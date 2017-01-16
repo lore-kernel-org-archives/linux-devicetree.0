@@ -1,80 +1,75 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] mtd: spi-nor: don't claim mr25h40 to be JEDEC compatible
-Date: Mon, 16 Jan 2017 11:40:59 +0100
-Message-ID: <20170116104059.cz2ypa5ixvvtfeqc@pengutronix.de>
-References: <20170113093509.25737-1-u.kleine-koenig@pengutronix.de>
- <CAMuHMdXJi9hJrY0ZV37gejp2XC6fkuLF7i7BqX4CUYTB7j_q1A@mail.gmail.com>
- <20170113194226.GH2472@leverpostej>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH] i2c: core: helper function to detect slave mode
+Date: Mon, 16 Jan 2017 10:32:36 +0000
+Message-ID: <7fdf5d3c-d0ea-ec45-6b18-4573fff6dd11@synopsys.com>
+References: <f4ec62119145bc70c938800c91eb396d30457304.1483636071.git.lolivei@synopsys.com>
+ <73246c4a-504c-52d7-dde4-970a45dca0bd@mleia.com>
+ <CAHp75Ve87TE3y6hg1bMxSFAPVcY3wPifGuvtpXNhBw5-eOnPrg@mail.gmail.com>
+ <b5788d1d-c951-0fc3-eed8-88457df1f27e@mleia.com>
+ <CAHp75Ve7zNN3m1ngLGi-81mFehKzZG07mh5H2T5+_k-=jJqqNA@mail.gmail.com>
+ <3748130b-5321-12eb-ec75-e2637dd9fc54@mleia.com>
+ <1484240482.2133.92.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170113194226.GH2472@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, MTD Maling List <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1484240482.2133.92.camel@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vladimir Zapolskiy <vz@mleia.com>, Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Fri, Jan 13, 2017 at 07:42:27PM +0000, Mark Rutland wrote:
-> On Fri, Jan 13, 2017 at 07:42:34PM +0100, Geert Uytterhoeven wrote:
-> > CC devicetree
-thanks
-
-> > 
-> > On Fri, Jan 13, 2017 at 10:35 AM, Uwe Kleine-König
-> > <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > > Commit edd0c8f4932d ("mtd: spi-nor: Add support for mr25h40") made it
-> > > possible to use a mr25h40 by writing
-> > >
-> > >         compatible = "mr25h40", "jedec,spi-nor";
-> > 
-> > No vendor prefix?
-> > 
-> > >
-> > > in a device tree. This chip however isn't JEDEC compatible however, so
-> > > change the chip string and add a compatible entry to bless
-> > >
-> > >         compatible = "mr25h40-nonjedec";
-> > >
-> > > as the right way.
-> > 
-> > This whole "-nonjedec" business looks wrong to me.
-> > If the device is called "mr25h40", its compatible value should be
-> > "everspin,mr25h40". Adding some (in)compatibility indicator violates the
-> > spirit of compatible values, IMHO.
+On 12-Jan-17 17:01, Andy Shevchenko wrote:
+> On Sat, 2017-01-07 at 03:24 +0200, Vladimir Zapolskiy wrote:
+>> On 01/07/2017 02:19 AM, Andy Shevchenko wrote:
+>>> On Sat, Jan 7, 2017 at 1:43 AM, Vladimir Zapolskiy <vz@mleia.com>
+>>> wrote:
+>>>> On 01/07/2017 12:45 AM, Andy Shevchenko wrote:
 > 
-> Agreed on all counts.
+>>>>> +             }
+>>>>>>> +     } else if (IS_BUILTIN(CONFIG_ACPI) &&
+>>>>>>> ACPI_HANDLE(dev)) {
+>>>>>>> +             dev_dbg(dev, "ACPI slave is not supported
+>>>>>>> yet\n");
+>>>>>>> +     }
+>>>>>>
+>>>>>> If so, then it might be better to drop else-if stub for now.
+>>>>>
+>>>>> Please, don't.
+>>>>>
+>>>>
+>>>> Why do you ask for this stub to be added?
+>>>
+>>> 1. Exactly the reason you asked above. Here is the code which has
+>>> built differently on different platforms. x86 usually is not using
+>>> CONFIG_OF, ARM doesn't ACPI (versus ARM64). Check GPIO library for
+>>> existing examples.
+>>
+>> From the context by the stub I mean dev_dbg() in
+>> i2c_slave_mode_detect()
+>> function, I don't see a connection to GPIO library, please clarify.
 > 
-> The compatible string should specify the vendor and device, any
-> compliance details should either be known for that string or derived
-> from other properties.
+> I agree that is not good proof for using IS_ENABLED/IS_BUILTIN macro.
+
+I can prepare a V3 and remove it if that's the decision.
+
 > 
-> IIUC this is following an existing pattern, which we should deprecate
-> (retaining support for those strings so old DTBs work).
-
-Looking at drivers/mtd/spi-nor/spi-nor.c there is in the spi_nor_ids
-array:
-
-	...
-        { "m25p05",  INFO(0x202010,  0,  32 * 1024,   2, 0) },
-	...
-        { "m25p05-nonjedec",  INFO(0, 0,  32 * 1024,   2, 0) },
-
-and similar entries for the other M25P members. So I guess these chips
-couldn't do JEDEC at the beginning, then got feature updates but no new
-name. So "m25p05-nonjedec" is fine as compatibility string?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>> 2. We might add that support later, but here is again, just no-op.
+>>>
+>>> So, what is your strong argument here against that?
+>>
+>> When the support is ready for ACPI case, you'll remove the added
+>> dev_dbg(), and I don't see a good point by adding it temporarily.
+> 
+> It would remind me to look at it at some point.
+> 
+>> What is wrong with the approach of adding the ACPI case handling
+>> branch when it is ready and remove any kind of stubs right now?
+> 
+> I will not object. Here is maintainer, let him speak.
+> 
+>> On ACPI platforms the function returns 'false' always, will the
+>> function work correctly (= corresponding to its description) as is?
+> 
+> Yes.
+> 
