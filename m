@@ -1,69 +1,87 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v2 03/11] drm/rockchip/dsi: remove mode_valid function
-Date: Mon, 16 Jan 2017 18:08:23 +0800
-Message-ID: <1484561311-494-4-git-send-email-zyw@rock-chips.com>
-References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH] rtc: stm32: fix comparison warnings
+Date: Mon, 16 Jan 2017 11:08:53 +0100
+Message-ID: <1484561333-12087-1-git-send-email-amelie.delaunay@st.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBC2IT2GSZUDRBSFX6LBQKGQEXNEWBEI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIE1JUEkgRFNJIGRvIG5vdCBuZWVkIGNoZWNrIHRoZSB2YWxpZGl0eSBvZiByZXNvbHV0aW9u
-LCB0aGUgbWF4CnJlc29sdXRpb24gc2hvdWxkIGRlcGVuZCBWT1AuIEhlbmNlLCByZW1vdmUgcmsz
-Mjg4X21pcGlfZHNpX21vZGVfdmFsaWQKaGVyZS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25n
-IDx6eXdAcm9jay1jaGlwcy5jb20+Ci0tLQoKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jIHwgMzkgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBmaWxl
-IGNoYW5nZWQsIDM5IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9y
-b2NrY2hpcC9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGkt
-ZHNpLmMKaW5kZXggMDRmZDU5NS4uOGY4ZDQ4YSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3
-LW1pcGktZHNpLmMKQEAgLTI3Niw4ICsyNzYsNiBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9k
-YXRhIHsKIAl1MzIgZ3JmX2RzaTBfbW9kZTsKIAl1MzIgZ3JmX2RzaTBfbW9kZV9yZWc7CiAJdW5z
-aWduZWQgaW50IG1heF9kYXRhX2xhbmVzOwotCWVudW0gZHJtX21vZGVfc3RhdHVzICgqbW9kZV92
-YWxpZCkoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKLQkJCQkJICAgc3RydWN0IGRy
-bV9kaXNwbGF5X21vZGUgKm1vZGUpOwogfTsKIAogc3RydWN0IGR3X21pcGlfZHNpIHsKQEAgLTk3
-OCwyMyArOTc2LDggQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVz
-KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IpCiAJcmV0dXJuIGRybV9wYW5lbF9nZXRf
-bW9kZXMoZHNpLT5wYW5lbCk7CiB9CiAKLXN0YXRpYyBlbnVtIGRybV9tb2RlX3N0YXR1cyBkd19t
-aXBpX2RzaV9tb2RlX3ZhbGlkKAotCQkJCQlzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9y
-LAotCQkJCQlzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKLXsKLQlzdHJ1Y3QgZHdfbWlw
-aV9kc2kgKmRzaSA9IGNvbl90b19kc2koY29ubmVjdG9yKTsKLQotCWVudW0gZHJtX21vZGVfc3Rh
-dHVzIG1vZGVfc3RhdHVzID0gTU9ERV9PSzsKLQotCWlmIChkc2ktPnBkYXRhLT5tb2RlX3ZhbGlk
-KQotCQltb2RlX3N0YXR1cyA9IGRzaS0+cGRhdGEtPm1vZGVfdmFsaWQoY29ubmVjdG9yLCBtb2Rl
-KTsKLQotCXJldHVybiBtb2RlX3N0YXR1czsKLX0KLQogc3RhdGljIHN0cnVjdCBkcm1fY29ubmVj
-dG9yX2hlbHBlcl9mdW5jcyBkd19taXBpX2RzaV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzID0gewog
-CS5nZXRfbW9kZXMgPSBkd19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVzLAotCS5tb2RlX3Zh
-bGlkID0gZHdfbWlwaV9kc2lfbW9kZV92YWxpZCwKIH07CiAKIHN0YXRpYyB2b2lkIGR3X21pcGlf
-ZHNpX2RybV9jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9y
-KQpAQCAtMTA2NSwzMyArMTA0OCwxMSBAQCBzdGF0aWMgaW50IHJvY2tjaGlwX21pcGlfcGFyc2Vf
-ZHQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpCiAJcmV0dXJuIDA7CiB9CiAKLXN0YXRpYyBlbnVt
-IGRybV9tb2RlX3N0YXR1cyByazMyODhfbWlwaV9kc2lfbW9kZV92YWxpZCgKLQkJCQkJc3RydWN0
-IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKLQkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUg
-Km1vZGUpCi17Ci0JLyoKLQkgKiBUaGUgVklEX1BLVF9TSVpFIGZpZWxkIGluIHRoZSBEU0lfVklE
-X1BLVF9DRkcKLQkgKiByZWdpc3RlciBpcyAxMS1iaXQuCi0JICovCi0JaWYgKG1vZGUtPmhkaXNw
-bGF5ID4gMHg3ZmYpCi0JCXJldHVybiBNT0RFX0JBRF9IVkFMVUU7Ci0KLQkvKgotCSAqIFRoZSBW
-X0FDVElWRV9MSU5FUyBmaWVsZCBpbiB0aGUgRFNJX1ZUSU1JTkdfQ0ZHCi0JICogcmVnaXN0ZXIg
-aXMgMTEtYml0LgotCSAqLwotCWlmIChtb2RlLT52ZGlzcGxheSA+IDB4N2ZmKQotCQlyZXR1cm4g
-TU9ERV9CQURfVlZBTFVFOwotCi0JcmV0dXJuIE1PREVfT0s7Ci19Ci0KIHN0YXRpYyBzdHJ1Y3Qg
-ZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHJrMzI4OF9taXBpX2RzaV9kcnZfZGF0YSA9IHsKIAkuZHNp
-MF9lbl9iaXQgPSBSSzMyODhfRFNJMF9TRUxfVk9QX0xJVCwKIAkuZHNpMV9lbl9iaXQgPSBSSzMy
-ODhfRFNJMV9TRUxfVk9QX0xJVCwKIAkuZ3JmX3N3aXRjaF9yZWcgPSBSSzMyODhfR1JGX1NPQ19D
-T042LAogCS5tYXhfZGF0YV9sYW5lcyA9IDQsCi0JLm1vZGVfdmFsaWQgPSByazMyODhfbWlwaV9k
-c2lfbW9kZV92YWxpZCwKIH07CiAKIHN0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRh
-IHJrMzM5OV9taXBpX2RzaV9kcnZfZGF0YSA9IHsKLS0gCjIuNi4zCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This patches fixes comparison between signed and unsigned values as it
+could produce an incorrect result when the signed value is converted to
+unsigned:
+
+drivers/rtc/rtc-stm32.c: In function 'stm32_rtc_valid_alrm':
+drivers/rtc/rtc-stm32.c:404:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+  if ((((tm->tm_year > cur_year) &&
+...
+
+It also fixes comparison always true or false due to the fact that unsigned
+value is compared against zero with >= or <:
+
+drivers/rtc/rtc-stm32.c: In function 'stm32_rtc_init':
+drivers/rtc/rtc-stm32.c:514:35: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
+  for (pred_a = pred_a_max; pred_a >= 0; pred_a-- ) {
+
+drivers/rtc/rtc-stm32.c:530:44: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
+     (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
+
+Fixes: 4e64350f42e2 ("rtc: add STM32 RTC driver")
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/rtc/rtc-stm32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/rtc/rtc-stm32.c b/drivers/rtc/rtc-stm32.c
+index 03c97c1..bd57eb1 100644
+--- a/drivers/rtc/rtc-stm32.c
++++ b/drivers/rtc/rtc-stm32.c
+@@ -383,7 +383,7 @@ static int stm32_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 
+ static int stm32_rtc_valid_alrm(struct stm32_rtc *rtc, struct rtc_time *tm)
+ {
+-	unsigned int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
++	int cur_day, cur_mon, cur_year, cur_hour, cur_min, cur_sec;
+ 	unsigned int dr = readl_relaxed(rtc->base + STM32_RTC_DR);
+ 	unsigned int tr = readl_relaxed(rtc->base + STM32_RTC_TR);
+ 
+@@ -509,7 +509,7 @@ static int stm32_rtc_init(struct platform_device *pdev,
+ 	pred_a_max = STM32_RTC_PRER_PRED_A >> STM32_RTC_PRER_PRED_A_SHIFT;
+ 	pred_s_max = STM32_RTC_PRER_PRED_S >> STM32_RTC_PRER_PRED_S_SHIFT;
+ 
+-	for (pred_a = pred_a_max; pred_a >= 0; pred_a--) {
++	for (pred_a = pred_a_max; pred_a + 1 > 0; pred_a--) {
+ 		pred_s = (rate / (pred_a + 1)) - 1;
+ 
+ 		if (((pred_s + 1) * (pred_a + 1)) == rate)
+@@ -525,7 +525,7 @@ static int stm32_rtc_init(struct platform_device *pdev,
+ 		pred_s = (rate / (pred_a + 1)) - 1;
+ 
+ 		dev_warn(&pdev->dev, "ck_rtc is %s\n",
+-			 (rate - ((pred_a + 1) * (pred_s + 1)) < 0) ?
++			 (rate < ((pred_a + 1) * (pred_s + 1))) ?
+ 			 "fast" : "slow");
+ 	}
+ 
+-- 
+1.9.1
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
