@@ -1,111 +1,44 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v2 08/11] drm/rockchip/dsi: fix the issue can not send commands
-Date: Mon, 16 Jan 2017 18:08:28 +0800
-Message-ID: <1484561311-494-9-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v2 11/11] drm/rockchip/dsi: fix insufficient bandwidth of some
+ panel
+Date: Mon, 16 Jan 2017 18:08:31 +0800
+Message-ID: <1484561311-494-12-git-send-email-zyw@rock-chips.com>
 References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-rockchip@lists.infradead.org, xubilv <xbl@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: xubilv <xbl@rock-chips.com>
-
-There is a bug in hdr_write function, the value from the caller will be
-overwritten, it cause the mipi can not send the correct command. And the
-MIPI_DSI_GENERIC_SHORT_WRITE_n_PARAM message type should be supported.
-
-Signed-off-by: xubilv <xbl@rock-chips.com>
-Signed-off-by: Chris Zhong <zyw@rock-chips.com>
----
-
- drivers/gpu/drm/rockchip/dw-mipi-dsi.c | 26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-index 4ec82f6..4a2691c 100644
---- a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-+++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-@@ -572,10 +572,12 @@ static int dw_mipi_dsi_host_detach(struct mipi_dsi_host *host,
- static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 val)
- {
- 	int ret;
-+	u32 sts;
- 
- 	ret = readx_poll_timeout(readl, dsi->base + DSI_CMD_PKT_STATUS,
--				 val, !(val & GEN_CMD_FULL), 1000,
-+				 sts, !(sts & GEN_CMD_FULL), 1000,
- 				 CMD_PKT_STATUS_TIMEOUT_US);
-+
- 	if (ret < 0) {
- 		dev_err(dsi->dev, "failed to get available command FIFO\n");
- 		return ret;
-@@ -584,8 +586,9 @@ static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 val)
- 	dsi_write(dsi, DSI_GEN_HDR, val);
- 
- 	ret = readx_poll_timeout(readl, dsi->base + DSI_CMD_PKT_STATUS,
--				 val, val & (GEN_CMD_EMPTY | GEN_PLD_W_EMPTY),
-+				 sts, sts & (GEN_CMD_EMPTY | GEN_PLD_W_EMPTY),
- 				 1000, CMD_PKT_STATUS_TIMEOUT_US);
-+
- 	if (ret < 0) {
- 		dev_err(dsi->dev, "failed to write command FIFO\n");
- 		return ret;
-@@ -594,8 +597,8 @@ static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 val)
- 	return 0;
- }
- 
--static int dw_mipi_dsi_dcs_short_write(struct dw_mipi_dsi *dsi,
--				       const struct mipi_dsi_msg *msg)
-+static int dw_mipi_dsi_short_write(struct dw_mipi_dsi *dsi,
-+				   const struct mipi_dsi_msg *msg)
- {
- 	const u16 *tx_buf = msg->tx_buf;
- 	u32 val = GEN_HDATA(*tx_buf) | GEN_HTYPE(msg->type);
-@@ -609,13 +612,14 @@ static int dw_mipi_dsi_dcs_short_write(struct dw_mipi_dsi *dsi,
- 	return dw_mipi_dsi_gen_pkt_hdr_write(dsi, val);
- }
- 
--static int dw_mipi_dsi_dcs_long_write(struct dw_mipi_dsi *dsi,
--				      const struct mipi_dsi_msg *msg)
-+static int dw_mipi_dsi_long_write(struct dw_mipi_dsi *dsi,
-+				  const struct mipi_dsi_msg *msg)
- {
- 	const u32 *tx_buf = msg->tx_buf;
- 	int len = msg->tx_len, pld_data_bytes = sizeof(*tx_buf), ret;
- 	u32 val = GEN_HDATA(msg->tx_len) | GEN_HTYPE(msg->type);
- 	u32 remainder = 0;
-+	u32 sts = 0;
- 
- 	if (msg->tx_len < 3) {
- 		dev_err(dsi->dev, "wrong tx buf length %zu for long write\n",
-@@ -635,7 +639,7 @@ static int dw_mipi_dsi_dcs_long_write(struct dw_mipi_dsi *dsi,
- 		}
- 
- 		ret = readx_poll_timeout(readl, dsi->base + DSI_CMD_PKT_STATUS,
--					 val, !(val & GEN_PLD_W_FULL), 1000,
-+					 sts, !(sts & GEN_PLD_W_FULL), 1000,
- 					 CMD_PKT_STATUS_TIMEOUT_US);
- 		if (ret < 0) {
- 			dev_err(dsi->dev,
-@@ -656,11 +660,15 @@ static ssize_t dw_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
- 	switch (msg->type) {
- 	case MIPI_DSI_DCS_SHORT_WRITE:
- 	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
-+	case MIPI_DSI_GENERIC_SHORT_WRITE_0_PARAM:
-+	case MIPI_DSI_GENERIC_SHORT_WRITE_1_PARAM:
-+	case MIPI_DSI_GENERIC_SHORT_WRITE_2_PARAM:
- 	case MIPI_DSI_SET_MAXIMUM_RETURN_PACKET_SIZE:
--		ret = dw_mipi_dsi_dcs_short_write(dsi, msg);
-+		ret = dw_mipi_dsi_short_write(dsi, msg);
- 		break;
- 	case MIPI_DSI_DCS_LONG_WRITE:
--		ret = dw_mipi_dsi_dcs_long_write(dsi, msg);
-+	case MIPI_DSI_GENERIC_LONG_WRITE:
-+		ret = dw_mipi_dsi_long_write(dsi, msg);
- 		break;
- 	default:
- 		dev_err(dsi->dev, "unsupported message type\n");
--- 
-2.6.3
+U2V0IHRoZSBsYW5lcyBicHMgdG8gMSAvIDAuOSB0aW1lcyBvZiBwY2xrLCB0aGUgbWFyZ2luIGlz
+IG5vdCBlbm91Z2gKZm9yIHNvbWUgcGFuZWwsIGl0IHdpbGwgY2F1c2UgdGhlIHNjcmVlbiBkaXNw
+bGF5IGlzIG5vdCBub3JtYWwsIHNvCmluY3JlYXNlcyB0aGUgYmFkbndpZHRoIHRvIDEgLyAwLjgu
+CgpTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgoKLS0tCgog
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgfCA0ICsrLS0KIDEgZmlsZSBj
+aGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvZHctbWlwaS1kc2kuYwppbmRleCA5ZGZhNzNkLi41YTk3M2ZlIDEwMDY0NAotLS0gYS9k
+cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYworKysgYi9kcml2ZXJzL2dwdS9k
+cm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwpAQCAtNTAxLDggKzUwMSw4IEBAIHN0YXRpYyBpbnQg
+ZHdfbWlwaV9kc2lfZ2V0X2xhbmVfYnBzKHN0cnVjdCBkd19taXBpX2RzaSAqZHNpKQogCiAJbXBj
+bGsgPSBESVZfUk9VTkRfVVAoZHNpLT5tb2RlLT5jbG9jaywgTVNFQ19QRVJfU0VDKTsKIAlpZiAo
+bXBjbGspIHsKLQkJLyogdGFrZSAxIC8gMC45LCBzaW5jZSBtYnBzIG11c3QgYmlnIHRoYW4gYmFu
+ZHdpZHRoIG9mIFJHQiAqLwotCQl0bXAgPSBtcGNsayAqIChicHAgLyBkc2ktPmxhbmVzKSAqIDEw
+IC8gOTsKKwkJLyogdGFrZSAxIC8gMC44LCBzaW5jZSBtYnBzIG11c3QgYmlnIHRoYW4gYmFuZHdp
+ZHRoIG9mIFJHQiAqLworCQl0bXAgPSBtcGNsayAqIChicHAgLyBkc2ktPmxhbmVzKSAqIDEwIC8g
+ODsKIAkJaWYgKHRtcCA8IG1heF9tYnBzKQogCQkJdGFyZ2V0X21icHMgPSB0bXA7CiAJCWVsc2UK
+LS0gCjIuNi4zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
