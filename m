@@ -1,99 +1,66 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH v3 8/13] arm64: allwinner: a64: Add MMC nodes
-Date: Mon, 16 Jan 2017 20:16:41 +0100
-Message-ID: <20170116191641.GA11718@Red>
-References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
- <ac77b9e25e7633886822cd1f1ebafd5985751ae4.1484585798.git-series.maxime.ripard@free-electrons.com>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 4/4] ARM: dts: sun8i: enable USB OTG on Orange
+ Pi One board
+Date: Tue, 17 Jan 2017 03:14:49 +0800
+Message-ID: <20170116191449.50397-5-icenowy@aosc.xyz>
+References: <20170116191449.50397-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <ac77b9e25e7633886822cd1f1ebafd5985751ae4.1484585798.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Andre Przywara <andre.przywara@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQ5Y6TBQKGQE743FC4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170116191449.50397-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 05:56:58PM +0100, Maxime Ripard wrote:
-> From: Andre Przywara <andre.przywara@arm.com>
-> 
-> The A64 has 3 MMC controllers, one of them being especially targeted to
-> eMMC. Among other things, it has a data strobe signal and a 8 bits data
-> width.
-> 
-> The two other are more usual controllers that will have a 4 bits width at
-> most and no data strobe signal, which limits it to more usual SD or MMC
-> peripherals.
-> 
-> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 39 ++++++++++++++++++++-
->  1 file changed, 39 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 99b6bb1e141c..143e9706438f 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -299,6 +299,45 @@
->  			#size-cells = <0>;
->  		};
->  
-> +		mmc0: mmc@1c0f000 {
-> +			compatible = "allwinner,sun50i-a64-mmc";
-> +			reg = <0x01c0f000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC0>, <&ccu CLK_MMC0>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC0>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc1: mmc@1c10000 {
-> +			compatible = "allwinner,sun50i-a64-mmc";
-> +			reg = <0x01c10000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC1>, <&ccu CLK_MMC1>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC1>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
-> +		mmc2: mmc@1c11000 {
-> +			compatible = "allwinner,sun50i-a64-emmc";
-> +			reg = <0x01c11000 0x1000>;
-> +			clocks = <&ccu CLK_BUS_MMC2>, <&ccu CLK_MMC2>;
-> +			clock-names = "ahb", "mmc";
-> +			resets = <&ccu RST_BUS_MMC2>;
-> +			reset-names = "ahb";
-> +			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +			status = "disabled";
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +		};
-> +
->  		gic: interrupt-controller@1c81000 {
->  			compatible = "arm,gic-400";
->  			reg = <0x01c81000 0x1000>,
+Orange Pi One board features a USB OTG port, which cannot be used to
+power up the board, but have a gateable VBUS and an ID pin, which makes
+it possible to be used in both host and peripheral mode.
 
-Hello
+Enable its OTG port in dual-role mode.
 
-It seems that mmc node is after i2c@1c2b400 so not in address order.
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Regards
-Corentin Labbe
+diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+index 34da853ee037..8f69c8c9995c 100644
+--- a/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
++++ b/arch/arm/boot/dts/sun8i-h3-orangepi-one.dts
+@@ -115,6 +115,11 @@
+ 	};
+ };
+ 
++&reg_usb0_vbus {
++	gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
++	status = "okay";
++};
++
+ &r_pio {
+ 	leds_r_opc: led_pins@0 {
+ 		pins = "PL10";
+@@ -151,7 +156,14 @@
+ 	status = "disabled";
+ };
+ 
++&usb_otg {
++	dr_mode = "otg";
++	status = "okay";
++};
++
+ &usbphy {
+ 	/* USB VBUS is always on */
+ 	status = "okay";
++	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
++	usb0_vbus-supply = <&reg_usb0_vbus>;
+ };
+-- 
+2.11.0
