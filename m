@@ -1,55 +1,51 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCHv3 RESEND 6/8] ARM: dts: stm32: enable RTC on
- stm32f469-disco
-Date: Mon, 16 Jan 2017 15:39:54 +0100
-Message-ID: <1371d57f-86e6-a6af-d936-1b3b1be8770f@st.com>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCHv3 RESEND 7/8] ARM: dts: stm32: enable RTC on
+ stm32429i-eval
+Date: Mon, 16 Jan 2017 15:40:00 +0100
+Message-ID: <289c63f8-08d0-20b7-b884-28d4fd0abed6@st.com>
 References: <1484573388-590-1-git-send-email-amelie.delaunay@st.com>
- <1484573388-590-4-git-send-email-amelie.delaunay@st.com>
+ <1484573388-590-5-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484573388-590-4-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484573388-590-5-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 01/16/2017 02:29 PM, Amelie Delaunay wrote:
-> This patch enables RTC on stm32f469-disco with default LSE clock source.
+> This patch enables RTC on stm32429i-eval with default LSE clock source.
 >
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+> Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stm32f469-disco.dts | 4 ++++
+>  arch/arm/boot/dts/stm32429i-eval.dts | 4 ++++
 >  1 file changed, 4 insertions(+)
 >
-> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-> index fda12a4..f52b9f6 100644
-> --- a/arch/arm/boot/dts/stm32f469-disco.dts
-> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
-> @@ -78,6 +78,10 @@
->  	clock-frequency = <8000000>;
+> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+> index 2181220..eedb27d 100644
+> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> @@ -157,6 +157,10 @@
+>  	};
 >  };
 >
 > +&rtc {
 > +	status = "okay";
 > +};
 > +
->  &usart3 {
->  	pinctrl-0 = <&usart3_pins_a>;
+>  &usart1 {
+>  	pinctrl-0 = <&usart1_pins_a>;
 >  	pinctrl-names = "default";
 >
 Applied on stm32-dt-for-v4.11
 
 Thanks
 Alex
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
