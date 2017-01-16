@@ -1,97 +1,36 @@
 From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v2 07/11] drm/rockchip/dsi: fix mipi display can't found at
- init time
-Date: Mon, 16 Jan 2017 18:08:27 +0800
-Message-ID: <1484561311-494-8-git-send-email-zyw@rock-chips.com>
+Subject: [PATCH v2 09/11] drm/rockchip/dsi: decrease the value of Ths-prepare
+Date: Mon, 16 Jan 2017 18:08:29 +0800
+Message-ID: <1484561311-494-10-git-send-email-zyw@rock-chips.com>
 References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-rockchip@lists.infradead.org, xubilv <xbl@rock-chips.com>, Chris Zhong <zyw@rock-chips.com>, Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgoKVGhlIHByb2JsZW0gaXMg
-dGhhdDoKICBtaXBpIHBhbmVsIHByb2JlIHJlcXVlc3QgbWlwaV9kc2lfaG9zdF9yZWdpc3Rlci4K
-ICBtaXBpIGhvc3QgYXR0YWNoIGlzIGNhbGwgZnJvbSBwYW5lbCBkZXZpY2UsIHNvIHRoZSBkZWZl
-ciBmdW5jdGlvbgphbHdheXMgY2FuJ3Qgd29ya3MuCgpTbyBhdCB0aGUgZmlyc3QgYmluZCB0aW1l
-LCBhbHdheXMgY2FuJ3QgZm91bmQgbWlwaSBwYW5lbC4KClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFv
-IDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KU2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5
-d0Byb2NrLWNoaXBzLmNvbT4KLS0tCgogZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGkt
-ZHNpLmMgfCA1NyArKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tCiAxIGZpbGUgY2hh
-bmdlZCwgMzkgaW5zZXJ0aW9ucygrKSwgMTggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvZHctbWlwaS1kc2kuYwppbmRleCA1ZTNmMDMxLi40ZWM4MmY2IDEwMDY0NAotLS0gYS9k
-cml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYworKysgYi9kcml2ZXJzL2dwdS9k
-cm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwpAQCAtNTUxLDExICs1NTEsOSBAQCBzdGF0aWMgaW50
-IGR3X21pcGlfZHNpX2hvc3RfYXR0YWNoKHN0cnVjdCBtaXBpX2RzaV9ob3N0ICpob3N0LAogCWRz
-aS0+cGFuZWwgPSBvZl9kcm1fZmluZF9wYW5lbChkZXZpY2UtPmRldi5vZl9ub2RlKTsKIAlpZiAo
-IWRzaS0+cGFuZWwpIHsKIAkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gZmluZCBwYW5lbFxuIik7Ci0J
-CXJldHVybiAtRVBST0JFX0RFRkVSOworCQlyZXR1cm4gLUVOT0RFVjsKIAl9CiAKLQlkcm1fcGFu
-ZWxfYXR0YWNoKGRzaS0+cGFuZWwsICZkc2ktPmNvbm5lY3Rvcik7Ci0KIAlyZXR1cm4gMDsKIH0K
-IApAQCAtNTY3LDYgKzU2NSw3IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfaG9zdF9kZXRhY2go
-c3RydWN0IG1pcGlfZHNpX2hvc3QgKmhvc3QsCiAJaWYgKGRzaS0+cGFuZWwpCiAJCWRybV9wYW5l
-bF9kZXRhY2goZHNpLT5wYW5lbCk7CiAKKwlkc2ktPnBhbmVsID0gTlVMTDsKIAlyZXR1cm4gMDsK
-IH0KIApAQCAtMTA0OCw2ICsxMDQ3LDggQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9yZWdpc3Rl
-cihzdHJ1Y3QgZHJtX2RldmljZSAqZHJtLAogCQkJICAgJmR3X21pcGlfZHNpX2F0b21pY19jb25u
-ZWN0b3JfZnVuY3MsCiAJCQkgICBEUk1fTU9ERV9DT05ORUNUT1JfRFNJKTsKIAorCWRybV9wYW5l
-bF9hdHRhY2goZHNpLT5wYW5lbCwgJmRzaS0+Y29ubmVjdG9yKTsKKwogCWRybV9tb2RlX2Nvbm5l
-Y3Rvcl9hdHRhY2hfZW5jb2Rlcihjb25uZWN0b3IsIGVuY29kZXIpOwogCiAJcmV0dXJuIDA7CkBA
-IC0xMDk3LDIzICsxMDk4LDE3IEBAIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIGR3X21pcGlfZHNp
-X2R0X2lkcyk7CiBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2
-LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAJCQkgICAgdm9pZCAqZGF0YSkKIHsKLQljb25zdCBz
-dHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9Ci0JCQlvZl9tYXRjaF9kZXZpY2UoZHdfbWlwaV9k
-c2lfZHRfaWRzLCBkZXYpOwotCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgKnBk
-YXRhID0gb2ZfaWQtPmRhdGE7CiAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IHRvX3Bs
-YXRmb3JtX2RldmljZShkZXYpOwogCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBkYXRhOwotCXN0
-cnVjdCBkd19taXBpX2RzaSAqZHNpOworCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gZGV2X2dl
-dF9kcnZkYXRhKGRldik7CiAJc3RydWN0IHJlc291cmNlICpyZXM7CiAJaW50IHJldDsKIAotCWRz
-aSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZHNpKSwgR0ZQX0tFUk5FTCk7Ci0JaWYgKCFk
-c2kpCi0JCXJldHVybiAtRU5PTUVNOwotCi0JZHNpLT5kZXYgPSBkZXY7Ci0JZHNpLT5wZGF0YSA9
-IHBkYXRhOwogCWRzaS0+ZHBtc19tb2RlID0gRFJNX01PREVfRFBNU19PRkY7CiAKKwlpZiAoIWRz
-aS0+cGFuZWwpCisJCXJldHVybiAtRVBST0JFX0RFRkVSOworCiAJcmV0ID0gcm9ja2NoaXBfbWlw
-aV9wYXJzZV9kdChkc2kpOwogCWlmIChyZXQpCiAJCXJldHVybiByZXQ7CkBAIC0xMTYwLDkgKzEx
-NTUsNyBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBz
-dHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAKIAlwbV9ydW50aW1lX2VuYWJsZShkZXYpOwogCi0JZHNp
-LT5kc2lfaG9zdC5vcHMgPSAmZHdfbWlwaV9kc2lfaG9zdF9vcHM7Ci0JZHNpLT5kc2lfaG9zdC5k
-ZXYgPSBkZXY7Ci0JcmV0dXJuIG1pcGlfZHNpX2hvc3RfcmVnaXN0ZXIoJmRzaS0+ZHNpX2hvc3Qp
-OworCXJldHVybiAwOwogCiBlcnJfcGxscmVmOgogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2kt
-PnBsbHJlZl9jbGspOwpAQCAtMTE3NCw3ICsxMTY3LDYgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9k
-c2lfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAogewog
-CXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gZGV2X2dldF9kcnZkYXRhKGRldik7CiAKLQltaXBp
-X2RzaV9ob3N0X3VucmVnaXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwogCXBtX3J1bnRpbWVfZGlzYWJs
-ZShkZXYpOwogCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPnBsbHJlZl9jbGspOwogfQpAQCAt
-MTE4NiwxMSArMTE3OCw0MCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGNvbXBvbmVudF9vcHMgZHdf
-bWlwaV9kc2lfb3BzID0gewogCiBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3Byb2JlKHN0cnVjdCBw
-bGF0Zm9ybV9kZXZpY2UgKnBkZXYpCiB7Ci0JcmV0dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRl
-diwgJmR3X21pcGlfZHNpX29wcyk7CisJc3RydWN0IGRldmljZSAqZGV2ID0gJnBkZXYtPmRldjsK
-Kwljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkICpvZl9pZCA9CisJCQlvZl9tYXRjaF9kZXZpY2Uo
-ZHdfbWlwaV9kc2lfZHRfaWRzLCBkZXYpOworCWNvbnN0IHN0cnVjdCBkd19taXBpX2RzaV9wbGF0
-X2RhdGEgKnBkYXRhID0gb2ZfaWQtPmRhdGE7CisJc3RydWN0IGR3X21pcGlfZHNpICpkc2k7CisJ
-aW50IHJldDsKKworCWRzaSA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmRzaSks
-IEdGUF9LRVJORUwpOworCWlmICghZHNpKQorCQlyZXR1cm4gLUVOT01FTTsKKworCWRzaS0+ZGV2
-ID0gZGV2OworCWRzaS0+cGRhdGEgPSBwZGF0YTsKKwlkc2ktPmRzaV9ob3N0Lm9wcyA9ICZkd19t
-aXBpX2RzaV9ob3N0X29wczsKKwlkc2ktPmRzaV9ob3N0LmRldiA9ICZwZGV2LT5kZXY7CisKKwly
-ZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2ktPmRzaV9ob3N0KTsKKwlpZiAocmV0KQor
-CQlyZXR1cm4gcmV0OworCisJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgZHNpKTsKKwlyZXQg
-PSBjb21wb25lbnRfYWRkKCZwZGV2LT5kZXYsICZkd19taXBpX2RzaV9vcHMpOworCWlmIChyZXQp
-CisJCW1pcGlfZHNpX2hvc3RfdW5yZWdpc3RlcigmZHNpLT5kc2lfaG9zdCk7CisKKwlyZXR1cm4g
-cmV0OwogfQogCiBzdGF0aWMgaW50IGR3X21pcGlfZHNpX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1f
-ZGV2aWNlICpwZGV2KQogeworCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gZGV2X2dldF9kcnZk
-YXRhKCZwZGV2LT5kZXYpOworCisJaWYgKGRzaSkKKwkJbWlwaV9kc2lfaG9zdF91bnJlZ2lzdGVy
-KCZkc2ktPmRzaV9ob3N0KTsKIAljb21wb25lbnRfZGVsKCZwZGV2LT5kZXYsICZkd19taXBpX2Rz
-aV9vcHMpOwogCXJldHVybiAwOwogfQotLSAKMi42LjMKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: xubilv <xbl@rock-chips.com>
+
+Signed-off-by: xubilv <xbl@rock-chips.com>
+Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+---
+
+ drivers/gpu/drm/rockchip/dw-mipi-dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
+index 4a2691c..f50909e 100644
+--- a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
++++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
+@@ -455,7 +455,7 @@ static int dw_mipi_dsi_phy_init(struct dw_mipi_dsi *dsi)
+ 					 BANDGAP_SEL(BANDGAP_96_10));
+ 
+ 	dw_mipi_dsi_phy_write(dsi, 0x70, TLP_PROGRAM_EN | 0xf);
+-	dw_mipi_dsi_phy_write(dsi, 0x71, THS_PRE_PROGRAM_EN | 0x55);
++	dw_mipi_dsi_phy_write(dsi, 0x71, THS_PRE_PROGRAM_EN | 0x2d);
+ 	dw_mipi_dsi_phy_write(dsi, 0x72, THS_ZERO_PROGRAM_EN | 0xa);
+ 
+ 	dsi_write(dsi, DSI_PHY_RSTZ, PHY_ENFORCEPLL | PHY_ENABLECLK |
+-- 
+2.6.3
