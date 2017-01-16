@@ -1,55 +1,126 @@
-From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Subject: Re: [PATCH 0/3] ti,ads7950 device tree bindings
-Date: Sun, 15 Jan 2017 17:44:57 -0600
-Message-ID: <b60edc70-1d0f-fbfc-6ae9-1e6e5e3525d1@lechnology.com>
-References: <1484157171-15571-1-git-send-email-david@lechnology.com>
- <c4c59921-d0dc-0858-8d66-c56fa38d3b50@kernel.org>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 3/3] Input: pwm-beeper: add optional amplifier
+ regulator
+Date: Sun, 15 Jan 2017 18:12:29 -0600
+Message-ID: <a907970d-3ab9-69df-9636-54c2b660cff9@lechnology.com>
+References: <1484164921-30587-1-git-send-email-david@lechnology.com>
+ <1484164921-30587-4-git-send-email-david@lechnology.com>
+ <20170114191943.GC31309@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c4c59921-d0dc-0858-8d66-c56fa38d3b50-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170114191943.GC31309@dtor-ws>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2017 07:58 AM, Jonathan Cameron wrote:
-> On 11/01/17 17:52, David Lechner wrote:
->> This series adds device tree bindings for the TI ADS7950 family of A/DC chips.
->> The series includes the bindings documentation and some fixes to the iio driver
->> to make it work with the device tree bindings.
+On 01/14/2017 01:19 PM, Dmitry Torokhov wrote:
+> On Wed, Jan 11, 2017 at 02:02:01PM -0600, David Lechner wrote:
+>> This adds an optional regulator to the pwm-beeper device. This regulator
+>> acts as an amplifier. The amplifier is only enabled while beeping in order
+>> to reduce power consumption.
 >>
->> FYI, the ads7950 driver has not made it into mainline yet, so no worries about
->> breaking anyone with these changes.
+>> Tested on LEGO MINDSTORMS EV3, which has a speaker connected to PWM through
+>> an amplifier.
 >>
-> And here's the bit I failed to read!
+>> Signed-off-by: David Lechner <david@lechnology.com>
+>> ---
+>>  drivers/input/misc/pwm-beeper.c | 29 ++++++++++++++++++++++++++++-
+>>  1 file changed, 28 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+>> index 30ac227..708e88e 100644
+>> --- a/drivers/input/misc/pwm-beeper.c
+>> +++ b/drivers/input/misc/pwm-beeper.c
+>> @@ -14,6 +14,7 @@
+>>   */
+>>
+>>  #include <linux/input.h>
+>> +#include <linux/regulator/consumer.h>
+>>  #include <linux/module.h>
+>>  #include <linux/kernel.h>
+>>  #include <linux/of.h>
+>> @@ -25,8 +26,10 @@
+>>  struct pwm_beeper {
+>>  	struct input_dev *input;
+>>  	struct pwm_device *pwm;
+>> +	struct regulator *reg;
+>>  	struct work_struct work;
+>>  	unsigned long period;
+>> +	bool reg_enabled;
+>>  };
+>>
+>>  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+>> @@ -38,8 +41,20 @@ static void __pwm_beeper_set(struct pwm_beeper *beeper)
+>>  	if (period) {
+>>  		pwm_config(beeper->pwm, period / 2, period);
+>>  		pwm_enable(beeper->pwm);
+>> -	} else
+>> +		if (beeper->reg) {
+>> +			int error;
+>> +
+>> +			error = regulator_enable(beeper->reg);
+>> +			if (!error)
+>> +				beeper->reg_enabled = true;
+>> +		}
+>> +	} else {
+>> +		if (beeper->reg_enabled) {
+>> +			regulator_disable(beeper->reg);
+>> +			beeper->reg_enabled = false;
+>> +		}
+>>  		pwm_disable(beeper->pwm);
+>> +	}
+>>  }
+>>
+>>  static void pwm_beeper_work(struct work_struct *work)
+>> @@ -82,6 +97,10 @@ static void pwm_beeper_stop(struct pwm_beeper *beeper)
+>>  {
+>>  	cancel_work_sync(&beeper->work);
+>>
+>> +	if (beeper->reg_enabled) {
+>> +		regulator_disable(beeper->reg);
+>> +		beeper->reg_enabled = false;
+>> +	}
+>>  	if (beeper->period)
+>>  		pwm_disable(beeper->pwm);
+>>  }
+>> @@ -111,6 +130,14 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>>  		return error;
+>>  	}
+>>
+>> +	beeper->reg = devm_regulator_get_optional(&pdev->dev, "amp");
 >
-> As an extra point, could you confirm what /sys/bus/iio/iio\:deviceX/name for this
-> one reads?  I have a feeling this is another case of what Lars has been pointing
-> out in other drivers this morning.  That name should be the device part number..
+> If you do not use optional regulator then you will not have to check if
+> you have it or not everywhere: regulator core will give you a dummy that
+> you can toggle to your heart's content.
+
+Some months ago, I learned that if you are not using device tree and you 
+do not call regulator_has_full_constraints(), then you do not get a 
+dummy regulator. And here, we are only checking if the regulator exists 
+in one place. We will still need the checks for beeper->reg_enabled to 
+keep calls to regulator_enable() and regulator_disable() balanced.
+
+On the other hand, it is recommended that you always call 
+regulator_has_full_constraints(), so I don't mind changing it if that is 
+what you think we should do. But, I don't really see much of an 
+advantage to changing it compared to the current implementation.
+
 >
-
-cat /sys/bus/iio/devices/iio\:device0/name
-ads7957
-
-This is the part number for the specific chip I am using. So, I am 
-guessing that it is correct unless it is supposed to be upper case or 
-something like that.
-
-
-
-> Thanks,
+>> +	error = PTR_ERR_OR_ZERO(beeper->reg);
+>> +	if (error) {
+>> +		if (error != -EPROBE_DEFER)
+>> +			dev_err(dev, "Failed to get amp regulator\n");
+>> +		return error;
+>> +	}
+>> +
+>>  	/*
+>>  	 * FIXME: pwm_apply_args() should be removed when switching to
+>>  	 * the atomic PWM API.
+>> --
+>> 2.7.4
+>>
 >
-> Jonathan
->> David Lechner (3):
->>   DT/bindings: Add bindings for TI ADS7950 A/DC chips
->>   iio: adc: ti-ads7950: Drop "ti-" prefix from module name
->>   iio: adc: ti-ads7950: Change regulator matching string to "vref"
->>
->>  .../devicetree/bindings/iio/adc/ti-ads7950.txt     | 23 ++++++++++++++++
->>  drivers/iio/adc/ti-ads7950.c                       | 32 +++++++++++-----------
->>  2 files changed, 39 insertions(+), 16 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/ti-ads7950.txt
->>
+> Thanks.
 >
