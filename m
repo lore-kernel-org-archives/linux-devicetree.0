@@ -1,100 +1,74 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and
- core files
-Date: Mon, 16 Jan 2017 17:00:05 +0530
-Message-ID: <587CAEBD.1010803@ti.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-12-git-send-email-kishon@ti.com>
- <4a89fb45-af84-d660-5ef0-12227b141cda@synopsys.com> <587C586C.6070003@ti.com>
- <0a16c862-312f-655e-3d66-bdb0c1f78584@synopsys.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Mon, 16 Jan 2017 12:40:23 +0100
+Message-ID: <20170116114023.GA3029@katana>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+ <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+ <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <0a16c862-312f-655e-3d66-bdb0c1f78584@synopsys.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <Chris.Brandt@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joao,
 
-On Monday 16 January 2017 03:57 PM, Joao Pinto wrote:
-> =
+--SUOF0GtieIMvvwua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Hi,
-> =
 
-> =C0s 5:21 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
->> Hi Joao,
->>
->> On Friday 13 January 2017 10:19 PM, Joao Pinto wrote:
->>> =C0s 10:26 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
->>>> Split pcie-designware.c into pcie-designware-host.c that contains
->>>> the host specific parts of the driver and pcie-designware.c that
->>>> contains the parts used by both host driver and endpoint driver.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  drivers/pci/dwc/Makefile               |    2 +-
->>>>  drivers/pci/dwc/pcie-designware-host.c |  619 +++++++++++++++++++++++=
-+++++++++
->>>>  drivers/pci/dwc/pcie-designware.c      |  613 +----------------------=
---------
->>>>  drivers/pci/dwc/pcie-designware.h      |    8 +
->>>>  4 files changed, 634 insertions(+), 608 deletions(-)
->>>>  create mode 100644 drivers/pci/dwc/pcie-designware-host.c
->>>>
->>>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->>>> index 7d27c14..3b57e55 100644
->>>> --- a/drivers/pci/dwc/Makefile
->>>> +++ b/drivers/pci/dwc/Makefile
->>>> @@ -1,4 +1,4 @@
->>>
->>> (snip...)
->>>
->>>> -static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
->>>> -				      int type, u64 cpu_addr, u64 pci_addr,
->>>> -				      u32 size)
->>>> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int ty=
-pe,
->>>> +			       u64 cpu_addr, u64 pci_addr, u32 size)
->>>>  {
->>>>  	u32 retries, val;
->>>>  =
+> > and then in the code do:
+> >
+> >         struct *cd_clk;
+> >         cd_clk =3D devm_clk_get(&pdev->dev, "cd");
+> >         if (cd_clk) {
+> >                 clk_prepare_enable(cd_clk);
+> >         }
+> >
+> >   (this simple 1-line fix patch is getting a lot more complicated)
+>=20
+> Disclaimer: I don't know how/if the SDHI core manages clocks, and may
+> interfere. Adding Wolfram.
 
->>>> @@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_=
-pcie *pci, int index,
->>>>  	dev_err(pci->dev, "iATU is not being enabled\n");
->>>>  }
->>>
->>> Kishon, iATU only makes sense in The Root Complex (host), so it should =
-be inside
->>> the pcie-designware-host.
->>
->> That is not true. Outbound ATU should be programmed to access host side =
-buffers
->> and inbound ATU should be programmed for the host to access EP mem space.
-> =
+Thanks for the heads up.
 
-> Sorry, I was not clear enough. What I was trying to suggest is, since the=
- ATU
-> programming is done by the host, wouldn't be better to include it in the
-> pcie-designware-host? It is just an architectural detail.
+We have special callbacks for en-/disabling clocks:
+sh_mobile_sdhi_clk_enable() and sh_mobile_sdhi_clk_disable().
 
-ATU programming is required in EP mode. See "[PATCH 24/37] PCI: dwc:
-designware: Add EP mode support" in this patch series.
+I think those functions should get the above if-blocks (without curly
+braces) to ensure we always have consistent 00 or 11 settings.
 
-Anything that's required by both EP mode and RC mode, I've placed in
-pcie-designware.c
 
-Thanks
-Kishon
+--SUOF0GtieIMvvwua
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYfLEnAAoJEBQN5MwUoCm2YbYP/0KDZ+Fxf9rOxb9hK9sUwLK6
+EPMelGAgQ37zRHHNtWT/BMYVQTZ01kr0jumYMaF4Di2DVDWAwRBOKGyZOrDXFErL
+LOujJFTnx3/hJjHu7eTTe8yPL2pYuqmzPOOPkmsqvbhVry6P/mBdsd1gcd9a1Pa1
+3ByKNghHsm8OXRw+3zN9FvZ/sFKTCh7XU8/uc9siWH1Se1tpTK5nvwRSQDrZ3Mkc
+vZMcIzmZRm9o2eFZjX8D6sdZkpNOGGB7JJrGxF29KnlHTGPXlCpXAwSKDFd93LkD
+LiSvZtYMzXqwUld3Wve0swrzlGwd/wFLM9OLTIYJ+WkNW/63ikt647vgU/8F5Xg7
+bbdmtn+i2nN+RoUTfSE0QiqoFc17qWuANouis8P/3zk6OAbl/hwNKpG4fGVfMoCt
+xvXM9bK8usapxoZ1Kic3MpoxuvVz16T0FBXZB4KNR452CTGyDzVq8kXd2UKPX59a
+UHHfq4JSYhLmQ32p0NPAqstsZzQIRRNFRIky0JvLgHkR/nGPetT558lIEeIp0MJV
+d+ywY+5Yfxdy99BVumHgUbA4DdBHYoq+X+k+XJOM8W43FrP+3Mc45/UfGCcCv5cr
+rZJ3/9tCCppdKbGmILGOw7V1LWY7bIzygR7qFdoZrkhbrL8EX0wwQwFY40fsHTrW
+oT69PsWmYcpgFGKn8P5b
+=5fuE
+-----END PGP SIGNATURE-----
+
+--SUOF0GtieIMvvwua--
