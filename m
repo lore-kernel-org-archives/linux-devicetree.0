@@ -1,91 +1,95 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Mon, 16 Jan 2017 11:39:53 +0100
-Message-ID: <7fcb8d94-840a-de2c-f43b-9123ccc65514@baylibre.com>
-References: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
- <m21sw66828.fsf@baylibre.com> <d3a00788-c3c1-4b10-90bf-2a8bc6a138f8@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d3a00788-c3c1-4b10-90bf-2a8bc6a138f8-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xypron.glpk-Mmb7MZpHnFY@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH v3 1/2] of: base: add support to find the level of the last cache
+Date: Mon, 16 Jan 2017 10:40:43 +0000
+Message-ID: <1484563244-14743-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tan Xiaojun <tanxiaojun@huawei.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/15/2017 03:43 PM, Andreas Färber wrote:
-> Am 13.01.2017 um 21:03 schrieb Kevin Hilman:
->> Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
->>
->>> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
->>> this patch adds this reserved zone and redefines the usable memory range.
->>>
->>> The memory node is also moved from the dtsi files into the proper dts files
->>> to handle variants memory sizes.
->>>
->>> This patch also fixes the memory sizes for the following platforms :
->>> - gxl-s905x-p212 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>> - gxm-s912-q201 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>> - gxl-s905d-p231 : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>> - gxl-nexbox-a95x : 1GiB instead of 2GiB, a proper 2GiB dts should be pushed
->>>
->>> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>
->> Queued for v4.10-rc.
-> 
-> What is the motivation for this change? I have a local U-Boot patch to
-> detect the amount of memory available as done downstream, but U-Boot
-> only updates the reg property that you seem to be abandoning here...
-> 
-> So for devices that come in multiple RAM configurations - like R-Box Pro
-> - this would require separate .dts files now! This looks very wrong to
-> me, especially since I am not aware of other platforms doing the same.
-> Instead, there's memory reservations for top and bottom done in U-Boot
-> for reg, plus reserved-memory nodes for anything in the middle.
-> 
-> Another thing to consider is that uEFI boot (bootefi) handles memory
-> reservation differently yet again, on the bootloader level. I have had
-> that working fine on Odroid-C2 and Vega S95.
-> 
-> So if there's no bug this is fixing (none mentioned in commit message) I
-> strongly object to this patch.
-> 
-> Regards,
-> Andreas
-> 
+It is useful to have helper function just to get the number of cache
+levels for a given logical cpu. We can obtain the same by just checking
+the level at which the last cache is present. This patch adds support
+to find the level of the last cache for a given cpu.
 
-Hi Andreas,
+It will be used on ARM64 platform where the device tree provides the
+information for the additional non-architected/transparent/external
+last level caches that are not integrated with the processors.
 
-Like I replied of my RFT patch :
-I really disagree about relying on any work or properties added by any bootloader here, Amlogic SoCs has
-a lot of u-boot versions in the field, and the Odroid-C2 is part of this.
+Cc: Mark Rutland <mark.rutland@arm.com>
+Suggested-by: Rob Herring <robh+dt@kernel.org>
+Acked-by: Rob Herring <robh+dt@kernel.org>
+Tested-by: Tan Xiaojun <tanxiaojun@huawei.com>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+---
+ drivers/of/base.c  | 26 ++++++++++++++++++++++++++
+ include/linux/of.h |  1 +
+ 2 files changed, 27 insertions(+)
 
-Even if Odroid-c2 is in mainline U-Boot or not, the mainline Linux kernel should work using
-any U-boot version even with the one provided by Amlogic on their openlinux distribution channel.
+v2->v3:
+	- Dropped unnecessary pointer check
+	- Added Rob's Ack and Tan's Tested-by tags
 
-Handling multiple RAM configuration is another story, and the Arm-Soc and DT maintainers should give us
-their advices.
+v1->v2:
+	- Moved to using "cache-level" in the last level cache instead
+	  of counting through all the nodes as suggested by Rob
 
-Actually there is a severe bug fixed here that cause a huge crash if such memory is not reserved while
-running stock u-boot version on various shipped products and Amlogic's own development boards.
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4bea3c797d6..a30f541f0825 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -25,6 +25,7 @@
+ #include <linux/cpu.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/of_graph.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+@@ -2268,6 +2269,31 @@ struct device_node *of_find_next_cache_node(const struct device_node *np)
+ }
 
-The bug is easily triggered by running :
-# stress --vm 4 --vm-bytes 128M --timeout 10s &
-[   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf000000 -- SError
-...
-[   47.058536] Internal error: Attempting to execute userspace memory: 8600000f [#3] PREEMPT SMP
-...
+ /**
++ * of_find_last_cache_level - Find the level at which the last cache is
++ * 		present for the given logical cpu
++ *
++ * @cpu: cpu number(logical index) for which the last cache level is needed
++ *
++ * Returns the the level at which the last cache is present. It is exactly
++ * same as  the total number of cache levels for the given logical cpu.
++ */
++int of_find_last_cache_level(unsigned int cpu)
++{
++	int cache_level = 0;
++	struct device_node *prev = NULL, *np = of_cpu_device_node_get(cpu);
++
++	while (np) {
++		prev = np;
++		of_node_put(np);
++		np = of_find_next_cache_node(np);
++	}
++
++	of_property_read_u32(prev, "cache-level", &cache_level);
++
++	return cache_level;
++}
++
++/**
+  * of_graph_parse_endpoint() - parse common endpoint node properties
+  * @node: pointer to endpoint device_node
+  * @endpoint: pointer to the OF endpoint data structure
+diff --git a/include/linux/of.h b/include/linux/of.h
+index d72f01009297..21e6323de0f3 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -280,6 +280,7 @@ extern struct device_node *of_get_child_by_name(const struct device_node *node,
 
-Note this is a fix targeted for 4.10 to make the system stable and various users reported some severe
-crash now the system has more drivers and read-world use-cases are running on Amlogic SoCs.
+ /* cache lookup */
+ extern struct device_node *of_find_next_cache_node(const struct device_node *);
++extern int of_find_last_cache_level(unsigned int cpu);
+ extern struct device_node *of_find_node_with_property(
+ 	struct device_node *from, const char *prop_name);
 
-Please feel free to push whatever changes that makes this memory reservation more coherent for 4.11,
-and respect the behavior of already shipped u-boot version and mainline U-Boot, UEFI, whatever...
-
-Neil
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
