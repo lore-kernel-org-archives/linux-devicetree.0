@@ -1,56 +1,46 @@
-From: Yannick Fertre <yannick.fertre@st.com>
-Subject: [PATCH v1 4/7] drm/panel: simple: Add support for Ampire
- AM-480272H3TMQW-T01H
-Date: Mon, 16 Jan 2017 14:29:01 +0100
-Message-ID: <1484573344-11609-5-git-send-email-yannick.fertre@st.com>
-References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
+From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCHv3 RESEND 5/8] ARM: dts: stm32: enable RTC on stm32f429-disco
+Date: Mon, 16 Jan 2017 14:29:46 +0100
+Message-ID: <1484573388-590-3-git-send-email-amelie.delaunay@st.com>
+References: <1484573388-590-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484573388-590-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHNpbXBsZS1wYW5lbCBzdXBwb3J0IGZvciB0aGUgQW1waXJlIEFNLTQ4MDI3MkgzVE1RVy1U
-MDFILAp3aGljaCBpcyBhIDQuMyIgV1FWR0EgcGFuZWwuCgpTaWduZWQtb2ZmLWJ5OiBZYW5uaWNr
-IEZlcnRyZSA8eWFubmljay5mZXJ0cmVAc3QuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9wYW5lbC1zaW1wbGUuYyB8IDI5ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZp
-bGUgY2hhbmdlZCwgMjkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1w
-bGUuYwppbmRleCAwNmFhZjc5Li5lZTVkMmZmIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-cGFuZWwvcGFuZWwtc2ltcGxlLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNp
-bXBsZS5jCkBAIC0zODYsNiArMzg2LDMyIEBAIHN0YXRpYyB2b2lkIHBhbmVsX3NpbXBsZV9zaHV0
-ZG93bihzdHJ1Y3QgZGV2aWNlICpkZXYpCiAJcGFuZWxfc2ltcGxlX2Rpc2FibGUoJnBhbmVsLT5i
-YXNlKTsKIH0KIAorc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxheV9tb2RlIGFtcGlyZV9h
-bV80ODAyNzJoM3RtcXdfdDAxaF9tb2RlID0geworCS5jbG9jayA9IDkwMDAsCisJLmhkaXNwbGF5
-ID0gNDgwLAorCS5oc3luY19zdGFydCA9IDQ4MCArIDIsCisJLmhzeW5jX2VuZCA9IDQ4MCArIDIg
-KyA0MSwKKwkuaHRvdGFsID0gNDgwICsgMiArIDQxICsgMiwKKwkudmRpc3BsYXkgPSAyNzIsCisJ
-LnZzeW5jX3N0YXJ0ID0gMjcyICsgMiwKKwkudnN5bmNfZW5kID0gMjcyICsgMiArIDEwLAorCS52
-dG90YWwgPSAyNzIgKyAyICsgMTAgKyAyLAorCS52cmVmcmVzaCA9IDYwLAorCS5mbGFncyA9IERS
-TV9NT0RFX0ZMQUdfUEhTWU5DIHwgRFJNX01PREVfRkxBR19QVlNZTkMsCit9OworCitzdGF0aWMg
-Y29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYW1waXJlX2FtXzQ4MDI3MmgzdG1xd190MDFoID0gewor
-CS5tb2RlcyA9ICZhbXBpcmVfYW1fNDgwMjcyaDN0bXF3X3QwMWhfbW9kZSwKKwkubnVtX21vZGVz
-ID0gMSwKKwkuYnBjID0gOCwKKworCS5zaXplID0geworCQkud2lkdGggPSAxMDUsCisJCS5oZWln
-aHQgPSA2NywKKwl9LAorCS5idXNfZm9ybWF0ID0gTUVESUFfQlVTX0ZNVF9SR0I4ODhfMVgyNCwK
-K307CisKIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBhbXBpcmVfYW04MDA0
-ODByM3RtcXdhMWhfbW9kZSA9IHsKIAkuY2xvY2sgPSAzMzMzMywKIAkuaGRpc3BsYXkgPSA4MDAs
-CkBAIC0xNzE1LDYgKzE3NDEsOSBAQCBzdGF0aWMgdm9pZCBwYW5lbF9zaW1wbGVfc2h1dGRvd24o
-c3RydWN0IGRldmljZSAqZGV2KQogCiBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBw
-bGF0Zm9ybV9vZl9tYXRjaFtdID0gewogCXsKKwkJLmNvbXBhdGlibGUgPSAiYW1waXJlLGFtLTQ4
-MDI3MmgzdG1xdy10MDFoIiwKKwkJLmRhdGEgPSAmYW1waXJlX2FtXzQ4MDI3MmgzdG1xd190MDFo
-LAorCX0sIHsKIAkJLmNvbXBhdGlibGUgPSAiYW1waXJlLGFtODAwNDgwcjN0bXF3YTFoIiwKIAkJ
-LmRhdGEgPSAmYW1waXJlX2FtODAwNDgwcjN0bXF3YTFoLAogCX0sIHsKLS0gCjEuOS4xCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+This patch enables RTC on stm32f429-disco with LSI as clock source because
+X2 crystal for LSE is not fitted by default.
+
+Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429-disco.dts | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index 7d0415e..9222b9f 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -94,6 +94,12 @@
+ 	clock-frequency = <8000000>;
+ };
+ 
++&rtc {
++	assigned-clocks = <&rcc 1 CLK_RTC>;
++	assigned-clock-parents = <&rcc 1 CLK_LSI>;
++	status = "okay";
++};
++
+ &usart1 {
+ 	pinctrl-0 = <&usart1_pins_a>;
+ 	pinctrl-names = "default";
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
