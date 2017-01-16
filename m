@@ -1,71 +1,44 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Mon, 16 Jan 2017 21:45:10 +0100
-Message-ID: <CACna6rwLaS_i+yEyUsaH8hZZ7y=EA-UK-BHz7m258vfeYuxbNg@mail.gmail.com>
-References: <20170116133503.13887-1-u.kleine-koenig@pengutronix.de>
- <CACna6ryLDwr0S=e-uUt+ZGcY8mNDnUtBPg_RmqtSVBziJkZd5w@mail.gmail.com> <20170116194154.v2p2gbyvvfb5bwe6@pengutronix.de>
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: dts: am335x-sl50: Update to new hardware
+Date: Mon, 16 Jan 2017 21:53:46 +0100
+Message-ID: <CAFqH_50s3oMsMK_QPFSKfOdrQ5gLcPp_PNM2emWfXO086_T8oQ@mail.gmail.com>
+References: <20170116165736.17197-1-enric.balletbo@collabora.com> <20170116174149.GE7403@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170116194154.v2p2gbyvvfb5bwe6-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170116174149.GE7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 January 2017 at 20:41, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Mon, Jan 16, 2017 at 02:55:01PM +0100, Rafa=C5=82 Mi=C5=82ecki wrote:
->> On 16 January 2017 at 14:35, Uwe Kleine-K=C3=B6nig
->> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > The MR25 family doesn't support JEDEC, so they need explicit mentionin=
-g
->> > in the list of supported spi IDs. This makes it possible to add these
->> > using for example:
->> >
->> >         compatible =3D "everspin,mr25h40";
->> >
->> > Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> > ---
->> > Hello,
->> >
->> > independent of the decision if -nonjedec is ok for m25p, this is neede=
-d
->> > to make Everspin's MRAMs work.
->> >
->> > Best regards
->> > Uwe
->> >
->> >  drivers/mtd/devices/m25p80.c | 5 +++++
->> >  1 file changed, 5 insertions(+)
->> >
->> > diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80=
-.c
->> > --- a/drivers/mtd/devices/m25p80.c
->> > +++ b/drivers/mtd/devices/m25p80.c
->> > @@ -305,6 +305,11 @@ static const struct spi_device_id m25p_ids[] =3D =
-{
->> >         {"m25p40-nonjedec"},    {"m25p80-nonjedec"},    {"m25p16-nonje=
-dec"},
->> >         {"m25p32-nonjedec"},    {"m25p64-nonjedec"},    {"m25p128-nonj=
-edec"},
->> >
->> > +       /* Everspin MRAMs without JEDEC support */
->> > +       { "mr25h256" }, /* 256 kib, 40 MHz */
+Hi Tony,
+
+2017-01-16 18:41 GMT+01:00 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
+> * Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> [170116 08:58]:
+>> Hi Tony,
 >>
->> A trivial thing: I think it should be Kib
->> https://en.wikipedia.org/wiki/Binary_prefix
+>> The following patches updates the device tree file for the SL50 device, there
+>> are few v1 boards and IMHO doesn't make sense to maintain the device tree
+>> for these old devices, so mostly of the updates are related to changes done in
+>> the next hardware revision v2 (the one that will go out).
 >
-> Oh, really? 10^3 =3D k and 2^10 =3D Ki, stange. Should I resend for that?
+> This is only if the v1 boards are company internal and can be easily
+> replaced. As long as that's the case I'm fine with that.
+>
 
-I don't think I understand you now. This is 262'144b device. You most
-likely want to divide it by 1024 and use Kib then, right?
+Yes thats the case, I don't expect see v1 board outside.
 
-So it should be just 256 Kib instead of 256 kib.
+Regards,
+  Enric
 
---=20
-Rafa=C5=82
+> Regards,
+>
+> Tony
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
