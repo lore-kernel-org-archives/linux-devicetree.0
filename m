@@ -1,136 +1,152 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Mon, 16 Jan 2017 14:19:02 +0530
-Message-ID: <587C88FE.2040900@ti.com>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-type-adjustment" for INCR burst type
+Date: Mon, 16 Jan 2017 10:50:23 +0200
+Message-ID: <87tw8zo0c0.fsf@linux.intel.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com> <1482139554-13618-2-git-send-email-jerry.huang@nxp.com> <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop> <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com> <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com> <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+In-Reply-To: <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
+To: Jerry Huang <jerry.huang@nxp.com>, Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
+
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+
 
 Hi,
 
-On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
-> Qualcomm chipsets have QMP phy controller that provides
-> support to a number of controller, viz. PCIe, UFS, and USB.
-> Adding dt binding information for the same.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Changes since v3:
->  - Added #clock-cells = <1>, indicating that phy is a clock provider.
-> 
-> Changes since v2:
->  - Removed binding for "ref_clk_src" since we don't request this
->    clock in the driver.
->  - Addressed s/ref_clk/ref. Don't need to add '_clk' suffix to clock names.
->  - Using 'phy' for the node name.
-> 
-> Changes since v1:
->  - New patch, forked out of the original driver patch:
->    "phy: qcom-qmp: new qmp phy driver for qcom-chipsets"
->  - Added 'Acked-by' from Rob.
->  - Updated bindings to include mem resource as a list of
->    offset - length pair for serdes block and for each lane.
->  - Added a new binding for 'lane-offsets' that contains offsets
->    to tx, rx and pcs blocks from each lane base address.
-> 
->  .../devicetree/bindings/phy/qcom-qmp-phy.txt       | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> new file mode 100644
-> index 000000000000..6f510fe48f46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-> @@ -0,0 +1,76 @@
-> +Qualcomm QMP PHY controller
-> +===========================
-> +
-> +QMP phy controller supports physical layer functionality for a number of
-> +controllers on Qualcomm chipsets, such as, PCIe, UFS, and USB.
-> +
-> +Required properties:
-> + - compatible: compatible list, contains:
-> +	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
-> +	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996.
-> + - reg: list of offset and length pair of the PHY register sets.
-> +	at index 0: offset and length of register set for PHY common
-> +		    serdes block.
-> +	from index 1 - N: offset and length of register set for each lane,
-> +			  for N number of phy lanes (ports).
-> + - lane-offsets: array of offsets to tx, rx and pcs blocks for phy lanes.
-> + - #phy-cells: must be 1
-> +    - Cell after phy phandle should be the port (lane) number.
-> + - #clock-cells: must be 1
-> +    - Phy pll outputs a bunch of clocks for Tx, Rx and Pipe
-> +      interface (for pipe based PHYs). These clock are then gate-controlled
-> +      by gcc.
-> + - clocks: a list of phandles and clock-specifier pairs,
-> +	   one for each entry in clock-names.
-> + - clock-names: must be "cfg_ahb" for phy config clock,
-> +			"aux" for phy aux clock,
-> +			"ref" for 19.2 MHz ref clk,
-> +			"pipe<port-number>" for pipe clock specific to
-> +			each port/lane (Optional).
-> + - resets: a list of phandles and reset controller specifier pairs,
-> +	   one for each entry in reset-names.
-> + - reset-names: must be "phy" for reset of phy block,
-> +			"common" for phy common block reset,
-> +			"cfg" for phy's ahb cfg block reset (Optional).
-> +			"port<port-number>" for reset specific to
-> +			each port/lane (Optional).
-> + - vdda-phy-supply: Phandle to a regulator supply to PHY core block.
-> + - vdda-pll-supply: Phandle to 1.8V regulator supply to PHY refclk pll block.
-> +
-> +Optional properties:
-> + - vddp-ref-clk-supply: Phandle to a regulator supply to any specific refclk
-> +			pll block.
-> +
-> +Example:
-> +	pcie_phy: phy@34000 {
-> +		compatible = "qcom,msm8996-qmp-pcie-phy";
-> +		reg = <0x034000 0x48f>,
-> +			<0x035000 0x5bf>,
-> +			<0x036000 0x5bf>,
-> +			<0x037000 0x5bf>;
-> +				/* tx, rx, pcs */
-> +		lane-offsets = <0x0 0x200 0x400>;
-> +		#phy-cells = <1>;
-> +		#clock-cells = <1>;
-> +
-> +		clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-> +			<&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-> +			<&gcc GCC_PCIE_CLKREF_CLK>,
-> +			<&gcc GCC_PCIE_0_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_1_PIPE_CLK>,
-> +			<&gcc GCC_PCIE_2_PIPE_CLK>;
-> +		clock-names = "aux", "cfg_ahb", "ref",
-> +				"pipe0", "pipe1", "pipe2";
-> +
-> +		vdda-phy-supply = <&pm8994_l28>;
-> +		vdda-pll-supply = <&pm8994_l12>;
-> +
-> +		resets = <&gcc GCC_PCIE_PHY_BCR>,
-> +			<&gcc GCC_PCIE_PHY_COM_BCR>,
-> +			<&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>,
-> +			<&gcc GCC_PCIE_0_PHY_BCR>,
-> +			<&gcc GCC_PCIE_1_PHY_BCR>,
-> +			<&gcc GCC_PCIE_2_PHY_BCR>;
-> +		reset-names = "phy", "common", "cfg",
-> +				"lane0", "lane1", "lane2";
+Jerry Huang <jerry.huang@nxp.com> writes:
+>> > On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com>
+>> wrote:
+>> > > Hi, Rob,
+>> > >> -----Original Message-----
+>> > >> From: Rob Herring [mailto:robh@kernel.org]
+>> > >> Sent: Friday, December 23, 2016 2:45 AM
+>> > >> To: Jerry Huang <jerry.huang@nxp.com>
+>> > >> Cc: balbi@kernel.org; mark.rutland@arm.com;
+>> > >> catalin.marinas@arm.com; will.deacon@arm.com;
+>> > >> linux@armlinux.org.uk; devicetree@vger.kernel.org;
+>> > >> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+>> > >> kernel@lists.infradead.org
+>> > >> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+>> > >> incr-burst- type-adjustment" for INCR burst type
+>> > >>
+>> > >> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
+>> > >> > New property "snps,incr-burst-type-adjustment =3D <x>, <y>" for
+>> > >> > USB3.0
+>> > >> DWC3.
+>> > >> > Field "x": 1/0 - undefined length INCR burst type enable or not;
+>> > >> > Field
+>> > >> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst
+>> type.
+>> > >> >
+>> > >> > While enabling undefined length INCR burst type and INCR16 burst
+>> > >> > type, get better write performance on NXP Layerscape platform:
+>> > >> > around 3% improvement (from 364MB/s to 375MB/s).
+>> > >> >
+>> > >> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
+>> > >> > ---
+>> > >> > Changes in v3:
+>> > >> >   - add new property for INCR burst in usb node.
+>> > >> >
+>> > >> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
+>> > >> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
+>> > >> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
+>> > >> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
+>> > >> >  4 files changed, 11 insertions(+)
+>> > >> >
+>> > >> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > >> > b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > >> > index e3e6983..8c405a3 100644
+>> > >> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > >> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+>> > >> > @@ -55,6 +55,10 @@ Optional properties:
+>> > >> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
+>> > >> >
+>> > >> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to
+>> > >> > be
+>> > >> reallocated.
+>> > >> > + - snps,incr-burst-type-adjustment: Value for INCR burst type of
+>> > >> GSBUSCFG0
+>> > >> > +   register, undefined length INCR burst type enable and INCRx t=
+ype.
+>> > >> > +   First field is for undefined length INCR burst type enable or=
+ not.
+>> > >> > +   Second field is for largest INCRx type enabled.
+>> > >>
+>> > >> Why do you need the first field? Is the 2nd field used if the 1st i=
+s 0?
+>> > >> If not, then just use the presence of the property to enable or not.
+>> > > The first field is one switch.
+>> > > When it is 1, means undefined length INCR burst type enabled, we can
+>> > > use
+>> > any length less than or equal to the largest-enabled burst length of
+>> > INCR4/8/16/32/64/128/256.
+>> > > When it is zero, means INCRx burst mode enabled, we can use one
+>> > > fixed
+>> > burst length of 1/4/8/16/32/64/128/256 byte.
+>> > > So, the 2nd field is used if the 1st is 0, we need to select one
+>> > > largest burst
+>> > length the USB controller can support.
+>> > > If we don't want to change the value of this register (use the
+>> > > default value),
+>> > we don't need to add this property to usb node.
+>> >
+>> > Just make this a single value with 0 meaning INCR and 4/8/16/etc being
+>> INCRx.
+>> Maybe, I didn't describe it clearly.
+>> According to DWC3 spec, the value "0" of field INCRBrstEna means INCRx
+>> burst mode, 1 means INCR burst mode.
+>> Regardless of the value of INCRBrstEna [bit0], we need to modify the oth=
+er
+>> field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform suppor=
+ted.
+>> Ad you mentioned, if we just use a single value with 0 meaning INCR and
+>> 4/8/16/etc being INCRx.
+>> I understand totally that when it is none-zero, we can use it for INCR b=
+urst
+>> mode.
+>> Then, when it is 0, how to select the INCRx value?
+>>=20
+>> So, I think we still need two vaue to specify INCRBrstEna and INCRx burst
+>> type.
+> Hi, Balbi,=20
+> It seems there is no feedback for my comment, so these patches can be acc=
+epted?
 
-Each lane has a separate clock, separate reset.. why not create sub-nodes for
-each lane?
+probably not, we need to really understand what information we need so
+it can be described properly. The last thing we want is unnecessary DT
+properties.
 
-Thanks
-Kishon
+It seems to me that we can extrapolate INCRBrstEna based on which burst
+modes are enabled. If only 0 is passed, then that bit should be 1, if 0
+and any other size is passed, then that bit should be 0, no?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlh8iU8ACgkQzL64meEa
+mQYd0Q//TCxyiafM2b2SBRr30DhoqSB7Oh/yckjnL6YaWQzzmIXyv/ylWpRmjCYC
+0nkd4SETooSZIHxLLHhiDwx1MycZcXzV+vHgaBqfbfUTgdXyuRVuOfUeK3YZ8JjJ
+58lz4Tj83GC8JZdyq54qHqsyUjzIqdrjqxoDtDctWM0rq8diPNl8EFQlJNZ9Dpxo
+AsDEbE+C1iggQGhMJuecvHpeBPS9pB/bF5kN0p5iy6XzgAG6K9prn1YHWhMkUrM+
+l0sCpcBr5jWqECulTW71rhv+FkGrzpsBzrPK3XaBK3EHYEQsD8bRcBPY3p+5IHfV
+Xc8MscQws8yWsi2VoEB3s7GallcbGbI+02mgb/u8kCwWHgmq/GfdYP+chOZSASIA
+oDq8My54jYOTuPgSGlfzD84h27R0zUK/z7itSKlLcpvmyI12DA43in9H3oJrgIMg
+GEVit2sIAxg4fys9vUrTS3lH05tbt2gzdzilSQAJE24jkTBhmsk0HohQ/Zgn2Y+v
+9xmAqtqml7iNdIhB8qFivBCB/echR/FnA1upYlYKxK+LlxQeVBjPvYnfuZ6YlUY4
+PSAEooquNLSCC+msvdstYW87CvQ+fkPYLBePF6UBr7FKqEXbp1lOOW+4tAGadACG
+XLwBWQ/mOzqXmcyc9w4HiZ4CMXuGL4VQmve/XqbiAALzFs/BE5s=
+=dMNt
+-----END PGP SIGNATURE-----
+--=-=-=--
