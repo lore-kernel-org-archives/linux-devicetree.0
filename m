@@ -1,101 +1,237 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 09/37] PCI: dwc: designware: Parse *num-lanes* property in
- dw_pcie_setup_rc
-Date: Mon, 16 Jan 2017 10:23:10 +0000
-Message-ID: <3f9d931f-a57f-2ea7-b821-ea9846ad0aa4@synopsys.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-10-git-send-email-kishon@ti.com>
- <c3c55af3-29d1-dc59-3ae4-9a4132c99092@synopsys.com> <587C57FD.7050601@ti.com>
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [v2 2/3] ARM: dts: STM32 Add USB FS host mode support
+Date: Mon, 16 Jan 2017 08:26:21 -0200
+Message-ID: <CAF3+TqcD9v=Z4BAprMoWNnDddmTkzKBAb8Yz1XnHLo0_2-995g@mail.gmail.com>
+References: <20170116020958.62767-1-bruherrera@gmail.com> <20170116020958.62767-2-bruherrera@gmail.com>
+ <f1fac058-6c03-595a-0d67-a89fcf70d7cc@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <587C57FD.7050601-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <f1fac058-6c03-595a-0d67-a89fcf70d7cc-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Alex,
 
-Hi,
-
-Às 5:19 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
-> Hi,
-> 
-> On Friday 13 January 2017 10:43 PM, Joao Pinto wrote:
->> Hi,
+On Mon, Jan 16, 2017 at 6:57 AM, Alexandre Torgue
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
+> Hi Bruno,
+>
+> On 01/16/2017 03:09 AM, Bruno Herrera wrote:
 >>
->> Às 10:25 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
->>> *num-lanes* dt property is parsed in dw_pcie_host_init. However
->>> *num-lanes* property is applicable to both root complex mode and
->>> endpoint mode. As a first step, move the parsing of this property
->>> outside dw_pcie_host_init. This is in preparation for splitting
->>> pcie-designware.c to pcie-designware.c and pcie-designware-host.c
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>> ---
->>>  drivers/pci/dwc/pcie-designware.c |   18 +++++++++++-------
->>>  drivers/pci/dwc/pcie-designware.h |    1 -
->>>  2 files changed, 11 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/pci/dwc/pcie-designware.c b/drivers/pci/dwc/pcie-designware.c
->>> index 00a0fdc..89cdb6b 100644
->>> --- a/drivers/pci/dwc/pcie-designware.c
->>> +++ b/drivers/pci/dwc/pcie-designware.c
->>> @@ -551,10 +551,6 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>  		}
->>>  	}
->>>  
->>> -	ret = of_property_read_u32(np, "num-lanes", &pci->lanes);
->>> -	if (ret)
->>> -		pci->lanes = 0;
->>> -
->>>  	ret = of_property_read_u32(np, "num-viewport", &pci->num_viewport);
->>>  	if (ret)
->>>  		pci->num_viewport = 2;
->>> @@ -751,18 +747,26 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->>>  
->>>  void dw_pcie_setup_rc(struct pcie_port *pp)
->>>  {
->>> +	int ret;
->>> +	u32 lanes;
->>>  	u32 val;
->>>  	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
->>> +	struct device *dev = pci->dev;
->>> +	struct device_node *np = dev->of_node;
->>>  
->>>  	/* get iATU unroll support */
->>>  	pci->iatu_unroll_enabled = dw_pcie_iatu_unroll_enabled(pci);
->>>  	dev_dbg(pci->dev, "iATU unroll: %s\n",
->>>  		pci->iatu_unroll_enabled ? "enabled" : "disabled");
->>>  
->>> +	ret = of_property_read_u32(np, "num-lanes", &lanes);
->>> +	if (ret)
->>> +		lanes = 0;
+>> This patch adds the USB pins and nodes for USB HS/FS cores working at FS
+>> speed,
+>> using embedded PHY.
 >>
->> You moved from host_init to root complex setup function, which in my opinion did
->> not improve (in this scope).
+>> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+>
+> Sorry, but what is patch 1 & pacth 3 status ?
+
+My bad, I'll add the status of the patch series version 3.
+>
+> For this one, can split it in 3 patches (one patch for SOC and one for each
+> board) please.
+>
+
+No problem.
+>
+>
+>> ---
+>>  arch/arm/boot/dts/stm32f429-disco.dts | 30 ++++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/stm32f429.dtsi      | 35
+>> ++++++++++++++++++++++++++++++++++-
+>>  arch/arm/boot/dts/stm32f469-disco.dts | 30 ++++++++++++++++++++++++++++++
+>>  3 files changed, 94 insertions(+), 1 deletion(-)
 >>
->> I suggest that instead of making so much intermediary patches, which is nice to
->> understand your development sequence, but hard to review. Wouldn't be better to
->> condense some of the patches? We would have a cloear vision of the final product :)
-> 
-> I thought the other way. If squashing patches is easier to review, I'll do it.
+>> diff --git a/arch/arm/boot/dts/stm32f429-disco.dts
+>> b/arch/arm/boot/dts/stm32f429-disco.dts
+>> index 7d0415e..374c5ed 100644
+>> --- a/arch/arm/boot/dts/stm32f429-disco.dts
+>> +++ b/arch/arm/boot/dts/stm32f429-disco.dts
+>> @@ -88,6 +88,16 @@
+>>                         gpios = <&gpioa 0 0>;
+>>                 };
+>>         };
+>> +
+>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>> +       vcc5v_otg: vcc5v-otg-regulator {
+>> +               compatible = "regulator-fixed";
+>> +               gpio = <&gpioc 4 0>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>> +               regulator-name = "vcc5_host1";
+>> +               regulator-always-on;
+>> +       };
+>>  };
+>>
+>>  &clk_hse {
+>> @@ -99,3 +109,23 @@
+>>         pinctrl-names = "default";
+>>         status = "okay";
+>>  };
+>> +
+>> +&usbotg_hs {
+>> +       compatible = "st,stm32-fsotg", "snps,dwc2";
+>> +       dr_mode = "host";
+>> +       pinctrl-0 = <&usbotg_fs_pins_b>;
+>> +       pinctrl-names = "default";
+>> +       status = "okay";
+>> +};
+>> +
+>> +&pinctrl {
+>> +       usb-host {
+>> +               usbotg_pwren_h: usbotg-pwren-h {
+>> +                       pins {
+>> +                               pinmux = <STM32F429_PC4_FUNC_GPIO>;
+>> +                               bias-disable;
+>> +                               drive-push-pull;
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>
+>
+> Pinctrl muxing has to be defined/declared in stm32f429.dtsi
+>
+This is board specific logic and it vary from board to board, should
+it be defined here?
+>
+>
+>> diff --git a/arch/arm/boot/dts/stm32f429.dtsi
+>> b/arch/arm/boot/dts/stm32f429.dtsi
+>> index e4dae0e..bc07aa8 100644
+>> --- a/arch/arm/boot/dts/stm32f429.dtsi
+>> +++ b/arch/arm/boot/dts/stm32f429.dtsi
+>> @@ -206,7 +206,7 @@
+>>                         reg = <0x40007000 0x400>;
+>>                 };
+>>
+>> -               pin-controller {
+>> +               pinctrl: pin-controller {
+>>                         #address-cells = <1>;
+>>                         #size-cells = <1>;
+>>                         compatible = "st,stm32f429-pinctrl";
+>> @@ -316,6 +316,30 @@
+>>                                 };
+>>                         };
+>>
+>> +                       usbotg_fs_pins_a: usbotg_fs@0 {
+>> +                               pins {
+>> +                                       pinmux =
+>> <STM32F429_PA10_FUNC_OTG_FS_ID>,
+>> +
+>> <STM32F429_PA11_FUNC_OTG_FS_DM>,
+>> +
+>> <STM32F429_PA12_FUNC_OTG_FS_DP>;
+>> +                                       bias-disable;
+>> +                                       drive-push-pull;
+>> +                                       slew-rate = <2>;
+>> +                               };
+>> +                       };
+>> +
+>> +                       usbotg_fs_pins_b: usbotg_fs@1 {
+>> +                               pins {
+>> +                                       pinmux =
+>> <STM32F429_PB12_FUNC_OTG_HS_ID>,
+>> +
+>> <STM32F429_PB14_FUNC_OTG_HS_DM>,
+>> +
+>> <STM32F429_PB15_FUNC_OTG_HS_DP>;
+>> +                                       bias-disable;
+>> +                                       drive-push-pull;
+>> +                                       slew-rate = <2>;
+>> +                               };
+>> +                       };
+>> +
+>> +
+>> +
+>>                         usbotg_hs_pins_a: usbotg_hs@0 {
+>>                                 pins {
+>>                                         pinmux =
+>> <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+>> @@ -420,6 +444,15 @@
+>>                         status = "disabled";
+>>                 };
+>>
+>> +               usbotg_fs: usb@50000000 {
+>> +                       compatible = "st,stm32f4xx-fsotg", "snps,dwc2";
+>> +                       reg = <0x50000000 0x40000>;
+>> +                       interrupts = <67>;
+>> +                       clocks = <&rcc 0 39>;
+>> +                       clock-names = "otg";
+>> +                       status = "disabled";
+>> +               };
+>> +
+>>                 rng: rng@50060800 {
+>>                         compatible = "st,stm32-rng";
+>>                         reg = <0x50060800 0x400>;
+>> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts
+>> b/arch/arm/boot/dts/stm32f469-disco.dts
+>> index 8877c00..8ae6763 100644
+>> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+>> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+>> @@ -68,6 +68,17 @@
+>>         soc {
+>>                 dma-ranges = <0xc0000000 0x0 0x10000000>;
+>>         };
+>> +
+>> +       /* This turns on vbus for otg for host mode (dwc2) */
+>> +       vcc5v_otg: vcc5v-otg-regulator {
+>> +               compatible = "regulator-fixed";
+>> +               enable-active-high;
+>> +               gpio = <&gpiob 2 0>;
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&usbotg_pwren_h>;
+>> +               regulator-name = "vcc5_host1";
+>> +               regulator-always-on;
+>> +       };
+>>  };
+>>
+>>  &rcc {
+>> @@ -81,3 +92,22 @@
+>>  &usart3 {
+>>         status = "okay";
+>>  };
+>> +
+>> +&usbotg_fs {
+>> +       dr_mode = "host";
+>> +       pinctrl-0 = <&usbotg_fs_pins_a>;
+>> +       pinctrl-names = "default";
+>> +       status = "okay";
+>> +};
+>> +
+>> +&pinctrl {
+>> +       usb-host {
+>> +               usbotg_pwren_h: usbotg-pwren-h {
+>> +                       pins {
+>> +                               pinmux = <STM32F429_PB2_FUNC_GPIO>;
+>> +                               bias-disable;
+>> +                               drive-push-pull;
+>> +                       };
+>> +               };
+>> +       };
+>> +};
+>
+> Same. Note that if you have 2 configuration for one feature (like it is here
+> for "usbotg_pwren_h"), you could index it. Not that I'm adding a dedidacted
+> pinctroller for stm32f469.
+>
+Sorry, but I dont know what you mean by index here.
+The usbotg_pwren_h (VBUS ENABLE) is attached in different port/pins
+for each board.
 
-I understand. To break it in small pieces is good to understand clearly what is
-done and how was done, but I would break too much. That's a personal opinion of
-course, lets see what others say :).
+Br.,
 
-Thanks,
-Joao
 
-> 
-> Btw, thanks for reviewing.
-> 
-> Cheers
-> Kishon
-> 
-
+> Br
+> Alex
+>>
+>>
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
