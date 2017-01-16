@@ -1,77 +1,142 @@
-From: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 11/37] PCI: dwc: Split pcie-designware.c into host and
- core files
-Date: Mon, 16 Jan 2017 10:27:58 +0000
-Message-ID: <0a16c862-312f-655e-3d66-bdb0c1f78584@synopsys.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-12-git-send-email-kishon@ti.com>
- <4a89fb45-af84-d660-5ef0-12227b141cda@synopsys.com> <587C586C.6070003@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: document renesas-ostm timer
+Date: Mon, 16 Jan 2017 11:30:19 +0100
+Message-ID: <CAMuHMdVC2BV6=jT1CZ+X92=_th-cEc0=hsiyRYxU5qMLoMVPMw@mail.gmail.com>
+References: <20170112185952.2780-1-chris.brandt@renesas.com>
+ <20170112185952.2780-2-chris.brandt@renesas.com> <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
+ <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <587C586C.6070003-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
-Hi,
-
-Às 5:21 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
-> Hi Joao,
-> 
-> On Friday 13 January 2017 10:19 PM, Joao Pinto wrote:
->> Às 10:26 AM de 1/12/2017, Kishon Vijay Abraham I escreveu:
->>> Split pcie-designware.c into pcie-designware-host.c that contains
->>> the host specific parts of the driver and pcie-designware.c that
->>> contains the parts used by both host driver and endpoint driver.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>> ---
->>>  drivers/pci/dwc/Makefile               |    2 +-
->>>  drivers/pci/dwc/pcie-designware-host.c |  619 ++++++++++++++++++++++++++++++++
->>>  drivers/pci/dwc/pcie-designware.c      |  613 +------------------------------
->>>  drivers/pci/dwc/pcie-designware.h      |    8 +
->>>  4 files changed, 634 insertions(+), 608 deletions(-)
->>>  create mode 100644 drivers/pci/dwc/pcie-designware-host.c
->>>
->>> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
->>> index 7d27c14..3b57e55 100644
->>> --- a/drivers/pci/dwc/Makefile
->>> +++ b/drivers/pci/dwc/Makefile
->>> @@ -1,4 +1,4 @@
+On Sat, Jan 14, 2017 at 4:30 AM, Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Friday, January 13, 2017, Geert Uytterhoeven wrote:
+>> > +The OSTM comes with 2 independent channels.
+>> > +We will use the first channel (OSTM0) as a free running clocksource
+>> > +and the second channel (OSTM1) as a interrupt driven clock event.
+>> > +
+>> > +Additionally we will use the clocksource channel (OTSM0) for the
+>> > +system schedule timer sched_clock().
 >>
->> (snip...)
+>> The above two sentences are software policy, not hardware description.
+>> Hence they do not belong in the DT bindings document.
+>> You can move them to the commit description, though.
+>
+> OK.
+>
+>> > +Required Properties:
+>> > +
+>> > +  - compatible: must be one or more of the following:
+>> > +    - "renesas,ostm-r7s72100" for the r7s72100 OSTM
 >>
->>> -static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
->>> -				      int type, u64 cpu_addr, u64 pci_addr,
->>> -				      u32 size)
->>> +void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index, int type,
->>> +			       u64 cpu_addr, u64 pci_addr, u32 size)
->>>  {
->>>  	u32 retries, val;
->>>  
->>> @@ -186,220 +151,6 @@ static void dw_pcie_prog_outbound_atu(struct dw_pcie *pci, int index,
->>>  	dev_err(pci->dev, "iATU is not being enabled\n");
->>>  }
+>> Please use "renesas,r7s72100-ostm" instead, to match current practices.
+>
+> If I look at the current r7s72100.dtsi:
+>
+> compatible = "renesas,r7s72100-cpg-clocks", "renesas,rz-cpg-clocks";
+> compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+> compatible = "renesas,scif-r7s72100", "renesas,scif";
+> compatible = "renesas,rspi-r7s72100", "renesas,rspi-rz";
+> compatible = "renesas,riic-r7s72100", "renesas,riic-rz";
+> compatible = "renesas,mtu2-r7s72100", "renesas,mtu2";
+> compatible = "renesas,mmcif-r7s72100", "renesas,sh-mmcif";
+> compatible = "renesas,sdhi-r7s72100";
+>
+> Is "renesas,xxx-r7s7210" the old way, and "renesas,r7s72100-xxx" is the new way??
+
+Yes, we settled on "<vendor>,<family|soc>-<device>", per request of the
+DT maintainers.
+
+>> > +  - reg: base address and length of the registers block for each timer
+>> channel.
+>> > +    There should be 2 sets of addresses, one for each channel.
+>> > +
+>> > +  - interrupts: interrupt specifiers for the timers. There should be 2
+>> > +    interupts, one for each channel.
+>> > +
+>> > +  - clocks: a list of phandle + clock-specifier pairs, one for each
+>> entry
+>> > +    channel. There should be 2 sets, one for each channel.
 >>
->> Kishon, iATU only makes sense in The Root Complex (host), so it should be inside
->> the pcie-designware-host.
-> 
-> That is not true. Outbound ATU should be programmed to access host side buffers
-> and inbound ATU should be programmed for the host to access EP mem space.
+>> Are the channels truly independent? If yes, I think it's better to have
+>> two separate device nodes, one for each channel.
+>> Each channel has its own module clock, so using separate devices means
+>> Runtime PM can manage both channels through their module clocks as soon as
+>> you add a "power-domains" property pointing to the clock domain controller.
+>
+> Yes, technically they are independent channels.
+> The way the driver is currently written, 1 instance of the driver uses 2 channels
+> for different things. Ch0 will be set up as a 'clocksource', and ch1 will be set up
+> as a 'clock event'.
+>
+> As in:
+>
+> static int __init ostm_timer_init(struct ostm_device *ostm)
+> {
+>         int ret = 0;
+>
+>         /* ostm0 will be clock source */
+>         ret = ostm_init_clksrc(ostm);
+>         if (ret)
+>                 goto err;
+>
+>         /* use ostm0 as system scheduling clock */
+>         ret = ostm_init_sched_clock(&ostm->clksrc);
+>         if (ret)
+>                 goto err;
+>
+>         /* ostm1 will be clock event */
+>         ret = ostm_init_clkevt(ostm);
+> err:
+>         return ret;
+> }
+>
+>
+>
+> Do you think it would be better if a driver instance only does 1 thing: Either
+> 'clocksource' or 'clock event'??
+> Then, I would make 2 ostm nodes and pass in the mode I would like it operate in?
+>
+> For example:
+>
+> &ostm0 {
+>         mode = "clocksource";
+>         status = "okay";
+> };
+>
+> &ostm1 {
+>         mode = "clock-event";
+>         status = "okay";
+> };
 
-Sorry, I was not clear enough. What I was trying to suggest is, since the ATU
-programming is done by the host, wouldn't be better to include it in the
-pcie-designware-host? It is just an architectural detail.
+Again, that's software policy, not hardware description.
 
-> 
-> Thanks
-> Kishon
-> 
+As they're independent channels, it doesn't matter which one is used for
+which function, right?
 
+You could use the first probed channel for the most important function
+(clocksource?), and the second one for the other function (clockevent).
+So there's no need for specifying this in DT.
+
+Does that make sense?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
