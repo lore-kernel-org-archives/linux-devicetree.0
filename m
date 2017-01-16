@@ -1,12 +1,12 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3 in MUSB mode
-Date: Tue, 17 Jan 2017 03:14:46 +0800
-Message-ID: <20170116191449.50397-2-icenowy@aosc.xyz>
+Subject: [PATCH 2/4] ARM: dts: sun8i: add MUSB node to H3 SoC
+Date: Tue, 17 Jan 2017 03:14:47 +0800
+Message-ID: <20170116191449.50397-3-icenowy@aosc.xyz>
 References: <20170116191449.50397-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB5FX6TBQKGQEVSU5KJA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBCVY6TBQKGQEDJVVLVY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170116191449.50397-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,71 +19,38 @@ To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PHY0 on H3 can be wired either to MUSB controller or OHCI/EHCI
-controller.
-
-The original driver wired it to OHCI/EHCI controller; however, as the
-code to use PHY0 as OHCI/EHCI is missing, it makes the PHY fully
-unusable.
-
-Rename the register (according to its function and the name in BSP
-driver), and remove the code which wires the PHY0 to OHCI/EHCI, as MUSB
-can support both peripheral and host mode (although the host mode of
-MUSB is buggy).
-
-The register that is renamed is now unused, as its initial value is just
-MUSB mode. However, when OHCI/EHCI mode support is added, the register
-can be used again.
+As we have already H3 PHY support code to MUSB mode fixed, and the H3
+MUSB controller supported, we can now add the MUSB node to the DTSI file
+of H3.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- drivers/phy/phy-sun4i-usb.c | 25 +++++++++----------------
- 1 file changed, 9 insertions(+), 16 deletions(-)
+ arch/arm/boot/dts/sun8i-h3.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c
-index bf28a0fdd569..6b193a635c6b 100644
---- a/drivers/phy/phy-sun4i-usb.c
-+++ b/drivers/phy/phy-sun4i-usb.c
-@@ -49,7 +49,7 @@
- #define REG_PHYBIST			0x08
- #define REG_PHYTUNE			0x0c
- #define REG_PHYCTL_A33			0x10
--#define REG_PHY_UNK_H3			0x20
-+#define REG_PHY_OTGCTL			0x20
+diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
+index 08fd0860bb6b..60dd88c7fb9a 100644
+--- a/arch/arm/boot/dts/sun8i-h3.dtsi
++++ b/arch/arm/boot/dts/sun8i-h3.dtsi
+@@ -206,6 +206,19 @@
+ 			#size-cells = <0>;
+ 		};
  
- #define REG_PMU_UNK1			0x10
- 
-@@ -269,23 +269,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)
- 		writel(val & ~2, phy->pmu + REG_PMU_UNK1);
- 	}
- 
--	if (data->cfg->type == sun8i_h3_phy) {
--		if (phy->index == 0) {
--			val = readl(data->base + REG_PHY_UNK_H3);
--			writel(val & ~1, data->base + REG_PHY_UNK_H3);
--		}
--	} else {
--		/* Enable USB 45 Ohm resistor calibration */
--		if (phy->index == 0)
--			sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
-+	/* Enable USB 45 Ohm resistor calibration */
-+	if (phy->index == 0)
-+		sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);
- 
--		/* Adjust PHY's magnitude and rate */
--		sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
-+	/* Adjust PHY's magnitude and rate */
-+	sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);
- 
--		/* Disconnect threshold adjustment */
--		sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
--				    data->cfg->disc_thresh, 2);
--	}
-+	/* Disconnect threshold adjustment */
-+	sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,
-+			    data->cfg->disc_thresh, 2);
- 
- 	sun4i_usb_phy_passby(phy, 1);
- 
++		usb_otg: usb@01c19000 {
++			compatible = "allwinner,sun8i-h3-musb";
++			reg = <0x01c19000 0x0400>;
++			clocks = <&ccu CLK_BUS_OTG>;
++			resets = <&ccu RST_BUS_OTG>;
++			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "mc";
++			phys = <&usbphy 0>;
++			phy-names = "usb";
++			extcon = <&usbphy 0>;
++			status = "disabled";
++		};
++
+ 		usbphy: phy@01c19400 {
+ 			compatible = "allwinner,sun8i-h3-usb-phy";
+ 			reg = <0x01c19400 0x2c>,
 -- 
 2.11.0
