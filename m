@@ -1,61 +1,100 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: [PATCH v4 2/5] dt: bindings: i2c-mux-pca954x: Add documentation for interrupt controller
-Date: Mon, 16 Jan 2017 11:11:12 +0800
-Message-ID: <1484536275-75995-3-git-send-email-preid@electromag.com.au>
-References: <1484536275-75995-1-git-send-email-preid@electromag.com.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484536275-75995-1-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Dawei Chien <dawei.chien@mediatek.com>
+Subject: Re: [PATCH v2 6/6] arm: dts: mt2701: Add thermal device node.
+Date: Mon, 16 Jan 2017 11:44:50 +0800
+Message-ID: <1484538290.13258.3.camel@mtksdaap41>
+References: <1484296978-18572-1-git-send-email-erin.lo@mediatek.com>
+         <1484296978-18572-7-git-send-email-erin.lo@mediatek.com>
+         <c8bbd4a4-2207-44f0-4462-3761c1d6c8a9@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <c8bbd4a4-2207-44f0-4462-3761c1d6c8a9@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Erin Lo <erin.lo@mediatek.com>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Various muxes can aggregate multiple irq lines and provide a control
-register to determine the active line. Add bindings for interrupt
-controller support.
+On Fri, 2017-01-13 at 16:27 +0100, Matthias Brugger wrote:
+> 
+> On 13/01/17 09:42, Erin Lo wrote:
+> > From: Dawei Chien <dawei.chien@mediatek.com>
+> >
+> > Add thermal controller device nodes for MT2701.
+> >
+> > Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > ---
+> >  arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 43 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> > index 3847f70..c43d5f8 100644
+> > --- a/arch/arm/boot/dts/mt2701.dtsi
+> > +++ b/arch/arm/boot/dts/mt2701.dtsi
+> > @@ -89,6 +89,36 @@
+> >  		clock-output-names = "rtc32k";
+> >  	};
+> >
+> > +	thermal-zones {
+> > +		cpu_thermal: cpu_thermal {
+> > +			polling-delay-passive = <1000>; /* milliseconds */
+> > +			polling-delay = <1000>; /* milliseconds */
+> > +
+> > +			thermal-sensors = <&thermal 0>;
+> > +			sustainable-power = <1000>;
+> > +
+> > +			trips {
+> > +				threshold: trip-point@0 {
+> > +					temperature = <68000>;
+> > +					hysteresis = <2000>;
+> > +					type = "passive";
+> > +				};
+> > +
+> > +				target: trip-point@1 {
+> > +					temperature = <85000>;
+> > +					hysteresis = <2000>;
+> > +					type = "passive";
+> > +				};
+> > +
+> > +				cpu_crit: cpu_crit@0 {
+> > +					temperature = <115000>;
+> > +					hysteresis = <2000>;
+> > +					type = "critical";
+> > +				};
+> > +			};
+> > +		};
+> > +	};
+> > +
+> >  	timer {
+> >  		compatible = "arm,armv7-timer";
+> >  		interrupt-parent = <&gic>;
+> > @@ -270,6 +300,19 @@
+> >  		status = "disabled";
+> >  	};
+> >
+> > +	thermal: thermal@1100b000 {
+> > +		#thermal-sensor-cells = <0>;
+> > +		compatible = "mediatek,mt2701-thermal";
+> > +		reg = <0 0x1100b000 0 0x1000>;
+> > +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
+> > +		clock-names = "therm", "auxadc";
+> > +		resets = <&pericfg 0x10>;
+> 
+> should be MT2701_PERI_AUXADC_SW_RST, right?
+> 
+Thank you for your reminding, I didn't realize mt2701-resets.h upstream
+already, I would update on next version, thank you.
 
-Acked-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
----
- Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+resets = <&pericfg MT2701_PERI_AUXADC_SW_RST>;
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-index cf53d5f..aa09704 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-@@ -19,7 +19,14 @@ Optional Properties:
-   - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
-     children in idle state. This is necessary for example, if there are several
-     multiplexers on the bus and the devices behind them use same I2C addresses.
--
-+  - interrupt-parent: Phandle for the interrupt controller that services
-+    interrupts for this device.
-+  - interrupts: Interrupt mapping for IRQ.
-+  - interrupt-controller: Marks the device node as an interrupt controller.
-+  - #interrupt-cells : Should be two.
-+    - first cell is the pin number
-+    - second cell is used to specify flags.
-+    See also Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
- 
- Example:
- 
-@@ -29,6 +36,11 @@ Example:
- 		#size-cells = <0>;
- 		reg = <0x74>;
- 
-+		interrupt-parent = <&ipic>;
-+		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
- 		i2c@2 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +		reset-names = "therm";
+> > +		mediatek,auxadc = <&auxadc>;
+> > +		mediatek,apmixedsys = <&apmixedsys>;
+> > +	};
+> > +
+> >  	nandc: nfi@1100d000 {
+> >  		compatible = "mediatek,mt2701-nfc";
+> >  		reg = <0 0x1100d000 0 0x1000>;
+> >
