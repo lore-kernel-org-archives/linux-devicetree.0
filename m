@@ -1,184 +1,74 @@
-From: Lukasz Majewski <lukma@denx.de>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Mon, 16 Jan 2017 22:44:37 +0100
-Message-ID: <20170116224437.67b5a0c5@jawa>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
-        <587C6A40.8070608@ti.com>
-        <20170116074927.086418f4@jawa>
-        <587C8088.80905@ti.com>
-        <20170116103136.21c899ac@jawa>
-        <587C9CE6.8040001@ti.com>
-        <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] power_supply: Add support for MAX14656 USB charger
+ detector
+Date: Mon, 16 Jan 2017 23:09:42 +0100
+Message-ID: <20170116220942.6ndez745bhmczyzu@earth>
+References: <1476893089-7233-1-git-send-email-akurz@blala.de>
+ <1476893089-7233-2-git-send-email-akurz@blala.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joao Pinto <Joao.Pinto@synopsys.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="3zqtffriqv5yyy23"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1476893089-7233-2-git-send-email-akurz-3EoFODjbY6Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Kurz <akurz-3EoFODjbY6Q@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joao,
 
-> 
-> Hi,
-> 
-> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
-> > + Joao, Jingoo
-> > 
-> > Hi,
-> > 
-> > On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
-> >> Hi Kishon,
-> >>
-> >>> Hi Łukasz,
-> >>>
-> >>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
-> >>>> Hi Kishon,
-> >>>>
-> >>>>> Hi,
-> >>>>>
-> >>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
-> >>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
-> >>>>>> run with forced GEN1 speed on PCIe bus.
-> >>>>>>
-> >>>>>> This patch changes the speed explicitly on dra7 based devices
-> >>>>>> when proper device tree attribute is defined for the PCIe
-> >>>>>> controller.
-> >>>>>>
-> >>>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> >>>>>
-> >>>>> Bjorn has already queued a patch to do the same thing
-> >>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
-> >>>>
-> >>>> It seems like Bjorn only modifies CAP registers.
-> >>>
-> >>> The patch also modifies the LNKCTL2 register.
-> >>>>
-> >>>> He also needs to change register with 0x080C offset to actually
-> >>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
-> >>>
-> >>> This bit is used to initiate speed change (after the link is
-> >>> initialized in GEN1). Resetting the bit (like what you have done
-> >>> here) prevents speed change.
-> >>
-> >> This is strange, but e2e advised me to do things as I did in the
-> >> patch to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
-> >>
-> >> Link:
-> >> [1]
-> >> https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
-> >>
-> >> Both patches modify 0x5180 007C register to set GEN1 capability
-> >> (PCI_EXP_LNKCAP_SLS_2_5GB)
-> >>
-> >> The problem is with second register (in your patch):
-> >>
-> >> From SPRUHZ6G TRM:
-> >>
-> >> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
-> >> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
-> >>   description in TRM
-> >>
-> >> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
-> >> default /reset value.
-> > 
-> > The default value is 0x2 (or else none of the cards would have
-> > enumerated in GEN2)
-> >>
-> >>
-> >> Could you clarify which way to _force_ PCIe GEN1 operation is
-> >> correct? Mine shows differences in lspci output (as posted in [1]).
-> > 
-> > You'll see the difference even with the patch in Bjorn's tree ;-)
-> > 
-> > I think these are 2 different approaches to keep the link at GEN1.
-> > Joao or Jingoo, do you have any suggestion here?
-> 
-> I studied the Databook,
+--3zqtffriqv5yyy23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Could you reveal which databook do you have in mind? Is that the TRM for
-AM5728?
+Hi Alexander,
 
-> and both approaches seem to be right,
-> dependently of the Core configuration and setup.
-> 
-> The standard manual speed change sequence is:
-> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
+On Wed, Oct 19, 2016 at 06:04:49PM +0200, Alexander Kurz wrote:
+> The MAX14656 USB charger detector, also known as "AL32" is used to detect
+> the presence and capabilities of attached USB chargers. The device is
+> attached via I2C plus one interrupt line to signalize events.
+>=20
+> The device can be found in LG smartphones like LS665 and LS770, compatible
+> devices are present in 4th/5th generation Amazon Kindle readers referenced
+> in source code packages as "Maxim AL32".
+>=20
+> The initial version of this driver has been extracted from LG source code
+> package LGLS665_Android_Lollipop_LS665ZV3, enriched with information from
+> the Kindle_src_4.1.3 source code package and adapted to the current power
+> class sysfs interface. Non-Standard Apple chargers which the device may
+> detect are mapped to the USB Battery Charging Specification Revision 1.2
+> class USB_DCP.
+>=20
+> Signed-off-by: Alexander Kurz <akurz-3EoFODjbY6Q@public.gmane.org>
 
-Do you mean TRGT_LINK_SPEED @ 0x5180 00A0 ?
+Sorry for the delay, this fell between the cracks. The driver looks
+fine and I have queued it for 4.11.
 
-> b) Clear "Directed Speed Change"
+-- Sebastian
 
-CFG_DIRECTED_SPEED_CHANGE @ 0x5180 080C 
+--3zqtffriqv5yyy23
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> c) Set "Directed Speed Change"
-> 
-> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the
-> default value), it will execute LTSSM to initiate speed change to
-> Gen2 or Gen3, after link is started in Gen1, and then the bit is
-> automatically cleared.
+-----BEGIN PGP SIGNATURE-----
 
-Ok, so with default settings (after reset) we do have Gen1 speed link
-and when we enable LTSSM (with LTSSM_EN bit setting) we negotiate to
-Gen2/Gen3.
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlh9RKYACgkQ2O7X88g7
++pqMtA//dIzM3mFvvwYUMGfCBBPpnu6y6U0wzUsYBbxR6vwSl6+kyYUefw/mgDCq
+SCHv7nFCLw96bSajr7ktGoqpCHW4Ncm4vhgpvTc/y6whX9WVvdqaWzk94DgwHVlj
+c8TUY7FJ/qLVyIpVjLXYfQBZH1Zgy3Db8LXuA2R5T79rz5A8nE5MKQ1tjS3a91x9
+xCPkLYU1GcxRBo9xGDWHemzosThPaFy71rH5p70/RKUlZESs/643e+HLlyTqTqpU
+MDm6eFgwQz6SCOq5Ek/T0Pt9rj9HER2yrxdPbTEnqFWAIc/W00ACOvYZhvvdKMnv
++7yaNB89BwE/ePwH6rgrA3e98Lt+UK3rLv4ezUd34P4IqUUguW2yCFBm1iSm08U3
+iBiUMn+3NtJgH5tMb1HL0Fn9yxvmGUSBJ9dsrE/TQhVZ3d9n/ykXVMpxIEx27FgS
+n1p4t+XR279jrZvIRPow0+k8GWNsHz2CoQUTGKWi0KUAcZyjkfaVpSWOw37ABKoy
+/Oz9CWCSFjlaV4ubzs2lal8WNE38X7kEEuYv52P/yzJCuv5waEC0G2ej3plQcFV8
+9cUG8iWanDQ9BCkOfGJpYguCKD4n+QP3isbuoLHvOReMsWEvMqfC8YStWFigYyLc
+nig3RQdLuBqY9CV5LCs8CTJ2spoCx3Ska1WxknENirS2rZbwMvA=
+=h/eZ
+-----END PGP SIGNATURE-----
 
-> 
-> Lukasz is reseting this bit, in order to avoid the LTSSM to be
-> executed, which is correct. 
-
-So with CFG_DIRECTED_SPEED_CHANGE = 0, when I start LTSSM (with
-LTSSM_EN) the state machine returns immediately and leaves link in the
-Gen1?
-
-The pci-dra7 driver always sets LTSSM_EN bit to start link negotiation.
-
-> There is another way to prevent this
-> automatic speed change, which is to set GEN1 speed before link up
-> which might be difficult in some setups, so Kishon's also right.
-> 
-> In my opinion Lukasz approach would be the one that might be more
-> universal and more "secure".
-
-The robustness is the key here since there are some devices, which on
-particular HW must only work with Gen1 speed. When we start LTSSM state
-machine and hence start negotiation to Gen2, not always the result of
-LTSSM is correct and device is properly recognized.
-
-> 
-> Joao
-> 
-> 
-> > 
-> >>
-> >>>
-> >>> IMO the better way is to set the LNKCTL2 to GEN1 instead of
-> >>> hacking the IP register.
-> >>
-> >> From the original patch description:
-> >>
-> >> "Add support to force Root Complex to work in GEN1 mode if so
-> >> desired, but don't force GEN1 mode on any board just yet."
-> >>
-> >> Are there any (floating around) patches allowing forcing GEN1
-> >> operation on any board (I would like to reuse/port them to my
-> >> current solution)?
-> > 
-> > For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt
-> > with the patch in Bjorn's tree.
-> > 
-> > Thanks
-> > Kishon
-> > 
-> 
-
-Best regards,
-
-Lukasz Majewski
-
+--3zqtffriqv5yyy23--
 --
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
