@@ -1,43 +1,141 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/2] of: fix of_device_get_modalias returned length when truncating buffers
-Date: Mon, 16 Jan 2017 14:41:21 -0600
-Message-ID: <20170116204122.5858-1-robh@kernel.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/2] of: Add function for generating a DT modalias with a newline
+Date: Mon, 16 Jan 2017 14:41:22 -0600
+Message-ID: <20170116204122.5858-2-robh@kernel.org>
+References: <20170116204122.5858-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170116204122.5858-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-If the length of the modalias is greater than the buffer size, then the
-modalias is truncated. However the untruncated length is returned which
-will cause an error. Fix this to return the truncated length. If an error
-in the case was desired, then then we should just return -ENOMEM.
+The modalias sysfs attr is lacking a newline for DT aliases on platform
+devices. The macio and ibmebus correctly add the newline, but open code it.
+Introduce a new function, of_device_modalias(), that fills the buffer with
+the modalias including the newline and update users of the old
+of_device_get_modalias function.
 
-The reality is no device will ever have 4KB of compatible strings to hit
-this case.
-
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
- drivers/of/device.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/ibmebus.c |  5 +----
+ drivers/base/platform.c                  |  2 +-
+ drivers/macintosh/macio_sysfs.c          |  7 +------
+ drivers/of/device.c                      | 16 +++++++++++++++-
+ include/linux/of_device.h                |  7 +++----
+ 5 files changed, 21 insertions(+), 16 deletions(-)
 
+diff --git a/arch/powerpc/platforms/pseries/ibmebus.c b/arch/powerpc/platforms/pseries/ibmebus.c
+index 614c28537141..18f5a7a2896f 100644
+--- a/arch/powerpc/platforms/pseries/ibmebus.c
++++ b/arch/powerpc/platforms/pseries/ibmebus.c
+@@ -410,10 +410,7 @@ static ssize_t name_show(struct device *dev,
+ static ssize_t modalias_show(struct device *dev,
+ 				struct device_attribute *attr, char *buf)
+ {
+-	ssize_t len = of_device_get_modalias(dev, buf, PAGE_SIZE - 2);
+-	buf[len] = '\n';
+-	buf[len+1] = 0;
+-	return len+1;
++	return of_device_modalias(dev, buf, PAGE_SIZE);
+ }
+ 
+ static struct device_attribute ibmebus_bus_device_attrs[] = {
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index c4af00385502..d92f60d7f15d 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -837,7 +837,7 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *a,
+ 	struct platform_device	*pdev = to_platform_device(dev);
+ 	int len;
+ 
+-	len = of_device_get_modalias(dev, buf, PAGE_SIZE -1);
++	len = of_device_modalias(dev, buf, PAGE_SIZE);
+ 	if (len != -ENODEV)
+ 		return len;
+ 
+diff --git a/drivers/macintosh/macio_sysfs.c b/drivers/macintosh/macio_sysfs.c
+index 8eb40afbd0f5..0b1f9c76c68d 100644
+--- a/drivers/macintosh/macio_sysfs.c
++++ b/drivers/macintosh/macio_sysfs.c
+@@ -41,12 +41,7 @@ compatible_show (struct device *dev, struct device_attribute *attr, char *buf)
+ static ssize_t modalias_show (struct device *dev, struct device_attribute *attr,
+ 			      char *buf)
+ {
+-	int len = of_device_get_modalias(dev, buf, PAGE_SIZE - 2);
+-
+-	buf[len] = '\n';
+-	buf[len+1] = 0;
+-
+-	return len+1;
++	return of_device_modalias(dev, buf, PAGE_SIZE);
+ }
+ 
+ static ssize_t devspec_show(struct device *dev,
 diff --git a/drivers/of/device.c b/drivers/of/device.c
-index fd5cfad7c403..bd620452f255 100644
+index bd620452f255..f3c3108d5a3a 100644
 --- a/drivers/of/device.c
 +++ b/drivers/of/device.c
-@@ -223,7 +223,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- 			str[i] = '_';
- 	}
+@@ -176,7 +176,7 @@ const void *of_device_get_match_data(const struct device *dev)
+ }
+ EXPORT_SYMBOL(of_device_get_match_data);
  
--	return tsize;
-+	return repend;
+-ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
++static ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+ {
+ 	const char *compat;
+ 	int cplen, i;
+@@ -227,6 +227,20 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
  }
  
  /**
++ * of_device_modalias - Fill buffer with newline terminated modalias string
++ */
++ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len)
++{
++	ssize_t sl = of_device_get_modalias(dev, str, len - 2);
++	if (sl < 0)
++		return sl;
++
++	str[sl++] = '\n';
++	str[sl] = 0;
++	return sl;
++}
++
++/**
+  * of_device_uevent - Display OF related uevent information
+  */
+ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index cc7dd687a89d..971d7250a8a4 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -35,8 +35,7 @@ extern void of_device_unregister(struct platform_device *ofdev);
+ 
+ extern const void *of_device_get_match_data(const struct device *dev);
+ 
+-extern ssize_t of_device_get_modalias(struct device *dev,
+-					char *str, ssize_t len);
++extern ssize_t of_device_modalias(struct device *dev, char *str, ssize_t len);
+ 
+ extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+@@ -72,8 +71,8 @@ static inline const void *of_device_get_match_data(const struct device *dev)
+ 	return NULL;
+ }
+ 
+-static inline int of_device_get_modalias(struct device *dev,
+-				   char *str, ssize_t len)
++static inline int of_device_modalias(struct device *dev,
++				     char *str, ssize_t len)
+ {
+ 	return -ENODEV;
+ }
 -- 
 2.10.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
