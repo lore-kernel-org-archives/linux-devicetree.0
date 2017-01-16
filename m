@@ -1,86 +1,216 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V2] usb: xhci: add support for performing fake doorbell
-Date: Mon, 16 Jan 2017 08:32:45 +0100
-Message-ID: <CACna6ryJ7fod1KUOa9BVuQQWpCKg0_ArtMzHq_P5xYfW9Namxw@mail.gmail.com>
-References: <20161001215817.25384-1-zajec5@gmail.com> <20161017203036.23399-1-zajec5@gmail.com>
- <CACna6rw0tnjEOSqjd=q66yWZWa+oNAkH-tk=RLiLzz_=i0x-sA@mail.gmail.com> <58331360.5000508@linux.intel.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 3/3] reset: zx2967: add reset controller driver for
+ ZTE's zx2967 family
+Date: Mon, 16 Jan 2017 15:44:23 +0800
+Message-ID: <20170116074418.GA11600@x250>
+References: <1484377530-30635-1-git-send-email-baoyou.xie@linaro.org>
+ <1484377530-30635-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <58331360.5000508@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@linux.intel.com>, Jon Mason <jon.mason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484377530-30635-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 November 2016 at 16:31, Mathias Nyman
-<mathias.nyman@linux.intel.com> wrote:
-> On 21.11.2016 09:57, Rafa=C5=82 Mi=C5=82ecki wrote:
->>
->> Hi Mathias,
->>
->> On 17 October 2016 at 22:30, Rafa=C5=82 Mi=C5=82ecki <zajec5@gmail.com> =
-wrote:
->>>
->>> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>>
->>> Broadcom's Northstar XHCI controllers seem to need a special start
->>> procedure to work correctly. There isn't any official documentation of
->>> this, the problem is that controller doesn't detect any connected
->>> devices with default setup. Moreover connecting USB device to controlle=
-r
->>> that doesn't run properly can cause SoC's watchdog issues.
->>>
->>> A workaround that was successfully tested on multiple devices is to
->>> perform a fake doorbell. This patch adds code for doing this and enable=
-s
->>> it on BCM4708 family.
->>>
->>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>> ---
->>> V2: Enable quirk for brcm,bcm4708 machines instead of adding separated
->>> binding
->>>      for it. Thanks Rob for your comment on this.
->>
->>
->> Do you think you can pick & push this one? V2 follows Rob's suggestion
->> and he has some DT knowledge for sure, so I guess it should be OK.
->> --
->
->
-> Is there some more background information on this?
->
-> I don't have any contacts to Broadcom myself, adding the BMC Kernel Feedb=
-ack
-> list to CC.
-> Maybe someone over there has an errata, documentation or just general
-> feedback.
->
-> How was this workaround even figured out? ringing the doorbell for the fi=
-rst
-> device doesn't seem like something found by trial and error,  especially
-> when
-> xhci specs state that:
->
-> "Software shall not write the Doorbell of an endpoint until after it has
-> issued a
-> Configure Endpoint Command for the endpoint and received a successful
-> Command
-> Completion Event."
->
-> The whole workaround is a bit intrusive, allocating a fake device, ring a
-> doorbell for a
-> fake device in the wrong state, clearing off HSE (host system error) whic=
-h
-> should only be set
-> when things really go bad, some random usleeps, and possible calling
-> xhci_start() twice.
->
-> I can't take this as is without some more info.
+On Sat, Jan 14, 2017 at 03:05:30PM +0800, Baoyou Xie wrote:
+> This patch adds reset controller driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/reset/Kconfig        |   6 ++
+>  drivers/reset/Makefile       |   1 +
+>  drivers/reset/reset-zx2967.c | 136 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 143 insertions(+)
+>  create mode 100644 drivers/reset/reset-zx2967.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 172dc96..972d077 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -92,6 +92,12 @@ config RESET_ZYNQ
+>  	help
+>  	  This enables the reset controller driver for Xilinx Zynq SoCs.
+>  
+> +config RESET_ZX2967
+> +	bool "ZX2967 Reset Driver"
+> +	depends on ARCH_ZX || COMPILE_TEST
+> +	help
+> +	  This enables the reset controller driver for ZTE zx2967 family.
+> +
 
-Hi (ping) Broadcom guys, could you help us with this USB workaround, please=
-?
+The config options seem to be sorted alphabetically, so RESET_ZX2967
+should be put before RESET_ZYNQ.
 
---=20
-Rafa=C5=82
+>  source "drivers/reset/sti/Kconfig"
+>  source "drivers/reset/hisilicon/Kconfig"
+>  source "drivers/reset/tegra/Kconfig"
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 13b346e..807b77b 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -14,3 +14,4 @@ obj-$(CONFIG_RESET_SUNXI) += reset-sunxi.o
+>  obj-$(CONFIG_TI_SYSCON_RESET) += reset-ti-syscon.o
+>  obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
+>  obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
+> +obj-$(CONFIG_RESET_ZX2967) += reset-zx2967.o
+
+Ditto
+
+> diff --git a/drivers/reset/reset-zx2967.c b/drivers/reset/reset-zx2967.c
+> new file mode 100644
+> index 0000000..63f9c41
+> --- /dev/null
+> +++ b/drivers/reset/reset-zx2967.c
+> @@ -0,0 +1,136 @@
+> +/*
+> + * ZTE's zx2967 family thermal sensor driver
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +
+> +struct zx2967_reset {
+> +	void __iomem			*reg_base;
+> +	spinlock_t			lock;
+> +	struct reset_controller_dev	rcdev;
+> +};
+> +
+> +static int zx2967_reset_assert(struct reset_controller_dev *rcdev,
+> +			   unsigned long id)
+> +{
+> +	struct zx2967_reset *reset = NULL;
+> +	int bank = id / 32;
+> +	int offset = id % 32;
+> +	unsigned int reg;
+> +	unsigned long flags;
+> +
+> +	reset = container_of(rcdev, struct zx2967_reset, rcdev);
+> +
+> +	spin_lock_irqsave(&reset->lock, flags);
+> +
+> +	reg = readl(reset->reg_base + (bank * 4));
+> +	writel(reg & ~BIT(offset), reset->reg_base + (bank * 4));
+> +	reg = readl(reset->reg_base + (bank * 4));
+> +
+> +	spin_unlock_irqrestore(&reset->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_reset_deassert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	struct zx2967_reset *reset = NULL;
+> +	int bank = id / 32;
+> +	int offset = id % 32;
+> +	unsigned int reg;
+> +	unsigned long flags;
+> +
+> +	reset = container_of(rcdev, struct zx2967_reset, rcdev);
+> +
+> +	spin_lock_irqsave(&reset->lock, flags);
+> +
+> +	reg = readl(reset->reg_base + (bank * 4));
+> +	writel(reg | BIT(offset), reset->reg_base + (bank * 4));
+> +	reg = readl(reset->reg_base + (bank * 4));
+> +
+> +	spin_unlock_irqrestore(&reset->lock, flags);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct reset_control_ops zx2967_reset_ops = {
+> +	.assert		= zx2967_reset_assert,
+> +	.deassert	= zx2967_reset_deassert,
+> +};
+> +
+> +static int zx2967_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct zx2967_reset *reset;
+> +	struct resource *res;
+> +
+> +	reset = devm_kzalloc(&pdev->dev, sizeof(*reset), GFP_KERNEL);
+> +	if (!reset)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	reset->reg_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(reset->reg_base))
+> +		return PTR_ERR(reset->reg_base);
+> +
+> +	spin_lock_init(&reset->lock);
+> +
+> +	reset->rcdev.owner = THIS_MODULE;
+> +	reset->rcdev.nr_resets = resource_size(res) * 8;
+> +	reset->rcdev.ops = &zx2967_reset_ops;
+> +	reset->rcdev.of_node = pdev->dev.of_node;
+> +
+> +	dev_info(&pdev->dev, "reset controller cnt:%d",
+> +		  reset->rcdev.nr_resets);
+> +
+> +	return reset_controller_register(&reset->rcdev);
+
+Use devm_reset_controller_register(), then we can save the call to
+reset_controller_unregister().
+
+Shawn
+
+> +}
+> +
+> +static int zx2967_reset_remove(struct platform_device *pdev)
+> +{
+> +	struct zx2967_reset *reset = platform_get_drvdata(pdev);
+> +
+> +	reset_controller_unregister(&reset->rcdev);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_reset_dt_ids[] = {
+> +	 { .compatible = "zte,zx296718-reset", },
+> +	 {},
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_reset_dt_ids);
+> +
+> +static struct platform_driver zx2967_reset_driver = {
+> +	.probe	= zx2967_reset_probe,
+> +	.remove	= zx2967_reset_remove,
+> +	.driver = {
+> +		.name		= "zx2967-reset",
+> +		.of_match_table	= zx2967_reset_dt_ids,
+> +	},
+> +};
+> +
+> +static int __init zx2967_reset_init(void)
+> +{
+> +	return platform_driver_register(&zx2967_reset_driver);
+> +}
+> +arch_initcall(zx2967_reset_init);
+> +
+> +static void __exit zx2967_reset_exit(void)
+> +{
+> +	platform_driver_unregister(&zx2967_reset_driver);
+> +}
+> +module_exit(zx2967_reset_exit);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 Reset Controller Driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
