@@ -1,123 +1,108 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] Documentation: dt-bindings: Add binding documentation
- for TI clkctrl clocks
-Date: Mon, 16 Jan 2017 09:07:47 -0800
-Message-ID: <20170116170746.GA7403@atomide.com>
-References: <20170109234226.9449-1-tony@atomide.com>
- <7acb6824-0e64-960b-1490-9b7a8b867b3b@ti.com>
+From: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] iio: max5481: Add support for Maxim digital
+ potentiometers
+Date: Mon, 16 Jan 2017 18:10:26 +0100
+Message-ID: <20170116171026.GA1676@x220.localdomain>
+References: <20170114212139.GA3418@x220.localdomain>
+ <e48d9285-a077-36b3-b904-d9cf95c50a82@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7acb6824-0e64-960b-1490-9b7a8b867b3b@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh@kernel.org>
+In-Reply-To: <e48d9285-a077-36b3-b904-d9cf95c50a82-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tero Kristo <t-kristo@ti.com> [170116 07:20]:
-> On 10/01/17 01:42, Tony Lindgren wrote:
-> > +Example: Clock controller node:
-> > +
-> > +&cm_l4per {
-> > +	cm_l4per_clkctrl: clk@20 {
-> > +		compatible = "ti,clkctrl";
-> > +		reg = <0x20 0x1b0>;
-> > +		#clock-cells = 1;
-> > +		ti,modulemode-auto = <OMAP4_GPIO2_CLKCTRL>;
-> > +	};
-> > +};
+On Jan 15, 2017 14:27, Jonathan Cameron wrote:
+> A few more bits an pieces.
 > 
-> So, in this example, what would cm_l4per be? Is it a clockdomain? Or is it
-> just an arbitrary interconnect instance, and the clockdomain would also be a
-> separate node under cm_l4per?
+> Thanks,
 
-Good question. It's not a clockdomain, those are the CLKSTCTRL registers.
-And for example "3.11.33.1 CORE_CM2 Register Summary" for core_cm2 has
-multiple clockdomains under it.
+Thanks for the review!
 
-Looking at the interconnect target module for cm2, it's range is from
-0x4a008000 - 0x4a009fff as listed in "Table 2-3. L4_CFG Memory Space
-Mapping". So that's the cm2 parent module, and whatever we can clearly
-set up as separate devices under that will make things easier to
-understand.
+> Jonathan
+> > ---
+> > +static int max5481_write_cmd(struct max5481_data *data, u8 cmd, u16 val)
+> > +{
+> > +	struct spi_device *spi = data->spi;
+> > +
+> > +	data->msg[0] = cmd;
+> > +
+> > +	switch (cmd) {
+> > +	case MAX5481_WRITE_WIPER:
+> > +		data->msg[1] = val >> 2;
+> > +		data->msg[2] = (val & 0x3) << 6;
+> > +		return spi_write(spi, data->msg, ARRAY_SIZE(data->msg));
+> array_size will give you the number of elements in the array. Here that
+> is fine, but inconsistent with the use of sizeof(data->msg[0]) below.
 
-The various device instances under cm2 can be seen in "3.11.29 CM2
-Instance Summary".
+Yes, you are right.
+Do you think that plain 3 and 1 below will be OK in this case? This is the way
+the protocol is defined.
+Or maybe ARRAY_SIZE above is OK, but below I will just write 1?
 
-So how about the following would describe that hardware using the
-#clock-cells = <3> as discussed:
+> > +
+> > +	case MAX5481_COPY_AB_TO_NV:
+> > +	case MAX5481_COPY_NV_TO_AB:
+> > +		return spi_write(spi, data->msg, sizeof(data->msg[0]));
+> > +
+> > +	default:
+> > +		return -EIO;
+> > +	}
+> > +}
+> > +
+> > (...)
+> > +static int max5481_probe(struct spi_device *spi)
+> > +{
+> > +	struct iio_dev *indio_dev;
+> > +	struct max5481_data *data;
+> > +	const struct spi_device_id *id = spi_get_device_id(spi);
+> > +	int ret;
+> > +
+> > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
+> > +	if (!indio_dev)
+> > +		return -ENOMEM;
+> > +
+> > +	dev_set_drvdata(&spi->dev, indio_dev);
+> > +	data = iio_priv(indio_dev);
+> > +
+> > +	data->spi = spi;
+> To use the of data you have below this will need different handling,
+> specifically the use of of_match_device to get access to the data.
+> See something like adc/max1363 for how to do this.
 
-&cm2 {	/* 0x4a008000 */
-	compatible = "ti,interconnect-socket-cm", "simple-pm-bus";
-	reg = <0 0x2000>;
-	ranges;
-	...
+OK thanks!
 
-	ckgen_cm2: cm@100 {
-		reg = <0x100 0x100>;
-		compatible = <"ti,clockmanager", "simple-pm-bus">;
-		ranges;
-		...
-	};
+> > +	data->cfg = &max5481_cfg[id->driver_data];
+> > +
+> > +	indio_dev->name = id->name;
+> > +	indio_dev->dev.parent = &spi->dev;
+> > +	indio_dev->modes = INDIO_DIRECT_MODE;
+> > +
+> > +	/* variant specific configuration */
+> > +	indio_dev->info = &max5481_info;
+> > +	indio_dev->channels = max5481_channels;
+> > +	indio_dev->num_channels = ARRAY_SIZE(max5481_channels);
+> > +
+> > +	/* restore wiper from NV */
+> > +	ret = max5481_write_cmd(data, MAX5481_COPY_NV_TO_AB, 0);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return iio_device_register(indio_dev);
+> > +}
+> > (...)
+> > +MODULE_AUTHOR("Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>");
+> > +MODULE_DESCRIPTION("max5481 SPI driver");
+> > +MODULE_LICENSE("GPL v2");
+> > 
+> 1
 
-	always_on_cm2: cm@600 {
-		reg = <0x100 0x100>;
-		compatible = <"ti,clockmanager", "simple-pm-bus">;
-		ranges;
-		...
-	};
+Do you mean:
+MODULE_LICENSE("GPL");
+?
 
-	...
-
-	l4per: cm@1400 {
-		reg = <0x1400 0x200>;
-		compatible = <"ti,clockmanager", "simple-pm-bus">;
-		ranges;
-		...
-
-		/* drivers/soc/ti/clockdomain.c */
-		cm_l4per@0 {
-			compatible = "ti,clockdomain";
-			reg = <0 0x200>;
-			ranges;
-			...
-
-			/* drivers/clk/ti/clkctrl.c */
-			cm_l4per_clkctrl: clk@20 {
-				compatible = "ti,clkctrl";
-				reg = <0x20 0x1b0>;
-				#clock-cells = <3>;
-			};
-
-			...
-
-		}
-
-		...
-	};
-
-	...
-};
-
-Then on am335x we need to set the ranges at the "ti,clockmanager" level
-as the registers are partially sorted and most of the CLKSTCTRL registers
-are at the beginning for all the clockdomains. With the ranges we can
-have each clkctrl instance be a child of the related clockdomain.
-
-> Shall we add power-domains = <&cm_l4per_clkdm>; entry under the
-> cm_l4per_clkctrl in this example? (My thinking is that we will represent
-> both OMAP clock and power domains as generic power domains within kernel /
-> DT.)
-
-Yeah it seems we can represent both the clock and power domains with just
-a single "power-domains" property.
-
-To me it seems the "power-domains" property would then belong to the
-"ti,clockdomain" node above. As the clkctrl clock instances are children
-of each clockdomain then "simple-pm-bus" should automatically manage
-PM runtime usecount for each clockdomain.
-
-Regards,
-
-Tony
+-- 
+Slawomir Stepien
