@@ -1,185 +1,49 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
 Subject: Re: [PATCH 0/4] ARM: dts: mt7623: Add initial Geek Force support
-Date: Mon, 16 Jan 2017 20:31:48 +0100
-Message-ID: <71841212-be03-5285-6ca6-b1fd9ce1d8db@suse.de>
+Date: Mon, 16 Jan 2017 20:34:13 +0100
+Message-ID: <741fcf69-2fac-04b2-65bf-85f1d0af097a@suse.de>
 References: <20170108133100.10428-1-afaerber@suse.de>
  <91f5ec74-1aa1-f2ad-24e9-14267cbe8498@phrozen.org>
  <d6bd3783-d124-9871-d3b4-93e366517895@suse.de>
  <3fecb422-8185-7ee0-c203-2bfdc4fd1393@phrozen.org>
+ <0bd6567e-1c5b-0ff6-d044-57d25e1a40d2@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3fecb422-8185-7ee0-c203-2bfdc4fd1393-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Lai <paul-37fROp6E04DQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <0bd6567e-1c5b-0ff6-d044-57d25e1a40d2@phrozen.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: John Crispin <john@phrozen.org>, linux-mediatek@lists.infradead.org
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Lai <paul@asiarf.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am 10.01.2017 um 11:18 schrieb John Crispin:
-> On 10/01/2017 10:48, Andreas Färber wrote:
->> Am 10.01.2017 um 08:00 schrieb John Crispin:
->>> On 08/01/2017 14:30, Andreas Färber wrote:
->>>>
->>>> Andreas Färber (4):
->>>>   Documentation: devicetree: Add vendor prefix for AsiaRF
->>>>   Documentation: devicetree: arm: mediatek: Add Geek Force board
->>>>   ARM: dts: mt7623: Add Geek Force config
->>>>   MAINTAINERS: Extend ARM/Mediatek SoC support section
->>>>
->>>
->>> Hi,
->>>
->>> i need to NAK this series. the asiarf board is nothing more than the
->>> official MTK EVB with AsiaRF written on it. this board is already
->>> supported by linux (arch/arm/boot/dts/mt7623-evb.dts) please extend the
->>> EVB dts file nstead of adding a duplicate and letting the original
-> bitrot.
->>
->> Well, I disagree.
-> 
-> reading the rest of the email you seem to be quite agro about this.
-
-Please re-read your reply above and my comments and reconsider your
-attitude when replying in the future. It's not about whether these
-patches go in or not, it's about your wording. And that continues with
-aggressively throwing around the term "agro" in two mails already. I
-don't see anything aggressive or angry in my original cover letter that
-would've prompted your reply and can only interpret that as your own
-frustration with your mt7623 progress. Instead you should've taken the
-time to explain a bit better what you really meant, then we could've
-spared or shortened this lengthy discussion and have a v2 already.
-
->> First of all I'm not letting "the original" bitrot, because I have
->> nothing to do with that .dts! If anyone is to blame for letting it
->> bitrot since February 2016, pick your own nose:
->>
->>
-> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/log/arch/arm/boot/dts/mt7623-evb.dts
-> 
-> what should i pick my nose about ?
-
-Don't blame _me_ for "bitrot" of a file _you_ added almost a year ago
-that did not see any updates since.
-
-Nothing wrong with you not working on something, just don't blame me for
-it then, especially when I don't (knowingly) have that hardware and have
-never come in touch with it before. I am new to linux-mediatek and had
-checked LAKML in vein for any mt7623 patches before sending mine.
-
-[snip]
->> Third, by your argumentation we shouldn't be adding, e.g., Odroid .dts
->> files either because they were based on a Samsung SMDK, or .dts files
->> for Amlogic TV boxes because they're almost identical to reference
->> designs, etc.
->> Users need to know which .dts file to choose, so having a sane .dts
->> filename is warranted. Depending on how similar they are, one could
->> either #include the -evb.dts or factor out a shared .dtsi, but that
->> takes us back to the previous point of hardly anyone having access to
->> EVB information to identify such a subset. Therefore duplicating trivial
->> nodes is the method of choice for all practical purposes - mt7623.dtsi
->> is getting reused just fine.
->>
-> 
-> in that case add a dtsi file for the EVB and include it in your geek
-> board.dts and only update the compat string.
-
-The question that I am not in a position to answer is: Are those two
-boards identical or just very similar? Paul in CC can hopefully clarify
-this when he is back. Matthias as maintainer has also remained silent.
-
->> Comparing our two .dts files, mine has two more UART nodes enabled, the
->> U-Boot bootloader's baudrate set to actually get serial output, a
->> different board compatible string for identification, and I chose the
->> new dual-licensing header that is being requested for new DT files.
-> 
-> 1) at the time we adde this the uart support was not ready
-
-> 2) the bootloader i am using is a custom built one hence the random baudrate
-
-Well, did the _original_ bootloader use 115200? In that case we could
-update -evb.dts with it, and you could still override it via console=
-for your custom build.
-
-Or maybe having source access you could even contribute to mainline
-U-Boot, so we can all work on the same codebase? I read a BPi-R2 is
-coming up with mt7623, so booting without appended .dtb and uImage will
-come in handy for more people than just EVB owners and Geek Force
-backers. I'd happily contribute to making bootefi command work.
-
-> 3) you can just updae the license if you want to, no problem
-
-OK, will gladly look into the feasibility.
-
->> For lack of schematics I figured out UART1 by testing - continuity tests
->> for GND, console=ttySx,115200n8 and trial-and-error for RX/TX. Obviously
->> I can't do that for a board I don't have access to.
->> UART2 and UART0 pins were clear, but only UART2 was obvious from ttyMT2.
-> 
-> you do have the EVB directly in front of you
-> 
->> Do you actually have access to a Geek Force board yourself, or what are
->> you basing your claims on? Mine looks different from the Indiegogo
->> picture and thus has different identification from that on
->> https://wikidevi.com/wiki/AsiaRF_WS2977 (WS3301, MT7623N RFB_V10).
-> 
-> i dont need the geek board as i have the EVB and they are identical
-> according to MTK
-> 
->> If you confirm the EVB's baudrate I can happily send that part your way.
->> I've seen 921600 on the Helio X20 96board for instance.
-> 
-> see above
-
-So... 4) add my UART nodes to your -evb.dts? Any nitpicks on the actual
-patch 3/4?
-
->> Also, none of what you've said justifies NAK'ing patch 4/4, which
->> applies to any mt7* and arm64 .dts, including yours.
-> 
-> agreed, i never even mentioned 4/4
-
-You replied to the cover letter 0/4 "i need to NAK this series" - and
-series includes all four patches. Therefore my frustration with your
-hip-shot reply. If you haven't read the patch, don't NAK it!
-
-In fact still no one replied to it at all, even now that you're aware of
-its existence.
-
->> While we're at it, I noticed that mainline has a "mediatek,mt7623-eth"
->> network driver but no corresponding .dtsi node. Talk about bitrot...
-> 
-> the idea is that we work together to make thins optimal. this is not a
-> you or is right. this is about the FOSS peer review process. please dont
-> be so agro.
-
-See above, please reconsider your tone. Peer review is no excuse for
-rude and destructive behavior towards contributors you don't know.
-
-Had you looked at the lists and codebase you would know that I am not
-new to FOSS.
-
-And please stop writing "agro", it sounds like some pothead making a
-peace sign; not helpful among professional software developers.
-
-Taking the time to start your sentences with a capital letter would also
-be a respectful gesture.
-
-> to me it seems suboptimal to support 2 dts files for the same board.
-
-If it is the identical board, then we are in violent agreement. I just
-find all your replies to me offensive so far, I don't know you and thus
-have no reason to trust your unsubstantiated claims about my board.
-
-Regards,
-
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgSm9obiwKCkFtIDEyLjAxLjIwMTcgdW0gMDk6MjMgc2NocmllYiBKb2huIENyaXNwaW46Cj4g
+aGFkIGEgbG9vayBsYXN0IG5pZ2h0IHdoeSB0aGUgZXRoZXJuZXQgZHRzaSB3YXMgbm90IGFkZGVk
+IGFuZCBpdAo+IG9idmlvdXNseSB3YXMgbm90IGFkZGVkIGFzIHdlIHdlcmUgd2FpdGluZyBmb3Ig
+dGhlIGNsay1tdDI3MDEgdG8gYmUKPiBtZXJnZWQuIHRoZSBldGhlcm5ldCBkdHNpIHdpbGwgaGF2
+ZSBwaGFuZGxlcyBwb2ludGluZyBhdCB0aGUgY2xrIG5vZGVzCj4gd2hpY2ggZGlkIG5vdCBleGlz
+dCBhdCB0aGUgdGltZS4gc2FtZSBpcyB0cnVlIGZvciB0aGUgUFdNIGNvZGUuCj4gCj4gaSBzYXQg
+ZG93biBsYXN0IG5pZ2h0IGFuZCB3b3JrZWQgb3V0IHdoYXQgcGVuZGluZyBwYXRjaGVzIGkgc3Rp
+bGwgaGF2ZQo+IGZvciBtdDc2MjMgYW5kIG91dCBvZiB0aGUgfjgwIHJlcXVpcmVkIHRvIGdldCB2
+NC40IHdvcmtpbmcgaSBvbmx5IG5lZWQKPiBhcm91bmQgMTAgZm9yIHY0LjEwLXJjMS4KPiAKPiBp
+IHN0YXJ0ZWQgdG8gcmViYXNlIHRoZXNlIHBhdGNoZXMgbGFzdCBuaWdodCBhbmQgd2lsbCBoYXZl
+IHRpbWUgdG8gdGVzdAo+IHRoZW0gdG9tb3Jyb3cgb3IgZWFybHkgbmV4dCB3ZWVrLiBhcyB0aGUg
+cHdyYXAgbm9kZSBhbG9uZSBpcyBhcm91bmQgMjAwCj4gbGluZXMgb2YgZGV2aWNldHJlZSB3ZSBu
+ZWVkIHRvIGZpZ3VyZSBvdXQgYSB3YXkgdG8gYWRkIHRoaXMgdG8gdGhlIGR0cwo+IGZpbGVzIHdp
+dGhvdXQgZHVwbGljYXRpbmcgaXQuIGknbGwgdHJ5IHRvIHBvc3QgYSBzZXJpZXMgZWFybHkgbmV4
+dCB3ZWVrCj4gdGhhdCB3ZSBjYW4gdGhlbiBkaXNjdXNzIGFuZCByZWJhc2UgeW91ciBnZWVrYm9h
+cmQgcGF0Y2hlcyBvbi4KClNvdW5kcyBsaWtlIGEgcGxhbi4gTWFueSB0aGFua3MhCgpSZWdhcmRz
+LApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xy
+bmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3Jh
+aGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
