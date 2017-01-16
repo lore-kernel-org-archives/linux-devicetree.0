@@ -1,243 +1,70 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
-Date: Mon, 16 Jan 2017 14:47:48 +0100
-Message-ID: <1484574468.8415.136.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-         <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
-         <1484320822.31475.96.camel@pengutronix.de>
-         <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] dt-bindings: mtd: add a common label property to
+ all mtd devices
+Date: Mon, 16 Jan 2017 14:52:58 +0100
+Message-ID: <20170116145258.17707912@bbrezillon>
+References: <1484573225-19095-1-git-send-email-clg@kaod.org>
+        <1484573225-19095-3-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484573225-19095-3-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-01-14 at 14:46 -0800, Steve Longerbeam wrote:
-[...]
-> >> +Unprocessed Video Capture:
-> >> +--------------------------
-> >> +
-> >> +Send frames directly from sensor to camera interface, with no
-> >> +conversions:
-> >> +
-> >> +-> ipu_smfc -> camif
-> > I'd call this capture interface, this is not just for cameras. Or maybe
-> > idmac if you want to mirror hardware names?
+On Mon, 16 Jan 2017 14:27:04 +0100
+Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
+
+> This can be used to easily identify a specific chip on a system with
+> multiple chips.
 > 
-> Camif is so named because it is the V4L2 user interface for video
-> capture. I suppose it could be named "capif", but that doesn't role
-> off the tongue quite as well.
-
-Agreed, capif sounds weird. I find camif a bit confusing though, because
-Samsung S3C has a camera interface that is actually called "CAMIF".
-
-> >> +Note the ipu_smfc can do pixel reordering within the same colorspace.
-> > That isn't a feature of the SMFC, but of the IDMAC (FCW & FCR).
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mtd/common.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/common.txt
 > 
-> yes, the doc is re-worded to make that more clear.
-> 
-> >> +For example, its sink pad can take UYVY2X8, but its source pad can
-> >> +output YUYV2X8.
-> > I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
-> > in the CSI chapter, for 8-bit per component data, the internal format
-> > between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
-> > (or "bayer/generic data"). In either case, the internal format does not
-> > change along the way.
-> 
-> these are pixels in memory buffers, not the IPU internal formats.
+> diff --git a/Documentation/devicetree/bindings/mtd/common.txt b/Documentation/devicetree/bindings/mtd/common.txt
+> new file mode 100644
+> index 000000000000..a781641a3b00
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/common.txt
+> @@ -0,0 +1,12 @@
+> +* Common properties of all MTD devices
+> +
+> +Optional properties:
+> +- label : name to assign to mtd. If omitted, the label is the MTD device name.
 
-As long as we are talking about the CSI -> SMFC -> IDMAC path, these
-should be IPU internal formats. How else would one choose between 8-bit
-companded RGB, and 16-bit expanded RGB for a 10-bit per component input
-signal? This is the same issue as in the next comment.
+Hm, the description is not really clear. How about:
 
-> >> +   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
-> >> +   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
-> >> +   # Configure pads for OV5640 pipeline
-> >> +   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
-> >> +   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
-> >> +   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
-> >> +   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
-> >> +   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
-> > [...]
-> >> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
-> > I agree this looks very intuitive, but technically correct for the
-> > csi1:1 and camif1:0 pads would be a 32-bit YUV format.
-> > (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
-> >
-> > I think it would be better to use the correct format
-> 
-> I'm not sure I follow you here.
+"
+- label: user-defined MTD device name. Can be used to assign user
+  friendly names to MTD devices (instead of the flash model or flash
+  controller based name) in order to ease flash device identification
+  and/or describe what they are used for.
+"
 
-The ov5640 sends UYVY2X8 on the wire, so pads "ov5640_mipi 1-0040":0
-up to "ipu1_csi1":0 are correct. But the CSI writes 32-bit YUV values
-into the SMFC, so the CSI output pad and the IDMAC input pad should have
-a YUV8_1X32 format.
+Otherwise,
 
-Chapter 37.4.2.3 "FCW & FCR - Format converter write and read" in the
-IDMAC chapter states that all internal submodules only work on 8-bit per
-component formats with four components: YUVA or RGBA.
+Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-> > [...]
-> > Is this a whole software buffer queue implementation? I thought the
-> > whole point of putting the custom mem2mem framework into the capture
-> > driver was to use the hardware FSU channel linking?
-> 
->   see below.
-> 
-> > What is the purpose of this if the sink should be triggered by the FSU?
-> 
-> Ok, here is where I need to make an admission.
-> 
-> The only FSU links I have attempted (and which currently have entries
-> in the fsu_link_info[] table), are the enc/vf/pp --> IRT links for rotation.
+Thanks,
 
-Which are not described as media entity links because the rotation units
-do not have separate media entities. So me arguing against handling
-mem2mem chaining via media entity links doesn't concern these implicit
-links.
+Boris
 
-> There does not appear to be support in the FSU for linking a write channel
-> to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
-> is support for the direct link from CSI (which I am using), but that's 
-> not an
-> IDMAC channel link.
-> 
-> There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
-> 0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
+> +
+> +Example:
+> +
+> +	flash@0 {
+> +		label = "System-firmware";
+> +
+> +		/* flash type specific properties */
+> +	};
 
-As I read it, that is 0 and 2 only, no idea why. But since there are
-only 2 CSIs, that shouldn't be a problem.
-
-> But I think this links to channel 12, and not to channels 8,9,10 to the 
-> VDIC.
-> Or will it? It's worth experimenting. It would have helped if FSL listed 
-> which
-> IDMAC channels these FSU links correspond to, instead of making us guess
-> at it.
-
-I would have assumed that the FSU triggering only works on 1:1 channels
-and the VDIC with its three input channels is different. But then
-there's the alleged VDOA link to ch8/9/10 ro ch9, depending on
-VDI_MOT_SEL.
-
-This makes me more convinced that the CSI -> VDIC link should only
-describe the direct path (real-time mode, single field).
-
-> In any event, the docs are not clear enough to implement a real FSU
-> link to the VDIC read channels, if it's even possible. And trying to get
-> programming help from FSL can be difficult, and no coding examples
-> for this link AFAIK.
-> 
-> So I ended resorted to linking to VDIC channels 8,9,10 with a software
-> approach, instead of attempting a hardware FSU link.
-> 
-> The EOF interrupt handler for the SMFC channels informs the VDIC
-> entity via a v4l2_subdev_ioctl() call that a buffer is available. The
-> VDIC then manually kicks off its read channels to bring that buffer
-> (and a previous buffer for F(n-1) field) into the VDIC.
-> 
-> There is a small amount of extra overhead going this route compared
-> to a FSU hardware link: there is the EOF irq latency (a few usec), and
-> the CPU overhead for the VDIC to manually start the read channels,
-> which is also a few usec at most (see prepare_vdi_in_buffers() in
-> imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU
-> use plus irq latency) under normal system load.
-
-That the same low overhead could be reached by linking videobuf2 queues
-of different video devices, that would be a lot more flexible.
-
-> Of course, in order to implement this software link, I had to implement
-> a straightforward FIFO dma buffer ring. The sink (VDIC) allocates the ring
-> at stream on, and the source requests a pointer to this ring in its own
-> stream on. Passing buffers from source to sink then follows a 
-> straightforward
-> FIFO queue/done/dequeue/queue model: sink queues buffers to src, src
-> grabs queued buffers and makes them active, src signals completed
-> buffers to sink, sink dequeues buffers in response, and sink queues
-> buffers back when it is finished with them.
-
-Thank you for the explanation.
-
-[...]
-> >> +static const u32 power_off_seq[] = {
-> >> +	IMX_MEDIA_GRP_ID_IC_PP,
-> >> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
-> >> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
-> >> +	IMX_MEDIA_GRP_ID_SMFC,
-> >> +	IMX_MEDIA_GRP_ID_CSI,
-> >> +	IMX_MEDIA_GRP_ID_VIDMUX,
-> >> +	IMX_MEDIA_GRP_ID_SENSOR,
-> >> +	IMX_MEDIA_GRP_ID_CSI2,
-> >> +};
-> > This seems somewhat arbitrary. Why is a power sequence needed?
-> 
-> The CSI-2 receiver must be powered up before the sensor, that's the
-> only requirement IIRC. The others have no s_power requirement. So I
-> can probably change this to power up in the frontend -> backend order
-> (IC_PP to sensor). And vice-versa for power off.
-
-Yes, I think that should work (see below).
-
-> > [...]
-> >> +/*
-> >> + * Turn current pipeline power on/off starting from start_entity.
-> >> + * Must be called with mdev->graph_mutex held.
-> >> + */
-> >> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
-> >> +				 struct media_entity_graph *graph,
-> >> +				 struct media_entity *start_entity, bool on)
-> >> +{
-> >> +	struct media_entity *entity;
-> >> +	struct v4l2_subdev *sd;
-> >> +	int i, ret = 0;
-> >> +	u32 id;
-> >> +
-> >> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
-> >> +		id = on ? power_on_seq[i] : power_off_seq[i];
-> >> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
-> >> +		if (!entity)
-> >> +			continue;
-> >> +
-> >> +		sd = media_entity_to_v4l2_subdev(entity);
-> >> +
-> >> +		ret = v4l2_subdev_call(sd, core, s_power, on);
-> >> +		if (ret && ret != -ENOIOCTLCMD)
-> >> +			break;
-> >> +	}
-> >> +
-> >> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
-> > This should really be handled by v4l2_pipeline_pm_use.
-> 
-> I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
-> doing some other stuff that bothered me, at least that's what I remember.
-> I will revisit this.
-
-I have used it with a tc358743 -> mipi-csi2 pipeline, it didn't cause
-any problems. It would be better to reuse and, if necessary, fix the
-existing infrastructure where available.
-
-> >> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
-> >> +				   struct imx_media_subdev *csi[4])
-> >> +{
-> >> +	int ret;
-> >> +
-> >> +	/* there must be at least one CSI in first IPU */
-> > Why?
-> 
-> Well yeah, imx-media doesn't necessarily need a CSI if things
-> like the VDIC or post-processor are being used by an output
-> overlay pipeline, for example. I'll fix this.
-
-I haven't even thought that far, but there could be boards with only a
-parallel sensor connected to IPU2 CSI1 and IPU1 disabled for power
-saving reasons.
-
-regards
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
