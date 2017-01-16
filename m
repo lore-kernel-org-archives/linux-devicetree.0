@@ -1,34 +1,72 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH v2] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Mon, 16 Jan 2017 22:02:17 +0100
-Message-ID: <CACna6rxGfoaWTMJMkhuOAb0d9DEqdB6FC5+s97y4s4NXAUbaLg@mail.gmail.com>
-References: <CACna6ryLDwr0S=e-uUt+ZGcY8mNDnUtBPg_RmqtSVBziJkZd5w@mail.gmail.com>
- <20170116210039.25267-1-u.kleine-koenig@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170116210039.25267-1-u.kleine-koenig@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Jagan Teki <jagan@openedev.com>
+From: eajames.ibm@gmail.com
+Subject: [PATCH linux v3 0/6] drivers: hwmon: Add On-Chip Controller driver
+Date: Mon, 16 Jan 2017 15:13:33 -0600
+Message-ID: <1484601219-30196-1-git-send-email-eajames.ibm@gmail.com>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTYgSmFudWFyeSAyMDE3IGF0IDIyOjAwLCBVd2UgS2xlaW5lLUvDtm5pZwo8dS5rbGVpbmUt
-a29lbmlnQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiBUaGUgTVIyNSBmYW1pbHkgZG9lc24ndCBz
-dXBwb3J0IEpFREVDLCBzbyB0aGV5IG5lZWQgZXhwbGljaXQgbWVudGlvbmluZwo+IGluIHRoZSBs
-aXN0IG9mIHN1cHBvcnRlZCBzcGkgSURzLiBUaGlzIG1ha2VzIGl0IHBvc3NpYmxlIHRvIGFkZCB0
-aGVzZQo+IHVzaW5nIGZvciBleGFtcGxlOgo+Cj4gICAgICAgICBjb21wYXRpYmxlID0gImV2ZXJz
-cGluLG1yMjVoNDAiOwo+Cj4gU2lnbmVkLW9mZi1ieTogVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xl
-aW5lLWtvZW5pZ0BwZW5ndXRyb25peC5kZT4KCkxvb2tzIE9LIHRvIG1lLCB0aGFua3MhCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXgg
-TVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+From: "Edward A. James" <eajames@us.ibm.com>
+
+This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
+on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
+Controller). The OCC is an embedded processor that provides real time
+power and thermal monitoring.
+
+The driver provides an interface on a BMC to poll OCC sensor data, set
+user power caps, and perform some basic OCC error handling. It interfaces
+with userspace through hwmon.
+
+The driver is currently functional only for the OCC on POWER8 chips.
+Communicating with the POWER9 OCC requries FSI support.
+
+Edward A. James (6):
+  hwmon: Add core On-Chip Controller support for POWER CPUs
+  hwmon: occ: Add sysfs interface
+  hwmon: occ: Add I2C transport implementation for SCOM operations
+  hwmon: occ: Add callbacks for parsing P8 OCC datastructures
+  hwmon: occ: Add hwmon implementation for the P8 OCC
+  hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+
+ Documentation/devicetree/bindings/hwmon/occ.txt |  13 +
+ Documentation/hwmon/occ                         | 114 ++++++
+ MAINTAINERS                                     |   7 +
+ drivers/hwmon/Kconfig                           |   2 +
+ drivers/hwmon/Makefile                          |   1 +
+ drivers/hwmon/occ/Kconfig                       |  29 ++
+ drivers/hwmon/occ/Makefile                      |   2 +
+ drivers/hwmon/occ/occ.c                         | 522 ++++++++++++++++++++++++
+ drivers/hwmon/occ/occ.h                         |  81 ++++
+ drivers/hwmon/occ/occ_p8.c                      | 247 +++++++++++
+ drivers/hwmon/occ/occ_p8.h                      |  30 ++
+ drivers/hwmon/occ/occ_p9.c                      | 308 ++++++++++++++
+ drivers/hwmon/occ/occ_p9.h                      |  30 ++
+ drivers/hwmon/occ/occ_scom_i2c.c                |  72 ++++
+ drivers/hwmon/occ/occ_scom_i2c.h                |  26 ++
+ drivers/hwmon/occ/occ_sysfs.c                   | 271 ++++++++++++
+ drivers/hwmon/occ/occ_sysfs.h                   |  44 ++
+ drivers/hwmon/occ/p8_occ_i2c.c                  | 104 +++++
+ drivers/hwmon/occ/scom.h                        |  47 +++
+ 19 files changed, 1950 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/occ.c
+ create mode 100644 drivers/hwmon/occ/occ.h
+ create mode 100644 drivers/hwmon/occ/occ_p8.c
+ create mode 100644 drivers/hwmon/occ/occ_p8.h
+ create mode 100644 drivers/hwmon/occ/occ_p9.c
+ create mode 100644 drivers/hwmon/occ/occ_p9.h
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+ create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+ create mode 100644 drivers/hwmon/occ/scom.h
+
+-- 
+1.9.1
+
