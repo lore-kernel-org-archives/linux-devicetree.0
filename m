@@ -1,84 +1,118 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: juno: add missing CoreSight STM
- component
-Date: Tue, 17 Jan 2017 14:01:03 +0000
-Message-ID: <6473418b-95d5-5be3-47fd-4c554f353923@arm.com>
-References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
- <1484655313-9025-5-git-send-email-sudeep.holla@arm.com>
- <5c742b98-0707-67fd-d8a1-467f34d99cdb@arm.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+        <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 00/10] Add sun8i A33 audio driver
+Date: Tue, 17 Jan 2017 15:02:20 +0100
+Message-ID: <20170117140230.23142-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5c742b98-0707-67fd-d8a1-467f34d99cdb@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Suzuki K Poulose <Suzuki.Poulose@arm.com>, linux-arm-kernel@lists.infradead.org, Mike Leach <mike.leach@linaro.org>, Mike Leach <mike.leach@arm.com>
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, coresight@lists.linaro.org, Liviu Dudau <liviu.dudau@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello everyone,
 
+This a V2 of my Allwinner A33 (sun8i) audio codec driver.
+Tested on linux-next-20170105 tag with one remaining patch from Chen-Yu's
+series:
+http://lkml.iu.edu/hypermail/linux/kernel/1611.3/01256.html
+Patch to apply before this serie:
+https://patchwork.kernel.org/patch/9423999/
 
-On 17/01/17 13:39, Suzuki K Poulose wrote:
-> On 17/01/17 12:15, Sudeep Holla wrote:
->> From: Mike Leach <mike.leach@linaro.org>
->>
->> This patch adds the missing CoreSight STM component definition to the
->> device tree of all the juno variants(r0,r1,r2)
->>
->> STM component is connected to different funnels depending on Juno
->> platform variant.
->>
->> Reviewed-and-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Signed-off-by: Mike Leach <mike.leach@linaro.org>
->> [sudeep.holla@arm.com: minor changelog update and reorganising the STM
->>     node back into juno-base.dtsi to avoid duplication]
->> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
->> ---
->>  arch/arm64/boot/dts/arm/juno-base.dtsi | 15 +++++++++++++++
->>  arch/arm64/boot/dts/arm/juno-r1.dts    |  4 ++++
->>  arch/arm64/boot/dts/arm/juno-r2.dts    |  4 ++++
->>  arch/arm64/boot/dts/arm/juno.dts       | 16 ++++++++++++++++
->>  4 files changed, 39 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> index faedf357db3b..58c1773c3aa4 100644
->> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
->> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
->> @@ -185,6 +185,21 @@
->>          };
->>      };
->>
->> +    stm@20100000 {
->> +        compatible = "arm,coresight-stm", "arm,primecell";
->> +        reg = <0 0x20100000 0 0x1000>,
->> +              <0 0x28000000 0 0x180000>;
-> 
-> The size of the stimulus base is 16MB (as per TRM), implies => 0x1000000.
-> 
+Changes since V1:
+	- Remove the analog codec driver as a better version has been
+	committed by Chen-Yu Tsai and is already merged.
+	- Remove the audio-card as simple-card can be used
+	- The DMA maxburst is set to 8 in the sun4i-i2s instead of
+	adding the maxburst of 4 in Sun6i dma engine.
+	- Create a new compatible for sun4i-i2s to handle the reset
+	line.
+	- Fix various problems in sun8i-codec driver according to V1's
+	reviews
+	- Add the pm_runtime hooks in sun8i-codec driver to prepare/
+	unprepare clocks.
+	- Update the DTS according to Chen-Yu's analog codec driver.
+	- Rename sun8i-codec's clocks to "bus" and "mod"
+	- The first "delay" issue from V1 is fixed by using a delay
+	when enabling the headphone amplifier to let the amplifier
+	being up.
 
-Fixed locally.
+Patch 1 increases the DMA maxburst value of sun4i-i2s to 8.
+See Chen-Yu's commit log for more details:
+https://patchwork.kernel.org/patch/9411805/
 
-Mike,
+Patch 2 adds the CLK_SET_RATE_PARENT flag to ccu sun8i-a33 clocks.
 
-Can you confirm ? I know TRM had some issues with size of other
-coresight components.
+Patches 3 and 4 add a new compatible "allwinner,sun6i-a31-i2s"
+to handle the reset line for sun4i-i2s driver. It uses a quirk to
+use a version with or without reset lines.
 
-> with that fixed :
-> 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> 
+Patch 5 adds the sun8i codec driver which represents the digital part
+of the A33 codec. It supports only playback features.
 
-Thanks.
+Path 6 fixes the previous issue of a "first time delay" in V1 (see cover
+letter). Do not hesitate if you have comments on this patch.
+
+Patches 7 adds the dt-bindings documentation for new audio driver
+added in this serie (sun8i-codec).
+
+Patch 8 adds the cpu DAI, codec and audio nodes to sun8i-a33 device tree.
+
+Patches 9 and 10 enable the audio on Parrot and Sinlinx's boards.
+
+The DAI for this A33 codec is the same than for A20: "sun4i-i2s".
+Currently, all the drivers handle only the playback feature.
+The other ones (such as capture) and all other interfaces except
+headphone are not supported. I will send a patch to handle the
+capture with microphones in next few weeks.
+
+Examples of amixer commands:
+	amixer set 'Headphone' 75%
+	amixer set 'Headphone' on
+	amixer set 'DAC' on
+	amixer set 'Right DAC Mixer RSlot 0' on
+	amixer set 'Left DAC Mixer LSlot 0' on
+
+It was tested on Parrot and Sinlinx boards.
+
+Let me know if you have any comments on this serie.
+
+Thank you in advance,
+Best regards,
+
+Mylène Josserand (10):
+  ASoC: sun4i-i2s: Increase DMA max burst to 8
+  clk: ccu-sun8i-a33: Add CLK_SET_RATE_PARENT to ac-dig
+  dt-bindings: sound: Add new reset compatible for sun4i-i2s
+  ASoC: sun4i-i2s: Add quirks to handle new compatible for reset
+  ASoC: Add sun8i digital audio codec
+  ASoC: sun8i-codec-analog: Add amplifier event to fix first delay
+  dt-bindings: sound: Add sun8i audio documentation
+  ARM: dts: sun8i: Add audio codec, dai and card for A33
+  ARM: dts: sun8i: parrot: Enable audio nodes
+  ARM: dts: sun8i: sinlinx: Enable audio nodes
+
+ .../devicetree/bindings/sound/sun4i-i2s.txt        |  23 +
+ .../devicetree/bindings/sound/sun8i-codec.txt      |  76 +++
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |   8 +
+ arch/arm/boot/dts/sun8i-a33.dtsi                   |  47 ++
+ arch/arm/boot/dts/sun8i-r16-parrot.dts             |   8 +
+ drivers/clk/sunxi-ng/ccu-sun8i-a33.c               |   2 +-
+ sound/soc/sunxi/Kconfig                            |  11 +
+ sound/soc/sunxi/Makefile                           |   1 +
+ sound/soc/sunxi/sun4i-i2s.c                        |  61 ++-
+ sound/soc/sunxi/sun8i-codec-analog.c               |  30 +-
+ sound/soc/sunxi/sun8i-codec.c                      | 531 +++++++++++++++++++++
+ 11 files changed, 791 insertions(+), 7 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/sun8i-codec.txt
+ create mode 100644 sound/soc/sunxi/sun8i-codec.c
 
 -- 
-Regards,
-Sudeep
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
