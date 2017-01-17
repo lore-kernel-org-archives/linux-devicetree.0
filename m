@@ -1,52 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3 in
- MUSB mode
-Date: Tue, 17 Jan 2017 09:06:11 +0100
-Message-ID: <20170117080611.tn7s7ddj2csqr27m@lukather>
-References: <20170116191449.50397-1-icenowy@aosc.xyz>
- <20170116191449.50397-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] i2c: mux: pca954x: Add irq_mask_en to delay
+ enabling irqs
+Date: Tue, 17 Jan 2017 16:07:26 +0800
+Message-ID: <d9c4e6fb-88f5-f6b1-bbcb-291997f0d591@electromag.com.au>
+References: <1484536275-75995-1-git-send-email-preid@electromag.com.au>
+ <1484536275-75995-6-git-send-email-preid@electromag.com.au>
+ <b2e0ba39-2a1b-9c67-082d-d7d043ecc220@axentia.se>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h3tu3smfodeypoun"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBG5B67BQKGQE23CMQDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170116191449.50397-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b2e0ba39-2a1b-9c67-082d-d7d043ecc220-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 16/01/2017 20:08, Peter Rosin wrote:
 
---h3tu3smfodeypoun
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+>> @@ -280,9 +294,12 @@ static void pca954x_irq_unmask(struct irq_data *idata)
+>>
+>>  	spin_lock_irqsave(&data->lock, flags);
+>>
+>> -	if (!data->irq_mask)
+>> +	if (!data->irq_mask_enable && !data->irq_mask)
+>>  		enable_irq(data->client->irq);
+>>  	data->irq_mask |= BIT(pos);
+>> +	if (data->irq_mask_enable &&
+>> +		(data->irq_mask & data->irq_mask) == data->irq_mask_enable)
+>
+> Hmm, I see that some apparently incompetent person :-) already acked this,
+> but the (data->irq_mask & data->irq_mask) part doesn't make sense at all.
+>
+>> +		enable_irq(data->client->irq);
+>>
+>
+> Hmm2, if you have a problematic device (like the ltc1760) on mux segment 0
+> and sane devices on other segments I'd be inclined to specify irq-mask-enable
+> as 0x1. But then this is possible:
+>
+> 1. ltc1760 registers its irq
+> 2. enable_irq(data->client->irq) is called because irq_mask_enable is "fulfilled"
+> 3. a sane irq register an irq on some other segment
+> 4. enable_irq(...) is called again (which the code appears to try to avoid)
+>
+> As I read the code, there will be problems with specifying irq-mask-enable
+> whenever there are more than one irq-client on a mux segment.
+>
+> So, I'm removing my ack until the above is resolved...
+>
 
-On Tue, Jan 17, 2017 at 03:14:46AM +0800, Icenowy Zheng wrote:
-> The PHY0 on H3 can be wired either to MUSB controller or OHCI/EHCI
-> controller.
-> 
-> The original driver wired it to OHCI/EHCI controller; however, as the
-> code to use PHY0 as OHCI/EHCI is missing, it makes the PHY fully
-> unusable.
-> 
-> Rename the register (according to its function and the name in BSP
-> driver), and remove the code which wires the PHY0 to OHCI/EHCI, as MUSB
-> can support both peripheral and host mode (although the host mode of
-> MUSB is buggy).
+G'day Peter,
 
-Can you elaborate on that? What's wrong with it?
-
-Maxime
+Yes that is obviously wrong.
+I think I've got it right this time in v5.
+Also implemented your suggest on the array for the dt binding.
+But stuck with the bitfield implementation for the moment.
+Hopefully that's ok.
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---h3tu3smfodeypoun--
+Regards
+Phil Reid
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
