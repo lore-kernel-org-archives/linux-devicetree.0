@@ -1,72 +1,68 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v3 1/4] ASoC: es8328-i2c: Add compatible for
-	ES8388
-Date: Tue, 17 Jan 2017 09:17:02 +0100
-Message-ID: <20170117081705.14107-2-romain.perier@collabora.com>
-References: <20170117081705.14107-1-romain.perier@collabora.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 1/3] dt: bindings: add documentation for zx2967
+ family reset controller
+Date: Tue, 17 Jan 2017 09:42:16 +0100
+Message-ID: <1484642536.4087.0.camel@pengutronix.de>
+References: <1484623377-16208-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170117081705.14107-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484623377-16208-1-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, robh+dt@kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, jun.nie@linaro.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a compatible string for everest,es8388. This is
-an audio codec that is compatible with es8328.
+On Tue, 2017-01-17 at 11:22 +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zx2967 family
+> reset controller.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> Reviewed-by: Shawn Guo <shawnguo@kernel.org>
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
+Thanks, I've applied all three patches with Shawn's Reviewed-by: on the
+driver patch.
 
-Changes in v3: None
-Changes in v2:
-- Fixed wrong use of the i2c_device_id data structure
+regards
+Philipp
 
- Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
- sound/soc/codecs/es8328-i2c.c                      | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
-index 30ea8a3..33fbf05 100644
---- a/Documentation/devicetree/bindings/sound/es8328.txt
-+++ b/Documentation/devicetree/bindings/sound/es8328.txt
-@@ -4,7 +4,7 @@ This device supports both I2C and SPI.
- 
- Required properties:
- 
--  - compatible : "everest,es8328"
-+  - compatible  : Should be "everest,es8328" or "everest,es8388"
-   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
-   - AVDD-supply : Regulator providing analog supply voltage 3.3V
-   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
-diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
-index 2d05b5d..318ab28 100644
---- a/sound/soc/codecs/es8328-i2c.c
-+++ b/sound/soc/codecs/es8328-i2c.c
-@@ -20,12 +20,14 @@
- 
- static const struct i2c_device_id es8328_id[] = {
- 	{ "es8328", 0 },
-+	{ "es8388", 0 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, es8328_id);
- 
- static const struct of_device_id es8328_of_match[] = {
- 	{ .compatible = "everest,es8328", },
-+	{ .compatible = "everest,es8388", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, es8328_of_match);
--- 
-2.9.3
+> ---
+>  .../devicetree/bindings/reset/zte,zx2967-reset.txt   | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt b/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
+> new file mode 100644
+> index 0000000..b015508
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
+> @@ -0,0 +1,20 @@
+> +ZTE zx2967 SoCs Reset Controller
+> +=======================================
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible: should be one of the following.
+> +	* zte,zx296718-reset
+> +- reg: physical base address of the controller and length of memory mapped
+> +	region.
+> +- #reset-cells: must be 1.
+> +
+> +example:
+> +
+> +	reset: reset-controller@1461060 {
+> +		compatible = "zte,zx296718-reset";
+> +		reg = <0x01461060 0x8>;
+> +		#reset-cells = <1>;
+> +	};
