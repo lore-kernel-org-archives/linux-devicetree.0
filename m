@@ -1,14 +1,16 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 00/18] FSI device driver introduction
-Date: Tue, 17 Jan 2017 08:42:43 +0100
-Message-ID: <20170117074243.GA20818@kroah.com>
-References: <1484601768-98079-1-git-send-email-christopher.lee.bostic@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v3 3/3] reset: zx2967: add reset controller driver for
+ ZTE's zx2967 family
+Date: Tue, 17 Jan 2017 15:46:42 +0800
+Message-ID: <20170117074641.GD11600@x250>
+References: <1484623377-16208-1-git-send-email-baoyou.xie@linaro.org>
+ <1484623377-16208-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1484601768-98079-1-git-send-email-christopher.lee.bostic@gmail.com>
+In-Reply-To: <1484623377-16208-3-git-send-email-baoyou.xie@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,16 +20,13 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: christopher.lee.bostic@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, geert+renesas@glider.be, andrew@aj.id.au, alistair@popple.id.au, mturquette@baylibre.com, linux@armlinux.org.uk, Chris Bostic <cbostic@us.ibm.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, benh@kernel.crashing.org, linux-arm-kernel@lists.infradead.org, jk@ozlabs.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, robh+dt@kernel.org, chen.chaokai@zte.com.cn, p.zabel@pengutronix.de, wang.qiang01@zte.com.cn, jun.nie@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 03:22:48PM -0600, christopher.lee.bostic@gmail.com wrote:
-> From: Chris Bostic <cbostic@us.ibm.com>
+On Tue, Jan 17, 2017 at 11:22:57AM +0800, Baoyou Xie wrote:
+> This patch adds reset controller driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 
-<snip>
-
-Only this, and patch 02/18 came through, did something get stuck on your
-end?
-
-greg k-h
+Reviewed-by: Shawn Guo <shawnguo@kernel.org>
