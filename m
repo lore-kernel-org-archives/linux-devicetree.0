@@ -1,96 +1,112 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] arm64: dts: exynos: Add stmfts touchscreen node for
- TM2 and TM2E
-Date: Tue, 17 Jan 2017 20:39:52 +0200
-Message-ID: <20170117183952.tfexmtp6723w7ism@kozik-lap>
-References: <20170117135441.31450-1-andi.shyti@samsung.com>
- <CGME20170117135457epcas5p2044e9e5cd9eb6b162bb0acb4e317bdfb@epcas5p2.samsung.com>
- <20170117135441.31450-4-andi.shyti@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sun4i-i2s: Increase DMA max burst to 8" to the asoc
+ tree
+Date: Tue, 17 Jan 2017 18:44:54 +0000
+Message-ID: <E1cTYkY-0008Ku-Kd@debutante>
+References: <20170117140230.23142-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170117135441.31450-4-andi.shyti@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: multipart/mixed; boundary="===============7943772179114720444=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170117140230.23142-2-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, mylene.josserand@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, linux-sunxi@googlegroups.com, sboyd@codeaurora.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, perex@perex.cz, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 10:54:41PM +0900, Andi Shyti wrote:
-> TM2 and TM2E devices are provided with a ST-Microelectronics
-> Finger Tip S device with small differences:
-> 
->  - screen size
->  - TM2E uses the stmfts also as a touchkey for "back" and "menu"
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         |  5 +++++
->  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        |  7 +++++++
->  3 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> index a5c866901e93..689d5c124a49 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> @@ -745,6 +745,19 @@
->  	};
->  };
->  
-> +&hsi2c_5 {
-> +	status = "okay";
-> +
-> +	touchscreen: stmfts@49 {
-> +		compatible = "st,stmfts";
-> +		reg = <0x49>;
-> +		interrupt-parent = <&gpa1>;
-> +		interrupts = <1 IRQ_TYPE_NONE>;
+--===============7943772179114720444==
+Content-Type: text/plain
 
-Looks fine to me, just wondering:
-1. Are you sure this is TYPE_NONE interrupt? Sometimes we put it
-   everywhere instead of checking real value.
-2. Don't you have to configure the gpa1-1 to EINT? Any pull up/down?
+The patch
 
-Best regards,
-Krzysztof
+   ASoC: sun4i-i2s: Increase DMA max burst to 8
 
-> +		avdd-supply = <&ldo30_reg>;
-> +		vdd-supply = <&ldo31_reg>;
-> +	};
-> +};
-> +
->  &hsi2c_7 {
->  	status = "okay";
->  
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> index 2449266b268f..d0311d34c6bd 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
-> @@ -29,3 +29,8 @@
->  	regulator-min-microvolt = <3000000>;
->  	regulator-max-microvolt = <3000000>;
->  };
-> +
-> +&touchscreen {
-> +	touchscreen-size-x = <1439>;
-> +	touchscreen-size-y = <2559>;
-> +};
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> index 2fbf3a860316..388880dcb5ae 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts
-> @@ -29,3 +29,10 @@
->  	regulator-min-microvolt = <3300000>;
->  	regulator-max-microvolt = <3300000>;
->  };
-> +
-> +&touchscreen {
-> +	touchscreen-size-x = <1599>;
-> +	touchscreen-size-y = <2559>;
-> +	touch-key-connected;
-> +	ledvdd-supply = <&ldo33_reg>;
-> +};
-> -- 
-> 2.11.0
-> 
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From ebad64d19377957976963f99ce1fcf2f09796357 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+ <mylene.josserand@free-electrons.com>
+Date: Tue, 17 Jan 2017 15:02:21 +0100
+Subject: [PATCH] ASoC: sun4i-i2s: Increase DMA max burst to 8
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+As done previously for sun4i-codec, the DMA maxburst of 4
+is not supported by every SoCs so the DMA controller engine
+returns "unsupported value".
+
+As a maxburst of 8 is supported by all variants, this patch
+increases it to 8.
+
+For more details, see commit from Chen-Yu Tsai:
+commit 730e2dd0cbc7 ("ASoC: sun4i-codec: Increase DMA max burst to 8")
+
+Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sunxi/sun4i-i2s.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
+index f24d19526603..4237323ef594 100644
+--- a/sound/soc/sunxi/sun4i-i2s.c
++++ b/sound/soc/sunxi/sun4i-i2s.c
+@@ -694,10 +694,10 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
+ 	}
+ 	
+ 	i2s->playback_dma_data.addr = res->start + SUN4I_I2S_FIFO_TX_REG;
+-	i2s->playback_dma_data.maxburst = 4;
++	i2s->playback_dma_data.maxburst = 8;
+ 
+ 	i2s->capture_dma_data.addr = res->start + SUN4I_I2S_FIFO_RX_REG;
+-	i2s->capture_dma_data.maxburst = 4;
++	i2s->capture_dma_data.maxburst = 8;
+ 
+ 	pm_runtime_enable(&pdev->dev);
+ 	if (!pm_runtime_enabled(&pdev->dev)) {
+-- 
+2.11.0
+
+
+
+--===============7943772179114720444==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7943772179114720444==--
