@@ -1,99 +1,206 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI 4.1 DMA controller
-Date: Tue, 17 Jan 2017 15:20:14 +0100
-Message-ID: <20170117142016.11163-2-abailon@baylibre.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/3 v3] iio: adc: add device tree bindings for Qualcomm PM8xxx
+ ADCs
+Date: Tue, 17 Jan 2017 15:25:13 +0100
+Message-ID: <20170117142515.10578-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117142016.11163-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rama Krishna Phani A <rphani@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T . Ivanov" <iivanov.xz@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
+This adds the device tree bindings for the Qualcomm PM8xxx
+ADCs. This is based on the existing DT bindings for the
+SPMI ADC so there are hopefully no controversial features.
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-msm@vger.kernel.org
+Cc: Ivan T. Ivanov <iivanov.xz@gmail.com>
+Cc: Andy Gross <andy.gross@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Rama Krishna Phani A <rphani@codeaurora.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../devicetree/bindings/usb/da8xx-usb.txt          | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+ChangeLog v2->v3:
+- Collapse the ratiometric property into one that enables and
+  selects a ratiometric reference in one go.
+- Use foo: adc-channel@X notation consequently
+- Document that the reference voltage is compulsory.
+ChangeLog v1->v2:
+- Spelling fixes
+---
+ .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 149 +++++++++++++++++++++
+ 1 file changed, 149 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-index ccb844a..aed3169 100644
---- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-@@ -18,10 +18,26 @@ Required properties:
- 
-  - phy-names: Should be "usb-phy"
- 
-+ - dmas: specifies the dma channels
+diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+new file mode 100644
+index 000000000000..53cd146d8096
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+@@ -0,0 +1,149 @@
++Qualcomm's PM8xxx voltage XOADC
 +
-+ - dma-names: specifies the names of the channels. Use "rxN" for receive
-+   and "txN" for transmit endpoints. N specifies the endpoint number.
++The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Crystal
++oscillator ADC) encompassing PM8018, PM8038, PM8058 and PM8921.
 +
- Optional properties:
- ~~~~~~~~~~~~~~~~~~~~
-  - vbus-supply: Phandle to a regulator providing the USB bus power.
- 
-+DMA
-+~~~
-+- compatible: ti,da8xx-cppi41
-+- reg: offset and length of the following register spaces: CPPI DMA Controller,
-+  CPPI DMA Scheduler, Queue Manager
-+- reg-names: "controller", "scheduler", "queuemgr"
-+- #dma-cells: should be set to 2. The first number represents the
-+  channel number (0 … 3 for endpoints 1 … 4).
-+  The second number is 0 for RX and 1 for TX transfers.
-+- #dma-channels: should be set to 4 representing the 4 endpoints.
++Required properties:
 +
- Example:
- 	usb_phy: usb-phy {
- 		compatible = "ti,da830-usb-phy";
-@@ -31,6 +47,9 @@ Example:
- 	usb0: usb@200000 {
- 		compatible = "ti,da830-musb";
- 		reg =   <0x00200000 0x10000>;
-+		ranges;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 		interrupts = <58>;
- 		interrupt-names = "mc";
- 
-@@ -39,5 +58,28 @@ Example:
- 		phys = <&usb_phy 0>;
- 		phy-names = "usb-phy";
- 
-+		dmas = <&cppi41dma 0 0 &cppi41dma 1 0
-+			&cppi41dma 2 0 &cppi41dma 3 0
-+			&cppi41dma 0 1 &cppi41dma 1 1
-+			&cppi41dma 2 1 &cppi41dma 3 1>;
-+		dma-names =
-+			"rx1", "rx2", "rx3", "rx4",
-+			"tx1", "tx2", "tx3", "tx4";
++- compatible: should be one of:
++  "qcom,pm8018-adc"
++  "qcom,pm8038-adc"
++  "qcom,pm8058-adc"
++  "qcom,pm8921-adc"
 +
- 		status = "okay";
++- reg: should contain the ADC base address in the PMIC, typically
++  0x197.
 +
-+		cppi41dma: dma-controller@201000 {
-+			compatible = "ti,da8xx-cppi41";
-+			reg =  <0x201000 0x1000
-+				0x202000 0x1000
-+				0x204000 0x4000>;
-+			reg-names = "controller", "scheduler", "queuemgr";
-+			interrupts = <58>;
-+			interrupt-names = "glue";
-+			#dma-cells = <2>;
-+			#dma-channels = <4>;
-+			#dma-requests = <256>;
-+			status = "okay";
-+		};
++- xoadc-ref-supply: should reference a regulator that can supply
++  a reference voltage on demand. The reference voltage may vary
++  with PMIC variant but is typically something like 2.2 or 1.8V.
 +
- 	};
++The following required properties are standard for IO channels, see
++iio-bindings.txt for more details:
++
++- #address-cells: should be set to <1>
++
++- #size-cells: should be set to <0>
++
++- #io-channel-cells: should be set to <1>
++
++- interrupts: should refer to the parent PMIC interrupt controller
++  and reference the proper ADC interrupt.
++
++Required subnodes:
++
++The ADC channels are configured as subnodes of the ADC. Since some of
++them are used for calibrating the ADC, these nodes are compulsory:
++
++adc-channel@c {
++	reg = <0x0c>;
++};
++
++adc-channel@d {
++	reg = <0x0d>;
++};
++
++adc-channel@f {
++	reg = <0x0f>;
++};
++
++These three nodes are used for absolute and ratiometric calibration
++and only need to have these reg values: they are by hardware definition
++1:1 ratio converters that sample 625, 1250 and 0 milliV and create
++an interpolation calibration for all other ADCs.
++
++Optional subnodes: any channels other than channel 0x0c, 0x0d and
++0x0f are optional.
++
++Required channel node properties:
++
++- reg: should contain the hardware channel number in the range
++  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
++
++Optional channel node properties:
++
++- qcom,decimation:
++  Value type: <u32>
++  Definition: This parameter is used to decrease the ADC sampling rate.
++          Quicker measurements can be made by reducing the decimation ratio.
++          Valid values are 512, 1024, 2048, 4096.
++          If the property is not found, a default value of 512 will be used.
++
++- qcom,ratiometric:
++  Value type: <u32>
++  Definition: Channel calibration type. If this property is specified
++          VADC will use a special voltage references for channel
++          calibration. The available references are specified in the
++	  as a u32 value setting (see below) and it is compulsory
++	  to also specify this reference if ratiometric calibration
++	  is selected.
++
++	  If the property is not found, the channel will be
++          calibrated with the 0.625V and 1.25V reference channels, also
++          known as an absolute calibration.
++  The reference voltage pairs when using ratiometric calibration:
++	  0 = XO_IN/XOADC_GND
++	  1 = PMIC_IN/XOADC_GND
++	  2 = PMIC_IN/BMS_CSP
++	  3 (invalid)
++	  4 = XOADC_GND/XOADC_GND
++	  5 = XOADC_VREF/XOADC_GND
++
++Example:
++
++xoadc: xoadc@197 {
++	compatible = "qcom,pm8058-adc";
++	reg = <0x197>;
++	interrupt-parent = <&pm8058>;
++	interrupts = <76 1>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	#io-channel-cells = <1>;
++
++	vcoin: adc-channel@0 {
++		reg = <0x00>;
++	};
++	vbat: adc-channel@1 {
++		reg = <0x01>;
++	};
++	dcin: adc-channel@2 {
++		reg = <0x02>;
++	};
++	ichg: adc-channel@3 {
++		reg = <0x03>;
++	};
++	vph_pwr: adc-channel@4 {
++		reg = <0x04>;
++	};
++	usb_vbus: adc-channel@a {
++		reg = <0x0a>;
++	};
++	die_temp: adc-channel@b {
++		reg = <0x0b>;
++	};
++	ref_625mv: adc-channel@c {
++		reg = <0x0c>;
++	};
++	ref_1250mv: adc-channel@d {
++		reg = <0x0d>;
++	};
++	ref_325mv: adc-channel@e {
++		reg = <0x0e>;
++	};
++	ref_muxoff: adc-channel@f {
++		reg = <0x0f>;
++	};
++};
++
++
++/* IIO client node */
++iio-hwmon {
++	compatible = "iio-hwmon";
++	io-channels = <&xoadc 0x01>, /* Battery */
++		    <&xoadc 0x02>, /* DC in (charger) */
++		    <&xoadc 0x04>, /* VPH the main system voltage */
++		    <&xoadc 0x0b>, /* Die temperature */
++		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
++		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
++		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
++};
 -- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
