@@ -1,136 +1,62 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/2] pinctrl: meson: Add HDMI HPD/DDC pins functions
-Date: Tue, 17 Jan 2017 13:05:37 +0100
-Message-ID: <1484654738-5496-2-git-send-email-narmstrong@baylibre.com>
-References: <1484654738-5496-1-git-send-email-narmstrong@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484654738-5496-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: khilman@baylibre.com, carlo@caione.org, linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] clk: meson-gxbb: Export HDMI clocks
+Date: Tue, 17 Jan 2017 13:08:48 +0100
+Message-ID: <1484654928-5640-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl functions for HDMI HPD pin and DDC pins on Amlogic Meson
-GXL and GXBB SoCs.
+Export HDMI clock from internal to dt-bindings.
 
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 19 +++++++++++++++++++
- drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 19 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
+ drivers/clk/meson/gxbb.h              | 4 ++--
+ include/dt-bindings/clock/gxbb-clkc.h | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-index c3928aa..0d9ad36 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
-@@ -232,6 +232,10 @@
- static const unsigned int pwm_f_x_pins[]	= { PIN(GPIOX_7, EE_OFF) };
- static const unsigned int pwm_f_y_pins[]	= { PIN(GPIOY_15, EE_OFF) };
- 
-+static const unsigned int hdmi_hpd_pins[]	= { PIN(GPIOH_0, EE_OFF) };
-+static const unsigned int hdmi_sda_pins[]	= { PIN(GPIOH_1, EE_OFF) };
-+static const unsigned int hdmi_scl_pins[]	= { PIN(GPIOH_2, EE_OFF) };
-+
- static const struct pinctrl_pin_desc meson_gxbb_aobus_pins[] = {
- 	MESON_PIN(GPIOAO_0, 0),
- 	MESON_PIN(GPIOAO_1, 0),
-@@ -440,6 +444,11 @@
- 	GROUP(eth_txd2,		6,	3),
- 	GROUP(eth_txd3,		6,	2),
- 
-+	/* Bank H */
-+	GROUP(hdmi_hpd,		1,	26),
-+	GROUP(hdmi_sda,		1,	25),
-+	GROUP(hdmi_scl,		1,	24),
-+
- 	/* Bank DV */
- 	GROUP(uart_tx_b,	2,	29),
- 	GROUP(uart_rx_b,	2,	28),
-@@ -636,6 +645,14 @@
- 	"pwm_f_y",
- };
- 
-+static const char * const hdmi_hpd_groups[] = {
-+	"hdmi_hpd",
-+};
-+
-+static const char * const hdmi_i2c_groups[] = {
-+	"hdmi_sda", "hdmi_scl",
-+};
-+
- static const char * const gpio_aobus_groups[] = {
- 	"GPIOAO_0", "GPIOAO_1", "GPIOAO_2", "GPIOAO_3", "GPIOAO_4",
- 	"GPIOAO_5", "GPIOAO_6", "GPIOAO_7", "GPIOAO_8", "GPIOAO_9",
-@@ -699,6 +716,8 @@
- 	FUNCTION(pwm_e),
- 	FUNCTION(pwm_f_x),
- 	FUNCTION(pwm_f_y),
-+	FUNCTION(hdmi_hpd),
-+	FUNCTION(hdmi_i2c),
- };
- 
- static struct meson_pmx_func meson_gxbb_aobus_functions[] = {
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 25694f7..7703a46 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -197,6 +197,10 @@
- 
- static const unsigned int pwm_e_pins[]		= { PIN(GPIOX_16, EE_OFF) };
- 
-+static const unsigned int hdmi_hpd_pins[]	= { PIN(GPIOH_0, EE_OFF) };
-+static const unsigned int hdmi_sda_pins[]	= { PIN(GPIOH_1, EE_OFF) };
-+static const unsigned int hdmi_scl_pins[]	= { PIN(GPIOH_2, EE_OFF) };
-+
- static const struct pinctrl_pin_desc meson_gxl_aobus_pins[] = {
- 	MESON_PIN(GPIOAO_0, 0),
- 	MESON_PIN(GPIOAO_1, 0),
-@@ -363,6 +367,11 @@
- 	GROUP(eth_txd2,		4,	11),
- 	GROUP(eth_txd3,		4,	10),
- 
-+	/* Bank H */
-+	GROUP(hdmi_hpd,		6,	31),
-+	GROUP(hdmi_sda,		6,	30),
-+	GROUP(hdmi_scl,		6,	29),
-+
- 	/* Bank DV */
- 	GROUP(uart_tx_b,	2,	16),
- 	GROUP(uart_rx_b,	2,	15),
-@@ -506,6 +515,14 @@
- 	"pwm_e",
- };
- 
-+static const char * const hdmi_hpd_groups[] = {
-+	"hdmi_hpd",
-+};
-+
-+static const char * const hdmi_i2c_groups[] = {
-+	"hdmi_sda", "hdmi_scl",
-+};
-+
- static const char * const gpio_aobus_groups[] = {
- 	"GPIOAO_0", "GPIOAO_1", "GPIOAO_2", "GPIOAO_3", "GPIOAO_4",
- 	"GPIOAO_5", "GPIOAO_6", "GPIOAO_7", "GPIOAO_8", "GPIOAO_9",
-@@ -537,6 +554,8 @@
- 	FUNCTION(i2c_c),
- 	FUNCTION(eth),
- 	FUNCTION(pwm_e),
-+	FUNCTION(hdmi_hpd),
-+	FUNCTION(hdmi_i2c),
- };
- 
- static struct meson_pmx_func meson_gxl_aobus_functions[] = {
+diff --git a/drivers/clk/meson/gxbb.h b/drivers/clk/meson/gxbb.h
+index 0252939..2139e97 100644
+--- a/drivers/clk/meson/gxbb.h
++++ b/drivers/clk/meson/gxbb.h
+@@ -231,7 +231,7 @@
+ #define CLKID_AHB_DATA_BUS	  60
+ #define CLKID_AHB_CTRL_BUS	  61
+ #define CLKID_HDMI_INTR_SYNC	  62
+-#define CLKID_HDMI_PCLK		  63
++/* CLKID_HDMI_PCLK */
+ /* CLKID_USB1_DDR_BRIDGE */
+ /* CLKID_USB0_DDR_BRIDGE */
+ #define CLKID_MMC_PCLK		  66
+@@ -245,7 +245,7 @@
+ #define CLKID_VCLK2_VENCI1	  74
+ #define CLKID_VCLK2_VENCP0	  75
+ #define CLKID_VCLK2_VENCP1	  76
+-#define CLKID_GCLK_VENCI_INT0	  77
++/* CLKID_GCLK_VENCI_INT0 */
+ #define CLKID_GCLK_VENCI_INT	  78
+ #define CLKID_DAC_CLK		  79
+ #define CLKID_AOCLK_GATE	  80
+diff --git a/include/dt-bindings/clock/gxbb-clkc.h b/include/dt-bindings/clock/gxbb-clkc.h
+index baade6f..da1d473 100644
+--- a/include/dt-bindings/clock/gxbb-clkc.h
++++ b/include/dt-bindings/clock/gxbb-clkc.h
+@@ -18,8 +18,10 @@
+ #define CLKID_USB0		50
+ #define CLKID_USB1		51
+ #define CLKID_USB		55
++#define CLKID_HDMI_PCLK		63
+ #define CLKID_USB1_DDR_BRIDGE	64
+ #define CLKID_USB0_DDR_BRIDGE	65
++#define CLKID_GCLK_VENCI_INT0	77
+ #define CLKID_AO_I2C		93
+ #define CLKID_SD_EMMC_A		94
+ #define CLKID_SD_EMMC_B		95
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
