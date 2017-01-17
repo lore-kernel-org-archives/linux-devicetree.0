@@ -1,67 +1,59 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v2 11/11] drm/rockchip/dsi: fix insufficient bandwidth of
- some panel
-Date: Tue, 17 Jan 2017 17:31:53 +0800
-Message-ID: <587DE489.2010004@rock-chips.com>
-References: <1484561311-494-1-git-send-email-zyw@rock-chips.com>
- <1484561311-494-12-git-send-email-zyw@rock-chips.com>
- <20170116124453.2154def9.john@metanate.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH v3 4/9] arm: dts: ls1021a: share all MSIs
+Date: Tue, 17 Jan 2017 17:32:38 +0800
+Message-ID: <1484645563-29877-5-git-send-email-Minghuan.Lian@nxp.com>
+References: <1484645563-29877-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170116124453.2154def9.john@metanate.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: John Keeping <john@metanate.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, linux-rockchip@lists.infradead.org, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484645563-29877-1-git-send-email-Minghuan.Lian@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9obgoKT24gMDEvMTYvMjAxNyAwODo0NCBQTSwgSm9obiBLZWVwaW5nIHdyb3RlOgo+IE9u
-IE1vbiwgMTYgSmFuIDIwMTcgMTg6MDg6MzEgKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Cj4+
-IFNldCB0aGUgbGFuZXMgYnBzIHRvIDEgLyAwLjkgdGltZXMgb2YgcGNsaywgdGhlIG1hcmdpbiBp
-cyBub3QgZW5vdWdoCj4+IGZvciBzb21lIHBhbmVsLCBpdCB3aWxsIGNhdXNlIHRoZSBzY3JlZW4g
-ZGlzcGxheSBpcyBub3Qgbm9ybWFsLCBzbwo+PiBpbmNyZWFzZXMgdGhlIGJhZG53aWR0aCB0byAx
-IC8gMC44Lgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMu
-Y29tPgo+Pgo+PiAtLS0KPj4KPj4gICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1k
-c2kuYyB8IDQgKystLQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKyksIDIgZGVs
-ZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHct
-bWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCj4+IGlu
-ZGV4IDlkZmE3M2QuLjVhOTczZmUgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9kdy1taXBpLWRzaS5jCj4+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jCj4+IEBAIC01MDEsOCArNTAxLDggQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9n
-ZXRfbGFuZV9icHMoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpCj4+ICAgCj4+ICAgCW1wY2xrID0g
-RElWX1JPVU5EX1VQKGRzaS0+bW9kZS0+Y2xvY2ssIE1TRUNfUEVSX1NFQyk7Cj4+ICAgCWlmICht
-cGNsaykgewo+PiAtCQkvKiB0YWtlIDEgLyAwLjksIHNpbmNlIG1icHMgbXVzdCBiaWcgdGhhbiBi
-YW5kd2lkdGggb2YgUkdCICovCj4+IC0JCXRtcCA9IG1wY2xrICogKGJwcCAvIGRzaS0+bGFuZXMp
-ICogMTAgLyA5Owo+PiArCQkvKiB0YWtlIDEgLyAwLjgsIHNpbmNlIG1icHMgbXVzdCBiaWcgdGhh
-biBiYW5kd2lkdGggb2YgUkdCICovCj4+ICsJCXRtcCA9IG1wY2xrICogKGJwcCAvIGRzaS0+bGFu
-ZXMpICogMTAgLyA4Owo+IFRoaXMgYW5kIHBhdGNoIDkgYXJlIGp1c3QgaGFja2luZyBhcm91bmQg
-dGhlIHVuZGVybHlpbmcgcHJvYmxlbSBpbiBvcmRlcgo+IHRvIG1ha2UgcGFydGljdWxhciBwYW5l
-bHMgd29yay4gIEknbSBwcmV0dHkgc3VyZSB0aGUgYWN0dWFsIGlzc3VlIGlzIHRoZQo+IHVzZSBv
-ZiBoYXJkY29kZWQgdmFsdWVzIHdoZW4gY29uZmlndXJpbmcgdGhlIFBIWSwgc2luY2UgdGhlIFBI
-WQo+IHBhcmFtZXRlcnMgYXJlIHNwZWNpZmllZCBpbiBjbG9jayBjeWNsZXMgYnV0IHRoZSBNSVBJ
-IHNwZWMgcmVxdWlyZXMKPiBhYnNvbHV0ZSB0aW1lIGR1cmF0aW9ucy4KPgo+IEkgcG9zdGVkIGEg
-c2VyaWVzIGFkZHJlc3NpbmcgdGhpcyBhIHdoaWxlIGFnbywgYWx0aG91Z2ggSSBzY3Jld2VkIHVw
-Cj4gc2VuZGluZyBpdCBzbyBzb21lIHBhdGNoZXMgd2VyZSBpbmNsdWRlZCB0d2ljZSBhbmQgc2lu
-Y2Ugbm8gb25lCj4gZXhwcmVzc2VkIGFueSBpbnRlcmVzdCBJIGRpZG4ndCBwb3N0IGEgY2xlYW5l
-ZCB1cCB2ZXJzaW9uLgo+Cj4gVGhlIHJlbGV2YW50IHBhdGNoIGlzIGhlcmU6Cj4KPiBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzkzNDAxOTMvClRoYW5rcyB2ZXJ5IG11Y2gsIHlv
-dXIgcGF0Y2hlcyBhcmUgdmVyeSB1c2VmdWwgZm9yIG1lLiBJdCBsb29rcyB5b3VyIAptZXRob2Qg
-aXMgY29ycmVjdC4KQW5kIEkgYW0gdmVyeSBjb25mdXNlZCB3aHkgTWFyayBZYW8gYW5kIG1lIGRp
-ZCBub3QgcmVjZWl2ZSB5b3VyIHBhdGNoZXMgCmJlZm9yZSwKYWx0aG91Z2ggd2UgaGF2ZSBzdWJz
-Y3JpYmVkIHRoZSA8bGludXgtcm9ja2NoaXBAbGlzdHMuaW5mcmFkZWFkLm9yZz4uCgpJbiBhZGRp
-dGlvbiwgY291bGQgeW91IHRlbGwgbWUgd2hpY2ggZGV2aWNlIHdhcmUgeW91IHRlc3Rpbmcgd2l0
-aCB0aGVzZSAKbWlwaSBwYXRjaGVzLgpJIGdvaW5nIHRvIHRlc3QgdGhlbSB0aGVzZSBkYXkuCgpD
-aHJpcyBaaG9uZwo+PiAgIAkJaWYgKHRtcCA8IG1heF9tYnBzKQo+PiAgIAkJCXRhcmdldF9tYnBz
-ID0gdG1wOwo+PiAgIAkJZWxzZQo+Cj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+In order to maximize the use of MSI, a PCIe controller will share
+all MSI controllers. The patch changes msi-parent to refer to all
+MSI controller dts nodes.
+
+Signed-off-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+---
+v3-v1:
+- None
+
+ arch/arm/boot/dts/ls1021a.dtsi | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index 6651938..1c82024 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -723,7 +723,7 @@
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x40 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x40 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+-			msi-parent = <&msi1>;
++			msi-parent = <&msi1>, <&msi2>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 91  IRQ_TYPE_LEVEL_HIGH>,
+@@ -746,7 +746,7 @@
+ 			bus-range = <0x0 0xff>;
+ 			ranges = <0x81000000 0x0 0x00000000 0x48 0x00010000 0x0 0x00010000   /* downstream I/O */
+ 				  0x82000000 0x0 0x40000000 0x48 0x40000000 0x0 0x40000000>; /* non-prefetchable memory */
+-			msi-parent = <&msi2>;
++			msi-parent = <&msi1>, <&msi2>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0 0 0 7>;
+ 			interrupt-map = <0000 0 0 1 &gic GIC_SPI 92  IRQ_TYPE_LEVEL_HIGH>,
+-- 
+1.9.1
