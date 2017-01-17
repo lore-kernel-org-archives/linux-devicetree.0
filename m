@@ -1,38 +1,71 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH 1/2] dt-bindings: document renesas-ostm timer
-Date: Tue, 17 Jan 2017 04:16:09 +0000
-Message-ID: <SG2PR06MB1165ECDD4D1395835B2804408A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170112185952.2780-1-chris.brandt@renesas.com>
- <20170112185952.2780-2-chris.brandt@renesas.com>
- <CAMuHMdX_hx2M8Q4y7gptJvad4cbb+M54DZVCmbhunKuk4esbGA@mail.gmail.com>
- <SG2PR06MB1165BA49D82D9C0835DC0FB38A7B0@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdVC2BV6=jT1CZ+X92=_th-cEc0=hsiyRYxU5qMLoMVPMw@mail.gmail.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Tue, 17 Jan 2017 04:27:27 +0000
+Message-ID: <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170112181149.29035-1-chris.brandt@renesas.com>
+ <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
+ <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+ <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+ <20170116114023.GA3029@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVC2BV6=jT1CZ+X92=_th-cEc0=hsiyRYxU5qMLoMVPMw@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170116114023.GA3029@katana>
 Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgSmFudWFyeSAxNiwgMjAxNywgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOg0KPiA+IERvIHlvdSB0aGluayBpdCB3b3VsZCBiZSBiZXR0ZXIgaWYgYSBkcml2
-ZXIgaW5zdGFuY2Ugb25seSBkb2VzIDENCj4gPiB0aGluZzogRWl0aGVyICdjbG9ja3NvdXJjZScg
-b3IgJ2Nsb2NrIGV2ZW50Jz8/DQo+ID4gVGhlbiwgSSB3b3VsZCBtYWtlIDIgb3N0bSBub2RlcyBh
-bmQgcGFzcyBpbiB0aGUgbW9kZSBJIHdvdWxkIGxpa2UgaXQNCj4gb3BlcmF0ZSBpbj8NCj4gPg0K
-PiA+IEZvciBleGFtcGxlOg0KPiA+DQo+ID4gJm9zdG0wIHsNCj4gPiAgICAgICAgIG1vZGUgPSAi
-Y2xvY2tzb3VyY2UiOw0KPiA+ICAgICAgICAgc3RhdHVzID0gIm9rYXkiOw0KPiA+IH07DQo+ID4N
-Cj4gPiAmb3N0bTEgew0KPiA+ICAgICAgICAgbW9kZSA9ICJjbG9jay1ldmVudCI7DQo+ID4gICAg
-ICAgICBzdGF0dXMgPSAib2theSI7DQo+ID4gfTsNCj4gDQo+IEFnYWluLCB0aGF0J3Mgc29mdHdh
-cmUgcG9saWN5LCBub3QgaGFyZHdhcmUgZGVzY3JpcHRpb24uDQo+IA0KPiBBcyB0aGV5J3JlIGlu
-ZGVwZW5kZW50IGNoYW5uZWxzLCBpdCBkb2Vzbid0IG1hdHRlciB3aGljaCBvbmUgaXMgdXNlZCBm
-b3INCj4gd2hpY2ggZnVuY3Rpb24sIHJpZ2h0Pw0KDQpDb3JyZWN0Lg0KDQoNCj4gWW91IGNvdWxk
-IHVzZSB0aGUgZmlyc3QgcHJvYmVkIGNoYW5uZWwgZm9yIHRoZSBtb3N0IGltcG9ydGFudCBmdW5j
-dGlvbg0KPiAoY2xvY2tzb3VyY2U/KSwgYW5kIHRoZSBzZWNvbmQgb25lIGZvciB0aGUgb3RoZXIg
-ZnVuY3Rpb24gKGNsb2NrZXZlbnQpLg0KPiBTbyB0aGVyZSdzIG5vIG5lZWQgZm9yIHNwZWNpZnlp
-bmcgdGhpcyBpbiBEVC4NCj4gDQo+IERvZXMgdGhhdCBtYWtlIHNlbnNlPw0KDQpUaGF0IHdvcmtz
-IGZvciBtZS4gSSdsbCBtb2RpZnkgdGhlIGRyaXZlciBhbmQgcmV0ZXN0LiBUaGFua3MgZm9yIHRo
-ZSBpZGVhIQ0KDQoNCkNocmlzDQo=
+Hi Wolfram and Geert,
+
+On Monday, January 16, 2017, Wolfram Sang:
+> > > and then in the code do:
+> > >
+> > >         struct *cd_clk;
+> > >         cd_clk =3D devm_clk_get(&pdev->dev, "cd");
+> > >         if (cd_clk) {
+> > >                 clk_prepare_enable(cd_clk);
+> > >         }
+> > >
+> > >   (this simple 1-line fix patch is getting a lot more complicated)
+> >
+> > Disclaimer: I don't know how/if the SDHI core manages clocks, and may
+> > interfere. Adding Wolfram.
+>=20
+> Thanks for the heads up.
+>=20
+> We have special callbacks for en-/disabling clocks:
+> sh_mobile_sdhi_clk_enable() and sh_mobile_sdhi_clk_disable().
+>=20
+> I think those functions should get the above if-blocks (without curly
+> braces) to ensure we always have consistent 00 or 11 settings.
+
+
+Well....
+I was going to try and cheat and in the probe, enable both the core
+and card-detect clocks, but, not save the card-detect clock pointer.
+Basically, once it is turned on, it is never turned off (since it was inten=
+ded
+to be used for low power operation anyway).
+
+The reason is that would then keep me from having to modify the existing
+functions sh_mobile_sdhi_clk_enable/disable.
+
+Is anyone going to have an issue if I turn the card-detect clock on but nev=
+er
+turn it off???? That was the patch that I was going to test out and submit.
+
+
+
+Chris
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
