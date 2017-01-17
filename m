@@ -1,49 +1,394 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] arm: sunxi: add support for V3s SoC
-Date: Tue, 17 Jan 2017 10:05:49 +0100
-Message-ID: <20170117090549.uqwsiwmclzhx7456@lukather>
-References: <20170116180116.36729-2-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v3 3/4] ASoC: rockchip: Add machine driver for
+	ES8388 codecs
+Date: Tue, 17 Jan 2017 09:17:04 +0100
+Message-ID: <20170117081705.14107-4-romain.perier@collabora.com>
+References: <20170117081705.14107-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dctuwbv46e3jpg3o"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6F467BQKGQECNNEVVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170116180116.36729-2-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zepan <715805855-9uewiaClKEY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170117081705.14107-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+The driver is used for Rockchip boards using an audio codec compatible
+with ES8388.
 
---dctuwbv46e3jpg3o
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+This commit is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.com> with some improvements.
 
-On Tue, Jan 17, 2017 at 02:01:13AM +0800, Icenowy Zheng wrote:
-> Allwinner V3s is a low-end single-core Cortex-A7 SoC, with 64MB
-> integrated DRAM, and several peripherals.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
-> Changes in v2:
-> - Used linux-sunxi.org wiki hosted address of V3s datasheet.
-> 
-> Note: the V3s datasheet contains its user manual.
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-That would be great to use User Manual in the filename rather than
-datasheet then. The datasheet is something different.
+Changes in v3:
+- Cosmetic changes
+- Added missing email to MODULE_AUTHOR
+Changes in v2:
+- Fixed wrong dependencies for SND_SOC_ROCKCHIP_ES8388, SND_SOC_ROCKCHIP_I2S
+  was selected with unmet direct dependencies
 
-Maxime
+ .../devicetree/bindings/sound/rockchip-es8388.txt  |  28 +++
+ sound/soc/rockchip/Kconfig                         |   9 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rockchip_es8388.c               | 269 +++++++++++++++++++++
+ 4 files changed, 308 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-es8388.txt
+ create mode 100644 sound/soc/rockchip/rockchip_es8388.c
 
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-es8388.txt b/Documentation/devicetree/bindings/sound/rockchip-es8388.txt
+new file mode 100644
+index 0000000..316af2c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-es8388.txt
+@@ -0,0 +1,28 @@
++ROCKCHIP with ES8388 CODECS
++
++Required properties:
++- compatible: "rockchip,rockchip-audio-es8388"
++- rockchip,model: The user-visible name of this sound complex
++- rockchip,i2s-controller: The phandle of the Rockchip I2S controller that's
++  connected to the CODEC
++- rockchip,audio-codec: The phandle of the es8388 audio codec
++
++Optionnal properties:
++- rockchip,hp-en-gpios = The phandle of the GPIO that power up/down the
++  headphone.
++- rockchip,hp-det-gpios = The phandle of the GPIO that detects the headphone
++- pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
++
++Example:
++
++sound {
++	compatible = "rockchip,rockchip-audio-es8388";
++	rockchip,model = "Analog audio output";
++	rockchip,i2s-controller = <&i2s>;
++	rockchip,audio-codec = <&es8388>;
++	rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
++	rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&headphone>;
++};
++
+diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
+index c783f9a..b159744 100644
+--- a/sound/soc/rockchip/Kconfig
++++ b/sound/soc/rockchip/Kconfig
+@@ -42,6 +42,15 @@ config SND_SOC_ROCKCHIP_RT5645
+ 	  Say Y or M here if you want to add support for SoC audio on Rockchip
+ 	  boards using the RT5645/RT5650 codec, such as Veyron.
+ 
++config SND_SOC_ROCKCHIP_ES8388
++	tristate "ASoC support for Rockchip boards using a ES8388 codec"
++	depends on SND_SOC_ROCKCHIP && I2C && GPIOLIB && CLKDEV_LOOKUP
++	select SND_SOC_ROCKCHIP_I2S
++	select SND_SOC_ES8328_I2C
++	help
++	  Say Y or M here if you want to add support for SoC audio on Rockchip
++	  boards using the ES8388 Codec such as Radxa Rock 2
++
+ config SND_SOC_RK3399_GRU_SOUND
+ 	tristate "ASoC support multiple codecs for Rockchip RK3399 GRU boards"
+ 	depends on SND_SOC_ROCKCHIP && I2C && GPIOLIB && CLKDEV_LOOKUP && SPI
+diff --git a/sound/soc/rockchip/Makefile b/sound/soc/rockchip/Makefile
+index 84e5c7c..759db5e 100644
+--- a/sound/soc/rockchip/Makefile
++++ b/sound/soc/rockchip/Makefile
+@@ -7,8 +7,10 @@ obj-$(CONFIG_SND_SOC_ROCKCHIP_SPDIF) += snd-soc-rockchip-spdif.o
+ 
+ snd-soc-rockchip-max98090-objs := rockchip_max98090.o
+ snd-soc-rockchip-rt5645-objs := rockchip_rt5645.o
++snd-soc-rockchip-es8388-objs := rockchip_es8388.o
+ snd-soc-rk3399-gru-sound-objs := rk3399_gru_sound.o
+ 
+ obj-$(CONFIG_SND_SOC_ROCKCHIP_MAX98090) += snd-soc-rockchip-max98090.o
+ obj-$(CONFIG_SND_SOC_ROCKCHIP_RT5645) += snd-soc-rockchip-rt5645.o
++obj-$(CONFIG_SND_SOC_ROCKCHIP_ES8388) += snd-soc-rockchip-es8388.o
+ obj-$(CONFIG_SND_SOC_RK3399_GRU_SOUND) += snd-soc-rk3399-gru-sound.o
+diff --git a/sound/soc/rockchip/rockchip_es8388.c b/sound/soc/rockchip/rockchip_es8388.c
+new file mode 100644
+index 0000000..723d025
+--- /dev/null
++++ b/sound/soc/rockchip/rockchip_es8388.c
+@@ -0,0 +1,269 @@
++/*
++ * Rockchip machine ASoC driver for boards using a ES8388 CODEC.
++ *
++ * Copyright (c) 2016, Collabora Ltd.
++ *
++ * Authors: Sjoerd Simons <sjoerd.simons@collabora.com>,
++ *	    Romain Perier <romain.perier@collabora.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ *
++ */
++
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/gpio.h>
++#include <linux/of_gpio.h>
++#include <sound/core.h>
++#include <sound/jack.h>
++#include <sound/pcm.h>
++#include <sound/pcm_params.h>
++#include <sound/soc.h>
++#include <sound/soc-dapm.h>
++
++#include "rockchip_i2s.h"
++
++#define DRV_NAME "rockchip-snd-es8388"
++
++struct rk_es8388_drvdata {
++	int gpio_hp_en;
++	int gpio_hp_det;
++};
++
++static int rk_es8388_hp_power(struct snd_soc_dapm_widget *w,
++			      struct snd_kcontrol *k, int event)
++{
++	struct rk_es8388_drvdata *machine = snd_soc_card_get_drvdata(w->dapm->card);
++
++	if (!gpio_is_valid(machine->gpio_hp_en))
++		return 0;
++
++	gpio_set_value_cansleep(machine->gpio_hp_en,
++				SND_SOC_DAPM_EVENT_ON(event));
++
++	return 0;
++}
++
++static struct snd_soc_jack headphone_jack;
++static struct snd_soc_jack_pin headphone_jack_pins[] = {
++	{
++		.pin = "Headphone",
++		.mask = SND_JACK_HEADPHONE
++	},
++};
++
++static const struct snd_soc_dapm_widget rk_dapm_widgets[] = {
++	SND_SOC_DAPM_HP("Headphone", rk_es8388_hp_power),
++};
++
++static const struct snd_soc_dapm_route rk_audio_map[] = {
++	{"Headphone", NULL, "LOUT2"},
++	{"Headphone", NULL, "ROUT2"},
++};
++
++static const struct snd_kcontrol_new rk_mc_controls[] = {
++	SOC_DAPM_PIN_SWITCH("Headphone"),
++};
++
++static int rk_hw_params(struct snd_pcm_substream *substream,
++			struct snd_pcm_hw_params *params)
++{
++	int ret = 0;
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++	int mclk;
++
++	switch (params_rate(params)) {
++	case 8000:
++	case 16000:
++	case 24000:
++	case 32000:
++	case 48000:
++	case 64000:
++	case 96000:
++		mclk = 12288000;
++		break;
++	case 11025:
++	case 22050:
++	case 44100:
++	case 88200:
++		mclk = 11289600;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	ret = snd_soc_dai_set_sysclk(cpu_dai, 0, mclk,
++				     SND_SOC_CLOCK_OUT);
++
++	if (ret && ret != -ENOTSUPP) {
++		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
++		return ret;
++	}
++
++	ret = snd_soc_dai_set_sysclk(codec_dai, 0, mclk,
++				     SND_SOC_CLOCK_IN);
++	if (ret && ret != -ENOTSUPP) {
++		dev_err(codec_dai->dev, "Can't set codec clock %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static struct snd_soc_jack_gpio rk_hp_jack_gpio = {
++	.name = "Headphone detection",
++	.report = SND_JACK_HEADPHONE,
++	.debounce_time = 150
++};
++
++static int rk_init(struct snd_soc_pcm_runtime *runtime)
++{
++	struct rk_es8388_drvdata *machine = snd_soc_card_get_drvdata(runtime->card);
++
++	/* Enable Headset Jack detection */
++	if (gpio_is_valid(machine->gpio_hp_det)) {
++		snd_soc_card_jack_new(runtime->card, "Headphone Jack",
++				      SND_JACK_HEADPHONE, &headphone_jack,
++				      headphone_jack_pins,
++				      ARRAY_SIZE(headphone_jack_pins));
++		rk_hp_jack_gpio.gpio = machine->gpio_hp_det;
++		snd_soc_jack_add_gpios(&headphone_jack, 1, &rk_hp_jack_gpio);
++	}
++
++	return 0;
++}
++
++static struct snd_soc_ops rk_ops = {
++	.hw_params = rk_hw_params,
++};
++
++static struct snd_soc_dai_link rk_dailink = {
++	.name = "ES8388",
++	.stream_name = "Audio",
++	.codec_dai_name = "es8328-hifi-analog",
++	.init = rk_init,
++	.ops = &rk_ops,
++	/* Set es8388 as slave */
++	.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
++		SND_SOC_DAIFMT_CBS_CFS,
++};
++
++static struct snd_soc_card snd_soc_card_rk = {
++	.name = "I2S-ES8388",
++	.dai_link = &rk_dailink,
++	.num_links = 1,
++	.num_aux_devs = 0,
++	.dapm_widgets = rk_dapm_widgets,
++	.num_dapm_widgets = ARRAY_SIZE(rk_dapm_widgets),
++	.dapm_routes = rk_audio_map,
++	.num_dapm_routes = ARRAY_SIZE(rk_audio_map),
++	.controls = rk_mc_controls,
++	.num_controls = ARRAY_SIZE(rk_mc_controls),
++};
++
++static int snd_rk_mc_probe(struct platform_device *pdev)
++{
++	int ret = 0;
++	struct snd_soc_card *card = &snd_soc_card_rk;
++	struct device_node *np = pdev->dev.of_node;
++	struct rk_es8388_drvdata *machine;
++
++	machine = devm_kzalloc(&pdev->dev, sizeof(struct rk_es8388_drvdata),
++			       GFP_KERNEL);
++	if (!machine)
++		return -ENOMEM;
++
++	card->dev = &pdev->dev;
++
++	machine->gpio_hp_det = of_get_named_gpio(np,
++		"rockchip,hp-det-gpios", 0);
++	if (machine->gpio_hp_det == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
++	machine->gpio_hp_en = of_get_named_gpio(np,
++		"rockchip,hp-en-gpios", 0);
++	if (machine->gpio_hp_en == -EPROBE_DEFER)
++		return -EPROBE_DEFER;
++
++	if (gpio_is_valid(machine->gpio_hp_en)) {
++		ret = devm_gpio_request_one(&pdev->dev, machine->gpio_hp_en,
++					    GPIOF_OUT_INIT_LOW, "hp_en");
++		if (ret) {
++			dev_err(card->dev, "cannot get hp_en gpio\n");
++			return ret;
++		}
++	}
++
++	ret = snd_soc_of_parse_card_name(card, "rockchip,model");
++	if (ret) {
++		dev_err(card->dev, "SoC parse card name failed %d\n", ret);
++		return ret;
++	}
++
++	rk_dailink.codec_of_node = of_parse_phandle(np, "rockchip,audio-codec",
++						    0);
++	if (!rk_dailink.codec_of_node) {
++		dev_err(&pdev->dev,
++			"Property 'rockchip,audio-codec' missing or invalid\n");
++		return -EINVAL;
++	}
++
++	rk_dailink.cpu_of_node = of_parse_phandle(np, "rockchip,i2s-controller",
++						  0);
++	if (!rk_dailink.cpu_of_node) {
++		dev_err(&pdev->dev,
++			"Property 'rockchip,i2s-controller' missing or invalid\n");
++		return -EINVAL;
++	}
++
++	rk_dailink.platform_of_node = rk_dailink.cpu_of_node;
++	snd_soc_card_set_drvdata(card, machine);
++
++	ret = devm_snd_soc_register_card(&pdev->dev, card);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"Soc register card failed %d\n", ret);
++		return ret;
++	}
++
++	platform_set_drvdata(pdev, card);
++
++	return ret;
++}
++
++static const struct of_device_id rockchip_es8388_of_match[] = {
++	{ .compatible = "rockchip,rockchip-audio-es8388", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, rockchip_es8388_of_match);
++
++static struct platform_driver snd_rk_es8388_driver = {
++	.probe = snd_rk_mc_probe,
++	.driver = {
++		.name = DRV_NAME,
++		.owner = THIS_MODULE,
++		.pm = &snd_soc_pm_ops,
++		.of_match_table = rockchip_es8388_of_match,
++	},
++};
++
++module_platform_driver(snd_rk_es8388_driver);
++
++MODULE_AUTHOR("Sjoerd Simons <sjoerd.simons@collabora.com>");
++MODULE_DESCRIPTION("Rockchip es8388 machine ASoC driver");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:" DRV_NAME);
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---dctuwbv46e3jpg3o--
+2.9.3
