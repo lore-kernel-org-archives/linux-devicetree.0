@@ -1,59 +1,72 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Dropping device tree pinmux nodes for GPIO usage
- (Was: [PATCH 3/5] arm64: dts: sun50i: add MMC nodes)
-Date: Tue, 17 Jan 2017 09:33:51 +0100
-Message-ID: <20170117083351.jy7jsdpi2zvufq5q@lukather>
-References: <1483398226-29321-1-git-send-email-andre.przywara@arm.com>
- <1483398226-29321-4-git-send-email-andre.przywara@arm.com>
- <CAGb2v65GJFTnQZtWHCS7CAtA+Dry94o77aakPLr938BpQksLog@mail.gmail.com>
- <20170115155931.l5tjcdhbz6sj3wke@localhost>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v3 1/4] ASoC: es8328-i2c: Add compatible for
+	ES8388
+Date: Tue, 17 Jan 2017 09:17:02 +0100
+Message-ID: <20170117081705.14107-2-romain.perier@collabora.com>
+References: <20170117081705.14107-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ibjbuieytilcvimr"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6VN67BQKGQEWZ7WNTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170115155931.l5tjcdhbz6sj3wke@localhost>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170117081705.14107-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
+This commit adds a compatible string for everest,es8388. This is
+an audio codec that is compatible with es8328.
 
---ibjbuieytilcvimr
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-On Sun, Jan 15, 2017 at 04:59:32PM +0100, Rask Ingemann Lambertsen wrote:
-> On Tue, Jan 03, 2017 at 10:52:12AM +0800, Chen-Yu Tsai wrote:
-> > On Tue, Jan 3, 2017 at 7:03 AM, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> wrote:
-> > > +
-> > > +                       mmc0_default_cd_pin: mmc0_cd_pin@0 {
-> > > +                               pins = "PF6";
-> > > +                               function = "gpio_in";
-> > > +                               bias-pull-up;
-> > > +                       };
-> > 
-> > We are starting to drop pinmux nodes for gpio usage.
-> 
-> How do we get the equivalent of bias-pull-up/down and drive-strength if we
-> run across a pin that needs it?
+Changes in v3: None
+Changes in v2:
+- Fixed wrong use of the i2c_device_id data structure
 
-Hmm, that's actually a very good question...
+ Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-For those cases, leave the pinctrl node for now, we'll deal with that
-in due time
-
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 30ea8a3..33fbf05 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,7 @@ This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+-  - compatible : "everest,es8328"
++  - compatible  : Should be "everest,es8328" or "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 2d05b5d..318ab28 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -20,12 +20,14 @@
+ 
+ static const struct i2c_device_id es8328_id[] = {
+ 	{ "es8328", 0 },
++	{ "es8388", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
+ 	{ .compatible = "everest,es8328", },
++	{ .compatible = "everest,es8388", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, es8328_of_match);
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---ibjbuieytilcvimr--
+2.9.3
