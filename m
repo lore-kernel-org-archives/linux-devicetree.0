@@ -1,63 +1,48 @@
-From: Bruno Herrera <bruherrera@gmail.com>
-Subject: [PATCH v3 3/5] ARM: dts: stm32: Enable USB FS on stm32f469-disco
-Date: Tue, 17 Jan 2017 14:12:35 -0200
-Message-ID: <20170117161237.3802-4-bruherrera@gmail.com>
-References: <20170117161237.3802-1-bruherrera@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117161237.3802-1-bruherrera@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, johnyoun@synopsys.com, felipe.balbi@linux.intel.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH v2 0/4] USB support for Broadcom NSP SoC
+Date: Tue, 17 Jan 2017 11:14:26 -0500
+Message-ID: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables USB FS on stm32f469-disco with 5V VBUS enable.
+This patch set contains the usb support for Broadcom NSP SoC. The
+usb3 phy is internal to the SoC and is accessed through mdio interface.
+The mdio interface can be used to access either internal usb3 phy or
+external ethernet phy using a multiplexer.
 
-Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
----
- arch/arm/boot/dts/stm32f469-disco.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+The first patch provides the documentation details for usb3 phy. The
+second patch provides the changes to the mdio bus driver. The third
+patch provides the phy driver and fourth patch provides the enable
+method for usb.
 
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index 8877c00..3e0a83e 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -68,6 +68,15 @@
- 	soc {
- 		dma-ranges = <0xc0000000 0x0 0x10000000>;
- 	};
-+
-+	/* This turns on vbus for otg for host mode (dwc2) */
-+	vcc5v_otg: vcc5v-otg-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpiob 2 0>;
-+		regulator-name = "vcc5_host1";
-+		regulator-always-on;
-+	};
- };
- 
- &rcc {
-@@ -81,3 +90,10 @@
- &usart3 {
- 	status = "okay";
- };
-+
-+&usbotg_fs {
-+	dr_mode = "host";
-+	pinctrl-0 = <&usbotg_fs_pins_a>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
+This patch series has been tested on NSP bcm958625HR board.
+This patch series is based on v4.10.0-rc3 and is available from
+github-repo: https://github.com/Broadcom/cygnus-linux.git
+branch:nsp-usb-v2
+
+Changes in v2:
+* Remove separate nsp mux driver as suggested by Andrew Lunn
+* Addressed comments from Scott and Rob
+
+Yendapally Reddy Dhananjaya Reddy (4):
+  dt-bindings: phy: Add documentation for NSP USB3 PHY
+  net: phy: Initialize mdio clock at probe function
+  phy: Add USB3 PHY support for Broadcom NSP SoC
+  arm: dts: nsp: Add USB nodes to device tree
+
+ .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  |  39 +++++
+ arch/arm/boot/dts/bcm-nsp.dtsi                     |  56 +++++++
+ arch/arm/boot/dts/bcm958625k.dts                   |  16 ++
+ drivers/net/phy/mdio-bcm-iproc.c                   |   6 +-
+ drivers/phy/Kconfig                                |   8 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-nsp-usb3.c                     | 176 +++++++++++++++++++++
+ 7 files changed, 298 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
+
 -- 
-2.10.1 (Apple Git-78)
+2.1.0
