@@ -1,37 +1,108 @@
-From: Erin Lo <erin.lo@mediatek.com>
-Subject: [PATCH v3] Add some DT nodes for Mediatek MT2701
-Date: Tue, 17 Jan 2017 17:24:08 +0800
-Message-ID: <1484645049-4477-1-git-send-email-erin.lo@mediatek.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v3 4/4] arm: dts: Add support for ES8388 to the
+	Radxa Rock 2
+Date: Tue, 17 Jan 2017 09:17:05 +0100
+Message-ID: <20170117081705.14107-5-romain.perier@collabora.com>
+References: <20170117081705.14107-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170117081705.14107-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series based on v4.10-rc2, include MT2701 spi/nand/auxadc/thermal controller DT nodes.
+This commit adds the DT definition of the es8388 i2c device
+found at address 0x10. It also adds the definition for connecting
+the Rockchip I2S to the es8388 analog output.
 
-Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"[1].
+This commit is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.com> with some improvements.
 
-Change in v3:
-1. Since some patches in v2 have been applied to v4.10-next/dts32, they were not included in v3 series.
-2. Remove iommu DT nodes since it will be sent with its driver patch series later.
-3. Remove ethernet DT nodes since it will be sent with its driver patch series later.
-4. Modify thermal resets pin define from hard code to name.
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-Change in v2:
-1. Add spi/auxadc pin setting
-2. Add ethernet node and pin setting
-3. Add thermal controller node
+Changes in v3: None
+Changes in v2: None
 
-[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
+ arch/arm/boot/dts/rk3288-rock2-square.dts | 37 +++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Dawei Chien (1):
-  arm: dts: mt2701: Add thermal device node.
-
- arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
---
-1.9.1
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index dd3ad2e..82d20fd 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -86,6 +86,17 @@
+ 		#sound-dai-cells = <0>;
+ 	};
+ 
++	sound_es8388 {
++		compatible = "rockchip,rockchip-audio-es8388";
++		rockchip,model = "Analog audio output";
++		rockchip,i2s-controller = <&i2s>;
++		rockchip,audio-codec = <&es8388>;
++		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
++		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&headphone>;
++	};
++
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		clocks = <&hym8563>;
+@@ -173,10 +184,29 @@
+ 	};
+ };
+ 
++&i2c2 {
++	status = "okay";
++
++	es8388: es8388@10 {
++		compatible = "everest,es8388", "everest,es8328";
++		reg = <0x10>;
++		AVDD-supply = <&vcca_codec>;
++		DVDD-supply = <&vcca_codec>;
++		HPVDD-supply = <&vcca_codec>;
++		PVDD-supply = <&vcca_codec>;
++		clocks = <&cru SCLK_I2S0_OUT>;
++		clock-names = "i2s_clk_out";
++	};
++};
++
+ &i2c5 {
+ 	status = "okay";
+ };
+ 
++&i2s {
++	status = "okay";
++};
++
+ &pinctrl {
+ 	ir {
+ 		ir_int: ir-int {
+@@ -190,6 +220,13 @@
+ 		};
+ 	};
+ 
++	sound {
++		headphone: headphone {
++			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
++					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.9.3
