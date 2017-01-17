@@ -1,8 +1,7 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 6/8] ARM: dts: kirkwood-linksys-viper: Utilize new DSA
- binding
-Date: Tue, 17 Jan 2017 10:22:22 -0800
-Message-ID: <20170117182224.32212-7-f.fainelli@gmail.com>
+Subject: [PATCH v3 5/8] ARM: dts: kirkwood-dir665: Utilize new DSA binding
+Date: Tue, 17 Jan 2017 10:22:21 -0800
+Message-ID: <20170117182224.32212-6-f.fainelli@gmail.com>
 References: <20170117182224.32212-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -26,17 +25,17 @@ Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
 Document new binding"). The legacy binding node is kept included, but is marked
 disabled.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Tested-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- arch/arm/boot/dts/kirkwood-linksys-viper.dts | 49 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-dir665.dts | 49 +++++++++++++++++++++++++++++++++++
  1 file changed, 49 insertions(+)
 
-diff --git a/arch/arm/boot/dts/kirkwood-linksys-viper.dts b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-index 345fcac48dc7..df7851820507 100644
---- a/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-+++ b/arch/arm/boot/dts/kirkwood-linksys-viper.dts
-@@ -70,6 +70,8 @@
+diff --git a/arch/arm/boot/dts/kirkwood-dir665.dts b/arch/arm/boot/dts/kirkwood-dir665.dts
+index 41acbb6dd6ab..4d2b15d6244a 100644
+--- a/arch/arm/boot/dts/kirkwood-dir665.dts
++++ b/arch/arm/boot/dts/kirkwood-dir665.dts
+@@ -194,6 +194,8 @@
  	};
  
  	dsa {
@@ -45,16 +44,16 @@ index 345fcac48dc7..df7851820507 100644
  		compatible = "marvell,dsa";
  		#address-cells = <2>;
  		#size-cells = <0>;
-@@ -207,6 +209,53 @@
+@@ -241,6 +243,53 @@
  
  &mdio {
  	status = "okay";
 +
-+	switch@10 {
++	switch@0 {
 +		compatible = "marvell,mv88e6085";
 +		#address-cells = <1>;
 +		#size-cells = <0>;
-+		reg = <16>;
++		reg = <0>;
 +
 +		ports {
 +			#address-cells = <1>;
@@ -62,31 +61,31 @@ index 345fcac48dc7..df7851820507 100644
 +
 +			port@0 {
 +				reg = <0>;
-+				label = "ethernet1";
++				label = "lan4";
 +			};
 +
 +			port@1 {
-+				reg = <1>;
-+				label = "ethernet2";
++			       reg = <1>;
++			       label = "lan3";
 +			};
 +
 +			port@2 {
-+				reg = <2>;
-+				label = "ethernet3";
++			       reg = <2>;
++			       label = "lan2";
 +			};
 +
 +			port@3 {
-+				reg = <3>;
-+				label = "ethernet4";
++			       reg = <3>;
++			       label = "lan1";
 +			};
 +
 +			port@4 {
 +				reg = <4>;
-+				label = "internet";
++				label = "wan";
 +			};
 +
-+			port@5 {
-+				reg = <5>;
++			port@6 {
++				reg = <6>;
 +				label = "cpu";
 +				ethernet = <&eth0port>;
 +				fixed-link {
@@ -98,6 +97,6 @@ index 345fcac48dc7..df7851820507 100644
 +	};
  };
  
- &uart0 {
+ /* eth0 is connected to a Marvell 88E6171 switch, without a PHY. So set
 -- 
 2.9.3
