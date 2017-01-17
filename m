@@ -1,93 +1,61 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Tue, 17 Jan 2017 20:23:04 +0100
-Message-ID: <1484680984.26620.29.camel@baylibre.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Tue, 17 Jan 2017 20:23:47 +0100
+Message-ID: <20170117192347.GA1438@katana>
+References: <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+ <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+ <20170116114023.GA3029@katana>
+ <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170117082118.GA1487@katana>
+ <CAMuHMdVW=HORcCA0brX4tZdtG9knqE7D_wnM5VtSrxz2LdBgUA@mail.gmail.com>
+ <20170117094529.GC1487@katana>
+ <SG2PR06MB11653D8853CB565A629B782E8A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="nFreZHaLTZJo0R7j"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20161202234739.22929-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB11653D8853CB565A629B782E8A7C0-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2016-12-03 at 00:47 +0100, Martin Blumenstingl wrote:
-> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
-> networks which are not affected by the EEE problem, as reported here:
-> [1]).
-> The actual problem for the TX throughput issues was that the TX delay
-> was applied twice:
-> - once "accidentally" by the PHY (this was fixed with [2])
-> - once by the MAC because there was a hardcoded TX delay (of 2ns),
->   this will be configurable with the changes from [0]
-> 
-> These are the dts changes which belong to my other series (in v2
-> these patches were part of the other series, upon request of the
-> net maintainers I have split the .dts changes into their own series
-> so
-> we are able to take both through different trees):
-> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
-> RGMII TX delay": [0].
-> Thus this series depends on the ACK for the binding changes in the
-> other series!
-> 
-> I based these changes on my other series "[PATCH v2 0/2] GXL and GXM
-> SCPI improvements": [3]
-> 
-> 
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/
-> 001834.html
-> [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/
-> 001607.html
-> [2] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/
-> 001707.html
-> [3] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/
-> 001831.html
-> 
-> Martin Blumenstingl (5):
->   ARM64: dts: meson-gx: move the MDIO node to meson-gx
 
-Sorry for the late reply, I've only been able to test this yesterday.
+--nFreZHaLTZJo0R7j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-With "snps,dwmac-mdio" provided in meson-gx.dtsi, the mdio_node is
-defined in stmmac_mdio_register and auto-detection of the PHY is
-disabled for all meson-gx boards.
 
-I wonder if this is desirable ? or maybe this something we could fix in
-stmmac ? (perform auto-detect the mdio bus is provided without a PHY)
+> So, should sh_mobile_sdhi_remove() be changed to call sh_mobile_sdhi_clk_disable()?
 
-Also, I think bisect is broken between patch 1 and patch 4: The PHY of
-some boards won't be detected between these patches. Should we squash
-them ? 
+Give me a minute, I already did a patch for this :)
 
->   ARM64: dts: meson-gxbb-odroidc2: add reset for the ethernet PHY
->   ARM64: dts: meson-gxbb-p20x: add reset for the ethernet PHY
->   ARM64: dts: meson-gxbb-vega-s95: add reset for the ethernet PHY
->   ARM64: dts: amlogic: add the ethernet TX delay configuration
-> 
 
-Last remark, about the use of ethernet-phy-idXXXX.XXXX in the odroid
-and the vega: Isn't it better to let phylib do the autodetection of the
-phy id ?
+--nFreZHaLTZJo0R7j
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If we want to specify the id in DT, we should probably add it for the
-Micrel PHY of the p200 as well, for consistency.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi            |  6 ++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 17
-> +++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 17
-> +++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 17
-> +++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts |  2 ++
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           |  6 ------
->  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts  |  2 ++
->  arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts  |  2 ++
->  8 files changed, 63 insertions(+), 6 deletions(-)
-> 
+iQIcBAEBAgAGBQJYfm9DAAoJEBQN5MwUoCm2+HEP/RA0Q9zt/PCWRIOHsc1WKujB
+IHOD5qHPxI6CmSwMQmbxpXZQDCrl6dY7eK/s7RkwySGw+xdMzLN8/6LsEOcSYFFk
+AEQAn0HLpbbT2xmL7o50bBy8YhGoL7eWSHFr/86TL7X6rw0RLVZJjG183O4N+D3R
+zzqUwmHHLhmnHzwgM8h88BXIr5bAbQjkKgrqo9uFDNM5nE7kg4yfnq/wP0HfcslR
+1TeRGAopJTGwuUGyqfWgF8e88Os7zv5c6YTKRrBkIZ936CKHzGMuyLoS6iwvxzrj
+D2pwl7JAXvq04VSWAbOp7ZyXfeNuQnvA2svjj/vP3doRGgRToMbWAYPdOKb3zNx4
+KEcrUUbx6QNiQf0WkTSDAL7Yvj8b5Eg8xmG85URr8Sl6uHolXI8EMJsXA7Fcg0pU
+NnFmyXM2pBapqyw0zvPBhZzeVrI9AKxlqJxxG36aDvVddk9OlhYLRqwAj/Rc1I4L
+26kWMOv/RL8pmj4hOKmbg9jFmQBT8mGYLkS0qKqarphx+qs5rCxto+G5iQ7CfXlW
+BrPF+hssFVMvw5GT4ar9sCiGP39RuPohi8AsnJQ2ZVIIT2KzyOvA2c0YzMZNrPqw
+jlTxXUpALxVt01iGtvNg9ak695cHnKzSzHqdL7tolSJ8P35mexR9Q5FNFW0lWqA4
+rbsQpDqiCiUfl51jqqyT
+=usJF
+-----END PGP SIGNATURE-----
+
+--nFreZHaLTZJo0R7j--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
