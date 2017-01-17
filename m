@@ -1,48 +1,65 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH v2 0/4] USB support for Broadcom NSP SoC
-Date: Tue, 17 Jan 2017 11:14:26 -0500
-Message-ID: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+From: Bruno Herrera <bruherrera@gmail.com>
+Subject: [PATCH v3 4/5] ARM: dts: stm32: Enable USB HS in FS mode (embedded
+ phy) on stm32f429-disco
+Date: Tue, 17 Jan 2017 14:12:36 -0200
+Message-ID: <20170117161237.3802-5-bruherrera@gmail.com>
+References: <20170117161237.3802-1-bruherrera@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170117161237.3802-1-bruherrera@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, johnyoun@synopsys.com, felipe.balbi@linux.intel.com
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set contains the usb support for Broadcom NSP SoC. The
-usb3 phy is internal to the SoC and is accessed through mdio interface.
-The mdio interface can be used to access either internal usb3 phy or
-external ethernet phy using a multiplexer.
+This patch enables USB HS working in FS mode on stm32f429-disco 
+with 5V VBUS enable.
 
-The first patch provides the documentation details for usb3 phy. The
-second patch provides the changes to the mdio bus driver. The third
-patch provides the phy driver and fourth patch provides the enable
-method for usb.
+Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+---
+ arch/arm/boot/dts/stm32f429-disco.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-This patch series has been tested on NSP bcm958625HR board.
-This patch series is based on v4.10.0-rc3 and is available from
-github-repo: https://github.com/Broadcom/cygnus-linux.git
-branch:nsp-usb-v2
-
-Changes in v2:
-* Remove separate nsp mux driver as suggested by Andrew Lunn
-* Addressed comments from Scott and Rob
-
-Yendapally Reddy Dhananjaya Reddy (4):
-  dt-bindings: phy: Add documentation for NSP USB3 PHY
-  net: phy: Initialize mdio clock at probe function
-  phy: Add USB3 PHY support for Broadcom NSP SoC
-  arm: dts: nsp: Add USB nodes to device tree
-
- .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  |  39 +++++
- arch/arm/boot/dts/bcm-nsp.dtsi                     |  56 +++++++
- arch/arm/boot/dts/bcm958625k.dts                   |  16 ++
- drivers/net/phy/mdio-bcm-iproc.c                   |   6 +-
- drivers/phy/Kconfig                                |   8 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-bcm-nsp-usb3.c                     | 176 +++++++++++++++++++++
- 7 files changed, 298 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
- create mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
-
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index 7d0415e..0b2b017 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -88,6 +88,14 @@
+ 			gpios = <&gpioa 0 0>;
+ 		};
+ 	};
++
++	/* This turns on vbus for otg for host mode (dwc2) */
++	vcc5v_otg: vcc5v-otg-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpioc 4 0>;
++		regulator-name = "vcc5_host1";
++		regulator-always-on;
++	};
+ };
+ 
+ &clk_hse {
+@@ -99,3 +107,11 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&usbotg_hs {
++	compatible = "st,stm32f4xx-fsotg";
++	dr_mode = "host";
++	pinctrl-0 = <&usbotg_fs_pins_b>;
++	pinctrl-names = "default";
++	status = "okay";
++};
 -- 
-2.1.0
+2.10.1 (Apple Git-78)
