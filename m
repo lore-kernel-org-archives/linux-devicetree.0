@@ -1,126 +1,101 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: exynos: Add regulators for Vbus and
- Vbus-Boost
-Date: Tue, 17 Jan 2017 20:28:26 +0200
-Message-ID: <20170117182826.gngf7gjkvfyg3uww@kozik-lap>
-References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20170117150123epcas1p12709f99a0993ae58ea1fe294df5a12fe@epcas1p1.samsung.com>
- <1484665444-23365-3-git-send-email-pankaj.dubey@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1484665444-23365-3-git-send-email-pankaj.dubey@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, Vivek Gautam <gautamvivek1987@gmail.com>, javier@osg.samsung.com, kgene@kernel.org, krzk@kernel.org, sanath@samsung.com, linux-arm-kernel@lists.infradead.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 2/8] ARM: dts: armada-385-linksys: Utilize new DSA binding
+Date: Tue, 17 Jan 2017 10:22:18 -0800
+Message-ID: <20170117182224.32212-3-f.fainelli@gmail.com>
+References: <20170117182224.32212-1-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170117182224.32212-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 08:34:04PM +0530, Pankaj Dubey wrote:
-> From: Vivek Gautam <gautamvivek1987@gmail.com>
-> 
-> Adding fixed voltage regulators for Vbus and Vbus-boost required
-> by USB 3.0 DRD controller on Exynos7-espresso board.
-> 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
+Document new binding"). The legacy binding node is kept included, but is marked
+disabled.
 
-Same as patch 1.
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-385-linksys.dtsi | 52 ++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
-> ---
->  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 45 +++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> index 9cf73cf..8d5abdd 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-> @@ -13,6 +13,7 @@
->  #include "exynos7.dtsi"
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/clock/samsung,s2mps11.h>
-> +#include <dt-bindings/gpio/gpio.h>
->  
->  / {
->  	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
-> @@ -33,6 +34,29 @@
->  		device_type = "memory";
->  		reg = <0x0 0x40000000 0x0 0xC0000000>;
->  	};
-> +
-> +	usb30_vbus_reg: regulator-usb30 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VBUS_5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		gpio = <&gph1 1 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb30_vbus_en>;
-> +		enable-active-high;
-> +	};
-> +
-> +	usb3drd_boost_5v: regulator-usb3drd-boost {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "VUSB_VBUS_5V";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		gpio = <&gpf4 1 GPIO_ACTIVE_HIGH>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&usb3drd_boost_en>;
-> +		enable-active-high;
-> +	};
-> +
->  };
->  
->  &fin_pll {
-> @@ -366,3 +390,24 @@
->  	vqmmc-supply = <&ldo2_reg>;
->  	disable-wp;
->  };
-> +
-> +&usbdrd_phy {
-> +	vbus-supply = <&usb30_vbus_reg>;
-> +	vbus-boost-supply = <&usb3drd_boost_5v>;
-> +};
-> +
-> +&pinctrl_bus1 {
-> +	usb30_vbus_en: usb30-vbus-en {
-> +		samsung,pins = "gph1-1";
-> +		samsung,pin-function = <1>;
+diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
+index 8f0e508f64ae..20d5e8b00f2d 100644
+--- a/arch/arm/boot/dts/armada-385-linksys.dtsi
++++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
+@@ -103,8 +103,56 @@
+ 				};
+ 			};
+ 
+-			mdio {
++			mdio@72004 {
+ 				status = "okay";
++
++				switch@0 {
++					compatible = "marvell,mv88e6095";
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++
++					ports {
++						#address-cells = <1>;
++						#size-cells = <0>;
++
++						port@0 {
++							reg = <0>;
++							label = "lan4";
++						};
++
++						port@1 {
++							reg = <1>;
++							label = "lan3";
++						};
++
++						port@2 {
++							reg = <2>;
++							label = "lan2";
++						};
++
++						port@3 {
++							reg = <3>;
++							label = "lan1";
++						};
++
++						port@4 {
++							reg = <4>;
++							label = "wan";
++						};
++
++						port@5 {
++							reg = <5>;
++							label = "cpu";
++							ethernet = <&eth2>;
++
++							fixed-link {
++								speed = <1000>;
++								full-duplex;
++							};
++						};
++					};
++				};
+ 			};
+ 
+ 			sata@a8000 {
+@@ -261,6 +309,8 @@
+ 	};
+ 
+ 	dsa@0 {
++		status = "disabled";
++
+ 		compatible = "marvell,dsa";
+ 		#address-cells = <2>;
+ 		#size-cells = <0>;
+-- 
+2.9.3
 
-Javier mentioned it, please use EXYNOS_PIN_FUNC_OUTPUT
-
-> +		samsung,pin-pud = <0>;
-
-EXYNOS_PIN_PULL_NONE
-
-> +		samsung,pin-drv = <0>;
-
-I think these are the same as in Exynos5422, so EXYNOS5420_PIN_DRV_LV1
-
-Best regards,
-Krzysztof
-
-
-> +	};
-> +
-> +	usb3drd_boost_en: usb3drd-boost-en {
-> +		samsung,pins = "gpf4-1";
-> +		samsung,pin-function = <1>;
-> +		samsung,pin-pud = <0>;
-> +		samsung,pin-drv = <0>;
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
