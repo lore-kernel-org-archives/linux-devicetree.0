@@ -1,56 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Tue, 17 Jan 2017 20:16:39 +0300
-Message-ID: <aa9b6761-c8de-13ea-1a62-9810ad92a6d4@cogentembedded.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
- <20170117142016.11163-2-abailon@baylibre.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 4/8] ARM: dts: armada-xp-linksys-mamba: Utilize new
+ DSA binding
+Date: Tue, 17 Jan 2017 18:28:14 +0100
+Message-ID: <20170117172814.GD9470@lunn.ch>
+References: <20170105192957.14304-1-f.fainelli@gmail.com>
+ <20170105192957.14304-5-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117142016.11163-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170105192957.14304-5-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 05:20 PM, Alexandre Bailon wrote:
+On Thu, Jan 05, 2017 at 11:29:53AM -0800, Florian Fainelli wrote:
+> Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
+> Document new binding"). The legacy binding node is kept included, but is marked
+> disabled.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> index ccb844a..aed3169 100644
-> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -18,10 +18,26 @@ Required properties:
->
->   - phy-names: Should be "usb-phy"
->
-> + - dmas: specifies the dma channels
-> +
-> + - dma-names: specifies the names of the channels. Use "rxN" for receive
-> +   and "txN" for transmit endpoints. N specifies the endpoint number.
-> +
->  Optional properties:
->  ~~~~~~~~~~~~~~~~~~~~
->   - vbus-supply: Phandle to a regulator providing the USB bus power.
->
-> +DMA
-> +~~~
-> +- compatible: ti,da8xx-cppi41
+Tested-by: Andrew Lunn <andrew@lunn.ch>
 
-    Almost missed this -- wildcards in this property are forbidden.
-We should use "ti,da830-cppi41" as a least common denominator.
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Andrew
