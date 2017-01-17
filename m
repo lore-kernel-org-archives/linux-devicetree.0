@@ -1,24 +1,54 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] dt-bindings: iio: document MAX11100 ADC
-Date: Tue, 17 Jan 2017 22:03:44 +0100
-Message-ID: <20170117210343.7n27uo6w37tei453@ninjato>
-References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
- <1484301038-16386-3-git-send-email-jacopo+renesas@jmondi.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v2 03/10] dt-bindings: sound: Add new reset compatible
+ for sun4i-i2s
+Date: Wed, 18 Jan 2017 08:20:34 +1100
+Message-ID: <20170118082034.62a6be25@free-electrons.com>
+References: <20170117201016.A5fiHT0P@smtp2p.mail.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484301038-16386-3-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170117201016.A5fiHT0P@smtp2p.mail.yandex.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, wens@csie.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, perex@perex.cz, linux-sunxi@googlegroups.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@free-electrons.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 10:50:38AM +0100, Jacopo Mondi wrote:
-> Add device tree bindings documentation for Maxim MAX11100 single-channel
-> ADC
-> 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Hello,
 
-Acked-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+On Wed, 18 Jan 2017 01:10:00 +0800, Icenowy Zheng wrote:
+
+> > Add a new compatible for sun4i-i2s driver to handle some
+> > SoCs that have a reset line that must be asserted/deasserted.
+> >
+> > This new compatible, "allwinner,sun6i-a31-i2s", requires two
+> > properties:
+> > - resets: phandle to the reset line
+> > - reset-names: the name of the reset line ("rst").
+> > Except these differences, the compatible is identical to previous one
+> > which will not handle a reset line.  
+> 
+> But I think the IP block is identical, right?
+> 
+> Should a new compatible be added only for reset-line?
+
+Having a different compatible in this case allows to make some stricter
+error checking: the driver can make sure that if the compatible string
+is sun6i-a31-i2s there *IS* a reset line specified in the DT. Without a
+separate compatible value, such a check is not possible, and the reset
+line is just optional. This can lead to people being confused if they
+forget to specify the reset line.
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
