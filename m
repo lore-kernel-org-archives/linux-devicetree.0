@@ -1,86 +1,117 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Tue, 17 Jan 2017 12:03:38 +0100
-Message-ID: <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
+From: Jerry Huang <jerry.huang@nxp.com>
+Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
+ incr-burst-type-adjustment" for INCR burst type
+Date: Tue, 17 Jan 2017 11:08:57 +0000
+Message-ID: <DB5PR0401MB18131480F5EFDCB2B1847948FE7C0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
+ <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
+ <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
+ <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
+ <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <87tw8zo0c0.fsf@linux.intel.com>
+ <DB5PR0401MB1813548526D3C8D34B9CCE52FE7C0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+ <8737gikls0.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <480df61d-c949-b3b0-61a4-d9db17f09e7d-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <8737gikls0.fsf@linux.intel.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The MR25 family doesn't support JEDEC, so they need explicit mentioning
-in the list of supported spi IDs. This makes it possible to add these
-using for example:
 
-	compatible = "everspin,mr25h40";
-
-There was already an entry for mr25h256. Move that one out of the "keep
-for compatibility" section and put in a new group for Everspin MRAMs.
-
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-Changes since (implicit) v1:
-
- - use Kib instead of kib
-
-Changes since v2:
-
- - update dt docs
- - handle already existing mr25h256 in m25p_ids[]
-
-Thanks to Cyrille for catching these.
-
- Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
- drivers/mtd/devices/m25p80.c                            | 6 +++++-
- 2 files changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-index 2c91c03e7eb0..3e920ec5c4d3 100644
---- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-+++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-@@ -14,6 +14,8 @@ Required properties:
-                  at25df641
-                  at26df081a
-                  mr25h256
-+                 mr25h10
-+                 mr25h40
-                  mx25l4005a
-                  mx25l1606e
-                  mx25l6405d
-diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
-index 9cf7fcd28034..0e2d3a64651a 100644
---- a/drivers/mtd/devices/m25p80.c
-+++ b/drivers/mtd/devices/m25p80.c
-@@ -288,7 +288,6 @@ static const struct spi_device_id m25p_ids[] = {
- 	 * should be kept for backward compatibility.
- 	 */
- 	{"at25df321a"},	{"at25df641"},	{"at26df081a"},
--	{"mr25h256"},
- 	{"mx25l4005a"},	{"mx25l1606e"},	{"mx25l6405d"},	{"mx25l12805d"},
- 	{"mx25l25635e"},{"mx66l51235l"},
- 	{"n25q064"},	{"n25q128a11"},	{"n25q128a13"},	{"n25q512a"},
-@@ -305,6 +304,11 @@ static const struct spi_device_id m25p_ids[] = {
- 	{"m25p40-nonjedec"},	{"m25p80-nonjedec"},	{"m25p16-nonjedec"},
- 	{"m25p32-nonjedec"},	{"m25p64-nonjedec"},	{"m25p128-nonjedec"},
- 
-+	/* Everspin MRAMs (non-JEDEC) */
-+	{ "mr25h256" }, /* 256 Kib, 40 MHz */
-+	{ "mr25h10" },  /*   1 Mib, 40 MHz */
-+	{ "mr25h40" },  /*   4 Mib, 40 MHz */
-+
- 	{ },
- };
- MODULE_DEVICE_TABLE(spi, m25p_ids);
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -----Original Message-----
+> From: Felipe Balbi [mailto:balbi@kernel.org]
+> Sent: Tuesday, January 17, 2017 6:45 PM
+> To: Jerry Huang <jerry.huang@nxp.com>; Rob Herring <robh@kernel.org>
+> Cc: mark.rutland@arm.com; catalin.marinas@arm.com;
+> will.deacon@arm.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
+> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org
+> Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
+> type-adjustment" for INCR burst type
+> 
+> 
+> Hi,
+> 
+> Jerry Huang <jerry.huang@nxp.com> writes:
+> 
+> <snip>
+> 
+> >> >> So, I think we still need two vaue to specify INCRBrstEna and
+> >> >> INCRx burst type.
+> >> > Hi, Balbi,
+> >> > It seems there is no feedback for my comment, so these patches can
+> >> > be
+> >> accepted?
+> >>
+> >> probably not, we need to really understand what information we need
+> >> so it can be described properly. The last thing we want is
+> >> unnecessary DT properties.
+> >>
+> >> It seems to me that we can extrapolate INCRBrstEna based on which
+> >> burst modes are enabled. If only 0 is passed, then that bit should be
+> >> 1, if 0 and any other size is passed, then that bit should be 0, no?
+> > Hi, Balbi,
+> > Below is the definition for this property,
+> > snps,incr-burst-type-adjustment = <x>, <y>
+> > x: Undefined Length INCR Burst Type Enable (INCRBrstEna)
+> >     0 - INCRX burst mode (not enable INCRBrstEna)
+> >     1 - INCR (undefined length) burst mode (enable INCRBrstEna)
+> > y: the burst length
+> >
+> > 1> if x = 0: means INCRBrstEna not enabled, set bit0 to zero (or clear
+> > it) , we select one of
+> > INCR1/INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 (pass this
+> > value through "y")to set the fix burst length controller supported.
+> >
+> > For example:
+> >
+> > 	snps,incr-burst-type-adjustment = <0>, <16>
+> >
+> > driver will set bit0 to zero and set bit3 to 1 (INCR16 Burst Type
+> > Enabled), controller will use INCR16 (with 16 bytes) to transfer data.
+> >
+> > 2> if x = 1: means INCRBrstEna enabled, we select one of
+> > INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 (pass this value
+> > through "y") to set the burst length, and controller will use any
+> > length less than or equal to that we selected.
+> >
+> > For example:
+> >
+> > 	snps,incr-burst-type-adjustment = <1>, <32>
+> >
+> > driver will set bit0 to 1 and set bit4 to 1 (INCR32 Burst Type
+> > Enabled), controller will use any burst length less than (such as 4,
+> > 8, 16 byte) or equal to 32 byte to transfer data.
+> >
+> > Therefore, I think this two fileds are needed. Do you think about it?
+> 
+> no, I don't think two values are needed, because first value can be
+> extrapolated from the second. Something like this:
+> 
+> 	snps,incr-burst-type-adjustment = <4>, <8>, <16>, <32>;
+> 
+> This is basically telling us that we can support anything in this list. So
+> INCRBrstEna should be set to 1.
+> 
+> If DT, on the other hand, says:
+> 
+> 	snps,incr-burst-type-adjustment = <32>;
+> 
+> this means that we can only support INCR32, so INCRBrstEna should be
+> cleared to 0.
+Got it, I will try this mode.
+Thanks a lot, Balbi,
