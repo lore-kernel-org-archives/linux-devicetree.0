@@ -1,57 +1,79 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v3 0/4] Add support for es8388 on the rock2
-Date: Tue, 17 Jan 2017 09:17:01 +0100
-Message-ID: <20170117081705.14107-1-romain.perier@collabora.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v2 0/8] ARM: dts: Switch to new DSA binding
+Date: Tue, 17 Jan 2017 09:19:43 +0100
+Message-ID: <87d1fm6qu8.fsf@free-electrons.com>
+References: <20170105192957.14304-1-f.fainelli@gmail.com>
+        <61c15ec6-6c0d-7865-d140-dba4ca3657a4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <61c15ec6-6c0d-7865-d140-dba4ca3657a4@gmail.com> (Florian
+        Fainelli's message of "Mon, 16 Jan 2017 17:30:38 -0800")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, vivien.didelot@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-This set of patches adds a machine driver for rockchip boards that use
-ES8388 codecs. It also adds slave mode to the es8328 driver that
-currently only supported the master mode. Then, it adds the required DT
-definitions to link rockchip-i2s to the es8388 analog output.
+Hi Florian,
+ 
+ On mar., janv. 17 2017, Florian Fainelli <f.fainelli@gmail.com> wrote:
 
-This work is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> with some improvements, changes and more
-commits.
+> On 01/05/2017 11:29 AM, Florian Fainelli wrote:
+>> Hi all,
+>> 
+>> This patch series converts the in-tree users to utilize the new (relatively)
+>> DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
+>> new binding"). The legacy binding node is kept included, but is marked
+>> disabled.
+>> 
+>> Changes in v2:
+>> 
+>> - patch 1: Use an hexadecimal reg property
+>> - patch 2: fixed the subject
+>> - patch 3: s/okay/disabled/ for the legacy DSA node
+>> - patches 7/8: fixed a stray whitespace
+>> 
+>> In about 2-3 releases we may consider removing the old DSA binding entirely
+>> from the kernel.
+>
+> Gregory, are you going to take this for 4.11? Thanks
 
-Changes in v3:
- - Cosmetic changes in rockchip_es8388.c
- - Added missing email to MODULE_AUTHOR in rockchip_es8388.c
-Changes in v2:
- - Fixed wrong use of the data structure i2c_device_id
- - Fixed wrong dependencies for SND_SOC_ROCKCHIP_ES8388
+it is my intend but I am waiting for the feedback from Andrew.
 
-Romain Perier (4):
-  ASoC: es8328-i2c: Add compatible for ES8388
-  ASoC: es8328: Add support for slave mode
-  ASoC: rockchip: Add machine driver for ES8388 codecs
-  arm: dts: Add support for ES8388 to the Radxa Rock 2
+Gregory
 
- Documentation/devicetree/bindings/sound/es8328.txt |   2 +-
- .../devicetree/bindings/sound/rockchip-es8388.txt  |  28 +++
- arch/arm/boot/dts/rk3288-rock2-square.dts          |  37 +++
- sound/soc/codecs/es8328-i2c.c                      |   2 +
- sound/soc/codecs/es8328.c                          |  28 ++-
- sound/soc/rockchip/Kconfig                         |   9 +
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rockchip_es8388.c               | 269 +++++++++++++++++++++
- 8 files changed, 370 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip-es8388.txt
- create mode 100644 sound/soc/rockchip/rockchip_es8388.c
+>
+>> 
+>> Thank you!
+>> 
+>> Florian Fainelli (8):
+>>   ARM: dts: armada-370-rd: Utilize new DSA binding
+>>   ARM: dts: armada-385-linksys: Utilize new DSA binding
+>>   ARM: dts: armada-388-clearfog: Utilize new DSA binding
+>>   ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
+>>   ARM: dts: kirkwood-dir665: Utilize new DSA binding
+>>   ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
+>>   ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
+>>   ARM: dts: kirkwood-rd88f6281: Utilize new DSA binding
+>> 
+>>  arch/arm/boot/dts/armada-370-rd.dts            | 44 +++++++++++++++++
+>>  arch/arm/boot/dts/armada-385-linksys.dtsi      | 52 ++++++++++++++++++++-
+>>  arch/arm/boot/dts/armada-388-clearfog.dts      | 65 ++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/armada-xp-linksys-mamba.dts  | 53 +++++++++++++++++++++
+>>  arch/arm/boot/dts/kirkwood-dir665.dts          | 49 +++++++++++++++++++
+>>  arch/arm/boot/dts/kirkwood-linksys-viper.dts   | 49 +++++++++++++++++++
+>>  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 +++++++++++++++++++
+>>  arch/arm/boot/dts/kirkwood-rd88f6281-z0.dts    | 11 +++++
+>>  arch/arm/boot/dts/kirkwood-rd88f6281.dtsi      | 44 +++++++++++++++++
+>>  9 files changed, 415 insertions(+), 1 deletion(-)
+>> 
+>
+>
+> -- 
+> Florian
 
 -- 
-2.9.3
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
