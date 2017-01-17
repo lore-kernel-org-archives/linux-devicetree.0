@@ -1,37 +1,64 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] dmaengine: cppi41: Make CPPI 4.1 driver more
- generic
-Date: Tue, 17 Jan 2017 07:55:45 -0800
-Message-ID: <20170117155545.GI7403@atomide.com>
-References: <20170117134540.9988-1-abailon@baylibre.com>
+From: Bruno Herrera <bruherrera@gmail.com>
+Subject: [PATCH v3 0/5] usb: dwc2: Add support for USB OTG on STM32F4x9
+Date: Tue, 17 Jan 2017 14:12:32 -0200
+Message-ID: <20170117161237.3802-1-bruherrera@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170117134540.9988-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, johnyoun@synopsys.com, felipe.balbi@linux.intel.com
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170117 05:46]:
-> Most of the patch of this series were part of
-> "[PATCH 00/11] dmaengine: cppi41: Add dma support to da8xx"
-> 
-> This series intend to make the CPPI 4.1 more generic in order to
-> add a new platform (the DA8xx).
-> To achieve that, all the IRQ code present in CPPI 4.1 driver has been moved
-> to MUSB DSPS driver.
-> Other changes mainly update the glue layer and platform code to make the
-> whole driver more generic.
+The STM32F4x9 MCU family has two DWC2 USB OTG cores on it. One core is
+USB OTG FS and other core is USB OTG HS. The USB FS core only works with
+its internal phy whilst the USF HS core can work in HS with external ulpi
+phy or in FS/LS speed with the embedded FS PHY.
 
-So does da8xx use CPPI 4.1 DMA for other devices also in addition to
-musb?
+The goal of this patch series is to enable the use of USB OTG FS/HS cores
+in FS mode using the internal phy.
 
-Regards,
+Changes since v3:
+- Removed commented lines from patch (sent by mistake)
+- Split DTS patch by boards and SOC
+- Removed unnecessary pinctrl nodes from DTS files
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+- Rename driver variables to meet the driver standard
+- Add compatible string for HS core
+
+Changes since v1:
+- Add dwc2_core_params structure for stm32f4 otg fs
+- Add compatible string for FS core/mode
+- Use GGPIO register to deativate power down of the phy
+
+Bruno Herrera (5):
+  usb: dwc2: Add support for STM32F429/439/469 USB OTG HS/FS in FS mode
+    (internal PHY)
+  ARM: dts: stm32: Add USB FS support for STM32F429 MCU
+  ARM: dts: stm32: Enable USB FS on stm32f469-disco
+  ARM: dts: stm32: Enable USB HS in FS mode (embedded phy) on
+    stm32f429-disco
+  dt-bindings: Document the STM32 USB OTG DWC2 core binding
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  4 ++
+ arch/arm/boot/dts/stm32f429-disco.dts          | 16 ++++++++
+ arch/arm/boot/dts/stm32f429.dtsi               | 31 ++++++++++++++++
+ arch/arm/boot/dts/stm32f469-disco.dts          | 16 ++++++++
+ drivers/usb/dwc2/core.h                        |  4 ++
+ drivers/usb/dwc2/hcd.c                         | 13 ++++++-
+ drivers/usb/dwc2/hw.h                          |  2 +
+ drivers/usb/dwc2/params.c                      | 51 ++++++++++++++++++++++++++
+ 8 files changed, 136 insertions(+), 1 deletion(-)
+
+-- 
+2.10.1 (Apple Git-78)
