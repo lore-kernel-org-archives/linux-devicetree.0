@@ -1,156 +1,37 @@
-From: Joao Pinto <Joao.Pinto@synopsys.com>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Tue, 17 Jan 2017 10:19:53 +0000
-Message-ID: <24cff7e5-42d6-66e2-6f10-a6ea4ceb8899@synopsys.com>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
- <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
- <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
- <587C9CE6.8040001@ti.com> <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
- <587DAD37.5030201@ti.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH 0/2] Add support for es8323 on the
+	firefly-rk3288
+Date: Tue, 17 Jan 2017 10:12:08 +0100
+Message-ID: <20170117091210.6837-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <587DAD37.5030201@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Lukasz Majewski <lukma@denx.de>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+This set of patches enables support for the es8323 codecs on the
+firefly-rk3288. It adds the required DT definitions to link rockchip-i2s
+to the es8388 analog output.
 
-Hi,
+Romain Perier (2):
+  SoC: es8328-i2c: Add compatible for ES8323
+  arm: dts: Add support for ES8323 to the Firefly-RK3288
 
-Às 5:35 AM de 1/17/2017, Kishon Vijay Abraham I escreveu:
-> Hi Joao,
-> 
-> On Monday 16 January 2017 10:31 PM, Joao Pinto wrote:
->>
->> Hi,
->>
->> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
->>> + Joao, Jingoo
->>>
->>> Hi,
->>>
->>> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
->>>> Hi Kishon,
->>>>
->>>>> Hi Łukasz,
->>>>>
->>>>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
->>>>>> Hi Kishon,
->>>>>>
->>>>>>> Hi,
->>>>>>>
->>>>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
->>>>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
->>>>>>>> run with forced GEN1 speed on PCIe bus.
->>>>>>>>
->>>>>>>> This patch changes the speed explicitly on dra7 based devices when
->>>>>>>> proper device tree attribute is defined for the PCIe controller.
->>>>>>>>
->>>>>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->>>>>>>
->>>>>>> Bjorn has already queued a patch to do the same thing
->>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
->>>>>>
->>>>>> It seems like Bjorn only modifies CAP registers.
->>>>>
->>>>> The patch also modifies the LNKCTL2 register.
->>>>>>
->>>>>> He also needs to change register with 0x080C offset to actually
->>>>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
->>>>>
->>>>> This bit is used to initiate speed change (after the link is
->>>>> initialized in GEN1). Resetting the bit (like what you have done
->>>>> here) prevents speed change.
->>>>
->>>> This is strange, but e2e advised me to do things as I did in the patch
->>>> to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
->>>>
->>>> Link:
->>>> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
->>>>
->>>> Both patches modify 0x5180 007C register to set GEN1 capability
->>>> (PCI_EXP_LNKCAP_SLS_2_5GB)
->>>>
->>>> The problem is with second register (in your patch):
->>>>
->>>> From SPRUHZ6G TRM:
->>>>
->>>> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
->>>> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
->>>>   description in TRM
->>>>
->>>> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
->>>> default /reset value.
->>>
->>> The default value is 0x2 (or else none of the cards would have enumerated in GEN2)
->>>>
->>>>
->>>> Could you clarify which way to _force_ PCIe GEN1 operation is correct?
->>>> Mine shows differences in lspci output (as posted in [1]).
->>>
->>> You'll see the difference even with the patch in Bjorn's tree ;-)
->>>
->>> I think these are 2 different approaches to keep the link at GEN1. Joao or
->>> Jingoo, do you have any suggestion here?
->>
->> I studied the Databook, and both approaches seem to be right, dependently of the
->> Core configuration and setup.
->>
->> The standard manual speed change sequence is:
->> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
->> b) Clear "Directed Speed Change"
->> c) Set "Directed Speed Change"
->>
->> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the default
->> value), it will execute LTSSM to initiate speed change to Gen2 or Gen3, after
->> link is started in Gen1, and then the bit is automatically cleared.
->>
->> Lukasz is reseting this bit, in order to avoid the LTSSM to be executed, which
->> is correct. There is another way to prevent this automatic speed change, which
->> is to set GEN1 speed before link up which might be difficult in some setups, so
->> Kishon's also right.
-> 
-> Just for my understanding, why do you think this will be difficult in some setups?
+ Documentation/devicetree/bindings/sound/es8328.txt |  5 ++++-
+ arch/arm/boot/dts/rk3288-firefly.dtsi              | 25 ++++++++++++++++++++++
+ sound/soc/codecs/es8328-i2c.c                      |  2 ++
+ 3 files changed, 31 insertions(+), 1 deletion(-)
 
-It depends on the way some PCI Cores are configured.
-
->>
->> In my opinion Lukasz approach would be the one that might be more universal and
->> more "secure".
-> 
-> IMHO setting link control in the standard PCIe header space should be more
-> universal. I'm not sure about the secure part though.
-
-When I said secure, I misleaded you, sorry. I meant more robust.
-
-> 
-> Thanks
-> Kishon
->>
->> Joao
->>
->>
->>>
->>>>
->>>>>
->>>>> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
->>>>> the IP register.
->>>>
->>>> From the original patch description:
->>>>
->>>> "Add support to force Root Complex to work in GEN1 mode if so desired,
->>>> but don't force GEN1 mode on any board just yet."
->>>>
->>>> Are there any (floating around) patches allowing forcing GEN1 operation
->>>> on any board (I would like to reuse/port them to my current solution)?
->>>
->>> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt with the
->>> patch in Bjorn's tree.
->>>
->>> Thanks
->>> Kishon
->>>
->>
+-- 
+2.9.3
