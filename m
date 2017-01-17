@@ -1,83 +1,51 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
- for nxp,irq-mask-enable
-Date: Tue, 17 Jan 2017 10:43:37 +0100
-Message-ID: <96f3cc0e-9c73-4af4-f072-5a1aeceb67af@axentia.se>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-5-git-send-email-preid@electromag.com.au>
- <9190ec70-eda4-5e44-a85a-211945c30eeb@axentia.se>
- <aeab2bbe-e243-98f6-b07f-76e4dda62fd6@electromag.com.au>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH v2] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Tue, 17 Jan 2017 10:48:39 +0100
+Message-ID: <aa0fc197-c320-6d1c-a892-6e272e16366a@atmel.com>
+References: <CACna6ryLDwr0S=e-uUt+ZGcY8mNDnUtBPg_RmqtSVBziJkZd5w@mail.gmail.com>
+ <20170116210039.25267-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <aeab2bbe-e243-98f6-b07f-76e4dda62fd6-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20170116210039.25267-1-u.kleine-koenig@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, Jagan Teki <jagan@openedev.com>, Marek Vasut <marex@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, kernel@pengutronix.de, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-17 10:28, Phil Reid wrote:
-> On 17/01/2017 16:57, Peter Rosin wrote:
->> On 2017-01-17 09:00, Phil Reid wrote:
->>> Unfortunately some hardware device will assert their irq line immediately
->>> on power on and provide no mechanism to mask the irq. As the i2c muxes
->>> provide no method to mask irq line this provides a work around by keeping
->>> the parent irq masked until enough device drivers have loaded to service
->>> all pending interrupts.
->>>
->>> For example the the ltc1760 assert its SMBALERT irq immediately on power
->>> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->>> device is registered irq are enabled and fire continuously as the second
->>> device driver has not yet loaded. Setting this parameter to <1 1> will
->>> delay the irq being enabled until both devices are ready.
->>
-> G'day Peter,
-> 
-> 
->> Hang on, does this suggestion I made make any sense at all? Maybe it does,
->> but does the pca954x driver even get notified of any but the first irq client
->> that unmasks interrupts on a mux segment? How can it count the number of
->> active irq clients if not?
-> 
-> Good question.
-> 
-> So what I did to test is setup my 2 ltc1760s to use the same irq on the pca954x.
-> Using the latest patch series.
-> 
-> Adding a log message into the irq_unmask function got the following.
-> 	dev_err(&data->client->dev, "irq_unmask %d %x %d", pos, data->irq_mask, data->irq_enabled);
-> 
-> dmesg | grep irq_unmask
-> [    4.392098] pca954x 4-0070: irq_unmask 0 1 1
-> 
-> 
-> But Looks like both got registered ok to the same irq.
-> cat /proc/interrupts
-> 161:          0          0  i2c-mux-pca954x   0 Level     15-000a, 16-000a
-> 
-> So from this testing, it doesn't look like it gets called multiple times.
-
-As I suspected, thanks for verifying!
-
-> So back to the bitmask for the dt do you think.
-
-Looking at kernel/irq/chip.c:irq_enable (and struct irq_chip docs), I get the
-feeling that if you provide the irq_enable operation (and maybe irq_disable too?),
-that might get us more info?
-
-> I think the interrupt enablelogic is correct now.
-> 
->>
->> I'm truly sorry for the trouble I'm causing by not just saying how it should
->> be done from the start, but I feel like I've been thrown in at the deep end
->> when it comes to interrupt controllers...
-> 
-> No problem. I'm learning a couple things as we go.
-> Should help me out on other drivers :)
-
-Yes, I'm also picking up a few bits here and there...
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpMZSAxNi8wMS8yMDE3IMOgIDIyOjAwLCBVd2UgS2xlaW5lLUvDtm5pZyBhIMOpY3JpdCA6
+Cj4gVGhlIE1SMjUgZmFtaWx5IGRvZXNuJ3Qgc3VwcG9ydCBKRURFQywgc28gdGhleSBuZWVkIGV4
+cGxpY2l0IG1lbnRpb25pbmcKPiBpbiB0aGUgbGlzdCBvZiBzdXBwb3J0ZWQgc3BpIElEcy4gVGhp
+cyBtYWtlcyBpdCBwb3NzaWJsZSB0byBhZGQgdGhlc2UKPiB1c2luZyBmb3IgZXhhbXBsZToKPiAK
+PiAJY29tcGF0aWJsZSA9ICJldmVyc3BpbixtcjI1aDQwIjsKPiAKPiBTaWduZWQtb2ZmLWJ5OiBV
+d2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPgo+IC0tLQo+
+IENoYW5nZXMgc2luY2UgKGltcGxpY2l0KSB2MToKPiAgLSB1c2UgS2liIGluc3RlYWQgb2Yga2li
+Cj4gCj4gIGRyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMgfCA1ICsrKysrCj4gIDEgZmlsZSBj
+aGFuZ2VkLCA1IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvZGV2
+aWNlcy9tMjVwODAuYyBiL2RyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMKPiBpbmRleCA5Y2Y3
+ZmNkMjgwMzQuLmFhNTBiZDk2ZGUzYSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL210ZC9kZXZpY2Vz
+L20yNXA4MC5jCj4gKysrIGIvZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVwODAuYwo+IEBAIC0zMDUs
+NiArMzA1LDExIEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpX2RldmljZV9pZCBtMjVwX2lkc1td
+ID0gewo+ICAJeyJtMjVwNDAtbm9uamVkZWMifSwJeyJtMjVwODAtbm9uamVkZWMifSwJeyJtMjVw
+MTYtbm9uamVkZWMifSwKPiAgCXsibTI1cDMyLW5vbmplZGVjIn0sCXsibTI1cDY0LW5vbmplZGVj
+In0sCXsibTI1cDEyOC1ub25qZWRlYyJ9LAo+ICAKPiArCS8qIEV2ZXJzcGluIE1SQU1zICovCj4g
+Kwl7ICJtcjI1aDI1NiIgfSwgLyogMjU2IEtpYiwgNDAgTUh6ICovCgpUaGVyZSBpcyBhbHJlYWR5
+IGEgIm1yMjVoMjU2IiBlbnRyeSBpbiB0aGUgbTI1cF9pZHNbXSBhcnJheS4KSXQncyBhIGdvb2Qg
+aWRlYSB0byByZWdyb3VwIGV2ZXJzcGluIG1lbW9yaWVzIGJ1dCBpdCBtaWdodCBiZSBiZXR0ZXIg
+dG8KcmV1c2UgdGhlIGV4aXN0aW5nIGVudHJ5LgoKVGhlIHByZXZpb3VzIGVudHJ5IGlzIGJldHdl
+ZW4gImF0MjVkZjMyMWEiLCAuLi4gYW5kICJteDI1bDQwMDVhIiBzbyBpdApkb2Vzbid0IGFwcGVh
+ciBpbiB5b3VyIHBhdGNoLgoKPiArCXsgIm1yMjVoMTAiIH0sICAvKiAgIDEgTWliLCA0MCBNSHog
+Ki8KPiArCXsgIm1yMjVoNDAiIH0sICAvKiAgIDQgTWliLCA0MCBNSHogKi8KPiArCj4gIAl7IH0s
+Cj4gIH07Cj4gIE1PRFVMRV9ERVZJQ0VfVEFCTEUoc3BpLCBtMjVwX2lkcyk7Cj4gCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1U
+RCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
