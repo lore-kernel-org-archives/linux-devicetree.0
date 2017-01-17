@@ -1,121 +1,107 @@
-From: Mike Leach <Mike.Leach-5wv7dgnIgG8@public.gmane.org>
-Subject: RE: [PATCH v4 4/4] arm64: dts: juno: add missing CoreSight STM
- component
-Date: Tue, 17 Jan 2017 14:52:31 +0000
-Message-ID: <DB6PR0802MB2198D30880E268077202AAD88C7C0@DB6PR0802MB2198.eurprd08.prod.outlook.com>
-References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
- <1484655313-9025-5-git-send-email-sudeep.holla@arm.com>
- <5c742b98-0707-67fd-d8a1-467f34d99cdb@arm.com>
- <6473418b-95d5-5be3-47fd-4c554f353923@arm.com>
+From: Rameshwar Sahu <rsahu@apm.com>
+Subject: Re: [PATCH v2] ata: xgene: Enable NCQ support for APM X-Gene SATA
+ controller hardware v1.1
+Date: Tue, 17 Jan 2017 20:25:21 +0530
+Message-ID: <CAFd313wajZzZWGQy20obf4k_7RO43Q10NiBa-8TVYxo3J93inA@mail.gmail.com>
+References: <1479462345-13942-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6473418b-95d5-5be3-47fd-4c554f353923-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, "coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1479462345-13942-1-git-send-email-rsahu@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, mlangsdo@redhat.com, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>, Rameshwar Prasad Sahu <rsahu@apm.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tejun,
 
-
-----------------------------------------------------------------
-Mike Leach                           +44 (0)1254 893911 (Direct)
-Principal Engineer                   +44 (0)1254 893900 (Main)
-Arm Blackburn Design Centre          +44 (0)1254 893901 (Fax)
-Belthorn House
-Walker Rd                            mailto:mike.leach-5wv7dgnIgG8@public.gmane.org
-Guide
-Blackburn
-BB1 2QE
-----------------------------------------------------------------
-
-
-> -----Original Message-----
-> From: Sudeep Holla [mailto:sudeep.holla-5wv7dgnIgG8@public.gmane.org]
-> Sent: 17 January 2017 14:01
-> To: Suzuki Poulose; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; Mike Leach; Mik=
-e
-> Leach
-> Cc: Sudeep Holla; Mathieu Poirier; Lorenzo Pieralisi; coresight-cunTk1MwBs//PtFMR13I2A@public.gmane.org=
-aro.org;
-> Liviu Dudau; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Olof Johansson
-> Subject: Re: [PATCH v4 4/4] arm64: dts: juno: add missing CoreSight STM
-> component
+On Fri, Nov 18, 2016 at 3:15 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
+> This patch enables NCQ support for APM X-Gene SATA controller hardware v1.1
+> that was broken with hardware v1.0. Second thing, here we should not assume
+> XGENE_AHCI_V2 always in case of having valid _CID in ACPI table. I need to
+> remove this assumption because V1_1 also has a valid _CID for backward
+> compatibly with v1.
 >
+> v2 changes:
+>         1. Changed patch description
 >
+> Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> ---
+>  drivers/ata/ahci_xgene.c |   14 ++++++++------
+>  1 files changed, 8 insertions(+), 6 deletions(-)
 >
-> On 17/01/17 13:39, Suzuki K Poulose wrote:
-> > On 17/01/17 12:15, Sudeep Holla wrote:
-> >> From: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>
-> >> This patch adds the missing CoreSight STM component definition to the
-> >> device tree of all the juno variants(r0,r1,r2)
-> >>
-> >> STM component is connected to different funnels depending on Juno
-> >> platform variant.
-> >>
-> >> Reviewed-and-Tested-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> [sudeep.holla-5wv7dgnIgG8@public.gmane.org: minor changelog update and reorganising the STM
-> >>     node back into juno-base.dtsi to avoid duplication]
-> >> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> >> ---
-> >>  arch/arm64/boot/dts/arm/juno-base.dtsi | 15 +++++++++++++++
-> >>  arch/arm64/boot/dts/arm/juno-r1.dts    |  4 ++++
-> >>  arch/arm64/boot/dts/arm/juno-r2.dts    |  4 ++++
-> >>  arch/arm64/boot/dts/arm/juno.dts       | 16 ++++++++++++++++
-> >>  4 files changed, 39 insertions(+)
-> >>
-> >> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> >> b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> >> index faedf357db3b..58c1773c3aa4 100644
-> >> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> >> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> >> @@ -185,6 +185,21 @@
-> >>          };
-> >>      };
-> >>
-> >> +    stm@20100000 {
-> >> +        compatible =3D "arm,coresight-stm", "arm,primecell";
-> >> +        reg =3D <0 0x20100000 0 0x1000>,
-> >> +              <0 0x28000000 0 0x180000>;
-> >
-> > The size of the stimulus base is 16MB (as per TRM), implies =3D> 0x1000=
-000.
-> >
+> diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+> index 73b19b2..8b88be9 100644
+> --- a/drivers/ata/ahci_xgene.c
+> +++ b/drivers/ata/ahci_xgene.c
+> @@ -87,6 +87,7 @@
 >
-> Fixed locally.
+>  enum xgene_ahci_version {
+>         XGENE_AHCI_V1 = 1,
+> +       XGENE_AHCI_V1_1,
+>         XGENE_AHCI_V2,
+>  };
 >
-> Mike,
+> @@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id xgene_ahci_acpi_match[] = {
+>         { "APMC0D0D", XGENE_AHCI_V1},
+> +       { "APMC0D67", XGENE_AHCI_V1_1},
+>         { "APMC0D32", XGENE_AHCI_V2},
+>         {},
+>  };
+> @@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
 >
-> Can you confirm ? I know TRM had some issues with size of other
-> coresight components.
+>  static const struct of_device_id xgene_ahci_of_match[] = {
+>         {.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
+> +       {.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
+>         {.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
+>         {},
+>  };
+> @@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>         struct resource *res;
+>         const struct of_device_id *of_devid;
+>         enum xgene_ahci_version version = XGENE_AHCI_V1;
+> -       const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+> -                                             &xgene_ahci_v2_port_info };
+> +       const struct ata_port_info *ppi;
+>         int rc;
 >
-Checked both Juno and STM arch manuals - these are in agreement that the ST=
-M memory stimulus area is 16MB in size.
-Thus for Juno specifically with all masters seeing the same area @ base 0x2=
-8000000, <0 0x28000000 0 0x1000000 >  would be the correct description.
-
-Mike
-
-> > with that fixed :
-> >
-> > Reviewed-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-> >
+>         hpriv = ahci_platform_get_resources(pdev);
+> @@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+>                                 dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
+>                                         __func__);
+>                                 version = XGENE_AHCI_V1;
+> -                       } else if (info->valid & ACPI_VALID_CID) {
+> -                               version = XGENE_AHCI_V2;
+>                         }
+>                 }
+>         }
+> @@ -858,18 +858,20 @@ skip_clk_phy:
 >
-> Thanks.
+>         switch (version) {
+>         case XGENE_AHCI_V1:
+> +               ppi = &xgene_ahci_v1_port_info;
+>                 hpriv->flags = AHCI_HFLAG_NO_NCQ;
+>                 break;
+>         case XGENE_AHCI_V2:
+> +               ppi = &xgene_ahci_v2_port_info;
+>                 hpriv->flags |= AHCI_HFLAG_YES_FBS;
+>                 hpriv->irq_handler = xgene_ahci_irq_intr;
+>                 break;
+>         default:
+> +               ppi = &xgene_ahci_v1_port_info;
+>                 break;
+>         }
+>
+> -       rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
+> -                                    &ahci_platform_sht);
+> +       rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
+>         if (rc)
+>                 goto disable_resources;
 >
 > --
-> Regards,
-> Sudeep
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.7.1
+>
+
+Any comments on this patch ??
