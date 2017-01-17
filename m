@@ -1,33 +1,56 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] clk: meson-gxbb: Export HDMI clocks
-Date: Tue, 17 Jan 2017 10:34:41 -0800
-Message-ID: <20170117183441.GU17126@codeaurora.org>
-References: <1484654928-5640-1-git-send-email-narmstrong@baylibre.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 01/14] devicetree: bindings: add bindings for
+ ahci-da850
+Date: Tue, 17 Jan 2017 12:35:31 -0600
+Message-ID: <7e3c8946-2a19-3e11-c071-b3737554005c@lechnology.com>
+References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484655976-25382-2-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484654928-5640-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1484655976-25382-2-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/17, Neil Armstrong wrote:
-> Export HDMI clock from internal to dt-bindings.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+On 01/17/2017 06:26 AM, Bartosz Golaszewski wrote:
+> Add DT bindings for the TI DA850 AHCI SATA controller.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
+>  Documentation/devicetree/bindings/ata/ahci-da850.txt | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
+>
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+> new file mode 100644
+> index 0000000..e7111b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+> @@ -0,0 +1,18 @@
+> +Device tree binding for the TI DA850 AHCI SATA Controller
+> +---------------------------------------------------------
+> +
+> +Required properties:
+> +  - compatible: must be "ti,da850-ahci"
+> +  - reg: physical base addresses and sizes of the controller's register areas
+> +  - interrupts: interrupt specifier (refer to the interrupt binding)
+> +
+> +Optional properties:
+> +  - clocks: clock specifier (refer to the common clock binding)
 
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Won't you also need a clock-names property since there are two clocks?
 
-I think we decided this would go with the dts changes if more
-needed to be exposed.
+> +
+> +Example:
+> +
+> +	sata: ahci@218000 {
+> +		compatible = "ti,da850-ahci";
+> +		reg = <0x218000 0x2000>, <0x22c018 0x4>;
+> +		interrupts = <67>;
+> +	};
+>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It would be nice to have clocks and clock-names in the example as well.
