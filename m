@@ -1,171 +1,200 @@
-From: Jerry Huang <jerry.huang@nxp.com>
-Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
- incr-burst-type-adjustment" for INCR burst type
-Date: Tue, 17 Jan 2017 10:37:17 +0000
-Message-ID: <DB5PR0401MB1813548526D3C8D34B9CCE52FE7C0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
-References: <1482139554-13618-1-git-send-email-jerry.huang@nxp.com>
- <1482139554-13618-2-git-send-email-jerry.huang@nxp.com>
- <20161222184514.hfd4g7ifrz5cv627@rob-hp-laptop>
- <DB5PR0401MB1813E210B2ADE1C9493F7768FE950@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <CAL_JsqJuifiSQAt-6FgtYYSukAnjzOLuTGEsO-Spn5LxkU-iwQ@mail.gmail.com>
- <DB5PR0401MB18132BB4CDE32EEA8F479E55FE7D0@DB5PR0401MB1813.eurprd04.prod.outlook.com>
- <87tw8zo0c0.fsf@linux.intel.com>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Tue, 17 Jan 2017 10:43:17 +0000
+Message-ID: <4b18d08a-c2cc-3c32-35ed-8f4a759ef235@synopsys.com>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
+ <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
+ <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
+ <587C9CE6.8040001@ti.com> <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
+ <20170116224437.67b5a0c5@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87tw8zo0c0.fsf@linux.intel.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Felipe Balbi <balbi@kernel.org>, Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170116224437.67b5a0c5@jawa>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+Hi Lukasz,
 
-> -----Original Message-----
-> From: Felipe Balbi [mailto:balbi@kernel.org]
-> Sent: Monday, January 16, 2017 4:50 PM
-> To: Jerry Huang <jerry.huang@nxp.com>; Rob Herring <robh@kernel.org>
-> Cc: mark.rutland@arm.com; catalin.marinas@arm.com;
-> will.deacon@arm.com; linux@armlinux.org.uk; devicetree@vger.kernel.org;
-> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: RE: [PATCH v3 2/3] USB3/DWC3: Add property "snps, incr-burst-
-> type-adjustment" for INCR burst type
+Às 9:44 PM de 1/16/2017, Lukasz Majewski escreveu:
+> Hi Joao,
 > 
+>>
+>> Hi,
+>>
+>> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
+>>> + Joao, Jingoo
+>>>
+>>> Hi,
+>>>
+>>> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
+>>>> Hi Kishon,
+>>>>
+>>>>> Hi Łukasz,
+>>>>>
+>>>>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
+>>>>>> Hi Kishon,
+>>>>>>
+>>>>>>> Hi,
+>>>>>>>
+>>>>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
+>>>>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
+>>>>>>>> run with forced GEN1 speed on PCIe bus.
+>>>>>>>>
+>>>>>>>> This patch changes the speed explicitly on dra7 based devices
+>>>>>>>> when proper device tree attribute is defined for the PCIe
+>>>>>>>> controller.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+>>>>>>>
+>>>>>>> Bjorn has already queued a patch to do the same thing
+>>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
+>>>>>>
+>>>>>> It seems like Bjorn only modifies CAP registers.
+>>>>>
+>>>>> The patch also modifies the LNKCTL2 register.
+>>>>>>
+>>>>>> He also needs to change register with 0x080C offset to actually
+>>>>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
+>>>>>
+>>>>> This bit is used to initiate speed change (after the link is
+>>>>> initialized in GEN1). Resetting the bit (like what you have done
+>>>>> here) prevents speed change.
+>>>>
+>>>> This is strange, but e2e advised me to do things as I did in the
+>>>> patch to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
+>>>>
+>>>> Link:
+>>>> [1]
+>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
+>>>>
+>>>> Both patches modify 0x5180 007C register to set GEN1 capability
+>>>> (PCI_EXP_LNKCAP_SLS_2_5GB)
+>>>>
+>>>> The problem is with second register (in your patch):
+>>>>
+>>>> From SPRUHZ6G TRM:
+>>>>
+>>>> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
+>>>> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
+>>>>   description in TRM
+>>>>
+>>>> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
+>>>> default /reset value.
+>>>
+>>> The default value is 0x2 (or else none of the cards would have
+>>> enumerated in GEN2)
+>>>>
+>>>>
+>>>> Could you clarify which way to _force_ PCIe GEN1 operation is
+>>>> correct? Mine shows differences in lspci output (as posted in [1]).
+>>>
+>>> You'll see the difference even with the patch in Bjorn's tree ;-)
+>>>
+>>> I think these are 2 different approaches to keep the link at GEN1.
+>>> Joao or Jingoo, do you have any suggestion here?
+>>
+>> I studied the Databook,
 > 
-> Hi,
-> 
-> Jerry Huang <jerry.huang@nxp.com> writes:
-> >> > On Thu, Dec 22, 2016 at 8:52 PM, Jerry Huang <jerry.huang@nxp.com>
-> >> wrote:
-> >> > > Hi, Rob,
-> >> > >> -----Original Message-----
-> >> > >> From: Rob Herring [mailto:robh@kernel.org]
-> >> > >> Sent: Friday, December 23, 2016 2:45 AM
-> >> > >> To: Jerry Huang <jerry.huang@nxp.com>
-> >> > >> Cc: balbi@kernel.org; mark.rutland@arm.com;
-> >> > >> catalin.marinas@arm.com; will.deacon@arm.com;
-> >> > >> linux@armlinux.org.uk; devicetree@vger.kernel.org;
-> >> > >> linux-usb@vger.kernel.org; linux-kernel@vger.kernel.org;
-> >> > >> linux-arm- kernel@lists.infradead.org
-> >> > >> Subject: Re: [PATCH v3 2/3] USB3/DWC3: Add property "snps,
-> >> > >> incr-burst- type-adjustment" for INCR burst type
-> >> > >>
-> >> > >> On Mon, Dec 19, 2016 at 05:25:53PM +0800, Changming Huang wrote:
-> >> > >> > New property "snps,incr-burst-type-adjustment = <x>, <y>" for
-> >> > >> > USB3.0
-> >> > >> DWC3.
-> >> > >> > Field "x": 1/0 - undefined length INCR burst type enable or
-> >> > >> > not; Field
-> >> > >> > "y": INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 burst
-> >> type.
-> >> > >> >
-> >> > >> > While enabling undefined length INCR burst type and INCR16
-> >> > >> > burst type, get better write performance on NXP Layerscape
-> platform:
-> >> > >> > around 3% improvement (from 364MB/s to 375MB/s).
-> >> > >> >
-> >> > >> > Signed-off-by: Changming Huang <jerry.huang@nxp.com>
-> >> > >> > ---
-> >> > >> > Changes in v3:
-> >> > >> >   - add new property for INCR burst in usb node.
-> >> > >> >
-> >> > >> >  Documentation/devicetree/bindings/usb/dwc3.txt |    5 +++++
-> >> > >> >  arch/arm/boot/dts/ls1021a.dtsi                 |    1 +
-> >> > >> >  arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi |    3 +++
-> >> > >> >  arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi |    2 ++
-> >> > >> >  4 files changed, 11 insertions(+)
-> >> > >> >
-> >> > >> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> > >> > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> > >> > index e3e6983..8c405a3 100644
-> >> > >> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> > >> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> >> > >> > @@ -55,6 +55,10 @@ Optional properties:
-> >> > >> >     fladj_30mhz_sdbnd signal is invalid or incorrect.
-> >> > >> >
-> >> > >> >   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has*
-> >> > >> > to be
-> >> > >> reallocated.
-> >> > >> > + - snps,incr-burst-type-adjustment: Value for INCR burst type
-> >> > >> > + of
-> >> > >> GSBUSCFG0
-> >> > >> > +   register, undefined length INCR burst type enable and INCRx
-> type.
-> >> > >> > +   First field is for undefined length INCR burst type enable or not.
-> >> > >> > +   Second field is for largest INCRx type enabled.
-> >> > >>
-> >> > >> Why do you need the first field? Is the 2nd field used if the 1st is 0?
-> >> > >> If not, then just use the presence of the property to enable or not.
-> >> > > The first field is one switch.
-> >> > > When it is 1, means undefined length INCR burst type enabled, we
-> >> > > can use
-> >> > any length less than or equal to the largest-enabled burst length
-> >> > of INCR4/8/16/32/64/128/256.
-> >> > > When it is zero, means INCRx burst mode enabled, we can use one
-> >> > > fixed
-> >> > burst length of 1/4/8/16/32/64/128/256 byte.
-> >> > > So, the 2nd field is used if the 1st is 0, we need to select one
-> >> > > largest burst
-> >> > length the USB controller can support.
-> >> > > If we don't want to change the value of this register (use the
-> >> > > default value),
-> >> > we don't need to add this property to usb node.
-> >> >
-> >> > Just make this a single value with 0 meaning INCR and 4/8/16/etc
-> >> > being
-> >> INCRx.
-> >> Maybe, I didn't describe it clearly.
-> >> According to DWC3 spec, the value "0" of field INCRBrstEna means
-> >> INCRx burst mode, 1 means INCR burst mode.
-> >> Regardless of the value of INCRBrstEna [bit0], we need to modify the
-> >> other field bit[1,2,3,4,5,6,7] to one INCR burst type  for the platform
-> supported.
-> >> Ad you mentioned, if we just use a single value with 0 meaning INCR
-> >> and 4/8/16/etc being INCRx.
-> >> I understand totally that when it is none-zero, we can use it for
-> >> INCR burst mode.
-> >> Then, when it is 0, how to select the INCRx value?
-> >>
-> >> So, I think we still need two vaue to specify INCRBrstEna and INCRx
-> >> burst type.
-> > Hi, Balbi,
-> > It seems there is no feedback for my comment, so these patches can be
-> accepted?
-> 
-> probably not, we need to really understand what information we need so it
-> can be described properly. The last thing we want is unnecessary DT
-> properties.
-> 
-> It seems to me that we can extrapolate INCRBrstEna based on which burst
-> modes are enabled. If only 0 is passed, then that bit should be 1, if 0 and any
-> other size is passed, then that bit should be 0, no?
-Hi, Balbi,
-Below is the definition for this property,
-snps,incr-burst-type-adjustment = <x>, <y>
-x: Undefined Length INCR Burst Type Enable (INCRBrstEna)
-    0 - INCRX burst mode (not enable INCRBrstEna)
-    1 - INCR (undefined length) burst mode (enable INCRBrstEna)
-y: the burst length
+> Could you reveal which databook do you have in mind? Is that the TRM for
+> AM5728?
 
-1> if x = 0: means INCRBrstEna not enabled, set bit0 to zero (or clear it) , we select one of INCR1/INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 (pass this value through "y")to set the fix burst length controller supported.
-For example:
-snps,incr-burst-type-adjustment = <0>, <16>
-driver will set bit0 to zero and set bit3 to 1 (INCR16 Burst Type Enabled), controller will use INCR16 (with 16 bytes) to transfer data.
+I checked the Designware PCIe Databook, since it is based on this IP.
 
-2> if x = 1: means INCRBrstEna enabled, we select one of INCR4/INCR8/INCR16/INCR32/INCR64/INCR128/INCR256 (pass this value through "y") to set the burst length, and controller will use any length less than or equal to that we selected.
-For example:
-snps,incr-burst-type-adjustment = <1>, <32>
-driver will set bit0 to 1 and set bit4 to 1 (INCR32 Burst Type Enabled), controller will use any burst length less than (such as 4, 8, 16 byte) or equal to 32 byte to transfer data.
+> 
+>> and both approaches seem to be right,
+>> dependently of the Core configuration and setup.
+>>
+>> The standard manual speed change sequence is:
+>> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
+> 
+> Do you mean TRGT_LINK_SPEED @ 0x5180 00A0 ?
 
-Therefore, I think this two fileds are needed. Do you think about it?
+Correct.
+
+> 
+>> b) Clear "Directed Speed Change"
+> 
+> CFG_DIRECTED_SPEED_CHANGE @ 0x5180 080C 
+
+Correct.
+
+> 
+>> c) Set "Directed Speed Change"
+>>
+>> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the
+>> default value), it will execute LTSSM to initiate speed change to
+>> Gen2 or Gen3, after link is started in Gen1, and then the bit is
+>> automatically cleared.
+> 
+> Ok, so with default settings (after reset) we do have Gen1 speed link
+> and when we enable LTSSM (with LTSSM_EN bit setting) we negotiate to
+> Gen2/Gen3.
+
+Yes, that's the expected behavior. I submited this direct question to R&D and
+will have your doubt answered soon.
+
+> 
+>>
+>> Lukasz is reseting this bit, in order to avoid the LTSSM to be
+>> executed, which is correct. 
+> 
+> So with CFG_DIRECTED_SPEED_CHANGE = 0, when I start LTSSM (with
+> LTSSM_EN) the state machine returns immediately and leaves link in the
+> Gen1?
+> 
+> The pci-dra7 driver always sets LTSSM_EN bit to start link negotiation.
+> 
+>> There is another way to prevent this
+>> automatic speed change, which is to set GEN1 speed before link up
+>> which might be difficult in some setups, so Kishon's also right.
+>>
+>> In my opinion Lukasz approach would be the one that might be more
+>> universal and more "secure".
+> 
+> The robustness is the key here since there are some devices, which on
+> particular HW must only work with Gen1 speed. When we start LTSSM state
+> machine and hence start negotiation to Gen2, not always the result of
+> LTSSM is correct and device is properly recognized.
+> 
+>>
+>> Joao
+>>
+>>
+>>>
+>>>>
+>>>>>
+>>>>> IMO the better way is to set the LNKCTL2 to GEN1 instead of
+>>>>> hacking the IP register.
+>>>>
+>>>> From the original patch description:
+>>>>
+>>>> "Add support to force Root Complex to work in GEN1 mode if so
+>>>> desired, but don't force GEN1 mode on any board just yet."
+>>>>
+>>>> Are there any (floating around) patches allowing forcing GEN1
+>>>> operation on any board (I would like to reuse/port them to my
+>>>> current solution)?
+>>>
+>>> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt
+>>> with the patch in Bjorn's tree.
+>>>
+>>> Thanks
+>>> Kishon
+>>>
+>>
+> 
+> Best regards,
+> 
+> Lukasz Majewski
+> 
+> --
+> 
+> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+> 
