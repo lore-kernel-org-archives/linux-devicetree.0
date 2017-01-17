@@ -1,44 +1,83 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am33x, da816x, da814x: Remove useless register
- address
-Date: Tue, 17 Jan 2017 08:28:42 -0800
-Message-ID: <20170117162842.GN7403@atomide.com>
-References: <20170117135420.10197-1-abailon@baylibre.com>
- <20170117154752.GH7403@atomide.com>
- <08fc8b99-e6c4-7282-8023-b0d37956428c@baylibre.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 01/10] ASoC: sun4i-i2s: Increase DMA max
+ burst to 8
+Date: Tue, 17 Jan 2017 17:41:11 +0100
+Message-ID: <20170117164111.76mefaj32fy64f7o@lukather>
+References: <20170117140230.23142-1-mylene.josserand@free-electrons.com>
+ <20170117140230.23142-2-mylene.josserand@free-electrons.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="2gweboskz7ujobya"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMUS7HBQKGQEQYZMJWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <08fc8b99-e6c4-7282-8023-b0d37956428c-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170117140230.23142-2-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170117 08:17]:
-> On 01/17/2017 04:47 PM, Tony Lindgren wrote:
-> > * Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170117 05:55]:
-> >> In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
-> >> have been removed. So it is not required anymore to define "glue"
-> >> register's address and size in DT.
-> >> Remove "glue" register from cppi41dma node.
-> > 
-> > Is this OK to queue later on after all the dependencies have been
-> > merged?
-> It should be queued on same time as "[PATCH v2 3/7] dmaengine: cppi41:
-> Remove usbss_mem", so yes I guess it is OK.
 
-Sounds like it will break things then.. Please read about "flag day"
-changes and why they are not accepted.
+--2gweboskz7ujobya
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You should make the driver work with the old and new binding, then
-we can just drop the old binding later on from the dts files.
+On Tue, Jan 17, 2017 at 03:02:21PM +0100, Myl=C3=A8ne Josserand wrote:
+> As done previously for sun4i-codec, the DMA maxburst of 4
+> is not supported by every SoCs so the DMA controller engine
+> returns "unsupported value".
+>=20
+> As a maxburst of 8 is supported by all variants, this patch
+> increases it to 8.
+>=20
+> For more details, see commit from Chen-Yu Tsai:
+> commit 730e2dd0cbc7 ("ASoC: sun4i-codec: Increase DMA max burst to 8")
 
-Regards,
+Those details could have been included directly in the commit log.
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Otherwise,
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
+
+--2gweboskz7ujobya
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYfkknAAoJEBx+YmzsjxAgPaIQAIK/zBjeQja/p8TCOIYY/Q5P
+k6tBGE8os+KjiXv9tJq+MX8p+8423SGlQ0VsRhMb1dNwyr7Qs95HBdBwFv4GyAj2
+Zo7EXeR8s5VQiNTYWxYA+d5VCwgAvByhMDffchYa0/3IiEb1VnBpeuASOvWxmk5J
+9+eeT3ozYi7gRgvCdZ9ZQpX/itG7sIFaydmrc/NfEz9WfyWGXx0JHz/8a4f6+h/i
+NsXEJplTf8mtAFyDnPYZ9xoCzPBvvfeAP680zACN8lR+fvq9qlZcSYei84QnvGHn
+tLy5iZeaF5g6MhHS9B88ImfBEQC3lzkEFBio539yKlR2yCQNv1Ogh5qmnzWFpc5E
+YNOcIy5mtiwREY+Si+qG1exO8CXOsCNM6ny1CI+xcVBSBvW5Jk4gvMaOpwAZqRmQ
+2af8htLvl63gThRRy4nKcncDPQPXDoigTQdVfrhk2TECduEU5o7kUXzS5Qk0HGI0
+9HFtZ//U/S6sRlRuYXtl8ey9PNk4KfAnVMExj9nrfW1H38togDxpLQi8C5Pp4M72
+iQkkOOv7noWqlPcIKm0YeotLJ3iya75/cHst3+7jNmdAPqCnd3yWkqizzA8mxuZI
+4gm9JC3BfcRws218k2Icm8aBVUqolYnRzxZp/Tkv4U2pqpveFx1dHsNoFFIUNMIt
+iE7xdIM/mUO6jW83Qc8G
+=3lxr
+-----END PGP SIGNATURE-----
+
+--2gweboskz7ujobya--
