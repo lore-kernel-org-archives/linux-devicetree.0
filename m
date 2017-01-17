@@ -1,108 +1,47 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v3 4/4] arm: dts: Add support for ES8388 to the
-	Radxa Rock 2
-Date: Tue, 17 Jan 2017 09:17:05 +0100
-Message-ID: <20170117081705.14107-5-romain.perier@collabora.com>
-References: <20170117081705.14107-1-romain.perier@collabora.com>
+From: Minghuan Lian <Minghuan.Lian@nxp.com>
+Subject: [PATCH v3 0/9] irqchip/ls-scfg-msi: Update MSI driver
+Date: Tue, 17 Jan 2017 17:32:34 +0800
+Message-ID: <1484645563-29877-1-git-send-email-Minghuan.Lian@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170117081705.14107-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Jason Cooper <jason@lakedaemon.net>, Roy Zang <roy.zang@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>, Stuart Yoder <stuart.yoder@nxp.com>, Yang-Leo Li <leoyang.li@nxp.com>, Minghuan Lian <Minghuan.Lian@nxp.com>, Scott Wood <scott.wood@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device
-found at address 0x10. It also adds the definition for connecting
-the Rockchip I2S to the es8388 analog output.
+This patch set is to update Layerscape MSI driver.
+1. fix the compatible strings typo
+2. Add MSI support to LS1046a
+3. Add MSI support to LS1043a v1.1
+4. Add MSI affinity support
 
-This commit is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.com> with some improvements.
+Minghuan Lian (9):
+  irqchip/ls-scfg-msi: fix typo of MSI compatible strings
+  arm: dts: ls1021a: fix typo of MSI compatible string
+  arm64: dts: ls1043a: fix typo of MSI compatible string
+  arm: dts: ls1021a: share all MSIs
+  arm64: dts: ls1043a: share all MSIs
+  arm64: dts: ls1046a: add MSI dts node
+  irqchip/ls-scfg-msi: add LS1046a MSI support
+  irqchip/ls-scfg-msi: add LS1043a v1.1 MSI support
+  irqchip/ls-scfg-msi: add MSI affinity support
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
+ .../interrupt-controller/fsl,ls-scfg-msi.txt       |   8 +-
+ arch/arm/boot/dts/ls1021a.dtsi                     |   8 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     |  12 +-
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |  31 +++
+ drivers/irqchip/irq-ls-scfg-msi.c                  | 256 ++++++++++++++++++---
+ 5 files changed, 268 insertions(+), 47 deletions(-)
 
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288-rock2-square.dts | 37 +++++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index dd3ad2e..82d20fd 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -86,6 +86,17 @@
- 		#sound-dai-cells = <0>;
- 	};
- 
-+	sound_es8388 {
-+		compatible = "rockchip,rockchip-audio-es8388";
-+		rockchip,model = "Analog audio output";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8388>;
-+		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&headphone>;
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&hym8563>;
-@@ -173,10 +184,29 @@
- 	};
- };
- 
-+&i2c2 {
-+	status = "okay";
-+
-+	es8388: es8388@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vcca_codec>;
-+		DVDD-supply = <&vcca_codec>;
-+		HPVDD-supply = <&vcca_codec>;
-+		PVDD-supply = <&vcca_codec>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
-+};
-+
- &i2c5 {
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ir {
- 		ir_int: ir-int {
-@@ -190,6 +220,13 @@
- 		};
- 	};
- 
-+	sound {
-+		headphone: headphone {
-+			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
-+					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
 -- 
-2.9.3
+1.9.1
