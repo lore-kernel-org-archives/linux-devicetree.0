@@ -1,248 +1,66 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
-Date: Tue, 17 Jan 2017 09:57:52 +0100
-Message-ID: <1484643472.4087.6.camel@pengutronix.de>
-References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] clk: sunxi-ng: add support for V3s CCU
+Date: Tue, 17 Jan 2017 10:04:56 +0100
+Message-ID: <20170117090456.fgw6lpqgurwwcczj@lukather>
+References: <20170116180116.36729-2-icenowy@aosc.xyz>
+ <20170116180116.36729-3-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: christopher.spinrath@rwth-aachen.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="kydoof46rcmptsw3"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBR5467BQKGQEAQG6QGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170116180116.36729-3-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Zepan <715805855-9uewiaClKEY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christopher,
 
-On Fri, 2016-12-02 at 15:37 +0100, christopher.spinrath@rwth-aachen.de
-wrote:
-> From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+--kydoof46rcmptsw3
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+Hi,
+
+On Tue, Jan 17, 2017 at 02:01:14AM +0800, Icenowy Zheng wrote:
+> V3s has a similar but cut-down CCU to H3.
 > 
-> Apart from the already enabled Designware HDMI port, the Utilite Pro
-> has a second display pipeline which has the following shape:
+> Add support for it.
 > 
->   IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
->                                 --> HDMI connector.
-> Enable support for it.
-> 
-> In addition, since this pipeline is hardwired to IPU1, sever the link
-> between IPU1 and the SoC-internal Designware HDMI encoder forcing the
-> latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
-> possible to drive both displays at high resolution due to the bandwidth
-> limitations of a single IPU.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
->
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
-> 
-> Hi all,
-> 
-> the removal of the link between IPU1 and the Designware HDMI encoder is the
-> result of a discussion I had with Philipp Zabel:
-> 
->   https://lists.freedesktop.org/archives/dri-devel/2016-November/125399.html .
-> 
-> Altough it is not possible to connect anything else to IPU1 on the Utilite, this
-> approach has at least one disadvantage: if the resolution is low enough such 
-> that a single IPU can handle both displays then muxing both displays to IPU1
-> would reduce the power consumption.
-> 
-> However, IMHO omitting the link IPU1 <--> DW HDMI is still the preferrable
-> solution since I'm not aware of any OS/driver that is capable of switching IPUs
-> or can handle the bandwidth limitation in a sane way. In particular, Linux is
-> unusable when both displays are supposed to be driven at high resolution and
-> both muxing options for the DW HDMI are available (this is not a userspace
-> issue; the system becomes almost unresponsive as soon as the kernel sets the
-> initial resolution).
-> 
-> Cheers,
-> Christopher
-> 
-> P.S.: this patch depends on the tfp410 bridge driver which has recently been
-> merged into drm-next.
-> 
->  arch/arm/boot/dts/imx6q-utilite-pro.dts | 115 ++++++++++++++++++++++++++++++++
->  1 file changed, 115 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> index 2200994..69bdd82 100644
-> --- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
-> @@ -59,6 +59,33 @@
->  		rtc1 = &snvs_rtc;
->  	};
->  
-> +	encoder {
-> +		compatible = "ti,tfp410";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +
-> +				tfp410_in: endpoint {
-> +					remote-endpoint = <&parallel_display_out>;
-> +				};
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +
-> +				tfp410_out: endpoint {
-> +					remote-endpoint = <&hdmi_connector_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	gpio-keys {
->  		compatible = "gpio-keys";
->  		pinctrl-names = "default";
-> @@ -72,6 +99,19 @@
->  		};
->  	};
->  
-> +	hdmi-connector {
-> +		compatible = "hdmi-connector";
-> +
-> +		type = "a";
-> +		ddc-i2c-bus = <&i2c_dvi_ddc>;
-> +
-> +		port {
-> +			hdmi_connector_in: endpoint {
-> +				remote-endpoint = <&tfp410_out>;
-> +			};
-> +		};
-> +	};
-> +
->  	i2cmux {
->  		compatible = "i2c-mux-gpio";
->  		pinctrl-names = "default";
-> @@ -105,8 +145,46 @@
->  			#size-cells = <0>;
->  		};
->  	};
-> +
-> +	parallel-display {
-> +		compatible = "fsl,imx-parallel-display";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_ipu1>;
-> +
-> +		interface-pix-fmt = "rgb24";
 
-This is not necessary if the connector created by the tpf410 has the
-correct media bus format set in its display_info structure. This can be
-done in tfp410_attach, before calling drm_mode_connector_attach_encoder:
+Output from checkpatch:
+total: 5 errors, 2 warnings, 3 checks, 857 lines checked
 
-        u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> I think I should make a comparsion between V3s and H3 CCU here:
+> (I won't mention the missing/added clocks here, only list conflicting clocks)
 
-	drm_display_info_set_bus_formats(&dvi->connector.display_info,                                                                         
-					 &bus_format, 1);
+That should be in your commit log.
 
-After this is done, the above line should be removed in a follow-up
-patch.
+> - "bus-ehci0" is at different bit (The bit that is "bus-ehci0" on V3s is
+>   "bus-ehci2" on H3)
+> - The mux of "ce" is different. (According the view at V3s datasheet by the
+>   author of sun4i-ss, V3s may have sun4i-ss, not sun8i-ce)
+> - The mux of "de" is different. (V3s do not have "pll-de", but it can mux "de"
+>   to "pll-video")
+> - Clocks about CSI largely differs. (As V3s is designed as a camera SoC, and
+>   it have an extra "pll-isp")
 
-> +		port@0 {
-> +			reg = <0>;
-> +
-> +			parallel_display_in: endpoint {
-> +				remote-endpoint = <&ipu1_di0_disp0>;
-> +			};
-> +		};
-> +
-> +		port@1 {
-> +			reg = <1>;
-> +
-> +			parallel_display_out: endpoint {
-> +				remote-endpoint = <&tfp410_in>;
-> +			};
-> +		};
-> +	};
->  };
->  
-> +/*
-> + * A single IPU is not able to drive both display interfaces available on the
-> + * Utilite Pro at high resolution due to its bandwidth limitation. Since the
-> + * tfp410 encoder is wired up to IPU1, sever the link between IPU1 and the
-> + * SoC-internal Designware HDMI encoder forcing the latter to be connected to
-> + * IPU2 instead of IPU1.
-> + */
-> +/delete-node/&ipu1_di0_hdmi;
-> +/delete-node/&hdmi_mux_0;
-> +/delete-node/&ipu1_di1_hdmi;
-> +/delete-node/&hdmi_mux_1;
-> +
->  &hdmi {
->  	ddc-i2c-bus = <&i2c2>;
->  	status = "okay";
-> @@ -151,6 +229,39 @@
->  		>;
->  	};
->  
-> +	pinctrl_ipu1: ipu1grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x38
-> +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x38
-> +			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x38
-> +			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x38
-> +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x38
-> +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x38
-> +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x38
-> +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x38
-> +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x38
-> +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x38
-> +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x38
-> +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x38
-> +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x38
-> +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x38
-> +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x38
-> +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x38
-> +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x38
-> +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x38
-> +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x38
-> +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x38
-> +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x38
-> +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x38
-> +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x38
-> +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x38
-> +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x38
-> +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x38
-> +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x38
-> +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x38
-> +		>;
-> +	};
-> +
->  	pinctrl_uart2: uart2grp {
->  		fsl,pins = <
->  			MX6QDL_PAD_GPIO_7__UART2_TX_DATA 0x1b0b1
-> @@ -194,6 +305,10 @@
->  	};
->  };
->  
-> +&ipu1_di0_disp0 {
-> +	remote-endpoint = <&parallel_display_in>;
-> +};
-> +
->  &pcie {
->  	pcie@0,0 {
->  		reg = <0x000000 0 0 0 0>;
+OK.
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+Thanks,
+Maxime
 
-regards
-Philipp
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--kydoof46rcmptsw3--
