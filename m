@@ -1,162 +1,179 @@
-From: christopher.lee.bostic@gmail.com
-Subject: [PATCH v3 00/18] FSI device driver introduction
-Date: Tue, 17 Jan 2017 16:02:39 -0600
-Message-ID: <1484690559-12909-1-git-send-email-christopher.lee.bostic@gmail.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Tue, 17 Jan 2017 23:26:21 +0100
+Message-ID: <1484691981.26620.55.camel@baylibre.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+         <1484680984.26620.29.camel@baylibre.com>
+         <CAFBinCDvtufXUxe+cRCzOKFtbOqS-xEr0Vp=_0S4Pn+sTPHOmg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, jk@ozlabs.org, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
-Cc: Chris Bostic <cbostic@us.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCDvtufXUxe+cRCzOKFtbOqS-xEr0Vp=_0S4Pn+sTPHOmg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chris Bostic <cbostic@us.ibm.com>
+On Tue, 2017-01-17 at 22:09 +0100, Martin Blumenstingl wrote:
+> On Tue, Jan 17, 2017 at 8:23 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> wrote:
+> > 
+> > On Sat, 2016-12-03 at 00:47 +0100, Martin Blumenstingl wrote:
+> > > 
+> > > This partially fixes the 1000Mbit/s ethernet TX throughput issues
+> > > (on
+> > > networks which are not affected by the EEE problem, as reported
+> > > here:
+> > > [1]).
+> > > The actual problem for the TX throughput issues was that the TX
+> > > delay
+> > > was applied twice:
+> > > - once "accidentally" by the PHY (this was fixed with [2])
+> > > - once by the MAC because there was a hardcoded TX delay (of
+> > > 2ns),
+> > >   this will be configurable with the changes from [0]
+> > > 
+> > > These are the dts changes which belong to my other series (in v2
+> > > these patches were part of the other series, upon request of the
+> > > net maintainers I have split the .dts changes into their own
+> > > series
+> > > so
+> > > we are able to take both through different trees):
+> > > "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
+> > > RGMII TX delay": [0].
+> > > Thus this series depends on the ACK for the binding changes in
+> > > the
+> > > other series!
+> > > 
+> > > I based these changes on my other series "[PATCH v2 0/2] GXL and
+> > > GXM
+> > > SCPI improvements": [3]
+> > > 
+> > > 
+> > > [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-Decem
+> > > ber/
+> > > 001834.html
+> > > [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-Novem
+> > > ber/
+> > > 001607.html
+> > > [2] http://lists.infradead.org/pipermail/linux-amlogic/2016-Novem
+> > > ber/
+> > > 001707.html
+> > > [3] http://lists.infradead.org/pipermail/linux-amlogic/2016-Decem
+> > > ber/
+> > > 001831.html
+> > > 
+> > > Martin Blumenstingl (5):
+> > >   ARM64: dts: meson-gx: move the MDIO node to meson-gx
+> > 
+> > Sorry for the late reply, I've only been able to test this
+> > yesterday.
+> > 
+> > With "snps,dwmac-mdio" provided in meson-gx.dtsi, the mdio_node is
+> > defined in stmmac_mdio_register and auto-detection of the PHY is
+> > disabled for all meson-gx boards.
+> > 
+> > I wonder if this is desirable ? or maybe this something we could
+> > fix in
+> > stmmac ? (perform auto-detect the mdio bus is provided without a
+> > PHY)
+> actually it's only a "problem" when introducing support for new
+> devices. can you please forward this question to the stmmac
+> maintainers, as I think your idea of enabling auto-detection when
+> there are no children in the MDIO-bus makes sense
 
-Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
-driver. FSI is a high fan out serial bus consisting of a clock and a serial
-data line capable of running at speeds up to 166 MHz.
+That's one way to address the issue, sure. I just wonder if we should
+keep the declaration of the mdio bus with "snps,dwmac-mdio" in the dts
+using it, with the phy explicitly declared ...
 
-This set provides the basic framework to add FSI extensions to the
-Linux bus and device models. Master specific implementations are
-defined to utilize the core FSI function.
+Otherwise, we have to make clear that you must always explicitly
+declare your PHY in amlogic's dts so there is no surprise.
 
-In Linux, we have a core FSI "bus type", along with drivers for FSI
-masters and engines.
+As you mentioned, we missed the gxbb-nexbox-a95. No phy declared in
+that dts, but it still get the mdio bus from meson-gx.dtsi. So as of
+"ARM64: dts: meson-gx: move the MDIO node to meson-gx" the PHY is not
+detected on this board.
 
-The FSI master drivers expose a read/write interface to the bus address
-space. The master drivers are under drivers/fsi/fsi-master-*.c.
+> 
+> > 
+> > Also, I think bisect is broken between patch 1 and patch 4: The PHY
+> > of
+> > some boards won't be detected between these patches. Should we
+> > squash
+> > them ?
+> what do you mean exactly? currently the TX-delay is hardcoded in
+> dwmac-meson8b. patch 4 moves the hardcoded value from the
+> dwmac-meson8b to the .dts-files.
+> unfortunately the corresponding dwmac-meson8b patch was not accepted
+> yet, so at the moment patch 4 should be a no-op.
 
-The core handles probing and discovery of slaves and slave
-engines, using those read/write interfaces. It is responsible for
-creating the endpoint Linux devices corresponding to the discovered
-engines on each slave.
+Nothing related to the tx-delay ... I'm all for it ;) Thx for your work
+by the way
 
-Slave engines are identified by an 'engine' type, and an optional
-version. Engine, a.k.a. client, drivers are matched and bound to these
-engines during discovery.
+What I meant is that as of "ARM64: dts: meson-gx: move the MDIO node to
+meson-gx" all boards not declaring the PHY explicitly can't detect it
+anymore. that's more or less all gxbb boards
 
-This patch set does not include extended FSI function such as:
-    *  Hub master support
-    *  Cascaded master support
-    *  Application layer hot plug notification
-    *  Application layer FSI bus status interface
+With "ARM64: dts: meson-gxbb-odroidc2: add reset for the ethernet PHY"
+the odroid gets fixed ... but the p200 and vega-s95 are still broken 
 
-Common FSI terminology:
+With the next patch, the p200 is/should have been fixed, then the vega-
+s95 is fixed 
 
-* Master
-    Controller of the FSI bus.  Only the master is allowed to control the
-    clock line and is the initiator of all transactions on a bus.
+In the end the gxbb-nexbox is still broken. To be honest I did not
+verify if there any other board in that case.
 
-* Slave
-    The receiver or target of a master initiated transaction.  The slave
-    cannot initiate communications on a bus and must respond to any
-    master requests for data.
+My point is that I think the declaration of the mdio bus in meson-
+gx.dtsi and the declaration of each PHY in the board dtss should be
+done in single commit to avoid having a (very) short part of the
+history with regressions
 
-* CFAM
-    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
-    ASIC residing in any device requiring FSI communications. CFAMs
-    consist of an array of hardware 'engines' used for various purposes.
-    I2C masters, UARTs, General Purpose IO hardware are common types of
-    these engines.
+> 
+> > 
+> > > 
+> > >   ARM64: dts: meson-gxbb-odroidc2: add reset for the ethernet PHY
+> > >   ARM64: dts: meson-gxbb-p20x: add reset for the ethernet PHY
+> > >   ARM64: dts: meson-gxbb-vega-s95: add reset for the ethernet PHY
+> > >   ARM64: dts: amlogic: add the ethernet TX delay configuration
+> > > 
+> > 
+> > Last remark, about the use of ethernet-phy-idXXXX.XXXX in the
+> > odroid
+> > and the vega: Isn't it better to let phylib do the autodetection of
+> > the
+> > phy id ?
+> > 
+> > If we want to specify the id in DT, we should probably add it for
+> > the
+> > Micrel PHY of the p200 as well, for consistency.
+> this seems to be a "best practice" when the PHY ID is known, see [0]
+> If you know the PHY ID of the Micrel PHY then please let me know,
+> then
+> we can include this in the fix for the p20x boards
 
-* Configuration Space / Table
-    A table contained at the beginning of each CFAM address space.
-    This table lists information such as the CFAM's ID, which engine types
-    and versions it has available, as well as its addressing range.
+OK
 
-* FSI Engine driver
-    A device driver that registers with the FSI core so that it can access
-    devices it owns on an FSI bus.
-
-Chris Bostic (8):
-  drivers/fsi: Kick off master scan via sysfs
-  drivers/fsi: Set up links for slave communication
-  drivers/fsi: Set slave SMODE to init communication
-  drivers/fsi: Remove all scanned devices during master unregister
-  drivers/fsi: Add FSI bus documentation
-  drivers/fsi: Add documentation for GPIO based FSI master
-  drivers/fsi: Document FSI master sysfs files in ABI
-  drivers/fsi: Add GPIO based FSI master
-
-Jeremy Kerr (10):
-  drivers/fsi: Add empty fsi bus definitions
-  drivers/fsi: Add device & driver definitions
-  drivers/fsi: add driver to device matches
-  drivers/fsi: Add fsi master definition
-  drivers/fsi: Add slave definition
-  drivers/fsi: Add empty master scan
-  drivers/fsi: Add FSI crc calculators to library
-  drivers/fsi: Implement slave initialisation
-  drivers/fsi: scan slaves & register devices
-  drivers/fsi: Add device read/write/peek functions
-
-Changes for v3:
-    - Patch set contained an invalid 18/18 test patch not
-      meant for community review, corrected.
-
-Changes for v2:
-    - Change from atomic global for master number to ida simple
-      interface.
-    - Add valid pointer checks on register and unregister utils.
-    - Move CRC calculation utilities out of driver to lib path.
-    - Clean up white space issues.
-    - Remove added list management of master devices and use
-      instead the device_for_each_child method available in the
-      bus.
-    - Add new patch to document FSI bus functionality.
-    - Add new patch documenting FSI gpio master.
-    - Rearrage patch set to have documentation earlier than code
-      implementing it.
-    - Document all comptible strings used in device tree bindings.
-    - Elaborate documentation definition of FSI GPIO master.
-    - Describe in more detail what each GPIO FSI master pin is for.
-    - Re-order compatible strings in example binding so that most
-      specific device comes first.
-    - Indicate proper activation order of all FSI GPIO master pins.
-    - Fix an unmatched '>' bracket in the example for binding.
-    - Bracket each element of the example bindings individually.
-    - Add new patch documenting sysfs-bus-fsi attributes.
-    - Merge FSI GPIO master init into probe function.
-    - Set pin initial values at time of pin request.
-    - Assign value of master->master.dev at probe time.
-    - Use get_optional interfac for all optional GPIO pins.
-
-
- Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
- Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
- drivers/Kconfig                                    |   2 +
- drivers/Makefile                                   |   1 +
- drivers/fsi/Kconfig                                |  23 +
- drivers/fsi/Makefile                               |   3 +
- drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
- drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
- drivers/fsi/fsi-master.h                           |  39 ++
- include/linux/crc-fsi.h                            |  29 ++
- include/linux/fsi.h                                |  60 +++
- lib/Makefile                                       |   1 +
- lib/crc-fsi.c                                      |  39 ++
- 14 files changed, 1352 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
- create mode 100644 drivers/fsi/Kconfig
- create mode 100644 drivers/fsi/Makefile
- create mode 100644 drivers/fsi/fsi-core.c
- create mode 100644 drivers/fsi/fsi-master-gpio.c
- create mode 100644 drivers/fsi/fsi-master.h
- create mode 100644 include/linux/crc-fsi.h
- create mode 100644 include/linux/fsi.h
- create mode 100644 lib/crc-fsi.c
-
--- 
-1.8.2.2
+> 
+> > 
+> > > 
+> > >  arch/arm64/boot/dts/amlogic/meson-gx.dtsi            |  6 ++++++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 17
+> > > +++++++++++++++++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 17
+> > > +++++++++++++++++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 17
+> > > +++++++++++++++++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts |  2 ++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           |  6 ------
+> > >  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts  |  2 ++
+> > >  arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts  |  2 ++
+> > >  8 files changed, 63 insertions(+), 6 deletions(-)
+> > > 
+> 
+> [0] http://lxr.free-electrons.com/source/Documentation/devicetree/bin
+> dings/net/phy.txt#L22
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
