@@ -1,101 +1,48 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Tue, 17 Jan 2017 20:14:07 +0300
-Message-ID: <d2d19518-5758-1af1-71cd-ab38f26734e7@cogentembedded.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
- <20170117142016.11163-2-abailon@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v7 2/3] input: tm2-touchkey: Add touchkey driver support
+ for TM2
+Date: Tue, 17 Jan 2017 19:20:47 +0200
+Message-ID: <20170117172047.47535bj5xd6toayu@kozik-lap>
+References: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170117055444epcas1p47b0b0a0ae3260b22fa61d2b92362050b@epcas1p4.samsung.com>
+ <1484632479-3111-3-git-send-email-jcsing.lee@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117142016.11163-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484632479-3111-3-git-send-email-jcsing.lee@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jaechul Lee <jcsing.lee@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-input@vger.kernel.org, galaxyra@gmail.com, beomho.seo@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 05:20 PM, Alexandre Bailon wrote:
+On Tue, Jan 17, 2017 at 02:54:38PM +0900, Jaechul Lee wrote:
+> This patch adds support for the TM2 touch key and led
+> functionality.
+> 
+> The driver interfaces with userspace through an input device and
+> reports KEY_PHONE and KEY_BACK event types. LED brightness can be
+> controlled by "/sys/class/leds/tm2-touchkey/brightness".
+> 
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
+This looks unusual. How did Dmitry's Sob end here?
 
-    "CPPI 4.1 DMA" again.
-
->
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          | 42 ++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> index ccb844a..aed3169 100644
-> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -18,10 +18,26 @@ Required properties:
->
->   - phy-names: Should be "usb-phy"
->
-> + - dmas: specifies the dma channels
-> +
-> + - dma-names: specifies the names of the channels. Use "rxN" for receive
-> +   and "txN" for transmit endpoints. N specifies the endpoint number.
-> +
->  Optional properties:
->  ~~~~~~~~~~~~~~~~~~~~
->   - vbus-supply: Phandle to a regulator providing the USB bus power.
->
-> +DMA
-> +~~~
-> +- compatible: ti,da8xx-cppi41
-> +- reg: offset and length of the following register spaces: CPPI DMA Controller,
-> +  CPPI DMA Scheduler, Queue Manager
-> +- reg-names: "controller", "scheduler", "queuemgr"
-> +- #dma-cells: should be set to 2. The first number represents the
-> +  channel number (0 … 3 for endpoints 1 … 4).
-> +  The second number is 0 for RX and 1 for TX transfers.
-> +- #dma-channels: should be set to 4 representing the 4 endpoints.
-
-    Shouldn't the # of channels be a part of the glue data?
-
-[...]
-> @@ -39,5 +58,28 @@ Example:
->  		phys = <&usb_phy 0>;
->  		phy-names = "usb-phy";
->
-> +		dmas = <&cppi41dma 0 0 &cppi41dma 1 0
-> +			&cppi41dma 2 0 &cppi41dma 3 0
-> +			&cppi41dma 0 1 &cppi41dma 1 1
-> +			&cppi41dma 2 1 &cppi41dma 3 1>;
-> +		dma-names =
-> +			"rx1", "rx2", "rx3", "rx4",
-> +			"tx1", "tx2", "tx3", "tx4";
-> +
->  		status = "okay";
-> +
-> +		cppi41dma: dma-controller@201000 {
-> +			compatible = "ti,da8xx-cppi41";
-> +			reg =  <0x201000 0x1000
-> +				0x202000 0x1000
-> +				0x204000 0x4000>;
-> +			reg-names = "controller", "scheduler", "queuemgr";
-> +			interrupts = <58>;
-> +			interrupt-names = "glue";
-> +			#dma-cells = <2>;
-> +			#dma-channels = <4>;
-> +			#dma-requests = <256>;
-
-    Not seeing this prop documented...
-
-> +			status = "okay";
-
-    Can be omitted.
-
-> +		};
-> +
->  	};
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
