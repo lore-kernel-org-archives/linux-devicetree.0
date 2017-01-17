@@ -1,95 +1,42 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: [PATCH v2 2/2] arm64: dts: exynos: Add regulators for Vbus and
- Vbus-Boost
-Date: Tue, 17 Jan 2017 20:34:04 +0530
-Message-ID: <1484665444-23365-3-git-send-email-pankaj.dubey@samsung.com>
-References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20170117150123epcas1p12709f99a0993ae58ea1fe294df5a12fe@epcas1p1.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: krzk@kernel.org, kgene@kernel.org, robh+dt@kernel.org, sanath@samsung.com, javier@osg.samsung.com, Vivek Gautam <gautamvivek1987@gmail.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+Subject: [PATCH v9 0/5] Add support for the STM32F4 I2C
+Date: Tue, 17 Jan 2017 16:26:56 +0100
+Message-ID: <1484666821-20551-1-git-send-email-cedric.madianga@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
+Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Vivek Gautam <gautamvivek1987@gmail.com>
+This patchset adds support for the I2C controller embedded in STM32F4xx SoC.
+It enables I2C transfer in interrupt mode with Standard-mode and Fast-mode bus
+speed.
 
-Adding fixed voltage regulators for Vbus and Vbus-boost required
-by USB 3.0 DRD controller on Exynos7-espresso board.
+Changes since v8:
+- Rework I2C Clock Control Register computation (Uwe)
+- Save register accesses as often as possible (Uwe)
+- Don't use mask before saving rx buffer (Uwe)
+- Add more comments to explain hardware way of working (Uwe)
+- Rename stm32f4_i2c_handle_rx_btf function by stm32f4_i2c_handle_rx_done (Uwe)
+- Set/Clear Ack position bit during address match phase
 
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
-Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 45 +++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+M'boumba Cedric Madianga (5):
+  dt-bindings: Document the STM32 I2C bindings
+  i2c: Add STM32F4 I2C driver
+  ARM: dts: stm32: Add I2C1 support for STM32F429 SoC
+  ARM: dts: stm32: Add I2C1 support for STM32429 eval board
+  ARM: configs: stm32: Add I2C support for STM32 defconfig
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 9cf73cf..8d5abdd 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -13,6 +13,7 @@
- #include "exynos7.dtsi"
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/clock/samsung,s2mps11.h>
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
-@@ -33,6 +34,29 @@
- 		device_type = "memory";
- 		reg = <0x0 0x40000000 0x0 0xC0000000>;
- 	};
-+
-+	usb30_vbus_reg: regulator-usb30 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBUS_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gph1 1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb30_vbus_en>;
-+		enable-active-high;
-+	};
-+
-+	usb3drd_boost_5v: regulator-usb3drd-boost {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VUSB_VBUS_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpf4 1 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb3drd_boost_en>;
-+		enable-active-high;
-+	};
-+
- };
- 
- &fin_pll {
-@@ -366,3 +390,24 @@
- 	vqmmc-supply = <&ldo2_reg>;
- 	disable-wp;
- };
-+
-+&usbdrd_phy {
-+	vbus-supply = <&usb30_vbus_reg>;
-+	vbus-boost-supply = <&usb3drd_boost_5v>;
-+};
-+
-+&pinctrl_bus1 {
-+	usb30_vbus_en: usb30-vbus-en {
-+		samsung,pins = "gph1-1";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	usb3drd_boost_en: usb3drd-boost-en {
-+		samsung,pins = "gpf4-1";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
+ .../devicetree/bindings/i2c/i2c-stm32.txt          |  33 +
+ arch/arm/boot/dts/stm32429i-eval.dts               |   6 +
+ arch/arm/boot/dts/stm32f429.dtsi                   |  23 +
+ arch/arm/configs/stm32_defconfig                   |   3 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-stm32f4.c                   | 883 +++++++++++++++++++++
+ 7 files changed, 959 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+ create mode 100644 drivers/i2c/busses/i2c-stm32f4.c
+
 -- 
-2.7.4
+1.9.1
