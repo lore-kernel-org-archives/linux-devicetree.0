@@ -1,120 +1,71 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Mon, 16 Jan 2017 22:07:11 -0800
-Message-ID: <CAOesGMhYfhrd-hy=N-FYDEPmumR0=QNzn5xTLxFuKG7apo5qiw@mail.gmail.com>
-References: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
- <m21sw66828.fsf@baylibre.com> <d3a00788-c3c1-4b10-90bf-2a8bc6a138f8@suse.de> <7fcb8d94-840a-de2c-f43b-9123ccc65514@baylibre.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH v7 3/3] arm64: dts: exynos: Add tm2 touchkey node
+Date: Tue, 17 Jan 2017 15:12:28 +0900
+Message-ID: <587DB5CC.4090909@samsung.com>
+References: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170117055444epcas1p430376a7c03940ded299e374367170b03@epcas1p4.samsung.com>
+ <1484632479-3111-4-git-send-email-jcsing.lee@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7fcb8d94-840a-de2c-f43b-9123ccc65514@baylibre.com>
+In-reply-to: <1484632479-3111-4-git-send-email-jcsing.lee@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Kevin Hilman <khilman@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, xypron.glpk@gmx.de, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Jaechul Lee <jcsing.lee@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Andi Shyti <andi.shyti@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 2:39 AM, Neil Armstrong <narmstrong@baylibre.com> w=
-rote:
-> On 01/15/2017 03:43 PM, Andreas F=C3=A4rber wrote:
->> Am 13.01.2017 um 21:03 schrieb Kevin Hilman:
->>> Neil Armstrong <narmstrong@baylibre.com> writes:
->>>
->>>> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory =
-space,
->>>> this patch adds this reserved zone and redefines the usable memory ran=
-ge.
->>>>
->>>> The memory node is also moved from the dtsi files into the proper dts =
-files
->>>> to handle variants memory sizes.
->>>>
->>>> This patch also fixes the memory sizes for the following platforms :
->>>> - gxl-s905x-p212 : 1GiB instead of 2GiB, a proper 2GiB dts should be p=
-ushed
->>>> - gxm-s912-q201 : 1GiB instead of 2GiB, a proper 2GiB dts should be pu=
-shed
->>>> - gxl-s905d-p231 : 1GiB instead of 2GiB, a proper 2GiB dts should be p=
-ushed
->>>> - gxl-nexbox-a95x : 1GiB instead of 2GiB, a proper 2GiB dts should be =
-pushed
->>>>
->>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>>
->>> Queued for v4.10-rc.
->>
->> What is the motivation for this change? I have a local U-Boot patch to
->> detect the amount of memory available as done downstream, but U-Boot
->> only updates the reg property that you seem to be abandoning here...
->>
->> So for devices that come in multiple RAM configurations - like R-Box Pro
->> - this would require separate .dts files now! This looks very wrong to
->> me, especially since I am not aware of other platforms doing the same.
->> Instead, there's memory reservations for top and bottom done in U-Boot
->> for reg, plus reserved-memory nodes for anything in the middle.
->>
->> Another thing to consider is that uEFI boot (bootefi) handles memory
->> reservation differently yet again, on the bootloader level. I have had
->> that working fine on Odroid-C2 and Vega S95.
->>
->> So if there's no bug this is fixing (none mentioned in commit message) I
->> strongly object to this patch.
->>
->> Regards,
->> Andreas
->>
->
-> Hi Andreas,
->
-> Like I replied of my RFT patch :
-> I really disagree about relying on any work or properties added by any bo=
-otloader here, Amlogic SoCs has
-> a lot of u-boot versions in the field, and the Odroid-C2 is part of this.
->
-> Even if Odroid-c2 is in mainline U-Boot or not, the mainline Linux kernel=
- should work using
-> any U-boot version even with the one provided by Amlogic on their openlin=
-ux distribution channel.
->
-> Handling multiple RAM configuration is another story, and the Arm-Soc and=
- DT maintainers should give us
-> their advices.
+Hi,
 
-Is there a way to detect what firmware is running and marking off
-memory from early kernel init instead? That'll take care of the
-concerns about memory size variance as well.
+I tested this patch on v6[1] and replied it.
+But, this version is missing the my tested-by and reviewed-by tag.
+[1] https://patchwork.kernel.org/patch/9504139/
 
-> Actually there is a severe bug fixed here that cause a huge crash if such=
- memory is not reserved while
-> running stock u-boot version on various shipped products and Amlogic's ow=
-n development boards.
->
-> The bug is easily triggered by running :
-> # stress --vm 4 --vm-bytes 128M --timeout 10s &
-> [   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf00000=
-0 -- SError
-> ...
-> [   47.058536] Internal error: Attempting to execute userspace memory: 86=
-00000f [#3] PREEMPT SMP
-> ...
->
-> Note this is a fix targeted for 4.10 to make the system stable and variou=
-s users reported some severe
-> crash now the system has more drivers and read-world use-cases are runnin=
-g on Amlogic SoCs.
->
-> Please feel free to push whatever changes that makes this memory reservat=
-ion more coherent for 4.11,
-> and respect the behavior of already shipped u-boot version and mainline U=
--Boot, UEFI, whatever...
+So, I add my reviewed-by and tested-by tag again.
 
-Technically we're not in regression territory here, since the platform
-is obviously still in bringup and these aren't bugs that have been
-introduced in this release. So I think we can take a little while to
-sort out if there's a solution that, even if not ideal, at least is on
-the path towards the proper fix and not away from it -- which this
-seems to be.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
 
 
--Olof
+On 2017년 01월 17일 14:54, Jaechul Lee wrote:
+> Add DT node support for TM2 touchkey device.
+> 
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> index 2449266..ddba2f8 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2.dts
+> @@ -18,6 +18,19 @@
+>  	compatible = "samsung,tm2", "samsung,exynos5433";
+>  };
+>  
+> +&hsi2c_9 {
+> +	status = "okay";
+> +
+> +	touchkey@20 {
+> +		compatible = "cypress,tm2-touchkey";
+> +		reg = <0x20>;
+> +		interrupt-parent = <&gpa3>;
+> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +		vcc-supply = <&ldo32_reg>;
+> +		vdd-supply = <&ldo33_reg>;
+> +	};
+> +};
+> +
+>  &ldo31_reg {
+>  	regulator-name = "TSP_VDD_1.85V_AP";
+>  	regulator-min-microvolt = <1850000>;
+> 
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+S/W Center, Samsung Electronics
