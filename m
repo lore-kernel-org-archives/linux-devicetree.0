@@ -1,12 +1,20 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v3 1/3] dt: bindings: add documentation for zx2967 family
- reset controller
-Date: Tue, 17 Jan 2017 11:22:55 +0800
-Message-ID: <1484623377-16208-1-git-send-email-baoyou.xie@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Tue, 17 Jan 2017 14:32:08 +1100
+Message-ID: <20170117143208.03c9af83@free-electrons.com>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+ <1484291609-20195-3-git-send-email-guochun.mao@mediatek.com>
+ <20170113151747.6bc85245@bbrezillon>
+ <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+ <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+ <20170113172825.75d545a3@bbrezillon>
+ <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+ <20170113175628.1793f433@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170113175628.1793f433@bbrezillon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,45 +24,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jun.nie@linaro.org, p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, baoyou.xie@linaro.org, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt-binding documentation for zx2967 family
-reset controller.
+Hello,
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-Reviewed-by: Shawn Guo <shawnguo@kernel.org>
----
- .../devicetree/bindings/reset/zte,zx2967-reset.txt   | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
+On Fri, 13 Jan 2017 17:56:28 +0100, Boris Brezillon wrote:
 
-diff --git a/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt b/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
-new file mode 100644
-index 0000000..b015508
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
-@@ -0,0 +1,20 @@
-+ZTE zx2967 SoCs Reset Controller
-+=======================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: should be one of the following.
-+	* zte,zx296718-reset
-+- reg: physical base address of the controller and length of memory mapped
-+	region.
-+- #reset-cells: must be 1.
-+
-+example:
-+
-+	reset: reset-controller@1461060 {
-+		compatible = "zte,zx296718-reset";
-+		reg = <0x01461060 0x8>;
-+		#reset-cells = <1>;
-+	};
+> because both compatible are referring to very specific IP version. It's
+> not the same as
+> 
+> 	compatible = "mediatek,mt8173-nor", "mediatek,mt81xx-nor";
+
+mt81xx-nor is a bogus compatible string, and DT binding maintainers
+will not accept it. They don't want compatible strings with "wildcards".
+
+Thomas
 -- 
-2.7.4
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
