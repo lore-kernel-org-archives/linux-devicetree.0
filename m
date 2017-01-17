@@ -1,65 +1,88 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] iio: distance: srf08: add IIO driver for us ranger
-Date: Tue, 17 Jan 2017 11:28:01 +0100
-Message-ID: <20170117102801.GB7823@andreas>
-References: <20170110184815.GA15532@andreas>
- <4099feac-959c-2b5b-a21a-3b111098af39@kernel.org>
- <20170114174856.GA2351@andreas>
- <d05cce62-4362-b249-f49f-58eed2316ddb@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <d05cce62-4362-b249-f49f-58eed2316ddb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] arm64: dts: exynos: Add regulators for Vbus and Vbus-Boost
+Date: Tue, 17 Jan 2017 16:02:23 +0530
+Message-ID: <1484649143-19423-3-git-send-email-pankaj.dubey@samsung.com>
+References: <1484649143-19423-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117102941epcas1p3a33a312bedd013edb0997b16786dede6@epcas1p3.samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1484649143-19423-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonathan,
+Adding fixed voltage regulators for Vbus and Vbus-boost required
+by USB 3.0 DRD controller on Exynos7-espresso board.
 
-[...]
+Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 44 +++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-> >> For the range, it's an interesting one.  Again the term range could
-> >> mean too many things within the wider ABI. We need to make it more
-> >> specific.
-> >>
-> >> Actually reading the datasheet, I think this is fundamentally about the
-> >> maximum sampling frequency rather than directly about the range.
-> >> The only reason you'd reduce the range is to speed that up. It doesn't
-> >> improve the resolution, the device simply answers quicker.
-> >>
-> >> So I'd support this as sampling_frequency.  You could then use
-> >> the the iio_info_mask_*_available and relevant callback to provide
-> >> info on what it then restricts the possible output values to
-> >> (rather than controlling it directly).
-> >>
-> > 
-> > By changing the range one cannot influence the sampling frequency directly. I
-> > have seen on the oszilloscope that the telegrams arrive almost at the same time
-> > with different settings of range and the same gain.
-> > 
-> > Only if the gain is also adjusted the sensor works faster and a higher frequency
-> > can be used. But the gain is also used to adjust the sensitivity of the sensor. 
-> That's rather weird and not what the datasheet suggests. Ah well.
-> > 
-> > What about calling it "sensor_domain" or "sensor_max_range"?
-> hmm. Not sure - propose that with appropriate Docs and we can think more on it.
-> > 
-> > 
-
-I made a mistake in the earlier mentioned measurement which i have to correct:
-
-The telegrams arrive faster with a smaller range and the same gain. 
-
-But we cannot use the sensor at a higher frequency if we are not adjusting the
-gain of the sensor as well. This is because of echos of the former cycle which
-are still around. And this setting of the gain depends on the surrounding where
-the sensor is used. So in the driver we cannot estimate it.
-
-Therefore i'll send out the next version with the attribute name
-"sensor_max_range" together with documentation as proposal.
-
-Andreas
-
+diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+index 9cf73cf..68f3a51 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
++++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+@@ -33,6 +33,29 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x40000000 0x0 0xC0000000>;
+ 	};
++
++	usb30_vbus_reg: regulator-usb30 {
++		compatible = "regulator-fixed";
++		regulator-name = "VBUS_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gph1 1 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb30_vbus_en>;
++		enable-active-high;
++	};
++
++	usb3drd_boost_5v: regulator-usb3drd-boost {
++		compatible = "regulator-fixed";
++		regulator-name = "VUSB_VBUS_5V";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&gpf4 1 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usb3drd_boost_en>;
++		enable-active-high;
++	};
++
+ };
+ 
+ &fin_pll {
+@@ -366,3 +389,24 @@
+ 	vqmmc-supply = <&ldo2_reg>;
+ 	disable-wp;
+ };
++
++&usbdrd_phy {
++	vbus-supply = <&usb30_vbus_reg>;
++	vbus-boost-supply = <&usb3drd_boost_5v>;
++};
++
++&pinctrl_bus1 {
++	usb30_vbus_en: usb30-vbus-en {
++		samsung,pins = "gph1-1";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	usb3drd_boost_en: usb3drd-boost-en {
++		samsung,pins = "gpf4-1";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++};
 -- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
