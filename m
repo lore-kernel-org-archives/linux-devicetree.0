@@ -1,39 +1,52 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH 2/4] musb: sunxi: add support for the variant in H3/V3s SoC
-Date: Tue, 17 Jan 2017 08:38:11 -0600
-Message-ID: <20170117143811.GC31716@uda0271908>
-References: <20170103152534.20118-1-icenowy@aosc.xyz>
- <20170103152534.20118-3-icenowy@aosc.xyz>
- <20170106135715.y7cwrwqyzybl6t5m@lukather>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Tue, 17 Jan 2017 14:48:10 +0000
+Message-ID: <SG2PR06MB1165BF7E1FD64C27620977678A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+ <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+ <20170116114023.GA3029@katana>
+ <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170117082118.GA1487@katana>
+ <CAMuHMdVW=HORcCA0brX4tZdtG9knqE7D_wnM5VtSrxz2LdBgUA@mail.gmail.com>
+ <20170117094529.GC1487@katana>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170106135715.y7cwrwqyzybl6t5m@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170117094529.GC1487@katana>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 02:57:15PM +0100, Maxime Ripard wrote:
-> On Tue, Jan 03, 2017 at 11:25:32PM +0800, Icenowy Zheng wrote:
-> > Allwinner H3/V3s features a variant of MUSB controller, which lacks one
-> > endpoint.
-> > 
-> > Add support for it.
-> > 
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
-> 
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Hi Wolfram,
 
-Applied. Thanks.
--Bin.
+On Tuesday, January 17, 2017, Wolfram Sang wrote:
+> > I have no idea if the SDHI driver disables the module clock when it is
+> > idle, but shouldn't the card detect clock be running all the time when
+> > the driver is bound to the device?
+>=20
+> Yes, it should. And for all instances with just one clock, this means thi=
+s
+> main clock must be running. So, en-/disable functions are all about
+> suspend/resume and bind/unbind. (Huh, looks like the unbind part is
+> missing, though. Need to look closer).
+>=20
+> My take is: either we implement the power saving and handle the cd clock
+> seperately. Or we ignore the power saving for now and handle both clocks
+> as virtually one, i.e. en-/disable them at the same time.
+>=20
+> Doesn't make sense?
+
+I'll go with "ignore the power saving for now and handle both clocks
+as virtually one".
+
+I'll go give it a try and see how it works.
+
+Thanks,
+Chris
