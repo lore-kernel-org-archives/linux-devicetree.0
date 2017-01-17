@@ -1,65 +1,67 @@
-From: Bruno Herrera <bruherrera@gmail.com>
-Subject: [PATCH v3 4/5] ARM: dts: stm32: Enable USB HS in FS mode (embedded
- phy) on stm32f429-disco
-Date: Tue, 17 Jan 2017 14:12:36 -0200
-Message-ID: <20170117161237.3802-5-bruherrera@gmail.com>
-References: <20170117161237.3802-1-bruherrera@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117161237.3802-1-bruherrera@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, johnyoun@synopsys.com, felipe.balbi@linux.intel.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Subject: [PATCH v2 1/4] dt-bindings: phy: Add documentation for NSP USB3 PHY
+Date: Tue, 17 Jan 2017 11:14:27 -0500
+Message-ID: <1484669670-4201-2-git-send-email-yendapally.reddy@broadcom.com>
+References: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables USB HS working in FS mode on stm32f429-disco 
-with 5V VBUS enable.
+Add documentation for USB3 PHY available in Northstar plus SoC
 
-Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
+Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
 ---
- arch/arm/boot/dts/stm32f429-disco.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 
-diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
-index 7d0415e..0b2b017 100644
---- a/arch/arm/boot/dts/stm32f429-disco.dts
-+++ b/arch/arm/boot/dts/stm32f429-disco.dts
-@@ -88,6 +88,14 @@
- 			gpios = <&gpioa 0 0>;
- 		};
- 	};
+diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+new file mode 100644
+index 0000000..e68ae5d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+@@ -0,0 +1,39 @@
++Broadcom USB3 phy binding for northstar plus SoC
++The USB3 phy is internal to the SoC and is accessed using mdio interface.
 +
-+	/* This turns on vbus for otg for host mode (dwc2) */
-+	vcc5v_otg: vcc5v-otg-regulator {
-+		compatible = "regulator-fixed";
-+		gpio = <&gpioc 4 0>;
-+		regulator-name = "vcc5_host1";
-+		regulator-always-on;
++Required mdio bus properties:
++- reg: Should be 0x0 for SoC internal USB3 phy
++- #address-cells: must be 1
++- #size-cells: must be 0
++
++Required USB3 PHY properties:
++- compatible: should be "brcm,nsp-usb3-phy"
++- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.
++- usb3-ctrl-syscon: handler of syscon node defining physical address
++  of usb3 control register.
++- #phy-cells: must be 0
++
++Required usb3 control properties:
++- compatible: should be "brcm,nsp-usb3-ctrl"
++- reg: offset and length of the control registers
++
++Example:
++
++	mdio@0 {
++		reg = <0x0>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usb3_phy: usb-phy@10 {
++			compatible = "brcm,nsp-usb3-phy";
++			reg = <0x10>;
++			usb3-ctrl-syscon = <&usb3_ctrl>;
++			#phy-cells = <0>;
++			status = "disabled";
++		};
 +	};
- };
- 
- &clk_hse {
-@@ -99,3 +107,11 @@
- 	pinctrl-names = "default";
- 	status = "okay";
- };
 +
-+&usbotg_hs {
-+	compatible = "st,stm32f4xx-fsotg";
-+	dr_mode = "host";
-+	pinctrl-0 = <&usbotg_fs_pins_b>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
++	usb3_ctrl: syscon@104408 {
++		compatible = "brcm,nsp-usb3-ctrl", "syscon";
++		reg = <0x104408 0x3fc>;
++	};
 -- 
-2.10.1 (Apple Git-78)
+2.1.0
