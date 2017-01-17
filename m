@@ -1,114 +1,118 @@
-Return-Path: <SRS0=bBJo=ZE=rock-chips.com=eddie.cai@kernel.org>
+Return-Path: <SRS0=Jz1C=Y7=linaro.org=baoyou.xie@kernel.org>
 MIME-Version: 1.0
-Reply-To: eddie.cai@rock-chips.com
-In-Reply-To: <20170121204217.y54lup7wkm7y7iwp@rob-hp-laptop>
-References: <1484791919-4665-1-git-send-email-eddie.cai@rock-chips.com>
- <1484791919-4665-2-git-send-email-eddie.cai@rock-chips.com> <20170121204217.y54lup7wkm7y7iwp@rob-hp-laptop>
-From: =?UTF-8?B?RWRkaWUgQ2FpKOiUoeaeqyk=?= <eddie.cai@rock-chips.com>
-Date: Sun, 22 Jan 2017 09:06:20 +0800
-Message-ID: <CAEYML7Kt-VJ7zgPE1DdWZVYtUHeLM=t9hERFF-_8sdcEqj9v2g@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: add Asus Tinker board
-Content-Type: multipart/alternative; boundary=001a114906a4e0edfb0546a47e87
-To: Rob Herring <robh@kernel.org>
-Cc: Eddie Cai <eddie.cai.linux@gmail.com>, "Mark.Rutland" <mark.rutland@arm.com>, =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>, linux@armlinux.org.uk, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-rockchip <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1484577528.8415.147.camel@pengutronix.de>
+References: <1484564194-18530-1-git-send-email-baoyou.xie@linaro.org>
+ <1484564194-18530-2-git-send-email-baoyou.xie@linaro.org> <1484577528.8415.147.camel@pengutronix.de>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Date: Tue, 17 Jan 2017 08:49:15 +0800
+Message-ID: <CA+DQWkzVUPcUgDV1NLVb7zD-Vmj5kttaLuib3m=JfxRV6MC5=A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] MAINTAINERS: add zx2967 reset controller driver to
+ ARM ZTE architecture
+Content-Type: multipart/alternative; boundary=001a11445d946a403e05463fabf4
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jun Nie <jun.nie@linaro.org>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-ID: <devicetree@vger.kernel.org>
 
---001a114906a4e0edfb0546a47e87
+--001a11445d946a403e05463fabf4
 Content-Type: text/plain; charset=UTF-8
 
-2017-01-22 4:42 GMT+08:00 Rob Herring <robh@kernel.org>:
+On 16 January 2017 at 22:38, Philipp Zabel <p.zabel@pengutronix.de> wrote:
 
-> On Thu, Jan 19, 2017 at 10:11:58AM +0800, Eddie Cai wrote:
-> > Tinker board is a credit card size develop board designed by Asus.
-> > Powered by RK3288.
+> On Mon, 2017-01-16 at 18:56 +0800, Baoyou Xie wrote:
+> > Add the zx2967 reset controller driver as maintained by ARM ZTE
+> > architecture maintainers, as they're parts of the core IP.
 > >
-> > Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
+> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 > > ---
-> >  Documentation/devicetree/bindings/arm/rockchip.txt | 3 +++
-> >  1 file changed, 3 insertions(+)
+> >  MAINTAINERS | 2 ++
+> >  1 file changed, 2 insertions(+)
 > >
-> > diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt
-> b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > index cc4ace6..ce1f04a 100644
-> > --- a/Documentation/devicetree/bindings/arm/rockchip.txt
-> > +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-> > @@ -1,5 +1,8 @@
-> >  Rockchip platforms device tree bindings
-> >  ---------------------------------------
-> > +- Asus Tinker board
-> > +    Required root node properties:
-> > +      - compatible = "rockchip,rk3288-tinker", "rockchip,rk3288";
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 2793808..08f8155 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -1980,10 +1980,12 @@ L:    linux-arm-kernel@lists.infradead.org
+> (moderated for non-subscribers)
+> >  S:   Maintained
+> >  F:   arch/arm/mach-zx/
+> >  F:   drivers/clk/zte/
+> > +F:   drivers/reset/reset-zx2967.c
+> >  F:   drivers/soc/zte/
+> >  F:   drivers/thermal/zx*
+> >  F:   Documentation/devicetree/bindings/arm/zte.txt
+> >  F:   Documentation/devicetree/bindings/clock/zx296702-clk.txt
+> > +F:   Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
+> >  F:   Documentation/devicetree/bindings/soc/zte/
+> >  F:   Documentation/devicetree/bindings/thermal/zx*
+> >  F:   include/dt-bindings/soc/zx*.h
 >
-> This should be asus,tinker if that's specific enough. At least the board
-> manufacturer should be the vendor.
+> This patch doesn't apply on top of reset/next. I can rebase it, but it
+> will cause a trivial merge conflict with the soc/thermal additions.
 >
-OK, i will modify it in next version
-
->
-> >
-> >  - Kylin RK3036 board:
-> >      Required root node properties:
-> > --
-> > 2.7.4
-> >
->
->
->
+> I will send v3 patch, it base on linux/next branch and conflict without
+the soc/thermal additions
 
 
--- 
-Eddie
+> regards
+> Philipp
+>
+>
 
---001a114906a4e0edfb0546a47e87
+--001a11445d946a403e05463fabf4
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">2017-01-22 4:42 GMT+08:00 Rob Herring <span dir=3D"ltr">&lt;<a href=3D"=
-mailto:robh@kernel.org" target=3D"_blank">robh@kernel.org</a>&gt;</span>:<b=
-r><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:=
-1px #ccc solid;padding-left:1ex"><span class=3D"">On Thu, Jan 19, 2017 at 1=
-0:11:58AM +0800, Eddie Cai wrote:<br>
-&gt; Tinker board is a credit card size develop board designed by Asus.<br>
-&gt; Powered by RK3288.<br>
+te">On 16 January 2017 at 22:38, Philipp Zabel <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:p.zabel@pengutronix.de" target=3D"_blank">p.zabel@pengutronix.d=
+e</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
+"><span class=3D"gmail-">On Mon, 2017-01-16 at 18:56 +0800, Baoyou Xie wrot=
+e:<br>
+&gt; Add the zx2967 reset controller driver as maintained by ARM ZTE<br>
+&gt; architecture maintainers, as they&#39;re parts of the core IP.<br>
 &gt;<br>
-&gt; Signed-off-by: Eddie Cai &lt;<a href=3D"mailto:eddie.cai@rock-chips.co=
-m">eddie.cai@rock-chips.com</a>&gt;<br>
+&gt; Signed-off-by: Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linaro.org"=
+>baoyou.xie@linaro.org</a>&gt;<br>
 &gt; ---<br>
-&gt;=C2=A0 Documentation/devicetree/<wbr>bindings/arm/rockchip.txt | 3 +++<=
-br>
-&gt;=C2=A0 1 file changed, 3 insertions(+)<br>
+&gt;=C2=A0 MAINTAINERS | 2 ++<br>
+&gt;=C2=A0 1 file changed, 2 insertions(+)<br>
 &gt;<br>
-&gt; diff --git a/Documentation/devicetree/<wbr>bindings/arm/rockchip.txt b=
-/Documentation/devicetree/<wbr>bindings/arm/rockchip.txt<br>
-&gt; index cc4ace6..ce1f04a 100644<br>
-&gt; --- a/Documentation/devicetree/<wbr>bindings/arm/rockchip.txt<br>
-&gt; +++ b/Documentation/devicetree/<wbr>bindings/arm/rockchip.txt<br>
-&gt; @@ -1,5 +1,8 @@<br>
-&gt;=C2=A0 Rockchip platforms device tree bindings<br>
-&gt;=C2=A0 ------------------------------<wbr>---------<br>
-&gt; +- Asus Tinker board<br>
-&gt; +=C2=A0 =C2=A0 Required root node properties:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 - compatible =3D &quot;rockchip,rk3288-tinker&qu=
-ot;, &quot;rockchip,rk3288&quot;;<br>
+&gt; diff --git a/MAINTAINERS b/MAINTAINERS<br>
+&gt; index 2793808..08f8155 100644<br>
+&gt; --- a/MAINTAINERS<br>
+&gt; +++ b/MAINTAINERS<br>
+&gt; @@ -1980,10 +1980,12 @@ L:=C2=A0 =C2=A0 <a href=3D"mailto:linux-arm-ke=
+rnel@lists.infradead.org">linux-arm-kernel@lists.<wbr>infradead.org</a> (mo=
+derated for non-subscribers)<br>
+&gt;=C2=A0 S:=C2=A0 =C2=A0Maintained<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0arch/arm/mach-zx/<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/clk/zte/<br>
+&gt; +F:=C2=A0 =C2=A0drivers/reset/reset-zx2967.c<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/soc/zte/<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/thermal/zx*<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/arm/zte.tx=
+t<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/clock/zx29=
+6702-clk.<wbr>txt<br>
+&gt; +F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/reset/zte,zx296=
+7-<wbr>reset.txt<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/soc/zte/<b=
+r>
+&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/thermal/zx=
+*<br>
+&gt;=C2=A0 F:=C2=A0 =C2=A0include/dt-bindings/soc/zx*.h<br>
 <br>
-</span>This should be asus,tinker if that&#39;s specific enough. At least t=
-he board<br>
-manufacturer should be the vendor.<br></blockquote><div>OK, i will modify i=
-t in next version=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"mar=
-gin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-<div class=3D"HOEnZb"><div class=3D"h5"><br>
-&gt;<br>
-&gt;=C2=A0 - Kylin RK3036 board:<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 Required root node properties:<br>
-&gt; --<br>
-&gt; 2.7.4<br>
-&gt;<br>
+</span>This patch doesn&#39;t apply on top of reset/next. I can rebase it, =
+but it<br>
+will cause a trivial merge conflict with the soc/thermal additions.<br>
+<br></blockquote><div>I will send v3 patch, it base on linux/next branch an=
+d conflict without the soc/thermal additions</div><div>=C2=A0</div><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
+ solid rgb(204,204,204);padding-left:1ex">
+regards<br>
+<span class=3D"gmail-HOEnZb"><font color=3D"#888888">Philipp<br>
 <br>
-<br>
-</div></div></blockquote></div><br><br clear=3D"all"><div><br></div>-- <br>=
-<div class=3D"gmail_signature" data-smartmail=3D"gmail_signature"><div dir=
-=3D"ltr">Eddie</div></div>
-</div></div>
+</font></span></blockquote></div><br></div></div>
 
---001a114906a4e0edfb0546a47e87--
+--001a11445d946a403e05463fabf4--
