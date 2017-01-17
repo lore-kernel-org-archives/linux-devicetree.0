@@ -1,1082 +1,632 @@
-From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] mtd: spi-nor: add rockchip serial flash controller
- driver
-Date: Tue, 17 Jan 2017 09:31:38 +0800
-Message-ID: <1393b1c7-ded3-746b-030c-b28807e933ae@rock-chips.com>
-References: <1481794068-241619-1-git-send-email-shawn.lin@rock-chips.com>
- <1481794068-241619-3-git-send-email-shawn.lin@rock-chips.com>
- <e5852f21-7aa0-8091-dc85-774e306e6f73@microchip.com>
+From: Jeremy McNicoll <jmcnicol@redhat.com>
+Subject: Re: [PATCH] Add Nexus 6P(msm8994) SDHCI support
+Date: Mon, 16 Jan 2017 17:33:05 -0800
+Message-ID: <20170117013305.GC25703@mini-rhel.redhat.com>
+References: <20161228162134.13687-1-git@kchr.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e5852f21-7aa0-8091-dc85-774e306e6f73-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyrille Pitchen <cyrille.pitchen-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20161228162134.13687-1-git@kchr.de>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bastian.=?iso-8859-1?B?S/ZjaGVyIDxnaXRAa2Noci5kZT4=?=@redhat.com
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, jeremymc@redhat.com, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Cyrille,
-
-On 2017/1/16 19:10, Cyrille Pitchen wrote:
-> Hi Shawn,
+On Wed, Dec 28, 2016 at 05:21:34PM +0100, Bastian Köcher wrote:
+> Signed-off-by: Bastian Köcher <git@kchr.de>
+> ---
 >
-> Le 15/12/2016 à 10:27, Shawn Lin a écrit :
->> Add rockchip serial flash controller driver
->>
->> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> ---
->>
->> Changes in v4:
->> - simplify the code of get_if_type
->> - use dma_dir to simplify the code
->> - simplify the rockchip_sfc_do_rd_wr
->> - some minor improvements
->> - add reset controller when doing resume
->>
->> Changes in v3:
->> - use io{read32,write32}_rep to simplify the corner cases
->> - remove more unnecessary bit definitions
->> - some minor comment fixes and improvement
->> - fix wrong unregister function
->> - unify more code
->> - use nor to avoid constantly replicating the whole
->>   sfc->flash[sfc->num_chip].nor
->> - add email for MODULE_AUTHOR
->> - remove #if 1 --- #endif
->> - extract DMA code to imporve the code structure
->> - reset all when failing to do dma
->> - pass sfc to get_if_type
->> - rename sfc-no-dma to sfc-no-DMA
->>
->> Changes in v2:
->> - fix typos
->> - add some comment for buffer and others operations
->> - rename SFC_MAX_CHIP_NUM to MAX_CHIPSELECT_NUM
->> - use u8 for cs
->> - return -EINVAL for default case of get_if_type
->> - use readl_poll_*() to check timeout cases
->> - simplify and clarify some condition checks
->> - rework the bitshifts to simplify the code
->> - define SFC_CMD_DUMMY(x)
->> - fix ummap for dma read path and finish all the
->>   cache maintenance.
->> - rename to rockchip_sfc_chip_priv and embed struct spi_nor
->>   in it.
->> - add MODULE_AUTHOR
->> - add runtime PM and general PM support.
->> - Thanks for Marek's comments. Link:
->>   http://lists.infradead.org/pipermail/linux-mtd/2016-November/070321.html
->>
->>  MAINTAINERS                        |   8 +
->>  drivers/mtd/spi-nor/Kconfig        |   7 +
->>  drivers/mtd/spi-nor/Makefile       |   1 +
->>  drivers/mtd/spi-nor/rockchip-sfc.c | 872 +++++++++++++++++++++++++++++++++++++
->>  4 files changed, 888 insertions(+)
->>  create mode 100644 drivers/mtd/spi-nor/rockchip-sfc.c
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 1cd38a7..eb7e06d 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -10266,6 +10266,14 @@ L:	linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>  S:	Odd Fixes
->>  F:	drivers/tty/serial/rp2.*
->>
->> +ROCKCHIP SERIAL FLASH CONTROLLER DRIVER
->> +M:	Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> +L:	linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> +L:	linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> +S:	Maintained
->> +F:	Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
->> +F:	drivers/mtd/spi-nor/rockchip-sfc.c
->> +
->>  ROSE NETWORK LAYER
->>  M:	Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
->>  L:	linux-hams-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
->> index 4a682ee..bf783a8 100644
->> --- a/drivers/mtd/spi-nor/Kconfig
->> +++ b/drivers/mtd/spi-nor/Kconfig
->> @@ -76,4 +76,11 @@ config SPI_NXP_SPIFI
->>  	  Flash. Enable this option if you have a device with a SPIFI
->>  	  controller and want to access the Flash as a mtd device.
->>
->> +config SPI_ROCKCHIP_SFC
->> +	tristate "Rockchip Serial Flash Controller(SFC)"
->> +	depends on ARCH_ROCKCHIP || COMPILE_TEST
->> +	depends on HAS_IOMEM && HAS_DMA
->> +	help
->> +	  This enables support for rockchip serial flash controller.
->> +
->>  endif # MTD_SPI_NOR
->> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
->> index 121695e..364d4c6 100644
->> --- a/drivers/mtd/spi-nor/Makefile
->> +++ b/drivers/mtd/spi-nor/Makefile
->> @@ -5,3 +5,4 @@ obj-$(CONFIG_SPI_FSL_QUADSPI)	+= fsl-quadspi.o
->>  obj-$(CONFIG_SPI_HISI_SFC)	+= hisi-sfc.o
->>  obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
->>  obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
->> +obj-$(CONFIG_SPI_ROCKCHIP_SFC)	+= rockchip-sfc.o
->> diff --git a/drivers/mtd/spi-nor/rockchip-sfc.c b/drivers/mtd/spi-nor/rockchip-sfc.c
->> new file mode 100644
->> index 0000000..102c08f
->> --- /dev/null
->> +++ b/drivers/mtd/spi-nor/rockchip-sfc.c
->> @@ -0,0 +1,872 @@
->> +/*
->> + * Rockchip Serial Flash Controller Driver
->> + *
->> + * Copyright (c) 2016, Rockchip Inc.
->> + * Author: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program. If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +#include <linux/bitops.h>
->> +#include <linux/clk.h>
->> +#include <linux/completion.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/module.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/mtd/spi-nor.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/slab.h>
->> +
->> +/* System control */
->> +#define SFC_CTRL			0x0
->> +#define  SFC_CTRL_COMMON_BITS_1		0x0
->> +#define  SFC_CTRL_COMMON_BITS_2		0x1
->> +#define  SFC_CTRL_COMMON_BITS_4		0x2
->> +#define  SFC_CTRL_DATA_BITS_SHIFT	12
->> +#define  SFC_CTRL_ADDR_BITS_SHIFT	10
->> +#define  SFC_CTRL_CMD_BITS_SHIFT	8
->> +#define  SFC_CTRL_PHASE_SEL_NEGETIVE	BIT(1)
->> +
->> +/* Interrupt mask */
->> +#define SFC_IMR				0x4
->> +#define  SFC_IMR_RX_FULL		BIT(0)
->> +#define  SFC_IMR_RX_UFLOW		BIT(1)
->> +#define  SFC_IMR_TX_OFLOW		BIT(2)
->> +#define  SFC_IMR_TX_EMPTY		BIT(3)
->> +#define  SFC_IMR_TRAN_FINISH		BIT(4)
->> +#define  SFC_IMR_BUS_ERR		BIT(5)
->> +#define  SFC_IMR_NSPI_ERR		BIT(6)
->> +#define  SFC_IMR_DMA			BIT(7)
->> +/* Interrupt clear */
->> +#define SFC_ICLR			0x8
->> +#define  SFC_ICLR_RX_FULL		BIT(0)
->> +#define  SFC_ICLR_RX_UFLOW		BIT(1)
->> +#define  SFC_ICLR_TX_OFLOW		BIT(2)
->> +#define  SFC_ICLR_TX_EMPTY		BIT(3)
->> +#define  SFC_ICLR_TRAN_FINISH		BIT(4)
->> +#define  SFC_ICLR_BUS_ERR		BIT(5)
->> +#define  SFC_ICLR_NSPI_ERR		BIT(6)
->> +#define  SFC_ICLR_DMA			BIT(7)
->> +/* FIFO threshold level */
->> +#define SFC_FTLR			0xc
->> +#define  SFC_FTLR_TX_SHIFT		0
->> +#define  SFC_FTLR_TX_MASK		0x1f
->> +#define  SFC_FTLR_RX_SHIFT		8
->> +#define  SFC_FTLR_RX_MASK		0x1f
->> +/* Reset FSM and FIFO */
->> +#define SFC_RCVR			0x10
->> +#define  SFC_RCVR_RESET			BIT(0)
->> +/* Enhanced mode */
->> +#define SFC_AX				0x14
->> +/* Address Bit number */
->> +#define SFC_ABIT			0x18
->> +/* Interrupt status */
->> +#define SFC_ISR				0x1c
->> +#define  SFC_ISR_RX_FULL_SHIFT		BIT(0)
->> +#define  SFC_ISR_RX_UFLOW_SHIFT		BIT(1)
->> +#define  SFC_ISR_TX_OFLOW_SHIFT		BIT(2)
->> +#define  SFC_ISR_TX_EMPTY_SHIFT		BIT(3)
->> +#define  SFC_ISR_TX_FINISH_SHIFT	BIT(4)
->> +#define  SFC_ISR_BUS_ERR_SHIFT		BIT(5)
->> +#define  SFC_ISR_NSPI_ERR_SHIFT		BIT(6)
->> +#define  SFC_ISR_DMA_SHIFT		BIT(7)
->> +/* FIFO status */
->> +#define SFC_FSR				0x20
->> +#define  SFC_FSR_TX_IS_FULL		BIT(0)
->> +#define  SFC_FSR_TX_IS_EMPTY		BIT(1)
->> +#define  SFC_FSR_RX_IS_EMPTY		BIT(2)
->> +#define  SFC_FSR_RX_IS_FULL		BIT(3)
->> +/* FSM status */
->> +#define SFC_SR				0x24
->> +#define  SFC_SR_IS_IDLE			0x0
->> +#define  SFC_SR_IS_BUSY			0x1
->> +/* Raw interrupt status */
->> +#define SFC_RISR			0x28
->> +#define  SFC_RISR_RX_FULL		BIT(0)
->> +#define  SFC_RISR_RX_UNDERFLOW		BIT(1)
->> +#define  SFC_RISR_TX_OVERFLOW		BIT(2)
->> +#define  SFC_RISR_TX_EMPTY		BIT(3)
->> +#define  SFC_RISR_TRAN_FINISH		BIT(4)
->> +#define  SFC_RISR_BUS_ERR		BIT(5)
->> +#define  SFC_RISR_NSPI_ERR		BIT(6)
->> +#define  SFC_RISR_DMA			BIT(7)
->> +/* Master trigger */
->> +#define SFC_DMA_TRIGGER			0x80
->> +/* Src or Dst addr for master */
->> +#define SFC_DMA_ADDR			0x84
->> +/* Command */
->> +#define SFC_CMD				0x100
->> +#define  SFC_CMD_IDX_SHIFT		0
->> +#define  SFC_CMD_DUMMY_SHIFT		8
->> +#define  SFC_CMD_DIR_RD			0
->> +#define  SFC_CMD_DIR_WR			1
->> +#define  SFC_CMD_DIR_SHIFT		12
->> +#define  SFC_CMD_ADDR_ZERO		(0x0 << 14)
->> +#define  SFC_CMD_ADDR_24BITS		(0x1 << 14)
->> +#define  SFC_CMD_ADDR_32BITS		(0x2 << 14)
->> +#define  SFC_CMD_ADDR_FRS		(0x3 << 14)
->> +#define  SFC_CMD_TRAN_BYTES_SHIFT	16
->> +#define  SFC_CMD_CS_SHIFT		30
->> +/* Address */
->> +#define SFC_ADDR			0x104
->> +/* Data */
->> +#define SFC_DATA			0x108
->> +
->> +#define SFC_MAX_CHIPSELECT_NUM		4
->> +#define SFC_DMA_MAX_LEN			0x4000
->> +#define SFC_CMD_DUMMY(x) \
->> +	((x) << SFC_CMD_DUMMY_SHIFT)
->> +
->> +enum rockchip_sfc_iftype {
->> +	IF_TYPE_STD,
->> +	IF_TYPE_DUAL,
->> +	IF_TYPE_QUAD,
->> +};
->> +
->> +struct rockchip_sfc;
->> +struct rockchip_sfc_chip_priv {
->> +	u8 cs;
->> +	u32 clk_rate;
->> +	struct spi_nor nor;
->> +	struct rockchip_sfc *sfc;
->> +};
->> +
->> +struct rockchip_sfc {
->> +	struct device *dev;
->> +	struct mutex lock;
->> +	void __iomem *regbase;
->> +	struct clk *hclk;
->> +	struct clk *clk;
->> +	/* virtual mapped addr for dma_buffer */
->> +	void *buffer;
->> +	dma_addr_t dma_buffer;
->> +	struct completion cp;
->> +	struct rockchip_sfc_chip_priv flash[SFC_MAX_CHIPSELECT_NUM];
->> +	u32 num_chip;
->> +	bool use_dma;
->> +	/* use negative edge of hclk to latch data */
->> +	bool negative_edge;
->> +};
->> +
->> +static int get_if_type(struct rockchip_sfc *sfc, enum read_mode flash_read)
->> +{
->> +	if (flash_read == SPI_NOR_DUAL)
->> +		return IF_TYPE_DUAL;
->> +	else if (flash_read == SPI_NOR_QUAD)
->> +		return IF_TYPE_QUAD;
->> +	else if (flash_read == SPI_NOR_NORMAL ||
->> +		 flash_read == SPI_NOR_FAST)
->> +		return IF_TYPE_STD;
->> +
->> +	dev_err(sfc->dev, "unsupported SPI read mode\n");
->> +	return -EINVAL;
->> +}
->> +
->> +static int rockchip_sfc_reset(struct rockchip_sfc *sfc)
->> +{
->> +	int err;
->> +	u32 status;
->> +
->> +	writel_relaxed(SFC_RCVR_RESET, sfc->regbase + SFC_RCVR);
->> +
->> +	err = readl_poll_timeout(sfc->regbase + SFC_RCVR, status,
->> +				 !(status & SFC_RCVR_RESET), 20,
->> +				 jiffies_to_usecs(HZ));
->> +	if (err)
->> +		dev_err(sfc->dev, "SFC reset never finished\n");
->> +
->> +	/* Still need to clear the masked interrupt from RISR */
->> +	writel_relaxed(SFC_ICLR_RX_FULL | SFC_ICLR_RX_UFLOW |
->> +		       SFC_ICLR_TX_OFLOW | SFC_ICLR_TX_EMPTY |
->> +		       SFC_ICLR_TRAN_FINISH | SFC_ICLR_BUS_ERR |
->> +		       SFC_ICLR_NSPI_ERR | SFC_ICLR_DMA,
->> +		       sfc->regbase + SFC_ICLR);
->> +	return err;
->> +}
->> +
->> +static int rockchip_sfc_init(struct rockchip_sfc *sfc)
->> +{
->> +	int err;
->> +
->> +	err = rockchip_sfc_reset(sfc);
->> +	if (err)
->> +		return err;
->> +
->> +	/* Mask all eight interrupts */
->> +	writel_relaxed(0xff, sfc->regbase + SFC_IMR);
->> +
->> +	/*
->> +	 * Phase configure for sfc to latch data by using
->> +	 * ahb clock, and this configuration should be Soc
->> +	 * specific.
->> +	 */
->> +	if (sfc->negative_edge)
->> +		writel_relaxed(SFC_CTRL_PHASE_SEL_NEGETIVE,
->> +			       sfc->regbase + SFC_CTRL);
->> +	else
->> +		writel_relaxed(0, sfc->regbase + SFC_CTRL);
->> +
->> +	return 0;
->> +}
->> +
->> +static int rockchip_sfc_prep(struct spi_nor *nor, enum spi_nor_ops ops)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	int ret;
->> +
->> +	mutex_lock(&sfc->lock);
->> +	pm_runtime_get_sync(sfc->dev);
->> +
->> +	ret = clk_set_rate(sfc->clk, priv->clk_rate);
->> +	if (ret)
->> +		goto out;
->> +
->> +	ret = clk_prepare_enable(sfc->clk);
->> +	if (ret)
->> +		goto out;
->> +
->> +	return 0;
->> +
->> +out:
->> +	mutex_unlock(&sfc->lock);
->> +	return ret;
->> +}
->> +
->> +static void rockchip_sfc_unprep(struct spi_nor *nor, enum spi_nor_ops ops)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +
->> +	clk_disable_unprepare(sfc->clk);
->> +	mutex_unlock(&sfc->lock);
->> +	pm_runtime_mark_last_busy(sfc->dev);
->> +	pm_runtime_put_autosuspend(sfc->dev);
->> +}
->> +
->> +static int rockchip_sfc_wait_op_finish(struct rockchip_sfc *sfc)
->> +{
->> +	int err;
->> +	u32 status;
->> +
->> +	/*
->> +	 * Note: tx and rx share the same fifo, so the rx's water level
->> +	 * is the same as rx's, which means this function could be reused
->> +	 * for checking the read operations as well.
->> +	 */
->> +	err = readl_poll_timeout(sfc->regbase + SFC_FSR, status,
->> +				 status & SFC_FSR_TX_IS_EMPTY,
->> +				 20, jiffies_to_usecs(2 * HZ));
->> +	if (err)
->> +		dev_err(sfc->dev, "SFC fifo never empty\n");
->> +
->> +	return err;
->> +}
->> +
->> +static int rockchip_sfc_op_reg(struct spi_nor *nor,
->> +				u8 opcode, int len, u8 optype)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	u32 reg;
->> +	bool tx_no_empty, rx_no_empty, is_busy;
->> +	int err;
->> +
->> +	reg = readl_relaxed(sfc->regbase + SFC_FSR);
->> +	tx_no_empty = !(reg & SFC_FSR_TX_IS_EMPTY);
->> +	rx_no_empty = !(reg & SFC_FSR_RX_IS_EMPTY);
->> +
->> +	is_busy = readl_relaxed(sfc->regbase + SFC_SR);
->> +
->> +	if (tx_no_empty || rx_no_empty || is_busy) {
->> +		err = rockchip_sfc_reset(sfc);
->> +		if (err)
->> +			return err;
->> +	}
->> +
->> +	reg = opcode << SFC_CMD_IDX_SHIFT;
->> +	reg |= len << SFC_CMD_TRAN_BYTES_SHIFT;
->> +	reg |= priv->cs << SFC_CMD_CS_SHIFT;
->> +	reg |= optype << SFC_CMD_DIR_SHIFT;
->> +
->> +	writel_relaxed(reg, sfc->regbase + SFC_CMD);
->> +
->> +	return rockchip_sfc_wait_op_finish(sfc);
->> +}
->> +
->> +static void rockchip_sfc_read_fifo(struct rockchip_sfc *sfc, u8 *buf, int len)
->> +{
->> +	u32 tmp, i;
->> +	int total_len = len;
->> +
->> +	/* 32-bit access only */
->> +	if (len >= 4 && !((u32)buf & 0x03)) {
->> +		ioread32_rep(sfc->regbase + SFC_DATA, buf, len >> 2);
->> +		len %= 4;
->> +		buf += total_len - len;
->> +	}
->> +
->> +	/* read the rest bytes */
->> +	for (i = 0; i < len; i++) {
->> +		if (!(i & 0x03))
->> +			tmp = readl_relaxed(sfc->regbase + SFC_DATA);
->> +		buf[i] = (tmp >> ((i & 0x03) * 8)) & 0xff;
->> +	}
->> +}
->> +
->> +static int rockchip_sfc_read_reg(struct spi_nor *nor, u8 opcode,
->> +				 u8 *buf, int len)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	int ret;
->> +
->> +	ret = rockchip_sfc_op_reg(nor, opcode, len, SFC_CMD_DIR_RD);
->> +	if (ret)
->> +		return ret;
->> +
->> +	rockchip_sfc_read_fifo(sfc, buf, len);
->> +
->> +	return 0;
->> +}
->> +
->> +static int rockchip_sfc_write_reg(struct spi_nor *nor, u8 opcode,
->> +				  u8 *buf, int len)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	u32 dwords;
->> +
->> +	/* Align bytes to dwords */
->> +	dwords = DIV_ROUND_UP(len, sizeof(u32));
->> +	iowrite32_rep(sfc->regbase + SFC_DATA, buf, dwords);
->> +
->> +	return rockchip_sfc_op_reg(nor, opcode, len, SFC_CMD_DIR_WR);
->> +}
->> +
->> +static inline void rockchip_sfc_setup_transfer(struct spi_nor *nor,
->> +					       loff_t from_to,
->> +					       size_t len, u8 op_type)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	u32 reg;
->> +	u8 if_type = 0;
->> +
->> +	if_type = get_if_type(sfc, nor->flash_read);
->> +	writel_relaxed((if_type << SFC_CTRL_DATA_BITS_SHIFT) |
->> +		       (if_type << SFC_CTRL_ADDR_BITS_SHIFT) |
->> +		       (if_type << SFC_CTRL_CMD_BITS_SHIFT) |
->> +		       (sfc->negative_edge ? SFC_CTRL_PHASE_SEL_NEGETIVE : 0),
->> +		       sfc->regbase + SFC_CTRL);
->
-> Marek rose an issue when commenting v3:
->
-> Looking at that code it seems that even if the hardware can support SPI
-> 1-1-n protocols, this driver actually allows SPI n-n-n protocols.
->
-> However with the current spi-nor framework, the values of the enum
-> read_mode must be understood this way:
-> SPI_NOR_FAST or SPI_NOR_NORMAL: SPI 1-1-1 protocol
-> SPI_NOR_DUAL: SPI 1-1-2 protocol
-> SPI_NOR_QUAD: SPI 1-1-4 protocol
->
-> Support to other SPI protocols such as SPI 1-4-4 or SPI 4-4-4 as not been
-> accepted in mainline yet.
->
-> Below in this driver, spi_nor_scan() is called with the value SPI_NOR_QUAD
-> hence it asks the spi-nor framework for using the SPI 1-1-4 (and not SPI
-> 4-4-4) *when supported by the QSPI memory*.
->
-> Also since the driver was tested with a Winbond w25q256 memory, let me warn
-> you that currently the SPI_NOR_QUAD_READ flag is *NOT* set in the "w25q256"
-> entry of the spi_nor_ids[] array. So this claims this memory is not capable
-> of using the SPI 1-1-4 protocol even if the Winbond memory actually
-> supports this protocol. Then the spi-nor framework selects the SPI 1-1-1
-> protocol as a fallback.
-> That's why you have succeeded in using your driver but it would have failed
-> with another QSPI memory with its SPI_NOR_QUAD_READ flag due to a protocol
-> mismatch.
->
-> So with the current spi-nor framework you must set
-> SFC_CTRL_{DATA|ADDR}_BITS_SHIFT to IF_TYPE_STD.
->
-> Later, once the patch adding support to other SPI protocols would have been
-> accepted in mainline, you could update your driver to tell the spi-nor
-> framework that the rockchip controller also supports SPI 1-2-2 and SPI
-> 1-4-4 protocols.
->
-
-Thanks, I will fix it in v5.
-
->
->> +
->> +	if (op_type == SFC_CMD_DIR_WR)
->> +		reg = nor->program_opcode << SFC_CMD_IDX_SHIFT;
->> +	else
->> +		reg = nor->read_opcode << SFC_CMD_IDX_SHIFT;
->> +
->> +	reg |= op_type << SFC_CMD_DIR_SHIFT;
->> +	reg |= (nor->addr_width == 4) ?
->> +		SFC_CMD_ADDR_32BITS : SFC_CMD_ADDR_24BITS;
->> +
->> +	reg |= priv->cs << SFC_CMD_CS_SHIFT;
->> +	reg |= len << SFC_CMD_TRAN_BYTES_SHIFT;
->
-> Looking at the definitions of SFC_CMD_TRAN_BYTES_SHIFT (16) and
-> SFC_CMD_CS_SHIFT (30), I understand that the bitfield for the transfer
-> length lays between bits 16 and 30 hence a 14 bit value at most.
-> So what if len is greater than 16384? It overflows in the cs bitfield?
->
-> You should apply masks to avoid such overflows and also test the len value
-> then report the actual number of transferred bytes.
-
-Sure, will fix.
-
->
->> +
->> +	if (op_type == SFC_CMD_DIR_RD)
->> +		reg |= SFC_CMD_DUMMY(nor->read_dummy);
->> +
->> +	/* Should minus one as 0x0 means 1 bit flash address */
->> +	writel_relaxed(nor->addr_width * 8 - 1, sfc->regbase + SFC_ABIT);
->> +	writel_relaxed(reg, sfc->regbase + SFC_CMD);
->> +	writel_relaxed(from_to, sfc->regbase + SFC_ADDR);
->> +}
->> +
->> +static int rockchip_sfc_do_dma_transfer(struct spi_nor *nor, loff_t from_to,
->> +					dma_addr_t dma_buf, size_t len,
->> +					u8 op_type)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	u32 reg;
->> +	int err = 0;
->> +
->> +	init_completion(&sfc->cp);
->> +
->> +	writel_relaxed(SFC_ICLR_RX_FULL | SFC_ICLR_RX_UFLOW |
->> +		       SFC_ICLR_TX_OFLOW | SFC_ICLR_TX_EMPTY |
->> +		       SFC_ICLR_TRAN_FINISH | SFC_ICLR_BUS_ERR |
->> +		       SFC_ICLR_NSPI_ERR | SFC_ICLR_DMA,
->> +		       sfc->regbase + SFC_ICLR);
->> +
->> +	/* Enable transfer complete interrupt */
->> +	reg = readl_relaxed(sfc->regbase + SFC_IMR);
->> +	reg &= ~SFC_IMR_TRAN_FINISH;
->> +	writel_relaxed(reg, sfc->regbase + SFC_IMR);
->> +
->> +	rockchip_sfc_setup_transfer(nor, from_to, len, op_type);
->> +	writel_relaxed(dma_buf, sfc->regbase + SFC_DMA_ADDR);
->> +
->> +	/*
->> +	 * Start dma but note that the sfc->dma_buffer is derived from
->> +	 * dmam_alloc_coherent so we don't actually need any sync operations
->> +	 * for coherent dma memory.
->> +	 */
->> +	writel_relaxed(0x1, sfc->regbase + SFC_DMA_TRIGGER);
->> +
->> +	/* Wait for the interrupt. */
->> +	if (!wait_for_completion_timeout(&sfc->cp, msecs_to_jiffies(2000))) {
->> +		dev_err(sfc->dev, "DMA wait for transfer finish timeout\n");
->> +		err = -ETIMEDOUT;
->> +	}
->> +
->> +	/* Disable transfer finish interrupt */
->> +	reg = readl_relaxed(sfc->regbase + SFC_IMR);
->> +	reg |= SFC_IMR_TRAN_FINISH;
->> +	writel_relaxed(reg, sfc->regbase + SFC_IMR);
->> +
->> +	if (err) {
->> +		rockchip_sfc_reset(sfc);
->> +		return err;
->> +	}
->> +
->> +	return rockchip_sfc_wait_op_finish(sfc);
->> +}
->> +
->> +static inline int rockchip_sfc_pio_write(struct rockchip_sfc *sfc, u_char *buf,
->> +					 size_t len)
->> +{
->> +	u32 dwords;
->> +
->> +	/*
->> +	 * Align bytes to dwords, although we will write some extra
->> +	 * bytes to fifo but the transfer bytes number in SFC_CMD
->> +	 * register will make sure we just send out the expected
->> +	 * byte numbers and the extra bytes will be clean before
->> +	 * setting up the next transfer. We should always round up
->> +	 * to align to DWORD as the ahb for Rockchip Socs won't
->> +	 * support non-aligned-to-DWORD transfer.
->> +	 */
->> +	dwords = DIV_ROUND_UP(len, sizeof(u32));
->> +	iowrite32_rep(sfc->regbase + SFC_DATA, buf, dwords);
->> +
->> +	return rockchip_sfc_wait_op_finish(sfc);
->> +}
->> +
->> +static inline int rockchip_sfc_pio_read(struct rockchip_sfc *sfc, u_char *buf,
->> +					size_t len)
->> +{
->> +	rockchip_sfc_read_fifo(sfc, buf, len);
->> +
->> +	return rockchip_sfc_wait_op_finish(sfc);
->> +}
->> +
->> +static int rockchip_sfc_pio_transfer(struct spi_nor *nor, loff_t from_to,
->> +				     size_t len, u_char *buf, u8 op_type)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +
->> +	rockchip_sfc_setup_transfer(nor, from_to, len, op_type);
->> +
->> +	if (op_type == SFC_CMD_DIR_WR)
->> +		return rockchip_sfc_pio_write(sfc, buf, len);
->> +	else
->> +		return rockchip_sfc_pio_read(sfc, buf, len);
->> +}
->> +
->> +static int rockchip_sfc_dma_transfer(struct spi_nor *nor, loff_t from_to,
->> +				     size_t len, u_char *buf, u8 op_type)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	size_t offset;
->> +	int ret;
->> +	dma_addr_t dma_addr = 0;
->> +	int dma_dir;
->> +
->> +	dma_dir = (op_type == SFC_CMD_DIR_RD) ?
->> +		   DMA_FROM_DEVICE : DMA_TO_DEVICE;
->> +
->> +	for (offset = 0; offset < len; offset += SFC_DMA_MAX_LEN) {
->> +		size_t trans = min_t(size_t, SFC_DMA_MAX_LEN, len - offset);
->> +
->> +		dma_addr = dma_map_single(NULL, (void *)buf, trans, dma_dir);
-> not good: buf may have been allocated with vmalloc() hence the pages of buf
-> are not garanteed to be contiguous in physical memory.
->
-> Just write a ubifs image into your QSPI memory and try to mount it. You are
-> very likely to notice some issues/crashes.
->
-
-You are right. I wasn't aware that the buf from vmalloc will pass in
-here so I need to check the address and if that was coming from vmalloc,
-we should use pre-allocated dma buf and do a copy here, although it's
-quite low performance. :)
+Sorry for the delay, my vactions this year ended up being a
+little longer than expected given the chaos in Fort Lauderdale
+airport. 
 
 
->
->> +
->> +		if (dma_mapping_error(sfc->dev, dma_addr)) {
->> +			/*
->> +			 * If we use pre-allocated dma_buffer, we need to
->> +			 * do a copy here.
->> +			 */
->> +			if (op_type == SFC_CMD_DIR_WR)
->> +				memcpy(sfc->buffer, buf + offset, trans);
->> +
->> +			dma_addr = 0;
->> +		}
->> +
->> +		if (op_type == SFC_CMD_DIR_WR)
->> +			/*
->> +			 * Flush the write data from write_buf to dma_addr
->> +			 * if using dynamic allocated dma buffer before dma
->> +			 * moves data from dma_addr to fifo.
->> +			 */
->> +			dma_sync_single_for_device(sfc->dev, dma_addr,
->> +						   trans, DMA_TO_DEVICE);
->> +
->> +
->> +		/* If failing to map dma, use pre-allocated area instead */
->> +		ret = rockchip_sfc_do_dma_transfer(nor, from_to + offset,
->> +						dma_addr ? dma_addr :
->> +						sfc->dma_buffer,
->> +						trans, op_type);
->> +
->> +		if (dma_addr) {
->> +			/*
->> +			 * Invalidate the read data from dma_addr if using
->> +			 * dynamic allocated dma buffer after dma moves data
->> +			 * from fifo to dma_addr.
->> +			 */
->> +			if (op_type == SFC_CMD_DIR_RD)
->> +				dma_sync_single_for_cpu(sfc->dev, dma_addr,
->> +							trans, DMA_FROM_DEVICE);
->> +
->> +			dma_unmap_single(NULL, dma_addr,
->> +					 trans, dma_dir);
->> +		}
->> +
->> +		if (ret) {
->> +			dev_warn(nor->dev, "DMA read timeout\n");
->> +			return ret;
->> +		}
->> +		/*
->> +		 * If we use pre-allocated dma_buffer for read, we need to
->> +		 * do a copy here.
->> +		 */
->> +		if (!dma_addr && (op_type == SFC_CMD_DIR_RD))
->> +			memcpy(buf + offset, sfc->buffer, trans);
->> +	}
->> +
->> +	return len;
->> +}
->> +
->> +static ssize_t rockchip_sfc_do_rd_wr(struct spi_nor *nor, loff_t from_to,
->> +				     size_t len, u_char *buf, u32 op_type)
->> +{
->> +	struct rockchip_sfc_chip_priv *priv = nor->priv;
->> +	struct rockchip_sfc *sfc = priv->sfc;
->> +	int ret;
->> +
->> +	if (likely(sfc->use_dma))
->> +		return rockchip_sfc_dma_transfer(nor, from_to, len,
->> +						 buf, op_type);
->> +
->> +	/* Fall back to PIO mode if DMA isn't present */
->> +	ret = rockchip_sfc_pio_transfer(nor, from_to, len,
->> +					(u_char *)buf, op_type);
->> +	if (ret) {
->> +		if (op_type == SFC_CMD_DIR_RD)
->> +			dev_warn(nor->dev, "PIO read timeout\n");
->> +		else
->> +			dev_warn(nor->dev, "PIO write timeout\n");
->> +		return ret;
->> +	}
->> +
->> +	return len;
->> +}
->> +
->> +static ssize_t rockchip_sfc_read(struct spi_nor *nor, loff_t from,
->> +				 size_t len, u_char *read_buf)
->> +{
->> +	return rockchip_sfc_do_rd_wr(nor, from, len,
->> +				     read_buf, SFC_CMD_DIR_RD);
->> +}
->> +
->> +static ssize_t rockchip_sfc_write(struct spi_nor *nor, loff_t to,
->> +				  size_t len, const u_char *write_buf)
->> +{
->> +	return rockchip_sfc_do_rd_wr(nor, to, len,
->> +				     (u_char *)write_buf,
->> +				     SFC_CMD_DIR_WR);
->> +}
->> +
->> +static int rockchip_sfc_register(struct device_node *np,
->> +				 struct rockchip_sfc *sfc)
->> +{
->> +	struct device *dev = sfc->dev;
->> +	struct mtd_info *mtd;
->> +	struct spi_nor *nor;
->> +	int ret;
->> +
->> +	nor = &sfc->flash[sfc->num_chip].nor;
->> +	nor->dev = dev;
->> +	spi_nor_set_flash_node(nor, np);
->> +
->> +	ret = of_property_read_u8(np, "reg", &sfc->flash[sfc->num_chip].cs);
->> +	if (ret) {
->> +		dev_err(dev, "No reg property for %s\n",
->> +			np->full_name);
->> +		return ret;
->> +	}
->> +
->> +	ret = of_property_read_u32(np, "spi-max-frequency",
->> +			&sfc->flash[sfc->num_chip].clk_rate);
->> +	if (ret) {
->> +		dev_err(dev, "No spi-max-frequency property for %s\n",
->> +			np->full_name);
->> +		return ret;
->> +	}
->> +
->> +	sfc->flash[sfc->num_chip].sfc = sfc;
->> +	nor->priv = &(sfc->flash[sfc->num_chip]);
->> +
->> +	nor->prepare = rockchip_sfc_prep;
->> +	nor->unprepare = rockchip_sfc_unprep;
->> +	nor->read_reg = rockchip_sfc_read_reg;
->> +	nor->write_reg = rockchip_sfc_write_reg;
->> +	nor->read = rockchip_sfc_read;
->> +	nor->write = rockchip_sfc_write;
->> +	nor->erase = NULL;
->> +	ret = spi_nor_scan(nor, NULL, SPI_NOR_QUAD);
->> +	if (ret)
->> +		return ret;
->> +
->> +	mtd = &(nor->mtd);
->> +	mtd->name = np->name;
->> +	ret = mtd_device_register(mtd, NULL, 0);
->> +	if (ret)
->> +		return ret;
->> +
->> +	sfc->num_chip++;
->> +	return 0;
->> +}
->> +
->> +static void rockchip_sfc_unregister_all(struct rockchip_sfc *sfc)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < sfc->num_chip; i++)
->> +		mtd_device_unregister(&sfc->flash[i].nor.mtd);
->> +}
->> +
->> +static int rockchip_sfc_register_all(struct rockchip_sfc *sfc)
->> +{
->> +	struct device *dev = sfc->dev;
->> +	struct device_node *np;
->> +	int ret;
->> +
->> +	for_each_available_child_of_node(dev->of_node, np) {
->> +		ret = rockchip_sfc_register(np, sfc);
->> +		if (ret)
->> +			goto fail;
->> +
->> +		if (sfc->num_chip == SFC_MAX_CHIPSELECT_NUM) {
->> +			dev_warn(dev, "Exceeds the max cs limitation\n");
->> +			break;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +
->> +fail:
->> +	dev_err(dev, "Failed to register all chips\n");
->> +	/* Unregister all the _registered_ nor flash */
->> +	rockchip_sfc_unregister_all(sfc);
->> +	return ret;
->> +}
->> +
->> +static irqreturn_t rockchip_sfc_irq_handler(int irq, void *dev_id)
->> +{
->> +	struct rockchip_sfc *sfc = dev_id;
->> +	u32 reg;
->> +
->> +	reg = readl_relaxed(sfc->regbase + SFC_RISR);
->> +	dev_dbg(sfc->dev, "Get irq: 0x%x\n", reg);
->> +
->> +	/* Clear interrupt */
->> +	writel_relaxed(reg, sfc->regbase + SFC_ICLR);
->> +
->> +	if (reg & SFC_RISR_TRAN_FINISH)
->> +		complete(&sfc->cp);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static int rockchip_sfc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *res;
->> +	struct rockchip_sfc *sfc;
->> +	int ret;
->> +
->> +	sfc = devm_kzalloc(dev, sizeof(*sfc), GFP_KERNEL);
->> +	if (!sfc)
->> +		return -ENOMEM;
->> +
->> +	platform_set_drvdata(pdev, sfc);
->> +	sfc->dev = dev;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	sfc->regbase = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(sfc->regbase))
->> +		return PTR_ERR(sfc->regbase);
->> +
->> +	sfc->clk = devm_clk_get(&pdev->dev, "sfc");
->> +	if (IS_ERR(sfc->clk)) {
->> +		dev_err(&pdev->dev, "Failed to get sfc interface clk\n");
->> +		return PTR_ERR(sfc->clk);
->> +	}
->> +
->> +	sfc->hclk = devm_clk_get(&pdev->dev, "hsfc");
->> +	if (IS_ERR(sfc->hclk)) {
->> +		dev_err(&pdev->dev, "Failed to get sfc ahp clk\n");
->> +		return PTR_ERR(sfc->hclk);
->> +	}
->> +
->> +	ret = dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
->> +	if (ret) {
->> +		dev_warn(dev, "Unable to set dma mask\n");
->> +		return ret;
->> +	}
->> +
->> +	sfc->buffer = dmam_alloc_coherent(dev, SFC_DMA_MAX_LEN,
->> +			&sfc->dma_buffer, GFP_KERNEL);
->> +	if (!sfc->buffer)
->> +		return -ENOMEM;
->> +
->> +	mutex_init(&sfc->lock);
->> +
->> +	ret = clk_prepare_enable(sfc->hclk);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to enable hclk\n");
->> +		goto err_hclk;
->> +	}
->> +
->> +	ret = clk_prepare_enable(sfc->clk);
->> +	if (ret) {
->> +		dev_err(&pdev->dev, "Failed to enable clk\n");
->> +		goto err_clk;
->> +	}
->> +
->> +	sfc->use_dma = !of_property_read_bool(sfc->dev->of_node,
->> +					      "rockchip,sfc-no-DMA");
->> +
->> +	sfc->negative_edge = of_device_is_compatible(sfc->dev->of_node,
->> +						     "rockchip,rk1108-sfc");
->> +	/* Find the irq */
->> +	ret = platform_get_irq(pdev, 0);
->> +	if (ret < 0) {
->> +		dev_err(dev, "Failed to get the irq\n");
->> +		goto err_irq;
->> +	}
->> +
->> +	ret = devm_request_irq(dev, ret, rockchip_sfc_irq_handler,
->> +			       0, pdev->name, sfc);
->> +	if (ret) {
->> +		dev_err(dev, "Failed to request irq\n");
->> +		goto err_irq;
->> +	}
->> +
->> +	sfc->num_chip = 0;
->> +	ret = rockchip_sfc_init(sfc);
->> +	if (ret)
->> +		goto err_irq;
->> +
->> +	pm_runtime_get_noresume(&pdev->dev);
->> +	pm_runtime_set_active(&pdev->dev);
->> +	pm_runtime_enable(&pdev->dev);
->> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 50);
->> +	pm_runtime_use_autosuspend(&pdev->dev);
->> +
->> +	ret = rockchip_sfc_register_all(sfc);
->> +	if (ret)
->> +		goto err_register;
->> +
->> +	clk_disable_unprepare(sfc->clk);
->> +	pm_runtime_put_autosuspend(&pdev->dev);
->> +	return 0;
->> +
->> +err_register:
->> +	pm_runtime_disable(&pdev->dev);
->> +	pm_runtime_set_suspended(&pdev->dev);
->> +	pm_runtime_put_noidle(&pdev->dev);
->> +err_irq:
->> +	clk_disable_unprepare(sfc->clk);
->> +err_clk:
->> +	clk_disable_unprepare(sfc->hclk);
->> +err_hclk:
->> +	mutex_destroy(&sfc->lock);
->> +	return ret;
->> +}
->> +
->> +static int rockchip_sfc_remove(struct platform_device *pdev)
->> +{
->> +	struct rockchip_sfc *sfc = platform_get_drvdata(pdev);
->> +
->> +	pm_runtime_get_sync(&pdev->dev);
->> +	pm_runtime_disable(&pdev->dev);
->> +	pm_runtime_put_noidle(&pdev->dev);
->> +
->> +	rockchip_sfc_unregister_all(sfc);
->> +	mutex_destroy(&sfc->lock);
->> +	clk_disable_unprepare(sfc->clk);
->> +	clk_disable_unprepare(sfc->hclk);
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_PM
->> +int rockchip_sfc_runtime_suspend(struct device *dev)
->> +{
->> +	struct rockchip_sfc *sfc = dev_get_drvdata(dev);
->> +
->> +	clk_disable_unprepare(sfc->hclk);
->> +	return 0;
->> +}
->> +
->> +int rockchip_sfc_runtime_resume(struct device *dev)
->> +{
->> +	struct rockchip_sfc *sfc = dev_get_drvdata(dev);
->> +
->> +	clk_prepare_enable(sfc->hclk);
->> +	return rockchip_sfc_reset(sfc);
->> +}
->> +#endif /* CONFIG_PM */
->> +
->> +static const struct of_device_id rockchip_sfc_dt_ids[] = {
->> +	{ .compatible = "rockchip,sfc"},
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, rockchip_sfc_dt_ids);
->> +
->> +static const struct dev_pm_ops rockchip_sfc_dev_pm_ops = {
->> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +				pm_runtime_force_resume)
->> +	SET_RUNTIME_PM_OPS(rockchip_sfc_runtime_suspend,
->> +			   rockchip_sfc_runtime_resume, NULL)
->> +};
->> +
->> +static struct platform_driver rockchip_sfc_driver = {
->> +	.driver = {
->> +		.name	= "rockchip-sfc",
->> +		.of_match_table = rockchip_sfc_dt_ids,
->> +		.pm = &rockchip_sfc_dev_pm_ops,
->> +	},
->> +	.probe	= rockchip_sfc_probe,
->> +	.remove	= rockchip_sfc_remove,
->> +};
->> +module_platform_driver(rockchip_sfc_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("Rockchip Serial Flash Controller Driver");
->> +MODULE_AUTHOR("Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
->>
->
->
->
->
+See comments / suggestions below.
+
+> Patch for enabling Nexus 6P(msm8994) SDHCI support.
+> 
+> The patch is based on the work of Jeremy McNicoll for 
+> the Nexus 5x:
+> https://www.spinics.net/lists/linux-arm-msm/msg24827.html
+> 
+>  .../arm64/boot/dts/qcom/msm8994-angler-rev-101.dts | 262 +++++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/msm8994-pins.dtsi         |  82 +++++++
+>  arch/arm64/boot/dts/qcom/msm8994.dtsi              | 154 ++++++++++--
+>  3 files changed, 483 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> index dfa08f513dc4..d0bf9072b614 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-angler-rev-101.dts
+> @@ -38,3 +38,265 @@
+>  		};
+>  	};
+>  };
+> +
+> +&smd_rpm {
+
+This node seems to be identical to what I have, so it makes
+more sense for us to share this type of thing.
+Can you take a look at the V2 I just sent and CC'd you on.
+By removing smd_rpm and including 
+arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
+you get all my fixes for FREE!
 
 
--- 
-Best Regards
-Shawn Lin
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	rpm {
+> +		rpm_requests {
+> +			pm8994-regulators {
+> +
+> +				vdd_l1-supply = <&pm8994_s1>;
+> +				vdd_l2_26_28-supply = <&pm8994_s3>;
+> +				vdd_l3_11-supply = <&pm8994_s3>;
+> +				vdd_l4_27_31-supply = <&pm8994_s3>;
+> +				vdd_l5_7-supply = <&pm8994_s3>;
+> +				vdd_l6_12_32-supply = <&pm8994_s5>;
+> +				vdd_l8_16_30-supply = <&vreg_vph_pwr>;
+> +				vdd_l9_10_18_22-supply = <&vreg_vph_pwr>;
+> +				vdd_l13_19_23_24-supply = <&vreg_vph_pwr>;
+> +				vdd_l14_15-supply = <&pm8994_s5>;
+> +				vdd_l17_29-supply = <&vreg_vph_pwr>;
+> +				vdd_l20_21-supply = <&vreg_vph_pwr>;
+> +				vdd_l25-supply = <&pm8994_s5>;
+> +				/*vin_lvs1_2 = <&pm8994_s4>; */
+> +
+> +				s1 {
+> +					regulator-min-microvolt = <800000>;
+> +					regulator-max-microvolt = <800000>;
+> +				};
+> +
+> +				s2 {
+> +				};
+> +
+> +				s3 {
+> +					regulator-min-microvolt = <1300000>;
+> +					regulator-max-microvolt = <1300000>;
+> +				};
+> +
+> +				s4 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					regulator-allow-set-load;
+> +					regulator-system-load = <325000>;
+> +				};
+> +
+> +				s5 {
+> +					regulator-min-microvolt = <2150000>;
+> +					regulator-max-microvolt = <2150000>;
+> +				};
+> +
+> +				s7 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +				};
+> +
+> +				l1 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +				};
+> +
+> +				l2 {
+> +					regulator-min-microvolt = <1250000>;
+> +					regulator-max-microvolt = <1250000>;
+> +				};
+> +
+> +				l3 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +				};
+> +
+> +				l4 {
+> +					regulator-min-microvolt = <1225000>;
+> +					regulator-max-microvolt = <1225000>;
+> +				};
+> +
+> +				l5 {
+> +				};
+> +
+> +				l6 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l7 {
+> +				};
+> +
+> +				l8 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l9 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +				};
+> +
+> +				l10 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l11 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					qcom,init-voltage = <1200000>;
+> +				};
+> +
+> +				l12 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					proxy-supply = <&pm8994_l12>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l13 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					qcom,init-voltage = <2950000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l14 {
+> +					regulator-min-microvolt = <1200000>;
+> +					regulator-max-microvolt = <1200000>;
+> +					qcom,init-voltage = <1200000>;
+> +					proxy-supply = <&pm8994_l14>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l15 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l16 {
+> +					regulator-min-microvolt = <2700000>;
+> +					regulator-max-microvolt = <2700000>;
+> +					qcom,init-voltage = <2700000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l17 {
+> +					regulator-min-microvolt = <2700000>;
+> +					regulator-max-microvolt = <2700000>;
+> +					qcom,init-voltage = <2700000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l18 {
+> +					regulator-min-microvolt = <3000000>;
+> +					regulator-max-microvolt = <3000000>;
+> +					regulator-always-on;
+> +					qcom,init-voltage = <3000000>;
+> +					qcom,init-ldo-mode = <1>;
+> +				};
+> +
+> +				l19 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					status = "okay";
+> +				};
+> +
+> +				l20 {
+> +					regulator-min-microvolt = <2950000>;
+> +					regulator-max-microvolt = <2950000>;
+> +					regulator-always-on;
+> +					regulator-boot-on;
+> +					regulator-allow-set-load;
+> +					regulator-system-load = <570000>;
+> +				};
+> +
+> +				l21 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					regulator-always-on;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l22 {
+> +					regulator-min-microvolt = <3100000>;
+> +					regulator-max-microvolt = <3100000>;
+> +					qcom,init-voltage = <3100000>;
+> +				};
+> +
+> +				l23 {
+> +					regulator-min-microvolt = <2800000>;
+> +					regulator-max-microvolt = <2800000>;
+> +					qcom,init-voltage = <2800000>;
+> +				};
+> +
+> +				l24 {
+> +					regulator-min-microvolt = <3075000>;
+> +					regulator-max-microvolt = <3150000>;
+> +					qcom,init-voltage = <3075000>;
+> +				};
+> +
+> +				l25 {
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +				};
+> +
+> +				l26 {
+> +					/* TODO: value from downstream
+> +					regulator-min-microvolt = <987500>;
+> +					fails to apply */
+> +				};
+> +
+> +				l27 {
+> +					regulator-min-microvolt = <1050000>;
+> +					regulator-max-microvolt = <1050000>;
+> +					qcom,init-voltage = <1050000>;
+> +				};
+> +
+> +				l28 {
+> +					regulator-min-microvolt = <1000000>;
+> +					regulator-max-microvolt = <1000000>;
+> +					qcom,init-voltage = <1000000>;
+> +					proxy-supply = <&pm8994_l28>;
+> +					qcom,proxy-consumer-enable;
+> +					qcom,proxy-consumer-current = <10000>;
+> +				};
+> +
+> +				l29 {
+> +					/* TODO: Unsupported voltage range..
+> +					regulator-min-microvolt = <2800000>;
+> +					regulator-max-microvolt = <2800000>;
+> +					qcom,init-voltage = <2800000>;
+> +					*/
+> +				};
+> +
+> +				l30 {
+> +					/* TODO: get this verified
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					*/
+> +				};
+> +
+> +				l31 {
+> +					regulator-min-microvolt = <1262500>;
+> +					regulator-max-microvolt = <1262500>;
+> +					qcom,init-voltage = <1262500>;
+> +				};
+> +
+> +				l32 {
+> +					/* TODO: get this verified
+> +					regulator-min-microvolt = <1800000>;
+> +					regulator-max-microvolt = <1800000>;
+> +					qcom,init-voltage = <1800000>;
+> +					*/
+> +				};
+> +
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> index 0e4eea0df25d..66c46b8f9e83 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994-pins.dtsi
+> @@ -35,4 +35,86 @@
+>  			bias-pull-down;
+>  		};
+>  	};
+> +
+> +	/* 0-3 for sdc1 4-6 for sdc2 */
+> +	/* Order of pins */
+> +	/* SDC1: CLK -> 0, CMD -> 1, DATA -> 2, RCLK -> 3 */
+> +	/* SDC2: CLK -> 4, CMD -> 5, DATA -> 6 */
+> +	pmx_sdc1_clk {
+
+Change all your node names,
+ anything before the '{'
+ to make sure it doesn't have '_' underscores.
+
+
+
+> +		sdc1_clk_on: clk_on {
+
+change this to 
+
+sdc1_clk_on: clk-on {
+
+label: node-name {
+
+
+
+
+> +			pinmux {
+> +				pins = "sdc1_clk";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_clk";
+> +				bias-disable = <0>; /* No pull */
+> +				drive-strength = <16>; /* 16mA */
+> +			};
+> +		};
+> +		sdc1_clk_off: clk_off {
+> +			pinmux {
+> +				pins = "sdc1_clk";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_clk";
+> +				bias-disable = <0>; /* No pull */
+> +				drive-strength = <2>; /* 2mA */
+> +			};
+> +		};
+> +	};
+> +
+> +	pmx_sdc1_cmd {
+> +		sdc1_cmd_on: cmd_on {
+> +			pinmux {
+> +				pins = "sdc1_cmd";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_cmd";
+> +				bias-pull-up;
+> +				drive-strength = <8>;
+> +			};
+> +		};
+> +		sdc1_cmd_off: cmd_off {
+> +			pinmux {
+> +				pins = "sdc1_cmd";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_cmd";
+> +				bias-pull-up = <0x3>; /* same as 3.10 ?? */
+> +				drive-strength = <2>; /* 2mA */
+> +			};
+> +		};
+> +	};
+> +
+> +	pmx_sdc1_data {
+> +		sdc1_data_on: data_on {
+> +			pinmux {
+> +				pins = "sdc1_data";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_data";
+> +				bias-pull-up;
+> +				drive-strength = <8>; /* 8mA */
+> +			};
+> +		};
+> +		sdc1_data_off: data_off {
+> +			pinmux {
+> +				pins = "sdc1_data";
+> +			};
+> +			pinconf {
+> +				pins = "sdc1_data";
+> +				bias-pull-up;
+> +				drive-strength = <2>;
+> +			};
+> +		};
+> +	};
+> +
+> +	pmx_sdc1_rclk {
+> +		sdc1_rclk_on: rclk_on {
+> +			bias-pull-down; /* pull down */
+> +		};
+> +		sdc1_rclk_off: rclk_off {
+> +			bias-pull-down; /* pull down */
+> +		};
+> +	};
+>  };
+> diff --git a/arch/arm64/boot/dts/qcom/msm8994.dtsi b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> index f33c41d01c86..703888d608c6 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8994.dtsi
+> @@ -73,6 +73,11 @@
+>  				  <0xf9002000 0x1000>;
+>  		};
+>  
+> +		apcs: syscon@f900d000 {
+> +			compatible = "syscon";
+> +			reg = <0xf900d000 0x2000>;
+> +		};
+> +
+>  		timer@f9020000 {
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+> @@ -156,11 +161,6 @@
+>  				 <&clock_gcc GCC_BLSP1_AHB_CLK>;
+>  		};
+>  
+> -		tcsr_mutex_regs: syscon@fd484000 {
+> -			compatible = "syscon";
+> -			reg = <0xfd484000 0x2000>;
+> -		};
+> -
+>  		clock_gcc: clock-controller@fc400000 {
+>  			compatible = "qcom,gcc-msm8994";
+>  			#clock-cells = <1>;
+> @@ -168,6 +168,75 @@
+>  			#power-domain-cells = <1>;
+>  			reg = <0xfc400000 0x2000>;
+>  		};
+> +
+> +		sdhci1: mmc@f9824900 {
+> +			compatible = "qcom,sdhci-msm-v4";
+> +			reg = <0xf9824900 0x1a0>, <0xf9824000 0x800>;
+> +			reg-names = "hc_mem", "core_mem";
+> +
+> +			interrupts = <GIC_SPI 123 IRQ_TYPE_NONE>,
+> +					<GIC_SPI 138 IRQ_TYPE_NONE>;
+> +			interrupt-names = "hc_irq", "pwr_irq";
+> +
+> +			clocks = <&clock_gcc GCC_SDCC1_APPS_CLK>,
+> +				<&clock_gcc GCC_SDCC1_AHB_CLK>;
+> +			clock-names = "core", "iface";
+> +
+> +			pinctrl-names = "default", "sleep";
+> +			pinctrl-0 = <&sdc1_clk_on &sdc1_cmd_on &sdc1_data_on
+> +					&sdc1_rclk_on>;
+> +			pinctrl-1 = <&sdc1_clk_off &sdc1_cmd_off &sdc1_data_off
+> +					&sdc1_rclk_off>;
+> +
+> +			vdd-supply = <&pm8994_l20>;
+> +			qcom,vdd-voltage-level = <2950000 2950000>;
+> +			qcom,vdd-current-level = <200 570000>;
+> +
+> +			vdd-io-supply = <&pm8994_s4>;
+> +			qcom,vdd-io-voltage-level = <1800000 1800000>;
+> +			qcom,vdd-io-current-level = <200 325000>;
+> +
+> +			regulator-always-on;
+> +			bus-width = <8>;
+> +			mmc-hs400-1_8v;
+> +			status = "okay";
+> +		};
+> +
+> +		vreg_vph_pwr: vreg-vph-pwr {
+> +			compatible = "regulator-fixed";
+> +			status = "okay";
+> +			regulator-name = "vph-pwr";
+> +
+> +			regulator-min-microvolt = <3600000>;
+> +			regulator-max-microvolt = <3600000>;
+> +
+> +			regulator-always-on;
+> +		};
+> +
+> +		rpm_msg_ram: memory@fc428000 {
+> +			compatible = "qcom,rpm-msg-ram";
+> +			reg = <0xfc428000 0x4000>;
+> +		};
+> +
+> +		sfpb_mutex_regs: syscon@fd484000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			compatible = "syscon";
+> +			reg = <0xfd484000 0x400>;
+> +		};
+> +
+> +		sfpb_mutex: hwmutex {
+> +			compatible = "qcom,sfpb-mutex";
+> +			syscon = <&sfpb_mutex_regs 0x0 0x100>;
+> +			#hwlock-cells = <1>;
+> +		};
+> +
+> +		smem {
+> +			compatible = "qcom,smem";
+> +			memory-region = <&smem_region>;
+> +			qcom,rpm-msg-ram = <&rpm_msg_ram>;
+> +			hwlocks = <&sfpb_mutex 3>;
+> +		};
+>  	};
+>  
+>  	memory {
+> @@ -193,22 +262,77 @@
+>  		#size-cells = <2>;
+>  		ranges;
+>  
+> -		smem_mem: smem_region@6a00000 {
+> +		smem_region: smem@6a00000 {
+
+good.
+
+>  			reg = <0x0 0x6a00000 0x0 0x200000>;
+>  			no-map;
+>  		};
+>  	};
+>  
+> -	tcsr_mutex: hwlock {
+> -		compatible = "qcom,tcsr-mutex";
+> -		syscon = <&tcsr_mutex_regs 0 0x80>;
+> -		#hwlock-cells = <1>;
+> -	};
+> +	smd_rpm: smd {
+> +		compatible = "qcom,smd";
+> +
+> +		rpm {
+> +			interrupts = <GIC_SPI 168 IRQ_TYPE_EDGE_RISING>;
+> +			qcom,ipc = <&apcs 8 0>;
+> +			qcom,smd-edge = <15>;
+> +			qcom,local-pid = <0>;
+> +			qcom,remote-pid = <6>;
+> +
+> +			rpm_requests {
+
+
+s/rpm_requests {/rpm-requests {/
+
+Node names cannot have an underscore. 
+
+-jeremy
+
+> +				compatible = "qcom,rpm-msm8994";
+> +				qcom,smd-channels = "rpm_requests";
+> +
+> +				rpmcc: qcom,rpmcc {
+> +					/* TODO: update when rpmcc-msm8994 support added */
+> +					compatible = "qcom,rpmcc-msm8916",
+> +							"qcom,rpmcc";
+> +					#clock-cells = <1>;
+> +				};
+>  
+> -	qcom,smem@6a00000 {
+> -		compatible = "qcom,smem";
+> -		memory-region = <&smem_mem>;
+> -		hwlocks = <&tcsr_mutex 3>;
+> +				smd_rpm_regulators: pm8994-regulators {
+> +					compatible = "qcom,rpm-pm8994-regulators";
+> +
+> +					pm8994_s1: s1 {};
+> +					pm8994_s2: s2 {};
+> +					pm8994_s3: s3 {};
+> +					pm8994_s4: s4 {};
+> +					pm8994_s5: s5 {};
+> +					pm8994_s6: s6 {};
+> +					pm8994_s7: s7 {};
+> +
+> +					pm8994_l1: l1 {};
+> +					pm8994_l2: l2 {};
+> +					pm8994_l3: l3 {};
+> +					pm8994_l4: l4 {};
+> +					pm8994_l6: l6 {};
+> +					pm8994_l8: l8 {};
+> +					pm8994_l9: l9 {};
+> +					pm8994_l10: l10 {};
+> +					pm8994_l11: l11 {};
+> +					pm8994_l12: l12 {};
+> +					pm8994_l13: l13 {};
+> +					pm8994_l14: l14 {};
+> +					pm8994_l15: l15 {};
+> +					pm8994_l16: l16 {};
+> +					pm8994_l17: l17 {};
+> +					pm8994_l18: l18 {};
+> +					pm8994_l19: l19 {};
+> +					pm8994_l20: l20 {};
+> +					pm8994_l21: l21 {};
+> +					pm8994_l22: l22 {};
+> +					pm8994_l23: l23 {};
+> +					pm8994_l24: l24 {};
+> +					pm8994_l25: l25 {};
+> +					pm8994_l26: l26 {};
+> +					pm8994_l27: l27 {};
+> +					pm8994_l28: l28 {};
+> +					pm8994_l29: l29 {};
+> +					pm8994_l30: l30 {};
+> +					pm8994_l31: l31 {};
+> +					pm8994_l32: l32 {};
+> +				};
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.11.0
+> 
