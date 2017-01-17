@@ -1,210 +1,207 @@
-From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH] arm64: dts: marvell: Add DT for MACCHIATOBin board
-Date: Tue, 17 Jan 2017 11:17:35 +0000
-Message-ID: <E1cTRlf-0005dY-L8@rmk-PC.armlinux.org.uk>
+From: Joao Pinto <Joao.Pinto@synopsys.com>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Tue, 17 Jan 2017 11:23:46 +0000
+Message-ID: <0bc72557-5110-39bd-89b4-f28307bad71d@synopsys.com>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
+ <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
+ <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
+ <587C9CE6.8040001@ti.com> <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
+ <20170116224437.67b5a0c5@jawa>
+ <4b18d08a-c2cc-3c32-35ed-8f4a759ef235@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4b18d08a-c2cc-3c32-35ed-8f4a759ef235@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>, Joao Pinto <Joao.Pinto@synopsys.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "jingoohan1@gmail.com" <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add a cut-down version of the DTS file for the community board
-MACCHIATOBin from SolidRun based on Marvell Armada 8040 SoC to suit
-the current mainlined Armada 8040 state.
+Às 10:43 AM de 1/17/2017, Joao Pinto escreveu:
+> 
+> Hi Lukasz,
+> 
+> Às 9:44 PM de 1/16/2017, Lukasz Majewski escreveu:
+>> Hi Joao,
+>>
+>>>
+>>> Hi,
+>>>
+>>> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
+>>>> + Joao, Jingoo
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
+>>>>> Hi Kishon,
+>>>>>
+>>>>>> Hi Łukasz,
+>>>>>>
+>>>>>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
+>>>>>>> Hi Kishon,
+>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
+>>>>>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
+>>>>>>>>> run with forced GEN1 speed on PCIe bus.
+>>>>>>>>>
+>>>>>>>>> This patch changes the speed explicitly on dra7 based devices
+>>>>>>>>> when proper device tree attribute is defined for the PCIe
+>>>>>>>>> controller.
+>>>>>>>>>
+>>>>>>>>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+>>>>>>>>
+>>>>>>>> Bjorn has already queued a patch to do the same thing
+>>>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
+>>>>>>>
+>>>>>>> It seems like Bjorn only modifies CAP registers.
+>>>>>>
+>>>>>> The patch also modifies the LNKCTL2 register.
+>>>>>>>
+>>>>>>> He also needs to change register with 0x080C offset to actually
+>>>>>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
+>>>>>>
+>>>>>> This bit is used to initiate speed change (after the link is
+>>>>>> initialized in GEN1). Resetting the bit (like what you have done
+>>>>>> here) prevents speed change.
+>>>>>
+>>>>> This is strange, but e2e advised me to do things as I did in the
+>>>>> patch to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
+>>>>>
+>>>>> Link:
+>>>>> [1]
+>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
+>>>>>
+>>>>> Both patches modify 0x5180 007C register to set GEN1 capability
+>>>>> (PCI_EXP_LNKCAP_SLS_2_5GB)
+>>>>>
+>>>>> The problem is with second register (in your patch):
+>>>>>
+>>>>> From SPRUHZ6G TRM:
+>>>>>
+>>>>> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
+>>>>> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
+>>>>>   description in TRM
+>>>>>
+>>>>> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
+>>>>> default /reset value.
+>>>>
+>>>> The default value is 0x2 (or else none of the cards would have
+>>>> enumerated in GEN2)
+>>>>>
+>>>>>
+>>>>> Could you clarify which way to _force_ PCIe GEN1 operation is
+>>>>> correct? Mine shows differences in lspci output (as posted in [1]).
+>>>>
+>>>> You'll see the difference even with the patch in Bjorn's tree ;-)
+>>>>
+>>>> I think these are 2 different approaches to keep the link at GEN1.
+>>>> Joao or Jingoo, do you have any suggestion here?
+>>>
+>>> I studied the Databook,
+>>
+>> Could you reveal which databook do you have in mind? Is that the TRM for
+>> AM5728?
+> 
+> I checked the Designware PCIe Databook, since it is based on this IP.
+> 
+>>
+>>> and both approaches seem to be right,
+>>> dependently of the Core configuration and setup.
+>>>
+>>> The standard manual speed change sequence is:
+>>> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
+>>
+>> Do you mean TRGT_LINK_SPEED @ 0x5180 00A0 ?
+> 
+> Correct.
+> 
+>>
+>>> b) Clear "Directed Speed Change"
+>>
+>> CFG_DIRECTED_SPEED_CHANGE @ 0x5180 080C 
+> 
+> Correct.
+> 
+>>
+>>> c) Set "Directed Speed Change"
+>>>
+>>> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the
+>>> default value), it will execute LTSSM to initiate speed change to
+>>> Gen2 or Gen3, after link is started in Gen1, and then the bit is
+>>> automatically cleared.
+>>
+>> Ok, so with default settings (after reset) we do have Gen1 speed link
+>> and when we enable LTSSM (with LTSSM_EN bit setting) we negotiate to
+>> Gen2/Gen3.
+> 
+> Yes, that's the expected behavior. I submited this direct question to R&D and
+> will have your doubt answered soon.
 
-This brings support for mainly SATA, SPI flash and UART.  The USB
-descriptions are included but are not tested in this form due to the
-lack of mainline GPIO.
+According to R&D if you set "Target Link Speed" to Gen1 before setting LTSSM_EN
+bit, the controller should stay in GEN1.
 
-Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
----
-This is derived from a version from Marvell, but severly cut down,
-cleaned up, re-organised and added to to suit mainline kernels.  The
-only common parts are the header comment, top level model and compatible
-strings, the rest has been changed by me in some way.
-
-I'm planning to submit further patches as the mainline Armada 8k support
-moves forward.
-
-This is submitted with Rabeeh's confirmation and ack that he (as Solid
-Run's CTO) is happy for this to be upstreamed.
-
-Note - the license text is rather "interesting" but matches that which
-is already on other ARM64 Marvell-based platforms.  I suspect someone at
-Free Electrons needs to talk to Marvell to correct the "library" thing,
-and clear up the "GPLv2" vs "GPLv2+" confusion in there.
-
- arch/arm64/boot/dts/marvell/Makefile              |   1 +
- arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 138 ++++++++++++++++++++++
- 2 files changed, 139 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 1690883b931a..3e6ce6c15a74 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-new file mode 100644
-index 000000000000..b7298429ffa1
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-@@ -0,0 +1,138 @@
-+/*
-+ * Copyright (C) 2016 Marvell Technology Group Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/*
-+ * Device Tree file for MACCHIATOBin Armada 8040 community board platform
-+ */
-+
-+#include "armada-8040.dtsi"
-+
-+/ {
-+	model = "Marvell 8040 MACHIATOBin";
-+	compatible = "marvell,armada8040-mcbin", "marvell,armada8040",
-+			"marvell,armada-ap806-quad", "marvell,armada-ap806";
-+
-+	memory@00000000 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+
-+	/* Regulator labels correspond with schematics */
-+	v_3_3: regulator-3-3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v_3_3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		status = "okay";
-+	};
-+
-+	v_vddo_h: regulator-1-8v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v_vddo_h";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		status = "okay";
-+	};
-+
-+	v_5v0_usb3_hst_vbus: regulator-usb3-vbus0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "v_5v0_usb3_hst_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		/* actually GPIO controlled, but 8k has no GPIO support yet */
-+		regulator-always-on;
-+		status = "okay";
-+	};
-+
-+	usb3h0_phy: usb3_phy0 {
-+		compatible = "usb-nop-xceiv";
-+		vcc-supply = <&v_5v0_usb3_hst_vbus>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
-+
-+&cpm_i2c0 {
-+	clock-frequency = <100000>;
-+	status = "okay";
-+};
-+
-+&cpm_sata0 {
-+	/* CPM Lane 0 - U29 */
-+	status = "okay";
-+};
-+
-+&cpm_usb3_0 {
-+	/* J38? - USB2.0 only */
-+	status = "okay";
-+};
-+
-+&cpm_usb3_1 {
-+	/* J38? - USB2.0 only */
-+	status = "okay";
-+};
-+
-+&cps_sata0 {
-+	/* CPS Lane 1 - U32 */
-+	/* CPS Lane 3 - U31 */
-+	status = "okay";
-+};
-+
-+&cps_spi1 {
-+	status = "okay";
-+
-+	spi-flash@0 {
-+		compatible = "st,w25q32";
-+		spi-max-frequency = <50000000>;
-+		reg = <0>;
-+	};
-+};
-+
-+&cps_usb3_0 {
-+	/* CPS Lane 2 - CON7 */
-+	usb-phy = <&usb3h0_phy>;
-+	status = "okay";
-+};
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>
+>>>
+>>> Lukasz is reseting this bit, in order to avoid the LTSSM to be
+>>> executed, which is correct. 
+>>
+>> So with CFG_DIRECTED_SPEED_CHANGE = 0, when I start LTSSM (with
+>> LTSSM_EN) the state machine returns immediately and leaves link in the
+>> Gen1?
+>>
+>> The pci-dra7 driver always sets LTSSM_EN bit to start link negotiation.
+>>
+>>> There is another way to prevent this
+>>> automatic speed change, which is to set GEN1 speed before link up
+>>> which might be difficult in some setups, so Kishon's also right.
+>>>
+>>> In my opinion Lukasz approach would be the one that might be more
+>>> universal and more "secure".
+>>
+>> The robustness is the key here since there are some devices, which on
+>> particular HW must only work with Gen1 speed. When we start LTSSM state
+>> machine and hence start negotiation to Gen2, not always the result of
+>> LTSSM is correct and device is properly recognized.
+>>
+>>>
+>>> Joao
+>>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> IMO the better way is to set the LNKCTL2 to GEN1 instead of
+>>>>>> hacking the IP register.
+>>>>>
+>>>>> From the original patch description:
+>>>>>
+>>>>> "Add support to force Root Complex to work in GEN1 mode if so
+>>>>> desired, but don't force GEN1 mode on any board just yet."
+>>>>>
+>>>>> Are there any (floating around) patches allowing forcing GEN1
+>>>>> operation on any board (I would like to reuse/port them to my
+>>>>> current solution)?
+>>>>
+>>>> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt
+>>>> with the patch in Bjorn's tree.
+>>>>
+>>>> Thanks
+>>>> Kishon
+>>>>
+>>>
+>>
+>> Best regards,
+>>
+>> Lukasz Majewski
+>>
+>> --
+>>
+>> DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+>> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+>> Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
+>>
+> 
