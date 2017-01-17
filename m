@@ -1,64 +1,109 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH v4 4/4] arm64: dts: juno: add missing CoreSight STM
- component
-Date: Tue, 17 Jan 2017 13:39:19 +0000
-Message-ID: <5c742b98-0707-67fd-d8a1-467f34d99cdb@arm.com>
-References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
- <1484655313-9025-5-git-send-email-sudeep.holla@arm.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/2] arm64: dts: exynos: Add regulators for Vbus and
+ Vbus-Boost
+Date: Tue, 17 Jan 2017 10:47:16 -0300
+Message-ID: <0266f79b-d667-d8f0-89f5-fd604a721a39@osg.samsung.com>
+References: <1484649143-19423-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117102941epcas1p3a33a312bedd013edb0997b16786dede6@epcas1p3.samsung.com>
+ <1484649143-19423-3-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484655313-9025-5-git-send-email-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, coresight@lists.linaro.org, Liviu Dudau <liviu.dudau@arm.com>, Olof Johansson <olof@lixom.net>, Mike Leach <mike.leach@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1484649143-19423-3-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: krzk@kernel.org, kgene@kernel.org, robh+dt@kernel.org, sanath@samsung.com, gautamvivek1987@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/17 12:15, Sudeep Holla wrote:
-> From: Mike Leach <mike.leach@linaro.org>
->
-> This patch adds the missing CoreSight STM component definition to the
-> device tree of all the juno variants(r0,r1,r2)
->
-> STM component is connected to different funnels depending on Juno
-> platform variant.
->
-> Reviewed-and-Tested-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Mike Leach <mike.leach@linaro.org>
-> [sudeep.holla@arm.com: minor changelog update and reorganising the STM
-> 	node back into juno-base.dtsi to avoid duplication]
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Hello Pankaj,
+
+On 01/17/2017 07:32 AM, Pankaj Dubey wrote:
+> Adding fixed voltage regulators for Vbus and Vbus-boost required
+> by USB 3.0 DRD controller on Exynos7-espresso board.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
+
+Same comment than 1/2 here.
+
 > ---
->  arch/arm64/boot/dts/arm/juno-base.dtsi | 15 +++++++++++++++
->  arch/arm64/boot/dts/arm/juno-r1.dts    |  4 ++++
->  arch/arm64/boot/dts/arm/juno-r2.dts    |  4 ++++
->  arch/arm64/boot/dts/arm/juno.dts       | 16 ++++++++++++++++
->  4 files changed, 39 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/arm/juno-base.dtsi b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> index faedf357db3b..58c1773c3aa4 100644
-> --- a/arch/arm64/boot/dts/arm/juno-base.dtsi
-> +++ b/arch/arm64/boot/dts/arm/juno-base.dtsi
-> @@ -185,6 +185,21 @@
->  		};
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 44 +++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> index 9cf73cf..68f3a51 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> @@ -33,6 +33,29 @@
+>  		device_type = "memory";
+>  		reg = <0x0 0x40000000 0x0 0xC0000000>;
 >  	};
->
-> +	stm@20100000 {
-> +		compatible = "arm,coresight-stm", "arm,primecell";
-> +		reg = <0 0x20100000 0 0x1000>,
-> +		      <0 0x28000000 0 0x180000>;
+> +
+> +	usb30_vbus_reg: regulator-usb30 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VBUS_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gph1 1 0>;
 
-The size of the stimulus base is 16MB (as per TRM), implies => 0x1000000.
+Please use the GPIO_ACTIVE_HIGH instead for the GPIO polarity.
 
-with that fixed :
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb30_vbus_en>;
+> +		enable-active-high;
+> +	};
+> +
+> +	usb3drd_boost_5v: regulator-usb3drd-boost {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VUSB_VBUS_5V";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpf4 1 0>;
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+Same here.
+
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usb3drd_boost_en>;
+> +		enable-active-high;
+> +	};
+> +
+>  };
+>  
+>  &fin_pll {
+> @@ -366,3 +389,24 @@
+>  	vqmmc-supply = <&ldo2_reg>;
+>  	disable-wp;
+>  };
+> +
+> +&usbdrd_phy {
+> +	vbus-supply = <&usb30_vbus_reg>;
+> +	vbus-boost-supply = <&usb3drd_boost_5v>;
+> +};
+> +
+> +&pinctrl_bus1 {
+> +	usb30_vbus_en: usb30-vbus-en {
+> +		samsung,pins = "gph1-1";
+> +		samsung,pin-function = <1>;
+
+EXYNOS_PIN_FUNC_OUTPUT
+
+> +		samsung,pin-pud = <0>;
+
+EXYNOS_PIN_PULL_NONE
+
+> +		samsung,pin-drv = <0>;
+
+I see that there are no Exynos7 drive strengths values for 
+Exynos7 in include/dt-bindings/pinctrl/samsung.h. It would
+be good to add those (on a different series of course).
+
+The patch looks good to me, so after the minor nits:
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
