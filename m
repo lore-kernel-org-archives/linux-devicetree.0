@@ -1,65 +1,210 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
- kdump
-Date: Tue, 17 Jan 2017 11:13:24 +0000
-Message-ID: <20170117111323.GB11939@leverpostej>
-References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
- <20161228043734.27535-1-takahiro.akashi@linaro.org>
- <20170112153944.GB12249@leverpostej>
- <20170113091339.GK20972@linaro.org>
- <20170113111756.GC26120@leverpostej>
- <20170116082505.GL20972@linaro.org>
+From: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH] arm64: dts: marvell: Add DT for MACCHIATOBin board
+Date: Tue, 17 Jan 2017 11:17:35 +0000
+Message-ID: <E1cTRlf-0005dY-L8@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170116082505.GL20972@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, james.morse@arm.com, geoff@infradead.org, bauerman@linux.vnet.ibm.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 05:25:07PM +0900, AKASHI Takahiro wrote:
-> On Fri, Jan 13, 2017 at 11:17:56AM +0000, Mark Rutland wrote:
-> > On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
-> > > On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+Add a cut-down version of the DTS file for the community board
+MACCHIATOBin from SolidRun based on Marvell Armada 8040 SoC to suit
+the current mainlined Armada 8040 state.
 
-> > > > arm64 we should either ensure that /proc/iomem is consistently usable
-> > > > (and have userspace consistently use it), or we should expose a new file
-> > > > specifically to expose this information.
-> > > 
-> > > The thing that I had in my mind when adding this property is that
-> > > /proc/iomem would be obsolete in the future, then we should have
-> > > an alternative in hand.
-> > 
-> > Ok.
-> > 
-> > My disagreement is with using the DT as a channel to convey information
-> > from the kernel to userspace.
-> > 
-> > I'm more than happy for a new file or other mechanism to express this
-> > information. For example, we could add
-> > /sys/kernel/kexec_crash_{base,size} or similar.
-> 
-> It may make sense because /sys/kernel/kexec_crash_size already exists,
-> so why not kexec_crash_base?
-> My concern, however, is that this kind of interface might prevent us from
-> allowing multiple regions to be reserved for crash dump kernel in the future.
-> (There is an assumption that we have only one region at least on arm64 though.)
+This brings support for mainly SATA, SPI flash and UART.  The USB
+descriptions are included but are not tested in this form due to the
+lack of mainline GPIO.
 
-Ok.
+Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+---
+This is derived from a version from Marvell, but severly cut down,
+cleaned up, re-organised and added to to suit mainline kernels.  The
+only common parts are the header comment, top level model and compatible
+strings, the rest has been changed by me in some way.
 
-If we need to handle that, we should also update the description of
-linux,usable-memory-range to allow multiple entries (and probably
-s/range/ranges).
+I'm planning to submit further patches as the mainline Armada 8k support
+moves forward.
 
-Thanks,
-Mark.
+This is submitted with Rabeeh's confirmation and ack that he (as Solid
+Run's CTO) is happy for this to be upstreamed.
+
+Note - the license text is rather "interesting" but matches that which
+is already on other ARM64 Marvell-based platforms.  I suspect someone at
+Free Electrons needs to talk to Marvell to correct the "library" thing,
+and clear up the "GPLv2" vs "GPLv2+" confusion in there.
+
+ arch/arm64/boot/dts/marvell/Makefile              |   1 +
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 138 ++++++++++++++++++++++
+ 2 files changed, 139 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 1690883b931a..3e6ce6c15a74 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+new file mode 100644
+index 000000000000..b7298429ffa1
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+@@ -0,0 +1,138 @@
++/*
++ * Copyright (C) 2016 Marvell Technology Group Ltd.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/*
++ * Device Tree file for MACCHIATOBin Armada 8040 community board platform
++ */
++
++#include "armada-8040.dtsi"
++
++/ {
++	model = "Marvell 8040 MACHIATOBin";
++	compatible = "marvell,armada8040-mcbin", "marvell,armada8040",
++			"marvell,armada-ap806-quad", "marvell,armada-ap806";
++
++	memory@00000000 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x80000000>;
++	};
++
++	/* Regulator labels correspond with schematics */
++	v_3_3: regulator-3-3v {
++		compatible = "regulator-fixed";
++		regulator-name = "v_3_3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-always-on;
++		status = "okay";
++	};
++
++	v_vddo_h: regulator-1-8v {
++		compatible = "regulator-fixed";
++		regulator-name = "v_vddo_h";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-always-on;
++		status = "okay";
++	};
++
++	v_5v0_usb3_hst_vbus: regulator-usb3-vbus0 {
++		compatible = "regulator-fixed";
++		regulator-name = "v_5v0_usb3_hst_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		/* actually GPIO controlled, but 8k has no GPIO support yet */
++		regulator-always-on;
++		status = "okay";
++	};
++
++	usb3h0_phy: usb3_phy0 {
++		compatible = "usb-nop-xceiv";
++		vcc-supply = <&v_5v0_usb3_hst_vbus>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
++
++&cpm_i2c0 {
++	clock-frequency = <100000>;
++	status = "okay";
++};
++
++&cpm_sata0 {
++	/* CPM Lane 0 - U29 */
++	status = "okay";
++};
++
++&cpm_usb3_0 {
++	/* J38? - USB2.0 only */
++	status = "okay";
++};
++
++&cpm_usb3_1 {
++	/* J38? - USB2.0 only */
++	status = "okay";
++};
++
++&cps_sata0 {
++	/* CPS Lane 1 - U32 */
++	/* CPS Lane 3 - U31 */
++	status = "okay";
++};
++
++&cps_spi1 {
++	status = "okay";
++
++	spi-flash@0 {
++		compatible = "st,w25q32";
++		spi-max-frequency = <50000000>;
++		reg = <0>;
++	};
++};
++
++&cps_usb3_0 {
++	/* CPS Lane 2 - CON7 */
++	usb-phy = <&usb3h0_phy>;
++	status = "okay";
++};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
