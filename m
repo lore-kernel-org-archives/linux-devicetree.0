@@ -1,50 +1,111 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Tue, 17 Jan 2017 14:16:48 +0100
-Message-ID: <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com> <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: [PATCH v4 1/4] PM / OPP: Expose _of_get_opp_desc_node as dev_pm_opp
+ API
+Date: Tue, 17 Jan 2017 07:18:05 -0600
+Message-ID: <20170117131808.29798-2-d-gerlach@ti.com>
+References: <20170117131808.29798-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117110338.10756-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170117131808.29798-1-d-gerlach@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17 January 2017 at 12:03, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The MR25 family doesn't support JEDEC, so they need explicit mentioning
-> in the list of supported spi IDs. This makes it possible to add these
-> using for example:
->
->         compatible =3D "everspin,mr25h40";
+Rename _of_get_opp_desc_node to dev_pm_opp_of_get_opp_desc_node and add it
+to include/linux/pm_opp.h to allow other drivers, such as platform OPP
+and cpufreq drivers, to make use of it.
 
-(...)
+Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+---
+v3->v4:
+	Export dev_pm_opp_of_get_opp_desc_node for use in modules.
+	
+ drivers/base/power/opp/of.c | 9 +++++----
+ include/linux/pm_opp.h      | 6 ++++++
+ 2 files changed, 11 insertions(+), 4 deletions(-)
 
-> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Do=
-cumentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> index 2c91c03e7eb0..3e920ec5c4d3 100644
-> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
-> @@ -14,6 +14,8 @@ Required properties:
->                   at25df641
->                   at26df081a
->                   mr25h256
-> +                 mr25h10
-> +                 mr25h40
->                   mx25l4005a
->                   mx25l1606e
->                   mx25l6405d
-
-Uh, this is getting a never-ending-story...
-If these chipsets don't support JEDEC, should we keep them in jedec,spi-nor=
-.txt?
-
---=20
-Rafa=C5=82
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/base/power/opp/of.c b/drivers/base/power/opp/of.c
+index 3f7d2591b173..fe14d231f1db 100644
+--- a/drivers/base/power/opp/of.c
++++ b/drivers/base/power/opp/of.c
+@@ -243,7 +243,7 @@ void dev_pm_opp_of_remove_table(struct device *dev)
+ EXPORT_SYMBOL_GPL(dev_pm_opp_of_remove_table);
+ 
+ /* Returns opp descriptor node for a device, caller must do of_node_put() */
+-static struct device_node *_of_get_opp_desc_node(struct device *dev)
++struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
+ {
+ 	/*
+ 	 * TODO: Support for multiple OPP tables.
+@@ -254,6 +254,7 @@ static struct device_node *_of_get_opp_desc_node(struct device *dev)
+ 
+ 	return of_parse_phandle(dev->of_node, "operating-points-v2", 0);
+ }
++EXPORT_SYMBOL_GPL(dev_pm_opp_of_get_opp_desc_node);
+ 
+ /**
+  * _opp_add_static_v2() - Allocate static OPPs (As per 'v2' DT bindings)
+@@ -495,7 +496,7 @@ int dev_pm_opp_of_add_table(struct device *dev)
+ 	 * OPPs have two version of bindings now. The older one is deprecated,
+ 	 * try for the new binding first.
+ 	 */
+-	opp_np = _of_get_opp_desc_node(dev);
++	opp_np = dev_pm_opp_of_get_opp_desc_node(dev);
+ 	if (!opp_np) {
+ 		/*
+ 		 * Try old-deprecated bindings for backward compatibility with
+@@ -605,7 +606,7 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev,
+ 	int cpu, ret = 0;
+ 
+ 	/* Get OPP descriptor node */
+-	np = _of_get_opp_desc_node(cpu_dev);
++	np = dev_pm_opp_of_get_opp_desc_node(cpu_dev);
+ 	if (!np) {
+ 		dev_dbg(cpu_dev, "%s: Couldn't find opp node.\n", __func__);
+ 		return -ENOENT;
+@@ -630,7 +631,7 @@ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev,
+ 		}
+ 
+ 		/* Get OPP descriptor node */
+-		tmp_np = _of_get_opp_desc_node(tcpu_dev);
++		tmp_np = dev_pm_opp_of_get_opp_desc_node(tcpu_dev);
+ 		if (!tmp_np) {
+ 			dev_err(tcpu_dev, "%s: Couldn't find opp node.\n",
+ 				__func__);
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index 0edd88f93904..a5b1aaeae229 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -270,6 +270,7 @@ void dev_pm_opp_of_remove_table(struct device *dev);
+ int dev_pm_opp_of_cpumask_add_table(const struct cpumask *cpumask);
+ void dev_pm_opp_of_cpumask_remove_table(const struct cpumask *cpumask);
+ int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct cpumask *cpumask);
++struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev);
+ #else
+ static inline int dev_pm_opp_of_add_table(struct device *dev)
+ {
+@@ -293,6 +294,11 @@ static inline int dev_pm_opp_of_get_sharing_cpus(struct device *cpu_dev, struct
+ {
+ 	return -ENOTSUPP;
+ }
++
++static inline struct device_node *dev_pm_opp_of_get_opp_desc_node(struct device *dev)
++{
++	return NULL;
++}
+ #endif
+ 
+ #endif		/* __LINUX_OPP_H__ */
+-- 
+2.11.0
