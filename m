@@ -1,58 +1,96 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Tue, 17 Jan 2017 10:16:05 +0100
-Message-ID: <CAMuHMdVW=HORcCA0brX4tZdtG9knqE7D_wnM5VtSrxz2LdBgUA@mail.gmail.com>
-References: <20170112181149.29035-1-chris.brandt@renesas.com>
- <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
- <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
- <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
- <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
- <20170116114023.GA3029@katana> <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170117082118.GA1487@katana>
+From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3] arm: dts: mt2701: Add thermal device node.
+Date: Tue, 17 Jan 2017 17:24:09 +0800
+Message-ID: <1484645049-4477-2-git-send-email-erin.lo@mediatek.com>
+References: <1484645049-4477-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117082118.GA1487@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1484645049-4477-1-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On Tue, Jan 17, 2017 at 9:21 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> The reason is that would then keep me from having to modify the existing
->> functions sh_mobile_sdhi_clk_enable/disable.
->
-> Why do you prefer this? I may be missing something but a small if-block
-> per function are not expensive IMO.
->
->> Is anyone going to have an issue if I turn the card-detect clock on but never
->> turn it off???? That was the patch that I was going to test out and submit.
->
-> It smells a bit hacky to me. And while hacky things are sometimes
-> needed, IMO this doesn't hold true here. With just 3 more lines (an
-> if-block in disable and a variable for the new clock) we can have it
-> proper.
+Add thermal controller device nodes for MT2701.
 
-I have no idea if the SDHI driver disables the module clock when it is
-idle, but shouldn't the card detect clock be running all the time when the
-driver is bound to the device?
+Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 4cfec57..26a88cb 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -89,6 +89,36 @@
+ 		clock-output-names = "rtc32k";
+ 	};
+ 
++	thermal-zones {
++		cpu_thermal: cpu_thermal {
++			polling-delay-passive = <1000>; /* milliseconds */
++			polling-delay = <1000>; /* milliseconds */
++
++			thermal-sensors = <&thermal 0>;
++			sustainable-power = <1000>;
++
++			trips {
++				threshold: trip-point@0 {
++					temperature = <68000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				target: trip-point@1 {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				cpu_crit: cpu_crit@0 {
++					temperature = <115000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++	};
++
+ 	timer {
+ 		compatible = "arm,armv7-timer";
+ 		interrupt-parent = <&gic>;
+@@ -270,6 +300,19 @@
+ 		status = "disabled";
+ 	};
+ 
++	thermal: thermal@1100b000 {
++		#thermal-sensor-cells = <0>;
++		compatible = "mediatek,mt2701-thermal";
++		reg = <0 0x1100b000 0 0x1000>;
++		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
++		clock-names = "therm", "auxadc";
++		resets = <&pericfg MT2701_PERI_THERM_SW_RST>;
++		reset-names = "therm";
++		mediatek,auxadc = <&auxadc>;
++		mediatek,apmixedsys = <&apmixedsys>;
++	};
++
+ 	nandc: nfi@1100d000 {
+ 		compatible = "mediatek,mt2701-nfc";
+ 		reg = <0 0x1100d000 0 0x1000>;
+-- 
+1.9.1
