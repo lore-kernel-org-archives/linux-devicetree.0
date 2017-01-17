@@ -1,82 +1,73 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: am33x, da816x, da814x: Remove useless register address
-Date: Tue, 17 Jan 2017 14:54:20 +0100
-Message-ID: <20170117135420.10197-1-abailon@baylibre.com>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Tue, 17 Jan 2017 14:57:22 +0100
+Message-ID: <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
+References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
+ <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+ <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
-have been removed. So it is not required anymore to define "glue"
-register's address and size in DT.
-Remove "glue" register from cppi41dma node.
+Le 17/01/2017 à 14:16, Rafał Miłecki a écrit :
+> On 17 January 2017 at 12:03, Uwe Kleine-König
+> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>> The MR25 family doesn't support JEDEC, so they need explicit mentioning
+>> in the list of supported spi IDs. This makes it possible to add these
+>> using for example:
+>>
+>>         compatible = "everspin,mr25h40";
+> 
+> (...)
+> 
+>> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> index 2c91c03e7eb0..3e920ec5c4d3 100644
+>> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+>> @@ -14,6 +14,8 @@ Required properties:
+>>                   at25df641
+>>                   at26df081a
+>>                   mr25h256
+>> +                 mr25h10
+>> +                 mr25h40
+>>                   mx25l4005a
+>>                   mx25l1606e
+>>                   mx25l6405d
+> 
+> Uh, this is getting a never-ending-story...
+> If these chipsets don't support JEDEC, should we keep them in jedec,spi-nor.txt?
+> 
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi | 5 ++---
- arch/arm/boot/dts/dm814x.dtsi | 5 ++---
- arch/arm/boot/dts/dm816x.dtsi | 5 ++---
- 3 files changed, 6 insertions(+), 9 deletions(-)
+Maybe not but I think the new compatible strings should be documented
+somewhere. Currently jedec,spi-nor.txt already documents all the
+"m25p*-nonjedec" memories. So maybe just renaming the jedec,spi-nor.txt
+file into spi-nor.txt or mtd,spi-nor.txt could be a solution. Otherwise, we
+can let it as is. I have no idea of what would be the best solution.
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 9e96d60..2466ed5 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -659,11 +659,10 @@
- 
- 			cppi41dma: dma-controller@47402000 {
- 				compatible = "ti,am3359-cppi41";
--				reg =  <0x47400000 0x1000
--					0x47402000 0x1000
-+				reg =  <0x47402000 0x1000
- 					0x47403000 0x1000
- 					0x47404000 0x4000>;
--				reg-names = "glue", "controller", "scheduler", "queuemgr";
-+				reg-names = "controller", "scheduler", "queuemgr";
- 				interrupts = <17>;
- 				interrupt-names = "glue";
- 				#dma-cells = <2>;
-diff --git a/arch/arm/boot/dts/dm814x.dtsi b/arch/arm/boot/dts/dm814x.dtsi
-index 9708157..2dd727a 100644
---- a/arch/arm/boot/dts/dm814x.dtsi
-+++ b/arch/arm/boot/dts/dm814x.dtsi
-@@ -156,11 +156,10 @@
- 
- 			cppi41dma: dma-controller@47402000 {
- 				compatible = "ti,am3359-cppi41";
--				reg =  <0x47400000 0x1000
--					0x47402000 0x1000
-+				reg =  <0x47402000 0x1000
- 					0x47403000 0x1000
- 					0x47404000 0x4000>;
--				reg-names = "glue", "controller", "scheduler", "queuemgr";
-+				reg-names = "controller", "scheduler", "queuemgr";
- 				interrupts = <17>;
- 				interrupt-names = "glue";
- 				#dma-cells = <2>;
-diff --git a/arch/arm/boot/dts/dm816x.dtsi b/arch/arm/boot/dts/dm816x.dtsi
-index 276211e..bb78511 100644
---- a/arch/arm/boot/dts/dm816x.dtsi
-+++ b/arch/arm/boot/dts/dm816x.dtsi
-@@ -493,11 +493,10 @@
- 
- 			cppi41dma: dma-controller@47402000 {
- 				compatible = "ti,am3359-cppi41";
--				reg =  <0x47400000 0x1000
--					0x47402000 0x1000
-+				reg =  <0x47402000 0x1000
- 					0x47403000 0x1000
- 					0x47404000 0x4000>;
--				reg-names = "glue", "controller", "scheduler", "queuemgr";
-+				reg-names = "controller", "scheduler", "queuemgr";
- 				interrupts = <17>;
- 				interrupt-names = "glue";
- 				#dma-cells = <2>;
--- 
-2.10.2
+To be honest, I don't always fully understand the DT policy/philosophy and
+its requirements. I just thought when a new property or a new value is
+introduced it has to be documented.
+Generally speaking, when DT is involved in some series of patches, it often
+generates many discussions about the proper way to do thinks and about
+choosing the best between many technically functional solutions.
 
+If you think jedec,spi-nor.txt is not suited to document the new value for
+the compatible string, why not, I perfectly understand your point.
+
+I don't mind choosing another way. I just want to be sure that, if not all,
+most of people agree on that solution and if possible, it is compliant with
+DT policy so everybody is happy and works together.
+That's why I involve DT people, even if it's a small detail, so they can
+advise us.
+
+Anyway, at some point we have to take a decision to carry on thinks.
+So actually, I would like to avoid a never-ending story :)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
