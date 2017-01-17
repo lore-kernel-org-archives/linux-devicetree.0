@@ -1,57 +1,42 @@
-From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] arm64: dts: juno: add CoreSight support for Juno
- r1/r2 variants
-Date: Tue, 17 Jan 2017 13:27:22 +0000
-Message-ID: <d89b805b-cc6f-37d5-2b64-4f83fa086db6@arm.com>
-References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
- <1484655313-9025-4-git-send-email-sudeep.holla@arm.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/2] arm64: dts: exynos: Add USB 3.0 controller node for
+ Exynos7
+Date: Tue, 17 Jan 2017 10:37:14 -0300
+Message-ID: <3a607d18-acf9-37f5-a6d4-7f8fe538d27f@osg.samsung.com>
+References: <1484649143-19423-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117102939epcas5p1aa25d6d8d080c086fb237e645bedbd17@epcas5p1.samsung.com>
+ <1484649143-19423-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484655313-9025-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1484649143-19423-2-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: krzk@kernel.org, kgene@kernel.org, robh+dt@kernel.org, sanath@samsung.com, gautamvivek1987@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/17 12:15, Sudeep Holla wrote:
-> From: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> The CoreSight support added for Juno is valid for only Juno r0.
-> The Juno r1 and r2 variants have additional components and alternative
-> connection routes between trace source and sinks.
->
-> This patch builds on top of the existing r0 support and extends it to
-> Juno r1/r2 variants.
->
-> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> [sudeep.holla-5wv7dgnIgG8@public.gmane.org: minor changelog update and major reorganisation of
-> 	the common coresight components back into juno-base.dtsi to avoid
-> 	duplication, also renamed funnel node names]
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi | 100 ++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/arm/juno-r1.dts       |   9 +++
->  arch/arm64/boot/dts/arm/juno-r2.dts       |   9 +++
->  3 files changed, 118 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
->
-> diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-> new file mode 100644
-> index 000000000000..563463ed28c7
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
-> @@ -0,0 +1,100 @@
-> +/ {
-> +	funnel@20130000 { /* cssys2 */
+Hello Pankaj,
 
-Typo, that should be csys1. Rest looks good to me.
+On 01/17/2017 07:32 AM, Pankaj Dubey wrote:
+> Add USB 3.0 DRD controller device node, with its clock
+> and phy information to enable the same on Exynos7.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+The S-o-B order isn't correct. You are the one posting the patch so
+yours should be the last one.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, wasn't this patch originally from Vivek? If you didn't change
+that much, I think that he should be listed as the patch author.
+
+I don't have an Exynos7 manual to verify but the patch looks good.
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
