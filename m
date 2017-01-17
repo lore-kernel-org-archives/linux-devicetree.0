@@ -1,38 +1,68 @@
-From: Rob Lippert <rlippert-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 3/3] mtd: spi-nor: add SPI_NOR_DUAL_READ to mx66l51235l
-Date: Tue, 17 Jan 2017 10:19:05 -0800
-Message-ID: <CAFRv3wxWL3yVHtcLhv+qhq52OwogHi0EGScCFo0ecnH+2yZ8Qg@mail.gmail.com>
-References: <1484573225-19095-1-git-send-email-clg@kaod.org>
- <1484573225-19095-4-git-send-email-clg@kaod.org> <57b7480d-4b5a-c420-d790-b22445eec723@gmail.com>
- <77542f12-781d-73a4-4b72-01a00c5abdd0@kaod.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH v3 0/8] ARM: dts: Switch to new DSA binding
+Date: Tue, 17 Jan 2017 10:22:16 -0800
+Message-ID: <20170117182224.32212-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77542f12-781d-73a4-4b72-01a00c5abdd0-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Lippert <roblip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 8:39 AM, C=C3=A9dric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote=
-:
->
-> Hello Marek,
->
-> On 01/16/2017 05:15 PM, Marek Vasut wrote:
-> > On 01/16/2017 02:27 PM, C=C3=A9dric Le Goater wrote:
-> >> From: Robert Lippert <roblip-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > 1) Commit message missing
-> > 2) This is unrelated to the rest of the series, send separately please
->
-> ok. I will do that. Rob, I will take ownership if you don't mind.
+Hi all,
 
-Yep that sounds great to me, thanks for your help!
+This patch series converts the in-tree users to utilize the new (relatively)
+DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
+new binding"). The legacy binding node is kept included, but is marked
+disabled.
 
--Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes in v3:
+
+- collected tags from Andrew and Russell
+- added missing change to arch/arm/boot/dts/kirkwood-rd88f6281-a.dts
+
+Changes in v2:
+
+- patch 1: Use an hexadecimal reg property
+- patch 2: fixed the subject
+- patch 3: s/okay/disabled/ for the legacy DSA node
+- patches 7/8: fixed a stray whitespace
+
+In about 2-3 releases we may consider removing the old DSA binding entirely
+from the kernel.
+
+Thank you!
+
+Florian Fainelli (8):
+  ARM: dts: armada-370-rd: Utilize new DSA binding
+  ARM: dts: armada-385-linksys: Utilize new DSA binding
+  ARM: dts: armada-388-clearfog: Utilize new DSA binding
+  ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
+  ARM: dts: kirkwood-dir665: Utilize new DSA binding
+  ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
+  ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
+  ARM: dts: kirkwood-rd88f6281: Utilize new DSA binding
+
+ arch/arm/boot/dts/armada-370-rd.dts            | 44 +++++++++++++++++
+ arch/arm/boot/dts/armada-385-linksys.dtsi      | 52 ++++++++++++++++++++-
+ arch/arm/boot/dts/armada-388-clearfog.dts      | 65 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/armada-xp-linksys-mamba.dts  | 53 +++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-dir665.dts          | 49 +++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-linksys-viper.dts   | 49 +++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 +++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-rd88f6281-z0.dts    | 11 +++++
+ arch/arm/boot/dts/kirkwood-rd88f6281.dtsi      | 44 +++++++++++++++++
+ 9 files changed, 415 insertions(+), 1 deletion(-)
+
+-- 
+2.9.3
