@@ -1,232 +1,39 @@
-From: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-Subject: [PATCH v2 3/4] phy: Add USB3 PHY support for Broadcom NSP SoC
-Date: Tue, 17 Jan 2017 11:14:29 -0500
-Message-ID: <1484669670-4201-4-git-send-email-yendapally.reddy@broadcom.com>
-References: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am33x, da816x, da814x: Remove useless register
+ address
+Date: Tue, 17 Jan 2017 17:16:17 +0100
+Message-ID: <08fc8b99-e6c4-7282-8023-b0d37956428c@baylibre.com>
+References: <20170117135420.10197-1-abailon@baylibre.com>
+ <20170117154752.GH7403@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170117154752.GH7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for Broadcom NSP USB3 PHY
-
-Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
----
- drivers/phy/Kconfig            |   8 ++
- drivers/phy/Makefile           |   1 +
- drivers/phy/phy-bcm-nsp-usb3.c | 176 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 185 insertions(+)
- create mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
-
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index e8eb7f2..f95aa0d 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -486,4 +486,12 @@ config PHY_MESON8B_USB2
- 	  and GXBB SoCs.
- 	  If unsure, say N.
- 
-+config PHY_NSP_USB3
-+	tristate "Broadcom NorthStar plus USB3 PHY driver"
-+	depends on OF && (ARCH_BCM_NSP || COMPILE_TEST)
-+	select GENERIC_PHY
-+	default ARCH_BCM_NSP
-+	help
-+	  Enable this to support the Broadcom Northstar plus USB3 PHY.
-+	  If unsure, say N.
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 65eb2f4..a96acd8 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -59,3 +59,4 @@ obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
- obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
- obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
-+obj-$(CONFIG_PHY_NSP_USB3)		+= phy-bcm-nsp-usb3.o
-diff --git a/drivers/phy/phy-bcm-nsp-usb3.c b/drivers/phy/phy-bcm-nsp-usb3.c
-new file mode 100644
-index 0000000..0033382
---- /dev/null
-+++ b/drivers/phy/phy-bcm-nsp-usb3.c
-@@ -0,0 +1,176 @@
-+/*
-+ * Copyright (C) 2016 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/mdio.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/phy/phy.h>
-+#include <linux/regmap.h>
-+
-+#define NSP_USB3_RST_CTRL_OFFSET	0x3f8
-+
-+/* mdio reg access */
-+#define NSP_USB3_PHY_BASE_ADDR_REG	0x1f
-+
-+#define NSP_USB3_PHY_PLL30_BLOCK	0x8000
-+#define NSP_USB3_PLL_CONTROL		0x01
-+#define NSP_USB3_PLLA_CONTROL0		0x0a
-+#define NSP_USB3_PLLA_CONTROL1		0x0b
-+
-+#define NSP_USB3_PHY_TX_PMD_BLOCK	0x8040
-+#define NSP_USB3_TX_PMD_CONTROL1	0x01
-+
-+#define NSP_USB3_PHY_PIPE_BLOCK		0x8060
-+#define NSP_USB3_LFPS_CMP		0x02
-+#define NSP_USB3_LFPS_DEGLITCH		0x03
-+
-+struct nsp_usb3_phy {
-+	struct regmap *usb3_ctrl;
-+	struct phy *phy;
-+	struct mdio_device *mdiodev;
-+};
-+
-+static int nsp_usb3_phy_init(struct phy *phy)
-+{
-+	struct nsp_usb3_phy *iphy = phy_get_drvdata(phy);
-+	struct mii_bus *bus = iphy->mdiodev->bus;
-+	int addr = iphy->mdiodev->addr;
-+	u32 data;
-+	int rc;
-+
-+	rc = regmap_read(iphy->usb3_ctrl, 0, &data);
-+	if (rc)
-+		return rc;
-+	data |= 1;
-+	rc = regmap_write(iphy->usb3_ctrl, 0, data);
-+	if (rc)
-+		return rc;
-+
-+	rc = regmap_write(iphy->usb3_ctrl, NSP_USB3_RST_CTRL_OFFSET, 1);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
-+			   NSP_USB3_PHY_PLL30_BLOCK);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PLL_CONTROL, 0x1000);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL0, 0x6400);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL1, 0xc000);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL1, 0x8000);
-+	if (rc)
-+		return rc;
-+
-+	rc = regmap_write(iphy->usb3_ctrl, NSP_USB3_RST_CTRL_OFFSET, 0);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PLL_CONTROL, 0x9000);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
-+			   NSP_USB3_PHY_PIPE_BLOCK);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_LFPS_CMP, 0xf30d);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_LFPS_DEGLITCH, 0x6302);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
-+			   NSP_USB3_PHY_TX_PMD_BLOCK);
-+	if (rc)
-+		return rc;
-+
-+	rc = mdiobus_write(bus, addr, NSP_USB3_TX_PMD_CONTROL1, 0x1003);
-+
-+	return rc;
-+}
-+
-+static struct phy_ops nsp_usb3_phy_ops = {
-+	.init = nsp_usb3_phy_init,
-+};
-+
-+static int nsp_usb3_phy_probe(struct mdio_device *mdiodev)
-+{
-+	struct device *dev = &mdiodev->dev;
-+	struct phy_provider *provider;
-+	struct nsp_usb3_phy *iphy;
-+
-+	iphy = devm_kzalloc(dev, sizeof(*iphy), GFP_KERNEL);
-+	if (!iphy)
-+		return -ENOMEM;
-+	iphy->mdiodev = mdiodev;
-+
-+	iphy->usb3_ctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						 "usb3-ctrl-syscon");
-+	if (IS_ERR(iphy->usb3_ctrl))
-+		return PTR_ERR(iphy->usb3_ctrl);
-+
-+	iphy->phy = devm_phy_create(dev, dev->of_node, &nsp_usb3_phy_ops);
-+	if (IS_ERR(iphy->phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(iphy->phy);
-+	}
-+
-+	phy_set_drvdata(iphy->phy, iphy);
-+
-+	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "could not register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nsp_usb3_phy_of_match[] = {
-+	{.compatible = "brcm,nsp-usb3-phy",},
-+	{ /* sentinel */ }
-+};
-+
-+static struct mdio_driver nsp_usb3_phy_driver = {
-+	.mdiodrv = {
-+		.driver = {
-+			.name = "nsp-usb3-phy",
-+			.of_match_table = nsp_usb3_phy_of_match,
-+		},
-+	},
-+	.probe = nsp_usb3_phy_probe,
-+};
-+
-+mdio_module_driver(nsp_usb3_phy_driver);
-+
-+MODULE_DESCRIPTION("Broadcom NSP USB3 PHY driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com");
--- 
-2.1.0
+On 01/17/2017 04:47 PM, Tony Lindgren wrote:
+> * Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170117 05:55]:
+>> In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
+>> have been removed. So it is not required anymore to define "glue"
+>> register's address and size in DT.
+>> Remove "glue" register from cppi41dma node.
+> 
+> Is this OK to queue later on after all the dependencies have been
+> merged?
+It should be queued on same time as "[PATCH v2 3/7] dmaengine: cppi41:
+Remove usbss_mem", so yes I guess it is OK.
+> 
+> Regards,
+> 
+> Tony
+> 
+Best Regards,
+Alexandre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
