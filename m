@@ -1,93 +1,49 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen
- driver
-Date: Tue, 17 Jan 2017 20:43:32 +0200
-Message-ID: <20170117184332.6ne4ercemll6qrbm@kozik-lap>
-References: <20170117135441.31450-1-andi.shyti@samsung.com>
- <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
- <20170117135441.31450-2-andi.shyti@samsung.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v2 14/14] ARM: dts: da850-lcdk: enable the SATA node
+Date: Tue, 17 Jan 2017 12:53:16 -0600
+Message-ID: <8dae1b25-465e-faf5-b5bb-7b1f534a1bcb@lechnology.com>
+References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484655976-25382-15-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170117135441.31450-2-andi.shyti@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484655976-25382-15-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 10:54:39PM +0900, Andi Shyti wrote:
-> Add binding for the STMicroelectronics FingerTip (stmfts)
-> touchscreen driver.
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+On 01/17/2017 06:26 AM, Bartosz Golaszewski wrote:
+> Enable the SATA node for da850-lcdk. We omit the pinctrl property on
+> purpose - the muxed SATA pins are not hooked up to anything
+> SATA-related on the lcdk.
+>
+> The REFCLKN/P rate on the board is 100MHz, so we need a multiplier of
+> 15 for 1.5GHz PLL rate.
+
+The multiplier is no longer in device tree, so this comment is not 
+necessary.
+
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > ---
->  .../bindings/input/touchscreen/st,stmfts.txt       | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
-> new file mode 100644
-> index 000000000000..788f4ba744db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
-> @@ -0,0 +1,43 @@
-> +* ST-Microelectronics FingerTip touchscreen controller
-> +
-> +The ST-Microelectronics FingerTip device provides a basic touchscreen
-> +functionality. Along with it the user can enable the touchkey which can work as
-> +a basic HOME and BACK key for phones.
-> +
-> +The driver supports also hovering as an absolute single touch event with x, y, z
-> +coordinates.
-> +
-> +Required properties:
-> +- compatible		: must be "st,stmfts"
-> +- reg			: I2C slave address, (e.g. 0x49)
-> +- interrupt-parent	: the phandle to the interrupt controller which provides
-> +			  the interrupt
-> +- interrupts		: interrupt specification
-> +- avdd-supply		: analogic power supply
-> +- vdd-supply		: power supply
-> +- touchscreen-size-x	: see touchscreen.txt
-> +- touchscreen-size-y	: see touchscreen.txt
-> +
-> +Optional properties:
-> +- touch-key-connected	: specifies whether the touchkey feature is connected
-
-You are making it a generic property but it is specific to this device,
-so:
-	st,touch-key-connected
-?
-
-> +- ledvdd-supply		: power supply to the touch key leds
-
-Is this really optional? If yes... how it gets the power when not
-provided?
-
-Best regards,
-Krzysztof
-
-> +
-> +Example:
-> +
-> +i2c@00000000 {
-> +
-> +	/* ... */
-> +
-> +	stmfts@49 {
-> +		compatible = "st,stmfts";
-> +		reg = <0x49>;
-> +		interrupt-parent = <&gpa1>;
-> +		interrupts = <1 IRQ_TYPE_NONE>;
-> +		touchscreen-size-x = <1599>;
-> +		touchscreen-size-y = <2559>;
-> +		touch-key-connected;
-> +		avdd-supply = <&ldo30_reg>;
-> +		vdd-supply = <&ldo31_reg>;
-> +		ledvdd-supply = <&ldo33_reg>;
-> +	};
+>  arch/arm/boot/dts/da850-lcdk.dts | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+> index afcb482..fbeee3c 100644
+> --- a/arch/arm/boot/dts/da850-lcdk.dts
+> +++ b/arch/arm/boot/dts/da850-lcdk.dts
+> @@ -105,6 +105,10 @@
+>  	status = "okay";
+>  };
+>
+> +&sata {
+> +	status = "okay";
 > +};
-> -- 
-> 2.11.0
-> 
+> +
+>  &mdio {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&mdio_pins>;
+>
