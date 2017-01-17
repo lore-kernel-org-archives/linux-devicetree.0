@@ -1,44 +1,59 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add R-Box Pro
-Date: Wed, 18 Jan 2017 00:06:07 +0100
-Message-ID: <3005a457-b7cf-393b-42ff-4149e080321c@suse.de>
-References: <20170117030611.23827-1-afaerber@suse.de>
- <20170117030611.23827-2-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117030611.23827-2-afaerber@suse.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 00/13] Ingenic JZ4740 / JZ4780 pinctrl driver
+Date: Wed, 18 Jan 2017 00:14:08 +0100
+Message-ID: <20170117231421.16310-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-QW0gMTcuMDEuMjAxNyB1bSAwNDowNiBzY2hyaWViIEFuZHJlYXMgRsOkcmJlcjoKPiBkaWZmIC0t
-Z2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2VmaWxlIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9hbWxvZ2ljL01ha2VmaWxlCj4gaW5kZXggMGQ3YmZiZjdkOTIyLi42NmJjODA5YTVl
-YWUgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2VmaWxlCj4g
-KysrIGIvYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL01ha2VmaWxlCj4gQEAgLTEyLDYgKzEy
-LDcgQEAgZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4bC1uZXhib3gtYTk1eC5k
-dGIKPiAgZHRiLSQoQ09ORklHX0FSQ0hfTUVTT04pICs9IG1lc29uLWd4bS1zOTEyLXEyMDAuZHRi
-Cj4gIGR0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1neG0tczkxMi1xMjAxLmR0Ygo+
-ICBkdGItJChDT05GSUdfQVJDSF9NRVNPTikgKz0gbWVzb24tZ3htLW5leGJveC1hMS5kdGIKCldo
-YXQgaXMgdGhlIGxvZ2ljIGJlaGluZCBtZXNvbi1neG0tczkxMi1xMjAxIHZzLiBtZXNvbi1neG0t
-bmV4Ym94LWExPwpTaG91bGQgaXQgYmUgcmVuYW1lZCB0byBpbmNsdWRlIC1zOTEyIGZvciBjb25z
-aXN0ZW5jeT8KCj4gK2R0Yi0kKENPTkZJR19BUkNIX01FU09OKSArPSBtZXNvbi1neG0tcmJveC1w
-cm8uZHRiCgpTaG91bGQgdGhpcyBuZXcgYm9hcmQgdXNlIG1lc29uLWd4bS1zOTEyLT8KCj4gIAo+
-ICBhbHdheXMJCTo9ICQoZHRiLXkpCj4gIHN1YmRpci15CTo9ICQoZHRzLWRpcnMpCgpSZWdhcmRz
-LApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJILCBNYXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xy
-bmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5kw7ZyZmZlciwgSmFuZSBTbWl0aGFyZCwgR3Jh
-aGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJuYmVyZykKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi,
+
+This set of patches introduces a new pinctrl driver for the Ingenic
+JZ4740 and JZ4780, which handles pin configuration, pin muxing and
+GPIO config for those MIPS SoCs.
+
+The initial driver was developed by to Paul Burton, so I'll expect his
+Signed-Off-By to be added to each patch. It has been severely modified
+and improved by myself, notably to add support for the JZ4740 (the
+initial non-upstream driver only handled the JZ4780).
+
+I successfully tested it on Imagination Technologies' CI20 board (JZ4780),
+as well as on the Dingoo A320 chinese handheld console (JZ4740).
+
+One patch in this series add a pinctrl configuration for some drivers
+instanciated in the QI LB60 devicetree. Since I don't own this device,
+this one patch was not tested.
+
+Some words about the driver itself:
+- pinctrl-ingenic.c contains the core functions that can be shared
+  across all Ingenic SoCs,
+- pinctrl-jz4740.c contains the JZ4740-specific low-level functions and
+  the jz4740-pinctrl driver,
+- pinctrl-jz4780.c contains the JZ4780-specific low-level functions and
+  the jz4780-pinctrl driver.
+
+The reason behind using a common file sharing core functions and backend
+ops for each SoC version, is that the pin/GPIO controllers of the Ingenic
+SoCs are extremely similar across SoC versions, except that some have the
+registers shuffled around. Making a distinct separation permits the reuse
+of large parts of the driver to support the two SoC versions.
+
+One problem still unresolved: the pinctrl framework does not allow us to
+configure each pin on demand (someone please prove me wrong), when the
+various PWM channels are requested or released. For instance, the PWM
+channels can be configured from sysfs, which would require all PWM pins
+to be configured properly beforehand for the PWM function, eventually
+causing conflicts with other platform or board drivers.
+
+The proper solution here would be to modify the pwm-jz4740 driver to
+handle only one PWM channel, and create an instance of this driver
+for each one of the 8 PWM channels. Then, it could use the pinctrl
+framework to dynamically configure the PWM pin it controls.
+
+Until this can be done, the only jz4740 board supported upstream
+(Qi lb60) could configure all of its connected PWM pins in PWM function
+mode, if those are not used by other drivers nor by GPIOs on the
+board. The only jz4780 board upstream (CI20) does not yet support the
+PWM driver.
