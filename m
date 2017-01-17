@@ -1,177 +1,57 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v4 2/4] Documentation: dt: add bindings for ti-cpufreq
-Date: Tue, 17 Jan 2017 07:18:06 -0600
-Message-ID: <20170117131808.29798-3-d-gerlach@ti.com>
-References: <20170117131808.29798-1-d-gerlach@ti.com>
+From: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] arm64: dts: juno: add CoreSight support for Juno
+ r1/r2 variants
+Date: Tue, 17 Jan 2017 13:27:22 +0000
+Message-ID: <d89b805b-cc6f-37d5-2b64-4f83fa086db6@arm.com>
+References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
+ <1484655313-9025-4-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117131808.29798-1-d-gerlach@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, Tony Lindgren <tony@atomide.com>, linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484655313-9025-4-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree bindings document for the TI CPUFreq/OPP driver
-on AM33xx, AM43xx, DRA7xx, and AM57xx SoCs. The operating-points-v2
-binding allows us to provide an opp-supported-hw property for each OPP
-to define when it is available. This driver is responsible for reading
-and parsing registers to determine which OPPs can be selectively enabled
-based on the specific SoC in use by matching against the opp-supported-hw
-data.
+On 17/01/17 12:15, Sudeep Holla wrote:
+> From: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> The CoreSight support added for Juno is valid for only Juno r0.
+> The Juno r1 and r2 variants have additional components and alternative
+> connection routes between trace source and sinks.
+>
+> This patch builds on top of the existing r0 support and extends it to
+> Juno r1/r2 variants.
+>
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> [sudeep.holla-5wv7dgnIgG8@public.gmane.org: minor changelog update and major reorganisation of
+> 	the common coresight components back into juno-base.dtsi to avoid
+> 	duplication, also renamed funnel node names]
+> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi | 100 ++++++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/arm/juno-r1.dts       |   9 +++
+>  arch/arm64/boot/dts/arm/juno-r2.dts       |   9 +++
+>  3 files changed, 118 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+> new file mode 100644
+> index 000000000000..563463ed28c7
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+> @@ -0,0 +1,100 @@
+> +/ {
+> +	funnel@20130000 { /* cssys2 */
 
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
----
-v3->v4:
-	Update to simplify binding, only use "syscon" now to pass control
-	module register space and let driver handle offsets.
+Typo, that should be csys1. Rest looks good to me.
 
- .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 128 +++++++++++++++++++++
- 1 file changed, 128 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+Reviewed-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-new file mode 100644
-index 000000000000..58efa4c72545
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-@@ -0,0 +1,128 @@
-+TI CPUFreq and OPP bindings
-+================================
-+
-+Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
-+families support different OPPs depending on the silicon variant in use.
-+The ti-cpufreq driver can use revision and an efuse value from the SoC to
-+provide the OPP framework with supported hardware information. This is
-+used to determine which OPPs from the operating-points-v2 table get enabled
-+when it is parsed by the OPP framework.
-+
-+Required properties:
-+--------------------
-+In 'cpus' nodes:
-+- operating-points-v2: Phandle to the operating-points-v2 table to use.
-+
-+In 'operating-points-v2' table:
-+- compatible: Should be
-+	- 'operating-points-v2-ti-cpu' for am335x, am43xx, and dra7xx/am57xx SoCs
-+- syscon: A phandle pointing to a syscon node representing the control module
-+	  register space of the SoC.
-+
-+Optional properties:
-+--------------------
-+For each opp entry in 'operating-points-v2' table:
-+- opp-supported-hw: Two bitfields indicating:
-+	1. Which revision of the SoC the OPP is supported by
-+	2. Which eFuse bits indicate this OPP is available
-+
-+	A bitwise AND is performed against these values and if any bit
-+	matches, the OPP gets enabled.
-+
-+Example:
-+--------
-+
-+/* From arch/arm/boot/dts/am33xx.dtsi */
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	cpu@0 {
-+		compatible = "arm,cortex-a8";
-+		device_type = "cpu";
-+		reg = <0>;
-+
-+		operating-points-v2 = <&cpu0_opp_table>;
-+
-+		clocks = <&dpll_mpu_ck>;
-+		clock-names = "cpu";
-+
-+		clock-latency = <300000>; /* From omap-cpufreq driver */
-+	};
-+};
-+
-+/*
-+ * cpu0 has different OPPs depending on SoC revision and some on revisions
-+ * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
-+ */
-+cpu0_opp_table: opp_table0 {
-+	compatible = "operating-points-v2-ti-cpu";
-+	syscon = <&scm_conf>;
-+
-+	/*
-+	 * The three following nodes are marked with opp-suspend
-+	 * because they can not be enabled simultaneously on a
-+	 * single SoC.
-+	 */
-+	opp50@300000000 {
-+		opp-hz = /bits/ 64 <300000000>;
-+		opp-microvolt = <950000 931000 969000>;
-+		opp-supported-hw = <0x06 0x0010>;
-+		opp-suspend;
-+	};
-+
-+	opp100@275000000 {
-+		opp-hz = /bits/ 64 <275000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x01 0x00FF>;
-+		opp-suspend;
-+	};
-+
-+	opp100@300000000 {
-+		opp-hz = /bits/ 64 <300000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x06 0x0020>;
-+		opp-suspend;
-+	};
-+
-+	opp100@500000000 {
-+		opp-hz = /bits/ 64 <500000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	opp100@600000000 {
-+		opp-hz = /bits/ 64 <600000000>;
-+		opp-microvolt = <1100000 1078000 1122000>;
-+		opp-supported-hw = <0x06 0x0040>;
-+	};
-+
-+	opp120@600000000 {
-+		opp-hz = /bits/ 64 <600000000>;
-+		opp-microvolt = <1200000 1176000 1224000>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	opp120@720000000 {
-+		opp-hz = /bits/ 64 <720000000>;
-+		opp-microvolt = <1200000 1176000 1224000>;
-+		opp-supported-hw = <0x06 0x0080>;
-+	};
-+
-+	oppturbo@720000000 {
-+		opp-hz = /bits/ 64 <720000000>;
-+		opp-microvolt = <1260000 1234800 1285200>;
-+		opp-supported-hw = <0x01 0xFFFF>;
-+	};
-+
-+	oppturbo@800000000 {
-+		opp-hz = /bits/ 64 <800000000>;
-+		opp-microvolt = <1260000 1234800 1285200>;
-+		opp-supported-hw = <0x06 0x0100>;
-+	};
-+
-+	oppnitro@1000000000 {
-+		opp-hz = /bits/ 64 <1000000000>;
-+		opp-microvolt = <1325000 1298500 1351500>;
-+		opp-supported-hw = <0x04 0x0200>;
-+	};
-+};
--- 
-2.11.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
