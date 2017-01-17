@@ -1,148 +1,65 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Tue, 17 Jan 2017 11:22:22 +0100
-Message-ID: <4f5b8608-af6c-3ef5-aaf0-e7e034d006cd@baylibre.com>
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
- <20170116184906.r62di7xiil5lae33@kozik-lap>
- <20170117093813.mxp2hgoxbgske6ru@lukather>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] iio: distance: srf08: add IIO driver for us ranger
+Date: Tue, 17 Jan 2017 11:28:01 +0100
+Message-ID: <20170117102801.GB7823@andreas>
+References: <20170110184815.GA15532@andreas>
+ <4099feac-959c-2b5b-a21a-3b111098af39@kernel.org>
+ <20170114174856.GA2351@andreas>
+ <d05cce62-4362-b249-f49f-58eed2316ddb@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3052969069068422119=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117093813.mxp2hgoxbgske6ru@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Boris Brezillon <boris.brezillon@free-electrons.com>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kukjin Kim <kgene@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Carlo Caione <carlo@caione.org>, =?UTF-8?Q?Antoine_T=c3=a9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d05cce62-4362-b249-f49f-58eed2316ddb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============3052969069068422119==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="baXXHI3UuuLRgEm8nxSP2amn2dFvWsbhu"
+Hi Jonathan,
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---baXXHI3UuuLRgEm8nxSP2amn2dFvWsbhu
-Content-Type: multipart/mixed; boundary="x9vnPWnuS7wTTPCongaAbJObnTW22ExCu";
- protected-headers="v1"
-From: Neil Armstrong <narmstrong@baylibre.com>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>,
- Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
- Heiko Stuebner <heiko@sntech.de>,
- Javier Martinez Canillas <javier@osg.samsung.com>,
- Kevin Hilman <khilman@baylibre.com>, Linus Walleij
- <linus.walleij@linaro.org>,
- Boris Brezillon <boris.brezillon@free-electrons.com>,
- Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
- Rob Herring <robh+dt@kernel.org>,
- Alexandre Belloni <alexandre.belloni@free-electrons.com>,
- Kukjin Kim <kgene@kernel.org>,
- =?UTF-8?Q?Antoine_T=c3=a9nart?= <antoine.tenart@free-electrons.com>,
- Carlo Caione <carlo@caione.org>,
- Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
- linux-arm-kernel@lists.infradead.org
-Message-ID: <4f5b8608-af6c-3ef5-aaf0-e7e034d006cd@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
- <20170116184906.r62di7xiil5lae33@kozik-lap>
- <20170117093813.mxp2hgoxbgske6ru@lukather>
-In-Reply-To: <20170117093813.mxp2hgoxbgske6ru@lukather>
+[...]
 
---x9vnPWnuS7wTTPCongaAbJObnTW22ExCu
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: quoted-printable
+> >> For the range, it's an interesting one.  Again the term range could
+> >> mean too many things within the wider ABI. We need to make it more
+> >> specific.
+> >>
+> >> Actually reading the datasheet, I think this is fundamentally about the
+> >> maximum sampling frequency rather than directly about the range.
+> >> The only reason you'd reduce the range is to speed that up. It doesn't
+> >> improve the resolution, the device simply answers quicker.
+> >>
+> >> So I'd support this as sampling_frequency.  You could then use
+> >> the the iio_info_mask_*_available and relevant callback to provide
+> >> info on what it then restricts the possible output values to
+> >> (rather than controlling it directly).
+> >>
+> > 
+> > By changing the range one cannot influence the sampling frequency directly. I
+> > have seen on the oszilloscope that the telegrams arrive almost at the same time
+> > with different settings of range and the same gain.
+> > 
+> > Only if the gain is also adjusted the sensor works faster and a higher frequency
+> > can be used. But the gain is also used to adjust the sensitivity of the sensor. 
+> That's rather weird and not what the datasheet suggests. Ah well.
+> > 
+> > What about calling it "sensor_domain" or "sensor_max_range"?
+> hmm. Not sure - propose that with appropriate Docs and we can think more on it.
+> > 
+> > 
 
-On 01/17/2017 10:38 AM, Maxime Ripard wrote:
-> Hi,
->=20
-> On Mon, Jan 16, 2017 at 08:49:06PM +0200, Krzysztof Kozlowski wrote:
->> On Mon, Jan 16, 2017 at 02:24:23PM +0100, Maxime Ripard wrote:
->>> The ARM Mali Utgard GPU family is embedded into a number of SoCs from=
+I made a mistake in the earlier mentioned measurement which i have to correct:
 
->>> Allwinner, Amlogic, Mediatek or Rockchip.
->>>
->>> Add a binding for the GPU of that family.
->>>
->>> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->>> ---
->>>  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++=
-++++++++++
->>>  1 file changed, 76 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-ut=
-gard.txt
->>
->> Do you have a driver in kernel which will implement these bindings?
->=20
-> No, but we have bindings for out-of-tree drivers already.
->=20
->> Defining them for out-of-tree driver does not bring any benefits
->> (3rd party driver will not respect them anyway).
->=20
-> You could see it the other way around too. The out-of-tree drivers
-> don't respect it at the moment because there's no binding to respect.
->=20
-> And at least for us, we definitely plan on doing that.
->=20
-> Maxime
+The telegrams arrive faster with a smaller range and the same gain. 
 
-Hi Maxime, Krzysztof,
+But we cannot use the sensor at a higher frequency if we are not adjusting the
+gain of the sensor as well. This is because of echos of the former cycle which
+are still around. And this setting of the gain depends on the surrounding where
+the sensor is used. So in the driver we cannot estimate it.
 
-We hope this will be accepted so it will solve the same issue we have on =
-Amlogic SoCs
-and all the other mali powered SoCs.
+Therefore i'll send out the next version with the attribute name
+"sensor_max_range" together with documentation as proposal.
 
-Having mainline bindings will forcre out-of-tree driver to respect those =
-bindings
-and remove a dts out-of-tree patch aswell.
+Andreas
 
-Neil
-
-
---x9vnPWnuS7wTTPCongaAbJObnTW22ExCu--
-
---baXXHI3UuuLRgEm8nxSP2amn2dFvWsbhu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJYffBoAAoJEHfc29rIyEnRI+YP/ixtCZyNAIKovl3s1CCBOYIL
-PgQXHAa5NC9/bD+Q0K2WUciuyQE0u2YW66+CS+iXkdhoVev36KzzR/y9wif5T4ty
-0dnBu4tk06v2pKJj5lZj9jmciU4aiwmmn0Teolxlw0RniX3uOpwei20RrG15b2du
-uRXJfLJ98hPB/8FQII5isw7e+N33ydGMwe0kli9pa0mYi2hJN1oHTHHtQxXb24Mk
-B3Q1aA7EkvvHEHgZ9Zsg4IiWM8KbKre92R+3xcBdGMRsMQJeJZucll66yW7YV5iM
-zpb/k7U6mn/fEkfq/Xt9WtRVhIrlwWz9LWN5JwXJv1DXZPU8wcZaHQ7Xbf/tPGJP
-ERuujEj9AV5OV2veSsRSW7FqHwa4zjiAH3zD+t6nwSIuMsmYKXG9pk+n5l7gMIOt
-yHKr7YOtVXcfF4Kb6KEaY7Cj2zteJiru89hj/cwvsGD1Dn4PV5AB5tx+r42QQB4R
-d2AYprgm5rNUn0MOMQ05821ry2KAotI2WuTVD6vdbAfmRhjzZX98DD8msA2LhfbK
-8rpuH9aOz7ImqHAxM9u/nUTzuX/SY/3ASoF5Ski0ZyCTRHoVRqjf1jfGcol+pEiF
-+D1EX5oHnBUQQPa8vPV69xk7TEP5/RebyUa4O2Rv6rmJ0OJAeBF29XpFutOnk2OI
-Ou7lvhOt7Bc43A5F1fDu
-=SQmk
------END PGP SIGNATURE-----
-
---baXXHI3UuuLRgEm8nxSP2amn2dFvWsbhu--
-
-
---===============3052969069068422119==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3052969069068422119==--
+-- 
