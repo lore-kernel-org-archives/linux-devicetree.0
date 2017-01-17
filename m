@@ -1,71 +1,106 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v5 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
- for nxp,irq-mask-enable
-Date: Tue, 17 Jan 2017 17:28:23 +0800
-Message-ID: <aeab2bbe-e243-98f6-b07f-76e4dda62fd6@electromag.com.au>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-5-git-send-email-preid@electromag.com.au>
- <9190ec70-eda4-5e44-a85a-211945c30eeb@axentia.se>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
+Date: Tue, 17 Jan 2017 10:38:13 +0100
+Message-ID: <20170117093813.mxp2hgoxbgske6ru@lukather>
+References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
+ <20170116184906.r62di7xiil5lae33@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <9190ec70-eda4-5e44-a85a-211945c30eeb@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0246541141000833915=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170116184906.r62di7xiil5lae33@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kukjin Kim <kgene@kernel.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Carlo Caione <carlo@caione.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/2017 16:57, Peter Rosin wrote:
-> On 2017-01-17 09:00, Phil Reid wrote:
->> Unfortunately some hardware device will assert their irq line immediately
->> on power on and provide no mechanism to mask the irq. As the i2c muxes
->> provide no method to mask irq line this provides a work around by keeping
->> the parent irq masked until enough device drivers have loaded to service
->> all pending interrupts.
->>
->> For example the the ltc1760 assert its SMBALERT irq immediately on power
->> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->> device is registered irq are enabled and fire continuously as the second
->> device driver has not yet loaded. Setting this parameter to <1 1> will
->> delay the irq being enabled until both devices are ready.
->
-G'day Peter,
+
+--===============0246541141000833915==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="b63koylry6bsxrbr"
+Content-Disposition: inline
 
 
-> Hang on, does this suggestion I made make any sense at all? Maybe it does,
-> but does the pca954x driver even get notified of any but the first irq client
-> that unmasks interrupts on a mux segment? How can it count the number of
-> active irq clients if not?
+--b63koylry6bsxrbr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good question.
+Hi,
 
-So what I did to test is setup my 2 ltc1760s to use the same irq on the pca954x.
-Using the latest patch series.
+On Mon, Jan 16, 2017 at 08:49:06PM +0200, Krzysztof Kozlowski wrote:
+> On Mon, Jan 16, 2017 at 02:24:23PM +0100, Maxime Ripard wrote:
+> > The ARM Mali Utgard GPU family is embedded into a number of SoCs from
+> > Allwinner, Amlogic, Mediatek or Rockchip.
+> >=20
+> > Add a binding for the GPU of that family.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++=
+++++++++
+> >  1 file changed, 76 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utga=
+rd.txt
+>=20
+> Do you have a driver in kernel which will implement these bindings?
 
-Adding a log message into the irq_unmask function got the following.
-	dev_err(&data->client->dev, "irq_unmask %d %x %d", pos, data->irq_mask, data->irq_enabled);
+No, but we have bindings for out-of-tree drivers already.
 
-dmesg | grep irq_unmask
-[    4.392098] pca954x 4-0070: irq_unmask 0 1 1
+> Defining them for out-of-tree driver does not bring any benefits
+> (3rd party driver will not respect them anyway).
+
+You could see it the other way around too. The out-of-tree drivers
+don't respect it at the moment because there's no binding to respect.
+
+And at least for us, we definitely plan on doing that.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--b63koylry6bsxrbr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYfeYBAAoJEBx+YmzsjxAgAX4P/i5oPEn98eoiVsJlLfEc/HDL
+aNN/zrSKBBtD1gzJhara2NsgEfSkWP5opyi1rYrZEjcdIA/tP9AVz8hUVEMQrN+c
+Fzo2v+CtL0KhNx5PGXxrgiSHNcYriLfzofM6gdWLvxbn5owlx2PqZq8pn8hcXbMQ
+4HX8lwSS2GKrjDELJP7Lk8sc/S86znk/64t7IrSnOONpwp2oUTN4TWPaGRIAbk1W
+GUfhydniJX8Eg0JmWJL1XiA4QFFZBDW8ltjDq4t8hZMJPG402ubRY4kEbOFgQNiy
+gJhtUPh4DVov/W5jAMfq7HbM8xUFuc6m15Fv4ofztK3cnestEDgpVBI3hEdHfryA
+bu6BTetoIF+/xm8Meg9G89HLvXiS8FcpCd0kLJfImKJXqlGcUM25rGLOTYMxHqB+
+6Hsh2TrjAtsZ7gwVT30hqVHT6WNR4m+7wkz8r2QSDh8aBbdfN+HFPSpuWC6TsXqW
+tNHxbML7YJzOip25GM8EPmslMvSF9DBK7v3qvtYRq+NjKVO8IA0YijllllemAcrC
+hkAJgbgC3HgCsCqtj+FyJLTOIucrmPtsKbF85Gqz8GFkySYJ1WOxtVZk7D2slS8D
+p6kYmXGcRcxXcQV9U4LDhN345wV25/RZ8IZ+qeTzP/ah5eaSBzEAF7f3GEJHCtQM
+UPCLwnEG1HEbeE0xJhHm
+=SUPt
+-----END PGP SIGNATURE-----
+
+--b63koylry6bsxrbr--
 
 
-But Looks like both got registered ok to the same irq.
-cat /proc/interrupts
-161:          0          0  i2c-mux-pca954x   0 Level     15-000a, 16-000a
+--===============0246541141000833915==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-So from this testing, it doesn't look like it gets called multiple times.
-So back to the bitmask for the dt do you think.
-I think the interrupt enablelogic is correct now.
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
->
-> I'm truly sorry for the trouble I'm causing by not just saying how it should
-> be done from the start, but I feel like I've been thrown in at the deep end
-> when it comes to interrupt controllers...
-
-No problem. I'm learning a couple things as we go.
-Should help me out on other drivers :)
-
-
--- 
-Regards
-Phil Reid
+--===============0246541141000833915==--
