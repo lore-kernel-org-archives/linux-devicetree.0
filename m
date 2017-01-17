@@ -1,112 +1,53 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: sun4i-i2s: Increase DMA max burst to 8" to the asoc
- tree
-Date: Tue, 17 Jan 2017 18:44:54 +0000
-Message-ID: <E1cTYkY-0008Ku-Kd@debutante>
-References: <20170117140230.23142-2-mylene.josserand@free-electrons.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
+Date: Tue, 17 Jan 2017 18:42:52 +0000
+Message-ID: <SG2PR06MB11653D8853CB565A629B782E8A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
+ <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
+ <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
+ <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
+ <20170116114023.GA3029@katana>
+ <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170117082118.GA1487@katana>
+ <CAMuHMdVW=HORcCA0brX4tZdtG9knqE7D_wnM5VtSrxz2LdBgUA@mail.gmail.com>
+ <20170117094529.GC1487@katana>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7943772179114720444=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117140230.23142-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, mylene.josserand@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, linux-sunxi@googlegroups.com, sboyd@codeaurora.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, perex@perex.cz, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170117094529.GC1487@katana>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa+renesas@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
---===============7943772179114720444==
-Content-Type: text/plain
+Hi Wolfram,
 
-The patch
+On Tuesday, January 17, 2017, Wolfram Sang wrote:
+> > I have no idea if the SDHI driver disables the module clock when it is
+> > idle, but shouldn't the card detect clock be running all the time when
+> > the driver is bound to the device?
+>=20
+> Yes, it should. And for all instances with just one clock, this means thi=
+s
+> main clock must be running. So, en-/disable functions are all about
+> suspend/resume and bind/unbind. (Huh, looks like the unbind part is
+> missing, though. Need to look closer).
 
-   ASoC: sun4i-i2s: Increase DMA max burst to 8
+I just did an unbind on my system:
 
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From ebad64d19377957976963f99ce1fcf2f09796357 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
- <mylene.josserand@free-electrons.com>
-Date: Tue, 17 Jan 2017 15:02:21 +0100
-Subject: [PATCH] ASoC: sun4i-i2s: Increase DMA max burst to 8
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-As done previously for sun4i-codec, the DMA maxburst of 4
-is not supported by every SoCs so the DMA controller engine
-returns "unsupported value".
-
-As a maxburst of 8 is supported by all variants, this patch
-increases it to 8.
-
-For more details, see commit from Chen-Yu Tsai:
-commit 730e2dd0cbc7 ("ASoC: sun4i-codec: Increase DMA max burst to 8")
-
-Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/sunxi/sun4i-i2s.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/sunxi/sun4i-i2s.c b/sound/soc/sunxi/sun4i-i2s.c
-index f24d19526603..4237323ef594 100644
---- a/sound/soc/sunxi/sun4i-i2s.c
-+++ b/sound/soc/sunxi/sun4i-i2s.c
-@@ -694,10 +694,10 @@ static int sun4i_i2s_probe(struct platform_device *pdev)
- 	}
- 	
- 	i2s->playback_dma_data.addr = res->start + SUN4I_I2S_FIFO_TX_REG;
--	i2s->playback_dma_data.maxburst = 4;
-+	i2s->playback_dma_data.maxburst = 8;
- 
- 	i2s->capture_dma_data.addr = res->start + SUN4I_I2S_FIFO_RX_REG;
--	i2s->capture_dma_data.maxburst = 4;
-+	i2s->capture_dma_data.maxburst = 8;
- 
- 	pm_runtime_enable(&pdev->dev);
- 	if (!pm_runtime_enabled(&pdev->dev)) {
--- 
-2.11.0
+$ echo e804e800.sd > /sys/bus/platform/drivers/sh_mobile_sdhi/unbind
 
 
+Looks like sh_mobile_sdhi_remove() is called, but sh_mobile_sdhi_clk_disabl=
+e()
+is not.
 
---===============7943772179114720444==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+So, should sh_mobile_sdhi_remove() be changed to call sh_mobile_sdhi_clk_di=
+sable()?
 
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============7943772179114720444==--
+Chris
