@@ -1,106 +1,52 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 12/13] pwm: jz4740: Let the pinctrl driver configure the pins
-Date: Wed, 18 Jan 2017 00:14:20 +0100
-Message-ID: <20170117231421.16310-13-paul@crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170117231421.16310-1-paul@crapouillou.net>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com, Paul Cercueil <paul@crapouillou.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/2] ARM: dts: dra7-evm: increase QSPI SPL partition size
+Date: Tue, 17 Jan 2017 15:27:44 -0800
+Message-ID: <20170117232743.GA7403@atomide.com>
+References: <1484311234-21978-1-git-send-email-ravibabu@ti.com>
+ <1484311234-21978-2-git-send-email-ravibabu@ti.com>
+ <20170113181239.GC2630@atomide.com>
+ <6C6B28D4DC342643927BEAFCE8707BF6C0A8C367@DBDE04.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <6C6B28D4DC342643927BEAFCE8707BF6C0A8C367@DBDE04.ent.ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "B, Ravi" <ravibabu@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "nsekhar@list.ti.com" <nsekhar@list.ti.com>, "Nori, Sekhar" <nsekhar@ti.com>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that the JZ4740 and similar SoCs have a pinctrl driver, we rely on
-the pins being properly configured before the driver probes.
+* B, Ravi <ravibabu@ti.com> [170117 00:15]:
+> Hi Tony
+> 
+> >* Ravi Babu <ravibabu@ti.com> [170113 04:41]:
+> >> The SPL size for DRA74x platform has increased and is now more than 
+> >> 64KB. Increase QSPI SPL partition size to 256KB for DRA74x EVM.
+> >> 
+> >> QSPI partition numbering changes because of this.
+> 
+> >And this will break the existing partitions potentially..
+> >See what was discussed on the list few days ago in thread "[PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition table".
+> 
+> >It's best to have these left empty or as they originally were and let u-boot configure the partitions.
+> 
+> Agree with you. For dra7xx platform the SPL size has been increased to 256KB and hence the existing QSPI SPL partition in kernel (64K size) will break when latest mainline u-boot is used. 
+> Here only SPL partition has been changed and other partition & size is NOT changed and kept intact. I feel it will not break the existing partitions for dra7xx platform.
 
-One inherent problem of this new approach is that the pinctrl framework
-does not allow us to configure each pin on demand, when the various PWM
-channels are requested or released. For instance, the PWM channels can
-be configured from sysfs, which would require all PWM pins to be configured
-properly beforehand for the PWM function, eventually causing conflicts
-with other platform or board drivers.
+What about the renumbering of partitions in your patch?
 
-The proper solution here would be to modify the pwm-jz4740 driver to
-handle only one PWM channel, and create an instance of this driver
-for each one of the 8 PWM channels. Then, it could use the pinctrl
-framework to dynamically configure the PWM pin it controls.
+Probably just best to make the partition information empty in the
+kernel as discussed.
 
-Until this can be done, the only jz4740 board supported upstream
-(Qi lb60) could configure all of its connected PWM pins in PWM function
-mode, if those are not used by other drivers nor by GPIOs on the
-board.
+Regards,
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/pwm/pwm-jz4740.c | 29 -----------------------------
- 1 file changed, 29 deletions(-)
-
-diff --git a/drivers/pwm/pwm-jz4740.c b/drivers/pwm/pwm-jz4740.c
-index 76d13150283f..a75ff3622450 100644
---- a/drivers/pwm/pwm-jz4740.c
-+++ b/drivers/pwm/pwm-jz4740.c
-@@ -21,22 +21,10 @@
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- 
--#include <asm/mach-jz4740/gpio.h>
- #include <asm/mach-jz4740/timer.h>
- 
- #define NUM_PWM 8
- 
--static const unsigned int jz4740_pwm_gpio_list[NUM_PWM] = {
--	JZ_GPIO_PWM0,
--	JZ_GPIO_PWM1,
--	JZ_GPIO_PWM2,
--	JZ_GPIO_PWM3,
--	JZ_GPIO_PWM4,
--	JZ_GPIO_PWM5,
--	JZ_GPIO_PWM6,
--	JZ_GPIO_PWM7,
--};
--
- struct jz4740_pwm_chip {
- 	struct pwm_chip chip;
- 	struct clk *clk;
-@@ -49,9 +37,6 @@ static inline struct jz4740_pwm_chip *to_jz4740(struct pwm_chip *chip)
- 
- static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	unsigned int gpio = jz4740_pwm_gpio_list[pwm->hwpwm];
--	int ret;
--
- 	/*
- 	 * Timers 0 and 1 are used for system tasks, so they are unavailable
- 	 * for use as PWMs.
-@@ -59,15 +44,6 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 	if (pwm->hwpwm < 2)
- 		return -EBUSY;
- 
--	ret = gpio_request(gpio, pwm->label);
--	if (ret) {
--		dev_err(chip->dev, "Failed to request GPIO#%u for PWM: %d\n",
--			gpio, ret);
--		return ret;
--	}
--
--	jz_gpio_set_function(gpio, JZ_GPIO_FUNC_PWM);
--
- 	jz4740_timer_start(pwm->hwpwm);
- 
- 	return 0;
-@@ -75,13 +51,8 @@ static int jz4740_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- static void jz4740_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- {
--	unsigned int gpio = jz4740_pwm_gpio_list[pwm->hwpwm];
--
- 	jz4740_timer_set_ctrl(pwm->hwpwm, 0);
- 
--	jz_gpio_set_function(gpio, JZ_GPIO_FUNC_NONE);
--	gpio_free(gpio);
--
- 	jz4740_timer_stop(pwm->hwpwm);
- }
- 
--- 
-2.11.0
+Tony
