@@ -1,39 +1,180 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am33x, da816x, da814x: Remove useless register
- address
-Date: Tue, 17 Jan 2017 17:16:17 +0100
-Message-ID: <08fc8b99-e6c4-7282-8023-b0d37956428c@baylibre.com>
-References: <20170117135420.10197-1-abailon@baylibre.com>
- <20170117154752.GH7403@atomide.com>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH v2 05/10] ASoC: Add sun8i digital audio codec
+Date: Tue, 17 Jan 2017 17:20:29 +0100
+Message-ID: <c1800916-5373-50a8-1b36-0ba5bb69641a@free-electrons.com>
+References: <20170117140230.23142-1-mylene.josserand@free-electrons.com>
+ <20170117140230.23142-6-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117154752.GH7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170117140230.23142-6-mylene.josserand@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com, thomas.petazzoni@free-electrons.com, alexandre.belloni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 04:47 PM, Tony Lindgren wrote:
-> * Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> [170117 05:55]:
->> In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
->> have been removed. So it is not required anymore to define "glue"
->> register's address and size in DT.
->> Remove "glue" register from cppi41dma node.
-> 
-> Is this OK to queue later on after all the dependencies have been
-> merged?
-It should be queued on same time as "[PATCH v2 3/7] dmaengine: cppi41:
-Remove usbss_mem", so yes I guess it is OK.
-> 
-> Regards,
-> 
-> Tony
-> 
-Best Regards,
-Alexandre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hello everyone,
+
+On 17/01/2017 15:02, Mylène Josserand wrote:
+> Add the sun8i audio codec which handles the digital register of
+> A33 codec.
+> The driver handles only the basic playback from the DAC to headphones.
+> All other features (microphone, capture, etc) will be added later.
+>
+> Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+
+[...]
+
+> +static int sun8i_codec_get_hw_rate(struct snd_pcm_hw_params *params)
+> +{
+> +	unsigned int rate = params_rate(params);
+> +
+> +	switch (rate) {
+> +	case 8000:
+> +	case 7350:
+> +		return 0x0;
+> +	case 11025:
+> +		return 0x1;
+> +	case 12000:
+> +		return 0x2;
+> +	case 16000:
+> +		return 0x3;
+> +	case 22050:
+> +		return 0x4;
+> +	case 24000:
+> +		return 0x5;
+> +	case 32000:
+> +		return 0x6;
+> +	case 44100:
+> +		return 0x7;
+> +	case 48000:
+> +		return 0x8;
+> +	case 96000:
+> +		return 0x9;
+> +	case 192000:
+> +		return 0xa;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static u32 sun8i_codec_get_mod_freq(struct snd_pcm_hw_params *params)
+> +{
+> +	unsigned int rate = params_rate(params);
+> +
+> +	switch (rate) {
+> +	case 176400:
+> +	case 88200:
+> +	case 44100:
+> +	case 22050:
+> +	case 11025:
+> +		return 22579200;
+> +
+> +	case 192000:
+> +	case 128000:
+> +	case 96000:
+> +	case 64000:
+> +	case 48000:
+> +	case 32000:
+> +	case 24000:
+> +	case 16000:
+> +	case 12000:
+> +	case 8000:
+> +		return 24576000;
+> +
+> +	default:
+> +		return 0;
+> +	}
+> +}
+
+This function is not used anymore, I will remove it in v3 (once I will 
+get some reviews).
+
+> +
+> +static int sun8i_set_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+> +{
+> +	struct sun8i_codec *scodec = snd_soc_codec_get_drvdata(dai->codec);
+> +	u32 value;
+> +
+> +	/* clock masters */
+> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+> +	case SND_SOC_DAIFMT_CBS_CFS: /* DAI Slave */
+> +		value = 0x0; /* Codec Master */
+> +		break;
+> +	case SND_SOC_DAIFMT_CBM_CFM: /* DAI Master */
+> +		value = 0x1; /* Codec Slave */
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+> +			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_MSTR_MOD),
+> +			   value << SUN8I_AIF1CLK_CTRL_AIF1_MSTR_MOD);
+> +
+> +	/* clock inversion */
+> +	switch (fmt & SND_SOC_DAIFMT_INV_MASK) {
+> +	case SND_SOC_DAIFMT_NB_NF: /* Normal */
+> +		value = 0x0;
+> +		break;
+> +	case SND_SOC_DAIFMT_IB_IF: /* Inversion */
+> +		value = 0x1;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+> +			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_BCLK_INV),
+> +			   value << SUN8I_AIF1CLK_CTRL_AIF1_BCLK_INV);
+> +	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+> +			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_LRCK_INV),
+> +			   value << SUN8I_AIF1CLK_CTRL_AIF1_LRCK_INV);
+> +
+> +	/* DAI format */
+> +	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+> +	case SND_SOC_DAIFMT_I2S:
+> +		value = 0x0;
+> +		break;
+> +	case SND_SOC_DAIFMT_LEFT_J:
+> +		value = 0x1;
+> +		break;
+> +	case SND_SOC_DAIFMT_RIGHT_J:
+> +		value = 0x2;
+> +		break;
+> +	case SND_SOC_DAIFMT_DSP_A:
+> +	case SND_SOC_DAIFMT_DSP_B:
+> +		value = 0x3;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +	regmap_update_bits(scodec->regmap, SUN8I_AIF1CLK_CTRL,
+> +			   BIT(SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT),
+> +			   value << SUN8I_AIF1CLK_CTRL_AIF1_DATA_FMT);
+> +
+> +	return 0;
+> +}
+> +
+> +static int sun8i_codec_hw_params(struct snd_pcm_substream *substream,
+> +				 struct snd_pcm_hw_params *params,
+> +				 struct snd_soc_dai *dai)
+> +{
+> +	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+> +	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
+
+Same things for these variables.
+
+> +	struct sun8i_codec *scodec = snd_soc_codec_get_drvdata(dai->codec);
+> +	u32 clk_freq;
+> +	int sample_rate, err;
+
+ditto for "clk_freq" and "err" ones.
+
+Sorry about that.
+
+Best regards,
+
+-- 
+Mylène Josserand, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
