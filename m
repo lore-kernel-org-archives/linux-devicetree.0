@@ -1,85 +1,86 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH 2/2] arm: dts: Add support for ES8323 to the
-	Firefly-RK3288
-Date: Tue, 17 Jan 2017 10:12:10 +0100
-Message-ID: <20170117091210.6837-3-romain.perier@collabora.com>
-References: <20170117091210.6837-1-romain.perier@collabora.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Tue, 17 Jan 2017 12:03:38 +0100
+Message-ID: <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170117091210.6837-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <480df61d-c949-b3b0-61a4-d9db17f09e7d-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device found at
-address 0x10. It also adds the definition for connecting the Rockchip
-I2S to the es8388 analog output.
+The MR25 family doesn't support JEDEC, so they need explicit mentioning
+in the list of supported spi IDs. This makes it possible to add these
+using for example:
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
+	compatible = "everspin,mr25h40";
+
+There was already an entry for mr25h256. Move that one out of the "keep
+for compatibility" section and put in a new group for Everspin MRAMs.
+
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3288-firefly.dtsi | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Changes since (implicit) v1:
 
-diff --git a/arch/arm/boot/dts/rk3288-firefly.dtsi b/arch/arm/boot/dts/rk3288-firefly.dtsi
-index 44935af..bbe2d67 100644
---- a/arch/arm/boot/dts/rk3288-firefly.dtsi
-+++ b/arch/arm/boot/dts/rk3288-firefly.dtsi
-@@ -103,6 +103,16 @@
- 		};
- 	};
+ - use Kib instead of kib
+
+Changes since v2:
+
+ - update dt docs
+ - handle already existing mr25h256 in m25p_ids[]
+
+Thanks to Cyrille for catching these.
+
+ Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
+ drivers/mtd/devices/m25p80.c                            | 6 +++++-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+index 2c91c03e7eb0..3e920ec5c4d3 100644
+--- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
++++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+@@ -14,6 +14,8 @@ Required properties:
+                  at25df641
+                  at26df081a
+                  mr25h256
++                 mr25h10
++                 mr25h40
+                  mx25l4005a
+                  mx25l1606e
+                  mx25l6405d
+diff --git a/drivers/mtd/devices/m25p80.c b/drivers/mtd/devices/m25p80.c
+index 9cf7fcd28034..0e2d3a64651a 100644
+--- a/drivers/mtd/devices/m25p80.c
++++ b/drivers/mtd/devices/m25p80.c
+@@ -288,7 +288,6 @@ static const struct spi_device_id m25p_ids[] = {
+ 	 * should be kept for backward compatibility.
+ 	 */
+ 	{"at25df321a"},	{"at25df641"},	{"at26df081a"},
+-	{"mr25h256"},
+ 	{"mx25l4005a"},	{"mx25l1606e"},	{"mx25l6405d"},	{"mx25l12805d"},
+ 	{"mx25l25635e"},{"mx66l51235l"},
+ 	{"n25q064"},	{"n25q128a11"},	{"n25q128a13"},	{"n25q512a"},
+@@ -305,6 +304,11 @@ static const struct spi_device_id m25p_ids[] = {
+ 	{"m25p40-nonjedec"},	{"m25p80-nonjedec"},	{"m25p16-nonjedec"},
+ 	{"m25p32-nonjedec"},	{"m25p64-nonjedec"},	{"m25p128-nonjedec"},
  
-+	sound_es8323 {
-+		compatible = "rockchip,rockchip-audio-es8388";
-+		rockchip,model = "Analog audio output";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8323>;
-+		/* tsadc and headphone use the same pins */
-+		rockchip,hp-en-gpios = <&gpio0 RK_PB2 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 RK_PB7 GPIO_ACTIVE_HIGH>;
-+	};
++	/* Everspin MRAMs (non-JEDEC) */
++	{ "mr25h256" }, /* 256 Kib, 40 MHz */
++	{ "mr25h10" },  /*   1 Mib, 40 MHz */
++	{ "mr25h40" },  /*   4 Mib, 40 MHz */
 +
- 	vbat_wl: vcc_sys: vsys-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc_sys";
-@@ -371,6 +381,17 @@
- 
- &i2c2 {
- 	status = "okay";
-+
-+	es8323: es8323@10 {
-+		compatible = "everest,es8323", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vcca_33>;
-+		DVDD-supply = <&vcca_33>;
-+		HPVDD-supply = <&vcca_33>;
-+		PVDD-supply = <&vcca_33>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
+ 	{ },
  };
- 
- &i2c4 {
-@@ -381,6 +402,10 @@
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &io_domains {
- 	status = "okay";
- 
+ MODULE_DEVICE_TABLE(spi, m25p_ids);
 -- 
-2.9.3
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
