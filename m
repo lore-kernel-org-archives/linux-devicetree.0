@@ -1,373 +1,205 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Tue, 17 Jan 2017 17:37:44 -0600
-Message-ID: <CAL_JsqKN8+jR96Sz12PZGGyQHJr8C79zbnXNgx1pSObNTFx9HA@mail.gmail.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <20170104205536.15963-3-d-gerlach@ti.com>
- <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop>
- <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
- <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
- <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
- <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
- <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com>
- <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
- <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com>
- <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Santosh Shilimkar <ssantosh@kernel.org>, Kevin Hilman <khilman@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Dave Gerlach <d-gerlach@ti.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 01/13] Documentation: dt/bindings: Document pinctrl-ingenic
+Date: Wed, 18 Jan 2017 00:14:09 +0100
+Message-ID: <20170117231421.16310-2-paul@crapouillou.net>
+References: <20170117231421.16310-1-paul@crapouillou.net>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170117231421.16310-1-paul@crapouillou.net>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 1:48 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> On 17/01/17 00:12, Dave Gerlach wrote:
->>
->> On 01/13/2017 08:40 PM, Rob Herring wrote:
->>>
->>> On Fri, Jan 13, 2017 at 2:28 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
->>>>
->>>> On 01/13/2017 01:25 PM, Rob Herring wrote:
->>>>>
->>>>>
->>>>> On Thu, Jan 12, 2017 at 9:27 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->>>>>>
->>>>>>
->>>>>> Rob,
->>>>>>
->>>>>> On 01/11/2017 03:34 PM, Rob Herring wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> On Mon, Jan 9, 2017 at 11:57 AM, Dave Gerlach <d-gerlach@ti.com>
->>>>>>> wrote:
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> Rob,
->>>>>>>>
->>>>>>>> On 01/09/2017 11:50 AM, Rob Herring wrote:
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> On Wed, Jan 04, 2017 at 02:55:34PM -0600, Dave Gerlach wrote:
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Add a generic power domain implementation, TI SCI PM Domains, that
->>>>>>>>>> will hook into the genpd framework and allow the TI SCI
->>>>>>>>>> protocol to
->>>>>>>>>> control device power states.
->>>>>>>>>>
->>>>>>>>>> Also, provide macros representing each device index as understood
->>>>>>>>>> by TI SCI to be used in the device node power-domain references.
->>>>>>>>>> These are identifiers for the K2G devices managed by the PMMC.
->>>>>>>>>>
->>>>>>>>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>>>>>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
->>>>>>>>>> ---
->>>>>>>>>> v2->v3:
->>>>>>>>>>         Update k2g_pds node docs to show it should be a child
->>>>>>>>>> of pmmc
->>>>>>>>>> node.
->>>>>>>>>>         In early versions a phandle was used to point to pmmc and
->>>>>>>>>> docs
->>>>>>>>>> still
->>>>>>>>>>         incorrectly showed this.
->>>>>>>>>>
->>>>>>>>>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   | 59
->>>>>>>>>> ++++++++++++++
->>>>>>>>>>  MAINTAINERS                                        |  2 +
->>>>>>>>>>  include/dt-bindings/genpd/k2g.h                    | 90
->>>>>>>>>> ++++++++++++++++++++++
->>>>>>>>>>  3 files changed, 151 insertions(+)
->>>>>>>>>>  create mode 100644
->>>>>>>>>> Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>>>>>>  create mode 100644 include/dt-bindings/genpd/k2g.h
->>>>>>>>>>
->>>>>>>>>> diff --git
->>>>>>>>>> a/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>>>>>> b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>>>>>> new file mode 100644
->>>>>>>>>> index 000000000000..4c9064e512cb
->>>>>>>>>> --- /dev/null
->>>>>>>>>> +++ b/Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
->>>>>>>>>> @@ -0,0 +1,59 @@
->>>>>>>>>> +Texas Instruments TI-SCI Generic Power Domain
->>>>>>>>>> +---------------------------------------------
->>>>>>>>>> +
->>>>>>>>>> +Some TI SoCs contain a system controller (like the PMMC, etc...)
->>>>>>>>>> that
->>>>>>>>>> is
->>>>>>>>>> +responsible for controlling the state of the IPs that are
->>>>>>>>>> present.
->>>>>>>>>> +Communication between the host processor running an OS and the
->>>>>>>>>> system
->>>>>>>>>> +controller happens through a protocol known as TI-SCI [1].
->>>>>>>>>> This pm
->>>>>>>>>> domain
->>>>>>>>>> +implementation plugs into the generic pm domain framework and
->>>>>>>>>> makes
->>>>>>>>>> use
->>>>>>>>>> of
->>>>>>>>>> +the TI SCI protocol power on and off each device when needed.
->>>>>>>>>> +
->>>>>>>>>> +[1] Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
->>>>>>>>>> +
->>>>>>>>>> +PM Domain Node
->>>>>>>>>> +==============
->>>>>>>>>> +The PM domain node represents the global PM domain managed by the
->>>>>>>>>> PMMC,
->>>>>>>>>> +which in this case is the single implementation as documented
->>>>>>>>>> by the
->>>>>>>>>> generic
->>>>>>>>>> +PM domain bindings in
->>>>>>>>>> Documentation/devicetree/bindings/power/power_domain.txt.
->>>>>>>>>> +Because this relies on the TI SCI protocol to communicate with
->>>>>>>>>> the
->>>>>>>>>> PMMC
->>>>>>>>>> it
->>>>>>>>>> +must be a child of the pmmc node.
->>>>>>>>>> +
->>>>>>>>>> +Required Properties:
->>>>>>>>>> +--------------------
->>>>>>>>>> +- compatible: should be "ti,sci-pm-domain"
->>>>>>>>>> +- #power-domain-cells: Must be 0.
->>>>>>>>>> +
->>>>>>>>>> +Example (K2G):
->>>>>>>>>> +-------------
->>>>>>>>>> +       pmmc: pmmc {
->>>>>>>>>> +               compatible = "ti,k2g-sci";
->>>>>>>>>> +               ...
->>>>>>>>>> +
->>>>>>>>>> +               k2g_pds: k2g_pds {
->>>>>>>>>> +                       compatible = "ti,sci-pm-domain";
->>>>>>>>>> +                       #power-domain-cells = <0>;
->>>>>>>>>> +               };
->>>>>>>>>> +       };
->>>>>>>>>> +
->>>>>>>>>> +PM Domain Consumers
->>>>>>>>>> +===================
->>>>>>>>>> +Hardware blocks that require SCI control over their state must
->>>>>>>>>> provide
->>>>>>>>>> +a reference to the sci-pm-domain they are part of and a unique
->>>>>>>>>> device
->>>>>>>>>> +specific ID that identifies the device.
->>>>>>>>>> +
->>>>>>>>>> +Required Properties:
->>>>>>>>>> +--------------------
->>>>>>>>>> +- power-domains: phandle pointing to the corresponding PM domain
->>>>>>>>>> node.
->>>>>>>>>> +- ti,sci-id: index representing the device id to be passed
->>>>>>>>>> oevr SCI
->>>>>>>>>> to
->>>>>>>>>> +            be used for device control.
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> As I've already stated before, this goes in power-domain cells.
->>>>>>>>> When
->>>>>>>>> you
->>>>>>>>> have a single thing (i.e. node) that controls multiple things, then
->>>>>>>>> you
->>>>>>>>> you need to specify the ID for each of them in phandle args.
->>>>>>>>> This is
->>>>>>>>> how
->>>>>>>>> irqs, gpio, clocks, *everything* in DT works.
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>>
->>>>>>>> You think the reasoning for doing it this way provided by both
->>>>>>>> Ulf and
->>>>>>>> myself on v2 [1] is not valid then?
->>>>>>>>
->>>>>>>> From Ulf:
->>>>>>>>
->>>>>>>> To me, the TI SCI ID, is similar to a "conid" for any another
->>>>>>>> "device
->>>>>>>> resource" (like clock, pinctrl, regulator etc) which we can describe
->>>>>>>> in DT and assign to a device node. The only difference here, is that
->>>>>>>> we don't have common API to fetch the resource (like clk_get(),
->>>>>>>> regulator_get()), but instead we fetches the device's resource from
->>>>>>>> SoC specific code, via genpd's device ->attach() callback.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Sorry, but that sounds like a kernel problem to me and has nothing to
->>>>>>> do with DT bindings.
->>>>>>>
->>>>>>>> From me:
->>>>>>>>
->>>>>>>> Yes, you've pretty much hit it on the head. It is not an index
->>>>>>>> into a
->>>>>>>> list
->>>>>>>> of genpds but rather identifies the device *within* a single
->>>>>>>> genpd. It
->>>>>>>> is
->>>>>>>> a
->>>>>>>> property specific to each device that resides in a ti-sci-genpd,
->>>>>>>> not a
->>>>>>>> mapping describing which genpd the device belongs to. The generic
->>>>>>>> power
->>>>>>>> domain binding is concerned with mapping the device to a specific
->>>>>>>> genpd,
->>>>>>>> which is does fine for us, but we have a sub mapping for devices
->>>>>>>> that
->>>>>>>> exist
->>>>>>>> inside a genpd which, we must describe as well, hence the ti,sci-id.
->>>>>>>>
->>>>>>>>
->>>>>>>> So to summarize, the genpd framework does interpret the phandle
->>>>>>>> arg as
->>>>>>>> an
->>>>>>>> index into multiple genpds, just as you've said other frameworks do,
->>>>>>>> but
->>>>>>>> this is not what I am trying to do, we have multiple devices within
->>>>>>>> this
->>>>>>>> *single* genpd, hence the need for the ti,sci-id property.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Fix the genpd framework rather than work around it in DT.
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> I still disagree that this has nothing to do with DT bindings, as the
->>>>>> current DT binding represents something different already. I am
->>>>>> trying to
->>>>>> extend it to give me additional information needed for our
->>>>>> platforms. Are
->>>>>> you saying that we should break what the current DT binding already
->>>>>> represents to mean something else?
->>>>>
->>>>>
->>>>>
->>>>> No idea because what's the current binding? From the patch, looks like
->>>>> a new binding to me.
->>>>
->>>>
->>>>
->>>> Yes, ti,sci-id is a new binding. I am referring to the current
->>>> meaning of
->>>> the "power-domains" binding, which is where you are asking this
->>>> property to
->>>> be added, in "power-domains" cells. This is documented here [1] in the
->>>> kernel, although looking at it I must admit it is not very clear.
->>>>
->>>> The power-domains cell represents an offset into an array of power
->>>> domains,
->>>> if you choose to use it. That's what the genpd framework is hard
->>>> coded to
->>>> interpret it as. This is correct, as it is an index into a static
->>>> list of
->>>> power domains, used to identify which power domain a device belongs to,
->>>> which is exactly what the genpd framework itself is concerned with.
->>>> This is
->>>> already how it is used in the kernel today.
->>>
->>>
->>> Strictly speaking, the cells are purely for the interpretation of the
->>> phandle they are associated with. If some controller wants to have 20
->>> cells, then it could assuming a good reason. The reality is we tend to
->>> align the meaning of the cells. If genpd is interpreting the cells and
->>> not letting the driver for the power domain controller interpret them,
->>> then still, genpd needs to be fixed.
->>
->>
->> Ok, perhaps the genpd folks on the thread can jump in here with any
->> thoughts that they have.
->>
->>>
->>> IIRC, initially it was said genpd required 0 cells, hence my confusion.
->>>
->>>> My ti,sci-id is not an index into a list of power domains, so it
->>>> should not
->>>> go in the power-domains cells and go against what the power-domains
->>>> binding
->>>> says that the cell expects. We have one single power domain, and the new
->>>> ti,sci-id binding is not something the genpd framework itself is
->>>> concerned
->>>> with as it's our property to identify a device inside a power domain,
->>>> not to
->>>> identify which power domain it is associated with.
->>>
->>>
->>> What is the id used for? I can understand why you need to know what
->>> power domain a device is in (as power-domains identifies), but not
->>> what devices are in a power domain.
->>
->>
->> We have a system control processor that provides power management
->> services to the OS and it responsible for handling the power state of
->> each device. This control happens over a communication interface we have
->> called TI SCI (implemented at drivers/firmware/ti-sci.c). The
->> communication protocol uses these ids to identify each device within the
->> power domain so that the control processor can do what is necessary to
->> enable that device.
->
->
-> I think a minor detail here that Rob might be missing right now is, that the
-> ti,sci-id is only controlling the PM runtime handling, and providing the ID
-> per-device for this purpose only. AFAIK, it is not really connected to the
-> power domain anymore as such, as we don't have power-domains / per device
-> anymore as was the case in some earlier revision of this work.
+From: Paul Burton <paul.burton@imgtec.com>
 
-So you used to have multiple power domains and now you don't? Did the
-h/w change?
+This commit adds documentation for the devicetree bidings of the
+pinctrl-ingenic driver, which handles pin configuration, pin muxing
+and GPIOs of the Ingenic SoCs currently supported by the Linux kernel.
 
-> One could argue though that the whole usage of power-domains is now moot, as
-> we basically only have implemented one genpd in the whole SoC, which doesn't
-> really reflect the reality. I wonder if better approach would be to have
-> this replaced with proper power domains at some point (if needed), and just
-> have a runtime-pm implementation in place for the devices that require it.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ .../bindings/pinctrl/ingenic,pinctrl.txt           | 173 +++++++++++++++++++++
+ 1 file changed, 173 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
 
-We're talking about bindings here. Any explanation in terms of
-runtime-pm and genpd a) goes over my head and b) isn't relevant to
-describing the hardware.
-
-I'm still confused with how many power domains (as defined by the h/w
-design) there are controlled by the SCI? Is it 1 or multiple? If 1,
-then why do you need the sci-id? For other things that are not the
-power domain?
-
-Or perhaps the SCI abstracts things such that you don't really know
-what the relationship between devices and power domains is? IOW, you
-can't tell from the SCI interface how many power domains there are.
-
->
-> So, as an example in DT, we would only have:
->
-> uart0: serial@02530c00 {
->   compatible = "xyz";
->   ...
->   ti,sci-id = <K2G_DEV_UART0>;
-> };
->
-> This is somewhat analogous to what OMAP family of SoCs have in place now,
-> under "ti,hwmods" property. I also wonder if the "ti,sci-id" should be
-> replaced with something like "ti,sci-dev-id" to make its purpose clearer.
-
-Describing in terms of hwmods doesn't help me either. Never understood
-that either. Sorry.
-
-Rob
+diff --git a/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+new file mode 100644
+index 000000000000..e59f7e7b6a49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/ingenic,pinctrl.txt
+@@ -0,0 +1,173 @@
++Ingenic jz47xx pin controller
++
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
++
++For the jz47xx SoCs, pin control is tightly bound with GPIO ports. All pins may
++be used as GPIOs, multiplexed device functions are configured within the
++GPIO port configuration registers and it is typical to refer to pins using the
++naming scheme "PxN" where x is a character identifying the GPIO port with
++which the pin is associated and N is an integer from 0 to 31 identifying the
++pin within that GPIO port. For example PA0 is the first pin in GPIO port A, and
++PB31 is the last pin in GPIO port B. The jz4740 contains 4 GPIO ports, PA to
++PD, for a total of 128 pins. The jz4780 contains 6 GPIO ports, PA to PF, for a
++total of 192 pins.
++
++
++##### Pin controller node #####
++
++Required properties:
++- compatible: One of:
++  - "ingenic,jz4740-pinctrl"
++  - "ingenic,jz4780-pinctrl"
++- #address-cells: Should contain the integer 1.
++- #size-cells: Should contain the integer 1.
++- ranges: Should be empty.
++
++Required sub-nodes:
++  - gpio-chips (see below)
++  - functions (see below)
++
++The pin controller node must have two sub-nodes, 'gpio-chips' and 'functions'.
++
++
++##### 'gpio-chips' sub-node #####
++
++The gpio-chips node will contain sub-nodes that correspond to GPIO controllers
++(one sub-node per GPIO controller).
++
++Required properties:
++- #address-cells: Should contain the integer 1.
++- #size-cells: Should contain the integer 1.
++- ranges: Should be empty.
++
++
++##### 'functions' sub-node #####
++
++The "functions" node will contain sub-nodes that correspond to pin function
++nodes.
++
++Required properties:
++- None.
++
++
++##### GPIO controller node #####
++
++Each subnode of the 'gpio-chips' node is a GPIO controller node.
++
++Required properties:
++- gpio-controller: Identifies this node as a GPIO controller.
++- #gpio-cells: Should contain the integer 2.
++- reg: Should contain the physical address and length of the GPIO controller's
++  configuration registers.
++
++Optional properties:
++- interrupt-controller: The GPIO controllers can optionally configure the
++  GPIOs as interrupt sources. In this case, the 'interrupt-controller'
++  standalone property should be supplied.
++- #interrupt-cells: Required if 'interrupt-controller' is also specified.
++  In that case, it should contain the integer 2.
++- interrupts: Required if 'interrupt-controller' is also specified.
++  In that case, it should contain the IRQ number of this GPIO controller.
++- ingenic,pull-ups: A bit mask identifying the pins associated with this GPIO
++  port which feature a pull-up resistor. The default mask is 0x0.
++- ingenic,pull-downs: A bit mask identifying the pins associated with this GPIO
++  port which feature a pull-down resistor. The default mask is 0x0.
++  Each pin of the jz47xx SoCs may feature a single bias resistor, thus there
++  should be no bits which are set in both ingenic,pull-ups & ingenic,pull-downs.
++
++
++##### Pin function node #####
++
++Each subnode of the 'functions' node is a pin function node.
++
++These subnodes represent a functionality of the SoC which may be exposed
++through one or more groups of pins, represented as subnodes of the pin
++function node. For example a function may be uart0, which may be exposed
++through the group of pins PF0 to PF3.
++
++Required pin function node properties:
++- None.
++
++
++##### Pin group node #####
++
++Each subnode of a pin function node is a pin group node.
++
++Required pin group node properties:
++- ingenic,pins: A set of values representing the pins within this pin group and
++  their configuration. Four values should be provided for each pin:
++  - The phandle of the GPIO controller node for the GPIO port within which the
++    pin is found.
++  - The index of the pin within its GPIO port (an integer in the range 0 to 31
++    inclusive).
++  - The index of the shared function port to be programmed in the GPIO port
++    registers for this pin.
++    Tables of these may be found in the jz4740 and jz4780 programming
++    manuals within the "General-Purpose I/O Ports" -> "Overview" section.
++    The value can either be supplied directly (0 for function 0, 1 for
++    function 1, etc.) or using the macros present in
++    <dt-bindings/pinctrl/ingenic.h>.
++    The special macro JZ_PIN_MODE_GPIO can be used to specify that the pin is
++    to be used as a GPIO. This is useful, for instance, when you just want to
++    set the electrical configuration of a pin used as GPIO.
++  - The phandle of a pin configuration node specifying the electrical
++    configuration that should be applied to the pin.
++
++For example the function 'msc0' may be exposed through 2 different pin groups,
++one in GPIO port A and one in GPIO port E:
++
++  bias-configs {
++    nobias: nobias {
++      bias-disable;
++    };
++  };
++
++  functions {
++    pinfunc_msc0: msc0 {
++      pins_msc0_pa: msc0-pa {
++        ingenic,pins = <&gpa  4 1 &nobias   /* d4 */
++                        &gpa  5 1 &nobias   /* d5 */
++                        &gpa  6 1 &nobias   /* d6 */
++                        &gpa  7 1 &nobias   /* d7 */
++                        &gpa 18 1 &nobias   /* clk */
++                        &gpa 19 1 &nobias   /* cmd */
++                        &gpa 20 1 &nobias   /* d0 */
++                        &gpa 21 1 &nobias   /* d1 */
++                        &gpa 22 1 &nobias   /* d2 */
++                        &gpa 23 1 &nobias   /* d3 */
++                        &gpa 24 1 &nobias>; /* rst */
++      };
++
++      pins_msc0_pe: msc0-pe {
++        ingenic,pins = <&gpe 20 0 &nobias   /* d0 */
++                        &gpe 21 0 &nobias   /* d1 */
++                        &gpe 22 0 &nobias   /* d2 */
++                        &gpe 23 0 &nobias   /* d3 */
++                        &gpe 28 0 &nobias   /* clk */
++                        &gpe 29 0 &nobias>; /* cmd */
++      };
++    };
++  };
++
++
++##### Pin configuration node #####
++
++The pin configuration nodes are referenced by phandle, and can be placed
++anywhere in the device tree (including in the pin controller node, or in a
++sub-node that is not 'gpio-chips' or 'functions').
++
++Pin configuration nodes use generic pinconf properties to specify an electrical
++configuration of a pin. The only configurable property for a pin of the jz47xx
++SoCs is whether to enable its bias resistor. Thus the only supported pinconf
++properties are:
++
++- bias-disable
++- bias-pull-up
++- bias-pull-down
++
++No arguments are supported for any of these properties.
++
++For more information about generic pinconfig properties, see
++Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+-- 
+2.11.0
