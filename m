@@ -1,58 +1,39 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH 3/3] arm64: dts: exynos: Add stmfts touchscreen node for
- TM2 and TM2E
-Date: Tue, 17 Jan 2017 11:35:21 -0300
-Message-ID: <1aad419a-5873-3eea-c536-aa8a1c187fb9@osg.samsung.com>
-References: <20170117135441.31450-1-andi.shyti@samsung.com>
- <CGME20170117135457epcas5p2044e9e5cd9eb6b162bb0acb4e317bdfb@epcas5p2.samsung.com>
- <20170117135441.31450-4-andi.shyti@samsung.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH 2/4] musb: sunxi: add support for the variant in H3/V3s SoC
+Date: Tue, 17 Jan 2017 08:38:11 -0600
+Message-ID: <20170117143811.GC31716@uda0271908>
+References: <20170103152534.20118-1-icenowy@aosc.xyz>
+ <20170103152534.20118-3-icenowy@aosc.xyz>
+ <20170106135715.y7cwrwqyzybl6t5m@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170117135441.31450-4-andi.shyti@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170106135715.y7cwrwqyzybl6t5m@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Andi,
-
-On 01/17/2017 10:54 AM, Andi Shyti wrote:
-> TM2 and TM2E devices are provided with a ST-Microelectronics
-> Finger Tip S device with small differences:
+On Fri, Jan 06, 2017 at 02:57:15PM +0100, Maxime Ripard wrote:
+> On Tue, Jan 03, 2017 at 11:25:32PM +0800, Icenowy Zheng wrote:
+> > Allwinner H3/V3s features a variant of MUSB controller, which lacks one
+> > endpoint.
+> > 
+> > Add support for it.
+> > 
+> > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 > 
->  - screen size
->  - TM2E uses the stmfts also as a touchkey for "back" and "menu"
-> 
-> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 13 +++++++++++++
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts         |  5 +++++
->  arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts        |  7 +++++++
->  3 files changed, 25 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> index a5c866901e93..689d5c124a49 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> @@ -745,6 +745,19 @@
->  	};
->  };
->  
-> +&hsi2c_5 {
-> +	status = "okay";
-> +
-> +	touchscreen: stmfts@49 {
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Same comment than in patch 1/3, I think "stmfts: touchscreen@49" is better.
-
-Rest looks good to me:
-
-Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
-Best regards,
--- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+Applied. Thanks.
+-Bin.
