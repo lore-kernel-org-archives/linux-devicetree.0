@@ -1,71 +1,71 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
-Subject: [PATCH v2 08/10] ARM: dts: sun8i: Add audio codec,
- dai and card for A33
-Date: Tue, 17 Jan 2017 15:02:28 +0100
-Message-ID: <20170117140230.23142-9-mylene.josserand@free-electrons.com>
-References: <20170117140230.23142-1-mylene.josserand@free-electrons.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] arm64: dts: juno: add CoreSight support for Juno
+ r1/r2 variants
+Date: Tue, 17 Jan 2017 14:07:39 +0000
+Message-ID: <a336df07-3e7c-c977-f7b3-22a90a728a2c@arm.com>
+References: <1484655313-9025-1-git-send-email-sudeep.holla@arm.com>
+ <1484655313-9025-4-git-send-email-sudeep.holla@arm.com>
+ <d89b805b-cc6f-37d5-2b64-4f83fa086db6@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117140230.23142-1-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, maxime.ripard@free-electrons.com, wens@csie.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <d89b805b-cc6f-37d5-2b64-4f83fa086db6-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suzuki K Poulose <Suzuki.Poulose-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, coresight-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBhdWRpbyBjb2RlYywgZGFpIGFuZCBhIHNpbXBsZSBjYXJkIHRvIGJlIGFibGUgdG8g
-dXNlIHRoZQphdWRpbyBzdHJlYW0gb2YgdGhlIGJ1aWx0aW4gY29kZWMgb24gc3VuOGkgU29DLgoK
-VGhpcyBjb21taXQgYWRkcyBhbHNvIGFuIGF1ZGlvLXJvdXRpbmcgZm9yIHRoZSBzb3VuZCBjYXJk
-IG5vZGUgdG8gbGluawp0aGUgYW5hbG9nIERBUE0gd2lkZ2V0cyAoUmlnaHQvTGVmdCBEQUMpIGFu
-ZCB0aGUgZGlnaXRhbCBvbmUncyBhcyB0aGV5CmFyZSBjcmVhdGVkIGluIGRpZmZlcmVudCBkcml2
-ZXJzLgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRA
-ZnJlZS1lbGVjdHJvbnMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNp
-IHwgNDcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNo
-YW5nZWQsIDQ3IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
-dW44aS1hMzMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCmluZGV4IDYz
-ZDUxODFmZmZmOC4uZmU4YTRmNDc2MGQyIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9z
-dW44aS1hMzMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMuZHRzaQpAQCAt
-NDMsNiArNDMsNyBAQAogICovCiAKICNpbmNsdWRlICJzdW44aS1hMjMtYTMzLmR0c2kiCisjaW5j
-bHVkZSA8ZHQtYmluZGluZ3MvZG1hL3N1bjRpLWExMC5oPgogCiAvIHsKIAljcHVzIHsKQEAgLTY5
-LDYgKzcwLDI3IEBACiAJCXJlZyA9IDwweDQwMDAwMDAwIDB4ODAwMDAwMDA+OwogCX07CiAKKwlz
-b3VuZCB7CisJCWNvbXBhdGlibGUgPSAic2ltcGxlLWF1ZGlvLWNhcmQiOworCQlzaW1wbGUtYXVk
-aW8tY2FyZCxuYW1lID0gIlN1bjhpIEF1ZGlvIENhcmQiOworCQlzaW1wbGUtYXVkaW8tY2FyZCxm
-b3JtYXQgPSAiaTJzIjsKKwkJc2ltcGxlLWF1ZGlvLWNhcmQsZnJhbWUtbWFzdGVyID0gPCZsaW5r
-X2NvZGVjPjsKKwkJc2ltcGxlLWF1ZGlvLWNhcmQsYml0Y2xvY2stbWFzdGVyID0gPCZsaW5rX2Nv
-ZGVjPjsKKwkJc2ltcGxlLWF1ZGlvLWNhcmQsbWNsay1mcyA9IDw1MTI+OworCQlzaW1wbGUtYXVk
-aW8tY2FyZCxhdXgtZGV2cyA9IDwmY29kZWNfYW5hbG9nPjsKKwkJc2ltcGxlLWF1ZGlvLWNhcmQs
-cm91dGluZyA9CisJCQkJIkxlZnQgREFDIiwgIkRpZ2l0YWwgTGVmdCBEQUMiLAorCQkJCSJSaWdo
-dCBEQUMiLCAiRGlnaXRhbCBSaWdodCBEQUMiOworCisJCXNpbXBsZS1hdWRpby1jYXJkLGNwdSB7
-CisJCQlzb3VuZC1kYWkgPSA8JmRhaT47CisJCX07CisKKwkJbGlua19jb2RlYzogc2ltcGxlLWF1
-ZGlvLWNhcmQsY29kZWMgeworCQkJc291bmQtZGFpID0gPCZjb2RlYz47CisJCX07CisJfTsKKwog
-CXNvY0AwMWMwMDAwMCB7CiAJCXRjb24wOiBsY2QtY29udHJvbGxlckAwMWMwYzAwMCB7CiAJCQlj
-b21wYXRpYmxlID0gImFsbHdpbm5lcixzdW44aS1hMzMtdGNvbiI7CkBAIC0xMTYsNiArMTM4LDMx
-IEBACiAJCQlyZXNldC1uYW1lcyA9ICJhaGIiOwogCQl9OwogCisJCWRhaTogZGFpQDAxYzIyYzAw
-IHsKKwkJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisJCQljb21wYXRpYmxlID0gImFsbHdpbm5l
-cixzdW42aS1hMzEtaTJzIjsKKwkJCXJlZyA9IDwweDAxYzIyYzAwIDB4MjAwPjsKKwkJCWludGVy
-cnVwdHMgPSA8R0lDX1NQSSAyOSBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWNsb2NrcyA9IDwm
-Y2N1IENMS19CVVNfQ09ERUM+LCA8JmNjdSBDTEtfQUNfRElHPjsKKwkJCWNsb2NrLW5hbWVzID0g
-ImFwYiIsICJtb2QiOworCQkJcmVzZXRzID0gPCZjY3UgUlNUX0JVU19DT0RFQz47CisJCQlyZXNl
-dC1uYW1lcyA9ICJyc3QiOworCQkJZG1hcyA9IDwmZG1hIDE1PiwgLyogQVVESU9fQ09ERUMgcG9y
-dCAqLworCQkJCTwmZG1hIDE1PjsgLyogQVVESU9fQ09ERUMgcG9ydCAqLworCQkJZG1hLW5hbWVz
-ID0gInJ4IiwgInR4IjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CisJCX07CisKKwkJY29kZWM6
-IGNvZGVjQDAxYzIyZTAwIHsKKwkJCSNzb3VuZC1kYWktY2VsbHMgPSA8MD47CisJCQljb21wYXRp
-YmxlID0gImFsbHdpbm5lcixzdW44aS1hMzMtY29kZWMiOworCQkJcmVnID0gPDB4MDFjMjJlMDAg
-MHg0MDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI5IElSUV9UWVBFX0xFVkVMX0hJR0g+
-OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19DT0RFQz4sIDwmY2N1IENMS19BQ19ESUc+Owor
-CQkJY2xvY2stbmFtZXMgPSAiYnVzIiwgIm1vZCI7CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwor
-CQl9OworCiAJCWZlMDogZGlzcGxheS1mcm9udGVuZEAwMWUwMDAwMCB7CiAJCQljb21wYXRpYmxl
-ID0gImFsbHdpbm5lcixzdW44aS1hMzMtZGlzcGxheS1mcm9udGVuZCI7CiAJCQlyZWcgPSA8MHgw
-MWUwMDAwMCAweDIwMDAwPjsKLS0gCjIuMTEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+On 17/01/17 13:27, Suzuki K Poulose wrote:
+> On 17/01/17 12:15, Sudeep Holla wrote:
+>> From: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> The CoreSight support added for Juno is valid for only Juno r0.
+>> The Juno r1 and r2 variants have additional components and alternative
+>> connection routes between trace source and sinks.
+>>
+>> This patch builds on top of the existing r0 support and extends it to
+>> Juno r1/r2 variants.
+>>
+>> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> [sudeep.holla-5wv7dgnIgG8@public.gmane.org: minor changelog update and major reorganisation of
+>>     the common coresight components back into juno-base.dtsi to avoid
+>>     duplication, also renamed funnel node names]
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi | 100
+>> ++++++++++++++++++++++++++++++
+>>  arch/arm64/boot/dts/arm/juno-r1.dts       |   9 +++
+>>  arch/arm64/boot/dts/arm/juno-r2.dts       |   9 +++
+>>  3 files changed, 118 insertions(+)
+>>  create mode 100644 arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+>>
+>> diff --git a/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+>> b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+>> new file mode 100644
+>> index 000000000000..563463ed28c7
+>> --- /dev/null
+>> +++ b/arch/arm64/boot/dts/arm/juno-cs-r1r2.dtsi
+>> @@ -0,0 +1,100 @@
+>> +/ {
+>> +    funnel@20130000 { /* cssys2 */
+> 
+> Typo, that should be csys1. Rest looks good to me.
+> 
+
+Fixed locally.
+
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+
+Thanks again.
+
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
