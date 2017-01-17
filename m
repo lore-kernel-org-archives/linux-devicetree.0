@@ -1,71 +1,66 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Tue, 17 Jan 2017 04:27:27 +0000
-Message-ID: <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170112181149.29035-1-chris.brandt@renesas.com>
- <CAMuHMdUz6nb-STMQK39hDqwHRt4R5t+Lndj150Lkg7prN=HQZQ@mail.gmail.com>
- <PS1PR06MB116243F531726538252C2BAE8A780@PS1PR06MB1162.apcprd06.prod.outlook.com>
- <CAMuHMdVkTS21UnZA9OyEZ=mR5+GtAEbiLwpe=uKB_O6deXBPyw@mail.gmail.com>
- <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
- <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
- <20170116114023.GA3029@katana>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v11 05/12] drm/mediatek: add BLS component
+Date: Tue, 17 Jan 2017 13:07:56 +0800
+Message-ID: <1484629676.5483.0.camel@mtksdaap41>
+References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+ <1484117473-46644-6-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170116114023.GA3029@katana>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484117473-46644-6-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram and Geert,
-
-On Monday, January 16, 2017, Wolfram Sang:
-> > > and then in the code do:
-> > >
-> > >         struct *cd_clk;
-> > >         cd_clk =3D devm_clk_get(&pdev->dev, "cd");
-> > >         if (cd_clk) {
-> > >                 clk_prepare_enable(cd_clk);
-> > >         }
-> > >
-> > >   (this simple 1-line fix patch is getting a lot more complicated)
-> >
-> > Disclaimer: I don't know how/if the SDHI core manages clocks, and may
-> > interfere. Adding Wolfram.
->=20
-> Thanks for the heads up.
->=20
-> We have special callbacks for en-/disabling clocks:
-> sh_mobile_sdhi_clk_enable() and sh_mobile_sdhi_clk_disable().
->=20
-> I think those functions should get the above if-blocks (without curly
-> braces) to ensure we always have consistent 00 or 11 settings.
-
-
-Well....
-I was going to try and cheat and in the probe, enable both the core
-and card-detect clocks, but, not save the card-detect clock pointer.
-Basically, once it is turned on, it is never turned off (since it was inten=
-ded
-to be used for low power operation anyway).
-
-The reason is that would then keep me from having to modify the existing
-functions sh_mobile_sdhi_clk_enable/disable.
-
-Is anyone going to have an issue if I turn the card-detect clock on but nev=
-er
-turn it off???? That was the patch that I was going to test out and submit.
-
-
-
-Chris
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksIFlUOgoKT24gV2VkLCAyMDE3LTAxLTExIGF0IDE0OjUxICswODAwLCBZVCBTaGVuIHdyb3Rl
+Ogo+IEFkZCBCTFMgY29tcG9uZW50IGZvciBQV00gKyBHQU1NQSBmdW5jdGlvbgo+IAo+IFNpZ25l
+ZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgoKQWNrZWQtYnk6IENLIEh1
+IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHBfY29tcC5jIHwgNSArKysrLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
+bXRrX2RybV9kZHBfY29tcC5oIHwgMiArKwo+ICAyIGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0aW9u
+cygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVk
+aWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+cm1fZGRwX2NvbXAuYwo+IGluZGV4IDNmZjc4OGMuLmY2ZTg1M2EgMTAwNjQ0Cj4gLS0tIGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMKPiBAQCAtMjU1LDYgKzI1NSw3IEBA
+IHN0YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwKPiAg
+CVtNVEtfRElTUF9QV01dID0gInB3bSIsCj4gIAlbTVRLX0RJU1BfTVVURVhdID0gIm11dGV4IiwK
+PiAgCVtNVEtfRElTUF9PRF0gPSAib2QiLAo+ICsJW01US19ESVNQX0JMU10gPSAiYmxzIiwKPiAg
+fTsKPiAgCj4gIHN0cnVjdCBtdGtfZGRwX2NvbXBfbWF0Y2ggewo+IEBAIC0yNjUsNiArMjY2LDcg
+QEAgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCB7Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0
+IG10a19kZHBfY29tcF9tYXRjaCBtdGtfZGRwX21hdGNoZXNbRERQX0NPTVBPTkVOVF9JRF9NQVhd
+ID0gewo+ICAJW0REUF9DT01QT05FTlRfQUFMXQk9IHsgTVRLX0RJU1BfQUFMLAkwLCAmZGRwX2Fh
+bCB9LAo+ICsJW0REUF9DT01QT05FTlRfQkxTXQk9IHsgTVRLX0RJU1BfQkxTLAkwLCBOVUxMIH0s
+Cj4gIAlbRERQX0NPTVBPTkVOVF9DT0xPUjBdCT0geyBNVEtfRElTUF9DT0xPUiwJMCwgJmRkcF9j
+b2xvciB9LAo+ICAJW0REUF9DT01QT05FTlRfQ09MT1IxXQk9IHsgTVRLX0RJU1BfQ09MT1IsCTEs
+ICZkZHBfY29sb3IgfSwKPiAgCVtERFBfQ09NUE9ORU5UX0RQSTBdCT0geyBNVEtfRFBJLAkJMCwg
+TlVMTCB9LAo+IEBAIC0zMzYsNyArMzM4LDggQEAgaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVj
+dCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZV9ub2RlICpub2RlLAo+ICAJY29tcC0+aWQgPSBj
+b21wX2lkOwo+ICAJY29tcC0+ZnVuY3MgPSBmdW5jcyA/OiBtdGtfZGRwX21hdGNoZXNbY29tcF9p
+ZF0uZnVuY3M7Cj4gIAo+IC0JaWYgKGNvbXBfaWQgPT0gRERQX0NPTVBPTkVOVF9EUEkwIHx8Cj4g
+KwlpZiAoY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0JMUyB8fAo+ICsJICAgIGNvbXBfaWQgPT0g
+RERQX0NPTVBPTkVOVF9EUEkwIHx8Cj4gIAkgICAgY29tcF9pZCA9PSBERFBfQ09NUE9ORU5UX0RT
+STAgfHwKPiAgCSAgICBjb21wX2lkID09IEREUF9DT01QT05FTlRfUFdNMCkgewo+ICAJCWNvbXAt
+PnJlZ3MgPSBOVUxMOwo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2RybV9kZHBfY29tcC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2Nv
+bXAuaAo+IGluZGV4IDIyYTMzZWUuLjA4MjhjZjggMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUv
+ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9t
+ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKPiBAQCAtMzYsMTEgKzM2LDEzIEBAIGVudW0gbXRr
+X2RkcF9jb21wX3R5cGUgewo+ICAJTVRLX0RJU1BfUFdNLAo+ICAJTVRLX0RJU1BfTVVURVgsCj4g
+IAlNVEtfRElTUF9PRCwKPiArCU1US19ESVNQX0JMUywKPiAgCU1US19ERFBfQ09NUF9UWVBFX01B
+WCwKPiAgfTsKPiAgCj4gIGVudW0gbXRrX2RkcF9jb21wX2lkIHsKPiAgCUREUF9DT01QT05FTlRf
+QUFMLAo+ICsJRERQX0NPTVBPTkVOVF9CTFMsCj4gIAlERFBfQ09NUE9ORU5UX0NPTE9SMCwKPiAg
+CUREUF9DT01QT05FTlRfQ09MT1IxLAo+ICAJRERQX0NPTVBPTkVOVF9EUEkwLAoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
