@@ -1,52 +1,131 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: r7s72100: fix sdhi clock define
-Date: Tue, 17 Jan 2017 11:00:52 +0100
-Message-ID: <CAMuHMdVSy-Vwky53wDmuHCLRTtmwXfbjOfk1oAeWzv6FqsH05g@mail.gmail.com>
-References: <SG2PR06MB1165D0D67AD68A12030C961D8A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdUVnUS-iOM8cbXNP7jMLNFb5+hgnMp3edkCzpbEpAePzw@mail.gmail.com>
- <SG2PR06MB11659339E4A08373D3626BB28A780@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAMuHMdX=cNuBSMqvPKYa7J5g7T4dSfHhSjcGdmuOPw_as=6RQQ@mail.gmail.com>
- <20170116114023.GA3029@katana> <SG2PR06MB11656A823E53F55C4FBCA7E88A7C0@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170117082118.GA1487@katana> <CAMuHMdVW=HORcCA0brX4tZdtG9knqE7D_wnM5VtSrxz2LdBgUA@mail.gmail.com>
- <20170117094529.GC1487@katana> <CAMuHMdViHu7i_Lqk80toWrW=KsR49hodGnTd-Cpq35ts9gNgyw@mail.gmail.com>
- <20170117095702.GA1930@katana>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] reset: uniphier: add compatible string for LD11
+ SD-reset block
+Date: Tue, 17 Jan 2017 11:07:28 +0100
+Message-ID: <1484647648.4087.7.camel@pengutronix.de>
+References: <1484420686-28911-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170117095702.GA1930@katana>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484420686-28911-1-git-send-email-yamada.masahiro@socionext.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Sun, 2017-01-15 at 04:04 +0900, Masahiro Yamada wrote:
+> The LD11 SoC is equipped with not only MIO-reset but also SD-reset
+> for controlling RST_n pin of the eMMC device.
+> 
+> Update the binding document and remove unneeded "." from each line
+> in itemization.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-On Tue, Jan 17, 2017 at 10:57 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
->> If we handle them as one, won't we miss card detect events due to the
->> card detect clock being disabled while SDHI is idle?
->
-> You mean this?
->
-> 1208         /*
-> 1209          * While using internal tmio hardware logic for card detection, we need
-> 1210          * to ensure it stays powered for it to work.
-> 1211          */
-> 1212         if (_host->native_hotplug)
-> 1213                 pm_runtime_get_noresume(&pdev->dev);
+Applied, thank you.
 
-OK. So that will keep the core module clock running.
+regards
+Philipp
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> 
+>  .../devicetree/bindings/reset/uniphier-reset.txt   | 47 +++++++++++-----------
+>  drivers/reset/reset-uniphier.c                     |  4 ++
+>  2 files changed, 28 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/uniphier-reset.txt b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> index 5020524..83ab0f5 100644
+> --- a/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> +++ b/Documentation/devicetree/bindings/reset/uniphier-reset.txt
+> @@ -6,14 +6,14 @@ System reset
+>  
+>  Required properties:
+>  - compatible: should be one of the following:
+> -    "socionext,uniphier-sld3-reset" - for sLD3 SoC.
+> -    "socionext,uniphier-ld4-reset"  - for LD4 SoC.
+> -    "socionext,uniphier-pro4-reset" - for Pro4 SoC.
+> -    "socionext,uniphier-sld8-reset" - for sLD8 SoC.
+> -    "socionext,uniphier-pro5-reset" - for Pro5 SoC.
+> -    "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC.
+> -    "socionext,uniphier-ld11-reset" - for LD11 SoC.
+> -    "socionext,uniphier-ld20-reset" - for LD20 SoC.
+> +    "socionext,uniphier-sld3-reset" - for sLD3 SoC
+> +    "socionext,uniphier-ld4-reset"  - for LD4 SoC
+> +    "socionext,uniphier-pro4-reset" - for Pro4 SoC
+> +    "socionext,uniphier-sld8-reset" - for sLD8 SoC
+> +    "socionext,uniphier-pro5-reset" - for Pro5 SoC
+> +    "socionext,uniphier-pxs2-reset" - for PXs2/LD6b SoC
+> +    "socionext,uniphier-ld11-reset" - for LD11 SoC
+> +    "socionext,uniphier-ld20-reset" - for LD20 SoC
+>  - #reset-cells: should be 1.
+>  
+>  Example:
+> @@ -37,14 +37,15 @@ Media I/O (MIO) reset, SD reset
+>  
+>  Required properties:
+>  - compatible: should be one of the following:
+> -    "socionext,uniphier-sld3-mio-reset" - for sLD3 SoC.
+> -    "socionext,uniphier-ld4-mio-reset"  - for LD4 SoC.
+> -    "socionext,uniphier-pro4-mio-reset" - for Pro4 SoC.
+> -    "socionext,uniphier-sld8-mio-reset" - for sLD8 SoC.
+> -    "socionext,uniphier-pro5-sd-reset"  - for Pro5 SoC.
+> -    "socionext,uniphier-pxs2-sd-reset"  - for PXs2/LD6b SoC.
+> -    "socionext,uniphier-ld11-mio-reset" - for LD11 SoC.
+> -    "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC.
+> +    "socionext,uniphier-sld3-mio-reset" - for sLD3 SoC
+> +    "socionext,uniphier-ld4-mio-reset"  - for LD4 SoC
+> +    "socionext,uniphier-pro4-mio-reset" - for Pro4 SoC
+> +    "socionext,uniphier-sld8-mio-reset" - for sLD8 SoC
+> +    "socionext,uniphier-pro5-sd-reset"  - for Pro5 SoC
+> +    "socionext,uniphier-pxs2-sd-reset"  - for PXs2/LD6b SoC
+> +    "socionext,uniphier-ld11-mio-reset" - for LD11 SoC (MIO)
+> +    "socionext,uniphier-ld11-sd-reset"  - for LD11 SoC (SD)
+> +    "socionext,uniphier-ld20-sd-reset"  - for LD20 SoC
+>  - #reset-cells: should be 1.
+>  
+>  Example:
+> @@ -68,13 +69,13 @@ Peripheral reset
+>  
+>  Required properties:
+>  - compatible: should be one of the following:
+> -    "socionext,uniphier-ld4-peri-reset"  - for LD4 SoC.
+> -    "socionext,uniphier-pro4-peri-reset" - for Pro4 SoC.
+> -    "socionext,uniphier-sld8-peri-reset" - for sLD8 SoC.
+> -    "socionext,uniphier-pro5-peri-reset" - for Pro5 SoC.
+> -    "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC.
+> -    "socionext,uniphier-ld11-peri-reset" - for LD11 SoC.
+> -    "socionext,uniphier-ld20-peri-reset" - for LD20 SoC.
+> +    "socionext,uniphier-ld4-peri-reset"  - for LD4 SoC
+> +    "socionext,uniphier-pro4-peri-reset" - for Pro4 SoC
+> +    "socionext,uniphier-sld8-peri-reset" - for sLD8 SoC
+> +    "socionext,uniphier-pro5-peri-reset" - for Pro5 SoC
+> +    "socionext,uniphier-pxs2-peri-reset" - for PXs2/LD6b SoC
+> +    "socionext,uniphier-ld11-peri-reset" - for LD11 SoC
+> +    "socionext,uniphier-ld20-peri-reset" - for LD20 SoC
+>  - #reset-cells: should be 1.
+>  
+>  Example:
+> diff --git a/drivers/reset/reset-uniphier.c b/drivers/reset/reset-uniphier.c
+> index 968c3ae..9c11be3 100644
+> --- a/drivers/reset/reset-uniphier.c
+> +++ b/drivers/reset/reset-uniphier.c
+> @@ -390,6 +390,10 @@ static const struct of_device_id uniphier_reset_match[] = {
+>  		.data = uniphier_sld3_mio_reset_data,
+>  	},
+>  	{
+> +		.compatible = "socionext,uniphier-ld11-sd-reset",
+> +		.data = uniphier_pro5_sd_reset_data,
+> +	},
+> +	{
+>  		.compatible = "socionext,uniphier-ld20-sd-reset",
+>  		.data = uniphier_pro5_sd_reset_data,
+>  	},
