@@ -1,36 +1,44 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 2/4] clk: samsung: Remove Exynos4415 driver (SoC not
- supported anymore)
-Date: Mon, 16 Jan 2017 11:32:40 +0100
-Message-ID: <c9b51cb6-f798-d41e-afff-f779b963345c@samsung.com>
-References: <20170114123642.15581-1-krzk@kernel.org>
- <CGME20170114123727epcas2p296aae6459c8575d7e5def74f18e5c64d@epcas2p2.samsung.com>
- <20170114123642.15581-3-krzk@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20170114123642.15581-3-krzk@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-clk@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/7] dmaengine: cppi41: Make CPPI 4.1 driver more generic
+Date: Tue, 17 Jan 2017 14:45:33 +0100
+Message-ID: <20170117134540.9988-1-abailon@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMTQvMjAxNyAwMTozNiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBTdXBw
-b3J0IGZvciBFeHlub3M0NDE1IGlzIGdvaW5nIGF3YXkgYmVjYXVzZSB0aGVyZSBhcmUgbm8gaW50
-ZXJuYWwgbm9yCj4gZXh0ZXJuYWwgdXNlcnMuCj4gCj4gU2luY2UgY29tbWl0IDQ2ZGNmMGZmMGRl
-MyAoIkFSTTogZHRzOiBleHlub3M6IFJlbW92ZSBleHlub3M0NDE1LmR0c2kiKSwKPiB0aGUgcGxh
-dGZvcm0gY2Fubm90IGJlIGluc3RhbnRpYXRlZCBzbyByZW1vdmUgYWxzbyB0aGUgZHJpdmVycy4K
-PiAKPiBTaWduZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgS296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+
-CgpBcHBsaWVkLCB0aGFua3MuCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+Most of the patch of this series were part of
+"[PATCH 00/11] dmaengine: cppi41: Add dma support to da8xx"
+
+This series intend to make the CPPI 4.1 more generic in order to
+add a new platform (the DA8xx).
+To achieve that, all the IRQ code present in CPPI 4.1 driver has been moved
+to MUSB DSPS driver.
+Other changes mainly update the glue layer and platform code to make the
+whole driver more generic.
+
+This series needs the patchset
+"[PATCH v2 0/2] usb: musb: cppi41: Add a way to manage DMA irq" to build.
+
+Alexandre Bailon (7):
+  usb: musb: dsps: Manage CPPI 4.1 DMA interrupt in dsps
+  usb: usb: dsps: update device tree bindings
+  dmaengine: cppi41: Remove usbss_mem
+  dmaengine: cppi41: rename platform variables
+  dmaengine: cppi41: Move some constants to glue layer
+  dmaengine: cppi41: init_sched(): Get number of channels from DT
+  dmaengine: cppi41: Fix a race between PM runtime and channel abort
+
+ .../devicetree/bindings/usb/am33xx-usb.txt         |   9 +-
+ drivers/dma/cppi41.c                               | 120 +++++++++++----------
+ drivers/usb/musb/musb_dsps.c                       |  73 ++++++++++++-
+ 3 files changed, 138 insertions(+), 64 deletions(-)
+
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
