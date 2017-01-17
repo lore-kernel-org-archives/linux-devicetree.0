@@ -1,96 +1,37 @@
-From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3] arm: dts: mt2701: Add thermal device node.
-Date: Tue, 17 Jan 2017 17:24:09 +0800
-Message-ID: <1484645049-4477-2-git-send-email-erin.lo@mediatek.com>
-References: <1484645049-4477-1-git-send-email-erin.lo@mediatek.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v3] Add some DT nodes for Mediatek MT2701
+Date: Tue, 17 Jan 2017 17:24:08 +0800
+Message-ID: <1484645049-4477-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1484645049-4477-1-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+This patch series based on v4.10-rc2, include MT2701 spi/nand/auxadc/thermal controller DT nodes.
 
-Add thermal controller device nodes for MT2701.
+Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"[1].
 
-Signed-off-by: Dawei Chien <dawei.chien-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
+Change in v3:
+1. Since some patches in v2 have been applied to v4.10-next/dts32, they were not included in v3 series.
+2. Remove iommu DT nodes since it will be sent with its driver patch series later.
+3. Remove ethernet DT nodes since it will be sent with its driver patch series later.
+4. Modify thermal resets pin define from hard code to name.
+
+Change in v2:
+1. Add spi/auxadc pin setting
+2. Add ethernet node and pin setting
+3. Add thermal controller node
+
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
+
+Dawei Chien (1):
+  arm: dts: mt2701: Add thermal device node.
+
  arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
  1 file changed, 43 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 4cfec57..26a88cb 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -89,6 +89,36 @@
- 		clock-output-names = "rtc32k";
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal: cpu_thermal {
-+			polling-delay-passive = <1000>; /* milliseconds */
-+			polling-delay = <1000>; /* milliseconds */
-+
-+			thermal-sensors = <&thermal 0>;
-+			sustainable-power = <1000>;
-+
-+			trips {
-+				threshold: trip-point@0 {
-+					temperature = <68000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				target: trip-point@1 {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				cpu_crit: cpu_crit@0 {
-+					temperature = <115000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+	};
-+
- 	timer {
- 		compatible = "arm,armv7-timer";
- 		interrupt-parent = <&gic>;
-@@ -270,6 +300,19 @@
- 		status = "disabled";
- 	};
- 
-+	thermal: thermal@1100b000 {
-+		#thermal-sensor-cells = <0>;
-+		compatible = "mediatek,mt2701-thermal";
-+		reg = <0 0x1100b000 0 0x1000>;
-+		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-+		clock-names = "therm", "auxadc";
-+		resets = <&pericfg MT2701_PERI_THERM_SW_RST>;
-+		reset-names = "therm";
-+		mediatek,auxadc = <&auxadc>;
-+		mediatek,apmixedsys = <&apmixedsys>;
-+	};
-+
- 	nandc: nfi@1100d000 {
- 		compatible = "mediatek,mt2701-nfc";
- 		reg = <0 0x1100d000 0 0x1000>;
--- 
+--
 1.9.1
