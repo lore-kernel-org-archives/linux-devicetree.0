@@ -1,26 +1,114 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] iio: adc: Add Maxim MAX11100 driver
-Date: Tue, 17 Jan 2017 22:02:17 +0100
-Message-ID: <20170117210216.skizojrdi2wjc4mu@ninjato>
-References: <1484301038-16386-1-git-send-email-jacopo+renesas@jmondi.org>
- <1484301038-16386-2-git-send-email-jacopo+renesas@jmondi.org>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Tue, 17 Jan 2017 22:09:57 +0100
+Message-ID: <CAFBinCDvtufXUxe+cRCzOKFtbOqS-xEr0Vp=_0S4Pn+sTPHOmg@mail.gmail.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+ <1484680984.26620.29.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484301038-16386-2-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484680984.26620.29.camel@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, will.deacon@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 17, 2017 at 8:23 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+> On Sat, 2016-12-03 at 00:47 +0100, Martin Blumenstingl wrote:
+>> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
+>> networks which are not affected by the EEE problem, as reported here:
+>> [1]).
+>> The actual problem for the TX throughput issues was that the TX delay
+>> was applied twice:
+>> - once "accidentally" by the PHY (this was fixed with [2])
+>> - once by the MAC because there was a hardcoded TX delay (of 2ns),
+>>   this will be configurable with the changes from [0]
+>>
+>> These are the dts changes which belong to my other series (in v2
+>> these patches were part of the other series, upon request of the
+>> net maintainers I have split the .dts changes into their own series
+>> so
+>> we are able to take both through different trees):
+>> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
+>> RGMII TX delay": [0].
+>> Thus this series depends on the ACK for the binding changes in the
+>> other series!
+>>
+>> I based these changes on my other series "[PATCH v2 0/2] GXL and GXM
+>> SCPI improvements": [3]
+>>
+>>
+>> [0] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/
+>> 001834.html
+>> [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/
+>> 001607.html
+>> [2] http://lists.infradead.org/pipermail/linux-amlogic/2016-November/
+>> 001707.html
+>> [3] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/
+>> 001831.html
+>>
+>> Martin Blumenstingl (5):
+>>   ARM64: dts: meson-gx: move the MDIO node to meson-gx
+>
+> Sorry for the late reply, I've only been able to test this yesterday.
+>
+> With "snps,dwmac-mdio" provided in meson-gx.dtsi, the mdio_node is
+> defined in stmmac_mdio_register and auto-detection of the PHY is
+> disabled for all meson-gx boards.
+>
+> I wonder if this is desirable ? or maybe this something we could fix in
+> stmmac ? (perform auto-detect the mdio bus is provided without a PHY)
+actually it's only a "problem" when introducing support for new
+devices. can you please forward this question to the stmmac
+maintainers, as I think your idea of enabling auto-detection when
+there are no children in the MDIO-bus makes sense
 
-> + * Copyright (C) 2016 Renesas Electronics Corporation
-> + * Copyright (C) 2016 Jacopo Mondi
+> Also, I think bisect is broken between patch 1 and patch 4: The PHY of
+> some boards won't be detected between these patches. Should we squash
+> them ?
+what do you mean exactly? currently the TX-delay is hardcoded in
+dwmac-meson8b. patch 4 moves the hardcoded value from the
+dwmac-meson8b to the .dts-files.
+unfortunately the corresponding dwmac-meson8b patch was not accepted
+yet, so at the moment patch 4 should be a no-op.
 
-In case you need to resend: 2016-17?
+>>   ARM64: dts: meson-gxbb-odroidc2: add reset for the ethernet PHY
+>>   ARM64: dts: meson-gxbb-p20x: add reset for the ethernet PHY
+>>   ARM64: dts: meson-gxbb-vega-s95: add reset for the ethernet PHY
+>>   ARM64: dts: amlogic: add the ethernet TX delay configuration
+>>
+>
+> Last remark, about the use of ethernet-phy-idXXXX.XXXX in the odroid
+> and the vega: Isn't it better to let phylib do the autodetection of the
+> phy id ?
+>
+> If we want to specify the id in DT, we should probably add it for the
+> Micrel PHY of the p200 as well, for consistency.
+this seems to be a "best practice" when the PHY ID is known, see [0]
+If you know the PHY ID of the Micrel PHY then please let me know, then
+we can include this in the fix for the p20x boards
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi            |  6 ++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts  | 17
+>> +++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi     | 17
+>> +++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 17
+>> +++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts |  2 ++
+>>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi           |  6 ------
+>>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts  |  2 ++
+>>  arch/arm64/boot/dts/amlogic/meson-gxm-s912-q200.dts  |  2 ++
+>>  8 files changed, 63 insertions(+), 6 deletions(-)
+>>
+
+[0] http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/phy.txt#L22
