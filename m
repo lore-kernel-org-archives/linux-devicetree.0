@@ -1,53 +1,34 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH] fbdev: ssd1307fb: allow reset-gpios is missing
-Date: Wed, 18 Jan 2017 01:29:11 +0200
-Message-ID: <CAHp75VejkJ7g5ZiZvadgUx2rf4fUkxR67Z+Yn6wVwgG_RAwUPQ@mail.gmail.com>
-References: <20170117042658.QtsSkpPN@smtp3o.mail.yandex.net> <20170117074013.iqzfuoc3ys27347y@lukather>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
+Date: Tue, 17 Jan 2017 15:23:10 -0800
+Message-ID: <20170117232310.GX7403@atomide.com>
+References: <20170117040336.21700-1-lokeshvutla@ti.com>
+ <20170117040336.21700-2-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170117074013.iqzfuoc3ys27347y@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Icenowy Zheng <icenowy@aosc.xyz>, David Airlie <airlied@linux.ie>, linux-fbdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170117040336.21700-2-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 9:40 AM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> On Mon, Jan 16, 2017 at 05:50:21PM +0800, Icenowy Zheng wrote:
->>
->> 2017=E5=B9=B41=E6=9C=8816=E6=97=A5 16:02=E4=BA=8E Maxime Ripard <maxime.=
-ripard@free-electrons.com>=E5=86=99=E9=81=93=EF=BC=9A
->> >
->> > On Sun, Jan 15, 2017 at 07:21:46PM +0800, Icenowy Zheng wrote:
->> > > Currently some SSD1306 OLED modules are sold without a reset pin (on=
-ly
->> > > VCC, GND, SCK, SDA four pins).
->> > >
->> > > Add support for missing reset-gpios property.
->> > >
->> > > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
->> >
->> > Unfortunately, a similar patch has been sent a couple of times
->> > already:
->> > https://www.spinics.net/lists/devicetree/msg158330.html
->>
->> Why is it never merged?
->
-> It was sent 4 days ago...
->
-> And since you didn't have the right maintainers in the cc list, yours
-> didn't have a chance to be merged either.
->
->> There are really boards that needs this function.
->
-> Then  you can accelerate its inclusion by reviewing it.
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170116 20:06]:
+> Hwmod core tries to reset and idles each IP that is registered with hwmod.
+> In case of earlycon, that specific uart IP cannot be reset or keep it in
+> idle state else earlycon hangs once hwmod resets that uart IP. So add support
+> to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
+> is enabled.
 
-Perhaps someone eventually adds drivers/reset/reset-gpio.c and uses
-devm_get_reset_optional_exclusive() instead?
+Nice :)
 
+I guess this has no dependency to SERIAL_OMAP vs 8250_OMAP selection?
 
---=20
-With Best Regards,
-Andy Shevchenko
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
