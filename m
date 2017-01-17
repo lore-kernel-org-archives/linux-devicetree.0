@@ -1,83 +1,52 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH v3] i2c: core: helper function to detect slave mode
-Date: Tue, 17 Jan 2017 14:33:00 +0000
-Message-ID: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen
+ driver
+Date: Tue, 17 Jan 2017 11:32:49 -0300
+Message-ID: <fb6ec656-ec3a-b0f3-4c39-56f0825eaf23@osg.samsung.com>
+References: <20170117135441.31450-1-andi.shyti@samsung.com>
+ <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
+ <20170117135441.31450-2-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170117135441.31450-2-andi.shyti@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vz@mleia.com
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+To: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-This function has the purpose of mode detection by checking the
-device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-Currently only checks using OF functions (ACPI slave not supported yet).
+Hello Andi,
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-Changes V2->V3: (@Vladimir)
-- Bug Fix: «of_node_put(child)» added.
+On 01/17/2017 10:54 AM, Andi Shyti wrote:
+> Add binding for the STMicroelectronics FingerTip (stmfts)
+> touchscreen driver.
+> 
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
+> ---
 
- drivers/i2c/i2c-core.c | 30 ++++++++++++++++++++++++++++++
- include/linux/i2c.h    |  1 +
- 2 files changed, 31 insertions(+)
+The binding looks good to me, I've just a minor nit below.
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 583e95042a21..30aa7b50b5bc 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -3690,6 +3690,36 @@ int i2c_slave_unregister(struct i2c_client *client)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(i2c_slave_unregister);
-+
-+/**
-+ * i2c_slave_mode_detect - detect operation mode
-+ * @dev:  The device owning the bus
-+ *
-+ * This checks the device nodes for an I2C slave by checking the address
-+ * used.
-+ *
-+ * Returns true if an I2C slave is detected, otherwise returns false.
-+ */
-+bool i2c_slave_mode_detect(struct device *dev)
-+{
-+	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-+		struct device_node *child;
-+		u32 reg;
-+
-+		for_each_child_of_node(dev->of_node, child) {
-+			of_property_read_u32(child, "reg", &reg);
-+			if (reg & I2C_OWN_SLAVE_ADDRESS) {
-+				of_node_put(child);
-+				return true;
-+			}
-+		}
-+	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
-+		dev_dbg(dev, "ACPI slave is not supported yet\n");
-+	}
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
-+
- #endif
- 
- MODULE_AUTHOR("Simon G. Vogl <simon@tk.uni-linz.ac.at>");
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 4b45ec46161f..2e72e157826c 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -282,6 +282,7 @@ enum i2c_slave_event {
- 
- extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
- extern int i2c_slave_unregister(struct i2c_client *client);
-+extern bool i2c_slave_mode_detect(struct device *dev);
- 
- static inline int i2c_slave_event(struct i2c_client *client,
- 				  enum i2c_slave_event event, u8 *val)
+[snip]
+
+> +
+> +i2c@00000000 {
+> +
+> +	/* ... */
+> +
+> +	stmfts@49 {
+
+The ePAPR document says:
+
+The name of a node should be somewhat generic, reflecting the function
+of the device and not its precise programming model.
+
+So I think this should be touchscreen@49 instead.
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
 -- 
-2.11.0
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
