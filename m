@@ -1,206 +1,83 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/3 v3] iio: adc: add device tree bindings for Qualcomm PM8xxx
- ADCs
-Date: Tue, 17 Jan 2017 15:25:13 +0100
-Message-ID: <20170117142515.10578-1-linus.walleij@linaro.org>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [PATCH v3] i2c: core: helper function to detect slave mode
+Date: Tue, 17 Jan 2017 14:33:00 +0000
+Message-ID: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Rama Krishna Phani A <rphani@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T . Ivanov" <iivanov.xz@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vz@mleia.com
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree bindings for the Qualcomm PM8xxx
-ADCs. This is based on the existing DT bindings for the
-SPMI ADC so there are hopefully no controversial features.
+This function has the purpose of mode detection by checking the
+device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
+Currently only checks using OF functions (ACPI slave not supported yet).
 
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-msm@vger.kernel.org
-Cc: Ivan T. Ivanov <iivanov.xz@gmail.com>
-Cc: Andy Gross <andy.gross@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Rama Krishna Phani A <rphani@codeaurora.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
-ChangeLog v2->v3:
-- Collapse the ratiometric property into one that enables and
-  selects a ratiometric reference in one go.
-- Use foo: adc-channel@X notation consequently
-- Document that the reference voltage is compulsory.
-ChangeLog v1->v2:
-- Spelling fixes
----
- .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 149 +++++++++++++++++++++
- 1 file changed, 149 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
+Changes V2->V3: (@Vladimir)
+- Bug Fix: «of_node_put(child)» added.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-new file mode 100644
-index 000000000000..53cd146d8096
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
-@@ -0,0 +1,149 @@
-+Qualcomm's PM8xxx voltage XOADC
+ drivers/i2c/i2c-core.c | 30 ++++++++++++++++++++++++++++++
+ include/linux/i2c.h    |  1 +
+ 2 files changed, 31 insertions(+)
+
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 583e95042a21..30aa7b50b5bc 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -3690,6 +3690,36 @@ int i2c_slave_unregister(struct i2c_client *client)
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(i2c_slave_unregister);
 +
-+The Qualcomm PM8xxx PMICs contain a HK/XO ADC (Housekeeping/Crystal
-+oscillator ADC) encompassing PM8018, PM8038, PM8058 and PM8921.
++/**
++ * i2c_slave_mode_detect - detect operation mode
++ * @dev:  The device owning the bus
++ *
++ * This checks the device nodes for an I2C slave by checking the address
++ * used.
++ *
++ * Returns true if an I2C slave is detected, otherwise returns false.
++ */
++bool i2c_slave_mode_detect(struct device *dev)
++{
++	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
++		struct device_node *child;
++		u32 reg;
 +
-+Required properties:
++		for_each_child_of_node(dev->of_node, child) {
++			of_property_read_u32(child, "reg", &reg);
++			if (reg & I2C_OWN_SLAVE_ADDRESS) {
++				of_node_put(child);
++				return true;
++			}
++		}
++	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
++		dev_dbg(dev, "ACPI slave is not supported yet\n");
++	}
++	return false;
++}
++EXPORT_SYMBOL_GPL(i2c_slave_mode_detect);
 +
-+- compatible: should be one of:
-+  "qcom,pm8018-adc"
-+  "qcom,pm8038-adc"
-+  "qcom,pm8058-adc"
-+  "qcom,pm8921-adc"
-+
-+- reg: should contain the ADC base address in the PMIC, typically
-+  0x197.
-+
-+- xoadc-ref-supply: should reference a regulator that can supply
-+  a reference voltage on demand. The reference voltage may vary
-+  with PMIC variant but is typically something like 2.2 or 1.8V.
-+
-+The following required properties are standard for IO channels, see
-+iio-bindings.txt for more details:
-+
-+- #address-cells: should be set to <1>
-+
-+- #size-cells: should be set to <0>
-+
-+- #io-channel-cells: should be set to <1>
-+
-+- interrupts: should refer to the parent PMIC interrupt controller
-+  and reference the proper ADC interrupt.
-+
-+Required subnodes:
-+
-+The ADC channels are configured as subnodes of the ADC. Since some of
-+them are used for calibrating the ADC, these nodes are compulsory:
-+
-+adc-channel@c {
-+	reg = <0x0c>;
-+};
-+
-+adc-channel@d {
-+	reg = <0x0d>;
-+};
-+
-+adc-channel@f {
-+	reg = <0x0f>;
-+};
-+
-+These three nodes are used for absolute and ratiometric calibration
-+and only need to have these reg values: they are by hardware definition
-+1:1 ratio converters that sample 625, 1250 and 0 milliV and create
-+an interpolation calibration for all other ADCs.
-+
-+Optional subnodes: any channels other than channel 0x0c, 0x0d and
-+0x0f are optional.
-+
-+Required channel node properties:
-+
-+- reg: should contain the hardware channel number in the range
-+  0 .. 0x0f (4 bits). The hardware only supports 16 channels.
-+
-+Optional channel node properties:
-+
-+- qcom,decimation:
-+  Value type: <u32>
-+  Definition: This parameter is used to decrease the ADC sampling rate.
-+          Quicker measurements can be made by reducing the decimation ratio.
-+          Valid values are 512, 1024, 2048, 4096.
-+          If the property is not found, a default value of 512 will be used.
-+
-+- qcom,ratiometric:
-+  Value type: <u32>
-+  Definition: Channel calibration type. If this property is specified
-+          VADC will use a special voltage references for channel
-+          calibration. The available references are specified in the
-+	  as a u32 value setting (see below) and it is compulsory
-+	  to also specify this reference if ratiometric calibration
-+	  is selected.
-+
-+	  If the property is not found, the channel will be
-+          calibrated with the 0.625V and 1.25V reference channels, also
-+          known as an absolute calibration.
-+  The reference voltage pairs when using ratiometric calibration:
-+	  0 = XO_IN/XOADC_GND
-+	  1 = PMIC_IN/XOADC_GND
-+	  2 = PMIC_IN/BMS_CSP
-+	  3 (invalid)
-+	  4 = XOADC_GND/XOADC_GND
-+	  5 = XOADC_VREF/XOADC_GND
-+
-+Example:
-+
-+xoadc: xoadc@197 {
-+	compatible = "qcom,pm8058-adc";
-+	reg = <0x197>;
-+	interrupt-parent = <&pm8058>;
-+	interrupts = <76 1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	#io-channel-cells = <1>;
-+
-+	vcoin: adc-channel@0 {
-+		reg = <0x00>;
-+	};
-+	vbat: adc-channel@1 {
-+		reg = <0x01>;
-+	};
-+	dcin: adc-channel@2 {
-+		reg = <0x02>;
-+	};
-+	ichg: adc-channel@3 {
-+		reg = <0x03>;
-+	};
-+	vph_pwr: adc-channel@4 {
-+		reg = <0x04>;
-+	};
-+	usb_vbus: adc-channel@a {
-+		reg = <0x0a>;
-+	};
-+	die_temp: adc-channel@b {
-+		reg = <0x0b>;
-+	};
-+	ref_625mv: adc-channel@c {
-+		reg = <0x0c>;
-+	};
-+	ref_1250mv: adc-channel@d {
-+		reg = <0x0d>;
-+	};
-+	ref_325mv: adc-channel@e {
-+		reg = <0x0e>;
-+	};
-+	ref_muxoff: adc-channel@f {
-+		reg = <0x0f>;
-+	};
-+};
-+
-+
-+/* IIO client node */
-+iio-hwmon {
-+	compatible = "iio-hwmon";
-+	io-channels = <&xoadc 0x01>, /* Battery */
-+		    <&xoadc 0x02>, /* DC in (charger) */
-+		    <&xoadc 0x04>, /* VPH the main system voltage */
-+		    <&xoadc 0x0b>, /* Die temperature */
-+		    <&xoadc 0x0c>, /* Reference voltage 1.25V */
-+		    <&xoadc 0x0d>, /* Reference voltage 0.625V */
-+		    <&xoadc 0x0e>; /* Reference voltage 0.325V */
-+};
+ #endif
+ 
+ MODULE_AUTHOR("Simon G. Vogl <simon@tk.uni-linz.ac.at>");
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 4b45ec46161f..2e72e157826c 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -282,6 +282,7 @@ enum i2c_slave_event {
+ 
+ extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
+ extern int i2c_slave_unregister(struct i2c_client *client);
++extern bool i2c_slave_mode_detect(struct device *dev);
+ 
+ static inline int i2c_slave_event(struct i2c_client *client,
+ 				  enum i2c_slave_event event, u8 *val)
 -- 
-2.9.3
+2.11.0
