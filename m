@@ -1,14 +1,17 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 7/8] ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA
- binding
-Date: Tue, 17 Jan 2017 10:22:23 -0800
-Message-ID: <20170117182224.32212-8-f.fainelli@gmail.com>
-References: <20170117182224.32212-1-f.fainelli@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: exynos: Add USB 3.0 controller node
+ for Exynos7
+Date: Tue, 17 Jan 2017 20:23:18 +0200
+Message-ID: <20170117182318.fvatrazvyuzmdsor@kozik-lap>
+References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117150121epcas1p102bd1355f780a56e14a0a7a81bd6dfaf@epcas1p1.samsung.com>
+ <1484665444-23365-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117182224.32212-1-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1484665444-23365-2-git-send-email-pankaj.dubey@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,86 +21,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, Vivek Gautam <gautamvivek1987@gmail.com>, javier@osg.samsung.com, kgene@kernel.org, krzk@kernel.org, sanath@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
-Document new binding"). The legacy binding node is kept included, but is marked
-disabled.
+On Tue, Jan 17, 2017 at 08:34:03PM +0530, Pankaj Dubey wrote:
+> From: Vivek Gautam <gautamvivek1987@gmail.com>
+> 
+> Add USB 3.0 DRD controller device node, with its clock
+> and phy information to enable the same on Exynos7.
+> 
+> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 ++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+Javier's Reviewed-by should be at the end.
 
-diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-index 172a38c0b8a9..327023a477b8 100644
---- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-+++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-@@ -112,6 +112,8 @@
- 	};
- 
- 	dsa {
-+		status = "disabled";
-+
- 		compatible = "marvell,dsa";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -159,6 +161,53 @@
- 
- &mdio {
- 	status = "okay";
-+
-+	switch@0 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan1";
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				label = "lan2";
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				label = "lan3";
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+				label = "lan4";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "wan";
-+			};
-+
-+			port@5 {
-+				reg = <5>;
-+				label = "cpu";
-+				ethernet = <&eth0port>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
- };
- 
- &eth0 {
--- 
-2.9.3
+> ---
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 34 +++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 9080a11..a2d8d11 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -603,6 +603,40 @@
+>  				#include "exynos7-trip-points.dtsi"
+>  			};
+>  		};
+> +
+> +		usbdrd_phy: phy@15500000 {
+> +			compatible = "samsung,exynos7-usbdrd-phy";
+> +			reg = <0x15500000 0x100>;
+> +			clocks = <&clock_fsys0 ACLK_USBDRD300>,
+> +			       <&clock_fsys0 OSCCLK_PHY_CLKOUT_USB30_PHY>,
+> +			       <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER>,
+> +			       <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PHYCLK_USER>,
+> +			       <&clock_fsys0 SCLK_USBDRD300_REFCLK>;
+> +			clock-names = "phy", "ref", "phy_pipe",
+> +				"phy_utmi", "itp";
+> +			samsung,pmu-syscon = <&pmu_system_controller>;
+> +			#phy-cells = <1>;
+> +		};
+> +
+> +		usbdrd3: usb@15400000 {
+> +			compatible = "samsung,exynos7-dwusb3";
+> +			clocks = <&clock_fsys0 ACLK_USBDRD300>,
+> +			       <&clock_fsys0 SCLK_USBDRD300_SUSPENDCLK>,
+> +			       <&clock_fsys0 ACLK_AXIUS_USBDRD30X_FSYS0X>;
+> +			clock-names = "usbdrd30", "usbdrd30_susp_clk",
+> +				"usbdrd30_axius_clk";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +
+> +			dwc3 {
+
+dtc should complain here - you need:
+	dwc3@15400000
+In the same time I think the address node does not have to be put after
+parent's usb.
+
+Best regards,
+Krzysztof
+
+> +				compatible = "snps,dwc3";
+> +				reg = <0x15400000 0x10000>;
+> +				interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> +				phys = <&usbdrd_phy 0>, <&usbdrd_phy 1>;
+> +				phy-names = "usb2-phy", "usb3-phy";
+> +			};
+> +		};
+>  	};
+>  };
+>  
+> -- 
+> 2.7.4
+> 
