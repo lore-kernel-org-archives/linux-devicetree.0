@@ -1,38 +1,75 @@
-From: Fabien Parent <fparent@baylibre.com>
-Subject: [PATCH] ARM: davinci: da850-evm: fix read access to SPI flash
-Date: Tue, 17 Jan 2017 13:57:42 +0100
-Message-ID: <20170117125742.9536-1-fparent@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: khilman@baylibre.com, nsekhar@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, Fabien Parent <fparent@baylibre.com>
+From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Tue, 17 Jan 2017 14:04:29 +0100
+Message-ID: <b4611843-d30a-d458-d357-25818da962a6@atmel.com>
+References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
+ <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, Jagan Teki <jagan@openedev.com>, Marek Vasut <marex@denx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, kernel@pengutronix.de, linux-mtd@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Read access to the SPI flash are broken on da850-evm, i.e. the data
-read is not what is actually programmed on the flash.
-According to the datasheet for the M25P64 part present on the da850-evm,
-if the SPI frequency is higher than 20MHz then the READ command is not
-usable anymore and only the FAST_READ command can be used to read data.
-
-This commit specifies in the DTS that we should use FAST_READ command
-instead of the READ command.
-
-Signed-off-by: Fabien Parent <fparent@baylibre.com>
----
- arch/arm/boot/dts/da850-evm.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 41de15fe15a2..78492a0bbbab 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -99,6 +99,7 @@
- 				#size-cells = <1>;
- 				compatible = "m25p64";
- 				spi-max-frequency = <30000000>;
-+				m25p,fast-read;
- 				reg = <0>;
- 				partition@0 {
- 					label = "U-Boot-SPL";
--- 
-2.11.0
+TGUgMTcvMDEvMjAxNyDDoCAxMjowMywgVXdlIEtsZWluZS1Lw7ZuaWcgYSDDqWNyaXQgOgo+IFRo
+ZSBNUjI1IGZhbWlseSBkb2Vzbid0IHN1cHBvcnQgSkVERUMsIHNvIHRoZXkgbmVlZCBleHBsaWNp
+dCBtZW50aW9uaW5nCj4gaW4gdGhlIGxpc3Qgb2Ygc3VwcG9ydGVkIHNwaSBJRHMuIFRoaXMgbWFr
+ZXMgaXQgcG9zc2libGUgdG8gYWRkIHRoZXNlCj4gdXNpbmcgZm9yIGV4YW1wbGU6Cj4gCj4gCWNv
+bXBhdGlibGUgPSAiZXZlcnNwaW4sbXIyNWg0MCI7Cj4gCj4gVGhlcmUgd2FzIGFscmVhZHkgYW4g
+ZW50cnkgZm9yIG1yMjVoMjU2LiBNb3ZlIHRoYXQgb25lIG91dCBvZiB0aGUgImtlZXAKPiBmb3Ig
+Y29tcGF0aWJpbGl0eSIgc2VjdGlvbiBhbmQgcHV0IGluIGEgbmV3IGdyb3VwIGZvciBFdmVyc3Bp
+biBNUkFNcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVpbmUt
+a29lbmlnQHBlbmd1dHJvbml4LmRlPgpBY2tlZC1ieTogQ3lyaWxsZSBQaXRjaGVuIDxjeXJpbGxl
+LnBpdGNoZW5AYXRtZWwuY29tPgoKQnkgdGhlIHdheSwgeW91J3ZlIGZvcmdvdHRlbiB0byBjb2xs
+ZWN0IE1hcmVrJ3MgYWNrIGZyb20gdjEgYnV0IG5vIG5lZWQgdG8KcmVzZW5kIGZvciB0aGF0LiBJ
+IHdhaXQgYSBsaXR0bGUgYml0IG1vcmUgZm9yIHNvbWUgRFQgZ3V5IGFjayBpZiB0aGV5IHdhbnQK
+YnV0IG90aGVyd2lzZSBJIHRoaW5rIHRoaXMgcGF0Y2ggaXMgcmVhZHkgdG8gYmUgbWVyZ2VkIGlu
+dG8gdGhlIHNwaS1ub3IgdHJlZS4KClRoYW5rcyAhCgo+IC0tLQo+IENoYW5nZXMgc2luY2UgKGlt
+cGxpY2l0KSB2MToKPiAKPiAgLSB1c2UgS2liIGluc3RlYWQgb2Yga2liCj4gCj4gQ2hhbmdlcyBz
+aW5jZSB2MjoKPiAKPiAgLSB1cGRhdGUgZHQgZG9jcwo+ICAtIGhhbmRsZSBhbHJlYWR5IGV4aXN0
+aW5nIG1yMjVoMjU2IGluIG0yNXBfaWRzW10KPiAKPiBUaGFua3MgdG8gQ3lyaWxsZSBmb3IgY2F0
+Y2hpbmcgdGhlc2UuCj4gCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
+amVkZWMsc3BpLW5vci50eHQgfCAyICsrCj4gIGRyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA2ICsrKysrLQo+ICAyIGZpbGVzIGNoYW5nZWQs
+IDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dAo+IGluZGV4
+IDJjOTFjMDNlN2ViMC4uM2U5MjBlYzVjNGQzIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQKPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0Cj4gQEAgLTE0
+LDYgKzE0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICAgICAgICAgICAgICAgICBhdDI1
+ZGY2NDEKPiAgICAgICAgICAgICAgICAgICBhdDI2ZGYwODFhCj4gICAgICAgICAgICAgICAgICAg
+bXIyNWgyNTYKPiArICAgICAgICAgICAgICAgICBtcjI1aDEwCj4gKyAgICAgICAgICAgICAgICAg
+bXIyNWg0MAo+ICAgICAgICAgICAgICAgICAgIG14MjVsNDAwNWEKPiAgICAgICAgICAgICAgICAg
+ICBteDI1bDE2MDZlCj4gICAgICAgICAgICAgICAgICAgbXgyNWw2NDA1ZAo+IGRpZmYgLS1naXQg
+YS9kcml2ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5jIGIvZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVw
+ODAuYwo+IGluZGV4IDljZjdmY2QyODAzNC4uMGUyZDNhNjQ2NTFhIDEwMDY0NAo+IC0tLSBhL2Ry
+aXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMKPiArKysgYi9kcml2ZXJzL210ZC9kZXZpY2VzL20y
+NXA4MC5jCj4gQEAgLTI4OCw3ICsyODgsNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNwaV9kZXZp
+Y2VfaWQgbTI1cF9pZHNbXSA9IHsKPiAgCSAqIHNob3VsZCBiZSBrZXB0IGZvciBiYWNrd2FyZCBj
+b21wYXRpYmlsaXR5Lgo+ICAJICovCj4gIAl7ImF0MjVkZjMyMWEifSwJeyJhdDI1ZGY2NDEifSwJ
+eyJhdDI2ZGYwODFhIn0sCj4gLQl7Im1yMjVoMjU2In0sCj4gIAl7Im14MjVsNDAwNWEifSwJeyJt
+eDI1bDE2MDZlIn0sCXsibXgyNWw2NDA1ZCJ9LAl7Im14MjVsMTI4MDVkIn0sCj4gIAl7Im14MjVs
+MjU2MzVlIn0seyJteDY2bDUxMjM1bCJ9LAo+ICAJeyJuMjVxMDY0In0sCXsibjI1cTEyOGExMSJ9
+LAl7Im4yNXExMjhhMTMifSwJeyJuMjVxNTEyYSJ9LAo+IEBAIC0zMDUsNiArMzA0LDExIEBAIHN0
+YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpX2RldmljZV9pZCBtMjVwX2lkc1tdID0gewo+ICAJeyJtMjVw
+NDAtbm9uamVkZWMifSwJeyJtMjVwODAtbm9uamVkZWMifSwJeyJtMjVwMTYtbm9uamVkZWMifSwK
+PiAgCXsibTI1cDMyLW5vbmplZGVjIn0sCXsibTI1cDY0LW5vbmplZGVjIn0sCXsibTI1cDEyOC1u
+b25qZWRlYyJ9LAo+ICAKPiArCS8qIEV2ZXJzcGluIE1SQU1zIChub24tSkVERUMpICovCj4gKwl7
+ICJtcjI1aDI1NiIgfSwgLyogMjU2IEtpYiwgNDAgTUh6ICovCj4gKwl7ICJtcjI1aDEwIiB9LCAg
+LyogICAxIE1pYiwgNDAgTUh6ICovCj4gKwl7ICJtcjI1aDQwIiB9LCAgLyogICA0IE1pYiwgNDAg
+TUh6ICovCj4gKwo+ICAJeyB9LAo+ICB9Owo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHNwaSwgbTI1
+cF9pZHMpOwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
