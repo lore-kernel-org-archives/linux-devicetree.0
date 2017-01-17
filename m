@@ -1,75 +1,50 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Tue, 17 Jan 2017 14:04:29 +0100
-Message-ID: <b4611843-d30a-d458-d357-25818da962a6@atmel.com>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
- <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+Date: Tue, 17 Jan 2017 14:16:48 +0100
+Message-ID: <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
+References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com> <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, Jagan Teki <jagan@openedev.com>, Marek Vasut <marex@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, kernel@pengutronix.de, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170117110338.10756-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Masahiko Iwamoto <iwamoto-sK/J6oeM9AhgKrQr38906+qrae++aQT8@public.gmane.org>, Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TGUgMTcvMDEvMjAxNyDDoCAxMjowMywgVXdlIEtsZWluZS1Lw7ZuaWcgYSDDqWNyaXQgOgo+IFRo
-ZSBNUjI1IGZhbWlseSBkb2Vzbid0IHN1cHBvcnQgSkVERUMsIHNvIHRoZXkgbmVlZCBleHBsaWNp
-dCBtZW50aW9uaW5nCj4gaW4gdGhlIGxpc3Qgb2Ygc3VwcG9ydGVkIHNwaSBJRHMuIFRoaXMgbWFr
-ZXMgaXQgcG9zc2libGUgdG8gYWRkIHRoZXNlCj4gdXNpbmcgZm9yIGV4YW1wbGU6Cj4gCj4gCWNv
-bXBhdGlibGUgPSAiZXZlcnNwaW4sbXIyNWg0MCI7Cj4gCj4gVGhlcmUgd2FzIGFscmVhZHkgYW4g
-ZW50cnkgZm9yIG1yMjVoMjU2LiBNb3ZlIHRoYXQgb25lIG91dCBvZiB0aGUgImtlZXAKPiBmb3Ig
-Y29tcGF0aWJpbGl0eSIgc2VjdGlvbiBhbmQgcHV0IGluIGEgbmV3IGdyb3VwIGZvciBFdmVyc3Bp
-biBNUkFNcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dS5rbGVpbmUt
-a29lbmlnQHBlbmd1dHJvbml4LmRlPgpBY2tlZC1ieTogQ3lyaWxsZSBQaXRjaGVuIDxjeXJpbGxl
-LnBpdGNoZW5AYXRtZWwuY29tPgoKQnkgdGhlIHdheSwgeW91J3ZlIGZvcmdvdHRlbiB0byBjb2xs
-ZWN0IE1hcmVrJ3MgYWNrIGZyb20gdjEgYnV0IG5vIG5lZWQgdG8KcmVzZW5kIGZvciB0aGF0LiBJ
-IHdhaXQgYSBsaXR0bGUgYml0IG1vcmUgZm9yIHNvbWUgRFQgZ3V5IGFjayBpZiB0aGV5IHdhbnQK
-YnV0IG90aGVyd2lzZSBJIHRoaW5rIHRoaXMgcGF0Y2ggaXMgcmVhZHkgdG8gYmUgbWVyZ2VkIGlu
-dG8gdGhlIHNwaS1ub3IgdHJlZS4KClRoYW5rcyAhCgo+IC0tLQo+IENoYW5nZXMgc2luY2UgKGlt
-cGxpY2l0KSB2MToKPiAKPiAgLSB1c2UgS2liIGluc3RlYWQgb2Yga2liCj4gCj4gQ2hhbmdlcyBz
-aW5jZSB2MjoKPiAKPiAgLSB1cGRhdGUgZHQgZG9jcwo+ICAtIGhhbmRsZSBhbHJlYWR5IGV4aXN0
-aW5nIG1yMjVoMjU2IGluIG0yNXBfaWRzW10KPiAKPiBUaGFua3MgdG8gQ3lyaWxsZSBmb3IgY2F0
-Y2hpbmcgdGhlc2UuCj4gCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQv
-amVkZWMsc3BpLW5vci50eHQgfCAyICsrCj4gIGRyaXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCA2ICsrKysrLQo+ICAyIGZpbGVzIGNoYW5nZWQs
-IDcgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dAo+IGluZGV4
-IDJjOTFjMDNlN2ViMC4uM2U5MjBlYzVjNGQzIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQKPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0Cj4gQEAgLTE0
-LDYgKzE0LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICAgICAgICAgICAgICAgICBhdDI1
-ZGY2NDEKPiAgICAgICAgICAgICAgICAgICBhdDI2ZGYwODFhCj4gICAgICAgICAgICAgICAgICAg
-bXIyNWgyNTYKPiArICAgICAgICAgICAgICAgICBtcjI1aDEwCj4gKyAgICAgICAgICAgICAgICAg
-bXIyNWg0MAo+ICAgICAgICAgICAgICAgICAgIG14MjVsNDAwNWEKPiAgICAgICAgICAgICAgICAg
-ICBteDI1bDE2MDZlCj4gICAgICAgICAgICAgICAgICAgbXgyNWw2NDA1ZAo+IGRpZmYgLS1naXQg
-YS9kcml2ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5jIGIvZHJpdmVycy9tdGQvZGV2aWNlcy9tMjVw
-ODAuYwo+IGluZGV4IDljZjdmY2QyODAzNC4uMGUyZDNhNjQ2NTFhIDEwMDY0NAo+IC0tLSBhL2Ry
-aXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMKPiArKysgYi9kcml2ZXJzL210ZC9kZXZpY2VzL20y
-NXA4MC5jCj4gQEAgLTI4OCw3ICsyODgsNiBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHNwaV9kZXZp
-Y2VfaWQgbTI1cF9pZHNbXSA9IHsKPiAgCSAqIHNob3VsZCBiZSBrZXB0IGZvciBiYWNrd2FyZCBj
-b21wYXRpYmlsaXR5Lgo+ICAJICovCj4gIAl7ImF0MjVkZjMyMWEifSwJeyJhdDI1ZGY2NDEifSwJ
-eyJhdDI2ZGYwODFhIn0sCj4gLQl7Im1yMjVoMjU2In0sCj4gIAl7Im14MjVsNDAwNWEifSwJeyJt
-eDI1bDE2MDZlIn0sCXsibXgyNWw2NDA1ZCJ9LAl7Im14MjVsMTI4MDVkIn0sCj4gIAl7Im14MjVs
-MjU2MzVlIn0seyJteDY2bDUxMjM1bCJ9LAo+ICAJeyJuMjVxMDY0In0sCXsibjI1cTEyOGExMSJ9
-LAl7Im4yNXExMjhhMTMifSwJeyJuMjVxNTEyYSJ9LAo+IEBAIC0zMDUsNiArMzA0LDExIEBAIHN0
-YXRpYyBjb25zdCBzdHJ1Y3Qgc3BpX2RldmljZV9pZCBtMjVwX2lkc1tdID0gewo+ICAJeyJtMjVw
-NDAtbm9uamVkZWMifSwJeyJtMjVwODAtbm9uamVkZWMifSwJeyJtMjVwMTYtbm9uamVkZWMifSwK
-PiAgCXsibTI1cDMyLW5vbmplZGVjIn0sCXsibTI1cDY0LW5vbmplZGVjIn0sCXsibTI1cDEyOC1u
-b25qZWRlYyJ9LAo+ICAKPiArCS8qIEV2ZXJzcGluIE1SQU1zIChub24tSkVERUMpICovCj4gKwl7
-ICJtcjI1aDI1NiIgfSwgLyogMjU2IEtpYiwgNDAgTUh6ICovCj4gKwl7ICJtcjI1aDEwIiB9LCAg
-LyogICAxIE1pYiwgNDAgTUh6ICovCj4gKwl7ICJtcjI1aDQwIiB9LCAgLyogICA0IE1pYiwgNDAg
-TUh6ICovCj4gKwo+ICAJeyB9LAo+ICB9Owo+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHNwaSwgbTI1
-cF9pZHMpOwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+On 17 January 2017 at 12:03, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> The MR25 family doesn't support JEDEC, so they need explicit mentioning
+> in the list of supported spi IDs. This makes it possible to add these
+> using for example:
+>
+>         compatible =3D "everspin,mr25h40";
+
+(...)
+
+> diff --git a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt b/Do=
+cumentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> index 2c91c03e7eb0..3e920ec5c4d3 100644
+> --- a/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> +++ b/Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt
+> @@ -14,6 +14,8 @@ Required properties:
+>                   at25df641
+>                   at26df081a
+>                   mr25h256
+> +                 mr25h10
+> +                 mr25h40
+>                   mx25l4005a
+>                   mx25l1606e
+>                   mx25l6405d
+
+Uh, this is getting a never-ending-story...
+If these chipsets don't support JEDEC, should we keep them in jedec,spi-nor=
+.txt?
+
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
