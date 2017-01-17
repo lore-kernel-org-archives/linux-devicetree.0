@@ -1,149 +1,363 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
-Date: Tue, 17 Jan 2017 11:05:51 +0530
-Message-ID: <587DAD37.5030201@ti.com>
-References: <1484486354-4585-1-git-send-email-lukma@denx.de>
- <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
- <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
- <587C9CE6.8040001@ti.com> <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <76d18446-78c9-87f2-22ad-f7ea38771285-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jaechul Lee <jcsing.lee@samsung.com>
+Subject: [PATCH v7 2/3] input: tm2-touchkey: Add touchkey driver support for TM2
+Date: Tue, 17 Jan 2017 14:54:38 +0900
+Message-ID: <1484632479-3111-3-git-send-email-jcsing.lee@samsung.com>
+References: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
+ <CGME20170117055444epcas1p47b0b0a0ae3260b22fa61d2b92362050b@epcas1p4.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Jaechul Lee <jcsing.lee@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, beomho.seo@samsung.com, galaxyra@gmail.com, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Joao,
+This patch adds support for the TM2 touch key and led
+functionality.
 
-On Monday 16 January 2017 10:31 PM, Joao Pinto wrote:
-> 
-> Hi,
-> 
-> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
->> + Joao, Jingoo
->>
->> Hi,
->>
->> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
->>> Hi Kishon,
->>>
->>>> Hi Łukasz,
->>>>
->>>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
->>>>> Hi Kishon,
->>>>>
->>>>>> Hi,
->>>>>>
->>>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
->>>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
->>>>>>> run with forced GEN1 speed on PCIe bus.
->>>>>>>
->>>>>>> This patch changes the speed explicitly on dra7 based devices when
->>>>>>> proper device tree attribute is defined for the PCIe controller.
->>>>>>>
->>>>>>> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
->>>>>>
->>>>>> Bjorn has already queued a patch to do the same thing
->>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
->>>>>
->>>>> It seems like Bjorn only modifies CAP registers.
->>>>
->>>> The patch also modifies the LNKCTL2 register.
->>>>>
->>>>> He also needs to change register with 0x080C offset to actually
->>>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
->>>>
->>>> This bit is used to initiate speed change (after the link is
->>>> initialized in GEN1). Resetting the bit (like what you have done
->>>> here) prevents speed change.
->>>
->>> This is strange, but e2e advised me to do things as I did in the patch
->>> to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
->>>
->>> Link:
->>> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
->>>
->>> Both patches modify 0x5180 007C register to set GEN1 capability
->>> (PCI_EXP_LNKCAP_SLS_2_5GB)
->>>
->>> The problem is with second register (in your patch):
->>>
->>> From SPRUHZ6G TRM:
->>>
->>> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
->>> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
->>>   description in TRM
->>>
->>> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
->>> default /reset value.
->>
->> The default value is 0x2 (or else none of the cards would have enumerated in GEN2)
->>>
->>>
->>> Could you clarify which way to _force_ PCIe GEN1 operation is correct?
->>> Mine shows differences in lspci output (as posted in [1]).
->>
->> You'll see the difference even with the patch in Bjorn's tree ;-)
->>
->> I think these are 2 different approaches to keep the link at GEN1. Joao or
->> Jingoo, do you have any suggestion here?
-> 
-> I studied the Databook, and both approaches seem to be right, dependently of the
-> Core configuration and setup.
-> 
-> The standard manual speed change sequence is:
-> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
-> b) Clear "Directed Speed Change"
-> c) Set "Directed Speed Change"
-> 
-> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the default
-> value), it will execute LTSSM to initiate speed change to Gen2 or Gen3, after
-> link is started in Gen1, and then the bit is automatically cleared.
-> 
-> Lukasz is reseting this bit, in order to avoid the LTSSM to be executed, which
-> is correct. There is another way to prevent this automatic speed change, which
-> is to set GEN1 speed before link up which might be difficult in some setups, so
-> Kishon's also right.
+The driver interfaces with userspace through an input device and
+reports KEY_PHONE and KEY_BACK event types. LED brightness can be
+controlled by "/sys/class/leds/tm2-touchkey/brightness".
 
-Just for my understanding, why do you think this will be difficult in some setups?
-> 
-> In my opinion Lukasz approach would be the one that might be more universal and
-> more "secure".
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ drivers/input/keyboard/Kconfig        |  11 ++
+ drivers/input/keyboard/Makefile       |   1 +
+ drivers/input/keyboard/tm2-touchkey.c | 286 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 298 insertions(+)
+ create mode 100644 drivers/input/keyboard/tm2-touchkey.c
 
-IMHO setting link control in the standard PCIe header space should be more
-universal. I'm not sure about the secure part though.
-
-Thanks
-Kishon
-> 
-> Joao
-> 
-> 
->>
->>>
->>>>
->>>> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
->>>> the IP register.
->>>
->>> From the original patch description:
->>>
->>> "Add support to force Root Complex to work in GEN1 mode if so desired,
->>> but don't force GEN1 mode on any board just yet."
->>>
->>> Are there any (floating around) patches allowing forcing GEN1 operation
->>> on any board (I would like to reuse/port them to my current solution)?
->>
->> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt with the
->> patch in Bjorn's tree.
->>
->> Thanks
->> Kishon
->>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index cbd75cf..97acd65 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -666,6 +666,17 @@ config KEYBOARD_TC3589X
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called tc3589x-keypad.
+ 
++config KEYBOARD_TM2_TOUCHKEY
++	tristate "TM2 touchkey support"
++	depends on I2C
++	depends on LEDS_CLASS
++	help
++	  Say Y here to enable device driver for tm2-touchkey with
++	  LED control for the Exynos5433 TM2 board.
++
++	  To compile this driver as a module, choose M here.
++	  module will be called tm2-touchkey.
++
+ config KEYBOARD_TWL4030
+ 	tristate "TI TWL4030/TWL5030/TPS659x0 keypad support"
+ 	depends on TWL4030_CORE
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index d9f4cfc..7d9acff 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_KEYBOARD_SUN4I_LRADC)	+= sun4i-lradc-keys.o
+ obj-$(CONFIG_KEYBOARD_SUNKBD)		+= sunkbd.o
+ obj-$(CONFIG_KEYBOARD_TC3589X)		+= tc3589x-keypad.o
+ obj-$(CONFIG_KEYBOARD_TEGRA)		+= tegra-kbc.o
++obj-$(CONFIG_KEYBOARD_TM2_TOUCHKEY)	+= tm2-touchkey.o
+ obj-$(CONFIG_KEYBOARD_TWL4030)		+= twl4030_keypad.o
+ obj-$(CONFIG_KEYBOARD_XTKBD)		+= xtkbd.o
+ obj-$(CONFIG_KEYBOARD_W90P910)		+= w90p910_keypad.o
+diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
+new file mode 100644
+index 0000000..916e2f3
+--- /dev/null
++++ b/drivers/input/keyboard/tm2-touchkey.c
+@@ -0,0 +1,286 @@
++/*
++ * TM2 touchkey device driver
++ *
++ * Copyright 2005 Phil Blundell
++ * Copyright 2016 Samsung Electronics Co., Ltd.
++ *
++ * Author: Beomho Seo <beomho.seo@samsung.com>
++ * Author: Jaechul Lee <jcsing.lee@samsung.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/bitops.h>
++#include <linux/delay.h>
++#include <linux/device.h>
++#include <linux/i2c.h>
++#include <linux/input.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/leds.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/pm.h>
++#include <linux/regulator/consumer.h>
++
++#define TM2_TOUCHKEY_DEV_NAME		"tm2-touchkey"
++#define TM2_TOUCHKEY_KEYCODE_REG	0x03
++#define TM2_TOUCHKEY_BASE_REG		0x00
++#define TM2_TOUCHKEY_CMD_LED_ON		0x10
++#define TM2_TOUCHKEY_CMD_LED_OFF	0x20
++#define TM2_TOUCHKEY_BIT_PRESS_EV	BIT(3)
++#define TM2_TOUCHKEY_BIT_KEYCODE	GENMASK(2, 0)
++#define TM2_TOUCHKEY_LED_VOLTAGE_MIN	2500000
++#define TM2_TOUCHKEY_LED_VOLTAGE_MAX	3300000
++
++enum {
++	TM2_TOUCHKEY_KEY_MENU = 0x1,
++	TM2_TOUCHKEY_KEY_BACK,
++};
++
++struct tm2_touchkey_data {
++	struct i2c_client *client;
++	struct input_dev *input_dev;
++	struct led_classdev led_dev;
++	struct regulator *vdd;
++	struct regulator_bulk_data regulators[2];
++};
++
++static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
++					    enum led_brightness brightness)
++{
++	struct tm2_touchkey_data *touchkey =
++		container_of(led_dev, struct tm2_touchkey_data, led_dev);
++	u32 volt;
++	u8 data;
++
++	if (brightness == LED_OFF) {
++		volt = TM2_TOUCHKEY_LED_VOLTAGE_MIN;
++		data = TM2_TOUCHKEY_CMD_LED_OFF;
++	} else {
++		volt = TM2_TOUCHKEY_LED_VOLTAGE_MAX;
++		data = TM2_TOUCHKEY_CMD_LED_ON;
++	}
++
++	regulator_set_voltage(touchkey->vdd, volt, volt);
++	i2c_smbus_write_byte_data(touchkey->client,
++				  TM2_TOUCHKEY_BASE_REG, data);
++}
++
++static int tm2_touchkey_power_enable(struct tm2_touchkey_data *touchkey)
++{
++	int error;
++
++	error = regulator_bulk_enable(ARRAY_SIZE(touchkey->regulators),
++				      touchkey->regulators);
++	if (error)
++		return error;
++
++	/* waiting for device initialization, at least 150ms */
++	msleep(150);
++
++	return 0;
++}
++
++static void tm2_touchkey_power_disable(void *data)
++{
++	struct tm2_touchkey_data *touchkey = data;
++
++	regulator_bulk_disable(ARRAY_SIZE(touchkey->regulators),
++			       touchkey->regulators);
++}
++
++static irqreturn_t tm2_touchkey_irq_handler(int irq, void *devid)
++{
++	struct tm2_touchkey_data *touchkey = devid;
++	int data;
++	int key;
++
++	data = i2c_smbus_read_byte_data(touchkey->client,
++					TM2_TOUCHKEY_KEYCODE_REG);
++	if (data < 0) {
++		dev_err(&touchkey->client->dev,
++			"failed to read i2c data: %d\n", data);
++		goto out;
++	}
++
++	switch (data & TM2_TOUCHKEY_BIT_KEYCODE) {
++	case TM2_TOUCHKEY_KEY_MENU:
++		key = KEY_PHONE;
++		break;
++
++	case TM2_TOUCHKEY_KEY_BACK:
++		key = KEY_BACK;
++		break;
++
++	default:
++		dev_warn(&touchkey->client->dev,
++			 "unhandled keycode, data %#02x\n", data);
++		goto out;
++	}
++
++	if (data & TM2_TOUCHKEY_BIT_PRESS_EV) {
++		input_report_key(touchkey->input_dev, KEY_PHONE, 0);
++		input_report_key(touchkey->input_dev, KEY_BACK, 0);
++	} else {
++		input_report_key(touchkey->input_dev, key, 1);
++	}
++
++	input_sync(touchkey->input_dev);
++
++out:
++	return IRQ_HANDLED;
++}
++
++static int tm2_touchkey_probe(struct i2c_client *client,
++			      const struct i2c_device_id *id)
++{
++	struct tm2_touchkey_data *touchkey;
++	int error;
++
++	if (!i2c_check_functionality(client->adapter,
++			I2C_FUNC_SMBUS_BYTE | I2C_FUNC_SMBUS_BYTE_DATA)) {
++		dev_err(&client->dev, "incompatible I2C adapter\n");
++		return -EIO;
++	}
++
++	touchkey = devm_kzalloc(&client->dev, sizeof(*touchkey), GFP_KERNEL);
++	if (!touchkey)
++		return -ENOMEM;
++
++	touchkey->client = client;
++	i2c_set_clientdata(client, touchkey);
++
++	touchkey->regulators[0].supply = "vcc";
++	touchkey->regulators[1].supply = "vdd";
++	error = devm_regulator_bulk_get(&client->dev,
++					ARRAY_SIZE(touchkey->regulators),
++					touchkey->regulators);
++	if (error) {
++		dev_err(&client->dev, "failed to get regulators: %d\n", error);
++		return error;
++	}
++
++	/* Save VDD for easy access */
++	touchkey->vdd = touchkey->regulators[1].consumer;
++
++	error = tm2_touchkey_power_enable(touchkey);
++	if (error) {
++		dev_err(&client->dev, "failed to power up device: %d\n", error);
++		return error;
++	}
++
++	error = devm_add_action_or_reset(&client->dev,
++					 tm2_touchkey_power_disable, touchkey);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to install poweroff handler: %d\n", error);
++		return error;
++	}
++
++	/* input device */
++	touchkey->input_dev = devm_input_allocate_device(&client->dev);
++	if (!touchkey->input_dev) {
++		dev_err(&client->dev, "failed to allocate input device\n");
++		return -ENOMEM;
++	}
++
++	touchkey->input_dev->name = TM2_TOUCHKEY_DEV_NAME;
++	touchkey->input_dev->id.bustype = BUS_I2C;
++
++	input_set_capability(touchkey->input_dev, EV_KEY, KEY_PHONE);
++	input_set_capability(touchkey->input_dev, EV_KEY, KEY_BACK);
++
++	input_set_drvdata(touchkey->input_dev, touchkey);
++
++	error = input_register_device(touchkey->input_dev);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to register input device: %d\n", error);
++		return error;
++	}
++
++	error = devm_request_threaded_irq(&client->dev, client->irq,
++					  NULL, tm2_touchkey_irq_handler,
++					  IRQF_ONESHOT,
++					  TM2_TOUCHKEY_DEV_NAME, touchkey);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to request threaded irq: %d\n", error);
++		return error;
++	}
++
++	/* led device */
++	touchkey->led_dev.name = TM2_TOUCHKEY_DEV_NAME;
++	touchkey->led_dev.brightness = LED_FULL;
++	touchkey->led_dev.max_brightness = LED_FULL;
++	touchkey->led_dev.brightness_set = tm2_touchkey_led_brightness_set;
++
++	error = devm_led_classdev_register(&client->dev, &touchkey->led_dev);
++	if (error) {
++		dev_err(&client->dev,
++			"failed to register touchkey led: %d\n", error);
++		return error;
++	}
++
++	return 0;
++}
++
++static int __maybe_unused tm2_touchkey_suspend(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct tm2_touchkey_data *touchkey = i2c_get_clientdata(client);
++
++	disable_irq(client->irq);
++	tm2_touchkey_power_disable(touchkey);
++
++	return 0;
++}
++
++static int __maybe_unused tm2_touchkey_resume(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct tm2_touchkey_data *touchkey = i2c_get_clientdata(client);
++	int ret;
++
++	enable_irq(client->irq);
++
++	ret = tm2_touchkey_power_enable(touchkey);
++	if (ret)
++		dev_err(dev, "failed to enable power: %d\n", ret);
++
++	return ret;
++}
++
++static SIMPLE_DEV_PM_OPS(tm2_touchkey_pm_ops,
++			 tm2_touchkey_suspend, tm2_touchkey_resume);
++
++static const struct i2c_device_id tm2_touchkey_id_table[] = {
++	{ TM2_TOUCHKEY_DEV_NAME, 0 },
++	{ },
++};
++MODULE_DEVICE_TABLE(i2c, tm2_touchkey_id_table);
++
++static const struct of_device_id tm2_touchkey_of_match[] = {
++	{ .compatible = "cypress,tm2-touchkey", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, tm2_touchkey_of_match);
++
++static struct i2c_driver tm2_touchkey_driver = {
++	.driver = {
++		.name = TM2_TOUCHKEY_DEV_NAME,
++		.pm = &tm2_touchkey_pm_ops,
++		.of_match_table = of_match_ptr(tm2_touchkey_of_match),
++	},
++	.probe = tm2_touchkey_probe,
++	.id_table = tm2_touchkey_id_table,
++};
++module_i2c_driver(tm2_touchkey_driver);
++
++MODULE_AUTHOR("Beomho Seo <beomho.seo@samsung.com>");
++MODULE_AUTHOR("Jaechul Lee <jcsing.lee@samsung.com>");
++MODULE_DESCRIPTION("Samsung touchkey driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.7.4
