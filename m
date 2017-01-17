@@ -1,100 +1,93 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v2 11/14] sata: ahci-da850: un-hardcode the MPY bits
-Date: Tue, 17 Jan 2017 12:51:49 -0600
-Message-ID: <062b5ef3-cc3a-0f9c-c040-93495f374dac@lechnology.com>
-References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
- <1484655976-25382-12-git-send-email-bgolaszewski@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen
+ driver
+Date: Tue, 17 Jan 2017 20:43:32 +0200
+Message-ID: <20170117184332.6ne4ercemll6qrbm@kozik-lap>
+References: <20170117135441.31450-1-andi.shyti@samsung.com>
+ <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
+ <20170117135441.31450-2-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1484655976-25382-12-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170117135441.31450-2-andi.shyti@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 06:26 AM, Bartosz Golaszewski wrote:
-> In order to make the MPY bits configurable, try to obtain the refclk
-> and calculate the required multiplier from its rate.
->
-> If we fail to get the clock, fall back to the default value which
-> keeps backwards compatibility.
-
-It seems like it would be wiser to make is so that if we fail to get the 
-clock, it is an error. This way, if someone makes a new board and 
-forgets to configure a clock, they will get an error instead of 
-wondering why things are not working because it is using the wrong 
-multiplier.
-
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Tue, Jan 17, 2017 at 10:54:39PM +0900, Andi Shyti wrote:
+> Add binding for the STMicroelectronics FingerTip (stmfts)
+> touchscreen driver.
+> 
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
 > ---
->  drivers/ata/ahci_da850.c | 88 +++++++++++++++++++++++++++++++++++++++++-------
->  1 file changed, 76 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/ata/ahci_da850.c b/drivers/ata/ahci_da850.c
-> index a7a7161..f48b7d0 100644
-> --- a/drivers/ata/ahci_da850.c
-> +++ b/drivers/ata/ahci_da850.c
-> @@ -14,6 +14,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/libata.h>
->  #include <linux/ahci_platform.h>
-> +#include <asm/div64.h>
->  #include "ahci.h"
->
->  #define DRV_NAME		"ahci_da850"
-> @@ -30,16 +31,14 @@
->  #define SATA_PHY_ENPLL(x)	((x) << 31)
->
->  /*
-> - * The multiplier needed for 1.5GHz PLL output.
-> - *
-> - * NOTE: This is currently hardcoded to be suitable for 100MHz crystal
-> - * frequency (which is used by DA850 EVM board) and may need to be changed
-> - * if you would like to use this driver on some other board.
-> + * This is the default multiplier value used if the refclk could not be
-> + * obtained. It corresponds with a crystal rate of 100MHz for 1.5GHz PLL
-> + * output.
->   */
-> -#define DA850_SATA_CLK_MULTIPLIER	7
-> +#define DA850_SATA_MPY_DEFAULT	0x8
->
->  static void da850_sata_init(struct device *dev, void __iomem *pwrdn_reg,
-> -			    void __iomem *ahci_base)
-> +			    void __iomem *ahci_base, u32 mpy)
->  {
->  	unsigned int val;
->
-> @@ -48,13 +47,56 @@ static void da850_sata_init(struct device *dev, void __iomem *pwrdn_reg,
->  	val &= ~BIT(0);
->  	writel(val, pwrdn_reg);
->
-> -	val = SATA_PHY_MPY(DA850_SATA_CLK_MULTIPLIER + 1) | SATA_PHY_LOS(1) |
-> -	      SATA_PHY_RXCDR(4) | SATA_PHY_RXEQ(1) | SATA_PHY_TXSWING(3) |
-> -	      SATA_PHY_ENPLL(1);
-> +	val = SATA_PHY_MPY(mpy) | SATA_PHY_LOS(1) | SATA_PHY_RXCDR(4) |
-> +	      SATA_PHY_RXEQ(1) | SATA_PHY_TXSWING(3) | SATA_PHY_ENPLL(1);
->
->  	writel(val, ahci_base + SATA_P0PHYCR_REG);
->  }
->
-> +static u32 ahci_da850_calculate_mpy(unsigned long refclk_rate)
-> +{
-> +	u64 pll_output = 1500000000;
-> +	u32 needed;
+>  .../bindings/input/touchscreen/st,stmfts.txt       | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+> new file mode 100644
+> index 000000000000..788f4ba744db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+> @@ -0,0 +1,43 @@
+> +* ST-Microelectronics FingerTip touchscreen controller
 > +
-> +	/*
-> +	 * We need to determine the value of the multiplier (MPY) bits.
-> +	 *
-> +	 * In order to include the 12.5 multiplier we need to first multiply
-> +	 * the desired rate of 1.5GHz by 10 before division.
-> +	 */
-> +	pll_output *= 10;
-> +	needed = __div64_32(&pll_output, refclk_rate);
+> +The ST-Microelectronics FingerTip device provides a basic touchscreen
+> +functionality. Along with it the user can enable the touchkey which can work as
+> +a basic HOME and BACK key for phones.
+> +
+> +The driver supports also hovering as an absolute single touch event with x, y, z
+> +coordinates.
+> +
+> +Required properties:
+> +- compatible		: must be "st,stmfts"
+> +- reg			: I2C slave address, (e.g. 0x49)
+> +- interrupt-parent	: the phandle to the interrupt controller which provides
+> +			  the interrupt
+> +- interrupts		: interrupt specification
+> +- avdd-supply		: analogic power supply
+> +- vdd-supply		: power supply
+> +- touchscreen-size-x	: see touchscreen.txt
+> +- touchscreen-size-y	: see touchscreen.txt
+> +
+> +Optional properties:
+> +- touch-key-connected	: specifies whether the touchkey feature is connected
 
-What if this does not divide evenly and there is a remainder. Shouldn't 
-there be an error in that case?
+You are making it a generic property but it is specific to this device,
+so:
+	st,touch-key-connected
+?
 
-...
+> +- ledvdd-supply		: power supply to the touch key leds
+
+Is this really optional? If yes... how it gets the power when not
+provided?
+
+Best regards,
+Krzysztof
+
+> +
+> +Example:
+> +
+> +i2c@00000000 {
+> +
+> +	/* ... */
+> +
+> +	stmfts@49 {
+> +		compatible = "st,stmfts";
+> +		reg = <0x49>;
+> +		interrupt-parent = <&gpa1>;
+> +		interrupts = <1 IRQ_TYPE_NONE>;
+> +		touchscreen-size-x = <1599>;
+> +		touchscreen-size-y = <2559>;
+> +		touch-key-connected;
+> +		avdd-supply = <&ldo30_reg>;
+> +		vdd-supply = <&ldo31_reg>;
+> +		ledvdd-supply = <&ldo33_reg>;
+> +	};
+> +};
+> -- 
+> 2.11.0
+> 
