@@ -1,93 +1,56 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH v3 4/8] ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
-Date: Tue, 17 Jan 2017 10:22:20 -0800
-Message-ID: <20170117182224.32212-5-f.fainelli@gmail.com>
-References: <20170117182224.32212-1-f.fainelli@gmail.com>
+From: David Lechner <david@lechnology.com>
+Subject: davinci common clock framework (was Re: [PATCH 03/10] devicetree:
+ bindings: add bindings for ahci-da850)
+Date: Tue, 17 Jan 2017 12:31:56 -0600
+Message-ID: <ee95c747-4e24-4cad-80d2-b13f2e704122@lechnology.com>
+References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484311084-31547-4-git-send-email-bgolaszewski@baylibre.com>
+ <35ff358d-9b17-b2be-38d8-6a51cdddc1a1@lechnology.com>
+ <CAMpxmJUau9BgAOhacPvcA=NwyE6-yEfDgPdcCZ_JCuNH-amJSA@mail.gmail.com>
+ <d8406f53-b97d-ca9a-f7d1-94ce5b7064f7@ti.com>
+ <CAMpxmJW9ns-aG=4zYHcV5-2b_TdmJ7q+Ap1jdyoxstZjWYRL2A@mail.gmail.com>
+ <fb93275e-73ad-513b-6ac8-a39bbe43fd5c@lechnology.com>
+ <37c826cc-9804-291e-a7b2-a512b59524fd@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170117182224.32212-1-f.fainelli@gmail.com>
+In-Reply-To: <37c826cc-9804-291e-a7b2-a512b59524fd@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, vivien.didelot@savoirfairelinux.com
+To: Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-ide@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Utilize the new DSA binding, introduced with commit 8c5ad1d6179d ("net: dsa:
-Document new binding"). The legacy binding node is kept included, but is marked
-disabled.
+On 01/17/2017 06:00 AM, Sekhar Nori wrote:
+> On Tuesday 17 January 2017 12:17 AM, David Lechner wrote:
+>> On 01/16/2017 08:30 AM, Bartosz Golaszewski wrote:
+>>> 2017-01-16 13:45 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
+>>>> On Monday 16 January 2017 03:43 PM, Bartosz Golaszewski wrote:
+>>>
+>>> It's true that once davinci gets ported (is this planned?) to using
+>>> the common clock framework, we could just create a fixed-clock node in
+>>> da850-lcdk for the SATA oscillator, so the new property is redundant.
+>>>
+>>
+>> I have some commits[1] where I started on converting da850 to use the
+>> common clock framework. But, I don't know anything about other davinci
+>> family devices, so I don't think I could really take that to completion
+>> without lots of help.
+>
+> I can help with testing, reviewing and filling in any missing
+> information. But I wont have time to write the code itself.
+>
+>>
+>> [1]: https://github.com/dlech/ev3dev-kernel/commits/wip-20160509
+>
+> I see that you have made a copy of the keystone PSC driver. I think you
+> will need pretty strong reasons to not use the same driver with some
+> customization for DaVinci.
+>
 
-Tested-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- arch/arm/boot/dts/armada-xp-linksys-mamba.dts | 53 +++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
-
-diff --git a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-index 83ac884c0f8a..42ea8764814c 100644
---- a/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-+++ b/arch/arm/boot/dts/armada-xp-linksys-mamba.dts
-@@ -302,6 +302,8 @@
- 	};
- 
- 	dsa {
-+		status = "disabled";
-+
- 		compatible = "marvell,dsa";
- 		#address-cells = <2>;
- 		#size-cells = <0>;
-@@ -398,3 +400,54 @@
- 		spi-max-frequency = <40000000>;
- 	};
- };
-+
-+&mdio {
-+	status = "okay";
-+
-+	switch@0 {
-+		compatible = "marvell,mv88e6085";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				label = "lan4";
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				label = "lan3";
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				label = "lan2";
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+				label = "lan1";
-+			};
-+
-+			port@4 {
-+				reg = <4>;
-+				label = "internet";
-+			};
-+
-+			port@5 {
-+				reg = <5>;
-+				label = "cpu";
-+				ethernet = <&eth0>;
-+				fixed-link {
-+					speed = <1000>;
-+					full-duplex;
-+				};
-+			};
-+		};
-+	};
-+};
--- 
-2.9.3
+It has been a while since I looked at this, but as I recall, the device 
+tree bindings for keystone are horrible and make no sense. So, I made 
+new bindings that make more sense. But since we can't break backwards 
+compatibility in device tree, I made a new driver rather than having the 
+mess of supporting two very different bindings in one driver. I don't 
+know if that is a strong enough reason, but that is why I did it. :-)
