@@ -1,116 +1,71 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3 in
- MUSB mode
-Date: Tue, 17 Jan 2017 09:26:54 +0800
-Message-ID: <20170117042714.R8fi09wn@smtp2p.mail.yandex.net>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/8] ARM: dts: Switch to new DSA binding
+Date: Mon, 16 Jan 2017 17:30:38 -0800
+Message-ID: <61c15ec6-6c0d-7865-d140-dba4ca3657a4@gmail.com>
+References: <20170105192957.14304-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB67F6XBQKGQEJOQXQGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170105192957.14304-1-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, vivien.didelot@savoirfairelinux.com, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 01/05/2017 11:29 AM, Florian Fainelli wrote:
+> Hi all,
+> 
+> This patch series converts the in-tree users to utilize the new (relatively)
+> DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
+> new binding"). The legacy binding node is kept included, but is marked
+> disabled.
+> 
+> Changes in v2:
+> 
+> - patch 1: Use an hexadecimal reg property
+> - patch 2: fixed the subject
+> - patch 3: s/okay/disabled/ for the legacy DSA node
+> - patches 7/8: fixed a stray whitespace
+> 
+> In about 2-3 releases we may consider removing the old DSA binding entirely
+> from the kernel.
 
-2017=E5=B9=B41=E6=9C=8817=E6=97=A5 06:57=E4=BA=8E Ond=C5=99ej Jirman <megou=
-s@megous.com>=E5=86=99=E9=81=93=EF=BC=9A
->
-> Dne 16.1.2017 v 20:14 Icenowy Zheng napsal(a):=20
-> > The PHY0 on H3 can be wired either to MUSB controller or OHCI/EHCI=20
-> > controller.=20
-> >=20
-> > The original driver wired it to OHCI/EHCI controller; however, as the=
-=20
-> > code to use PHY0 as OHCI/EHCI is missing, it makes the PHY fully=20
-> > unusable.=20
-> >=20
-> > Rename the register (according to its function and the name in BSP=20
-> > driver), and remove the code which wires the PHY0 to OHCI/EHCI, as MUSB=
-=20
-> > can support both peripheral and host mode (although the host mode of=20
-> > MUSB is buggy).=20
-> >=20
-> > The register that is renamed is now unused, as its initial value is jus=
-t=20
-> > MUSB mode. However, when OHCI/EHCI mode support is added, the register=
-=20
-> > can be used again.=20
-> >=20
-> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
-> > ---=20
-> >=C2=A0 drivers/phy/phy-sun4i-usb.c | 25 +++++++++----------------=20
-> >=C2=A0 1 file changed, 9 insertions(+), 16 deletions(-)=20
-> >=20
-> > diff --git a/drivers/phy/phy-sun4i-usb.c b/drivers/phy/phy-sun4i-usb.c=
-=20
-> > index bf28a0fdd569..6b193a635c6b 100644=20
-> > --- a/drivers/phy/phy-sun4i-usb.c=20
-> > +++ b/drivers/phy/phy-sun4i-usb.c=20
-> > @@ -49,7 +49,7 @@=20
-> >=C2=A0 #define REG_PHYBIST 0x08=20
-> >=C2=A0 #define REG_PHYTUNE 0x0c=20
-> >=C2=A0 #define REG_PHYCTL_A33 0x10=20
-> > -#define REG_PHY_UNK_H3 0x20=20
-> > +#define REG_PHY_OTGCTL 0x20=20
->
-> You have added REG_PHY_OTGCTL, but it is not used below.=20
+Gregory, are you going to take this for 4.11? Thanks
 
-See the commit message.
+> 
+> Thank you!
+> 
+> Florian Fainelli (8):
+>   ARM: dts: armada-370-rd: Utilize new DSA binding
+>   ARM: dts: armada-385-linksys: Utilize new DSA binding
+>   ARM: dts: armada-388-clearfog: Utilize new DSA binding
+>   ARM: dts: armada-xp-linksys-mamba: Utilize new DSA binding
+>   ARM: dts: kirkwood-dir665: Utilize new DSA binding
+>   ARM: dts: kirkwood-linksys-viper: Utilize new DSA binding
+>   ARM: dts: kirkwood-mv88f6281gtw-ge: Utilize new DSA binding
+>   ARM: dts: kirkwood-rd88f6281: Utilize new DSA binding
+> 
+>  arch/arm/boot/dts/armada-370-rd.dts            | 44 +++++++++++++++++
+>  arch/arm/boot/dts/armada-385-linksys.dtsi      | 52 ++++++++++++++++++++-
+>  arch/arm/boot/dts/armada-388-clearfog.dts      | 65 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/armada-xp-linksys-mamba.dts  | 53 +++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-dir665.dts          | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-linksys-viper.dts   | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 49 +++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-rd88f6281-z0.dts    | 11 +++++
+>  arch/arm/boot/dts/kirkwood-rd88f6281.dtsi      | 44 +++++++++++++++++
+>  9 files changed, 415 insertions(+), 1 deletion(-)
+> 
 
-I know it's now unused :-) It's just because the default mode is musb.
 
->
-> regards,=20
-> =C2=A0 o.=20
->
-> >=C2=A0 #define REG_PMU_UNK1 0x10=20
-> >=C2=A0=20
-> > @@ -269,23 +269,16 @@ static int sun4i_usb_phy_init(struct phy *_phy)=
-=20
-> >=C2=A0 writel(val & ~2, phy->pmu + REG_PMU_UNK1);=20
-> >=C2=A0 }=20
-> >=C2=A0=20
-> > - if (data->cfg->type =3D=3D sun8i_h3_phy) {=20
-> > - if (phy->index =3D=3D 0) {=20
-> > - val =3D readl(data->base + REG_PHY_UNK_H3);=20
-> > - writel(val & ~1, data->base + REG_PHY_UNK_H3);=20
-> > - }=20
-> > - } else {=20
-> > - /* Enable USB 45 Ohm resistor calibration */=20
-> > - if (phy->index =3D=3D 0)=20
-> > - sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);=20
-> > + /* Enable USB 45 Ohm resistor calibration */=20
-> > + if (phy->index =3D=3D 0)=20
-> > + sun4i_usb_phy_write(phy, PHY_RES45_CAL_EN, 0x01, 1);=20
-> >=C2=A0=20
-> > - /* Adjust PHY's magnitude and rate */=20
-> > - sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);=20
-> > + /* Adjust PHY's magnitude and rate */=20
-> > + sun4i_usb_phy_write(phy, PHY_TX_AMPLITUDE_TUNE, 0x14, 5);=20
-> >=C2=A0=20
-> > - /* Disconnect threshold adjustment */=20
-> > - sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,=20
-> > - =C2=A0=C2=A0=C2=A0 data->cfg->disc_thresh, 2);=20
-> > - }=20
-> > + /* Disconnect threshold adjustment */=20
-> > + sun4i_usb_phy_write(phy, PHY_DISCON_TH_SEL,=20
-> > + =C2=A0=C2=A0=C2=A0 data->cfg->disc_thresh, 2);=20
-> >=C2=A0=20
-> >=C2=A0 sun4i_usb_phy_passby(phy, 1);=20
-> >=C2=A0=20
-> >=20
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Florian
