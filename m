@@ -1,45 +1,83 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Tue, 17 Jan 2017 06:35:25 +0000
-Message-ID: <AM3PR04MB530F532D867C08824DADDC9877C0@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
- <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
- <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
- <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkda1a4+yOrzBnKs6J84PS0StwQ68gHxDub_u7i5ofU9s7w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] fbdev: ssd1307fb: allow reset-gpios is missing
+Date: Tue, 17 Jan 2017 08:40:13 +0100
+Message-ID: <20170117074013.iqzfuoc3ys27347y@lukather>
+References: <20170117042658.QtsSkpPN@smtp3o.mail.yandex.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda1a4+yOrzBnKs6J84PS0StwQ68gHxDub_u7i5ofU9s7w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ds6hxb3kkbfhw6hg"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170117042658.QtsSkpPN-/icbEWb855g0PDqKvflMoHmW9unr2Ajn@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDA1LzEyXSBEb2N1bWVudDogZHQ6IGJpbmRpbmc6IGlt
-eDogdXBkYXRlIHBpbmN0cmwgZG9jDQo+IGZvciBpbXg2c2xsDQo+IA0KPiBPbiBUaHUsIEphbiAx
-MiwgMjAxNyBhdCAzOjU3IEFNLCBKYWNreSBCYWkgPHBpbmcuYmFpQG54cC5jb20+IHdyb3RlOg0K
-PiANCj4gPiBBbm90aGVyIHRoaW5nIGlzIHRoYXQgd2UgY2FuIHVzZSBhIHBpbnMtdG9vbCBwcm9n
-cmFtIGRldmVsb3BlZCBieSBOWFANCj4gPiB0byAgZ2VuZXJhdGUgdGhlIHBpbmN0cmwgY29uZmln
-dXJhdGlvbiBjb2RlIHRoYXQgY2FuIGJlIHVzZWQgZGlyZWN0bHkNCj4gPiBpbiBkdHMuIFRoaXMg
-dGlueSBwcm9ncmFtIGNhbiBhdm9pZCBwaW4gZnVuY3Rpb24gY29uZmxpY3QuIEFzIG9uIGkuTVgs
-DQo+ID4gdGhlcmUgYXJlIHNvIG1heSBwaW5zLCBlYWNoIHBpbiBjYW4gYmUgdXNlZCBmb3IgdXAg
-OCAgZnVuY3Rpb24uDQo+ID4gQ29uZmlndXJpbmcgdGhlIHBpbnMgaXMgYSB0aW1lLWNvbnN1bWlu
-ZyB3b3JrLiAgVGhpcyB0b29scyBpcyB2ZXJ5IHVzZWZ1bCBmb3INCj4gY3VzdG9tZXIgdG8gZ2Vu
-ZXJhdGUgdGhlIGR0cyBjb2RlLg0KPiANCj4gSSB1bmRlcnN0YW5kLCBidXQgZXZlcnkgc2lsaWNv
-biB2ZW5kb3IgaGFzIHN1Y2ggYSB0b29sLCBhbGwgYXJlIGRpZmZlcmVudCwNCj4gcHJvcHJpZXRh
-cnkgYW5kIHVuZnJpZW5kbHkgdG8gcHJvZ3JhbW1lcnMgYW5kIG9wZW4gc291cmNlIGRldmVsb3Bl
-cnMsIHdobw0KPiBuZWVkIHRvIHVuZGVyc3RhbmQgaG93IHRoZSBoYXJkd2FyZSBpcyB3b3JraW5n
-IHdpdGhvdXQgbWFnaWMgdG9vbHMgYW5kDQo+IHNlY3JldCBkYXRhIHNoZWV0cyB0byBmaXggYnVn
-cy4NCj4gDQo+IEZvciB0aGUgcGVvcGxlIHdvcmtpbmcgd2l0aCBtYWludGFpbmluZyB0aGUgY29k
-ZSBpdCBpcyBwYXJhbW91bnQgdGhhdCBEVFMgZmlsZXMNCj4gYXJlIHNlbGYtZGVzY3JpcHRpdmUu
-DQo+IA0KDQpPSy4gIFRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4gIEFkZGluZyBnZW5lcmljLXBp
-bmNvbmYgaW4gaW14IHBpbmN0cmwgbmVlZHMgc29tZSB0aW1lDQp0byBmaW5pc2ggYW5kIHRoZSBs
-ZWdhY3kgbWV0aG9kIHN0aWxsIG5lZWQgYmUgaGVyZSBldmVuIGlmIGdlbmVyaWMtcGluY29uZiBp
-cyBhZGRlZC4gDQpEbyB5b3UgcGxhbiB0byBwaWNrIHRoaXMgbGVnYWN5IGJpbmRpbmcgcGF0Y2gg
-Zm9yIG5vdz8NCg0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0K
+
+--ds6hxb3kkbfhw6hg
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 16, 2017 at 05:50:21PM +0800, Icenowy Zheng wrote:
+>=20
+> 2017=E5=B9=B41=E6=9C=8816=E6=97=A5 16:02=E4=BA=8E Maxime Ripard <maxime.r=
+ipard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > On Sun, Jan 15, 2017 at 07:21:46PM +0800, Icenowy Zheng wrote:=20
+> > > Currently some SSD1306 OLED modules are sold without a reset pin (onl=
+y=20
+> > > VCC, GND, SCK, SDA four pins).=20
+> > >=20
+> > > Add support for missing reset-gpios property.=20
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> >
+> > Unfortunately, a similar patch has been sent a couple of times=20
+> > already:=20
+> > https://www.spinics.net/lists/devicetree/msg158330.html=20
+>=20
+> Why is it never merged?
+
+It was sent 4 days ago...
+
+And since you didn't have the right maintainers in the cc list, yours
+didn't have a chance to be merged either.
+=20
+> There are really boards that needs this function.
+
+Then  you can accelerate its inclusion by reviewing it.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ds6hxb3kkbfhw6hg
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYfcpZAAoJEBx+YmzsjxAgUy8QAKbSp6ZD91G+tCYOdV7XBu2R
+TOs+qO1ttUUaSbbsgWs1FGIS+/+4Guw4brMsU+eojqrDJ09937syR2a/xwGP0MOJ
+LKoDJ9LExmYXbG6ADCkQ3/gWJfktaHkD3poVH0OoACr9gUxfw1p93q8IHbFopoUS
+soPEru5gd+3qFGFMtTAaCU/O5blbRCWkvZZ/OdbKzTcugCgKHGAmNPjOLkekMWCJ
+i2h8ghEg39R59zZ/n+47Z+Tx5LT09GtbSRumUs3G2zcex3JVnn6wH+09fV/ZqtOH
+MNFPJr4yA9tLO2K+d+Beq+Dw/+LB8IzlpVND3bBm+hKZ6TQqlu69zrpzE2e8Bi2c
+UZpfyaKyvfH3XtwMAxpAzSgAJIxqD64yu9HxishYr+0GN9jqa+bEQK6Tfoit+6ep
+WE5qqo1DnlFJjmzjQQ83k39oO9WJM59C2U5U2JVsnh4rfVblz0czJvgbb79Q/soU
+3i33rteGj7tBtmrDKchr5TH1oWEOQaYeHJxBRuJ/7FEpkXRz1/7oyASkrG9Rzlen
+tg6hsceJevRDnUFrznx38C1iGYr9nWEHRfd+7yiHPB6MTUOYcowaJkUIJzzttyFC
+SNTVzFwPuQugH/4RAB2AZz1bzCE8GIL3OR6fPmKiSVWywRJLceP3YTQWhGO449jg
+JbiKnRiXp5zq7bbgSg5T
+=vdMG
+-----END PGP SIGNATURE-----
+
+--ds6hxb3kkbfhw6hg--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
