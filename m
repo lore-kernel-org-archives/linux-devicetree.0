@@ -1,45 +1,38 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 00/10] ARM: da850-lcdk: add SATA support
-Date: Tue, 17 Jan 2017 13:34:24 +0100
-Message-ID: <CAMpxmJVdFhzLGmY8maUo8k1Gzgwp+2ivFD8VqG3SbspFoXNvbw@mail.gmail.com>
-References: <1484311084-31547-1-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484311084-31547-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Fabien Parent <fparent@baylibre.com>
+Subject: [PATCH] ARM: davinci: da850-evm: fix read access to SPI flash
+Date: Tue, 17 Jan 2017 13:57:42 +0100
+Message-ID: <20170117125742.9536-1-fparent@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: khilman@baylibre.com, nsekhar@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, Fabien Parent <fparent@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-01-13 13:37 GMT+01:00 Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>:
-> This series contains all the changes necessary to make SATA work on
-> the da850-lcdk board.
->
-> The first patch adds a clock lookup entry required for the ahci core
-> to retrieve a functional clock.
->
-> The second enables relevant config options for all davinci boards.
->
-> The third adds device tree bindings for the ahci_da850 driver.
->
-> The fourth adds a workaround for a SATA controller instability we
-> detected after increasing the PLL0 frequency for proper LCD
-> controller support.
->
-> Patches 5 through 7 extend the ahci_da850 driver - add DT support,
-> un-hardcode the clock multiplier value and add a workaround for
-> a quirk present on the da850 SATA controller.
->
-> Patches 8-10 add the device tree changes required to probe the driver.
->
-> I'm posting the series as a whole to give all reviewers the full
-> picture and visibility of the changes required, if needed I can resend
-> the patches separately.
->
+Read access to the SPI flash are broken on da850-evm, i.e. the data
+read is not what is actually programmed on the flash.
+According to the datasheet for the M25P64 part present on the da850-evm,
+if the SPI frequency is higher than 20MHz then the READ command is not
+usable anymore and only the FAST_READ command can be used to read data.
 
-Superseded by v2.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This commit specifies in the DTS that we should use FAST_READ command
+instead of the READ command.
+
+Signed-off-by: Fabien Parent <fparent@baylibre.com>
+---
+ arch/arm/boot/dts/da850-evm.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 41de15fe15a2..78492a0bbbab 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -99,6 +99,7 @@
+ 				#size-cells = <1>;
+ 				compatible = "m25p64";
+ 				spi-max-frequency = <30000000>;
++				m25p,fast-read;
+ 				reg = <0>;
+ 				partition@0 {
+ 					label = "U-Boot-SPL";
+-- 
+2.11.0
