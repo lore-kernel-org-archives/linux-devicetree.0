@@ -1,73 +1,248 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
- for nxp,irq-mask-enable
-Date: Tue, 17 Jan 2017 09:57:24 +0100
-Message-ID: <9190ec70-eda4-5e44-a85a-211945c30eeb@axentia.se>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-5-git-send-email-preid@electromag.com.au>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
+Date: Tue, 17 Jan 2017 09:57:52 +0100
+Message-ID: <1484643472.4087.6.camel@pengutronix.de>
+References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484640029-22870-5-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: christopher.spinrath@rwth-aachen.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-17 09:00, Phil Reid wrote:
-> Unfortunately some hardware device will assert their irq line immediately
-> on power on and provide no mechanism to mask the irq. As the i2c muxes
-> provide no method to mask irq line this provides a work around by keeping
-> the parent irq masked until enough device drivers have loaded to service
-> all pending interrupts.
+Hi Christopher,
+
+On Fri, 2016-12-02 at 15:37 +0100, christopher.spinrath@rwth-aachen.de
+wrote:
+> From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 > 
-> For example the the ltc1760 assert its SMBALERT irq immediately on power
-> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
-> device is registered irq are enabled and fire continuously as the second
-> device driver has not yet loaded. Setting this parameter to <1 1> will
-> delay the irq being enabled until both devices are ready.
-
-Hang on, does this suggestion I made make any sense at all? Maybe it does,
-but does the pca954x driver even get notified of any but the first irq client
-that unmasks interrupts on a mux segment? How can it count the number of
-active irq clients if not?
-
-I'm truly sorry for the trouble I'm causing by not just saying how it should
-be done from the start, but I feel like I've been thrown in at the deep end
-when it comes to interrupt controllers...
-
-Cheers,
-peda
-
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+> Apart from the already enabled Designware HDMI port, the Utilite Pro
+> has a second display pipeline which has the following shape:
+> 
+>   IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
+>                                 --> HDMI connector.
+> Enable support for it.
+> 
+> In addition, since this pipeline is hardwired to IPU1, sever the link
+> between IPU1 and the SoC-internal Designware HDMI encoder forcing the
+> latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
+> possible to drive both displays at high resolution due to the bandwidth
+> limitations of a single IPU.
+> 
+> Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 3 +++
->  1 file changed, 3 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> index aa09704..ac71be6 100644
-> --- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-> @@ -19,6 +19,8 @@ Optional Properties:
->    - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
->      children in idle state. This is necessary for example, if there are several
->      multiplexers on the bus and the devices behind them use same I2C addresses.
-> +  - nxp,irq-mask-enable: array; Defines the minimum number of chips that must
-> +    register an irq for each channel before the parent irq line in enabled.
->    - interrupt-parent: Phandle for the interrupt controller that services
->      interrupts for this device.
->    - interrupts: Interrupt mapping for IRQ.
-> @@ -36,6 +38,7 @@ Example:
->  		#size-cells = <0>;
->  		reg = <0x74>;
+> Hi all,
+> 
+> the removal of the link between IPU1 and the Designware HDMI encoder is the
+> result of a discussion I had with Philipp Zabel:
+> 
+>   https://lists.freedesktop.org/archives/dri-devel/2016-November/125399.html .
+> 
+> Altough it is not possible to connect anything else to IPU1 on the Utilite, this
+> approach has at least one disadvantage: if the resolution is low enough such 
+> that a single IPU can handle both displays then muxing both displays to IPU1
+> would reduce the power consumption.
+> 
+> However, IMHO omitting the link IPU1 <--> DW HDMI is still the preferrable
+> solution since I'm not aware of any OS/driver that is capable of switching IPUs
+> or can handle the bandwidth limitation in a sane way. In particular, Linux is
+> unusable when both displays are supposed to be driven at high resolution and
+> both muxing options for the DW HDMI are available (this is not a userspace
+> issue; the system becomes almost unresponsive as soon as the kernel sets the
+> initial resolution).
+> 
+> Cheers,
+> Christopher
+> 
+> P.S.: this patch depends on the tfp410 bridge driver which has recently been
+> merged into drm-next.
+> 
+>  arch/arm/boot/dts/imx6q-utilite-pro.dts | 115 ++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-utilite-pro.dts b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+> index 2200994..69bdd82 100644
+> --- a/arch/arm/boot/dts/imx6q-utilite-pro.dts
+> +++ b/arch/arm/boot/dts/imx6q-utilite-pro.dts
+> @@ -59,6 +59,33 @@
+>  		rtc1 = &snvs_rtc;
+>  	};
 >  
-> +		nxp,irq-mask-enable = <0 0 0 0 1 0 0 0>;
->  		interrupt-parent = <&ipic>;
->  		interrupts = <17 IRQ_TYPE_LEVEL_LOW>;
->  		interrupt-controller;
-> 
+> +	encoder {
+> +		compatible = "ti,tfp410";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +
+> +				tfp410_in: endpoint {
+> +					remote-endpoint = <&parallel_display_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +
+> +				tfp410_out: endpoint {
+> +					remote-endpoint = <&hdmi_connector_in>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	gpio-keys {
+>  		compatible = "gpio-keys";
+>  		pinctrl-names = "default";
+> @@ -72,6 +99,19 @@
+>  		};
+>  	};
+>  
+> +	hdmi-connector {
+> +		compatible = "hdmi-connector";
+> +
+> +		type = "a";
+> +		ddc-i2c-bus = <&i2c_dvi_ddc>;
+> +
+> +		port {
+> +			hdmi_connector_in: endpoint {
+> +				remote-endpoint = <&tfp410_out>;
+> +			};
+> +		};
+> +	};
+> +
+>  	i2cmux {
+>  		compatible = "i2c-mux-gpio";
+>  		pinctrl-names = "default";
+> @@ -105,8 +145,46 @@
+>  			#size-cells = <0>;
+>  		};
+>  	};
+> +
+> +	parallel-display {
+> +		compatible = "fsl,imx-parallel-display";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ipu1>;
+> +
+> +		interface-pix-fmt = "rgb24";
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This is not necessary if the connector created by the tpf410 has the
+correct media bus format set in its display_info structure. This can be
+done in tfp410_attach, before calling drm_mode_connector_attach_encoder:
+
+        u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+
+	drm_display_info_set_bus_formats(&dvi->connector.display_info,                                                                         
+					 &bus_format, 1);
+
+After this is done, the above line should be removed in a follow-up
+patch.
+
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			parallel_display_in: endpoint {
+> +				remote-endpoint = <&ipu1_di0_disp0>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			parallel_display_out: endpoint {
+> +				remote-endpoint = <&tfp410_in>;
+> +			};
+> +		};
+> +	};
+>  };
+>  
+> +/*
+> + * A single IPU is not able to drive both display interfaces available on the
+> + * Utilite Pro at high resolution due to its bandwidth limitation. Since the
+> + * tfp410 encoder is wired up to IPU1, sever the link between IPU1 and the
+> + * SoC-internal Designware HDMI encoder forcing the latter to be connected to
+> + * IPU2 instead of IPU1.
+> + */
+> +/delete-node/&ipu1_di0_hdmi;
+> +/delete-node/&hdmi_mux_0;
+> +/delete-node/&ipu1_di1_hdmi;
+> +/delete-node/&hdmi_mux_1;
+> +
+>  &hdmi {
+>  	ddc-i2c-bus = <&i2c2>;
+>  	status = "okay";
+> @@ -151,6 +229,39 @@
+>  		>;
+>  	};
+>  
+> +	pinctrl_ipu1: ipu1grp {
+> +		fsl,pins = <
+> +			MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x38
+> +			MX6QDL_PAD_DI0_PIN15__IPU1_DI0_PIN15       0x38
+> +			MX6QDL_PAD_DI0_PIN2__IPU1_DI0_PIN02        0x38
+> +			MX6QDL_PAD_DI0_PIN3__IPU1_DI0_PIN03        0x38
+> +			MX6QDL_PAD_DISP0_DAT0__IPU1_DISP0_DATA00   0x38
+> +			MX6QDL_PAD_DISP0_DAT1__IPU1_DISP0_DATA01   0x38
+> +			MX6QDL_PAD_DISP0_DAT2__IPU1_DISP0_DATA02   0x38
+> +			MX6QDL_PAD_DISP0_DAT3__IPU1_DISP0_DATA03   0x38
+> +			MX6QDL_PAD_DISP0_DAT4__IPU1_DISP0_DATA04   0x38
+> +			MX6QDL_PAD_DISP0_DAT5__IPU1_DISP0_DATA05   0x38
+> +			MX6QDL_PAD_DISP0_DAT6__IPU1_DISP0_DATA06   0x38
+> +			MX6QDL_PAD_DISP0_DAT7__IPU1_DISP0_DATA07   0x38
+> +			MX6QDL_PAD_DISP0_DAT8__IPU1_DISP0_DATA08   0x38
+> +			MX6QDL_PAD_DISP0_DAT9__IPU1_DISP0_DATA09   0x38
+> +			MX6QDL_PAD_DISP0_DAT10__IPU1_DISP0_DATA10  0x38
+> +			MX6QDL_PAD_DISP0_DAT11__IPU1_DISP0_DATA11  0x38
+> +			MX6QDL_PAD_DISP0_DAT12__IPU1_DISP0_DATA12  0x38
+> +			MX6QDL_PAD_DISP0_DAT13__IPU1_DISP0_DATA13  0x38
+> +			MX6QDL_PAD_DISP0_DAT14__IPU1_DISP0_DATA14  0x38
+> +			MX6QDL_PAD_DISP0_DAT15__IPU1_DISP0_DATA15  0x38
+> +			MX6QDL_PAD_DISP0_DAT16__IPU1_DISP0_DATA16  0x38
+> +			MX6QDL_PAD_DISP0_DAT17__IPU1_DISP0_DATA17  0x38
+> +			MX6QDL_PAD_DISP0_DAT18__IPU1_DISP0_DATA18  0x38
+> +			MX6QDL_PAD_DISP0_DAT19__IPU1_DISP0_DATA19  0x38
+> +			MX6QDL_PAD_DISP0_DAT20__IPU1_DISP0_DATA20  0x38
+> +			MX6QDL_PAD_DISP0_DAT21__IPU1_DISP0_DATA21  0x38
+> +			MX6QDL_PAD_DISP0_DAT22__IPU1_DISP0_DATA22  0x38
+> +			MX6QDL_PAD_DISP0_DAT23__IPU1_DISP0_DATA23  0x38
+> +		>;
+> +	};
+> +
+>  	pinctrl_uart2: uart2grp {
+>  		fsl,pins = <
+>  			MX6QDL_PAD_GPIO_7__UART2_TX_DATA 0x1b0b1
+> @@ -194,6 +305,10 @@
+>  	};
+>  };
+>  
+> +&ipu1_di0_disp0 {
+> +	remote-endpoint = <&parallel_display_in>;
+> +};
+> +
+>  &pcie {
+>  	pcie@0,0 {
+>  		reg = <0x000000 0 0 0 0>;
+
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+regards
+Philipp
