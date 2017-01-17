@@ -1,80 +1,149 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v11 06/12] drm/mediatek: update display module connections
-Date: Tue, 17 Jan 2017 13:19:40 +0800
-Message-ID: <1484630380.5483.1.camel@mtksdaap41>
-References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
- <1484117473-46644-7-git-send-email-yt.shen@mediatek.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Tue, 17 Jan 2017 11:05:51 +0530
+Message-ID: <587DAD37.5030201@ti.com>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
+ <587C6A40.8070608@ti.com> <20170116074927.086418f4@jawa>
+ <587C8088.80905@ti.com> <20170116103136.21c899ac@jawa>
+ <587C9CE6.8040001@ti.com> <76d18446-78c9-87f2-22ad-f7ea38771285@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484117473-46644-7-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <76d18446-78c9-87f2-22ad-f7ea38771285-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>, "jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT24gV2VkLCAyMDE3LTAxLTExIGF0IDE0OjUxICswODAwLCBZVCBTaGVuIHdyb3Rl
-Ogo+IHVwZGF0ZSBjb25uZWN0aW9ucyBmb3IgT1ZMLCBSRE1BLCBCTFMsIERTSQo+IAo+IFNpZ25l
-ZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgoKQWNrZWQtYnk6IENLIEh1
-IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHAuYyB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNo
-YW5nZWQsIDI1IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHAuYwo+IGluZGV4IGI3N2Q0NTYuLmE5YjIwOWMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kZHAuYwo+IEBAIC0zMiw2ICszMiwxMCBAQAo+ICAjZGVmaW5lIERJU1Bf
-UkVHX0NPTkZJR19ESVNQX1JETUExX01PVVRfRU4JMHgwYzgKPiAgI2RlZmluZSBESVNQX1JFR19D
-T05GSUdfTU1TWVNfQ0dfQ09OMAkJMHgxMDAKPiAgCj4gKyNkZWZpbmUgRElTUF9SRUdfQ09ORklH
-X0RJU1BfT1ZMX01PVVRfRU4JMHgwMzAKPiArI2RlZmluZSBESVNQX1JFR19DT05GSUdfT1VUX1NF
-TAkJCTB4MDRjCj4gKyNkZWZpbmUgRElTUF9SRUdfQ09ORklHX0RTSV9TRUwJCQkweDA1MAo+ICsK
-PiAgI2RlZmluZSBESVNQX1JFR19NVVRFWF9FTihuKQkoMHgyMCArIDB4MjAgKiAobikpCj4gICNk
-ZWZpbmUgRElTUF9SRUdfTVVURVgobikJKDB4MjQgKyAweDIwICogKG4pKQo+ICAjZGVmaW5lIERJ
-U1BfUkVHX01VVEVYX1JTVChuKQkoMHgyOCArIDB4MjAgKiAobikpCj4gQEAgLTcxLDYgKzc1LDEw
-IEBACj4gICNkZWZpbmUgRFBJMF9TRUxfSU5fUkRNQTEJCTB4MQo+ICAjZGVmaW5lIENPTE9SMV9T
-RUxfSU5fT1ZMMQkJMHgxCj4gIAo+ICsjZGVmaW5lIE9WTF9NT1VUX0VOX1JETUEJCTB4MQo+ICsj
-ZGVmaW5lIEJMU19UT19EU0lfUkRNQTFfVE9fRFBJMQkweDgKPiArI2RlZmluZSBEU0lfU0VMX0lO
-X0JMUwkJCTB4MAo+ICsKPiAgc3RydWN0IG10a19kaXNwX211dGV4IHsKPiAgCWludCBpZDsKPiAg
-CWJvb2wgY2xhaW1lZDsKPiBAQCAtMTExLDYgKzExOSw5IEBAIHN0YXRpYyB1bnNpZ25lZCBpbnQg
-bXRrX2RkcF9tb3V0X2VuKGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCWlmIChjdXIgPT0g
-RERQX0NPTVBPTkVOVF9PVkwwICYmIG5leHQgPT0gRERQX0NPTVBPTkVOVF9DT0xPUjApIHsKPiAg
-CQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19ESVNQX09WTDBfTU9VVF9FTjsKPiAgCQl2YWx1ZSA9
-IE9WTDBfTU9VVF9FTl9DT0xPUjA7Cj4gKwl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5U
-X09WTDAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX1JETUEwKSB7Cj4gKwkJKmFkZHIgPSBESVNQ
-X1JFR19DT05GSUdfRElTUF9PVkxfTU9VVF9FTjsKPiArCQl2YWx1ZSA9IE9WTF9NT1VUX0VOX1JE
-TUE7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09EICYmIG5leHQgPT0gRERQ
-X0NPTVBPTkVOVF9SRE1BMCkgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfT0Rf
-TU9VVF9FTjsKPiAgCQl2YWx1ZSA9IE9EX01PVVRfRU5fUkRNQTA7Cj4gQEAgLTE0OCw2ICsxNTks
-OSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2luKGVudW0gbXRrX2RkcF9jb21w
-X2lkIGN1ciwKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfT1ZMMSAmJiBuZXh0
-ID09IEREUF9DT01QT05FTlRfQ09MT1IxKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdf
-RElTUF9DT0xPUjFfU0VMX0lOOwo+ICAJCXZhbHVlID0gQ09MT1IxX1NFTF9JTl9PVkwxOwo+ICsJ
-fSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9PSBERFBfQ09NUE9O
-RU5UX0RTSTApIHsKPiArCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19EU0lfU0VMOwo+ICsJCXZh
-bHVlID0gRFNJX1NFTF9JTl9CTFM7Cj4gIAl9IGVsc2Ugewo+ICAJCXZhbHVlID0gMDsKPiAgCX0K
-PiBAQCAtMTU1LDYgKzE2OSwxNSBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2lu
-KGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCXJldHVybiB2YWx1ZTsKPiAgfQo+ICAKPiAr
-c3RhdGljIHZvaWQgbXRrX2RkcF9zb3V0X3NlbCh2b2lkIF9faW9tZW0gKmNvbmZpZ19yZWdzLAo+
-ICsJCQkgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiArCQkJICAgICBlbnVtIG10a19k
-ZHBfY29tcF9pZCBuZXh0KQo+ICt7Cj4gKwlpZiAoY3VyID09IEREUF9DT01QT05FTlRfQkxTICYm
-IG5leHQgPT0gRERQX0NPTVBPTkVOVF9EU0kwKQo+ICsJCXdyaXRlbF9yZWxheGVkKEJMU19UT19E
-U0lfUkRNQTFfVE9fRFBJMSwKPiArCQkJICAgICAgIGNvbmZpZ19yZWdzICsgRElTUF9SRUdfQ09O
-RklHX09VVF9TRUwpOwo+ICt9Cj4gKwo+ICB2b2lkIG10a19kZHBfYWRkX2NvbXBfdG9fcGF0aCh2
-b2lkIF9faW9tZW0gKmNvbmZpZ19yZWdzLAo+ICAJCQkgICAgICBlbnVtIG10a19kZHBfY29tcF9p
-ZCBjdXIsCj4gIAkJCSAgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIG5leHQpCj4gQEAgLTE2Nyw2
-ICsxOTAsOCBAQCB2b2lkIG10a19kZHBfYWRkX2NvbXBfdG9fcGF0aCh2b2lkIF9faW9tZW0gKmNv
-bmZpZ19yZWdzLAo+ICAJCXdyaXRlbF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRyKTsK
-PiAgCX0KPiAgCj4gKwltdGtfZGRwX3NvdXRfc2VsKGNvbmZpZ19yZWdzLCBjdXIsIG5leHQpOwo+
-ICsKPiAgCXZhbHVlID0gbXRrX2RkcF9zZWxfaW4oY3VyLCBuZXh0LCAmYWRkcik7Cj4gIAlpZiAo
-dmFsdWUpIHsKPiAgCQlyZWcgPSByZWFkbF9yZWxheGVkKGNvbmZpZ19yZWdzICsgYWRkcikgfCB2
-YWx1ZTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
-cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Joao,
+
+On Monday 16 January 2017 10:31 PM, Joao Pinto wrote:
+> 
+> Hi,
+> 
+> Às 10:13 AM de 1/16/2017, Kishon Vijay Abraham I escreveu:
+>> + Joao, Jingoo
+>>
+>> Hi,
+>>
+>> On Monday 16 January 2017 03:01 PM, Lukasz Majewski wrote:
+>>> Hi Kishon,
+>>>
+>>>> Hi Łukasz,
+>>>>
+>>>> On Monday 16 January 2017 12:19 PM, Lukasz Majewski wrote:
+>>>>> Hi Kishon,
+>>>>>
+>>>>>> Hi,
+>>>>>>
+>>>>>> On Sunday 15 January 2017 06:49 PM, Lukasz Majewski wrote:
+>>>>>>> Some devices (due to e.g. bad PCIe signal integrity) require to
+>>>>>>> run with forced GEN1 speed on PCIe bus.
+>>>>>>>
+>>>>>>> This patch changes the speed explicitly on dra7 based devices when
+>>>>>>> proper device tree attribute is defined for the PCIe controller.
+>>>>>>>
+>>>>>>> Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+>>>>>>
+>>>>>> Bjorn has already queued a patch to do the same thing
+>>>>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__git.kernel.org_cgit_linux_kernel_git_helgaas_pci.git_log_-3Fh-3Dpci_host-2Ddra7xx&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=E8zk1CbKxGH-f3fw_WpXxFU-A8BLkgA8NusCaxk1SvA&e= 
+>>>>>
+>>>>> It seems like Bjorn only modifies CAP registers.
+>>>>
+>>>> The patch also modifies the LNKCTL2 register.
+>>>>>
+>>>>> He also needs to change register with 0x080C offset to actually
+>>>>> ( PCIECTRL_PL_WIDTH_SPEED_CTL )
+>>>>
+>>>> This bit is used to initiate speed change (after the link is
+>>>> initialized in GEN1). Resetting the bit (like what you have done
+>>>> here) prevents speed change.
+>>>
+>>> This is strange, but e2e advised me to do things as I did in the patch
+>>> to _force_ GEN1 operation on PCIe2 port [1] (AM5728)
+>>>
+>>> Link:
+>>> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__e2e.ti.com_support_arm_sitara-5Farm_f_791_t_566421&d=DwIDaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=s2fO0hii0OGNOv9qQy_HRXy-xAJUD1NNoEcc3io_kx0&m=zD82T5n4WcL7Ga-NSY2NI7KE75xQ99hN-mW2yX46wQk&s=uXLwglyRYqKpwp1JSxkOWmKpQ2wjfhgofpm8DCfquNw&e= 
+>>>
+>>> Both patches modify 0x5180 007C register to set GEN1 capability
+>>> (PCI_EXP_LNKCAP_SLS_2_5GB)
+>>>
+>>> The problem is with second register (in your patch):
+>>>
+>>> From SPRUHZ6G TRM:
+>>>
+>>> PCIECTRL_EP_DBICS_LNK_CAS_2 (0x5180 00A0)
+>>> - TRGT_LINK_SPEED (Reset 0x1) - "Target Link Speed" - no more
+>>>   description in TRM
+>>>
+>>> It is set to PCI_EXP_LNKCAP_SLS_2_5GB = 0x1, which is the same as
+>>> default /reset value.
+>>
+>> The default value is 0x2 (or else none of the cards would have enumerated in GEN2)
+>>>
+>>>
+>>> Could you clarify which way to _force_ PCIe GEN1 operation is correct?
+>>> Mine shows differences in lspci output (as posted in [1]).
+>>
+>> You'll see the difference even with the patch in Bjorn's tree ;-)
+>>
+>> I think these are 2 different approaches to keep the link at GEN1. Joao or
+>> Jingoo, do you have any suggestion here?
+> 
+> I studied the Databook, and both approaches seem to be right, dependently of the
+> Core configuration and setup.
+> 
+> The standard manual speed change sequence is:
+> a) Write to PCIE_CAP_TARGET_LINK_SPEED (indicating desired speed)
+> b) Clear "Directed Speed Change"
+> c) Set "Directed Speed Change"
+> 
+> If "Directed Speed Change" is set (DEFAULT_GEN2_SPEED_CHANGE is the default
+> value), it will execute LTSSM to initiate speed change to Gen2 or Gen3, after
+> link is started in Gen1, and then the bit is automatically cleared.
+> 
+> Lukasz is reseting this bit, in order to avoid the LTSSM to be executed, which
+> is correct. There is another way to prevent this automatic speed change, which
+> is to set GEN1 speed before link up which might be difficult in some setups, so
+> Kishon's also right.
+
+Just for my understanding, why do you think this will be difficult in some setups?
+> 
+> In my opinion Lukasz approach would be the one that might be more universal and
+> more "secure".
+
+IMHO setting link control in the standard PCIe header space should be more
+universal. I'm not sure about the secure part though.
+
+Thanks
+Kishon
+> 
+> Joao
+> 
+> 
+>>
+>>>
+>>>>
+>>>> IMO the better way is to set the LNKCTL2 to GEN1 instead of hacking
+>>>> the IP register.
+>>>
+>>> From the original patch description:
+>>>
+>>> "Add support to force Root Complex to work in GEN1 mode if so desired,
+>>> but don't force GEN1 mode on any board just yet."
+>>>
+>>> Are there any (floating around) patches allowing forcing GEN1 operation
+>>> on any board (I would like to reuse/port them to my current solution)?
+>>
+>> For setting to GEN1 mode, "max-link-speed" should be set to 1 in dt with the
+>> patch in Bjorn's tree.
+>>
+>> Thanks
+>> Kishon
+>>
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
