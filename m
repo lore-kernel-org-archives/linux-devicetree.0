@@ -1,81 +1,98 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Wed, 18 Jan 2017 14:51:43 +0100
-Message-ID: <4276ee3d-c922-e02c-4fa0-4f903db988cc@gmail.com>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
- <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
- <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
- <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
- <CACna6rz_g+N2rs=O-QRAka_BVMiMXhmC+O5KgeZJFmCe8bf1jQ@mail.gmail.com>
+From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] arm64: dts: exynos: Add USB 3.0 controller node
+ for Exynos7
+Date: Wed, 18 Jan 2017 22:58:47 +0900
+Message-ID: <CAGOxZ52ypgGdvYYP24Y37NzfmGqDNwBW+NsrKDAeNN6=OnafbA@mail.gmail.com>
+References: <CGME20170118063008epcas5p26a5a1fd73d843b2b08eae0fdb03b775c@epcas5p2.samsung.com>
+ <1484721173-30474-1-git-send-email-pankaj.dubey@samsung.com> <1484721173-30474-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <CACna6rz_g+N2rs=O-QRAka_BVMiMXhmC+O5KgeZJFmCe8bf1jQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jagan Teki <jagan@openedev.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484721173-30474-2-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kgene <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMTcvMjAxNyAwNDo0OSBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDE3IEph
-bnVhcnkgMjAxNyBhdCAxNDo1NywgQ3lyaWxsZSBQaXRjaGVuIDxjeXJpbGxlLnBpdGNoZW5AYXRt
-ZWwuY29tPiB3cm90ZToKPj4gTGUgMTcvMDEvMjAxNyDDoCAxNDoxNiwgUmFmYcWCIE1pxYJlY2tp
-IGEgw6ljcml0IDoKPj4+IE9uIDE3IEphbnVhcnkgMjAxNyBhdCAxMjowMywgVXdlIEtsZWluZS1L
-w7ZuaWcKPj4+IDx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgo+Pj4+IFRo
-ZSBNUjI1IGZhbWlseSBkb2Vzbid0IHN1cHBvcnQgSkVERUMsIHNvIHRoZXkgbmVlZCBleHBsaWNp
-dCBtZW50aW9uaW5nCj4+Pj4gaW4gdGhlIGxpc3Qgb2Ygc3VwcG9ydGVkIHNwaSBJRHMuIFRoaXMg
-bWFrZXMgaXQgcG9zc2libGUgdG8gYWRkIHRoZXNlCj4+Pj4gdXNpbmcgZm9yIGV4YW1wbGU6Cj4+
-Pj4KPj4+PiAgICAgICAgIGNvbXBhdGlibGUgPSAiZXZlcnNwaW4sbXIyNWg0MCI7Cj4+Pgo+Pj4g
-KC4uLikKPj4+Cj4+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbXRkL2plZGVjLHNwaS1ub3IudHh0Cj4+Pj4gaW5kZXggMmM5MWMwM2U3ZWIwLi4zZTky
-MGVjNWM0ZDMgMTAwNjQ0Cj4+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL210ZC9qZWRlYyxzcGktbm9yLnR4dAo+Pj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQKPj4+PiBAQCAtMTQsNiArMTQsOCBA
-QCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+Pj4+ICAgICAgICAgICAgICAgICAgIGF0MjVkZjY0MQo+
-Pj4+ICAgICAgICAgICAgICAgICAgIGF0MjZkZjA4MWEKPj4+PiAgICAgICAgICAgICAgICAgICBt
-cjI1aDI1Ngo+Pj4+ICsgICAgICAgICAgICAgICAgIG1yMjVoMTAKPj4+PiArICAgICAgICAgICAg
-ICAgICBtcjI1aDQwCj4+Pj4gICAgICAgICAgICAgICAgICAgbXgyNWw0MDA1YQo+Pj4+ICAgICAg
-ICAgICAgICAgICAgIG14MjVsMTYwNmUKPj4+PiAgICAgICAgICAgICAgICAgICBteDI1bDY0MDVk
-Cj4+Pgo+Pj4gVWgsIHRoaXMgaXMgZ2V0dGluZyBhIG5ldmVyLWVuZGluZy1zdG9yeS4uLgo+Pj4g
-SWYgdGhlc2UgY2hpcHNldHMgZG9uJ3Qgc3VwcG9ydCBKRURFQywgc2hvdWxkIHdlIGtlZXAgdGhl
-bSBpbiBqZWRlYyxzcGktbm9yLnR4dD8KPj4+Cj4+Cj4+IE1heWJlIG5vdCBidXQgSSB0aGluayB0
-aGUgbmV3IGNvbXBhdGlibGUgc3RyaW5ncyBzaG91bGQgYmUgZG9jdW1lbnRlZAo+PiBzb21ld2hl
-cmUuIEN1cnJlbnRseSBqZWRlYyxzcGktbm9yLnR4dCBhbHJlYWR5IGRvY3VtZW50cyBhbGwgdGhl
-Cj4+ICJtMjVwKi1ub25qZWRlYyIgbWVtb3JpZXMuIFNvIG1heWJlIGp1c3QgcmVuYW1pbmcgdGhl
-IGplZGVjLHNwaS1ub3IudHh0Cj4+IGZpbGUgaW50byBzcGktbm9yLnR4dCBvciBtdGQsc3BpLW5v
-ci50eHQgY291bGQgYmUgYSBzb2x1dGlvbi4gT3RoZXJ3aXNlLCB3ZQo+PiBjYW4gbGV0IGl0IGFz
-IGlzLiBJIGhhdmUgbm8gaWRlYSBvZiB3aGF0IHdvdWxkIGJlIHRoZSBiZXN0IHNvbHV0aW9uLgo+
-Pgo+PiBUbyBiZSBob25lc3QsIEkgZG9uJ3QgYWx3YXlzIGZ1bGx5IHVuZGVyc3RhbmQgdGhlIERU
-IHBvbGljeS9waGlsb3NvcGh5IGFuZAo+PiBpdHMgcmVxdWlyZW1lbnRzLiBJIGp1c3QgdGhvdWdo
-dCB3aGVuIGEgbmV3IHByb3BlcnR5IG9yIGEgbmV3IHZhbHVlIGlzCj4+IGludHJvZHVjZWQgaXQg
-aGFzIHRvIGJlIGRvY3VtZW50ZWQuCj4+IEdlbmVyYWxseSBzcGVha2luZywgd2hlbiBEVCBpcyBp
-bnZvbHZlZCBpbiBzb21lIHNlcmllcyBvZiBwYXRjaGVzLCBpdCBvZnRlbgo+PiBnZW5lcmF0ZXMg
-bWFueSBkaXNjdXNzaW9ucyBhYm91dCB0aGUgcHJvcGVyIHdheSB0byBkbyB0aGlua3MgYW5kIGFi
-b3V0Cj4+IGNob29zaW5nIHRoZSBiZXN0IGJldHdlZW4gbWFueSB0ZWNobmljYWxseSBmdW5jdGlv
-bmFsIHNvbHV0aW9ucy4KPj4KPj4gSWYgeW91IHRoaW5rIGplZGVjLHNwaS1ub3IudHh0IGlzIG5v
-dCBzdWl0ZWQgdG8gZG9jdW1lbnQgdGhlIG5ldyB2YWx1ZSBmb3IKPj4gdGhlIGNvbXBhdGlibGUg
-c3RyaW5nLCB3aHkgbm90LCBJIHBlcmZlY3RseSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQuCj4+Cj4+
-IEkgZG9uJ3QgbWluZCBjaG9vc2luZyBhbm90aGVyIHdheS4gSSBqdXN0IHdhbnQgdG8gYmUgc3Vy
-ZSB0aGF0LCBpZiBub3QgYWxsLAo+PiBtb3N0IG9mIHBlb3BsZSBhZ3JlZSBvbiB0aGF0IHNvbHV0
-aW9uIGFuZCBpZiBwb3NzaWJsZSwgaXQgaXMgY29tcGxpYW50IHdpdGgKPj4gRFQgcG9saWN5IHNv
-IGV2ZXJ5Ym9keSBpcyBoYXBweSBhbmQgd29ya3MgdG9nZXRoZXIuCj4+IFRoYXQncyB3aHkgSSBp
-bnZvbHZlIERUIHBlb3BsZSwgZXZlbiBpZiBpdCdzIGEgc21hbGwgZGV0YWlsLCBzbyB0aGV5IGNh
-bgo+PiBhZHZpc2UgdXMuCj4+Cj4+IEFueXdheSwgYXQgc29tZSBwb2ludCB3ZSBoYXZlIHRvIHRh
-a2UgYSBkZWNpc2lvbiB0byBjYXJyeSBvbiB0aGlua3MuCj4+IFNvIGFjdHVhbGx5LCBJIHdvdWxk
-IGxpa2UgdG8gYXZvaWQgYSBuZXZlci1lbmRpbmcgc3RvcnkgOikKPiAKPiBTb3VuZHMgT0sgdG8g
-bWUsIEknbSBub3QgRFQgZXhwZXJ0IHRob3VnaCA7KQoKU28gb2ssIHdlIGFscmVhZHkgaGF2ZSBh
-IGZldyBub24tamVkZWMgYmluZGluZ3MgZG9jdW1lbnRlZCBpbgpqZWRlYyxzcGktbm9yLHRleHQg
-LiBMZXQncyBqdXN0IGFwcGx5IHRoaXMgcGF0Y2ggYW5kIGlmIHNvbWVvbmUgd2FudHMgdG8Kc3Bs
-aXQgdGhlCmJpbmRpbmcgZG9jdW1lbnQsIHBhdGNoIGlzIHdlbGNvbWUuIEdvb2QgPwoKLS0gCkJl
-c3QgcmVnYXJkcywKTWFyZWsgVmFzdXQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+HI,
+
+On Wed, Jan 18, 2017 at 3:32 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Add USB 3.0 DRD controller device node, with its clock
+> and phy information to enable the same on Exynos7.
+>
+> Signed-off-by: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+> ---
+
+Looks good.
+Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 34 +++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> index 80aa60e..9a3fbed 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+> @@ -603,6 +603,40 @@
+>                                 #include "exynos7-trip-points.dtsi"
+>                         };
+>                 };
+> +
+> +               usbdrd_phy: phy@15500000 {
+> +                       compatible = "samsung,exynos7-usbdrd-phy";
+> +                       reg = <0x15500000 0x100>;
+> +                       clocks = <&clock_fsys0 ACLK_USBDRD300>,
+> +                              <&clock_fsys0 OSCCLK_PHY_CLKOUT_USB30_PHY>,
+> +                              <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER>,
+> +                              <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PHYCLK_USER>,
+> +                              <&clock_fsys0 SCLK_USBDRD300_REFCLK>;
+> +                       clock-names = "phy", "ref", "phy_pipe",
+> +                               "phy_utmi", "itp";
+> +                       samsung,pmu-syscon = <&pmu_system_controller>;
+> +                       #phy-cells = <1>;
+> +               };
+> +
+> +               usbdrd3 {
+> +                       compatible = "samsung,exynos7-dwusb3";
+> +                       clocks = <&clock_fsys0 ACLK_USBDRD300>,
+> +                              <&clock_fsys0 SCLK_USBDRD300_SUSPENDCLK>,
+> +                              <&clock_fsys0 ACLK_AXIUS_USBDRD30X_FSYS0X>;
+> +                       clock-names = "usbdrd30", "usbdrd30_susp_clk",
+> +                               "usbdrd30_axius_clk";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+> +                       ranges;
+> +
+> +                       dwc3@15400000 {
+> +                               compatible = "snps,dwc3";
+> +                               reg = <0x15400000 0x10000>;
+> +                               interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+> +                               phys = <&usbdrd_phy 0>, <&usbdrd_phy 1>;
+> +                               phy-names = "usb2-phy", "usb3-phy";
+> +                       };
+> +               };
+>         };
+>  };
+>
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Regards,
+Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
