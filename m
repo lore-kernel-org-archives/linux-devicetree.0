@@ -1,37 +1,60 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 18/18] insert build break
-Date: Wed, 18 Jan 2017 16:06:05 -0600
-Message-ID: <CAL_JsqL-yQD=oFQW0YfB9JnSpDVcOcUG0GM8NgLCB1nsFQsrEQ@mail.gmail.com>
-References: <1484260655-80477-1-git-send-email-christopher.lee.bostic@gmail.com>
- <20170113071545.GB12441@kroah.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] Documentation: mtk-quadspi: update DT bindings
+Date: Wed, 18 Jan 2017 16:08:09 -0600
+Message-ID: <20170118220809.pmaa2f3kwiddehti@rob-hp-laptop>
+References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
+ <1484291609-20195-2-git-send-email-guochun.mao@mediatek.com>
+ <20170113151326.11e9451a@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170113071545.GB12441@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg KH <gregkh@linuxfoundation.org>, kbuild test robot <fengguang.wu@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Chris Bostic <cbostic@us.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, christopher.lee.bostic@gmail.com, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jeremy Kerr <jk@ozlabs.org>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170113151326.11e9451a@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 1:15 AM, Greg KH <gregkh@linuxfoundation.org> wrote:
-> On Thu, Jan 12, 2017 at 04:37:35PM -0600, christopher.lee.bostic@gmail.com wrote:
->> From: Chris Bostic <cbostic@us.ibm.com>
->>
->> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
->
-> I can not accept patches that have no changelog text, and this one is
-> very odd:
+On Fri, Jan 13, 2017 at 03:13:26PM +0100, Boris Brezillon wrote:
+> On Fri, 13 Jan 2017 15:13:28 +0800
+> Guochun Mao <guochun.mao@mediatek.com> wrote:
+> 
+> > Add "mediatek,mt2701-nor" for nor flash node's compatible.
+> > 
+> > Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/mtd/mtk-quadspi.txt        |    4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > index fb314f0..f83d31d 100644
+> > --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
+> > @@ -1,7 +1,9 @@
+> >  * Serial NOR flash controller for MTK MT81xx (and similar)
+> >  
+> >  Required properties:
+> > -- compatible: 	  should be "mediatek,mt8173-nor";
+> > +- compatible: 	  should contain:
+> > +		  "mediatek,mt2701-nor" for MT2701,
+> > +		  "mediatek,mt8173-nor" for MT8173.
+> 
+> Do you need to define a new compatible? If the IPs are exactly the same
+> in both SoCs it shouldn't be needed.
 
-Seems like this would be an easy check to add to 0-day. And perhaps
-missing S-o-B, too.
+Rather the 2701 should contain both strings in that case.
 
 Rob
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
