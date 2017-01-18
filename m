@@ -1,38 +1,94 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/4] pinctrl: samsung: Remove support for Exynos4415 (SoC
- not supported anymore)
-Date: Wed, 18 Jan 2017 11:37:04 +0100
-Message-ID: <CACRpkdZh+kPUwf56XskzCUPh89h5a_2_-=EFw=NFKYY_zD4jfw@mail.gmail.com>
-References: <20170114123642.15581-1-krzk@kernel.org>
- <20170114123642.15581-4-krzk@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
+ 4.1 DMA controller
+Date: Wed, 18 Jan 2017 13:37:59 +0300
+Message-ID: <bc554229-87a7-530d-7bba-837f4269c22e@cogentembedded.com>
+References: <20170117142016.11163-1-abailon@baylibre.com>
+ <20170117142016.11163-2-abailon@baylibre.com>
+ <aa9b6761-c8de-13ea-1a62-9810ad92a6d4@cogentembedded.com>
+ <710c724c-3831-e9d1-406b-76bdfed7b948@ti.com>
+ <d544f4f2-9303-8d68-0350-af9c53ff19aa@cogentembedded.com>
+ <69908f47-1920-b3f8-a307-2c9cb93c2c26@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170114123642.15581-4-krzk@kernel.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <69908f47-1920-b3f8-a307-2c9cb93c2c26-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBKYW4gMTQsIDIwMTcgYXQgMTozNiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6
-a0BrZXJuZWwub3JnPiB3cm90ZToKCj4gU3VwcG9ydCBmb3IgRXh5bm9zNDQxNSBpcyBnb2luZyBh
-d2F5IGJlY2F1c2UgdGhlcmUgYXJlIG5vIGludGVybmFsIG5vcgo+IGV4dGVybmFsIHVzZXJzLgo+
-Cj4gU2luY2UgY29tbWl0IDQ2ZGNmMGZmMGRlMyAoIkFSTTogZHRzOiBleHlub3M6IFJlbW92ZSBl
-eHlub3M0NDE1LmR0c2kiKSwKPiB0aGUgcGxhdGZvcm0gY2Fubm90IGJlIGluc3RhbnRpYXRlZCBz
-byByZW1vdmUgYWxzbyB0aGUgZHJpdmVycy4KPgo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBL
-b3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KCkl0IGNhbiBjZXJ0YWlubHkgYmUgaW5zdGFudGlh
-dGVkIChmcm9tIG9sZCBEVEJzLi4uKSBidXQgaGFzCm5vIERUUyB1cHN0cmVhbS4gQnV0IEkgZ2V0
-IHdoYXQgeW91IG1lYW4uCgpQYXRjaCBhcHBsaWVkLCBpZiBzb21lb25lIGlzIHVuaGFwcHkgdGhl
-eSBjYW4gYWx3YXlzIHN0YXJ0CnNlbmRpbmcgcmV2ZXJ0cy4KCllvdXJzLApMaW51cyBXYWxsZWlq
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 1/18/2017 1:21 PM, Sekhar Nori wrote:
+
+>>>>> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma
+>>>>> controller.
+>>>>>
+>>>>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>>>> ---
+>>>>>  .../devicetree/bindings/usb/da8xx-usb.txt          | 42
+>>>>> ++++++++++++++++++++++
+>>>>>  1 file changed, 42 insertions(+)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>>> index ccb844a..aed3169 100644
+>>>>> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>>>> @@ -18,10 +18,26 @@ Required properties:
+>>>>>
+>>>>>   - phy-names: Should be "usb-phy"
+>>>>>
+>>>>> + - dmas: specifies the dma channels
+>>>>> +
+>>>>> + - dma-names: specifies the names of the channels. Use "rxN" for
+>>>>> receive
+>>>>> +   and "txN" for transmit endpoints. N specifies the endpoint number.
+>>>>> +
+>>>>>  Optional properties:
+>>>>>  ~~~~~~~~~~~~~~~~~~~~
+>>>>>   - vbus-supply: Phandle to a regulator providing the USB bus power.
+>>>>>
+>>>>> +DMA
+>>>>> +~~~
+>>>>> +- compatible: ti,da8xx-cppi41
+>>>>
+>>>>    Almost missed this -- wildcards in this property are forbidden.
+>>>> We should use "ti,da830-cppi41" as a least common denominator.
+>>>
+>>> Documentation/devicetree/bindings/submitting-patches.txt states:
+>>>
+>>> "
+>>>   5) The wildcard "<chip>" may be used in compatible strings, as in
+>>>      the following example:
+>>>
+>>>          - compatible: Must contain '"nvidia,<chip>-pcie",
+>>>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
+>>> "
+>>>
+>>> I take this to mean that using wildcards to denote an SoC family on
+>>> which the same IP is present is okay to do.> With that understanding, I
+>>> think using ti,da8xx-cppi41 is fine too.
+>>
+>>    It doesn't really follow. I repeat, x's are not allowed.
+>
+> Can you clarify here? If x's are indeed not allowed,
+
+    I have no idea where you got that they are allowed.
+
+> then I think the
+> document is being ambiguous about what constitutes "The wildcard "<chip>""
+
+    There 's no ambiguity because the wildcard is the word "<chip>" itself, 
+not anything other. Even if "<chip>" is used in the bindings, its possible 
+values should be documented anyway.
+
+> Thanks,
+> Sekhar
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
