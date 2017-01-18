@@ -1,163 +1,38 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM64: dts: meson-gxbb-p20x: add reset for the
- ethernet PHY
-Date: Wed, 18 Jan 2017 11:36:09 +0100
-Message-ID: <1484735769.26620.69.camel@baylibre.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
-         <20161202234739.22929-4-martin.blumenstingl@googlemail.com>
-         <1484680941.26620.28.camel@baylibre.com>
-         <CAFBinCBfJ4b1a1Bqn7kJHyj79i8UJnjJh00u3NvARzJPuUmrNA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/4] pinctrl: samsung: Remove support for Exynos4415 (SoC
+ not supported anymore)
+Date: Wed, 18 Jan 2017 11:37:04 +0100
+Message-ID: <CACRpkdZh+kPUwf56XskzCUPh89h5a_2_-=EFw=NFKYY_zD4jfw@mail.gmail.com>
+References: <20170114123642.15581-1-krzk@kernel.org>
+ <20170114123642.15581-4-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCBfJ4b1a1Bqn7kJHyj79i8UJnjJh00u3NvARzJPuUmrNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170114123642.15581-4-krzk@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-01-17 at 22:26 +0100, Martin Blumenstingl wrote:
-> On Tue, Jan 17, 2017 at 8:22 PM, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> wrote:
-> > 
-> > On Sat, 2016-12-03 at 00:47 +0100, Martin Blumenstingl wrote:
-> > > 
-> > > This resets the ethernet PHY during boot to get the PHY into a
-> > > "clean"
-> > > state. While here also specify the phy-handle of the ethmac node
-> > > to
-> > > make the PHY configuration similar to the one we have on GXL
-> > > devices.
-> > > 
-> > > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemai
-> > > l.co
-> > > m>
-> > > Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > > ---
-> > >  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 15
-> > > +++++++++++++++
-> > >  1 file changed, 15 insertions(+)
-> > > 
-> > > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> > > b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> > > index 203be28..2abc553 100644
-> > > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> > > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> > > @@ -134,10 +134,25 @@
-> > >       pinctrl-names = "default";
-> > >  };
-> > > 
-> > > +&mdio0 {
-> > > +     ethernet_phy0: ethernet-phy@0 {
-> > > +             compatible = "ethernet-phy-ieee802.3-c22";
-> > > +             reg = <0>;
-> > 
-> > Sorry for the late reply.
-> > I just tried on the p200 and this patch (serie) breaks the network
-> > on
-> > it. The PHY is not detected anymore.
-> > 
-> > From the KSZ9031 Datasheet : "PHY Address 0h is supported as the
-> > unique
-> > PHY address only; it is not supported as the broadcast PHY address
-> > [...]"
-> > 
-> > So we can't just use the broadcast address here:
-> > reg should be <3>.
-> OK, I'll fix that in a follow-up. as mentioned in the other thread:
-> can you confirm that the PHY ID is 0x00221620?
-
-That's right.
-
-> It seems that I also broke meson-gxbb-nexbox-a95x.dts with that
-> series
-> (no idea why that slipped through): according to the photos from
-> Neil's wiki [0] this seems to use an IC+ 10/100 ethernet PHY
-> (probably
-> an IP101A)
-
-IP101GR from what I can see on the board.
-
-> 
-> > 
-> > > 
-> > > +     };
-> > > +};
-> > > +
-> > >  &ethmac {
-> > >       status = "okay";
-> > >       pinctrl-0 = <&eth_rgmii_pins>;
-> > >       pinctrl-names = "default";
-> > > +
-> > > +     phy-handle = <&ethernet_phy0>;
-> > > +
-> > > +     snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> > > +     snps,reset-delays-us = <0 10000 1000000>;
-> > > +     snps,reset-active-low;
-> > > +
-> > > +     phy-mode = "rgmii";
-> > 
-> > We can't define this in p20x. actually the p201 uses an rmii.
-> > I have not idea about gpio reset, or the phy address for the p201.
-> > 
-> > I suppose it would be better to move this to meson-gxbb_p200.dts
-> > 
-> > I don't know if anybody has a p201, but until we can confirm a
-> > working
-> > Ethernet configuration, we should probably drop it for the p201
-> > 
-> > Of course the problem was already there before this patch ...
-> indeed, that seems to be a problem.
-> the GXBB Nexbox A95x I mentioned above is based on the p201 board.
-> Amlogic's .dts also toggles GPIOZ_14 for it: [1]
-> chances are high that it also features an IP101A PHY (this is pure
-> speculation though).
-
-Agreed, chances are high it'll be this way.
-
-> 
-> I propose four patches to fix all this situation:
-> - add the GPIOZ_14 reset and an ethernet_phy0 (with reg = <0>) to
-> meson-gxbb-nexbox-a95x.dts
-> - add the ethernet_phy0 node with reg = <0> (and ideally I also want
-> to include the KSZ9031 PHY ID) to meson-gxbb-p200.dtsi along with
-> phy-mode = "rgmii"
-
-you mean with reg = <3> ?
-
-> - add the ethernet_phy0 node with reg = <0> (without any PHY ID as we
-> don't know which one is used) to meson-gxbb-p201.dtsi along with
-> phy-mode = "rgmii"
-> - remove "phy-mode" and ethernet_phy0 from meson-gxbb-p20x.dtsi and
-> add a comment that both, the RGMII and the RMII PHY have GPIOZ_14
-> connected to their reset line
-
-I'm not too sure about these last 2 points. As you mentioned, we are
-only speculating regarding the p201. I would prefer to avoid putting
-things we are not sure about in the DT (as much as possible).
-
-We could disable the ethernet for p201:
-1) if nobody complains, situation remains unchanged, ethernet is not
-working on that board
-2) if someone complains, then we will be able to some facts from
-him/her, and get it working properly.
-
-After all, that's not a regression. With what we had in the meson-gxbb-
-p20x.dtsi so far, ethernet never worked on that board.
- 
-> 
-> does that make sense?
-> 
-> 
-> Regards,
-> Martin
-> 
-> 
-> [0] https://github.com/superna9999/linux/wiki/Boards#nexbox-a95x-s905
-> [1] https://github.com/khadas/linux/blob/Vim/arch/arm64/boot/dts/amlo
-> gic/gxbb_p201.dts#L186
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU2F0LCBKYW4gMTQsIDIwMTcgYXQgMTozNiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6
+a0BrZXJuZWwub3JnPiB3cm90ZToKCj4gU3VwcG9ydCBmb3IgRXh5bm9zNDQxNSBpcyBnb2luZyBh
+d2F5IGJlY2F1c2UgdGhlcmUgYXJlIG5vIGludGVybmFsIG5vcgo+IGV4dGVybmFsIHVzZXJzLgo+
+Cj4gU2luY2UgY29tbWl0IDQ2ZGNmMGZmMGRlMyAoIkFSTTogZHRzOiBleHlub3M6IFJlbW92ZSBl
+eHlub3M0NDE1LmR0c2kiKSwKPiB0aGUgcGxhdGZvcm0gY2Fubm90IGJlIGluc3RhbnRpYXRlZCBz
+byByZW1vdmUgYWxzbyB0aGUgZHJpdmVycy4KPgo+IFNpZ25lZC1vZmYtYnk6IEtyenlzenRvZiBL
+b3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KCkl0IGNhbiBjZXJ0YWlubHkgYmUgaW5zdGFudGlh
+dGVkIChmcm9tIG9sZCBEVEJzLi4uKSBidXQgaGFzCm5vIERUUyB1cHN0cmVhbS4gQnV0IEkgZ2V0
+IHdoYXQgeW91IG1lYW4uCgpQYXRjaCBhcHBsaWVkLCBpZiBzb21lb25lIGlzIHVuaGFwcHkgdGhl
+eSBjYW4gYWx3YXlzIHN0YXJ0CnNlbmRpbmcgcmV2ZXJ0cy4KCllvdXJzLApMaW51cyBXYWxsZWlq
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
