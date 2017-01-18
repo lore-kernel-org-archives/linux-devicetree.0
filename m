@@ -1,50 +1,146 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 3/4] cpufreq: ti: Add cpufreq driver to determine
- available OPPs at runtime
-Date: Wed, 18 Jan 2017 08:47:25 +0530
-Message-ID: <20170118031725.GC11478@vireshk-i7>
-References: <20170117131808.29798-1-d-gerlach@ti.com>
- <20170117131808.29798-4-d-gerlach@ti.com>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 2/2] arm64: dts: exynos: Add regulators for Vbus and
+ Vbus-Boost
+Date: Wed, 18 Jan 2017 08:50:12 +0530
+Message-ID: <68177964-890d-7061-dac0-f37717b1a254@samsung.com>
+References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117150123epcas1p12709f99a0993ae58ea1fe294df5a12fe@epcas1p1.samsung.com>
+ <1484665444-23365-3-git-send-email-pankaj.dubey@samsung.com>
+ <20170117182826.gngf7gjkvfyg3uww@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170117131808.29798-4-d-gerlach@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170117182826.gngf7gjkvfyg3uww@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautamvivek1987@gmail.com>, javier@osg.samsung.com, robh+dt@kernel.org, kgene@kernel.org, sanath@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17-01-17, 07:18, Dave Gerlach wrote:
-> Some TI SoCs, like those in the AM335x, AM437x, DRA7x, and AM57x families,
-> have different OPPs available for the MPU depending on which specific
-> variant of the SoC is in use. This can be determined through use of the
-> revision and an eFuse register present in the silicon. Introduce a
-> ti-cpufreq driver that can read the aformentioned values and provide
-> them as version matching data to the opp framework. Through this the
-> opp-supported-hw dt binding that is part of the operating-points-v2
-> table can be used to indicate availability of OPPs for each device.
-> 
-> This driver also creates the "cpufreq-dt" platform_device after passing
-> the version matching data to the OPP framework so that the cpufreq-dt
-> handles the actual cpufreq implementation. Even without the necessary
-> data to pass the version matching data the driver will still create this
-> device to maintain backwards compatibility with operating-points v1
-> tables.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> ---
-> v3->v4:
-> 	Update to use simplified binding, only use "syscon" now to pass control
-> 	module register space and add offsets to relevant data for each SoC.
-> 
->  drivers/cpufreq/Kconfig.arm  |  11 ++
->  drivers/cpufreq/Makefile     |   1 +
->  drivers/cpufreq/ti-cpufreq.c | 272 +++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 284 insertions(+)
->  create mode 100644 drivers/cpufreq/ti-cpufreq.c
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
--- 
-viresh
+On Tuesday 17 January 2017 11:58 PM, Krzysztof Kozlowski wrote:
+> On Tue, Jan 17, 2017 at 08:34:04PM +0530, Pankaj Dubey wrote:
+>> From: Vivek Gautam <gautamvivek1987@gmail.com>
+>>
+>> Adding fixed voltage regulators for Vbus and Vbus-boost required
+>> by USB 3.0 DRD controller on Exynos7-espresso board.
+>>
+>> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> 
+> Same as patch 1.
+> 
+
+OK, will update.
+
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 45 +++++++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> index 9cf73cf..8d5abdd 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>> @@ -13,6 +13,7 @@
+>>  #include "exynos7.dtsi"
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>  #include <dt-bindings/clock/samsung,s2mps11.h>
+>> +#include <dt-bindings/gpio/gpio.h>
+>>  
+>>  / {
+>>  	model = "Samsung Exynos7 Espresso board based on EXYNOS7";
+>> @@ -33,6 +34,29 @@
+>>  		device_type = "memory";
+>>  		reg = <0x0 0x40000000 0x0 0xC0000000>;
+>>  	};
+>> +
+>> +	usb30_vbus_reg: regulator-usb30 {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VBUS_5V";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		gpio = <&gph1 1 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&usb30_vbus_en>;
+>> +		enable-active-high;
+>> +	};
+>> +
+>> +	usb3drd_boost_5v: regulator-usb3drd-boost {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "VUSB_VBUS_5V";
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +		gpio = <&gpf4 1 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&usb3drd_boost_en>;
+>> +		enable-active-high;
+>> +	};
+>> +
+>>  };
+>>  
+>>  &fin_pll {
+>> @@ -366,3 +390,24 @@
+>>  	vqmmc-supply = <&ldo2_reg>;
+>>  	disable-wp;
+>>  };
+>> +
+>> +&usbdrd_phy {
+>> +	vbus-supply = <&usb30_vbus_reg>;
+>> +	vbus-boost-supply = <&usb3drd_boost_5v>;
+>> +};
+>> +
+>> +&pinctrl_bus1 {
+>> +	usb30_vbus_en: usb30-vbus-en {
+>> +		samsung,pins = "gph1-1";
+>> +		samsung,pin-function = <1>;
+> 
+> Javier mentioned it, please use EXYNOS_PIN_FUNC_OUTPUT
+> 
+
+Yes, but as it's not taken care in existing dts for other pin
+definitions, so a Javier mentioned, this can be taken care as a separate
+patch for all pin definitions? Or do you want me to first add patch
+converting all these with macros and then on top of add this usb related
+pin definitions.
+
+Thanks,
+Pankaj Dubey
+
+
+>> +		samsung,pin-pud = <0>;
+> 
+> EXYNOS_PIN_PULL_NONE
+> 
+>> +		samsung,pin-drv = <0>;
+> 
+> I think these are the same as in Exynos5422, so EXYNOS5420_PIN_DRV_LV1
+> 
+> Best regards,
+> Krzysztof
+> 
+> 
+>> +	};
+>> +
+>> +	usb3drd_boost_en: usb3drd-boost-en {
+>> +		samsung,pins = "gpf4-1";
+>> +		samsung,pin-function = <1>;
+>> +		samsung,pin-pud = <0>;
+>> +		samsung,pin-drv = <0>;
+>> +	};
+>> +};
+>> -- 
+>> 2.7.4
+>>
+> 
+> 
+> 
