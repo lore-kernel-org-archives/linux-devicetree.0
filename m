@@ -1,47 +1,93 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v2 1/5] UDC: Split the driver into amd (pci) and Synopsys
- core driver
-Date: Wed, 18 Jan 2017 10:45:39 -0800
-Message-ID: <e1453122-164a-e1a8-6aa6-fb25eb33101f@gmail.com>
-References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
- <1484640308-25976-2-git-send-email-raviteja.garimella@broadcom.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: Initializing MAC address at run-time
+Date: Wed, 18 Jan 2017 19:54:35 +0100
+Message-ID: <20170118185435.fen6np7lydzgxxek@pengutronix.de>
+References: <e083ed68-0e8e-380e-23bd-5ad387c88575@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484640308-25976-2-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <e083ed68-0e8e-380e-23bd-5ad387c88575@free.fr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mason <slash.tmp@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, netdev <netdev@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 12:05 AM, Raviteja Garimella wrote:
-> This patch splits the amd5536udc driver into two -- one that does
-> pci device registration and the other file that does the rest of
-> the driver tasks like the gadget/ep ops etc for Synopsys UDC.
-> 
-> This way of splitting helps in exporting core driver symbols which
-> can be used by any other platform/pci driver that is written for
-> the same Synopsys USB device controller.
-> 
-> The current patch also includes a change in the Kconfig and Makefile.
-> A new config option USB_SNP_CORE will be selected automatically when
-> any one of the platform or pci driver for the same UDC is selected.
-> 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hello,
 
-Although the changes you have done make sense and it is most certainly a
-good idea to split udc core from bus specific glue logic, it is really
-hard to review the changes per-se because of the file rename, could that
-happen at a later time?
+On Wed, Jan 18, 2017 at 03:03:57PM +0100, Mason wrote:
+> When my system boots up, eth0 is given a seemingly random MAC address.
+> =
 
-Also, keep in mind that anytime a driver file is renamed, this poses a
-backport/maintenance issue where backporting fixes from latest upstream
-to a kernel version that has a different file/directory structure is a
-major pain.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> [    0.950734] nb8800 26000.ethernet eth0: MAC address ba:de:d6:38:b8:38
+> [    0.957334] nb8800 26000.ethernet eth0: MAC address 6e:f1:48:de:d6:c4
+> =
+
+> =
+
+> The DT node for eth0 is:
+> =
+
+> 	eth0: ethernet@26000 {
+> 		compatible =3D "sigma,smp8734-ethernet";
+> 		reg =3D <0x26000 0x800>;
+> 		interrupts =3D <38 IRQ_TYPE_LEVEL_HIGH>;
+> 		clocks =3D <&clkgen SYS_CLK>;
+> 	};
+> =
+
+> Documentation/devicetree/bindings/net/ethernet.txt mentions
+> - local-mac-address: array of 6 bytes, specifies the MAC address that was
+>   assigned to the network device;
+> =
+
+> And indeed, if I define this property, eth0 ends up with the MAC address
+> I specify in the device tree. But of course, I don't want all my boards
+> to share the same MAC address. Every interface has a unique MAC address.
+> =
+
+> In fact, the boot loader (not Uboot, a custom non-DT boot loader) stores
+> the MAC address somewhere in MMIO space, in some weird custom format.
+
+Where does your machine get the dtb from? You write it to the boot
+medium at a certain point of time I assume. So AFAICT you have the
+following options (in no particular order):
+
+ a) Describe in the dtb how to find out how the MAC address is stored
+    (already pointed out Mark and Robin)
+ b) Make your bootloader dt aware and let it provide the
+    local-mac-address property.
+ c) Adapt the dtb before it is written to the boot medium.
+ d) Let the bootloader configure the device and teach the driver to pick
+    up the mac from the device's address space.
+ e) Accept that the mac address is random during development, and make
+    Userspace configure the MAC address, which is early enough for
+    production use.
+
+Not sure d) is considered ok today, but some drivers have this feature.
+I'd say b) is the best choice.
+
+> I need to do something similar with the NAND partitions. The boot loader
+> stores the partition offsets somewhere, and I need to pass this info
+> to the NAND framework, so I assumed that inserting the corresponding
+> properties at run-time was the correct way to do it.
+
+The list of options here is similar to the list above. d) doesn't work,
+but instead you can pass the partitioning on the kernel commandline.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
