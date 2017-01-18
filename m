@@ -1,47 +1,88 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
-Date: Wed, 18 Jan 2017 09:00:34 -0800
-Message-ID: <20170118170033.GD7403@atomide.com>
-References: <20170117040336.21700-1-lokeshvutla@ti.com>
- <20170117040336.21700-2-lokeshvutla@ti.com>
- <20170117232310.GX7403@atomide.com>
- <88830967-6e83-33fc-8a1c-d776fd694e2f@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <88830967-6e83-33fc-8a1c-d776fd694e2f-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 3/3] ARM: dts: r7s72100: update sdhi clock bindings
+Date: Wed, 18 Jan 2017 12:25:02 -0500
+Message-ID: <20170118172502.13876-4-chris.brandt@renesas.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170118172502.13876-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170117 19:50]:
-> 
-> 
-> On Wednesday 18 January 2017 04:53 AM, Tony Lindgren wrote:
-> > * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170116 20:06]:
-> >> Hwmod core tries to reset and idles each IP that is registered with hwmod.
-> >> In case of earlycon, that specific uart IP cannot be reset or keep it in
-> >> idle state else earlycon hangs once hwmod resets that uart IP. So add support
-> >> to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
-> >> is enabled.
-> > 
-> > Nice :)
-> > 
-> > I guess this has no dependency to SERIAL_OMAP vs 8250_OMAP selection?
-> 
-> Unfortunately SERIAL_OMAP does not support earlycon yet. As I mentioned
-> in my cover letter, I verified this series only with 8250_OMAP.
+The SDHI controller in the RZ/A1 has 2 clock sources per channel and both
+need to be enabled/disabled for proper operation. This fixes the fact that
+the define for R7S72100_CLK_SDHI1 was not correct to begin with (typo), and
+that all 4 clock sources need to be defined an used.
 
-OK. So just to understand why it would not work with omap-serial, do we
-need something implemented in drivers/tty/serial/earlycon.c for non 8250
-drivers to make it work? Or are there other dependencies?
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+* add missing clock sources instead of just fixing typo
+* changed clock name from "carddetect" to "cd"
+---
+ arch/arm/boot/dts/r7s72100.dtsi            | 17 ++++++++++++-----
+ include/dt-bindings/clock/r7s72100-clock.h |  6 ++++--
+ 2 files changed, 16 insertions(+), 7 deletions(-)
 
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 3dd427d..9d0b8d0 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -153,9 +153,12 @@
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0xfcfe0444 4>;
+-			clocks = <&p1_clk>, <&p1_clk>;
+-			clock-indices = <R7S72100_CLK_SDHI1 R7S72100_CLK_SDHI0>;
+-			clock-output-names = "sdhi1", "sdhi0";
++			clocks = <&p1_clk>, <&p1_clk>, <&p1_clk>, <&p1_clk>;
++			clock-indices = <
++				R7S72100_CLK_SDHI00 R7S72100_CLK_SDHI01
++				R7S72100_CLK_SDHI10 R7S72100_CLK_SDHI11
++			>;
++			clock-output-names = "sdhi00", "sdhi01", "sdhi10", "sdhi11";
+ 		};
+ 	};
+ 
+@@ -478,7 +481,9 @@
+ 			      GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH
+ 			      GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		clocks = <&mstp12_clks R7S72100_CLK_SDHI0>;
++		clocks = <&mstp12_clks R7S72100_CLK_SDHI00>,
++			 <&mstp12_clks R7S72100_CLK_SDHI01>;
++		clock-names = "core", "cd";
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+@@ -491,7 +496,9 @@
+ 			      GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH
+ 			      GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>;
+ 
+-		clocks = <&mstp12_clks R7S72100_CLK_SDHI1>;
++		clocks = <&mstp12_clks R7S72100_CLK_SDHI10>,
++			 <&mstp12_clks R7S72100_CLK_SDHI11>;
++		clock-names = "core", "cd";
+ 		cap-sd-highspeed;
+ 		cap-sdio-irq;
+ 		status = "disabled";
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index 29e01ed..f2d8428 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -45,7 +45,9 @@
+ #define R7S72100_CLK_SPI4	3
+ 
+ /* MSTP12 */
+-#define R7S72100_CLK_SDHI0	3
+-#define R7S72100_CLK_SDHI1	2
++#define R7S72100_CLK_SDHI00	3
++#define R7S72100_CLK_SDHI01	2
++#define R7S72100_CLK_SDHI10	1
++#define R7S72100_CLK_SDHI11	0
+ 
+ #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
+-- 
+2.10.1
