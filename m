@@ -1,117 +1,82 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 3/8] PWM: add pwm-stm32 DT bindings
-Date: Wed, 18 Jan 2017 10:20:21 +0100
-Message-ID: <20170118092021.GE18989@ulmo.ba.sec>
-References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
- <1483608344-9012-4-git-send-email-benjamin.gaignard@st.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
+ 4.1 DMA controller
+Date: Wed, 18 Jan 2017 12:30:11 +0300
+Message-ID: <d544f4f2-9303-8d68-0350-af9c53ff19aa@cogentembedded.com>
+References: <20170117142016.11163-1-abailon@baylibre.com>
+ <20170117142016.11163-2-abailon@baylibre.com>
+ <aa9b6761-c8de-13ea-1a62-9810ad92a6d4@cogentembedded.com>
+ <710c724c-3831-e9d1-406b-76bdfed7b948@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="AjmyJqqohANyBN/e"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483608344-9012-4-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <710c724c-3831-e9d1-406b-76bdfed7b948-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hello!
 
---AjmyJqqohANyBN/e
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 1/18/2017 11:33 AM, Sekhar Nori wrote:
 
-On Thu, Jan 05, 2017 at 10:25:39AM +0100, Benjamin Gaignard wrote:
-> Define bindings for pwm-stm32
->=20
-> version 6:
-> - change st,breakinput parameter format to make it usuable on stm32f7 too.
->=20
-> version 2:
-> - use parameters instead of compatible of handle the hardware configurati=
-on
->=20
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 ++++++++++++++++=
-++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Docume=
-ntation/devicetree/bindings/pwm/pwm-stm32.txt
-> new file mode 100644
-> index 0000000..866f222
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> @@ -0,0 +1,33 @@
-> +STMicroelectronics STM32 Timers PWM bindings
-> +
-> +Must be a sub-node of an STM32 Timers device tree node.
-> +See ../mfd/stm32-timers.txt for details about the parent node.
-> +
-> +Required parameters:
-> +- compatible:		Must be "st,stm32-pwm".
-> +- pinctrl-names: 	Set to "default".
-> +- pinctrl-0: 		List of phandles pointing to pin configuration nodes for =
-PWM module.
-> +			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
-> +
-> +Optional parameters:
-> +- st,breakinput:	Arrays of three u32 <index level filter> to describe br=
-eak input configurations.
-> +			"index" indicates on which break input the configuration should be ap=
-plied.
+>>> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
+>>>
+>>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/usb/da8xx-usb.txt          | 42
+>>> ++++++++++++++++++++++
+>>>  1 file changed, 42 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> index ccb844a..aed3169 100644
+>>> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+>>> @@ -18,10 +18,26 @@ Required properties:
+>>>
+>>>   - phy-names: Should be "usb-phy"
+>>>
+>>> + - dmas: specifies the dma channels
+>>> +
+>>> + - dma-names: specifies the names of the channels. Use "rxN" for receive
+>>> +   and "txN" for transmit endpoints. N specifies the endpoint number.
+>>> +
+>>>  Optional properties:
+>>>  ~~~~~~~~~~~~~~~~~~~~
+>>>   - vbus-supply: Phandle to a regulator providing the USB bus power.
+>>>
+>>> +DMA
+>>> +~~~
+>>> +- compatible: ti,da8xx-cppi41
+>>
+>>    Almost missed this -- wildcards in this property are forbidden.
+>> We should use "ti,da830-cppi41" as a least common denominator.
+>
+> Documentation/devicetree/bindings/submitting-patches.txt states:
+>
+> "
+>   5) The wildcard "<chip>" may be used in compatible strings, as in
+>      the following example:
+>
+>          - compatible: Must contain '"nvidia,<chip>-pcie",
+>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
+> "
+>
+> I take this to mean that using wildcards to denote an SoC family on
+> which the same IP is present is okay to do.> With that understanding, I
+> think using ti,da8xx-cppi41 is fine too.
 
-It might be useful to specify what the valid values are for the break
-input index.
+    It doesn't really follow. I repeat, x's are not allowed.
 
-Also, u32 is kind of a Linuxism, perhaps "Arrays of three cells"? Also,
-does this mean there can be multiple entries? Such as 6 cells for two
-configurations? What's the maximum number of such configurations?
+[...]
 
-If it's possible to specify multiple configurations, maybe a slightly
-clearer wording would be: "One or more <index level filter> triplets to
-describe..."
+> Thanks,
+> Sekhar
 
-> +			"level" gives the active level (0=3Dlow or 1=3Dhigh) for this configu=
-ration.
+MBR, Sergei
 
-So how does this work exactly? "level" specifies the output level if the
-filter value is matched?
-
-> +			"filter" gives the filtering value to be applied.
-
-Is this a single value at which "level" will be applied? Or is it an
-upper/lower bound that can be used to restrict the output to "level" if
-the signal goes beyond/below a certain threshold?
-
-Maybe an example would clarify this. Or perhaps a reference to a manual
-where a more in-depth description of this functionality can be found.
-
-Thierry
-
---AjmyJqqohANyBN/e
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlh/M1MACgkQ3SOs138+
-s6FoGBAAoPA2amY+CvmCZQoYktOqkJpSoNPfge4/uzCau9x/jgz7gc2mRUhEYam3
-qQUhkBtJ6npRcovfiad3Q8hHqBWeej0CO/TtTuFGBMRF7joYdZecy7BgskxuLS1g
-9RM6ngvISwA63IkQ31JEMPgx51Z/Cg0mg4uql82r1oT5mb3kM0Y/f6lo58/lhhM0
-3uppHrUWAIs/BdQ13q/MarMxZWfs5AMm5j+WWuKqoEQQM29HCEBy90tyDRD3Bwc9
-FVIdnqGYulpgu+MgC8y/FF1t+woRE6kQp19YFsYMvCtpocv7qyANjgKKiTOCUhUG
-+utVT9+yoS9U1iO1PXovtCMooryACfgqObuCPBAedOlx+K1MTqs8x1c9QbXWxJww
-2KOHutj4qcqtYQVxLhE3JrMKrEr5dKnC+Q9bi5OBb3NylGokPUH2Q/g52che5ca0
-CpJvHTcwOy8RM2CiVpLIbAboaUyA+mnpGeH6NnM/674PtZqRd258EH3Y7AZ8YezD
-Ho0v6WolcYD9GfMe8EzrZAlHzM30w/fAT7vkykmxOVa9COXSYgPRK4XNPVYbCT9G
-FKQ3UbjLe2Fp7xGioANMqGugRbLCa07F5uTj5VaryQPzVBHcB7adBHkiJuyq3Xrz
-Mm3Xigav6FIjs+OxtxnHl/mY+xdCcYSJOOeR+I3/lMFPILvXCn0=
-=t9ed
------END PGP SIGNATURE-----
-
---AjmyJqqohANyBN/e--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
