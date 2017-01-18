@@ -1,42 +1,42 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Wed, 18 Jan 2017 20:40:34 +0100
-Message-ID: <CAFBinCACbeZPRXQO4OA5mJdGRvMkQoUmQEAKCi8KU2ZvrspF6A@mail.gmail.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
- <m2a8ao1833.fsf@baylibre.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH] ahci: qoriq: added ls2088a platforms support
+Date: Wed, 18 Jan 2017 11:53:51 -0800
+Message-ID: <20170118195351.GD9171@mtj.duckdns.org>
+References: <1484633521-10938-1-git-send-email-yuantian.tang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2a8ao1833.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484633521-10938-1-git-send-email-yuantian.tang@nxp.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: yuantian.tang@nxp.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Kevin,
+On Tue, Jan 17, 2017 at 02:12:01PM +0800, yuantian.tang@nxp.com wrote:
+> From: Tang Yuantian <Yuantian.Tang@nxp.com>
+> 
+> Ls2088a is new introduced arm-based soc with sata support with
+> following features:
+> 1. Complies with the serial ATA 3.0 specification and the AHCI 1.3.1
+>    specification
+> 2. Contains a high-speed descriptor-based DMA controller
+> 3. Supports the following:
+>    a. Speeds of 1.5 Gb/s (first-generation SATA), 3 Gb/s
+>       (second-generation SATA), and 6 Gb/s (third-generation SATA)
+>    b. FIS-based switching
+>    c. Native command queuing (NCQ) commands
+>    d. Port multiplier operation
+>    e. Asynchronous notification
+>    f. SATA BIST mode
+> 
+> Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
 
-On Wed, Jan 18, 2017 at 8:28 PM, Kevin Hilman <khilman@baylibre.com> wrote:
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->
->> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
->> networks which are not affected by the EEE problem, as reported here:
->
-> Based on the discussions with Jerome, I'm dropping this series from the
-> v4.11/dt64 branch for now.
-what is you opinion on having the MDIO node in meson-gx (and keeping
-GXBB and GXL/GXM consistent) vs not having PHY autodetection for GXBB
-(= not having the MDIO in meson-gx)?
-I cannot send a v2 until we have a decision for this
+Reverted due to build failure.  Did you even try to compile it before
+submission?  We all make mistakes and that's fine but this one seems a
+bit too careless.  Please don't do this.
 
-> This series also had a small conflict with Jerome's fix[1] for the
-> odroid-c2, so please rebase any updates here on my v4.10/fixes branch.
-will keep that in mind, noted.
+Thanks.
+
+-- 
+tejun
