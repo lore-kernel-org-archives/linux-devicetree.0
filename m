@@ -1,60 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] Documentation: mtk-quadspi: update DT bindings
-Date: Wed, 18 Jan 2017 16:08:09 -0600
-Message-ID: <20170118220809.pmaa2f3kwiddehti@rob-hp-laptop>
-References: <1484291609-20195-1-git-send-email-guochun.mao@mediatek.com>
- <1484291609-20195-2-git-send-email-guochun.mao@mediatek.com>
- <20170113151326.11e9451a@bbrezillon>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add R-Box Pro
+Date: Wed, 18 Jan 2017 14:18:39 -0800
+Message-ID: <m27f5sypts.fsf@baylibre.com>
+References: <20170117030611.23827-1-afaerber@suse.de>
+ <20170117030611.23827-2-afaerber@suse.de>
+ <63fbfc68-917f-68b2-9e7d-e1834e2841d3@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170113151326.11e9451a@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Guochun Mao <guochun.mao@mediatek.com>, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <63fbfc68-917f-68b2-9e7d-e1834e2841d3@suse.de> ("Andreas
+ =?utf-8?Q?F=C3=A4rber=22's?= message of "Tue, 17 Jan 2017 04:35:10 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 03:13:26PM +0100, Boris Brezillon wrote:
-> On Fri, 13 Jan 2017 15:13:28 +0800
-> Guochun Mao <guochun.mao@mediatek.com> wrote:
-> 
-> > Add "mediatek,mt2701-nor" for nor flash node's compatible.
-> > 
-> > Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/mtd/mtk-quadspi.txt        |    4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > index fb314f0..f83d31d 100644
-> > --- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > +++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-> > @@ -1,7 +1,9 @@
-> >  * Serial NOR flash controller for MTK MT81xx (and similar)
-> >  
-> >  Required properties:
-> > -- compatible: 	  should be "mediatek,mt8173-nor";
-> > +- compatible: 	  should contain:
-> > +		  "mediatek,mt2701-nor" for MT2701,
-> > +		  "mediatek,mt8173-nor" for MT8173.
-> 
-> Do you need to define a new compatible? If the IPs are exactly the same
-> in both SoCs it shouldn't be needed.
-
-Rather the 2701 should contain both strings in that case.
-
-Rob
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cml0ZXM6Cgo+IEFtIDE3LjAxLjIw
+MTcgdW0gMDQ6MDYgc2NocmllYiBBbmRyZWFzIEbDpHJiZXI6Cj4+ICsJbGVkcyB7Cj4+ICsJCWNv
+bXBhdGlibGUgPSAiZ3Bpby1sZWRzIjsKPj4gKwo+PiArCQlibHVlIHsKPj4gKwkJCWxhYmVsID0g
+InJib3gtcHJvOmJsdWU6b24iOwo+PiArCQkJZ3Bpb3MgPSA8JmdwaW9fYW8gR1BJT0FPXzkgR1BJ
+T19BQ1RJVkVfSElHSD47Cj4+ICsJCQlkZWZhdWx0LXN0YXRlID0gIm9uIjsKPj4gKwkJfTsKPj4g
+Kwo+PiArCQlyZWQgewo+PiArCQkJbGFiZWwgPSAicmJveC1wcm86cmVkOnN0YW5kYnkiOwo+PiAr
+CQkJZ3Bpb3MgPSA8JmdwaW8gR1BJT0RWXzI4IEdQSU9fQUNUSVZFX0hJR0g+Owo+PiArCQkJZGVm
+YXVsdC1zdGF0ZSA9ICJvZmYiOwo+PiArCQkJcmV0YWluLXN0YXRlLXN1c3BlbmRlZDsKPj4gKwkJ
+CXBhbmljLWluZGljYXRvcjsKPj4gKwkJfTsKPj4gKwl9Owo+Cj4gVGhlIG9yaWdpbmFsIHByb3Bl
+cnR5IG5hbWVzIGZvciB0aGVzZSB0d28gd2VyZSBsZWQgYW5kIHJlZC4gSWYgYW55b25lCj4gaGFz
+IGJldHRlciBsYWJlbCBuYW1lcyB0aGFuIHRoZSBhYm92ZSwgcGxlYXNlIHNwZWFrIHVwLiBEaXR0
+byBmb3IKPiB2ZWdhLXM5NS4gT24gdGhlIG9kcm9pZGMyIGl0J3MgY2FsbGVkIGFsaXZlIGJ1dCB1
+c2VzIGhlYXJ0YmVhdCB0aGVyZS4KPgo+IFRoZSB2ZW5kb3IgZGV2aWNlIHRyZWUgaGFkIGEgdGhp
+cmQgIm1jdSIgR1BJTyBpbiB0aGUgc3lzbGVkIG5vZGUsCj4gR1BJT0FPXzYsIHdoaWNoIGxlYWRz
+IHRvIGltbWVkaWF0ZSBwb3dlci1vZmYuIEkgdHJpZWQgdXNpbmcKPiAiZ3Bpby1wb3dlcm9mZiIg
+dG8gY29uZmlndXJlIHRoaXMgcGluLCBidXQgdGhhdCBkcml2ZXIgZmFpbHMgdG8KPiBpbml0aWFs
+aXplIGJlY2F1c2Ugc29tZSBwbSBjYWxsYmFjayBpcyBhbHJlYWR5IHJlZ2lzdGVyZWQgLSBJIGFz
+c3VtZQo+IGZyb20gcHNjaSwgd2hpY2ggYXBwYXJlbnRseSBzdWNjZWVkcyB0byBwb3dlci1vZmYg
+dGhlIHN5c3RlbSwgdG9vLiBGb3IKPiBjb21wYXJpc29uLCB0aGUgUzkwNSBiYXNlZCBWZWdhIFM5
+NSBUZWxvcyBoYXMgbm8gc3VjaCBtY3UgcHJvcGVydHkuIEFueQo+IHRob3VnaHRzPwo+Cj4gQWxz
+bywgYW55IGlkZWFzIGhvdyBiZXN0IHRvIHN3aXRjaCBmcm9tIGJsdWUgdG8gcmVkIGZvciBzdXNw
+ZW5kPyBBZGQKPiBwaW5jdHJsIHByb3BlcnRpZXMgYWJvdmU/IHN5c3RlbWQgc2VydmljZSBkb2lu
+ZyBlY2hvIGZyb20gdXNlcnNwYWNlPyBJCj4gYXNzdW1lIGluIEFuZHJvaWQgdGhlIEFtbG9naWMg
+c3lzbGVkIGRyaXZlciBoYW5kbGVzIGFsbCB0aGF0IGxvZ2ljIC0KPiBkaWRuJ3QgZmluZCBhbnkg
+c3VzcGVuZCBlcXVpdmFsZW50IHRvIGdwaW8tcG93ZXJvZmYuCgppbiBsZWRzLWdwaW8sIHdoZW4g
+cmV0YWluLXN0YXRlLXN1c3BlbmRlZCBpcyBub3Qgc2V0LCB0aGUgTEVEIGlzCmF1dG9tYXRpY2Fs
+bHkgc2V0IHRvIHZhbHVlIDAuICBJIHdvbmRlciBpZiBsZWRzLWdwaW8gc2hvdWxkIGdyb3cgc3Vw
+cG9ydAp0byBtYWtlIHRoZSBzdXNwZW5kIHZhbHVlIGNvbmZpZ3VyYWJsZT8gIE9yIGEgcHJvcGVy
+dHkgbGlrZQoidG9nZ2xlLXN0YXRlLXN1c3BlbmRlZCIgPwoKS2V2aW4KCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
