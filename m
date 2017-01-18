@@ -1,74 +1,85 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v3 08/13] sata: ahci-da850: implement a workaround for the softreset quirk
-Date: Wed, 18 Jan 2017 14:19:56 +0100
-Message-ID: <1484745601-4769-9-git-send-email-bgolaszewski@baylibre.com>
-References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
+Date: Wed, 18 Jan 2017 13:25:37 +0000
+Message-ID: <fc58dd17-a46a-e7ff-7ad4-5c3539ffaf93@arm.com>
+References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
+ <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+ <aa0cb86e-ede2-432b-6248-92679fc06578@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <aa0cb86e-ede2-432b-6248-92679fc06578@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Tony Lindgren <tony@atomide.com>, Jason Cooper <jason@lakedaemon.net>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, arm@kernel.org, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Sascha Hauer <kernel@pengutronix.de>, Simon Horman <horms@verge.net.au>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawnguo@kern>
 List-Id: devicetree@vger.kernel.org
 
-There's an issue with the da850 SATA controller: if port multiplier
-support is compiled in, but we're connecting the drive directly to
-the SATA port on the board, the drive can't be detected.
+On 18/01/17 11:57, Robin Murphy wrote:
+> On 18/01/17 10:53, Marc Zyngier wrote:
+>> Since everybody copied my own mistake from the DT binding example,
+>> let's address all the offenders in one swift go.
+>>
+>> Most of them got the CPU interface size wrong (4kB, while it should
+>> be 8kB), except for both keystone platforms which got the control
+>> interface wrong (4kB instead of 8kB).
+>>
+>> In the couple of cases were I knew for sure what implementation
+> 
+>                          where
+> 
+>> was used, I've added the "arm,gic-400" compatible string. I'm 99%
+>> sure that this is what everyong is using, but short of having the
+> 
+>                          everyone
+> 
+>> TRM for all the other SoCs, I've let them alone.
+>>
+>> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>> ---
+> [...]
+>> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
+>> index 63c7cf0..07bf300 100644
+>> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
+>> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
+>> @@ -45,7 +45,7 @@
+>>  		interrupt-controller;
+>>  		reg = <0x0 0x02561000 0x0 0x1000>,
+>>  		      <0x0 0x02562000 0x0 0x2000>,
+>> -		      <0x0 0x02564000 0x0 0x1000>,
+>> +		      <0x0 0x02564000 0x0 0x2000>,
+>>  		      <0x0 0x02566000 0x0 0x2000>;
+>>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
+>>  				IRQ_TYPE_LEVEL_HIGH)>;
+>> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+>> index 02708ba..aaff6816 100644
+>> --- a/arch/arm/boot/dts/keystone.dtsi
+>> +++ b/arch/arm/boot/dts/keystone.dtsi
+>> @@ -35,7 +35,7 @@
+>>  		interrupt-controller;
+>>  		reg = <0x0 0x02561000 0x0 0x1000>,
+>>  		      <0x0 0x02562000 0x0 0x2000>,
+>> -		      <0x0 0x02564000 0x0 0x1000>,
+>> +		      <0x0 0x02564000 0x0 0x2000>,
+>>  		      <0x0 0x02566000 0x0 0x2000>;
+>>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
+>>  				IRQ_TYPE_LEVEL_HIGH)>;
+> 
+> FWIW I happen to have some public Keystone TRMs handy from my DMA offset
+> investigations, and both K2G and K2H explicitly say it's a GIC-400 too.
 
-To make SATA work on the da850-lcdk board: first try to softreset
-with pmp - if the operation fails with -EBUSY, retry without pmp.
+Ah, brilliant. I'll update the patch accordingly.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/ata/ahci_da850.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+Thanks,
 
-diff --git a/drivers/ata/ahci_da850.c b/drivers/ata/ahci_da850.c
-index 7f5328f..11dd87e 100644
---- a/drivers/ata/ahci_da850.c
-+++ b/drivers/ata/ahci_da850.c
-@@ -54,11 +54,42 @@ static void da850_sata_init(struct device *dev, void __iomem *pwrdn_reg,
- 	writel(val, ahci_base + SATA_P0PHYCR_REG);
- }
- 
-+static int ahci_da850_softreset(struct ata_link *link,
-+				unsigned int *class, unsigned long deadline)
-+{
-+	int pmp, ret;
-+
-+	pmp = sata_srst_pmp(link);
-+
-+	/*
-+	 * There's an issue with the SATA controller on da850 SoCs: if we
-+	 * enable Port Multiplier support, but the drive is connected directly
-+	 * to the board, it can't be detected. As a workaround: if PMP is
-+	 * enabled, we first call ahci_do_softreset() and pass it the result of
-+	 * sata_srst_pmp(). If this call fails, we retry with pmp = 0.
-+	 */
-+	ret = ahci_do_softreset(link, class, pmp, deadline, ahci_check_ready);
-+	if (pmp && ret == -EBUSY)
-+		return ahci_do_softreset(link, class, 0,
-+					 deadline, ahci_check_ready);
-+
-+	return ret;
-+}
-+
-+static struct ata_port_operations ahci_da850_port_ops = {
-+	.inherits = &ahci_platform_ops,
-+	.softreset = ahci_da850_softreset,
-+	/*
-+	 * No need to override .pmp_softreset - it's only used for actual
-+	 * PMP-enabled ports.
-+	 */
-+};
-+
- static const struct ata_port_info ahci_da850_port_info = {
- 	.flags		= AHCI_FLAG_COMMON,
- 	.pio_mask	= ATA_PIO4,
- 	.udma_mask	= ATA_UDMA6,
--	.port_ops	= &ahci_platform_ops,
-+	.port_ops	= &ahci_da850_port_ops,
- };
- 
- static struct scsi_host_template ahci_platform_sht = {
+	M.
 -- 
-2.9.3
+Jazz is not dead. It just smells funny...
