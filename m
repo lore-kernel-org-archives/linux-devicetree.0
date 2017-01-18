@@ -1,37 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/2] clk: vc5: Add bindings for IDT VersaClock
- 5P49V5923 and 5P49V5933
-Date: Wed, 18 Jan 2017 15:28:13 -0600
-Message-ID: <20170118212813.fhvzntoxxppfuyp2@rob-hp-laptop>
-References: <20170112010324.28068-1-marek.vasut@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] fbdev/ssd1307fb: add support to enable VBAT
+Date: Wed, 18 Jan 2017 16:33:10 -0600
+Message-ID: <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
+References: <cover.1484303628.git.jsarha@ti.com>
+ <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170112010324.28068-1-marek.vasut@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+In-Reply-To: <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 02:03:23AM +0100, Marek Vasut wrote:
-> Add bindings for IDT VersaClock 5 5P49V5923 and 5P49V5933 chips.
-> These are I2C clock generators with optional clock source from
-> either XTal or dedicated clock generator and, depending on the
-> model, two or more clock outputs.
+On Fri, Jan 13, 2017 at 12:35:48PM +0200, Jyri Sarha wrote:
+> From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 > 
-> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-renesas-soc@vger.kernel.org
+> SSD1306 needs VBAT when it is wired in charge pump configuration. This
+> patch adds support to the driver to enable VBAT regulator at init time.
+> 
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+> Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 > ---
-> V2: Add mapping between the clock specifier and physical pins of the chip
-> ---
->  .../devicetree/bindings/clock/idt,versaclock5.txt  | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+>  .../devicetree/bindings/display/ssd1307fb.txt        |  1 +
+>  drivers/video/fbdev/ssd1307fb.c                      | 20 +++++++++++++++++++-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> index 6617df6..209d931 100644
+> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>  Optional properties:
+>    - reset-gpios: The GPIO used to reset the OLED display, if available. See
+>                   Documentation/devicetree/bindings/gpio/gpio.txt for details.
+> +  - vbat-supply: The supply for VBAT
 
-Acked-by: Rob Herring <robh@kernel.org>
+According to the datasheet, SSD1307 has 2 supplies: Vdd and Vcc
+
+I don't see any mention of a charge pump, so that must be an external 
+component.
+
+>    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
+>                                to segment mapping
+>    - solomon,com-seq: Display uses sequential COM pin configuration
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
