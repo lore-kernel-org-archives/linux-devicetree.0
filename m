@@ -1,49 +1,33 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2] ata: xgene: Enable NCQ support for APM X-Gene SATA
- controller hardware v1.1
-Date: Wed, 18 Jan 2017 11:23:08 -0800
-Message-ID: <20170118192308.GC9171@mtj.duckdns.org>
-References: <1479462345-13942-1-git-send-email-rsahu@apm.com>
- <CAFd313wajZzZWGQy20obf4k_7RO43Q10NiBa-8TVYxo3J93inA@mail.gmail.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 0/5] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Wed, 18 Jan 2017 11:28:16 -0800
+Message-ID: <m2a8ao1833.fsf@baylibre.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAFd313wajZzZWGQy20obf4k_7RO43Q10NiBa-8TVYxo3J93inA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rameshwar Sahu <rsahu@apm.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, mlangsdo@redhat.com, Arnd Bergmann <arnd@arndb.de>, linux-scsi@vger.kernel.org, Jon Masters <jcm@redhat.com>, patches <patches@apm.com>, linux-ide@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20161202234739.22929-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Sat, 3 Dec 2016 00:47:34 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-On Tue, Jan 17, 2017 at 08:25:21PM +0530, Rameshwar Sahu wrote:
-> Hi Tejun,
-> 
-> On Fri, Nov 18, 2016 at 3:15 PM, Rameshwar Prasad Sahu <rsahu@apm.com> wrote:
-> > This patch enables NCQ support for APM X-Gene SATA controller hardware v1.1
-> > that was broken with hardware v1.0. Second thing, here we should not assume
-> > XGENE_AHCI_V2 always in case of having valid _CID in ACPI table. I need to
-> > remove this assumption because V1_1 also has a valid _CID for backward
-> > compatibly with v1.
-> >
-> > v2 changes:
-> >         1. Changed patch description
-> >
-> > Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+> This partially fixes the 1000Mbit/s ethernet TX throughput issues (on
+> networks which are not affected by the EEE problem, as reported here:
 
-Hmm... I don't have the patch in my queue.  Can you please resend it?
+Based on the discussions with Jerome, I'm dropping this series from the
+v4.11/dt64 branch for now.
 
-Thanks.
+This series also had a small conflict with Jerome's fix[1] for the
+odroid-c2, so please rebase any updates here on my v4.10/fixes branch.
 
--- 
-tejun
+Kevin
+
+[1] https://git.kernel.org/cgit/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v4.10/fixes
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
