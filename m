@@ -1,125 +1,74 @@
-From: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Subject: Re: [PATCH v5 4/5] dt: bindings: i2c-mux-pca954x: Add documentation
- for nxp,irq-mask-enable
-Date: Wed, 18 Jan 2017 17:00:30 +0800
-Message-ID: <82da1e7e-4837-dd4e-a3b1-d83203cc29ed@electromag.com.au>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-5-git-send-email-preid@electromag.com.au>
- <9190ec70-eda4-5e44-a85a-211945c30eeb@axentia.se>
- <aeab2bbe-e243-98f6-b07f-76e4dda62fd6@electromag.com.au>
- <96f3cc0e-9c73-4af4-f072-5a1aeceb67af@axentia.se>
- <1abf8327-9c3c-f390-fbc4-9eb142068a66@axentia.se>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 06/14] ARM: davinci: da850: model the SATA refclk
+Date: Wed, 18 Jan 2017 14:32:37 +0530
+Message-ID: <ff3b3949-1f48-f176-2b06-b9a4c14e6ffa@ti.com>
+References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484655976-25382-7-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1abf8327-9c3c-f390-fbc4-9eb142068a66-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484655976-25382-7-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/2017 18:14, Peter Rosin wrote:
-> On 2017-01-17 10:43, Peter Rosin wrote:
->> On 2017-01-17 10:28, Phil Reid wrote:
->>> On 17/01/2017 16:57, Peter Rosin wrote:
->>>> On 2017-01-17 09:00, Phil Reid wrote:
->>>>> Unfortunately some hardware device will assert their irq line immediately
->>>>> on power on and provide no mechanism to mask the irq. As the i2c muxes
->>>>> provide no method to mask irq line this provides a work around by keeping
->>>>> the parent irq masked until enough device drivers have loaded to service
->>>>> all pending interrupts.
->>>>>
->>>>> For example the the ltc1760 assert its SMBALERT irq immediately on power
->>>>> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->>>>> device is registered irq are enabled and fire continuously as the second
->>>>> device driver has not yet loaded. Setting this parameter to <1 1> will
->>>>> delay the irq being enabled until both devices are ready.
->>>>
->>> G'day Peter,
->>>
->>>
->>>> Hang on, does this suggestion I made make any sense at all? Maybe it does,
->>>> but does the pca954x driver even get notified of any but the first irq client
->>>> that unmasks interrupts on a mux segment? How can it count the number of
->>>> active irq clients if not?
->>>
->>> Good question.
->>>
->>> So what I did to test is setup my 2 ltc1760s to use the same irq on the pca954x.
->>> Using the latest patch series.
->>>
->>> Adding a log message into the irq_unmask function got the following.
->>> 	dev_err(&data->client->dev, "irq_unmask %d %x %d", pos, data->irq_mask, data->irq_enabled);
->>>
->>> dmesg | grep irq_unmask
->>> [    4.392098] pca954x 4-0070: irq_unmask 0 1 1
->>>
->>>
->>> But Looks like both got registered ok to the same irq.
->>> cat /proc/interrupts
->>> 161:          0          0  i2c-mux-pca954x   0 Level     15-000a, 16-000a
->>>
->>> So from this testing, it doesn't look like it gets called multiple times.
->>
->> As I suspected, thanks for verifying!
->>
->>> So back to the bitmask for the dt do you think.
->>
->> Looking at kernel/irq/chip.c:irq_enable (and struct irq_chip docs), I get the
->> feeling that if you provide the irq_enable operation (and maybe irq_disable too?),
->> that might get us more info?
->
-> No, I no longer think that. I think we need to get at the irq descriptor "depth".
-> But that feels like poking at the wrong level. Crap.
->
-> And to answer the question if I think we should go back to a dt bitmask, then
-> no I do not think that. The array describes what we want to do, it's the linux
-> implementation that gives us difficulties. Agreed?
+On Tuesday 17 January 2017 05:56 PM, Bartosz Golaszewski wrote:
+> Register a dummy clock modelling the external SATA oscillator for
 
-G'day Peter,
+I would not call it a dummy clock. Its representing something physically
+present. Just call it "fixed rate clock" ?
 
-Yes agreed, that makes sense.
+> da850 DT mode. For non-DT boot we don't register the clock - instead
+> we rely on the default MPY value defined in the da850 ahci driver (as
+> is done currently).
 
-I had a play with using the irq_enable call back.
-But that doesn't seem to offer any more feedback then unmask.
-Called just once on the first irq that registers.
+Here too, like David suggested, it will be nice to register it both for
+DT and non-DT case. With that I think your driver will be simple too
+since you dont have to worry about the case when refclkpn is not supplied.
 
-The only way I can see to count the number of registered handlers on a
-shared irq is to count the action handlers on the irq_desc.
-The only irq_chip handler that seems guaranteed to be called on irq request is
-irq_bus_lock, irq_bus_sync_unlock callbacks, but these are called elsewhere
-at various times.
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/mach-davinci/da8xx-dt.c           |  8 ++++++++
+>  arch/arm/mach-davinci/devices-da8xx.c      | 23 +++++++++++++++++++++++
+>  arch/arm/mach-davinci/include/mach/da8xx.h |  1 +
+>  3 files changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index b83e5d1..13137cb 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -61,6 +61,14 @@ static void __init da850_init_machine(void)
+>  		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
+>  			__func__, ret);
+>  
+> +	if (of_machine_is_compatible("ti,da850-evm") ||
+> +	    of_machine_is_compatible("ti,da850-lcdk")) {
+> +		ret = da850_register_sata_refclk(100000000);
+> +		if (ret)
+> +			pr_warn("%s: registering SATA_REFCLK clock failed: %d",
+> +				__func__, ret);
+> +	}
 
-We have a dt spec that supports this future proofing of the irq count.
-But as you say the kernel code prevents us at the moment.
-The count of 1 bitmask implementation works for my particular situation at the moment.
+Since all supported boards use 100 Mhz refclk anyway, I would drop the
+machine check and just do:
 
-Perhaps the > 1 case can be tackled in the future when someone has a use case?
+	/* All existing boards use 100MHz SATA refclkpn */
+	unsigned long sata_refclkpn = 100 * 1000 * 1000;
 
-Thoughts?
+	ret = da850_register_sata_refclk(sata_refclkpn);
 
+It should then be easy for the odd board (when it comes) to set
+sata_refclkpn to a different value.
 
-
->
->>> I think the interrupt enablelogic is correct now.
->>>
->>>>
->>>> I'm truly sorry for the trouble I'm causing by not just saying how it should
->>>> be done from the start, but I feel like I've been thrown in at the deep end
->>>> when it comes to interrupt controllers...
->>>
->>> No problem. I'm learning a couple things as we go.
->>> Should help me out on other drivers :)
->>
->> Yes, I'm also picking up a few bits here and there...
-
-
-
--- 
-Regards
-Phil Reid
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sekhar
