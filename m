@@ -1,77 +1,93 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Wed, 18 Jan 2017 16:20:10 -0600
-Message-ID: <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
-References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
- <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
- <20170113172825.75d545a3@bbrezillon>
- <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
- <20170113175628.1793f433@bbrezillon>
- <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
- <20170114092958.022f2fc8@bbrezillon>
- <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
- <20170116094032.6f471f11@bbrezillon>
- <20170117143650.5db87148@free-electrons.com>
+From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
+Date: Wed, 18 Jan 2017 23:20:17 +0100
+Message-ID: <17a7f9cea35944288f97735e66859929@rwthex-s1-b.rwth-ad.de>
+References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
+ <88bdfd5321484efc82af4132ac2f0d7e@rwthex-s1-b.rwth-ad.de>
+ <6ed3f695104044f18e98fc9619aab16e@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170117143650.5db87148-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6ed3f695104044f18e98fc9619aab16e@rwthex-s1-b.rwth-ad.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 02:36:50PM +1100, Thomas Petazzoni wrote:
-> Hello,
-> 
-> (Side note: you guys should learn about stripping irrelevant parts of
-> an e-mail when replying!)
+Hi Philipp,
+
+turns out I have a question on your comment after all:
+
+On 01/17/2017 07:35 PM, Christopher Spinrath wrote:
+> Hi Philipp,
 >
-> On Mon, 16 Jan 2017 09:40:32 +0100, Boris Brezillon wrote:
-> 
-> > > Well this is OK I guess, but then you can also use "mediatek,mt8173-nor"
-> > > as the oldest supported compatible and be done with it, no ? It looks a
-> > > bit crappy though, I admit that ...
-> > 
-> > Let's stop bikeshedding and wait for DT maintainers feedback
-> > before taking a decision ;-).
-> > 
-> > Rob, Mark, any opinion?
+> thanks for the review!
 >
+> On 01/17/2017 09:57 AM, Philipp Zabel wrote:
+>> [...]
+>>> +
+>>> +    parallel-display {
+>>> +        compatible = "fsl,imx-parallel-display";
+>>> +        #address-cells = <1>;
+>>> +        #size-cells = <0>;
+>>> +        pinctrl-names = "default";
+>>> +        pinctrl-0 = <&pinctrl_ipu1>;
+>>> +
+>>> +        interface-pix-fmt = "rgb24";
+>>
+>> This is not necessary if the connector created by the tpf410 has the
+>> correct media bus format set in its display_info structure. This can be
+>> done in tfp410_attach, before calling drm_mode_connector_attach_encoder:
+>>
+>>         u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>>
+>>     drm_display_info_set_bus_formats(&dvi->connector.display_info,
+>>                      &bus_format, 1);
+>>
+>> After this is done, the above line should be removed in a follow-up
+>> patch.
 
-Sigh, is how to do compatibles really not yet understood?
- 
-> I agree that a clarification would be good. There are really two
-> options:
-> 
->  1. Have two compatible strings in the DT, the one that matches the
->     exact SoC where the IP is found (first compatible string) and the
->     one that matches some other SoC where the same IP is found (second
->     compatible string). Originally, Linux only supports the second
->     compatible string in its device driver, but if it happens that a
->     difference is found between two IPs that we thought were the same,
->     we can add support for the first compatible string in the driver,
->     with a slightly different behavior.
+On closer inspection the tfp410 can handle rgb12, rgb24, and DVI 
+formats. Considering this it feels wrong to hardcode the bus format to 
+rgb24 (isn't it?).
 
-This. And no wildcards in the compatible string. 
+So a solution might be to add a property specifying the bus format to 
+the tfp410 binding. But then we would effectively just move this 
+property from one node to another. I wonder if this is still desireable...?
 
->  2. Have a single compatible string in the DT, matching the exact SoC
->     where the IP is found. This involves adding immediately this
->     compatible string in the corresponding driver.
+Cheers,
+Christopher
 
-I wouldn't object to this from a DT perspective as I have no clue 
-generally if IP blocks are "the same" or not. Subsystem maintainers will 
-object though.
-
-> I've not really been able to figure out which of the two options is the
-> most future-proof/appropriate.
-
-They are both future-proof. #2 has the disadvantage of requiring a 
-kernel update for a new SoC. 
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Ok, I will send a mini follow-up series doing that with your
+> Suggested-by (unless you object) in the next few days.
+>
+> Cheers,
+> Christopher
+>
+>>> +        port@0 {
+>>> +            reg = <0>;
+>>> +
+>>> +            parallel_display_in: endpoint {
+>>> +                remote-endpoint = <&ipu1_di0_disp0>;
+>>> +            };
+>>> +        };
+>>> +
+>>> +        port@1 {
+>>> +            reg = <1>;
+>>> +
+>>> +            parallel_display_out: endpoint {
+>>> +                remote-endpoint = <&tfp410_in>;
+>>> +            };
+>>> +        };
+>>> +    };
+>>>  };
+>>>  [...]
