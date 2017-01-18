@@ -1,28 +1,51 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Wed, 18 Jan 2017 15:11:11 +0000
-Message-ID: <SG2PR06MB1165807455A0482AB711F7398A7F0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170117195940.25092-1-chris.brandt@renesas.com>
- <20170117195940.25092-3-chris.brandt@renesas.com>
- <CAMuHMdVqgrfPVCz68z9vqX_5GhKVbF-FndraTk40UrBdMMKwYw@mail.gmail.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
+Date: Wed, 18 Jan 2017 12:16:48 -0300
+Message-ID: <e2295a5d-3224-1198-8b46-f45b153b540a@osg.samsung.com>
+References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
+ <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdVqgrfPVCz68z9vqX_5GhKVbF-FndraTk40UrBdMMKwYw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Heiko Stuebner <heiko@sntech.de>Ma
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIFdlZG5lc2RheSwgSmFudWFyeSAxOCwgMjAxNywgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+ICstIGNsb2NrczogTW9zdCBjb250cm9sbGVycyBvbmx5IGhhdmUg
-MSBjbG9jayBzb3VyY2UgcGVyIGNhaG5uZWwuDQo+IEhvd2V2ZXIsIHNvbWUNCj4gPiArICAgICAg
-ICAgaGF2ZSAyLiBJZiAyIGNsb2NrcyBhcmUgc3BlY2lmaWVkLCB5b3UgbXVzdCBuYW1lIHRoZW0g
-YXMNCj4gImNvcmUiIGFuZA0KPiA+ICsgICAgICAgICAiY2FyZGRldGVjdCIuIElmIHRoZSBjb250
-cm9sbGVyIG9ubHkgaGFzIDEgY2xvY2ssIG5hbWluZyBpcw0KPiA+ICtub3QNCj4gDQo+IFBlcmhh
-cHMgdGhpcyBjbG9jayBzaG91bGQganVzdCBiZSBjYWxsZWQgImNkIiwgYXMgdGhhdCdzIGFscmVh
-ZHkgYW4NCj4gZXN0YWJsaXNoZWQgYWJicmV2aWF0aW9uIGZvciBjYXJkIGRldGVjdCBpbiBNTUMg
-RFQgYmluZGluZ3M/DQoNCg0KT0ssIEknbGwgY2hhbmdlIGl0Lg0KDQpUaGFua3MsDQpDaHJpcw0K
-DQo=
+Hello Marc,
+
+On 01/18/2017 07:53 AM, Marc Zyngier wrote:
+> Since everybody copied my own mistake from the DT binding example,
+> let's address all the offenders in one swift go.
+> 
+> Most of them got the CPU interface size wrong (4kB, while it should
+> be 8kB), except for both keystone platforms which got the control
+> interface wrong (4kB instead of 8kB).
+> 
+> In the couple of cases were I knew for sure what implementation
+> was used, I've added the "arm,gic-400" compatible string. I'm 99%
+> sure that this is what everyong is using, but short of having the
+> TRM for all the other SoCs, I've let them alone.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  arch/arm/boot/dts/exynos3250.dtsi    | 2 +-
+>  arch/arm/boot/dts/exynos5.dtsi       | 2 +-
+>  arch/arm/boot/dts/exynos5260.dtsi    | 2 +-
+>  arch/arm/boot/dts/exynos5440.dtsi    | 2 +-
+
+I've looked at the Exynos5250 and Exynos5420 TRM and both say that adopts
+GIC-400, so I think it's safe for you to also update the compatible in the
+exynos5.dtsi. Unfortunately I don't have manuals for 3250, 5260 and 5440.
+
+The register map changes looks good to me, so for Exynos:
+
+Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
