@@ -1,88 +1,131 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 3/3] ARM: dts: r7s72100: update sdhi clock bindings
-Date: Wed, 18 Jan 2017 12:25:02 -0500
-Message-ID: <20170118172502.13876-4-chris.brandt@renesas.com>
-References: <20170118172502.13876-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170118172502.13876-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH v3 06/13] ARM: davinci: da850: model the SATA refclk
+Date: Wed, 18 Jan 2017 11:26:41 -0600
+Message-ID: <ff4deee6-9700-fff3-be96-0ad2f008914b@lechnology.com>
+References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484745601-4769-7-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1484745601-4769-7-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The SDHI controller in the RZ/A1 has 2 clock sources per channel and both
-need to be enabled/disabled for proper operation. This fixes the fact that
-the define for R7S72100_CLK_SDHI1 was not correct to begin with (typo), and
-that all 4 clock sources need to be defined an used.
+On 01/18/2017 07:19 AM, Bartosz Golaszewski wrote:
+> Register a dummy clock modelling the external SATA oscillator for
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-* add missing clock sources instead of just fixing typo
-* changed clock name from "carddetect" to "cd"
----
- arch/arm/boot/dts/r7s72100.dtsi            | 17 ++++++++++++-----
- include/dt-bindings/clock/r7s72100-clock.h |  6 ++++--
- 2 files changed, 16 insertions(+), 7 deletions(-)
+modeling
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 3dd427d..9d0b8d0 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -153,9 +153,12 @@
- 			#clock-cells = <1>;
- 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0xfcfe0444 4>;
--			clocks = <&p1_clk>, <&p1_clk>;
--			clock-indices = <R7S72100_CLK_SDHI1 R7S72100_CLK_SDHI0>;
--			clock-output-names = "sdhi1", "sdhi0";
-+			clocks = <&p1_clk>, <&p1_clk>, <&p1_clk>, <&p1_clk>;
-+			clock-indices = <
-+				R7S72100_CLK_SDHI00 R7S72100_CLK_SDHI01
-+				R7S72100_CLK_SDHI10 R7S72100_CLK_SDHI11
-+			>;
-+			clock-output-names = "sdhi00", "sdhi01", "sdhi10", "sdhi11";
- 		};
- 	};
- 
-@@ -478,7 +481,9 @@
- 			      GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH
- 			      GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
- 
--		clocks = <&mstp12_clks R7S72100_CLK_SDHI0>;
-+		clocks = <&mstp12_clks R7S72100_CLK_SDHI00>,
-+			 <&mstp12_clks R7S72100_CLK_SDHI01>;
-+		clock-names = "core", "cd";
- 		cap-sd-highspeed;
- 		cap-sdio-irq;
- 		status = "disabled";
-@@ -491,7 +496,9 @@
- 			      GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH
- 			      GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>;
- 
--		clocks = <&mstp12_clks R7S72100_CLK_SDHI1>;
-+		clocks = <&mstp12_clks R7S72100_CLK_SDHI10>,
-+			 <&mstp12_clks R7S72100_CLK_SDHI11>;
-+		clock-names = "core", "cd";
- 		cap-sd-highspeed;
- 		cap-sdio-irq;
- 		status = "disabled";
-diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
-index 29e01ed..f2d8428 100644
---- a/include/dt-bindings/clock/r7s72100-clock.h
-+++ b/include/dt-bindings/clock/r7s72100-clock.h
-@@ -45,7 +45,9 @@
- #define R7S72100_CLK_SPI4	3
- 
- /* MSTP12 */
--#define R7S72100_CLK_SDHI0	3
--#define R7S72100_CLK_SDHI1	2
-+#define R7S72100_CLK_SDHI00	3
-+#define R7S72100_CLK_SDHI01	2
-+#define R7S72100_CLK_SDHI10	1
-+#define R7S72100_CLK_SDHI11	0
- 
- #endif /* __DT_BINDINGS_CLOCK_R7S72100_H__ */
--- 
-2.10.1
+> da850 (both DT and board file mode).
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/mach-davinci/da8xx-dt.c           |  8 ++++++++
+>  arch/arm/mach-davinci/devices-da8xx.c      | 29 +++++++++++++++++++++++++++++
+>  arch/arm/mach-davinci/include/mach/da8xx.h |  1 +
+>  3 files changed, 38 insertions(+)
+>
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index b83e5d1..0f981b5 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -50,6 +50,9 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+>
+>  static void __init da850_init_machine(void)
+>  {
+> +        /* All existing boards use 100MHz SATA refclkpn */
+> +        static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
+> +
+>  	int ret;
+>
+>  	ret = da8xx_register_usb20_phy_clk(false);
+> @@ -61,6 +64,11 @@ static void __init da850_init_machine(void)
+>  		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
+>  			__func__, ret);
+>
+> +        ret = da850_register_sata_refclk(sata_refclkpn);
+> +        if (ret)
+> +		pr_warn("%s: registering SATA REFCLK failed: %d",
+> +			__func__, ret);
+> +
+>  	of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
+>  	davinci_pm_init();
+>  }
+> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+> index c2457b3..cfceb32 100644
+> --- a/arch/arm/mach-davinci/devices-da8xx.c
+> +++ b/arch/arm/mach-davinci/devices-da8xx.c
+> @@ -24,6 +24,7 @@
+>  #include <mach/common.h>
+>  #include <mach/time.h>
+>  #include <mach/da8xx.h>
+> +#include <mach/clock.h>
+>  #include "cpuidle.h"
+>  #include "sram.h"
+>
+> @@ -1023,6 +1024,28 @@ int __init da8xx_register_spi_bus(int instance, unsigned num_chipselect)
+>  }
+>
+>  #ifdef CONFIG_ARCH_DAVINCI_DA850
+> +static struct clk sata_refclk = {
+> +	.name		= "sata_refclk",
+> +	.set_rate	= davinci_simple_set_rate,
+> +};
+> +
+> +static struct clk_lookup sata_refclk_lookup =
+> +		CLK("ahci_da850", "refclk", &sata_refclk);
+> +
+> +int __init da850_register_sata_refclk(int rate)
+> +{
+> +	int ret;
+> +
+> +	sata_refclk.rate = rate;
+> +	ret = clk_register(&sata_refclk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clkdev_add(&sata_refclk_lookup);
+> +
+> +	return 0;
+> +}
+> +
+>  static struct resource da850_sata_resources[] = {
+>  	{
+>  		.start	= DA850_SATA_BASE,
+> @@ -1055,9 +1078,15 @@ static struct platform_device da850_sata_device = {
+>
+>  int __init da850_register_sata(unsigned long refclkpn)
+>  {
+> +	int ret;
+> +
+>  	/* please see comment in drivers/ata/ahci_da850.c */
+>  	BUG_ON(refclkpn != 100 * 1000 * 1000);
+
+This BUG_ON() should be removed since the sata driver can now handle 
+other clock frequencies.
+
+>
+> +	ret = da850_register_sata_refclk(refclkpn);
+> +	if (ret)
+> +		return ret;
+> +
+>  	return platform_device_register(&da850_sata_device);
+>  }
+>  #endif
+> diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
+> index 85ff218..7e46422 100644
+> --- a/arch/arm/mach-davinci/include/mach/da8xx.h
+> +++ b/arch/arm/mach-davinci/include/mach/da8xx.h
+> @@ -95,6 +95,7 @@ int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
+>  int da8xx_register_usb_refclkin(int rate);
+>  int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
+>  int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
+> +int da850_register_sata_refclk(int rate);
+>  int da8xx_register_emac(void);
+>  int da8xx_register_uio_pruss(void);
+>  int da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata);
+>
+
