@@ -1,110 +1,49 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Wed, 18 Jan 2017 14:04:18 +0100
-Message-ID: <3f01b354-22ec-04de-4a11-1e8317a92a5b@baylibre.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
- <20170117142016.11163-2-abailon@baylibre.com>
- <d2d19518-5758-1af1-71cd-ab38f26734e7@cogentembedded.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: DTS: Fix broken GICv2 register maps
+Date: Wed, 18 Jan 2017 13:07:30 +0000
+Message-ID: <16613dbe-08b9-98d8-c747-a977e78601b1@arm.com>
+References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
+ <2966702.djJyWhCMlK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d2d19518-5758-1af1-71cd-ab38f26734e7-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <2966702.djJyWhCMlK@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2017 06:14 PM, Sergei Shtylyov wrote:
-> On 01/17/2017 05:20 PM, Alexandre Bailon wrote:
-> 
->> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
-> 
->    "CPPI 4.1 DMA" again.
-> 
+On 18/01/17 12:34, Arnd Bergmann wrote:
+> On Wednesday, January 18, 2017 10:53:29 AM CET Marc Zyngier wrote:
+>> For a GICv2 (which happens to be virtualization capable), the
+>> architecture mandates the following regions:
 >>
->> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/usb/da8xx-usb.txt          | 42
->> ++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
+>> 	     GICD: 4kB
+>> 	     GICC: 8kB
+>> 	     GICH: 8kB
+>> 	     GICV: 8kB
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> index ccb844a..aed3169 100644
->> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->> @@ -18,10 +18,26 @@ Required properties:
+>> Unfortunately, I made a mistake in one of the examples contained in
+>> the DT binding document, and everyone duplicated that same mistake all
+>> over the map.
 >>
->>   - phy-names: Should be "usb-phy"
->>
->> + - dmas: specifies the dma channels
->> +
->> + - dma-names: specifies the names of the channels. Use "rxN" for receive
->> +   and "txN" for transmit endpoints. N specifies the endpoint number.
->> +
->>  Optional properties:
->>  ~~~~~~~~~~~~~~~~~~~~
->>   - vbus-supply: Phandle to a regulator providing the USB bus power.
->>
->> +DMA
->> +~~~
->> +- compatible: ti,da8xx-cppi41
->> +- reg: offset and length of the following register spaces: CPPI DMA
->> Controller,
->> +  CPPI DMA Scheduler, Queue Manager
->> +- reg-names: "controller", "scheduler", "queuemgr"
->> +- #dma-cells: should be set to 2. The first number represents the
->> +  channel number (0 … 3 for endpoints 1 … 4).
->> +  The second number is 0 for RX and 1 for TX transfers.
->> +- #dma-channels: should be set to 4 representing the 4 endpoints.
-> 
->    Shouldn't the # of channels be a part of the glue data?
-TBH I don't think know. For AM33xx, the number of channels is defined
-so I did the same for DA850.
-> 
-> [...]
->> @@ -39,5 +58,28 @@ Example:
->>          phys = <&usb_phy 0>;
->>          phy-names = "usb-phy";
->>
->> +        dmas = <&cppi41dma 0 0 &cppi41dma 1 0
->> +            &cppi41dma 2 0 &cppi41dma 3 0
->> +            &cppi41dma 0 1 &cppi41dma 1 1
->> +            &cppi41dma 2 1 &cppi41dma 3 1>;
->> +        dma-names =
->> +            "rx1", "rx2", "rx3", "rx4",
->> +            "tx1", "tx2", "tx3", "tx4";
->> +
->>          status = "okay";
->> +
->> +        cppi41dma: dma-controller@201000 {
->> +            compatible = "ti,da8xx-cppi41";
->> +            reg =  <0x201000 0x1000
->> +                0x202000 0x1000
->> +                0x204000 0x4000>;
->> +            reg-names = "controller", "scheduler", "queuemgr";
->> +            interrupts = <58>;
->> +            interrupt-names = "glue";
->> +            #dma-cells = <2>;
->> +            #dma-channels = <4>;
->> +            #dma-requests = <256>;
-> 
->    Not seeing this prop documented...
-Right. Actually, this prop is not even used so I will just remove it.
-> 
->> +            status = "okay";
-> 
->    Can be omitted.
-> 
->> +        };
->> +
->>      };
+>> This small series fixes the DT binding, and hopefully updates all the
+>> offending DTs to be compliant with the architecture.
 >>
 > 
-Best Regards,
-Alexandre
+> Looks good to me, can you send this as a pull request to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+> once you have collected a reasonable number of Acks?
+
+Sure, will do.
+
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
