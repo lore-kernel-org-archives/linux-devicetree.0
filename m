@@ -1,94 +1,217 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Wed, 18 Jan 2017 13:37:59 +0300
-Message-ID: <bc554229-87a7-530d-7bba-837f4269c22e@cogentembedded.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
- <20170117142016.11163-2-abailon@baylibre.com>
- <aa9b6761-c8de-13ea-1a62-9810ad92a6d4@cogentembedded.com>
- <710c724c-3831-e9d1-406b-76bdfed7b948@ti.com>
- <d544f4f2-9303-8d68-0350-af9c53ff19aa@cogentembedded.com>
- <69908f47-1920-b3f8-a307-2c9cb93c2c26@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69908f47-1920-b3f8-a307-2c9cb93c2c26-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH 2/3] ARM64: dts: meson-gxbb: Add support for WeTek Hub and Play
+Date: Wed, 18 Jan 2017 11:50:41 +0100
+Message-ID: <1484736642-5451-3-git-send-email-narmstrong@baylibre.com>
+References: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: khilman@baylibre.com, carlo@caione.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/18/2017 1:21 PM, Sekhar Nori wrote:
+Adds support for the WeTek Hub and Play2 boards.
+The Hub is an extremely small IPTv Set-Top-Box and the Play2 is a more
+traditionnal Satellite or Terrestrial and IPTv Set-Top-Box.
 
->>>>> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma
->>>>> controller.
->>>>>
->>>>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>>>>  .../devicetree/bindings/usb/da8xx-usb.txt          | 42
->>>>> ++++++++++++++++++++++
->>>>>  1 file changed, 42 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>>>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>>>> index ccb844a..aed3169 100644
->>>>> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>>>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>>>> @@ -18,10 +18,26 @@ Required properties:
->>>>>
->>>>>   - phy-names: Should be "usb-phy"
->>>>>
->>>>> + - dmas: specifies the dma channels
->>>>> +
->>>>> + - dma-names: specifies the names of the channels. Use "rxN" for
->>>>> receive
->>>>> +   and "txN" for transmit endpoints. N specifies the endpoint number.
->>>>> +
->>>>>  Optional properties:
->>>>>  ~~~~~~~~~~~~~~~~~~~~
->>>>>   - vbus-supply: Phandle to a regulator providing the USB bus power.
->>>>>
->>>>> +DMA
->>>>> +~~~
->>>>> +- compatible: ti,da8xx-cppi41
->>>>
->>>>    Almost missed this -- wildcards in this property are forbidden.
->>>> We should use "ti,da830-cppi41" as a least common denominator.
->>>
->>> Documentation/devicetree/bindings/submitting-patches.txt states:
->>>
->>> "
->>>   5) The wildcard "<chip>" may be used in compatible strings, as in
->>>      the following example:
->>>
->>>          - compatible: Must contain '"nvidia,<chip>-pcie",
->>>            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
->>> "
->>>
->>> I take this to mean that using wildcards to denote an SoC family on
->>> which the same IP is present is okay to do.> With that understanding, I
->>> think using ti,da8xx-cppi41 is fine too.
->>
->>    It doesn't really follow. I repeat, x's are not allowed.
->
-> Can you clarify here? If x's are indeed not allowed,
+Both are based on the p200 Reference Design and out-of-tree support is
+based on OpenELEC kernel at [1].
 
-    I have no idea where you got that they are allowed.
+[1] https://github.com/wetek-enigma/linux-amlogic
 
-> then I think the
-> document is being ambiguous about what constitutes "The wildcard "<chip>""
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/Makefile               |  2 +
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 66 +++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 94 ++++++++++++++++++++++
+ 3 files changed, 162 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
 
-    There 's no ambiguity because the wildcard is the word "<chip>" itself, 
-not anything other. Even if "<chip>" is used in the bindings, its possible 
-values should be documented anyway.
-
-> Thanks,
-> Sekhar
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 0d7bfbf..cc2e2dd 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -5,6 +5,8 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-p201.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-pro.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-meta.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-vega-s95-telos.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-hub.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-play2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p231.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+new file mode 100644
+index 0000000..56f8559
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+@@ -0,0 +1,66 @@
++/*
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "meson-gxbb-p20x.dtsi"
++
++/ {
++	compatible = "wetek,hub", "amlogic,meson-gxbb";
++	model = "WeTek Hub";
++
++	leds {
++		compatible = "gpio-leds";
++
++		system {
++			label = "wetek-play:system-status";
++			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			panic-indicator;
++		};
++	};
++
++	cvbs-connector {
++		status = "disabled";
++	};
++};
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+new file mode 100644
+index 0000000..ea79fdd
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (c) 2016 BayLibre, Inc.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "meson-gxbb-p20x.dtsi"
++#include <dt-bindings/input/input.h>
++
++/ {
++	compatible = "wetek,play2", "amlogic,meson-gxbb";
++	model = "WeTek Play 2";
++
++	leds {
++		compatible = "gpio-leds";
++
++		system {
++			label = "wetek-play:system-status";
++			gpios = <&gpio_ao GPIOAO_13 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			panic-indicator;
++		};
++
++		wifi {
++			label = "wetek-play:wifi-status";
++			gpios = <&gpio GPIODV_26 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++
++		ethernet {
++			label = "wetek-play:ethernet-status";
++			gpios = <&gpio GPIODV_27 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
++
++	gpio-keys-polled {
++		compatible = "gpio-keys-polled";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		poll-interval = <100>;
++
++		button@0 {
++			label = "reset";
++			linux,code = <KEY_RESTART>;
++			gpios = <&gpio_ao GPIOAO_3 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&i2c_A {
++	status = "okay";
++	pinctrl-0 = <&i2c_a_pins>;
++	pinctrl-names = "default";
++};
+-- 
+1.9.1
