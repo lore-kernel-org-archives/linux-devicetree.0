@@ -1,44 +1,56 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 0/7] dmaengine: cppi41: Make CPPI 4.1 driver more generic
-Date: Tue, 17 Jan 2017 14:45:33 +0100
-Message-ID: <20170117134540.9988-1-abailon@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH 3/3] arm64: dts: juno: Remove Motherboard USB node
+Date: Wed, 18 Jan 2017 14:18:10 +0000
+Message-ID: <61d3b621-bb47-c59b-d89f-07636ef8408c@arm.com>
+References: <74595d6d866518db7cfabc39b4cf9b54d3be9bde.1484741104.git.robin.murphy@arm.com>
+ <39868e0d327456be61aa9ac318fc2d958523a696.1484741104.git.robin.murphy@arm.com>
+ <20170118123802.GE995@e110455-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170118123802.GE995@e110455-lin.cambridge.arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Local user for Liviu Dudau <liviu.dudau@arm.com>, Robin Murphy <robin.murphy@arm.com>
+Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Most of the patch of this series were part of
-"[PATCH 00/11] dmaengine: cppi41: Add dma support to da8xx"
 
-This series intend to make the CPPI 4.1 more generic in order to
-add a new platform (the DA8xx).
-To achieve that, all the IRQ code present in CPPI 4.1 driver has been moved
-to MUSB DSPS driver.
-Other changes mainly update the glue layer and platform code to make the
-whole driver more generic.
 
-This series needs the patchset
-"[PATCH v2 0/2] usb: musb: cppi41: Add a way to manage DMA irq" to build.
+On 18/01/17 12:38, Local user for Liviu Dudau wrote:
+> Hi Robin,
+> 
+> On Wed, Jan 18, 2017 at 12:12:52PM +0000, Robin Murphy wrote:
+>> The first batch of Juno boards included a discrete USB controller chip
+>> as a contingency in case of issues with the USB 2.0 IP integrated into
+>> the SoC. As it turned out, the latter was fine, and to the best of my
+>> knowledge the motherboard USB was never even brought up and validated.
+>>
+>> Since this also isn't present on later boards, and uses a compatible
+>> string undocumented and unmatched by any driver in the kernel, let's
+>> just tidy it away for ever to avoid any confusion.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> For all 3 patches:
+> 
+> Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> 
 
-Alexandre Bailon (7):
-  usb: musb: dsps: Manage CPPI 4.1 DMA interrupt in dsps
-  usb: usb: dsps: update device tree bindings
-  dmaengine: cppi41: Remove usbss_mem
-  dmaengine: cppi41: rename platform variables
-  dmaengine: cppi41: Move some constants to glue layer
-  dmaengine: cppi41: init_sched(): Get number of channels from DT
-  dmaengine: cppi41: Fix a race between PM runtime and channel abort
+Thanks Liviu (or/and Local user for Liviu Dudau :))
 
- .../devicetree/bindings/usb/am33xx-usb.txt         |   9 +-
- drivers/dma/cppi41.c                               | 120 +++++++++++----------
- drivers/usb/musb/musb_dsps.c                       |  73 ++++++++++++-
- 3 files changed, 138 insertions(+), 64 deletions(-)
+All 3 patches applied to [1]
 
 -- 
-2.10.2
+Regards,
+Sudeep
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] git.kernel.org/sudeep.holla/linux/h/for-next/updates/juno
