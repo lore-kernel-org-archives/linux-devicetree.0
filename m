@@ -1,55 +1,90 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun6i: sina31s: Enable USB OTG
- controller in peripheral mode
-Date: Wed, 18 Jan 2017 08:11:06 +0100
-Message-ID: <20170118071106.oynmjovrik54fjwy@lukather>
-References: <20170118010105.20069-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 00/13] Ingenic JZ4740 / JZ4780 pinctrl driver
+Date: Wed, 18 Jan 2017 08:15:30 +0100
+Message-ID: <20170118071530.GA18989@ulmo.ba.sec>
+References: <20170117231421.16310-1-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lr2sbh37pclubbdk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFNK7TBQKGQEE2ZYHDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="k1lZvvs/B4yU6o8G"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170118010105.20069-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170117231421.16310-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
 
---lr2sbh37pclubbdk
-Content-Type: text/plain; charset=UTF-8
+--k1lZvvs/B4yU6o8G
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Jan 18, 2017 at 09:01:05AM +0800, Chen-Yu Tsai wrote:
-> While the SinA31s does have a proper 5-pin mini USB OTG port, the ID
-> pin does not seem to work. The pin used in the schematics is always low,
-> regardless of the attached OTG cable or SoC internal pin bias settings.
-> 
-> The v1.5 board is missing bias resistors shown in the schematics for
-> earlier revisions, and the connections of the remaining one does not
-> match the schematics either.
-> 
-> In addition, VBUS for this port is disconnected from the board's 5V
-> power rail. The board features a pad to solder jumper pins to connect
-> VBUS to 5V manually.
-> 
-> Given the above and the fact that the board has 5 more USB host ports,
-> it makes more sense to have the OTG port work in peripheral mode.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Wed, Jan 18, 2017 at 12:14:08AM +0100, Paul Cercueil wrote:
+[...]
+> One problem still unresolved: the pinctrl framework does not allow us to
+> configure each pin on demand (someone please prove me wrong), when the
+> various PWM channels are requested or released. For instance, the PWM
+> channels can be configured from sysfs, which would require all PWM pins
+> to be configured properly beforehand for the PWM function, eventually
+> causing conflicts with other platform or board drivers.
 
-Applied, thanks!
-Maxime
+Still catching up on a lot of email, so I haven't gone through the
+entire series. But I don't think the above is true.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lr2sbh37pclubbdk--
+My understanding is that you can have separate pin groups for each
+pin (provided the hardware supports that) and then control each of
+these groups dynamically at runtime.
+
+That is you could have the PWM driver's ->request() and ->free()
+call into the pinctrl framework to select the correct pinmux
+configuration as necessary.
+
+> The proper solution here would be to modify the pwm-jz4740 driver to
+> handle only one PWM channel, and create an instance of this driver
+> for each one of the 8 PWM channels. Then, it could use the pinctrl
+> framework to dynamically configure the PWM pin it controls.
+
+That could probably work. From only looking at the JZ4740 PWM driver
+there's no separate IP block to deal with the PWM outputs, but they are
+merely GPIOs controller via a timer, so one instance per GPIO seems like
+a fine solution to me.
+
+> Until this can be done, the only jz4740 board supported upstream
+> (Qi lb60) could configure all of its connected PWM pins in PWM function
+> mode, if those are not used by other drivers nor by GPIOs on the
+> board. The only jz4780 board upstream (CI20) does not yet support the
+> PWM driver.
+
+Typically all of the pinmux is pre-determined by the board design. That
+is if you've got 8 pins that can be driven by a PWM signal, not all of
+those might be exposed by the design. If, say, only 0-4 and 6 expose the
+PWM signal while 5 and 7 expose a different function then you can simply
+use a static pinmux configuration and ignore PWMs 5 and 7. Even if
+someone were to configure them, the signal would simply go nowhere.
+
+Of course you'd have to check that your hardware actually matches those
+assumptions. They certainly apply to many SoCs that I've come across.
+
+Thierry
+
+--k1lZvvs/B4yU6o8G
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlh/Fg8ACgkQ3SOs138+
+s6Gr8Q//TFgNuNimYiB+7+AruQDt63U50a4sL1bBqLZEtCja8d1coKzuIihocevQ
+FmB9mRjJA9VM/PGa86qsjDBAtWbIROZYqBE50U0DjGcIOHdZOltSM7I0liWPQRGm
+42j4lMZZo7mdcIGWzcQmmIFroDOC0HMgG7/ZnYP1xvheJJaIJXghb41I/hYo55ub
+c3M+ySsnWHfeIhe6BCsxm7sW99iStEiMDvGQkT/42QdmqsDkA2oKRgxOH4sNqgae
+0r6fKZIF3bJX5klQiarNroAm7zRmc1T8AB/60CeQTrgDA0NC/rYThPE707ivqgqq
+wsLbrqWXsO194wJxXJ2PX3+mKxm0Y6TgQPdDEb6f2Mehl8/NNTmIURjRyxBWrfsG
+u0q0of+WuoEHi014KW3Qy4DJcGaATi13wJJzV1R2SX0dDcApALoPrVthMpx3h599
+kUpxaMFeWpCNGjRFszJdCn8ZZgxaoDZiKRvLR9ghRYB1CaFlR7SZEz/wiHDjEx0q
+4OSgtSMDRdWOyInw+wCTVE/9dFrSBLoMVAihrmS9d6FqUDdNYYlRsU/QReC8lFFl
+tabfOvtDw/BHahDuKlWJpW2QdVQ5xmr+uUDM6uWMWV8rYdIz20fP614uSt0nJNQx
+7WMslUpB4sm1DGoeX0fL+PPa7wDWUeL9tAgZHmMEWIe8393sjtM=
+=7L1k
+-----END PGP SIGNATURE-----
+
+--k1lZvvs/B4yU6o8G--
