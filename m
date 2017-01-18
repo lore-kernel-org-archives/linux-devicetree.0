@@ -1,60 +1,116 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 5/5] ARM: dts: dra7xx: Add stdout-path property
-Date: Wed, 18 Jan 2017 09:33:26 +0530
-Message-ID: <20170118040326.29259-6-lokeshvutla@ti.com>
-References: <20170118040326.29259-1-lokeshvutla@ti.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: exynos: Add regulators for Vbus and Vbus-Boost
+Date: Wed, 18 Jan 2017 07:17:58 +0200
+Message-ID: <CAJKOXPfY=LbRQtOKtcetMqiroEkP5crUiM6OeUww5fPsvJgd6A@mail.gmail.com>
+References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117150123epcas1p12709f99a0993ae58ea1fe294df5a12fe@epcas1p1.samsung.com>
+ <1484665444-23365-3-git-send-email-pankaj.dubey@samsung.com>
+ <20170117182826.gngf7gjkvfyg3uww@kozik-lap> <68177964-890d-7061-dac0-f37717b1a254@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118040326.29259-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <68177964-890d-7061-dac0-f37717b1a254-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: "pankaj.dubey" <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add stdout-path property in /chosen node so that earlycon can be
-used by just adding earlycon in bootargs.
+On Wed, Jan 18, 2017 at 5:20 AM, pankaj.dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+>
+> On Tuesday 17 January 2017 11:58 PM, Krzysztof Kozlowski wrote:
+>> On Tue, Jan 17, 2017 at 08:34:04PM +0530, Pankaj Dubey wrote:
+>>> From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>
+>>> Adding fixed voltage regulators for Vbus and Vbus-boost required
+>>> by USB 3.0 DRD controller on Exynos7-espresso board.
+>>>
+>>> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+>>> Signed-off-by: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Same as patch 1.
+>>
+>
+> OK, will update.
+>
+>>> ---
+>>>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts | 45 +++++++++++++++++++++++++
+>>>  1 file changed, 45 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> index 9cf73cf..8d5abdd 100644
+>>> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+>>> @@ -13,6 +13,7 @@
+>>>  #include "exynos7.dtsi"
+>>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>>  #include <dt-bindings/clock/samsung,s2mps11.h>
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>>
+>>>  / {
+>>>      model = "Samsung Exynos7 Espresso board based on EXYNOS7";
+>>> @@ -33,6 +34,29 @@
+>>>              device_type = "memory";
+>>>              reg = <0x0 0x40000000 0x0 0xC0000000>;
+>>>      };
+>>> +
+>>> +    usb30_vbus_reg: regulator-usb30 {
+>>> +            compatible = "regulator-fixed";
+>>> +            regulator-name = "VBUS_5V";
+>>> +            regulator-min-microvolt = <5000000>;
+>>> +            regulator-max-microvolt = <5000000>;
+>>> +            gpio = <&gph1 1 GPIO_ACTIVE_HIGH>;
+>>> +            pinctrl-names = "default";
+>>> +            pinctrl-0 = <&usb30_vbus_en>;
+>>> +            enable-active-high;
+>>> +    };
+>>> +
+>>> +    usb3drd_boost_5v: regulator-usb3drd-boost {
+>>> +            compatible = "regulator-fixed";
+>>> +            regulator-name = "VUSB_VBUS_5V";
+>>> +            regulator-min-microvolt = <5000000>;
+>>> +            regulator-max-microvolt = <5000000>;
+>>> +            gpio = <&gpf4 1 GPIO_ACTIVE_HIGH>;
+>>> +            pinctrl-names = "default";
+>>> +            pinctrl-0 = <&usb3drd_boost_en>;
+>>> +            enable-active-high;
+>>> +    };
+>>> +
+>>>  };
+>>>
+>>>  &fin_pll {
+>>> @@ -366,3 +390,24 @@
+>>>      vqmmc-supply = <&ldo2_reg>;
+>>>      disable-wp;
+>>>  };
+>>> +
+>>> +&usbdrd_phy {
+>>> +    vbus-supply = <&usb30_vbus_reg>;
+>>> +    vbus-boost-supply = <&usb3drd_boost_5v>;
+>>> +};
+>>> +
+>>> +&pinctrl_bus1 {
+>>> +    usb30_vbus_en: usb30-vbus-en {
+>>> +            samsung,pins = "gph1-1";
+>>> +            samsung,pin-function = <1>;
+>>
+>> Javier mentioned it, please use EXYNOS_PIN_FUNC_OUTPUT
+>>
+>
+> Yes, but as it's not taken care in existing dts for other pin
+> definitions, so a Javier mentioned, this can be taken care as a separate
+> patch for all pin definitions? Or do you want me to first add patch
+> converting all these with macros and then on top of add this usb related
+> pin definitions.
 
-Tested-by: Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/dra7-evm.dts          | 4 ++++
- arch/arm/boot/dts/dra72-evm-common.dtsi | 4 ++++
- 2 files changed, 8 insertions(+)
+For new code let's use the macros even if entire file is not converted
+(yet). The same like mixture of values and GPIO_ACTIVE_* macros. If
+you wish to convert the file to macros, feel free to go. But I see it
+as separate patch.
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 132f2be10889..b3923c049edb 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -21,6 +21,10 @@
- 		reg = <0x0 0x80000000 0x0 0x60000000>; /* 1536 MB */
- 	};
- 
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
- 	evm_3v3_sd: fixedregulator-sd {
- 		compatible = "regulator-fixed";
- 		regulator-name = "evm_3v3_sd";
-diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
-index e50fbeea96e0..45b62138cbde 100644
---- a/arch/arm/boot/dts/dra72-evm-common.dtsi
-+++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
-@@ -18,6 +18,10 @@
- 		display0 = &hdmi0;
- 	};
- 
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
- 	evm_12v0: fixedregulator-evm12v0 {
- 		/* main supply */
- 		compatible = "regulator-fixed";
--- 
-2.11.0
-
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
