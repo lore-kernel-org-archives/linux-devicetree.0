@@ -1,57 +1,37 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and
- usable memory range
-Date: Wed, 18 Jan 2017 01:09:02 +0100
-Message-ID: <635fece7-4edf-13b4-3de1-e093abae655f@suse.de>
-References: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: davinci: da850-evm: fix read access to SPI flash
+Date: Tue, 17 Jan 2017 16:25:23 -0800
+Message-ID: <m237gh2ozw.fsf@baylibre.com>
+References: <20170117125742.9536-1-fparent@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484129414-23325-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170117125742.9536-1-fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Fabien Parent's
+        message of "Tue, 17 Jan 2017 13:57:42 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: xypron.glpk-Mmb7MZpHnFY@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 11.01.2017 um 11:10 schrieb Neil Armstrong:
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index eada0b5..66677b5 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -55,6 +55,18 @@
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  
-> +	reserved-memory {
+Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-Should this get a label for future gx*-level additions?
+> Read access to the SPI flash are broken on da850-evm, i.e. the data
+> read is not what is actually programmed on the flash.
+> According to the datasheet for the M25P64 part present on the da850-evm,
+> if the SPI frequency is higher than 20MHz then the READ command is not
+> usable anymore and only the FAST_READ command can be used to read data.
+>
+> This commit specifies in the DTS that we should use FAST_READ command
+> instead of the READ command.
+>
+> Signed-off-by: Fabien Parent <fparent-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* 2MiB reserved for ARM Trusted Firmware (BL31) */
+Tested on da850-evm on top of v4.10-rc3.  This gets the DT boot
+functionatliy in line with the legacy (board-file) boot.
 
-"2 MiB" please. Ditto for the to-be-refactored 16 MiB node.
+Tested-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-> +		secmon: secmon {
-> +			reg = <0x0 0x10000000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells = <0x2>;
->  		#size-cells = <0x0>;
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
