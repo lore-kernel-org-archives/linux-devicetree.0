@@ -1,78 +1,234 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 01/14] devicetree: bindings: add bindings for ahci-da850
-Date: Wed, 18 Jan 2017 14:35:23 +0530
-Message-ID: <792384a9-a7d3-56f5-5178-f3b0f8e7114a@ti.com>
-References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
- <1484655976-25382-2-git-send-email-bgolaszewski@baylibre.com>
- <7e3c8946-2a19-3e11-c071-b3737554005c@lechnology.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Wed, 18 Jan 2017 14:43:08 +0530
+Message-ID: <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7e3c8946-2a19-3e11-c071-b3737554005c@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <587C880E.90803@ti.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mark.rutland@arm.com, sboyd@codeaurora.org, bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 January 2017 12:05 AM, David Lechner wrote:
-> On 01/17/2017 06:26 AM, Bartosz Golaszewski wrote:
->> Add DT bindings for the TI DA850 AHCI SATA controller.
+Hi Kishon,
+
+
+On 01/16/2017 02:15 PM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+>> PHY transceiver driver for QUSB2 phy controller that provides
+>> HighSpeed functionality for DWC3 controller present on
+>> Qualcomm chipsets.
 >>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
 >> ---
->>  Documentation/devicetree/bindings/ata/ahci-da850.txt | 18
->> ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt
->> b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+>> Changes since v3:
+>>   - Added 'Reviewed-by' from Stephen.
+>>   - Fixed debug message for qusb2_phy_set_tune2_param().
+>>   - Replaced devm_reset_control_get() with devm_reset_control_get_by_index()
+>>     since we are requesting only one reset.
+>>   - Updated devm_nvmem_cell_get() with a NULL cell id.
+>>   - Made error labels more idiomatic.
+>>   - Refactored qusb2_setbits() and qusb2_clrbits() a little bit to accept
+>>     base address and register offset as two separate arguments.
+>>
+>> Changes since v2:
+>>   - Removed selecting 'RESET_CONTROLLER' config.
+>>   - Added error handling for clk_prepare_enable paths.
+>>   - Removed explicitly setting ref_clk rate to 19.2 MHz. Don't need to
+>>     do that since 'xo' is modeled as parent to this clock.
+>>   - Removed 'ref_clk_src' handling. Driver doesn't need to request and
+>>     handle this clock.
+>>   - Moved nvmem_cell_get() to probe function.
+>>   - Simplified phy pll status handling.
+>>   - Using of_device_get_match_data() to get match data.
+>>   - Uniformly using lowercase for hex numbers.
+>>   - Fixed sparse warnings.
+>>   - Using shorter variable names in structure and in functions.
+>>   - Handling various comment style shortcomings.
+>>
+>> Changes since v1:
+>>   - removed reference to clk_enabled/pwr_enabled.
+>>   - moved clock and regulator enable code to phy_power_on/off() callbacks.
+>>   - fixed return on EPROBE_DEFER in qusb2_phy_probe().
+>>   - fixed phy create and phy register ordering.
+>>   - removed references to non-lkml links from commit message.
+>>   - took care of other minor nits.
+>>   - Fixed coccinelle warnings -
+>>     'PTR_ERR applied after initialization to constant'
+>>   - Addressed review comment, regarding qfprom access for tune2 param value.
+>>     This driver is now based on qfprom patch[1] that allows byte access now.
+>>
+>>   drivers/phy/Kconfig          |  10 +
+>>   drivers/phy/Makefile         |   1 +
+>>   drivers/phy/phy-qcom-qusb2.c | 539 +++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 550 insertions(+)
+>>   create mode 100644 drivers/phy/phy-qcom-qusb2.c
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index e8eb7f225a88..0ed53d018b23 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -430,6 +430,16 @@ config PHY_STIH407_USB
+>>   	  Enable this support to enable the picoPHY device used by USB2
+>>   	  and USB3 controllers on STMicroelectronics STiH407 SoC families.
+>>   
+>> +config PHY_QCOM_QUSB2
+>> +	tristate "Qualcomm QUSB2 PHY Driver"
+>> +	depends on OF && (ARCH_QCOM || COMPILE_TEST)
+>> +	select GENERIC_PHY
+>> +	help
+>> +	  Enable this to support the HighSpeed QUSB2 PHY transceiver for USB
+>> +	  controllers on Qualcomm chips. This driver supports the high-speed
+>> +	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
+>> +	  USB IPs on MSM SOCs.
+>> +
+>>   config PHY_QCOM_UFS
+>>   	tristate "Qualcomm UFS PHY driver"
+>>   	depends on OF && ARCH_QCOM
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index 65eb2f436a41..dad1682b80e3 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -49,6 +49,7 @@ obj-$(CONFIG_PHY_ST_SPEAR1310_MIPHY)	+= phy-spear1310-miphy.o
+>>   obj-$(CONFIG_PHY_ST_SPEAR1340_MIPHY)	+= phy-spear1340-miphy.o
+>>   obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+>>   obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
+>> +obj-$(CONFIG_PHY_QCOM_QUSB2) 	+= phy-qcom-qusb2.o
+>>   obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
+>>   obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
+>>   obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
+>> diff --git a/drivers/phy/phy-qcom-qusb2.c b/drivers/phy/phy-qcom-qusb2.c
 >> new file mode 100644
->> index 0000000..e7111b4
+>> index 000000000000..c69118610164
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
->> @@ -0,0 +1,18 @@
->> +Device tree binding for the TI DA850 AHCI SATA Controller
->> +---------------------------------------------------------
+>> +++ b/drivers/phy/phy-qcom-qusb2.c
+>> @@ -0,0 +1,539 @@
+>> +/*
+>> + * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 and
+>> + * only version 2 as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
 >> +
->> +Required properties:
->> +  - compatible: must be "ti,da850-ahci"
->> +  - reg: physical base addresses and sizes of the controller's
->> register areas
->> +  - interrupts: interrupt specifier (refer to the interrupt binding)
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/err.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/module.h>
+>> +#include <linux/nvmem-consumer.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <linux/reset.h>
+>> +#include <linux/slab.h>
 >> +
->> +Optional properties:
->> +  - clocks: clock specifier (refer to the common clock binding)
-> 
-> Won't you also need a clock-names property since there are two clocks?
-> 
+>> +#define QUSB2PHY_PLL_TEST		0x04
+>> +#define CLK_REF_SEL			BIT(7)
 >> +
->> +Example:
+>> +#define QUSB2PHY_PLL_TUNE		0x08
+>> +#define QUSB2PHY_PLL_USER_CTL1		0x0c
+>> +#define QUSB2PHY_PLL_USER_CTL2		0x10
+>> +#define QUSB2PHY_PLL_AUTOPGM_CTL1	0x1c
+>> +#define QUSB2PHY_PLL_PWR_CTRL		0x18
 >> +
->> +    sata: ahci@218000 {
->> +        compatible = "ti,da850-ahci";
->> +        reg = <0x218000 0x2000>, <0x22c018 0x4>;
->> +        interrupts = <67>;
->> +    };
->>
-> 
-> It would be nice to have clocks and clock-names in the example as well.
+>> +#define QUSB2PHY_PLL_STATUS		0x38
+>> +#define PLL_LOCKED			BIT(5)
+>> +
+>> +#define QUSB2PHY_PORT_TUNE1		0x80
+>> +#define QUSB2PHY_PORT_TUNE2		0x84
+>> +#define QUSB2PHY_PORT_TUNE3		0x88
+>> +#define QUSB2PHY_PORT_TUNE4		0x8c
+>> +#define QUSB2PHY_PORT_TUNE5		0x90
+>> +#define QUSB2PHY_PORT_TEST2		0x9c
+>> +
+>> +#define QUSB2PHY_PORT_POWERDOWN		0xb4
+>> +#define CLAMP_N_EN			BIT(5)
+>> +#define FREEZIO_N			BIT(1)
+>> +#define POWER_DOWN			BIT(0)
+>> +
+>> +#define QUSB2PHY_REFCLK_ENABLE		BIT(0)
+>> +
+>> +#define PHY_CLK_SCHEME_SEL		BIT(0)
+>> +
+>> +struct qusb2_phy_init_tbl {
+>> +	unsigned int offset;
+>> +	unsigned int val;
+>> +};
+>> +#define QUSB2_PHY_INIT_CFG(o, v) \
+>> +	{			\
+>> +		.offset = o,	\
+>> +		.val = v,	\
+>> +	}
+>> +
+>> +static const struct qusb2_phy_init_tbl msm8996_init_tbl[] = {
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xf8),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xb3),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xc0),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9f),
+>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+>> +};
+> I wish all this data comes from device tree and one API in phy-core can do all
+> these settings. Your other driver qcom-qmp also seems to have a bunch of
+> similar settings.
+>
+> The problem is every vendor driver adds a bunch of code to perform the same
+> thing again and again when all of these settings can be done by a single phy API.
 
-Well, we don't use the common clock binding today. Is it really
-necessary to add them now. Thats basically going to remain completely
-untested.
+Yes, i understand this. You have commented similar thing in the patch 
+from Jaehoon -
+[PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe phy
 
-I would drop the mention of clocks specification as an optional property
-too.
+I would like to understand the requirements here.
+Would you like me to get all this information from the device tree -
+an array of register offset and value pair, which we can then program
+by calling a phy_ops (may be calibrate) ? Something of this sort:
 
-Thanks,
-Sekhar
+phy-calibrate-data = <val1, register_offset1>,
+                                   <val2, register_offset2>,
+                                   <val3, register_offset3>,
+                                   ....
+
+I am sure having such information in the driver (like i have in my patch)
+makes the driver look more clumsy.
+But, all this data can be pretty huge - a set of some 100+ 
+register-value pairs
+for QMP phy, for example. So, will it be okay to get this from device tree ?
+We also note here that such information changes from one IP version to 
+another.
+I remember Rob having some concerns about it.
+
+
+Regards
+Vivek
+> Thanks
+> Kishon
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
