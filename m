@@ -1,90 +1,46 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v5] ARM64: dts: meson-gx: Add firmware reserved memory zones
-Date: Wed, 18 Jan 2017 17:50:45 +0100
-Message-ID: <1484758245-9354-1-git-send-email-narmstrong@baylibre.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
+Date: Wed, 18 Jan 2017 09:00:34 -0800
+Message-ID: <20170118170033.GD7403@atomide.com>
+References: <20170117040336.21700-1-lokeshvutla@ti.com>
+ <20170117040336.21700-2-lokeshvutla@ti.com>
+ <20170117232310.GX7403@atomide.com>
+ <88830967-6e83-33fc-8a1c-d776fd694e2f@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <88830967-6e83-33fc-8a1c-d776fd694e2f-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xypron.glpk-Mmb7MZpHnFY@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
-this patch adds these reserved zones.
+* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170117 19:50]:
+> 
+> 
+> On Wednesday 18 January 2017 04:53 AM, Tony Lindgren wrote:
+> > * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170116 20:06]:
+> >> Hwmod core tries to reset and idles each IP that is registered with hwmod.
+> >> In case of earlycon, that specific uart IP cannot be reset or keep it in
+> >> idle state else earlycon hangs once hwmod resets that uart IP. So add support
+> >> to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
+> >> is enabled.
+> > 
+> > Nice :)
+> > 
+> > I guess this has no dependency to SERIAL_OMAP vs 8250_OMAP selection?
+> 
+> Unfortunately SERIAL_OMAP does not support earlycon yet. As I mentioned
+> in my cover letter, I verified this series only with 8250_OMAP.
 
-Without such reserved memory zones, running the following stress command :
-$ stress-ng --vm 16 --vm-bytes 128M --timeout 10s
-multiple times:
+OK. So just to understand why it would not work with omap-serial, do we
+need something implemented in drivers/tty/serial/earlycon.c for non 8250
+drivers to make it work? Or are there other dependencies?
 
-Could lead to the following kernel crashes :
-[   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf000000 -- SError
-...
-[   47.058536] Internal error: Attempting to execute userspace memory: 8600000f [#3] PREEMPT SMP
-...
-Instead of the OOM killer.
+Regards,
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
-
-Changes since v4 at [5]:
-- Move start of ddr memory to reserved-memory node
-- Drop memory node move
-- Fix typo in sizes
-
-Changes since resent v2 at [4]:
-- Fix invalid comment of useable memory attributes
-
-Changes since original v2 at [3]:
-- Typo in commit 2GiB -> 1GiB, 4GiB -> 2GiB
-
-Changes since v2 at [2]:
-- Moved all memory node out of dtsi
-- Added comment about useable memory
-- Fixed comment about secmon reserved zone
-
-Changes since v1 at [1] :
-- Renamed reg into linux,usable-memory to ovveride u-boot memory
-- only kept secmon memory zone
-
-[1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-[2] http://lkml.kernel.org/r/1483105232-6242-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-[3] http://lkml.kernel.org/r/1484128128-22454-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-[4] http://lkml.kernel.org/r/1484128540-22662-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-[5] http://lkml.kernel.org/r/1484129414-23325-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index eada0b5..63d52b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -55,6 +55,24 @@
- 	#address-cells = <2>;
- 	#size-cells = <2>;
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 16 MiB reserved for Hardware ROM Firmware */
-+		hwrom: hwrom {
-+			reg = <0x0 0x0 0x0 0x1000000>;
-+			no-map;
-+		};
-+
-+		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon: secmon {
-+			reg = <0x0 0x10000000 0x0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <0x2>;
- 		#size-cells = <0x0>;
--- 
-1.9.1
-
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
