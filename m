@@ -1,64 +1,74 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: [PATCH v3] arm64: dts: exynos: Remove unneeded unit names in Exynos5433 nodes
-Date: Wed, 18 Jan 2017 12:50:13 -0300
-Message-ID: <1484754613-2425-1-git-send-email-javier@osg.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Andi Shyti <andi.shyti@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
+Date: Wed, 18 Jan 2017 12:25:00 -0500
+Message-ID: <20170118172502.13876-2-chris.brandt@renesas.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170118172502.13876-1-chris.brandt@renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The "samsung,exynos5433-mipi-video-phy" and "samsung,exynos5250-dwusb3"
-DT bindings don't specify a reg property for these nodes, so having a
-unit name leads to the following DTC warnings:
+Some controllers have 2 clock sources instead of 1, so they both need
+to be turned on/off.
 
-Node /soc/video-phy@105c0710 has a unit name, but no reg property
-Node /soc/usb@15400000 has a unit name, but no reg property
-Node /soc/usb@15a00000 has a unit name, but no reg property
-
-Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 ---
+v2:
+* changed clk2 to clk_cd
+* disable clk if clk_cd enable fails
+* changed clock name from "carddetect" to "cd"
+---
+ drivers/mmc/host/sh_mobile_sdhi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Changes in v3:
-  - Use proper device node names, suggested by Krzysztof.
-
-Changes in v2:
-  - Fix subject line since I forgot the "exynos" prefix.
-
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 59788d89b686..57c7bbeb65a7 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -706,7 +706,7 @@
- 			interrupts = <GIC_PPI 9 0xf04>;
- 		};
+diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+index 59db14b..a3f995e 100644
+--- a/drivers/mmc/host/sh_mobile_sdhi.c
++++ b/drivers/mmc/host/sh_mobile_sdhi.c
+@@ -143,6 +143,7 @@ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
  
--		mipi_phy: video-phy@105c0710 {
-+		mipi_phy: video-phy {
- 			compatible = "samsung,exynos5433-mipi-video-phy";
- 			#phy-cells = <1>;
- 			samsung,pmu-syscon = <&pmu_system_controller>;
-@@ -1357,7 +1357,7 @@
- 			status = "disabled";
- 		};
+ struct sh_mobile_sdhi {
+ 	struct clk *clk;
++	struct clk *clk_cd;
+ 	struct tmio_mmc_data mmc_data;
+ 	struct tmio_mmc_dma dma_priv;
+ 	struct pinctrl *pinctrl;
+@@ -190,6 +191,12 @@ static int sh_mobile_sdhi_clk_enable(struct tmio_mmc_host *host)
+ 	if (ret < 0)
+ 		return ret;
  
--		usbdrd30: usb@15400000  {
-+		usbdrd30: usbdrd {
- 			compatible = "samsung,exynos5250-dwusb3";
- 			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
- 				<&cmu_fsys CLK_SCLK_USBDRD30>;
-@@ -1404,7 +1404,7 @@
- 			status = "disabled";
- 		};
++	ret = clk_prepare_enable(priv->clk_cd);
++	if (ret < 0) {
++		clk_disable_unprepare(priv->clk);
++		return ret;
++	}
++
+ 	/*
+ 	 * The clock driver may not know what maximum frequency
+ 	 * actually works, so it should be set with the max-frequency
+@@ -255,6 +262,8 @@ static void sh_mobile_sdhi_clk_disable(struct tmio_mmc_host *host)
+ 	struct sh_mobile_sdhi *priv = host_to_priv(host);
  
--		usbhost30: usb@15a00000 {
-+		usbhost30: usbhost {
- 			compatible = "samsung,exynos5250-dwusb3";
- 			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
- 				<&cmu_fsys CLK_SCLK_USBHOST30>;
+ 	clk_disable_unprepare(priv->clk);
++	if (priv->clk_cd)
++		clk_disable_unprepare(priv->clk_cd);
+ }
+ 
+ static int sh_mobile_sdhi_card_busy(struct mmc_host *mmc)
+@@ -572,6 +581,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
+ 		goto eprobe;
+ 	}
+ 
++	priv->clk_cd = devm_clk_get(&pdev->dev, "cd");
++	if (IS_ERR(priv->clk_cd))
++		priv->clk_cd = NULL;
++
+ 	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
+ 	if (!IS_ERR(priv->pinctrl)) {
+ 		priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
 -- 
-2.7.4
+2.10.1
+
+
