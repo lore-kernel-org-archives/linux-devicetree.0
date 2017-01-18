@@ -1,48 +1,43 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Wed, 18 Jan 2017 10:22:23 -0800
-Message-ID: <20170118182223.GP10531@minitux>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
- <587C88FE.2040900@ti.com>
- <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v3 09/13] sata: ahci: export ahci_do_hardreset() locally
+Date: Wed, 18 Jan 2017 10:28:26 -0800
+Message-ID: <20170118182826.GA1451@mtj.duckdns.org>
+References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484745601-4769-10-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <50612693-5345-55da-8207-8c5e721fb68a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1484745601-4769-10-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 17 Jan 22:54 PST 2017, Vivek Gautam wrote:
-> On 01/16/2017 02:19 PM, Kishon Vijay Abraham I wrote:
-> > On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
-[..]
-> > > +		reset-names = "phy", "common", "cfg",
-> > > +				"lane0", "lane1", "lane2";
-> > Each lane has a separate clock, separate reset.. why not create sub-nodes for
-> > each lane?
+Hello, Bartosz.
+
+On Wed, Jan 18, 2017 at 02:19:57PM +0100, Bartosz Golaszewski wrote:
+> We need a way to retrieve the information about the online state of
+> the link in the ahci-da850 driver.
 > 
-> Yes, each lane has separate pipe clock and resets.
-> I can have a binding such as written below.
+> Create a new function: ahci_do_hardreset() which is called from
+> ahci_hardreset() for backwards compatibility, but has an additional
+> argument: 'online' - which can be used to check if the link is online
+> after this function returns.
 
-+1
+Please just add @online to ahci_hardreset() and update the callers.
+Other than that, the sata changes look good to me.
 
-> Does it makes sense to pull in the tx, rx and pcs offsets as well
-> to the child node, and iomap the entire address space of the phy ?
-> 
+Thanks.
 
-Note that you don't have to follow the same structure in your device
-driver as you describe your hardware in devicetree.
-
-I would suggest that you replace the lane-offset and various lane
-specific resources with subnodes, but keep the driver "as is".
-
-Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+tejun
