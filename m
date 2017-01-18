@@ -1,83 +1,67 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
-Date: Wed, 18 Jan 2017 09:33:22 +0530
-Message-ID: <20170118040326.29259-2-lokeshvutla@ti.com>
-References: <20170118040326.29259-1-lokeshvutla@ti.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 5/6] dt-bindings: mt8173-xhci: add reference clock
+Date: Wed, 18 Jan 2017 14:08:26 +0800
+Message-ID: <1484719707-12107-5-git-send-email-chunfeng.yun@mediatek.com>
+References: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118040326.29259-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hwmod core tries to reset and idles each IP that is registered with hwmod.
-In case of earlycon, that specific uart IP cannot be reset or keep it in
-idle state else earlycon hangs once hwmod resets that uart IP. So add support
-to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
-is enabled.
+add a reference clock for compatibility
 
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- arch/arm/mach-omap2/omap_hwmod.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index e8b988714a09..0da4f2ea76c4 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3249,6 +3249,36 @@ int __init omap_hwmod_setup_one(const char *oh_name)
- }
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+index 2a930bd..ab8bb27 100644
+--- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+@@ -23,6 +23,7 @@ Required properties:
+ 	entry in clock-names
+  - clock-names : must contain
+ 	"sys_ck": for clock of xHCI MAC
++	"ref_ck": for reference clock of xHCI MAC
+ 	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+ 	"wakeup_deb_p1": for USB wakeup debounce clock of port1
  
- /**
-+ * omap_hwmod_setup_earlycon_flags - set up flags for early console
-+ *
-+ * Enable DEBUG_OMAPUART_FLAGS for uart hwmod that is being used as
-+ * early concole so that hwmod core doesn't reset and keep it in idle
-+ * that specific uart.
-+ */
-+#ifdef CONFIG_SERIAL_EARLYCON
-+static void __init omap_hwmod_setup_earlycon_flags(void)
-+{
-+	struct device_node *np;
-+	struct omap_hwmod *oh;
-+	const char *uart;
-+
-+	np = of_find_node_by_path("/chosen");
-+	if (np) {
-+		uart = of_get_property(np, "stdout-path", NULL);
-+		if (uart) {
-+			np = of_find_node_by_path(uart);
-+			if (np) {
-+				uart = of_get_property(np, "ti,hwmods", NULL);
-+				oh = omap_hwmod_lookup(uart);
-+				if (oh)
-+					oh->flags |= DEBUG_OMAPUART_FLAGS;
-+			}
-+		}
-+	}
-+}
-+#endif
-+
-+/**
-  * omap_hwmod_setup_all - set up all registered IP blocks
-  *
-  * Initialize and set up all IP blocks registered with the hwmod code.
-@@ -3261,6 +3291,9 @@ static int __init omap_hwmod_setup_all(void)
- 	_ensure_mpu_hwmod_is_setup(NULL);
+@@ -47,10 +48,10 @@ usb30: usb@11270000 {
+ 	reg-names = "mac", "ippc";
+ 	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+ 	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+-	clocks = <&topckgen CLK_TOP_USB30_SEL>,
++	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+ 		 <&pericfg CLK_PERI_USB0>,
+ 		 <&pericfg CLK_PERI_USB1>;
+-	clock-names = "sys_ck",
++	clock-names = "sys_ck", "ref_ck",
+ 		      "wakeup_deb_p0",
+ 		      "wakeup_deb_p1";
+ 	phys = <&phy_port0 PHY_TYPE_USB3>,
+@@ -82,6 +83,7 @@ Required properties:
+ 	entry in clock-names
+  - clock-names : must be
+ 	"sys_ck": for clock of xHCI MAC
++	"ref_ck": for reference clock of xHCI MAC
  
- 	omap_hwmod_for_each(_init, NULL);
-+#ifdef CONFIG_SERIAL_EARLYCON
-+	omap_hwmod_setup_earlycon_flags();
-+#endif
- 	omap_hwmod_for_each(_setup, NULL);
- 
- 	return 0;
+ Optional properties:
+  - vbus-supply : reference to the VBUS regulator;
+@@ -94,8 +96,8 @@ usb30: usb@11270000 {
+ 	reg-names = "mac";
+ 	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+ 	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+-	clocks = <&topckgen CLK_TOP_USB30_SEL>;
+-	clock-names = "sys_ck";
++	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
++	clock-names = "sys_ck", "ref_ck";
+ 	vusb33-supply = <&mt6397_vusb_reg>;
+ 	usb3-lpm-capable;
+ };
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
