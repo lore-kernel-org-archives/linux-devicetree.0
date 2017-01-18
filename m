@@ -1,93 +1,48 @@
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
-Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
-Date: Wed, 18 Jan 2017 23:20:17 +0100
-Message-ID: <17a7f9cea35944288f97735e66859929@rwthex-s1-b.rwth-ad.de>
-References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
- <88bdfd5321484efc82af4132ac2f0d7e@rwthex-s1-b.rwth-ad.de>
- <6ed3f695104044f18e98fc9619aab16e@rwthex-s1-b.rwth-ad.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] Documentation: devicetree: move shared property
+ used by rc into a common place
+Date: Wed, 18 Jan 2017 16:22:38 -0600
+Message-ID: <20170118222238.7iqt7joopu45dq46@rob-hp-laptop>
+References: <1484292939-9454-1-git-send-email-sean.wang@mediatek.com>
+ <1484292939-9454-2-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6ed3f695104044f18e98fc9619aab16e@rwthex-s1-b.rwth-ad.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484292939-9454-2-git-send-email-sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+On Fri, Jan 13, 2017 at 03:35:37PM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Most IR drivers uses the same label to identify the
+> scancdoe/key table they used by multiple bindings and lack
+> explanation well. So move the shared property into a common
+> place and give better explanation.
+> 
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/gpio-ir-receiver.txt |   3 +-
+>  .../devicetree/bindings/media/hix5hd2-ir.txt       |   2 +-
+>  Documentation/devicetree/bindings/media/rc.txt     | 116 +++++++++++++++++++++
+>  .../devicetree/bindings/media/sunxi-ir.txt         |   2 +-
+>  4 files changed, 120 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/rc.txt
 
-turns out I have a question on your comment after all:
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-On 01/17/2017 07:35 PM, Christopher Spinrath wrote:
-> Hi Philipp,
->
-> thanks for the review!
->
-> On 01/17/2017 09:57 AM, Philipp Zabel wrote:
->> [...]
->>> +
->>> +    parallel-display {
->>> +        compatible = "fsl,imx-parallel-display";
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +        pinctrl-names = "default";
->>> +        pinctrl-0 = <&pinctrl_ipu1>;
->>> +
->>> +        interface-pix-fmt = "rgb24";
->>
->> This is not necessary if the connector created by the tpf410 has the
->> correct media bus format set in its display_info structure. This can be
->> done in tfp410_attach, before calling drm_mode_connector_attach_encoder:
->>
->>         u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
->>
->>     drm_display_info_set_bus_formats(&dvi->connector.display_info,
->>                      &bus_format, 1);
->>
->> After this is done, the above line should be removed in a follow-up
->> patch.
+Thanks for doing this.
 
-On closer inspection the tfp410 can handle rgb12, rgb24, and DVI 
-formats. Considering this it feels wrong to hardcode the bus format to 
-rgb24 (isn't it?).
-
-So a solution might be to add a property specifying the bus format to 
-the tfp410 binding. But then we would effectively just move this 
-property from one node to another. I wonder if this is still desireable...?
-
-Cheers,
-Christopher
-
-> Ok, I will send a mini follow-up series doing that with your
-> Suggested-by (unless you object) in the next few days.
->
-> Cheers,
-> Christopher
->
->>> +        port@0 {
->>> +            reg = <0>;
->>> +
->>> +            parallel_display_in: endpoint {
->>> +                remote-endpoint = <&ipu1_di0_disp0>;
->>> +            };
->>> +        };
->>> +
->>> +        port@1 {
->>> +            reg = <1>;
->>> +
->>> +            parallel_display_out: endpoint {
->>> +                remote-endpoint = <&tfp410_in>;
->>> +            };
->>> +        };
->>> +    };
->>>  };
->>>  [...]
+Rob
