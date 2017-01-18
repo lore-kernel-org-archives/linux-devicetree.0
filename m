@@ -1,49 +1,66 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] Documentation: devicetree: amlogic: Add R-Box Pro
-Date: Wed, 18 Jan 2017 15:38:57 -0800
-Message-ID: <m2bmv4x7ji.fsf@baylibre.com>
-References: <20170117030611.23827-2-afaerber@suse.de>
- <20170117225459.4438-1-afaerber@suse.de>
- <20170117225459.4438-2-afaerber@suse.de>
- <819ac0c0-92b7-bac7-dcfc-a56c34a6bf62@baylibre.com>
- <9439ba55-c56c-71bf-00a5-870e2f4dd07b@suse.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] clk: ux500: Add device tree bindings for ABx500
+ clocks
+Date: Wed, 18 Jan 2017 17:09:48 -0600
+Message-ID: <20170118230948.hplhmyp6hyu3olzd@rob-hp-laptop>
+References: <20170113150826.30202-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <9439ba55-c56c-71bf-00a5-870e2f4dd07b@suse.de> ("Andreas
- =?utf-8?Q?F=C3=A4rber=22's?= message of "Wed, 18 Jan 2017 23:38:48 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170113150826.30202-1-linus.walleij@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cml0ZXM6Cgo+IEFtIDE4LjAxLjIw
-MTcgdW0gMTA6MzUgc2NocmllYiBOZWlsIEFybXN0cm9uZzoKPj4gT24gMDEvMTcvMjAxNyAxMTo1
-NCBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+Pj4gQ2M6IGFkYUBraW5nbm92YWwuY29tCj4+
-PiBTaWduZWQtb2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4+PiAt
-LS0KPj4+ICBPcmlnaW5hbGx5IEkgdGhvdWdodCB3ZSB3b3VsZCBncm91cCBieSBTb0MgKDYsIDgs
-IDhiLCBneGJiLCBneGwsIGdteCwgZXRjLikKPj4+ICBidXQgdGhpcyBnb3Qgb3V0IG9mIG9yZGVy
-IHdpdGggbmV4Ym94LGE5NXggLSBzbyBpbnNlcnRpbmcga2luZ25vdmVsIGJldHdlZW4KPj4+ICBh
-bWxvZ2ljIGFuZCBuZXhib3ggaGVyZS4gSWYgdGhhdCdzIHdoYXQgd2Ugd2FudCBnb2luZyBmb3J3
-YXJkLCB3ZSBzaG91bGQgbW92ZQo+Pj4gIHRoZSBvbGQgZW50cmllcyB0byBtYWtlIHRoZSBzY2hl
-bWUgY2xlYXJlci4gVGhlIGFsdGVybmF0aXZlIHdvdWxkIGJlIHRvCj4+PiAgcmVvcmRlciBhbHBo
-YWJldGljYWxseSB3aXRoaW4gZWFjaCBTb0MgZ3JvdXAsIGJ1dCBuZXhib3gsYTk1eCB3aXRoIHR3
-byBTb0NzCj4+PiAgbWFrZXMgaXQgZGlmZmljdWx0IHRvIGNhdGVnb3JpemUsIHdlIGNvdWxkIGNo
-b29zZSBneGJiIGFzIHRoZSBlYXJsaWVyIG9uZS4KPj4gCj4+IEFuZHJlYXMsCj4+IAo+PiBGZWVs
-IGZyZWUgdG8gcHJvdmlkZSBhIGZpeHVwLgo+Cj4gU3VyZSwgdGhlIHF1ZXN0aW9uIGlzIHdoaWNo
-IHdheS4gOykgS2V2aW4/IENhcmxvPwoKSSBkb24ndCBoYXZlIGEgc3Ryb25nIHByZWZlcmVuY2Us
-IGJ1dCBjb250aW51aW5nIHRvIGdyb3VwIGJ5IFNvQyBtYWtlcwp0aGUgbW9zdCBzZW5zZSBiYXNl
-ZCBvbiB3aGF0IHdlIGhhdmUgdGhlcmUgbm93LgoKTW92aW5nIG5leGJveCxhOTV4IHVwIHRvIHRo
-ZSBmaXJzdCBvbmUgKGd4YmIpIGlzIGZpbmUgd2l0aCBtZS4KCktldmluCgoKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Jan 13, 2017 at 04:08:26PM +0100, Linus Walleij wrote:
+> This adds device tree bindings for the ABx500 clocks on the
+> ST-Ericsson platforms.
+> 
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../devicetree/bindings/clock/stericsson,abx500.txt         | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/stericsson,abx500.txt b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+> new file mode 100644
+> index 000000000000..8764d80e3412
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+> @@ -0,0 +1,13 @@
+> +Clock bindings for ST-Ericsson ABx500 clocks
+> +
+> +Required properties :
+> +- compatible : shall contain the following:
+> +  "stericsson,ab8500-clk"
+> +- #clock-cells should be <1>
+
+Header for clock numbers?
+
+> +
+> +Example:
+> +
+> +ab8500_clock: ab8500-clock {
+
+clock-controller {
+
+or 
+
+clocks {
+
+> +	compatible = "stericsson,ab8500-clk";
+
+No reg, they're all just fixed?
+
+> +	#clock-cells = <1>;
+> +};
+> -- 
+> 2.9.3
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
