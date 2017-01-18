@@ -1,46 +1,41 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: meson: fix uart_ao_b for GXBB and GXL/GXM
-Date: Wed, 18 Jan 2017 11:21:47 +0100
-Message-ID: <CACRpkdaDB5LoNSdUFUdypHbUseo0KqKiK1hteeD5RK1KkF60XA@mail.gmail.com>
-References: <20170115222029.8271-1-martin.blumenstingl@googlemail.com> <20170115222029.8271-2-martin.blumenstingl@googlemail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] ARM64: dts: meson-gx: add the missing uart_AO_B
+Date: Wed, 18 Jan 2017 11:22:45 +0100
+Message-ID: <CACRpkdY9LGHJinCeJvJ=38fpWU7eAZwuv5-HG=kEFKzouAF-vQ@mail.gmail.com>
+References: <20170115222029.8271-1-martin.blumenstingl@googlemail.com>
+ <20170115222029.8271-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170115222029.8271-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170115222029.8271-3-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 On Sun, Jan 15, 2017 at 11:20 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+<martin.blumenstingl@googlemail.com> wrote:
 
-> The GXBB and GXL/GXM pinctrl drivers had a configuration which conflicts
-> with uart_ao_a. According to the GXBB ("S905") datasheet the AO UART
-> functions are:
-> - GPIOAO_0: Func1 = UART_TX_AO_A (bit 12), Func2 = UART_TX_AO_B (bit 26)
-> - GPIOAO_1: Func1 = UART_RX_AO_A (bit 11), Func2 = UART_RX_AO_B (bit 25)
-> - GPIOAO_4: Func2 = UART_TX_AO_B (bit 24)
-> - GPIOAO_5: Func2 = UART_RX_AO_B (bit 25)
+> This adds the missing node for the uart_AO_B port to the meson-gx.dtsi
+> (as this is supported by GXBB, GXL and GXM) along with the required
+> pinctrl pins. This is required as some boards are using it (the boards
+> from the Khadas VIM series for example have it exposed on the pin
+> headers).
 >
-> The existing definition for uart_AO_A already uses GPIOAO_0 and GPIOAO_1.
-> The old definition of uart_AO_B however was broken, as it used GPIOAO_0
-> for TX (which would be fine) and two pins (GPIOAO_1 and GPIOAO_5) for RX
-> (which does not make any sense).
->
-> This fixes the uart_AO_B configuration by moving it to GPIOAO_4 and
-> GPIOAO_5 (it would be possible to use GPIOAO_0 and GPIOAO_1 in theory,
-> but all existing hardware uses uart_AO_A there).
-> The fix for GXBB and GXL/GXM is identical since it seems that these
-> specific pins are identical on both SoC variants.
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 
-Patch applied for fixes.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Please funnel this through the apropriate ARM SoC-feed tree.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
