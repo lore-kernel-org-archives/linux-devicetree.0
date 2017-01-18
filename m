@@ -1,69 +1,60 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/6] usb: mtu3: get resources that cause deferred probe earlier
-Date: Wed, 18 Jan 2017 14:08:22 +0800
-Message-ID: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH 6/6] dt-bindings: mt8173-mtu3: add reference clock
+Date: Wed, 18 Jan 2017 14:08:27 +0800
+Message-ID: <1484719707-12107-6-git-send-email-chunfeng.yun@mediatek.com>
+References: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some resources such as regulator, clock usually cause deferred
-probe, get them earlier to avoid more ineffective processing.
+add a reference clock for compatibility
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3_plat.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ .../devicetree/bindings/usb/mt8173-mtu3.txt        |   10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index 7833678..6344859 100644
---- a/drivers/usb/mtu3/mtu3_plat.c
-+++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -204,6 +204,18 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 	int i;
- 	int ret;
- 
-+	ssusb->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
-+	if (IS_ERR(ssusb->vusb33)) {
-+		dev_err(dev, "failed to get vusb33\n");
-+		return PTR_ERR(ssusb->vusb33);
-+	}
-+
-+	ssusb->sys_clk = devm_clk_get(dev, "sys_ck");
-+	if (IS_ERR(ssusb->sys_clk)) {
-+		dev_err(dev, "failed to get sys clock\n");
-+		return PTR_ERR(ssusb->sys_clk);
-+	}
-+
- 	ssusb->num_phys = of_count_phandle_with_args(node,
- 			"phys", "#phy-cells");
- 	if (ssusb->num_phys > 0) {
-@@ -230,18 +242,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 		return PTR_ERR(ssusb->ippc_base);
- 	}
- 
--	ssusb->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
--	if (IS_ERR(ssusb->vusb33)) {
--		dev_err(dev, "failed to get vusb33\n");
--		return PTR_ERR(ssusb->vusb33);
--	}
--
--	ssusb->sys_clk = devm_clk_get(dev, "sys_ck");
--	if (IS_ERR(ssusb->sys_clk)) {
--		dev_err(dev, "failed to get sys clock\n");
--		return PTR_ERR(ssusb->sys_clk);
--	}
--
- 	ssusb->dr_mode = usb_get_dr_mode(dev);
- 	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN) {
- 		dev_err(dev, "dr_mode is error\n");
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+index e049d19..8c976cd 100644
+--- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
++++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+@@ -10,7 +10,7 @@ Required properties:
+  - vusb33-supply : regulator of USB avdd3.3v
+  - clocks : a list of phandle + clock-specifier pairs, one for each
+ 	entry in clock-names
+- - clock-names : must contain "sys_ck" for clock of controller;
++ - clock-names : must contain "sys_ck" and "ref_ck" for clock of controller;
+ 	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
+ 	depends on "mediatek,enable-wakeup"
+  - phys : a list of phandle + phy specifier pairs
+@@ -56,10 +56,10 @@ ssusb: usb@11271000 {
+ 	phys = <&phy_port0 PHY_TYPE_USB3>,
+ 	       <&phy_port1 PHY_TYPE_USB2>;
+ 	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+-	clocks = <&topckgen CLK_TOP_USB30_SEL>,
++	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+ 		 <&pericfg CLK_PERI_USB0>,
+ 		 <&pericfg CLK_PERI_USB1>;
+-	clock-names = "sys_ck",
++	clock-names = "sys_ck", "ref_ck",
+ 		      "wakeup_deb_p0",
+ 		      "wakeup_deb_p1";
+ 	vusb33-supply = <&mt6397_vusb_reg>;
+@@ -79,8 +79,8 @@ ssusb: usb@11271000 {
+ 		reg-names = "mac";
+ 		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+ 		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+-		clocks = <&topckgen CLK_TOP_USB30_SEL>;
+-		clock-names = "sys_ck";
++		clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
++		clock-names = "sys_ck", "ref_ck";
+ 		vusb33-supply = <&mt6397_vusb_reg>;
+ 		status = "disabled";
+ 	};
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
