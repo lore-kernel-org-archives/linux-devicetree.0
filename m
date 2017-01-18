@@ -1,83 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Wed, 18 Jan 2017 12:30:11 +0300
-Message-ID: <d544f4f2-9303-8d68-0350-af9c53ff19aa@cogentembedded.com>
-References: <20170117142016.11163-1-abailon@baylibre.com>
- <20170117142016.11163-2-abailon@baylibre.com>
- <aa9b6761-c8de-13ea-1a62-9810ad92a6d4@cogentembedded.com>
- <710c724c-3831-e9d1-406b-76bdfed7b948@ti.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 2/3] Documentation: devicetree: amlogic: Add R-Box Pro
+Date: Wed, 18 Jan 2017 10:35:34 +0100
+Message-ID: <819ac0c0-92b7-bac7-dcfc-a56c34a6bf62@baylibre.com>
+References: <20170117030611.23827-2-afaerber@suse.de>
+ <20170117225459.4438-1-afaerber@suse.de>
+ <20170117225459.4438-2-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <710c724c-3831-e9d1-406b-76bdfed7b948-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170117225459.4438-2-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-amlogic@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, ada@kingnoval.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 1/18/2017 11:33 AM, Sekhar Nori wrote:
-
->>> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx cppi41 dma controller.
->>>
->>> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/usb/da8xx-usb.txt          | 42
->>> ++++++++++++++++++++++
->>>  1 file changed, 42 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> index ccb844a..aed3169 100644
->>> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
->>> @@ -18,10 +18,26 @@ Required properties:
->>>
->>>   - phy-names: Should be "usb-phy"
->>>
->>> + - dmas: specifies the dma channels
->>> +
->>> + - dma-names: specifies the names of the channels. Use "rxN" for receive
->>> +   and "txN" for transmit endpoints. N specifies the endpoint number.
->>> +
->>>  Optional properties:
->>>  ~~~~~~~~~~~~~~~~~~~~
->>>   - vbus-supply: Phandle to a regulator providing the USB bus power.
->>>
->>> +DMA
->>> +~~~
->>> +- compatible: ti,da8xx-cppi41
->>
->>    Almost missed this -- wildcards in this property are forbidden.
->> We should use "ti,da830-cppi41" as a least common denominator.
->
-> Documentation/devicetree/bindings/submitting-patches.txt states:
->
-> "
->   5) The wildcard "<chip>" may be used in compatible strings, as in
->      the following example:
->
->          - compatible: Must contain '"nvidia,<chip>-pcie",
->            "nvidia,tegra20-pcie"' where <chip> is tegra30, tegra132, ...
-> "
->
-> I take this to mean that using wildcards to denote an SoC family on
-> which the same IP is present is okay to do.> With that understanding, I
-> think using ti,da8xx-cppi41 is fine too.
-
-    It doesn't really follow. I repeat, x's are not allowed.
-
-[...]
-
-> Thanks,
-> Sekhar
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDEvMTcvMjAxNyAxMTo1NCBQTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+IENjOiBhZGFA
+a2luZ25vdmFsLmNvbQo+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJA
+c3VzZS5kZT4KPiAtLS0KPiAgT3JpZ2luYWxseSBJIHRob3VnaHQgd2Ugd291bGQgZ3JvdXAgYnkg
+U29DICg2LCA4LCA4YiwgZ3hiYiwgZ3hsLCBnbXgsIGV0Yy4pCj4gIGJ1dCB0aGlzIGdvdCBvdXQg
+b2Ygb3JkZXIgd2l0aCBuZXhib3gsYTk1eCAtIHNvIGluc2VydGluZyBraW5nbm92ZWwgYmV0d2Vl
+bgo+ICBhbWxvZ2ljIGFuZCBuZXhib3ggaGVyZS4gSWYgdGhhdCdzIHdoYXQgd2Ugd2FudCBnb2lu
+ZyBmb3J3YXJkLCB3ZSBzaG91bGQgbW92ZQo+ICB0aGUgb2xkIGVudHJpZXMgdG8gbWFrZSB0aGUg
+c2NoZW1lIGNsZWFyZXIuIFRoZSBhbHRlcm5hdGl2ZSB3b3VsZCBiZSB0bwo+ICByZW9yZGVyIGFs
+cGhhYmV0aWNhbGx5IHdpdGhpbiBlYWNoIFNvQyBncm91cCwgYnV0IG5leGJveCxhOTV4IHdpdGgg
+dHdvIFNvQ3MKPiAgbWFrZXMgaXQgZGlmZmljdWx0IHRvIGNhdGVnb3JpemUsIHdlIGNvdWxkIGNo
+b29zZSBneGJiIGFzIHRoZSBlYXJsaWVyIG9uZS4KCkFuZHJlYXMsCgpGZWVsIGZyZWUgdG8gcHJv
+dmlkZSBhIGZpeHVwLgoKTmVpbAoKPiAgCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9hcm0vYW1sb2dpYy50eHQgfCAxICsKPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vYW1sb2dpYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Ft
+bG9naWMudHh0Cj4gaW5kZXggOWIyYjQxYWI2ODE3Li5mYjBlZTdkOWE5MjEgMTAwNjQ0Cj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hbWxvZ2ljLnR4dAo+ICsr
+KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQKPiBA
+QCAtNDUsNSArNDUsNiBAQCBCb2FyZCBjb21wYXRpYmxlIHZhbHVlczoKPiAgICAtICJhbWxvZ2lj
+LHAyMzEiIChNZXNvbiBneGwgczkwNWQpCj4gICAgLSAiYW1sb2dpYyxxMjAwIiAoTWVzb24gZ3ht
+IHM5MTIpCj4gICAgLSAiYW1sb2dpYyxxMjAxIiAoTWVzb24gZ3htIHM5MTIpCj4gKyAgLSAia2lu
+Z25vdmVsLHItYm94LXBybyIgKE1lc29uIGd4bSBTOTEyKQo+ICAgIC0gIm5leGJveCxhOTV4IiAo
+TWVzb24gZ3hiYiBvciBNZXNvbiBneGwgczkwNXgpCj4gICAgLSAibmV4Ym94LGExIiAoTWVzb24g
+Z3htIHM5MTIpCj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8vbGludXgtYXJtLWtlcm5lbAo=
