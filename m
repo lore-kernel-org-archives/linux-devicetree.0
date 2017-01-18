@@ -1,29 +1,41 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: BCM5301X: Add DT for Luxul XWR-1200
-Date: Tue, 17 Jan 2017 17:06:50 -0800
-Message-ID: <bbf4484a-cc20-9a0b-7a7e-08c3e4b55a32@gmail.com>
-References: <1484447368-7622-1-git-send-email-dhaab@luxul.com>
- <1484447368-7622-2-git-send-email-dhaab@luxul.com>
+From: Andi Shyti <andi.shyti@samsung.com>
+Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen
+ driver
+Date: Wed, 18 Jan 2017 10:12:48 +0900
+Message-ID: <20170118011248.6wlcog5r4jkgaat4@gangnam.samsung>
+References: <20170117135441.31450-1-andi.shyti@samsung.com>
+ <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
+ <20170117135441.31450-2-andi.shyti@samsung.com>
+ <20170117184332.6ne4ercemll6qrbm@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484447368-7622-2-git-send-email-dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-disposition: inline
+In-reply-to: <20170117184332.6ne4ercemll6qrbm@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/14/2017 06:29 PM, Dan Haab wrote:
-> Luxul XWR-1200 in a dual-band router based on BCM47081. It uses serial
-> flash (for bootloader and NVRAM) and NAND flash (for firmware).
-> 
-> Signed-off-by: Dan Haab <dhaab-RSK6WAzFx3QAvxtiuMwx3w@public.gmane.org>
+Hi Krzysztof,
 
-Applied thanks
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +Optional properties:
+> > +- touch-key-connected	: specifies whether the touchkey feature is connected
+> 
+> You are making it a generic property but it is specific to this device,
+> so:
+> 	st,touch-key-connected
+> ?
+> 
+> > +- ledvdd-supply		: power supply to the touch key leds
+> 
+> Is this really optional? If yes... how it gets the power when not
+> provided?
+
+yes, it is. This is required only if (st,)touch-key-connected is
+added, it's not required in any other case. Anyway, even if not
+present, the device works, just without leds, which is fine for
+me.
+
+Thanks,
+Andi
