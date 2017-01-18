@@ -1,69 +1,109 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Wed, 18 Jan 2017 14:23:03 +0100
-Message-ID: <20170118132303.zswjourymirskkoc@lukather>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm64: dts: exynos: Fix drive strength of sd0_xxx pin definitions
+Date: Wed, 18 Jan 2017 22:40:42 +0900
+Message-ID: <CAGOxZ50aXxVitrgS6EXLbZdip0M7Xb0AwmSUvb7diVFVBK5OLw@mail.gmail.com>
+References: <CGME20170118053953epcas1p18e06184783a0edc6a2cfc3b6a9d9ce31@epcas1p1.samsung.com>
+ <1484718141-28785-1-git-send-email-pankaj.dubey@samsung.com> <1484718141-28785-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6matwqgemfwtdbib"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484718141-28785-2-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kgene <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---6matwqgemfwtdbib
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 18, 2017 at 2:42 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> As per Exynos7 datasheet FSYS1 pinctrl block does not support drive
+> strength value of 0x3. This patch fixes this and update the correct
+> drive strength for sd0_xxx pin definitions.
+>
+> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+Looks good.
+Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-On Wed, Jan 18, 2017 at 10:53:31AM +0000, Marc Zyngier wrote:
-> Since everybody copied my own mistake from the DT binding example,
-> let's address all the offenders in one swift go.
->=20
-> Most of them got the CPU interface size wrong (4kB, while it should
-> be 8kB), except for both keystone platforms which got the control
-> interface wrong (4kB instead of 8kB).
->=20
-> In the couple of cases were I knew for sure what implementation
-> was used, I've added the "arm,gic-400" compatible string. I'm 99%
-> sure that this is what everyong is using, but short of having the
-> TRM for all the other SoCs, I've let them alone.
->=20
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+> index 8232198..7ebb939 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi
+> @@ -497,49 +497,49 @@
+>                 samsung,pins = "gpr0-0";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <0>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_cmd: sd0-cmd {
+>                 samsung,pins = "gpr0-1";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <3>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_ds: sd0-ds {
+>                 samsung,pins = "gpr0-2";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <1>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_qrdy: sd0-qrdy {
+>                 samsung,pins = "gpr0-3";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <1>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_bus1: sd0-bus-width1 {
+>                 samsung,pins = "gpr1-0";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <3>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_bus4: sd0-bus-width4 {
+>                 samsung,pins = "gpr1-1", "gpr1-2", "gpr1-3";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <3>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd0_bus8: sd0-bus-width8 {
+>                 samsung,pins = "gpr1-4", "gpr1-5", "gpr1-6", "gpr1-7";
+>                 samsung,pin-function = <2>;
+>                 samsung,pin-pud = <3>;
+> -               samsung,pin-drv = <3>;
+> +               samsung,pin-drv = <4>;
+>         };
+>
+>         sd1_clk: sd1-clk {
+> --
+> 2.7.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-Thanks!
-Maxime
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---6matwqgemfwtdbib
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYf2wyAAoJEBx+YmzsjxAggEAP/2pckmHysvJH9rX6b0OLm8F4
-tZNJS8Iq5so+BKBrGfFSUdq2Ban1JcRsE8xouQiJBXHtJ3eI2l5+W3qm30nHCZH9
-N+rKb+sEkgL1mgIvwZI2XSeULla6NBzagJgf6f0daGAKaVgodF/qlm+fKQoP5D+a
-VPpzsk2CxIPuNVGs/bVFmbaQeh6uwq6gnq6vCGA66KrTMZrG8jJQtq8gZMdyMtBw
-QFgX4dkRzCnr8cW3tTbcFRGx5X2IqaOwY4invq1nxiKyN6Q0boaiY31uQPRSVVuW
-UQvGR8ZqkX5S3HLS8Gi3Xhd61hJ+ycuJ7yK0AZHNKPjb1a5kRmOOfF1JpkXJoGDH
-zc0OfVtczr7HgCCOzErkn2aR40QBc4NUn/aGUJ+UfMgGEJYMLTbw9gZotFgiq++K
-LQq9+ACdxKgWJNJ2AS9JrbyNy+AlaD2/yalCwSQUcARm0F1BaDFScY14jhGY7zbx
-Ehs/2N2Ye7yabzLLjEzxWyns/u/0Rp70rn7Wi6ZmsjQ3R5uCJ2K+doguQrK7rII2
-6bCcLx7U5UrS4DHHdT/pvusIcjWBCh3hNntUNcwZ578W5v5njUv+Bpx+XaOOq0go
-8ij+r5W/LDL6bVYy6GTMSfu5WgkkJZbsi4hgaNLiTdPqz7WC8aV/d+042rnPRNGI
-AqkfYIYezK/bDZqI4Efx
-=07zl
------END PGP SIGNATURE-----
-
---6matwqgemfwtdbib--
+-- 
+Regards,
+Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
