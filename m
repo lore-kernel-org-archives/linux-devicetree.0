@@ -1,39 +1,59 @@
-From: Javier Martinez Canillas <javier@osg.samsung.com>
-Subject: Re: [PATCH] arm64: dts: exynos: Remove address node from usb parent
- node
-Date: Wed, 18 Jan 2017 12:36:42 -0300
-Message-ID: <7280351b-d26a-accb-b442-fc1eb056c8d6@osg.samsung.com>
-References: <CGME20170118054410epcas1p4df5c5631e0b13081662eb8fff5e383b3@epcas1p4.samsung.com>
- <1484718408-28933-1-git-send-email-pankaj.dubey@samsung.com>
- <587F137B.6070109@samsung.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v8 11/12] dt-bindings: simplified bindings for single-user gpio mux
+Date: Wed, 18 Jan 2017 16:57:14 +0100
+Message-ID: <1484755035-25927-12-git-send-email-peda@axentia.se>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <587F137B.6070109@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: robh+dt@kernel.org, krzk@kernel.org, kgene@kernel.org
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <1484755035-25927-1-git-send-email-peda@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Allow bindings for a GPIO controlled mux to be specified in the
+mux consumer node.
 
-On 01/18/2017 04:04 AM, Chanwoo Choi wrote:
-> Hi Pankaj,
-> 
-> This issue already posted by Javier Martinez Canillas[1].
-> Maybe, he will post v2.
-> 
+Acked-by: Jonathan Cameron <jic23@kernel.org>
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ .../devicetree/bindings/mux/mux-controller.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-That's correct, I didn't post a v2 since I was waiting for feedback
-from the DT maintainers on patches 1/2 and 2/2 from the same series:
-
-https://www.spinics.net/lists/arm-kernel/msg553286.html
-
-But I'll re-spin just this patch since the changes are independent.
-
-Best regards,
+diff --git a/Documentation/devicetree/bindings/mux/mux-controller.txt b/Documentation/devicetree/bindings/mux/mux-controller.txt
+index 42b2177e5ae1..4e89df8b2392 100644
+--- a/Documentation/devicetree/bindings/mux/mux-controller.txt
++++ b/Documentation/devicetree/bindings/mux/mux-controller.txt
+@@ -125,3 +125,29 @@ An example mux controller might look like this:
+ 		reg = <0x50>;
+ 		#mux-control-cells = <1>;
+ 	};
++
++
++Combinded controller and consumer of a GPIO mux
++-----------------------------------------------
++
++For the common case of a single consumer of a GPIO controlled mux, there is
++a simplified binding which will instantiate an implicit mux controller. Just
++specify a mux-gpios property with the same interpretation as in mux-gpio.txt.
++Note that other properties described in mux-gpio.txt are not available in
++this simplified form and that the mux controller is unnamed. If you need
++more than one mux controller, a shared mux controller or if you need a
++specific idle-state, use the more flexible binding with the mux controller
++in its own node.
++
++Example:
++
++	adc-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 0>;
++		io-channel-names = "parent";
++
++		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
++			    <&pioA 1 GPIO_ACTIVE_HIGH>;
++
++		channels = "sync-1", "in", "out", "sync-2";
++	};
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.1.4
