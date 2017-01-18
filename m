@@ -1,105 +1,143 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 13/13] MIPS: jz4740: Remove custom GPIO code
-Date: Wed, 18 Jan 2017 08:27:51 +0100
-Message-ID: <20170118072751.GC18989@ulmo.ba.sec>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170117231421.16310-14-paul@crapouillou.net>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH v11 09/12] drm/mediatek: add dsi transfer function
+Date: Wed, 18 Jan 2017 15:49:47 +0800
+Message-ID: <1484725787.26941.4.camel@mtksdaap41>
+References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
+ <1484117473-46644-10-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5335441250778327517=="
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170117231421.16310-14-paul@crapouillou.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Paul Cercueil <paul@crapouillou.net>, Ralf Baechle <ralf@linux-mips.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, james.hogan@imgtec.com, Paul Burton <paul.burton@imgtec.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mips@linux-mips.org, linux-fbdev@vger.kernel.org, Maarten ter Huurne <maarten@treewalker.org>, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1484117473-46644-10-git-send-email-yt.shen@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YT Shen <yt.shen@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============5335441250778327517==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yVhtmJPUSI46BTXb"
-Content-Disposition: inline
-
-
---yVhtmJPUSI46BTXb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 18, 2017 at 12:14:21AM +0100, Paul Cercueil wrote:
-> All the drivers for the various hardware elements of the jz4740 SoC have
-> been modified to use the pinctrl framework for their pin configuration
-> needs.
-> As such, this platform code is now unused and can be deleted.
->=20
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  arch/mips/include/asm/mach-jz4740/gpio.h | 371 ----------------------
->  arch/mips/jz4740/Makefile                |   2 -
->  arch/mips/jz4740/gpio.c                  | 519 -------------------------=
-------
->  3 files changed, 892 deletions(-)
->  delete mode 100644 arch/mips/jz4740/gpio.c
-
-Have you considered how this could best be merged? It's probably easiest
-to take all of this through the MIPS tree because we have an addition of
-the pinctrl that would be a replacement for the GPIO code, while at the
-same time a bunch of drivers rely on the JZ4740 GPIO code for successful
-compilation.
-
-That's slightly complicated by the number of drivers, so needs a lot of
-coordination, but it's not the worst I've seen.
-
-Maybe one other solution that would make the transition easier would be
-to stub out the GPIO functions if the pinctrl driver is enabled, and do
-the removal of the mach-jz4740/gpio.h after all drivers have been merged
-through their corresponding subsystem trees. That way all drivers should
-remain compilable and functional at runtime, while still having the
-possibility to merge through the subsystem trees.
-
-That said, the whole series is fairly simple, so merging everything
-through the MIPS tree sounds like the easiest way to go.
-
-Thierry
-
---yVhtmJPUSI46BTXb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlh/GPcACgkQ3SOs138+
-s6HJuA/8DBbCWXiobPupHIJkfkobmKLcWcDTCHrFnZvAFle+RTPeoANQQYkJ75pW
-qHYVgHTL0x3n4NBLFvYl1Twl+fGLQNxEKbg87WBSj5jeAyTK3y4KA0P79OAfnkee
-nSWeP8v+TluNV7gWSnFpUgFffHif24BbwtIsuLYxxn/awM2ZPQEx3CxDr5jvJD4E
-2lTp4sYoRLmgHQb7Q7YH6b8JSibxXFEafzIfuSC42ySLXThDqY2TiMcQproKxfXl
-/lruvG7w89INCAQOlXHG81sX0XGcbFYW0Cv1M5c0E3hk7DkbgFL3A5Q6IpnHjHdO
-tOXg+DMjByeZMy9H3PP2vVnVva+fg5oMCWJHIP2Ih3d+CIBJdo6YlI/TvGH+Gh4h
-4HKGiO83F+JljR5/ver0BBue9gyxCGs9sUO3B3TVAiunrS+hgfw/Wv+hcQ1IsubU
-wnxXDrj54QxeP9O1T84yPD98e75O4tD1DHltfPZOI+bkxiQmvOGFYarcATKS0Edk
-uJdWdEbfV/gB+1ckUpq0QEoTDdx7YEwuQCVn7dcS2hwyD4qEEc86j9Z+hkvk2+zg
-cGHxOJ54wGqgIUMQM9/ohreFUPpifTWo6afe4tlos4V9BhA+1/dj29d0EmBJ2gON
-TmNKjvYGHnilhT2uGMYDx6xfaXLGq8QG8o1kVlfRhCBWnGEyqzc=
-=/Oal
------END PGP SIGNATURE-----
-
---yVhtmJPUSI46BTXb--
-
-
---===============5335441250778327517==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
-
---===============5335441250778327517==--
+SGksIFlUOgoKT24gV2VkLCAyMDE3LTAxLTExIGF0IDE0OjUxICswODAwLCBZVCBTaGVuIHdyb3Rl
+Ogo+IEZyb206IHNoYW9taW5nIGNoZW4gPHNoYW9taW5nLmNoZW5AbWVkaWF0ZWsuY29tPgo+IAo+
+IGFkZCBkc2kgcmVhZC93cml0ZSBjb21tYW5kcyBmb3IgdHJhbnNmZXIgZnVuY3Rpb24KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4K
+CkFja2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgoKPiAtLS0KPiAgZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kc2kuYyB8IDE2OCArKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKystCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNjYgaW5zZXJ0aW9ucygrKSwgMiBkZWxl
+dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
+c2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiBpbmRleCA0NzQ4NjFh
+Li5iM2M3ZmQ4IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNp
+LmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jCj4gQEAgLTI0LDYg
+KzI0LDcgQEAKPiAgI2luY2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+Cj4gICNpbmNsdWRlIDxsaW51
+eC9waHkvcGh5Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4KPiArI2lu
+Y2x1ZGUgPHZpZGVvL21pcGlfZGlzcGxheS5oPgo+ICAjaW5jbHVkZSA8dmlkZW8vdmlkZW9tb2Rl
+Lmg+Cj4gIAo+ICAjaW5jbHVkZSAibXRrX2RybV9kZHBfY29tcC5oIgo+IEBAIC04MCw4ICs4MSwx
+NiBAQAo+ICAjZGVmaW5lIERTSV9IQlBfV0MJCTB4NTQKPiAgI2RlZmluZSBEU0lfSEZQX1dDCQkw
+eDU4Cj4gIAo+ICsjZGVmaW5lIERTSV9DTURRX1NJWkUJCTB4NjAKPiArI2RlZmluZSBDTURRX1NJ
+WkUJCQkweDNmCj4gKwo+ICAjZGVmaW5lIERTSV9IU1RYX0NLTF9XQwkJMHg2NAo+ICAKPiArI2Rl
+ZmluZSBEU0lfUlhfREFUQTAJCTB4NzQKPiArI2RlZmluZSBEU0lfUlhfREFUQTEJCTB4NzgKPiAr
+I2RlZmluZSBEU0lfUlhfREFUQTIJCTB4N2MKPiArI2RlZmluZSBEU0lfUlhfREFUQTMJCTB4ODAK
+PiArCj4gICNkZWZpbmUgRFNJX1JBQ0sJCTB4ODQKPiAgI2RlZmluZSBSQUNLCQkJCUJJVCgwKQo+
+ICAKPiBAQCAtMTE3LDYgKzEyNiwxNSBAQAo+ICAjZGVmaW5lIENMS19IU19QT1NUCQkJKDB4ZmYg
+PDwgOCkKPiAgI2RlZmluZSBDTEtfSFNfRVhJVAkJCSgweGZmIDw8IDE2KQo+ICAKPiArI2RlZmlu
+ZSBEU0lfQ01EUTAJCTB4MTgwCj4gKyNkZWZpbmUgQ09ORklHCQkJCSgweGZmIDw8IDApCj4gKyNk
+ZWZpbmUgU0hPUlRfUEFDS0VUCQkJMAo+ICsjZGVmaW5lIExPTkdfUEFDS0VUCQkJMgo+ICsjZGVm
+aW5lIEJUQQkJCQlCSVQoMikKPiArI2RlZmluZSBEQVRBX0lECQkJCSgweGZmIDw8IDgpCj4gKyNk
+ZWZpbmUgREFUQV8wCQkJCSgweGZmIDw8IDE2KQo+ICsjZGVmaW5lIERBVEFfMQkJCQkoMHhmZiA8
+PCAyNCkKPiArCj4gICNkZWZpbmUgVF9MUFgJCTUKPiAgI2RlZmluZSBUX0hTX1BSRVAJNgo+ICAj
+ZGVmaW5lIFRfSFNfVFJBSUwJOAo+IEBAIC0xMjUsNiArMTQzLDEyIEBACj4gIAo+ICAjZGVmaW5l
+IE5TX1RPX0NZQ0xFKG4sIGMpICAgICgobikgLyAoYykgKyAoKChuKSAlIChjKSkgPyAxIDogMCkp
+Cj4gIAo+ICsjZGVmaW5lIE1US19EU0lfSE9TVF9JU19SRUFEKHR5cGUpIFwKPiArCSgodHlwZSA9
+PSBNSVBJX0RTSV9HRU5FUklDX1JFQURfUkVRVUVTVF8wX1BBUkFNKSB8fCBcCj4gKwkodHlwZSA9
+PSBNSVBJX0RTSV9HRU5FUklDX1JFQURfUkVRVUVTVF8xX1BBUkFNKSB8fCBcCj4gKwkodHlwZSA9
+PSBNSVBJX0RTSV9HRU5FUklDX1JFQURfUkVRVUVTVF8yX1BBUkFNKSB8fCBcCj4gKwkodHlwZSA9
+PSBNSVBJX0RTSV9EQ1NfUkVBRCkpCj4gKwo+ICBzdHJ1Y3QgcGh5Owo+ICAKPiAgc3RydWN0IG10
+a19kc2kgewo+IEBAIC00OTcsMTIgKzUyMSwxMiBAQCBzdGF0aWMgdm9pZCBtdGtfZHNpX2lycV9k
+YXRhX3NldChzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1MzIgaXJxX2JpdCkKPiAgCWRzaS0+aXJxX2Rh
+dGEgfD0gaXJxX2JpdDsKPiAgfQo+ICAKPiAtc3RhdGljIF9fbWF5YmVfdW51c2VkIHZvaWQgbXRr
+X2RzaV9pcnFfZGF0YV9jbGVhcihzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1MzIgaXJxX2JpdCkKPiAr
+c3RhdGljIHZvaWQgbXRrX2RzaV9pcnFfZGF0YV9jbGVhcihzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1
+MzIgaXJxX2JpdCkKPiAgewo+ICAJZHNpLT5pcnFfZGF0YSAmPSB+aXJxX2JpdDsKPiAgfQo+ICAK
+PiAtc3RhdGljIF9fbWF5YmVfdW51c2VkIHMzMiBtdGtfZHNpX3dhaXRfZm9yX2lycV9kb25lKHN0
+cnVjdCBtdGtfZHNpICpkc2ksIHUzMiBpcnFfZmxhZywKPiArc3RhdGljIHMzMiBtdGtfZHNpX3dh
+aXRfZm9yX2lycV9kb25lKHN0cnVjdCBtdGtfZHNpICpkc2ksIHUzMiBpcnFfZmxhZywKPiAgCQkJ
+CSAgICAgdW5zaWduZWQgaW50IHRpbWVvdXQpCj4gIHsKPiAgCXMzMiByZXQgPSAwOwo+IEBAIC04
+MzIsOSArODU2LDE0OSBAQCBzdGF0aWMgaW50IG10a19kc2lfaG9zdF9kZXRhY2goc3RydWN0IG1p
+cGlfZHNpX2hvc3QgKmhvc3QsCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiArc3RhdGljIHZvaWQg
+bXRrX2RzaV93YWl0X2Zvcl9pZGxlKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gK3sKPiArCXUzMiB0
+aW1lb3V0X21zID0gNTAwMDAwOyAvKiB0b3RhbCAxcyB+IDJzIHRpbWVvdXQgKi8KPiArCj4gKwl3
+aGlsZSAodGltZW91dF9tcy0tKSB7Cj4gKwkJaWYgKCEocmVhZGwoZHNpLT5yZWdzICsgRFNJX0lO
+VFNUQSkgJiBEU0lfQlVTWSkpCj4gKwkJCWJyZWFrOwo+ICsKPiArCQl1c2xlZXBfcmFuZ2UoMiwg
+NCk7Cj4gKwl9Cj4gKwo+ICsJaWYgKHRpbWVvdXRfbXMgPT0gMCkgewo+ICsJCURSTV9XQVJOKCJw
+b2xsaW5nIGRzaSB3YWl0IG5vdCBidXN5IHRpbWVvdXQhXG4iKTsKPiArCj4gKwkJbXRrX2RzaV9l
+bmFibGUoZHNpKTsKPiArCQltdGtfZHNpX3Jlc2V0X2VuZ2luZShkc2kpOwo+ICsJfQo+ICt9Cj4g
+Kwo+ICtzdGF0aWMgdTMyIG10a19kc2lfcmVjdl9jbnQodTggdHlwZSwgdTggKnJlYWRfZGF0YSkK
+PiArewo+ICsJc3dpdGNoICh0eXBlKSB7Cj4gKwljYXNlIE1JUElfRFNJX1JYX0dFTkVSSUNfU0hP
+UlRfUkVBRF9SRVNQT05TRV8xQllURToKPiArCWNhc2UgTUlQSV9EU0lfUlhfRENTX1NIT1JUX1JF
+QURfUkVTUE9OU0VfMUJZVEU6Cj4gKwkJcmV0dXJuIDE7Cj4gKwljYXNlIE1JUElfRFNJX1JYX0dF
+TkVSSUNfU0hPUlRfUkVBRF9SRVNQT05TRV8yQllURToKPiArCWNhc2UgTUlQSV9EU0lfUlhfRENT
+X1NIT1JUX1JFQURfUkVTUE9OU0VfMkJZVEU6Cj4gKwkJcmV0dXJuIDI7Cj4gKwljYXNlIE1JUElf
+RFNJX1JYX0dFTkVSSUNfTE9OR19SRUFEX1JFU1BPTlNFOgo+ICsJY2FzZSBNSVBJX0RTSV9SWF9E
+Q1NfTE9OR19SRUFEX1JFU1BPTlNFOgo+ICsJCXJldHVybiByZWFkX2RhdGFbMV0gKyByZWFkX2Rh
+dGFbMl0gKiAxNjsKPiArCWNhc2UgTUlQSV9EU0lfUlhfQUNLTk9XTEVER0VfQU5EX0VSUk9SX1JF
+UE9SVDoKPiArCQlEUk1fSU5GTygidHlwZSBpcyAweDAyLCB0cnkgYWdhaW5cbiIpOwo+ICsJCWJy
+ZWFrOwo+ICsJZGVmYXVsdDoKPiArCQlEUk1fSU5GTygidHlwZSgweCV4KSBjYW5ub3QgYmUgbm9u
+LXJlY29nbml0ZVxuIiwgdHlwZSk7Cj4gKwkJYnJlYWs7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuIDA7
+Cj4gK30KPiArCj4gK3N0YXRpYyB2b2lkIG10a19kc2lfY21kcShzdHJ1Y3QgbXRrX2RzaSAqZHNp
+LCBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lfbXNnICptc2cpCj4gK3sKPiArCWNvbnN0IGNoYXIgKnR4
+X2J1ZiA9IG1zZy0+dHhfYnVmOwo+ICsJdTggY29uZmlnLCBjbWRxX3NpemUsIGNtZHFfb2ZmLCB0
+eXBlID0gbXNnLT50eXBlOwo+ICsJdTMyIHJlZ192YWwsIGNtZHFfbWFzaywgaTsKPiArCj4gKwlp
+ZiAoTVRLX0RTSV9IT1NUX0lTX1JFQUQodHlwZSkpCj4gKwkJY29uZmlnID0gQlRBOwo+ICsJZWxz
+ZQo+ICsJCWNvbmZpZyA9IChtc2ctPnR4X2xlbiA+IDIpID8gTE9OR19QQUNLRVQgOiBTSE9SVF9Q
+QUNLRVQ7Cj4gKwo+ICsJaWYgKG1zZy0+dHhfbGVuID4gMikgewo+ICsJCWNtZHFfc2l6ZSA9IDEg
+KyAobXNnLT50eF9sZW4gKyAzKSAvIDQ7Cj4gKwkJY21kcV9vZmYgPSA0Owo+ICsJCWNtZHFfbWFz
+ayA9IENPTkZJRyB8IERBVEFfSUQgfCBEQVRBXzAgfCBEQVRBXzE7Cj4gKwkJcmVnX3ZhbCA9ICht
+c2ctPnR4X2xlbiA8PCAxNikgfCAodHlwZSA8PCA4KSB8IGNvbmZpZzsKPiArCX0gZWxzZSB7Cj4g
+KwkJY21kcV9zaXplID0gMTsKPiArCQljbWRxX29mZiA9IDI7Cj4gKwkJY21kcV9tYXNrID0gQ09O
+RklHIHwgREFUQV9JRDsKPiArCQlyZWdfdmFsID0gKHR5cGUgPDwgOCkgfCBjb25maWc7Cj4gKwl9
+Cj4gKwo+ICsJZm9yIChpID0gMDsgaSA8IG1zZy0+dHhfbGVuOyBpKyspCj4gKwkJd3JpdGViKHR4
+X2J1ZltpXSwgZHNpLT5yZWdzICsgRFNJX0NNRFEwICsgY21kcV9vZmYgKyBpKTsKPiArCj4gKwlt
+dGtfZHNpX21hc2soZHNpLCBEU0lfQ01EUTAsIGNtZHFfbWFzaywgcmVnX3ZhbCk7Cj4gKwltdGtf
+ZHNpX21hc2soZHNpLCBEU0lfQ01EUV9TSVpFLCBDTURRX1NJWkUsIGNtZHFfc2l6ZSk7Cj4gK30K
+PiArCj4gK3N0YXRpYyBzc2l6ZV90IG10a19kc2lfaG9zdF9zZW5kX2NtZChzdHJ1Y3QgbXRrX2Rz
+aSAqZHNpLAo+ICsJCQkJICAgICBjb25zdCBzdHJ1Y3QgbWlwaV9kc2lfbXNnICptc2csIHU4IGZs
+YWcpCj4gK3sKPiArCW10a19kc2lfd2FpdF9mb3JfaWRsZShkc2kpOwo+ICsJbXRrX2RzaV9pcnFf
+ZGF0YV9jbGVhcihkc2ksIGZsYWcpOwo+ICsJbXRrX2RzaV9jbWRxKGRzaSwgbXNnKTsKPiArCW10
+a19kc2lfc3RhcnQoZHNpKTsKPiArCj4gKwlpZiAoIW10a19kc2lfd2FpdF9mb3JfaXJxX2RvbmUo
+ZHNpLCBmbGFnLCAyMDAwKSkKPiArCQlyZXR1cm4gLUVUSU1FOwo+ICsJZWxzZQo+ICsJCXJldHVy
+biAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgc3NpemVfdCBtdGtfZHNpX2hvc3RfdHJhbnNmZXIoc3Ry
+dWN0IG1pcGlfZHNpX2hvc3QgKmhvc3QsCj4gKwkJCQkgICAgIGNvbnN0IHN0cnVjdCBtaXBpX2Rz
+aV9tc2cgKm1zZykKPiArewo+ICsJc3RydWN0IG10a19kc2kgKmRzaSA9IGhvc3RfdG9fZHNpKGhv
+c3QpOwo+ICsJdTMyIHJlY3ZfY250LCBpOwo+ICsJdTggcmVhZF9kYXRhWzE2XTsKPiArCXZvaWQg
+KnNyY19hZGRyOwo+ICsJdTggaXJxX2ZsYWcgPSBDTURfRE9ORV9JTlRfRkxBRzsKPiArCj4gKwlp
+ZiAocmVhZGwoZHNpLT5yZWdzICsgRFNJX01PREVfQ1RSTCkgJiBNT0RFKSB7Cj4gKwkJRFJNX0VS
+Uk9SKCJkc2kgZW5naW5lIGlzIG5vdCBjb21tYW5kIG1vZGVcbiIpOwo+ICsJCXJldHVybiAtRUlO
+VkFMOwo+ICsJfQo+ICsKPiArCWlmIChNVEtfRFNJX0hPU1RfSVNfUkVBRChtc2ctPnR5cGUpKQo+
+ICsJCWlycV9mbGFnIHw9IExQUlhfUkRfUkRZX0lOVF9GTEFHOwo+ICsKPiArCWlmIChtdGtfZHNp
+X2hvc3Rfc2VuZF9jbWQoZHNpLCBtc2csIGlycV9mbGFnKSA8IDApCj4gKwkJcmV0dXJuIC1FVElN
+RTsKPiArCj4gKwlpZiAoIU1US19EU0lfSE9TVF9JU19SRUFEKG1zZy0+dHlwZSkpCj4gKwkJcmV0
+dXJuIDA7Cj4gKwo+ICsJaWYgKCFtc2ctPnJ4X2J1Zikgewo+ICsJCURSTV9FUlJPUigiZHNpIHJl
+Y2VpdmUgYnVmZmVyIHNpemUgbWF5IGJlIE5VTExcbiIpOwo+ICsJCXJldHVybiAtRUlOVkFMOwo+
+ICsJfQo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCAxNjsgaSsrKQo+ICsJCSoocmVhZF9kYXRhICsg
+aSkgPSByZWFkYihkc2ktPnJlZ3MgKyBEU0lfUlhfREFUQTAgKyBpKTsKPiArCj4gKwlyZWN2X2Nu
+dCA9IG10a19kc2lfcmVjdl9jbnQocmVhZF9kYXRhWzBdLCByZWFkX2RhdGEpOwo+ICsKPiArCWlm
+IChyZWN2X2NudCA+IDIpCj4gKwkJc3JjX2FkZHIgPSAmcmVhZF9kYXRhWzRdOwo+ICsJZWxzZQo+
+ICsJCXNyY19hZGRyID0gJnJlYWRfZGF0YVsxXTsKPiArCj4gKwlpZiAocmVjdl9jbnQgPiAxMCkK
+PiArCQlyZWN2X2NudCA9IDEwOwo+ICsKPiArCWlmIChyZWN2X2NudCA+IG1zZy0+cnhfbGVuKQo+
+ICsJCXJlY3ZfY250ID0gbXNnLT5yeF9sZW47Cj4gKwo+ICsJaWYgKHJlY3ZfY250KQo+ICsJCW1l
+bWNweShtc2ctPnJ4X2J1Ziwgc3JjX2FkZHIsIHJlY3ZfY250KTsKPiArCj4gKwlEUk1fSU5GTygi
+ZHNpIGdldCAlZCBieXRlIGRhdGEgZnJvbSB0aGUgcGFuZWwgYWRkcmVzcygweCV4KVxuIiwKPiAr
+CQkgcmVjdl9jbnQsICooKHU4ICopKG1zZy0+dHhfYnVmKSkpOwo+ICsKPiArCXJldHVybiByZWN2
+X2NudDsKPiArfQo+ICsKPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBtaXBpX2RzaV9ob3N0X29wcyBt
+dGtfZHNpX29wcyA9IHsKPiAgCS5hdHRhY2ggPSBtdGtfZHNpX2hvc3RfYXR0YWNoLAo+ICAJLmRl
+dGFjaCA9IG10a19kc2lfaG9zdF9kZXRhY2gsCj4gKwkudHJhbnNmZXIgPSBtdGtfZHNpX2hvc3Rf
+dHJhbnNmZXIsCj4gIH07Cj4gIAo+ICBzdGF0aWMgaW50IG10a19kc2lfYmluZChzdHJ1Y3QgZGV2
+aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0YSkKCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
