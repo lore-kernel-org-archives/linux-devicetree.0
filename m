@@ -1,14 +1,11 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: davinci: da850-evm: fix read access to SPI flash
-Date: Wed, 18 Jan 2017 15:28:21 +0530
-Message-ID: <b349792e-0465-acac-5fe9-e9b4ae666ce7@ti.com>
-References: <20170117125742.9536-1-fparent@baylibre.com>
- <m237gh2ozw.fsf@baylibre.com>
+From: =?UTF-8?q?S=C3=A9bastien=20Szymanski?= <sebastien.szymanski@armadeus.com>
+Subject: [PATCH 1/1] ARM: dts: imx6dl: fix GPIO4 range
+Date: Wed, 18 Jan 2017 11:09:51 +0100
+Message-ID: <1484734191-18556-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m237gh2ozw.fsf@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,31 +15,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Fabien Parent <fparent@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Julien Boibessot <julien.boibessot@armadeus.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 January 2017 05:55 AM, Kevin Hilman wrote:
-> Fabien Parent <fparent@baylibre.com> writes:
-> 
->> Read access to the SPI flash are broken on da850-evm, i.e. the data
->> read is not what is actually programmed on the flash.
->> According to the datasheet for the M25P64 part present on the da850-evm,
->> if the SPI frequency is higher than 20MHz then the READ command is not
->> usable anymore and only the FAST_READ command can be used to read data.
->>
->> This commit specifies in the DTS that we should use FAST_READ command
->> instead of the READ command.
->>
->> Signed-off-by: Fabien Parent <fparent@baylibre.com>
-> 
-> Tested on da850-evm on top of v4.10-rc3.  This gets the DT boot
-> functionatliy in line with the legacy (board-file) boot.
-> 
-> Tested-by: Kevin Hilman <khilman@baylibre.com>
-
-Applied with Kevin's Tested-by and also marked for stable. Sending pull
-request for v4.10-rc shortly.
-
-Thanks,
-Sekhar
+R1BJTzRfMTEgaXMgb24gcGluIDE1MihNWDZETF9QQURfS0VZX1JPVzIpIGFuZCBub3Qgb24gcGlu
+CjE1MShNWDZETF9QQURfS0VZX1JPVzEpLgoKSSBmb3VuZCB0aGUgZXJyb3Igd2hpbGUgYm9vdGlu
+ZyBhIG1haW5saW5lIGtlcm5lbCBvbiBBUEY2UyBTb00gYW5kCm5vdGljZWQgdGhlIGZvbGxvd2lu
+ZyBtZXNzYWdlOgoKWyAgICAyLjYwOTMzN10gaW14NmRsLXBpbmN0cmwgMjBlMDAwMC5pb211eGM6
+IHBpbiBNWDZETF9QQURfS0VZX1JPVzEKYWxyZWFkeSByZXF1ZXN0ZWQgYnkgMjBhODAwMC5ncGlv
+OjEwNTsgY2Fubm90IGNsYWltIGZvciAyMGE4MDAwLmdwaW86MTA3ClsgICAgMi42MjE4ODRdIGlt
+eDZkbC1waW5jdHJsIDIwZTAwMDAuaW9tdXhjOiBwaW4tMTUxICgyMGE4MDAwLmdwaW86MTA3KQpz
+dGF0dXMgLTIyClsgICAgMi42MjkzMDNdIHNwaV9pbXggMjAwODAwMC5lY3NwaTogQ2FuJ3QgZ2V0
+IENTIEdQSU8gMTA3CgpXaXRoIHRoaXMgcGF0Y2gsIHRoZSBtZXNzYWdlIGlzIGdvbmUgYW5kIHNw
+aV9pbXggZHJpdmVyIHByb2JlcyBjb3JyZWN0bHkuCgpGaXhlczogYmI3MjhkNjYyYmVkICgiQVJN
+OiBkdHM6IGFkZCBncGlvLXJhbmdlcyBwcm9wZXJ0eSB0byBpTVggR1BJTwpjb250cm9sbGVycyIp
+CgpTaWduZWQtb2ZmLWJ5OiBTw6liYXN0aWVuIFN6eW1hbnNraSA8c2ViYXN0aWVuLnN6eW1hbnNr
+aUBhcm1hZGV1cy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvaW14NmRsLmR0c2kgfCAyICst
+CiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy9pbXg2ZGwuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lt
+eDZkbC5kdHNpCmluZGV4IDFhZGUxOTUuLjdhYTEyMGYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2lteDZkbC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2lteDZkbC5kdHNpCkBA
+IC0xMzcsNyArMTM3LDcgQEAKICZncGlvNCB7CiAJZ3Bpby1yYW5nZXMgPSA8JmlvbXV4YyAgNSAx
+MzYgMT4sIDwmaW9tdXhjICA2IDE0NSAxPiwgPCZpb211eGMgIDcgMTUwIDE+LAogCQkgICAgICA8
+JmlvbXV4YyAgOCAxNDYgMT4sIDwmaW9tdXhjICA5IDE1MSAxPiwgPCZpb211eGMgMTAgMTQ3IDE+
+LAotCQkgICAgICA8JmlvbXV4YyAxMSAxNTEgMT4sIDwmaW9tdXhjIDEyIDE0OCAxPiwgPCZpb211
+eGMgMTMgMTUzIDE+LAorCQkgICAgICA8JmlvbXV4YyAxMSAxNTIgMT4sIDwmaW9tdXhjIDEyIDE0
+OCAxPiwgPCZpb211eGMgMTMgMTUzIDE+LAogCQkgICAgICA8JmlvbXV4YyAxNCAxNDkgMT4sIDwm
+aW9tdXhjIDE1IDE1NCAxPiwgPCZpb211eGMgMTYgIDM5IDc+LAogCQkgICAgICA8JmlvbXV4YyAy
+MyAgNTYgMT4sIDwmaW9tdXhjIDI0ICA2MSA3PiwgPCZpb211eGMgMzEgIDQ2IDE+OwogfTsKLS0g
+CjIuNy4zCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
