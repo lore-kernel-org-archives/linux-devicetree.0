@@ -1,56 +1,64 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH 3/3] arm64: dts: juno: Remove Motherboard USB node
-Date: Wed, 18 Jan 2017 14:18:10 +0000
-Message-ID: <61d3b621-bb47-c59b-d89f-07636ef8408c@arm.com>
-References: <74595d6d866518db7cfabc39b4cf9b54d3be9bde.1484741104.git.robin.murphy@arm.com>
- <39868e0d327456be61aa9ac318fc2d958523a696.1484741104.git.robin.murphy@arm.com>
- <20170118123802.GE995@e110455-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170118123802.GE995@e110455-lin.cambridge.arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Local user for Liviu Dudau <liviu.dudau@arm.com>, Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, linux-arm-kernel@lists.infradead.org, Sudeep Holla <sudeep.holla@arm.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH v3] arm64: dts: exynos: Remove unneeded unit names in Exynos5433 nodes
+Date: Wed, 18 Jan 2017 12:50:13 -0300
+Message-ID: <1484754613-2425-1-git-send-email-javier@osg.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Andi Shyti <andi.shyti@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The "samsung,exynos5433-mipi-video-phy" and "samsung,exynos5250-dwusb3"
+DT bindings don't specify a reg property for these nodes, so having a
+unit name leads to the following DTC warnings:
 
+Node /soc/video-phy@105c0710 has a unit name, but no reg property
+Node /soc/usb@15400000 has a unit name, but no reg property
+Node /soc/usb@15a00000 has a unit name, but no reg property
 
-On 18/01/17 12:38, Local user for Liviu Dudau wrote:
-> Hi Robin,
-> 
-> On Wed, Jan 18, 2017 at 12:12:52PM +0000, Robin Murphy wrote:
->> The first batch of Juno boards included a discrete USB controller chip
->> as a contingency in case of issues with the USB 2.0 IP integrated into
->> the SoC. As it turned out, the latter was fine, and to the best of my
->> knowledge the motherboard USB was never even brought up and validated.
->>
->> Since this also isn't present on later boards, and uses a compatible
->> string undocumented and unmatched by any driver in the kernel, let's
->> just tidy it away for ever to avoid any confusion.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> For all 3 patches:
-> 
-> Acked-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> 
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-Thanks Liviu (or/and Local user for Liviu Dudau :))
+---
 
-All 3 patches applied to [1]
+Changes in v3:
+  - Use proper device node names, suggested by Krzysztof.
 
+Changes in v2:
+  - Fix subject line since I forgot the "exynos" prefix.
+
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 59788d89b686..57c7bbeb65a7 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -706,7 +706,7 @@
+ 			interrupts = <GIC_PPI 9 0xf04>;
+ 		};
+ 
+-		mipi_phy: video-phy@105c0710 {
++		mipi_phy: video-phy {
+ 			compatible = "samsung,exynos5433-mipi-video-phy";
+ 			#phy-cells = <1>;
+ 			samsung,pmu-syscon = <&pmu_system_controller>;
+@@ -1357,7 +1357,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usbdrd30: usb@15400000  {
++		usbdrd30: usbdrd {
+ 			compatible = "samsung,exynos5250-dwusb3";
+ 			clocks = <&cmu_fsys CLK_ACLK_USBDRD30>,
+ 				<&cmu_fsys CLK_SCLK_USBDRD30>;
+@@ -1404,7 +1404,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		usbhost30: usb@15a00000 {
++		usbhost30: usbhost {
+ 			compatible = "samsung,exynos5250-dwusb3";
+ 			clocks = <&cmu_fsys CLK_ACLK_USBHOST30>,
+ 				<&cmu_fsys CLK_SCLK_USBHOST30>;
 -- 
-Regards,
-Sudeep
-
-[1] git.kernel.org/sudeep.holla/linux/h/for-next/updates/juno
+2.7.4
