@@ -1,84 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: mmc: add DT binding for S3C24XX
- MMC/SD/SDIO controller
-Date: Wed, 18 Jan 2017 16:38:16 -0600
-Message-ID: <20170118223816.nccyc7aoa7succsi@rob-hp-laptop>
-References: <1484319953-6479-1-git-send-email-sergio.prado@e-labworks.com>
- <1484319953-6479-2-git-send-email-sergio.prado@e-labworks.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] fbdev: ssd1307fb: Remove reset-active-low from
+ the DT binding document
+Date: Wed, 18 Jan 2017 16:28:04 -0600
+Message-ID: <20170118222804.ifqkkffot5n55gsk@rob-hp-laptop>
+References: <cover.1484303628.git.jsarha@ti.com>
+ <b68e1b9b735543b9e1511cfeb8e5d9ceec6c7666.1484303628.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484319953-6479-2-git-send-email-sergio.prado@e-labworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sergio Prado <sergio.prado@e-labworks.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, ben-linux@fluff.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <b68e1b9b735543b9e1511cfeb8e5d9ceec6c7666.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 01:05:52PM -0200, Sergio Prado wrote:
-> Adds the device tree bindings description for Samsung S3C24XX
-> MMC/SD/SDIO controller, used as a connectivity interface with external
-> MMC, SD and SDIO storage mediums.
+On Fri, Jan 13, 2017 at 12:35:46PM +0200, Jyri Sarha wrote:
+> Remove reset-active-low from the devicetree binding document. The actual
+> implementation has never been there in the driver code and there is no
+> reason to add it because the gpiod API supports gpio flags, including
+> GPIO_ACTIVE_LOW, directly trough its own devicetree binding.
 > 
-> Signed-off-by: Sergio Prado <sergio.prado@e-labworks.com>
+> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 > ---
->  .../devicetree/bindings/mmc/samsung,s3cmci.txt     | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
+>  Documentation/devicetree/bindings/display/ssd1307fb.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
-> new file mode 100644
-> index 000000000000..d09dbf4b3824
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/samsung,s3cmci.txt
-> @@ -0,0 +1,34 @@
-> +* Samsung's S3C24XX MMC/SD/SDIO controller device tree bindings
-> +
-> +Samsung's S3C24XX MMC/SD/SDIO controller is used as a connectivity interface
-> +with external MMC, SD and SDIO storage mediums.
-> +
-> +This file documents differences between the core mmc properties described by
-> +mmc.txt and the properties used by the Samsung S3C24XX MMC/SD/SDIO controller
-> +implementation.
-> +
-> +Required SoC Specific Properties:
-> +- compatible: should be one of the following
-> +  - "samsung,s3c2410-sdi": for controllers compatible with s3c2410
-> +  - "samsung,s3c2412-sdi": for controllers compatible with s3c2412
-> +  - "samsung,s3c2440-sdi": for controllers compatible with s3c2440
-> +- clocks: Should reference the controller clock
-> +- clock-names: Should contain "sdi"
+> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> index eb31ed4..4aee67f 100644
+> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+> @@ -8,14 +8,14 @@ Required properties:
+>           0x3c or 0x3d
+>    - pwm: Should contain the pwm to use according to the OF device tree PWM
+>           specification [0]. Only required for the ssd1307.
+> -  - reset-gpios: Should contain the GPIO used to reset the OLED display
+> +  - reset-gpios: Should contain the GPIO used to reset the OLED display. See
+> +                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
 
-You are missing things from the example.
+You need to define the active state. Does the active state actually 
+vary? Sounds like the compatible is not specific enough unless some 
+boards have an inverter.
 
-> +
-> +Example:
-> +	mmc0: mmc@5a000000 {
-> +		compatible = "samsung,s3c2440-sdi";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sdi_pins>;
-> +		reg = <0x5a000000 0x100000>;
-> +		interrupts = <0 0 21 3>;
-> +		clocks = <&clocks PCLK_SDI>;
-> +		clock-names = "sdi";
-> +		bus-width = <4>;
-> +		cd-gpios = <&gpg 8 GPIO_ACTIVE_LOW>;
-> +		wp-gpios = <&gph 8 GPIO_ACTIVE_LOW>;
-> +	};
-> +
-> +	Note: This example shows both SoC specific and board specific properties
-> +	in a single device node. The properties can be actually be separated
-> +	into SoC specific node and board specific node.
-
-The source structure is not relavent to the binding.
-
-Rob
+>    - solomon,height: Height in pixel of the screen driven by the controller
+>    - solomon,width: Width in pixel of the screen driven by the controller
+>    - solomon,page-offset: Offset of pages (band of 8 pixels) that the screen is
+>      mapped to.
+>  
+>  Optional properties:
+> -  - reset-active-low: Is the reset gpio is active on physical low?
+>    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
+>                                to segment mapping
+>    - solomon,com-seq: Display uses sequential COM pin configuration
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
