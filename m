@@ -1,58 +1,77 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add R-Box Pro
-Date: Wed, 18 Jan 2017 14:18:39 -0800
-Message-ID: <m27f5sypts.fsf@baylibre.com>
-References: <20170117030611.23827-1-afaerber@suse.de>
- <20170117030611.23827-2-afaerber@suse.de>
- <63fbfc68-917f-68b2-9e7d-e1834e2841d3@suse.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Wed, 18 Jan 2017 16:20:10 -0600
+Message-ID: <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
+References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+ <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+ <20170113172825.75d545a3@bbrezillon>
+ <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+ <20170113175628.1793f433@bbrezillon>
+ <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
+ <20170114092958.022f2fc8@bbrezillon>
+ <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
+ <20170116094032.6f471f11@bbrezillon>
+ <20170117143650.5db87148@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <63fbfc68-917f-68b2-9e7d-e1834e2841d3@suse.de> ("Andreas
- =?utf-8?Q?F=C3=A4rber=22's?= message of "Tue, 17 Jan 2017 04:35:10 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170117143650.5db87148-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cml0ZXM6Cgo+IEFtIDE3LjAxLjIw
-MTcgdW0gMDQ6MDYgc2NocmllYiBBbmRyZWFzIEbDpHJiZXI6Cj4+ICsJbGVkcyB7Cj4+ICsJCWNv
-bXBhdGlibGUgPSAiZ3Bpby1sZWRzIjsKPj4gKwo+PiArCQlibHVlIHsKPj4gKwkJCWxhYmVsID0g
-InJib3gtcHJvOmJsdWU6b24iOwo+PiArCQkJZ3Bpb3MgPSA8JmdwaW9fYW8gR1BJT0FPXzkgR1BJ
-T19BQ1RJVkVfSElHSD47Cj4+ICsJCQlkZWZhdWx0LXN0YXRlID0gIm9uIjsKPj4gKwkJfTsKPj4g
-Kwo+PiArCQlyZWQgewo+PiArCQkJbGFiZWwgPSAicmJveC1wcm86cmVkOnN0YW5kYnkiOwo+PiAr
-CQkJZ3Bpb3MgPSA8JmdwaW8gR1BJT0RWXzI4IEdQSU9fQUNUSVZFX0hJR0g+Owo+PiArCQkJZGVm
-YXVsdC1zdGF0ZSA9ICJvZmYiOwo+PiArCQkJcmV0YWluLXN0YXRlLXN1c3BlbmRlZDsKPj4gKwkJ
-CXBhbmljLWluZGljYXRvcjsKPj4gKwkJfTsKPj4gKwl9Owo+Cj4gVGhlIG9yaWdpbmFsIHByb3Bl
-cnR5IG5hbWVzIGZvciB0aGVzZSB0d28gd2VyZSBsZWQgYW5kIHJlZC4gSWYgYW55b25lCj4gaGFz
-IGJldHRlciBsYWJlbCBuYW1lcyB0aGFuIHRoZSBhYm92ZSwgcGxlYXNlIHNwZWFrIHVwLiBEaXR0
-byBmb3IKPiB2ZWdhLXM5NS4gT24gdGhlIG9kcm9pZGMyIGl0J3MgY2FsbGVkIGFsaXZlIGJ1dCB1
-c2VzIGhlYXJ0YmVhdCB0aGVyZS4KPgo+IFRoZSB2ZW5kb3IgZGV2aWNlIHRyZWUgaGFkIGEgdGhp
-cmQgIm1jdSIgR1BJTyBpbiB0aGUgc3lzbGVkIG5vZGUsCj4gR1BJT0FPXzYsIHdoaWNoIGxlYWRz
-IHRvIGltbWVkaWF0ZSBwb3dlci1vZmYuIEkgdHJpZWQgdXNpbmcKPiAiZ3Bpby1wb3dlcm9mZiIg
-dG8gY29uZmlndXJlIHRoaXMgcGluLCBidXQgdGhhdCBkcml2ZXIgZmFpbHMgdG8KPiBpbml0aWFs
-aXplIGJlY2F1c2Ugc29tZSBwbSBjYWxsYmFjayBpcyBhbHJlYWR5IHJlZ2lzdGVyZWQgLSBJIGFz
-c3VtZQo+IGZyb20gcHNjaSwgd2hpY2ggYXBwYXJlbnRseSBzdWNjZWVkcyB0byBwb3dlci1vZmYg
-dGhlIHN5c3RlbSwgdG9vLiBGb3IKPiBjb21wYXJpc29uLCB0aGUgUzkwNSBiYXNlZCBWZWdhIFM5
-NSBUZWxvcyBoYXMgbm8gc3VjaCBtY3UgcHJvcGVydHkuIEFueQo+IHRob3VnaHRzPwo+Cj4gQWxz
-bywgYW55IGlkZWFzIGhvdyBiZXN0IHRvIHN3aXRjaCBmcm9tIGJsdWUgdG8gcmVkIGZvciBzdXNw
-ZW5kPyBBZGQKPiBwaW5jdHJsIHByb3BlcnRpZXMgYWJvdmU/IHN5c3RlbWQgc2VydmljZSBkb2lu
-ZyBlY2hvIGZyb20gdXNlcnNwYWNlPyBJCj4gYXNzdW1lIGluIEFuZHJvaWQgdGhlIEFtbG9naWMg
-c3lzbGVkIGRyaXZlciBoYW5kbGVzIGFsbCB0aGF0IGxvZ2ljIC0KPiBkaWRuJ3QgZmluZCBhbnkg
-c3VzcGVuZCBlcXVpdmFsZW50IHRvIGdwaW8tcG93ZXJvZmYuCgppbiBsZWRzLWdwaW8sIHdoZW4g
-cmV0YWluLXN0YXRlLXN1c3BlbmRlZCBpcyBub3Qgc2V0LCB0aGUgTEVEIGlzCmF1dG9tYXRpY2Fs
-bHkgc2V0IHRvIHZhbHVlIDAuICBJIHdvbmRlciBpZiBsZWRzLWdwaW8gc2hvdWxkIGdyb3cgc3Vw
-cG9ydAp0byBtYWtlIHRoZSBzdXNwZW5kIHZhbHVlIGNvbmZpZ3VyYWJsZT8gIE9yIGEgcHJvcGVy
-dHkgbGlrZQoidG9nZ2xlLXN0YXRlLXN1c3BlbmRlZCIgPwoKS2V2aW4KCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Tue, Jan 17, 2017 at 02:36:50PM +1100, Thomas Petazzoni wrote:
+> Hello,
+> 
+> (Side note: you guys should learn about stripping irrelevant parts of
+> an e-mail when replying!)
+>
+> On Mon, 16 Jan 2017 09:40:32 +0100, Boris Brezillon wrote:
+> 
+> > > Well this is OK I guess, but then you can also use "mediatek,mt8173-nor"
+> > > as the oldest supported compatible and be done with it, no ? It looks a
+> > > bit crappy though, I admit that ...
+> > 
+> > Let's stop bikeshedding and wait for DT maintainers feedback
+> > before taking a decision ;-).
+> > 
+> > Rob, Mark, any opinion?
+>
+
+Sigh, is how to do compatibles really not yet understood?
+ 
+> I agree that a clarification would be good. There are really two
+> options:
+> 
+>  1. Have two compatible strings in the DT, the one that matches the
+>     exact SoC where the IP is found (first compatible string) and the
+>     one that matches some other SoC where the same IP is found (second
+>     compatible string). Originally, Linux only supports the second
+>     compatible string in its device driver, but if it happens that a
+>     difference is found between two IPs that we thought were the same,
+>     we can add support for the first compatible string in the driver,
+>     with a slightly different behavior.
+
+This. And no wildcards in the compatible string. 
+
+>  2. Have a single compatible string in the DT, matching the exact SoC
+>     where the IP is found. This involves adding immediately this
+>     compatible string in the corresponding driver.
+
+I wouldn't object to this from a DT perspective as I have no clue 
+generally if IP blocks are "the same" or not. Subsystem maintainers will 
+object though.
+
+> I've not really been able to figure out which of the two options is the
+> most future-proof/appropriate.
+
+They are both future-proof. #2 has the disadvantage of requiring a 
+kernel update for a new SoC. 
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
