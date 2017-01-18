@@ -1,52 +1,44 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
-Date: Wed, 18 Jan 2017 14:49:46 -0800
-Message-ID: <20170118224946.GC11881@dtor-ws>
-References: <20161223163214.7716-1-jelle@vdwaa.nl>
- <20170114191425.GA31309@dtor-ws>
- <20170118205712.GA5333@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/3] ARM64: dts: meson-gxbb: Add support for WeTek Hub and
+ Play
+Date: Wed, 18 Jan 2017 14:53:53 -0800
+Message-ID: <m2mveox9mm.fsf@baylibre.com>
+References: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com>
+ <1484736642-5451-3-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170118205712.GA5333@gmail.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Jelle van der Waa <jelle@vdwaa.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484736642-5451-3-git-send-email-narmstrong@baylibre.com> (Neil
+ Armstrong's message of "Wed, 18 Jan 2017 11:50:41 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
-> On 01/14/17 at 11:14am, Dmitry Torokhov wrote:
-> > > +
-> > > +static const struct of_device_id zet6223_of_match[] = {
-> > > +	{ .compatible = "zeitec", "zet6223" },
-> > 
-> > The compatible should be "zeitec,zet6223", what you have here is
-> > equivalent of:
-> > 
-> > 	{ .compatible = "zeitec", .data = "zet6223" },
-> 
-> Ah that was silly, thanks :)
-> 
-> > I also have been looking at you previosu submission and had some draft
-> > changes. I reconciled them in the patch below, if it still works for you
-> > then I'll fold everything together and apply. Please let me know.
-> 
-> I'll find some time to test the patch below, I've one small suggestion
-> to the patch below.
-> 
-> > +	ts->fingernum = buf[15] & 0x7F;
-> > +	if (ts->fingernum > ZET6223_MAX_FINGERS) {
-> > +		dev_warn(&ts->client->dev,
-> > +			 "touchpanel reports %d fingers, limiting to %d\n",
-> > +			 ts->fingernum, ZET6223_MAX_FINGERS);
-> > +		ts->fingernum = 16;
-> 
-> Maybe use ZET6223_MAX_FINGERS?
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Makes sense, I'll change before applying.
+> Adds support for the WeTek Hub and Play2 boards.
+> The Hub is an extremely small IPTv Set-Top-Box and the Play2 is a more
+> traditionnal Satellite or Terrestrial and IPTv Set-Top-Box.
+>
+> Both are based on the p200 Reference Design and out-of-tree support is
+> based on OpenELEC kernel at [1].
+>
+> [1] https://github.com/wetek-enigma/linux-amlogic
+>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 
-Thanks.
+Did you get the GPIO/button info from the LibreELEC tree or did you find
+some schematics someplace?  If you found any schematics, it would be
+nice to have links in the DTS files.
 
--- 
-Dmitry
+Kevin
