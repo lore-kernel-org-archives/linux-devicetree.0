@@ -1,580 +1,176 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Wed, 18 Jan 2017 12:29:57 +0100
-Message-ID: <27d56d51-8193-a3c1-9acb-739833344872@gmail.com>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v7 4/8] PWM: add PWM driver for STM32 plaftorm
+Date: Wed, 18 Jan 2017 12:37:59 +0100
+Message-ID: <20170118113759.GA16826@ulmo.ba.sec>
+References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+ <1483608344-9012-5-git-send-email-benjamin.gaignard@st.com>
+ <20170118100817.GF18989@ulmo.ba.sec>
+ <CA+M3ks64VEE8a0oeiA8J-T5FDzwWTo=pdaMACy+pz7EyOQY-Jg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Tony Lindgren <tony@atomide.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, arm@kernel.org, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Santosh Shilimkar <ssantosh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Sascha Hauer <kernel@pengutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+M3ks64VEE8a0oeiA8J-T5FDzwWTo=pdaMACy+pz7EyOQY-Jg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
 
+--wRRV7LY7NUeQGEoC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 18/01/17 11:53, Marc Zyngier wrote:
-> Since everybody copied my own mistake from the DT binding example,
-> let's address all the offenders in one swift go.
->
-> Most of them got the CPU interface size wrong (4kB, while it should
-> be 8kB), except for both keystone platforms which got the control
-> interface wrong (4kB instead of 8kB).
->
-> In the couple of cases were I knew for sure what implementation
-> was used, I've added the "arm,gic-400" compatible string. I'm 99%
-> sure that this is what everyong is using, but short of having the
-> TRM for all the other SoCs, I've let them alone.
->
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  arch/arm/boot/dts/alpine.dtsi        | 2 +-
->  arch/arm/boot/dts/axm55xx.dtsi       | 2 +-
->  arch/arm/boot/dts/dra7.dtsi          | 2 +-
->  arch/arm/boot/dts/ecx-2000.dts       | 2 +-
->  arch/arm/boot/dts/exynos3250.dtsi    | 2 +-
->  arch/arm/boot/dts/exynos5.dtsi       | 2 +-
->  arch/arm/boot/dts/exynos5260.dtsi    | 2 +-
->  arch/arm/boot/dts/exynos5440.dtsi    | 2 +-
->  arch/arm/boot/dts/imx6ul.dtsi        | 4 ++--
->  arch/arm/boot/dts/keystone-k2g.dtsi  | 2 +-
->  arch/arm/boot/dts/keystone.dtsi      | 2 +-
->  arch/arm/boot/dts/ls1021a.dtsi       | 4 ++--
->  arch/arm/boot/dts/mt2701.dtsi        | 2 +-
->  arch/arm/boot/dts/mt6580.dtsi        | 2 +-
->  arch/arm/boot/dts/mt6589.dtsi        | 2 +-
->  arch/arm/boot/dts/mt7623.dtsi        | 2 +-
->  arch/arm/boot/dts/mt8127.dtsi        | 2 +-
->  arch/arm/boot/dts/mt8135.dtsi        | 2 +-
+On Wed, Jan 18, 2017 at 12:15:58PM +0100, Benjamin Gaignard wrote:
+> 2017-01-18 11:08 GMT+01:00 Thierry Reding <thierry.reding@gmail.com>:
+> > On Thu, Jan 05, 2017 at 10:25:40AM +0100, Benjamin Gaignard wrote:
+[...]
+> >> +static u32 active_channels(struct stm32_pwm *dev)
+> >> +{
+> >> +     u32 ccer;
+> >> +
+> >> +     regmap_read(dev->regmap, TIM_CCER, &ccer);
+> >> +
+> >> +     return ccer & TIM_CCER_CCXE;
+> >> +}
+> >
+> > This looks like something that you could track in software, but this is
+> > probably fine, too. Again, technically regmap_read() could fail, so you
+> > might want to consider adding some code to handle it. In practice it
+> > probably won't, so maybe you don't.
+>=20
+> TIM_CCER_CCXE is a value that IIO timer can also read (not write) so
+> I have keep the same logic for pwm driver.
 
-for the Mediatek SoCs:
+Would that not be racy? What happens if after active_channels() here,
+the IIO timer modifies the TIM_CCER register?
 
-Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> >> +     ret =3D stm32_pwm_config(chip, pwm, state->duty_cycle, state->pe=
+riod);
+> >> +     if (ret)
+> >> +             return ret;
+> >> +
+> >> +     if (!enabled && state->enabled)
+> >> +             ret =3D stm32_pwm_enable(chip, pwm);
+> >> +
+> >> +     return ret;
+> >> +}
+> >
+> > Would it be possible to merge stm32_pwm_disable(), stm32_pwm_enable(),
+> > stm32_pwm_set_polarity() and stm32_pwm_config() into stm32_pwm_apply()?
+> > Part of the reason for the atomic API was to make it easier to write
+> > these drivers, but your implementation effectively copies what the
+> > transitional helpers do.
+> >
+> > It might not make a difference technically in your case, but I think
+> > it'd make the implementation more compact and set a better example for
+> > future reference.
+>=20
+> hmm... it will create a fat function with lot of where
+> enabling/disabling/configuration
+> will be mixed I'm really not convince that will more compact and readable.
 
->  arch/arm/boot/dts/omap5.dtsi         | 2 +-
->  arch/arm/boot/dts/r8a73a4.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7743.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7745.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7790.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7791.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7792.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7793.dtsi       | 2 +-
->  arch/arm/boot/dts/r8a7794.dtsi       | 2 +-
->  arch/arm/boot/dts/rk1108.dtsi        | 2 +-
->  arch/arm/boot/dts/rk3036.dtsi        | 2 +-
->  arch/arm/boot/dts/rk322x.dtsi        | 2 +-
->  arch/arm/boot/dts/rk3288.dtsi        | 2 +-
->  arch/arm/boot/dts/sun6i-a31.dtsi     | 2 +-
->  arch/arm/boot/dts/sun7i-a20.dtsi     | 4 ++--
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
->  arch/arm/boot/dts/sun8i-a83t.dtsi    | 2 +-
->  arch/arm/boot/dts/sun8i-h3.dtsi      | 2 +-
->  arch/arm/boot/dts/sun9i-a80.dtsi     | 2 +-
->  37 files changed, 40 insertions(+), 40 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
-> index db8752f..d0eefc3 100644
-> --- a/arch/arm/boot/dts/alpine.dtsi
-> +++ b/arch/arm/boot/dts/alpine.dtsi
-> @@ -93,7 +93,7 @@
->  			interrupt-controller;
->  			reg = <0x0 0xfb001000 0x0 0x1000>,
->  			      <0x0 0xfb002000 0x0 0x2000>,
-> -			      <0x0 0xfb004000 0x0 0x1000>,
-> +			      <0x0 0xfb004000 0x0 0x2000>,
->  			      <0x0 0xfb006000 0x0 0x2000>;
->  			interrupts =
->  				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
-> index a9d6d59..47799f5 100644
-> --- a/arch/arm/boot/dts/axm55xx.dtsi
-> +++ b/arch/arm/boot/dts/axm55xx.dtsi
-> @@ -62,7 +62,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0x20 0x01001000 0 0x1000>,
-> -		      <0x20 0x01002000 0 0x1000>,
-> +		      <0x20 0x01002000 0 0x2000>,
->  		      <0x20 0x01004000 0 0x2000>,
->  		      <0x20 0x01006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index 1faf24a..a9ffa49 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -57,7 +57,7 @@
->  		interrupt-controller;
->  		#interrupt-cells = <3>;
->  		reg = <0x0 0x48211000 0x0 0x1000>,
-> -		      <0x0 0x48212000 0x0 0x1000>,
-> +		      <0x0 0x48212000 0x0 0x2000>,
->  		      <0x0 0x48214000 0x0 0x2000>,
->  		      <0x0 0x48216000 0x0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
-> index 2ccbb57f..c15e7e0 100644
-> --- a/arch/arm/boot/dts/ecx-2000.dts
-> +++ b/arch/arm/boot/dts/ecx-2000.dts
-> @@ -99,7 +99,7 @@
->  			interrupt-controller;
->  			interrupts = <1 9 0xf04>;
->  			reg = <0xfff11000 0x1000>,
-> -			      <0xfff12000 0x1000>,
-> +			      <0xfff12000 0x2000>,
->  			      <0xfff14000 0x2000>,
->  			      <0xfff16000 0x2000>;
->  		};
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index ba17ee1..9c28ef4 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -234,7 +234,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			reg = <0x10481000 0x1000>,
-> -			      <0x10482000 0x1000>,
-> +			      <0x10482000 0x2000>,
->  			      <0x10484000 0x2000>,
->  			      <0x10486000 0x2000>;
->  			interrupts = <GIC_PPI 9
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index 7fd870e..678c08e 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -94,7 +94,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			reg =	<0x10481000 0x1000>,
-> -				<0x10482000 0x1000>,
-> +				<0x10482000 0x2000>,
->  				<0x10484000 0x2000>,
->  				<0x10486000 0x2000>;
->  			interrupts = <GIC_PPI 9
-> diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-> index 5818718..5e88c96 100644
-> --- a/arch/arm/boot/dts/exynos5260.dtsi
-> +++ b/arch/arm/boot/dts/exynos5260.dtsi
-> @@ -167,7 +167,7 @@
->  			#size-cells = <0>;
->  			interrupt-controller;
->  			reg = <0x10481000 0x1000>,
-> -				<0x10482000 0x1000>,
-> +				<0x10482000 0x2000>,
->  				<0x10484000 0x2000>,
->  				<0x10486000 0x2000>;
->  			interrupts = <GIC_PPI 9
-> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-> index 2a2e570..77d35bb 100644
-> --- a/arch/arm/boot/dts/exynos5440.dtsi
-> +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> @@ -40,7 +40,7 @@
->  		#interrupt-cells = <3>;
->  		interrupt-controller;
->  		reg =	<0x2E1000 0x1000>,
-> -			<0x2E2000 0x1000>,
-> +			<0x2E2000 0x2000>,
->  			<0x2E4000 0x2000>,
->  			<0x2E6000 0x2000>;
->  		interrupts = <GIC_PPI 9
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index 39845a7..ac5371a 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -91,11 +91,11 @@
->  	};
->
->  	intc: interrupt-controller@00a01000 {
-> -		compatible = "arm,cortex-a7-gic";
-> +		compatible = "arm,gic-400", "arm,cortex-a7-gic";
->  		#interrupt-cells = <3>;
->  		interrupt-controller;
->  		reg = <0x00a01000 0x1000>,
-> -		      <0x00a02000 0x1000>,
-> +		      <0x00a02000 0x2000>,
->  		      <0x00a04000 0x2000>,
->  		      <0x00a06000 0x2000>;
->  	};
-> diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-> index 63c7cf0..07bf300 100644
-> --- a/arch/arm/boot/dts/keystone-k2g.dtsi
-> +++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-> @@ -45,7 +45,7 @@
->  		interrupt-controller;
->  		reg = <0x0 0x02561000 0x0 0x1000>,
->  		      <0x0 0x02562000 0x0 0x2000>,
-> -		      <0x0 0x02564000 0x0 0x1000>,
-> +		      <0x0 0x02564000 0x0 0x2000>,
->  		      <0x0 0x02566000 0x0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
->  				IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 02708ba..aaff6816 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -35,7 +35,7 @@
->  		interrupt-controller;
->  		reg = <0x0 0x02561000 0x0 0x1000>,
->  		      <0x0 0x02562000 0x0 0x2000>,
-> -		      <0x0 0x02564000 0x0 0x1000>,
-> +		      <0x0 0x02564000 0x0 0x2000>,
->  		      <0x0 0x02566000 0x0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
->  				IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-> index 282d854..45ea57f 100644
-> --- a/arch/arm/boot/dts/ls1021a.dtsi
-> +++ b/arch/arm/boot/dts/ls1021a.dtsi
-> @@ -110,11 +110,11 @@
->  		ranges;
->
->  		gic: interrupt-controller@1400000 {
-> -			compatible = "arm,cortex-a7-gic";
-> +			compatible = "arm,gic-400", "arm,cortex-a7-gic";
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			reg = <0x0 0x1401000 0x0 0x1000>,
-> -			      <0x0 0x1402000 0x0 0x1000>,
-> +			      <0x0 0x1402000 0x0 0x2000>,
->  			      <0x0 0x1404000 0x0 0x2000>,
->  			      <0x0 0x1406000 0x0 0x2000>;
->  			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 7eab6f4..454d099 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -170,7 +170,7 @@
->  		#interrupt-cells = <3>;
->  		interrupt-parent = <&gic>;
->  		reg = <0 0x10211000 0 0x1000>,
-> -		      <0 0x10212000 0 0x1000>,
-> +		      <0 0x10212000 0 0x2000>,
->  		      <0 0x10214000 0 0x2000>,
->  		      <0 0x10216000 0 0x2000>;
->  	};
-> diff --git a/arch/arm/boot/dts/mt6580.dtsi b/arch/arm/boot/dts/mt6580.dtsi
-> index 06fdf6c..a349dba 100644
-> --- a/arch/arm/boot/dts/mt6580.dtsi
-> +++ b/arch/arm/boot/dts/mt6580.dtsi
-> @@ -91,7 +91,7 @@
->  		#interrupt-cells = <3>;
->  		interrupt-parent = <&gic>;
->  		reg = <0x10211000 0x1000>,
-> -		      <0x10212000 0x1000>,
-> +		      <0x10212000 0x2000>,
->  		      <0x10214000 0x2000>,
->  		      <0x10216000 0x2000>;
->  	};
-> diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-> index 88b3cb1..0d6f60a 100644
-> --- a/arch/arm/boot/dts/mt6589.dtsi
-> +++ b/arch/arm/boot/dts/mt6589.dtsi
-> @@ -102,7 +102,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-parent = <&gic>;
->  			reg = <0x10211000 0x1000>,
-> -			      <0x10212000 0x1000>,
-> +			      <0x10212000 0x2000>,
->  			      <0x10214000 0x2000>,
->  			      <0x10216000 0x2000>;
->  		};
-> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-> index fd2b614..19a54a3 100644
-> --- a/arch/arm/boot/dts/mt7623.dtsi
-> +++ b/arch/arm/boot/dts/mt7623.dtsi
-> @@ -104,7 +104,7 @@
->  		#interrupt-cells = <3>;
->  		interrupt-parent = <&gic>;
->  		reg = <0 0x10211000 0 0x1000>,
-> -		      <0 0x10212000 0 0x1000>,
-> +		      <0 0x10212000 0 0x2000>,
->  		      <0 0x10214000 0 0x2000>,
->  		      <0 0x10216000 0 0x2000>;
->  	};
-> diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-> index 52086c8..916c095 100644
-> --- a/arch/arm/boot/dts/mt8127.dtsi
-> +++ b/arch/arm/boot/dts/mt8127.dtsi
-> @@ -129,7 +129,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-parent = <&gic>;
->  			reg = <0 0x10211000 0 0x1000>,
-> -			      <0 0x10212000 0 0x1000>,
-> +			      <0 0x10212000 0 0x2000>,
->  			      <0 0x10214000 0 0x2000>,
->  			      <0 0x10216000 0 0x2000>;
->  		};
-> diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-> index 1d7f92b..a97b4ee 100644
-> --- a/arch/arm/boot/dts/mt8135.dtsi
-> +++ b/arch/arm/boot/dts/mt8135.dtsi
-> @@ -221,7 +221,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-parent = <&gic>;
->  			reg = <0 0x10211000 0 0x1000>,
-> -			      <0 0x10212000 0 0x1000>,
-> +			      <0 0x10212000 0 0x2000>,
->  			      <0 0x10214000 0 0x2000>,
->  			      <0 0x10216000 0 0x2000>;
->  		};
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 7cd92ba..71b4809 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -92,7 +92,7 @@
->  		interrupt-controller;
->  		#interrupt-cells = <3>;
->  		reg = <0 0x48211000 0 0x1000>,
-> -		      <0 0x48212000 0 0x1000>,
-> +		      <0 0x48212000 0 0x2000>,
->  		      <0 0x48214000 0 0x2000>,
->  		      <0 0x48216000 0 0x2000>;
->  		interrupt-parent = <&gic>;
-> diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-> index 53183ff..14a66ca 100644
-> --- a/arch/arm/boot/dts/r8a73a4.dtsi
-> +++ b/arch/arm/boot/dts/r8a73a4.dtsi
-> @@ -465,7 +465,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0 0xf1001000 0 0x1000>,
-> -			<0 0xf1002000 0 0x1000>,
-> +			<0 0xf1002000 0 0x2000>,
->  			<0 0xf1004000 0 0x2000>,
->  			<0 0xf1006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-> index 216cb1f..172a944 100644
-> --- a/arch/arm/boot/dts/r8a7743.dtsi
-> +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -55,7 +55,7 @@
->  			#address-cells = <0>;
->  			interrupt-controller;
->  			reg = <0 0xf1001000 0 0x1000>,
-> -			      <0 0xf1002000 0 0x1000>,
-> +			      <0 0xf1002000 0 0x2000>,
->  			      <0 0xf1004000 0 0x2000>,
->  			      <0 0xf1006000 0 0x2000>;
->  			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-> diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-> index 0b2e2f3..7390ec0 100644
-> --- a/arch/arm/boot/dts/r8a7745.dtsi
-> +++ b/arch/arm/boot/dts/r8a7745.dtsi
-> @@ -55,7 +55,7 @@
->  			#address-cells = <0>;
->  			interrupt-controller;
->  			reg = <0 0xf1001000 0 0x1000>,
-> -			      <0 0xf1002000 0 0x1000>,
-> +			      <0 0xf1002000 0 0x2000>,
->  			      <0 0xf1004000 0 0x2000>,
->  			      <0 0xf1006000 0 0x2000>;
->  			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index 0c8900d..ac38764 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -183,7 +183,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0 0xf1001000 0 0x1000>,
-> -			<0 0xf1002000 0 0x1000>,
-> +			<0 0xf1002000 0 0x2000>,
->  			<0 0xf1004000 0 0x2000>,
->  			<0 0xf1006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index 8721466..28039db 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -114,7 +114,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0 0xf1001000 0 0x1000>,
-> -			<0 0xf1002000 0 0x1000>,
-> +			<0 0xf1002000 0 0x2000>,
->  			<0 0xf1004000 0 0x2000>,
->  			<0 0xf1006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
-> index 6ced3c1..1ed5c88 100644
-> --- a/arch/arm/boot/dts/r8a7792.dtsi
-> +++ b/arch/arm/boot/dts/r8a7792.dtsi
-> @@ -88,7 +88,7 @@
->  			#interrupt-cells = <3>;
->  			interrupt-controller;
->  			reg = <0 0xf1001000 0 0x1000>,
-> -			      <0 0xf1002000 0 0x1000>,
-> +			      <0 0xf1002000 0 0x2000>,
->  			      <0 0xf1004000 0 0x2000>,
->  			      <0 0xf1006000 0 0x2000>;
->  			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-> diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-> index 2fb527c..934c097 100644
-> --- a/arch/arm/boot/dts/r8a7793.dtsi
-> +++ b/arch/arm/boot/dts/r8a7793.dtsi
-> @@ -105,7 +105,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0 0xf1001000 0 0x1000>,
-> -			<0 0xf1002000 0 0x1000>,
-> +			<0 0xf1002000 0 0x2000>,
->  			<0 0xf1004000 0 0x2000>,
->  			<0 0xf1006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-> index fb576db..09f7823 100644
-> --- a/arch/arm/boot/dts/r8a7794.dtsi
-> +++ b/arch/arm/boot/dts/r8a7794.dtsi
-> @@ -71,7 +71,7 @@
->  		#address-cells = <0>;
->  		interrupt-controller;
->  		reg = <0 0xf1001000 0 0x1000>,
-> -			<0 0xf1002000 0 0x1000>,
-> +			<0 0xf1002000 0 0x2000>,
->  			<0 0xf1004000 0 0x2000>,
->  			<0 0xf1006000 0 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
-> index d770023..d6194bf 100644
-> --- a/arch/arm/boot/dts/rk1108.dtsi
-> +++ b/arch/arm/boot/dts/rk1108.dtsi
-> @@ -215,7 +215,7 @@
->  		#address-cells = <0>;
->
->  		reg = <0x32011000 0x1000>,
-> -		      <0x32012000 0x1000>,
-> +		      <0x32012000 0x2000>,
->  		      <0x32014000 0x2000>,
->  		      <0x32016000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index 4ed49a2..ff9b90b 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -189,7 +189,7 @@
->  		#address-cells = <0>;
->
->  		reg = <0x10139000 0x1000>,
-> -		      <0x1013a000 0x1000>,
-> +		      <0x1013a000 0x2000>,
->  		      <0x1013c000 0x2000>,
->  		      <0x1013e000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index 9d3aee5..9dff822 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -443,7 +443,7 @@
->  		#address-cells = <0>;
->
->  		reg = <0x32011000 0x1000>,
-> -		      <0x32012000 0x1000>,
-> +		      <0x32012000 0x2000>,
->  		      <0x32014000 0x2000>,
->  		      <0x32016000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 4fad133..af46cba 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1110,7 +1110,7 @@
->  		#address-cells = <0>;
->
->  		reg = <0xffc01000 0x1000>,
-> -		      <0xffc02000 0x1000>,
-> +		      <0xffc02000 0x2000>,
->  		      <0xffc04000 0x2000>,
->  		      <0xffc06000 0x2000>;
->  		interrupts = <GIC_PPI 9 0xf04>;
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-> index 2b26175..6ed505a 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -861,7 +861,7 @@
->  		gic: interrupt-controller@01c81000 {
->  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c81000 0x1000>,
-> -			      <0x01c82000 0x1000>,
-> +			      <0x01c82000 0x2000>,
->  			      <0x01c84000 0x2000>,
->  			      <0x01c86000 0x2000>;
->  			interrupt-controller;
-> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-> index f7db067..3c24832 100644
-> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
-> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-> @@ -1686,9 +1686,9 @@
->  		};
->
->  		gic: interrupt-controller@01c81000 {
-> -			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-> +			compatible = "arm,gic-400", "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c81000 0x1000>,
-> -			      <0x01c82000 0x1000>,
-> +			      <0x01c82000 0x2000>,
->  			      <0x01c84000 0x2000>,
->  			      <0x01c86000 0x2000>;
->  			interrupt-controller;
-> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> index e4991a7..49dfe86 100644
-> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> @@ -489,7 +489,7 @@
->  		gic: interrupt-controller@01c81000 {
->  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c81000 0x1000>,
-> -			      <0x01c82000 0x1000>,
-> +			      <0x01c82000 0x2000>,
->  			      <0x01c84000 0x2000>,
->  			      <0x01c86000 0x2000>;
->  			interrupt-controller;
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index d3473f8..04c3fdd 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -217,7 +217,7 @@
->  		gic: interrupt-controller@01c81000 {
->  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c81000 0x1000>,
-> -			      <0x01c82000 0x1000>,
-> +			      <0x01c82000 0x2000>,
->  			      <0x01c84000 0x2000>,
->  			      <0x01c86000 0x2000>;
->  			interrupt-controller;
-> diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-> index 6c14a6f..292abd0 100644
-> --- a/arch/arm/boot/dts/sun8i-h3.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-> @@ -580,7 +580,7 @@
->  		gic: interrupt-controller@01c81000 {
->  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c81000 0x1000>,
-> -			      <0x01c82000 0x1000>,
-> +			      <0x01c82000 0x2000>,
->  			      <0x01c84000 0x2000>,
->  			      <0x01c86000 0x2000>;
->  			interrupt-controller;
-> diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-> index 979ad1a..b7b5831 100644
-> --- a/arch/arm/boot/dts/sun9i-a80.dtsi
-> +++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-> @@ -613,7 +613,7 @@
->  		gic: interrupt-controller@01c41000 {
->  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->  			reg = <0x01c41000 0x1000>,
-> -			      <0x01c42000 0x1000>,
-> +			      <0x01c42000 0x2000>,
->  			      <0x01c44000 0x2000>,
->  			      <0x01c46000 0x2000>;
->  			interrupt-controller;
->
+I don't object to splitting this up into separate functions, I just
+don't think the functions should correspond to the legacy ones. One
+variant that I think could work out nicely would be to have one
+function that precomputes the various values, call in from ->apply()
+and then do only the register writes along with a couple of
+conditionals depending on enable state, for example.
+
+> >> +static const struct pwm_ops stm32pwm_ops =3D {
+> >> +     .owner =3D THIS_MODULE,
+> >> +     .apply =3D stm32_pwm_apply,
+> >> +};
+> >> +
+> >> +static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+> >> +                                 int level, int filter)
+> >> +{
+> >> +     u32 bdtr =3D TIM_BDTR_BKE;
+> >> +
+> >> +     if (level)
+> >> +             bdtr |=3D TIM_BDTR_BKP;
+> >> +
+> >> +     bdtr |=3D (filter & TIM_BDTR_BKF_MASK) << TIM_BDTR_BKF_SHIFT;
+> >> +
+> >> +     regmap_update_bits(priv->regmap,
+> >> +                        TIM_BDTR, TIM_BDTR_BKE | TIM_BDTR_BKP | TIM_B=
+DTR_BKF,
+> >> +                        bdtr);
+> >> +
+> >> +     regmap_read(priv->regmap, TIM_BDTR, &bdtr);
+> >> +
+> >> +     return (bdtr & TIM_BDTR_BKE) ? 0 : -EINVAL;
+> >> +}
+> >> +
+> >> +static int stm32_pwm_set_breakinput2(struct stm32_pwm *priv,
+> >> +                                  int level, int filter)
+> >> +{
+> >> +     u32 bdtr =3D TIM_BDTR_BK2E;
+> >> +
+> >> +     if (level)
+> >> +             bdtr |=3D TIM_BDTR_BK2P;
+> >> +
+> >> +     bdtr |=3D (filter & TIM_BDTR_BKF_MASK) << TIM_BDTR_BK2F_SHIFT;
+> >> +
+> >> +     regmap_update_bits(priv->regmap,
+> >> +                        TIM_BDTR, TIM_BDTR_BK2E |
+> >> +                        TIM_BDTR_BK2P |
+> >> +                        TIM_BDTR_BK2F,
+> >> +                        bdtr);
+> >> +
+> >> +     regmap_read(priv->regmap, TIM_BDTR, &bdtr);
+> >> +
+> >> +     return (bdtr & TIM_BDTR_BK2E) ? 0 : -EINVAL;
+> >> +}
+> >
+> > As far as I can tell the only difference here is the various bit
+> > positions. Can you collapse the above two functions and add a new
+> > parameter to unify some code?
+>=20
+> Yes it is all about bit shifting, I had try unify those two functions
+> with index has additional parameter
+> but it just add if() before each lines so no real benefit for code size.
+
+How about if you precompute the values and masks? Something like:
+
+	u32 bke =3D (index =3D=3D 0) ? ... : ...;
+	u32 bkp =3D (index =3D=3D 0) ? ... : ...;
+	u32 bkf =3D (index =3D=3D 0) ? ... : ...;
+	u32 mask =3D (index =3D=3D 0) ? ... : ...;
+
+	bdtr =3D bke | bkf;
+
+	if (level)
+		bdtr |=3D bkp;
+
+	regmap_update_bits(priv->regmap, TIM_BDTR, mask, bdtr);
+
+	regmap_read(priv->regmap, TIM_BDTR, &bdtr);
+
+	return (bdtr & bke) ? 0 : -EINVAL;
+
+?
+
+--wRRV7LY7NUeQGEoC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlh/U5QACgkQ3SOs138+
+s6EQaw/6A5Lq/6+aW6RbpHpOY47xmaxjBMJt0KBCBJVnxlw/GWJKSf5AqTRfhZvi
+wP5uo8eUOIjEdXtyBw4c7jUaz9OrJx64qtvwQq0KmLjH4Ix0t3mePVJZVI0LAHaD
+FXFt9u1EXPLw3ruKR1YXlqwFWqOldlZxV3d45J45Q4d8Xl+daosSwBzX2Yy+bCzG
+oB6JmbrRFFvEcX+kJMq1GlElzfBVqdfqymEZKvWsX4dl1uYV200Nh2cxUzB2RnVw
+6gBBlOyPiFmJNMa3UrfW7yojrhN1IE9Sb6hwowjz/M2+re79b8Gu/BqssRdySc6Q
+sLK1EWGLWkangoeTncdLL1o01n1obqyyHdKxBkq9Oi6YOY73nM1yvw4XQEjA8Chr
+8Nn8tGgSeIqzRry56aY8wrNNulL3Fn+lT78sx2VCNQafDeOxAOY+Lrays6Ojy4Zq
++SY279iu0anM2+T9y88rr7h8aULeyZsn6SdFpCrdLtVmG83HiinYCsqGdccCkNzA
+6nqarbgpoD7xfLUrMJtBjEIx93CiUts29GzMz+SXKYRFXVduNmD9qvgXKm6s4ZzY
+0av2CjOqOu+IqOsik3iVrhluHMC7GFXHJCtXaKKznEx8Q7VwrxAosl58W2J3n2He
+zM9YYvi1MG+ZngI+tjDiIKcty4DOUFHBmjo2pMYZRJzJ5wMcaBQ=
+=Maik
+-----END PGP SIGNATURE-----
+
+--wRRV7LY7NUeQGEoC--
