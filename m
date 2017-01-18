@@ -1,48 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 1/5] clk: mvebu: support for 98DX3236 SoC
-Date: Wed, 18 Jan 2017 16:25:08 -0600
-Message-ID: <20170118222508.prn5xk63nuc3ocr7@rob-hp-laptop>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-2-chris.packham@alliedtelesis.co.nz>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add R-Box Pro
+Date: Wed, 18 Jan 2017 14:27:19 -0800
+Message-ID: <m237ggypfc.fsf@baylibre.com>
+References: <20170117030611.23827-1-afaerber@suse.de>
+        <20170117030611.23827-2-afaerber@suse.de>
+        <3005a457-b7cf-393b-42ff-4149e080321c@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170113091222.7132-2-chris.packham@alliedtelesis.co.nz>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux-arm-kernel@lists.infradead.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3005a457-b7cf-393b-42ff-4149e080321c@suse.de> ("Andreas
+        =?utf-8?Q?F=C3=A4rber=22's?= message of "Wed, 18 Jan 2017 00:06:07 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: linux-amlogic@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 10:12:16PM +1300, Chris Packham wrote:
-> The 98DX3236, 98DX3336, 98DX4521 and variants have a different TCLK from
-> the Armada XP (200MHz vs 250MHz). The CPU core clock is fixed at 800MHz.
-> 
-> The clock gating options are a subset of those on the Armada XP.
-> 
-> The core clock divider is different to the Armada XP also.
-> 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> ---
-> 
-> Notes:
->     Changes in v2:
->     - Update devicetree binding documentation for new compatible string
->     Changes in v3:
->     - Add 98dx3236 support to mvebu/clk-corediv.c rather than creating a new
->       driver.
->     - Document mv98dx3236-corediv-clock binding
->     Changes in v4:
->     - None
-> 
->  .../bindings/clock/mvebu-corediv-clock.txt         |  1 +
->  .../devicetree/bindings/clock/mvebu-cpu-clock.txt  |  1 +
+Andreas F=C3=A4rber <afaerber@suse.de> writes:
 
-Please add acks when posting new versions.
+> Am 17.01.2017 um 04:06 schrieb Andreas F=C3=A4rber:
+>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/=
+amlogic/Makefile
+>> index 0d7bfbf7d922..66bc809a5eae 100644
+>> --- a/arch/arm64/boot/dts/amlogic/Makefile
+>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+>> @@ -12,6 +12,7 @@ dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxl-nexbox-a95x.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-s912-q200.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-s912-q201.dtb
+>>  dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-nexbox-a1.dtb
+>
+> What is the logic behind meson-gxm-s912-q201 vs. meson-gxm-nexbox-a1?
+> Should it be renamed to include -s912 for consistency?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Oops, I think it should be renamed for consistency.
 
->  drivers/clk/mvebu/armada-xp.c                      | 42 ++++++++++++++++++++++
->  drivers/clk/mvebu/clk-corediv.c                    | 23 ++++++++++++
->  drivers/clk/mvebu/clk-cpu.c                        | 31 ++++++++++++++--
->  5 files changed, 96 insertions(+), 2 deletions(-)
+I believe there's only one chip in the GXM family (S912) so it might be
+that we could either drop the -s912 from the q20x boards or, add it to
+the nexbox.
+
+I lean towards dropping the -s912 since there's a single chip in GXM.
+(FWIW, GXL has more than one chip in the family so we added the chip
+there.)
+
+>> +dtb-$(CONFIG_ARCH_MESON) +=3D meson-gxm-rbox-pro.dtb
+>
+> Should this new board use meson-gxm-s912-?
+
+No.  Unless Neil or you thing otherwise, I think we should send a patch
+to drop the -s912 from the q20x boards instead.  (where "we" =3D=3D Neil) ;)
+
+Kevin
