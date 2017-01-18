@@ -1,75 +1,43 @@
-From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/5] ARM: dts: am33xx: Add stdout-path property
-Date: Wed, 18 Jan 2017 09:33:23 +0530
-Message-ID: <20170118040326.29259-3-lokeshvutla@ti.com>
-References: <20170118040326.29259-1-lokeshvutla@ti.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] arm64: dts: exynos: Add USB 3.0 controller node
+ for Exynos7
+Date: Wed, 18 Jan 2017 01:27:14 -0300
+Message-ID: <CABxcv=kFe+En+6f-xKJS5nnJLsdXViAd7KWJmJYEhvZG5DU+_w@mail.gmail.com>
+References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117150121epcas1p102bd1355f780a56e14a0a7a81bd6dfaf@epcas1p1.samsung.com>
+ <1484665444-23365-2-git-send-email-pankaj.dubey@samsung.com>
+ <20170117182318.fvatrazvyuzmdsor@kozik-lap> <9f45a921-ebfb-c252-20bb-3a7adf508343@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118040326.29259-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <9f45a921-ebfb-c252-20bb-3a7adf508343-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+To: "pankaj.dubey" <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add stdout-path property in /chosen node so that earlycon can be
-used by just adding earlycon in bootargs.
+Hello Pankaj,
 
-Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-evm.dts   | 4 ++++
- arch/arm/boot/dts/am335x-evmsk.dts | 4 ++++
- arch/arm/boot/dts/am335x-icev2.dts | 4 ++++
- 3 files changed, 12 insertions(+)
+On Wed, Jan 18, 2017 at 12:16 AM, pankaj.dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tuesday 17 January 2017 11:53 PM, Krzysztof Kozlowski wrote:
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index c2186ec2834b..1c37a7c1ea17 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -25,6 +25,10 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index e2548d1ce753..9e43c443738a 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -32,6 +32,10 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
-diff --git a/arch/arm/boot/dts/am335x-icev2.dts b/arch/arm/boot/dts/am335x-icev2.dts
-index 1463df3b5b19..ff9417ce93c0 100644
---- a/arch/arm/boot/dts/am335x-icev2.dts
-+++ b/arch/arm/boot/dts/am335x-icev2.dts
-@@ -24,6 +24,10 @@
- 		reg = <0x80000000 0x10000000>; /* 256 MB */
- 	};
- 
-+	chosen {
-+		stdout-path = &uart3;
-+	};
-+
- 	vbat: fixedregulator0 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vbat";
--- 
-2.11.0
+[snip]
 
+>>> +
+>>> +                    dwc3 {
+>>
+>> dtc should complain here - you need:
+>>       dwc3@15400000
+>
+> No, it didn't complain. Anyway, I will update as it's already taken care
+> in other Exynos SoC DTSi files.
+>
+
+It only complains if you run dtc with warnings enabled, i.e: make W=1
+exynos7-espresso.dtb
+
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
