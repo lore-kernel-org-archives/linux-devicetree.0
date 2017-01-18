@@ -1,15 +1,14 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v7 4/8] PWM: add PWM driver for STM32 plaftorm
-Date: Wed, 18 Jan 2017 12:16:44 +0100
-Message-ID: <CA+M3ks4NKApD-FGY9=KGcngA2aaiLop8QFtbVmgz2yeOSo7E=g@mail.gmail.com>
-References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
- <1483608344-9012-5-git-send-email-benjamin.gaignard@st.com>
- <20170118101628.GG18989@ulmo.ba.sec>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
+Date: Wed, 18 Jan 2017 12:25:00 +0100
+Message-ID: <2229087.5bOlf9DNaK@diego>
+References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
+ <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170118101628.GG18989@ulmo.ba.sec>
+In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,30 +18,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Alexandre Torgue <alexandre.torgue@st.com>, Linux PWM List <linux-pwm@vger.kernel.org>, linux-iio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Gerald Baeza <gerald.baeza@st.com>, Fabrice Gasnier <fabrice.gasnier@st.com>, Lee Jones <lee.jones@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Jonathan Cameron <jic23@kernel.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, arm@kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime
 List-Id: devicetree@vger.kernel.org
 
-MjAxNy0wMS0xOCAxMToxNiBHTVQrMDE6MDAgVGhpZXJyeSBSZWRpbmcgPHRoaWVycnkucmVkaW5n
-QGdtYWlsLmNvbT46Cj4gT24gVGh1LCBKYW4gMDUsIDIwMTcgYXQgMTA6MjU6NDBBTSArMDEwMCwg
-QmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6Cj4gWy4uLl0KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-cHdtL0tjb25maWcgYi9kcml2ZXJzL3B3bS9LY29uZmlnCj4+IGluZGV4IGY5MmRkNDEuLjg4MDM1
-YzAgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvcHdtL0tjb25maWcKPj4gKysrIGIvZHJpdmVycy9w
-d20vS2NvbmZpZwo+PiBAQCAtMzk3LDYgKzM5NywxNSBAQCBjb25maWcgUFdNX1NUSQo+PiAgICAg
-ICAgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhlcmU6IHRo
-ZSBtb2R1bGUKPj4gICAgICAgICB3aWxsIGJlIGNhbGxlZCBwd20tc3RpLgo+Pgo+PiArY29uZmln
-IFBXTV9TVE0zMgo+PiArICAgICB0cmlzdGF0ZSAiU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIFBX
-TSIKPj4gKyAgICAgZGVwZW5kcyBvbiAoQVJDSF9TVE0zMiAmJiBPRiAmJiBNRkRfU1RNMzJfVElN
-RVJTKSB8fCBDT01QSUxFX1RFU1QKPgo+IE9uZSBvdGhlciB0aGluZzogaXMgdGhlIGRlcGVuZGVu
-Y3kgb24gQVJDSF9TVE0zMiBhbmQgT0YgbmVjZXNzYXJ5IGhlcmU/Cj4gQVJDSF9TVE0zMiBhbmQg
-T0YgYXJlIGJvdGggcHVsbGVkIGluIGJ5IE1GRF9TVE0zMl9USU1FUlMuIFRoZSBkZXBlbmRlbmN5
-Cj4gaXMgcHJvYmFibHkgZmluZSBmb3IgTUZEX1NUTTMyX1RJTUVSUywgdGhvdWdoIGV2ZW4gdGhl
-cmUgJiYgT0Ygc2VlbXMgdG9vCj4gbXVjaCwgc2luY2UgaXQncyBhbHJlYWR5IHB1bGxlZCBpbiB2
-aWEgQVJDSF9TVE0zMiAtPiBBUk1fU0lOR0xFX0FSTVY3TQo+IC0+IFVTRV9PRi4KClNhaWQgbGlr
-ZSB0aGF0IE1GRF9TVE0zMl9USU1FUlMgaXMgZW5vdWdoIHNvIEkgd2lsbCBrZWVwIHRoaXMgb25l
-CgpUaGFua3MKCj4KPiBUaGllcnJ5CgoKCi0tIApCZW5qYW1pbiBHYWlnbmFyZAoKR3JhcGhpYyBT
-dHVkeSBHcm91cAoKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBT
-b0NzCgpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
-aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Am Mittwoch, 18. Januar 2017, 10:53:31 CET schrieb Marc Zyngier:
+> Since everybody copied my own mistake from the DT binding example,
+> let's address all the offenders in one swift go.
+> 
+> Most of them got the CPU interface size wrong (4kB, while it should
+> be 8kB), except for both keystone platforms which got the control
+> interface wrong (4kB instead of 8kB).
+> 
+> In the couple of cases were I knew for sure what implementation
+> was used, I've added the "arm,gic-400" compatible string. I'm 99%
+> sure that this is what everyong is using, but short of having the
+> TRM for all the other SoCs, I've let them alone.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+
+for the Rockchip parts
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
+> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
+> index d770023..d6194bf 100644
+> --- a/arch/arm/boot/dts/rk1108.dtsi
+> +++ b/arch/arm/boot/dts/rk1108.dtsi
+> @@ -215,7 +215,7 @@
+>  		#address-cells = <0>;
+> 
+>  		reg = <0x32011000 0x1000>,
+> -		      <0x32012000 0x1000>,
+> +		      <0x32012000 0x2000>,
+>  		      <0x32014000 0x2000>,
+>  		      <0x32016000 0x2000>;
+>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | 
+IRQ_TYPE_LEVEL_HIGH)>;
+> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
+> index 4ed49a2..ff9b90b 100644
+> --- a/arch/arm/boot/dts/rk3036.dtsi
+> +++ b/arch/arm/boot/dts/rk3036.dtsi
+> @@ -189,7 +189,7 @@
+>  		#address-cells = <0>;
+> 
+>  		reg = <0x10139000 0x1000>,
+> -		      <0x1013a000 0x1000>,
+> +		      <0x1013a000 0x2000>,
+>  		      <0x1013c000 0x2000>,
+>  		      <0x1013e000 0x2000>;
+>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | 
+IRQ_TYPE_LEVEL_HIGH)>;
+> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> index 9d3aee5..9dff822 100644
+> --- a/arch/arm/boot/dts/rk322x.dtsi
+> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> @@ -443,7 +443,7 @@
+>  		#address-cells = <0>;
+> 
+>  		reg = <0x32011000 0x1000>,
+> -		      <0x32012000 0x1000>,
+> +		      <0x32012000 0x2000>,
+>  		      <0x32014000 0x2000>,
+>  		      <0x32016000 0x2000>;
+>  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | 
+IRQ_TYPE_LEVEL_HIGH)>;
+> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+> index 4fad133..af46cba 100644
+> --- a/arch/arm/boot/dts/rk3288.dtsi
+> +++ b/arch/arm/boot/dts/rk3288.dtsi
+> @@ -1110,7 +1110,7 @@
+>  		#address-cells = <0>;
+> 
+>  		reg = <0xffc01000 0x1000>,
+> -		      <0xffc02000 0x1000>,
+> +		      <0xffc02000 0x2000>,
+>  		      <0xffc04000 0x2000>,
+>  		      <0xffc06000 0x2000>;
+>  		interrupts = <GIC_PPI 9 0xf04>;
