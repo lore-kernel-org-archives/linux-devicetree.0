@@ -1,14 +1,14 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 14/18] drivers/fsi: Add FSI bus documentation
-Date: Wed, 18 Jan 2017 15:53:20 -0600
-Message-ID: <20170118215320.kd7zl2lkpxuf25ki@rob-hp-laptop>
-References: <1484260497-80241-1-git-send-email-christopher.lee.bostic@gmail.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v14 4/5] Documentation: tee subsystem and op-tee driver
+Date: Wed, 18 Jan 2017 13:54:21 -0800
+Message-ID: <315ef64f-0d9e-1cfa-d861-0f6653b05230@broadcom.com>
+References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
+ <1484744296-30003-5-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1484260497-80241-1-git-send-email-christopher.lee.bostic@gmail.com>
+In-Reply-To: <1484744296-30003-5-git-send-email-jens.wiklander@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,84 +18,172 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: christopher.lee.bostic@gmail.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benh@kernel.crashing.org, geert+renesas@glider.be, andrew@aj.id.au, gregkh@linuxfoundation.org, mturquette@baylibre.com, linux@armlinux.org.uk, Chris Bostic <cbostic@us.ibm.com>, linux-kernel@vger.kernel.org, joel@jms.id.au, alistair@popple.id.au, linux-arm-kernel@lists.infradead.org, jk@ozlabs.org
+To: Jens Wiklander <jens.wiklander@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>
+Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Nishanth Menon <nm@ti.com>, broonie@kernel.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, jean-michel.delorme@st.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, Mark Rutland <mark.rutland@arm.com>, "Andrew F . Davis" <afd@ti.com>, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 04:34:57PM -0600, christopher.lee.bostic@gmail.com wrote:
-> From: Chris Bostic <cbostic@us.ibm.com>
-> 
-> Add details on the basic functions of the FSI serial bus.
-> 
-> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
+Hi Jens,
+
+Documentation looks good.
+
+On 17-01-18 04:58 AM, Jens Wiklander wrote:
+> Acked-by: Andreas Dannenberg <dannenberg@ti.com>
+> Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->  Documentation/devicetree/bindings/fsi/fsi.txt | 54 +++++++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
+>  Documentation/00-INDEX |   2 +
+>  Documentation/tee.txt  | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  MAINTAINERS            |   1 +
+>  3 files changed, 121 insertions(+)
+>  create mode 100644 Documentation/tee.txt
+>
+> diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
+> index c8a8eb1a2b11..fc6a3cb83d97 100644
+> --- a/Documentation/00-INDEX
+> +++ b/Documentation/00-INDEX
+> @@ -412,6 +412,8 @@ sysctl/
+>  	- directory with info on the /proc/sys/* files.
+>  target/
+>  	- directory with info on generating TCM v4 fabric .ko modules
+> +tee.txt
+> +	- info on the TEE subsystem and drivers
+>  this_cpu_ops.txt
+>  	- List rationale behind and the way to use this_cpu operations.
+>  thermal/
+> diff --git a/Documentation/tee.txt b/Documentation/tee.txt
 > new file mode 100644
-> index 0000000..7fa2394
+> index 000000000000..718599357596
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
-> @@ -0,0 +1,54 @@
-> +FSI: Flexible Support processor Interface
-
-This doesn't describe anything about what the DT structure looks like.
-
+> +++ b/Documentation/tee.txt
+> @@ -0,0 +1,118 @@
+> +TEE subsystem
+> +This document describes the TEE subsystem in Linux.
 > +
-> +FSI is a two line serial bus capable of running at speeds up to 166 MHz.
-> +The lines consist of a clock responsible for synchronizing the target device
-> +(slave) with the master which is responsible for all transactions on the bus.
-> +The master owns the clock line and is the only side allowed to change its
-> +state. The second line, SDA, is a data line that conveys information to/from
-> +the slave who samples based on the clock line.  The data line is
-> +bi-directional.
+> +A TEE (Trusted Execution Environment) is a trusted OS running in some
+> +secure environment, for example, TrustZone on ARM CPUs, or a separate
+> +secure co-processor etc. A TEE driver handles the details needed to
+> +communicate with the TEE.
 > +
-> +The master initiates communication by sending a command to the slave and
-> +depending on the type of command will allow the slave to control the bus
-> +to return requested data.  All commands are CRC protected.  The slave upon
-> +receipt of a command will determine if the CRC is correct and discard
-> +the data if noise has corrupted the line.  In the same manner the master
-> +will verify the CRC received from the slave.
+> +This subsystem deals with:
 > +
-> +Types of commands:
-> +Read 32 bit:  Read a 32 bit word from a specified address on the slave.
-> +Read 16 bit:  Read a 16 bit 'half word' from a specified address on the slave.
-> +read 8 bit:   Read a byte from a specified address on the slave.
-> +Write 32,16,8 bit: Write to a specified address on the slave with the provided
-> +		data.
-> +BREAK:		Initialize the slave's logic to receive commands.
-> +TERM:		Terminate the slave's error lockout to resume communications
-> +		after an error on the bus is detected.
-> +D-POLL:		Poll the slave to determine when it is no longer buy processing
-> +		a previous command.
-> +I-POLL:		Interrupt signal check.  Master queries slave to see if any
-> +		interrupts are asserting.
+> +- Registration of TEE drivers
 > +
-> +High fanout capability:
-> +FSI buses can be chained together in 'hub' configurations to expand the
-> +available communications channels and thus allow connetion to more slaves.
+> +- Managing shared memory between Linux and the TEE
 > +
+> +- Providing a generic API to the TEE
 > +
-> +Typical implementation
+> +The TEE interface
+> +=================
 > +
-> + FSI master ----- slave with local FSI master (hub) ------- downstream slave
+> +include/uapi/linux/tee.h defines the generic interface to a TEE.
 > +
+> +User space (the client) connects to the driver by opening /dev/tee[0-9]* or
+> +/dev/teepriv[0-9]*.
 > +
-> +Each two line combination of a clock and data line is collectively referred
-> +to as a 'FSI link'.   Depending on hardware the primary FSI master may support
-> +up to 64 links.  Hub FSI masters can support at most 8 links.  Total number
-> +of supported slaves can grow exponentially depending on how many hubs are
-> +placed in the path.  Presently only two hubs in the chain are allowed but
-> +in the future this may be expanded.
+> +- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor
+> +  which user space can mmap. When user space doesn't need the file
+> +  descriptor any more, it should be closed. When shared memory isn't needed
+> +  any longer it should be unmapped with munmap() to allow the reuse of
+> +  memory.
 > +
-> +The slave hardware logic responsible for decoding FSI master commands is
-> +contained in a CFAM (Common Field replaceable unit Access Macro).  Up to
-> +4 slaves or CFAMs can be connected on each FSI link.  CFAMs in addition
-> +to the slave logic (or engine) can contain other functions that allow access
-> +via FSI.  Common additional functionality includes I2C masters, GPIO
-> +controllers, UARTs, etc...
-> -- 
-> 1.8.2.2
-> 
+> +- TEE_IOC_VERSION lets user space know which TEE this driver handles and
+> +  the its capabilities.
+> +
+> +- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application.
+> +
+> +- TEE_IOC_INVOKE invokes a function in a Trusted Application.
+> +
+> +- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE.
+> +
+> +- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application.
+> +
+> +There are two classes of clients, normal clients and supplicants. The latter is
+> +a helper process for the TEE to access resources in Linux, for example file
+> +system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
+> +/dev/teepriv[0-9].
+> +
+> +Much of the communication between clients and the TEE is opaque to the
+> +driver. The main job for the driver is to receive requests from the
+> +clients, forward them to the TEE and send back the results. In the case of
+> +supplicants the communication goes in the other direction, the TEE sends
+> +requests to the supplicant which then sends back the result.
+> +
+> +OP-TEE driver
+> +=============
+> +
+> +The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
+> +TrustZone based OP-TEE solution that is supported.
+> +
+> +Lowest level of communication with OP-TEE builds on ARM SMC Calling
+> +Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
+> +[3] used internally by the driver. Stacked on top of that is OP-TEE Message
+> +Protocol [4].
+> +
+> +OP-TEE SMC interface provides the basic functions required by SMCCC and some
+> +additional functions specific for OP-TEE. The most interesting functions are:
+> +
+> +- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
+> +  which is then returned by TEE_IOC_VERSION
+> +
+> +- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
+> +  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
+> +  separate secure co-processor.
+> +
+> +- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
+> +
+> +- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
+> +  range to used for shared memory between Linux and OP-TEE.
+> +
+> +The GlobalPlatform TEE Client API [5] is implemented on top of the generic
+> +TEE API.
+> +
+> +Picture of the relationship between the different components in the
+> +OP-TEE architecture.
+> +
+> +    User space                  Kernel                   Secure world
+> +    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
+> + +--------+                                             +-------------+
+> + | Client |                                             | Trusted     |
+> + +--------+                                             | Application |
+> +    /\                                                  +-------------+
+> +    || +----------+                                           /\
+> +    || |tee-      |                                           ||
+> +    || |supplicant|                                           \/
+> +    || +----------+                                     +-------------+
+> +    \/      /\                                          | TEE Internal|
+> + +-------+  ||                                          | API         |
+> + + TEE   |  ||            +--------+--------+           +-------------+
+> + | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
+> + | API   |  \/            | subsys | driver |           | Trusted OS  |
+> + +-------+----------------+----+-------+----+-----------+-------------+
+> + |      Generic TEE API        |       |     OP-TEE MSG               |
+> + |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
+> + +-----------------------------+       +------------------------------+
+> +
+> +RPC (Remote Procedure Call) are requests from secure world to kernel driver
+> +or tee-supplicant. An RPC is identified by a special range of SMCCC return
+> +values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
+> +kernel are handled by the kernel driver. Other RPC messages will be forwarded to
+> +tee-supplicant without further involvement of the driver, except switching
+> +shared memory buffer representation.
+> +
+> +References:
+> +[1] https://github.com/OP-TEE/optee_os
+> +[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
+> +[3] drivers/tee/optee/optee_smc.h
+> +[4] drivers/tee/optee/optee_msg.h
+> +[5] http://www.globalplatform.org/specificationsdevice.asp look for
+> +    "TEE Client API Specification v1.0" and click download.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 975fd339c026..eec9bee0d752 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -10895,6 +10895,7 @@ S:	Maintained
+>  F:	include/linux/tee_drv.h
+>  F:	include/uapi/linux/tee.h
+>  F:	drivers/tee/
+> +F:	Documentation/tee.txt
+>
+>  THUNDERBOLT DRIVER
+>  M:	Andreas Noever <andreas.noever@gmail.com>
+>
