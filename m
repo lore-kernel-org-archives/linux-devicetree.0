@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH 1/3] dt-bindings: vendor-prefix: Add wetek vendor prefix
-Date: Wed, 18 Jan 2017 11:50:40 +0100
-Message-ID: <1484736642-5451-2-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH 3/3] dt-bindings: amlogic: Add WeTek boards
+Date: Wed, 18 Jan 2017 11:50:42 +0100
+Message-ID: <1484736642-5451-4-git-send-email-narmstrong@baylibre.com>
 References: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,25 +21,23 @@ To: khilman@baylibre.com, carlo@caione.org
 Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add prefix for WeTek Electronics, limited, a company producing multimedia
-Set-Top-Boxes and supporting KODI and OpenELEC distributions.
-
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e..0c16d85 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -320,6 +320,7 @@ virtio	Virtual I/O Device Specification, developed by the OASIS consortium
- vivante	Vivante Corporation
- voipac	Voipac Technologies s.r.o.
- wd	Western Digital Corp.
-+wetek	WeTek Electronics, limited.
- wexler	Wexler
- winbond Winbond Electronics corp.
- wlf	Wolfson Microelectronics
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 9b2b41a..c246cd2 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -40,6 +40,8 @@ Board compatible values:
+   - "hardkernel,odroid-c2" (Meson gxbb)
+   - "amlogic,p200" (Meson gxbb)
+   - "amlogic,p201" (Meson gxbb)
++  - "wetek,hub" (Meson gxbb)
++  - "wetek,play2" (Meson gxbb)
+   - "amlogic,p212" (Meson gxl s905x)
+   - "amlogic,p230" (Meson gxl s905d)
+   - "amlogic,p231" (Meson gxl s905d)
 -- 
 1.9.1
