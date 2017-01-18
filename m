@@ -1,72 +1,50 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga@gmail.com>
-Subject: Re: [PATCH v9 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 18 Jan 2017 21:55:39 +0100
-Message-ID: <CAOAejn2LobTMfvsvmW8cCiToFHuM6n26s5QPLLXxLzb-WKkhQw@mail.gmail.com>
-References: <1484666821-20551-1-git-send-email-cedric.madianga@gmail.com>
- <1484666821-20551-3-git-send-email-cedric.madianga@gmail.com>
- <20170117193752.e6hju25w74bb4i4z@pengutronix.de>
- <CAOAejn0ea2j_oUijOdHgiL3JU4TM0HZoL+-ggzjpPL2eA7tDCw@mail.gmail.com>
- <20170118184237.tvhlsksdcw2ckwan@pengutronix.de>
+From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
+Date: Wed, 18 Jan 2017 21:57:14 +0100
+Message-ID: <20170118205712.GA5333@gmail.com>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+ <20170114191425.GA31309@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170118184237.tvhlsksdcw2ckwan@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170114191425.GA31309@dtor-ws>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-MjAxNy0wMS0xOCAxOTo0MiBHTVQrMDE6MDAgVXdlIEtsZWluZS1Lw7ZuaWcgPHUua2xlaW5lLWtv
-ZW5pZ0BwZW5ndXRyb25peC5kZT46Cj4gSGVsbG8gQ2VkcmljLAo+Cj4gT24gV2VkLCBKYW4gMTgs
-IDIwMTcgYXQgMDQ6MjE6MTdQTSArMDEwMCwgTSdib3VtYmEgQ2VkcmljIE1hZGlhbmdhIHdyb3Rl
-Ogo+PiA+PiArICAgICAgKiBJbiBzdGFuZGFyZCBtb2RlLCB0aGUgbWF4aW11bSBhbGxvd2VkIFND
-TCByaXNlIHRpbWUgaXMgMTAwMCBucy4KPj4gPj4gKyAgICAgICogSWYsIGluIHRoZSBJMkNfQ1Iy
-IHJlZ2lzdGVyLCB0aGUgdmFsdWUgb2YgRlJFUVs1OjBdIGJpdHMgaXMgZXF1YWwgdG8KPj4gPj4g
-KyAgICAgICogMHgwOCBzbyBwZXJpb2QgPSAxMjUgbnMgdGhlcmVmb3JlIHRoZSBUUklTRVs1OjBd
-IGJpdHMgbXVzdCBiZQo+PiA+PiArICAgICAgKiBwcm9ncmFtbWVkIHdpdGggMDloLigxMDAwIG5z
-IC8gMTI1IG5zID0gOCArIDEpCj4+ID4KPj4gPiAgICAgICAgICogcHJvZ3JhbW1lZCB3aXRoIDB4
-OS4KPj4gPiAoMTAwMCBucyAvIDEyNSBucyA9IDgpCj4+ID4KPj4gPj4gKyAgICAgICogU28sIGZv
-ciBJMkMgc3RhbmRhcmQgbW9kZSBUUklTRSA9IEZSRVFbNTowXSArIDEKPj4gPj4gKyAgICAgICoK
-Pj4gPj4gKyAgICAgICogSW4gZmFzdCBtb2RlLCB0aGUgbWF4aW11bSBhbGxvd2VkIFNDTCByaXNl
-IHRpbWUgaXMgMzAwIG5zLgo+PiA+PiArICAgICAgKiBJZiwgaW4gdGhlIEkyQ19DUjIgcmVnaXN0
-ZXIsIHRoZSB2YWx1ZSBvZiBGUkVRWzU6MF0gYml0cyBpcyBlcXVhbCB0bwo+PiA+PiArICAgICAg
-KiAweDA4IHNvIHBlcmlvZCA9IDEyNSBucyB0aGVyZWZvcmUgdGhlIFRSSVNFWzU6MF0gYml0cyBt
-dXN0IGJlCj4+ID4+ICsgICAgICAqIHByb2dyYW1tZWQgd2l0aCAwM2guKDMwMCBucyAvIDEyNSBu
-cyA9IDIgKyAxKQo+PiA+Cj4+ID4gYXMgYWJvdmUgcy8wM2gvMHgzLzsKPj4KPj4gb2sKPj4KPj4g
-PiBzLy4oLy4gKC87Cj4+IG9rCj4+Cj4+ID4gcy8rIDEvLzsKPj4gVGhpcyBmb3JtdWxhIGlzIHVz
-ZSB0byB1bmRlcnN0YW5kIGhvdyB3ZSBmaW5kIHRoZSByZXN1bHQgMHgzCj4+IFNvLCAweDMgPT4g
-MzAwIG5zIC8gMTI1bnMgPSAyICsgMQo+Cj4gWWVhaCwgSSB1bmRlcnN0b29kIHRoYXQsIGJ1dCB3
-cml0aW5nIDMwMCBucyAvIDEyNW5zID0gMiArIDEgaXMKPiBpcnJpdGF0aW5nIGF0IGJlc3QuCgpP
-ay4gSSB3aWxsIHdyaXRlIDB4MyAoMzAwIG5zIC8gMTI1IG5zICsgMSkgYW5kIDB4OSAoMTAwMCBu
-cyAvIDEyNSBucyArIDEpCgo+PiA+ICAgICAgICAgWy4uLl0KPj4gPiAgICAgICAgIElmIERVVFkg
-PSAxOiAodG8gcmVhY2ggNDAwIGtIeikKPj4gPgo+PiA+IFN0cmFuZ2UuCj4+ID4KPj4gPj4gKyAg
-ICAgICAgICAgICB2YWwgPSBESVZfUk9VTkRfVVAoaTJjX2Rldi0+cGFyZW50X3JhdGUsIDQwMDAw
-MCAqIDMpOwo+PiA+Cj4+ID4gdGhlIG1hbnVhbCByZWFkczoKPj4gPgo+PiA+ICAgICAgICAgVGhl
-IG1pbmltdW0gYWxsb3dlZCB2YWx1ZSBpcyAweDA0LCBleGNlcHQgaW4gRkFTVCBEVVRZIG1vZGUK
-Pj4gPiAgICAgICAgIHdoZXJlIHRoZSBtaW5pbXVtIGFsbG93ZWQgdmFsdWUgaXMgMHgwMQo+PiA+
-Cj4+ID4gWW91IGRvbid0IGNoZWNrIGZvciB0aGF0LCByaWdodD8KPj4KPj4gQXMgdGhlIG1pbmlt
-dW0gZnJlcSB2YWx1ZSBpcyA2IE1oeiBpbiBmYXN0IG1vZGUgdGhlIG1pbmltdW0gQ0NSIGlzIDUK
-Pj4gYXMgZGVzY3JpYmVkIGluIHRoZSBjb21tZW50Lgo+PiBTbyBJIGRvbid0IG5lZWQgdG8gY2hl
-Y2sgdGhhdCBhZ2FpbiBhcyBpdCBpcyBhbHJlYWR5IGRvbmUgYnkgY2hlY2tpbmcKPj4gcGFyZW50
-IGZyZXF1ZW5jeS4KPgo+IFRoYXQgd291bGQgdGhlbiBnbyBpbnRvIGEgY29tbWVudC4KCklzIGl0
-IHJlYWxseSBuZWVkZWQgPwpBZGRpbmcgc29tZSBjb21tZW50cyB0byBleHBsYWluIGltcGxlbWVu
-dGF0aW9uIGNob2ljZXMgb3IgIGhhcmR3YXJlCndheSBvZiB3b3JraW5nIGlzIGNsZWFybHkgdXNl
-ZnVsLgpCdXQgZm9yIHRoaXMga2luZCBvZiB0aGluZywgSSBhbSByZWFsbHkgc3VycHJpc2VkLi4u
-Cgo+Cj4+ID4gQ0NSIGlzIDExIGJpdHMgd2lkZS4gQSBjb21tZW50IGNvbmZpcm1pbmcgdGhhdCB0
-aGlzIGNhbm5vdCBvdmVyZmxvdwo+PiA+IHdvdWxkIGJlIG5pY2UuCj4+Cj4+IEFnYWluIHRoZXJl
-IGlzIG5vIGNoYW5jZSBvZiBvdmVyZmxvdyB0aGFua3MgdG8gcGFyZW50IGZyZXF1ZW5jeSBjaGVj
-awo+Cj4gUmlnaHQsIHRoaXMgdGltZSBJIHNhdyB0aGlzIG15c2VsZiwgc28gSSByZXF1ZXN0ZWQg
-YSBjb21tZW50IHN0YXRpbmcKPiB0aGlzIGZhY3QuCgpkaXR0bwoKQmVzdCByZWdhcmRzLApDZWRy
-aWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
-LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
-Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
-bS1rZXJuZWwK
+On 01/14/17 at 11:14am, Dmitry Torokhov wrote:
+> > +
+> > +static const struct of_device_id zet6223_of_match[] = {
+> > +	{ .compatible = "zeitec", "zet6223" },
+> 
+> The compatible should be "zeitec,zet6223", what you have here is
+> equivalent of:
+> 
+> 	{ .compatible = "zeitec", .data = "zet6223" },
+
+Ah that was silly, thanks :)
+
+> I also have been looking at you previosu submission and had some draft
+> changes. I reconciled them in the patch below, if it still works for you
+> then I'll fold everything together and apply. Please let me know.
+
+I'll find some time to test the patch below, I've one small suggestion
+to the patch below.
+
+> +	ts->fingernum = buf[15] & 0x7F;
+> +	if (ts->fingernum > ZET6223_MAX_FINGERS) {
+> +		dev_warn(&ts->client->dev,
+> +			 "touchpanel reports %d fingers, limiting to %d\n",
+> +			 ts->fingernum, ZET6223_MAX_FINGERS);
+> +		ts->fingernum = 16;
+
+Maybe use ZET6223_MAX_FINGERS?
+
+-- 
+Jelle van der Waa
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
