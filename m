@@ -1,14 +1,13 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Wed, 18 Jan 2017 12:25:00 +0100
-Message-ID: <2229087.5bOlf9DNaK@diego>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH 0/4] Bluetooth support for GXBB/GXL/GXM based devices
+Date: Wed, 18 Jan 2017 12:25:43 +0100
+Message-ID: <CAFBinCC0RADEKnkYEF6_DkBTftdjmPMku+N3bdvZMCoqs96xGA@mail.gmail.com>
+References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+In-Reply-To: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,80 +17,70 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, arm@kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime
+To: linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, jslaby@suse.com, gregkh@linuxfoundation.org, khilman@baylibre.com, carlo@caione.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 18. Januar 2017, 10:53:31 CET schrieb Marc Zyngier:
-> Since everybody copied my own mistake from the DT binding example,
-> let's address all the offenders in one swift go.
-> 
-> Most of them got the CPU interface size wrong (4kB, while it should
-> be 8kB), except for both keystone platforms which got the control
-> interface wrong (4kB instead of 8kB).
-> 
-> In the couple of cases were I knew for sure what implementation
-> was used, I've added the "arm,gic-400" compatible string. I'm 99%
-> sure that this is what everyong is using, but short of having the
-> TRM for all the other SoCs, I've let them alone.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+Kevin,
 
-for the Rockchip parts
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+On Sun, Jan 15, 2017 at 11:32 PM, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+> This adds the missing kernel bits for Bluetooth support on the
+> Tronsmart Vega S95 (GXBB based) boards as well as for the GXL
+> P230/P231 and GXM Q200/Q201 reference boards.
+>
+> The Bluetooth functionality on these boards is provided by the
+> SDIO wifi/Bluetooth combo-chip (Broadcom bcm43xx based). The
+> Bluetooth module on that combo-chip has to be taken out of reset,
+> which is taken care of the GPIO in the sdio_pwrseq.
+>
+> Once the module is taken out of reset it can be set up from userspace
+> using the "hciattach" tool from bluez, which talks to the Bluetooth
+> module which is connected to one of the serial ports (in our case
+> uart_A). To get the Bluetooth module initialized within the timeout
+> defined by "hciattach" (and to achieve usable speeds for Bluetooth
+> transfers) the communication uses a speed of 2000000 baud, which was
+> not supported by meson_uart before.
+>
+> NOTE: The .dts-changes from this series depends on my previous series
+> "add support for uart_AO_B" - see [0]
+>
+>
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001982.html
+>
+>
+> Martin Blumenstingl (4):
+>   tty: serial: meson: allow baud-rates higher than 115200
+>   ARM64: dts: meson-gx: add the serial CTS and RTS pin groups
 
-> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
-> index d770023..d6194bf 100644
-> --- a/arch/arm/boot/dts/rk1108.dtsi
-> +++ b/arch/arm/boot/dts/rk1108.dtsi
-> @@ -215,7 +215,7 @@
->  		#address-cells = <0>;
-> 
->  		reg = <0x32011000 0x1000>,
-> -		      <0x32012000 0x1000>,
-> +		      <0x32012000 0x2000>,
->  		      <0x32014000 0x2000>,
->  		      <0x32016000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | 
-IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index 4ed49a2..ff9b90b 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -189,7 +189,7 @@
->  		#address-cells = <0>;
-> 
->  		reg = <0x10139000 0x1000>,
-> -		      <0x1013a000 0x1000>,
-> +		      <0x1013a000 0x2000>,
->  		      <0x1013c000 0x2000>,
->  		      <0x1013e000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | 
-IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index 9d3aee5..9dff822 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -443,7 +443,7 @@
->  		#address-cells = <0>;
-> 
->  		reg = <0x32011000 0x1000>,
-> -		      <0x32012000 0x1000>,
-> +		      <0x32012000 0x2000>,
->  		      <0x32014000 0x2000>,
->  		      <0x32016000 0x2000>;
->  		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | 
-IRQ_TYPE_LEVEL_HIGH)>;
-> diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-> index 4fad133..af46cba 100644
-> --- a/arch/arm/boot/dts/rk3288.dtsi
-> +++ b/arch/arm/boot/dts/rk3288.dtsi
-> @@ -1110,7 +1110,7 @@
->  		#address-cells = <0>;
-> 
->  		reg = <0xffc01000 0x1000>,
-> -		      <0xffc02000 0x1000>,
-> +		      <0xffc02000 0x2000>,
->  		      <0xffc04000 0x2000>,
->  		      <0xffc06000 0x2000>;
->  		interrupts = <GIC_PPI 9 0xf04>;
+Neil just informed me that Rob Herring is working on defining the UART
+Bluetooth device properly using devicetree (preparation for this is
+named "[PATCH v2 0/9] Serial slave device bus", see [0] for the
+mailing-list conversation and [1] for a WiP git repo).
+This means that there will be a better solution than the one proposed
+in the meson-gx-p23x-q20x and meson-gxbb-vega-s95 patches (patches #1
+and #2 are not affected by this), namely:
+- I'm currently (ab)using sdio-pwrseq node to power on the UART
+Bluetooth module, this can solved by specifying a bluetooth {  } node
+inside the &uart_A node in the future and providing the corresponding
+GPIOs there
+- all the userspace commands will not be necessary once
+drivers/bluetooth/hci_bcm.c is changed to the serio framework and gets
+devicetree support
+>   ARM64: dts: meson-gx-p23x-q20x: enable the Bluetooth module
+>   ARM64: dts: meson-gxbb-vega-s95: enable the Bluetooth module
+>
+>  .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 12 ++++++-
+>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      |  9 +++++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 40 ++++++++++++++++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 40 ++++++++++++++++++++++
+>  drivers/tty/serial/meson_uart.c                    |  2 +-
+>  5 files changed, 101 insertions(+), 2 deletions(-)
+>
+> --
+> 2.11.0
+>
+
+
+[0] http://marc.info/?l=linux-serial&m=148460728417109&w=2
+[1] https://git.kernel.org/cgit/linux/kernel/git/robh/linux.git/log/?h=serial-bus-v3
