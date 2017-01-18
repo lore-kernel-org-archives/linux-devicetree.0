@@ -1,100 +1,89 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] devicetree: document new marvell-8xxx and
- pwrseq-sd8787 options
-Date: Wed, 18 Jan 2017 16:02:07 -0600
-Message-ID: <20170118220207.3zhbavk2uo4xui34@rob-hp-laptop>
-References: <20170113052937.12538-1-matt@ranostay.consulting>
- <20170113052937.12538-2-matt@ranostay.consulting>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/4] Bluetooth support for GXBB/GXL/GXM based devices
+Date: Wed, 18 Jan 2017 14:02:06 -0800
+Message-ID: <m2fukgyqld.fsf@baylibre.com>
+References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
+ <CAFBinCC0RADEKnkYEF6_DkBTftdjmPMku+N3bdvZMCoqs96xGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170113052937.12538-2-matt@ranostay.consulting>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCC0RADEKnkYEF6_DkBTftdjmPMku+N3bdvZMCoqs96xGA@mail.gmail.com>
+ (Martin Blumenstingl's message of "Wed, 18 Jan 2017 12:25:43 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, gregkh@linuxfoundation.org, will.deacon@arm.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 09:29:36PM -0800, Matt Ranostay wrote:
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Changelog?
+> Kevin,
+>
+> On Sun, Jan 15, 2017 at 11:32 PM, Martin Blumenstingl
+> <martin.blumenstingl@googlemail.com> wrote:
+>> This adds the missing kernel bits for Bluetooth support on the
+>> Tronsmart Vega S95 (GXBB based) boards as well as for the GXL
+>> P230/P231 and GXM Q200/Q201 reference boards.
+>>
+>> The Bluetooth functionality on these boards is provided by the
+>> SDIO wifi/Bluetooth combo-chip (Broadcom bcm43xx based). The
+>> Bluetooth module on that combo-chip has to be taken out of reset,
+>> which is taken care of the GPIO in the sdio_pwrseq.
+>>
+>> Once the module is taken out of reset it can be set up from userspace
+>> using the "hciattach" tool from bluez, which talks to the Bluetooth
+>> module which is connected to one of the serial ports (in our case
+>> uart_A). To get the Bluetooth module initialized within the timeout
+>> defined by "hciattach" (and to achieve usable speeds for Bluetooth
+>> transfers) the communication uses a speed of 2000000 baud, which was
+>> not supported by meson_uart before.
+>>
+>> NOTE: The .dts-changes from this series depends on my previous series
+>> "add support for uart_AO_B" - see [0]
+>>
+>>
+>> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/001982.html
+>>
+>>
+>> Martin Blumenstingl (4):
+>>   tty: serial: meson: allow baud-rates higher than 115200
+>>   ARM64: dts: meson-gx: add the serial CTS and RTS pin groups
+>
+> Neil just informed me that Rob Herring is working on defining the UART
+> Bluetooth device properly using devicetree (preparation for this is
+> named "[PATCH v2 0/9] Serial slave device bus", see [0] for the
+> mailing-list conversation and [1] for a WiP git repo).
 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> ---
->  .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
->  .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> new file mode 100644
-> index 000000000000..1b658351629b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> @@ -0,0 +1,14 @@
-> +* Marvell SD8787 power sequence provider
-> +
-> +Required properties:
-> +- compatible: must be "mmc-pwrseq-sd8787".
-> +- pwndn-gpio: contains a power down GPIO specifier.
+Ah, good news.  I knew Rob had been talking about that for awhile, so
+I'm glad to see it coming into existence.  Thanks for the pointers.
 
-powerdown-gpios
+> This means that there will be a better solution than the one proposed
+> in the meson-gx-p23x-q20x and meson-gxbb-vega-s95 patches (patches #1
+> and #2 are not affected by this),> namely:
+> - I'm currently (ab)using sdio-pwrseq node to power on the UART
+> Bluetooth module, this can solved by specifying a bluetooth {  } node
+> inside the &uart_A node in the future and providing the corresponding
+> GPIOs there
 
-> +- reset-gpio: contains a reset GPIO specifier.
+Good.  I didn't like the (ab)use of sdio_pwrseq GPIO resets for the
+bluetooth either.
 
-reset-gpios
+> - all the userspace commands will not be necessary once
+> drivers/bluetooth/hci_bcm.c is changed to the serio framework and gets
+> devicetree support
 
-And state the active state for both.
+Cool.  Maybe you can setup a WIP branch based on Rob's work for broader
+testing on Amlogic boards until this gets merged?
 
-> +
-> +Example:
-> +
-> +	wifi_pwrseq: wifi_pwrseq {
-> +		compatible = "mmc-pwrseq-sd8787";
-> +		pwrdn-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
-> +		reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
-> +	}
-> diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> index 980b16df74c3..0854451ff91d 100644
-> --- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> +++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
-> @@ -1,4 +1,4 @@
-> -Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
-> +Marvell 8787/8897/8997 (sd8787/sd8897/sd8997/pcie8997) SDIO/PCIE devices
->  ------
->  
->  This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
-> @@ -8,6 +8,7 @@ connects the device to the system.
->  Required properties:
->  
->    - compatible : should be one of the following:
-> +	* "marvell,sd8787"
->  	* "marvell,sd8897"
->  	* "marvell,sd8997"
->  	* "pci11ab,2b42"
-> @@ -34,6 +35,9 @@ Optional properties:
->  		 so that the wifi chip can wakeup host platform under certain condition.
->  		 during system resume, the irq will be disabled to make sure
->  		 unnecessary interrupt is not received.
-> +  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
-> +  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
-> +		 for documentation of MMC power sequence bindings.
->  
->  Example:
->  
-> @@ -46,6 +50,7 @@ so that firmware can wakeup host using this device side pin.
->  &mmc3 {
->  	status = "okay";
->  	vmmc-supply = <&wlan_en_reg>;
-> +	mmc-pwrseq = <&wifi_pwrseq>;
->  	bus-width = <4>;
->  	cap-power-off-card;
->  	keep-power-in-suspend;
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the mean time, I've applied patch 2/4 and hopefully the drivers/tty
+patch will go through the serial tree.
+
+Kevin
