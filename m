@@ -1,48 +1,51 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Wed, 18 Jan 2017 14:58:53 +0000
-Message-ID: <SG2PR06MB1165AD95913FB62D971BCC358A7F0@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170117195940.25092-1-chris.brandt@renesas.com>
- <20170117195940.25092-3-chris.brandt@renesas.com>
- <20170117203340.dx6k4zof2omcbz4y@ninjato>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: exynos: Use macros for pinctrl
+ configuration on Exynos7
+Date: Wed, 18 Jan 2017 17:01:31 +0200
+Message-ID: <20170118150131.ttalzfxxtpbrw5gb@kozik-lap>
+References: <1484718141-28785-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170118054013epcas5p3b20dca776ee350f4ba863db24d3dea67@epcas5p3.samsung.com>
+ <1484718141-28785-4-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170117203340.dx6k4zof2omcbz4y@ninjato>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484718141-28785-4-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, krzk@kernel.org, kgene@kernel.org, robh+dt@kernel.org, sanath@samsung.com, javier@osg.samsung.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Wolfram,
+On Wed, Jan 18, 2017 at 11:12:21AM +0530, Pankaj Dubey wrote:
+> Usage of DTS macros instead of hard-coded numbers makes code easier to
+> read.  One does not have to remember which value means pull-up/down or
+> specific driver strength.
+> 
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> ---
+>  arch/arm64/boot/dts/exynos/exynos7-espresso.dts |   4 +-
+>  arch/arm64/boot/dts/exynos/exynos7-pinctrl.dtsi | 302 ++++++++++++------------
+>  2 files changed, 154 insertions(+), 152 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> index c528dd5..1b2db9f0 100644
+> --- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> +++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
+> @@ -328,8 +328,8 @@
+>  &pinctrl_alive {
+>  	pmic_irq: pmic-irq {
+>  		samsung,pins = "gpa0-2";
+> -		samsung,pin-pud = <3>;
+> -		samsung,pin-drv = <3>;
+> +		samsung,pin-pud = <EXYNOS_PIN_PULL_UP>;
+> +		samsung,pin-drv = <EXYNOS4_PIN_DRV_LV3>;
+>  	};
+>  };
 
-On Tuesday, January 17, 2017, Wolfram Sang wrote:
-> > +- clocks: Most controllers only have 1 clock source per cahnnel.
-> > +However, some
->=20
-> channel.
->=20
-> > +	  have 2. If 2 clocks are specified, you must name them as "core"
-> > +and
->=20
-> Maybe "However, some have a second clock dedicated to card detection."?
+This is not equal (value 3 => 1). If the change was intended, please do
+in separate patch.
 
+Rest looks fine.
 
-Thank you for fixing my crappy spelling and grammar ;)
-
-
-
-I'm glad C code uses 'if' and 'else' instead of=20
-
-	contemplate (x>y)
-		X=3D1;
-	alternatively
-		y=3D1;
-
-
-  ...then I'd be screwed!
-
-
-Chris
+Best regards,
+Krzysztof
