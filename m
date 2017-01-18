@@ -1,97 +1,120 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: Re: [PATCH 2/3] Input: add support for the STMicroelectronics
- FingerTip touchscreen
-Date: Wed, 18 Jan 2017 10:58:04 +0900
-Message-ID: <20170118015804.4j26oruyyej54qt4@gangnam.samsung>
-References: <20170117135441.31450-1-andi.shyti@samsung.com>
- <CGME20170117135456epcas5p25a2bfb3a8e1e785177ea842310401d24@epcas5p2.samsung.com>
- <20170117135441.31450-3-andi.shyti@samsung.com> <20170117212128.GC6888@dtor-ws>
+From: "pankaj.dubey" <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: exynos: Add USB 3.0 controller node for
+ Exynos7
+Date: Wed, 18 Jan 2017 08:46:04 +0530
+Message-ID: <9f45a921-ebfb-c252-20bb-3a7adf508343@samsung.com>
+References: <1484665444-23365-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170117150121epcas1p102bd1355f780a56e14a0a7a81bd6dfaf@epcas1p1.samsung.com>
+ <1484665444-23365-2-git-send-email-pankaj.dubey@samsung.com>
+ <20170117182318.fvatrazvyuzmdsor@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-disposition: inline
-In-reply-to: <20170117212128.GC6888@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170117182318.fvatrazvyuzmdsor@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Vivek Gautam <gautamvivek1987@gmail.com>, javier@osg.samsung.com, robh+dt@kernel.org, kgene@kernel.org, sanath@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-thanks for looking into the driver and the review!
-I agree with almost everything, some comments below.
 
-> > +	/* optional tuning */
-> > +	err = stmfts_write_and_wait(sdata, STMFTS_MS_CX_TUNING);
-> > +	if (err)
-> > +		dev_warn(&sdata->client->dev, "failed to perform mutual auto tune\n");
-> > +
-> > +	/* optional tuning */
-> > +	err = stmfts_write_and_wait(sdata, STMFTS_SS_CX_TUNING);
-> > +	if (err)
-> > +		dev_warn(&sdata->client->dev, "failed to perform self auto tune\n");
-> > +
-> > +	err = stmfts_write_and_wait(sdata, STMFTS_FULL_FORCE_CALIBRATION);
-> > +	if (err)
-> > +		return err;
+On Tuesday 17 January 2017 11:53 PM, Krzysztof Kozlowski wrote:
+> On Tue, Jan 17, 2017 at 08:34:03PM +0530, Pankaj Dubey wrote:
+>> From: Vivek Gautam <gautamvivek1987@gmail.com>
+>>
+>> Add USB 3.0 DRD controller device node, with its clock
+>> and phy information to enable the same on Exynos7.
+>>
+>> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>> Signed-off-by: Vivek Gautam <gautamvivek1987@gmail.com>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
 > 
-> Hmm, do you need to calibrate on boot, or maybe wait for the device to
-> be opened first?
-
-The datasheet says that I need to calibrate during boot. Anyway,
-the calibration requires some time (it can be up to a couple of
-seconds), therefore I wouldn't like to calibrate everytime
-someone opens the device.
-
-> > +static int stmfts_enable_key(struct stmfts_data *sdata)
-> > +{
-> > +	int err;
-> > +
-> > +	sdata->input_key = devm_input_allocate_device(&sdata->client->dev);
-> > +	if (!sdata->input_key)
-> > +		return -ENOMEM;
-> > +
-> > +	sdata->input_key->name = "stmfts_key";
-> > +	sdata->input_key->id.bustype = BUS_I2C;
-> > +	sdata->input_key->open = stmfts_input_key_open;
-> > +	sdata->input_key->close = stmfts_input_key_close;
+> Javier's Reviewed-by should be at the end.
 > 
-> If you want separate input device for keys I'd recommend setting ->phys
-> on them. Another option is to add keys to teh touchscreen device. Do you
-> expect different actors listening to these devices? Even with different
-> actors you can program event masks so that if process is not interested
-> in some events (like ABS_MT_* events) it is not woken up when dveice
-> generates them.
 
-Are you suggesting to drop one event interface?
+OK, will update.
 
-The reason why I chose to generate two interfaces is indeed
-because there might be be different processes completely
-unrelated to each other that will interact with the device (for
-example in Jaechul's driver that you just reviewed, touchscreen
-and touchkey are different devices).
-
-I chose it for coherency with the common userspace architecture.
-But of course, I can do as you recommend.
-
-I have one more question. This touchscreen has also a proximity
-functionality that works exactly as a proximity sensor and I
-planned to add it in the future. Would it make sense to use the
-iio framework (as it behaves as a proximity sensor) or use the
-current interface? For instance, I was going to use the iio.
-
-> > +	/* get the regulator for powering the leds on */
-> > +	sdata->ledvdd = devm_regulator_get(&sdata->client->dev, "ledvdd");
-> > +	if (IS_ERR(sdata->ledvdd))
-> > +		/* there is no LED connected to the touch key */
-> > +		sdata->ledvdd = NULL;
+>> ---
+>>  arch/arm64/boot/dts/exynos/exynos7.dtsi | 34 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> index 9080a11..a2d8d11 100644
+>> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+>> @@ -603,6 +603,40 @@
+>>  				#include "exynos7-trip-points.dtsi"
+>>  			};
+>>  		};
+>> +
+>> +		usbdrd_phy: phy@15500000 {
+>> +			compatible = "samsung,exynos7-usbdrd-phy";
+>> +			reg = <0x15500000 0x100>;
+>> +			clocks = <&clock_fsys0 ACLK_USBDRD300>,
+>> +			       <&clock_fsys0 OSCCLK_PHY_CLKOUT_USB30_PHY>,
+>> +			       <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER>,
+>> +			       <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PHYCLK_USER>,
+>> +			       <&clock_fsys0 SCLK_USBDRD300_REFCLK>;
+>> +			clock-names = "phy", "ref", "phy_pipe",
+>> +				"phy_utmi", "itp";
+>> +			samsung,pmu-syscon = <&pmu_system_controller>;
+>> +			#phy-cells = <1>;
+>> +		};
+>> +
+>> +		usbdrd3: usb@15400000 {
+>> +			compatible = "samsung,exynos7-dwusb3";
+>> +			clocks = <&clock_fsys0 ACLK_USBDRD300>,
+>> +			       <&clock_fsys0 SCLK_USBDRD300_SUSPENDCLK>,
+>> +			       <&clock_fsys0 ACLK_AXIUS_USBDRD30X_FSYS0X>;
+>> +			clock-names = "usbdrd30", "usbdrd30_susp_clk",
+>> +				"usbdrd30_axius_clk";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +
+>> +			dwc3 {
 > 
-> As I mentioned, is it truly regulator, or just a GPIO?
+> dtc should complain here - you need:
+> 	dwc3@15400000
 
-As I wrote in the previous mail, this is truly a regulator. If it
-was a gpio, I would still prefer to use the regulator_* functions
-as those would be managed by regulator-gpio and I don't need to
-change the driver for that.
+No, it didn't complain. Anyway, I will update as it's already taken care
+in other Exynos SoC DTSi files.
 
-Thanks a lot,
-Andi
+> In the same time I think the address node does not have to be put after
+> parent's usb.
+> 
+
+OK, will update.
+
+
+Thanks,
+Pankaj Dubey
+
+> Best regards,
+> Krzysztof
+> 
+>> +				compatible = "snps,dwc3";
+>> +				reg = <0x15400000 0x10000>;
+>> +				interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+>> +				phys = <&usbdrd_phy 0>, <&usbdrd_phy 1>;
+>> +				phy-names = "usb2-phy", "usb3-phy";
+>> +			};
+>> +		};
+>>  	};
+>>  };
+>>  
+>> -- 
+>> 2.7.4
+>>
+> 
+> 
+> 
