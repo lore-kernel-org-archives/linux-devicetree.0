@@ -1,181 +1,230 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v9 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 18 Jan 2017 19:42:37 +0100
-Message-ID: <20170118184237.tvhlsksdcw2ckwan@pengutronix.de>
-References: <1484666821-20551-1-git-send-email-cedric.madianga@gmail.com>
- <1484666821-20551-3-git-send-email-cedric.madianga@gmail.com>
- <20170117193752.e6hju25w74bb4i4z@pengutronix.de>
- <CAOAejn0ea2j_oUijOdHgiL3JU4TM0HZoL+-ggzjpPL2eA7tDCw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn0ea2j_oUijOdHgiL3JU4TM0HZoL+-ggzjpPL2eA7tDCw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] regulator: qcom-smd: Add PM8994 regulator support
+Date: Wed, 18 Jan 2017 02:46:37 -0800
+Message-ID: <20170118104637.3312-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeremy McNicoll <jeremymc@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Cedric,
+From: Rajendra Nayak <rnayak@codeaurora.org>
 
-On Wed, Jan 18, 2017 at 04:21:17PM +0100, M'boumba Cedric Madianga wrote:
-> >> +      * In standard mode, the maximum allowed SCL rise time is 1000 n=
-s.
-> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits is e=
-qual to
-> >> +      * 0x08 so period =3D 125 ns therefore the TRISE[5:0] bits must =
-be
-> >> +      * programmed with 09h.(1000 ns / 125 ns =3D 8 + 1)
-> >
-> >         * programmed with 0x9.
-> > (1000 ns / 125 ns =3D 8)
-> >
-> >> +      * So, for I2C standard mode TRISE =3D FREQ[5:0] + 1
-> >> +      *
-> >> +      * In fast mode, the maximum allowed SCL rise time is 300 ns.
-> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits is e=
-qual to
-> >> +      * 0x08 so period =3D 125 ns therefore the TRISE[5:0] bits must =
-be
-> >> +      * programmed with 03h.(300 ns / 125 ns =3D 2 + 1)
-> >
-> > as above s/03h/0x3/;
-> =
+This patch adds support for the PM8994 regulators found on msm8992,
+msm8994 and msm8996 platforms.
 
-> ok
-> =
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[bjorn: Add DT binding doc and vdd_lvs1_2 supply]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  |  56 +++++++++++
+ drivers/regulator/qcom_smd-regulator.c             | 102 +++++++++++++++++++++
+ 2 files changed, 158 insertions(+)
 
-> > s/.(/. (/;
-> ok
-> =
-
-> > s/+ 1//;
-> This formula is use to understand how we find the result 0x3
-> So, 0x3 =3D> 300 ns / 125ns =3D 2 + 1
-
-Yeah, I understood that, but writing 300 ns / 125ns =3D 2 + 1 is
-irritating at best.
-
-> >> +      * So, for I2C fast mode TRISE =3D FREQ[5:0] * 300 / 1000 + 1
-> >> +      */
-> >> +     if (i2c_dev->speed =3D=3D STM32F4_I2C_SPEED_STANDARD)
-> >> +             trise =3D freq + 1;
-> >> +     else
-> >> +             trise =3D freq * 300 / 1000 + 1;
-> >
-> > I'd use
-> >
-> >         * 3 / 10
-> >
-> > without downside and lesser chance to overflow.
-> =
-
-> There is no chance of overflow as the max freq value allowed is 46
-
-ok
-
-> >> +             /*
-> >> +              * In fast mode, we compute CCR with duty =3D 0 as with =
-low
-> >> +              * frequencies we are not able to reach 400 kHz.
-> >> +              * In that case:
-> >> +              * t_scl_high =3D CCR * I2C parent clk period
-> >> +              * t_scl_low =3D 2 * CCR * I2C parent clk period
-> >> +              * So, CCR =3D I2C parent rate / (400 kHz * 3)
-> >> +              *
-> >> +              * For example with parent rate =3D 6 MHz:
-> >> +              * CCR =3D 6000000 / (400000 * 3) =3D 5
-> >> +              * t_scl_high =3D 5 * (1 / 6000000) =3D 833 ns > 600 ns
-> >> +              * t_scl_low =3D 2 * 5 * (1 / 6000000) =3D 1667 ns > 130=
-0 ns
-> >> +              * t_scl_high + t_scl_low =3D 2500 ns so 400 kHz is reac=
-hed
-> >> +              */
-> >
-> > Huh, that's surprising. So you don't use DUTY any more. I found two
-> > hints in the manual that contradict here:
-> =
-
-> Yes with the above formula we could use duty =3D 0 by default
-> =
-
-> >
-> >         f_{PCLK1} must be at least 2 MHz to achieve Sm mode I2C frequen=
-cies
-> =
-
-> STM32F4_I2C_MIN_STANDARD_FREQ =3D 2
-> =
-
-> >         It must be at least 4 MHz to achieve Fm mode I2C frequencies.
-> =
-
-> STM32F4_I2C_MIN_FAST_FREQ =3D 6
-> =
-
-> > It must be a multiple of 10MHz to reach the 400 kHz maximum I2C Fm mode=
- clock.
-> =
-
-> If we use this rule only 3 values are allowed 10 Mhz, 20 Mhz, 30 Mhz and =
-40 Mhz.
-> It is very restrictive.
-> So I don't take it into account in order to have more frequencies even
-> if 400 Khz is not reached.
-> Indeed, in many cases we are very close to 400 Khz.
-> For example, the default I2C parent clock in my board is 45 Mhz
-> I reach 395 kHz in theory and 390 kHz by testing.
-> I am in Fast mode but not with the max freq but very close.
-
-fine
-
-> > and
-> >
-> >         [...]
-> >         If DUTY =3D 1: (to reach 400 kHz)
-> >
-> > Strange.
-> >
-> >> +             val =3D DIV_ROUND_UP(i2c_dev->parent_rate, 400000 * 3);
-> >
-> > the manual reads:
-> >
-> >         The minimum allowed value is 0x04, except in FAST DUTY mode
-> >         where the minimum allowed value is 0x01
-> >
-> > You don't check for that, right?
-> =
-
-> As the minimum freq value is 6 Mhz in fast mode the minimum CCR is 5
-> as described in the comment.
-> So I don't need to check that again as it is already done by checking
-> parent frequency.
-
-That would then go into a comment.
-
-> > CCR is 11 bits wide. A comment confirming that this cannot overflow
-> > would be nice.
-> =
-
-> Again there is no chance of overflow thanks to parent frequency check
-
-Right, this time I saw this myself, so I requested a comment stating
-this fact.
- =
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index 1f8d6f84b657..4e3dfb5b5f16 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -22,6 +22,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8841-regulators"
+ 		    "qcom,rpm-pm8916-regulators"
+ 		    "qcom,rpm-pm8941-regulators"
++		    "qcom,rpm-pm8994-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
+ 
+ - vdd_s1-supply:
+@@ -80,6 +81,56 @@ Regulator nodes are identified by their compatible:
+ - vdd_s10-supply:
+ - vdd_s11-supply:
+ - vdd_s12-supply:
++- vdd_l1-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l3_l11-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l5_l7-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_l5_l7-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l3_l11-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l14_l15-supply:
++- vdd_l14_l15-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l17_l29-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l20_l21-supply:
++- vdd_l20_l21-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l25-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l17_l29-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_lvs1_2-supply:
++	Usage: optional (pm8994 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply:
++- vdd_s6-supply:
++- vdd_s7-supply:
++- vdd_s8-supply:
++- vdd_s9-supply:
++- vdd_s10-supply:
++- vdd_s11-supply:
++- vdd_s12-supply:
+ - vdd_l1_l11-supply:
+ - vdd_l2_l3_l4_l27-supply:
+ - vdd_l5_l7-supply:
+@@ -113,6 +164,11 @@ pm8941:
+ 	l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
+ 	lvs3, 5vs1, 5vs2
+ 
++pm8994:
++	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
++	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
++	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
++
+ pma8084:
+ 	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index 8ed46a9a55c8..f35994a2a5be 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -305,6 +305,56 @@ static const struct regulator_desc pm8916_buck_hvo_smps = {
+ 	.ops = &rpm_smps_ldo_ops,
+ };
+ 
++static const struct regulator_desc pm8994_hfsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE( 375000,  0,  95, 12500),
++		REGULATOR_LINEAR_RANGE(1550000, 96, 158, 25000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 159,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_ftsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0, 199, 5000),
++		REGULATOR_LINEAR_RANGE(700000, 200, 349, 10000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 350,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_nldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(750000, 0, 63, 12500),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 64,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_pldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE( 750000,  0,  63, 12500),
++		REGULATOR_LINEAR_RANGE(1550000, 64, 126, 25000),
++		REGULATOR_LINEAR_RANGE(3100000, 127, 163, 50000),
++	},
++	.n_linear_ranges = 3,
++	.n_voltages = 164,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_switch = {
++	.ops = &rpm_switch_ops,
++};
++
++static const struct regulator_desc pm8994_lnldo = {
++	.fixed_uV = 1740000,
++	.n_voltages = 1,
++	.ops = &rpm_smps_ldo_ops_fixed,
++};
++
+ struct rpm_regulator_data {
+ 	const char *name;
+ 	u32 type;
+@@ -443,10 +493,62 @@ static const struct rpm_regulator_data rpm_pma8084_regulators[] = {
+ 	{}
+ };
+ 
++static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8994_ftsmps, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8994_ftsmps, "vdd_s2" },
++	{ "s3", QCOM_SMD_RPM_SMPA, 3, &pm8994_hfsmps, "vdd_s3" },
++	{ "s4", QCOM_SMD_RPM_SMPA, 4, &pm8994_hfsmps, "vdd_s4" },
++	{ "s5", QCOM_SMD_RPM_SMPA, 5, &pm8994_hfsmps, "vdd_s5" },
++	{ "s6", QCOM_SMD_RPM_SMPA, 6, &pm8994_ftsmps, "vdd_s6" },
++	{ "s7", QCOM_SMD_RPM_SMPA, 7, &pm8994_hfsmps, "vdd_s7" },
++	{ "s8", QCOM_SMD_RPM_SMPA, 8, &pm8994_ftsmps, "vdd_s8" },
++	{ "s9", QCOM_SMD_RPM_SMPA, 9, &pm8994_ftsmps, "vdd_s9" },
++	{ "s10", QCOM_SMD_RPM_SMPA, 10, &pm8994_ftsmps, "vdd_s10" },
++	{ "s11", QCOM_SMD_RPM_SMPA, 11, &pm8994_ftsmps, "vdd_s11" },
++	{ "s12", QCOM_SMD_RPM_SMPA, 12, &pm8994_ftsmps, "vdd_s12" },
++	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pm8994_nldo, "vdd_l1" },
++	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pm8994_nldo, "vdd_l3_l11" },
++	{ "l4", QCOM_SMD_RPM_LDOA, 4, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l5", QCOM_SMD_RPM_LDOA, 5, &pm8994_lnldo, "vdd_l5_l7" },
++	{ "l6", QCOM_SMD_RPM_LDOA, 6, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "l7", QCOM_SMD_RPM_LDOA, 7, &pm8994_lnldo, "vdd_l5_l7" },
++	{ "l8", QCOM_SMD_RPM_LDOA, 8, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l9", QCOM_SMD_RPM_LDOA, 9, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l11", QCOM_SMD_RPM_LDOA, 11, &pm8994_nldo, "vdd_l3_l11" },
++	{ "l12", QCOM_SMD_RPM_LDOA, 12, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "l13", QCOM_SMD_RPM_LDOA, 13, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l14", QCOM_SMD_RPM_LDOA, 14, &pm8994_pldo, "vdd_l14_l15" },
++	{ "l15", QCOM_SMD_RPM_LDOA, 15, &pm8994_pldo, "vdd_l14_l15" },
++	{ "l16", QCOM_SMD_RPM_LDOA, 16, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l17", QCOM_SMD_RPM_LDOA, 17, &pm8994_pldo, "vdd_l17_l29" },
++	{ "l18", QCOM_SMD_RPM_LDOA, 18, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l19", QCOM_SMD_RPM_LDOA, 19, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l20", QCOM_SMD_RPM_LDOA, 20, &pm8994_pldo, "vdd_l20_l21" },
++	{ "l21", QCOM_SMD_RPM_LDOA, 21, &pm8994_pldo, "vdd_l20_l21" },
++	{ "l22", QCOM_SMD_RPM_LDOA, 22, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l23", QCOM_SMD_RPM_LDOA, 23, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l24", QCOM_SMD_RPM_LDOA, 24, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l25", QCOM_SMD_RPM_LDOA, 25, &pm8994_pldo, "vdd_l25" },
++	{ "l26", QCOM_SMD_RPM_LDOA, 26, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l27", QCOM_SMD_RPM_LDOA, 27, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l28", QCOM_SMD_RPM_LDOA, 28, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l29", QCOM_SMD_RPM_LDOA, 29, &pm8994_pldo, "vdd_l17_l29" },
++	{ "l30", QCOM_SMD_RPM_LDOA, 30, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l31", QCOM_SMD_RPM_LDOA, 31, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l32", QCOM_SMD_RPM_LDOA, 32, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "lvs1", QCOM_SMD_RPM_VSA, 1, &pm8994_switch, "vdd_lvs1_2" },
++	{ "lvs2", QCOM_SMD_RPM_VSA, 2, &pm8994_switch, "vdd_lvs1_2" },
++
++	{}
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
+ 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
+ 	{ .compatible = "qcom,rpm-pm8941-regulators", .data = &rpm_pm8941_regulators },
++	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
+ 	{}
+ };
+-- 
+2.11.0
