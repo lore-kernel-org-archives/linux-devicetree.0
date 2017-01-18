@@ -1,131 +1,67 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH v3 06/13] ARM: davinci: da850: model the SATA refclk
-Date: Wed, 18 Jan 2017 11:26:41 -0600
-Message-ID: <ff4deee6-9700-fff3-be96-0ad2f008914b@lechnology.com>
-References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
- <1484745601-4769-7-git-send-email-bgolaszewski@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1484745601-4769-7-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Wed, 18 Jan 2017 12:25:01 -0500
+Message-ID: <20170118172502.13876-3-chris.brandt@renesas.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170118172502.13876-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/18/2017 07:19 AM, Bartosz Golaszewski wrote:
-> Register a dummy clock modelling the external SATA oscillator for
+In the case of a single clock source, you don't need names. However,
+if the controller has 2 clock sources, you need to name them correctly
+so the driver can find the 2nd one.
 
-modeling
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+---
+v2:
+* fix spelling and change wording
+* changed clock name from "carddetect" to "cd"
+---
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-> da850 (both DT and board file mode).
->
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/mach-davinci/da8xx-dt.c           |  8 ++++++++
->  arch/arm/mach-davinci/devices-da8xx.c      | 29 +++++++++++++++++++++++++++++
->  arch/arm/mach-davinci/include/mach/da8xx.h |  1 +
->  3 files changed, 38 insertions(+)
->
-> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-> index b83e5d1..0f981b5 100644
-> --- a/arch/arm/mach-davinci/da8xx-dt.c
-> +++ b/arch/arm/mach-davinci/da8xx-dt.c
-> @@ -50,6 +50,9 @@ static struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
->
->  static void __init da850_init_machine(void)
->  {
-> +        /* All existing boards use 100MHz SATA refclkpn */
-> +        static const unsigned long sata_refclkpn = 100 * 1000 * 1000;
-> +
->  	int ret;
->
->  	ret = da8xx_register_usb20_phy_clk(false);
-> @@ -61,6 +64,11 @@ static void __init da850_init_machine(void)
->  		pr_warn("%s: registering USB 1.1 PHY clock failed: %d",
->  			__func__, ret);
->
-> +        ret = da850_register_sata_refclk(sata_refclkpn);
-> +        if (ret)
-> +		pr_warn("%s: registering SATA REFCLK failed: %d",
-> +			__func__, ret);
-> +
->  	of_platform_default_populate(NULL, da850_auxdata_lookup, NULL);
->  	davinci_pm_init();
->  }
-> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> index c2457b3..cfceb32 100644
-> --- a/arch/arm/mach-davinci/devices-da8xx.c
-> +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> @@ -24,6 +24,7 @@
->  #include <mach/common.h>
->  #include <mach/time.h>
->  #include <mach/da8xx.h>
-> +#include <mach/clock.h>
->  #include "cpuidle.h"
->  #include "sram.h"
->
-> @@ -1023,6 +1024,28 @@ int __init da8xx_register_spi_bus(int instance, unsigned num_chipselect)
->  }
->
->  #ifdef CONFIG_ARCH_DAVINCI_DA850
-> +static struct clk sata_refclk = {
-> +	.name		= "sata_refclk",
-> +	.set_rate	= davinci_simple_set_rate,
-> +};
-> +
-> +static struct clk_lookup sata_refclk_lookup =
-> +		CLK("ahci_da850", "refclk", &sata_refclk);
-> +
-> +int __init da850_register_sata_refclk(int rate)
-> +{
-> +	int ret;
-> +
-> +	sata_refclk.rate = rate;
-> +	ret = clk_register(&sata_refclk);
-> +	if (ret)
-> +		return ret;
-> +
-> +	clkdev_add(&sata_refclk_lookup);
-> +
-> +	return 0;
-> +}
-> +
->  static struct resource da850_sata_resources[] = {
->  	{
->  		.start	= DA850_SATA_BASE,
-> @@ -1055,9 +1078,15 @@ static struct platform_device da850_sata_device = {
->
->  int __init da850_register_sata(unsigned long refclkpn)
->  {
-> +	int ret;
-> +
->  	/* please see comment in drivers/ata/ahci_da850.c */
->  	BUG_ON(refclkpn != 100 * 1000 * 1000);
+diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+index a1650ed..90370cd 100644
+--- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+@@ -25,8 +25,29 @@ Required properties:
+ 		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
+ 		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
+ 
++- clocks: Most controllers only have 1 clock source per channel. However, some
++	  have a second clock dedicated to card detection. If 2 clocks are
++	  specified, you must name them as "core" and "cd". If the controller
++	  only has 1 clock, naming is not required.
++
+ Optional properties:
+ - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+ - pinctrl-names: should be "default", "state_uhs"
+ - pinctrl-0: should contain default/high speed pin ctrl
+ - pinctrl-1: should contain uhs mode pin ctrl
++
++Example showing 2 clocks:
++	sdhi0: sd@e804e000 {
++		compatible = "renesas,sdhi-r7s72100";
++		reg = <0xe804e000 0x100>;
++		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH
++			      GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
++
++		clocks = <&mstp12_clks R7S72100_CLK_SDHI00>,
++			 <&mstp12_clks R7S72100_CLK_SDHI01>;
++		clock-names = "core", "cd";
++		cap-sd-highspeed;
++		cap-sdio-irq;
++		status = "disabled";
++	};
+-- 
+2.10.1
 
-This BUG_ON() should be removed since the sata driver can now handle 
-other clock frequencies.
 
->
-> +	ret = da850_register_sata_refclk(refclkpn);
-> +	if (ret)
-> +		return ret;
-> +
->  	return platform_device_register(&da850_sata_device);
->  }
->  #endif
-> diff --git a/arch/arm/mach-davinci/include/mach/da8xx.h b/arch/arm/mach-davinci/include/mach/da8xx.h
-> index 85ff218..7e46422 100644
-> --- a/arch/arm/mach-davinci/include/mach/da8xx.h
-> +++ b/arch/arm/mach-davinci/include/mach/da8xx.h
-> @@ -95,6 +95,7 @@ int da8xx_register_usb11(struct da8xx_ohci_root_hub *pdata);
->  int da8xx_register_usb_refclkin(int rate);
->  int da8xx_register_usb20_phy_clk(bool use_usb_refclkin);
->  int da8xx_register_usb11_phy_clk(bool use_usb_refclkin);
-> +int da850_register_sata_refclk(int rate);
->  int da8xx_register_emac(void);
->  int da8xx_register_uio_pruss(void);
->  int da8xx_register_lcdc(struct da8xx_lcdc_platform_data *pdata);
->
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
