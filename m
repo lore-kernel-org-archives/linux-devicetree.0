@@ -1,61 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] fbdev: ssd1307fb: Remove reset-active-low from
- the DT binding document
-Date: Wed, 18 Jan 2017 16:28:04 -0600
-Message-ID: <20170118222804.ifqkkffot5n55gsk@rob-hp-laptop>
-References: <cover.1484303628.git.jsarha@ti.com>
- <b68e1b9b735543b9e1511cfeb8e5d9ceec6c7666.1484303628.git.jsarha@ti.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 2/3] Documentation: devicetree: amlogic: Add R-Box Pro
+Date: Wed, 18 Jan 2017 23:38:48 +0100
+Message-ID: <9439ba55-c56c-71bf-00a5-870e2f4dd07b@suse.de>
+References: <20170117030611.23827-2-afaerber@suse.de>
+ <20170117225459.4438-1-afaerber@suse.de>
+ <20170117225459.4438-2-afaerber@suse.de>
+ <819ac0c0-92b7-bac7-dcfc-a56c34a6bf62@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <b68e1b9b735543b9e1511cfeb8e5d9ceec6c7666.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <819ac0c0-92b7-bac7-dcfc-a56c34a6bf62@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 12:35:46PM +0200, Jyri Sarha wrote:
-> Remove reset-active-low from the devicetree binding document. The actual
-> implementation has never been there in the driver code and there is no
-> reason to add it because the gpiod API supports gpio flags, including
-> GPIO_ACTIVE_LOW, directly trough its own devicetree binding.
-> 
-> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/display/ssd1307fb.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-> index eb31ed4..4aee67f 100644
-> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
-> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
-> @@ -8,14 +8,14 @@ Required properties:
->           0x3c or 0x3d
->    - pwm: Should contain the pwm to use according to the OF device tree PWM
->           specification [0]. Only required for the ssd1307.
-> -  - reset-gpios: Should contain the GPIO used to reset the OLED display
-> +  - reset-gpios: Should contain the GPIO used to reset the OLED display. See
-> +                 Documentation/devicetree/bindings/gpio/gpio.txt for details.
-
-You need to define the active state. Does the active state actually 
-vary? Sounds like the compatible is not specific enough unless some 
-boards have an inverter.
-
->    - solomon,height: Height in pixel of the screen driven by the controller
->    - solomon,width: Width in pixel of the screen driven by the controller
->    - solomon,page-offset: Offset of pages (band of 8 pixels) that the screen is
->      mapped to.
->  
->  Optional properties:
-> -  - reset-active-low: Is the reset gpio is active on physical low?
->    - solomon,segment-no-remap: Display needs normal (non-inverted) data column
->                                to segment mapping
->    - solomon,com-seq: Display uses sequential COM pin configuration
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW0gMTguMDEuMjAxNyB1bSAxMDozNSBzY2hyaWViIE5laWwgQXJtc3Ryb25nOgo+IE9uIDAxLzE3
+LzIwMTcgMTE6NTQgUE0sIEFuZHJlYXMgRsOkcmJlciB3cm90ZToKPj4gQ2M6IGFkYUBraW5nbm92
+YWwuY29tCj4+IFNpZ25lZC1vZmYtYnk6IEFuZHJlYXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5k
+ZT4KPj4gLS0tCj4+ICBPcmlnaW5hbGx5IEkgdGhvdWdodCB3ZSB3b3VsZCBncm91cCBieSBTb0Mg
+KDYsIDgsIDhiLCBneGJiLCBneGwsIGdteCwgZXRjLikKPj4gIGJ1dCB0aGlzIGdvdCBvdXQgb2Yg
+b3JkZXIgd2l0aCBuZXhib3gsYTk1eCAtIHNvIGluc2VydGluZyBraW5nbm92ZWwgYmV0d2Vlbgo+
+PiAgYW1sb2dpYyBhbmQgbmV4Ym94IGhlcmUuIElmIHRoYXQncyB3aGF0IHdlIHdhbnQgZ29pbmcg
+Zm9yd2FyZCwgd2Ugc2hvdWxkIG1vdmUKPj4gIHRoZSBvbGQgZW50cmllcyB0byBtYWtlIHRoZSBz
+Y2hlbWUgY2xlYXJlci4gVGhlIGFsdGVybmF0aXZlIHdvdWxkIGJlIHRvCj4+ICByZW9yZGVyIGFs
+cGhhYmV0aWNhbGx5IHdpdGhpbiBlYWNoIFNvQyBncm91cCwgYnV0IG5leGJveCxhOTV4IHdpdGgg
+dHdvIFNvQ3MKPj4gIG1ha2VzIGl0IGRpZmZpY3VsdCB0byBjYXRlZ29yaXplLCB3ZSBjb3VsZCBj
+aG9vc2UgZ3hiYiBhcyB0aGUgZWFybGllciBvbmUuCj4gCj4gQW5kcmVhcywKPiAKPiBGZWVsIGZy
+ZWUgdG8gcHJvdmlkZSBhIGZpeHVwLgoKU3VyZSwgdGhlIHF1ZXN0aW9uIGlzIHdoaWNoIHdheS4g
+OykgS2V2aW4/IENhcmxvPwoKQ2hlZXJzLApBbmRyZWFzCgotLSAKU1VTRSBMaW51eCBHbWJILCBN
+YXhmZWxkc3RyLiA1LCA5MDQwOSBOw7xybmJlcmcsIEdlcm1hbnkKR0Y6IEZlbGl4IEltZW5kw7Zy
+ZmZlciwgSmFuZSBTbWl0aGFyZCwgR3JhaGFtIE5vcnRvbgpIUkIgMjEyODQgKEFHIE7DvHJuYmVy
+ZykKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4
+LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFy
+bS1rZXJuZWwK
