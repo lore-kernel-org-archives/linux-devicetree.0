@@ -1,16 +1,17 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 30/37] dt-bindings: PCI: dra7xx: Add dt bindings to
- enable legacy mode
-Date: Wed, 18 Jan 2017 15:46:03 -0600
-Message-ID: <20170118214603.qnewy3sm6sgw7lbg@rob-hp-laptop>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-31-git-send-email-kishon@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/4] ARM64: dts: meson-gx: add the serial CTS and RTS pin
+ groups
+Date: Wed, 18 Jan 2017 13:52:26 -0800
+Message-ID: <m2k29syr1h.fsf@baylibre.com>
+References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
+ <20170115223255.10350-3-martin.blumenstingl@googlemail.com>
+ <b74ed3d7-ea69-5a5b-a313-baab3a9e2396@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1484216786-17292-31-git-send-email-kishon@ti.com>
+In-Reply-To: <b74ed3d7-ea69-5a5b-a313-baab3a9e2396@suse.de> ("Andreas
+ =?utf-8?Q?F=C3=A4rber=22's?= message of "Sun, 15 Jan 2017 23:50:17 +0100")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,41 +21,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, gregkh@linuxfoundation.org, will.deacon@arm.com, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 03:56:19PM +0530, Kishon Vijay Abraham I wrote:
-> Update device tree binding documentation of TI's dra7xx PCI
-> controller to include property for enabling legacy mode.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/pci/ti-pci.txt |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> index 62f5f59..ed85e8e 100644
-> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -39,6 +39,10 @@ DEVICE MODE
->   - interrupts : one interrupt entries must be specified for main interrupt.
->   - num-ib-windows : number of inbound address translation windows
->   - num-ob-windows : number of outbound address translation windows
-> + - syscon-legacy-mode: phandle to the syscon dt node. The 1st argument should
-> +		       contain the register offset within syscon and the 2nd
-> +		       argument should contain the bit field for setting the
-> +		       legacy mode
-
-What's legacy mode?
-
->  
->  Optional Property:
->   - gpios : Should be added if a gpio line is required to drive PERST# line
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPiB3cml0ZXM6Cgo+IEFtIDE1LjAxLjIw
+MTcgdW0gMjM6MzIgc2NocmllYiBNYXJ0aW4gQmx1bWVuc3RpbmdsOgo+PiBUaGlzIGFkZHMgcGlu
+Y3RybCBncm91cCBub2RlcyBmb3IgdGhlIENUUyBhbmQgUlRTIHBpbnMgb2YgZWFjaCBzZXJpYWwK
+Pj4gY29udHJvbGxlci4gVGhpcyBtYWtlcyBpdCBwb3NzaWJsZSB0byBlbmFibGUgdGhlIENUUyBh
+bmQgUlRTIHBpbnMgd2hpY2gKPj4gYXJlIGNvbnRyb2xsZWQgYnkgdGhlIHNlcmlhbCBjb250cm9s
+bGVyIGhhcmR3YXJlICh0aHJvdWdoIHRoZSBtZXNvbl91YXJ0Cj4+IGRyaXZlcikuCj4+IAo+PiBT
+aWduZWQtb2ZmLWJ5OiBNYXJ0aW4gQmx1bWVuc3RpbmdsIDxtYXJ0aW4uYmx1bWVuc3RpbmdsQGdv
+b2dsZW1haWwuY29tPgo+Cj4gVGVzdGVkLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1
+c2UuZGU+CgpBcHBsaWVkIHRvIHY0LjExL2R0NjQgd2l0aCBBbmRyZWFzJyBhY2suCgpLZXZpbgoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
