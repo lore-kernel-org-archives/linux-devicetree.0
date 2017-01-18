@@ -1,344 +1,560 @@
-From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-Subject: [PATCH] arm64: dts: hisilicon: add dtsi file for Hisilicon Hi3660 SOC
-Date: Wed, 18 Jan 2017 18:04:35 +0800
-Message-ID: <20170118100435.43318-1-hw.wangxiaoyin@hisilicon.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 4/8] PWM: add PWM driver for STM32 plaftorm
+Date: Wed, 18 Jan 2017 11:08:17 +0100
+Message-ID: <20170118100817.GF18989@ulmo.ba.sec>
+References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
+ <1483608344-9012-5-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: hw.wangxiaoyin@hisilicon.com, chenya99@hisilicon.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kbCYTQG2MZjuOjyn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483608344-9012-5-git-send-email-benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds pinctrl dtsi file
 
-Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
----
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |   3 +-
- .../arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi | 292 +++++++++++++++++++++
- 2 files changed, 293 insertions(+), 2 deletions(-)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
+--kbCYTQG2MZjuOjyn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-index 9a1d36aa84ce..de21ebfa4bd8 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -8,8 +8,7 @@
- /dts-v1/;
- 
- #include "hi3660.dtsi"
--/*#include "hi3660-ion.dtsi"*/
--/*#include "hikey960-pinctrl.dtsi"*/
-+#include "hikey960-pinctrl.dtsi"
- 
- / {
- 	model = "HiKey960";
-diff --git a/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-new file mode 100644
-index 000000000000..98a0b78289b6
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-@@ -0,0 +1,292 @@
-+/*
-+ * pinctrl dts fils for Hislicon HiKey960 development board
-+ *
-+ */
-+
-+#include <dt-bindings/pinctrl/hisi.h>
-+
-+/ {
-+	soc {
-+		/* [IOMG_000, IOMG_123] */
-+		range: gpio-range {
-+			#pinctrl-single,gpio-range-cells = <3>;
-+		};
-+		pmx0: pinmux@e896c000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xe896c000 0x0 0x1f0>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <
-+				&range 0 7 0
-+				&range 8 116 0>;
-+
-+			isp0_pmx_func: isp0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x058 MUX_M1 /* ISP_CLK0 */
-+					0x064 MUX_M1 /* ISP_SCL0 */
-+					0x068 MUX_M1 /* ISP_SDA0 */
-+				>;
-+			};
-+
-+			isp1_pmx_func: isp1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x05c MUX_M1 /* ISP_CLK1 */
-+					0x06c MUX_M1 /* ISP_SCL1 */
-+					0x070 MUX_M1 /* ISP_SDA1 */
-+				>;
-+			};
-+
-+			i2c3_pmx_func: i2c3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x02c MUX_M1 /* I2C3_SCL */
-+					0x030 MUX_M1 /* I2C3_SDA */
-+				>;
-+			};
-+
-+			i2c4_pmx_func: i2c4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x090 MUX_M1 /* I2C4_SCL */
-+					0x094 MUX_M1 /* I2C4_SDA */
-+				>;
-+			};
-+
-+			pcie_perstn_pmx_func: pcie_perstn_pmx_func {
-+				pinctrl-single,pins = <
-+					0x15c MUX_M1 /* PCIE_PERST_N */
-+				>;
-+			};
-+
-+			usbhub5734_pmx_func: usbhub5734_pmx_func {
-+				pinctrl-single,pins = <
-+					0x11c MUX_M0 /* GPIO_073 */
-+					0x120 MUX_M0 /* GPIO_074 */
-+				>;
-+			};
-+
-+			spi1_pmx_func: spi1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x034 MUX_M1 /* SPI1_CLK */
-+					0x038 MUX_M1 /* SPI1_DI */
-+					0x03c MUX_M1 /* SPI1_DO */
-+					0x040 MUX_M1 /* SPI1_CS_N */
-+				>;
-+			};
-+
-+			uart0_pmx_func: uart0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0cc MUX_M2 /* UART0_RXD */
-+					0x0d0 MUX_M2 /* UART0_TXD */
-+					0x0d4 MUX_M2 /* UART0_RXD_M */
-+					0x0d8 MUX_M2 /* UART0_TXD_M */
-+				>;
-+			};
-+
-+			uart1_pmx_func: uart1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0b0 MUX_M2 /* UART1_CTS_N */
-+					0x0b4 MUX_M2 /* UART1_RTS_N */
-+					0x0a8 MUX_M2 /* UART1_RXD */
-+					0x0ac MUX_M2 /* UART1_TXD */
-+				>;
-+			};
-+
-+			uart2_pmx_func: uart2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0bc MUX_M2 /* UART2_CTS_N */
-+					0x0c0 MUX_M2 /* UART2_RTS_N */
-+					0x0c8 MUX_M2 /* UART2_RXD */
-+					0x0c4 MUX_M2 /* UART2_TXD */
-+				>;
-+			};
-+
-+			uart3_pmx_func: uart3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0dc MUX_M1 /* UART3_CTS_N */
-+					0x0e0 MUX_M1 /* UART3_RTS_N */
-+					0x0e4 MUX_M1 /* UART3_RXD */
-+					0x0e8 MUX_M1 /* UART3_TXD */
-+				>;
-+			};
-+
-+			uart4_pmx_func: uart4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0ec MUX_M1 /* UART4_CTS_N */
-+					0x0f0 MUX_M1 /* UART4_RTS_N */
-+					0x0f4 MUX_M1 /* UART4_RXD */
-+					0x0f8 MUX_M1 /* UART4_TXD */
-+				>;
-+			};
-+
-+			uart5_pmx_func: uart5_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0c4 MUX_M3 /* UART5_CTS_N */
-+					0x0c8 MUX_M3 /* UART5_RTS_N */
-+					0x0bc MUX_M3 /* UART5_RXD */
-+					0x0c0 MUX_M3 /* UART5_TXD */
-+				>;
-+			};
-+
-+			uart6_pmx_func: uart6_pmx_func {
-+				pinctrl-single,pins = <
-+					0x0cc MUX_M1 /* UART6_CTS_N */
-+					0x0d0 MUX_M1 /* UART6_RTS_N */
-+					0x0d4 MUX_M1 /* UART6_RXD */
-+					0x0d8 MUX_M1 /* UART6_TXD */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_MMC0_000, IOMG_MMC0_005] */
-+		pmx1: pinmux@ff37e000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff37e000 0x0 0x18>;
-+			#gpio-range-cells = <0x3>;
-+			#pinctrl-cells = <1>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 6 0>;
-+
-+			sdcard_pmx_func: sdcard_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SD_CLK */
-+					0x004 MUX_M1 /* SD_CMD */
-+					0x008 MUX_M1 /* SD_DATA0 */
-+					0x00c MUX_M1 /* SD_DATA1 */
-+					0x010 MUX_M1 /* SD_DATA2 */
-+					0x014 MUX_M1 /* SD_DATA3 */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_FIX_000, IOMG_FIX_011] */
-+		pmx2: pinmux@ff3b6000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff3b6000 0x0 0x30>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 12 0>;
-+
-+			spi3_pmx_func: spi3_pmx_func {
-+				pinctrl-single,pins = <
-+					0x008 MUX_M1 /* SPI3_CLK */
-+					0x00c MUX_M1 /* SPI3_DI */
-+					0x010 MUX_M1 /* SPI3_DO */
-+					0x014 MUX_M1 /* SPI3_CS0_N */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_MMC1_000, IOMG_MMC1_005] */
-+		pmx3: pinmux@ff3fd000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xff3fd000 0x0 0x18>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 6 0>;
-+
-+			sdio_pmx_func: sdio_pmx_func {
-+				pinctrl-single,pins = <
-+					0x000 MUX_M1 /* SDIO_CLK */
-+					0x004 MUX_M1 /* SDIO_CMD */
-+					0x008 MUX_M1 /* SDIO_DATA0 */
-+					0x00c MUX_M1 /* SDIO_DATA1 */
-+					0x010 MUX_M1 /* SDIO_DATA2 */
-+					0x014 MUX_M1 /* SDIO_DATA3 */
-+				>;
-+			};
-+		};
-+
-+		/* [IOMG_AO_000, IOMG_AO_041] */
-+		pmx4: pinmux@fff11000 {
-+			compatible = "pinctrl-single";
-+			reg = <0x0 0xfff11000 0x0 0xa8>;
-+			#pinctrl-cells = <1>;
-+			#gpio-range-cells = <0x3>;
-+			pinctrl-single,register-width = <0x20>;
-+			pinctrl-single,function-mask = <0x7>;
-+			/* pin base in node, nr pins & gpio function */
-+			pinctrl-single,gpio-range = <&range 0 42 0>;
-+
-+			i2s2_pmx_func: i2s2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x044 MUX_M1 /* I2S2_DI */
-+					0x048 MUX_M1 /* I2S2_DO */
-+					0x04c MUX_M1 /* I2S2_XCLK */
-+					0x050 MUX_M1 /* I2S2_XFS */
-+				>;
-+			};
-+
-+			slimbus_pmx_func: slimbus_pmx_func {
-+				pinctrl-single,pins = <
-+					0x02c MUX_M1 /* SLIMBUS_CLK */
-+					0x030 MUX_M1 /* SLIMBUS_DATA */
-+				>;
-+			};
-+
-+			i2c0_pmx_func: i2c0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x014 MUX_M1 /* I2C0_SCL */
-+					0x018 MUX_M1 /* I2C0_SDA */
-+				>;
-+			};
-+
-+			i2c1_pmx_func: i2c1_pmx_func {
-+				pinctrl-single,pins = <
-+					0x01c MUX_M1 /* I2C1_SCL */
-+					0x020 MUX_M1 /* I2C1_SDA */
-+				>;
-+			};
-+
-+			i2c2_pmx_func: i2c2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x024 MUX_M1 /* I2C2_SCL */
-+					0x028 MUX_M1 /* I2C2_SDA */
-+				>;
-+			};
-+
-+			i2c7_pmx_func: i2c7_pmx_func {
-+				pinctrl-single,pins = <
-+					0x024 MUX_M3 /* I2C7_SCL */
-+					0x028 MUX_M3 /* I2C7_SDA */
-+				>;
-+			};
-+
-+			spi2_pmx_func: spi2_pmx_func {
-+				pinctrl-single,pins = <
-+					0x08c MUX_M1 /* SPI2_CLK */
-+					0x090 MUX_M1 /* SPI2_DI */
-+					0x094 MUX_M1 /* SPI2_DO */
-+					0x098 MUX_M1 /* SPI2_CS0_N */
-+				>;
-+			};
-+
-+			spi4_pmx_func: spi4_pmx_func {
-+				pinctrl-single,pins = <
-+					0x08c MUX_M4 /* SPI4_CLK */
-+					0x090 MUX_M4 /* SPI4_DI */
-+					0x094 MUX_M4 /* SPI4_DO */
-+					0x098 MUX_M4 /* SPI4_CS0_N */
-+				>;
-+			};
-+
-+			i2s0_pmx_func: i2s0_pmx_func {
-+				pinctrl-single,pins = <
-+					0x034 MUX_M1 /* I2S0_DI */
-+					0x038 MUX_M1 /* I2S0_DO */
-+					0x03c MUX_M1 /* I2S0_XCLK */
-+					0x040 MUX_M1 /* I2S0_XFS */
-+				>;
-+			};
-+		};
-+	};
-+};
--- 
-2.11.0-rc2
+On Thu, Jan 05, 2017 at 10:25:40AM +0100, Benjamin Gaignard wrote:
+> This driver adds support for PWM driver on STM32 platform.
+> The SoC have multiple instances of the hardware IP and each
+> of them could have small differences: number of channels,
+> complementary output, auto reload register size...
+>=20
+> version 6:
+> - change st,breakinput parameter to make it usuable for stm32f7 too.
+>=20
+> version 4:
+> - detect at probe time hardware capabilities
+> - fix comments done on v2 and v3
+> - use PWM atomic ops
+>=20
+> version 2:
+> - only keep one comptatible
+> - use DT parameters to discover hardware block configuration
+>=20
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/pwm/Kconfig     |   9 +
+>  drivers/pwm/Makefile    |   1 +
+>  drivers/pwm/pwm-stm32.c | 434 ++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 444 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-stm32.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index f92dd41..88035c0 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -397,6 +397,15 @@ config PWM_STI
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-sti.
+> =20
+> +config PWM_STM32
+> +	tristate "STMicroelectronics STM32 PWM"
+> +	depends on (ARCH_STM32 && OF && MFD_STM32_TIMERS) || COMPILE_TEST
+> +	help
+> +	  Generic PWM framework driver for STM32 SoCs.
+> +
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-stm32.
+> +
+>  config PWM_STMPE
+>  	bool "STMPE expander PWM export"
+>  	depends on MFD_STMPE
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index a48bdb5..346a83b 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -38,6 +38,7 @@ obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+>  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
+>  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
+>  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
+> +obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
+>  obj-$(CONFIG_PWM_STMPE)		+=3D pwm-stmpe.o
+>  obj-$(CONFIG_PWM_SUN4I)		+=3D pwm-sun4i.o
+>  obj-$(CONFIG_PWM_TEGRA)		+=3D pwm-tegra.o
+> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+> new file mode 100644
+> index 0000000..fcf0a78
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-stm32.c
+> @@ -0,0 +1,434 @@
+> +/*
+> + * Copyright (C) STMicroelectronics 2016
+> + *
+> + * Author: Gerald Baeza <gerald.baeza-qxv4g6HH51o@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL), version 2
+> + *
+> + * Inspired by timer-stm32.c from Maxime Coquelin
+> + *             pwm-atmel.c from Bo Shen
+> + */
+> +
+> +#include <linux/mfd/stm32-timers.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/of.h>
+
+Can you please sort these alphabetically?
+
+> +
+> +#define CCMR_CHANNEL_SHIFT 8
+> +#define CCMR_CHANNEL_MASK  0xFF
+> +#define MAX_BREAKINPUT 2
+
+Okay, this answers my question regarding the st,breakinput property. I
+still think it'd be good to have this in the binding documentation just
+to avoid having to look at implementation to find out.
+
+> +
+> +struct stm32_pwm {
+> +	struct pwm_chip chip;
+> +	struct device *dev;
+> +	struct clk *clk;
+> +	struct regmap *regmap;
+> +	unsigned int caps;
+
+This seems completely unused?
+
+> +	unsigned int npwm;
+
+It's somewhat redundant to have this here, since the same information is
+already contained in struct pwm_chip.npwm.
+
+Since you use this primarily for detection, how about you make the
+stm32_pwm_detect_channels() function return the value and store it in a
+local variable in ->probe()? That might be useful also because you
+need to check the return value of regmap_update_bits() which technically
+could fail.
+
+> +	u32 max_arr;
+> +	bool have_complementary_output;
+> +};
+> +
+> +struct stm32_breakinput {
+> +	u32 index;
+> +	u32 level;
+> +	u32 filter;
+> +};
+> +
+> +static inline struct stm32_pwm *to_stm32_pwm_dev(struct pwm_chip *chip)
+> +{
+> +	return container_of(chip, struct stm32_pwm, chip);
+> +}
+> +
+> +static u32 active_channels(struct stm32_pwm *dev)
+> +{
+> +	u32 ccer;
+> +
+> +	regmap_read(dev->regmap, TIM_CCER, &ccer);
+> +
+> +	return ccer & TIM_CCER_CCXE;
+> +}
+
+This looks like something that you could track in software, but this is
+probably fine, too. Again, technically regmap_read() could fail, so you
+might want to consider adding some code to handle it. In practice it
+probably won't, so maybe you don't.
+
+> +
+> +static int write_ccrx(struct stm32_pwm *dev, struct pwm_device *pwm,
+> +		      u32 value)
+> +{
+> +	switch (pwm->hwpwm) {
+> +	case 0:
+> +		return regmap_write(dev->regmap, TIM_CCR1, value);
+> +	case 1:
+> +		return regmap_write(dev->regmap, TIM_CCR2, value);
+> +	case 2:
+> +		return regmap_write(dev->regmap, TIM_CCR3, value);
+> +	case 3:
+> +		return regmap_write(dev->regmap, TIM_CCR4, value);
+> +	}
+> +	return -EINVAL;
+> +}
+> +
+> +static int stm32_pwm_config(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> +			    int duty_ns, int period_ns)
+> +{
+> +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
+> +	unsigned long long prd, div, dty;
+> +	unsigned int prescaler =3D 0;
+> +	u32 ccmr, mask, shift;
+> +
+> +	/* Period and prescaler values depends on clock rate */
+> +	div =3D (unsigned long long)clk_get_rate(priv->clk) * period_ns;
+> +
+> +	do_div(div, NSEC_PER_SEC);
+> +	prd =3D div;
+> +
+> +	while (div > priv->max_arr) {
+> +		prescaler++;
+> +		div =3D prd;
+> +		do_div(div, (prescaler + 1));
+
+Nit: there's no need for the parentheses here.
+
+> +	}
+> +
+> +	prd =3D div;
+> +
+> +	if (prescaler > MAX_TIM_PSC) {
+> +		dev_err(chip->dev, "prescaler exceeds the maximum value\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * All channels share the same prescaler and counter so when two
+> +	 * channels are active at the same we can't change them
+
+Nit: "at the same time"?
+
+> +	 */
+> +	if (active_channels(priv) & ~(1 << pwm->hwpwm * 4)) {
+> +		u32 psc, arr;
+> +
+> +		regmap_read(priv->regmap, TIM_PSC, &psc);
+> +		regmap_read(priv->regmap, TIM_ARR, &arr);
+> +
+> +		if ((psc !=3D prescaler) || (arr !=3D prd - 1))
+> +			return -EBUSY;
+> +	}
+> +
+> +	regmap_write(priv->regmap, TIM_PSC, prescaler);
+> +	regmap_write(priv->regmap, TIM_ARR, prd - 1);
+> +	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_ARPE, TIM_CR1_ARPE);
+> +
+> +	/* Calculate the duty cycles */
+> +	dty =3D prd * duty_ns;
+> +	do_div(dty, period_ns);
+> +
+> +	write_ccrx(priv, pwm, dty);
+> +
+> +	/* Configure output mode */
+> +	shift =3D (pwm->hwpwm & 0x1) * CCMR_CHANNEL_SHIFT;
+> +	ccmr =3D (TIM_CCMR_PE | TIM_CCMR_M1) << shift;
+> +	mask =3D CCMR_CHANNEL_MASK << shift;
+> +
+> +	if (pwm->hwpwm < 2)
+> +		regmap_update_bits(priv->regmap, TIM_CCMR1, mask, ccmr);
+> +	else
+> +		regmap_update_bits(priv->regmap, TIM_CCMR2, mask, ccmr);
+> +
+> +	regmap_update_bits(priv->regmap, TIM_BDTR,
+> +			   TIM_BDTR_MOE | TIM_BDTR_AOE,
+> +			   TIM_BDTR_MOE | TIM_BDTR_AOE);
+> +
+> +	return 0;
+> +}
+> +
+> +static int stm32_pwm_set_polarity(struct pwm_chip *chip, struct pwm_devi=
+ce *pwm,
+> +				  enum pwm_polarity polarity)
+> +{
+> +	u32 mask;
+> +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
+> +
+> +	mask =3D TIM_CCER_CC1P << (pwm->hwpwm * 4);
+> +	if (priv->have_complementary_output)
+> +		mask |=3D TIM_CCER_CC1NP << (pwm->hwpwm * 4);
+> +
+> +	regmap_update_bits(priv->regmap, TIM_CCER, mask,
+> +			   polarity =3D=3D PWM_POLARITY_NORMAL ? 0 : mask);
+> +
+> +	return 0;
+> +}
+> +
+> +static int stm32_pwm_enable(struct pwm_chip *chip, struct pwm_device *pw=
+m)
+> +{
+> +	u32 mask;
+> +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
+> +
+> +	clk_enable(priv->clk);
+
+This can fail, so its return value should be checked. Also, I don't see
+a clk_prepare() anywhere. Is that something that maybe the MFD driver
+should be doing? It currently isn't.
+
+> +
+> +	/* Enable channel */
+> +	mask =3D TIM_CCER_CC1E << (pwm->hwpwm * 4);
+> +	if (priv->have_complementary_output)
+> +		mask |=3D TIM_CCER_CC1NE << (pwm->hwpwm * 4);
+> +
+> +	regmap_update_bits(priv->regmap, TIM_CCER, mask, mask);
+> +
+> +	/* Make sure that registers are updated */
+> +	regmap_update_bits(priv->regmap, TIM_EGR, TIM_EGR_UG, TIM_EGR_UG);
+> +
+> +	/* Enable controller */
+> +	regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, TIM_CR1_CEN);
+> +
+> +	return 0;
+> +}
+> +
+> +static void stm32_pwm_disable(struct pwm_chip *chip, struct pwm_device *=
+pwm)
+> +{
+> +	u32 mask;
+> +	struct stm32_pwm *priv =3D to_stm32_pwm_dev(chip);
+> +
+> +	/* Disable channel */
+> +	mask =3D TIM_CCER_CC1E << (pwm->hwpwm * 4);
+> +	if (priv->have_complementary_output)
+> +		mask |=3D TIM_CCER_CC1NE << (pwm->hwpwm * 4);
+> +
+> +	regmap_update_bits(priv->regmap, TIM_CCER, mask, 0);
+> +
+> +	/* When all channels are disabled, we can disable the controller */
+> +	if (!active_channels(priv))
+> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> +
+> +	clk_disable(priv->clk);
+> +}
+> +
+> +static int stm32_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> +			   struct pwm_state *state)
+> +{
+> +	struct pwm_state curstate;
+> +	bool enabled;
+> +	int ret;
+> +
+> +	pwm_get_state(pwm, &curstate);
+> +	enabled =3D curstate.enabled;
+
+There should be no need to do this in drivers. pwm_get_state() is for
+PWM API users. Drivers can directly dereference pwm->state.
+
+> +
+> +	if (enabled && !state->enabled) {
+> +		stm32_pwm_disable(chip, pwm);
+> +		return 0;
+> +	}
+> +
+> +	if (state->polarity !=3D curstate.polarity && enabled)
+> +		stm32_pwm_set_polarity(chip, pwm, state->polarity);
+
+So that's kind of a violation of atomic API semantics. The above means
+that if you have a PWM in the following state:
+
+	enabled: no
+	polarity: normal
+
+and want to set this:
+
+	enabled: yes
+	polarity: inversed
+
+then you will ignore the new polarity setting. What's the reason for
+"&& enabled) in the conditional above?
+
+> +
+> +	ret =3D stm32_pwm_config(chip, pwm, state->duty_cycle, state->period);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!enabled && state->enabled)
+> +		ret =3D stm32_pwm_enable(chip, pwm);
+> +
+> +	return ret;
+> +}
+
+Would it be possible to merge stm32_pwm_disable(), stm32_pwm_enable(),
+stm32_pwm_set_polarity() and stm32_pwm_config() into stm32_pwm_apply()?
+Part of the reason for the atomic API was to make it easier to write
+these drivers, but your implementation effectively copies what the
+transitional helpers do.
+
+It might not make a difference technically in your case, but I think
+it'd make the implementation more compact and set a better example for
+future reference.
+
+> +
+> +static const struct pwm_ops stm32pwm_ops =3D {
+> +	.owner =3D THIS_MODULE,
+> +	.apply =3D stm32_pwm_apply,
+> +};
+> +
+> +static int stm32_pwm_set_breakinput(struct stm32_pwm *priv,
+> +				    int level, int filter)
+> +{
+> +	u32 bdtr =3D TIM_BDTR_BKE;
+> +
+> +	if (level)
+> +		bdtr |=3D TIM_BDTR_BKP;
+> +
+> +	bdtr |=3D (filter & TIM_BDTR_BKF_MASK) << TIM_BDTR_BKF_SHIFT;
+> +
+> +	regmap_update_bits(priv->regmap,
+> +			   TIM_BDTR, TIM_BDTR_BKE | TIM_BDTR_BKP | TIM_BDTR_BKF,
+> +			   bdtr);
+> +
+> +	regmap_read(priv->regmap, TIM_BDTR, &bdtr);
+> +
+> +	return (bdtr & TIM_BDTR_BKE) ? 0 : -EINVAL;
+> +}
+> +
+> +static int stm32_pwm_set_breakinput2(struct stm32_pwm *priv,
+> +				     int level, int filter)
+> +{
+> +	u32 bdtr =3D TIM_BDTR_BK2E;
+> +
+> +	if (level)
+> +		bdtr |=3D TIM_BDTR_BK2P;
+> +
+> +	bdtr |=3D (filter & TIM_BDTR_BKF_MASK) << TIM_BDTR_BK2F_SHIFT;
+> +
+> +	regmap_update_bits(priv->regmap,
+> +			   TIM_BDTR, TIM_BDTR_BK2E |
+> +			   TIM_BDTR_BK2P |
+> +			   TIM_BDTR_BK2F,
+> +			   bdtr);
+> +
+> +	regmap_read(priv->regmap, TIM_BDTR, &bdtr);
+> +
+> +	return (bdtr & TIM_BDTR_BK2E) ? 0 : -EINVAL;
+> +}
+
+As far as I can tell the only difference here is the various bit
+positions. Can you collapse the above two functions and add a new
+parameter to unify some code?
+
+> +
+> +static int stm32_pwm_apply_breakinputs(struct stm32_pwm *priv,
+> +				       struct device_node *np)
+> +{
+> +	struct stm32_breakinput breakinput[MAX_BREAKINPUT];
+> +	int nb, ret, i, array_size;
+> +
+> +	nb =3D of_property_count_elems_of_size(np, "st,breakinput",
+> +					     sizeof(struct stm32_breakinput));
+> +
+> +	/*
+> +	 * Because "st,breakinput" parameter is optional do not make probe
+> +	 * failed if it doesn't exist.
+> +	 */
+> +	if (nb <=3D 0)
+> +		return 0;
+> +
+> +	if (nb > MAX_BREAKINPUT)
+> +		return -EINVAL;
+> +
+> +	array_size =3D nb * sizeof(struct stm32_breakinput) / sizeof(u32);
+> +	ret =3D of_property_read_u32_array(np, "st,breakinput",
+> +					 &breakinput[0].index, array_size);
+
+Maybe (u32 *)breakinput? That would make it more resilient against
+changes in ordering of fields in the struct. Granted, that's not likely
+to change, but I think it's a good idea in general to write code in a
+way that's safe in a more general case. That way if somebody ever were
+to copy from your code and then decide to reorder fields in their code
+things wouldn't fall apart.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i =3D 0; i < nb && !ret; i++) {
+> +		switch (breakinput[i].index) {
+> +		case 0:
+> +		{
+> +			ret =3D stm32_pwm_set_breakinput(priv,
+> +						       breakinput[i].level,
+> +						       breakinput[i].filter);
+> +			break;
+> +		}
+
+Curly braces are unnecessary here.
+
+> +		case 1:
+> +		{
+> +			ret =3D stm32_pwm_set_breakinput2(priv,
+> +							breakinput[i].level,
+> +							breakinput[i].filter);
+> +
+> +			break;
+> +		}
+> +		default:
+> +		{
+> +			ret =3D -EINVAL;
+> +			break;
+> +		}
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static void stm32_pwm_detect_complementary(struct stm32_pwm *priv)
+> +{
+> +	u32 ccer;
+> +
+> +	/*
+> +	 * If complementary bit doesn't exist writing 1 will have no
+> +	 * effect so we can detect it.
+> +	 */
+> +	regmap_update_bits(priv->regmap,
+> +			   TIM_CCER, TIM_CCER_CC1NE, TIM_CCER_CC1NE);
+> +	regmap_read(priv->regmap, TIM_CCER, &ccer);
+> +	regmap_update_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE, 0);
+
+This is strange: why are we disabling outputs here? Shouldn't the last
+line here undo the first instead?
+
+> +
+> +	priv->have_complementary_output =3D (ccer !=3D 0);
+> +}
+> +
+> +static void stm32_pwm_detect_channels(struct stm32_pwm *priv)
+> +{
+> +	u32 ccer;
+> +
+> +	/*
+> +	 * If channels enable bits don't exist writing 1 will have no
+> +	 * effect so we can detect and count them.
+> +	 */
+> +	regmap_update_bits(priv->regmap,
+> +			   TIM_CCER, TIM_CCER_CCXE, TIM_CCER_CCXE);
+> +	regmap_read(priv->regmap, TIM_CCER, &ccer);
+> +	regmap_update_bits(priv->regmap, TIM_CCER, TIM_CCER_CCXE, 0);
+
+Does this have the potential to glitch? I suspect that the clock may not
+be on at this point and therefore no PWM outputs will be generated, but
+is that guaranteed to always be the case?
+
+Thierry
+
+--kbCYTQG2MZjuOjyn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlh/Po8ACgkQ3SOs138+
+s6FuOhAAsH9ryuifOpdy4bcWXIx/wwcYRz2NTdH04wQ71xfUY2VByNiyVg7Wakv9
+wvQrwTlmz+Vz3Oa/c5PbSTHczWhwvZGpwmGDRiMphroJ1kRPY4aJq8umZUnmUO5v
+1E9OSIeMiWYzD20zn0mYfn8AeL0T7YjRns0H8d+GZjbOCZkPHRiSTNGnHQrh/uO/
+KbbdQDBNNl/Q4OeZ3QhCQU9Q0b6OUQgu/6atV9x7UoH4NdZMT1I5zPrqWgf5uwco
+5W0ibK6gvuxXRVO8A1dXJsaZaZhK3rgBJeNxL+0yJGs2Q/wBsLHSWsqULSqZ6zV4
+q/oK+gBB7ViTs9QdipFtW37G+SGvBoUjWU73l9uW4dzBkA3i1w3xzJYjybhg2ATW
+/HynO/sp2r06ijuTVFoDoEmmGIAFe+Brg4gE9ZjTmMV3S4lBTRTPeGw1R7kjrFsr
+VvSRLDktTdc2t9zb3ASx97reVHm33Lhq8QlfVqWmCuSIZwSdiMLlaEpi/JpNGdrs
+/ms0sGAsdlwrd0nBhFsnRTGDHuGXpo7QrqfxTtWjn4v3DLXwEThJd34UqQRZdqzv
+iclNyButHOFsIqWo7p66j3mDRIuU+1x67LwEa6ExVVLd3vVxF6xn+H5Qf1MIc5cT
+vGEJAu6Um03HmjeQsRkOMkR7zYMVVZbBjPveBqSp9YmKXBFBeso=
+=lnQl
+-----END PGP SIGNATURE-----
+
+--kbCYTQG2MZjuOjyn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
