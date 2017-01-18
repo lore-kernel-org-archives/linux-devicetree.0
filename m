@@ -1,44 +1,48 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] clk: meson-gxbb: Export HDMI clocks
-Date: Wed, 18 Jan 2017 10:12:41 -0800
-Message-ID: <m2mveo1bl2.fsf@baylibre.com>
-References: <1484654928-5640-1-git-send-email-narmstrong@baylibre.com>
- <20170117183441.GU17126@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Wed, 18 Jan 2017 10:22:23 -0800
+Message-ID: <20170118182223.GP10531@minitux>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+ <587C88FE.2040900@ti.com>
+ <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117183441.GU17126@codeaurora.org> (Stephen Boyd's message
- of "Tue, 17 Jan 2017 10:34:41 -0800")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, mturquette@baylibre.com, linux-kernel@vger.kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50612693-5345-55da-8207-8c5e721fb68a-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Boyd <sboyd@codeaurora.org> writes:
+On Tue 17 Jan 22:54 PST 2017, Vivek Gautam wrote:
+> On 01/16/2017 02:19 PM, Kishon Vijay Abraham I wrote:
+> > On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+[..]
+> > > +		reset-names = "phy", "common", "cfg",
+> > > +				"lane0", "lane1", "lane2";
+> > Each lane has a separate clock, separate reset.. why not create sub-nodes for
+> > each lane?
+> 
+> Yes, each lane has separate pipe clock and resets.
+> I can have a binding such as written below.
 
-> On 01/17, Neil Armstrong wrote:
->> Export HDMI clock from internal to dt-bindings.
->> 
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->
-> Acked-by: Stephen Boyd <sboyd@codeaurora.org>
->
-> I think we decided this would go with the dts changes if more
-> needed to be exposed.
++1
 
-Ah, that's right.  I'll queue it up in the amlogic dt branch with your
-ack.
+> Does it makes sense to pull in the tx, rx and pcs offsets as well
+> to the child node, and iomap the entire address space of the phy ?
+> 
 
-Thanks,
+Note that you don't have to follow the same structure in your device
+driver as you describe your hardware in devicetree.
 
-Kevin
+I would suggest that you replace the lane-offset and various lane
+specific resources with subnodes, but keep the driver "as is".
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
