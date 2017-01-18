@@ -1,125 +1,29 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH v7 3/8] PWM: add pwm-stm32 DT bindings
-Date: Wed, 18 Jan 2017 10:42:04 +0100
-Message-ID: <CA+M3ks5t8j8bgyK7iq7oig_7+swiWzhB12=Q4q-umesWk4-m9w@mail.gmail.com>
-References: <1483608344-9012-1-git-send-email-benjamin.gaignard@st.com>
- <1483608344-9012-4-git-send-email-benjamin.gaignard@st.com> <20170118092021.GE18989@ulmo.ba.sec>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 12/14] ARM: dts: da850: add pinmux settings for the
+ SATA controller
+Date: Wed, 18 Jan 2017 15:09:59 +0530
+Message-ID: <09c88e31-0fd4-15f3-fc0c-25b34b41783b@ti.com>
+References: <1484655976-25382-1-git-send-email-bgolaszewski@baylibre.com>
+ <1484655976-25382-13-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170118092021.GE18989@ulmo.ba.sec>
+In-Reply-To: <1484655976-25382-13-git-send-email-bgolaszewski@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linus Walleij <linus.walleij@linaro.org>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2017-01-18 10:20 GMT+01:00 Thierry Reding <thierry.reding@gmail.com>:
-> On Thu, Jan 05, 2017 at 10:25:39AM +0100, Benjamin Gaignard wrote:
->> Define bindings for pwm-stm32
->>
->> version 6:
->> - change st,breakinput parameter format to make it usuable on stm32f7 to=
-o.
->>
->> version 2:
->> - use parameters instead of compatible of handle the hardware configurat=
-ion
->>
->> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
->> ---
->>  .../devicetree/bindings/pwm/pwm-stm32.txt          | 33 +++++++++++++++=
-+++++++
->>  1 file changed, 33 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Docum=
-entation/devicetree/bindings/pwm/pwm-stm32.txt
->> new file mode 100644
->> index 0000000..866f222
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->> @@ -0,0 +1,33 @@
->> +STMicroelectronics STM32 Timers PWM bindings
->> +
->> +Must be a sub-node of an STM32 Timers device tree node.
->> +See ../mfd/stm32-timers.txt for details about the parent node.
->> +
->> +Required parameters:
->> +- compatible:                Must be "st,stm32-pwm".
->> +- pinctrl-names:     Set to "default".
->> +- pinctrl-0:                 List of phandles pointing to pin configura=
-tion nodes for PWM module.
->> +                     For Pinctrl properties see ../pinctrl/pinctrl-bind=
-ings.txt
->> +
->> +Optional parameters:
->> +- st,breakinput:     Arrays of three u32 <index level filter> to descri=
-be break input configurations.
->> +                     "index" indicates on which break input the configu=
-ration should be applied.
->
-> It might be useful to specify what the valid values are for the break
-> input index.
+Hi Bartosz,
 
-It could 0 and 1, I will add this information.
+On Tuesday 17 January 2017 05:56 PM, Bartosz Golaszewski wrote:
+> Add pinmux sub-nodes for all muxed SATA pins.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
->
-> Also, u32 is kind of a Linuxism, perhaps "Arrays of three cells"? Also,
-> does this mean there can be multiple entries? Such as 6 cells for two
-> configurations? What's the maximum number of such configurations?
->
-> If it's possible to specify multiple configurations, maybe a slightly
-> clearer wording would be: "One or more <index level filter> triplets to
-> describe..."
->
+Since these are all unused at this time, we should drop adding them
+until a time someone really needs these.
 
-You can have one configuration per index so I will rephrase it like that:
-One or two <index level filter> to describe break input configurations.
-"index" indicates on which break input (0 or 1 ) the configuration
-should be applied.
-
-
->> +                     "level" gives the active level (0=3Dlow or 1=3Dhig=
-h) for this configuration.
->
-> So how does this work exactly? "level" specifies the output level if the
-> filter value is matched?
-
-No it specify on which input level the break event is generated
-
->
->> +                     "filter" gives the filtering value to be applied.
->
-> Is this a single value at which "level" will be applied? Or is it an
-> upper/lower bound that can be used to restrict the output to "level" if
-> the signal goes beyond/below a certain threshold?
-
-Very very basically filter is more a debounce value set on the signal
-to avoid glitches.
-The goal of break input feature is to stop PWM generation in hardware
-errors failure case.
-
-For a more completed description you can read "using break input
-function" (starting page 645) in this doc:
-
-http://www.st.com/content/ccc/resource/technical/document/reference_manual/=
-c5/cf/ef/52/c0/f1/4b/fa/DM00124865.pdf/files/DM00124865.pdf/jcr:content/tra=
-nslations/en.DM00124865.pdf
-
->
-> Maybe an example would clarify this. Or perhaps a reference to a manual
-> where a more in-depth description of this functionality can be found.
->
-> Thierry
-
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+Sekhar
