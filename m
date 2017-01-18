@@ -1,74 +1,37 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
-Date: Wed, 18 Jan 2017 12:25:00 -0500
-Message-ID: <20170118172502.13876-2-chris.brandt@renesas.com>
-References: <20170118172502.13876-1-chris.brandt@renesas.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170118172502.13876-1-chris.brandt@renesas.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/2] clk: vc5: Add bindings for IDT VersaClock
+ 5P49V5923 and 5P49V5933
+Date: Wed, 18 Jan 2017 15:28:13 -0600
+Message-ID: <20170118212813.fhvzntoxxppfuyp2@rob-hp-laptop>
+References: <20170112010324.28068-1-marek.vasut@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170112010324.28068-1-marek.vasut@gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-clk@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some controllers have 2 clock sources instead of 1, so they both need
-to be turned on/off.
+On Thu, Jan 12, 2017 at 02:03:23AM +0100, Marek Vasut wrote:
+> Add bindings for IDT VersaClock 5 5P49V5923 and 5P49V5933 chips.
+> These are I2C clock generators with optional clock source from
+> either XTal or dedicated clock generator and, depending on the
+> model, two or more clock outputs.
+> 
+> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-renesas-soc@vger.kernel.org
+> ---
+> V2: Add mapping between the clock specifier and physical pins of the chip
+> ---
+>  .../devicetree/bindings/clock/idt,versaclock5.txt  | 65 ++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/idt,versaclock5.txt
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v2:
-* changed clk2 to clk_cd
-* disable clk if clk_cd enable fails
-* changed clock name from "carddetect" to "cd"
----
- drivers/mmc/host/sh_mobile_sdhi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
-
-diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-index 59db14b..a3f995e 100644
---- a/drivers/mmc/host/sh_mobile_sdhi.c
-+++ b/drivers/mmc/host/sh_mobile_sdhi.c
-@@ -143,6 +143,7 @@ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
- 
- struct sh_mobile_sdhi {
- 	struct clk *clk;
-+	struct clk *clk_cd;
- 	struct tmio_mmc_data mmc_data;
- 	struct tmio_mmc_dma dma_priv;
- 	struct pinctrl *pinctrl;
-@@ -190,6 +191,12 @@ static int sh_mobile_sdhi_clk_enable(struct tmio_mmc_host *host)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = clk_prepare_enable(priv->clk_cd);
-+	if (ret < 0) {
-+		clk_disable_unprepare(priv->clk);
-+		return ret;
-+	}
-+
- 	/*
- 	 * The clock driver may not know what maximum frequency
- 	 * actually works, so it should be set with the max-frequency
-@@ -255,6 +262,8 @@ static void sh_mobile_sdhi_clk_disable(struct tmio_mmc_host *host)
- 	struct sh_mobile_sdhi *priv = host_to_priv(host);
- 
- 	clk_disable_unprepare(priv->clk);
-+	if (priv->clk_cd)
-+		clk_disable_unprepare(priv->clk_cd);
- }
- 
- static int sh_mobile_sdhi_card_busy(struct mmc_host *mmc)
-@@ -572,6 +581,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
- 		goto eprobe;
- 	}
- 
-+	priv->clk_cd = devm_clk_get(&pdev->dev, "cd");
-+	if (IS_ERR(priv->clk_cd))
-+		priv->clk_cd = NULL;
-+
- 	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
- 	if (!IS_ERR(priv->pinctrl)) {
- 		priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
--- 
-2.10.1
-
-
+Acked-by: Rob Herring <robh@kernel.org>
