@@ -1,77 +1,91 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/2] ARM: dts: dra7-evm: increase QSPI SPL partition size
-Date: Wed, 18 Jan 2017 09:39:25 -0800
-Message-ID: <20170118173925.GG7403@atomide.com>
-References: <1484311234-21978-1-git-send-email-ravibabu@ti.com>
- <1484311234-21978-2-git-send-email-ravibabu@ti.com>
- <20170113181239.GC2630@atomide.com>
- <6C6B28D4DC342643927BEAFCE8707BF6C0A8C367@DBDE04.ent.ti.com>
- <20170117232743.GA7403@atomide.com>
- <b586537d-49b6-50a6-ae60-11faf25b26f9@ti.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Wed, 18 Jan 2017 10:03:47 -0800
+Message-ID: <20170118180347.GO10531@minitux>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com>
+ <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <b586537d-49b6-50a6-ae60-11faf25b26f9@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "bcousson@baylibre.com" <bcousson@baylibre.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "B, Ravi" <ravibabu@ti.com>
+In-Reply-To: <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, sboyd@codeaurora.org, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sekhar Nori <nsekhar@ti.com> [170118 03:59]:
-> Hi Tony,
-> 
-> On Wednesday 18 January 2017 04:57 AM, Tony Lindgren wrote:
-> > * B, Ravi <ravibabu@ti.com> [170117 00:15]:
-> >> Hi Tony
-> >>
-> >>> * Ravi Babu <ravibabu@ti.com> [170113 04:41]:
-> >>>> The SPL size for DRA74x platform has increased and is now more than 
-> >>>> 64KB. Increase QSPI SPL partition size to 256KB for DRA74x EVM.
-> >>>>
-> >>>> QSPI partition numbering changes because of this.
-> >>
-> >>> And this will break the existing partitions potentially..
-> >>> See what was discussed on the list few days ago in thread "[PATCH 1/6] ARM: dts: am335x-phycore-som: Update NAND partition table".
-> >>
-> >>> It's best to have these left empty or as they originally were and let u-boot configure the partitions.
-> >>
-> >> Agree with you. For dra7xx platform the SPL size has been increased to 256KB and hence the existing QSPI SPL partition in kernel (64K size) will break when latest mainline u-boot is used. 
-> >> Here only SPL partition has been changed and other partition & size is NOT changed and kept intact. I feel it will not break the existing partitions for dra7xx platform.
+On Wed 18 Jan 01:13 PST 2017, Vivek Gautam wrote:
+> On 01/16/2017 02:15 PM, Kishon Vijay Abraham I wrote:
+> > Hi,
 > > 
-> > What about the renumbering of partitions in your patch?
-> 
-> Thats true, partitions will get renumbered. But mtd numbering can change
-> depending on probe order of devices anyway. So usespace which uses
-> hardcoded mtd partition numbers is pretty fragile already, I guess.
-> 
+> > On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+[..]
+> > > +static const struct qusb2_phy_init_tbl msm8996_init_tbl[] = {
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xf8),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xb3),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xc0),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9f),
+> > > +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+> > > +};
+> > I wish all this data comes from device tree and one API in phy-core can do all
+> > these settings. Your other driver qcom-qmp also seems to have a bunch of
+> > similar settings.
 > > 
-> > Probably just best to make the partition information empty in the
-> > kernel as discussed.
+> > The problem is every vendor driver adds a bunch of code to perform the same
+> > thing again and again when all of these settings can be done by a single phy API.
 > 
-> Given that existing dtbs already have the partition information, wont
-> this be treated as a regression for someone upgrading to new kernel?
+> Yes, i understand this. You have commented similar thing in the patch from
+> Jaehoon -
+> [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe phy
+> 
+> I would like to understand the requirements here.
+> Would you like me to get all this information from the device tree -
+> an array of register offset and value pair, which we can then program
+> by calling a phy_ops (may be calibrate) ? Something of this sort:
+> 
+> phy-calibrate-data = <val1, register_offset1>,
+>                                   <val2, register_offset2>,
+>                                   <val3, register_offset3>,
+>                                   ....
+> 
+> I am sure having such information in the driver (like i have in my patch)
+> makes the driver look more clumsy.
+> But, all this data can be pretty huge - a set of some 100+ register-value
+> pairs
+> for QMP phy, for example. So, will it be okay to get this from device tree ?
+> We also note here that such information changes from one IP version to
+> another.
+> I remember Rob having some concerns about it.
+> 
 
-Well these "flag day" type changes are not acceptable because they are
-impossible to coordinate. You can't assume people update their bootloader
-on regular basis, or update both bootloader and kernel to some specific
-versions.
+The devicetree is supposed to describe which hardware components a
+certain device has, most of the time this carries a set of properties to
+describe how this piece is connected and configured.
 
-> Going forward, is the preference that new boards shall not have
-> partition information in DT?
+A dump of magic register values does not describe how the QMP is
+connected to anything and is, as far as this patch shows, static for
+this particular hardware block.
 
-Yes or else it will have to stay as it was originally set because
-of these issues.
+Further more moving this blob to devicetree will not allow us to treat
+the various QMP configurations as one HW block, as there are other
+differences as well.
+
+Like many other drivers it's possible to create a generic version that
+has every bit of logic driven by configuration from devicetree, but like
+most of those cases this is not the way we split things.
+
+
+
+And this has the side effect of keeping the dts files human readable,
+human understandable and human maintainable.
 
 Regards,
-
-Tony
+Bjorn
