@@ -1,561 +1,103 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Wed, 18 Jan 2017 10:53:31 +0000
-Message-ID: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gma>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v4] ARM64: dts: meson-gx: Add reserved memory zone and
+ usable memory range
+Date: Wed, 18 Jan 2017 11:57:22 +0100
+Message-ID: <a312f87d-bd17-2729-1c51-d25be7de9380@baylibre.com>
+References: <1484129414-23325-1-git-send-email-narmstrong@baylibre.com>
+ <m21sw66828.fsf@baylibre.com> <d3a00788-c3c1-4b10-90bf-2a8bc6a138f8@suse.de>
+ <7fcb8d94-840a-de2c-f43b-9123ccc65514@baylibre.com>
+ <CAOesGMhYfhrd-hy=N-FYDEPmumR0=QNzn5xTLxFuKG7apo5qiw@mail.gmail.com>
+ <ecb5ff50-f5d5-ffe6-0732-faf5e51906f8@baylibre.com>
+ <04113569-e342-77ff-f79a-2c9c4dc4c602@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <04113569-e342-77ff-f79a-2c9c4dc4c602@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, xypron.glpk@gmx.de, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>, Olof Johansson <olof@lixom.net>, linux-amlogic@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Since everybody copied my own mistake from the DT binding example,
-let's address all the offenders in one swift go.
-
-Most of them got the CPU interface size wrong (4kB, while it should
-be 8kB), except for both keystone platforms which got the control
-interface wrong (4kB instead of 8kB).
-
-In the couple of cases were I knew for sure what implementation
-was used, I've added the "arm,gic-400" compatible string. I'm 99%
-sure that this is what everyong is using, but short of having the
-TRM for all the other SoCs, I've let them alone.
-
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
----
- arch/arm/boot/dts/alpine.dtsi        | 2 +-
- arch/arm/boot/dts/axm55xx.dtsi       | 2 +-
- arch/arm/boot/dts/dra7.dtsi          | 2 +-
- arch/arm/boot/dts/ecx-2000.dts       | 2 +-
- arch/arm/boot/dts/exynos3250.dtsi    | 2 +-
- arch/arm/boot/dts/exynos5.dtsi       | 2 +-
- arch/arm/boot/dts/exynos5260.dtsi    | 2 +-
- arch/arm/boot/dts/exynos5440.dtsi    | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi        | 4 ++--
- arch/arm/boot/dts/keystone-k2g.dtsi  | 2 +-
- arch/arm/boot/dts/keystone.dtsi      | 2 +-
- arch/arm/boot/dts/ls1021a.dtsi       | 4 ++--
- arch/arm/boot/dts/mt2701.dtsi        | 2 +-
- arch/arm/boot/dts/mt6580.dtsi        | 2 +-
- arch/arm/boot/dts/mt6589.dtsi        | 2 +-
- arch/arm/boot/dts/mt7623.dtsi        | 2 +-
- arch/arm/boot/dts/mt8127.dtsi        | 2 +-
- arch/arm/boot/dts/mt8135.dtsi        | 2 +-
- arch/arm/boot/dts/omap5.dtsi         | 2 +-
- arch/arm/boot/dts/r8a73a4.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7743.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7745.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7790.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7791.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7792.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7793.dtsi       | 2 +-
- arch/arm/boot/dts/r8a7794.dtsi       | 2 +-
- arch/arm/boot/dts/rk1108.dtsi        | 2 +-
- arch/arm/boot/dts/rk3036.dtsi        | 2 +-
- arch/arm/boot/dts/rk322x.dtsi        | 2 +-
- arch/arm/boot/dts/rk3288.dtsi        | 2 +-
- arch/arm/boot/dts/sun6i-a31.dtsi     | 2 +-
- arch/arm/boot/dts/sun7i-a20.dtsi     | 4 ++--
- arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi    | 2 +-
- arch/arm/boot/dts/sun8i-h3.dtsi      | 2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi     | 2 +-
- 37 files changed, 40 insertions(+), 40 deletions(-)
-
-diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
-index db8752f..d0eefc3 100644
---- a/arch/arm/boot/dts/alpine.dtsi
-+++ b/arch/arm/boot/dts/alpine.dtsi
-@@ -93,7 +93,7 @@
- 			interrupt-controller;
- 			reg = <0x0 0xfb001000 0x0 0x1000>,
- 			      <0x0 0xfb002000 0x0 0x2000>,
--			      <0x0 0xfb004000 0x0 0x1000>,
-+			      <0x0 0xfb004000 0x0 0x2000>,
- 			      <0x0 0xfb006000 0x0 0x2000>;
- 			interrupts =
- 				<GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
-index a9d6d59..47799f5 100644
---- a/arch/arm/boot/dts/axm55xx.dtsi
-+++ b/arch/arm/boot/dts/axm55xx.dtsi
-@@ -62,7 +62,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0x20 0x01001000 0 0x1000>,
--		      <0x20 0x01002000 0 0x1000>,
-+		      <0x20 0x01002000 0 0x2000>,
- 		      <0x20 0x01004000 0 0x2000>,
- 		      <0x20 0x01006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1faf24a..a9ffa49 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -57,7 +57,7 @@
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
- 		reg = <0x0 0x48211000 0x0 0x1000>,
--		      <0x0 0x48212000 0x0 0x1000>,
-+		      <0x0 0x48212000 0x0 0x2000>,
- 		      <0x0 0x48214000 0x0 0x2000>,
- 		      <0x0 0x48216000 0x0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/ecx-2000.dts b/arch/arm/boot/dts/ecx-2000.dts
-index 2ccbb57f..c15e7e0 100644
---- a/arch/arm/boot/dts/ecx-2000.dts
-+++ b/arch/arm/boot/dts/ecx-2000.dts
-@@ -99,7 +99,7 @@
- 			interrupt-controller;
- 			interrupts = <1 9 0xf04>;
- 			reg = <0xfff11000 0x1000>,
--			      <0xfff12000 0x1000>,
-+			      <0xfff12000 0x2000>,
- 			      <0xfff14000 0x2000>,
- 			      <0xfff16000 0x2000>;
- 		};
-diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-index ba17ee1..9c28ef4 100644
---- a/arch/arm/boot/dts/exynos3250.dtsi
-+++ b/arch/arm/boot/dts/exynos3250.dtsi
-@@ -234,7 +234,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			reg = <0x10481000 0x1000>,
--			      <0x10482000 0x1000>,
-+			      <0x10482000 0x2000>,
- 			      <0x10484000 0x2000>,
- 			      <0x10486000 0x2000>;
- 			interrupts = <GIC_PPI 9
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 7fd870e..678c08e 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -94,7 +94,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			reg =	<0x10481000 0x1000>,
--				<0x10482000 0x1000>,
-+				<0x10482000 0x2000>,
- 				<0x10484000 0x2000>,
- 				<0x10486000 0x2000>;
- 			interrupts = <GIC_PPI 9
-diff --git a/arch/arm/boot/dts/exynos5260.dtsi b/arch/arm/boot/dts/exynos5260.dtsi
-index 5818718..5e88c96 100644
---- a/arch/arm/boot/dts/exynos5260.dtsi
-+++ b/arch/arm/boot/dts/exynos5260.dtsi
-@@ -167,7 +167,7 @@
- 			#size-cells = <0>;
- 			interrupt-controller;
- 			reg = <0x10481000 0x1000>,
--				<0x10482000 0x1000>,
-+				<0x10482000 0x2000>,
- 				<0x10484000 0x2000>,
- 				<0x10486000 0x2000>;
- 			interrupts = <GIC_PPI 9
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 2a2e570..77d35bb 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -40,7 +40,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg =	<0x2E1000 0x1000>,
--			<0x2E2000 0x1000>,
-+			<0x2E2000 0x2000>,
- 			<0x2E4000 0x2000>,
- 			<0x2E6000 0x2000>;
- 		interrupts = <GIC_PPI 9
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 39845a7..ac5371a 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -91,11 +91,11 @@
- 	};
- 
- 	intc: interrupt-controller@00a01000 {
--		compatible = "arm,cortex-a7-gic";
-+		compatible = "arm,gic-400", "arm,cortex-a7-gic";
- 		#interrupt-cells = <3>;
- 		interrupt-controller;
- 		reg = <0x00a01000 0x1000>,
--		      <0x00a02000 0x1000>,
-+		      <0x00a02000 0x2000>,
- 		      <0x00a04000 0x2000>,
- 		      <0x00a06000 0x2000>;
- 	};
-diff --git a/arch/arm/boot/dts/keystone-k2g.dtsi b/arch/arm/boot/dts/keystone-k2g.dtsi
-index 63c7cf0..07bf300 100644
---- a/arch/arm/boot/dts/keystone-k2g.dtsi
-+++ b/arch/arm/boot/dts/keystone-k2g.dtsi
-@@ -45,7 +45,7 @@
- 		interrupt-controller;
- 		reg = <0x0 0x02561000 0x0 0x1000>,
- 		      <0x0 0x02562000 0x0 0x2000>,
--		      <0x0 0x02564000 0x0 0x1000>,
-+		      <0x0 0x02564000 0x0 0x2000>,
- 		      <0x0 0x02566000 0x0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
- 				IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 02708ba..aaff6816 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -35,7 +35,7 @@
- 		interrupt-controller;
- 		reg = <0x0 0x02561000 0x0 0x1000>,
- 		      <0x0 0x02562000 0x0 0x2000>,
--		      <0x0 0x02564000 0x0 0x1000>,
-+		      <0x0 0x02564000 0x0 0x2000>,
- 		      <0x0 0x02566000 0x0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) |
- 				IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
-index 282d854..45ea57f 100644
---- a/arch/arm/boot/dts/ls1021a.dtsi
-+++ b/arch/arm/boot/dts/ls1021a.dtsi
-@@ -110,11 +110,11 @@
- 		ranges;
- 
- 		gic: interrupt-controller@1400000 {
--			compatible = "arm,cortex-a7-gic";
-+			compatible = "arm,gic-400", "arm,cortex-a7-gic";
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			reg = <0x0 0x1401000 0x0 0x1000>,
--			      <0x0 0x1402000 0x0 0x1000>,
-+			      <0x0 0x1402000 0x0 0x2000>,
- 			      <0x0 0x1404000 0x0 0x2000>,
- 			      <0x0 0x1406000 0x0 0x2000>;
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 7eab6f4..454d099 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -170,7 +170,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-parent = <&gic>;
- 		reg = <0 0x10211000 0 0x1000>,
--		      <0 0x10212000 0 0x1000>,
-+		      <0 0x10212000 0 0x2000>,
- 		      <0 0x10214000 0 0x2000>,
- 		      <0 0x10216000 0 0x2000>;
- 	};
-diff --git a/arch/arm/boot/dts/mt6580.dtsi b/arch/arm/boot/dts/mt6580.dtsi
-index 06fdf6c..a349dba 100644
---- a/arch/arm/boot/dts/mt6580.dtsi
-+++ b/arch/arm/boot/dts/mt6580.dtsi
-@@ -91,7 +91,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-parent = <&gic>;
- 		reg = <0x10211000 0x1000>,
--		      <0x10212000 0x1000>,
-+		      <0x10212000 0x2000>,
- 		      <0x10214000 0x2000>,
- 		      <0x10216000 0x2000>;
- 	};
-diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-index 88b3cb1..0d6f60a 100644
---- a/arch/arm/boot/dts/mt6589.dtsi
-+++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -102,7 +102,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
- 			reg = <0x10211000 0x1000>,
--			      <0x10212000 0x1000>,
-+			      <0x10212000 0x2000>,
- 			      <0x10214000 0x2000>,
- 			      <0x10216000 0x2000>;
- 		};
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index fd2b614..19a54a3 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -104,7 +104,7 @@
- 		#interrupt-cells = <3>;
- 		interrupt-parent = <&gic>;
- 		reg = <0 0x10211000 0 0x1000>,
--		      <0 0x10212000 0 0x1000>,
-+		      <0 0x10212000 0 0x2000>,
- 		      <0 0x10214000 0 0x2000>,
- 		      <0 0x10216000 0 0x2000>;
- 	};
-diff --git a/arch/arm/boot/dts/mt8127.dtsi b/arch/arm/boot/dts/mt8127.dtsi
-index 52086c8..916c095 100644
---- a/arch/arm/boot/dts/mt8127.dtsi
-+++ b/arch/arm/boot/dts/mt8127.dtsi
-@@ -129,7 +129,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
--			      <0 0x10212000 0 0x1000>,
-+			      <0 0x10212000 0 0x2000>,
- 			      <0 0x10214000 0 0x2000>,
- 			      <0 0x10216000 0 0x2000>;
- 		};
-diff --git a/arch/arm/boot/dts/mt8135.dtsi b/arch/arm/boot/dts/mt8135.dtsi
-index 1d7f92b..a97b4ee 100644
---- a/arch/arm/boot/dts/mt8135.dtsi
-+++ b/arch/arm/boot/dts/mt8135.dtsi
-@@ -221,7 +221,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-parent = <&gic>;
- 			reg = <0 0x10211000 0 0x1000>,
--			      <0 0x10212000 0 0x1000>,
-+			      <0 0x10212000 0 0x2000>,
- 			      <0 0x10214000 0 0x2000>,
- 			      <0 0x10216000 0 0x2000>;
- 		};
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 7cd92ba..71b4809 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -92,7 +92,7 @@
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
- 		reg = <0 0x48211000 0 0x1000>,
--		      <0 0x48212000 0 0x1000>,
-+		      <0 0x48212000 0 0x2000>,
- 		      <0 0x48214000 0 0x2000>,
- 		      <0 0x48216000 0 0x2000>;
- 		interrupt-parent = <&gic>;
-diff --git a/arch/arm/boot/dts/r8a73a4.dtsi b/arch/arm/boot/dts/r8a73a4.dtsi
-index 53183ff..14a66ca 100644
---- a/arch/arm/boot/dts/r8a73a4.dtsi
-+++ b/arch/arm/boot/dts/r8a73a4.dtsi
-@@ -465,7 +465,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0xf1001000 0 0x1000>,
--			<0 0xf1002000 0 0x1000>,
-+			<0 0xf1002000 0 0x2000>,
- 			<0 0xf1004000 0 0x2000>,
- 			<0 0xf1006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 216cb1f..172a944 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -55,7 +55,7 @@
- 			#address-cells = <0>;
- 			interrupt-controller;
- 			reg = <0 0xf1001000 0 0x1000>,
--			      <0 0xf1002000 0 0x1000>,
-+			      <0 0xf1002000 0 0x2000>,
- 			      <0 0xf1004000 0 0x2000>,
- 			      <0 0xf1006000 0 0x2000>;
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-diff --git a/arch/arm/boot/dts/r8a7745.dtsi b/arch/arm/boot/dts/r8a7745.dtsi
-index 0b2e2f3..7390ec0 100644
---- a/arch/arm/boot/dts/r8a7745.dtsi
-+++ b/arch/arm/boot/dts/r8a7745.dtsi
-@@ -55,7 +55,7 @@
- 			#address-cells = <0>;
- 			interrupt-controller;
- 			reg = <0 0xf1001000 0 0x1000>,
--			      <0 0xf1002000 0 0x1000>,
-+			      <0 0xf1002000 0 0x2000>,
- 			      <0 0xf1004000 0 0x2000>,
- 			      <0 0xf1006000 0 0x2000>;
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 0c8900d..ac38764 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -183,7 +183,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0xf1001000 0 0x1000>,
--			<0 0xf1002000 0 0x1000>,
-+			<0 0xf1002000 0 0x2000>,
- 			<0 0xf1004000 0 0x2000>,
- 			<0 0xf1006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 8721466..28039db 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -114,7 +114,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0xf1001000 0 0x1000>,
--			<0 0xf1002000 0 0x1000>,
-+			<0 0xf1002000 0 0x2000>,
- 			<0 0xf1004000 0 0x2000>,
- 			<0 0xf1006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/r8a7792.dtsi b/arch/arm/boot/dts/r8a7792.dtsi
-index 6ced3c1..1ed5c88 100644
---- a/arch/arm/boot/dts/r8a7792.dtsi
-+++ b/arch/arm/boot/dts/r8a7792.dtsi
-@@ -88,7 +88,7 @@
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
- 			reg = <0 0xf1001000 0 0x1000>,
--			      <0 0xf1002000 0 0x1000>,
-+			      <0 0xf1002000 0 0x2000>,
- 			      <0 0xf1004000 0 0x2000>,
- 			      <0 0xf1006000 0 0x2000>;
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) |
-diff --git a/arch/arm/boot/dts/r8a7793.dtsi b/arch/arm/boot/dts/r8a7793.dtsi
-index 2fb527c..934c097 100644
---- a/arch/arm/boot/dts/r8a7793.dtsi
-+++ b/arch/arm/boot/dts/r8a7793.dtsi
-@@ -105,7 +105,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0xf1001000 0 0x1000>,
--			<0 0xf1002000 0 0x1000>,
-+			<0 0xf1002000 0 0x2000>,
- 			<0 0xf1004000 0 0x2000>,
- 			<0 0xf1006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index fb576db..09f7823 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -71,7 +71,7 @@
- 		#address-cells = <0>;
- 		interrupt-controller;
- 		reg = <0 0xf1001000 0 0x1000>,
--			<0 0xf1002000 0 0x1000>,
-+			<0 0xf1002000 0 0x2000>,
- 			<0 0xf1004000 0 0x2000>,
- 			<0 0xf1006000 0 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
-index d770023..d6194bf 100644
---- a/arch/arm/boot/dts/rk1108.dtsi
-+++ b/arch/arm/boot/dts/rk1108.dtsi
-@@ -215,7 +215,7 @@
- 		#address-cells = <0>;
- 
- 		reg = <0x32011000 0x1000>,
--		      <0x32012000 0x1000>,
-+		      <0x32012000 0x2000>,
- 		      <0x32014000 0x2000>,
- 		      <0x32016000 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(1) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-index 4ed49a2..ff9b90b 100644
---- a/arch/arm/boot/dts/rk3036.dtsi
-+++ b/arch/arm/boot/dts/rk3036.dtsi
-@@ -189,7 +189,7 @@
- 		#address-cells = <0>;
- 
- 		reg = <0x10139000 0x1000>,
--		      <0x1013a000 0x1000>,
-+		      <0x1013a000 0x2000>,
- 		      <0x1013c000 0x2000>,
- 		      <0x1013e000 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(2) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 9d3aee5..9dff822 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -443,7 +443,7 @@
- 		#address-cells = <0>;
- 
- 		reg = <0x32011000 0x1000>,
--		      <0x32012000 0x1000>,
-+		      <0x32012000 0x2000>,
- 		      <0x32014000 0x2000>,
- 		      <0x32016000 0x2000>;
- 		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 4fad133..af46cba 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -1110,7 +1110,7 @@
- 		#address-cells = <0>;
- 
- 		reg = <0xffc01000 0x1000>,
--		      <0xffc02000 0x1000>,
-+		      <0xffc02000 0x2000>,
- 		      <0xffc04000 0x2000>,
- 		      <0xffc06000 0x2000>;
- 		interrupts = <GIC_PPI 9 0xf04>;
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 2b26175..6ed505a 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -861,7 +861,7 @@
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index f7db067..3c24832 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -1686,9 +1686,9 @@
- 		};
- 
- 		gic: interrupt-controller@01c81000 {
--			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-+			compatible = "arm,gic-400", "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-index e4991a7..49dfe86 100644
---- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-@@ -489,7 +489,7 @@
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index d3473f8..04c3fdd 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -217,7 +217,7 @@
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 6c14a6f..292abd0 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -580,7 +580,7 @@
- 		gic: interrupt-controller@01c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
--			      <0x01c82000 0x1000>,
-+			      <0x01c82000 0x2000>,
- 			      <0x01c84000 0x2000>,
- 			      <0x01c86000 0x2000>;
- 			interrupt-controller;
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 979ad1a..b7b5831 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -613,7 +613,7 @@
- 		gic: interrupt-controller@01c41000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c41000 0x1000>,
--			      <0x01c42000 0x1000>,
-+			      <0x01c42000 0x2000>,
- 			      <0x01c44000 0x2000>,
- 			      <0x01c46000 0x2000>;
- 			interrupt-controller;
--- 
-2.1.4
+T24gMDEvMTgvMjAxNyAwMTowMCBBTSwgQW5kcmVhcyBGw6RyYmVyIHdyb3RlOgo+IEhpIE5laWws
+Cj4gCj4gQW0gMTcuMDEuMjAxNyB1bSAwOToyMSBzY2hyaWViIE5laWwgQXJtc3Ryb25nOgo+PiBB
+cyBJIGZpbmFsbHkgdW5kZXJzdGFuZCwgdGhlIHJlYWwgaXNzdWUgaGVyZSBpcyB0aGUgdXNhZ2Ug
+b2YgdGhlICJsaW51eCx1c2VhYmxlLW1lbW9yeSIgcHJvcGVydHkgdGhhdAo+PiBvdmVycmlkZXMg
+dGhlIHJlZyBwcm9wZXJ0eSB0aGF0IGlzIGNoYW5nZWQgYnkgdGhlIGJvb3Rsb2FkZXIgdG8gcHJv
+dmlkZSB0aGUgInJlYWwiIG1lbW9yeSBzaXplLgo+IAo+IFllcywgZXhhY3RseS4gSXQgYXNzdXJl
+ZCB0aGF0IDAuLjB4MDEwMDAwMDAgd2FzIGFsd2F5cyB1bmF2YWlsYWJsZSwgYXMKPiBpbnRlbmRl
+ZCwgYnV0IGF0IHRoZSBzYW1lIHRpbWUgaXQgaWdub3JlZCBhbnkgbG93ZXJlZCBvciBoZWlnaHRl
+bmVkCj4gdXBwZXIgbGltaXQgY29taW5nIGZyb20gdGhlIGJvb3Rsb2FkZXIgc2lkZS4KPiAKPiBB
+cyBhIHJ1bGUgb2YgdGh1bWIsIGFueSBub2RlcyB0aGF0IGhhdmUgZGV2aWNlX3R5cGUgc2V0IGNh
+biBiZSBleHBlY3RlZAo+IHRvIGJlIG1vZGlmaWVkIGR1cmluZyBib290Lgo+IAo+PiBBcyBJIHVu
+ZGVyc3RhbmQgdGhlIG1haW5saW5lIFUtQm9vdCBkb2VzIGl0IHJpZ2h0LCBhbmQgaXQncyBhIGdv
+b2QgbmV3cywgYW5kIGl0IHNlZW1zIHVFRkkgbmVlZCB0byBwcm92aWRlCj4+IHNvbWUgc3BlY2lh
+bGl6ZWQgbWVtb3J5IHJhbmdlIGFzd2VsbCwgYnV0IHRoZSB2ZW5kb3IgVS1Cb290IHZlcnNpb25z
+IG9ubHkgcHJvdmlkZSB0aGUgZnVsbCBtZW1vcnkgcmFuZ2UgaGVyZS4KPj4gSXQgc2VlbXMgb2J2
+aW91cyB0aGF0IHdoYXRldmVyIHJhbmdlIGlzIHByb3ZpZGVkIGJ5IHUtYm9vdCwgdGhlIGZpcnN0
+IDE2TWlCIHNob3VsZCBiZSByZXNlcnZlZC4KPj4KPj4gVGhlIHN0cmVzcy1uZyBwYWNrYWdlIHBy
+b3ZpZGVzIHRoaXMgInN0cmVzcyIgY29tbWFuZCBhbmQgaXMgdXNlZCB0byBmb3JjZSB0aGUga2Vy
+bmVsIHRvIG1hcCBtb3JlIG1lbW9yeQo+PiB6b25lcywKPiAKPiBUaGFua3MsIGl0cyBiaW5hcnkg
+aXMgY2FsbGVkIHN0cmVzcy1uZyBpbiBvcGVuU1VTRSBUdW1ibGV3ZWVkLiA7KQo+IAo+PiBidXQg
+SSBhbHNvIGdvdCB0aGUgaXNzdWUgd2hpbGUgcnVubmluZyBhIGZ1bGx5IGZsZWRnZWQgRGVza3Rv
+cCBFbnZpcm9ubWVudCB0aGFua3MgdG8gdGhlCj4+IHJlY2VudGx5IG1lcmdlZCBEUk0gZHJpdmVy
+Lgo+IAo+IEknbGwgaGFwcGlseSB0ZXN0IG9uY2UgSERNSSBpcyByZWFkeS4gOikKPiAKPj4gWW91
+IG1heSBub3QgYmUgYWJsZSB0byB0cmlnZ2VyIHRoZSBpc3N1ZSBzaW5jZSBpdCBzZWVtcyBBbWxv
+Z2ljIHJlZHVjZXMgdGhpcyByZXNlcnZlZCBzaXplIG9uIEdYTC9HWE0gOgo+PiBodHRwczovL2dp
+dGh1Yi5jb20va2hhZGFzL2xpbnV4L2NvbW1pdC82OThkZjJjNmNmYmIwZDFhOTM1OTc0MzIwOGU4
+MzUxN2IzMWRhNmNlCj4+IEJ1dCBpdCBzaG91bGQgYmUgY29uZmlybWVkLgo+IAo+IENvbmZpcm1p
+bmcgbm8gaXNzdWVzIG9uIHRocmVlIHJ1bnMgb24gbWVzb24tZ3htLXJib3gtcHJvOgo+IAo+IGJv
+eGVyOn4gIyBzdHJlc3MtbmcgLS12bSA0IC0tdm0tYnl0ZXMgMTI4TSAtLXRpbWVvdXQgMTBzICYK
+PiBbMV0gMjUyOAo+IGJveGVyOn4gIyBzdHJlc3Mtbmc6IGluZm86ICBbMjUyOF0gZGlzcGF0Y2hp
+bmcgaG9nczogNCB2bQo+IHN0cmVzcy1uZzogaW5mbzogIFsyNTI4XSBjYWNoZSBhbGxvY2F0ZTog
+ZGVmYXVsdCBjYWNoZSBzaXplOiAyNTZLCj4gc3RyZXNzLW5nOiBpbmZvOiAgWzI1MjhdIHN1Y2Nl
+c3NmdWwgcnVuIGNvbXBsZXRlZCBpbiAxMC4wN3MKPiAKPiBbMV0rICBEb25lICAgICAgICAgICAg
+ICAgICAgICBzdHJlc3MtbmcgLS12bSA0IC0tdm0tYnl0ZXMgMTI4TSAtLXRpbWVvdXQgMTBzCj4g
+Ym94ZXI6fiAjIHN0cmVzcy1uZyAtLXZtIDQgLS12bS1ieXRlcyAxMjhNIC0tdGltZW91dCAxMHMK
+PiBzdHJlc3Mtbmc6IGluZm86ICBbMjUzN10gZGlzcGF0Y2hpbmcgaG9nczogNCB2bQo+IHN0cmVz
+cy1uZzogaW5mbzogIFsyNTM3XSBjYWNoZSBhbGxvY2F0ZTogZGVmYXVsdCBjYWNoZSBzaXplOiAy
+NTZLCj4gc3RyZXNzLW5nOiBpbmZvOiAgWzI1MzddIHN1Y2Nlc3NmdWwgcnVuIGNvbXBsZXRlZCBp
+biAxMC4wN3MKPiBib3hlcjp+ICMgc3RyZXNzLW5nIC0tdm0gNCAtLXZtLWJ5dGVzIDEyOE0gLS10
+aW1lb3V0IDEwcwo+IHN0cmVzcy1uZzogaW5mbzogIFsyNTQ2XSBkaXNwYXRjaGluZyBob2dzOiA0
+IHZtCj4gc3RyZXNzLW5nOiBpbmZvOiAgWzI1NDZdIGNhY2hlIGFsbG9jYXRlOiBkZWZhdWx0IGNh
+Y2hlIHNpemU6IDI1NksKPiBzdHJlc3Mtbmc6IGluZm86ICBbMjU0Nl0gc3VjY2Vzc2Z1bCBydW4g
+Y29tcGxldGVkIGluIDEwLjA3cwo+IGJveGVyOn4gIwoKRm9yIDIgR2lCIGJvYXJkcywgeW91IG1h
+eSBuZWVkIHRvIGluY3JlYXNlIHRoZSB2bSB0aHJlYWRzIDoKIyBzdHJlc3MtbmcgLS12bSAxNiAt
+LXZtLWJ5dGVzIDEyOE0gLS10aW1lb3V0IDEwcwpzdHJlc3Mtbmc6IGluZm86ICBbMTI5Ml0gZGlz
+cGF0Y2hpbmcgaG9nczogMTYgdm0Kc3RyZXNzLW5nOiBpbmZvOiAgWzEyOTJdIGNhY2hlIGFsbG9j
+YXRlOiBkZWZhdWx0IGNhY2hlIHNpemU6IDUxMksKc3RyZXNzOiBpbmZvOiBbMTI3NV0gZGlzcGF0
+Y2hpbmcgaG9nczogMCBjcHUsIDAgaW8sIDE2IHZtLCAwIGhkZApbICA5NDguODMyNjk0XSBCYWQg
+bW9kZSBpbiBFcnJvciBoYW5kbGVyIGRldGVjdGVkIG9uIENQVTEsIGNvZGUgMHhiZjAwMDAwMCAt
+LSBTRXJyb3IKWyAgOTQ4LjgzMjgxMl0gQmFkIG1vZGUgaW4gRXJyb3IgaGFuZGxlciBkZXRlY3Rl
+ZCBvbiBDUFUzLCBjb2RlIDB4YmYwMDAwMDAgLS0gU0Vycm9yClsgIDk0OC44MzI4MzJdIENQVTog
+MyBQSUQ6IDEyNzkgQ29tbTogc3RyZXNzIE5vdCB0YWludGVkIDQuMTAuMC1yYzQtMDAwMDQtZ2Jh
+N2U3YjggIzE0Ci4uLgoKT24gYSBXZXRlayBQbGF5MiBib2FyZCB3aXRoIDJHaUIuCgo+IAo+PiBL
+ZXZpbiBhc2tlZCBtZSBpbml0aWFsbHkgdG8gaGFuZGxlIHRoaXMgInN0YXJ0IG9mIGRkciIgcmVz
+ZXJ2ZWQgem9uZSB2aWEgYSByZXNlcnZlZC1tZW1vcnkgZW50cnksIGJ1dAo+PiBhdCB0aGF0IHRp
+bWUgaXQgc2VlbWVkIGEgYmV0dGVyIGlkZWEgdG8gdXNlICJsaW51eCx1c2VhYmxlLW1lbW9yeSIs
+IGJ1dCBJIHJlY29uIGl0IG1heSBiZSBhbiBlcnJvci4KPj4KPj4gSSB3aWxsIHB1c2ggYSB2NSB3
+aXRoIGEgc3VwcGxlbWVudGFyeSByZXNlcnZlZC1tZW1vcnkgZW50cnkgYW5kIHdpbGwgcG9zdHBv
+bmUgdGhlIGJvYXJkcyBtZW1vcnkgc2l6ZQo+PiBmaXh1cCBmb3IgYSBmdXR1cmUgRFRTIGNsZWFu
+dXAuCj4+Cj4+IEFuZHJlYXMsIGlzIHRoaXMgb2sgZm9yIHlvdSA/Cj4gCj4gWWVzLCBzb3VuZHMg
+ZmluZSB0byBtZSwgdGhhbmtzLiBJJ2xsIG5vdGUgYSBmZXcgbW9yZSBuaXRzIHRvIGNvbnNpZGVy
+Lgo+IAo+IEtldmluLCBJIG5vdGljZWQgdGhhdCB0aGlzIHN1cHBvc2VkbHkgYXBwbGllZCBwYXRj
+aCBkaWQgbm90IHNob3cgdXAgaW4KPiBsaW51eC1uZXh0IGZvciB0ZXN0aW5nIC0gY291bGQgeW91
+IG1lcmdlIHlvdXIgZml4ZXMgYnJhbmNoIGludG8gZm9yLW5leHQKPiBwbGVhc2UgZm9yIHRob3Nl
+IG9mIHVzIHdvcmtpbmcgb24gbmV3IHN0dWZmPwo+IAo+PiBUaGlzIGlzc3VlIGV4aXN0cyBzaW5j
+ZSBmb3JldmVyIG9uIG1haW5saW5lIGxpbnV4LCBhbmQgZXZlbiA0LjkgaGFzIGl0Lgo+PiBPbG9m
+LCBIb3cgY291bGQgYSBzaW1pbGFyIGZpeCBnbyBpbiA0Ljkgc3RhYmxlID8KPiAKPiBJIGd1ZXNz
+IGl0IHdvdWxkIHRoZW4gYmUgYmVzdCB0byBjb25zaWRlciBzcGxpdHRpbmcgdGhpcyBwYXRjaCB1
+cCBwZXIKPiBib2FyZC9Tb0Mgc28gdGhhdCB5b3UgY2FuIHNldCBhcHByb3ByaWF0ZSBGaXhlczog
+aGVhZGVycyBpbmRpY2F0aW5nIGhvdwo+IGZhciBiYWNrIGVhY2ggb25lIG5lZWRzIHRvIGJlIGZp
+eGVkLgo+IAo+IFJlZ2FyZHMsCj4gQW5kcmVhcwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
