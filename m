@@ -1,49 +1,35 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Export __of_find_all_nodes()
-Date: Wed, 18 Jan 2017 13:33:15 -0800
-Message-ID: <587FDF1B.1060206@gmail.com>
-References: <20170118093849.32204-1-alexander.sverdlin@nokia.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 25/37] dt-bindings: PCI: Add dt bindings for pci
+ designware EP mode
+Date: Wed, 18 Jan 2017 15:36:31 -0600
+Message-ID: <20170118213631.vvdjc4g3gt6zy2c5@rob-hp-laptop>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-26-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118093849.32204-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484216786-17292-26-git-send-email-kishon@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>, linux-arm-msm@vger.kernel.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@axis.com, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, linux-omap@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/18/17 01:38, Alexander Sverdlin wrote:
-> This is necessary for for_each_of_allnodes() to work in the modules.
+On Thu, Jan 12, 2017 at 03:56:14PM +0530, Kishon Vijay Abraham I wrote:
+> Add device tree binding documentation for pci designware EP mode.
 > 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
->  drivers/of/base.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2eb4dea62b84..f576c33e0b84 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -270,6 +270,7 @@ struct device_node *__of_find_all_nodes(struct device_node *prev)
->  	}
->  	return np;
->  }
-> +EXPORT_SYMBOL_GPL(__of_find_all_nodes);
->  
->  /**
->   * of_find_all_nodes - Get next node in global list
-> 
+>  .../devicetree/bindings/pci/designware-pcie.txt    |   26 ++++++++++++++------
+>  1 file changed, 18 insertions(+), 8 deletions(-)
 
-Quoting Rob from the last request for this:
-
-"What driver needs this? This isn't really a function I'd expect drivers to use."
-
--Frank
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
