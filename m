@@ -1,98 +1,135 @@
-From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] arm64: dts: exynos: Add USB 3.0 controller node
- for Exynos7
-Date: Wed, 18 Jan 2017 22:58:47 +0900
-Message-ID: <CAGOxZ52ypgGdvYYP24Y37NzfmGqDNwBW+NsrKDAeNN6=OnafbA@mail.gmail.com>
-References: <CGME20170118063008epcas5p26a5a1fd73d843b2b08eae0fdb03b775c@epcas5p2.samsung.com>
- <1484721173-30474-1-git-send-email-pankaj.dubey@samsung.com> <1484721173-30474-2-git-send-email-pankaj.dubey@samsung.com>
+From: Mason <slash.tmp@free.fr>
+Subject: Initializing MAC address at run-time
+Date: Wed, 18 Jan 2017 15:03:57 +0100
+Message-ID: <e083ed68-0e8e-380e-23bd-5ad387c88575@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484721173-30474-2-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kgene <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: 
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linux ARM <linux-arm-kernel@lists.infradead.org>, DT <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-HI,
+Hello,
 
-On Wed, Jan 18, 2017 at 3:32 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Add USB 3.0 DRD controller device node, with its clock
-> and phy information to enable the same on Exynos7.
->
-> Signed-off-by: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> ---
+When my system boots up, eth0 is given a seemingly random MAC address.
 
-Looks good.
-Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+[    0.950734] nb8800 26000.ethernet eth0: MAC address ba:de:d6:38:b8:38
+[    0.957334] nb8800 26000.ethernet eth0: MAC address 6e:f1:48:de:d6:c4
 
->  arch/arm64/boot/dts/exynos/exynos7.dtsi | 34 +++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> index 80aa60e..9a3fbed 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-> @@ -603,6 +603,40 @@
->                                 #include "exynos7-trip-points.dtsi"
->                         };
->                 };
-> +
-> +               usbdrd_phy: phy@15500000 {
-> +                       compatible = "samsung,exynos7-usbdrd-phy";
-> +                       reg = <0x15500000 0x100>;
-> +                       clocks = <&clock_fsys0 ACLK_USBDRD300>,
-> +                              <&clock_fsys0 OSCCLK_PHY_CLKOUT_USB30_PHY>,
-> +                              <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PIPE_PCLK_USER>,
-> +                              <&clock_fsys0 PHYCLK_USBDRD300_UDRD30_PHYCLK_USER>,
-> +                              <&clock_fsys0 SCLK_USBDRD300_REFCLK>;
-> +                       clock-names = "phy", "ref", "phy_pipe",
-> +                               "phy_utmi", "itp";
-> +                       samsung,pmu-syscon = <&pmu_system_controller>;
-> +                       #phy-cells = <1>;
-> +               };
-> +
-> +               usbdrd3 {
-> +                       compatible = "samsung,exynos7-dwusb3";
-> +                       clocks = <&clock_fsys0 ACLK_USBDRD300>,
-> +                              <&clock_fsys0 SCLK_USBDRD300_SUSPENDCLK>,
-> +                              <&clock_fsys0 ACLK_AXIUS_USBDRD30X_FSYS0X>;
-> +                       clock-names = "usbdrd30", "usbdrd30_susp_clk",
-> +                               "usbdrd30_axius_clk";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
-> +                       ranges;
-> +
-> +                       dwc3@15400000 {
-> +                               compatible = "snps,dwc3";
-> +                               reg = <0x15400000 0x10000>;
-> +                               interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
-> +                               phys = <&usbdrd_phy 0>, <&usbdrd_phy 1>;
-> +                               phy-names = "usb2-phy", "usb3-phy";
-> +                       };
-> +               };
->         };
->  };
->
-> --
-> 2.7.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+The DT node for eth0 is:
+
+	eth0: ethernet@26000 {
+		compatible = "sigma,smp8734-ethernet";
+		reg = <0x26000 0x800>;
+		interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&clkgen SYS_CLK>;
+	};
+
+Documentation/devicetree/bindings/net/ethernet.txt mentions
+- local-mac-address: array of 6 bytes, specifies the MAC address that was
+  assigned to the network device;
+
+And indeed, if I define this property, eth0 ends up with the MAC address
+I specify in the device tree. But of course, I don't want all my boards
+to share the same MAC address. Every interface has a unique MAC address.
+
+In fact, the boot loader (not Uboot, a custom non-DT boot loader) stores
+the MAC address somewhere in MMIO space, in some weird custom format.
+
+So, at init, I can find the MAC address, and dynamically insert the
+"local-mac-address" property in the eth0 node.
+
+Is there another (better) way to do this?
+
+I'll post my code below, for illustration purpose.
+
+Mark suggested this can be done from user-space, but I can't do that,
+because I'm using an NFS rootfs, so I need the network before I even
+have a user-space. And the DHCP server is configured to serve different
+root filesystems, based on the MAC address.
+
+I need to do something similar with the NAND partitions. The boot loader
+stores the partition offsets somewhere, and I need to pass this info
+to the NAND framework, so I assumed that inserting the corresponding
+properties at run-time was the correct way to do it.
+
+Regards.
 
 
 
--- 
-Regards,
-Alim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+#include <linux/of.h>
+#include <linux/io.h>
+#include <asm/unaligned.h>
+
+#define XENV_LRRW_ADDR	0x61a00
+#define XENV_LRRW_SIZE	628
+
+static u8 xenv[XENV_LRRW_SIZE] __initdata;
+
+static void __init *xenv_lookup(void *addr, const char *key, int keylen)
+{
+	u32 len = le32_to_cpup(addr);
+	void *end = addr + len;
+
+	if (len > XENV_LRRW_SIZE)
+		return NULL;
+
+	for (addr += 36; addr < end; addr += len)
+	{
+		len = get_unaligned_be16(addr) & 0xfff;
+		if (strcmp(key, addr + 2) == 0)
+			return addr + 2 + keylen;
+	}
+
+	return NULL;
+}
+
+static struct property prop;
+static u8 mac[6];
+
+static const char mac_lo[] __initconst = "lrrw.maclo";
+static const char mac_hi[] __initconst = "lrrw.machi";
+
+static int __init tango_get_mac_address(void *xenv)
+{
+	struct device_node *np = of_find_node_by_path("eth0");
+	u8 *lo = xenv_lookup(xenv, mac_lo, sizeof mac_lo);
+	u8 *hi = xenv_lookup(xenv, mac_hi, sizeof mac_hi);
+
+	if (np == NULL || lo == NULL || hi == NULL) return -ENODEV;
+
+	mac[0] = hi[1];
+	mac[1] = hi[0];
+	mac[2] = lo[3];
+	mac[3] = lo[2];
+	mac[4] = lo[1];
+	mac[5] = lo[0];
+
+	prop.name = "local-mac-address";
+	prop.length = sizeof mac;
+	prop.value = mac;
+
+	return of_update_property(np, &prop);
+}
+
+static int __init mac_fixup(void)
+{
+	void __iomem *xenv_orig = ioremap(XENV_LRRW_ADDR, XENV_LRRW_SIZE);
+	memcpy_fromio(xenv, xenv_orig, XENV_LRRW_SIZE);
+	iounmap(xenv_orig);
+	return tango_get_mac_address(xenv);
+}
+
+device_initcall(mac_fixup);
