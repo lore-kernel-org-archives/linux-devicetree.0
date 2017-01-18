@@ -1,56 +1,102 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Wed, 18 Jan 2017 15:26:24 +0000
-Message-ID: <90ab45ff-3995-600d-c263-e6d350a35aaf@arm.com>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
- <e2295a5d-3224-1198-8b46-f45b153b540a@osg.samsung.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: Initializing MAC address at run-time
+Date: Wed, 18 Jan 2017 15:35:09 +0000
+Message-ID: <f902209c-268b-5abe-4527-c8d0e56bce79@arm.com>
+References: <e083ed68-0e8e-380e-23bd-5ad387c88575@free.fr>
+ <20170118144528.GH3231@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e2295a5d-3224-1198-8b46-f45b153b540a@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Heiko Stuebner <heiko@sntech.de>Ma
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170118144528.GH3231@leverpostej>
+Sender: netdev-owner@vger.kernel.org
+To: Mason <slash.tmp@free.fr>
+Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, netdev <netdev@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/01/17 15:16, Javier Martinez Canillas wrote:
-> Hello Marc,
-> 
-> On 01/18/2017 07:53 AM, Marc Zyngier wrote:
->> Since everybody copied my own mistake from the DT binding example,
->> let's address all the offenders in one swift go.
+On 18/01/17 14:45, Mark Rutland wrote:
+> On Wed, Jan 18, 2017 at 03:03:57PM +0100, Mason wrote:
+>> Hello,
 >>
->> Most of them got the CPU interface size wrong (4kB, while it should
->> be 8kB), except for both keystone platforms which got the control
->> interface wrong (4kB instead of 8kB).
+>> When my system boots up, eth0 is given a seemingly random MAC address.
 >>
->> In the couple of cases were I knew for sure what implementation
->> was used, I've added the "arm,gic-400" compatible string. I'm 99%
->> sure that this is what everyong is using, but short of having the
->> TRM for all the other SoCs, I've let them alone.
+>> [    0.950734] nb8800 26000.ethernet eth0: MAC address ba:de:d6:38:b8:38
+>> [    0.957334] nb8800 26000.ethernet eth0: MAC address 6e:f1:48:de:d6:c4
 >>
->> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
->> ---
->>  arch/arm/boot/dts/exynos3250.dtsi    | 2 +-
->>  arch/arm/boot/dts/exynos5.dtsi       | 2 +-
->>  arch/arm/boot/dts/exynos5260.dtsi    | 2 +-
->>  arch/arm/boot/dts/exynos5440.dtsi    | 2 +-
+>>
+>> The DT node for eth0 is:
+>>
+>> 	eth0: ethernet@26000 {
+>> 		compatible = "sigma,smp8734-ethernet";
+>> 		reg = <0x26000 0x800>;
+>> 		interrupts = <38 IRQ_TYPE_LEVEL_HIGH>;
+>> 		clocks = <&clkgen SYS_CLK>;
+>> 	};
+>>
+>> Documentation/devicetree/bindings/net/ethernet.txt mentions
+>> - local-mac-address: array of 6 bytes, specifies the MAC address that was
+>>   assigned to the network device;
+>>
+>> And indeed, if I define this property, eth0 ends up with the MAC address
+>> I specify in the device tree. But of course, I don't want all my boards
+>> to share the same MAC address. Every interface has a unique MAC address.
+>>
+>> In fact, the boot loader (not Uboot, a custom non-DT boot loader) stores
+>> the MAC address somewhere in MMIO space, in some weird custom format.
+>>
+>> So, at init, I can find the MAC address, and dynamically insert the
+>> "local-mac-address" property in the eth0 node.
 > 
-> I've looked at the Exynos5250 and Exynos5420 TRM and both say that adopts
-> GIC-400, so I think it's safe for you to also update the compatible in the
-> exynos5.dtsi. Unfortunately I don't have manuals for 3250, 5260 and 5440.
-
-Thanks for taking the time to find out, I'll update the patch.
-
+> To me it sounds very convoluted to do this from the kernel, to pass
+> information back to itself. I don't think this is the best way to handle
+> this.
 > 
-> The register map changes looks good to me, so for Exynos:
+>> Is there another (better) way to do this?
+>>
+>> I'll post my code below, for illustration purpose.
+>>
+>> Mark suggested this can be done from user-space, but I can't do that,
+>> because I'm using an NFS rootfs, so I need the network before I even
+>> have a user-space. And the DHCP server is configured to serve different
+>> root filesystems, based on the MAC address.
 > 
-> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> That's not quite what I said. I asked whether your information was
+> coming from userspace or from a kernel driver.
+> 
+> My suggestion was that this should be done in the probe path somehow,
+> by describing the relationship between the ethernet controller and the
+> device containing the MAC information.
+> 
+> e.g. on the ethernet device, have a phandle (and perhaps some other
+> args) describinng the device containing the MAC, and how to extract it.
+> 
+> That way, in the ethernet probe path we can go and look up the MAC
+> address from the provider of that information.
 
-Thank you.
+See Documentation/devicetree/bindings/mfd/syscon.txt and
+bindings/drivers with syscon dependencies. Essentially, you would use a
+syscon node to describe "somewhere in MMIO space", then your ethernet
+driver probe routine simply grabs the regmap, pulls out the MAC and goes
+from there.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Be warned that the above represents the totality of my technical
+knowledge on the subject ;) My experience is in hacking up DTs for
+drivers which already use this mechanism, rather than in implementing it.
+
+Robin.
+
+>> I need to do something similar with the NAND partitions. The boot loader
+>> stores the partition offsets somewhere, and I need to pass this info
+>> to the NAND framework, so I assumed that inserting the corresponding
+>> properties at run-time was the correct way to do it.
+> 
+> I would say similar could happen here.
+> 
+> Thanks,
+> Mark.
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
