@@ -1,109 +1,60 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v11 08/12] drm/mediatek: add dsi interrupt control
-Date: Wed, 18 Jan 2017 14:21:33 +0800
-Message-ID: <1484720493.26941.2.camel@mtksdaap41>
-References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
- <1484117473-46644-9-git-send-email-yt.shen@mediatek.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 4/5] ARM: dts: am57xx: Add stdout-path property
+Date: Wed, 18 Jan 2017 09:33:25 +0530
+Message-ID: <20170118040326.29259-5-lokeshvutla@ti.com>
+References: <20170118040326.29259-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484117473-46644-9-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170118040326.29259-1-lokeshvutla-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT24gV2VkLCAyMDE3LTAxLTExIGF0IDE0OjUxICswODAwLCBZVCBTaGVuIHdyb3Rl
-Ogo+IEZyb206IHNoYW9taW5nIGNoZW4gPHNoYW9taW5nLmNoZW5AbWVkaWF0ZWsuY29tPgo+IAo+
-IGFkZCBkc2kgaW50ZXJydXB0IGNvbnRyb2wKPiAKPiBTaWduZWQtb2ZmLWJ5OiBzaGFvbWluZyBj
-aGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KCkFja2VkLWJ5OiBDSyBIdSA8Y2suaHVA
-bWVkaWF0ZWsuY29tPgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2ku
-YyB8IDkyICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCA5MiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5j
-Cj4gaW5kZXggNmY0YjNiYi4uNDc0ODYxYSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19k
-c2kuYwo+IEBAIC0xOCw2ICsxOCw3IEBACj4gICNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4g
-ICNpbmNsdWRlIDxsaW51eC9jbGsuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2NvbXBvbmVudC5oPgo+
-ICsjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9vZi5oPgo+ICAjaW5j
-bHVkZSA8bGludXgvb2ZfcGxhdGZvcm0uaD4KPiAgI2luY2x1ZGUgPGxpbnV4L29mX2dyYXBoLmg+
-Cj4gQEAgLTI5LDYgKzMwLDE2IEBACj4gIAo+ICAjZGVmaW5lIERTSV9TVEFSVAkJMHgwMAo+ICAK
-PiArI2RlZmluZSBEU0lfSU5URU4JCTB4MDgKPiArCj4gKyNkZWZpbmUgRFNJX0lOVFNUQQkJMHgw
-Ywo+ICsjZGVmaW5lIExQUlhfUkRfUkRZX0lOVF9GTEFHCQlCSVQoMCkKPiArI2RlZmluZSBDTURf
-RE9ORV9JTlRfRkxBRwkJQklUKDEpCj4gKyNkZWZpbmUgVEVfUkRZX0lOVF9GTEFHCQkJQklUKDIp
-Cj4gKyNkZWZpbmUgVk1fRE9ORV9JTlRfRkxBRwkJQklUKDMpCj4gKyNkZWZpbmUgRVhUX1RFX1JE
-WV9JTlRfRkxBRwkJQklUKDQpCj4gKyNkZWZpbmUgRFNJX0JVU1kJCQlCSVQoMzEpCj4gKwo+ICAj
-ZGVmaW5lIERTSV9DT05fQ1RSTAkJMHgxMAo+ICAjZGVmaW5lIERTSV9SRVNFVAkJCUJJVCgwKQo+
-ICAjZGVmaW5lIERTSV9FTgkJCQlCSVQoMSkKPiBAQCAtNzEsNiArODIsOSBAQAo+ICAKPiAgI2Rl
-ZmluZSBEU0lfSFNUWF9DS0xfV0MJCTB4NjQKPiAgCj4gKyNkZWZpbmUgRFNJX1JBQ0sJCTB4ODQK
-PiArI2RlZmluZSBSQUNLCQkJCUJJVCgwKQo+ICsKPiAgI2RlZmluZSBEU0lfUEhZX0xDQ09OCQkw
-eDEwNAo+ICAjZGVmaW5lIExDX0hTX1RYX0VOCQkJQklUKDApCj4gICNkZWZpbmUgTENfVUxQTV9F
-TgkJCUJJVCgxKQo+IEBAIC0xMzcsNiArMTUxLDggQEAgc3RydWN0IG10a19kc2kgewo+ICAJc3Ry
-dWN0IHZpZGVvbW9kZSB2bTsKPiAgCWludCByZWZjb3VudDsKPiAgCWJvb2wgZW5hYmxlZDsKPiAr
-CXUzMiBpcnFfZGF0YTsKPiArCXdhaXRfcXVldWVfaGVhZF90IGlycV93YWl0X3F1ZXVlOwo+ICB9
-Owo+ICAKPiAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX2RzaSAqZW5jb2Rlcl90b19kc2koc3Ry
-dWN0IGRybV9lbmNvZGVyICplKQo+IEBAIC00NjksNiArNDg1LDY0IEBAIHN0YXRpYyB2b2lkIG10
-a19kc2lfc3RhcnQoc3RydWN0IG10a19kc2kgKmRzaSkKPiAgCXdyaXRlbCgxLCBkc2ktPnJlZ3Mg
-KyBEU0lfU1RBUlQpOwo+ICB9Cj4gIAo+ICtzdGF0aWMgdm9pZCBtdGtfZHNpX3NldF9pbnRlcnJ1
-cHRfZW5hYmxlKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gK3sKPiArCXUzMiBpbnRlbiA9IExQUlhf
-UkRfUkRZX0lOVF9GTEFHIHwgQ01EX0RPTkVfSU5UX0ZMQUcgfCBWTV9ET05FX0lOVF9GTEFHOwo+
-ICsKPiArCXdyaXRlbChpbnRlbiwgZHNpLT5yZWdzICsgRFNJX0lOVEVOKTsKPiArfQo+ICsKPiAr
-c3RhdGljIHZvaWQgbXRrX2RzaV9pcnFfZGF0YV9zZXQoc3RydWN0IG10a19kc2kgKmRzaSwgdTMy
-IGlycV9iaXQpCj4gK3sKPiArCWRzaS0+aXJxX2RhdGEgfD0gaXJxX2JpdDsKPiArfQo+ICsKPiAr
-c3RhdGljIF9fbWF5YmVfdW51c2VkIHZvaWQgbXRrX2RzaV9pcnFfZGF0YV9jbGVhcihzdHJ1Y3Qg
-bXRrX2RzaSAqZHNpLCB1MzIgaXJxX2JpdCkKPiArewo+ICsJZHNpLT5pcnFfZGF0YSAmPSB+aXJx
-X2JpdDsKPiArfQo+ICsKPiArc3RhdGljIF9fbWF5YmVfdW51c2VkIHMzMiBtdGtfZHNpX3dhaXRf
-Zm9yX2lycV9kb25lKHN0cnVjdCBtdGtfZHNpICpkc2ksIHUzMiBpcnFfZmxhZywKPiArCQkJCSAg
-ICAgdW5zaWduZWQgaW50IHRpbWVvdXQpCj4gK3sKPiArCXMzMiByZXQgPSAwOwo+ICsJdW5zaWdu
-ZWQgbG9uZyBqaWZmaWVzID0gbXNlY3NfdG9famlmZmllcyh0aW1lb3V0KTsKPiArCj4gKwlyZXQg
-PSB3YWl0X2V2ZW50X2ludGVycnVwdGlibGVfdGltZW91dChkc2ktPmlycV93YWl0X3F1ZXVlLAo+
-ICsJCQkJCSAgICAgICBkc2ktPmlycV9kYXRhICYgaXJxX2ZsYWcsCj4gKwkJCQkJICAgICAgIGpp
-ZmZpZXMpOwo+ICsJaWYgKHJldCA9PSAwKSB7Cj4gKwkJRFJNX1dBUk4oIldhaXQgRFNJIElSUSgw
-eCUwOHgpIFRpbWVvdXRcbiIsIGlycV9mbGFnKTsKPiArCj4gKwkJbXRrX2RzaV9lbmFibGUoZHNp
-KTsKPiArCQltdGtfZHNpX3Jlc2V0X2VuZ2luZShkc2kpOwo+ICsJfQo+ICsKPiArCXJldHVybiBy
-ZXQ7Cj4gK30KPiArCj4gK3N0YXRpYyBpcnFyZXR1cm5fdCBtdGtfZHNpX2lycShpbnQgaXJxLCB2
-b2lkICpkZXZfaWQpCj4gK3sKPiArCXN0cnVjdCBtdGtfZHNpICpkc2kgPSBkZXZfaWQ7Cj4gKwl1
-MzIgc3RhdHVzLCB0bXA7Cj4gKwl1MzIgZmxhZyA9IExQUlhfUkRfUkRZX0lOVF9GTEFHIHwgQ01E
-X0RPTkVfSU5UX0ZMQUcgfCBWTV9ET05FX0lOVF9GTEFHOwo+ICsKPiArCXN0YXR1cyA9IHJlYWRs
-KGRzaS0+cmVncyArIERTSV9JTlRTVEEpICYgZmxhZzsKPiArCj4gKwlpZiAoc3RhdHVzKSB7Cj4g
-KwkJZG8gewo+ICsJCQltdGtfZHNpX21hc2soZHNpLCBEU0lfUkFDSywgUkFDSywgUkFDSyk7Cj4g
-KwkJCXRtcCA9IHJlYWRsKGRzaS0+cmVncyArIERTSV9JTlRTVEEpOwo+ICsJCX0gd2hpbGUgKHRt
-cCAmIERTSV9CVVNZKTsKPiArCj4gKwkJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX0lOVFNUQSwgc3Rh
-dHVzLCAwKTsKPiArCQltdGtfZHNpX2lycV9kYXRhX3NldChkc2ksIHN0YXR1cyk7Cj4gKwkJd2Fr
-ZV91cF9pbnRlcnJ1cHRpYmxlKCZkc2ktPmlycV93YWl0X3F1ZXVlKTsKPiArCX0KPiArCj4gKwly
-ZXR1cm4gSVJRX0hBTkRMRUQ7Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lkIG10a19kc2lfcG93ZXJv
-ZmYoc3RydWN0IG10a19kc2kgKmRzaSkKPiAgewo+ICAJaWYgKFdBUk5fT04oZHNpLT5yZWZjb3Vu
-dCA9PSAwKSkKPiBAQCAtNTE3LDYgKzU5MSw3IEBAIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNp
-X2VuYWJsZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQo+ICAKPiAgCW10a19kc2lfcHNfY29udHJvbF92
-YWN0KGRzaSk7Cj4gIAltdGtfZHNpX2NvbmZpZ192ZG9fdGltaW5nKGRzaSk7Cj4gKwltdGtfZHNp
-X3NldF9pbnRlcnJ1cHRfZW5hYmxlKGRzaSk7Cj4gIAo+ICAJbXRrX2RzaV9zZXRfbW9kZShkc2kp
-Owo+ICAJbXRrX2RzaV9jbGtfaHNfbW9kZShkc2ksIDEpOwo+IEBAIC04MTgsNiArODkzLDcgQEAg
-c3RhdGljIGludCBtdGtfZHNpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4g
-IAlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICAJc3RydWN0IGRldmljZV9ub2Rl
-ICpyZW1vdGVfbm9kZSwgKmVuZHBvaW50Owo+ICAJc3RydWN0IHJlc291cmNlICpyZWdzOwo+ICsJ
-aW50IGlycV9udW07Cj4gIAlpbnQgY29tcF9pZDsKPiAgCWludCByZXQ7Cj4gIAo+IEBAIC04OTQs
-NiArOTcwLDIyIEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQo+ICAJCXJldHVybiByZXQ7Cj4gIAl9Cj4gIAo+ICsJaXJxX251bSA9IHBsYXRm
-b3JtX2dldF9pcnEocGRldiwgMCk7Cj4gKwlpZiAoaXJxX251bSA8IDApIHsKPiArCQlkZXZfZXJy
-KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVxdWVzdCBkc2kgaXJxIHJlc291cmNlXG4iKTsKPiAr
-CQlyZXR1cm4gLUVQUk9CRV9ERUZFUjsKPiArCX0KPiArCj4gKwlpcnFfc2V0X3N0YXR1c19mbGFn
-cyhpcnFfbnVtLCBJUlFfVFlQRV9MRVZFTF9MT1cpOwo+ICsJcmV0ID0gZGV2bV9yZXF1ZXN0X2ly
-cSgmcGRldi0+ZGV2LCBpcnFfbnVtLCBtdGtfZHNpX2lycSwKPiArCQkJICAgICAgIElSUUZfVFJJ
-R0dFUl9MT1csIGRldl9uYW1lKCZwZGV2LT5kZXYpLCBkc2kpOwo+ICsJaWYgKHJldCkgewo+ICsJ
-CWRldl9lcnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZXF1ZXN0IG1lZGlhdGVrIGRzaSBpcnFc
-biIpOwo+ICsJCXJldHVybiAtRVBST0JFX0RFRkVSOwo+ICsJfQo+ICsKPiArCWluaXRfd2FpdHF1
-ZXVlX2hlYWQoJmRzaS0+aXJxX3dhaXRfcXVldWUpOwo+ICsKPiAgCXBsYXRmb3JtX3NldF9kcnZk
-YXRhKHBkZXYsIGRzaSk7Cj4gIAo+ICAJcmV0dXJuIGNvbXBvbmVudF9hZGQoJnBkZXYtPmRldiwg
-Jm10a19kc2lfY29tcG9uZW50X29wcyk7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Add stdout-path property in /chosen node so that earlycon can be
+used by just adding earlycon in bootargs.
+
+Signed-off-by: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 4 ++++
+ arch/arm/boot/dts/am57xx-idk-common.dtsi        | 4 ++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+index 78bee26361f1..3a95db7da71f 100644
+--- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
+@@ -22,6 +22,10 @@
+ 		display0 = &hdmi0;
+ 	};
+ 
++	chosen {
++		stdout-path = &uart3;
++	};
++
+ 	memory@0 {
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x80000000>;
+diff --git a/arch/arm/boot/dts/am57xx-idk-common.dtsi b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+index 814a720d5c3d..0d341c545b01 100644
+--- a/arch/arm/boot/dts/am57xx-idk-common.dtsi
++++ b/arch/arm/boot/dts/am57xx-idk-common.dtsi
+@@ -14,6 +14,10 @@
+ 		rtc1 = &rtc;
+ 	};
+ 
++	chosen {
++		stdout-path = &uart3;
++	};
++
+ 	vmain: fixedregulator-vmain {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "VMAIN";
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
