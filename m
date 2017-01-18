@@ -1,40 +1,40 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Export __of_find_all_nodes()
-Date: Wed, 18 Jan 2017 10:38:49 +0100
-Message-ID: <20170118093849.32204-1-alexander.sverdlin@nokia.com>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: [RESEND PATCH 0/2] Add i2c DT binding and device node for Mediatek
+ MT2701 Soc
+Date: Wed, 18 Jan 2017 17:40:59 +0800
+Message-ID: <1484732461-13594-1-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Wolfram Sang <wsa@the-dreams.de>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is necessary for for_each_of_allnodes() to work in the modules.
+This patch series based on v4.10-rc2, include MT2701 i2c DT binding and device node.
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/of/base.c | 1 +
- 1 file changed, 1 insertion(+)
+Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"[1].
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 2eb4dea62b84..f576c33e0b84 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -270,6 +270,7 @@ struct device_node *__of_find_all_nodes(struct device_node *prev)
- 	}
- 	return np;
- }
-+EXPORT_SYMBOL_GPL(__of_find_all_nodes);
- 
- /**
-  * of_find_all_nodes - Get next node in global list
--- 
-2.11.0
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
+
+Jun Gao (2):
+  Documentation: devicetree: Add i2c binding for mediatek MT2701 Soc
+    Platform
+  arm: dts: mt2701: Add i2c device node
+
+ .../devicetree/bindings/i2c/i2c-mt6577.txt         |   11 ++---
+ arch/arm/boot/dts/mt2701-evb.dts                   |   44 ++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi                      |   42 +++++++++++++++++++
+ 3 files changed, 92 insertions(+), 5 deletions(-)
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
