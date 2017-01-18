@@ -1,49 +1,47 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: DTS: Fix broken GICv2 register maps
-Date: Wed, 18 Jan 2017 13:07:30 +0000
-Message-ID: <16613dbe-08b9-98d8-c747-a977e78601b1@arm.com>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <2966702.djJyWhCMlK@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 01/13] devicetree: bindings: add bindings for ahci-da850
+Date: Wed, 18 Jan 2017 14:19:49 +0100
+Message-ID: <1484745601-4769-2-git-send-email-bgolaszewski@baylibre.com>
+References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2966702.djJyWhCMlK@wuerfel>
+In-Reply-To: <1484745601-4769-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tsahee Zidenberg <tsahee-IEYhy/pPZWng2XuLRlxkFAC/G2K4zDHf@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias
+To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 18/01/17 12:34, Arnd Bergmann wrote:
-> On Wednesday, January 18, 2017 10:53:29 AM CET Marc Zyngier wrote:
->> For a GICv2 (which happens to be virtualization capable), the
->> architecture mandates the following regions:
->>
->> 	     GICD: 4kB
->> 	     GICC: 8kB
->> 	     GICH: 8kB
->> 	     GICV: 8kB
->>
->> Unfortunately, I made a mistake in one of the examples contained in
->> the DT binding document, and everyone duplicated that same mistake all
->> over the map.
->>
->> This small series fixes the DT binding, and hopefully updates all the
->> offending DTs to be compliant with the architecture.
->>
-> 
-> Looks good to me, can you send this as a pull request to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> once you have collected a reasonable number of Acks?
+Add DT bindings for the TI DA850 AHCI SATA controller.
 
-Sure, will do.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/ata/ahci-da850.txt | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
 
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-
-Thanks,
-
-	M.
+diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+new file mode 100644
+index 0000000..fd90662
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
+@@ -0,0 +1,15 @@
++Device tree binding for the TI DA850 AHCI SATA Controller
++---------------------------------------------------------
++
++Required properties:
++  - compatible: must be "ti,da850-ahci"
++  - reg: physical base addresses and sizes of the controller's register areas
++  - interrupts: interrupt specifier (refer to the interrupt binding)
++
++Example:
++
++	sata: ahci@218000 {
++		compatible = "ti,da850-ahci";
++		reg = <0x218000 0x2000>, <0x22c018 0x4>;
++		interrupts = <67>;
++	};
 -- 
-Jazz is not dead. It just smells funny...
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
