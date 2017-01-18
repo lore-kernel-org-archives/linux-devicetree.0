@@ -1,39 +1,111 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4] tty: serial: meson: allow baud-rates higher than 115200
-Date: Wed, 18 Jan 2017 13:44:42 -0800
-Message-ID: <m2o9z4yred.fsf@baylibre.com>
-References: <20170115223255.10350-1-martin.blumenstingl@googlemail.com>
-        <20170115223255.10350-2-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 28/37] dt-bindings: PCI: dra7xx: Add dt bindings for pci
+ dra7xx EP mode
+Date: Wed, 18 Jan 2017 15:45:05 -0600
+Message-ID: <20170118214505.5kcoowi4ooy7eepg@rob-hp-laptop>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-29-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170115223255.10350-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-        (Martin Blumenstingl's message of "Sun, 15 Jan 2017 23:32:52 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484216786-17292-29-git-send-email-kishon@ti.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
+On Thu, Jan 12, 2017 at 03:56:17PM +0530, Kishon Vijay Abraham I wrote:
+> Add device tree binding documentation for pci dra7xx EP mode.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |   37 ++++++++++++++++++----
+>  1 file changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 60e2516..62f5f59 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -1,17 +1,22 @@
+>  TI PCI Controllers
+>  
+>  PCIe Designware Controller
+> - - compatible: Should be "ti,dra7-pcie""
+> - - reg : Two register ranges as listed in the reg-names property
+> - - reg-names : The first entry must be "ti-conf" for the TI specific registers
+> -	       The second entry must be "rc-dbics" for the designware pcie
+> -	       registers
+> -	       The third entry must be "config" for the PCIe configuration space
+> + - compatible: Should be "ti,dra7-pcie" for RC
+> +	       Should be "ti,dra7-pcie-ep" for EP
+>   - phys : list of PHY specifiers (used by generic PHY framework)
+>   - phy-names : must be "pcie-phy0", "pcie-phy1", "pcie-phyN".. based on the
+>  	       number of PHYs as specified in *phys* property.
+>   - ti,hwmods : Name of the hwmod associated to the pcie, "pcie<X>",
+>  	       where <X> is the instance number of the pcie from the HW spec.
+> + - num-lanes as specified in ../designware-pcie.txt
+> +
+> +HOST MODE
+> +=========
+> + - reg : Two register ranges as listed in the reg-names property
+> + - reg-names : The first entry must be "ti-conf" for the TI specific registers
+> +	       The second entry must be "rc-dbics" for the designware pcie
+> +	       registers
+> +	       The third entry must be "config" for the PCIe configuration space
+>   - interrupts : Two interrupt entries must be specified. The first one is for
+>  		main interrupt line and the second for MSI interrupt line.
+>   - #address-cells,
+> @@ -19,13 +24,31 @@ PCIe Designware Controller
+>     #interrupt-cells,
+>     device_type,
+>     ranges,
+> -   num-lanes,
+>     interrupt-map-mask,
+>     interrupt-map : as specified in ../designware-pcie.txt
+>  
+> +DEVICE MODE
+> +===========
+> + - reg : Four register ranges as listed in the reg-names property
+> + - reg-names : "ti-conf" for the TI specific registers
+> +	       "ep_dbics" for the standard configuration registers as
+> +		they are locally accessed within the DIF CS space
+> +	       "ep_dbics2" for the standard configuration registers as
+> +		they are locally accessed within the DIF CS2 space
+> +	       "addr_space" used to map remote RC address space
+> + - interrupts : one interrupt entries must be specified for main interrupt.
+> + - num-ib-windows : number of inbound address translation windows
+> + - num-ob-windows : number of outbound address translation windows
+> +
+>  Optional Property:
+>   - gpios : Should be added if a gpio line is required to drive PERST# line
+>  
+> +NOTE: Two dt nodes should be added for each PCI controller; one for host
 
-> The vendor driver allows setting baud-rates higher than 115200 baud.
-> There is a check in the vendor driver which prevents using more than
-> 115200 baud during startup, however it does not have such a check in
-> .set_termios.
-> Higher baud-rates are often used by the bluetooth modules embedded into
-> the SDIO wifi chips (Amlogic devices use brcmfmac based wifi chips quite
-> often, 2000000 baud seems to be a common value for the UART baud-rate in
-> Amlogic's "libbt").
->
-> I have tested this on a Meson GXL device with uart_A (to which the
-> bluetooth module is connected, where initialization times out with
-> 115200 baud) and uart_AO (which I manually set to 2000000 baud  and then
-> connected with my USB UART adapter to that).
->
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+s/should/may/
 
-Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Don't define dts source structure here. You could also have 2 files with 
+each config and just include the right one for each board.
+
+We don't want overlapping memory regions defined in DT and this kind of 
+violates that, but I guess status is sufficient.
+
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +mode and another for device mode. So in order for PCI to
+> +work in host mode, EP mode dt node should be disabled and in order to PCI to
+> +work in EP mode, host mode dt node should be disabled. And host mode and EP
+> +mode are mutually exclusive.
+> +
+>  Example:
+>  axi {
+>  	compatible = "simple-bus";
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
