@@ -1,36 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: add "microchip,24c128" compatible
- string
-Date: Wed, 18 Jan 2017 17:11:50 -0600
-Message-ID: <20170118231150.j4lkvuw63ym6vyuy@rob-hp-laptop>
-References: <1484334222-14223-1-git-send-email-david@lechnology.com>
- <1484334222-14223-4-git-send-email-david@lechnology.com>
+Subject: Re: [PATCH 4/4] drm: exynos: Remove support for Exynos4415 (SoC not
+ supported anymore)
+Date: Wed, 18 Jan 2017 17:14:02 -0600
+Message-ID: <20170118231402.xxje54gag3mb6b3x@rob-hp-laptop>
+References: <20170114123642.15581-1-krzk@kernel.org>
+ <20170114123642.15581-5-krzk@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1484334222-14223-4-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Lechner <david@lechnology.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170114123642.15581-5-krzk@kernel.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier@osg.samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 01:03:41PM -0600, David Lechner wrote:
-> This adds "microchip,24c128" to the list of compatible strings for i2c
-> eeproms.
-> 
-> Signed-off-by: David Lechner <david@lechnology.com>
-> ---
->  Documentation/devicetree/bindings/eeprom/eeprom.txt | 2 ++
->  1 file changed, 2 insertions(+)
-
-Acked-by: Rob Herring <robh@kernel.org>
+T24gU2F0LCBKYW4gMTQsIDIwMTcgYXQgMDI6MzY6NDJQTSArMDIwMCwgS3J6eXN6dG9mIEtvemxv
+d3NraSB3cm90ZToKPiBTdXBwb3J0IGZvciBFeHlub3M0NDE1IGlzIGdvaW5nIGF3YXkgYmVjYXVz
+ZSB0aGVyZSBhcmUgbm8gaW50ZXJuYWwgbm9yCj4gZXh0ZXJuYWwgdXNlcnMuCj4gCj4gU2luY2Ug
+Y29tbWl0IDQ2ZGNmMGZmMGRlMyAoIkFSTTogZHRzOiBleHlub3M6IFJlbW92ZSBleHlub3M0NDE1
+LmR0c2kiKSwKPiB0aGUgcGxhdGZvcm0gY2Fubm90IGJlIGluc3RhbnRpYXRlZCBzbyByZW1vdmUg
+YWxzbyB0aGUgZHJpdmVycy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBLcnp5c3p0b2YgS296bG93c2tp
+IDxrcnprQGtlcm5lbC5vcmc+Cj4gLS0tCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvZXh5bm9zL2V4eW5vc19kc2ltLnR4dCB8ICAxIC0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkv
+ZXh5bm9zL3NhbXN1bmctZmltZC50eHQgICAgICAgICAgIHwgIDEgLQoKQWNrZWQtYnk6IFJvYiBI
+ZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cgo+ICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5v
+c19kcm1fZHNpLmMgICAgICAgICAgICAgICAgfCAxNSArLS0tLS0tLS0tLS0tLS0KPiAgZHJpdmVy
+cy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2ZpbWQuYyAgICAgICAgICAgICAgIHwgMTggKyst
+LS0tLS0tLS0tLS0tLS0tCj4gIDQgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAzMiBk
+ZWxldGlvbnMoLSkKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVs
+Cg==
