@@ -1,72 +1,56 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 13/13] MIPS: jz4740: Remove custom GPIO code
-Date: Thu, 19 Jan 2017 12:24:54 +0100
-Message-ID: <b88d4818b42ae6b0853e5c01d4121c47@mail.crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170117231421.16310-14-paul@crapouillou.net>
- <20170118072751.GC18989@ulmo.ba.sec>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH RESEND v8 1/4] arm64: arch_timer: Add device tree binding for
+ hisilicon-161010101 erratum
+Date: Thu, 19 Jan 2017 19:46:43 +0800
+Message-ID: <1484826406-16348-2-git-send-email-dingtianhong@huawei.com>
+References: <1484826406-16348-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170118072751.GC18989@ulmo.ba.sec>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484826406-16348-1-git-send-email-dingtianhong@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-18 08:27, Thierry Reding a écrit :
+This erratum describes a bug in logic outside the core, so MIDR can't be
+used to identify its presence, and reading an SoC-specific revision
+register from common arch timer code would be awkward.  So, describe it
+in the device tree.
 
-> On Wed, Jan 18, 2017 at 12:14:21AM +0100, Paul Cercueil wrote:
-> 
->> All the drivers for the various hardware elements of the jz4740 SoC 
->> have been modified to use the pinctrl framework for their pin 
->> configuration needs. As such, this platform code is now unused and can 
->> be deleted. Signed-off-by: Paul Cercueil <paul@crapouillou.net> --- 
->> arch/mips/include/asm/mach-jz4740/gpio.h | 371 ---------------------- 
->> arch/mips/jz4740/Makefile | 2 - arch/mips/jz4740/gpio.c | 519 
->> ------------------------------- 3 files changed, 892 deletions(-) 
->> delete mode 100644 arch/mips/jz4740/gpio.c
-> 
-> Have you considered how this could best be merged? It's probably 
-> easiest
-> to take all of this through the MIPS tree because we have an addition 
-> of
-> the pinctrl that would be a replacement for the GPIO code, while at the
-> same time a bunch of drivers rely on the JZ4740 GPIO code for 
-> successful
-> compilation.
-> 
-> That's slightly complicated by the number of drivers, so needs a lot of
-> coordination, but it's not the worst I've seen.
-> 
-> Maybe one other solution that would make the transition easier would be
-> to stub out the GPIO functions if the pinctrl driver is enabled, and do
-> the removal of the mach-jz4740/gpio.h after all drivers have been 
-> merged
-> through their corresponding subsystem trees. That way all drivers 
-> should
-> remain compilable and functional at runtime, while still having the
-> possibility to merge through the subsystem trees.
-> 
-> That said, the whole series is fairly simple, so merging everything
-> through the MIPS tree sounds like the easiest way to go.
-> 
-> Thierry
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-I think it would make sense to merge it through the MIPS tree, yes,
-considering that the patches for the drivers in the other subsystems are
-quite small, and that they just remove code (well, except the pinctrl
-driver itself). Besides, the files modified are not touched very often
-so the chances of breakage are pretty low.
-
--Paul
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index ad440a2..9116934 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
+   This also affects writes to the tval register, due to the implicit
+   counter read.
+ 
++- hisilicon,erratum-161010101 : A boolean property. Indicates the presence of
++  erratum 161010101, which says that reading the counter is unreliable unless
++  reading twice on the register and the value of the second read is larger
++  than the first by less than 32. If the verification is unsuccessful, then
++  discard the value of this read and repeat this procedure until the verification
++  is successful.  This also affects writes to the tval register, due to the
++  implicit counter read.
++
+ ** Optional properties:
+ 
+ - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+-- 
+1.9.0
