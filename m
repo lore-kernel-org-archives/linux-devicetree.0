@@ -1,131 +1,65 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v9 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 19 Jan 2017 09:02:58 +0100
-Message-ID: <20170119080258.fovhfy2v6rrtgwgp@pengutronix.de>
-References: <1484666821-20551-1-git-send-email-cedric.madianga@gmail.com>
- <1484666821-20551-3-git-send-email-cedric.madianga@gmail.com>
- <20170117193752.e6hju25w74bb4i4z@pengutronix.de>
- <CAOAejn0ea2j_oUijOdHgiL3JU4TM0HZoL+-ggzjpPL2eA7tDCw@mail.gmail.com>
- <20170118184237.tvhlsksdcw2ckwan@pengutronix.de>
- <CAOAejn2LobTMfvsvmW8cCiToFHuM6n26s5QPLLXxLzb-WKkhQw@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 1/2] ARM64: dts: meson-gxm: Add R-Box Pro
+Date: Thu, 19 Jan 2017 09:10:02 +0100
+Message-ID: <809182ae-cfb5-7f6f-c383-ee337e78fa4c@baylibre.com>
+References: <20170117030611.23827-1-afaerber@suse.de>
+ <20170117030611.23827-2-afaerber@suse.de>
+ <3005a457-b7cf-393b-42ff-4149e080321c@suse.de> <m237ggypfc.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOAejn2LobTMfvsvmW8cCiToFHuM6n26s5QPLLXxLzb-WKkhQw@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <m237ggypfc.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Cedric,
+Hi Andreas, Kevin,
 
-On Wed, Jan 18, 2017 at 09:55:39PM +0100, M'boumba Cedric Madianga wrote:
-> 2017-01-18 19:42 GMT+01:00 Uwe Kleine-König <u.kleine-koenig@pengutronix.de>:
-> > Hello Cedric,
-> >
-> > On Wed, Jan 18, 2017 at 04:21:17PM +0100, M'boumba Cedric Madianga wrote:
-> >> >> +      * In standard mode, the maximum allowed SCL rise time is 1000 ns.
-> >> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits is equal to
-> >> >> +      * 0x08 so period = 125 ns therefore the TRISE[5:0] bits must be
-> >> >> +      * programmed with 09h.(1000 ns / 125 ns = 8 + 1)
-> >> >
-> >> >         * programmed with 0x9.
-> >> > (1000 ns / 125 ns = 8)
-> >> >
-> >> >> +      * So, for I2C standard mode TRISE = FREQ[5:0] + 1
-> >> >> +      *
-> >> >> +      * In fast mode, the maximum allowed SCL rise time is 300 ns.
-> >> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits is equal to
-> >> >> +      * 0x08 so period = 125 ns therefore the TRISE[5:0] bits must be
-> >> >> +      * programmed with 03h.(300 ns / 125 ns = 2 + 1)
-> >> >
-> >> > as above s/03h/0x3/;
-> >>
-> >> ok
-> >>
-> >> > s/.(/. (/;
-> >> ok
-> >>
-> >> > s/+ 1//;
-> >> This formula is use to understand how we find the result 0x3
-> >> So, 0x3 => 300 ns / 125ns = 2 + 1
-> >
-> > Yeah, I understood that, but writing 300 ns / 125ns = 2 + 1 is
-> > irritating at best.
+On 01/18/2017 11:27 PM, Kevin Hilman wrote:
+> Andreas FÃ¤rber <afaerber@suse.de> writes:
 > 
-> Ok. I will write 0x3 (300 ns / 125 ns + 1) and 0x9 (1000 ns / 125 ns + 1)
+>> Am 17.01.2017 um 04:06 schrieb Andreas FÃ¤rber:
+>>> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+>>> index 0d7bfbf7d922..66bc809a5eae 100644
+>>> --- a/arch/arm64/boot/dts/amlogic/Makefile
+>>> +++ b/arch/arm64/boot/dts/amlogic/Makefile
+>>> @@ -12,6 +12,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-nexbox-a95x.dtb
+>>>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q200.dtb
+>>>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-s912-q201.dtb
+>>>  dtb-$(CONFIG_ARCH_MESON) += meson-gxm-nexbox-a1.dtb
+>>
+>> What is the logic behind meson-gxm-s912-q201 vs. meson-gxm-nexbox-a1?
+>> Should it be renamed to include -s912 for consistency?
+
+It followed the GXL logic... until I posted the nexbox-a1 without !
+Since the q20x and p23x boards are the same, it was to enforce the fact that
+the S912 was on the q200 and q201 boards.
+
+> Oops, I think it should be renamed for consistency.
 > 
-> >> >         [...]
-> >> >         If DUTY = 1: (to reach 400 kHz)
-> >> >
-> >> > Strange.
-> >> >
-> >> >> +             val = DIV_ROUND_UP(i2c_dev->parent_rate, 400000 * 3);
-> >> >
-> >> > the manual reads:
-> >> >
-> >> >         The minimum allowed value is 0x04, except in FAST DUTY mode
-> >> >         where the minimum allowed value is 0x01
-> >> >
-> >> > You don't check for that, right?
-> >>
-> >> As the minimum freq value is 6 Mhz in fast mode the minimum CCR is 5
-> >> as described in the comment.
-> >> So I don't need to check that again as it is already done by checking
-> >> parent frequency.
-> >
-> > That would then go into a comment.
+> I believe there's only one chip in the GXM family (S912) so it might be
+> that we could either drop the -s912 from the q20x boards or, add it to
+> the nexbox.
+
+I believe this aswell AFAIK.
+
 > 
-> Is it really needed ?
-> Adding some comments to explain implementation choices or  hardware
-> way of working is clearly useful.
-> But for this kind of thing, I am really surprised...
+> I lean towards dropping the -s912 since there's a single chip in GXM.
+> (FWIW, GXL has more than one chip in the family so we added the chip
+> there.)
+> 
+>>> +dtb-$(CONFIG_ARCH_MESON) += meson-gxm-rbox-pro.dtb
+>>
+>> Should this new board use meson-gxm-s912-?
+> 
+> No.  Unless Neil or you thing otherwise, I think we should send a patch
+> to drop the -s912 from the q20x boards instead.  (where "we" == Neil) ;)
 
-TL;DR: It's not needed, but it probably helps.
+Ok, will do.
 
-Consider someone sees a breakage in your driver in five years. By then
-you either have other interests or at least forgot 95 % of the thoughts
-you had when implementing the driver.
+> 
+> Kevin
 
-So when I see:
-
-	val = DIV_ROUND_UP(i2c_dev->parent_rate, 400000 * 3);
-	ccr |= STM32F4_I2C_CCR_CCR(val);
-	writel_relaxed(ccr, i2c_dev->base + STM32F4_I2C_CCR);                                                                                                       
-
-after seeing that the bus freq is wrong the obvious thoughts are:
-
- - Does this use the right algorithm?
- - Does this calculation result in values that are usable by the
-   hardware?
-
-That you thought about this today doesn't mean it's still right in five
-years. During that time a new hardware variant is available with a
-higher parent freq. Or there is a new errata available for the SoC.
-
-So to help answer the questions above it helps if you add today the
-formulas from the manual and a quick reason for why val fits into the
-respective bits in the CCR register. That comment might be wrong until
-then, too, but that only means you should make it easy to verify.
-Something like:
-
-	/* 
-	 * Function bla_blub made sure that parent_rate is not higher
-	 * than 23 * pi MHz. As a result val is at most 13.2 bits wide
-	 * and so fits into the CCR bits.
-	 */
-
-This gives you in five years time the opportunity to quickly check
-bla_blub if this is still true, add a printk for parent_rate to check
-this, or quickly identify the bug in the code or the mismatch to the
-manual.
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Neil
