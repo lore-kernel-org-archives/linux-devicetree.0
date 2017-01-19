@@ -1,79 +1,101 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2] Documentation: dt-bindings: Add binding documentation
- for TI clkctrl clocks
-Date: Thu, 19 Jan 2017 13:28:13 -0600
-Message-ID: <20170119192813.xdt5jahffcdzmucu@rob-hp-laptop>
-References: <20170117225302.10844-1-tony@atomide.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH 3/4] phy: qcom-ufs: Remove -always-on property
+Date: Fri, 20 Jan 2017 01:09:06 +0530
+Message-ID: <CAFp+6iGpB7crk84P9U-SwXCd-iSKwOc51FFHNdTHS3fEmPr51Q@mail.gmail.com>
+References: <20170119104739.4376-1-bjorn.andersson@linaro.org> <20170119104739.4376-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170117225302.10844-1-tony@atomide.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170119104739.4376-3-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subhash Jadavani <subhashj@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 02:53:02PM -0800, Tony Lindgren wrote:
-> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
-> clock controller instance for each interconnect target module. The clkctrl
-> controls functional and interface clocks for the module.
-> 
-> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
-> With this binding and a related clock device driver we can start moving the
-> clkctrl clock handling to live in drivers/clk/ti.
-> 
-> Note that this binding allows keeping the clockdomain related parts out of
-> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
-> a separate driver in drivers/soc/ti and genpd. If the clockdomain driver
-> needs to know it's clocks, we can just set the the clkctrl device
-> instances to be children of the related clockdomain device.
-> 
-> Each clkctrl clock can have multiple optional gate clocks, and multiple
-> optional mux clocks. To represent this in device tree, it seems that
-> it is best done using four clock cells #clock-cells = <4> property.
-> 
-> The reasons for using #clock-cells = <4> are:
-> 
-> 1. We need to specify the clkctrl offset from the instance base. Otherwise
->    we end up with a large number of device tree nodes that need to be
->    patched when new clocks are discovered in a clkctrl clock with minor
->    hardware revision changes for example
-> 
-> 2. On omap5 CM_L3INIT_USB_HOST_HS_CLKCTRL has ten OPTFCLKEN bits. So we
->    need to use a separate cell for optional gate clocks to avoid address
->    space conflicts
-> 
-> 3. Some clkctrl instances can also also optional mux clocks. To address
->    them properly we need also a separate cell for the optional mux
->    clock index
-> 
-> 4. The modulemode clock needs a flag passed to it for hardware or
->    software controlled mode
-> 
-> There is probably no need to list input clocks for each clkctrl clock
-> instance in the binding. If we want to add them, the standard clocks
-> binding can be used for that.
-> 
-> For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
-> Mapping Summary" for example. It shows one instance of a clkctrl clock
-> controller with multiple clkctrl registers.
-> 
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+On Thu, Jan 19, 2017 at 4:17 PM, Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+> The fact that a regulator is always-on is a property of the regulator,
+> not a specific consumer. Implementing this in the driver leads to a
+> system behaviour that is dependent on if the Qualcomm UFS PHY was ever
+> (partially) probed.
+>
+> If the specific regulator should be always on in a particular device,
+> mark it so by specifying "regulator-always-on" in the regulator node.
+>
+> Cc: Subhash Jadavani <subhashj@codeaurora.org>
+> Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
-> 
-> Changes from v1:
-> 
-> - Use #clock-cells to avoid address space conflicts
-> 
-> - Consider also optional mux clocks as pointed out by Tero
-> 
-> ---
->  .../devicetree/bindings/clock/ti-clkctrl.txt       | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
+Looks good.
 
+Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+
+Regards
+Vivek
+
+>  Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 1 -
+>  drivers/phy/phy-qcom-ufs-i.h                       | 1 -
+>  drivers/phy/phy-qcom-ufs.c                         | 5 +----
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> index b6b5130e5f65..1f69ee1a61ea 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> @@ -29,7 +29,6 @@ Optional properties:
+>  - vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
+>  - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
+>  - vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
+> -- vddp-ref-clk-always-on : specifies if this supply needs to be kept always on
+>
+>  Example:
+>
+> diff --git a/drivers/phy/phy-qcom-ufs-i.h b/drivers/phy/phy-qcom-ufs-i.h
+> index d505d98cf5f8..13b02b7de30b 100644
+> --- a/drivers/phy/phy-qcom-ufs-i.h
+> +++ b/drivers/phy/phy-qcom-ufs-i.h
+> @@ -77,7 +77,6 @@ struct ufs_qcom_phy_vreg {
+>         int min_uV;
+>         int max_uV;
+>         bool enabled;
+> -       bool is_always_on;
+>  };
+>
+>  struct ufs_qcom_phy {
+> diff --git a/drivers/phy/phy-qcom-ufs.c b/drivers/phy/phy-qcom-ufs.c
+> index bbd317158084..c145fa6e824c 100644
+> --- a/drivers/phy/phy-qcom-ufs.c
+> +++ b/drivers/phy/phy-qcom-ufs.c
+> @@ -242,9 +242,6 @@ static int ufs_qcom_phy_init_vreg(struct device *dev,
+>                         }
+>                         err = 0;
+>                 }
+> -               snprintf(prop_name, MAX_PROP_NAME, "%s-always-on", name);
+> -               vreg->is_always_on = of_property_read_bool(dev->of_node,
+> -                                                          prop_name);
+>         }
+>
+>         if (!strcmp(name, "vdda-pll")) {
+> @@ -402,7 +399,7 @@ static int ufs_qcom_phy_disable_vreg(struct device *dev,
+>  {
+>         int ret = 0;
+>
+> -       if (!vreg || !vreg->enabled || vreg->is_always_on)
+> +       if (!vreg || !vreg->enabled)
+>                 goto out;
+>
+>         ret = regulator_disable(vreg->reg);
+> --
+> 2.11.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
