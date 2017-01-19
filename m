@@ -1,34 +1,55 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Thu, 19 Jan 2017 13:49:59 +0000
-Message-ID: <23512329-e8d9-4b4f-c460-4d769ef7102e@arm.com>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: fix SolidRun iMX6 platforms
+Date: Thu, 19 Jan 2017 12:04:37 -0200
+Message-ID: <CAOMZO5DTPbKnAf4=z87vTYan5q-0Qxx001OScy5nC==p24C5+w@mail.gmail.com>
+References: <E1cUC4p-00087z-NF@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484832916-7248-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1cUC4p-00087z-NF@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/01/17 13:35, Ding Tianhong wrote:
-> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
-> potential to contain an erroneous value when the timer value changes".
-> Accesses to TVAL (both read and write) are also affected due to the implicit counter
-> read.  Accesses to CVAL are not affected.
+Hi Russell,
 
-Please. 3 series in 2 hours is not fun, and is not helping your case
-either. Give us the time to properly review your patches, and wait until
-we ask you to respin if we think that this is required.
+On Thu, Jan 19, 2017 at 10:44 AM, Russell King
+<rmk+kernel@armlinux.org.uk> wrote:
+> Removal of skeleton.dtsi from imx6qdl.dtsi caused a regression on
+> SolidRun platforms as the /chosen and /memory nodes are no longer
+> populated.  Fix this by adding the nodes into the platform .dtsi
+> files.
+>
+> Uncompressing Linux... done, booting the kernel.
+> Booting Linux on physical CPU 0x0
+> Linux version 4.10.0-rc3+ (rmk@rmk-PC.arm.linux.org.uk) (gcc version 4.7.4 (GCC) ) #2066 SMP Thu Jan 19 12:31:19 GMT 2017
+> CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
+> CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> OF: fdt:Machine model: SolidRun Cubox-i Dual/Quad
+> INITRD: 0x20000000+0x001cd000 is not a memory region - disabling initrd
+> cma: Failed to reserve 256 MiB
+> Memory policy: Data cache writealloc
+> Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
+>
+> CPU: 0 PID: 0 Comm: swapper Not tainted 4.10.0-rc3+ #2066
+> Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+> Backtrace: invalid frame pointer 0xc09e5e44c
+> ---[ end Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
+>
+> Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 
-Thanks,
+I made a previous attempt to fix this issue and realized that it was
+not complete.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just sent a v2, which hopefully will fix this problem for all i.MX dtsi files.
