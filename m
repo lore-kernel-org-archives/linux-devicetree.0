@@ -1,95 +1,82 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/6] usb: mtu3: add reference clock
-Date: Thu, 19 Jan 2017 13:22:56 +0100
-Message-ID: <7fc9de99-4bef-ddf2-c5fe-985f8d2348d2@gmail.com>
-References: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
- <1484719707-12107-2-git-send-email-chunfeng.yun@mediatek.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH] ARM: dts: fix SolidRun iMX6 platforms
+Date: Thu, 19 Jan 2017 12:44:27 +0000
+Message-ID: <E1cUC4p-00087z-NF@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484719707-12107-2-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Removal of skeleton.dtsi from imx6qdl.dtsi caused a regression on
+SolidRun platforms as the /chosen and /memory nodes are no longer
+populated.  Fix this by adding the nodes into the platform .dtsi
+files.
 
+Uncompressing Linux... done, booting the kernel.
+Booting Linux on physical CPU 0x0
+Linux version 4.10.0-rc3+ (rmk@rmk-PC.arm.linux.org.uk) (gcc version 4.7.4 (GCC) ) #2066 SMP Thu Jan 19 12:31:19 GMT 2017
+CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
+CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+OF: fdt:Machine model: SolidRun Cubox-i Dual/Quad
+INITRD: 0x20000000+0x001cd000 is not a memory region - disabling initrd
+cma: Failed to reserve 256 MiB
+Memory policy: Data cache writealloc
+Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
 
-On 18/01/17 07:08, Chunfeng Yun wrote:
-> usually, the reference clock comes from 26M oscillator directly,
-> but some SoCs are not, add it for compatibility.
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  drivers/usb/mtu3/mtu3.h      |    1 +
->  drivers/usb/mtu3/mtu3_plat.c |   21 +++++++++++++++++++--
->  2 files changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-> index ba9df71..aa6fd6a 100644
-> --- a/drivers/usb/mtu3/mtu3.h
-> +++ b/drivers/usb/mtu3/mtu3.h
-> @@ -225,6 +225,7 @@ struct ssusb_mtk {
->  	/* common power & clock */
->  	struct regulator *vusb33;
->  	struct clk *sys_clk;
-> +	struct clk *ref_clk;
->  	/* otg */
->  	struct otg_switch_mtk otg_switch;
->  	enum usb_dr_mode dr_mode;
-> diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-> index 6344859..19a345d 100644
-> --- a/drivers/usb/mtu3/mtu3_plat.c
-> +++ b/drivers/usb/mtu3/mtu3_plat.c
-> @@ -123,7 +123,13 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
->  	ret = clk_prepare_enable(ssusb->sys_clk);
->  	if (ret) {
->  		dev_err(ssusb->dev, "failed to enable sys_clk\n");
-> -		goto clk_err;
-> +		goto sys_clk_err;
-> +	}
-> +
-> +	ret = clk_prepare_enable(ssusb->ref_clk);
-> +	if (ret) {
-> +		dev_err(ssusb->dev, "failed to enable ref_clk\n");
-> +		goto ref_clk_err;
->  	}
->
->  	ret = ssusb_phy_init(ssusb);
-> @@ -143,8 +149,10 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
->  phy_err:
->  	ssusb_phy_exit(ssusb);
->  phy_init_err:
-> +	clk_disable_unprepare(ssusb->ref_clk);
-> +ref_clk_err:
->  	clk_disable_unprepare(ssusb->sys_clk);
-> -clk_err:
-> +sys_clk_err:
->  	regulator_disable(ssusb->vusb33);
->  vusb33_err:
->
-> @@ -154,6 +162,7 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
->  static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
->  {
->  	clk_disable_unprepare(ssusb->sys_clk);
-> +	clk_disable_unprepare(ssusb->ref_clk);
->  	regulator_disable(ssusb->vusb33);
->  	ssusb_phy_power_off(ssusb);
->  	ssusb_phy_exit(ssusb);
-> @@ -216,6 +225,12 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
->  		return PTR_ERR(ssusb->sys_clk);
->  	}
->
-> +	ssusb->ref_clk = devm_clk_get(dev, "ref_ck");
-> +	if (IS_ERR(ssusb->ref_clk)) {
-> +		dev_err(dev, "failed to get ref clock\n");
-> +		return PTR_ERR(ssusb->ref_clk);
-> +	}
-> +
+CPU: 0 PID: 0 Comm: swapper Not tainted 4.10.0-rc3+ #2066
+Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
+Backtrace: invalid frame pointer 0xc09e5e44c
+---[ end Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
 
-That would break older dts bindings, right?
-ref_ck must be optional for the code.
+Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 6 ++++++
+ arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 2 ++
+ 2 files changed, 8 insertions(+)
 
-Regards,
-Matthias
+diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+index ff41f83551de..69e3a848ee74 100644
+--- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
+@@ -44,6 +44,12 @@
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ / {
++	chosen {
++		stdout-path = &uart1;
++	};
++
++	memory { device_type = "memory"; reg = <0 0>; };
++
+ 	ir_recv: ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+ 		gpios = <&gpio3 9 1>;
+diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+index a5e5356cdc6a..ae2feb882193 100644
+--- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
+@@ -46,6 +46,8 @@
+ 		stdout-path = &uart1;
+ 	};
+ 
++	memory { device_type = "memory"; reg = <0 0>; };
++
+ 	ir_recv: ir-receiver {
+ 		compatible = "gpio-ir-receiver";
+ 		gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
+-- 
+2.7.4
