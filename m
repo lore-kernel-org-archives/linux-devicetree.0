@@ -1,37 +1,127 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7 3/3] arm64: dts: exynos: Add tm2 touchkey node
-Date: Thu, 19 Jan 2017 22:10:37 +0200
-Message-ID: <20170119201037.ya7delguz5ng5cku@kozik-lap>
-References: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
- <CGME20170117055444epcas1p430376a7c03940ded299e374367170b03@epcas1p4.samsung.com>
- <1484632479-3111-4-git-send-email-jcsing.lee@samsung.com>
+From: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3
+ in MUSB mode
+Date: Thu, 19 Jan 2017 21:27:09 +0100
+Message-ID: <20170119202709.GA1853@excalibur.cnev.de>
+References: <20170116191449.50397-1-icenowy@aosc.xyz>
+ <20170116191449.50397-2-icenowy@aosc.xyz>
+ <20170117080611.tn7s7ddj2csqr27m@lukather>
+ <3866431484672228@web20j.yandex.ru>
+ <20170117200658.gcrcxeanthdtwg26@lukather>
+ <CAGb2v67kYtrTdw9YMS7wvRa=2MWYJ=BEc9SmUOds7hNYZKOz9g@mail.gmail.com>
+ <20170119143445.dmckuqjxmfhwr3h5@lukather>
+ <1682741484838608@web2j.yandex.ru>
+Reply-To: merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDP2XNNJ7IFBBKGCQTCAKGQE2PNZECY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1484632479-3111-4-git-send-email-jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galaxyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1682741484838608-kYtBYcqtKoJuio3avFS2gg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 02:54:39PM +0900, Jaechul Lee wrote:
-> Add DT node support for TM2 touchkey device.
-> 
-> Signed-off-by: Beomho Seo <beomho.seo-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Jaechul Lee <jcsing.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+On Thu, Jan 19, 2017 at 11:10:08PM +0800, Icenowy Zheng wrote:
+> 19.01.2017, 22:34, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > On Wed, Jan 18, 2017 at 04:09:32AM +0800, Chen-Yu Tsai wrote:
+> >> =C2=A0On Wed, Jan 18, 2017 at 4:06 AM, Maxime Ripard
+> >> =C2=A0<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> >> =C2=A0> On Wed, Jan 18, 2017 at 12:57:08AM +0800, Icenowy Zheng wrote:
+> >> =C2=A0>> 17.01.2017, 16:06, "Maxime Ripard" <maxime.ripard@free-electr=
+ons.com>:
+> >> =C2=A0>> > On Tue, Jan 17, 2017 at 03:14:46AM +0800, Icenowy Zheng wro=
+te:
+> >> =C2=A0>> >> The PHY0 on H3 can be wired either to MUSB controller or O=
+HCI/EHCI
+> >> =C2=A0>> >> controller.
+> >> =C2=A0>> >>
+> >> =C2=A0>> >> The original driver wired it to OHCI/EHCI controller; howe=
+ver, as the
+> >> =C2=A0>> >> code to use PHY0 as OHCI/EHCI is missing, it makes the PHY=
+ fully
+> >> =C2=A0>> >> unusable.
+> >> =C2=A0>> >>
+> >> =C2=A0>> >> Rename the register (according to its function and the nam=
+e in BSP
+> >> =C2=A0>> >> driver), and remove the code which wires the PHY0 to OHCI/=
+EHCI, as MUSB
+> >> =C2=A0>> >> can support both peripheral and host mode (although the ho=
+st mode of
+> >> =C2=A0>> >> MUSB is buggy).
+> >> =C2=A0>> >
+> >> =C2=A0>> > Can you elaborate on that? What's wrong with it?
+> >> =C2=A0>>
+> >> =C2=A0>> The configuration is at bit 0 of register 0x20 in PHY.
+> >> =C2=A0>>
+> >> =C2=A0>> When the PHY is reseted, it defaults as MUSB mode.
+> >> =C2=A0>>
+> >> =C2=A0>> However, the original author of the H3 PHY code seems to be l=
+ack of
+> >> =C2=A0>> this knowledge (He named it PHY_UNK_H3), and changed the PHY =
+to HCI
+> >> =C2=A0>> mode.
+> >> =C2=A0>>
+> >> =C2=A0>> I just removed the code that wires it to HCI mode, thus it wi=
+ll work
+> >> =C2=A0>> in MUSB mode, with my sun8i-h3-musb patch.
+> >> =C2=A0>
+> >> =C2=A0> I have no idea what you mean by MUSB mode.
+> >> =C2=A0>
+> >> =C2=A0> Do you mean that the previous code was only working in host mo=
+de, and
+> >> =C2=A0> now it only works in peripheral?
+> >>
+> >> =C2=A0From what I understand, with the H3, Allwinner has put a mux
+> >> =C2=A0in front of the MUSB controller. The mux can send the USB data
+> >> =C2=A0to/from the MUSB controller, or a standard EHCI/OHCI pair.
+> >> =C2=A0This register controls said mux.
+> >>
+> >> =C2=A0This means we can use a proper USB host for host mode,
+> >> =C2=A0instead of the limited support in MUSB.
+> >
+> > But musb can still operate as a host, right?
+>=20
+> Yes!
 
-Thanks, applied.
+Hello,
 
-Best regards,
-Krzysztof
+I don't know how the MUSB implementation in the H3 behaves as I
+don't have any H3-based systems, but if it should happen to be
+similar to the one in the A31s, it probably isn't a full-fledged
+alternative to using an OHCI/EHCI controller.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>From my practical experiments with the MUSB in the A31s in host
+mode I can report that I hadn't been able to get multiple HIDs
+(in my case keyboard and mouse) working at the same time.  The
+keyboard alone worked without problems, the mouse alone worked
+without problems, but when both were connected, only one of them
+worked.
+
+I had at that time talked to Hans de Goede about the problem and
+if I remenber correctly, he had mentioned that the MUSB has
+problems servicing more than one device that does interrupt
+transfers (as HIDs do).
+
+Hans, can you perhaps shed some light on this?
+
+Regards,
+Karsten
+--=20
+Gem. Par. 28 Abs. 4 Bundesdatenschutzgesetz widerspreche ich der Nutzung
+sowie der Weitergabe meiner personenbezogenen Daten f=C3=BCr Zwecke der
+Werbung sowie der Markt- oder Meinungsforschung.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
