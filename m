@@ -1,50 +1,43 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 1/4] Documentation: dt: mailbox: Add Aspeed ast2400/2500
- bindings
-Date: Thu, 19 Jan 2017 09:08:47 -0600
-Message-ID: <1484838527.24294.45.camel@kernel.crashing.org>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-2-cyrilbur@gmail.com>
-         <20170118203833.3htpccig67kpd6xl@rob-hp-laptop>
-         <1484784318.4097.2.camel@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: mtd: add a common label property to
+ all mtd devices
+Date: Thu, 19 Jan 2017 10:42:46 -0600
+Message-ID: <20170119164246.bqkucct4pj76k27o@rob-hp-laptop>
+References: <1484573225-19095-3-git-send-email-clg@kaod.org>
+ <1484578600-25994-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484784318.4097.2.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484578600-25994-1-git-send-email-clg@kaod.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-01-19 at 11:05 +1100, Cyril Bur wrote:
-> > > +============
-> > > +This represents the mailbox on the Soc.
-> > > +
-> > > +As the mailbox registers sit on the LPC bus, it makes most sense for
-> > > +the device to be within the LPC host node. See
-> > > +Documentation/devicetree/bindings/mfd/aspeed-lpc.txt for more
-> > > +information. This does not have to be the case, provided the reg
-> > > +property can give the full address of the mbox registers.
-> > 
-> > This does have to be the case. I'd expect all devices on the LPC bus to 
-> > be under a LPC bus node.
-> > 
-> > Drop the last sentence, and:
-> > 
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Will do, thanks for the review.
+On Mon, Jan 16, 2017 at 03:56:40PM +0100, C=E9dric Le Goater wrote:
+> This can be used to easily identify a specific chip on a system with
+> multiple chips.
+> =
 
-Well well ... on the BMC side it's not actually on the LPC bus ;-)
+> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+> Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/common.txt | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/common.txt
 
-However it's within the LPC host controller register set, and so as such
-can be represented as a child of it.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Cheers,
-Ben.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
