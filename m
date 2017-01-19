@@ -1,95 +1,26 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Thu, 19 Jan 2017 23:36:43 +0000
-Message-ID: <6a047346b2994e99b96bb50a12c2e41c@svr-chch-ex1.atlnz.lc>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
- <2fca7ac2-9a88-19b1-28c5-5192b9c4a2bc@gmail.com>
- <9996b6a215f944e1a47fa6239d8de21f@svr-chch-ex1.atlnz.lc>
- <66c205acea6046978bf17e6d8fc1959f@svr-chch-ex1.atlnz.lc>
- <42aa88b1-4807-245b-6107-0f1db28679b8@gmail.com>
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] NFC: trf7970a: add device tree option for 27MHz
+ clock
+Date: Thu, 19 Jan 2017 16:35:23 -0700
+Message-ID: <20170119233523.GA30311@animalcreek.com>
+References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1482380314-16440-1-git-send-email-geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+Cc: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, justin-R+k406RtEhcAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/01/17 12:19, Sebastian Hesselbarth wrote:
-> On 19.01.2017 22:12, Chris Packham wrote:
->> On 14/01/17 20:50, Chris Packham wrote:
->>> On 13/01/17 22:54, Sebastian Hesselbarth wrote:
->>>> On 13.01.2017 10:12, Chris Packham wrote:
->>>>> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->>>>>
->>>>> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
->>>>> from Marvell.
->>>>>
->>>>> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
->>>>> Acked-by: Rob Herring <robh@kernel.org>
->>>>> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->>>>> ---
->>>>>
->>>>> Notes:
->>>>>     Changes in v2:
->>>>>     - include sdio support for the 98DX4251
->>>>>     Changes in v3:
->>>>>     - None
->>>>>     Changes in v4:
->>>>>     - Correct some discrepencies between binding and driver.
->>>>
->>>> Well, unfortunately I still see differences between the "gpio" in
->>>> the binding and "gpo" in the driver.
->>>>
->>>> Please go back to that list I sent you yesterday and fix them all.
->>>>
->>>
->>> I think you may have missed my initial reply [1]. Or I have missed your
->>> response to it. Long story short "gpo" is intentional because some of
->>> those pins can't be used as inputs. But if you still want me to change
->>> it I will.
->>>
->>> [1] - https://lkml.org/lkml/2017/1/12/117
->>>
->>
->> Did you get a chance to consider this. Do you still want me to change
->> gpo -> gpio given the information above?
->
-> Chris,
->
-> sorry if I wasn't clear enough. I don't want you to change every gpo
-> into gpio. All I was referring to is the _difference_ between driver
-> implementation and device tree binding - and soley resolve that.
->
-> So, for the gpo's I see that the binding doc still says "gpio" for the
-> available functions where the driver expects "gpo".
->
-> e.g. the binding has this:
->
-> mpp6          6        gpio, sd0(clk), dev(a2)
->
-> if you change it to
->
-> mpp6          6        gpo, sd0(clk), dev(a2)
->
-> both binding and driver are the same, right?
->
-> I do understand that the hardware is gp-output only and you correctly
-> reflected that in the pinctrl driver - but the binding doc does not
-> reflect that for those mpps in the list.
->
+On Wed, Dec 21, 2016 at 11:18:32PM -0500, Geoff Lansberry wrote:
+> The TRF7970A has configuration options to support hardware designs
+> which use a 27.12MHz clock. This commit adds a device tree option
+> 'clock-frequency' to support configuring the this chip for default
+> 13.56MHz clock or the optional 27.12MHz clock.
+> 
+> Signed-off-by: Geoff Lansberry <geoff-R+k406RtEhcAvxtiuMwx3w@public.gmane.org>
+> ---
 
-Ah OK thanks for clearing up my confusion. I'll make sure the binding 
-and the driver are consistent when I submit v5 (probably next week).
+Acked-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
