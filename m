@@ -1,50 +1,98 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v9 1/4] arm64: arch_timer: Add device tree binding for hisilicon-161010101 erratum
-Date: Thu, 19 Jan 2017 21:35:13 +0800
-Message-ID: <1484832916-7248-2-git-send-email-dingtianhong@huawei.com>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484832916-7248-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 09/14] sata: ahci: export ahci_do_hardreset() locally
+Date: Thu, 19 Jan 2017 14:29:43 +0100
+Message-ID: <1484832588-18413-10-git-send-email-bgolaszewski@baylibre.com>
+References: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This erratum describes a bug in logic outside the core, so MIDR can't be
-used to identify its presence, and reading an SoC-specific revision
-register from common arch timer code would be awkward.  So, describe it
-in the device tree.
+We need a way to retrieve the information about the online state of
+the link in the ahci-da850 driver.
 
-Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Create a new function: ahci_do_hardreset() which is called from
+ahci_hardreset() for backwards compatibility, but has an additional
+argument: 'online' - which can be used to check if the link is online
+after this function returns.
+
+The new routine will be used in the ahci-da850 driver to avoid code
+duplication when implementing a workaround for tha da850 SATA
+controller quirk/instability.
+
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/ata/ahci.h    |  3 +++
+ drivers/ata/libahci.c | 18 +++++++++++++-----
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index ad440a2..e926aea 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
-   This also affects writes to the tval register, due to the implicit
-   counter read.
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index 0cc08f8..5db6ab2 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -398,6 +398,9 @@ int ahci_do_softreset(struct ata_link *link, unsigned int *class,
+ 		      int pmp, unsigned long deadline,
+ 		      int (*check_ready)(struct ata_link *link));
  
-+- hisilicon,erratum-161010101 : A boolean property. Indicates the
-+  presence of Hisilicon erratum 161010101, which says that reading the
-+  counters is unreliable in some cases, and reads may return a value 32
-+  beyond the correct value. This also affects writes to the tval
-+  registers, due to the implicit counter read.
++int ahci_do_hardreset(struct ata_link *link, unsigned int *class,
++		      unsigned long deadline, bool *online);
 +
- ** Optional properties:
+ unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
+ int ahci_stop_engine(struct ata_port *ap);
+ void ahci_start_fis_rx(struct ata_port *ap);
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index ee7db31..3159f9e 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1519,8 +1519,8 @@ static int ahci_pmp_retry_softreset(struct ata_link *link, unsigned int *class,
+ 	return rc;
+ }
  
- - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+-static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+-			  unsigned long deadline)
++int ahci_do_hardreset(struct ata_link *link, unsigned int *class,
++		      unsigned long deadline, bool *online)
+ {
+ 	const unsigned long *timing = sata_ehc_deb_timing(&link->eh_context);
+ 	struct ata_port *ap = link->ap;
+@@ -1528,7 +1528,6 @@ static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
+ 	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
+ 	struct ata_taskfile tf;
+-	bool online;
+ 	int rc;
+ 
+ 	DPRINTK("ENTER\n");
+@@ -1540,17 +1539,26 @@ static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+ 	tf.command = ATA_BUSY;
+ 	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+ 
+-	rc = sata_link_hardreset(link, timing, deadline, &online,
++	rc = sata_link_hardreset(link, timing, deadline, online,
+ 				 ahci_check_ready);
+ 
+ 	hpriv->start_engine(ap);
+ 
+-	if (online)
++	if (*online)
+ 		*class = ahci_dev_classify(ap);
+ 
+ 	DPRINTK("EXIT, rc=%d, class=%u\n", rc, *class);
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(ahci_do_hardreset);
++
++static int ahci_hardreset(struct ata_link *link, unsigned int *class,
++			  unsigned long deadline)
++{
++	bool online;
++
++	return ahci_do_hardreset(link, class, deadline, &online);
++}
+ 
+ static void ahci_postreset(struct ata_link *link, unsigned int *class)
+ {
 -- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
