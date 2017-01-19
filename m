@@ -1,137 +1,198 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v2 3/3] ARM: dts: imx6ul: Add Engicam Is.IoT MX6UL NAND initial support
-Date: Fri, 20 Jan 2017 00:09:35 +0100
-Message-ID: <1484867375-22411-3-git-send-email-jagan@openedev.com>
-References: <1484867375-22411-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484867375-22411-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
+ OTG HS/FS in FS mode (internal PHY)
+Date: Thu, 19 Jan 2017 23:12:38 +0000
+Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B3FEDD5@US01WEMBX2.internal.synopsys.com>
+References: <20170117161237.3802-1-bruherrera@gmail.com>
+ <20170117161237.3802-2-bruherrera@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+On 1/17/2017 8:13 AM, Bruno Herrera wrote:
+> This patch introduces a new parameter to activate USB OTG HS/FS core embedded
+> phy transceiver. The STM32F4x9 SoC uses the GGPIO register to enable the transceiver.
+> Also add the dwc2_core_params structure for stm32f4 otg fs.
+>
+> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/usb/dwc2/core.h   |  4 ++++
+>  drivers/usb/dwc2/hcd.c    | 13 +++++++++++-
+>  drivers/usb/dwc2/hw.h     |  2 ++
+>  drivers/usb/dwc2/params.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 69 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+> index 9548d3e..e3199c5 100644
+> --- a/drivers/usb/dwc2/core.h
+> +++ b/drivers/usb/dwc2/core.h
+> @@ -430,6 +430,9 @@ enum dwc2_ep0_state {
+>   *			needed.
+>   *			0 - No (default)
+>   *			1 - Yes
+> + * @activate_transceiver: Activate internal transceiver using GGPIO register.
+> + *			0 - Deactivate the transceiver (default)
+> + *			1 - Activate the transceiver
+>   * @g_dma:              Enables gadget dma usage (default: autodetect).
+>   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
+>   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
+> @@ -501,6 +504,7 @@ struct dwc2_core_params {
+>  	int uframe_sched;
+>  	int external_id_pin_ctl;
+>  	int hibernation;
+> +	int activate_transceiver;
+>
+>  	/*
+>  	 * The following parameters are *only* set via device
+> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+> index 911c3b3..6bee529 100644
+> --- a/drivers/usb/dwc2/hcd.c
+> +++ b/drivers/usb/dwc2/hcd.c
+> @@ -118,7 +118,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
+>
+>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>  {
+> -	u32 usbcfg, i2cctl;
+> +	u32 usbcfg, ggpio, i2cctl;
+>  	int retval = 0;
+>
+>  	/*
+> @@ -142,6 +142,17 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>  				return retval;
+>  			}
+>  		}
+> +
+> +		ggpio = dwc2_readl(hsotg->regs + GGPIO);
+> +		if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN) &&
+> +		    (hsotg->params.activate_transceiver > 0)) {
+> +			dev_dbg(hsotg->dev, "Activating transceiver\n");
+> +			/* STM32F4xx uses the GGPIO register as general core
+> +			 * configuration register.
+> +			 */
+> +			ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
+> +			dwc2_writel(ggpio, hsotg->regs + GGPIO);
+> +		}
+>  	}
+>
+>  	/*
+> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
+> index 5be056b..a84e93b 100644
+> --- a/drivers/usb/dwc2/hw.h
+> +++ b/drivers/usb/dwc2/hw.h
+> @@ -225,6 +225,8 @@
+>
+>  #define GPVNDCTL			HSOTG_REG(0x0034)
+>  #define GGPIO				HSOTG_REG(0x0038)
+> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	(1 << 16)
+> +
+>  #define GUID				HSOTG_REG(0x003c)
+>  #define GSNPSID				HSOTG_REG(0x0040)
+>  #define GHWCFG1				HSOTG_REG(0x0044)
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 11fe68a..dbb054d 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -192,6 +192,37 @@ static const struct dwc2_core_params params_amlogic = {
+>  	.hibernation			= -1,
+>  };
+>
+> +static const struct dwc2_core_params params_stm32f4_otgfs = {
+> +	.otg_cap			= DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE,
+> +	.otg_ver			= -1,
+> +	.dma_desc_enable		= 0,
+> +	.dma_desc_fs_enable		= 0,
+> +	.speed				= DWC2_SPEED_PARAM_FULL,
+> +	.enable_dynamic_fifo		= -1,
+> +	.en_multiple_tx_fifo		= -1,
+> +	.host_rx_fifo_size		= 128,	/* 128 DWORDs */
+> +	.host_nperio_tx_fifo_size	= 96,	/* 96 DWORDs */
+> +	.host_perio_tx_fifo_size	= 96,	/* 96 DWORDs */
+> +	.max_transfer_size		= -1,
+> +	.max_packet_count		= 256,
+> +	.host_channels			= -1,
+> +	.phy_type			= DWC2_PHY_TYPE_PARAM_FS,
+> +	.phy_utmi_width			= -1,
+> +	.phy_ulpi_ddr			= -1,
+> +	.phy_ulpi_ext_vbus		= -1,
+> +	.i2c_enable			= 0,
+> +	.ulpi_fs_ls			= -1,
+> +	.host_support_fs_ls_low_power	= -1,
+> +	.host_ls_low_power_phy_clk	= -1,
+> +	.ts_dline			= -1,
+> +	.reload_ctl			= -1,
+> +	.ahbcfg				= -1,
+> +	.uframe_sched			= 0,
+> +	.external_id_pin_ctl		= -1,
+> +	.hibernation			= -1,
+> +	.activate_transceiver		= 1,
+> +};
+> +
+>  static const struct dwc2_core_params params_default = {
+>  	.otg_cap			= -1,
+>  	.otg_ver			= -1,
+> @@ -240,6 +271,8 @@ const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "amlogic,meson8b-usb", .data = &params_amlogic },
+>  	{ .compatible = "amlogic,meson-gxbb-usb", .data = &params_amlogic },
+>  	{ .compatible = "amcc,dwc-otg", .data = NULL },
+> +	{ .compatible = "st,stm32f4xx-fsotg", .data = &params_stm32f4_otgfs },
+> +	{ .compatible = "st,stm32f4xx-hsotg", .data = NULL },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
+> @@ -1044,6 +1077,23 @@ static void dwc2_set_param_hibernation(struct dwc2_hsotg *hsotg,
+>  	hsotg->params.hibernation = val;
+>  }
+>
+> +static void dwc2_set_param_activate_transceiver(struct dwc2_hsotg *hsotg,
+> +		int val)
+> +{
+> +	if (DWC2_OUT_OF_BOUNDS(val, 0, 1)) {
+> +		if (val >= 0) {
+> +			dev_err(hsotg->dev,
+> +				"'%d' invalid for parameter activate transceiver\n",
+> +				val);
+> +			dev_err(hsotg->dev, "activate transceiver must be 0 or 1\n");
+> +		}
+> +		val = 0;
+> +		dev_dbg(hsotg->dev, "Setting activate transceiver to %d\n", val);
+> +	}
+> +
+> +	hsotg->params.activate_transceiver = val;
+> +}
+> +
+>  static void dwc2_set_param_tx_fifo_sizes(struct dwc2_hsotg *hsotg)
+>  {
+>  	int i;
+> @@ -1158,6 +1208,7 @@ static void dwc2_set_parameters(struct dwc2_hsotg *hsotg,
+>  	dwc2_set_param_uframe_sched(hsotg, params->uframe_sched);
+>  	dwc2_set_param_external_id_pin_ctl(hsotg, params->external_id_pin_ctl);
+>  	dwc2_set_param_hibernation(hsotg, params->hibernation);
+> +	dwc2_set_param_activate_transceiver(hsotg, params->activate_transceiver);
+>
+>  	/*
+>  	 * Set devicetree-only parameters. These parameters do not
+>
 
-Engicam Is.IoT MX6UL has separate module for NAND, so add nand dts
-file for imx6ul-isiot.dtsi.
+Hi Bruno,
 
-dmesg:
------
-nand: device found, Manufacturer ID: 0x2c, Chip ID: 0xda
-nand: Micron MT29F2G08ABAEAH4
-nand: 256 MiB, SLC, erase size: 128 KiB, page size: 2048, OOB size: 64
-gpmi-nand 1806000.gpmi-nand: enable the asynchronous EDO mode 5
-gpmi-nand 1806000.gpmi-nand: driver registered.
+This will conflict with stuff we have pending for 4.11.
 
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- Newly added patch
+Can you rebase this against this series:
+https://www.spinics.net/lists/linux-usb/msg152258.html
 
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/imx6ul-isiot-nand.dts | 79 +++++++++++++++++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-isiot-nand.dts
+You can use this repo that has those patches applied:
+https://github.com/synopsys-usb/linux.git
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f2c9545..f7340ce 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -436,6 +436,7 @@ dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
- 	imx6ul-geam-kit.dtb \
- 	imx6ul-isiot-emmc.dtb \
-+	imx6ul-isiot-nand.dtb \
- 	imx6ul-liteboard.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-tx6ul-0010.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-isiot-nand.dts b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
-new file mode 100644
-index 0000000..de15e1c
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
-@@ -0,0 +1,79 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-isiot.dtsi"
-+
-+/ {
-+	model = "Engicam Is.IoT MX6UL NAND Starter kit";
-+	compatible = "engicam,imx6ul-isiot", "fsl,imx6ul";
-+};
-+
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	nand-on-flash-bbt;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_gpmi_nand: gpmi-nand {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_CLE__RAWNAND_CLE         0xb0b1
-+			MX6UL_PAD_NAND_ALE__RAWNAND_ALE         0xb0b1
-+			MX6UL_PAD_NAND_WP_B__RAWNAND_WP_B       0xb0b1
-+			MX6UL_PAD_NAND_READY_B__RAWNAND_READY_B 0xb000
-+			MX6UL_PAD_NAND_CE0_B__RAWNAND_CE0_B     0xb0b1
-+			MX6UL_PAD_NAND_RE_B__RAWNAND_RE_B       0xb0b1
-+			MX6UL_PAD_NAND_WE_B__RAWNAND_WE_B       0xb0b1
-+			MX6UL_PAD_NAND_DATA00__RAWNAND_DATA00   0xb0b1
-+			MX6UL_PAD_NAND_DATA01__RAWNAND_DATA01   0xb0b1
-+			MX6UL_PAD_NAND_DATA02__RAWNAND_DATA02   0xb0b1
-+			MX6UL_PAD_NAND_DATA03__RAWNAND_DATA03   0xb0b1
-+			MX6UL_PAD_NAND_DATA04__RAWNAND_DATA04   0xb0b1
-+			MX6UL_PAD_NAND_DATA05__RAWNAND_DATA05   0xb0b1
-+			MX6UL_PAD_NAND_DATA06__RAWNAND_DATA06   0xb0b1
-+			MX6UL_PAD_NAND_DATA07__RAWNAND_DATA07   0xb0b1
-+		>;
-+	};
-+};
--- 
-1.9.1
+Thanks,
+John
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
