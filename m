@@ -1,103 +1,77 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH v4 1/2] power: reset: add linkstation-reset driver
-Date: Thu, 19 Jan 2017 05:43:28 +0100
-Message-ID: <20170119044327.j3d2rlpn5va3iw37@earth>
-References: <20161227070611.14852-1-rogershimizu@gmail.com>
- <20170107150451.17912-1-rogershimizu@gmail.com>
- <20170107150451.17912-2-rogershimizu@gmail.com>
- <CAEQ9gEkoKc0Yv+kLYGWgHZZW92u0tW8E9U0eT7ZhAx79yKxzLQ@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Thu, 19 Jan 2017 10:42:05 +0530
+Message-ID: <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+ <587C88FE.2040900@ti.com>
+ <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
+ <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1397219413317979899=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEQ9gEkoKc0Yv+kLYGWgHZZW92u0tW8E9U0eT7ZhAx79yKxzLQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Shimizu <rogershimizu@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Ryan Tandy <ryan@nardis.ca>, linux-pm@vger.kernel.org, Herbert Valerio Riedel <hvr@gnu.org>, devicetree@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>, linux-arm-kernel@lists.infradead.org, Sylver Bruneau <sylver.bruneau@googlemail.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170119004028.GA4857-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============1397219413317979899==
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="idei6pnsp4jbus2l"
-Content-Disposition: inline
+On 01/19/2017 06:10 AM, Stephen Boyd wrote:
+> On 01/18, Bjorn Andersson wrote:
+>> On Tue 17 Jan 22:54 PST 2017, Vivek Gautam wrote:
+>>> On 01/16/2017 02:19 PM, Kishon Vijay Abraham I wrote:
+>>>> On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+>> [..]
+>>>>> +		reset-names = "phy", "common", "cfg",
+>>>>> +				"lane0", "lane1", "lane2";
+>>>> Each lane has a separate clock, separate reset.. why not create sub-nodes for
+>>>> each lane?
+>>> Yes, each lane has separate pipe clock and resets.
+>>> I can have a binding such as written below.
+>> +1
+>>
+>>> Does it makes sense to pull in the tx, rx and pcs offsets as well
+>>> to the child node, and iomap the entire address space of the phy ?
+>>>
+>> Note that you don't have to follow the same structure in your device
+>> driver as you describe your hardware in devicetree.
+>>
+>> I would suggest that you replace the lane-offset and various lane
+>> specific resources with subnodes, but keep the driver "as is".
+>>
+> Didn't we already move away from subnodes for lanes in an earlier
+> revision of these patches? I seem to recall we did that because
+> lanes are not devices and the whole "phy as a bus" concept not
+> making sense.
+
+Yea, we started out without having any sub-nodes and we
+argued that we don't require them since the qmp device is
+represented by the qmp node itself.
+The lanes otoh are representative of gen_phys and related properties.
+
+In the driver -
+"struct qmp_phy " represents the lanes and holds "struct phy",
+"struct qcom_qmp" represents the qmp block as a whole and holds "struct 
+device"
+Does this make lanes qualify to be childs of qmp ?
+
+"phy as a bus" (just trying to understand here) -
+let's say a usb phy controller has one HSIC phy port and one USB2 phy port.
+So, should this phy controller be a bus providing two ports (and so we 
+will have
+couple of child nodes to the phy controller) ?
 
 
---idei6pnsp4jbus2l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards
+Vivek
 
-Hi Roger,
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
-On Wed, Jan 18, 2017 at 09:08:13PM +0900, Roger Shimizu wrote:
-> On Sun, Jan 8, 2017 at 12:04 AM, Roger Shimizu <rogershimizu@gmail.com> w=
-rote:
-> > Buffalo Linkstation / KuroBox and their variants need magic command
-> > sending to UART1 to power-off.
-> >
-> > Power driver linkstation-reset implements the magic command and I/O
-> > routine, which come from files listed below:
-> >   - arch/arm/mach-orion5x/kurobox_pro-setup.c
-> >   - arch/arm/mach-orion5x/terastation_pro2-setup.c
->=20
-> I think there's not much concern regarding to this series.
-> Could you kindly help to apply this patch?
-
-Well you dropped the DT binding, but still introduce new DT
-properties. Since they are not documented without the binding
-I won't merge this. DT binding documentation is not optional.
-In other words: NAK on the binding effectively means NAK on
-the driver in its current state.
-
-If you want to see this merged rebase it to Rob's generic
-serial bindings [0] and help to support him getting everything
-into mainline ASAP. Currently the feedback seems to be quite
-positive, so I hope to see it merged for 4.11.
-
-[0] https://lwn.net/Articles/711794/ (current proposal from 2 days ago)
-
--- Sebastian
-
---idei6pnsp4jbus2l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAliAQ+0ACgkQ2O7X88g7
-+ppoxxAAo/f8qG0ksrebqujmq9OMV9/8MYQInvamFKDIs6NefQiMfH1GeE9q8PXm
-EFrW1iYWv3w88fc26iUiHWjJ1YpyJdEam+BdBhFnF15RdLBmLHSoIREKcBQaIHPO
-q4nP4uOgUT5oOKG2H9Z+z/oJnWv7Qz6kOg1yyX3Cve2cpsPXkywrGPpDN3VKHv8f
-5zLxO2m2eJBXZQj1FChkqqjPuM9NP9Kx8qWlg1w17gLblMaWQxImJkmMUciiRrbz
-WjBKfalbbOIjTylRDf+3BvUV1e5L6MakAiMO6+AzRSugIsDbFskuABSWEuPIQGOy
-0nWBCSGkGTrxo8UB2s/Zy2+IrCxak8kwbXtSUdOqBQ9pZ0NtlToF+O/Vbw5t7Sqr
-cO0xDnw3KEJOKge6yXmqyXVA12TvBMcBLga7TZuXeU7cKXJTBXVdUuGzfR1IoUdg
-zul/kFT+BPZCUaMS9B+09sH1SHKS7QHgwW1rqltTH4EZZ+LEncj9nQwsp2tcswc9
-kniixhTbf0HYgWyN7Bug3sXjAq9CATYJKnCdTz5t0H93O0Z+Qh6n/guCYxKWR0J7
-yKUt4IodgZ6ChL8GYrs9mN/V3gF2G/9wCqCcEdsnnOW/JQU8oZHtzL1TfxxZm41G
-YuF8X7nDh1x/oC4g+nH8K7EGr9hLDDbUlpLE7VYBWxladRkY7qw=
-=m9Qr
------END PGP SIGNATURE-----
-
---idei6pnsp4jbus2l--
-
-
---===============1397219413317979899==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1397219413317979899==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
