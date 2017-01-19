@@ -1,8 +1,8 @@
 From: Ding Tianhong <dingtianhong@huawei.com>
-Subject: [PATCH v8 1/4] arm64: arch_timer: Add device tree binding for
- hisilicon-161010101 erratum
-Date: Thu, 19 Jan 2017 19:14:31 +0800
-Message-ID: <1484824474-12172-2-git-send-email-dingtianhong@huawei.com>
+Subject: [PATCH v8 4/4] arm64: arch timer: Add timer erratum property for
+ Hip05-d02 and Hip06-d03
+Date: Thu, 19 Jan 2017 19:14:34 +0800
+Message-ID: <1484824474-12172-5-git-send-email-dingtianhong@huawei.com>
 References: <1484824474-12172-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,35 +22,37 @@ To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rut
 Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-This erratum describes a bug in logic outside the core, so MIDR can't be
-used to identify its presence, and reading an SoC-specific revision
-register from common arch timer code would be awkward.  So, describe it
-in the device tree.
+Enable workaround for hisilicon erratum 161010101 on Hip05-d02 and Hip06-d03 board.
 
 Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hip05.dtsi | 1 +
+ arch/arm64/boot/dts/hisilicon/hip06.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index ad440a2..9116934 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
-   This also affects writes to the tval register, due to the implicit
-   counter read.
+diff --git a/arch/arm64/boot/dts/hisilicon/hip05.dtsi b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+index 4b472a3..6b76f3a 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip05.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip05.dtsi
+@@ -281,6 +281,7 @@
+ 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+ 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++		hisilicon,erratum-161010101;
+ 	};
  
-+- hisilicon,erratum-161010101 : A boolean property. Indicates the presence of
-+  erratum 161010101, which says that reading the counter is unreliable unless
-+  reading twice on the register and the value of the second read is larger
-+  than the first by less than 32. If the verification is unsuccessful, then
-+  discard the value of this read and repeat this procedure until the verification
-+  is successful.  This also affects writes to the tval register, due to the
-+  implicit counter read.
-+
- ** Optional properties:
+ 	pmu {
+diff --git a/arch/arm64/boot/dts/hisilicon/hip06.dtsi b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+index a049b64..cf8b9db 100644
+--- a/arch/arm64/boot/dts/hisilicon/hip06.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hip06.dtsi
+@@ -260,6 +260,7 @@
+ 			     <GIC_PPI 14 IRQ_TYPE_LEVEL_LOW>,
+ 			     <GIC_PPI 11 IRQ_TYPE_LEVEL_LOW>,
+ 			     <GIC_PPI 10 IRQ_TYPE_LEVEL_LOW>;
++		hisilicon,erratum-161010101;
+ 	};
  
- - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+ 	pmu {
 -- 
 1.9.0
