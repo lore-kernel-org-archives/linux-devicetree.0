@@ -1,83 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Thu, 19 Jan 2017 11:54:23 -0600
-Message-ID: <20170119175423.uvjqtgkp2jns35hf@rob-hp-laptop>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
- <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
- <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
- <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
+From: Icenowy Zheng <icenowy@aosc.xyz>
+Subject: [PATCH v3 1/6] dt-bindings: add device tree binding for Allwinner V3s
+ pinctrl
+Date: Fri, 20 Jan 2017 01:54:43 +0800
+Message-ID: <20170119175448.11445-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jagan Teki <jagan@openedev.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMTcsIDIwMTcgYXQgMDI6NTc6MjJQTSArMDEwMCwgQ3lyaWxsZSBQaXRjaGVu
-IHdyb3RlOgo+IExlIDE3LzAxLzIwMTcgw6AgMTQ6MTYsIFJhZmHFgiBNacWCZWNraSBhIMOpY3Jp
-dCA6Cj4gPiBPbiAxNyBKYW51YXJ5IDIwMTcgYXQgMTI6MDMsIFV3ZSBLbGVpbmUtS8O2bmlnCj4g
-PiA8dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiA+PiBUaGUgTVIyNSBm
-YW1pbHkgZG9lc24ndCBzdXBwb3J0IEpFREVDLCBzbyB0aGV5IG5lZWQgZXhwbGljaXQgbWVudGlv
-bmluZwo+ID4+IGluIHRoZSBsaXN0IG9mIHN1cHBvcnRlZCBzcGkgSURzLiBUaGlzIG1ha2VzIGl0
-IHBvc3NpYmxlIHRvIGFkZCB0aGVzZQo+ID4+IHVzaW5nIGZvciBleGFtcGxlOgo+ID4+Cj4gPj4g
-ICAgICAgICBjb21wYXRpYmxlID0gImV2ZXJzcGluLG1yMjVoNDAiOwo+ID4gCj4gPiAoLi4uKQo+
-ID4gCj4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
-dGQvamVkZWMsc3BpLW5vci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-bXRkL2plZGVjLHNwaS1ub3IudHh0Cj4gPj4gaW5kZXggMmM5MWMwM2U3ZWIwLi4zZTkyMGVjNWM0
-ZDMgMTAwNjQ0Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
-ZC9qZWRlYyxzcGktbm9yLnR4dAo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQKPiA+PiBAQCAtMTQsNiArMTQsOCBAQCBSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+ID4+ICAgICAgICAgICAgICAgICAgIGF0MjVkZjY0MQo+ID4+ICAg
-ICAgICAgICAgICAgICAgIGF0MjZkZjA4MWEKPiA+PiAgICAgICAgICAgICAgICAgICBtcjI1aDI1
-Ngo+ID4+ICsgICAgICAgICAgICAgICAgIG1yMjVoMTAKPiA+PiArICAgICAgICAgICAgICAgICBt
-cjI1aDQwCj4gPj4gICAgICAgICAgICAgICAgICAgbXgyNWw0MDA1YQo+ID4+ICAgICAgICAgICAg
-ICAgICAgIG14MjVsMTYwNmUKPiA+PiAgICAgICAgICAgICAgICAgICBteDI1bDY0MDVkCj4gPiAK
-PiA+IFVoLCB0aGlzIGlzIGdldHRpbmcgYSBuZXZlci1lbmRpbmctc3RvcnkuLi4KPiA+IElmIHRo
-ZXNlIGNoaXBzZXRzIGRvbid0IHN1cHBvcnQgSkVERUMsIHNob3VsZCB3ZSBrZWVwIHRoZW0gaW4g
-amVkZWMsc3BpLW5vci50eHQ/Cj4gPiAKPiAKPiBNYXliZSBub3QgYnV0IEkgdGhpbmsgdGhlIG5l
-dyBjb21wYXRpYmxlIHN0cmluZ3Mgc2hvdWxkIGJlIGRvY3VtZW50ZWQKPiBzb21ld2hlcmUuIEN1
-cnJlbnRseSBqZWRlYyxzcGktbm9yLnR4dCBhbHJlYWR5IGRvY3VtZW50cyBhbGwgdGhlCj4gIm0y
-NXAqLW5vbmplZGVjIiBtZW1vcmllcy4gU28gbWF5YmUganVzdCByZW5hbWluZyB0aGUgamVkZWMs
-c3BpLW5vci50eHQKPiBmaWxlIGludG8gc3BpLW5vci50eHQgb3IgbXRkLHNwaS1ub3IudHh0IGNv
-dWxkIGJlIGEgc29sdXRpb24uIE90aGVyd2lzZSwgd2UKPiBjYW4gbGV0IGl0IGFzIGlzLiBJIGhh
-dmUgbm8gaWRlYSBvZiB3aGF0IHdvdWxkIGJlIHRoZSBiZXN0IHNvbHV0aW9uLgoKQXMgSSByZWFk
-IHRoZSBkZXNjcmlwdGlvbiwgdGhlIG5vbi1qZWRlYyBjaGlwcyBkb24ndCBzdXBwb3J0IFJFQUQg
-SUQsIApidXQgSSB3b3VsZCBhc3N1bWUgdGhleSBvdGhlcndpc2UgZm9sbG93IHRoZSBKRURFQyBz
-cGVjKHMpPwoKPiBUbyBiZSBob25lc3QsIEkgZG9uJ3QgYWx3YXlzIGZ1bGx5IHVuZGVyc3RhbmQg
-dGhlIERUIHBvbGljeS9waGlsb3NvcGh5IGFuZAo+IGl0cyByZXF1aXJlbWVudHMuIEkganVzdCB0
-aG91Z2h0IHdoZW4gYSBuZXcgcHJvcGVydHkgb3IgYSBuZXcgdmFsdWUgaXMKPiBpbnRyb2R1Y2Vk
-IGl0IGhhcyB0byBiZSBkb2N1bWVudGVkLgo+IEdlbmVyYWxseSBzcGVha2luZywgd2hlbiBEVCBp
-cyBpbnZvbHZlZCBpbiBzb21lIHNlcmllcyBvZiBwYXRjaGVzLCBpdCBvZnRlbgo+IGdlbmVyYXRl
-cyBtYW55IGRpc2N1c3Npb25zIGFib3V0IHRoZSBwcm9wZXIgd2F5IHRvIGRvIHRoaW5rcyBhbmQg
-YWJvdXQKPiBjaG9vc2luZyB0aGUgYmVzdCBiZXR3ZWVuIG1hbnkgdGVjaG5pY2FsbHkgZnVuY3Rp
-b25hbCBzb2x1dGlvbnMuCgpEb2Vzbid0IHRoYXQgYXBwbHkgdG8gYW55IGNvZGUgcmV2aWV3PyBT
-b3VuZHMgbGlrZSB0aGUga2VybmVsIHByb2Nlc3MgdG8gCm1lLiBJZiB0aGUgRFQgcmV2aWV3IGlz
-IG1vcmUgc3RyaW5nZW50LCB0aGVuIEknbGwgdGFrZSB0aGF0IGFzIGEgCmNvbXBsZW1lbnQuCgo+
-IElmIHlvdSB0aGluayBqZWRlYyxzcGktbm9yLnR4dCBpcyBub3Qgc3VpdGVkIHRvIGRvY3VtZW50
-IHRoZSBuZXcgdmFsdWUgZm9yCj4gdGhlIGNvbXBhdGlibGUgc3RyaW5nLCB3aHkgbm90LCBJIHBl
-cmZlY3RseSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQuCj4gCj4gSSBkb24ndCBtaW5kIGNob29zaW5n
-IGFub3RoZXIgd2F5LiBJIGp1c3Qgd2FudCB0byBiZSBzdXJlIHRoYXQsIGlmIG5vdCBhbGwsCj4g
-bW9zdCBvZiBwZW9wbGUgYWdyZWUgb24gdGhhdCBzb2x1dGlvbiBhbmQgaWYgcG9zc2libGUsIGl0
-IGlzIGNvbXBsaWFudCB3aXRoCj4gRFQgcG9saWN5IHNvIGV2ZXJ5Ym9keSBpcyBoYXBweSBhbmQg
-d29ya3MgdG9nZXRoZXIuCj4gVGhhdCdzIHdoeSBJIGludm9sdmUgRFQgcGVvcGxlLCBldmVuIGlm
-IGl0J3MgYSBzbWFsbCBkZXRhaWwsIHNvIHRoZXkgY2FuCj4gYWR2aXNlIHVzLgo+IAo+IEFueXdh
-eSwgYXQgc29tZSBwb2ludCB3ZSBoYXZlIHRvIHRha2UgYSBkZWNpc2lvbiB0byBjYXJyeSBvbiB0
-aGlua3MuCj4gU28gYWN0dWFsbHksIEkgd291bGQgbGlrZSB0byBhdm9pZCBhIG5ldmVyLWVuZGlu
-ZyBzdG9yeSA6KQoKSSBkb24ndCBrbm93IHdoYXQncyB0aGUgcmlnaHQgYW5zd2VyIGhlcmUgd2l0
-aCByZWdhcmRzIHRvIHJlbmFtaW5nIG9yIApzcGxpdGluZyB0aGluZ3MuIEluIGVpdGhlciBjYXNl
-LCB0aGF0J3MgYSBzZXBhcmF0ZSBpc3N1ZSBmcm9tIHRoaXMgCnBhdGNoLgoKUm9iCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVRE
-IGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtbXRkLwo=
+Allwinner V3s SoC has a pin controller like other Allwinner SoCs and got
+supported by the sunxi-pinctrl driver now.
+
+Add a device tree binding for it.
+
+Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+---
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index de1378b4efad..a1002735bc75 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -22,6 +22,7 @@ Required properties:
+   "allwinner,sun8i-a83t-pinctrl"
+   "allwinner,sun8i-h3-pinctrl"
+   "allwinner,sun8i-h3-r-pinctrl"
++  "allwinner,sun8i-v3s-pinctrl"
+   "allwinner,sun50i-a64-pinctrl"
+   "nextthing,gr8-pinctrl"
+ 
+-- 
+2.11.0
