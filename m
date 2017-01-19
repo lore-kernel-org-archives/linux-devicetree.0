@@ -1,46 +1,86 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH v11 10/12] drm/mediatek: add non-continuous clock mode
- and EOT packet control
-Date: Thu, 19 Jan 2017 09:42:06 +0800
-Message-ID: <1484790126.19089.0.camel@mtksdaap41>
-References: <1484117473-46644-1-git-send-email-yt.shen@mediatek.com>
- <1484117473-46644-11-git-send-email-yt.shen@mediatek.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
+Date: Wed, 18 Jan 2017 17:44:53 -0800
+Message-ID: <aaefdb64-5d45-a225-f764-b06ebda73264@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
+ <1484320822.31475.96.camel@pengutronix.de>
+ <2b1d2418-1ad4-6373-cb07-c3aeab48187f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484117473-46644-11-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YT Shen <yt.shen@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <2b1d2418-1ad4-6373-cb07-c3aeab48187f@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlUOgoKT24gV2VkLCAyMDE3LTAxLTExIGF0IDE0OjUxICswODAwLCBZVCBTaGVuIHdyb3Rl
-Ogo+IFRoaXMgcGF0Y2ggd2lsbCB1cGRhdGUgZHNpIGNsb2NrIGNvbnRyb2wgbWV0aG9kLgo+IDEu
-IGRzaSBub24tY29udGludWUgY2xvY2sgbW9kZSB3aWxsIGVuaGFuY2UgYW50aXN0YXRpYyBlZmZl
-Y3QgZm9yIHBhbmVsCj4gMi4gRU9UIHBhY2tldCBjb250cm9sIHdpbGwganVkZ2Ugd2hldGhlciBk
-c2kgc2VuZCBlbmQgb2YgcGFja2V0IG9yIG5vdAo+IGJ5IGN1c3RvbWl6ZQo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IHNoYW9taW5nIGNoZW4gPHNoYW9taW5nLmNoZW5AbWVkaWF0ZWsuY29tPgo+IFNpZ25l
-ZC1vZmYtYnk6IFlUIFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgoKQWNrZWQtYnk6IENLIEh1
-IDxjay5odUBtZWRpYXRlay5jb20+Cgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RzaS5jIHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+IAo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+IGluZGV4IGIzYzdmZDguLjg1ZjIyZDIgMTAw
-NjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwo+ICsrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKPiBAQCAtNDMxLDYgKzQzMSw5IEBAIHN0
-YXRpYyB2b2lkIG10a19kc2lfcnh0eF9jb250cm9sKHN0cnVjdCBtdGtfZHNpICpkc2kpCj4gIAkJ
-YnJlYWs7Cj4gIAl9Cj4gIAo+ICsJdG1wX3JlZyB8PSAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9E
-U0lfQ0xPQ0tfTk9OX0NPTlRJTlVPVVMpIDw8IDY7Cj4gKwl0bXBfcmVnIHw9IChkc2ktPm1vZGVf
-ZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX0VPVF9QQUNLRVQpID4+IDM7Cj4gKwo+ICAJd3JpdGVsKHRt
-cF9yZWcsIGRzaS0+cmVncyArIERTSV9UWFJYX0NUUkwpOwo+ICB9Cj4gIAoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 01/14/2017 02:42 PM, Steve Longerbeam wrote:
+>
+>>> +/* parse inputs property from a sensor node */
+>>> +static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
+>>> +				   struct imx_media_subdev *sensor,
+>>> +				   struct device_node *sensor_np)
+>>> +{
+>>> +	struct imx_media_sensor_input *sinput = &sensor->input;
+>>> +	int ret, i;
+>>> +
+>>> +	for (i = 0; i < IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
+>>> +		const char *input_name;
+>>> +		u32 val;
+>>> +
+>>> +		ret = of_property_read_u32_index(sensor_np, "inputs", i, &val);
+>>> +		if (ret)
+>>> +			break;
+>>> +
+>>> +		sinput->value[i] = val;
+>>> +
+>>> +		ret = of_property_read_string_index(sensor_np, "input-names",
+>>> +						    i, &input_name);
+>>> +		/*
+>>> +		 * if input-names not provided, they will be set using
+>>> +		 * the subdev name once the sensor is known during
+>>> +		 * async bind
+>>> +		 */
+>>> +		if (!ret)
+>>> +			strncpy(sinput->name[i], input_name,
+>>> +				sizeof(sinput->name[i]));
+>>> +	}
+>>> +
+>>> +	sinput->num = i;
+>>> +
+>>> +	/* if no inputs provided just assume a single input */
+>>> +	if (sinput->num == 0)
+>>> +		sinput->num = 1;
+>>> +}
+>> This should be parsed by the sensor driver, not imx-media.
+>
+> you're probably right. I'll submit a patch for adv7180.c.
+
+Actually, the problem here is that this parses an input routing value to
+pass to s_routing, and an input name string. There would need to be
+another subdev callback, maybe enum_imput, that would return this
+information for the bridge driver, if this info were to be parsed and
+maintained by the sensor.
+
+But this info should really be known and parsed by the bridge anyway,
+because as the header for s_routing states,
+
+"An i2c device shouldn't know about whether an input pin is connected
+  to a Composite connector, because on another board or platform it
+  might be connected to something else entirely. The calling driver is
+  responsible for mapping a user-level input to the right pins on the i2c
+  device."
+
+Steve
