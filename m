@@ -1,57 +1,75 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/8] ARM: dts: Switch to new DSA binding
-Date: Thu, 19 Jan 2017 14:49:23 -0800
-Message-ID: <f164986c-4d72-5c50-ded7-5492b7c98be2@gmail.com>
-References: <20170117182224.32212-1-f.fainelli@gmail.com>
- <633afd2c-75e4-adeb-f3a0-b59b5f47f1a7@gmail.com>
- <878tq67jjy.fsf@free-electrons.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Export __of_find_all_nodes()
+Date: Thu, 19 Jan 2017 14:42:28 -0800
+Message-ID: <588140D4.1060103@gmail.com>
+References: <20170118093849.32204-1-alexander.sverdlin@nokia.com>
+ <587FDF1B.1060206@gmail.com> <d9525715-be49-1cfa-f623-084237e44b4c@nokia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <878tq67jjy.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <d9525715-be49-1cfa-f623-084237e44b4c-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2017 02:48 PM, Gregory CLEMENT wrote:
-> Hi Florian,
->  
->  On jeu., janv. 19 2017, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On 01/19/17 01:43, Alexander Sverdlin wrote:
+> Hi!
 > 
->> On 01/17/2017 10:22 AM, Florian Fainelli wrote:
->>> Hi all,
+> On 18/01/17 22:33, Frank Rowand wrote:
+>>> This is necessary for for_each_of_allnodes() to work in the modules.
 >>>
->>> This patch series converts the in-tree users to utilize the new (relatively)
->>> DSA binding that was introduced with commit 8c5ad1d6179d ("net: dsa: Document
->>> new binding"). The legacy binding node is kept included, but is marked
->>> disabled.
+>>> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> ---
+>>>  drivers/of/base.c | 1 +
+>>>  1 file changed, 1 insertion(+)
 >>>
->>> Changes in v3:
+>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>>> index 2eb4dea62b84..f576c33e0b84 100644
+>>> --- a/drivers/of/base.c
+>>> +++ b/drivers/of/base.c
+>>> @@ -270,6 +270,7 @@ struct device_node *__of_find_all_nodes(struct device_node *prev)
+>>>  	}
+>>>  	return np;
+>>>  }
+>>> +EXPORT_SYMBOL_GPL(__of_find_all_nodes);
+>>>  
+>>>  /**
+>>>   * of_find_all_nodes - Get next node in global list
 >>>
->>> - collected tags from Andrew and Russell
->>> - added missing change to arch/arm/boot/dts/kirkwood-rd88f6281-a.dts
->>>
->>> Changes in v2:
->>>
->>> - patch 1: Use an hexadecimal reg property
->>> - patch 2: fixed the subject
->>> - patch 3: s/okay/disabled/ for the legacy DSA node
->>> - patches 7/8: fixed a stray whitespace
->>>
->>> In about 2-3 releases we may consider removing the old DSA binding entirely
->>> from the kernel.
+>> Quoting Rob from the last request for this:
 >>
->> Gregory, all patches have been reviewed/tested now, can you take this
->> for an upcoming 4.11 pull request? Thanks!
+>> "What driver needs this? This isn't really a function I'd expect drivers to use."
 > 
-> 
-> All the series applied on mvebu/dt
+> This one and the one from previous patch/mail are used in a module which reads DT overlays
 
-Awesome, merci !
--- 
-Florian
+If I understand correctly, that was a request to be able to use of_node_init() directly.
+Is that correct?
+
+> from pluggable extension boards, eventually performs some sanity checks/corrections and
+> applies these overlays. This eventual corrections require low-level access to DT.
+
+Are you saying that you want to modify the device tree data structure after the overlay
+is applied?
+
+The idea of sanity checks is one that I am very interested in.  Could the sanity checks
+be done statically, either with the overlay source, or with the compiled overlay source?
+The idea behind that question is whether the checks could be done while the overlay is
+being developed, instead of at run time.
+
+I am also curious about what sort of corrections are made and how it is determined what
+corrections to make.
+
+
+> I cannot judge, how relevant this usecase is for the community, but I was driven by the fact,
+> that the functions which require the functions I export are defined statically in .h files
+> and therefore are exposed to the modules.
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
