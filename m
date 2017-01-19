@@ -1,76 +1,55 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 0/4] ARM: K2G: Add support for TI-SCI Generic PM
- Domains
-Date: Thu, 19 Jan 2017 12:59:29 -0600
-Message-ID: <7e87e4cd-d859-b941-8cb8-118a8b0d2690@ti.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
- <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
- <25026532-fe4d-8215-9249-c5c7efcd8242@oracle.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Thu, 19 Jan 2017 20:02:17 +0100
+Message-ID: <20170119190217.GB1439@katana>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+ <20170118172502.13876-3-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <25026532-fe4d-8215-9249-c5c7efcd8242@oracle.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="6sX45UoQRIJXqkqR"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170118172502.13876-3-chris.brandt@renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Santosh,
-On 01/19/2017 11:51 AM, santosh.shilimkar@oracle.com wrote:
-> On 1/4/17 2:06 PM, Dave Gerlach wrote:
->> Santosh,
->> On 01/04/2017 03:54 PM, Santosh Shilimkar wrote:
->>> On 1/4/2017 12:55 PM, Dave Gerlach wrote:
->>>> Hi,
->>>> This is v3 of the series to add support for TI-SCI Generic PM Domains.
->>>> Previous versions can be found here:
->>>>
->>>> v2: https://www.spinics.net/lists/kernel/msg2364612.html
->>>> v1: http://www.spinics.net/lists/arm-kernel/msg525204.html
->>>>
->>>> This version is rebased on v4.10-rc2 but is the same as v2 with the
->>>> exception of patch 2 in which the devicetree binding documentation
->>>> needed to be updated to show the k2g_pds node should be a child of
->>>> the pmmc node. Apart from that, the acks provided by Ulf were added
->>>> to patches 1 and 3.
->>>>
->>>> Now that the TI-SCI series has been merged [1] this series will be
->>>> ready
->>>> to go in with an ack on the DT binding. Rob had raised some
->>>> questions on
->>>> the necessity ti,sci-id property but I believe these were properly
->>>> addressed during the discussion of v2 so hopefully an ack is in order
->>>> now.
->>>>
->>> How do you plan to merge this series with below patch ?
->>>
->>>>   PM / Domains: Add generic data pointer to genpd data struct
->>> I think this one goes via Rafael's tree. If you want me to merge this
->>> along with other patches then will need his ack.
->>>
->>> Other way is to get that merged first via Rafael's tree and then
->>> the remainder series.
->>
->> I'd be happy with it going in through your tree with an ack to avoid any
->> delay but I'd say it's Rafael's call as it is a patch to the genpd core,
->> even though at this point I am the only user.
->>
-> Am going to send pull request over weekend, so if you would like
-> me take the series via arm-soc tree, please get Rafaels, ack and
-> let me know.
 
-Thanks for letting me know, unfortunately we have not yet reached 
-alignment on the binding so I do not believe we will be ready for merge 
-in time.
+--6sX45UoQRIJXqkqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Dave
+On Wed, Jan 18, 2017 at 12:25:01PM -0500, Chris Brandt wrote:
+> In the case of a single clock source, you don't need names. However,
+> if the controller has 2 clock sources, you need to name them correctly
+> so the driver can find the 2nd one.
+>=20
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
->
-> Regards,
-> Santosh
->
->
+Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
+
+--6sX45UoQRIJXqkqR
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJYgQ04AAoJEBQN5MwUoCm2t7QP/RIS0PAurhJ17FcbYaJfZFdX
+Ca3VEk47s0Z7ij8fgXlHE79GmSL4eWdNqexgYcvlCFrWHaGoVvxlKmy50n7pNkDs
+jHxLs5Z6pwPwiSl3f0/MkwRXA2M7T5eWjyUSGdyit2m43qef1ucHG3MgWarWU4C6
+aon+qMAidF3OxuT4vbH/7Yk6QMADq72kSEiXqvulgZK5RBeyxeVOhSgJkwOof5nd
+1Z/f9IEHBIz6XijKTfcbynjm/87/dTotYRHrzF6zAdIMSgIf2uWjvyjexsgvft+O
+bUJTjuP3ohlXGMNjJfyvPGoNr7tyVuJns6j32+PgJskyYgT9LQUfnDgWtS+e5sbE
+eAY+oOYJrDwBgJbNgkZB+fOnoCUjkmrAN3xzOSimGTHF0UWYGs6F1RcLv36WEtzF
+OJH0wTaGYQtWng8V2KnX1mf9c4FFBGKo/RlQJQS9fD26Zl7tLupoWk3x4nYc4ETI
+bRTVck8AIb0KJXwALcqRCUJB2WTFgtlLBcirSLpQN4yqUs32CWa0mEDZfdJwFODx
+O6ihp4bbfGJNMk6M2I1qhimtK11whbcQl8T2S8+cPkDM9H5k2nzMV12l2oGrv/V3
+BkKU+dvpp5/DNPYnnTb6l9tg/3dAehsOG9ZnSp7iKmx2WGvsKFKOYaUHM07XCGMe
+anmD4Bdv6h/aNmVlAPIX
+=4ReP
+-----END PGP SIGNATURE-----
+
+--6sX45UoQRIJXqkqR--
