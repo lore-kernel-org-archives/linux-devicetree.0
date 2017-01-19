@@ -1,61 +1,144 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
-Date: Thu, 19 Jan 2017 06:56:50 -0800
-Message-ID: <20170119145649.GR7403@atomide.com>
-References: <20170117040336.21700-1-lokeshvutla@ti.com>
- <20170117040336.21700-2-lokeshvutla@ti.com>
- <20170117232310.GX7403@atomide.com>
- <88830967-6e83-33fc-8a1c-d776fd694e2f@ti.com>
- <20170118170033.GD7403@atomide.com>
- <61578446-3a10-55ab-dac9-0a95b6e2c77c@ti.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Question about OF-graph ports
+Date: Thu, 19 Jan 2017 08:58:13 -0600
+Message-ID: <CAL_Jsq+pDkfijyKV0ALzZUrH-NVzmLaNj6ivAEFO98NUOXGojw@mail.gmail.com>
+References: <87r33z4maj.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <61578446-3a10-55ab-dac9-0a95b6e2c77c-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <87r33z4maj.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
-Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170119 02:08]:
-> 
-> 
-> On Wednesday 18 January 2017 10:30 PM, Tony Lindgren wrote:
-> > * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170117 19:50]:
-> >>
-> >>
-> >> On Wednesday 18 January 2017 04:53 AM, Tony Lindgren wrote:
-> >>> * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170116 20:06]:
-> >>>> Hwmod core tries to reset and idles each IP that is registered with hwmod.
-> >>>> In case of earlycon, that specific uart IP cannot be reset or keep it in
-> >>>> idle state else earlycon hangs once hwmod resets that uart IP. So add support
-> >>>> to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
-> >>>> is enabled.
-> >>>
-> >>> Nice :)
-> >>>
-> >>> I guess this has no dependency to SERIAL_OMAP vs 8250_OMAP selection?
-> >>
-> >> Unfortunately SERIAL_OMAP does not support earlycon yet. As I mentioned
-> >> in my cover letter, I verified this series only with 8250_OMAP.
-> > 
-> > OK. So just to understand why it would not work with omap-serial, do we
-> > need something implemented in drivers/tty/serial/earlycon.c for non 8250
-> > drivers to make it work? Or are there other dependencies?
-> 
-> Yeah,  OF_EARLYCON_DECLARE should be declared for omap-serial. Just
-> posted a patch[1] adding support for earlycon in omap-serial.
+On Thu, Jan 19, 2017 at 12:07 AM, Kuninori Morimoto
+<kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+> Hi Rob, Mark
+> and ALSA SoC ML
+>
+> I'm working for OF-graph base sound card support.
+> Now I want to know 1 things which can't solve by myself.
+> It is OF-graph ports
+>
+> ALSA SoC needs CPU, Codec, and Sound Card.
+> If CPU <-> Card <-> Codec case, OF-graph will be
+>
+>         card {
+>                 ports {
+>                         port@0 {
+>                                 card_in: endpoint {
+>                                         remote-endpoint = <&cpu_out>;
+>                                 };
+>                         };
+>                         port@1 {
+>                                 card_out: endpoint {
+>                                         remote-endpoint = <&codec_in>;
+>                                 };
+>                         };
+>                 };
+>         };
+>
+>         cpu {
+>                 port {
+>                         cpu_out: endpoint {
+>                                 remote-endpoint = <&card_in>;
+>                         };
+>                 };
+>         };
+>
+>         codec {
+>                 port {
+>                         codec_in: endpoint {
+>                                 remote-endpoint = <&card_out>;
+>                         };
+>                 };
+>         };
+>
+> This is OK.
+> If CPU has many ports, then ALSA SoC requests 1 Card which has many
+> DAIs (= Digital Audio Interface).
+> This case, cpu will have "ports" and many "port", this is OK.
+>
+>         SoC.0              Codec0
+>         SoC.1 <-> Card <-> Codec1
+>         SoC.2              Codec2
 
-OK great. And with Vignesh's fix for omap5, I think we then have 8250-omap
-and omap-serial behaving the same way on all SoC variants.
+This looks wrong to me. The card is just a container node to group
+things. The card should not be the middle of the graph. There is no
+data flow thru the card as it's not a hardware thing. Start with the
+codec's port connected to the node controlling the audio port on the
+SOC (In the simple case, that's an SSI controller) and expand the
+graph from there.
 
-Regards,
 
-Tony
+> In "card", CPU/Codec pair is indicated by "ports" now
+> (= port0 is CPU, port1 is Codec, etc)
+>
+> My question is in this case, how to know CPU/Codec pair on "card" ?
 
-> [1] https://patchwork.kernel.org/patch/9525377/
+The card should only have the entry (or exit) points of the graph.
+That may not even need to be graph nodes. It could just be a list of
+CPU DAI phandles (which then have graph nodes).
 
+Look at the display side use of OF graph. We have display subsystem
+nodes (like a card) with a poorly named ports property (nothing to do
+with OF graph) listing display channels. Each phandle there is the
+entry point to the graph and is typically the front end display
+controller (perhaps a CSC and scaling unit). The graph then goes to a
+backend controller (for display timing), then to interface PHY
+(DSI/HDMI), then possibly and external bridge chip, then to a
+connector or panel node. That's a complex example. In simple cases, we
+just have a display controller connected to a panel.
+
+> Can we have *multi ports*, like this ?
+>
+> card {
+>         ports {
+>                 ports@0 {
+>                         port@0 { /* SoC.0 */ };
+
+This is not the OF graph binding, so don't do this. OF graph is
+flexible enough already to describe any topology. If you feel you need
+to extend it, then something is wrong.
+
+>                         port@1 { /* Codec0*/ };
+>                 };
+>                 ports@1 {
+>                         port@0 { /* SoC.1 */ };
+>                         port@1 { /* Codec1*/ };
+>                 };
+>                 ports@2 {
+>                         port@0 { /* SoC.2 */ };
+>                         port@1 { /* Codec2*/ };
+>                 };
+>         };
+> };
+>
+> Or can I use grouping, like this ?
+>
+> card {
+>         group = <port@0 port@1>,
+>                 <port@2 port@3>,
+>                 <port@4 port@5>;
+
+If it's not clear by now, the graph is supposed to define the
+connections. You are defining connections here in your own custom way.
+
+>         ports {
+>                 port@0 { /* SoC.0 */ };
+>                 port@1 { /* SoC.1 */ };
+>                 port@2 { /* SoC.2 */ };
+>                 port@3 { /* Codec0*/ };
+>                 port@4 { /* Codec1*/ };
+>                 port@5 { /* Codec2*/ };
+>         };
+> };
+>
+> Best regards
+> ---
+> Kuninori Morimoto
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
