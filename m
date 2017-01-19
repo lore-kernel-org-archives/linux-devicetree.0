@@ -1,72 +1,79 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 0/8] Add PWM and IIO timer drivers for STM32
-Date: Thu, 19 Jan 2017 13:35:25 -0600
-Message-ID: <20170119193525.jufn5vh4huap7umm@rob-hp-laptop>
-References: <1484749251-14445-1-git-send-email-benjamin.gaignard@st.com>
- <20170119084355.GF3718@dell>
- <CA+M3ks7UchJ3QdQrHO6rSsc4YNhNEmLejoeRBVNhn=2biSn=cQ@mail.gmail.com>
+Subject: Re: [PATCHv2] Documentation: dt-bindings: Add binding documentation
+ for TI clkctrl clocks
+Date: Thu, 19 Jan 2017 13:28:13 -0600
+Message-ID: <20170119192813.xdt5jahffcdzmucu@rob-hp-laptop>
+References: <20170117225302.10844-1-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CA+M3ks7UchJ3QdQrHO6rSsc4YNhNEmLejoeRBVNhn=2biSn=cQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Fabrice Gasnier <fabrice.gasnier@st.com>, Gerald Baeza <gerald.baeza@st.com>, Arnaud Pouliquen <arnaud.pouliquen@st.com>, Linaro Kernel Mailman List <linaro-kernel@lists.linaro.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
+In-Reply-To: <20170117225302.10844-1-tony@atomide.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 05:02:11PM +0100, Benjamin Gaignard wrote:
-> 2017-01-19 9:43 GMT+01:00 Lee Jones <lee.jones@linaro.org>:
-> > On Wed, 18 Jan 2017, Benjamin Gaignard wrote:
-> >
-
-> >> Benjamin Gaignard (8):
-> >>   MFD: add bindings for STM32 Timers driver
-> >>   MFD: add STM32 Timers driver
-> >>   PWM: add pwm-stm32 DT bindings
-> >>   PWM: add PWM driver for STM32 plaftorm
-> >>   IIO: add bindings for STM32 timer trigger driver
-> >>   IIO: add STM32 timer trigger driver
-> >>   ARM: dts: stm32: add Timers driver for stm32f429 MCU
-> >>   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
-> >>
-> >>  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
-> >>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
-> >>  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
-> >>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
-> >>  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++++++++
-> >>  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
-> >>  drivers/iio/trigger/Kconfig                        |   9 +
-> >>  drivers/iio/trigger/Makefile                       |   1 +
-> >>  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++++++++++++
-> >>  drivers/mfd/Kconfig                                |  11 +
-> >>  drivers/mfd/Makefile                               |   2 +
-> >>  drivers/mfd/stm32-timers.c                         |  80 +++++
-> >>  drivers/pwm/Kconfig                                |   9 +
-> >>  drivers/pwm/Makefile                               |   1 +
-> >>  drivers/pwm/pwm-stm32.c                            | 398 +++++++++++++++++++++
-> >>  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
-> >>  include/linux/mfd/stm32-timers.h                   |  71 ++++
-> >>  17 files changed, 1422 insertions(+)
-> >>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
-> >>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
-> >>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
-> >>  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
-> >>  create mode 100644 drivers/mfd/stm32-timers.c
-> >>  create mode 100644 drivers/pwm/pwm-stm32.c
-> >>  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
-> >>  create mode 100644 include/linux/mfd/stm32-timers.h
-> >
-> > Let me know when you have all your Acks.
-> >
-> > I would be happy to take this through the MFD tree.
+On Tue, Jan 17, 2017 at 02:53:02PM -0800, Tony Lindgren wrote:
+> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
+> clock controller instance for each interconnect target module. The clkctrl
+> controls functional and interface clocks for the module.
 > 
-> Some Acks are still missing on DT patches, I hope that Rob could find
-> to review them
-> after that it will ok :-)
+> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
+> With this binding and a related clock device driver we can start moving the
+> clkctrl clock handling to live in drivers/clk/ti.
+> 
+> Note that this binding allows keeping the clockdomain related parts out of
+> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
+> a separate driver in drivers/soc/ti and genpd. If the clockdomain driver
+> needs to know it's clocks, we can just set the the clkctrl device
+> instances to be children of the related clockdomain device.
+> 
+> Each clkctrl clock can have multiple optional gate clocks, and multiple
+> optional mux clocks. To represent this in device tree, it seems that
+> it is best done using four clock cells #clock-cells = <4> property.
+> 
+> The reasons for using #clock-cells = <4> are:
+> 
+> 1. We need to specify the clkctrl offset from the instance base. Otherwise
+>    we end up with a large number of device tree nodes that need to be
+>    patched when new clocks are discovered in a clkctrl clock with minor
+>    hardware revision changes for example
+> 
+> 2. On omap5 CM_L3INIT_USB_HOST_HS_CLKCTRL has ten OPTFCLKEN bits. So we
+>    need to use a separate cell for optional gate clocks to avoid address
+>    space conflicts
+> 
+> 3. Some clkctrl instances can also also optional mux clocks. To address
+>    them properly we need also a separate cell for the optional mux
+>    clock index
+> 
+> 4. The modulemode clock needs a flag passed to it for hardware or
+>    software controlled mode
+> 
+> There is probably no need to list input clocks for each clkctrl clock
+> instance in the binding. If we want to add them, the standard clocks
+> binding can be used for that.
+> 
+> For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
+> Mapping Summary" for example. It shows one instance of a clkctrl clock
+> controller with multiple clkctrl registers.
+> 
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+> 
+> Changes from v1:
+> 
+> - Use #clock-cells to avoid address space conflicts
+> 
+> - Consider also optional mux clocks as pointed out by Tero
+> 
+> ---
+>  .../devicetree/bindings/clock/ti-clkctrl.txt       | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
 
-I've acked all the bindings. stm32 maintainer needs to ack the dts 
-files.
+Acked-by: Rob Herring <robh@kernel.org>
 
-Rob
