@@ -1,135 +1,114 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v13 2/5] tee: generic TEE subsystem
-Date: Thu, 19 Jan 2017 17:45:43 +0100
-Message-ID: <20170119164541.GA22094@jax>
-References: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
- <1479480700-554-3-git-send-email-jens.wiklander@linaro.org>
- <5825882.vZRDMrBMkW@wuerfel>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Thu, 19 Jan 2017 17:52:07 +0100
+Message-ID: <1484844727.24339.50.camel@pengutronix.de>
+References: <20170119163631.10668-1-andrew.smirnov@gmail.com>
+         <20170119163631.10668-4-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <5825882.vZRDMrBMkW@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, Nishanth Menon <nm@ti.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, broonie@kernel.org, Al Viro <viro@zeniv.linux.org.uk>, "Andrew F. Davis" <afd@ti.com>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, jean-michel.delorme@st.com, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170119163631.10668-4-andrew.smirnov@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-pci@vger.kernel.org, yurovsky@gmail.com, Richard Zhu <hongxing.zhu@nxp.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJuZCwKClRoaXMgaXMgdGhlIG9sZCB2MTMgcGF0Y2ggc2V0IHlvdSdyZSBjb21tZW50aW5n
-LCBidXQgaXQgZG9lc24ndCBtYXR0ZXIKaXQncyBlc3NlbnRpYWxseSBpZGVudGljYWwgdG8gdjE0
-IGluIHRoaXMgcGF0Y2guCgpPbiBXZWQsIEphbiAxOCwgMjAxNyBhdCAwOToxOToyNVBNICswMTAw
-LCBBcm5kIEJlcmdtYW5uIHdyb3RlOgo+IE9uIEZyaWRheSwgTm92ZW1iZXIgMTgsIDIwMTYgMzo1
-MTozNyBQTSBDRVQgSmVucyBXaWtsYW5kZXIgd3JvdGU6Cj4gPiBJbml0aWFsIHBhdGNoIGZvciBn
-ZW5lcmljIFRFRSBzdWJzeXN0ZW0uCj4gPiBUaGlzIHN1YnN5c3RlbSBwcm92aWRlczoKPiA+ICog
-UmVnaXN0cmF0aW9uL3VuLXJlZ2lzdHJhdGlvbiBvZiBURUUgZHJpdmVycy4KPiA+ICogU2hhcmVk
-IG1lbW9yeSBiZXR3ZWVuIG5vcm1hbCB3b3JsZCBhbmQgc2VjdXJlIHdvcmxkLgo+ID4gKiBJb2N0
-bCBpbnRlcmZhY2UgZm9yIGludGVyYWN0aW9uIHdpdGggdXNlciBzcGFjZS4KPiA+ICogU3lzZnMg
-aW1wbGVtZW50YXRpb25faWQgb2YgVEVFIGRyaXZlcgo+ID4gCj4gPiBBIFRFRSAoVHJ1c3RlZCBF
-eGVjdXRpb24gRW52aXJvbm1lbnQpIGRyaXZlciBpcyBhIGRyaXZlciB0aGF0IGludGVyZmFjZXMK
-PiA+IHdpdGggYSB0cnVzdGVkIE9TIHJ1bm5pbmcgaW4gc29tZSBzZWN1cmUgZW52aXJvbm1lbnQs
-IGZvciBleGFtcGxlLAo+ID4gVHJ1c3Rab25lIG9uIEFSTSBjcHVzLCBvciBhIHNlcGFyYXRlIHNl
-Y3VyZSBjby1wcm9jZXNzb3IgZXRjLgo+ID4gCj4gPiBUaGUgVEVFIHN1YnN5c3RlbSBjYW4gc2Vy
-dmUgYSBURUUgZHJpdmVyIGZvciBhIEdsb2JhbCBQbGF0Zm9ybSBjb21wbGlhbnQKPiA+IFRFRSwg
-YnV0IGl0J3Mgbm90IGxpbWl0ZWQgdG8gb25seSBHbG9iYWwgUGxhdGZvcm0gVEVFcy4KPiA+IAo+
-ID4gVGhpcyBwYXRjaCBidWlsZHMgb24gb3RoZXIgc2ltaWxhciBpbXBsZW1lbnRhdGlvbnMgdHJ5
-aW5nIHRvIHNvbHZlCj4gPiB0aGUgc2FtZSBwcm9ibGVtOgo+ID4gKiAib3B0ZWVfbGludXhkcml2
-ZXIiIGJ5IGFtb25nIG90aGVycwo+ID4gICBKZWFuLW1pY2hlbCBERUxPUk1FPGplYW4tbWljaGVs
-LmRlbG9ybWVAc3QuY29tPiBhbmQKPiA+ICAgRW1tYW51ZWwgTUlDSEVMIDxlbW1hbnVlbC5taWNo
-ZWxAc3QuY29tPgo+ID4gKiAiR2VuZXJpYyBUcnVzdFpvbmUgRHJpdmVyIiBieSBKYXZpZXIgR29u
-esOhbGV6IDxqYXZpZXJAamF2aWdvbi5jb20+Cj4gCj4gQ2FuIHlvdSBnaXZlIGFuIGV4YW1wbGUg
-Zm9yIGEgc3lzdGVtIHRoYXQgd291bGQgY29udGFpbiBtb3JlIHRoYW4gb25lCj4gVEVFPyBJIHNl
-ZSB0aGF0IHlvdSBzdXBwb3J0IGR5bmFtaWMgcmVnaXN0cmF0aW9uLCBhbmQgaXQncyBjbGVhciB0
-aGF0Cj4gdGhlcmUgY2FuIGJlIG1vcmUgdGhhbiBvbmUgdHlwZSBvZiBURUUsIGJ1dCB3aHkgd291
-bGQgb25lIGhhdmUgbW9yZQo+IHRoYW4gb25lIGF0IGEgdGltZSwgYW5kIHdoeSBub3QgbW9yZSB0
-aGFuIDMyPwoKSSBrbm93IHRoYXQgU1QgaGFzIHN5c3RlbXMgd2hlcmUgdGhlcmUncyBvbmUgVEVF
-IGluIFRydXN0Wm9uZSBhbmQKYW5vdGhlciBURUUgb24gYSBzZXBhcmF0ZSBzZWN1cmUgY28tcHJv
-Y2Vzc29yLiBJZiB5b3UgaGF2ZSBzZXZlcmFsIFRFRXMKaXQncyBwcm9iYWJseSBiZWNhdXNlIHRo
-ZXkgaGF2ZSBkaWZmZXJlbnQgY2FwYWJpbGl0aWVzIChwZXJmb3JtYW5jZQp2ZXJzdXMgbGV2ZWwg
-b2Ygc2VjdXJpdHkpLiBKdXN0IGdvaW5nIGJleW9uZCB0d28gb3IgdGhyZWUgZGlmZmVyZW50Cmxl
-dmVscyBvZiBzZWN1cml0eSB3aXRoIGRpZmZlcmVudCBURUVzIHNvdW5kcyBhIGJpdCBleHRyZW1l
-LCBzbyBhCm1heGltdW0gb2YgMzIgb3IgMTYgc2hvdWxkIGJlIGZhaXJseSBzYWZlLiBJZiBpdCB0
-dXJucyBvdXQgSSdtIHdyb25nIGluCnRoaXMgYXNzdW1wdGlvbiBpdCdzIG5vdCB0aGF0IGhhcmQg
-dG8gY29ycmVjdCBpdC4KCj4gCj4gPiArc3RhdGljIGludCB0ZWVfaW9jdGxfaW52b2tlKHN0cnVj
-dCB0ZWVfY29udGV4dCAqY3R4LAo+ID4gKwkJCSAgICBzdHJ1Y3QgdGVlX2lvY3RsX2J1Zl9kYXRh
-IF9fdXNlciAqdWJ1ZikKPiA+ICt7Cj4gPiArCWludCByYzsKPiA+ICsJc2l6ZV90IG47Cj4gPiAr
-CXN0cnVjdCB0ZWVfaW9jdGxfYnVmX2RhdGEgYnVmOwo+ID4gKwlzdHJ1Y3QgdGVlX2lvY3RsX2lu
-dm9rZV9hcmcgX191c2VyICp1YXJnOwo+ID4gKwlzdHJ1Y3QgdGVlX2lvY3RsX2ludm9rZV9hcmcg
-YXJnOwo+ID4gKwlzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIF9fdXNlciAqdXBhcmFtcyA9IE5VTEw7
-Cj4gPiArCXN0cnVjdCB0ZWVfcGFyYW0gKnBhcmFtcyA9IE5VTEw7Cj4gPiArCj4gPiArCWlmICgh
-Y3R4LT50ZWVkZXYtPmRlc2MtPm9wcy0+aW52b2tlX2Z1bmMpCj4gPiArCQlyZXR1cm4gLUVJTlZB
-TDsKPiA+ICsKPiA+ICsJaWYgKGNvcHlfZnJvbV91c2VyKCZidWYsIHVidWYsIHNpemVvZihidWYp
-KSkKPiA+ICsJCXJldHVybiAtRUZBVUxUOwo+ID4gKwo+ID4gKwlpZiAoYnVmLmJ1Zl9sZW4gPiBU
-RUVfTUFYX0FSR19TSVpFIHx8Cj4gPiArCSAgICBidWYuYnVmX2xlbiA8IHNpemVvZihzdHJ1Y3Qg
-dGVlX2lvY3RsX2ludm9rZV9hcmcpKQo+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiArCj4gPiAr
-CXVhcmcgPSAoc3RydWN0IHRlZV9pb2N0bF9pbnZva2VfYXJnIF9fdXNlciAqKSh1bnNpZ25lZCBs
-b25nKWJ1Zi5idWZfcHRyOwo+IAo+IHU2NF90b191c2VyX3B0cigpCgpUaGFua3MsIHRoYXQncyBj
-b252ZW5pZW50LgoKPiAKPiA+ICsJaWYgKGNvcHlfZnJvbV91c2VyKCZhcmcsIHVhcmcsIHNpemVv
-ZihhcmcpKSkKPiA+ICsJCXJldHVybiAtRUZBVUxUOwo+ID4gKwo+ID4gKwlpZiAoc2l6ZW9mKGFy
-ZykgKyBURUVfSU9DVExfUEFSQU1fU0laRShhcmcubnVtX3BhcmFtcykgIT0gYnVmLmJ1Zl9sZW4p
-Cj4gPiArCQlyZXR1cm4gLUVJTlZBTDsKPiA+ICsKPiA+ICsJaWYgKGFyZy5udW1fcGFyYW1zKSB7
-Cj4gPiArCQlwYXJhbXMgPSBrY2FsbG9jKGFyZy5udW1fcGFyYW1zLCBzaXplb2Yoc3RydWN0IHRl
-ZV9wYXJhbSksCj4gPiArCQkJCSBHRlBfS0VSTkVMKTsKPiA+ICsJCWlmICghcGFyYW1zKQo+ID4g
-KwkJCXJldHVybiAtRU5PTUVNOwo+IAo+IEl0IHdvdWxkIGJlIGdvb2QgdG8gaGF2ZSBhbiB1cHBl
-ciBib3VuZCBvbiB0aGUgbnVtYmVyIG9mIHBhcmFtZXRlcnMKPiB0byBsaW1pdCB0aGUgc2l6ZSBv
-ZiB0aGUgbWVtb3J5IGFsbG9jYXRpb24gaGVyZS4KClRoaXMgaXMgYWxyZWFkeSBsaW1pdGVkIGR1
-ZSB0bzoKClRoZSB0ZXN0IHdpdGg6IGJ1Zi5idWZfbGVuID4gVEVFX01BWF9BUkdfU0laRQoKQW5k
-IHRoZW4gYW5vdGhlciB0ZXN0IHRoYXQgdGhlIG51bWJlciBvZiBwYXJhbWV0ZXJzIG1hdGNoZXMg
-dGhlIGJ1ZmZlciBzaXplCndpdGg6IHNpemVvZihhcmcpICsgVEVFX0lPQ1RMX1BBUkFNX1NJWkUo
-YXJnLm51bV9wYXJhbXMpICE9IGJ1Zi5idWZfbGVuCgo+IAo+ID4gK2ludCB0ZWVfZGV2aWNlX3Jl
-Z2lzdGVyKHN0cnVjdCB0ZWVfZGV2aWNlICp0ZWVkZXYpCj4gPiArewo+ID4gKwlpbnQgcmM7Cj4g
-PiArCj4gPiArCS8qCj4gPiArCSAqIElmIHRoZSB0ZWVkZXYgYWxyZWFkeSBpcyByZWdpc3RlcmVk
-LCBkb24ndCBkbyBpdCBhZ2Fpbi4gSXQncwo+ID4gKwkgKiBvYnZpb3VzbHkgYW4gZXJyb3IgdG8g
-dHJ5IHRvIHJlZ2lzdGVyIHR3aWNlLCBidXQgaWYgd2UgcmV0dXJuCj4gPiArCSAqIGFuIGVycm9y
-IHdlJ2xsIGZvcmNlIHRoZSBkcml2ZXIgdG8gcmVtb3ZlIHRoZSB0ZWVkZXYuCj4gPiArCSAqLwo+
-ID4gKwlpZiAodGVlZGV2LT5mbGFncyAmIFRFRV9ERVZJQ0VfRkxBR19SRUdJU1RFUkVEKSB7Cj4g
-PiArCQlkZXZfZXJyKCZ0ZWVkZXYtPmRldiwgImF0dGVtcHQgdG8gcmVnaXN0ZXIgdHdpY2VcbiIp
-Owo+ID4gKwkJcmV0dXJuIDA7Cj4gPiArCX0KPiAKPiBJIGRvbid0IHVuZGVyc3RhbmQgd2hhdCB5
-b3UgYXJlIHByb3RlY3RpbmcgYWdhaW5zdCBoZXJlLgo+IEhvdyB3b3VsZCB3ZSBnZXQgdG8gdGhp
-cyBmdW5jdGlvbiB0d2ljZSBmb3IgdGhlIHNhbWUgZGV2aWNlPwo+IAo+IENvdWxkIHlvdSBjaGFu
-Z2UgdGhlIGNhbGxlciBzbyBpdCBkb2Vzbid0IGhhcHBlbj8KClllcyB0aGUgY2FsbGVyIGNhbiBi
-ZSBjaGFuZ2VkLCBJJ2xsIHJldHVybiBhbiBlcnJvciBpbnN0ZWFkIChhbmQgcmVtb3ZlCnRoZSBj
-b21tZW50KS4KCj4gCj4gPiArLyoqCj4gPiArICogc3RydWN0IHRlZV9pb2N0bF9wYXJhbSAtIHBh
-cmFtZXRlcgo+ID4gKyAqIEBhdHRyOiBhdHRyaWJ1dGVzCj4gPiArICogQG1lbXJlZjogYSBtZW1v
-cnkgcmVmZXJlbmNlCj4gPiArICogQHZhbHVlOiBhIHZhbHVlCj4gPiArICoKPiA+ICsgKiBAYXR0
-ciAmIFRFRV9QQVJBTV9BVFRSX1RZUEVfTUFTSyBpbmRpY2F0ZXMgaWYgbWVtcmVmIG9yIHZhbHVl
-IGlzIHVzZWQgaW4KPiA+ICsgKiB0aGUgdW5pb24uIFRFRV9QQVJBTV9BVFRSX1RZUEVfVkFMVUVf
-KiBpbmRpY2F0ZXMgdmFsdWUgYW5kCj4gPiArICogVEVFX1BBUkFNX0FUVFJfVFlQRV9NRU1SRUZf
-KiBpbmRpY2F0ZXMgbWVtcmVmLiBURUVfUEFSQU1fQVRUUl9UWVBFX05PTkUKPiA+ICsgKiBpbmRp
-Y2F0ZXMgdGhhdCBub25lIG9mIHRoZSBtZW1iZXJzIGFyZSB1c2VkLgo+ID4gKyAqLwo+ID4gK3N0
-cnVjdCB0ZWVfaW9jdGxfcGFyYW0gewo+ID4gKwlfX3U2NCBhdHRyOwo+ID4gKwl1bmlvbiB7Cj4g
-PiArCQlzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtX21lbXJlZiBtZW1yZWY7Cj4gPiArCQlzdHJ1Y3Qg
-dGVlX2lvY3RsX3BhcmFtX3ZhbHVlIHZhbHVlOwo+ID4gKwl9IHU7Cj4gPiArfTsKPiA+ICsKPiA+
-ICsjZGVmaW5lIFRFRV9JT0NUTF9VVUlEX0xFTgkJMTYKPiA+ICsKPiAKPiBIYXZpbmcgYSB1bmlv
-biBpbiBhbiBpb2N0bCBhcmd1bWVudCBzZWVtcyBvZGQuIEhhdmUgeW91IGNvbnNpZGVyZWQKPiB1
-c2luZyB0d28gZGlmZmVyZW50IGlvY3RsIGNvbW1hbmQgbnVtYmVycyBkZXBlbmRpbmcgb24gdGhl
-IHR5cGU/CgpzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIGlzIHVzZWQgYXMgYW4gYXJyYXkgYW5kIHNv
-bWUgcGFyYW1ldGVycyBjYW4gYmUKbWVtcmVmcyB3aGlsZSBvdGhlciBhcmUgdmFsdWVzLgoKPiAK
-PiA+ICsvKioKPiA+ICsgKiBzdHJ1Y3QgdGVlX2lvY2xfc3VwcF9zZW5kX2FyZyAtIFNlbmQgYSBy
-ZXNwb25zZSB0byBhIHJlY2VpdmVkIHJlcXVlc3QKPiA+ICsgKiBAcmV0Oglbb3V0XSByZXR1cm4g
-dmFsdWUKPiA+ICsgKiBAbnVtX3BhcmFtcwlbaW5dIG51bWJlciBvZiBwYXJhbWV0ZXJzIGZvbGxv
-d2luZyB0aGlzIHN0cnVjdAo+ID4gKyAqLwo+ID4gK3N0cnVjdCB0ZWVfaW9jbF9zdXBwX3NlbmRf
-YXJnIHsKPiA+ICsJX191MzIgcmV0Owo+ID4gKwlfX3UzMiBudW1fcGFyYW1zOwo+ID4gKwkvKgo+
-ID4gKwkgKiB0aGlzIHN0cnVjdCBpcyA4IGJ5dGUgYWxpZ25lZCBzaW5jZSB0aGUgJ3N0cnVjdCB0
-ZWVfaW9jdGxfcGFyYW0nCj4gPiArCSAqIHdoaWNoIGZvbGxvd3MgcmVxdWlyZXMgOCBieXRlIGFs
-aWdubWVudC4KPiA+ICsJICoKPiA+ICsJICogQ29tbWVudGVkIG91dCBlbGVtZW50IHVzZWQgdG8g
-dmlzdWFsaXplIHRoZSBsYXlvdXQgZHluYW1pYyBwYXJ0Cj4gPiArCSAqIG9mIHRoZSBzdHJ1Y3Qu
-IFRoaXMgZmllbGQgaXMgbm90IGF2YWlsYWJsZSBhdCBhbGwgaWYKPiA+ICsJICogbnVtX3BhcmFt
-cyA9PSAwLgo+ID4gKwkgKgo+ID4gKwkgKiBzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIHBhcmFtc1tu
-dW1fcGFyYW1zXTsKPiA+ICsJICovCj4gPiArfSBfX2FsaWduZWQoOCk7Cj4gCj4gSSdkIG1ha2Ug
-dGhhdCAKPiAKPiAJc3RydWN0IHRlZV9pb2N0bF9wYXJhbSBwYXJhbXNbMF07Cj4gCj4gYXMgd2Vs
-IGhlcmUsIGFzIEkgYWxzbyBjb21tZW50ZWQgaW4gcGF0Y2ggMyB0aGF0IGhhcyBhIHNpbWlsYXIg
-c3RydWN0dXJlLgoKSSdtIGNvbmNlcm5lZCB0aGF0IHRoaXMgbWF5IGNhdXNlIHdhcm5pbmdzIHdo
-ZW4gY29tcGlsaW5nIGZvciB1c2VyIHNwYWNlCmRlcGVuZGluZyBvbiBjb21waWxlciBhbmQgb3B0
-aW9ucy4gQW0gSSB0b28gY2F1dGlvdXMgaGVyZT8KIApUaGFua3MsCkplbnMKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Am Donnerstag, den 19.01.2017, 08:36 -0800 schrieb Andrey Smirnov:
+> Add various bits of code needed to support i.MX7D variant of the IP.
+> 
+> Cc: yurovsky@gmail.com
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
+>  drivers/pci/host/pci-imx6.c                        | 188 ++++++++++++++++++---
+>  include/linux/mfd/syscon/imx7-gpc.h                |  18 ++
+>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+>  include/linux/mfd/syscon/imx7-src.h                |  18 ++
+>  5 files changed, 208 insertions(+), 26 deletions(-)
+>  create mode 100644 include/linux/mfd/syscon/imx7-gpc.h
+>  create mode 100644 include/linux/mfd/syscon/imx7-src.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 83aeb1f..20b9382 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
+>  
+>  Required properties:
+> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+> +- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie",
+> +  	      "fsl,imx6qp-pcie", "fsl,imx7d-pcie"
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> @@ -34,6 +35,9 @@ Additional required properties for imx6sx-pcie:
+>  - clock names: Must include the following additional entries:
+>  	- "pcie_inbound_axi"
+>  
+> +Additional required properties for imx7d-pcie:
+> +- pcie-phy-supply: Should specify the regulator supplying PCIe PHY
+> +
+This isn't a PHY regulator, but a regulator powering the GPC domain
+where the PHY is located. This should not be handled in the PCIe driver.
+See the previous discussion with i.MX6SX, that is in the same boat.
+
+[...]
+>  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  {
+> -	if (imx6_pcie->variant == IMX6SX)
+> +	switch (imx6_pcie->variant) {
+> +	case IMX7D: {
+> +		int ret;
+> +		unsigned int reg, mapping;
+> +		struct pcie_port *pp = &imx6_pcie->pp;
+> +		struct device *dev = pp->dev;
+> +
+> +		regulator_set_voltage(imx6_pcie->pcie_phy_regulator,
+> +				      1000000, 1000000);
+> +		ret = regulator_enable(imx6_pcie->pcie_phy_regulator);
+> +		if (ret) {
+> +			dev_err(dev, "failed to enable pcie regulator.\n");
+> +			return;
+> +		}
+> +
+> +		/*
+> +		 * Now that PHY regulator is enabled, do sofware
+> +		 * power-up request by mapping PHY in A7 domain and
+> +		 * setting power-up request bit
+> +		 */
+> +		regmap_read(imx6_pcie->gpc, GPC_PGC_CPU_MAPPING, &mapping);
+> +		regmap_write(imx6_pcie->gpc, GPC_PGC_CPU_MAPPING,
+> +			     mapping | IMX7D_PCIE_PHY_A7_DOMAIN);
+> +
+> +		regmap_update_bits(imx6_pcie->gpc, GPC_PU_PGC_SW_PUP_REQ,
+> +				   IMX7D_PCIE_PHY_SW_PUP_REQ,
+> +				   IMX7D_PCIE_PHY_SW_PUP_REQ);
+> +		/*
+> +		 * As per "5.5.9.4 Example Code 4" in IMX7DRM.pdf wait
+> +		 * for PUP_REQ bit to be cleared
+> +		 */
+> +		while (!regmap_read(imx6_pcie->gpc,
+> +				    GPC_PU_PGC_SW_PUP_REQ, &reg) &&
+> +		       reg & IMX7D_PCIE_PHY_SW_PUP_REQ)
+> +			;
+> +		regmap_write(imx6_pcie->gpc, GPC_PGC_CPU_MAPPING, mapping);
+
+I won't allow code touching the GPC registers to sneak into the PCIe
+driver. I know this is the downstream solution, but this really needs a
+proper GPC power domain driver, instead of this hack.
+
+Regards,
+Lucas
