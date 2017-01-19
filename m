@@ -1,249 +1,153 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: marvell: Add DT for MACCHIATOBin board
-Date: Fri, 20 Jan 2017 00:07:33 +0100
-Message-ID: <874m0u7ioa.fsf@free-electrons.com>
-References: <E1cTRlf-0005dY-L8@rmk-PC.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1cTRlf-0005dY-L8-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
-        message of "Tue, 17 Jan 2017 11:17:35 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jagan Teki <jagan@openedev.com>
+Subject: [PATCH v2 2/3] ARM: dts: imx6ul: Add Engicam Is.IoT MX6UL eMMC initial support
+Date: Fri, 20 Jan 2017 00:09:34 +0100
+Message-ID: <1484867375-22411-2-git-send-email-jagan@openedev.com>
+References: <1484867375-22411-1-git-send-email-jagan@openedev.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484867375-22411-1-git-send-email-jagan@openedev.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+From: Jagan Teki <jagan@amarulasolutions.com>
+
+Engicam Is.IoT MX6UL has separate module for eMMC, so add emmc dts
+file for imx6ul-isiot.dtsi, usdhc2 node represent eMMC.
+
+dmesg:
+-----
+mmc1: SDHCI controller on 2194000.usdhc [2194000.usdhc] using ADMA
+mmc1: new DDR MMC card at address 0001
+mmcblk1: mmc1:0001 M62704 3.53 GiB
+
+Cc: Matteo Lisi <matteo.lisi@engicam.com>
+Cc: Michael Trimarchi <michael@amarulasolutions.com>
+Cc: Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+Changes for v2:
+- Newly added with the reference of '[PATCH 1/2] ARM: dts: imx6ul-isiot: Add eMMC node'
+
+ arch/arm/boot/dts/Makefile                         |  2 +-
+ arch/arm/boot/dts/imx6ul-isiot-emmc.dts            | 77 ++++++++++++++++++++++
+ .../dts/{imx6ul-isiot.dts => imx6ul-isiot.dtsi}    |  3 -
+ 3 files changed, 78 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+ rename arch/arm/boot/dts/{imx6ul-isiot.dts => imx6ul-isiot.dtsi} (97%)
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index fa68843..f2c9545 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -435,7 +435,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-14x14-evk.dtb \
+ 	imx6ul-geam-kit.dtb \
+-	imx6ul-isiot.dtb \
++	imx6ul-isiot-emmc.dtb \
+ 	imx6ul-liteboard.dtb \
+ 	imx6ul-pico-hobbit.dtb \
+ 	imx6ul-tx6ul-0010.dtb \
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+new file mode 100644
+index 0000000..f5b4228
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+@@ -0,0 +1,77 @@
++/*
++ * Copyright (C) 2016 Amarula Solutions B.V.
++ * Copyright (C) 2016 Engicam S.r.l.
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This file is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License
++ *     version 2 as published by the Free Software Foundation.
++ *
++ *     This file is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "imx6ul-isiot.dtsi"
++
++/ {
++	model = "Engicam Is.IoT MX6UL eMMC Starter kit";
++	compatible = "engicam,imx6ul-isiot", "fsl,imx6ul";
++};
++
++&usdhc2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	cd-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
++	bus-width = <8>;
++	no-1-8-v;
++	status = "okay";
++};
++
++&iomuxc {
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6UL_PAD_NAND_RE_B__USDHC2_CLK      0x17070
++			MX6UL_PAD_NAND_WE_B__USDHC2_CMD      0x10070
++			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0  0x17070
++			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1  0x17070
++			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2  0x17070
++			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3  0x17070
++			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4  0x17070
++			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5  0x17070
++			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6  0x17070
++			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7  0x17070
++			MX6UL_PAD_NAND_ALE__USDHC2_RESET_B   0x17070
++		>;
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dts b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+similarity index 97%
+rename from arch/arm/boot/dts/imx6ul-isiot.dts
+rename to arch/arm/boot/dts/imx6ul-isiot.dtsi
+index 077bc26..edfa0ab 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dts
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -47,9 +47,6 @@
+ #include "imx6ul.dtsi"
  
- On mar., janv. 17 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-
-> Add a cut-down version of the DTS file for the community board
-> MACCHIATOBin from SolidRun based on Marvell Armada 8040 SoC to suit
-> the current mainlined Armada 8040 state.
->
-> This brings support for mainly SATA, SPI flash and UART.  The USB
-> descriptions are included but are not tested in this form due to the
-> lack of mainline GPIO.
->
-> Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-
-
-Applied on mvebu/dt
-
-Thanks!
-
-
-> ---
-> This is derived from a version from Marvell, but severly cut down,
-> cleaned up, re-organised and added to to suit mainline kernels.  The
-> only common parts are the header comment, top level model and compatible
-> strings, the rest has been changed by me in some way.
->
-> I'm planning to submit further patches as the mainline Armada 8k support
-> moves forward.
->
-> This is submitted with Rabeeh's confirmation and ack that he (as Solid
-> Run's CTO) is happy for this to be upstreamed.
->
-> Note - the license text is rather "interesting" but matches that which
-> is already on other ARM64 Marvell-based platforms.  I suspect someone at
-> Free Electrons needs to talk to Marvell to correct the "library" thing,
-> and clear up the "GPLv2" vs "GPLv2+" confusion in there.
-
-Actually the "library" thing is pretty common in the
-arch/arm64/boot/dts. One of the first device tree file introduced in
-arm64 came with this error and then most of the people copy and paste
-it. We also find it on the arm directory but the ratio is lower:
-
-git grep "This library is free software" arch/arm/boot/dts/ | wc -l
-20
-git grep "This library is free software" arch/arm64 | wc -l
-56
-
-For the "GPLv2" vs "GPLv2+" confusion it is less common but not not only
-on the ARM64 Marvell-based platforms some freescale are also
-impacted. Actually it was first introduce from freescale where "the GPL
-or the X11 license" part became "the GPLv2 or the X11 license".
-
-I am pretty sure that this change were not intend from Marvell. But I
-will clarify this with them to be able to fix it.
-
-Gregory
-
->
->  arch/arm64/boot/dts/marvell/Makefile              |   1 +
->  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 138 ++++++++++++++++++++++
->  2 files changed, 139 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
->
-> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-> index 1690883b931a..3e6ce6c15a74 100644
-> --- a/arch/arm64/boot/dts/marvell/Makefile
-> +++ b/arch/arm64/boot/dts/marvell/Makefile
-> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
->  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
-> +dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin.dtb
->  
->  always		:= $(dtb-y)
->  subdir-y	:= $(dts-dirs)
-> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> new file mode 100644
-> index 000000000000..b7298429ffa1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Copyright (C) 2016 Marvell Technology Group Ltd.
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPLv2 or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +/*
-> + * Device Tree file for MACCHIATOBin Armada 8040 community board platform
-> + */
-> +
-> +#include "armada-8040.dtsi"
-> +
-> +/ {
-> +	model = "Marvell 8040 MACHIATOBin";
-> +	compatible = "marvell,armada8040-mcbin", "marvell,armada8040",
-> +			"marvell,armada-ap806-quad", "marvell,armada-ap806";
-> +
-> +	memory@00000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x0 0x0 0x80000000>;
-> +	};
-> +
-> +	/* Regulator labels correspond with schematics */
-> +	v_3_3: regulator-3-3v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v_3_3";
-> +		regulator-min-microvolt = <3300000>;
-> +		regulator-max-microvolt = <3300000>;
-> +		regulator-always-on;
-> +		status = "okay";
-> +	};
-> +
-> +	v_vddo_h: regulator-1-8v {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v_vddo_h";
-> +		regulator-min-microvolt = <1800000>;
-> +		regulator-max-microvolt = <1800000>;
-> +		regulator-always-on;
-> +		status = "okay";
-> +	};
-> +
-> +	v_5v0_usb3_hst_vbus: regulator-usb3-vbus0 {
-> +		compatible = "regulator-fixed";
-> +		regulator-name = "v_5v0_usb3_hst_vbus";
-> +		regulator-min-microvolt = <5000000>;
-> +		regulator-max-microvolt = <5000000>;
-> +		/* actually GPIO controlled, but 8k has no GPIO support yet */
-> +		regulator-always-on;
-> +		status = "okay";
-> +	};
-> +
-> +	usb3h0_phy: usb3_phy0 {
-> +		compatible = "usb-nop-xceiv";
-> +		vcc-supply = <&v_5v0_usb3_hst_vbus>;
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&cpm_i2c0 {
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +};
-> +
-> +&cpm_sata0 {
-> +	/* CPM Lane 0 - U29 */
-> +	status = "okay";
-> +};
-> +
-> +&cpm_usb3_0 {
-> +	/* J38? - USB2.0 only */
-> +	status = "okay";
-> +};
-> +
-> +&cpm_usb3_1 {
-> +	/* J38? - USB2.0 only */
-> +	status = "okay";
-> +};
-> +
-> +&cps_sata0 {
-> +	/* CPS Lane 1 - U32 */
-> +	/* CPS Lane 3 - U31 */
-> +	status = "okay";
-> +};
-> +
-> +&cps_spi1 {
-> +	status = "okay";
-> +
-> +	spi-flash@0 {
-> +		compatible = "st,w25q32";
-> +		spi-max-frequency = <50000000>;
-> +		reg = <0>;
-> +	};
-> +};
-> +
-> +&cps_usb3_0 {
-> +	/* CPS Lane 2 - CON7 */
-> +	usb-phy = <&usb3h0_phy>;
-> +	status = "okay";
-> +};
-> -- 
-> 2.7.4
->
-
+ / {
+-	model = "Engicam Is.IoT MX6UL Starter kit";
+-	compatible = "engicam,imx6ul-isiot", "fsl,imx6ul";
+-
+ 	memory {
+ 		reg = <0x80000000 0x20000000>;
+ 	};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
