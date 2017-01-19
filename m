@@ -1,141 +1,155 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v8 0/8] Add PWM and IIO timer drivers for STM32
-Date: Thu, 19 Jan 2017 08:43:55 +0000
-Message-ID: <20170119084355.GF3718@dell>
-References: <1484749251-14445-1-git-send-email-benjamin.gaignard@st.com>
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v29 9/9] Documentation: dt: chosen properties for arm64
+ kdump
+Date: Thu, 19 Jan 2017 18:01:11 +0900
+Message-ID: <20170119090110.GO20972@linaro.org>
+References: <20161228043347.27358-1-takahiro.akashi@linaro.org>
+ <20161228043734.27535-1-takahiro.akashi@linaro.org>
+ <20170112153944.GB12249@leverpostej>
+ <20170113091339.GK20972@linaro.org>
+ <20170113111756.GC26120@leverpostej>
+ <20170116082505.GL20972@linaro.org>
+ <20170117082629.GA7012@dhcp-128-65.nay.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484749251-14445-1-git-send-email-benjamin.gaignard@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
+In-Reply-To: <20170117082629.GA7012-0VdLhd/A9Pl+NNSt+8eSiB/sF2h8X+2i0E9HWUfgJXw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Young <dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jan 2017, Benjamin Gaignard wrote:
+On Tue, Jan 17, 2017 at 04:26:29PM +0800, Dave Young wrote:
+> On 01/16/17 at 05:25pm, AKASHI Takahiro wrote:
+> > On Fri, Jan 13, 2017 at 11:17:56AM +0000, Mark Rutland wrote:
+> > > On Fri, Jan 13, 2017 at 06:13:49PM +0900, AKASHI Takahiro wrote:
+> > > > On Thu, Jan 12, 2017 at 03:39:45PM +0000, Mark Rutland wrote:
+> > > > > On Wed, Dec 28, 2016 at 01:37:34PM +0900, AKASHI Takahiro wrote:
+> > > > > > +linux,crashkernel-base
+> > > > > > +linux,crashkernel-size
+> > > > > > +----------------------
+> > > > > > +
+> > > > > > +These properties (currently used on PowerPC and arm64) indicates
+> > > > > > +the base address and the size, respectively, of the reserved memory
+> > > > > > +range for crash dump kernel.
+> > > > > 
+> > > > > From this description, it's not clear to me what the (expected)
+> > > > > consumers of this property are, nor what is expected to provide it.
+> > > > > 
+> > > > > In previous rounds of review, I had assumed that this was used to
+> > > > > describe a preference to the first kernel as to what region of memory
+> > > > > should be used for a subsequent kdump kernel. Looking around, I'm not
+> > > > > sure if I was correct in that assessment.
+> > > > > 
+> > > > > I see that arch/powerpc seems to consume this property to configure
+> > > > > crashk_res, but it also rewrites it based on crashk_res, presumably for
+> > > > > the benefit of userspace. It's not clear to me how on powerpc the kdump
+> > > > > kernel knows its memory range -- is more DT modification done in the
+> > > > > kernel and/or userspace?
+> > > > 
+> > > > I don't believe that powerpc will rewrite the property any way.
+> > > > As far as I know from *the source code*, powerpc kernel retrieves
+> > > > the memory range for crash dump kernel from a kernel command line, i.e.
+> > > > crashkernel=, and then exposes it through DT to userspace (assuming
+> > > > kexec-tools).
+> > > 
+> > > The rewriting I describe is in export_crashk_values() in
+> > > arch/powerpc/kernel/machine_kexec.c, where the code deletes existing the
+> > > properties, and adds new ones, to the DT exposed to userspace.
+> > > 
+> > > So I think we're just quibbling over the definition of "rewrite".
+> > 
+> > Gotcha
+> > 
+> > > > > arm64 we should either ensure that /proc/iomem is consistently usable
+> > > > > (and have userspace consistently use it), or we should expose a new file
+> > > > > specifically to expose this information.
+> > > > 
+> > > > The thing that I had in my mind when adding this property is that
+> > > > /proc/iomem would be obsolete in the future, then we should have
+> > > > an alternative in hand.
+> > > 
+> > > Ok.
+> > > 
+> > > My disagreement is with using the DT as a channel to convey information
+> > > from the kernel to userspace.
+> > > 
+> > > I'm more than happy for a new file or other mechanism to express this
+> > > information. For example, we could add
+> > > /sys/kernel/kexec_crash_{base,size} or similar.
+> > 
+> > It may make sense because /sys/kernel/kexec_crash_size already exists,
+> > so why not kexec_crash_base?
+> > My concern, however, is that this kind of interface might prevent us from
+> > allowing multiple regions to be reserved for crash dump kernel in the future.
+> > (There is an assumption that we have only one region at least on arm64 though.)
+> 
+> In x86 there could be two ranges, one for softiotlb under 4G and another
+> for range over 4G, but kexec_crash_size only shows the size of
+> over-4g-range.
+> 
+> It is better to use /proc/iomem, most arches use /proc/iomem. Do you
+> have any reason why it will be obsolete? At least for the time being it
+> is fine.
 
-> version 8:
-> - rebase on v4.10-rc4
-> - fix comments done by Thierry on PWM
-> - reword "reg" parameter description
-> - change kernel kernel in IIO ABI documentation
-> 
-> version 7:
-> - rebase on v4.10-rc2
-> - remove iio_device code from driver and keep only the trigger part
-> 
-> version 6:
-> - rename stm32-gptimer in stm32-timers.
-> - change "st,stm32-gptimer" compatible to "st,stm32-timers".
-> - modify "st,breakinput" parameter in pwm part.
-> - split DT patch in 2
-> 
-> version 5:
-> - fix comments done on version 4
-> - rebased on kernel 4.9-rc8
-> - change nodes names and re-order then by addresses
-> 
-> version 4:
-> - fix comments done on version 3
-> - don't use interrupts anymore in IIO timer
-> - detect hardware capabilities at probe time to simplify binding
-> 
-> version 3:
-> - no change on mfd and pwm divers patches
-> - add cross reference between bindings
-> - change compatible to "st,stm32-timer-trigger"
-> - fix attributes access rights
-> - use string instead of int for master_mode and slave_mode
-> - document device attributes in sysfs-bus-iio-timer-stm32
-> - update DT with the new compatible
-> 
-> version 2:
-> - keep only one compatible per driver
-> - use DT parameters to describe hardware block configuration:
->   - pwm channels, complementary output, counter size, break input
->   - triggers accepted and create by IIO timers
-> - change DT to limite use of reference to the node
-> - interrupt is now in IIO timer driver
-> - rename stm32-mfd-timer to stm32-timers (for general purpose timer)
-> 
-> The following patches enable PWM and IIO Timer features for STM32 platforms.
-> 
-> Those two features are mixed into the registers of the same hardware block
-> (named general purpose timer) which lead to introduce a multifunctions driver 
-> on the top of them to be able to share the registers.
-> 
-> In STM32f4 14 instances of timer hardware block exist, even if they all have
-> the same register mapping they could have a different number of pwm channels
-> and/or different triggers capabilities. We use various parameters in DT to 
-> describe the differences between hardware blocks
-> 
-> The MFD (stm32-timers.c) takes care of clock and register mapping
-> by using regmap. stm32_timers structure is provided to its sub-node to
-> share those information.
-> 
-> PWM driver is implemented into pwm-stm32.c. Depending of the instance we may
-> have up to 4 channels, sometime with complementary outputs or 32 bits counter
-> instead of 16 bits. Some hardware blocks may also have a break input function
-> which allows to stop pwm depending of a level, defined in devicetree, on an
-> external pin.
-> 
-> IIO timer driver (stm32-timer-trigger.c and stm32-timer-trigger.h) define a list
-> of hardware triggers usable by hardware blocks like ADC, DAC or other timers. 
-> 
-> The matrix of possible connections between blocks is quite complex so we use 
-> trigger names and is_stm32_iio_timer_trigger() function to be sure that
-> triggers are valid and configure the IPs.
-> 
-> At run time IIO timer hardware blocks can configure (through "master_mode" 
-> IIO device attribute) which internal signal (counter enable, reset,
-> comparison block, etc...) is used to generate the trigger.
-> 
-> Benjamin Gaignard (8):
->   MFD: add bindings for STM32 Timers driver
->   MFD: add STM32 Timers driver
->   PWM: add pwm-stm32 DT bindings
->   PWM: add PWM driver for STM32 plaftorm
->   IIO: add bindings for STM32 timer trigger driver
->   IIO: add STM32 timer trigger driver
->   ARM: dts: stm32: add Timers driver for stm32f429 MCU
->   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
-> 
->  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
->  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
->  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
->  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
->  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++++++++
->  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
->  drivers/iio/trigger/Kconfig                        |   9 +
->  drivers/iio/trigger/Makefile                       |   1 +
->  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++++++++++++
->  drivers/mfd/Kconfig                                |  11 +
->  drivers/mfd/Makefile                               |   2 +
->  drivers/mfd/stm32-timers.c                         |  80 +++++
->  drivers/pwm/Kconfig                                |   9 +
->  drivers/pwm/Makefile                               |   1 +
->  drivers/pwm/pwm-stm32.c                            | 398 +++++++++++++++++++++
->  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
->  include/linux/mfd/stm32-timers.h                   |  71 ++++
->  17 files changed, 1422 insertions(+)
->  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
->  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
->  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
->  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
->  create mode 100644 drivers/mfd/stm32-timers.c
->  create mode 100644 drivers/pwm/pwm-stm32.c
->  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
->  create mode 100644 include/linux/mfd/stm32-timers.h
+I don't know.
+I just think that I might have seen that someone said so somewhere
+and that more _powerful_ (structured) tool could supersede it :)
 
-Let me know when you have all your Acks.
+-Takahiro AKASHI
 
-I would be happy to take this through the MFD tree.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+> > 
+> > Thanks,
+> > -Takahiro AKASHI
+> > 
+> > > 
+> > > > > Further, I do not think we need this property. It makes more sense to me
+> > > > > for the preference of a a region to be described to the *first* kernel
+> > > > > using the command line consistently.
+> > > > > 
+> > > > > So I think we should drop this property, and not use it on arm64. Please
+> > > > > document this as powerpc only.
+> > > > 
+> > > > OK, but if we drop the property from arm64 code, we have no reason
+> > > > to leave its description in this patch.
+> > > > (In fact, there are a few more (undocumented) properties that only ppc
+> > > > uses for kdump.)
+> > > 
+> > > I'm happy to drop it, then.
+> > > 
+> > > > > > +linux,usable-memory-range
+> > > > > > +-------------------------
+> > > > > > +
+> > > > > > +This property (currently used only on arm64) holds the memory range,
+> > > > > > +the base address and the size, which can be used as system ram on
+> > > > > > +the *current* kernel. Note that, if this property is present, any memory
+> > > > > > +regions under "memory" nodes in DT blob or ones marked as "conventional
+> > > > > > +memory" in EFI memory map should be ignored.
+> > > > > 
+> > > > > Could you please replace this with:
+> > > > > 
+> > > > >   This property (arm64 only) holds a base address and size, describing a
+> > > > >   limited region in which memory may be considered available for use by
+> > > > >   the kernel. Memory outside of this range is not available for use.
+> > > > >   
+> > > > >   This property describes a limitation: memory within this range is only
+> > > > >   valid when also described through another mechanism that the kernel
+> > > > >   would otherwise use to determine available memory (e.g. memory nodes
+> > > > >   or the EFI memory map). Valid memory may be sparse within the range.
+> > > > 
+> > > > Sure.
+> > > 
+> > > Cheers!
+> > > 
+> > > Thanks,
+> > > Mark.
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
