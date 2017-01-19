@@ -1,34 +1,80 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] of: Add function for generating a DT modalias with a
- newline
-Date: Thu, 19 Jan 2017 11:35:33 +0100
-Message-ID: <20170119103533.GA19476@kroah.com>
-References: <20170116204122.5858-1-robh@kernel.org>
- <20170116204122.5858-2-robh@kernel.org>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v1 0/7] DRM: add LTDC support for STM32F4
+Date: Thu, 19 Jan 2017 10:35:49 +0000
+Message-ID: <7b7a26e1-90d2-9d42-e44f-fc2ce5635545@st.com>
+References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
+ <cf29809f-f951-eeed-5886-02d0a7a1e56f@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170116204122.5858-2-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cf29809f-f951-eeed-5886-02d0a7a1e56f@baylibre.com>
+Content-Language: en-US
+Content-ID: <280877D2510DE84FBA7FE2DD294E49D8@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Philippe CORNU <philippe.cornu@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mickael REULIER <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 02:41:22PM -0600, Rob Herring wrote:
-> The modalias sysfs attr is lacking a newline for DT aliases on platform
-> devices. The macio and ibmebus correctly add the newline, but open code it.
-> Introduce a new function, of_device_modalias(), that fills the buffer with
-> the modalias including the newline and update users of the old
-> of_device_get_modalias function.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-
-
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+SGkgTmVpbCwNClNUIG1heSB1c2UgdGhpcyBoYXJkd2FyZSBJUCBhbHNvIGluIG90aGVyIFNvQywg
+ZXZlbiB0aGF0IGlzIG5vdCB0cnVlIA0Kbm93LCBJIGhvcGUgdGhhdCAic3QiIGlzIGEgbW9yZSBm
+dXR1ciBwcm9vZiBuYW1lLg0KDQpCZXN0IHJlZ2FyZHMNCg0KWWFubmljayBGZXJ0csOpDQoNCg0K
+T24gMDEvMTYvMjAxNyAwNTowMiBQTSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+IE9uIDAxLzE2
+LzIwMTcgMDI6MjggUE0sIFlhbm5pY2sgRmVydHJlIHdyb3RlOg0KPj4gVGhlIHB1cnBvc2Ugb2Yg
+dGhpcyBzZXQgb2YgcGF0Y2hlcyBpcyB0byBhZGQgYSBuZXcgZHJpdmVyIGZvciBzdG0zMmY0Mjku
+DQo+PiBUaGlzIGRyaXZlciB3YXMgZGV2ZWxvcGVkIGFuZCB0ZXN0ZWQgb24gZXZhbHVhdGlvbiBi
+b2FyZCBzdG0zMjQyOWkuDQo+Pg0KPj4gU3RtMzJmNCBpcyBhIE1DVSBwbGF0Zm9ybSB3aGljaCBk
+b24ndCBoYXZlIE1NVSBzbyB0aGUgbGFzdCBwYXRjaGVzIGRldmVsb3BlZA0KPj4gYnkgQmVuamFt
+aW4gR2FpZ25hcmQgcmVnYXJkaW5nICJEUk06IGFsbG93IHRvIHVzZSBtbXVsZXNzIGRldmljZXMi
+DQo+PiBhcmUgbmVjZXNzYXJ5Lg0KPj4NCj4+IFRoZSBib2FyZCBzdG00MjlpIGVtYmVkcyBhIEFt
+cGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCBzY3JlZW4uDQo+PiBBIG5ldyBzaW1wbGUgcGFuZWwg
+YW0tNDgwMjcyaDN0bXF3LXQwMWggaGF2ZSBiZWVuIGFkZGVkIHRvIHN1cHBvcnQgaXQuDQo+Pg0K
+Pj4gWWFubmljayBGZXJ0cmUgKDcpOg0KPj4gICBkdC1iaW5kaW5nczogZGlzcGxheTogYWRkIFNU
+TTMyIExUREMgZHJpdmVyDQo+PiAgIGRybS9zdDogQWRkIFNUTTMyIExUREMgZHJpdmVyDQo+PiAg
+IGR0LWJpbmRpbmdzOiBBZGQgQW1waXJlIEFNLTQ4MDI3MkgzVE1RVy1UMDFIIHBhbmVsDQo+PiAg
+IGRybS9wYW5lbDogc2ltcGxlOiBBZGQgc3VwcG9ydCBmb3IgQW1waXJlIEFNLTQ4MDI3MkgzVE1R
+Vy1UMDFIDQo+PiAgIEFSTTogZHRzOiBzdG0zMmY0Mjk6IEFkZCBsdGRjIHN1cHBvcnQNCj4+ICAg
+QVJNOiBkdHM6IHN0bTMyNDI5aS1ldmFsOiBFbmFibGUgbHRkYyAmIHNpbXBsZSBwYW5lbCBvbiBF
+dmFsIGJvYXJkDQo+PiAgIEFSTTogY29uZmlnczogQWRkIFNUTTMyIExUREMgc3VwcG9ydCBpbiBT
+VE0zMiBkZWZjb25maWcNCj4+DQo+PiAgLi4uL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3
+MmgzdG1xdy10MDFoLnR4dCAgfCAgICA3ICsNCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
+aXNwbGF5L3N0LGx0ZGMudHh0ICAgICAgICB8ICAgNTcgKw0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRz
+L3N0bTMyNDI5aS1ldmFsLmR0cyAgICAgICAgICAgICAgIHwgICA1OCArDQo+PiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvc3RtMzJmNDI5LmR0c2kgICAgICAgICAgICAgICAgICAgfCAgIDI1ICstDQo+PiAg
+YXJjaC9hcm0vY29uZmlncy9zdG0zMl9kZWZjb25maWcgICAgICAgICAgICAgICAgICAgfCAgICA1
+ICsNCj4+ICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgIDIgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAgMSArDQo+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
+ZS5jICAgICAgICAgICAgICAgfCAgIDI5ICsNCj4+ICBkcml2ZXJzL2dwdS9kcm0vc3QvS2NvbmZp
+ZyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTQgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9z
+dC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArDQo+PiAgZHJpdmVycy9n
+cHUvZHJtL3N0L2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjc5ICsrKysNCj4+
+ICBkcml2ZXJzL2dwdS9kcm0vc3QvZHJ2LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
+MjUgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9zdC9sdGRjLmMgICAgICAgICAgICAgICAgICAgICAg
+ICAgIHwgMTQzOCArKysrKysrKysrKysrKysrKysrKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9zdC9s
+dGRjLmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyMCArDQo+PiAgMTQgZmlsZXMgY2hh
+bmdlZCwgMTk2NiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+PiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Ft
+cGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQNCj4+ICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L0tjb25maWcNCj4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L01ha2VmaWxlDQo+PiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdC9kcnYuYw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vc3QvZHJ2LmgNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
+cHUvZHJtL3N0L2x0ZGMuYw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
+c3QvbHRkYy5oDQo+Pg0KPg0KPiBIaSBZYW5uaWNrLA0KPg0KPiBTaG91bGRuJ3QgYmUgbW9yZSBs
+b2dpY2FsIHRvIHVzZSBzdG0zMiBmb3IgdGhlIGRyaXZlciBpbnN0ZWFkIG9mIHN0ID8NCj4gSXQg
+d291bGQgZXZlbnR1YWxseSBjb2xsdWRlIHdpdGggdGhlIG90aGVyIFNUTWljcm9lbGVjdHJvbmlj
+cyBTb0NzIGFuZA0KPiB3aWxsIGJlIGFsaWduZWQgd2l0aCBvdGhlciBkcml2ZXJzIGxpa2Ugc3Rt
+MzItcnRjLCBzdG0zMi1pMmMsIC4uLg0KPg0KPiBOZWlsDQo+Cl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
