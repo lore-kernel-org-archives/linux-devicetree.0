@@ -1,78 +1,76 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 3/4] phy: qcom-ufs: Remove -always-on property
-Date: Thu, 19 Jan 2017 02:47:38 -0800
-Message-ID: <20170119104739.4376-3-bjorn.andersson@linaro.org>
-References: <20170119104739.4376-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170119104739.4376-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Subhash Jadavani <subhashj@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 0/4] ARM: K2G: Add support for TI-SCI Generic PM
+ Domains
+Date: Thu, 19 Jan 2017 12:59:29 -0600
+Message-ID: <7e87e4cd-d859-b941-8cb8-118a8b0d2690@ti.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com>
+ <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
+ <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
+ <25026532-fe4d-8215-9249-c5c7efcd8242@oracle.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <25026532-fe4d-8215-9249-c5c7efcd8242@oracle.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Tero Kristo <t-kristo@ti.com>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The fact that a regulator is always-on is a property of the regulator,
-not a specific consumer. Implementing this in the driver leads to a
-system behaviour that is dependent on if the Qualcomm UFS PHY was ever
-(partially) probed.
+Santosh,
+On 01/19/2017 11:51 AM, santosh.shilimkar@oracle.com wrote:
+> On 1/4/17 2:06 PM, Dave Gerlach wrote:
+>> Santosh,
+>> On 01/04/2017 03:54 PM, Santosh Shilimkar wrote:
+>>> On 1/4/2017 12:55 PM, Dave Gerlach wrote:
+>>>> Hi,
+>>>> This is v3 of the series to add support for TI-SCI Generic PM Domains.
+>>>> Previous versions can be found here:
+>>>>
+>>>> v2: https://www.spinics.net/lists/kernel/msg2364612.html
+>>>> v1: http://www.spinics.net/lists/arm-kernel/msg525204.html
+>>>>
+>>>> This version is rebased on v4.10-rc2 but is the same as v2 with the
+>>>> exception of patch 2 in which the devicetree binding documentation
+>>>> needed to be updated to show the k2g_pds node should be a child of
+>>>> the pmmc node. Apart from that, the acks provided by Ulf were added
+>>>> to patches 1 and 3.
+>>>>
+>>>> Now that the TI-SCI series has been merged [1] this series will be
+>>>> ready
+>>>> to go in with an ack on the DT binding. Rob had raised some
+>>>> questions on
+>>>> the necessity ti,sci-id property but I believe these were properly
+>>>> addressed during the discussion of v2 so hopefully an ack is in order
+>>>> now.
+>>>>
+>>> How do you plan to merge this series with below patch ?
+>>>
+>>>>   PM / Domains: Add generic data pointer to genpd data struct
+>>> I think this one goes via Rafael's tree. If you want me to merge this
+>>> along with other patches then will need his ack.
+>>>
+>>> Other way is to get that merged first via Rafael's tree and then
+>>> the remainder series.
+>>
+>> I'd be happy with it going in through your tree with an ack to avoid any
+>> delay but I'd say it's Rafael's call as it is a patch to the genpd core,
+>> even though at this point I am the only user.
+>>
+> Am going to send pull request over weekend, so if you would like
+> me take the series via arm-soc tree, please get Rafaels, ack and
+> let me know.
 
-If the specific regulator should be always on in a particular device,
-mark it so by specifying "regulator-always-on" in the regulator node.
+Thanks for letting me know, unfortunately we have not yet reached 
+alignment on the binding so I do not believe we will be ready for merge 
+in time.
 
-Cc: Subhash Jadavani <subhashj@codeaurora.org>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 1 -
- drivers/phy/phy-qcom-ufs-i.h                       | 1 -
- drivers/phy/phy-qcom-ufs.c                         | 5 +----
- 3 files changed, 1 insertion(+), 6 deletions(-)
+Regards,
+Dave
 
-diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-index b6b5130e5f65..1f69ee1a61ea 100644
---- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-@@ -29,7 +29,6 @@ Optional properties:
- - vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
- - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
- - vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
--- vddp-ref-clk-always-on : specifies if this supply needs to be kept always on
- 
- Example:
- 
-diff --git a/drivers/phy/phy-qcom-ufs-i.h b/drivers/phy/phy-qcom-ufs-i.h
-index d505d98cf5f8..13b02b7de30b 100644
---- a/drivers/phy/phy-qcom-ufs-i.h
-+++ b/drivers/phy/phy-qcom-ufs-i.h
-@@ -77,7 +77,6 @@ struct ufs_qcom_phy_vreg {
- 	int min_uV;
- 	int max_uV;
- 	bool enabled;
--	bool is_always_on;
- };
- 
- struct ufs_qcom_phy {
-diff --git a/drivers/phy/phy-qcom-ufs.c b/drivers/phy/phy-qcom-ufs.c
-index bbd317158084..c145fa6e824c 100644
---- a/drivers/phy/phy-qcom-ufs.c
-+++ b/drivers/phy/phy-qcom-ufs.c
-@@ -242,9 +242,6 @@ static int ufs_qcom_phy_init_vreg(struct device *dev,
- 			}
- 			err = 0;
- 		}
--		snprintf(prop_name, MAX_PROP_NAME, "%s-always-on", name);
--		vreg->is_always_on = of_property_read_bool(dev->of_node,
--							   prop_name);
- 	}
- 
- 	if (!strcmp(name, "vdda-pll")) {
-@@ -402,7 +399,7 @@ static int ufs_qcom_phy_disable_vreg(struct device *dev,
- {
- 	int ret = 0;
- 
--	if (!vreg || !vreg->enabled || vreg->is_always_on)
-+	if (!vreg || !vreg->enabled)
- 		goto out;
- 
- 	ret = regulator_disable(vreg->reg);
--- 
-2.11.0
+>
+> Regards,
+> Santosh
+>
+>
+
