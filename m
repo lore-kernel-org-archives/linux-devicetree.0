@@ -1,63 +1,39 @@
-From: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Subject: [PATCH v10 1/5] dt-bindings: Document the STM32 I2C bindings
-Date: Thu, 19 Jan 2017 14:25:12 +0100
-Message-ID: <1484832316-5594-2-git-send-email-cedric.madianga@gmail.com>
-References: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, u.kleine-koenig@pengutronix.de
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 13/14] ARM: dts: da850-lcdk: enable the SATA node
+Date: Thu, 19 Jan 2017 14:29:47 +0100
+Message-ID: <1484832588-18413-14-git-send-email-bgolaszewski@baylibre.com>
+References: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation of device tree bindings for the STM32 I2C
-controller.
+Enable the SATA node for da850-lcdk. We omit the pinctrl property on
+purpose - the muxed SATA pins are not hooked up to anything
+SATA-related on the lcdk.
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- .../devicetree/bindings/i2c/i2c-stm32.txt          | 33 ++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+ arch/arm/boot/dts/da850-lcdk.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-new file mode 100644
-index 0000000..78eaf7b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
-@@ -0,0 +1,33 @@
-+* I2C controller embedded in STMicroelectronics STM32 I2C platform
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index afcb482..fbeee3c 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -105,6 +105,10 @@
+ 	status = "okay";
+ };
+ 
++&sata {
++	status = "okay";
++};
 +
-+Required properties :
-+- compatible : Must be "st,stm32f4-i2c"
-+- reg : Offset and length of the register set for the device
-+- interrupts : Must contain the interrupt id for I2C event and then the
-+  interrupt id for I2C error.
-+- resets: Must contain the phandle to the reset controller.
-+- clocks: Must contain the input clock of the I2C instance.
-+- A pinctrl state named "default" must be defined to set pins in mode of
-+  operation for I2C transfer
-+- #address-cells = <1>;
-+- #size-cells = <0>;
-+
-+Optional properties :
-+- clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
-+  the default 100 kHz frequency will be used. As only Normal and Fast modes
-+  are supported, possible values are 100000 and 400000.
-+
-+Example :
-+
-+	i2c@40005400 {
-+		compatible = "st,stm32f4-i2c";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x40005400 0x400>;
-+		interrupts = <31>,
-+			     <32>;
-+		resets = <&rcc 277>;
-+		clocks = <&rcc 0 149>;
-+		pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
-+		pinctrl-names = "default";
-+	};
+ &mdio {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mdio_pins>;
 -- 
-1.9.1
+2.9.3
+
