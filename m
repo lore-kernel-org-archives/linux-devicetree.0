@@ -1,61 +1,34 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Export __of_find_all_nodes()
-Date: Thu, 19 Jan 2017 10:43:35 +0100
-Message-ID: <d9525715-be49-1cfa-f623-084237e44b4c@nokia.com>
-References: <20170118093849.32204-1-alexander.sverdlin@nokia.com>
- <587FDF1B.1060206@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 2/2] of: Add function for generating a DT modalias with a
+ newline
+Date: Thu, 19 Jan 2017 11:35:33 +0100
+Message-ID: <20170119103533.GA19476@kroah.com>
+References: <20170116204122.5858-1-robh@kernel.org>
+ <20170116204122.5858-2-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <587FDF1B.1060206-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170116204122.5858-2-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On 18/01/17 22:33, Frank Rowand wrote:
->> This is necessary for for_each_of_allnodes() to work in the modules.
->>
->> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  drivers/of/base.c | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 2eb4dea62b84..f576c33e0b84 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -270,6 +270,7 @@ struct device_node *__of_find_all_nodes(struct device_node *prev)
->>  	}
->>  	return np;
->>  }
->> +EXPORT_SYMBOL_GPL(__of_find_all_nodes);
->>  
->>  /**
->>   * of_find_all_nodes - Get next node in global list
->>
-> Quoting Rob from the last request for this:
+On Mon, Jan 16, 2017 at 02:41:22PM -0600, Rob Herring wrote:
+> The modalias sysfs attr is lacking a newline for DT aliases on platform
+> devices. The macio and ibmebus correctly add the newline, but open code it.
+> Introduce a new function, of_device_modalias(), that fills the buffer with
+> the modalias including the newline and update users of the old
+> of_device_get_modalias function.
 > 
-> "What driver needs this? This isn't really a function I'd expect drivers to use."
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
 
-This one and the one from previous patch/mail are used in a module which reads DT overlays
-from pluggable extension boards, eventually performs some sanity checks/corrections and
-applies these overlays. This eventual corrections require low-level access to DT.
 
-I cannot judge, how relevant this usecase is for the community, but I was driven by the fact,
-that the functions which require the functions I export are defined statically in .h files
-and therefore are exposed to the modules.
-
--- 
-Best regards,
-Alexander Sverdlin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
