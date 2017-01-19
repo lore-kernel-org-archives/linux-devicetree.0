@@ -1,160 +1,178 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Thu, 19 Jan 2017 13:49:25 +0200
-Message-ID: <6829547.Y11xI2zT5C@avalon>
-References: <74f0-58704480-5-27259840@173563636> <2338437.Vj2otdygnZ@avalon>
- <20170119092532.GB29457@collabora.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
+Date: Thu, 19 Jan 2017 17:26:49 +0530
+Message-ID: <CAFp+6iEpnHTWQe196zWPJu3vqb+L=47rfU_8nfuUNC=Gjvc8Gg@mail.gmail.com>
+References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
+ <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com>
+ <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2>
+ <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2>
+ <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2>
+ <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
+ <87por9lnjd.fsf@linux.intel.com> <576A4321.6020209@ti.com>
+ <87fus5ljwf.fsf@linux.intel.com> <576A4C95.4080202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170119092532.GB29457@collabora.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Senna Tschudin <peter.senna@collabora.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Martyn Welch <martyn.welch@collabora.co.uk>, Daniel Vetter <daniel.vetter@ffwll.ch>, Peter Senna Tschudin <peter.senna@gmail.com>, Peter Senna Tschudin <peter.senna@collabora.co.uk>, dri-devel@lists.freedesktop.org, "linux-kernel@vger.kernel.org " <linux-kernel@vger.kernel.org>, Yakir Yang <ykk@rock-chips.com>, Jiri Slaby <jslaby@suse.cz>, Rob Herring <robh@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@dowhile0.org>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, martin.donnelly@ge.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <rmk+kernel@armlinux.org.uk>, linux-arm-kernel
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <576A4C95.4080202@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Felipe Balbi <balbi@kernel.org>
+Cc: Peter Chen <hzpeterchen@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, peter.chen@freescale.com, Tony Lindgren <tony@atomide.com>, Greg KH <gregkh@linuxfoundation.org>, dan.j.williams@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Joao.Pinto@synopsys.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, jun.li@freescale.com, grygorii.strashko@ti.com, Rob Herring <robh@kernel.org>, nsekhar@ti.com, b-liu@ti.com, Joe Perches <joe@perches.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hi,
 
-On Thursday 19 Jan 2017 10:25:32 Peter Senna Tschudin wrote:
-> On Thu, Jan 19, 2017 at 10:17:45AM +0200, Laurent Pinchart wrote:
-> > On Thursday 19 Jan 2017 09:12:14 Peter Senna Tschudin wrote:
-> >> On Wed, Jan 18, 2017 at 11:10:58PM +0200, Laurent Pinchart wrote:
-> >>> On Monday 16 Jan 2017 09:37:11 Peter Senna Tschudin wrote:
-> >>>> On Tue, Jan 10, 2017 at 11:04:58PM +0200, Laurent Pinchart wrote:
-> >>>>> On Saturday 07 Jan 2017 01:29:52 Peter Senna Tschudin wrote:
-> >>>>>> On 04 January, 2017 21:39 CET, Rob Herring wrote:
-> >>>>>>> On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin wrote:
-> >>>>>>>> On 03 January, 2017 23:51 CET, Rob Herring <robh@kernel.org> wrote:
-> >>>>>>>>> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin 
-> > wrote:
-> >>>>>>>>>> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> >>>>>>>>>> display bridge.
-> >>>>>>>>>> 
-> >>>>>>>>>> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
-> >>>>>>>>>> Cc: Martin Donnelly <martin.donnelly@ge.com>
-> >>>>>>>>>> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> >>>>>>>>>> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> >>>>>>>>>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> >>>>>>>>>> Cc: Rob Herring <robh@kernel.org>
-> >>>>>>>>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> >>>>>>>>>> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-> >>>>>>>>> ---
-> >>>>>>>>>> There was an Acked-by from Rob Herring <robh@kernel.org> for
-> >>>>>>>>>> V6, but I changed the bindings to use i2c_new_secondary_device()
-> >>>>>>>>>> so I removed it from the commit message.
-> >> 
-> >> [...]
-> >> 
-> >>>>>>>>>> .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 +++++++++
-> >>>>>>>>> 
-> >>>>>>>>> Isn't '-lvds-dp' redundant? The part# should be enough.
-> >>>>>>>> 
-> >>>>>>>> b850v3 is the name of the product, this is why the proposed name.
-> >>>>>>>> What about, b850v3-dp2 dp2 indicating the second DP output?
-> >>>>>>> 
-> >>>>>> Humm, b850v3 is the board name? This node should be the name of
-> >>>>>>> the bridge chip.
-> >>>>>> 
-> >>>>>> From the cover letter:
-> >>>>>> 
-> >>>>>> -- // --
-> >>>>>> There are two physical bridges on the video signal pipeline: a
-> >>>>>> STDP4028(LVDS to DP) and a STDP2690(DP to DP++).  The hardware and
-> >>>>>> firmware made it complicated for this binding to comprise two
-> >>>>>> device tree nodes, as the design goal is to configure both bridges
-> >>>>>> based on the LVDS signal, which leave the driver powerless to control
-> >>>>>> the video processing pipeline. The two bridges behaves as a single
-> >>>>>> bridge, and the driver is only needed for telling the host about EDID
-> >>>>>> / HPD, and for giving the host powers to ack interrupts. The video
-> >>>>>> signal pipeline
-> >>>>>> 
-> >>>>>> is as follows:
-> >>>>>>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video
-> >>>>>>   output
-> >>>>>> 
-> >>>>>> -- // --
-> >>>>> 
-> >>>>> You forgot to prefix your patch series with [HACK] ;-)
-> >>>>> 
-> >>>>> How about fixing the issues that make the two DT nodes solution
-> >>>>> difficult ? What are they ?
-> >>>> 
-> >>>> The Firmware and the hardware design. Both bridges, with stock
-> >>>> firmware, are fully capable of providig EDID information and handling
-> >>>> interrupts. But on this specific design, with this specific firmware, I
-> >>>> need to read EDID from one bridge, and handle interrupts on the other.
-> >>> 
-> >>> Which firmware are you talking about ? Firmware running on the
-> >>> bridges, or somewhere else ?
-> >> 
-> >> Each bridge has it's own external flash containing a binary firmware.
-> >> The goal of the firmware is to configure the output end based on the
-> >> input end. This is part of what makes handling EDID and HPD challenging.
-> >> 
-> >>>> Back when I was starting the development I could not come up with a
-> >>>> proper way to split EDID and interrupts between two bridges in a way
-> >>>> that would result in a fully functional connector. Did I miss
-> >>>> something?
-> >>> 
-> >>> You didn't, we did :-) I've been telling for quite some time now that
-> >>> we must decouple bridges from connectors, and this is another example of
-> >>> why we have such a need. Bridges should expose additional functions
-> >>> needed to implement connector operations, and the connector should be
-> >>> instantiated by the display driver with the help of bridge operations.
-> >>> You could then create a connector that relies on one bridge to read the
-> >>> EDID and on the other bridge to handle HPD.
-> >> 
-> >> Ah thanks. So for now the single DT node approach is acceptable, right?
-> >> The problem is that even if the driver is getting better on each
-> >> iteration, the single DT node for two chips issue comes back often and I
-> >> believe is _the_ issue preventing the driver from getting upstream. V1
-> >> was sent ~ 8 months ago...
-> >> 
-> >> Can I have some blessing on the single DT node approach for now?
-> > 
-> > With the "DT as an ABI" approach, I'm afraid not. Temporary hacks are
-> > acceptable on the driver side, but you need two nodes in DT.
-> 
-> So can I make two node DT "in the right way" and work around current
-> connectors vs. bridge limitations on the driver side? This seems to be
-> doable.
-> 
-> Then I could fix bridge API, with my own driver and update API clients
-> affected by the change...
 
-I'm willing to discuss that as long as the DT bindings are correct, yes.
+On Wed, Jun 22, 2016 at 2:00 PM, Roger Quadros <rogerq@ti.com> wrote:
 
-> >> I'm one of the 3 proposed maintainers for the driver, and I'm willing to
-> >> maintain the driver on the long run, as is the same with the other two
-> >> proposed maintainers. So when the time to split the node in two comes,
-> >> we will be around, and willing to do it ourselves.
-> > 
-> > How about putting that team of 3 maintainers to work on fixing the problem
-> > in the bridge API ? :-)
-> 
-> Guess you would be a good lawyer! My point was not exactly that we could
-> work in parallel. Point was that there is redundancy in case one or two
-> of us loose interest. But nice try! :-)
-> 
-> Chances of having resources to fix bridge API and clients were better 6
-> months ago, but let me see what I can get.  Last blocking issue was the
-> migration to atomic, now this. I'm going to need to answer what the next
-> blocking issue is going to be.
-> 
-> Actually in these ~8 months one bit of the required changes was
-> accepted: dc80d7038883, but this was generic and not related to our
-> specific use case.
+Luckily hit this thread while checking about DRD role functionality for DWC3.
 
+> On 22/06/16 11:14, Felipe Balbi wrote:
+>>
+>> Hi,
+>>
+>> Roger Quadros <rogerq@ti.com> writes:
+>>>>>>>>>>> For the real use case, some Carplay platforms need it.
+>>>>>>>>>>
+>>>>>>>>>> Carplay does *NOT* rely on OTG. Apple has its own proprietary and closed
+>>>>>>>>>> specification which is not OTG-compliant.
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Yes, it is not OTG-compliant, but it can co-work with some standard OTG FSM
+>>>>>>>>> states to finish role swap.
+>>>>>>>>
+>>>>>>>> What are you referring to as "finish role swap"? I don't get that.
+>>>>>>>
+>>>>>>> Change current role from host to peripheral.
+>>>>>>
+>>>>>> Okay, we have two scenarios here:
+>>>>>>
+>>>>>> 1. You need full OTG compliance
+>>>>>>
+>>>>>>   For this, granted, you need the state machine if your HW doesn't
+>>>>>>   track it. This is a given. With only one user, however, perhaps
+>>>>>>   we don't need a generic layer. There are not enough different
+>>>>>>   setups to design a good enough generic layer. We will end up
+>>>>>>   with a pseudo-generic framework which is coupled with its only
+>>>>>>   user.
+>>>>>>
+>>>>>> 2. Dual-role support, without OTG compliance
+>>>>>>
+>>>>>>   In this case, you don't need a stack. All you need is a signal
+>>>>>>   to tell you state of ID pin and another to tell you state of
+>>>>>>   VBUS level. If you have those, you don't need to walk an OTG
+>>>>>>   state machine at all. You don't need any of those quirky OTG
+>>>>>>   timers, agreed?
+>>>>>>
+>>>>>>   Given the above, why would you even want to use a subset of OTG
+>>>>>>   state machine to implement something that's _usually_ as simple
+>>>>>>   as:
+>>>>>>
+>>>>>> 8<----------------------------------------------------------------------
+>>>>>>   vbus = read(VBUS_STATE); /* could be a gpio_get_value() */
+>>>>>>         id = read(ID_STATE); /* could be a gpio_get_value() */
+>>>>>>
+>>>>>>         set_role(id);
+>>>>>>         set_vbus(vbus);
+>>>>>> ------------------------------------------------------------------------
+>>>>>>
+>>>>>
+>>>>> In fact, the individual driver can do it by itself. The chipidea driver
+>>>>> handles OTG and dual-role well currently. By considering this OTG/DRD
+>>>>> framework is worthwhile or not, we would like to see if it can
+>>>>> simplify DRD design for each driver, and can benefit the platforms which
+>>>>> has different drivers for host and peripheral to finish the role switch
+>>>>> well.
+>>>>
+>>>> simplify how?  By adding unnecessary workqueues and a level indirection
+>>>> that just goes back to the same driver?
+>>>
+>>> What do you mean by same driver?
+>>
+>> dwc3 registers to OTG layer. dwc3 also registers as UDC to UDC
+>> layer. When dwc3 OTG IRQ fires, dwc3 tells OTG layer about it and OTG
+>> layer jumps to a callback that goes back to dwc3 to e.g. start
+>> peripheral side.
+>>
+>> See ?!? Starts on dwc3, goes to OTG layer, goes back to DWC3.
+>>
+>>> Gadget driver, host driver and PHY (or MUX) driver (for ID/VBUS) can
+>>> be 3 totally independent drivers unlike dwc3 where you have a single
+>>> driver in control of both host and gadget.
+>>
+>> That's a totally different issue and one not being tackled by OTG
+>> layer, because there are no such users yet. We can't design anything
+>> based solely on speculation of what might happen.
+>>
+>> If there aren't enough users, there is no way to design a good generic
+>> layer.
+>>
+>>> Questions not clear to me are:
+>>>
+>>> 1) Which driver handles ID/VBUS events and makes a decision to do the
+>>> role swap?  Probably the PHY/MUX driver?
+>>
+>> This is implementation dependent. For TI's USB subsystem, we have PMIC
+>> sampling VBUS/ID that and using EXTCON to tell dwc3-omap to program UTMI
+>> mailbox. The same mailbox can be used in HW-mode (see AM437x) where SW
+>> has no intervention.
+>>
+>> For Intel's USB subsystem, we have PMIC sampling VBUS/ID with an
+>> internal mux (much like TI's UTMI mailbox, but slightly different) to
+>> switch between a separate XHCI or a separate dwc3. The same mux can be
+>> put in HW-mode where SW has no intervention.
+>>
+>> In any case, for Intel's stuff most of the magic happens in ASL. Our PHY
+>> driver just detects role (at least for Type-C based plats) and executes
+>> _DSM with correct arguments [1]. _DSM will program internal MUX, toggle
+>> VBUS and, for type-C, toggle VCONN when needed.
+>>
+>>> 2) How does it perform the role swap? Probably a register write to the
+>>> PHY/MUX without needing to stop/start controllers? Easy case is both
+>>> controllers can run in co-existence without interference. Is there any
+>>> platform other than dwc3 where this is not the case?
+>>
+>> Again speculation. But to answer your question, only dwc3 is in such a
+>> case today. But even for dwc3 we can have DRD with a much, much simpler
+>> setup as I have already explained.
+>>
+>>> 3) Even if host and gadget controllers can operate in coexistence,
+>>> there is no need for both to be running for embedded applications
+>>> which are usually power conservative.  How can we achieve that?
+>>
+>> Now you're also speculating that you're running on embedded applications
+>> and that we _can_ power off parts of the IP. I happen to know that we
+>> can't power off XHCI part of dwc3 in TI's SoC because that's fed by same
+>> Clocks and power rails as the peripheral side.
+>>
+>> [1] https://lkml.org/lkml/2016/6/21/658
+>>
+> For TI's case it is dwc3 and you are implementing the role swap in the dwc3
+> driver where you do intend to remove the XHCI platform device. So I'm not
+> much concerned about that.
+>
+> I was concerned about other platforms. I guess I'll let the other platform
+> people speak up as to what they need.
+
+I will talk about the msm platforms using dwc3 hardware.
+DWC3 controller on msm doesn't seem to have full otg functionality,
+and the driver makes use of switching between host and device
+using PRTCAPDIR register in of the core [1].
+
+We plan to support this DRD role switching (swapping host and device
+functionality based on id/vbus interrupts) in upstream.
+
+Do we see a valid case to have this framework?
+Or, may be add a 'drd' layer for dwc3 that handles
+role switching (using PRTCAPDIR) based on the id/vbus extcon notifications.
+
+
+[1] https://source.codeaurora.org/quic/la/kernel/msm-3.18/tree/drivers/usb/dwc3/dwc3-msm.c?h=msm-3.18
+     "dwc3_otg_start_host()"
+     "dwc3_otg_start_peripheral()"
+
+
+Regards
+Vivek
 -- 
-Regards,
-
-Laurent Pinchart
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
