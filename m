@@ -1,52 +1,82 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 00/13] Ingenic JZ4740 / JZ4780 pinctrl driver
-Date: Thu, 19 Jan 2017 12:19:36 +0100
-Message-ID: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170118071530.GA18989@ulmo.ba.sec>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: Re: [PATCH RESEND v8 1/4] arm64: arch_timer: Add device tree binding
+ for hisilicon-161010101 erratum
+Date: Thu, 19 Jan 2017 20:18:31 +0800
+Message-ID: <b6db0384-afdf-b1d9-5790-328d63f1c306@huawei.com>
+References: <1484826406-16348-1-git-send-email-dingtianhong@huawei.com>
+ <1484826406-16348-2-git-send-email-dingtianhong@huawei.com>
+ <20170119121008.GE11176@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170118071530.GA18989@ulmo.ba.sec>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170119121008.GE11176@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-18 08:15, Thierry Reding a écrit :
 
-> On Wed, Jan 18, 2017 at 12:14:08AM +0100, Paul Cercueil wrote:
-> [...]
-> 
->> One problem still unresolved: the pinctrl framework does not allow us 
->> to configure each pin on demand (someone please prove me wrong), when 
->> the various PWM channels are requested or released. For instance, the 
->> PWM channels can be configured from sysfs, which would require all PWM 
->> pins to be configured properly beforehand for the PWM function, 
->> eventually causing conflicts with other platform or board drivers.
-> 
-> Still catching up on a lot of email, so I haven't gone through the
-> entire series. But I don't think the above is true.
-> 
-> My understanding is that you can have separate pin groups for each
-> pin (provided the hardware supports that) and then control each of
-> these groups dynamically at runtime.
-> 
-> That is you could have the PWM driver's ->request() and ->free()
-> call into the pinctrl framework to select the correct pinmux
-> configuration as necessary.
 
-Thanks for the feedback.
+On 2017/1/19 20:10, Mark Rutland wrote:
+> On Thu, Jan 19, 2017 at 07:46:43PM +0800, Ding Tianhong wrote:
+>> This erratum describes a bug in logic outside the core, so MIDR can't be
+>> used to identify its presence, and reading an SoC-specific revision
+>> register from common arch timer code would be awkward.  So, describe it
+>> in the device tree.
+>>
+>> Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> index ad440a2..9116934 100644
+>> --- a/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> +++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+>> @@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
+>>    This also affects writes to the tval register, due to the implicit
+>>    counter read.
+>>  
+>> +- hisilicon,erratum-161010101 : A boolean property. Indicates the presence of
+>> +  erratum 161010101, which says that reading the counter is unreliable unless
+>> +  reading twice on the register and the value of the second read is larger
+>> +  than the first by less than 32. If the verification is unsuccessful, then
+>> +  discard the value of this read and repeat this procedure until the verification
+>> +  is successful.  This also affects writes to the tval register, due to the
+>> +  implicit counter read.
+> 
+> This describes the workaround, which shouldn't be necessary.
+> 
+> My understanding (from the cover letter) is that reads of the
+> {virtual,physical} counters may return a value precisely 32 above the
+> true value.
+> 
+> So it would be better to say:
+> 
+> - hisilicon,erratum-161010101 : A boolean property. Indicates the
+>   presence of Hisilicon erratum 161010101, which says that reading the
+>   counters is unreliable in some cases, and reads may return a value 32
+>   beyond the correct value. This also affects writes to the tval
+>   registers, due to the implicit counter read.
+> 
+> Thanks,
+> Mark.
 
-The problem with pinctrl and PWM, is that the pinctrl API works by 
-"states".
-A default state, sleep state, and basically any custom state that the 
-devicetree
-provides. This works well until you need to control individually each 
-pin; with
-8 pins, you would need 2^8 states, each one corresponding to a given 
-configuration.
+Looks more accurate.
 
--Paul
+Thanks.
+Ding
+
+> 
+> .
+> 
