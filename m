@@ -1,34 +1,26 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v4 1/2] mailbox: Add driver for Broadcom FlexRM ring
- manager
-Date: Thu, 19 Jan 2017 13:23:53 -0800
-Message-ID: <1fb39c44-3a8f-4df4-2654-ef10f01c927f@broadcom.com>
-References: <1483614475-3442-1-git-send-email-anup.patel@broadcom.com>
- <1483614475-3442-2-git-send-email-anup.patel@broadcom.com>
- <CAALAos8RVRenZXeLg6ARPqJNteHKQ2d0n9cnfFfsp2MV4sj3Bg@mail.gmail.com>
+From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
+ DWC_USB3_NUM_IN_EPS
+Date: Thu, 19 Jan 2017 21:34:28 +0000
+Message-ID: <44c413d9-d97c-d691-a3dd-2647961c09c1@nexus-software.ie>
+References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
+ <87mvemx0so.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAALAos8RVRenZXeLg6ARPqJNteHKQ2d0n9cnfFfsp2MV4sj3Bg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Pramod KUMAR <pramod.kumar@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, Device Tree <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87mvemx0so.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anup,
 
-On 17-01-18 07:15 PM, Anup Patel wrote:
-> Hi All,
->
-> Any comments on this patch ??
->
-> Regards,
-> Anup
->
+Thanks for the quick feedback Felipe, appreciated, I'll take on-board 
+those changes.
 
-Looks good to me.
-
-Jassi, can you pickup this patchset?
-
-Scott
+---
+bod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
