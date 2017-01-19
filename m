@@ -1,124 +1,103 @@
-From: Peter Senna Tschudin <peter.senna@collabora.com>
-Subject: Re: [PATCH V7 1/4] Documentation/devicetree/bindings: b850v3_lvds_dp
-Date: Thu, 19 Jan 2017 09:12:14 +0100
-Message-ID: <20170119081214.GA29457@collabora.com>
-References: <74f0-58704480-5-27259840@173563636>
- <6276161.johxDync2u@avalon>
- <20170116083711.GA18775@collabora.com>
- <2088084.GDlN6tZSQv@avalon>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Thu, 19 Jan 2017 09:14:28 +0100
+Message-ID: <20170119091428.598eb987@bbrezillon>
+References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+        <20170113172825.75d545a3@bbrezillon>
+        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+        <20170113175628.1793f433@bbrezillon>
+        <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
+        <20170114092958.022f2fc8@bbrezillon>
+        <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
+        <20170116094032.6f471f11@bbrezillon>
+        <20170117143650.5db87148@free-electrons.com>
+        <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
+        <20170119103829.524ce715@free-electrons.com>
+        <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2088084.GDlN6tZSQv@avalon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: dri-devel@lists.freedesktop.org, Peter Senna Tschudin <peter.senna@collabora.co.uk>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Peter Senna Tschudin <peter.senna@gmail.com>, Takashi Iwai <tiwai@suse.com>, Yakir Yang <ykk@rock-chips.com>, Jiri Slaby <jslaby@suse.cz>, Martyn Welch <martyn.welch@collabora.co.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Russell King <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@dowhile0.org>, Thierry Reding <treding@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, martin.donnelly@ge.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, enric.balletb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2017 at 11:10:58PM +0200, Laurent Pinchart wrote:
-> Hi Peter,
+Hi Rob,
+
+On Wed, 18 Jan 2017 20:51:08 -0600
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+
+> On Wed, Jan 18, 2017 at 5:38 PM, Thomas Petazzoni
+> <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hello,
+> >
+> > On Wed, 18 Jan 2017 16:20:10 -0600, Rob Herring wrote:
+> >  
+> >> > > Rob, Mark, any opinion?  
+> >> >  
+> >>
+> >> Sigh, is how to do compatibles really not yet understood?  
+> >
+> > Well, it seems like not everyone necessarily understands what is the
+> > best strategy to adopt (me included).
+> >  
+> >> > I agree that a clarification would be good. There are really two
+> >> > options:
+> >> >
+> >> >  1. Have two compatible strings in the DT, the one that matches the
+> >> >     exact SoC where the IP is found (first compatible string) and the
+> >> >     one that matches some other SoC where the same IP is found (second
+> >> >     compatible string). Originally, Linux only supports the second
+> >> >     compatible string in its device driver, but if it happens that a
+> >> >     difference is found between two IPs that we thought were the same,
+> >> >     we can add support for the first compatible string in the driver,
+> >> >     with a slightly different behavior.  
+> >>
+> >> This. And no wildcards in the compatible string.  
+> >
+> > OK. So it means that today we do something like:
+> >
+> >         compatible = "baz,foo-12", "baz,foo-00";
+> >
+> > and support only baz,foo-00 in the driver. If tomorrow we discover
+> > that there is in fact a difference between the two IP blocks, we can
+> > add support for baz,foo-12 in the driver, and handle the differences.
+> >
+> > But then, the DT still contains:
+> >
+> >         compatible = "baz,foo-12", "baz,foo-00";
+> >
+> > and therefore pretends that the IP block is compatible with
+> > "baz,foo-00" which is in fact *not* the case. It was a mistake to
+> > consider it as compatible. So we keep living with a DT that has
+> > incorrect information.  
 > 
-> On Monday 16 Jan 2017 09:37:11 Peter Senna Tschudin wrote:
-> > On Tue, Jan 10, 2017 at 11:04:58PM +0200, Laurent Pinchart wrote:
-> > > On Saturday 07 Jan 2017 01:29:52 Peter Senna Tschudin wrote:
-> > >> On 04 January, 2017 21:39 CET, Rob Herring wrote:
-> > >>> On Tue, Jan 3, 2017 at 5:34 PM, Peter Senna Tschudin wrote:
-> > >>>> On 03 January, 2017 23:51 CET, Rob Herring <robh@kernel.org> wrote:
-> > >>>>> On Sun, Jan 01, 2017 at 09:24:29PM +0100, Peter Senna Tschudin wrote:
-> > >>>>>> Devicetree bindings documentation for the GE B850v3 LVDS/DP++
-> > >>>>>> display bridge.
-> > >>>>>> 
-> > >>>>>> Cc: Martyn Welch <martyn.welch@collabora.co.uk>
-> > >>>>>> Cc: Martin Donnelly <martin.donnelly@ge.com>
-> > >>>>>> Cc: Javier Martinez Canillas <javier@dowhile0.org>
-> > >>>>>> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> > >>>>>> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> > >>>>>> Cc: Rob Herring <robh@kernel.org>
-> > >>>>>> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > >>>>>> Signed-off-by: Peter Senna Tschudin <peter.senna@collabora.com>
-> > >>>>>> ---
-> > >>>>>> There was an Acked-by from Rob Herring <robh@kernel.org> for V6,
-> > >>>>>> but I changed the bindings to use i2c_new_secondary_device() so I
-> > >>>>>> removed it from the commit message.
-> > >>>>>> 
+> I wouldn't say it's a mistake necessarily. The old compatible would
+> probably work to some extent. I'd assume it was tested to some level.
+> Or it could be other changes exposing a difference.
 
-[...]
+One last question and I'm done: is something like that acceptable?
 
-> > >>>>>>  .../devicetree/bindings/ge/b850v3-lvds-dp.txt      | 39 +++++++++++
-> > >>>>> 
-> > >>>>> Isn't '-lvds-dp' redundant? The part# should be enough.
-> > >>>> 
-> > >>>> b850v3 is the name of the product, this is why the proposed name.
-> > >>>> What about, b850v3-dp2 dp2 indicating the second DP output?
-> > >>> 
-> > >>> Humm, b850v3 is the board name? This node should be the name of the
-> > >>> bridge chip.
-> > >> 
-> > >> From the cover letter:
-> > >> 
-> > >> -- // --
-> > >> There are two physical bridges on the video signal pipeline: a
-> > >> STDP4028(LVDS to DP) and a STDP2690(DP to DP++).  The hardware and
-> > >> firmware made it complicated for this binding to comprise two device
-> > >> tree nodes, as the design goal is to configure both bridges based on
-> > >> the LVDS signal, which leave the driver powerless to control the video
-> > >> processing pipeline. The two bridges behaves as a single bridge, and
-> > >> the driver is only needed for telling the host about EDID / HPD, and
-> > >> for giving the host powers to ack interrupts. The video signal pipeline
-> > >> is as follows:
-> > >>   Host -> LVDS|--(STDP4028)--|DP -> DP|--(STDP2690)--|DP++ -> Video
-> > >>   output
-> > >> -- // --
-> > > 
-> > > You forgot to prefix your patch series with [HACK] ;-)
-> > > 
-> > > How about fixing the issues that make the two DT nodes solution difficult
-> > > ? What are they ?
-> > 
-> > The Firmware and the hardware design. Both bridges, with stock firmware,
-> > are fully capable of providig EDID information and handling interrupts.
-> > But on this specific design, with this specific firmware, I need to read
-> > EDID from one bridge, and handle interrupts on the other.
-> 
-> Which firmware are you talking about ? Firmware running on the bridges, or 
-> somewhere else ?
+	compatible = "<vendor>,<old-soc>","<vendor>,<new-soc>";
 
-Each bridge has it's own external flash containing a binary firmware.
-The goal of the firmware is to configure the output end based on the
-input end. This is part of what makes handling EDID and HPD challenging.
+This can happen when someone adds support for an unsupported feature
+on a brand new SoC, and then someone else use the same driver for an
+older SoC embedding the same IP but still wants to add a new compatible
+just in case these 2 IPs appear to be slightly different.
 
-> 
-> > Back when I was starting the development I could not come up with a proper
-> > way to split EDID and interrupts between two bridges in a way that would
-> > result in a fully functional connector. Did I miss something?
-> 
-> You didn't, we did :-) I've been telling for quite some time now that we must 
-> decouple bridges from connectors, and this is another example of why we have 
-> such a need. Bridges should expose additional functions needed to implement 
-> connector operations, and the connector should be instantiated by the display 
-> driver with the help of bridge operations. You could then create a connector 
-> that relies on one bridge to read the EDID and on the other bridge to handle 
-> HPD.
+Here the order of compat strings is no longer following a clear rule
+like 'most-specific compatible first' or 'newest IP/SoC version first',
+it's completely dependent on the order these IPs were supported in the
+OS (Linux). I'm perfectly fine with that BTW, just want to make sure
+this is authorized.
 
-Ah thanks. So for now the single DT node approach is acceptable, right?
-The problem is that even if the driver is getting better on each
-iteration, the single DT node for two chips issue comes back often and I
-believe is _the_ issue preventing the driver from getting upstream. V1
-was sent ~ 8 months ago...
+Regards,
 
-Can I have some blessing on the single DT node approach for now? I'm one
-of the 3 proposed maintainers for the driver, and I'm willing to
-maintain the driver on the long run, as is the same with the other two
-proposed maintainers. So when the time to split the node in two comes,
-we will be around, and willing to do it ourselves.
-
-Thank you!
-
-Peter
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
