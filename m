@@ -1,188 +1,248 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v5 5/5] i2c: mux: pca954x: Add irq-mask-enable to delay
- enabling irqs
-Date: Thu, 19 Jan 2017 23:56:50 +0100
-Message-ID: <71f756e1-4677-8b59-81a2-2b12fbf12621@axentia.se>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-6-git-send-email-preid@electromag.com.au>
- <312e32e9-a828-d692-895b-4042729e5417@axentia.se>
- <61c38233-abf2-df31-6f7c-c4214f4103aa@electromag.com.au>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: marvell: Add DT for MACCHIATOBin board
+Date: Fri, 20 Jan 2017 00:07:33 +0100
+Message-ID: <874m0u7ioa.fsf@free-electrons.com>
+References: <E1cTRlf-0005dY-L8@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <61c38233-abf2-df31-6f7c-c4214f4103aa-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <E1cTRlf-0005dY-L8-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
+        message of "Tue, 17 Jan 2017 11:17:35 +0000")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-19 08:48, Phil Reid wrote:
-> On 18/01/2017 20:19, Peter Rosin wrote:
->> On 2017-01-17 09:00, Phil Reid wrote:
->>> Unfortunately some hardware device will assert their irq line immediately
->>> on power on and provide no mechanism to mask the irq. As the i2c muxes
->>> provide no method to mask irq line this provides a work around by keeping
->>> the parent irq masked until enough device drivers have loaded to service
->>> all pending interrupts.
->>>
->>> For example the the ltc1760 assert its SMBALERT irq immediately on power
->>> on. With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->>> device is registered irq are enabled and fire continuously as the second
->>> device driver has not yet loaded. Setting this parameter to <1 1> will
->>> delay the irq being enabled until both devices are ready.
->>>
->>> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
->>> ---
->>>  drivers/i2c/muxes/i2c-mux-pca954x.c | 33 ++++++++++++++++++++++++++++++---
->>>  1 file changed, 30 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
->>> index f55da88..012b2ef 100644
->>> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
->>> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
->>> @@ -76,6 +76,19 @@ struct chip_desc {
->>>  	} muxtype;
->>>  };
->>>
->>> +/*
->>> + * irq_mask_enable: Provides a mechanism to work around hardware that asserts
->>> + * their irq immediately on power on. It allows the enabling of the irq to be
->>> + * delayed until the corresponding bits in the the irq_mask are set thru
->>> + * irq_unmask.
->>> + * For example the ltc1760 assert its SMBALERT irq immediately on power on.
->>> + * With two ltc1760 attached to bus 0 & 1 on a pca954x mux when the first
->>> + * device is registered irq are enabled and fire continuously as the second
->>> + * device driver has not yet loaded. Setting this parameter to 0x3 while
->>> + * delay the irq being enabled until both devices are ready.
->>> + * This workaround will not work if two devices share an interrupt on the
->>> + * same bus segment.
->>
->> It will also not work if something shares the interrupt with the pca954x mux,
->> on the parent side of the mux, so to speak. Then that other driver may
->> potentially enable the irq "behind the back" of the pca954x driver.
->>
->>> + */
->>>  struct pca954x {
->>>  	const struct chip_desc *chip;
->>>
->>> @@ -84,7 +97,9 @@ struct pca954x {
->>>  	struct i2c_client *client;
->>>
->>>  	struct irq_domain *irq;
->>> +	unsigned int irq_mask_enable;
->>>  	unsigned int irq_mask;
->>> +	bool irq_enabled;
->>>  	spinlock_t lock;
->>>  };
->>>
->>> @@ -266,8 +281,10 @@ static void pca954x_irq_mask(struct irq_data *idata)
->>>  	spin_lock_irqsave(&data->lock, flags);
->>>
->>>  	data->irq_mask &= ~BIT(pos);
->>> -	if (!data->irq_mask)
->>> +	if (data->irq_enabled && !data->irq_mask) {
->>>  		disable_irq(data->client->irq);
->>> +		data->irq_enabled = false;
->>> +	}
->>
->> When irq_mask_enable is non-zero, I think the parent irq should be masked
->> when the first irq from the set in irq_mask_enable is masked. For symmetry.
->>
->> Like so (untested):
->>
->> 	if (data->irq_enabled) {
->> 		if (!data->irq_mask ||
->> 			(data->irq_mask & mask_enable) != mask_enable) {
->> 			disable_irq(data->client->irq);
->> 			data->irq_enabled = false;
->> 		}
->> 	}
-> Yeap this make sense.
-> 
->>
->> Hmm, this whole thing is fiddly and while it solves your problem it doesn't
->> allow for solving the more general problem when there are "problematic"
->> devices mixed with other devices. At least, I don't see it. And the
->> limitations we are walking into with tracking number of enables etc suggests
->> that we are attacking this at the wrong level. Maybe you should try to work
->> around the hw limitations not in the pca954x driver, but in the irq core?
-> 
-> I'm looking at the option of getting the hardware changed to not route
-> the irq for my chips thru the i2c mux. Fortunately the hardware is going thru a
-> revision for some other changes. Messing with the irq core sounds dangerous
-> with my level of knowledge.
+Hi Russell,
+ 
+ On mar., janv. 17 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
 
-Yeah, but I bet you'd get some attention from people with more irq
-experience. That can't be bad :-)
+> Add a cut-down version of the DTS file for the community board
+> MACCHIATOBin from SolidRun based on Marvell Armada 8040 SoC to suit
+> the current mainlined Armada 8040 state.
+>
+> This brings support for mainly SATA, SPI flash and UART.  The USB
+> descriptions are included but are not tested in this form due to the
+> lack of mainline GPIO.
+>
+> Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 
-> The other way I think I can tackle it after reading the datasheet for the ltc1760 is that
-> it'll deassert it's irq (smbalert) line when the host sends a ARA request on the bus segment.
-> There's a driver in the kernel for this already, but it's not DT enable and doesn't
-> handle multiple bus segments. I'll have a look at that as well.
-> Pretty sure it would need the mux to become an irq parent as per patch 1-3 of this series.
-> This would be so the system can figure out which segment to do the poll on.
 
-Yeah sounds neater. It has the slight drawback that it may not work
-for pure i2c buses since it an SMB thing??
+Applied on mvebu/dt
 
-BTW, why do you need special treatment for multiple segments? Will it not
-simply have an ARA appear on whatever i2c bus the device sits on? And if
-something requests to send an ARA message on a bus that happens to be a
-muxed segment, my mental picture is that the mux will be operated as usual
-so that the ARA appears on the muxed segment. Maybe I'm missing something?
+Thanks!
 
-> But p4-5 could be dropped which is where we're stuck I think.
 
-Yes, I dislike to add a workaround for a specific case that might get
-in the way for anybody wishing to fix a bigger, more generic, problem...
+> ---
+> This is derived from a version from Marvell, but severly cut down,
+> cleaned up, re-organised and added to to suit mainline kernels.  The
+> only common parts are the header comment, top level model and compatible
+> strings, the rest has been changed by me in some way.
+>
+> I'm planning to submit further patches as the mainline Armada 8k support
+> moves forward.
+>
+> This is submitted with Rabeeh's confirmation and ack that he (as Solid
+> Run's CTO) is happy for this to be upstreamed.
+>
+> Note - the license text is rather "interesting" but matches that which
+> is already on other ARM64 Marvell-based platforms.  I suspect someone at
+> Free Electrons needs to talk to Marvell to correct the "library" thing,
+> and clear up the "GPLv2" vs "GPLv2+" confusion in there.
 
-> Looking at this approach it shouldn't matter if the ltc1760 driver has registered yet or not.
-> This approach possibly has a lot more generic appeal I think.
-> 
-> Thoughts on just submitting p1-3 for now while I figure out the SMB alert approach?
+Actually the "library" thing is pretty common in the
+arch/arm64/boot/dts. One of the first device tree file introduced in
+arm64 came with this error and then most of the people copy and paste
+it. We also find it on the arm directory but the ratio is lower:
 
-Yes, looks like a plan. Thanks in advance!
+git grep "This library is free software" arch/arm/boot/dts/ | wc -l
+20
+git grep "This library is free software" arch/arm64 | wc -l
+56
 
->> I.e. have the irq core check, for each irq, for a property that specifies
->> the depth at which each irq should be unmasked. This new property should
->> probably be located in the interrupt-controller node? Then the code can
->> unmask interrupts when the depth hits this mark, instead of always unmasking
->> the interrupt when the depth changes from zero to one. You are then adding
->> the workaround at a level where there is enough information to fix the
->> more general problem. I think?
->>
->> But, once again, I'm no irq expert and would desperately like a second
->> opinion on this stuff...
->>
->>>
->>>  	spin_unlock_irqrestore(&data->lock, flags);
->>>  }
->>> @@ -275,14 +292,18 @@ static void pca954x_irq_mask(struct irq_data *idata)
->>>  static void pca954x_irq_unmask(struct irq_data *idata)
->>>  {
->>>  	struct pca954x *data = irq_data_get_irq_chip_data(idata);
->>> +	unsigned int mask_enable = data->irq_mask_enable;
->>>  	unsigned int pos = idata->hwirq;
->>>  	unsigned long flags;
->>>
->>>  	spin_lock_irqsave(&data->lock, flags);
->>>
->>> -	if (!data->irq_mask)
->>> -		enable_irq(data->client->irq);
->>>  	data->irq_mask |= BIT(pos);
->>> +	if (!data->irq_enabled
->>> +	    && (data->irq_mask & mask_enable) == mask_enable) {
->>
->> I think the coding standard says that the && should be at the end of the
->> first line. Didn't checkpatch complain?
-> 
-> No it didn't complain. and I wasn't sure which way to do this.
+For the "GPLv2" vs "GPLv2+" confusion it is less common but not not only
+on the ARM64 Marvell-based platforms some freescale are also
+impacted. Actually it was first introduce from freescale where "the GPL
+or the X11 license" part became "the GPLv2 or the X11 license".
 
-Ah, you need the --strict option for that to show up...
+I am pretty sure that this change were not intend from Marvell. But I
+will clarify this with them to be able to fix it.
 
-Cheers,
-peda
+Gregory
 
+>
+>  arch/arm64/boot/dts/marvell/Makefile              |   1 +
+>  arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 138 ++++++++++++++++++++++
+>  2 files changed, 139 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+>
+> diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+> index 1690883b931a..3e6ce6c15a74 100644
+> --- a/arch/arm64/boot/dts/marvell/Makefile
+> +++ b/arch/arm64/boot/dts/marvell/Makefile
+> @@ -7,6 +7,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+>  dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
+> +dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-mcbin.dtb
+>  
+>  always		:= $(dtb-y)
+>  subdir-y	:= $(dts-dirs)
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> new file mode 100644
+> index 000000000000..b7298429ffa1
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+> @@ -0,0 +1,138 @@
+> +/*
+> + * Copyright (C) 2016 Marvell Technology Group Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/*
+> + * Device Tree file for MACCHIATOBin Armada 8040 community board platform
+> + */
+> +
+> +#include "armada-8040.dtsi"
+> +
+> +/ {
+> +	model = "Marvell 8040 MACHIATOBin";
+> +	compatible = "marvell,armada8040-mcbin", "marvell,armada8040",
+> +			"marvell,armada-ap806-quad", "marvell,armada-ap806";
+> +
+> +	memory@00000000 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	/* Regulator labels correspond with schematics */
+> +	v_3_3: regulator-3-3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "v_3_3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		status = "okay";
+> +	};
+> +
+> +	v_vddo_h: regulator-1-8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "v_vddo_h";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +		status = "okay";
+> +	};
+> +
+> +	v_5v0_usb3_hst_vbus: regulator-usb3-vbus0 {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "v_5v0_usb3_hst_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		/* actually GPIO controlled, but 8k has no GPIO support yet */
+> +		regulator-always-on;
+> +		status = "okay";
+> +	};
+> +
+> +	usb3h0_phy: usb3_phy0 {
+> +		compatible = "usb-nop-xceiv";
+> +		vcc-supply = <&v_5v0_usb3_hst_vbus>;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> +&cpm_i2c0 {
+> +	clock-frequency = <100000>;
+> +	status = "okay";
+> +};
+> +
+> +&cpm_sata0 {
+> +	/* CPM Lane 0 - U29 */
+> +	status = "okay";
+> +};
+> +
+> +&cpm_usb3_0 {
+> +	/* J38? - USB2.0 only */
+> +	status = "okay";
+> +};
+> +
+> +&cpm_usb3_1 {
+> +	/* J38? - USB2.0 only */
+> +	status = "okay";
+> +};
+> +
+> +&cps_sata0 {
+> +	/* CPS Lane 1 - U32 */
+> +	/* CPS Lane 3 - U31 */
+> +	status = "okay";
+> +};
+> +
+> +&cps_spi1 {
+> +	status = "okay";
+> +
+> +	spi-flash@0 {
+> +		compatible = "st,w25q32";
+> +		spi-max-frequency = <50000000>;
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&cps_usb3_0 {
+> +	/* CPS Lane 2 - CON7 */
+> +	usb-phy = <&usb3h0_phy>;
+> +	status = "okay";
+> +};
+> -- 
+> 2.7.4
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
