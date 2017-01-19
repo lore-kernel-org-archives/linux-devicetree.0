@@ -1,85 +1,85 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC v2 1/5] UDC: Split the driver into amd (pci) and Synopsys
- core driver
-Date: Thu, 19 Jan 2017 11:28:33 -0800
-Message-ID: <db1037e7-33f2-95ce-2f7a-60fe98d75e0c@gmail.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [RFC v2 4/5] DT bindings documentation for Synopsys UDC platform
+ driver
+Date: Thu, 19 Jan 2017 11:30:46 -0800
+Message-ID: <f86f32cd-8fed-c30f-d647-8f7992013458@broadcom.com>
 References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
- <1484640308-25976-2-git-send-email-raviteja.garimella@broadcom.com>
- <e1453122-164a-e1a8-6aa6-fb25eb33101f@gmail.com>
- <CAEHZuqO2x8FYW6AWbS5KshMt9UG7R4gWTfG_VaT+rNcAZ5d4Lg@mail.gmail.com>
+ <1484640308-25976-5-git-send-email-raviteja.garimella@broadcom.com>
+ <20170119173659.jeao5pqtlepmidek@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEHZuqO2x8FYW6AWbS5KshMt9UG7R4gWTfG_VaT+rNcAZ5d4Lg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170119173659.jeao5pqtlepmidek@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Raviteja Garimella <raviteja.garimella@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2017 02:44 AM, Raviteja Garimella wrote:
-> Hi,
-> 
-> On Thu, Jan 19, 2017 at 12:15 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 01/17/2017 12:05 AM, Raviteja Garimella wrote:
->>> This patch splits the amd5536udc driver into two -- one that does
->>> pci device registration and the other file that does the rest of
->>> the driver tasks like the gadget/ep ops etc for Synopsys UDC.
->>>
->>> This way of splitting helps in exporting core driver symbols which
->>> can be used by any other platform/pci driver that is written for
->>> the same Synopsys USB device controller.
->>>
->>> The current patch also includes a change in the Kconfig and Makefile.
->>> A new config option USB_SNP_CORE will be selected automatically when
->>> any one of the platform or pci driver for the same UDC is selected.
->>>
->>> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi Rob,
+
+On 17-01-19 09:36 AM, Rob Herring wrote:
+> On Tue, Jan 17, 2017 at 01:35:07PM +0530, Raviteja Garimella wrote:
+>> This patch adds device tree bindings documentation for Synopsys
+>> USB device controller platform driver.
+>
+> Bindings describe h/w, not drivers.
 >>
->> Although the changes you have done make sense and it is most certainly a
->> good idea to split udc core from bus specific glue logic, it is really
->> hard to review the changes per-se because of the file rename, could that
->> happen at a later time?
-> 
-> If you start looking at this specific patch from the header file (amd5536udc.h),
-> the additions in there comprise of:
-> - 9 function declarations
-> - some module parameter variable declarations that's moved out from the older
->   common file amd5536udc.c
-> - 2 #includes that are needed by all files.
+>> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+>> ---
+>>  .../devicetree/bindings/usb/snps,dw-ahb-udc.txt    | 27 ++++++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>> new file mode 100644
+>> index 0000000..0c18327
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>> @@ -0,0 +1,27 @@
+>> +Synopsys USB Device controller.
+>> +
+>> +The device node is used for Synopsys Designware Cores AHB
+>> +Subsystem Device Controller (UDC).
+>> +
+>> +This device node is used by UDCs integrated it Broadcom's
+>> +Northstar2 and Cygnus SoC's.
+>
+> You need compatible strings for these in addition.
+>
+We don't need compatibility strings when an IP block is integrated into 
+an SoC.  Otherwise each time we add the IP block to a new SoC we would 
+need to update ever linux driver that supports that SoC.  That doesn't 
+make sense?
 
-Well, I don't really question the changes themselves, rather how this is
-presented as a patch series to reviewers.
+Cygnus and Northstar2 use existing drivers for such block as UARTs, SPI 
+controllers, NAND controllers, etc, etc.  We haven't added compatibility 
+strings for those drivers and won't be.
 
-What I would do, to help introduce both the rename, and the splitting of
-core vs. bus-glue specific changes is:
+Perhaps comment above can be:
+This device node is used by UDCs integrated it such as Broadcom's
+Northstar2 and Cygnus SoC's.
+>> +
+>> +Required properties:
+>> + - compatible: should be "snps,dw-ahb-udc"
+>
+> This is a different IP than DWC2?
+>
+>> + - reg: Offset and length of UDC register set
+>> + - interrupts: description of interrupt line
+>> + - phys: phandle to phy node.
+>> + - extcon: phandle to the extcon device. This is optional and
+>> +   not required for those that don't require extcon support.
+>> +   Extcon support will be required if the UDC is connected to
+>> +   a Dual Role Device Phy that supports both Host and Device
+>> +   mode based on the external cable.
+>
+> Drop this. It should be a part of the phy. Also, I don't care to see new
+> users of extcon binding because it needs redoing.
+>
+We may need extcon support to support DRD Phy though.  We have to work 
+within the framework that exists in linux today.  If modified in the 
+future adapt to it as needed?
 
-- have an initial patch which extracts the core functionality of the
-driver and the PCI bus glue logic into adm5536udc_pci.c and left
-adm5536udc.c intact (that would be a small delta to review)
-
-- have a second patch that performs the file rename from adm5536udc.c
-into snps_udc_core.c and updates adm5536udc_pci.c eventually as a result
-of that, then again, a reviewer can ignore the rename part (don't format
-to generate your patches with git format-patch -M in that case) and just
-focus on the conversion part for adm5536udc_pci.c
-
-> 
-> So, basically what's done for this split is that:
-> 1. the static keyword is removed from those 9 functions in the new file
->     snps_udc_core.c and are exported.
-> 2. The module parameters declarations (since they are used in both core
->     and pci file) are moved to the header file now.
-
-These should really be part of the commit messages for each commit doing
-the changes, this is meant to help a reviewer understand what you are
-doing, and to some degree, will help him/her make an educated decision
-as to what part of the code the focus should be put on.
-
-Thanks
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+  Scott
