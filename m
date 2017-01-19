@@ -1,37 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v3 5/6] hwmon: occ: Add hwmon implementation for
- the P8 OCC
-Date: Thu, 19 Jan 2017 11:12:06 -0600
-Message-ID: <20170119171206.uxtdicfn4ahge6c6@rob-hp-laptop>
-References: <1484601219-30196-1-git-send-email-eajames.ibm@gmail.com>
- <1484601219-30196-6-git-send-email-eajames.ibm@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] dt: bindings: add documentation for zx2967 family
+ reset controller
+Date: Thu, 19 Jan 2017 11:27:04 -0600
+Message-ID: <20170119172704.xe7a2w4es5vydd7x@rob-hp-laptop>
+References: <1484623377-16208-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484601219-30196-6-git-send-email-eajames.ibm@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: eajames.ibm@gmail.com
-Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+In-Reply-To: <1484623377-16208-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 03:13:38PM -0600, eajames.ibm@gmail.com wrote:
-> From: "Edward A. James" <eajames@us.ibm.com>
+On Tue, Jan 17, 2017 at 11:22:55AM +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zx2967 family
+> reset controller.
 > 
-> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
-> well as probe the entire driver from the I2C bus. I2C is the communication
-> method between the BMC and the P8 OCC.
-> 
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
+>  .../devicetree/bindings/reset/zte,zx2967-reset.txt   | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/hwmon/occ/Kconfig                       |  14 ++++
->  drivers/hwmon/occ/Makefile                      |   1 +
->  drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++++++++++++++++++++
->  4 files changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
->  create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
