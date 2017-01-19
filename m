@@ -1,30 +1,69 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v10 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 19 Jan 2017 14:31:44 +0100
-Message-ID: <20170119133144.wrzj3uexho5cpw4k@pengutronix.de>
-References: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
- <1484832316-5594-3-git-send-email-cedric.madianga@gmail.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 04/14] sata: ahci-da850: get the sata clock using a
+ connection id
+Date: Thu, 19 Jan 2017 14:29:38 +0100
+Message-ID: <1484832588-18413-5-git-send-email-bgolaszewski@baylibre.com>
+References: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484832316-5594-3-git-send-email-cedric.madianga@gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 02:25:13PM +0100, M'boumba Cedric Madianga wrote:
-> This patch adds support for the STM32F4 I2C controller.
-> 
-> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Acked-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+In preparation for using two clocks in the driver (the sysclk2-based
+clock and the external REFCLK), check if we got a functional clock
+after calling ahci_platform_get_resources(). If not, retry calling
+clk_get() with con_id specified.
 
-Thanks
-Uwe
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/ata/ahci_da850.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
+diff --git a/drivers/ata/ahci_da850.c b/drivers/ata/ahci_da850.c
+index 267a3d3..8cfdc86 100644
+--- a/drivers/ata/ahci_da850.c
++++ b/drivers/ata/ahci_da850.c
+@@ -71,12 +71,28 @@ static int ahci_da850_probe(struct platform_device *pdev)
+ 	struct ahci_host_priv *hpriv;
+ 	struct resource *res;
+ 	void __iomem *pwrdn_reg;
++	struct clk *clk;
+ 	int rc;
+ 
+ 	hpriv = ahci_platform_get_resources(pdev);
+ 	if (IS_ERR(hpriv))
+ 		return PTR_ERR(hpriv);
+ 
++	/*
++	 * Internally ahci_platform_get_resources() calls clk_get(dev, NULL)
++	 * when trying to obtain the first clock. This SATA controller uses
++	 * two clocks for which we specify two connection ids. If we don't
++	 * have a clock at this point - call clk_get() again with
++	 * con_id = "sata".
++	 */
++	if (!hpriv->clks[0]) {
++		clk = clk_get(dev, "sata");
++		if (IS_ERR(clk))
++			return PTR_ERR(clk);
++
++		hpriv->clks[0] = clk;
++	}
++
+ 	rc = ahci_platform_enable_resources(hpriv);
+ 	if (rc)
+ 		return rc;
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.9.3
