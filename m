@@ -1,72 +1,86 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] usb: usb: dsps: update device tree bindings
-Date: Thu, 19 Jan 2017 12:15:12 -0600
-Message-ID: <20170119181512.pb3znkxqscnrpmnz@rob-hp-laptop>
-References: <20170117134540.9988-1-abailon@baylibre.com>
- <20170117134540.9988-3-abailon@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen
+ driver
+Date: Thu, 19 Jan 2017 12:19:12 -0600
+Message-ID: <20170119181912.lzlcc5zbtue2ojp4@rob-hp-laptop>
+References: <20170117135441.31450-1-andi.shyti@samsung.com>
+ <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
+ <20170117135441.31450-2-andi.shyti@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170117134540.9988-3-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170117135441.31450-2-andi.shyti@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andi Shyti <andi.shyti@samsung.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Andi Shyti <andi@etezian.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 02:45:35PM +0100, Alexandre Bailon wrote:
-> In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
-> have been removed. So it is not required anymore to define "glue"
-> register's address and size in DT.
-> Update dsps device tree bindings.
+On Tue, Jan 17, 2017 at 10:54:39PM +0900, Andi Shyti wrote:
+> Add binding for the STMicroelectronics FingerTip (stmfts)
+> touchscreen driver.
 
-Looks like you are breaking compatibility here.
-
-Are the glue registers already in the USB node? If so, then the DMA 
-driver just needs to ignore the first reg entry when 4 entries are 
-present. Or add a fixup to the DT somewhere.
+Bindings describe h/w not drivers.
 
 > 
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Andi Shyti <andi.shyti@samsung.com>
 > ---
->  Documentation/devicetree/bindings/usb/am33xx-usb.txt | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+>  .../bindings/input/touchscreen/st,stmfts.txt       | 43 ++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-> index 20c2ff2..ef89010 100644
-> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
-> @@ -54,9 +54,9 @@ node.
->  DMA
->  ~~~
->  - compatible: ti,am3359-cppi41
-> -- reg: offset and length of the following register spaces: USBSS, USB
-> +- reg: offset and length of the following register spaces: USB
->    CPPI DMA Controller, USB CPPI DMA Scheduler, USB Queue Manager
-> -- reg-names: glue, controller, scheduler, queuemgr
-> +- reg-names: controller, scheduler, queuemgr
->  - #dma-cells: should be set to 2. The first number represents the
->    endpoint number (0 … 14 for endpoints 1 … 15 on instance 0 and 15 … 29
->    for endpoints 1 … 15 on instance 1). The second number is 0 for RX and
-> @@ -183,11 +183,10 @@ usb: usb@47400000 {
->  
->  	cppi41dma: dma-controller@07402000 {
->  		compatible = "ti,am3359-cppi41";
-> -		reg =  <0x47400000 0x1000
-> -			0x47402000 0x1000
-> +		reg =  <0x47402000 0x1000
->  			0x47403000 0x1000
->  			0x47404000 0x4000>;
-> -		reg-names = "glue", "controller", "scheduler", "queuemgr";
-> +		reg-names = "controller", "scheduler", "queuemgr";
->  		interrupts = <17>;
->  		interrupt-names = "glue";
->  		#dma-cells = <2>;
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+> new file mode 100644
+> index 000000000000..788f4ba744db
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
+> @@ -0,0 +1,43 @@
+> +* ST-Microelectronics FingerTip touchscreen controller
+> +
+> +The ST-Microelectronics FingerTip device provides a basic touchscreen
+> +functionality. Along with it the user can enable the touchkey which can work as
+> +a basic HOME and BACK key for phones.
+> +
+> +The driver supports also hovering as an absolute single touch event with x, y, z
+> +coordinates.
+> +
+> +Required properties:
+> +- compatible		: must be "st,stmfts"
+
+Seems too generic. Is this a single device?
+
+> +- reg			: I2C slave address, (e.g. 0x49)
+> +- interrupt-parent	: the phandle to the interrupt controller which provides
+> +			  the interrupt
+> +- interrupts		: interrupt specification
+> +- avdd-supply		: analogic power supply
+> +- vdd-supply		: power supply
+> +- touchscreen-size-x	: see touchscreen.txt
+> +- touchscreen-size-y	: see touchscreen.txt
+> +
+> +Optional properties:
+> +- touch-key-connected	: specifies whether the touchkey feature is connected
+> +- ledvdd-supply		: power supply to the touch key leds
+> +
+> +Example:
+> +
+> +i2c@00000000 {
+> +
+> +	/* ... */
+> +
+> +	stmfts@49 {
+> +		compatible = "st,stmfts";
+> +		reg = <0x49>;
+> +		interrupt-parent = <&gpa1>;
+> +		interrupts = <1 IRQ_TYPE_NONE>;
+> +		touchscreen-size-x = <1599>;
+> +		touchscreen-size-y = <2559>;
+> +		touch-key-connected;
+> +		avdd-supply = <&ldo30_reg>;
+> +		vdd-supply = <&ldo31_reg>;
+> +		ledvdd-supply = <&ldo33_reg>;
+> +	};
+> +};
 > -- 
-> 2.10.2
+> 2.11.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
