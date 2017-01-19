@@ -1,82 +1,97 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH] ARM: dts: fix SolidRun iMX6 platforms
-Date: Thu, 19 Jan 2017 12:44:27 +0000
-Message-ID: <E1cUC4p-00087z-NF@rmk-PC.armlinux.org.uk>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] mmc: pwrseq: add support for Marvell SD8787 chip
+Date: Thu, 19 Jan 2017 13:50:02 +0100
+Message-ID: <CAPDyKFqWrzh7pr+TLwjoCWxu8g9ANrNnETeVoE0MCqo-q7YsSA@mail.gmail.com>
+References: <20170113052937.12538-1-matt@ranostay.consulting>
+ <20170113052937.12538-3-matt@ranostay.consulting> <cd669d08-0db4-57e4-478b-2b200ccef6f1@rock-chips.com>
+ <CAJ_EiSQtPUwv9K7CbM5e_wnre6=qR=+hgtq-oVFub2phijvXgA@mail.gmail.com>
+ <0a49ba8d-e749-8462-fa48-7d8a17cecc75@rock-chips.com> <CAJ_EiSSQF_2pRaYdUBbKzbHt=1pn3NBrz8C5B7Dta9x7xqZ8oA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJ_EiSSQF_2pRaYdUBbKzbHt=1pn3NBrz8C5B7Dta9x7xqZ8oA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Removal of skeleton.dtsi from imx6qdl.dtsi caused a regression on
-SolidRun platforms as the /chosen and /memory nodes are no longer
-populated.  Fix this by adding the nodes into the platform .dtsi
-files.
+On 18 January 2017 at 08:50, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org> wrote:
+> On Sun, Jan 15, 2017 at 6:35 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+>> On 2017/1/16 5:41, Matt Ranostay wrote:
+>>>
+>>> On Thu, Jan 12, 2017 at 11:16 PM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> On 2017/1/13 13:29, Matt Ranostay wrote:
+>>>>>
+>>>>>
+>>>>> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
+>>>>> This can be abstracted to other chipsets if needed in the future.
+>>>>>
+>>>>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>>>>> Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>>>> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/mmc/core/Kconfig         |  10 ++++
+>>>>>  drivers/mmc/core/Makefile        |   1 +
+>>>>>  drivers/mmc/core/pwrseq_sd8787.c | 117
+>>>>> +++++++++++++++++++++++++++++++++++++++
+>>>>>  3 files changed, 128 insertions(+)
+>>>>>  create mode 100644 drivers/mmc/core/pwrseq_sd8787.c
+>>>>>
+>>>>> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
+>>>>> index cdfa8520a4b1..fc1ecdaaa9ca 100644
+>>>>> --- a/drivers/mmc/core/Kconfig
+>>>>> +++ b/drivers/mmc/core/Kconfig
+>>>>> @@ -12,6 +12,16 @@ config PWRSEQ_EMMC
+>>>>>           This driver can also be built as a module. If so, the module
+>>>>>           will be called pwrseq_emmc.
+>>>>>
+>>>>> +config PWRSEQ_SD8787
+>>>>> +       tristate "HW reset support for SD8787 BT + Wifi module"
+>>>>> +       depends on OF && (MWIFIEX || BT_MRVL_SDIO)
+>>>>> +       help
+>>>>> +         This selects hardware reset support for the SD8787 BT + Wifi
+>>>>> +         module. By default this option is set to n.
+>>>>> +
+>>>>> +         This driver can also be built as a module. If so, the module
+>>>>> +         will be called pwrseq_sd8787.
+>>>>> +
+>>>>
+>>>>
+>>>>
+>>>> I don't like this way, as we have a chance to list lots
+>>>> configure options here. wifi A,B,C,D...Z, all of them need a
+>>>> new section here if needed?
+>>>>
+>>>> Instead, could you just extent pwrseq_simple.c and add you
+>>>> .compatible = "mmc-pwrseq-sd8787", "mmc-pwrseq-simple"?
+>>>
+>>>
+>>> You mean all the chipset pwrseqs linked into the pwrseq-simple module?
+>>
+>>
+>> What I mean was if you just extent the pwrseq-simple a bit, you could
+>> just add your chipset pwrseqs linked into the pwrseq-simple. But if you
+>> need a different *pattern* of pwrseqs, you should need a new name, for
+>> instance, pwrseq-sdio.c etc... But please don't use the name of
+>> sd8787? So if I use a wifi named ABC but using the same pwrseq pattenr,
+>> should I include your "mmc-pwrseq- sd8787" for that or I need a new
+>> mmc-pwrseq-ABC.c?
+>
+> Ah so pwrseq-sdio.c seems reasonable and having chipsets functions
+> defined in a structure. That could be abstracted out for other
+> chipsets that could needed in the future.
 
-Uncompressing Linux... done, booting the kernel.
-Booting Linux on physical CPU 0x0
-Linux version 4.10.0-rc3+ (rmk@rmk-PC.arm.linux.org.uk) (gcc version 4.7.4 (GCC) ) #2066 SMP Thu Jan 19 12:31:19 GMT 2017
-CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
-CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-OF: fdt:Machine model: SolidRun Cubox-i Dual/Quad
-INITRD: 0x20000000+0x001cd000 is not a memory region - disabling initrd
-cma: Failed to reserve 256 MiB
-Memory policy: Data cache writealloc
-Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
+I think get the idea and it seems reasonable. With that in mind, I
+have looked at the code once more and I got some new ideas on how to
+adopt pwrseq-simple for your case.
 
-CPU: 0 PID: 0 Comm: swapper Not tainted 4.10.0-rc3+ #2066
-Hardware name: Freescale i.MX6 Quad/DualLite (Device Tree)
-Backtrace: invalid frame pointer 0xc09e5e44c
----[ end Kernel panic - not syncing: ERROR: Failed to allocate 0x2000 bytes below 0x0.
+I post the comments separately.
 
-Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- arch/arm/boot/dts/imx6qdl-cubox-i.dtsi      | 6 ++++++
- arch/arm/boot/dts/imx6qdl-hummingboard.dtsi | 2 ++
- 2 files changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-index ff41f83551de..69e3a848ee74 100644
---- a/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-cubox-i.dtsi
-@@ -44,6 +44,12 @@
- #include <dt-bindings/gpio/gpio.h>
- 
- / {
-+	chosen {
-+		stdout-path = &uart1;
-+	};
-+
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
- 	ir_recv: ir-receiver {
- 		compatible = "gpio-ir-receiver";
- 		gpios = <&gpio3 9 1>;
-diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-index a5e5356cdc6a..ae2feb882193 100644
---- a/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-hummingboard.dtsi
-@@ -46,6 +46,8 @@
- 		stdout-path = &uart1;
- 	};
- 
-+	memory { device_type = "memory"; reg = <0 0>; };
-+
- 	ir_recv: ir-receiver {
- 		compatible = "gpio-ir-receiver";
- 		gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
--- 
-2.7.4
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
