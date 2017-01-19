@@ -1,131 +1,35 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 3/7] iio: adc: stm32: add trigger polarity extended attribute
-Date: Thu, 19 Jan 2017 14:34:10 +0100
-Message-ID: <1484832854-6314-4-git-send-email-fabrice.gasnier@st.com>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v4 05/14] ARM: davinci: da850: add con_id for the SATA clock
+Date: Thu, 19 Jan 2017 14:29:39 +0100
+Message-ID: <1484832588-18413-6-git-send-email-bgolaszewski@baylibre.com>
+References: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484832588-18413-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Define extended attribute so that user may choose rising, falling or both
-edges for external trigger sources.
-Default to rising edge in case it isn't set.
+The ahci-da850 SATA driver is now capable of retrieving clocks by
+con_id. Add the connection id for the sysclk2-derived SATA clock.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- drivers/iio/adc/stm32-adc.c | 51 ++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+ arch/arm/mach-davinci/da850.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 30708bc..9753c39 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -164,6 +164,7 @@ struct stm32_adc_trig_info {
-  * @lock:		spinlock
-  * @bufi:		data buffer index
-  * @num_conv:		expected number of scan conversions
-+ * @exten:		external trigger config (enable/polarity)
-  */
- struct stm32_adc {
- 	struct stm32_adc_common	*common;
-@@ -175,6 +176,7 @@ struct stm32_adc {
- 	spinlock_t		lock;		/* interrupt lock */
- 	int			bufi;
- 	int			num_conv;
-+	enum stm32_adc_exten	exten;
- };
- 
- /**
-@@ -449,7 +451,9 @@ static int stm32_adc_set_trig(struct iio_dev *indio_dev,
- 
- 		/* set trigger source, default to rising edge */
- 		extsel = ret;
--		exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
-+		if (adc->exten == STM32_EXTEN_SWTRIG)
-+			adc->exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
-+		exten = adc->exten;
- 	}
- 
- 	spin_lock_irqsave(&adc->lock, flags);
-@@ -463,6 +467,39 @@ static int stm32_adc_set_trig(struct iio_dev *indio_dev,
- 	return 0;
- }
- 
-+static int stm32_adc_set_trig_pol(struct iio_dev *indio_dev,
-+				  const struct iio_chan_spec *chan,
-+				  unsigned int type)
-+{
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+
-+	adc->exten = type;
-+
-+	return 0;
-+}
-+
-+static int stm32_adc_get_trig_pol(struct iio_dev *indio_dev,
-+				  const struct iio_chan_spec *chan)
-+{
-+	struct stm32_adc *adc = iio_priv(indio_dev);
-+
-+	return adc->exten;
-+}
-+
-+static const char * const stm32_trig_pol_items[] = {
-+	[STM32_EXTEN_SWTRIG] = "swtrig",
-+	[STM32_EXTEN_HWTRIG_RISING_EDGE] = "rising-edge",
-+	[STM32_EXTEN_HWTRIG_FALLING_EDGE] = "falling-edge",
-+	[STM32_EXTEN_HWTRIG_BOTH_EDGES] = "both-edges",
-+};
-+
-+const struct iio_enum stm32_adc_trig_pol = {
-+	.items = stm32_trig_pol_items,
-+	.num_items = ARRAY_SIZE(stm32_trig_pol_items),
-+	.get = stm32_adc_get_trig_pol,
-+	.set = stm32_adc_set_trig_pol,
-+};
-+
- /**
-  * stm32_adc_single_conv() - Performs a single conversion
-  * @indio_dev: IIO device
-@@ -745,6 +782,17 @@ static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
- 	return IRQ_HANDLED;
- }
- 
-+static const struct iio_chan_spec_ext_info stm32_adc_ext_info[] = {
-+	IIO_ENUM("trigger_pol", IIO_SHARED_BY_ALL, &stm32_adc_trig_pol),
-+	{
-+		.name = "trigger_pol_available",
-+		.shared = IIO_SHARED_BY_ALL,
-+		.read = iio_enum_available_read,
-+		.private = (uintptr_t)&stm32_adc_trig_pol,
-+	},
-+	{},
-+};
-+
- static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
- 				    struct iio_chan_spec *chan,
- 				    const struct stm32_adc_chan_spec *channel,
-@@ -760,6 +808,7 @@ static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
- 	chan->scan_type.sign = 'u';
- 	chan->scan_type.realbits = 12;
- 	chan->scan_type.storagebits = 16;
-+	chan->ext_info = stm32_adc_ext_info;
- }
- 
- static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 1d873d1..dbf1daa 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -571,7 +571,7 @@ static struct clk_lookup da850_clks[] = {
+ 	CLK("spi_davinci.0",	NULL,		&spi0_clk),
+ 	CLK("spi_davinci.1",	NULL,		&spi1_clk),
+ 	CLK("vpif",		NULL,		&vpif_clk),
+-	CLK("ahci_da850",		NULL,		&sata_clk),
++	CLK("ahci_da850",	"sata",		&sata_clk),
+ 	CLK("davinci-rproc.0",	NULL,		&dsp_clk),
+ 	CLK(NULL,		NULL,		&ehrpwm_clk),
+ 	CLK("ehrpwm.0",		"fck",		&ehrpwm0_clk),
 -- 
-1.9.1
+2.9.3
