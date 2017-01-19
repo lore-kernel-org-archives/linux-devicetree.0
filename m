@@ -1,45 +1,45 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] clk: gxbb: add the SAR ADC clocks and expose them
-Date: Thu, 19 Jan 2017 11:13:32 -0800
-Message-ID: <20170119191332.GA7829@codeaurora.org>
-References: <20170115224221.15510-1-martin.blumenstingl@googlemail.com>
- <20170119145822.26239-1-martin.blumenstingl@googlemail.com>
- <20170119145822.26239-3-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3 v3] iio: adc: add device tree bindings for Qualcomm
+ PM8xxx ADCs
+Date: Thu, 19 Jan 2017 13:16:50 -0600
+Message-ID: <20170119191650.o3ghoysxkhrqw4gw@rob-hp-laptop>
+References: <20170117142515.10578-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170119145822.26239-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170117142515.10578-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T . Ivanov" <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19, Martin Blumenstingl wrote:
-> The HHI_SAR_CLK_CNTL contains three SAR ADC specific clocks:
-> - a mux clock to choose between different ADC reference clocks (this is
->   2-bit wide, but the datasheet only lists the parents for the first
->   bit)
-> - a divider for the input/reference clock
-> - a gate which enables the ADC clock
+On Tue, Jan 17, 2017 at 03:25:13PM +0100, Linus Walleij wrote:
+> This adds the device tree bindings for the Qualcomm PM8xxx
+> ADCs. This is based on the existing DT bindings for the
+> SPMI ADC so there are hopefully no controversial features.
 > 
-> Additionally this exposes the ADC core clock (CLKID_SAR_ADC) and
-> CLKID_SANA (which seems to enable the analog inputs, but unfortunately
-> there is no documentation for this - we just mimic what the vendor
-> driver does).
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Ivan T. Ivanov <iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rama Krishna Phani A <rphani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
+> ChangeLog v2->v3:
+> - Collapse the ratiometric property into one that enables and
+>   selects a ratiometric reference in one go.
+> - Use foo: adc-channel@X notation consequently
+> - Document that the reference voltage is compulsory.
+> ChangeLog v1->v2:
+> - Spelling fixes
+> ---
+>  .../bindings/iio/adc/qcom,pm8xxx-xoadc.txt         | 149 +++++++++++++++++++++
+>  1 file changed, 149 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/qcom,pm8xxx-xoadc.txt
 
-Acked-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-This should go through arm-soc along with the other patch to dts.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
