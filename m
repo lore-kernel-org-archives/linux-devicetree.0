@@ -1,7 +1,7 @@
 From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: Enable Broadcom iProc mailbox controller
-Date: Wed, 18 Jan 2017 17:39:40 -0800
-Message-ID: <1484789980-6812-4-git-send-email-jonathan.richardson@broadcom.com>
+Subject: [PATCH v2 1/3] dt-bindings: Document Broadcom iProc mailbox controller driver
+Date: Wed, 18 Jan 2017 17:39:38 -0800
+Message-ID: <1484789980-6812-2-git-send-email-jonathan.richardson@broadcom.com>
 References: <1484789980-6812-1-git-send-email-jonathan.richardson@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1484789980-6812-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -11,33 +11,37 @@ Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland 
 List-Id: devicetree@vger.kernel.org
 
 Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm-cygnus.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/mailbox/brcm,iproc-mailbox.txt     | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
 
-diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
-index fabc9f3..488bf42 100644
---- a/arch/arm/boot/dts/bcm-cygnus.dtsi
-+++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
-@@ -114,6 +114,12 @@
- 			      <0x0301d24c 0x2c>;
- 		};
- 
-+		mailbox: mailbox@03024024 {
-+			compatible = "brcm,iproc-mailbox";
-+			reg = <0x03024024 0x8>;
-+			#mbox-cells = <1>;
-+		};
+diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+new file mode 100644
+index 0000000..f4c4f96
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+@@ -0,0 +1,14 @@
++* Broadcom's iProc Mailbox Controller
 +
- 		gpio_crmu: gpio@03024800 {
- 			compatible = "brcm,cygnus-crmu-gpio";
- 			reg = <0x03024800 0x50>,
++Required properties:
++- compatible: Must be "brcm,iproc-mailbox"
++- reg: Defines the base address of the mailbox controller.
++- #mbox-cells: Must be 1.
++
++Example:
++
++	mailbox: mailbox@03024024 {
++		compatible = "brcm,iproc-mailbox";
++		reg = <0x03024024 0x8>;
++		#mbox-cells = <1>;
++	};
 -- 
 1.9.1
 
