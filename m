@@ -1,163 +1,152 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v5] ARM64: dts: meson-gx: Add firmware reserved memory
- zones
-Date: Thu, 19 Jan 2017 01:20:06 +0100
-Message-ID: <2bdb6818-4620-53b1-112d-2d6a29e484d9@suse.de>
-References: <1484758245-9354-1-git-send-email-narmstrong@baylibre.com>
+From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: dt: misc: Add Aspeed ast2400/2500
+ LPC Control bindings
+Date: Thu, 19 Jan 2017 11:19:23 +1100
+Message-ID: <1484785163.4097.5.camel@gmail.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
+         <20170112002910.3650-3-cyrilbur@gmail.com>
+         <20170118211645.v54xvmxcsfzxior2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-15"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484758245-9354-1-git-send-email-narmstrong@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, xypron.glpk@gmx.de, khilman@baylibre.com, carlo@caione.org
-Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170118211645.v54xvmxcsfzxior2@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2017-01-18 at 15:16 -0600, Rob Herring wrote:
+> On Thu, Jan 12, 2017 at 11:29:08AM +1100, Cyril Bur wrote:
+> > Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/misc/aspeed-lpc-ctrl.txt   | 78 ++++++++++++++++++++++
+> >  1 file changed, 78 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
+> > new file mode 100644
+> > index 000000000000..f84ac83211ec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
+> > @@ -0,0 +1,78 @@
+> > +ASpeed LPC Control
+> > +==================
+> > +This binding defines the LPC control for ASpeed SoCs. Partitions of
+> > +the LPC bus can be access by other processors on the system, address
+> > +ranges on the bus can map accesses from another processor to regions
+> > +of the ASpeed SoC memory space.
+> > +
+> > +Reserved Memory:
+> > +================
+> > +The driver provides functionality to map the LPC bus to a region of
+> > +ASpeed ram. A phandle to a reserved memory node must be provided so
+> > +that the driver can safely use this region.
+> > +
+> > +Flash:
+> > +======
+> > +The driver provides functionality to unmap the LPC bus from ASpeed
+> > +RAM, historically the default mapping has been to the SPI flash
+> > +controller on the ASpeed SoC, a phandle to this node should be
+> > +supplied.
+> > +
+> > +Device Node:
+> > +============
+> > +
+> > +As LPC bus configuration registers are at the start of the LPC bus
+> > +memory space, it makes most sense for the device to be within the LPC
+> > +host node. See Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
+> > +for more information. This does not have to be the case, provided the
+> > +reg property can give the full address of the LPC bus.
+> 
+> Same comment here.
+> 
 
-Am 18.01.2017 um 17:50 schrieb Neil Armstrong:
-> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory spa=
-ce,
-> this patch adds these reserved zones.
-> =
+Hi Rob,
 
-> Without such reserved memory zones, running the following stress command :
-> $ stress-ng --vm 16 --vm-bytes 128M --timeout 10s
-> multiple times:
-> =
+Yes, thanks.
 
-> Could lead to the following kernel crashes :
-> [   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf00000=
-0 -- SError
-> ...
-> [   47.058536] Internal error: Attempting to execute userspace memory: 86=
-00000f [#3] PREEMPT SMP
-> ...
-> Instead of the OOM killer.
-> =
+> > +
+> > +Required properties:
+> > +--------------------
+> > +
+> > +- compatible:		"aspeed,ast2400-lpc-ctrl" for ASpeed ast2400 SoCs
+> > +					"aspeed,ast2500-lpc-ctrl" for ASpeed ast2500 SoCs
+> > +
+> > +- reg:				Location and size of the configuration registers
+> > +					for the LPC bus. Note that if the device node is
+> > +					within the LPC host node then base is relative to
+> > +					that.
+> > +
+> > +- memory-region:	phandle of the reserved memory region
+> > +- flash:			phandle of the SPI flash controller
+> > +
+> > +Example:
+> > +--------
+> > +
+> > +reserved-memory {
+> > +	#address-cells = <1>;
+> > +	#size-cells = <1>;
+> > +	ranges;
+> > +
+> > +	...
+> > +
+> > +	flash_memory: region@54000000 {
+> > +		compatible = "aspeed,ast2400-lpc-ctrl";
+> 
+> This doesn't look right?
+> 
 
+Correct, my mistake, I'll remove.
 
-I miss a Fixes: or Cc: here for the backport you desired. To have it
-fixed back to my very introduction:
+> > +		no-map;
+> > +		reg = <0x54000000 0x04000000>; /* 64M */
+> 
+> Is this system RAM? reserved-memory is generally for carveouts in system 
+> RAM (e.g. the memory node).
+> 
 
-Fixes: 4f24eda8401f ("ARM64: dts: Prepare configs for Amlogic Meson GXBaby")
+Yes it will be a chunk of system RAM. Our intended use case is to use
+system ram to buffer host accesses to system flash (on the bmc). This
+provides control over concurrent access to the flash and place to add
+security measures to prevent the host from backdooring through the
+flash. With the use of a protocol through the platform mailbox.
 
-People backporting it would need to handle the meson-{gx =3D> gxbb}.dtsi
-transition for 4.9 down to 4.6, which seems fairly straightforward.
+Having said that I don't want to limit myself to just that - there has
+been other ideas for a host<->bmc ram buffer which may or may not see
+the light of day.
 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> =
+I hope that makes sense,
 
-> Changes since v4 at [5]:
-> - Move start of ddr memory to reserved-memory node
-> - Drop memory node move
-> - Fix typo in sizes
-> =
+Thanks for the review,
 
-> Changes since resent v2 at [4]:
-> - Fix invalid comment of useable memory attributes
-> =
+Cyril
 
-> Changes since original v2 at [3]:
-> - Typo in commit 2GiB -> 1GiB, 4GiB -> 2GiB
-> =
-
-> Changes since v2 at [2]:
-> - Moved all memory node out of dtsi
-> - Added comment about useable memory
-> - Fixed comment about secmon reserved zone
-> =
-
-> Changes since v1 at [1] :
-> - Renamed reg into linux,usable-memory to ovveride u-boot memory
-> - only kept secmon memory zone
-> =
-
-> [1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong@baylibre.c=
-om
-> [2] http://lkml.kernel.org/r/1483105232-6242-1-git-send-email-narmstrong@=
-baylibre.com
-> [3] http://lkml.kernel.org/r/1484128128-22454-1-git-send-email-narmstrong=
-@baylibre.com
-> [4] http://lkml.kernel.org/r/1484128540-22662-1-git-send-email-narmstrong=
-@baylibre.com
-> [5] http://lkml.kernel.org/r/1484129414-23325-1-git-send-email-narmstrong=
-@baylibre.com
-> =
-
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/=
-dts/amlogic/meson-gx.dtsi
-> index eada0b5..63d52b7 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -55,6 +55,24 @@
->  	#address-cells =3D <2>;
->  	#size-cells =3D <2>;
->  =
-
-> +	reserved-memory {
-> +		#address-cells =3D <2>;
-> +		#size-cells =3D <2>;
-> +		ranges;
-> +
-> +		/* 16 MiB reserved for Hardware ROM Firmware */
-> +		hwrom: hwrom {
-
-Both sub-nodes get a label that is unused, but reserved-memory itself
-does not (my v4 remark). Intentional?
-
-> +			reg =3D <0x0 0x0 0x0 0x1000000>;
-> +			no-map;
-> +		};
-> +
-> +		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
-> +		secmon: secmon {
-
-I note that this .dtsi further down has a node /firmware/secure-monitor
-with label sm.
-a) Is there any naming convention such as secmon_mem to adopt here to
-avoid mixups with sm?
-b) Should this secmon node be referenced in the secure-monitor node via
-memory-node =3D <&secmon>; to model their connection, thereby giving the
-label a use? Or should we maybe merge the two nodes by moving the
-compatible string here?
-
-https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Docum=
-entation/devicetree/bindings/reserved-memory/reserved-memory.txt
-
-> +			reg =3D <0x0 0x10000000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	cpus {
->  		#address-cells =3D <0x2>;
->  		#size-cells =3D <0x0>;
-
-Anyway, objection resolved,
-
-Reviewed-by: Andreas F=E4rber <afaerber@suse.de>
-
-I don't expect breakage from these more confined additions, but I can
-try to test tomorrow.
-
-Thanks,
-Andreas
-
--- =
-
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Felix Imend=F6rffer, Jane Smithard, Graham Norton
-HRB 21284 (AG N=FCrnberg)
+> > +	};
+> > +};
+> > +
+> > +host_pnor: spi@1e630000 {
+> > +	reg = < 0x1e630000 0x18
+> > +			0x30000000 0x02000000 >;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	compatible = "aspeed,ast2400-smc";
+> > +
+> > +	...
+> > +
+> > +};
+> > +
+> > +lpc-ctrl@0 {
+> > +	compatible = "aspeed,ast2400-lpc-ctrl";
+> > +	memory-region = <&flash_memory>;
+> > +	flash = <&host_pnor>;
+> > +	reg = <0x0 0x80>;
+> > +};
+> > +
+> > -- 
+> > 2.11.0
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
