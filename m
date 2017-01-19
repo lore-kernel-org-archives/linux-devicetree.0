@@ -1,103 +1,205 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Thu, 19 Jan 2017 08:18:41 -0600
-Message-ID: <CAL_Jsq+S-FYy4SmjJ3fWzBugw2zCj5TQkkfUA8QVL7SLJW3E1g@mail.gmail.com>
-References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
- <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com> <20170113172825.75d545a3@bbrezillon>
- <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com> <20170113175628.1793f433@bbrezillon>
- <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com> <20170114092958.022f2fc8@bbrezillon>
- <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com> <20170116094032.6f471f11@bbrezillon>
- <20170117143650.5db87148@free-electrons.com> <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
- <20170119103829.524ce715@free-electrons.com> <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ@mail.gmail.com>
- <20170119091428.598eb987@bbrezillon>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 2/2] mmc: pwrseq: add support for Marvell SD8787 chip
+Date: Thu, 19 Jan 2017 15:13:12 +0100
+Message-ID: <CAPDyKFpcKuybQmhqCkaAkOM5d+ubU8O8=adLm+PXwc=+N87vng@mail.gmail.com>
+References: <20170113052937.12538-1-matt@ranostay.consulting> <20170113052937.12538-3-matt@ranostay.consulting>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170119091428.598eb987@bbrezillon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guochun Mao <guochun.mao@mediatek.com>, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170113052937.12538-3-matt@ranostay.consulting>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Matt Ranostay <matt@ranostay.consulting>
+Cc: "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Shawn Lin <shawn.lin@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 2:14 AM, Boris Brezillon
-<boris.brezillon@free-electrons.com> wrote:
-> Hi Rob,
->
-> On Wed, 18 Jan 2017 20:51:08 -0600
-> Rob Herring <robh@kernel.org> wrote:
->
->> On Wed, Jan 18, 2017 at 5:38 PM, Thomas Petazzoni
->> <thomas.petazzoni@free-electrons.com> wrote:
->> > Hello,
->> >
->> > On Wed, 18 Jan 2017 16:20:10 -0600, Rob Herring wrote:
->> >
->> >> > > Rob, Mark, any opinion?
->> >> >
->> >>
->> >> Sigh, is how to do compatibles really not yet understood?
->> >
->> > Well, it seems like not everyone necessarily understands what is the
->> > best strategy to adopt (me included).
->> >
->> >> > I agree that a clarification would be good. There are really two
->> >> > options:
->> >> >
->> >> >  1. Have two compatible strings in the DT, the one that matches the
->> >> >     exact SoC where the IP is found (first compatible string) and the
->> >> >     one that matches some other SoC where the same IP is found (second
->> >> >     compatible string). Originally, Linux only supports the second
->> >> >     compatible string in its device driver, but if it happens that a
->> >> >     difference is found between two IPs that we thought were the same,
->> >> >     we can add support for the first compatible string in the driver,
->> >> >     with a slightly different behavior.
->> >>
->> >> This. And no wildcards in the compatible string.
->> >
->> > OK. So it means that today we do something like:
->> >
->> >         compatible = "baz,foo-12", "baz,foo-00";
->> >
->> > and support only baz,foo-00 in the driver. If tomorrow we discover
->> > that there is in fact a difference between the two IP blocks, we can
->> > add support for baz,foo-12 in the driver, and handle the differences.
->> >
->> > But then, the DT still contains:
->> >
->> >         compatible = "baz,foo-12", "baz,foo-00";
->> >
->> > and therefore pretends that the IP block is compatible with
->> > "baz,foo-00" which is in fact *not* the case. It was a mistake to
->> > consider it as compatible. So we keep living with a DT that has
->> > incorrect information.
->>
->> I wouldn't say it's a mistake necessarily. The old compatible would
->> probably work to some extent. I'd assume it was tested to some level.
->> Or it could be other changes exposing a difference.
->
-> One last question and I'm done: is something like that acceptable?
->
->         compatible = "<vendor>,<old-soc>","<vendor>,<new-soc>";
->
-> This can happen when someone adds support for an unsupported feature
-> on a brand new SoC, and then someone else use the same driver for an
-> older SoC embedding the same IP but still wants to add a new compatible
-> just in case these 2 IPs appear to be slightly different.
++Shawn
 
-Yes, it's old and new compatible strings in this case and it's newest
-compatible string first.
+On 13 January 2017 at 06:29, Matt Ranostay <matt@ranostay.consulting> wrote:
+> Allow power sequencing for the Marvell SD8787 Wifi/BT chip.
+> This can be abstracted to other chipsets if needed in the future.
+>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+> ---
+>  drivers/mmc/core/Kconfig         |  10 ++++
+>  drivers/mmc/core/Makefile        |   1 +
+>  drivers/mmc/core/pwrseq_sd8787.c | 117 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 128 insertions(+)
+>  create mode 100644 drivers/mmc/core/pwrseq_sd8787.c
+>
+> diff --git a/drivers/mmc/core/Kconfig b/drivers/mmc/core/Kconfig
+> index cdfa8520a4b1..fc1ecdaaa9ca 100644
+> --- a/drivers/mmc/core/Kconfig
+> +++ b/drivers/mmc/core/Kconfig
+> @@ -12,6 +12,16 @@ config PWRSEQ_EMMC
+>           This driver can also be built as a module. If so, the module
+>           will be called pwrseq_emmc.
+>
+> +config PWRSEQ_SD8787
+> +       tristate "HW reset support for SD8787 BT + Wifi module"
+> +       depends on OF && (MWIFIEX || BT_MRVL_SDIO)
+> +       help
+> +         This selects hardware reset support for the SD8787 BT + Wifi
+> +         module. By default this option is set to n.
+> +
+> +         This driver can also be built as a module. If so, the module
+> +         will be called pwrseq_sd8787.
+> +
+>  config PWRSEQ_SIMPLE
+>         tristate "Simple HW reset support for MMC"
+>         default y
+> diff --git a/drivers/mmc/core/Makefile b/drivers/mmc/core/Makefile
+> index b2a257dc644f..0f81464fa824 100644
+> --- a/drivers/mmc/core/Makefile
+> +++ b/drivers/mmc/core/Makefile
+> @@ -10,6 +10,7 @@ mmc_core-y                    := core.o bus.o host.o \
+>                                    quirks.o slot-gpio.o
+>  mmc_core-$(CONFIG_OF)          += pwrseq.o
+>  obj-$(CONFIG_PWRSEQ_SIMPLE)    += pwrseq_simple.o
+> +obj-$(CONFIG_PWRSEQ_SD8787)    += pwrseq_sd8787.o
+>  obj-$(CONFIG_PWRSEQ_EMMC)      += pwrseq_emmc.o
+>  mmc_core-$(CONFIG_DEBUG_FS)    += debugfs.o
+>  obj-$(CONFIG_MMC_BLOCK)                += mmc_block.o
+> diff --git a/drivers/mmc/core/pwrseq_sd8787.c b/drivers/mmc/core/pwrseq_sd8787.c
+> new file mode 100644
+> index 000000000000..f4080fe6439e
+> --- /dev/null
+> +++ b/drivers/mmc/core/pwrseq_sd8787.c
+> @@ -0,0 +1,117 @@
+> +/*
+> + * pwrseq_sd8787.c - power sequence support for Marvell SD8787 BT + Wifi chip
+> + *
+> + * Copyright (C) 2016 Matt Ranostay <matt@ranostay.consulting>
+> + *
+> + * Based on the original work pwrseq_simple.c
+> + *  Copyright (C) 2014 Linaro Ltd
+> + *  Author: Ulf Hansson <ulf.hansson@linaro.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +
+> +#include <linux/mmc/host.h>
+> +
+> +#include "pwrseq.h"
+> +
+> +struct mmc_pwrseq_sd8787 {
+> +       struct mmc_pwrseq pwrseq;
+> +       struct gpio_desc *reset_gpio;
+> +       struct gpio_desc *pwrdn_gpio;
+> +};
+> +
+> +#define to_pwrseq_sd8787(p) container_of(p, struct mmc_pwrseq_sd8787, pwrseq)
+> +
+> +static void mmc_pwrseq_sd8787_pre_power_on(struct mmc_host *host)
+> +{
+> +       struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
+> +
+> +       gpiod_set_value_cansleep(pwrseq->reset_gpio, 1);
+> +
+> +       msleep(300);
+> +       gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 1);
+> +}
+> +
+> +static void mmc_pwrseq_sd8787_power_off(struct mmc_host *host)
+> +{
+> +       struct mmc_pwrseq_sd8787 *pwrseq = to_pwrseq_sd8787(host->pwrseq);
+> +
+> +       gpiod_set_value_cansleep(pwrseq->pwrdn_gpio, 0);
+> +       gpiod_set_value_cansleep(pwrseq->reset_gpio, 0);
+> +}
+> +
+> +static const struct mmc_pwrseq_ops mmc_pwrseq_sd8787_ops = {
+> +       .pre_power_on = mmc_pwrseq_sd8787_pre_power_on,
+> +       .power_off = mmc_pwrseq_sd8787_power_off,
+> +};
+> +
+> +static const struct of_device_id mmc_pwrseq_sd8787_of_match[] = {
+> +       { .compatible = "mmc-pwrseq-sd8787",},
+> +       {/* sentinel */},
+> +};
+> +MODULE_DEVICE_TABLE(of, mmc_pwrseq_sd8787_of_match);
+> +
+> +static int mmc_pwrseq_sd8787_probe(struct platform_device *pdev)
+> +{
+> +       struct mmc_pwrseq_sd8787 *pwrseq;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       pwrseq = devm_kzalloc(dev, sizeof(*pwrseq), GFP_KERNEL);
+> +       if (!pwrseq)
+> +               return -ENOMEM;
+> +
+> +       pwrseq->pwrdn_gpio = devm_gpiod_get(dev, "pwrdn", GPIOD_OUT_LOW);
+> +       if (IS_ERR(pwrseq->pwrdn_gpio))
+> +               return PTR_ERR(pwrseq->pwrdn_gpio);
+> +
+> +       pwrseq->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+> +       if (IS_ERR(pwrseq->reset_gpio))
+> +               return PTR_ERR(pwrseq->reset_gpio);
+> +
+> +       pwrseq->pwrseq.dev = dev;
+> +       pwrseq->pwrseq.ops = &mmc_pwrseq_sd8787_ops;
+> +       pwrseq->pwrseq.owner = THIS_MODULE;
+> +       platform_set_drvdata(pdev, pwrseq);
+> +
+> +       return mmc_pwrseq_register(&pwrseq->pwrseq);
+> +}
+> +
+> +static int mmc_pwrseq_sd8787_remove(struct platform_device *pdev)
+> +{
+> +       struct mmc_pwrseq_sd8787 *pwrseq = platform_get_drvdata(pdev);
+> +
+> +       mmc_pwrseq_unregister(&pwrseq->pwrseq);
+> +
+> +       return 0;
+> +}
+> +
+> +static struct platform_driver mmc_pwrseq_sd8787_driver = {
+> +       .probe = mmc_pwrseq_sd8787_probe,
+> +       .remove = mmc_pwrseq_sd8787_remove,
+> +       .driver = {
+> +               .name = "pwrseq_sd8787",
+> +               .of_match_table = mmc_pwrseq_sd8787_of_match,
+> +       },
+> +};
+> +
+> +module_platform_driver(mmc_pwrseq_sd8787_driver);
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.10.2
+>
 
-> Here the order of compat strings is no longer following a clear rule
-> like 'most-specific compatible first' or 'newest IP/SoC version first',
-> it's completely dependent on the order these IPs were supported in the
-> OS (Linux). I'm perfectly fine with that BTW, just want to make sure
-> this is authorized.
+Twisting my head around how this could be integrated smoothly into
+pwrseq simple. No, I just can find a good way forward without messing
+up pwrseq simple itself.
 
-I guess we should say "newest compatible for IP first" instead. There
-are some exceptions where we add fallbacks later on, but that falls
-under the most-specific part.
+So, for now I decided (once more :-), that let's keep this as separate driver!
 
-It's order that the bindings are defined, not Linux support really,
-but in practice those are the same.
+Perhaps, following device specific mmc pwrseq drivers will needs
+something similar, but in such case we can look into that then.
+Thinking about cw1200 for example.
 
-Rob
+Let's get Rob's ack for the DT bindings, seems almost there, then I
+will queue this.
+
+Kind regards
+Uffe
