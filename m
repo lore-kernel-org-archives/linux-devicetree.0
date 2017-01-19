@@ -1,54 +1,62 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v7 2/3] input: tm2-touchkey: Add touchkey driver support
- for TM2
-Date: Thu, 19 Jan 2017 09:17:21 +0200
-Message-ID: <CAJKOXPd1jd2LkdTPB4oUK071v0X92YWCsc=japDUv3tuFbNXHQ@mail.gmail.com>
-References: <1484632479-3111-1-git-send-email-jcsing.lee@samsung.com>
- <CGME20170117055444epcas1p47b0b0a0ae3260b22fa61d2b92362050b@epcas1p4.samsung.com>
- <1484632479-3111-3-git-send-email-jcsing.lee@samsung.com> <20170117172047.47535bj5xd6toayu@kozik-lap>
- <CAKdAkRQij9VuG1mguE0FwQMKuHrnyLAZJxOtkoR97uuX+ZBmLQ@mail.gmail.com>
- <20170117181056.mrwyudslfgh2wfms@kozik-lap> <20170118224711.GB11881@dtor-ws>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v6 03/25] usb: ulpi: Support device discovery via DT
+Date: Thu, 19 Jan 2017 08:39:01 +0100
+Message-ID: <20170119073901.GF14493@kroah.com>
+References: <20161228225711.698-1-stephen.boyd@linaro.org>
+ <20161228225711.698-4-stephen.boyd@linaro.org>
+ <20170119063349.GB10621@b29397-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170118224711.GB11881@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Jaechul Lee <jcsing.lee@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Beomho Seo <beomho.seo@samsung.com>, =?UTF-8?B?7J207J6s7LKg?= <galaxyra@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170119063349.GB10621@b29397-desktop>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 12:47 AM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> On Tue, Jan 17, 2017 at 08:10:56PM +0200, Krzysztof Kozlowski wrote:
->> On Tue, Jan 17, 2017 at 10:06:27AM -0800, Dmitry Torokhov wrote:
->> > On Tue, Jan 17, 2017 at 9:20 AM, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> > > On Tue, Jan 17, 2017 at 02:54:38PM +0900, Jaechul Lee wrote:
->> > >> This patch adds support for the TM2 touch key and led
->> > >> functionality.
->> > >>
->> > >> The driver interfaces with userspace through an input device and
->> > >> reports KEY_PHONE and KEY_BACK event types. LED brightness can be
->> > >> controlled by "/sys/class/leds/tm2-touchkey/brightness".
->> > >>
->> > >> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> > >> Signed-off-by: Jaechul Lee <jcsing.lee@samsung.com>
->> > >> Reviewed-by: Javier Martinez Canillas <javier@osg.samsung.com>
->> > >> Reviewed-by: Andi Shyti <andi.shyti@samsung.com>
->> > >> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> > >> Tested-by: Chanwoo Choi <cw00.choi@samsung.com>
->> > >> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
->> > >> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->> > >
->> > > This looks unusual. How did Dmitry's Sob end here?
->> >
->> > I sent Jaechul a version of the patch to try out.
->>
->> Ah, makes sense then.
->
-> I picked up (and folded) the binding doc and driver patches, DTS should
-> go through some other tree I believe.
+On Thu, Jan 19, 2017 at 02:33:49PM +0800, Peter Chen wrote:
+> On Wed, Dec 28, 2016 at 02:56:49PM -0800, Stephen Boyd wrote:
+> > The qcom HSIC ULPI phy doesn't have any bits set in the vendor or
+> > product ID registers. This makes it impossible to make a ULPI
+> > driver match against the ID registers. Add support to discover
+> > the ULPI phys via DT help alleviate this problem. In the DT case,
+> > we'll look for a ULPI bus node underneath the device registering
+> > the ULPI viewport (or the parent of that device to support
+> > chipidea's device layout) and then match up the phy node
+> > underneath that with the ULPI device that's created.
+> > 
+> > The side benefit of this is that we can use standard properties
+> > in the phy node like clks, regulators, gpios, etc. because we
+> > don't have firmware like ACPI to turn these things on for us. And
+> > we can use the DT phy binding to point our phy consumer to the
+> > phy provider.
+> > 
+> > The ULPI bus code supports native enumeration by reading the
+> > vendor ID and product ID registers at device creation time, but
+> > we can't be certain that those register reads will succeed if the
+> > phy is not powered up. To avoid any problems with reading the ID
+> > registers before the phy is powered we fallback to DT matching
+> > when the ID reads fail.
+> > 
+> > If the ULPI spec had some generic power sequencing for these
+> > registers we could put that into the ULPI bus layer and power up
+> > the device before reading the ID registers. Unfortunately this
+> > doesn't exist and the power sequence is usually device specific.
+> > By having the device matched up with DT we can avoid this
+> > problem.
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: <devicetree@vger.kernel.org>
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> 
+> Greg, is it ok I pick up this patch, and send it with chipidea
+> changes together for 4.11-rc1 later?
 
-Yes, I will take it. I waited for driver and bindings to be accepted.
+No objection from me.
 
-Thanks,
-Krzysztof
+thanks,
+
+greg k-h
