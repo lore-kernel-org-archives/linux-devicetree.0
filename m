@@ -1,34 +1,72 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v3 0/3] input: pwm-beeper: add feature to set volume level
-Date: Thu, 19 Jan 2017 13:37:00 -0800
-Message-ID: <20170119213700.GC13542@dtor-ws>
-References: <0e2dec4d-7550-9495-f12a-020391183304@exceet.de>
- <cover.1484838551.git.frieder.schrempf@exceet.de>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
+Date: Thu, 19 Jan 2017 23:37:53 +0200
+Message-ID: <20170119213753.GC3205@valkosipuli.retiisi.org.uk>
+References: <20161228183036.GA13139@amd>
+ <20170111225335.GA21553@amd>
+ <20170112120603.6gwtpwhyuaynvlj3@tarshish>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <cover.1484838551.git.frieder.schrempf@exceet.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Frieder Schrempf <frieder.schrempf@exceet.de>
-Cc: robh@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, luis@debethencourt.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>
+In-Reply-To: <20170112120603.6gwtpwhyuaynvlj3@tarshish>
+Sender: linux-media-owner@vger.kernel.org
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Pavel Machek <pavel@ucw.cz>, robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 04:24:07PM +0100, Frieder Schrempf wrote:
-> Make the driver accept switching volume levels via sysfs.
-> This can be helpful if the beep/bell sound intensity needs
-> to be adapted to the environment of the device.
-> 
-> The number of volume levels available and their values can
-> be specified via device tree (similar to pwm-backlight).
-> 
-> The volume adjustment is done by changing the duty cycle of
-> the pwm signal.
+Hi Baruch,
 
-I wonder how this all will mesh up with beepers that have dedicated
-amplifiers (support is being added by David Lechner).
+On Thu, Jan 12, 2017 at 02:06:03PM +0200, Baruch Siach wrote:
+> Hi Pavel,
+> 
+> On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
+> > From: Sakari Ailus <sakari.ailus@iki.fi>
+> > 
+> > In the vast majority of cases the bus type is known to the driver(s)
+> > since a receiver or transmitter can only support a single one. There
+> > are cases however where different options are possible.
+> > 
+> > The existing V4L2 OF support tries to figure out the bus type and
+> > parse the bus parameters based on that. This does not scale too well
+> > as there are multiple serial busses that share common properties.
+> > 
+> > Some hardware also supports multiple types of busses on the same
+> > interfaces.
+> > 
+> > Document the CSI1/CCP2 property strobe. It signifies the clock or
+> > strobe mode.
+> >  
+> > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
+> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > index 9cd2a36..08c4498 100644
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -76,6 +76,11 @@ Optional endpoint properties
+> >    mode horizontal and vertical synchronization signals are provided to the
+> >    slave device (data source) by the master device (data sink). In the master
+> >    mode the data source device is also the source of the synchronization signals.
+> > +- bus-type: data bus type. Possible values are:
+> > +  0 - MIPI CSI2
+> > +  1 - parallel / Bt656
+> 
+> Why not have separate values for parallel and BT.656?
 
-Thanks.
+The current implementation of V4L2 OF support digs the information from
+other properties (hsync-active, vsync-active and field-even-active). If any
+of them are present, the bus is considered to be a regular parallel bus ---
+the Bt.656 has no such signals.
+
+CSI-2 bus is assumed if CSI-2 specific properties can be found. However,
+explicit bus type is needed as the type of the bus isn't anymore implicitly
+determinable with the addition of CSI-1 and CCP2 busses: they use the same
+properties.
 
 -- 
-Dmitry
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
