@@ -1,72 +1,84 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Thu, 19 Jan 2017 23:37:53 +0200
-Message-ID: <20170119213753.GC3205@valkosipuli.retiisi.org.uk>
+Date: Thu, 19 Jan 2017 23:49:06 +0200
+Message-ID: <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
 References: <20161228183036.GA13139@amd>
  <20170111225335.GA21553@amd>
- <20170112120603.6gwtpwhyuaynvlj3@tarshish>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170112120603.6gwtpwhyuaynvlj3@tarshish>
-Sender: linux-media-owner@vger.kernel.org
-To: Baruch Siach <baruch@tkos.co.il>
-Cc: Pavel Machek <pavel@ucw.cz>, robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org
+In-Reply-To: <20170111225335.GA21553@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Baruch,
+Hi Pavel,
 
-On Thu, Jan 12, 2017 at 02:06:03PM +0200, Baruch Siach wrote:
-> Hi Pavel,
+On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
+> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 > 
-> On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
-> > From: Sakari Ailus <sakari.ailus@iki.fi>
-> > 
-> > In the vast majority of cases the bus type is known to the driver(s)
-> > since a receiver or transmitter can only support a single one. There
-> > are cases however where different options are possible.
-> > 
-> > The existing V4L2 OF support tries to figure out the bus type and
-> > parse the bus parameters based on that. This does not scale too well
-> > as there are multiple serial busses that share common properties.
-> > 
-> > Some hardware also supports multiple types of busses on the same
-> > interfaces.
-> > 
-> > Document the CSI1/CCP2 property strobe. It signifies the clock or
-> > strobe mode.
-> >  
-> > Signed-off-by: Sakari Ailus <sakari.ailus@iki.fi>
-> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > index 9cd2a36..08c4498 100644
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -76,6 +76,11 @@ Optional endpoint properties
-> >    mode horizontal and vertical synchronization signals are provided to the
-> >    slave device (data source) by the master device (data sink). In the master
-> >    mode the data source device is also the source of the synchronization signals.
-> > +- bus-type: data bus type. Possible values are:
-> > +  0 - MIPI CSI2
-> > +  1 - parallel / Bt656
+> In the vast majority of cases the bus type is known to the driver(s)
+> since a receiver or transmitter can only support a single one. There
+> are cases however where different options are possible.
 > 
-> Why not have separate values for parallel and BT.656?
+> The existing V4L2 OF support tries to figure out the bus type and
+> parse the bus parameters based on that. This does not scale too well
+> as there are multiple serial busses that share common properties.
+> 
+> Some hardware also supports multiple types of busses on the same
+> interfaces.
+> 
+> Document the CSI1/CCP2 property strobe. It signifies the clock or
+> strobe mode.
+>  
+> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 9cd2a36..08c4498 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -76,6 +76,11 @@ Optional endpoint properties
+>    mode horizontal and vertical synchronization signals are provided to the
+>    slave device (data source) by the master device (data sink). In the master
+>    mode the data source device is also the source of the synchronization signals.
+> +- bus-type: data bus type. Possible values are:
+> +  0 - MIPI CSI2
+> +  1 - parallel / Bt656
+> +  2 - MIPI CSI1
+> +  3 - CCP2
 
-The current implementation of V4L2 OF support digs the information from
-other properties (hsync-active, vsync-active and field-even-active). If any
-of them are present, the bus is considered to be a regular parallel bus ---
-the Bt.656 has no such signals.
+Actually, thinking about this again --- we only need to explictly specify
+busses if we're dealing with either CCP2 or CSI-1. The vast majority of the
+actual busses are and continue to be CSI-2 or either parallel or Bt.656. As
+they can be implicitly detected, we would have an option to just drop values
+0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
+CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
+bus-type will need to be supported anyway.
 
-CSI-2 bus is assumed if CSI-2 specific properties can be found. However,
-explicit bus type is needed as the type of the bus isn't anymore implicitly
-determinable with the addition of CSI-1 and CCP2 busses: they use the same
-properties.
+>  - bus-width: number of data lines actively used, valid for the parallel busses.
+>  - data-shift: on the parallel data busses, if bus-width is used to specify the
+>    number of data lines, data-shift can be used to specify which data lines are
+> @@ -112,7 +117,8 @@ Optional endpoint properties
+>    should be the combined length of data-lanes and clock-lanes properties.
+>    If the lane-polarities property is omitted, the value must be interpreted
+>    as 0 (normal). This property is valid for serial busses only.
+> -
+> +- strobe: Whether the clock signal is used as clock or strobe. Used
+> +  with CCP2, for instance.
+
+How about the "ti,strobe-clock-inv" I proposed? No-one seems to know what
+this really truly means... or just drop it if it's not really needed.
 
 -- 
-Kind regards,
+Cheers,
 
 Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
