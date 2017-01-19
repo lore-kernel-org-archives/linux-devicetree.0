@@ -1,14 +1,14 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
-Date: Thu, 19 Jan 2017 12:35:40 -0200
-Message-ID: <CAOMZO5AdgM9eFnerLRdYxwE7gsOE5OvkWs6rCR4zta1XmXHj1A@mail.gmail.com>
-References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
- <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [PATCH 1/7] Documentation: arm: fix wrong reference number in DT
+ definition
+Date: Thu, 19 Jan 2017 14:37:51 +0000
+Message-ID: <20170119143757.14537-2-juri.lelli@arm.com>
+References: <20170119143757.14537-1-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
+In-Reply-To: <20170119143757.14537-1-juri.lelli@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,18 +18,37 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@armlinux.org.uk>, Javier Martinez Canillas <javier@osg.samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, juri.lelli@arm.com, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVXdlLAoKT24gVGh1LCBKYW4gMTksIDIwMTcgYXQgMTI6MTMgUE0sIFV3ZSBLbGVpbmUtS8O2
-bmlnCjx1LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+IHdyb3RlOgoKPiBXb3VsZCBpdCBi
-ZSBuaWNlIHRvIGFkZCBhIGNvbW1lbnQgYWJvdXQgd2h5IHRoaXMgd2FzIGFkZGVkPyBTb21ldGhp
-bmcgdG8KPiBwcmV2ZW50IGEgY2xlYW51cCBsaWtlICJyZW1vdmUgZW1wdHkgbm9kZXMgYW5kIGlu
-dmFsaWQgbWVtb3J5Cj4gY29uZmlndXJhdGlvbnMiLgoKRG8geW91IG1lYW4gc29tZXRoaW5nIGxp
-a2UgdGhpcz8KCi8qICJjaG9zZW4iIGFuZCAibWVtb3J5IiBub2RlcyBhcmUgbWFuZGF0b3J5ICov
-CmNob3NlbiB7fTsKbWVtb3J5IHsgZGV2aWNlX3R5cGUgPSAibWVtb3J5IjsgcmVnID0gPDAgMD47
-IH07CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+Reference to cpu capacity binding has a wrong number. Fix it.
+
+Reported-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a1bcfeed5f24..c27376a27a92 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -246,7 +246,7 @@ nodes to be present and contain the properties described below.
+ 		Usage: Optional
+ 		Value type: <u32>
+ 		Definition:
+-			# u32 value representing CPU capacity [3] in
++			# u32 value representing CPU capacity [4] in
+ 			  DMIPS/MHz, relative to highest capacity-dmips-mhz
+ 			  in the system.
+ 
+@@ -473,5 +473,5 @@ cpus {
+ [2] arm/msm/qcom,kpss-acc.txt
+ [3] ARM Linux kernel documentation - idle states bindings
+     Documentation/devicetree/bindings/arm/idle-states.txt
+-[3] ARM Linux kernel documentation - cpu capacity bindings
++[4] ARM Linux kernel documentation - cpu capacity bindings
+     Documentation/devicetree/bindings/arm/cpu-capacity.txt
+-- 
+2.10.0
