@@ -1,53 +1,143 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Wed, 18 Jan 2017 16:40:28 -0800
-Message-ID: <20170119004028.GA4857@codeaurora.org>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
- <587C88FE.2040900@ti.com>
- <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v5] ARM64: dts: meson-gx: Add firmware reserved memory
+ zones
+Date: Thu, 19 Jan 2017 02:18:27 +0100
+Message-ID: <eca803d3-1a67-cda5-554d-4313ae56635e@suse.de>
+References: <1484758245-9354-1-git-send-email-narmstrong@baylibre.com>
+ <2bdb6818-4620-53b1-112d-2d6a29e484d9@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170118182223.GP10531@minitux>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2bdb6818-4620-53b1-112d-2d6a29e484d9@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, xypron.glpk@gmx.de, khilman@baylibre.com, carlo@caione.org
+Cc: linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/18, Bjorn Andersson wrote:
-> On Tue 17 Jan 22:54 PST 2017, Vivek Gautam wrote:
-> > On 01/16/2017 02:19 PM, Kishon Vijay Abraham I wrote:
-> > > On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
-> [..]
-> > > > +		reset-names = "phy", "common", "cfg",
-> > > > +				"lane0", "lane1", "lane2";
-> > > Each lane has a separate clock, separate reset.. why not create sub-nodes for
-> > > each lane?
-> > 
-> > Yes, each lane has separate pipe clock and resets.
-> > I can have a binding such as written below.
+Am 19.01.2017 um 01:20 schrieb Andreas Färber:
+> Hi,
 > 
-> +1
+> Am 18.01.2017 um 17:50 schrieb Neil Armstrong:
+>> The Amlogic Meson GXBB/GXL/GXM secure monitor uses part of the memory space,
+>> this patch adds these reserved zones.
+>>
+>> Without such reserved memory zones, running the following stress command :
+>> $ stress-ng --vm 16 --vm-bytes 128M --timeout 10s
+>> multiple times:
+>>
+>> Could lead to the following kernel crashes :
+>> [   46.937975] Bad mode in Error handler detected on CPU1, code 0xbf000000 -- SError
+>> ...
+>> [   47.058536] Internal error: Attempting to execute userspace memory: 8600000f [#3] PREEMPT SMP
+>> ...
+>> Instead of the OOM killer.
+>>
 > 
-> > Does it makes sense to pull in the tx, rx and pcs offsets as well
-> > to the child node, and iomap the entire address space of the phy ?
-> > 
+> I miss a Fixes: or Cc: here for the backport you desired. To have it
+> fixed back to my very introduction:
 > 
-> Note that you don't have to follow the same structure in your device
-> driver as you describe your hardware in devicetree.
+> Fixes: 4f24eda8401f ("ARM64: dts: Prepare configs for Amlogic Meson GXBaby")
 > 
-> I would suggest that you replace the lane-offset and various lane
-> specific resources with subnodes, but keep the driver "as is".
+> People backporting it would need to handle the meson-{gx => gxbb}.dtsi
+> transition for 4.9 down to 4.6, which seems fairly straightforward.
+> 
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 18 ++++++++++++++++++
+>>  1 file changed, 18 insertions(+)
+>>
+>> Changes since v4 at [5]:
+>> - Move start of ddr memory to reserved-memory node
+>> - Drop memory node move
+>> - Fix typo in sizes
+>>
+>> Changes since resent v2 at [4]:
+>> - Fix invalid comment of useable memory attributes
+>>
+>> Changes since original v2 at [3]:
+>> - Typo in commit 2GiB -> 1GiB, 4GiB -> 2GiB
+>>
+>> Changes since v2 at [2]:
+>> - Moved all memory node out of dtsi
+>> - Added comment about useable memory
+>> - Fixed comment about secmon reserved zone
+>>
+>> Changes since v1 at [1] :
+>> - Renamed reg into linux,usable-memory to ovveride u-boot memory
+>> - only kept secmon memory zone
+>>
+>> [1] http://lkml.kernel.org/r/20161212101801.28491-1-narmstrong@baylibre.com
+>> [2] http://lkml.kernel.org/r/1483105232-6242-1-git-send-email-narmstrong@baylibre.com
+>> [3] http://lkml.kernel.org/r/1484128128-22454-1-git-send-email-narmstrong@baylibre.com
+>> [4] http://lkml.kernel.org/r/1484128540-22662-1-git-send-email-narmstrong@baylibre.com
+>> [5] http://lkml.kernel.org/r/1484129414-23325-1-git-send-email-narmstrong@baylibre.com
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> index eada0b5..63d52b7 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> @@ -55,6 +55,24 @@
+>>  	#address-cells = <2>;
+>>  	#size-cells = <2>;
+>>  
+>> +	reserved-memory {
+>> +		#address-cells = <2>;
+>> +		#size-cells = <2>;
+>> +		ranges;
+>> +
+>> +		/* 16 MiB reserved for Hardware ROM Firmware */
+>> +		hwrom: hwrom {
+> 
+> Both sub-nodes get a label that is unused, but reserved-memory itself
+> does not (my v4 remark). Intentional?
+> 
+>> +			reg = <0x0 0x0 0x0 0x1000000>;
+>> +			no-map;
+>> +		};
+>> +
+>> +		/* 2 MiB reserved for ARM Trusted Firmware (BL31) */
+>> +		secmon: secmon {
+> 
+> I note that this .dtsi further down has a node /firmware/secure-monitor
+> with label sm.
+> a) Is there any naming convention such as secmon_mem to adopt here to
+> avoid mixups with sm?
+> b) Should this secmon node be referenced in the secure-monitor node via
+> memory-node = <&secmon>; to model their connection, thereby giving the
+> label a use? Or should we maybe merge the two nodes by moving the
+> compatible string here?
+> 
+> https://git.kernel.org/cgit/linux/kernel/git/next/linux-next.git/tree/Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+
+Answering my own question: the example labels use _reserved suffix.
+
+>> +			reg = <0x0 0x10000000 0x0 0x200000>;
+
+And since we use a reg property here, the node name should get a unit
+address to avoid future dtc warnings/errors. Ditto for hwrom.
+
+>> +			no-map;
+>> +		};
+>> +	};
+>> +
+>>  	cpus {
+>>  		#address-cells = <0x2>;
+>>  		#size-cells = <0x0>;
+> 
+> Anyway, objection resolved,
+> 
+> Reviewed-by: Andreas Färber <afaerber@suse.de>
+> 
+> I don't expect breakage from these more confined additions, but I can
+> try to test tomorrow.
+> 
+> Thanks,
+> Andreas
 > 
 
-Didn't we already move away from subnodes for lanes in an earlier
-revision of these patches? I seem to recall we did that because
-lanes are not devices and the whole "phy as a bus" concept not
-making sense.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
