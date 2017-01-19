@@ -1,120 +1,97 @@
-From: Mason <slash.tmp@free.fr>
-Subject: Re: Initializing MAC address at run-time
-Date: Thu, 19 Jan 2017 16:31:56 +0100
-Message-ID: <79fef293-74ec-dece-1941-747cd55f1ca2@free.fr>
-References: <e083ed68-0e8e-380e-23bd-5ad387c88575@free.fr>
- <20170118185435.fen6np7lydzgxxek@pengutronix.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v2 2/4] clk: sunxi-ng: add support for
+ V3s CCU
+Date: Thu, 19 Jan 2017 16:41:28 +0100
+Message-ID: <20170119154128.hzhggymgg7uczpfo@lukather>
+References: <20170117200213.27eGY8hi@smtp3h.mail.yandex.net>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170118185435.fen6np7lydzgxxek@pengutronix.de>
-Content-Language: 
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, DT <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Kevin Hilman <khilman@kernel.org>, netdev <netdev@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="psx5bck5e4wnn5kr"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQF4QPCAKGQEYSKNA2Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170117200213.27eGY8hi-YjF/ssw8qq80PDqKvflMoHmW9unr2Ajn@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zepan <715805855-9uewiaClKEY@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Uwe,
 
-On 18/01/2017 19:54, Uwe Kleine-K=F6nig wrote:
+--psx5bck5e4wnn5kr
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, Jan 18, 2017 at 03:03:57PM +0100, Mason wrote:
->
->> When my system boots up, eth0 is given a seemingly random MAC address.
->>
->> [    0.950734] nb8800 26000.ethernet eth0: MAC address ba:de:d6:38:b8:38
->> [    0.957334] nb8800 26000.ethernet eth0: MAC address 6e:f1:48:de:d6:c4
->>
->>
->> The DT node for eth0 is:
->>
->> 	eth0: ethernet@26000 {
->> 		compatible =3D "sigma,smp8734-ethernet";
->> 		reg =3D <0x26000 0x800>;
->> 		interrupts =3D <38 IRQ_TYPE_LEVEL_HIGH>;
->> 		clocks =3D <&clkgen SYS_CLK>;
->> 	};
->>
->> Documentation/devicetree/bindings/net/ethernet.txt mentions
->> - local-mac-address: array of 6 bytes, specifies the MAC address that was
->>   assigned to the network device;
->>
->> And indeed, if I define this property, eth0 ends up with the MAC address
->> I specify in the device tree. But of course, I don't want all my boards
->> to share the same MAC address. Every interface has a unique MAC address.
->>
->> In fact, the boot loader (not Uboot, a custom non-DT boot loader) stores
->> the MAC address somewhere in MMIO space, in some weird custom format.
-> =
+On Wed, Jan 18, 2017 at 01:02:03AM +0800, Icenowy Zheng wrote:
+>=20
+> 2017=E5=B9=B41=E6=9C=8817=E6=97=A5 17:04=E4=BA=8E Maxime Ripard <maxime.r=
+ipard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
+> >
+> > Hi,=20
+> >
+> > On Tue, Jan 17, 2017 at 02:01:14AM +0800, Icenowy Zheng wrote:=20
+> > > V3s has a similar but cut-down CCU to H3.=20
+> > >=20
+> > > Add support for it.=20
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> > > ---=20
+> >
+> > Output from checkpatch:=20
+> > total: 5 errors, 2 warnings, 3 checks, 857 lines checked=20
+> >
+> > > I think I should make a comparsion between V3s and H3 CCU here:=20
+> > > (I won't mention the missing/added clocks here, only list conflicting=
+ clocks)=20
+> >
+> > That should be in your commit log.=20
+>=20
+> I think it can be easily get by a diff command :-)
+>=20
+> And we do not have the tradition to describe clock difference in
+> commit log, is it right?
 
-> Where does your machine get the dtb from? You write it to the boot
-> medium at a certain point of time I assume.
+In very low details, no, but still having the big picture is a good
+idea.
 
-The DTB is appended to the kernel uImage.
-(It's never written to the board's storage.)
+Maxime
 
-> So AFAICT you have the following options (in no particular order):
-> =
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
->  a) Describe in the dtb how to find out how the MAC address is stored
->     (already pointed out Mark and Robin)
->  b) Make your bootloader dt aware and let it provide the
->     local-mac-address property.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Do you agree that such boot loader would execute code that is roughly
-identical to the one posted for illustration purposes?
-  1. find the MAC address to use for eth0
-  2. find the eth0 node in the DT
-  3. insert the right prop in the eth0 node
+--psx5bck5e4wnn5kr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In which case, it seems a waste to add the DT library to the boot
-loader, when the operation can be done in Linux, which requires the
-DT library anyway. (Additionally, adding DT support to some custom
-legacy boot loader might be a complex task.)
+-----BEGIN PGP SIGNATURE-----
 
->  c) Adapt the dtb before it is written to the boot medium.
+iQIcBAEBCAAGBQJYgN4oAAoJEBx+YmzsjxAg3LsP/2Gfax1B4rYAprxZ2k92kUeq
+wwE7NdXjEzCoW8RV59RKKAJELxJq+It0+a7byjKqnuxes+kTE7+KvRDCpoWYYf2U
+RLy3IHgHnFgoKEgHt54HX3/9OqryQek3CeE5LwuzPSrrrTLC8ENMCDzEdlDWqaqa
+o32vr9qu8gy/E725xR7/jfsRgQva10UEUa83kQmGum9nuK2C3Cq2MNPRxxUDaJoN
+5POapjpxOF1UZqMAA3Z//6MRbgz8uiyr6TJZzAupW9oCMSQ07PmiG80oUztVhisv
+FjPCUq5qTlDsCWj8pWKbOIM27dTqFEoJ4ICM2RLj650Ukb4nkBABnYsDWWFwsDjA
+Pm/j0cdehwvWUemiT7hZ/qhacU38Z3azU1ZYF9UK86Pdrr++Zv4AzE79LfHORwd3
+eBPGMGA/ZZ8oslgD4vY02WSoyYewBtjQqh7A6HUyTPThWYKvynyfmVhiwLTLQMN/
+woG3AnbK2JQ490zDb0wVsOYS2Zp3rEDnbL3uUiuIONStfqySggk1+GZvUiXTfRbs
+7+JVwhCAV7YYe0uKP2YpPoEVV/BujReNOTNmQBnGQGZ9yg8CxwBsaGLN+BMuNBZZ
+h8dy0JmH9fva8lDYdLy0dR6S9tMiJAGJdCgfTp33d5wsb/ZPFWSviOSdIYN1EzlO
+NZbrelb1FhrrU4X76QYC
+=zGlR
+-----END PGP SIGNATURE-----
 
-This is not applicable, as the DTB is not written to the board.
-
->  d) Let the bootloader configure the device and teach the driver to pick
->     up the mac from the device's address space.
-
-I'm not sure what you call "the device" ?
-The local RAM where the MAC is stored? the eth controller?
-
->  e) Accept that the mac address is random during development, and make
->     Userspace configure the MAC address, which is early enough for
->     production use.
-
-During development, some devs configure the DHCP server to provide
-a specific uImage and/or rootfs to their board, based on the MAC
-address. This scheme would fall apart with a random MAC.
-
-> Not sure d) is considered ok today, but some drivers have this feature.
-> I'd say b) is the best choice.
-
-In my mind, doing it early in Linux is similar in spirit to doing it
-at the boot loader stage, in that it's neatly separated from the rest
-of the setup.
-
->> I need to do something similar with the NAND partitions. The boot loader
->> stores the partition offsets somewhere, and I need to pass this info
->> to the NAND framework, so I assumed that inserting the corresponding
->> properties at run-time was the correct way to do it.
-> =
-
-> The list of options here is similar to the list above. d) doesn't work,
-> but instead you can pass the partitioning on the kernel commandline.
-
-Yes, I will test the command line approach. Thanks.
-
-Regards.
+--psx5bck5e4wnn5kr--
