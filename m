@@ -1,152 +1,161 @@
-From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: dt: misc: Add Aspeed ast2400/2500
- LPC Control bindings
-Date: Thu, 19 Jan 2017 11:19:23 +1100
-Message-ID: <1484785163.4097.5.camel@gmail.com>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-3-cyrilbur@gmail.com>
-         <20170118211645.v54xvmxcsfzxior2@rob-hp-laptop>
+From: christopher.lee.bostic@gmail.com
+Subject: [PATCH v3 00/18] FSI device driver introduction
+Date: Wed, 18 Jan 2017 18:30:33 -0600
+Message-ID: <1484785833-24832-1-git-send-email-christopher.lee.bostic@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118211645.v54xvmxcsfzxior2@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+Cc: Christopher Bostic <christopher.lee.bostic@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-01-18 at 15:16 -0600, Rob Herring wrote:
-> On Thu, Jan 12, 2017 at 11:29:08AM +1100, Cyril Bur wrote:
-> > Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/misc/aspeed-lpc-ctrl.txt   | 78 ++++++++++++++++++++++
-> >  1 file changed, 78 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
-> > new file mode 100644
-> > index 000000000000..f84ac83211ec
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
-> > @@ -0,0 +1,78 @@
-> > +ASpeed LPC Control
-> > +==================
-> > +This binding defines the LPC control for ASpeed SoCs. Partitions of
-> > +the LPC bus can be access by other processors on the system, address
-> > +ranges on the bus can map accesses from another processor to regions
-> > +of the ASpeed SoC memory space.
-> > +
-> > +Reserved Memory:
-> > +================
-> > +The driver provides functionality to map the LPC bus to a region of
-> > +ASpeed ram. A phandle to a reserved memory node must be provided so
-> > +that the driver can safely use this region.
-> > +
-> > +Flash:
-> > +======
-> > +The driver provides functionality to unmap the LPC bus from ASpeed
-> > +RAM, historically the default mapping has been to the SPI flash
-> > +controller on the ASpeed SoC, a phandle to this node should be
-> > +supplied.
-> > +
-> > +Device Node:
-> > +============
-> > +
-> > +As LPC bus configuration registers are at the start of the LPC bus
-> > +memory space, it makes most sense for the device to be within the LPC
-> > +host node. See Documentation/devicetree/bindings/mfd/aspeed-lpc.txt
-> > +for more information. This does not have to be the case, provided the
-> > +reg property can give the full address of the LPC bus.
-> 
-> Same comment here.
-> 
+From: Christopher Bostic <christopher.lee.bostic@gmail.com>
 
-Hi Rob,
+Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
+driver. FSI is a high fan out serial bus consisting of a clock and a serial
+data line capable of running at speeds up to 166 MHz.
 
-Yes, thanks.
+This set provides the basic framework to add FSI extensions to the
+Linux bus and device models. Master specific implementations are
+defined to utilize the core FSI function.
 
-> > +
-> > +Required properties:
-> > +--------------------
-> > +
-> > +- compatible:		"aspeed,ast2400-lpc-ctrl" for ASpeed ast2400 SoCs
-> > +					"aspeed,ast2500-lpc-ctrl" for ASpeed ast2500 SoCs
-> > +
-> > +- reg:				Location and size of the configuration registers
-> > +					for the LPC bus. Note that if the device node is
-> > +					within the LPC host node then base is relative to
-> > +					that.
-> > +
-> > +- memory-region:	phandle of the reserved memory region
-> > +- flash:			phandle of the SPI flash controller
-> > +
-> > +Example:
-> > +--------
-> > +
-> > +reserved-memory {
-> > +	#address-cells = <1>;
-> > +	#size-cells = <1>;
-> > +	ranges;
-> > +
-> > +	...
-> > +
-> > +	flash_memory: region@54000000 {
-> > +		compatible = "aspeed,ast2400-lpc-ctrl";
-> 
-> This doesn't look right?
-> 
+In Linux, we have a core FSI "bus type", along with drivers for FSI
+masters and engines.
 
-Correct, my mistake, I'll remove.
+The FSI master drivers expose a read/write interface to the bus address
+space. The master drivers are under drivers/fsi/fsi-master-*.c.
 
-> > +		no-map;
-> > +		reg = <0x54000000 0x04000000>; /* 64M */
-> 
-> Is this system RAM? reserved-memory is generally for carveouts in system 
-> RAM (e.g. the memory node).
-> 
+The core handles probing and discovery of slaves and slave
+engines, using those read/write interfaces. It is responsible for
+creating the endpoint Linux devices corresponding to the discovered
+engines on each slave.
 
-Yes it will be a chunk of system RAM. Our intended use case is to use
-system ram to buffer host accesses to system flash (on the bmc). This
-provides control over concurrent access to the flash and place to add
-security measures to prevent the host from backdooring through the
-flash. With the use of a protocol through the platform mailbox.
+Slave engines are identified by an 'engine' type, and an optional
+version. Engine, a.k.a. client, drivers are matched and bound to these
+engines during discovery.
 
-Having said that I don't want to limit myself to just that - there has
-been other ideas for a host<->bmc ram buffer which may or may not see
-the light of day.
+This patch set does not include extended FSI function such as:
+    *  Hub master support
+    *  Cascaded master support
+    *  Application layer hot plug notification
+    *  Application layer FSI bus status interface
 
-I hope that makes sense,
+Common FSI terminology:
 
-Thanks for the review,
+* Master
+    Controller of the FSI bus.  Only the master is allowed to control the
+    clock line and is the initiator of all transactions on a bus.
 
-Cyril
+* Slave
+    The receiver or target of a master initiated transaction.  The slave
+    cannot initiate communications on a bus and must respond to any
+    master requests for data.
 
-> > +	};
-> > +};
-> > +
-> > +host_pnor: spi@1e630000 {
-> > +	reg = < 0x1e630000 0x18
-> > +			0x30000000 0x02000000 >;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	compatible = "aspeed,ast2400-smc";
-> > +
-> > +	...
-> > +
-> > +};
-> > +
-> > +lpc-ctrl@0 {
-> > +	compatible = "aspeed,ast2400-lpc-ctrl";
-> > +	memory-region = <&flash_memory>;
-> > +	flash = <&host_pnor>;
-> > +	reg = <0x0 0x80>;
-> > +};
-> > +
-> > -- 
-> > 2.11.0
-> > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* CFAM
+    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
+    ASIC residing in any device requiring FSI communications. CFAMs
+    consist of an array of hardware 'engines' used for various purposes.
+    I2C masters, UARTs, General Purpose IO hardware are common types of
+    these engines.
+
+* Configuration Space / Table
+    A table contained at the beginning of each CFAM address space.
+    This table lists information such as the CFAM's ID, which engine types
+    and versions it has available, as well as its addressing range.
+
+* FSI Engine driver
+    A device driver that registers with the FSI core so that it can access
+    devices it owns on an FSI bus.
+
+Chris Bostic (8):
+  drivers/fsi: Kick off master scan via sysfs
+  drivers/fsi: Set up links for slave communication
+  drivers/fsi: Set slave SMODE to init communication
+  drivers/fsi: Remove all scanned devices during master unregister
+  drivers/fsi: Add FSI bus documentation
+  drivers/fsi: Add documentation for GPIO based FSI master
+  drivers/fsi: Document FSI master sysfs files in ABI
+  drivers/fsi: Add GPIO based FSI master
+
+Jeremy Kerr (10):
+  drivers/fsi: Add empty fsi bus definitions
+  drivers/fsi: Add device & driver definitions
+  drivers/fsi: add driver to device matches
+  drivers/fsi: Add fsi master definition
+  drivers/fsi: Add slave definition
+  drivers/fsi: Add empty master scan
+  drivers/fsi: Add FSI crc calculators to library
+  drivers/fsi: Implement slave initialisation
+  drivers/fsi: scan slaves & register devices
+  drivers/fsi: Add device read/write/peek functions
+
+Changes for v3:
+    - Patch set contained an invalid 18/18 test patch not
+      meant for community review, corrected.
+
+Changes for v2:
+    - Change from atomic global for master number to ida simple
+      interface.
+    - Add valid pointer checks on register and unregister utils.
+    - Move CRC calculation utilities out of driver to lib path.
+    - Clean up white space issues.
+    - Remove added list management of master devices and use
+      instead the device_for_each_child method available in the
+      bus.
+    - Add new patch to document FSI bus functionality.
+    - Add new patch documenting FSI gpio master.
+    - Rearrage patch set to have documentation earlier than code
+      implementing it.
+    - Document all compatible strings used in device tree bindings.
+    - Elaborate documentation definition of FSI GPIO master.
+    - Describe in more detail what each GPIO FSI master pin is for.
+    - Re-order compatible strings in example binding so that most
+      specific device comes first.
+    - Indicate proper activation order of all FSI GPIO master pins.
+    - Fix an unmatched '>' bracket in the example for binding.
+    - Bracket each element of the example bindings individually.
+    - Add new patch documenting sysfs-bus-fsi attributes.
+    - Merge FSI GPIO master init into probe function.
+    - Set pin initial values at time of pin request.
+    - Assign value of master->master.dev at probe time.
+    - Use get_optional interface for all optional GPIO pins.
+
+ Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
+ .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
+ Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/fsi/Kconfig                                |  23 +
+ drivers/fsi/Makefile                               |   3 +
+ drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
+ drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
+ drivers/fsi/fsi-master.h                           |  39 ++
+ include/linux/crc-fsi.h                            |  29 ++
+ include/linux/fsi.h                                |  60 +++
+ lib/Makefile                                       |   1 +
+ lib/crc-fsi.c                                      |  39 ++
+ 14 files changed, 1352 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+ create mode 100644 drivers/fsi/Kconfig
+ create mode 100644 drivers/fsi/Makefile
+ create mode 100644 drivers/fsi/fsi-core.c
+ create mode 100644 drivers/fsi/fsi-master-gpio.c
+ create mode 100644 drivers/fsi/fsi-master.h
+ create mode 100644 include/linux/crc-fsi.h
+ create mode 100644 include/linux/fsi.h
+ create mode 100644 lib/crc-fsi.c
+
+-- 
+1.8.2.2
