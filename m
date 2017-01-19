@@ -1,32 +1,59 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Thu, 19 Jan 2017 10:02:44 +0000
-Message-ID: <20170119100244.GX27312@n2100.armlinux.org.uk>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of/unittest: Swap arguments of of_unittest_apply_overlay()
+Date: Thu, 19 Jan 2017 11:06:16 +0100
+Message-ID: <20170119100616.4679-1-alexander.sverdlin@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170113091222.7132-4-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kalyan Kinthada <kalyan.kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 13, 2017 at 10:12:18PM +1300, Chris Packham wrote:
-> +static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] = {
-> +	MPP_FUNC_CTRL(0, 32, NULL, armada_xp_mpp_ctrl),
-> +};
+Function signature
 
-As Linus has taken my mvebu pinctrl series, this will need to be
-changed to "mvebu_mmio_mpp_ctrl" rather than "armada_xp_mpp_ctrl"
-when it's merged.
+  of_unittest_apply_overlay(int unittest_nr, int overlay_nr, ...
 
+and call sites, like in of_unittest_apply_overlay_check():
+
+  ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, ...
+
+do not match. Fix this in one place (function signature).
+The only affected test case is 15, which supplies non-existing
+overlay number 16, but two bugs matched here. Fix the test case.
+
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ drivers/of/unittest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 53c83d66eb7e..66bfa8d674ce 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -1181,7 +1181,7 @@ static void of_unittest_destroy_tracked_overlays(void)
+ 	} while (defers > 0);
+ }
+ 
+-static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
++static int of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
+ 		int *overlay_id)
+ {
+ 	struct device_node *np = NULL;
+@@ -1840,7 +1840,7 @@ static void of_unittest_overlay_i2c_15(void)
+ 	int ret;
+ 
+ 	/* device should enable */
+-	ret = of_unittest_apply_overlay_check(16, 15, 0, 1, I2C_OVERLAY);
++	ret = of_unittest_apply_overlay_check(15, 15, 0, 1, I2C_OVERLAY);
+ 	if (ret != 0)
+ 		return;
+ 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
