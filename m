@@ -1,153 +1,102 @@
 From: Jagan Teki <jagan@openedev.com>
-Subject: [PATCH v2 2/3] ARM: dts: imx6ul: Add Engicam Is.IoT MX6UL eMMC initial support
-Date: Fri, 20 Jan 2017 00:09:34 +0100
-Message-ID: <1484867375-22411-2-git-send-email-jagan@openedev.com>
-References: <1484867375-22411-1-git-send-email-jagan@openedev.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484867375-22411-1-git-send-email-jagan@openedev.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH v2 1/3] ARM: dts: imx6qdl: Fix "ERROR: code indent should use
+ tabs where possible"
+Date: Fri, 20 Jan 2017 00:09:33 +0100
+Message-ID: <1484867375-22411-1-git-send-email-jagan@openedev.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+Cc: devicetree@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Engicam Is.IoT MX6UL has separate module for eMMC, so add emmc dts
-file for imx6ul-isiot.dtsi, usdhc2 node represent eMMC.
+Fixed code indent tabs in respetcive imx6qdl dtsi files and
+also add space on imx6qdl-icore-rqs.dtsi on usdhc bus-width nodes.
 
-dmesg:
------
-mmc1: SDHCI controller on 2194000.usdhc [2194000.usdhc] using ADMA
-mmc1: new DDR MMC card at address 0001
-mmcblk1: mmc1:0001 M62704 3.53 GiB
-
-Cc: Matteo Lisi <matteo.lisi@engicam.com>
-Cc: Michael Trimarchi <michael@amarulasolutions.com>
-Cc: Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v2:
-- Newly added with the reference of '[PATCH 1/2] ARM: dts: imx6ul-isiot: Add eMMC node'
+- none
 
- arch/arm/boot/dts/Makefile                         |  2 +-
- arch/arm/boot/dts/imx6ul-isiot-emmc.dts            | 77 ++++++++++++++++++++++
- .../dts/{imx6ul-isiot.dts => imx6ul-isiot.dtsi}    |  3 -
- 3 files changed, 78 insertions(+), 4 deletions(-)
- create mode 100644 arch/arm/boot/dts/imx6ul-isiot-emmc.dts
- rename arch/arm/boot/dts/{imx6ul-isiot.dts => imx6ul-isiot.dtsi} (97%)
+ arch/arm/boot/dts/imx6qdl-gw52xx.dtsi    | 2 +-
+ arch/arm/boot/dts/imx6qdl-gw53xx.dtsi    | 2 +-
+ arch/arm/boot/dts/imx6qdl-gw552x.dtsi    | 2 +-
+ arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fa68843..f2c9545 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -435,7 +435,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
- dtb-$(CONFIG_SOC_IMX6UL) += \
- 	imx6ul-14x14-evk.dtb \
- 	imx6ul-geam-kit.dtb \
--	imx6ul-isiot.dtb \
-+	imx6ul-isiot-emmc.dtb \
- 	imx6ul-liteboard.dtb \
- 	imx6ul-pico-hobbit.dtb \
- 	imx6ul-tx6ul-0010.dtb \
-diff --git a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
-new file mode 100644
-index 0000000..f5b4228
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
-@@ -0,0 +1,77 @@
-+/*
-+ * Copyright (C) 2016 Amarula Solutions B.V.
-+ * Copyright (C) 2016 Engicam S.r.l.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License
-+ *     version 2 as published by the Free Software Foundation.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx6ul-isiot.dtsi"
-+
-+/ {
-+	model = "Engicam Is.IoT MX6UL eMMC Starter kit";
-+	compatible = "engicam,imx6ul-isiot", "fsl,imx6ul";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	cd-gpios = <&gpio4 5 GPIO_ACTIVE_LOW>;
-+	bus-width = <8>;
-+	no-1-8-v;
-+	status = "okay";
-+};
-+
-+&iomuxc {
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6UL_PAD_NAND_RE_B__USDHC2_CLK      0x17070
-+			MX6UL_PAD_NAND_WE_B__USDHC2_CMD      0x10070
-+			MX6UL_PAD_NAND_DATA00__USDHC2_DATA0  0x17070
-+			MX6UL_PAD_NAND_DATA01__USDHC2_DATA1  0x17070
-+			MX6UL_PAD_NAND_DATA02__USDHC2_DATA2  0x17070
-+			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3  0x17070
-+			MX6UL_PAD_NAND_DATA04__USDHC2_DATA4  0x17070
-+			MX6UL_PAD_NAND_DATA05__USDHC2_DATA5  0x17070
-+			MX6UL_PAD_NAND_DATA06__USDHC2_DATA6  0x17070
-+			MX6UL_PAD_NAND_DATA07__USDHC2_DATA7  0x17070
-+			MX6UL_PAD_NAND_ALE__USDHC2_RESET_B   0x17070
-+		>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6ul-isiot.dts b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-similarity index 97%
-rename from arch/arm/boot/dts/imx6ul-isiot.dts
-rename to arch/arm/boot/dts/imx6ul-isiot.dtsi
-index 077bc26..edfa0ab 100644
---- a/arch/arm/boot/dts/imx6ul-isiot.dts
-+++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
-@@ -47,9 +47,6 @@
- #include "imx6ul.dtsi"
+diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+index b6078b1..91991d6 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+@@ -235,7 +235,7 @@
  
- / {
--	model = "Engicam Is.IoT MX6UL Starter kit";
--	compatible = "engicam,imx6ul-isiot", "fsl,imx6ul";
--
- 	memory {
- 		reg = <0x80000000 0x20000000>;
- 	};
+ 			/* VDD_1P8 (1+R1/R2 = 2.505): GPS/VideoIn/ENET-PHY */
+ 			reg_1p8v: sw2 {
+-                                regulator-name = "vdd1p8";
++				regulator-name = "vdd1p8";
+ 				regulator-min-microvolt = <1033310>;
+ 				regulator-max-microvolt = <2004000>;
+ 				lltc,fb-voltage-divider = <301000 200000>;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+index 19cf036..a208e7e 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+@@ -227,7 +227,7 @@
+ 
+ 			/* VDD_1P8 (1+R1/R2 = 2.505): GPS/VideoIn/ENET-PHY */
+ 			reg_1p8v: sw2 {
+-                                regulator-name = "vdd1p8";
++				regulator-name = "vdd1p8";
+ 				regulator-min-microvolt = <1033310>;
+ 				regulator-max-microvolt = <2004000>;
+ 				lltc,fb-voltage-divider = <301000 200000>;
+diff --git a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+index 90200fa..67613dd 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw552x.dtsi
+@@ -162,7 +162,7 @@
+ 
+ 			/* VDD_1P8 (1+R1/R2 = 2.505): ENET-PHY */
+ 			reg_1p8v: sw2 {
+-                                regulator-name = "vdd1p8";
++				regulator-name = "vdd1p8";
+ 				regulator-min-microvolt = <1033310>;
+ 				regulator-max-microvolt = <2004000>;
+ 				lltc,fb-voltage-divider = <301000 200000>;
+diff --git a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+index d5c3aa8..6e29d8b 100644
+--- a/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-icore-rqs.dtsi
+@@ -223,7 +223,7 @@
+ 	pinctrl-2 = <&pinctrl_usdhc3_200mhz>;
+ 	vmcc-supply = <&reg_sd3_vmmc>;
+ 	cd-gpios = <&gpio1 1 GPIO_ACTIVE_LOW>;
+-	bus-witdh=<4>;
++	bus-witdh = <4>;
+ 	no-1-8-v;
+ 	status = "okay";
+ };
+@@ -234,7 +234,7 @@
+ 	pinctrl-1 = <&pinctrl_usdhc4_100mhz>;
+ 	pinctrl-2 = <&pinctrl_usdhc4_200mhz>;
+ 	vmcc-supply = <&reg_sd4_vmmc>;
+-	bus-witdh=<8>;
++	bus-witdh = <8>;
+ 	no-1-8-v;
+ 	non-removable;
+ 	status = "okay";
 -- 
 1.9.1
