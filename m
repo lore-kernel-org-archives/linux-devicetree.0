@@ -1,84 +1,131 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Thu, 19 Jan 2017 23:49:06 +0200
-Message-ID: <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
+From: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v2 4/5] DT bindings documentation for Synopsys UDC platform
+ driver
+Date: Thu, 19 Jan 2017 13:55:44 -0800
+Message-ID: <87d20899-9e79-5d10-f6c0-c443f586c2e6@broadcom.com>
+References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1484640308-25976-5-git-send-email-raviteja.garimella@broadcom.com>
+ <20170119173659.jeao5pqtlepmidek@rob-hp-laptop>
+ <f86f32cd-8fed-c30f-d647-8f7992013458@broadcom.com>
+ <95544a16-08aa-f983-465c-e557b4d3785e@gmail.com>
+ <dce7e46f-66f7-7c8d-182d-ba8347082b52@broadcom.com>
+ <efabd5cc-eafb-0887-852e-24b0f52019cf@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170111225335.GA21553@amd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <efabd5cc-eafb-0887-852e-24b0f52019cf-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
 
-On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
-> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+
+On 1/19/2017 12:17 PM, Florian Fainelli wrote:
+> On 01/19/2017 12:07 PM, Scott Branden wrote:
+>> Hi Florian,
+>>
+>> On 17-01-19 11:40 AM, Florian Fainelli wrote:
+>>> On 01/19/2017 11:30 AM, Scott Branden wrote:
+>>>> Hi Rob,
+>>>>
+>>>> On 17-01-19 09:36 AM, Rob Herring wrote:
+>>>>> On Tue, Jan 17, 2017 at 01:35:07PM +0530, Raviteja Garimella wrote:
+>>>>>> This patch adds device tree bindings documentation for Synopsys
+>>>>>> USB device controller platform driver.
+>>>>>
+>>>>> Bindings describe h/w, not drivers.
+>>>>>>
+>>>>>> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/usb/snps,dw-ahb-udc.txt    | 27
+>>>>>> ++++++++++++++++++++++
+>>>>>>  1 file changed, 27 insertions(+)
+>>>>>>  create mode 100644
+>>>>>> Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>>>>>> b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..0c18327
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
+>>>>>> @@ -0,0 +1,27 @@
+>>>>>> +Synopsys USB Device controller.
+>>>>>> +
+>>>>>> +The device node is used for Synopsys Designware Cores AHB
+>>>>>> +Subsystem Device Controller (UDC).
+>>>>>> +
+>>>>>> +This device node is used by UDCs integrated it Broadcom's
+>>>>>> +Northstar2 and Cygnus SoC's.
+>>>>>
+>>>>> You need compatible strings for these in addition.
+>>>>>
+>>>> We don't need compatibility strings when an IP block is integrated into
+>>>> an SoC.  Otherwise each time we add the IP block to a new SoC we would
+>>>> need to update ever linux driver that supports that SoC.  That doesn't
+>>>> make sense?
+>>>
+>>> You probably do need such a thing, here is how the compatible strings
+>>> for IP blocks integrated into SoCs could be used:
+>>>
+>>> - provide a compatible strings which describes exactly the integration
+>>> of this peripheral into a given SoC, e.g: brcm,udc-ns2, the reason for
+>>> that is that you want to be able to capture the specific IP block
+>>> integration into a specific SoC and all its quirks
+>>>
+>>> - if the block has its own revision scheme (and it can be relied on),
+>>> provide it: brcm,udc-v1.2 and that is probably the most meaningful
+>>> compatible string for a client program here
+>>>
+>>> - have a some kind of fallback/catchall compatible string that describes
+>>> the block: brcm,udc which may also work just fine, although is not
+>>> preferred
+>>>
+>>> Defining compatible strings is meant to avoid making (possibly
+>>> incompatible) Device Tree binding changes in the future, and you always
+>>> have the liberty as a client program (OS, bootloader) to match only the
+>>> compatible strings you care about, from the most specific (which
+>>> includes the exact SoC) to the least specific.
+>>>
+>>> The key thing is that, if the full set of compatible strings are present
+>>> and available, you can retroactively fix your driver to be more
+>>> specific, very much less so your Device Tree blob (although there is
+>>> disagreement).
+>>>
+>> The driver stands alone from the SoC and does not need compatibility
+>> strings per SoC.  New SoCs will use the exact same block.
 > 
-> In the vast majority of cases the bus type is known to the driver(s)
-> since a receiver or transmitter can only support a single one. There
-> are cases however where different options are possible.
+> Even if you take the exact same block and put it in a different SoC,
+> that's still an integration work that 99% of the time goes just fine
+> because the validation worked great, and the 1% of the time where you
+> need to capture an integration bug, you are glad this SoC-specific
+> compatible string exists such that you can work around it in the driver.
+
+That's a very conservative estimate. Based on my experience, it's more
+like 50/50, i.e., roughly half of the time we found SoC integration
+specific quirks or workaround are needed.
+
 > 
-> The existing V4L2 OF support tries to figure out the bus type and
-> parse the bus parameters based on that. This does not scale too well
-> as there are multiple serial busses that share common properties.
+> One way to solve that is to use SoC specific compatible strings because
+> that presents itself as a self-contained and standardized way, or you
+> can have your driver call into a piece of code that reads the SoC
+> type/revision, but AFAICT this seems to be frowned upon because it
+> presents some kind of layering violation.
 > 
-> Some hardware also supports multiple types of busses on the same
-> interfaces.
+>>
+>> We don't add compatibility strings to any other drivers when we add the
+>> same block to a new SoC.
 > 
-> Document the CSI1/CCP2 property strobe. It signifies the clock or
-> strobe mode.
->  
-> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Ideally we would define new compatible strings for each new SoC we tape
+> out, yet don't necessarily match them in client programs, but just
+> define them as a safeguard in case something went wrong at the
+> integration stage that is discovered after the fact.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> index 9cd2a36..08c4498 100644
-> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -76,6 +76,11 @@ Optional endpoint properties
->    mode horizontal and vertical synchronization signals are provided to the
->    slave device (data source) by the master device (data sink). In the master
->    mode the data source device is also the source of the synchronization signals.
-> +- bus-type: data bus type. Possible values are:
-> +  0 - MIPI CSI2
-> +  1 - parallel / Bt656
-> +  2 - MIPI CSI1
-> +  3 - CCP2
-
-Actually, thinking about this again --- we only need to explictly specify
-busses if we're dealing with either CCP2 or CSI-1. The vast majority of the
-actual busses are and continue to be CSI-2 or either parallel or Bt.656. As
-they can be implicitly detected, we would have an option to just drop values
-0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
-CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
-bus-type will need to be supported anyway.
-
->  - bus-width: number of data lines actively used, valid for the parallel busses.
->  - data-shift: on the parallel data busses, if bus-width is used to specify the
->    number of data lines, data-shift can be used to specify which data lines are
-> @@ -112,7 +117,8 @@ Optional endpoint properties
->    should be the combined length of data-lanes and clock-lanes properties.
->    If the lane-polarities property is omitted, the value must be interpreted
->    as 0 (normal). This property is valid for serial busses only.
-> -
-> +- strobe: Whether the clock signal is used as clock or strobe. Used
-> +  with CCP2, for instance.
-
-How about the "ti,strobe-clock-inv" I proposed? No-one seems to know what
-this really truly means... or just drop it if it's not really needed.
-
--- 
-Cheers,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
