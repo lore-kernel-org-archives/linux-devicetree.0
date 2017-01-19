@@ -1,108 +1,103 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] fbdev/ssd1307fb: add support to enable VBAT
-Date: Thu, 19 Jan 2017 15:15:12 +0200
-Message-ID: <754f3644-a157-bb90-1494-aba4fc1264f8@ti.com>
-References: <cover.1484303628.git.jsarha@ti.com>
- <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha@ti.com>
- <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Thu, 19 Jan 2017 08:18:41 -0600
+Message-ID: <CAL_Jsq+S-FYy4SmjJ3fWzBugw2zCj5TQkkfUA8QVL7SLJW3E1g@mail.gmail.com>
+References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+ <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com> <20170113172825.75d545a3@bbrezillon>
+ <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com> <20170113175628.1793f433@bbrezillon>
+ <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com> <20170114092958.022f2fc8@bbrezillon>
+ <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com> <20170116094032.6f471f11@bbrezillon>
+ <20170117143650.5db87148@free-electrons.com> <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
+ <20170119103829.524ce715@free-electrons.com> <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ@mail.gmail.com>
+ <20170119091428.598eb987@bbrezillon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature";
-        boundary="Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170119091428.598eb987@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Guochun Mao <guochun.mao@mediatek.com>, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm
-Content-Type: multipart/mixed; boundary="Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV";
- protected-headers="v1"
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
- b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org,
- bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Message-ID: <754f3644-a157-bb90-1494-aba4fc1264f8-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] fbdev/ssd1307fb: add support to enable VBAT
-References: <cover.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
- <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
- <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
-In-Reply-To: <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
-
---Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-
-On 19/01/17 00:33, Rob Herring wrote:
-> On Fri, Jan 13, 2017 at 12:35:48PM +0200, Jyri Sarha wrote:
->> From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+On Thu, Jan 19, 2017 at 2:14 AM, Boris Brezillon
+<boris.brezillon@free-electrons.com> wrote:
+> Hi Rob,
+>
+> On Wed, 18 Jan 2017 20:51:08 -0600
+> Rob Herring <robh@kernel.org> wrote:
+>
+>> On Wed, Jan 18, 2017 at 5:38 PM, Thomas Petazzoni
+>> <thomas.petazzoni@free-electrons.com> wrote:
+>> > Hello,
+>> >
+>> > On Wed, 18 Jan 2017 16:20:10 -0600, Rob Herring wrote:
+>> >
+>> >> > > Rob, Mark, any opinion?
+>> >> >
+>> >>
+>> >> Sigh, is how to do compatibles really not yet understood?
+>> >
+>> > Well, it seems like not everyone necessarily understands what is the
+>> > best strategy to adopt (me included).
+>> >
+>> >> > I agree that a clarification would be good. There are really two
+>> >> > options:
+>> >> >
+>> >> >  1. Have two compatible strings in the DT, the one that matches the
+>> >> >     exact SoC where the IP is found (first compatible string) and the
+>> >> >     one that matches some other SoC where the same IP is found (second
+>> >> >     compatible string). Originally, Linux only supports the second
+>> >> >     compatible string in its device driver, but if it happens that a
+>> >> >     difference is found between two IPs that we thought were the same,
+>> >> >     we can add support for the first compatible string in the driver,
+>> >> >     with a slightly different behavior.
+>> >>
+>> >> This. And no wildcards in the compatible string.
+>> >
+>> > OK. So it means that today we do something like:
+>> >
+>> >         compatible = "baz,foo-12", "baz,foo-00";
+>> >
+>> > and support only baz,foo-00 in the driver. If tomorrow we discover
+>> > that there is in fact a difference between the two IP blocks, we can
+>> > add support for baz,foo-12 in the driver, and handle the differences.
+>> >
+>> > But then, the DT still contains:
+>> >
+>> >         compatible = "baz,foo-12", "baz,foo-00";
+>> >
+>> > and therefore pretends that the IP block is compatible with
+>> > "baz,foo-00" which is in fact *not* the case. It was a mistake to
+>> > consider it as compatible. So we keep living with a DT that has
+>> > incorrect information.
 >>
->> SSD1306 needs VBAT when it is wired in charge pump configuration. This=
+>> I wouldn't say it's a mistake necessarily. The old compatible would
+>> probably work to some extent. I'd assume it was tested to some level.
+>> Or it could be other changes exposing a difference.
+>
+> One last question and I'm done: is something like that acceptable?
+>
+>         compatible = "<vendor>,<old-soc>","<vendor>,<new-soc>";
+>
+> This can happen when someone adds support for an unsupported feature
+> on a brand new SoC, and then someone else use the same driver for an
+> older SoC embedding the same IP but still wants to add a new compatible
+> just in case these 2 IPs appear to be slightly different.
 
->> patch adds support to the driver to enable VBAT regulator at init time=
-=2E
->>
->> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
->> Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/display/ssd1307fb.txt        |  1 +
->>  drivers/video/fbdev/ssd1307fb.c                      | 20 +++++++++++=
-++++++++-
->>  2 files changed, 20 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b=
-/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> index 6617df6..209d931 100644
->> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
->> @@ -16,6 +16,7 @@ Required properties:
->>  Optional properties:
->>    - reset-gpios: The GPIO used to reset the OLED display, if availabl=
-e. See
->>                   Documentation/devicetree/bindings/gpio/gpio.txt for =
-details.
->> +  - vbat-supply: The supply for VBAT
->=20
-> According to the datasheet, SSD1307 has 2 supplies: Vdd and Vcc
->=20
-> I don't see any mention of a charge pump, so that must be an external=20
-> component.
+Yes, it's old and new compatible strings in this case and it's newest
+compatible string first.
 
-VBAT is for SSD1306. Perhaps the DT doc should mention it.
+> Here the order of compat strings is no longer following a clear rule
+> like 'most-specific compatible first' or 'newest IP/SoC version first',
+> it's completely dependent on the order these IPs were supported in the
+> OS (Linux). I'm perfectly fine with that BTW, just want to make sure
+> this is authorized.
 
- Tomi
+I guess we should say "newest compatible for IP first" instead. There
+are some exceptions where we add fallbacks later on, but that falls
+under the most-specific part.
 
+It's order that the bindings are defined, not Linux support really,
+but in practice those are the same.
 
---Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV--
-
---Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYgLvgAAoJEPo9qoy8lh717r4P/Ra3s7JLrp+KgH8lBmcyuXNJ
-8muDEaI8ltQ/f4+U7pc78voU4C+Xbh4eItgOO6t0vT5hMkbKuJeWogs305Tbc5Xn
-MymvbtF4A3Bn24APABHJASJOSbKmAF/snfl3D+SAk1fbyQ49ZvMW+RJEDmFNbJyG
-tV1m0XRwusn+KsidL3GAfLUBh3NaBUfE0wSkzizKTXekEKli5z9yft7rhltUUs2U
-ii1LtXwerGCb5ZI2P6q3/n70Oaxqp00dm87qmubUJXuPLN0jdMOIjG06pjEHZEbD
-HiDyOUYpijV5g6CTQOFVGq+y4z2cqfpFXz2v04d9JfB1vXLE3JI2N665X3DT5EWh
-kKaN3h1LvJ6Jq/he1pobCV+qW7/1vWys4EIv0nw5sMN1AHSNrR2hZEVVmhm3mBs+
-6lW7iQ8cXPtqO57lFDEdJce4MFrSqjOxa9bAUqXRp6+Qb2kGlgduRkLcGj+dyygP
-Xcr0+h8BuRdEVR3ukRKr+vn/dAhRxRXcP6EY9vFkswEfn9eT0hxs6tBBugRqWgKQ
-mDW5RZ101T055AodYL9vLQ0+yAu+LrFiuuc5Q0+oCgQ+Km00f1U4Tiswvvkv8N/m
-ok6sb22lvn72CWd2d+DkZG95WxmzUGB0o9Ebknjdgp6LHp9guJuZI6Zll7t8rO4L
-8BylSEM/YOXEuVHzQy3I
-=Hrsc
------END PGP SIGNATURE-----
-
---Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
