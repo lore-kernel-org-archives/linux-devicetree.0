@@ -1,25 +1,212 @@
-From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
- DWC_USB3_NUM_IN_EPS
-Date: Thu, 19 Jan 2017 21:34:28 +0000
-Message-ID: <44c413d9-d97c-d691-a3dd-2647961c09c1@nexus-software.ie>
-References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
- <87mvemx0so.fsf@linux.intel.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] input: pwm-beeper: add feature to set volume via
+ sysfs
+Date: Thu, 19 Jan 2017 13:29:23 -0800
+Message-ID: <20170119212923.GA13542@dtor-ws>
+References: <cover.1484838551.git.frieder.schrempf@exceet.de>
+ <49b6d7788399142ecd01f4f5dcf263ce96eb13f1.1484838551.git.frieder.schrempf@exceet.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87mvemx0so.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <49b6d7788399142ecd01f4f5dcf263ce96eb13f1.1484838551.git.frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+To: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, luis-HiykPkW1eAzzDCI4PIEvbQC/G2K4zDHf@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Frieder,
 
-Thanks for the quick feedback Felipe, appreciated, I'll take on-board 
-those changes.
+On Thu, Jan 19, 2017 at 04:24:08PM +0100, Frieder Schrempf wrote:
+> Make the driver accept switching volume levels via sysfs.
+> This can be helpful if the beep/bell sound intensity needs
+> to be adapted to the environment of the device.
+> 
+> The volume adjustment is done by changing the duty cycle of
+> the pwm signal.
+> 
+> This patch adds the sysfs interface with 5 default volume
+> levels (0 - mute, 4 - max. volume).
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> ---
+> Changes in v3:
+>  - update date
+>  
+>  .../ABI/testing/sysfs-class-input-pwm-beeper       | 17 ++++++
+>  drivers/input/misc/pwm-beeper.c                    | 71 +++++++++++++++++++++-
+>  2 files changed, 87 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/ABI/testing/sysfs-class-input-pwm-beeper
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-class-input-pwm-beeper b/Documentation/ABI/testing/sysfs-class-input-pwm-beeper
+> new file mode 100644
+> index 0000000..c878a1d
+> --- /dev/null
+> +++ b/Documentation/ABI/testing/sysfs-class-input-pwm-beeper
+> @@ -0,0 +1,17 @@
+> +What:		/sys/class/input/input(x)/volume
 
----
-bod
+Only generic (i.e. applicable to all input devices) attributes can be
+present in /sys/class/input/input(x)/, and volume certainly isn't such
+attribute. Please move them to the pwm-beeper platform device itself.
+
+> +Date:		January 2017
+> +KernelVersion:
+> +Contact:	Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> +Description:
+> +		Control the volume of this pwm-beeper. Values
+> +		are between 0 and max_volume_level. This file will also
+> +		show the current volume level stored in the driver.
+> +
+> +What:		/sys/class/input/input(x)/max_volume_level
+> +Date:		January 2017
+> +KernelVersion:
+> +Contact:	Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> +Description:
+> +		This file shows the maximum volume level that can be
+> +		assigned to volume.
+> +
+> diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+> index 5f9655d..3ed21da 100644
+> --- a/drivers/input/misc/pwm-beeper.c
+> +++ b/drivers/input/misc/pwm-beeper.c
+> @@ -1,5 +1,9 @@
+>  /*
+>   *  Copyright (C) 2010, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> + *
+> + *  Copyright (C) 2016, Frieder Schrempf <frieder.schrempf-wPoT/lNZgHizQB+pC5nmwQ@public.gmane.org>
+> + *  (volume support)
+> + *
+>   *  PWM beeper driver
+>   *
+>   *  This program is free software; you can redistribute it and/or modify it
+> @@ -27,16 +31,77 @@ struct pwm_beeper {
+>  	struct pwm_device *pwm;
+>  	struct work_struct work;
+>  	unsigned long period;
+> +	unsigned int volume;
+> +	unsigned int volume_levels[] = {0, 8, 20, 40, 500};
+
+Does this actually work? Anyway, you are not allowing to set differentr
+values in for different beepers, so take the array out of the structure.
+
+> +	unsigned int max_volume_level;
+>  };
+>  
+>  #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+>  
+> +static ssize_t beeper_show_volume(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	struct pwm_beeper *beeper = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d\n", beeper->volume);
+> +}
+> +
+> +static ssize_t beeper_show_max_volume_level(struct device *dev,
+> +		struct device_attribute *attr, char *buf)
+> +{
+> +	struct pwm_beeper *beeper = dev_get_drvdata(dev);
+> +
+> +	return sprintf(buf, "%d\n", beeper->max_volume_level);
+> +}
+> +
+> +static ssize_t beeper_store_volume(struct device *dev,
+> +		struct device_attribute *attr, const char *buf, size_t count)
+> +{
+> +	int rc;
+> +	struct pwm_beeper *beeper = dev_get_drvdata(dev);
+> +	unsigned int volume;
+> +
+> +	rc = kstrtouint(buf, 0, &volume);
+> +	if (rc)
+> +		return rc;
+> +
+> +	rc = -ENXIO;
+
+Why? There are no failures below.
+
+> +	if (volume > beeper->max_volume_level)
+> +		volume = beeper->max_volume_level;
+
+Return -EINVAL maybe?
+
+> +	pr_debug("set volume to %u\n", volume);
+> +	if (beeper->volume != volume)
+> +		beeper->volume = volume;
+
+Why?
+
+> +	rc = count;
+> +
+> +	return rc;
+> +}
+> +
+> +static DEVICE_ATTR(volume, 0644, beeper_show_volume, beeper_store_volume);
+> +static DEVICE_ATTR(max_volume_level, 0644, beeper_show_max_volume_level, NULL);
+
+Drop "level", it is cleaner.
+
+> +
+> +static struct attribute *bp_device_attributes[] = {
+
+pwm_beeper_atttributes
+
+> +	&dev_attr_volume.attr,
+> +	&dev_attr_max_volume_level.attr,
+> +	NULL,
+> +};
+> +
+> +static struct attribute_group bp_device_attr_group = {
+
+pwm_beeper_attribute_group
+
+> +	.attrs = bp_device_attributes,
+> +};
+> +
+> +static const struct attribute_group *bp_device_attr_groups[] = {
+> +	&bp_device_attr_group,
+> +	NULL,
+> +};
+> +
+>  static void __pwm_beeper_set(struct pwm_beeper *beeper)
+>  {
+>  	unsigned long period = beeper->period;
+>  
+>  	if (period) {
+> -		pwm_config(beeper->pwm, period / 2, period);
+> +		pwm_config(beeper->pwm,
+> +			period / 1000 * beeper->volume_levels[beeper->volume],
+> +			period);
+>  		pwm_enable(beeper->pwm);
+>  	} else
+>  		pwm_disable(beeper->pwm);
+> @@ -123,6 +188,8 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>  
+>  	INIT_WORK(&beeper->work, pwm_beeper_work);
+>  
+> +	beeper->max_volume_level = ARRAY_SIZE(beeper->volume_levels) - 1;
+> +
+>  	beeper->input = input_allocate_device();
+>  	if (!beeper->input) {
+>  		dev_err(&pdev->dev, "Failed to allocate input device\n");
+> @@ -146,6 +213,8 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+>  
+>  	input_set_drvdata(beeper->input, beeper);
+>  
+> +	beeper->input->dev.groups = bp_device_attr_groups;
+> +
+>  	error = input_register_device(beeper->input);
+>  	if (error) {
+>  		dev_err(&pdev->dev, "Failed to register input device: %d\n", error);
+> -- 
+> 2.7.4
+> 
+
+Thanks.
+
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
