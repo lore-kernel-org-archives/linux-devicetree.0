@@ -1,62 +1,81 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Thu, 19 Jan 2017 10:08:03 -0600
-Message-ID: <20170119160803.indfxkvvirobmmv6@rob-hp-laptop>
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
- <20170116184906.r62di7xiil5lae33@kozik-lap>
- <20170117093813.mxp2hgoxbgske6ru@lukather>
+From: Yannick FERTRE <yannick.fertre@st.com>
+Subject: Re: [PATCH v1 1/7] dt-bindings: display: add STM32 LTDC driver
+Date: Thu, 19 Jan 2017 16:16:01 +0000
+Message-ID: <dfb3192a-d5b6-029e-b8cb-65a628a0c30b@st.com>
+References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
+ <1484573344-11609-2-git-send-email-yannick.fertre@st.com>
+ <2080174.sm3cyM9MmB@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170117093813.mxp2hgoxbgske6ru@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Carlo Caione <carlo@caione.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2080174.sm3cyM9MmB@avalon>
+Content-Language: en-US
+Content-ID: <03AEB2D7DCEC594BA4200E4EB0E6D57C@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Philippe CORNU <philippe.cornu@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mickael REULIER <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 10:38:13AM +0100, Maxime Ripard wrote:
-> Hi,
-> 
-> On Mon, Jan 16, 2017 at 08:49:06PM +0200, Krzysztof Kozlowski wrote:
-> > On Mon, Jan 16, 2017 at 02:24:23PM +0100, Maxime Ripard wrote:
-> > > The ARM Mali Utgard GPU family is embedded into a number of SoCs from
-> > > Allwinner, Amlogic, Mediatek or Rockchip.
-> > > 
-> > > Add a binding for the GPU of that family.
-> > > 
-> > > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > > ---
-> > >  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
-> > >  1 file changed, 76 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > 
-> > Do you have a driver in kernel which will implement these bindings?
-> 
-> No, but we have bindings for out-of-tree drivers already.
-> 
-> > Defining them for out-of-tree driver does not bring any benefits
-> > (3rd party driver will not respect them anyway).
-> 
-> You could see it the other way around too. The out-of-tree drivers
-> don't respect it at the moment because there's no binding to respect.
-> 
-> And at least for us, we definitely plan on doing that.
-
-I have no issue taking this. Bindings are in the kernel for 
-convenience. Having a driver can help make sure they are complete and 
-sound, but otherwise isn't strictly required.
-
-In fact, the ARM folks already asked me about this, but you beat them to 
-it (plus it's hard to get them to care about mali400 much).
-
-Rob
+T24gMDEvMTYvMjAxNyAwOTozMCBQTSwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToKPiBIaSBZYW5u
+aWNrLAo+Cj4gVGhhbmsgeW91IGZvciB0aGUgcGF0Y2guCj4KPiBPbiBNb25kYXkgMTYgSmFuIDIw
+MTcgMTQ6Mjg6NTggWWFubmljayBGZXJ0cmUgd3JvdGU6Cj4+IFNpZ25lZC1vZmYtYnk6IFlhbm5p
+Y2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBzdC5jb20+Cj4+IC0tLQo+PiAgLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9zdCxsdGRjLnR4dCAgICAgICAgfCA1NyArKysrKysrKysrKysr
+KysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA1NyBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRk
+Yy50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L3N0LGx0ZGMudHh0Cj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQgbmV3IGZpbGUgbW9kZQo+PiAxMDA2NDQKPj4gaW5kZXgg
+MDAwMDAwMC4uMjBlODlkYQo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LGx0ZGMudHh0Cj4+IEBAIC0wLDAgKzEsNTcg
+QEAKPj4gKyogU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIGxjZC10ZnQgZGlzcGxheSBjb250cm9s
+bGVyCj4+ICsKPj4gKy0gc3QtZGlzcGxheS1zdWJzeXN0ZW06IE1hc3RlciBkZXZpY2UgZm9yIERS
+TSBzdWItY29tcG9uZW50cwo+PiArICBUaGlzIGRldmljZSBtdXN0IGJlIHRoZSBwYXJlbnQgb2Yg
+YWxsIHRoZSBzdWItY29tcG9uZW50cyBhbmQgaXMKPj4gcmVzcG9uc2libGUKPj4gKyAgb2YgYmlu
+ZCB0aGVtLgo+Cj4gV2h5IGRvIHlvdSBuZWVkIHRoaXMgPyBBdCBhIHF1aWNrIGdsYW5jZSB0aGUg
+bHRkYyBub2RlIHNob3VsZCBiZSBlbm91Z2guCkhpIExhdXJlbnQsClRvIHByZXBhcmUgbmV4dCBk
+ZXZpY2UgdXBzdHJlYW0gb2YgZHNpLCB3ZSBuZWVkIGEgbWFzdGVyIG5vZGUgCiJzdC1kaXNwbGF5
+LXN1YnN5c3RlbSIgYW5kIGEgc3ViIG5vZGUgInN0LGx0ZGMiLiBJdCdzIHRoZSBzYW1lIGtpbmQg
+b2YgCm5vZGUgdGhhbiBzdCxzdGloNHh4Lgo+Cj4+ICsgIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4+
+ICsgIC0gY29tcGF0aWJsZTogInN0LGRpc3BsYXktc3Vic3lzdGVtIgo+PiArICAtIHJhbmdlczog
+dG8gYWxsb3cgcHJvYmluZyBvZiBzdWJkZXZpY2VzCj4+ICsKPj4gKy0gbHRkY19ob3N0OiBsY2Qt
+dGZ0IGRpc3BsYXkgY29udHJvbGxlciBob3N0Cj4+ICsgIG11c3QgYmUgYSBzdWItbm9kZSBvZiBz
+dC1kaXNwbGF5LXN1YnN5c3RlbQo+PiArICBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArICAtIGNv
+bXBhdGlibGU6ICJzdCxsdGRjIgo+PiArICAtIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIG9m
+IHRoZSBJUCByZWdpc3RlcnMgYW5kIGxlbmd0aCBvZiBtZW1vcnkKPj4gbWFwcGVkIHJlZ2lvbi4K
+Pj4gKyAgLSBjbG9ja3M6IGZyb20gY29tbW9uIGNsb2NrIGJpbmRpbmc6IGhhbmRsZSBoYXJkd2Fy
+ZSBJUCBuZWVkZWQgY2xvY2tzLAo+PiB0aGUKPj4gKyAgICBudW1iZXIgb2YgY2xvY2tzIG1heSBk
+ZXBlbmQgb2YgdGhlIFNvQyB0eXBlLgo+PiArICAgIFNlZSAuLi9jbG9ja3MvY2xvY2stYmluZGlu
+Z3MudHh0IGZvciBkZXRhaWxzLgo+PiArICAtIGNsb2NrLW5hbWVzOiBuYW1lcyBvZiB0aGUgY2xv
+Y2tzIGxpc3RlZCBpbiBjbG9ja3MgcHJvcGVydHkgaW4gdGhlIHNhbWUKPj4gKyAgICBvcmRlci4K
+Pgo+IFlvdSBuZWVkIHRvIGRlZmluZSB0aGUgcmVxdWlyZWQvb3B0aW9uYWwgY2xvY2tzIHdpdGgg
+dGhlaXIgbmFtZXMgaGVyZS4gSWYgdGhleQo+IHZhcnkgZGVwZW5kaW5nIG9uIHRoZSBTb0MsIHRo
+ZSBEVCBiaW5kaW5ncyBkb2N1bWVudCBuZWVkIHRvIGxpc3QgdGhlbSBmb3IgZWFjaAo+IFNvQy4K
+PgpPaywgSSdsbCBwdXNoIG5ld3MgYmluZGluZ3Mgd2l0aCBwYWNrIFYyLgo+PiArICAtIHJlc2V0
+czogcmVzZXRzIHRvIGJlIHVzZWQgYnkgdGhlIGRldmljZQo+PiArICAgIFNlZSAuLi9yZXNldC9y
+ZXNldC50eHQgZm9yIGRldGFpbHMuCj4+ICsgIC0gcmVzZXQtbmFtZXM6IG5hbWVzIG9mIHRoZSBy
+ZXNldHMgbGlzdGVkIGluIHJlc2V0cyBwcm9wZXJ0eSBpbiB0aGUgc2FtZQo+PiArICAgIG9yZGVy
+Lgo+PiArICBSZXF1aXJlZCBub2RlczoKPj4gKyAgICAtIFZpZGVvIHBvcnQgZm9yIFJHQiBvdXRw
+dXQuCj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsKPj4gKy8gewo+PiArCS4uLgo+PiArCXNvYyB7Cj4+
+ICsJLi4uCj4+ICsJCXN0LWRpc3BsYXktc3Vic3lzdGVtIHsKPj4gKwkJCWNvbXBhdGlibGUgPSAi
+c3QsZGlzcGxheS1zdWJzeXN0ZW0iOwo+PiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4+ICsJ
+CQkjc2l6ZS1jZWxscyA9IDwxPjsKPj4gKwkJCXJhbmdlczsKPj4gKwkJCWRtYS1yYW5nZXM7Cj4+
+ICsKPj4gKwkJCWx0ZGNfaG9zdDogc3RtMzItbHRkY0A0MDAxNjgwMCB7Cj4+ICsJCQkJY29tcGF0
+aWJsZSA9ICJzdCxsdGRjIjsKPj4gKwkJCQlyZWcgPSA8MHg0MDAxNjgwMCAweDIwMD47Cj4+ICsJ
+CQkJaW50ZXJydXB0cyA9IDw4OD4sIDw4OT47Cj4+ICsJCQkJcmVzZXRzID0gPCZyY2MgMzE0PjsK
+Pj4gKwkJCQljbG9ja3MgPSA8JnJjYyAxIDg+Owo+PiArCQkJCWNsb2NrLW5hbWVzID0gImNsay1s
+Y2QiOwo+PiArCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsKPj4gKwkJCQlwb3J0IHsKPj4g
+KwkJCQkJbHRkY19vdXRfcmdiOiBlbmRwb2ludCB7Cj4+ICsJCQkJCX07Cj4+ICsJCQkJfTsKPj4g
+KwkJCX07Cj4+ICsJCX07Cj4+ICsJLi4uCj4+ICsJfTsKPj4gK307Cj4KX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
