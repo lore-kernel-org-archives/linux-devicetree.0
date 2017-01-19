@@ -1,182 +1,263 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] Documentation: dt: add bindings for ti-cpufreq
-Date: Thu, 19 Jan 2017 12:07:02 -0600
-Message-ID: <20170119180702.62xg2ta5pq4mf7sd@rob-hp-laptop>
-References: <20170117131808.29798-1-d-gerlach@ti.com>
- <20170117131808.29798-3-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170117131808.29798-3-d-gerlach-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: qcom-smd: Add PM8994 regulator support" to the regulator tree
+Date: Thu, 19 Jan 2017 18:04:05 +0000
+Message-ID: <E1cUH49-00051t-Hm@debutante>
+References: <20170118104637.3312-1-bjorn.andersson@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170118104637.3312-1-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Jeremy McNicoll <jeremymc@redhat.com>linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 07:18:06AM -0600, Dave Gerlach wrote:
-> Add the device tree bindings document for the TI CPUFreq/OPP driver
-> on AM33xx, AM43xx, DRA7xx, and AM57xx SoCs. The operating-points-v2
-> binding allows us to provide an opp-supported-hw property for each OPP
-> to define when it is available. This driver is responsible for reading
-> and parsing registers to determine which OPPs can be selectively enabled
-> based on the specific SoC in use by matching against the opp-supported-hw
-> data.
-> 
-> Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
-> ---
-> v3->v4:
-> 	Update to simplify binding, only use "syscon" now to pass control
-> 	module register space and let driver handle offsets.
-> 
->  .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 128 +++++++++++++++++++++
->  1 file changed, 128 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-> new file mode 100644
-> index 000000000000..58efa4c72545
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
-> @@ -0,0 +1,128 @@
-> +TI CPUFreq and OPP bindings
-> +================================
-> +
-> +Certain TI SoCs, like those in the am335x, am437x, am57xx, and dra7xx
-> +families support different OPPs depending on the silicon variant in use.
-> +The ti-cpufreq driver can use revision and an efuse value from the SoC to
-> +provide the OPP framework with supported hardware information. This is
-> +used to determine which OPPs from the operating-points-v2 table get enabled
-> +when it is parsed by the OPP framework.
-> +
-> +Required properties:
-> +--------------------
-> +In 'cpus' nodes:
-> +- operating-points-v2: Phandle to the operating-points-v2 table to use.
-> +
-> +In 'operating-points-v2' table:
-> +- compatible: Should be
-> +	- 'operating-points-v2-ti-cpu' for am335x, am43xx, and dra7xx/am57xx SoCs
-> +- syscon: A phandle pointing to a syscon node representing the control module
-> +	  register space of the SoC.
-> +
-> +Optional properties:
-> +--------------------
-> +For each opp entry in 'operating-points-v2' table:
-> +- opp-supported-hw: Two bitfields indicating:
-> +	1. Which revision of the SoC the OPP is supported by
-> +	2. Which eFuse bits indicate this OPP is available
-> +
-> +	A bitwise AND is performed against these values and if any bit
-> +	matches, the OPP gets enabled.
-> +
-> +Example:
-> +--------
-> +
-> +/* From arch/arm/boot/dts/am33xx.dtsi */
-> +cpus {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	cpu@0 {
-> +		compatible = "arm,cortex-a8";
-> +		device_type = "cpu";
-> +		reg = <0>;
-> +
-> +		operating-points-v2 = <&cpu0_opp_table>;
-> +
-> +		clocks = <&dpll_mpu_ck>;
-> +		clock-names = "cpu";
-> +
-> +		clock-latency = <300000>; /* From omap-cpufreq driver */
-> +	};
-> +};
-> +
-> +/*
-> + * cpu0 has different OPPs depending on SoC revision and some on revisions
-> + * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
-> + */
-> +cpu0_opp_table: opp_table0 {
+The patch
 
-Just "opp-table {"
+   regulator: qcom-smd: Add PM8994 regulator support
 
-> +	compatible = "operating-points-v2-ti-cpu";
-> +	syscon = <&scm_conf>;
-> +
-> +	/*
-> +	 * The three following nodes are marked with opp-suspend
-> +	 * because they can not be enabled simultaneously on a
-> +	 * single SoC.
-> +	 */
-> +	opp50@300000000 {
+has been applied to the regulator tree at
 
-What's the 50, 100, 120 in the names?
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-> +		opp-hz = /bits/ 64 <300000000>;
-> +		opp-microvolt = <950000 931000 969000>;
-> +		opp-supported-hw = <0x06 0x0010>;
-> +		opp-suspend;
-> +	};
-> +
-> +	opp100@275000000 {
-> +		opp-hz = /bits/ 64 <275000000>;
-> +		opp-microvolt = <1100000 1078000 1122000>;
-> +		opp-supported-hw = <0x01 0x00FF>;
-> +		opp-suspend;
-> +	};
-> +
-> +	opp100@300000000 {
-> +		opp-hz = /bits/ 64 <300000000>;
-> +		opp-microvolt = <1100000 1078000 1122000>;
-> +		opp-supported-hw = <0x06 0x0020>;
-> +		opp-suspend;
-> +	};
-> +
-> +	opp100@500000000 {
-> +		opp-hz = /bits/ 64 <500000000>;
-> +		opp-microvolt = <1100000 1078000 1122000>;
-> +		opp-supported-hw = <0x01 0xFFFF>;
-> +	};
-> +
-> +	opp100@600000000 {
-> +		opp-hz = /bits/ 64 <600000000>;
-> +		opp-microvolt = <1100000 1078000 1122000>;
-> +		opp-supported-hw = <0x06 0x0040>;
-> +	};
-> +
-> +	opp120@600000000 {
-> +		opp-hz = /bits/ 64 <600000000>;
-> +		opp-microvolt = <1200000 1176000 1224000>;
-> +		opp-supported-hw = <0x01 0xFFFF>;
-> +	};
-> +
-> +	opp120@720000000 {
-> +		opp-hz = /bits/ 64 <720000000>;
-> +		opp-microvolt = <1200000 1176000 1224000>;
-> +		opp-supported-hw = <0x06 0x0080>;
-> +	};
-> +
-> +	oppturbo@720000000 {
-> +		opp-hz = /bits/ 64 <720000000>;
-> +		opp-microvolt = <1260000 1234800 1285200>;
-> +		opp-supported-hw = <0x01 0xFFFF>;
-> +	};
-> +
-> +	oppturbo@800000000 {
-> +		opp-hz = /bits/ 64 <800000000>;
-> +		opp-microvolt = <1260000 1234800 1285200>;
-> +		opp-supported-hw = <0x06 0x0100>;
-> +	};
-> +
-> +	oppnitro@1000000000 {
-> +		opp-hz = /bits/ 64 <1000000000>;
-> +		opp-microvolt = <1325000 1298500 1351500>;
-> +		opp-supported-hw = <0x04 0x0200>;
-> +	};
-> +};
-> -- 
-> 2.11.0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 14a1699225957328e4fb07db7e4751cc9d02ae11 Mon Sep 17 00:00:00 2001
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Date: Wed, 18 Jan 2017 02:46:37 -0800
+Subject: [PATCH] regulator: qcom-smd: Add PM8994 regulator support
+
+This patch adds support for the PM8994 regulators found on msm8992,
+msm8994 and msm8996 platforms.
+
+Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+[bjorn: Add DT binding doc and vdd_lvs1_2 supply]
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/regulator/qcom,smd-rpm-regulator.txt  |  56 +++++++++++
+ drivers/regulator/qcom_smd-regulator.c             | 102 +++++++++++++++++++++
+ 2 files changed, 158 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+index 1f8d6f84b657..4e3dfb5b5f16 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
+@@ -22,6 +22,7 @@ Regulator nodes are identified by their compatible:
+ 		    "qcom,rpm-pm8841-regulators"
+ 		    "qcom,rpm-pm8916-regulators"
+ 		    "qcom,rpm-pm8941-regulators"
++		    "qcom,rpm-pm8994-regulators"
+ 		    "qcom,rpm-pma8084-regulators"
+ 
+ - vdd_s1-supply:
+@@ -80,6 +81,56 @@ Regulator nodes are identified by their compatible:
+ - vdd_s10-supply:
+ - vdd_s11-supply:
+ - vdd_s12-supply:
++- vdd_l1-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l3_l11-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l5_l7-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_l5_l7-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l3_l11-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l14_l15-supply:
++- vdd_l14_l15-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l17_l29-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l20_l21-supply:
++- vdd_l20_l21-supply:
++- vdd_l9_l10_l18_l22-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l13_l19_l23_l24-supply:
++- vdd_l25-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l2_l26_l28-supply:
++- vdd_l17_l29-supply:
++- vdd_l8_l16_l30-supply:
++- vdd_l4_l27_l31-supply:
++- vdd_l6_l12_l32-supply:
++- vdd_lvs1_2-supply:
++	Usage: optional (pm8994 only)
++	Value type: <phandle>
++	Definition: reference to regulator supplying the input pin, as
++		    described in the data sheet
++
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply:
++- vdd_s6-supply:
++- vdd_s7-supply:
++- vdd_s8-supply:
++- vdd_s9-supply:
++- vdd_s10-supply:
++- vdd_s11-supply:
++- vdd_s12-supply:
+ - vdd_l1_l11-supply:
+ - vdd_l2_l3_l4_l27-supply:
+ - vdd_l5_l7-supply:
+@@ -113,6 +164,11 @@ pm8941:
+ 	l14, l15, l16, l17, l18, l19, l20, l21, l22, l23, l24, lvs1, lvs2,
+ 	lvs3, 5vs1, 5vs2
+ 
++pm8994:
++	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
++	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
++	l21, l22, l23, l24, l25, l26, l27, l28, l29, l30, l31, l32, lvs1, lvs2
++
+ pma8084:
+ 	s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, l1, l2, l3, l4, l5,
+ 	l6, l7, l8, l9, l10, l11, l12, l13, l14, l15, l16, l17, l18, l19, l20,
+diff --git a/drivers/regulator/qcom_smd-regulator.c b/drivers/regulator/qcom_smd-regulator.c
+index 8ed46a9a55c8..f35994a2a5be 100644
+--- a/drivers/regulator/qcom_smd-regulator.c
++++ b/drivers/regulator/qcom_smd-regulator.c
+@@ -305,6 +305,56 @@ static const struct regulator_desc pm8916_buck_hvo_smps = {
+ 	.ops = &rpm_smps_ldo_ops,
+ };
+ 
++static const struct regulator_desc pm8994_hfsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE( 375000,  0,  95, 12500),
++		REGULATOR_LINEAR_RANGE(1550000, 96, 158, 25000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 159,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_ftsmps = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(350000,  0, 199, 5000),
++		REGULATOR_LINEAR_RANGE(700000, 200, 349, 10000),
++	},
++	.n_linear_ranges = 2,
++	.n_voltages = 350,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_nldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE(750000, 0, 63, 12500),
++	},
++	.n_linear_ranges = 1,
++	.n_voltages = 64,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_pldo = {
++	.linear_ranges = (struct regulator_linear_range[]) {
++		REGULATOR_LINEAR_RANGE( 750000,  0,  63, 12500),
++		REGULATOR_LINEAR_RANGE(1550000, 64, 126, 25000),
++		REGULATOR_LINEAR_RANGE(3100000, 127, 163, 50000),
++	},
++	.n_linear_ranges = 3,
++	.n_voltages = 164,
++	.ops = &rpm_smps_ldo_ops,
++};
++
++static const struct regulator_desc pm8994_switch = {
++	.ops = &rpm_switch_ops,
++};
++
++static const struct regulator_desc pm8994_lnldo = {
++	.fixed_uV = 1740000,
++	.n_voltages = 1,
++	.ops = &rpm_smps_ldo_ops_fixed,
++};
++
+ struct rpm_regulator_data {
+ 	const char *name;
+ 	u32 type;
+@@ -443,10 +493,62 @@ static const struct rpm_regulator_data rpm_pma8084_regulators[] = {
+ 	{}
+ };
+ 
++static const struct rpm_regulator_data rpm_pm8994_regulators[] = {
++	{ "s1", QCOM_SMD_RPM_SMPA, 1, &pm8994_ftsmps, "vdd_s1" },
++	{ "s2", QCOM_SMD_RPM_SMPA, 2, &pm8994_ftsmps, "vdd_s2" },
++	{ "s3", QCOM_SMD_RPM_SMPA, 3, &pm8994_hfsmps, "vdd_s3" },
++	{ "s4", QCOM_SMD_RPM_SMPA, 4, &pm8994_hfsmps, "vdd_s4" },
++	{ "s5", QCOM_SMD_RPM_SMPA, 5, &pm8994_hfsmps, "vdd_s5" },
++	{ "s6", QCOM_SMD_RPM_SMPA, 6, &pm8994_ftsmps, "vdd_s6" },
++	{ "s7", QCOM_SMD_RPM_SMPA, 7, &pm8994_hfsmps, "vdd_s7" },
++	{ "s8", QCOM_SMD_RPM_SMPA, 8, &pm8994_ftsmps, "vdd_s8" },
++	{ "s9", QCOM_SMD_RPM_SMPA, 9, &pm8994_ftsmps, "vdd_s9" },
++	{ "s10", QCOM_SMD_RPM_SMPA, 10, &pm8994_ftsmps, "vdd_s10" },
++	{ "s11", QCOM_SMD_RPM_SMPA, 11, &pm8994_ftsmps, "vdd_s11" },
++	{ "s12", QCOM_SMD_RPM_SMPA, 12, &pm8994_ftsmps, "vdd_s12" },
++	{ "l1", QCOM_SMD_RPM_LDOA, 1, &pm8994_nldo, "vdd_l1" },
++	{ "l2", QCOM_SMD_RPM_LDOA, 2, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l3", QCOM_SMD_RPM_LDOA, 3, &pm8994_nldo, "vdd_l3_l11" },
++	{ "l4", QCOM_SMD_RPM_LDOA, 4, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l5", QCOM_SMD_RPM_LDOA, 5, &pm8994_lnldo, "vdd_l5_l7" },
++	{ "l6", QCOM_SMD_RPM_LDOA, 6, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "l7", QCOM_SMD_RPM_LDOA, 7, &pm8994_lnldo, "vdd_l5_l7" },
++	{ "l8", QCOM_SMD_RPM_LDOA, 8, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l9", QCOM_SMD_RPM_LDOA, 9, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l10", QCOM_SMD_RPM_LDOA, 10, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l11", QCOM_SMD_RPM_LDOA, 11, &pm8994_nldo, "vdd_l3_l11" },
++	{ "l12", QCOM_SMD_RPM_LDOA, 12, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "l13", QCOM_SMD_RPM_LDOA, 13, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l14", QCOM_SMD_RPM_LDOA, 14, &pm8994_pldo, "vdd_l14_l15" },
++	{ "l15", QCOM_SMD_RPM_LDOA, 15, &pm8994_pldo, "vdd_l14_l15" },
++	{ "l16", QCOM_SMD_RPM_LDOA, 16, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l17", QCOM_SMD_RPM_LDOA, 17, &pm8994_pldo, "vdd_l17_l29" },
++	{ "l18", QCOM_SMD_RPM_LDOA, 18, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l19", QCOM_SMD_RPM_LDOA, 19, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l20", QCOM_SMD_RPM_LDOA, 20, &pm8994_pldo, "vdd_l20_l21" },
++	{ "l21", QCOM_SMD_RPM_LDOA, 21, &pm8994_pldo, "vdd_l20_l21" },
++	{ "l22", QCOM_SMD_RPM_LDOA, 22, &pm8994_pldo, "vdd_l9_l10_l18_l22" },
++	{ "l23", QCOM_SMD_RPM_LDOA, 23, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l24", QCOM_SMD_RPM_LDOA, 24, &pm8994_pldo, "vdd_l13_l19_l23_l24" },
++	{ "l25", QCOM_SMD_RPM_LDOA, 25, &pm8994_pldo, "vdd_l25" },
++	{ "l26", QCOM_SMD_RPM_LDOA, 26, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l27", QCOM_SMD_RPM_LDOA, 27, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l28", QCOM_SMD_RPM_LDOA, 28, &pm8994_nldo, "vdd_l2_l26_l28" },
++	{ "l29", QCOM_SMD_RPM_LDOA, 29, &pm8994_pldo, "vdd_l17_l29" },
++	{ "l30", QCOM_SMD_RPM_LDOA, 30, &pm8994_pldo, "vdd_l8_l16_l30" },
++	{ "l31", QCOM_SMD_RPM_LDOA, 31, &pm8994_nldo, "vdd_l4_l27_l31" },
++	{ "l32", QCOM_SMD_RPM_LDOA, 32, &pm8994_pldo, "vdd_l6_l12_l32" },
++	{ "lvs1", QCOM_SMD_RPM_VSA, 1, &pm8994_switch, "vdd_lvs1_2" },
++	{ "lvs2", QCOM_SMD_RPM_VSA, 2, &pm8994_switch, "vdd_lvs1_2" },
++
++	{}
++};
++
+ static const struct of_device_id rpm_of_match[] = {
+ 	{ .compatible = "qcom,rpm-pm8841-regulators", .data = &rpm_pm8841_regulators },
+ 	{ .compatible = "qcom,rpm-pm8916-regulators", .data = &rpm_pm8916_regulators },
+ 	{ .compatible = "qcom,rpm-pm8941-regulators", .data = &rpm_pm8941_regulators },
++	{ .compatible = "qcom,rpm-pm8994-regulators", .data = &rpm_pm8994_regulators },
+ 	{ .compatible = "qcom,rpm-pma8084-regulators", .data = &rpm_pma8084_regulators },
+ 	{}
+ };
+-- 
+2.11.0
