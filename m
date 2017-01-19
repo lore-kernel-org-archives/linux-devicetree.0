@@ -1,47 +1,34 @@
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 1/3] ARM: dts: stm32: set HSE_RTC clock frequency to 1 MHz on
- stm32f746
-Date: Thu, 19 Jan 2017 14:45:17 +0100
-Message-ID: <1484833519-9298-2-git-send-email-amelie.delaunay@st.com>
-References: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Thu, 19 Jan 2017 13:49:59 +0000
+Message-ID: <23512329-e8d9-4b4f-c460-4d769ef7102e@arm.com>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484833519-9298-1-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484832916-7248-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set HSE_RTC clock frequency to 1 MHz, as the clock supplied to
-the RTC must be 1 MHz.
+On 19/01/17 13:35, Ding Tianhong wrote:
+> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
+> potential to contain an erroneous value when the timer value changes".
+> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+> read.  Accesses to CVAL are not affected.
 
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- arch/arm/boot/dts/stm32f746.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Please. 3 series in 2 hours is not fun, and is not helping your case
+either. Give us the time to properly review your patches, and wait until
+we ask you to respin if we think that this is required.
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index 5bbee56..b42f23d 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -343,6 +343,8 @@
- 			reg = <0x40023800 0x400>;
- 			clocks = <&clk_hse>, <&clk_i2s_ckin>;
- 			st,syscfg = <&pwrcfg>;
-+			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
-+			assigned-clock-rates = <1000000>;
- 		};
- 
- 		dma1: dma-controller@40026000 {
+Thanks,
+
+	M.
 -- 
-1.9.1
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
