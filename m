@@ -1,59 +1,54 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of/unittest: Swap arguments of of_unittest_apply_overlay()
-Date: Thu, 19 Jan 2017 11:06:16 +0100
-Message-ID: <20170119100616.4679-1-alexander.sverdlin@nokia.com>
+From: Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: OMAP2+: omap_hwmod: Add support for earlycon
+Date: Thu, 19 Jan 2017 15:35:22 +0530
+Message-ID: <61578446-3a10-55ab-dac9-0a95b6e2c77c@ti.com>
+References: <20170117040336.21700-1-lokeshvutla@ti.com>
+ <20170117040336.21700-2-lokeshvutla@ti.com>
+ <20170117232310.GX7403@atomide.com>
+ <88830967-6e83-33fc-8a1c-d776fd694e2f@ti.com>
+ <20170118170033.GD7403@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170118170033.GD7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Vignesh R <vigneshr-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Function signature
 
-  of_unittest_apply_overlay(int unittest_nr, int overlay_nr, ...
 
-and call sites, like in of_unittest_apply_overlay_check():
+On Wednesday 18 January 2017 10:30 PM, Tony Lindgren wrote:
+> * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170117 19:50]:
+>>
+>>
+>> On Wednesday 18 January 2017 04:53 AM, Tony Lindgren wrote:
+>>> * Lokesh Vutla <lokeshvutla-l0cyMroinI0@public.gmane.org> [170116 20:06]:
+>>>> Hwmod core tries to reset and idles each IP that is registered with hwmod.
+>>>> In case of earlycon, that specific uart IP cannot be reset or keep it in
+>>>> idle state else earlycon hangs once hwmod resets that uart IP. So add support
+>>>> to not reset uart that is being used as earlycon only if CONFIG_SERIAL_EARLYCON
+>>>> is enabled.
+>>>
+>>> Nice :)
+>>>
+>>> I guess this has no dependency to SERIAL_OMAP vs 8250_OMAP selection?
+>>
+>> Unfortunately SERIAL_OMAP does not support earlycon yet. As I mentioned
+>> in my cover letter, I verified this series only with 8250_OMAP.
+> 
+> OK. So just to understand why it would not work with omap-serial, do we
+> need something implemented in drivers/tty/serial/earlycon.c for non 8250
+> drivers to make it work? Or are there other dependencies?
 
-  ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, ...
+Yeah,  OF_EARLYCON_DECLARE should be declared for omap-serial. Just
+posted a patch[1] adding support for earlycon in omap-serial.
 
-do not match. Fix this in one place (function signature).
-The only affected test case is 15, which supplies non-existing
-overlay number 16, but two bugs matched here. Fix the test case.
+[1] https://patchwork.kernel.org/patch/9525377/
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- drivers/of/unittest.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
-index 53c83d66eb7e..66bfa8d674ce 100644
---- a/drivers/of/unittest.c
-+++ b/drivers/of/unittest.c
-@@ -1181,7 +1181,7 @@ static void of_unittest_destroy_tracked_overlays(void)
- 	} while (defers > 0);
- }
- 
--static int of_unittest_apply_overlay(int unittest_nr, int overlay_nr,
-+static int of_unittest_apply_overlay(int overlay_nr, int unittest_nr,
- 		int *overlay_id)
- {
- 	struct device_node *np = NULL;
-@@ -1840,7 +1840,7 @@ static void of_unittest_overlay_i2c_15(void)
- 	int ret;
- 
- 	/* device should enable */
--	ret = of_unittest_apply_overlay_check(16, 15, 0, 1, I2C_OVERLAY);
-+	ret = of_unittest_apply_overlay_check(15, 15, 0, 1, I2C_OVERLAY);
- 	if (ret != 0)
- 		return;
- 
--- 
-2.11.0
-
+Thanks and regards,
+Lokesh
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
