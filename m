@@ -1,15 +1,17 @@
 From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 6/7] arm, arm64: factorize common cpu capacity default code
-Date: Thu, 19 Jan 2017 14:53:34 +0000
-Message-ID: <20170119145333.GB27312@n2100.armlinux.org.uk>
-References: <20170119143757.14537-1-juri.lelli@arm.com>
- <20170119143757.14537-7-juri.lelli@arm.com>
+Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
+Date: Thu, 19 Jan 2017 14:56:42 +0000
+Message-ID: <20170119145642.GC27312@n2100.armlinux.org.uk>
+References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
+ <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
+ <CAOMZO5AdgM9eFnerLRdYxwE7gsOE5OvkWs6rCR4zta1XmXHj1A@mail.gmail.com>
+ <20170119144641.jxj2bqg5uqjol23x@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170119143757.14537-7-juri.lelli@arm.com>
+In-Reply-To: <20170119144641.jxj2bqg5uqjol23x@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,50 +21,65 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, linux-kernel@vger.kernel.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, sudeep.holla@arm.com, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Fabio Estevam <festevam@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 02:37:56PM +0000, Juri Lelli wrote:
-> +extern unsigned long
-> +arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
-> +extern void set_capacity_scale(unsigned int cpu, unsigned long capacity);
+On Thu, Jan 19, 2017 at 03:46:41PM +0100, Uwe Kleine-K=F6nig wrote:
+> On Thu, Jan 19, 2017 at 12:35:40PM -0200, Fabio Estevam wrote:
+> > Hi Uwe,
+> > =
 
-These should be in a header file (please run your code through sparse).
+> > On Thu, Jan 19, 2017 at 12:13 PM, Uwe Kleine-K=F6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > =
 
-> +extern bool cap_parsing_failed;
-> +extern void normalize_cpu_capacity(void);
-> +extern int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu);
+> > > Would it be nice to add a comment about why this was added? Something=
+ to
+> > > prevent a cleanup like "remove empty nodes and invalid memory
+> > > configurations".
+> > =
 
-Same for these.
+> > Do you mean something like this?
+> > =
 
-> diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-> new file mode 100644
-> index 000000000000..3faf89518892
-> --- /dev/null
-> +++ b/drivers/base/arch_topology.c
-> @@ -0,0 +1,240 @@
-> +/*
-> + * driver/base/arch_topology.c - Arch specific cpu topology information
-> + *
-> + * Written by: Juri Lelli, ARM Ltd.
-> + *
-> + * Copyright (C) 2016, ARM Ltd.
-> + *
-> + * All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
+> > /* "chosen" and "memory" nodes are mandatory */
+> > chosen {};
+> > memory { device_type =3D "memory"; reg =3D <0 0>; };
+> =
 
-The files that you've taken this code from are GPLv2, but you've thrown
-a GPLv2+ header on a file that's merely a copy of the original code.
-As some of the code you've moved to this new file is from Nicolas and
-Vincent, you need to seek their approval to make this change of license
-terms, or keep the original license terms.
+> Not very helpful comment. Something like:
+> =
 
--- 
+> 	/*
+> 	 * The decompressor relies on a pre-existing chosen node to be
+> 	 * available to insert the command line and merge other ATAGS
+> 	 * info.
+> 	 */
+> =
+
+> Is it difficult to fix the decompressor?
+
+... and that comment would be wrong.  Yes, the decompressor relies on it,
+as do some uboot versions.
+
+> I didn't understood the breakage regarding the memory node good enough
+> to suggest a comment for that.
+
+A missing memory node appears to prevent some uboot versions supplying
+any kind of memory layout to the kernel, which then causes the kernel to
+crash very early during boot.
+
+Again, this is not using appended DTB - this is using a separately loaded
+DTB in uboot.  uboot fails to update the dtb if these nodes are missing.
+
+Frankly, I think the original change (removing the skeleton.dtsi include)
+was misguided and needs to be reverted - the change is imho built upon an
+incorrect assumption that nothing in skeleton.dtsi is required.  That's
+clearly false.
+
+-- =
+
 RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
 FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
 according to speedtest.net.
