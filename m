@@ -1,87 +1,135 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [RFC v2 4/5] DT bindings documentation for Synopsys UDC platform
- driver
-Date: Thu, 19 Jan 2017 11:40:49 -0800
-Message-ID: <95544a16-08aa-f983-465c-e557b4d3785e@gmail.com>
-References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
- <1484640308-25976-5-git-send-email-raviteja.garimella@broadcom.com>
- <20170119173659.jeao5pqtlepmidek@rob-hp-laptop>
- <f86f32cd-8fed-c30f-d647-8f7992013458@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f86f32cd-8fed-c30f-d647-8f7992013458@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>, Rob Herring <robh@kernel.org>, Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
+From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+Subject: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM == DWC_USB3_NUM_IN_EPS
+Date: Thu, 19 Jan 2017 19:58:02 +0000
+Message-ID: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2017 11:30 AM, Scott Branden wrote:
-> Hi Rob,
-> 
-> On 17-01-19 09:36 AM, Rob Herring wrote:
->> On Tue, Jan 17, 2017 at 01:35:07PM +0530, Raviteja Garimella wrote:
->>> This patch adds device tree bindings documentation for Synopsys
->>> USB device controller platform driver.
->>
->> Bindings describe h/w, not drivers.
->>>
->>> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
->>> ---
->>>  .../devicetree/bindings/usb/snps,dw-ahb-udc.txt    | 27
->>> ++++++++++++++++++++++
->>>  1 file changed, 27 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
->>> b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
->>> new file mode 100644
->>> index 0000000..0c18327
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
->>> @@ -0,0 +1,27 @@
->>> +Synopsys USB Device controller.
->>> +
->>> +The device node is used for Synopsys Designware Cores AHB
->>> +Subsystem Device Controller (UDC).
->>> +
->>> +This device node is used by UDCs integrated it Broadcom's
->>> +Northstar2 and Cygnus SoC's.
->>
->> You need compatible strings for these in addition.
->>
-> We don't need compatibility strings when an IP block is integrated into
-> an SoC.  Otherwise each time we add the IP block to a new SoC we would
-> need to update ever linux driver that supports that SoC.  That doesn't
-> make sense?
+- DWC_USB3_NUM indicates the number of Device mode single directional
+  endpoints, including OUT and IN endpoint 0.
 
-You probably do need such a thing, here is how the compatible strings
-for IP blocks integrated into SoCs could be used:
+- DWC_USB3_NUM_IN_EPS indicates the maximum number of Device mode IN
+  endpoints active at any time, including control endpoint 0.
 
-- provide a compatible strings which describes exactly the integration
-of this peripheral into a given SoC, e.g: brcm,udc-ns2, the reason for
-that is that you want to be able to capture the specific IP block
-integration into a specific SoC and all its quirks
+It's possible to configure RTL such that DWC_USB3_NUM_EPS is equal to
+DWC_USB3_NUM_IN_EPS.
 
-- if the block has its own revision scheme (and it can be relied on),
-provide it: brcm,udc-v1.2 and that is probably the most meaningful
-compatible string for a client program here
+dwc3-core calculates the number of OUT endpoints as DWC_USB3_NUM minus
+DWC_USB3_NUM_IN_EPS. If RTL has been configured with DWC_USB3_NUM_IN_EPS
+equal to DWC_USB3_NUM then dwc3-core will calculate the number of OUT
+endpoints as zero.
 
-- have a some kind of fallback/catchall compatible string that describes
-the block: brcm,udc which may also work just fine, although is not preferred
+For example a from dwc3_core_num_eps() shows:
+[    1.565000]  /usb0@f01d0000: found 8 IN and 0 OUT endpoints
 
-Defining compatible strings is meant to avoid making (possibly
-incompatible) Device Tree binding changes in the future, and you always
-have the liberty as a client program (OS, bootloader) to match only the
-compatible strings you care about, from the most specific (which
-includes the exact SoC) to the least specific.
+This patch fixes this case by adding a snps,num_in_eps quirk and an
+over-ride value for DWC_USB3_NUM_IN_EPS snps,num_in_eps_override. When the
+quirk is declared then snps,num_in_eps_override will be used instead of
+DWC_USB3_NUM_IN_EPS as the value of the number active IN endpoints.
 
-The key thing is that, if the full set of compatible strings are present
-and available, you can retroactively fix your driver to be more
-specific, very much less so your Device Tree blob (although there is
-disagreement).
+The minimum value specified for DWC_USB3_NUM_IN_EPS in the Designware
+data-book is two, if snps,num_in_eps_quirk is declared but
+snps,num_in_eps_override is omitted, then the minimum value will be used as
+the default.
+
+Signed-off-by: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |  3 +++
+ drivers/usb/dwc3/core.c                        | 11 +++++++++++
+ drivers/usb/dwc3/core.h                        |  6 ++++++
+ 3 files changed, 20 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+index e3e6983..bb383bf 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -55,6 +55,9 @@ Optional properties:
+ 	fladj_30mhz_sdbnd signal is invalid or incorrect.
+ 
+  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
++ - snps,num_in_eps_quirk: when set core will over-ride the num_in_eps value.
++ - snps,num_in_eps_override: the value that will be used for num_in_eps when
++			num_in_eps_quirk is true
+ 
+ This is usually a subnode to DWC3 glue to which it is connected.
+ 
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 369bab1..d5e472a 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -398,6 +398,8 @@ static void dwc3_core_num_eps(struct dwc3 *dwc)
+ 	struct dwc3_hwparams	*parms = &dwc->hwparams;
+ 
+ 	dwc->num_in_eps = DWC3_NUM_IN_EPS(parms);
++	if (dwc->num_in_eps_quirk)
++		dwc->num_in_eps = dwc->num_in_eps_override;
+ 	dwc->num_out_eps = DWC3_NUM_EPS(parms) - dwc->num_in_eps;
+ }
+ 
+@@ -908,6 +910,7 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 	struct device		*dev = dwc->dev;
+ 	u8			lpm_nyet_threshold;
+ 	u8			tx_de_emphasis;
++	u8			num_in_eps_override;
+ 	u8			hird_threshold;
+ 
+ 	/* default to highest possible threshold */
+@@ -922,6 +925,9 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 	 */
+ 	hird_threshold = 12;
+ 
++	/* default value of 2 is the minimum RTL parameter value */
++	num_in_eps_override = 2;
++
+ 	dwc->maximum_speed = usb_get_maximum_speed(dev);
+ 	dwc->dr_mode = usb_get_dr_mode(dev);
+ 	dwc->hsphy_mode = of_usb_get_phy_mode(dev->of_node);
+@@ -981,9 +987,14 @@ static void dwc3_get_properties(struct dwc3 *dwc)
+ 				    &dwc->hsphy_interface);
+ 	device_property_read_u32(dev, "snps,quirk-frame-length-adjustment",
+ 				 &dwc->fladj);
++	dwc->num_in_eps_quirk = device_property_read_bool(dev,
++				"snps,num_in_eps_quirk");
++	device_property_read_u8(dev, "snps,num_in_eps_override",
++				&num_in_eps_override);
+ 
+ 	dwc->lpm_nyet_threshold = lpm_nyet_threshold;
+ 	dwc->tx_de_emphasis = tx_de_emphasis;
++	dwc->num_in_eps_override = num_in_eps_override;
+ 
+ 	dwc->hird_threshold = hird_threshold
+ 		| (dwc->is_utmi_l1_suspend << 4);
+diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
+index 14b7602..3fe6dfc 100644
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -853,6 +853,9 @@ struct dwc3_scratchpad_array {
+  * 	3	- Reserved
+  * @imod_interval: set the interrupt moderation interval in 250ns
+  *                 increments or 0 to disable.
++ * @num_in_eps_quirk: set if silicon reports number of device-mode IN endpoints
++ *		      as equal to equal to the total number of endpoints.
++ * @num_in_eps_override: The value to set the number of IN endpoints to.
+  */
+ struct dwc3 {
+ 	struct usb_ctrlrequest	*ctrl_req;
+@@ -1003,6 +1006,9 @@ struct dwc3 {
+ 	unsigned		tx_de_emphasis:2;
+ 
+ 	u16			imod_interval;
++
++	unsigned		num_in_eps_quirk:1;
++	unsigned		num_in_eps_override:6;
+ };
+ 
+ /* -------------------------------------------------------------------------- */
 -- 
-Florian
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
