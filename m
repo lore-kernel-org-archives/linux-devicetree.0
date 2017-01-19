@@ -1,42 +1,45 @@
-From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 09/13] sata: ahci: export ahci_do_hardreset() locally
-Date: Thu, 19 Jan 2017 11:55:24 +0100
-Message-ID: <CAMpxmJULuF3cB7+Vy_qeWkTjooHvx8yk70w59Q=XNd0aAREcuw@mail.gmail.com>
-References: <1484745601-4769-1-git-send-email-bgolaszewski@baylibre.com>
- <1484745601-4769-10-git-send-email-bgolaszewski@baylibre.com> <20170118182826.GA1451@mtj.duckdns.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 09/13] mmc: jz4740: Let the pinctrl driver configure the pins
+Date: Thu, 19 Jan 2017 11:55:41 +0100
+Message-ID: <CAPDyKFp4idZx+ynQByz22zwsiK+reBcvt3OdHm1kR2QUy+sUhw@mail.gmail.com>
+References: <20170117231421.16310-1-paul@crapouillou.net> <20170117231421.16310-10-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170118182826.GA1451-qYNAdHglDFBN0TnZuCh8vA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170117231421.16310-10-paul@crapouillou.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, Linux
 List-Id: devicetree@vger.kernel.org
 
-2017-01-18 19:28 GMT+01:00 Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
-> Hello, Bartosz.
->
-> On Wed, Jan 18, 2017 at 02:19:57PM +0100, Bartosz Golaszewski wrote:
->> We need a way to retrieve the information about the online state of
->> the link in the ahci-da850 driver.
->>
->> Create a new function: ahci_do_hardreset() which is called from
->> ahci_hardreset() for backwards compatibility, but has an additional
->> argument: 'online' - which can be used to check if the link is online
->> after this function returns.
->
-> Please just add @online to ahci_hardreset() and update the callers.
-> Other than that, the sata changes look good to me.
->
+[...]
 
-Are you sure? There are 23 places in drivers/ata/ where the .hardreset
-callback is assigned. I'd prefer not to change the drivers I can't
-test. Besides all other **reset callbacks take three arguments -
-should we really only change one of them for a single driver's needs?
+>
+> -#ifdef CONFIG_PM_SLEEP
+> -
+> -static int jz4740_mmc_suspend(struct device *dev)
+> -{
+> -       struct jz4740_mmc_host *host = dev_get_drvdata(dev);
+> -
+> -       jz_gpio_bulk_suspend(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
+> -
 
-Thanks,
-Bartosz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shouldn't this be replaced with a call to:
+pinctrl_pm_select_sleep_state();
+
+> -       return 0;
+> -}
+> -
+> -static int jz4740_mmc_resume(struct device *dev)
+> -{
+> -       struct jz4740_mmc_host *host = dev_get_drvdata(dev);
+> -
+> -       jz_gpio_bulk_resume(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
+
+Shouldn't this be replaced with a call to:
+pinctrl_pm_select_default_state();
+
+[...]
+
+Kind regards
+Uffe
