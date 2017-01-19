@@ -1,61 +1,38 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3] iio: max5481: Add support for Maxim digital
- potentiometers
-Date: Thu, 19 Jan 2017 07:09:23 -0600
-Message-ID: <20170119130923.zaro5vgl7l7kidr6@rob-hp-laptop>
-References: <20170114212139.GA3418@x220.localdomain>
+Subject: Re: [PATCH v2] Documentation: usb: fix wrong documentation paths
+Date: Thu, 19 Jan 2017 07:11:02 -0600
+Message-ID: <20170119131102.lzieqp3dsew3w6at@rob-hp-laptop>
+References: <20170115121428.3255-1-yegorslists@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170114212139.GA3418-SwUeJysX96B82hYKe6nXyg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170115121428.3255-1-yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 14, 2017 at 10:21:39PM +0100, Slawomir Stepien wrote:
-> From: Matt Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
+On Sun, Jan 15, 2017 at 01:14:28PM +0100, Yegor Yefremov wrote:
+> Fixes wrong spelled "pinctrl-bindings.txt" and "qcom-dwc3-usb-phy.txt"
+> file names as also wrong specified "mt8173-mtu3.txt" file name.
 > 
-> Add implementation for Maxim Integrated 5481, 5482, 5483,
-> and 5484 digital potentiometer devices.
-> 
-> Datasheet:
-> http://datasheets.maximintegrated.com/en/ds/MAX5481-MAX5484.pdf
-> 
-> Signed-off-by: Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Matthew Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
+> Changes:
+> 	v1 -> v2: add changelog text (Greg Kroah-Hartman)
 > 
-> This is my resubmission of this patch after original authors decided not to
-> pursuit it inclusion into kernel.
-> 
-> Tested using signal analyzer.
-> 
-> Changes since v2:
-> * spi write buffer moved to struct max5481_data and ____cacheline_aligned.
-> * max5481_write_cmd now uses pointer to struct max5481_data as a first argument.
-> 
-> Changes since v1:
-> * removed not needed '``' and 'c' chars
-> * includes are now sorted
-> * added coma to last item in enum max5481_variant
-> * removed maxpos from struct max5481_cfg
-> * max5481_CHANNEL is no MAX5481_CHANNEL and it does not have 'ch' argument
-> * max5481_write_cmd is now based around switch
-> * removed not needed cast in max5481_write_cmd
-> * wpier state is saved after iio_device_unregister
-> * changed names in spi_device_id and acpi_device_id to be equal to names in of_device_id
-> 
-> ---
->  .../bindings/iio/potentiometer/max5481.txt         |  23 +++
+>  Documentation/devicetree/bindings/usb/dwc3-st.txt     | 4 ++--
+>  Documentation/devicetree/bindings/usb/ehci-st.txt     | 2 +-
+>  Documentation/devicetree/bindings/usb/mt8173-mtu3.txt | 2 +-
+>  Documentation/devicetree/bindings/usb/mt8173-xhci.txt | 4 ++--
+>  Documentation/devicetree/bindings/usb/qcom,dwc3.txt   | 2 +-
+>  5 files changed, 7 insertions(+), 7 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Applied, thanks.
 
->  drivers/iio/potentiometer/Kconfig                  |  11 ++
->  drivers/iio/potentiometer/Makefile                 |   1 +
->  drivers/iio/potentiometer/max5481.c                | 216 +++++++++++++++++++++
->  4 files changed, 251 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
->  create mode 100644 drivers/iio/potentiometer/max5481.c
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
