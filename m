@@ -1,66 +1,179 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 4/5] DT bindings documentation for Synopsys UDC platform
- driver
-Date: Thu, 19 Jan 2017 11:36:59 -0600
-Message-ID: <20170119173659.jeao5pqtlepmidek@rob-hp-laptop>
-References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
- <1484640308-25976-5-git-send-email-raviteja.garimella@broadcom.com>
+From: Chris Paterson <Chris.Paterson2@renesas.com>
+Subject: RE: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Thu, 19 Jan 2017 17:46:32 +0000
+Message-ID: <HK2PR0601MB132923F9E0A7C7CB21567757B77E0@HK2PR0601MB1329.apcprd06.prod.outlook.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
+ <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl> <4506041.7mPt4W6j0m@avalon>
+ <HK2PR06MB0545BF36C3DD2D4D1B951C3FC3670@HK2PR06MB0545.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484640308-25976-5-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <HK2PR06MB0545BF36C3DD2D4D1B951C3FC3670@HK2PR06MB0545.apcprd06.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 01:35:07PM +0530, Raviteja Garimella wrote:
-> This patch adds device tree bindings documentation for Synopsys
-> USB device controller platform driver.
+Hello Hans,
 
-Bindings describe h/w, not drivers.
-> 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/snps,dw-ahb-udc.txt    | 27 ++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
-> new file mode 100644
-> index 0000000..0c18327
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/snps,dw-ahb-udc.txt
-> @@ -0,0 +1,27 @@
-> +Synopsys USB Device controller.
-> +
-> +The device node is used for Synopsys Designware Cores AHB
-> +Subsystem Device Controller (UDC).
-> +
-> +This device node is used by UDCs integrated it Broadcom's
-> +Northstar2 and Cygnus SoC's.
+Do you have any further feedback on this?
 
-You need compatible strings for these in addition.
+Thanks, Chris
 
-> +
-> +Required properties:
-> + - compatible: should be "snps,dw-ahb-udc"
 
-This is a different IP than DWC2?
-
-> + - reg: Offset and length of UDC register set
-> + - interrupts: description of interrupt line
-> + - phys: phandle to phy node.
-> + - extcon: phandle to the extcon device. This is optional and
-> +   not required for those that don't require extcon support.
-> +   Extcon support will be required if the UDC is connected to
-> +   a Dual Role Device Phy that supports both Host and Device
-> +   mode based on the external cable.
-
-Drop this. It should be a part of the phy. Also, I don't care to see new 
-users of extcon binding because it needs redoing.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> From: Ramesh Shanmugasundaram
+> Sent: 10 January 2017 09:31
+> Hi Laurent,
+>=20
+> > > >>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram
+> wrote:
+> > > >>>> Add binding documentation for Renesas R-Car Digital Radio
+> > > >>>> Interface
+> > > >>>> (DRIF) controller.
+> > > >>>>
+> > > >>>> Signed-off-by: Ramesh Shanmugasundaram
+> > > >>>> <ramesh.shanmugasundaram@bp.renesas.com> ---
+> > > >>>>
+> > > >>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202
+> > +++++++++++++
+> > > >>>>  1 file changed, 202 insertions(+)  create mode 100644
+> > > >>>>
+> > > >>>> Documentation/devicetree/bindings/media/renesas,drif.txt
+> > > >>>>
+> > > >>>> diff --git
+> > > >>>> a/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > > >>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new
+> > > >>>> file mode 100644 index 0000000..1f3feaf
+> > > >>>> --- /dev/null
+> > > >>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> > > >>>>
+> > > >>>> +Optional properties of an internal channel when:
+> > > >>>> +     - It is the only enabled channel of the bond (or)
+> > > >>>> +     - If it acts as primary among enabled bonds
+> > > >>>> +--------------------------------------------------------
+> > > >>>> +- renesas,syncmd       : sync mode
+> > > >>>> +                      0 (Frame start sync pulse mode. 1-bit
+> > > >>>> +width
+> > > >>>> pulse
+> > > >>>> +                         indicates start of a frame)
+> > > >>>> +                      1 (L/R sync or I2S mode) (default)
+> > > >>>> +- renesas,lsb-first    : empty property indicates lsb bit is
+> > received
+> > > >>>> first.
+> > > >>>> +                      When not defined msb bit is received
+> > > >>>> +first
+> > > >>>> +(default)
+> > > >>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1
+> > > >>>> +for
+> > > >>>> low/high
+> > >
+> > > Shouldn't this be 'renesas,sync-active' instead of syncac-active?
+> > >
+> > > I'm not sure if syncac is intended or if it is a typo.
+> > >
+> > > >>>> +                      respectively. The default is 1 (active hi=
+gh)
+> > > >>>> +- renesas,dtdl         : delay between sync signal and start of
+> > > >>>> reception.
+> > > >>>> +                      The possible values are represented in
+> > > >>>> + 0.5
+> > clock
+> > > >>>> +                      cycle units and the range is 0 to 4. The
+> > default
+> > > >>>> +                      value is 2 (i.e.) 1 clock cycle delay.
+> > > >>>> +- renesas,syncdl       : delay between end of reception and syn=
+c
+> > > >>>> signal edge.
+> > > >>>> +                      The possible values are represented in
+> > > >>>> + 0.5
+> > clock
+> > > >>>> +                      cycle units and the range is 0 to 4 & 6.
+> > > >>>> + The
+> > > >>>> default
+> > > >>>> +                      value is 0 (i.e.) no delay.
+> > > >>>
+> > > >>> Most of these properties are pretty similar to the video bus
+> > > >>> properties defined at the endpoint level in
+> > > >>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
+> > > >>> believe it would make sense to use OF graph and try to
+> > > >>> standardize these properties similarly.
+> > >
+> > > Other than sync-active, is there really anything else that is similar=
+?
+> > > And even the sync-active isn't a good fit since here there is only
+> > > one sync signal instead of two for video (h and vsync).
+> >
+> > That's why I said similar, not identical :-) My point is that, if we
+> > consider that we could connect multiple sources to the DRIF, using OF
+> > graph would make sense, and the above properties should then be
+> > defined per endpoint.
+>=20
+> Thanks for the clarifications. I have some questions.
+>=20
+> - Assuming two devices are interfaced with DRIF and they are represented
+> using two endpoints, the control signal related properties of DRIF might =
+still
+> need to be same for both endpoints? For e.g. syncac-active cannot be
+> different in both endpoints?
+>=20
+> - I suppose "lsb-first", "dtdl" & "syncdl" may be defined per endpoint.
+> However, h/w manual says same register values needs to be programmed
+> for both the internal channels of a channel. Same with "syncmd" property.
+>=20
+> We could still define them as per endpoint property with a note that they
+> need to be same. But I am not sure if that is what you intended?
+>=20
+>  If we define them per endpoint we should then also try
+> > standardize the ones that are not really Renesas-specific (that's at
+> > least syncac-active).
+>=20
+> OK. I will call it "sync-active".
+>=20
+>  For the syncmd and lsb-first properties, it could also
+> > make sense to query them from the connected subdev at runtime, as
+> > they're similar in purpose to formats and media bus configuration
+> > (struct v4l2_mbus_config).
+>=20
+> May I know in bit more detail about what you had in mind? Please correct =
+me
+> if my understanding is wrong here but when I looked at the code
+>=20
+> 1) mbus_config is part of subdev_video_ops only. I assume we don't want t=
+o
+> support this as part of tuner subdev. The next closest is pad_ops with "s=
+truct
+> v4l2_mbus_framefmt" but it is fully video specific config unless I come u=
+p
+> with new MEDIA_BUS_FMT_xxxx in media-bus-format.h and use the code
+> field? For e.g.
+>=20
+> #define MEDIA_BUS_FMT_SDR_I2S_PADHI_BE       0x7001
+> #define MEDIA_BUS_FMT_SDR_I2S_PADHI_LE       0x7002
+>=20
+> 2) The framework does not seem to mandate pad ops for all subdev. As the
+> tuner can be any third party subdev, is it fair to assume that these prop=
+erties
+> can be queried from subdev?
+>=20
+> 3) Assuming pad ops is not available on the subdev shouldn't we still nee=
+d a
+> way to define these properties on DRIF DT?
+>=20
+> >
+> > I'm not an SDR expert, so I'd like to have your opinion on this.
+> >
+> > > >> Note that the last two properties match the those in
+> > > >> Documentation/devicetree/bindings/spi/sh-msiof.txt.
+> > > >> We may want to use one DRIF channel as a plain SPI slave with the
+> > > >> (modified) MSIOF driver in the future.
+> > > >
+> > > > Should I leave it as it is or modify these as in video-interfaces.t=
+xt?
+> > > > Shall we conclude on this please?
+> >
+>=20
+> Thanks,
+> Ramesh
