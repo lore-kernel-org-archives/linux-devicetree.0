@@ -1,187 +1,96 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Thu, 19 Jan 2017 14:15:24 +0200
-Message-ID: <16136231-7dfd-2f84-064f-f78a6ffe073b@ti.com>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com>
- <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2>
- <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2>
- <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2>
- <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
- <87por9lnjd.fsf@linux.intel.com> <576A4321.6020209@ti.com>
- <87fus5ljwf.fsf@linux.intel.com> <576A4C95.4080202@ti.com>
- <CAFp+6iEpnHTWQe196zWPJu3vqb+L=47rfU_8nfuUNC=Gjvc8Gg@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
+Date: Thu, 19 Jan 2017 15:13:35 +0100
+Message-ID: <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
+References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iEpnHTWQe196zWPJu3vqb+L=47rfU_8nfuUNC=Gjvc8Gg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>, Felipe Balbi <balbi@kernel.org>
-Cc: Peter Chen <hzpeterchen@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, peter.chen@freescale.com, Tony Lindgren <tony@atomide.com>, Greg KH <gregkh@linuxfoundation.org>, dan.j.williams@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Joao.Pinto@synopsys.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, jun.li@freescale.com, grygorii.strashko@ti.com, Rob Herring <robh@kernel.org>, nsekhar@ti.com, b-liu@ti.com, Joe Perches <joe@perches.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: devicetree@vger.kernel.org, linux@armlinux.org.uk, javier@osg.samsung.com, kernel@pengutronix.de, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Vivek,
+On Thu, Jan 19, 2017 at 12:02:46PM -0200, Fabio Estevam wrote:
+> Commit 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi") causes boot
+> issues when the bootloader does not create a 'chosen' node if such node
+> is not present in the dtb.
+> =
 
-On 19/01/17 13:56, Vivek Gautam wrote:
-> Hi,
-> 
-> 
-> On Wed, Jun 22, 2016 at 2:00 PM, Roger Quadros <rogerq@ti.com> wrote:
-> 
-> Luckily hit this thread while checking about DRD role functionality for DWC3.
-> 
->> On 22/06/16 11:14, Felipe Balbi wrote:
->>>
->>> Hi,
->>>
->>> Roger Quadros <rogerq@ti.com> writes:
->>>>>>>>>>>> For the real use case, some Carplay platforms need it.
->>>>>>>>>>>
->>>>>>>>>>> Carplay does *NOT* rely on OTG. Apple has its own proprietary and closed
->>>>>>>>>>> specification which is not OTG-compliant.
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Yes, it is not OTG-compliant, but it can co-work with some standard OTG FSM
->>>>>>>>>> states to finish role swap.
->>>>>>>>>
->>>>>>>>> What are you referring to as "finish role swap"? I don't get that.
->>>>>>>>
->>>>>>>> Change current role from host to peripheral.
->>>>>>>
->>>>>>> Okay, we have two scenarios here:
->>>>>>>
->>>>>>> 1. You need full OTG compliance
->>>>>>>
->>>>>>>   For this, granted, you need the state machine if your HW doesn't
->>>>>>>   track it. This is a given. With only one user, however, perhaps
->>>>>>>   we don't need a generic layer. There are not enough different
->>>>>>>   setups to design a good enough generic layer. We will end up
->>>>>>>   with a pseudo-generic framework which is coupled with its only
->>>>>>>   user.
->>>>>>>
->>>>>>> 2. Dual-role support, without OTG compliance
->>>>>>>
->>>>>>>   In this case, you don't need a stack. All you need is a signal
->>>>>>>   to tell you state of ID pin and another to tell you state of
->>>>>>>   VBUS level. If you have those, you don't need to walk an OTG
->>>>>>>   state machine at all. You don't need any of those quirky OTG
->>>>>>>   timers, agreed?
->>>>>>>
->>>>>>>   Given the above, why would you even want to use a subset of OTG
->>>>>>>   state machine to implement something that's _usually_ as simple
->>>>>>>   as:
->>>>>>>
->>>>>>> 8<----------------------------------------------------------------------
->>>>>>>   vbus = read(VBUS_STATE); /* could be a gpio_get_value() */
->>>>>>>         id = read(ID_STATE); /* could be a gpio_get_value() */
->>>>>>>
->>>>>>>         set_role(id);
->>>>>>>         set_vbus(vbus);
->>>>>>> ------------------------------------------------------------------------
->>>>>>>
->>>>>>
->>>>>> In fact, the individual driver can do it by itself. The chipidea driver
->>>>>> handles OTG and dual-role well currently. By considering this OTG/DRD
->>>>>> framework is worthwhile or not, we would like to see if it can
->>>>>> simplify DRD design for each driver, and can benefit the platforms which
->>>>>> has different drivers for host and peripheral to finish the role switch
->>>>>> well.
->>>>>
->>>>> simplify how?  By adding unnecessary workqueues and a level indirection
->>>>> that just goes back to the same driver?
->>>>
->>>> What do you mean by same driver?
->>>
->>> dwc3 registers to OTG layer. dwc3 also registers as UDC to UDC
->>> layer. When dwc3 OTG IRQ fires, dwc3 tells OTG layer about it and OTG
->>> layer jumps to a callback that goes back to dwc3 to e.g. start
->>> peripheral side.
->>>
->>> See ?!? Starts on dwc3, goes to OTG layer, goes back to DWC3.
->>>
->>>> Gadget driver, host driver and PHY (or MUX) driver (for ID/VBUS) can
->>>> be 3 totally independent drivers unlike dwc3 where you have a single
->>>> driver in control of both host and gadget.
->>>
->>> That's a totally different issue and one not being tackled by OTG
->>> layer, because there are no such users yet. We can't design anything
->>> based solely on speculation of what might happen.
->>>
->>> If there aren't enough users, there is no way to design a good generic
->>> layer.
->>>
->>>> Questions not clear to me are:
->>>>
->>>> 1) Which driver handles ID/VBUS events and makes a decision to do the
->>>> role swap?  Probably the PHY/MUX driver?
->>>
->>> This is implementation dependent. For TI's USB subsystem, we have PMIC
->>> sampling VBUS/ID that and using EXTCON to tell dwc3-omap to program UTMI
->>> mailbox. The same mailbox can be used in HW-mode (see AM437x) where SW
->>> has no intervention.
->>>
->>> For Intel's USB subsystem, we have PMIC sampling VBUS/ID with an
->>> internal mux (much like TI's UTMI mailbox, but slightly different) to
->>> switch between a separate XHCI or a separate dwc3. The same mux can be
->>> put in HW-mode where SW has no intervention.
->>>
->>> In any case, for Intel's stuff most of the magic happens in ASL. Our PHY
->>> driver just detects role (at least for Type-C based plats) and executes
->>> _DSM with correct arguments [1]. _DSM will program internal MUX, toggle
->>> VBUS and, for type-C, toggle VCONN when needed.
->>>
->>>> 2) How does it perform the role swap? Probably a register write to the
->>>> PHY/MUX without needing to stop/start controllers? Easy case is both
->>>> controllers can run in co-existence without interference. Is there any
->>>> platform other than dwc3 where this is not the case?
->>>
->>> Again speculation. But to answer your question, only dwc3 is in such a
->>> case today. But even for dwc3 we can have DRD with a much, much simpler
->>> setup as I have already explained.
->>>
->>>> 3) Even if host and gadget controllers can operate in coexistence,
->>>> there is no need for both to be running for embedded applications
->>>> which are usually power conservative.  How can we achieve that?
->>>
->>> Now you're also speculating that you're running on embedded applications
->>> and that we _can_ power off parts of the IP. I happen to know that we
->>> can't power off XHCI part of dwc3 in TI's SoC because that's fed by same
->>> Clocks and power rails as the peripheral side.
->>>
->>> [1] https://lkml.org/lkml/2016/6/21/658
->>>
->> For TI's case it is dwc3 and you are implementing the role swap in the dwc3
->> driver where you do intend to remove the XHCI platform device. So I'm not
->> much concerned about that.
->>
->> I was concerned about other platforms. I guess I'll let the other platform
->> people speak up as to what they need.
-> 
-> I will talk about the msm platforms using dwc3 hardware.
-> DWC3 controller on msm doesn't seem to have full otg functionality,
-> and the driver makes use of switching between host and device
-> using PRTCAPDIR register in of the core [1].
-> 
-> We plan to support this DRD role switching (swapping host and device
-> functionality based on id/vbus interrupts) in upstream.
-> 
-> Do we see a valid case to have this framework?
+> The reason for the boot failure is well explained by Javier Martinez
+> Canillas: "the decompressor relies on a pre-existing chosen node to be
+> available to insert the command line and merge other ATAGS info."
+> =
 
-Felipe wanted to have a minimal dual-role logic inside dwc3 which is
-independent of any DRD/OTG framework.
+> , so pass an empty 'chosen' node to fix the boot problem.
+> =
 
-I have implemented this and will send out patches today for review.
+> This issue has been seen in the kernelci reports with Barebox as
+> bootloader.
+> =
 
-> Or, may be add a 'drd' layer for dwc3 that handles
-> role switching (using PRTCAPDIR) based on the id/vbus extcon notifications.
-> 
-> 
-> [1] https://source.codeaurora.org/quic/la/kernel/msm-3.18/tree/drivers/usb/dwc3/dwc3-msm.c?h=msm-3.18
->      "dwc3_otg_start_host()"
->      "dwc3_otg_start_peripheral()"
-> 
-> 
+> Also pass the 'memory' node in order to fix boot issues on the SolidRun
+> iMX6 platforms.
+> =
 
-regards,
--roger
+> Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
+> Reported-by: kernelci.org bot <bot@kernelci.org>
+> Reported-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Signed-off-by: Fabio Estevam <fabio.estevam@nxp.com>
+> ---
+> Changes since v1:
+> - Also pass the memory node.
+> =
+
+>  arch/arm/boot/dts/imx1.dtsi    | 2 ++
+>  arch/arm/boot/dts/imx23.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx25.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx27.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx28.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx31.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx35.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx50.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx51.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx53.dtsi   | 2 ++
+>  arch/arm/boot/dts/imx6qdl.dtsi | 2 ++
+>  arch/arm/boot/dts/imx6sl.dtsi  | 2 ++
+>  arch/arm/boot/dts/imx6sx.dtsi  | 2 ++
+>  arch/arm/boot/dts/imx6ul.dtsi  | 2 ++
+>  arch/arm/boot/dts/imx7s.dtsi   | 2 ++
+>  15 files changed, 30 insertions(+)
+> =
+
+> diff --git a/arch/arm/boot/dts/imx1.dtsi b/arch/arm/boot/dts/imx1.dtsi
+> index dd3de38..7ef0d36 100644
+> --- a/arch/arm/boot/dts/imx1.dtsi
+> +++ b/arch/arm/boot/dts/imx1.dtsi
+> @@ -18,6 +18,8 @@
+>  / {
+>  	#address-cells =3D <1>;
+>  	#size-cells =3D <1>;
+> +	chosen {};
+> +	memory { device_type =3D "memory"; reg =3D <0 0>; };
+
+Would it be nice to add a comment about why this was added? Something to
+prevent a cleanup like "remove empty nodes and invalid memory
+configurations".
+
+Best regards
+Uwe
+
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
