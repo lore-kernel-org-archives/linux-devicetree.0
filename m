@@ -1,148 +1,141 @@
-From: "M'boumba Cedric Madianga" <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 2/5] i2c: Add STM32F4 I2C driver
-Date: Thu, 19 Jan 2017 09:29:53 +0100
-Message-ID: <CAOAejn1HdZACqBLfw9r-yXZeSatz=mYDBGc9fdQ2puPVhsOp1w@mail.gmail.com>
-References: <1484666821-20551-1-git-send-email-cedric.madianga@gmail.com>
- <1484666821-20551-3-git-send-email-cedric.madianga@gmail.com>
- <20170117193752.e6hju25w74bb4i4z@pengutronix.de> <CAOAejn0ea2j_oUijOdHgiL3JU4TM0HZoL+-ggzjpPL2eA7tDCw@mail.gmail.com>
- <20170118184237.tvhlsksdcw2ckwan@pengutronix.de> <CAOAejn2LobTMfvsvmW8cCiToFHuM6n26s5QPLLXxLzb-WKkhQw@mail.gmail.com>
- <20170119080258.fovhfy2v6rrtgwgp@pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v8 0/8] Add PWM and IIO timer drivers for STM32
+Date: Thu, 19 Jan 2017 08:43:55 +0000
+Message-ID: <20170119084355.GF3718@dell>
+References: <1484749251-14445-1-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170119080258.fovhfy2v6rrtgwgp-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484749251-14445-1-git-send-email-benjamin.gaignard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabrice.gasnier@st.com, gerald.baeza@st.com, arnaud.pouliquen@st.com, linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-ok fine
+On Wed, 18 Jan 2017, Benjamin Gaignard wrote:
 
-2017-01-19 9:02 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutroni=
-x.de>:
-> Hello Cedric,
->
-> On Wed, Jan 18, 2017 at 09:55:39PM +0100, M'boumba Cedric Madianga wrote:
->> 2017-01-18 19:42 GMT+01:00 Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengut=
-ronix.de>:
->> > Hello Cedric,
->> >
->> > On Wed, Jan 18, 2017 at 04:21:17PM +0100, M'boumba Cedric Madianga wro=
-te:
->> >> >> +      * In standard mode, the maximum allowed SCL rise time is 10=
-00 ns.
->> >> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits =
-is equal to
->> >> >> +      * 0x08 so period =3D 125 ns therefore the TRISE[5:0] bits m=
-ust be
->> >> >> +      * programmed with 09h.(1000 ns / 125 ns =3D 8 + 1)
->> >> >
->> >> >         * programmed with 0x9.
->> >> > (1000 ns / 125 ns =3D 8)
->> >> >
->> >> >> +      * So, for I2C standard mode TRISE =3D FREQ[5:0] + 1
->> >> >> +      *
->> >> >> +      * In fast mode, the maximum allowed SCL rise time is 300 ns=
-.
->> >> >> +      * If, in the I2C_CR2 register, the value of FREQ[5:0] bits =
-is equal to
->> >> >> +      * 0x08 so period =3D 125 ns therefore the TRISE[5:0] bits m=
-ust be
->> >> >> +      * programmed with 03h.(300 ns / 125 ns =3D 2 + 1)
->> >> >
->> >> > as above s/03h/0x3/;
->> >>
->> >> ok
->> >>
->> >> > s/.(/. (/;
->> >> ok
->> >>
->> >> > s/+ 1//;
->> >> This formula is use to understand how we find the result 0x3
->> >> So, 0x3 =3D> 300 ns / 125ns =3D 2 + 1
->> >
->> > Yeah, I understood that, but writing 300 ns / 125ns =3D 2 + 1 is
->> > irritating at best.
->>
->> Ok. I will write 0x3 (300 ns / 125 ns + 1) and 0x9 (1000 ns / 125 ns + 1=
-)
->>
->> >> >         [...]
->> >> >         If DUTY =3D 1: (to reach 400 kHz)
->> >> >
->> >> > Strange.
->> >> >
->> >> >> +             val =3D DIV_ROUND_UP(i2c_dev->parent_rate, 400000 * =
-3);
->> >> >
->> >> > the manual reads:
->> >> >
->> >> >         The minimum allowed value is 0x04, except in FAST DUTY mode
->> >> >         where the minimum allowed value is 0x01
->> >> >
->> >> > You don't check for that, right?
->> >>
->> >> As the minimum freq value is 6 Mhz in fast mode the minimum CCR is 5
->> >> as described in the comment.
->> >> So I don't need to check that again as it is already done by checking
->> >> parent frequency.
->> >
->> > That would then go into a comment.
->>
->> Is it really needed ?
->> Adding some comments to explain implementation choices or  hardware
->> way of working is clearly useful.
->> But for this kind of thing, I am really surprised...
->
-> TL;DR: It's not needed, but it probably helps.
->
-> Consider someone sees a breakage in your driver in five years. By then
-> you either have other interests or at least forgot 95 % of the thoughts
-> you had when implementing the driver.
->
-> So when I see:
->
->         val =3D DIV_ROUND_UP(i2c_dev->parent_rate, 400000 * 3);
->         ccr |=3D STM32F4_I2C_CCR_CCR(val);
->         writel_relaxed(ccr, i2c_dev->base + STM32F4_I2C_CCR);
->
-> after seeing that the bus freq is wrong the obvious thoughts are:
->
->  - Does this use the right algorithm?
->  - Does this calculation result in values that are usable by the
->    hardware?
->
-> That you thought about this today doesn't mean it's still right in five
-> years. During that time a new hardware variant is available with a
-> higher parent freq. Or there is a new errata available for the SoC.
->
-> So to help answer the questions above it helps if you add today the
-> formulas from the manual and a quick reason for why val fits into the
-> respective bits in the CCR register. That comment might be wrong until
-> then, too, but that only means you should make it easy to verify.
-> Something like:
->
->         /*
->          * Function bla_blub made sure that parent_rate is not higher
->          * than 23 * pi MHz. As a result val is at most 13.2 bits wide
->          * and so fits into the CCR bits.
->          */
->
-> This gives you in five years time the opportunity to quickly check
-> bla_blub if this is still true, add a printk for parent_rate to check
-> this, or quickly identify the bug in the code or the mismatch to the
-> manual.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> version 8:
+> - rebase on v4.10-rc4
+> - fix comments done by Thierry on PWM
+> - reword "reg" parameter description
+> - change kernel kernel in IIO ABI documentation
+> 
+> version 7:
+> - rebase on v4.10-rc2
+> - remove iio_device code from driver and keep only the trigger part
+> 
+> version 6:
+> - rename stm32-gptimer in stm32-timers.
+> - change "st,stm32-gptimer" compatible to "st,stm32-timers".
+> - modify "st,breakinput" parameter in pwm part.
+> - split DT patch in 2
+> 
+> version 5:
+> - fix comments done on version 4
+> - rebased on kernel 4.9-rc8
+> - change nodes names and re-order then by addresses
+> 
+> version 4:
+> - fix comments done on version 3
+> - don't use interrupts anymore in IIO timer
+> - detect hardware capabilities at probe time to simplify binding
+> 
+> version 3:
+> - no change on mfd and pwm divers patches
+> - add cross reference between bindings
+> - change compatible to "st,stm32-timer-trigger"
+> - fix attributes access rights
+> - use string instead of int for master_mode and slave_mode
+> - document device attributes in sysfs-bus-iio-timer-stm32
+> - update DT with the new compatible
+> 
+> version 2:
+> - keep only one compatible per driver
+> - use DT parameters to describe hardware block configuration:
+>   - pwm channels, complementary output, counter size, break input
+>   - triggers accepted and create by IIO timers
+> - change DT to limite use of reference to the node
+> - interrupt is now in IIO timer driver
+> - rename stm32-mfd-timer to stm32-timers (for general purpose timer)
+> 
+> The following patches enable PWM and IIO Timer features for STM32 platforms.
+> 
+> Those two features are mixed into the registers of the same hardware block
+> (named general purpose timer) which lead to introduce a multifunctions driver 
+> on the top of them to be able to share the registers.
+> 
+> In STM32f4 14 instances of timer hardware block exist, even if they all have
+> the same register mapping they could have a different number of pwm channels
+> and/or different triggers capabilities. We use various parameters in DT to 
+> describe the differences between hardware blocks
+> 
+> The MFD (stm32-timers.c) takes care of clock and register mapping
+> by using regmap. stm32_timers structure is provided to its sub-node to
+> share those information.
+> 
+> PWM driver is implemented into pwm-stm32.c. Depending of the instance we may
+> have up to 4 channels, sometime with complementary outputs or 32 bits counter
+> instead of 16 bits. Some hardware blocks may also have a break input function
+> which allows to stop pwm depending of a level, defined in devicetree, on an
+> external pin.
+> 
+> IIO timer driver (stm32-timer-trigger.c and stm32-timer-trigger.h) define a list
+> of hardware triggers usable by hardware blocks like ADC, DAC or other timers. 
+> 
+> The matrix of possible connections between blocks is quite complex so we use 
+> trigger names and is_stm32_iio_timer_trigger() function to be sure that
+> triggers are valid and configure the IPs.
+> 
+> At run time IIO timer hardware blocks can configure (through "master_mode" 
+> IIO device attribute) which internal signal (counter enable, reset,
+> comparison block, etc...) is used to generate the trigger.
+> 
+> Benjamin Gaignard (8):
+>   MFD: add bindings for STM32 Timers driver
+>   MFD: add STM32 Timers driver
+>   PWM: add pwm-stm32 DT bindings
+>   PWM: add PWM driver for STM32 plaftorm
+>   IIO: add bindings for STM32 timer trigger driver
+>   IIO: add STM32 timer trigger driver
+>   ARM: dts: stm32: add Timers driver for stm32f429 MCU
+>   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
+> 
+>  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
+>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
+>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++++++++
+>  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
+>  drivers/iio/trigger/Kconfig                        |   9 +
+>  drivers/iio/trigger/Makefile                       |   1 +
+>  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++++++++++++
+>  drivers/mfd/Kconfig                                |  11 +
+>  drivers/mfd/Makefile                               |   2 +
+>  drivers/mfd/stm32-timers.c                         |  80 +++++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-stm32.c                            | 398 +++++++++++++++++++++
+>  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
+>  include/linux/mfd/stm32-timers.h                   |  71 ++++
+>  17 files changed, 1422 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
+>  create mode 100644 drivers/mfd/stm32-timers.c
+>  create mode 100644 drivers/pwm/pwm-stm32.c
+>  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
+>  create mode 100644 include/linux/mfd/stm32-timers.h
+
+Let me know when you have all your Acks.
+
+I would be happy to take this through the MFD tree.
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
