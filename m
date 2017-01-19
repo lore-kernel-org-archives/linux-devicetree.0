@@ -1,48 +1,56 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Question about OF-graph ports
-Date: Thu, 19 Jan 2017 11:12:15 +0000
-Message-ID: <20170119111215.cv2fyvjafluih22p@sirena.org.uk>
-References: <87r33z4maj.wl%kuninori.morimoto.gx@renesas.com>
+From: Ding Tianhong <dingtianhong@huawei.com>
+Subject: [PATCH v8 1/4] arm64: arch_timer: Add device tree binding for
+ hisilicon-161010101 erratum
+Date: Thu, 19 Jan 2017 19:14:31 +0800
+Message-ID: <1484824474-12172-2-git-send-email-dingtianhong@huawei.com>
+References: <1484824474-12172-1-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2m5nqk4iqobbls3y"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87r33z4maj.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484824474-12172-1-git-send-email-dingtianhong@huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+Cc: Ding Tianhong <dingtianhong@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+This erratum describes a bug in logic outside the core, so MIDR can't be
+used to identify its presence, and reading an SoC-specific revision
+register from common arch timer code would be awkward.  So, describe it
+in the device tree.
 
---2m5nqk4iqobbls3y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/arch_timer.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-On Thu, Jan 19, 2017 at 06:07:43AM +0000, Kuninori Morimoto wrote:
-
-> My question is in this case, how to know CPU/Codec pair on "card" ?
-
-This is more of a DT question but, I don't think I have that strong an
-opinion based on the snippets you posted, they both seem readable.
-
---2m5nqk4iqobbls3y
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliAnw4ACgkQJNaLcl1U
-h9DMLwf+PVK9kAq8D2ZgYRLG5yVkdG6XYp+qLfC66cYm0I2EzGNnpqQcpBS6SrlQ
-fawILf9H8TO9txSiBR4oQ2zpwvYxM7b/bqUNV0rb4WT4/nVDDKuKXTlScx7fQmeQ
-uOT2lA9jpSTQdYNfgQnNqxradF6IS9ZU/JHjl1HFy+x8v6t16Lj3aUbFvEMjZ7l5
-XhV6wDLwmhvCPX0YklrrFyF4oWAwYTaxEdqvwtjO0vQUWfQb2M6VFTb28J9GZPPQ
-/il95HQY/XVU6dPYwBIkSEsW4+uPtWm55b/XolqennHaBcb+SNjas9FKUzIxEGDD
-e5vnc1UvU7Fx6n0g6ACtZYBEeP1/rA==
-=XVRp
------END PGP SIGNATURE-----
-
---2m5nqk4iqobbls3y--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
+index ad440a2..9116934 100644
+--- a/Documentation/devicetree/bindings/arm/arch_timer.txt
++++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
+@@ -31,6 +31,14 @@ to deliver its interrupts via SPIs.
+   This also affects writes to the tval register, due to the implicit
+   counter read.
+ 
++- hisilicon,erratum-161010101 : A boolean property. Indicates the presence of
++  erratum 161010101, which says that reading the counter is unreliable unless
++  reading twice on the register and the value of the second read is larger
++  than the first by less than 32. If the verification is unsuccessful, then
++  discard the value of this read and repeat this procedure until the verification
++  is successful.  This also affects writes to the tval register, due to the
++  implicit counter read.
++
+ ** Optional properties:
+ 
+ - arm,cpu-registers-not-fw-configured : Firmware does not initialize
+-- 
+1.9.0
