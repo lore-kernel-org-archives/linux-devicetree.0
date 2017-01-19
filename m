@@ -1,67 +1,83 @@
-From: "santosh.shilimkar@oracle.com" <santosh.shilimkar@oracle.com>
-Subject: Re: [PATCH v3 0/4] ARM: K2G: Add support for TI-SCI Generic PM Domains
-Date: Thu, 19 Jan 2017 09:51:35 -0800
-Message-ID: <25026532-fe4d-8215-9249-c5c7efcd8242@oracle.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <6fc7a6cb-1856-1377-b00c-8166dbb23ea2@oracle.com>
- <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
+Date: Thu, 19 Jan 2017 11:54:23 -0600
+Message-ID: <20170119175423.uvjqtgkp2jns35hf@rob-hp-laptop>
+References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
+ <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
+ <CACna6rwSZH8697px46KitcsFTROhqAQa2Cm2-RCTH=L_5nQFYg@mail.gmail.com>
+ <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <bf9286b1-379d-1cc8-4eae-d268540dd2a6@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Gerlach <d-gerlach@ti.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Lokesh Vutla <lokeshvutla@ti.com>, Keerthy <j-keerthy@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <82a0b0f7-a94b-70b5-1a5e-e5c04943a684@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Cyrille Pitchen <cyrille.pitchen@atmel.com>
+Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Sascha Hauer <kernel@pengutronix.de>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Jagan Teki <jagan@openedev.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/4/17 2:06 PM, Dave Gerlach wrote:
-> Santosh,
-> On 01/04/2017 03:54 PM, Santosh Shilimkar wrote:
->> On 1/4/2017 12:55 PM, Dave Gerlach wrote:
->>> Hi,
->>> This is v3 of the series to add support for TI-SCI Generic PM Domains.
->>> Previous versions can be found here:
->>>
->>> v2: https://www.spinics.net/lists/kernel/msg2364612.html
->>> v1: http://www.spinics.net/lists/arm-kernel/msg525204.html
->>>
->>> This version is rebased on v4.10-rc2 but is the same as v2 with the
->>> exception of patch 2 in which the devicetree binding documentation
->>> needed to be updated to show the k2g_pds node should be a child of
->>> the pmmc node. Apart from that, the acks provided by Ulf were added
->>> to patches 1 and 3.
->>>
->>> Now that the TI-SCI series has been merged [1] this series will be ready
->>> to go in with an ack on the DT binding. Rob had raised some questions on
->>> the necessity ti,sci-id property but I believe these were properly
->>> addressed during the discussion of v2 so hopefully an ack is in order
->>> now.
->>>
->> How do you plan to merge this series with below patch ?
->>
->>>   PM / Domains: Add generic data pointer to genpd data struct
->> I think this one goes via Rafael's tree. If you want me to merge this
->> along with other patches then will need his ack.
->>
->> Other way is to get that merged first via Rafael's tree and then
->> the remainder series.
->
-> I'd be happy with it going in through your tree with an ack to avoid any
-> delay but I'd say it's Rafael's call as it is a patch to the genpd core,
-> even though at this point I am the only user.
->
-Am going to send pull request over weekend, so if you would like
-me take the series via arm-soc tree, please get Rafaels, ack and
-let me know.
-
-Regards,
-Santosh
+T24gVHVlLCBKYW4gMTcsIDIwMTcgYXQgMDI6NTc6MjJQTSArMDEwMCwgQ3lyaWxsZSBQaXRjaGVu
+IHdyb3RlOgo+IExlIDE3LzAxLzIwMTcgw6AgMTQ6MTYsIFJhZmHFgiBNacWCZWNraSBhIMOpY3Jp
+dCA6Cj4gPiBPbiAxNyBKYW51YXJ5IDIwMTcgYXQgMTI6MDMsIFV3ZSBLbGVpbmUtS8O2bmlnCj4g
+PiA8dS5rbGVpbmUta29lbmlnQHBlbmd1dHJvbml4LmRlPiB3cm90ZToKPiA+PiBUaGUgTVIyNSBm
+YW1pbHkgZG9lc24ndCBzdXBwb3J0IEpFREVDLCBzbyB0aGV5IG5lZWQgZXhwbGljaXQgbWVudGlv
+bmluZwo+ID4+IGluIHRoZSBsaXN0IG9mIHN1cHBvcnRlZCBzcGkgSURzLiBUaGlzIG1ha2VzIGl0
+IHBvc3NpYmxlIHRvIGFkZCB0aGVzZQo+ID4+IHVzaW5nIGZvciBleGFtcGxlOgo+ID4+Cj4gPj4g
+ICAgICAgICBjb21wYXRpYmxlID0gImV2ZXJzcGluLG1yMjVoNDAiOwo+ID4gCj4gPiAoLi4uKQo+
+ID4gCj4gPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+dGQvamVkZWMsc3BpLW5vci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bXRkL2plZGVjLHNwaS1ub3IudHh0Cj4gPj4gaW5kZXggMmM5MWMwM2U3ZWIwLi4zZTkyMGVjNWM0
+ZDMgMTAwNjQ0Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210
+ZC9qZWRlYyxzcGktbm9yLnR4dAo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9tdGQvamVkZWMsc3BpLW5vci50eHQKPiA+PiBAQCAtMTQsNiArMTQsOCBAQCBSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+ID4+ICAgICAgICAgICAgICAgICAgIGF0MjVkZjY0MQo+ID4+ICAg
+ICAgICAgICAgICAgICAgIGF0MjZkZjA4MWEKPiA+PiAgICAgICAgICAgICAgICAgICBtcjI1aDI1
+Ngo+ID4+ICsgICAgICAgICAgICAgICAgIG1yMjVoMTAKPiA+PiArICAgICAgICAgICAgICAgICBt
+cjI1aDQwCj4gPj4gICAgICAgICAgICAgICAgICAgbXgyNWw0MDA1YQo+ID4+ICAgICAgICAgICAg
+ICAgICAgIG14MjVsMTYwNmUKPiA+PiAgICAgICAgICAgICAgICAgICBteDI1bDY0MDVkCj4gPiAK
+PiA+IFVoLCB0aGlzIGlzIGdldHRpbmcgYSBuZXZlci1lbmRpbmctc3RvcnkuLi4KPiA+IElmIHRo
+ZXNlIGNoaXBzZXRzIGRvbid0IHN1cHBvcnQgSkVERUMsIHNob3VsZCB3ZSBrZWVwIHRoZW0gaW4g
+amVkZWMsc3BpLW5vci50eHQ/Cj4gPiAKPiAKPiBNYXliZSBub3QgYnV0IEkgdGhpbmsgdGhlIG5l
+dyBjb21wYXRpYmxlIHN0cmluZ3Mgc2hvdWxkIGJlIGRvY3VtZW50ZWQKPiBzb21ld2hlcmUuIEN1
+cnJlbnRseSBqZWRlYyxzcGktbm9yLnR4dCBhbHJlYWR5IGRvY3VtZW50cyBhbGwgdGhlCj4gIm0y
+NXAqLW5vbmplZGVjIiBtZW1vcmllcy4gU28gbWF5YmUganVzdCByZW5hbWluZyB0aGUgamVkZWMs
+c3BpLW5vci50eHQKPiBmaWxlIGludG8gc3BpLW5vci50eHQgb3IgbXRkLHNwaS1ub3IudHh0IGNv
+dWxkIGJlIGEgc29sdXRpb24uIE90aGVyd2lzZSwgd2UKPiBjYW4gbGV0IGl0IGFzIGlzLiBJIGhh
+dmUgbm8gaWRlYSBvZiB3aGF0IHdvdWxkIGJlIHRoZSBiZXN0IHNvbHV0aW9uLgoKQXMgSSByZWFk
+IHRoZSBkZXNjcmlwdGlvbiwgdGhlIG5vbi1qZWRlYyBjaGlwcyBkb24ndCBzdXBwb3J0IFJFQUQg
+SUQsIApidXQgSSB3b3VsZCBhc3N1bWUgdGhleSBvdGhlcndpc2UgZm9sbG93IHRoZSBKRURFQyBz
+cGVjKHMpPwoKPiBUbyBiZSBob25lc3QsIEkgZG9uJ3QgYWx3YXlzIGZ1bGx5IHVuZGVyc3RhbmQg
+dGhlIERUIHBvbGljeS9waGlsb3NvcGh5IGFuZAo+IGl0cyByZXF1aXJlbWVudHMuIEkganVzdCB0
+aG91Z2h0IHdoZW4gYSBuZXcgcHJvcGVydHkgb3IgYSBuZXcgdmFsdWUgaXMKPiBpbnRyb2R1Y2Vk
+IGl0IGhhcyB0byBiZSBkb2N1bWVudGVkLgo+IEdlbmVyYWxseSBzcGVha2luZywgd2hlbiBEVCBp
+cyBpbnZvbHZlZCBpbiBzb21lIHNlcmllcyBvZiBwYXRjaGVzLCBpdCBvZnRlbgo+IGdlbmVyYXRl
+cyBtYW55IGRpc2N1c3Npb25zIGFib3V0IHRoZSBwcm9wZXIgd2F5IHRvIGRvIHRoaW5rcyBhbmQg
+YWJvdXQKPiBjaG9vc2luZyB0aGUgYmVzdCBiZXR3ZWVuIG1hbnkgdGVjaG5pY2FsbHkgZnVuY3Rp
+b25hbCBzb2x1dGlvbnMuCgpEb2Vzbid0IHRoYXQgYXBwbHkgdG8gYW55IGNvZGUgcmV2aWV3PyBT
+b3VuZHMgbGlrZSB0aGUga2VybmVsIHByb2Nlc3MgdG8gCm1lLiBJZiB0aGUgRFQgcmV2aWV3IGlz
+IG1vcmUgc3RyaW5nZW50LCB0aGVuIEknbGwgdGFrZSB0aGF0IGFzIGEgCmNvbXBsZW1lbnQuCgo+
+IElmIHlvdSB0aGluayBqZWRlYyxzcGktbm9yLnR4dCBpcyBub3Qgc3VpdGVkIHRvIGRvY3VtZW50
+IHRoZSBuZXcgdmFsdWUgZm9yCj4gdGhlIGNvbXBhdGlibGUgc3RyaW5nLCB3aHkgbm90LCBJIHBl
+cmZlY3RseSB1bmRlcnN0YW5kIHlvdXIgcG9pbnQuCj4gCj4gSSBkb24ndCBtaW5kIGNob29zaW5n
+IGFub3RoZXIgd2F5LiBJIGp1c3Qgd2FudCB0byBiZSBzdXJlIHRoYXQsIGlmIG5vdCBhbGwsCj4g
+bW9zdCBvZiBwZW9wbGUgYWdyZWUgb24gdGhhdCBzb2x1dGlvbiBhbmQgaWYgcG9zc2libGUsIGl0
+IGlzIGNvbXBsaWFudCB3aXRoCj4gRFQgcG9saWN5IHNvIGV2ZXJ5Ym9keSBpcyBoYXBweSBhbmQg
+d29ya3MgdG9nZXRoZXIuCj4gVGhhdCdzIHdoeSBJIGludm9sdmUgRFQgcGVvcGxlLCBldmVuIGlm
+IGl0J3MgYSBzbWFsbCBkZXRhaWwsIHNvIHRoZXkgY2FuCj4gYWR2aXNlIHVzLgo+IAo+IEFueXdh
+eSwgYXQgc29tZSBwb2ludCB3ZSBoYXZlIHRvIHRha2UgYSBkZWNpc2lvbiB0byBjYXJyeSBvbiB0
+aGlua3MuCj4gU28gYWN0dWFsbHksIEkgd291bGQgbGlrZSB0byBhdm9pZCBhIG5ldmVyLWVuZGlu
+ZyBzdG9yeSA6KQoKSSBkb24ndCBrbm93IHdoYXQncyB0aGUgcmlnaHQgYW5zd2VyIGhlcmUgd2l0
+aCByZWdhcmRzIHRvIHJlbmFtaW5nIG9yIApzcGxpdGluZyB0aGluZ3MuIEluIGVpdGhlciBjYXNl
+LCB0aGF0J3MgYSBzZXBhcmF0ZSBpc3N1ZSBmcm9tIHRoaXMgCnBhdGNoLgoKUm9iCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXggTVRE
+IGRpc2N1c3Npb24gbWFpbGluZyBsaXN0Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtbXRkLwo=
