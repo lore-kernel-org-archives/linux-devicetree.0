@@ -1,254 +1,107 @@
-From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
-Date: Thu, 19 Jan 2017 12:02:46 -0200
-Message-ID: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] fbdev/ssd1307fb: add support to enable VBAT
+Date: Thu, 19 Jan 2017 15:15:12 +0200
+Message-ID: <754f3644-a157-bb90-1494-aba4fc1264f8@ti.com>
+References: <cover.1484303628.git.jsarha@ti.com>
+ <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha@ti.com>
+ <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi") causes boot
-issues when the bootloader does not create a 'chosen' node if such node
-is not present in the dtb.
+--Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm
+Content-Type: multipart/mixed; boundary="Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org,
+ bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Message-ID: <754f3644-a157-bb90-1494-aba4fc1264f8-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] fbdev/ssd1307fb: add support to enable VBAT
+References: <cover.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
+ <214ae9ca86009148f233be71a3606917f3150dcd.1484303628.git.jsarha-l0cyMroinI0@public.gmane.org>
+ <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
+In-Reply-To: <20170118223310.kxbgq47v7cl33ls3@rob-hp-laptop>
 
-The reason for the boot failure is well explained by Javier Martinez
-Canillas: "the decompressor relies on a pre-existing chosen node to be
-available to insert the command line and merge other ATAGS info."
+--Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-, so pass an empty 'chosen' node to fix the boot problem.
+On 19/01/17 00:33, Rob Herring wrote:
+> On Fri, Jan 13, 2017 at 12:35:48PM +0200, Jyri Sarha wrote:
+>> From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+>>
+>> SSD1306 needs VBAT when it is wired in charge pump configuration. This=
 
-This issue has been seen in the kernelci reports with Barebox as
-bootloader.
+>> patch adds support to the driver to enable VBAT regulator at init time=
+=2E
+>>
+>> Signed-off-by: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+>> Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/display/ssd1307fb.txt        |  1 +
+>>  drivers/video/fbdev/ssd1307fb.c                      | 20 +++++++++++=
+++++++++-
+>>  2 files changed, 20 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/display/ssd1307fb.txt b=
+/Documentation/devicetree/bindings/display/ssd1307fb.txt
+>> index 6617df6..209d931 100644
+>> --- a/Documentation/devicetree/bindings/display/ssd1307fb.txt
+>> +++ b/Documentation/devicetree/bindings/display/ssd1307fb.txt
+>> @@ -16,6 +16,7 @@ Required properties:
+>>  Optional properties:
+>>    - reset-gpios: The GPIO used to reset the OLED display, if availabl=
+e. See
+>>                   Documentation/devicetree/bindings/gpio/gpio.txt for =
+details.
+>> +  - vbat-supply: The supply for VBAT
+>=20
+> According to the datasheet, SSD1307 has 2 supplies: Vdd and Vcc
+>=20
+> I don't see any mention of a charge pump, so that must be an external=20
+> component.
 
-Also pass the 'memory' node in order to fix boot issues on the SolidRun
-iMX6 platforms.
+VBAT is for SSD1306. Perhaps the DT doc should mention it.
 
-Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
-Reported-by: kernelci.org bot <bot-ssFOTAMYnuFg9hUCZPvPmw@public.gmane.org>
-Reported-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
----
-Changes since v1:
-- Also pass the memory node.
+ Tomi
 
- arch/arm/boot/dts/imx1.dtsi    | 2 ++
- arch/arm/boot/dts/imx23.dtsi   | 2 ++
- arch/arm/boot/dts/imx25.dtsi   | 2 ++
- arch/arm/boot/dts/imx27.dtsi   | 2 ++
- arch/arm/boot/dts/imx28.dtsi   | 2 ++
- arch/arm/boot/dts/imx31.dtsi   | 2 ++
- arch/arm/boot/dts/imx35.dtsi   | 2 ++
- arch/arm/boot/dts/imx50.dtsi   | 2 ++
- arch/arm/boot/dts/imx51.dtsi   | 2 ++
- arch/arm/boot/dts/imx53.dtsi   | 2 ++
- arch/arm/boot/dts/imx6qdl.dtsi | 2 ++
- arch/arm/boot/dts/imx6sl.dtsi  | 2 ++
- arch/arm/boot/dts/imx6sx.dtsi  | 2 ++
- arch/arm/boot/dts/imx6ul.dtsi  | 2 ++
- arch/arm/boot/dts/imx7s.dtsi   | 2 ++
- 15 files changed, 30 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx1.dtsi b/arch/arm/boot/dts/imx1.dtsi
-index dd3de38..7ef0d36 100644
---- a/arch/arm/boot/dts/imx1.dtsi
-+++ b/arch/arm/boot/dts/imx1.dtsi
-@@ -18,6 +18,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		gpio0 = &gpio1;
-diff --git a/arch/arm/boot/dts/imx23.dtsi b/arch/arm/boot/dts/imx23.dtsi
-index 96eae64..7bb662c 100644
---- a/arch/arm/boot/dts/imx23.dtsi
-+++ b/arch/arm/boot/dts/imx23.dtsi
-@@ -16,6 +16,8 @@
- 	#size-cells = <1>;
- 
- 	interrupt-parent = <&icoll>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		gpio0 = &gpio0;
-diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
-index 213d86e..f328ecc 100644
---- a/arch/arm/boot/dts/imx25.dtsi
-+++ b/arch/arm/boot/dts/imx25.dtsi
-@@ -14,6 +14,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx27.dtsi b/arch/arm/boot/dts/imx27.dtsi
-index 6a7cb9e..3271ec49 100644
---- a/arch/arm/boot/dts/imx27.dtsi
-+++ b/arch/arm/boot/dts/imx27.dtsi
-@@ -19,6 +19,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 905bdb5..5f47558 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -17,6 +17,8 @@
- 	#size-cells = <1>;
- 
- 	interrupt-parent = <&icoll>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &mac0;
-diff --git a/arch/arm/boot/dts/imx31.dtsi b/arch/arm/boot/dts/imx31.dtsi
-index c0a5d5f..afd4106 100644
---- a/arch/arm/boot/dts/imx31.dtsi
-+++ b/arch/arm/boot/dts/imx31.dtsi
-@@ -12,6 +12,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		serial0 = &uart1;
-diff --git a/arch/arm/boot/dts/imx35.dtsi b/arch/arm/boot/dts/imx35.dtsi
-index 6f7b943..e08e574 100644
---- a/arch/arm/boot/dts/imx35.dtsi
-+++ b/arch/arm/boot/dts/imx35.dtsi
-@@ -13,6 +13,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx50.dtsi b/arch/arm/boot/dts/imx50.dtsi
-index fe0221e..46329ff 100644
---- a/arch/arm/boot/dts/imx50.dtsi
-+++ b/arch/arm/boot/dts/imx50.dtsi
-@@ -17,6 +17,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 33526ca..c6ffc7b 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -19,6 +19,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index ca51dc0..2d56f26 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -19,6 +19,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index 89b834f..c88a373 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -16,6 +16,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 19cbd87..89e8315 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -14,6 +14,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec;
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 10f3330..f52d017 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -15,6 +15,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		can0 = &flexcan1;
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 0f69a3f..1d93601 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -15,6 +15,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		ethernet0 = &fec1;
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 8db1eb9..1757789 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -50,6 +50,8 @@
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-+	chosen {};
-+	memory { device_type = "memory"; reg = <0 0>; };
- 
- 	aliases {
- 		gpio0 = &gpio1;
--- 
-2.7.4
+--Sjog6FrwHbP5vDGJmaPtmRkRD7K494JsV--
 
+--Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJYgLvgAAoJEPo9qoy8lh717r4P/Ra3s7JLrp+KgH8lBmcyuXNJ
+8muDEaI8ltQ/f4+U7pc78voU4C+Xbh4eItgOO6t0vT5hMkbKuJeWogs305Tbc5Xn
+MymvbtF4A3Bn24APABHJASJOSbKmAF/snfl3D+SAk1fbyQ49ZvMW+RJEDmFNbJyG
+tV1m0XRwusn+KsidL3GAfLUBh3NaBUfE0wSkzizKTXekEKli5z9yft7rhltUUs2U
+ii1LtXwerGCb5ZI2P6q3/n70Oaxqp00dm87qmubUJXuPLN0jdMOIjG06pjEHZEbD
+HiDyOUYpijV5g6CTQOFVGq+y4z2cqfpFXz2v04d9JfB1vXLE3JI2N665X3DT5EWh
+kKaN3h1LvJ6Jq/he1pobCV+qW7/1vWys4EIv0nw5sMN1AHSNrR2hZEVVmhm3mBs+
+6lW7iQ8cXPtqO57lFDEdJce4MFrSqjOxa9bAUqXRp6+Qb2kGlgduRkLcGj+dyygP
+Xcr0+h8BuRdEVR3ukRKr+vn/dAhRxRXcP6EY9vFkswEfn9eT0hxs6tBBugRqWgKQ
+mDW5RZ101T055AodYL9vLQ0+yAu+LrFiuuc5Q0+oCgQ+Km00f1U4Tiswvvkv8N/m
+ok6sb22lvn72CWd2d+DkZG95WxmzUGB0o9Ebknjdgp6LHp9guJuZI6Zll7t8rO4L
+8BylSEM/YOXEuVHzQy3I
+=Hrsc
+-----END PGP SIGNATURE-----
+
+--Ure9sRBtNQVVGCULQ4quSEnFL86vckWnm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
