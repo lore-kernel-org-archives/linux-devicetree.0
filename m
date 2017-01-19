@@ -1,80 +1,76 @@
-From: Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v1 0/7] DRM: add LTDC support for STM32F4
-Date: Thu, 19 Jan 2017 10:35:49 +0000
-Message-ID: <7b7a26e1-90d2-9d42-e44f-fc2ce5635545@st.com>
-References: <1484573344-11609-1-git-send-email-yannick.fertre@st.com>
- <cf29809f-f951-eeed-5886-02d0a7a1e56f@baylibre.com>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC v2 1/5] UDC: Split the driver into amd (pci) and Synopsys
+ core driver
+Date: Thu, 19 Jan 2017 16:14:04 +0530
+Message-ID: <CAEHZuqO2x8FYW6AWbS5KshMt9UG7R4gWTfG_VaT+rNcAZ5d4Lg@mail.gmail.com>
+References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1484640308-25976-2-git-send-email-raviteja.garimella@broadcom.com> <e1453122-164a-e1a8-6aa6-fb25eb33101f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cf29809f-f951-eeed-5886-02d0a7a1e56f@baylibre.com>
-Content-Language: en-US
-Content-ID: <280877D2510DE84FBA7FE2DD294E49D8@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Neil Armstrong <narmstrong@baylibre.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Philippe CORNU <philippe.cornu@st.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Mickael REULIER <mickael.reulier@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e1453122-164a-e1a8-6aa6-fb25eb33101f-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmVpbCwNClNUIG1heSB1c2UgdGhpcyBoYXJkd2FyZSBJUCBhbHNvIGluIG90aGVyIFNvQywg
-ZXZlbiB0aGF0IGlzIG5vdCB0cnVlIA0Kbm93LCBJIGhvcGUgdGhhdCAic3QiIGlzIGEgbW9yZSBm
-dXR1ciBwcm9vZiBuYW1lLg0KDQpCZXN0IHJlZ2FyZHMNCg0KWWFubmljayBGZXJ0csOpDQoNCg0K
-T24gMDEvMTYvMjAxNyAwNTowMiBQTSwgTmVpbCBBcm1zdHJvbmcgd3JvdGU6DQo+IE9uIDAxLzE2
-LzIwMTcgMDI6MjggUE0sIFlhbm5pY2sgRmVydHJlIHdyb3RlOg0KPj4gVGhlIHB1cnBvc2Ugb2Yg
-dGhpcyBzZXQgb2YgcGF0Y2hlcyBpcyB0byBhZGQgYSBuZXcgZHJpdmVyIGZvciBzdG0zMmY0Mjku
-DQo+PiBUaGlzIGRyaXZlciB3YXMgZGV2ZWxvcGVkIGFuZCB0ZXN0ZWQgb24gZXZhbHVhdGlvbiBi
-b2FyZCBzdG0zMjQyOWkuDQo+Pg0KPj4gU3RtMzJmNCBpcyBhIE1DVSBwbGF0Zm9ybSB3aGljaCBk
-b24ndCBoYXZlIE1NVSBzbyB0aGUgbGFzdCBwYXRjaGVzIGRldmVsb3BlZA0KPj4gYnkgQmVuamFt
-aW4gR2FpZ25hcmQgcmVnYXJkaW5nICJEUk06IGFsbG93IHRvIHVzZSBtbXVsZXNzIGRldmljZXMi
-DQo+PiBhcmUgbmVjZXNzYXJ5Lg0KPj4NCj4+IFRoZSBib2FyZCBzdG00MjlpIGVtYmVkcyBhIEFt
-cGlyZSBBTS00ODAyNzJIM1RNUVctVDAxSCBzY3JlZW4uDQo+PiBBIG5ldyBzaW1wbGUgcGFuZWwg
-YW0tNDgwMjcyaDN0bXF3LXQwMWggaGF2ZSBiZWVuIGFkZGVkIHRvIHN1cHBvcnQgaXQuDQo+Pg0K
-Pj4gWWFubmljayBGZXJ0cmUgKDcpOg0KPj4gICBkdC1iaW5kaW5nczogZGlzcGxheTogYWRkIFNU
-TTMyIExUREMgZHJpdmVyDQo+PiAgIGRybS9zdDogQWRkIFNUTTMyIExUREMgZHJpdmVyDQo+PiAg
-IGR0LWJpbmRpbmdzOiBBZGQgQW1waXJlIEFNLTQ4MDI3MkgzVE1RVy1UMDFIIHBhbmVsDQo+PiAg
-IGRybS9wYW5lbDogc2ltcGxlOiBBZGQgc3VwcG9ydCBmb3IgQW1waXJlIEFNLTQ4MDI3MkgzVE1R
-Vy1UMDFIDQo+PiAgIEFSTTogZHRzOiBzdG0zMmY0Mjk6IEFkZCBsdGRjIHN1cHBvcnQNCj4+ICAg
-QVJNOiBkdHM6IHN0bTMyNDI5aS1ldmFsOiBFbmFibGUgbHRkYyAmIHNpbXBsZSBwYW5lbCBvbiBF
-dmFsIGJvYXJkDQo+PiAgIEFSTTogY29uZmlnczogQWRkIFNUTTMyIExUREMgc3VwcG9ydCBpbiBT
-VE0zMiBkZWZjb25maWcNCj4+DQo+PiAgLi4uL2Rpc3BsYXkvcGFuZWwvYW1waXJlLGFtLTQ4MDI3
-MmgzdG1xdy10MDFoLnR4dCAgfCAgICA3ICsNCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3N0LGx0ZGMudHh0ICAgICAgICB8ICAgNTcgKw0KPj4gIGFyY2gvYXJtL2Jvb3QvZHRz
-L3N0bTMyNDI5aS1ldmFsLmR0cyAgICAgICAgICAgICAgIHwgICA1OCArDQo+PiAgYXJjaC9hcm0v
-Ym9vdC9kdHMvc3RtMzJmNDI5LmR0c2kgICAgICAgICAgICAgICAgICAgfCAgIDI1ICstDQo+PiAg
-YXJjaC9hcm0vY29uZmlncy9zdG0zMl9kZWZjb25maWcgICAgICAgICAgICAgICAgICAgfCAgICA1
-ICsNCj4+ICBkcml2ZXJzL2dwdS9kcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICB8ICAgIDIgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAg
-ICAgICAgICAgIHwgICAgMSArDQo+PiAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBs
-ZS5jICAgICAgICAgICAgICAgfCAgIDI5ICsNCj4+ICBkcml2ZXJzL2dwdS9kcm0vc3QvS2NvbmZp
-ZyAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMTQgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9z
-dC9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgNyArDQo+PiAgZHJpdmVycy9n
-cHUvZHJtL3N0L2Rydi5jICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgMjc5ICsrKysNCj4+
-ICBkcml2ZXJzL2dwdS9kcm0vc3QvZHJ2LmggICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAg
-MjUgKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9zdC9sdGRjLmMgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwgMTQzOCArKysrKysrKysrKysrKysrKysrKw0KPj4gIGRyaXZlcnMvZ3B1L2RybS9zdC9s
-dGRjLmggICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyMCArDQo+PiAgMTQgZmlsZXMgY2hh
-bmdlZCwgMTk2NiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQo+PiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2Ft
-cGlyZSxhbS00ODAyNzJoM3RtcXctdDAxaC50eHQNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvc3QsbHRkYy50eHQNCj4+ICBj
-cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L0tjb25maWcNCj4+ICBjcmVhdGUg
-bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3N0L01ha2VmaWxlDQo+PiAgY3JlYXRlIG1vZGUg
-MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9zdC9kcnYuYw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
-cml2ZXJzL2dwdS9kcm0vc3QvZHJ2LmgNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9n
-cHUvZHJtL3N0L2x0ZGMuYw0KPj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0v
-c3QvbHRkYy5oDQo+Pg0KPg0KPiBIaSBZYW5uaWNrLA0KPg0KPiBTaG91bGRuJ3QgYmUgbW9yZSBs
-b2dpY2FsIHRvIHVzZSBzdG0zMiBmb3IgdGhlIGRyaXZlciBpbnN0ZWFkIG9mIHN0ID8NCj4gSXQg
-d291bGQgZXZlbnR1YWxseSBjb2xsdWRlIHdpdGggdGhlIG90aGVyIFNUTWljcm9lbGVjdHJvbmlj
-cyBTb0NzIGFuZA0KPiB3aWxsIGJlIGFsaWduZWQgd2l0aCBvdGhlciBkcml2ZXJzIGxpa2Ugc3Rt
-MzItcnRjLCBzdG0zMi1pMmMsIC4uLg0KPg0KPiBOZWlsDQo+Cl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi,
+
+On Thu, Jan 19, 2017 at 12:15 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 01/17/2017 12:05 AM, Raviteja Garimella wrote:
+>> This patch splits the amd5536udc driver into two -- one that does
+>> pci device registration and the other file that does the rest of
+>> the driver tasks like the gadget/ep ops etc for Synopsys UDC.
+>>
+>> This way of splitting helps in exporting core driver symbols which
+>> can be used by any other platform/pci driver that is written for
+>> the same Synopsys USB device controller.
+>>
+>> The current patch also includes a change in the Kconfig and Makefile.
+>> A new config option USB_SNP_CORE will be selected automatically when
+>> any one of the platform or pci driver for the same UDC is selected.
+>>
+>> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>
+> Although the changes you have done make sense and it is most certainly a
+> good idea to split udc core from bus specific glue logic, it is really
+> hard to review the changes per-se because of the file rename, could that
+> happen at a later time?
+
+If you start looking at this specific patch from the header file (amd5536udc.h),
+the additions in there comprise of:
+- 9 function declarations
+- some module parameter variable declarations that's moved out from the older
+  common file amd5536udc.c
+- 2 #includes that are needed by all files.
+
+So, basically what's done for this split is that:
+1. the static keyword is removed from those 9 functions in the new file
+    snps_udc_core.c and are exported.
+2. The module parameters declarations (since they are used in both core
+    and pci file) are moved to the header file now.
+
+Rest all is same as in old amd5536udc.c common file. It's just a copy from the
+old file.
+
+And, the file amd5536udc.c will now only do the pci device probe and
+remove functions.
+
+I hope this helps. Please let me know of any clarifications needed.
+Since both the files are required to be reviewed, I think renaming is
+inevitable.
+
+Thanks,
+Ravi
+
+>
+> Also, keep in mind that anytime a driver file is renamed, this poses a
+> backport/maintenance issue where backporting fixes from latest upstream
+> to a kernel version that has a different file/directory structure is a
+> major pain.
+> --
+> Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
