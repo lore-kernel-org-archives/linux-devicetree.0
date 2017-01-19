@@ -1,51 +1,54 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 1/3] dt-bindings: Document Broadcom iProc mailbox controller driver
-Date: Wed, 18 Jan 2017 17:39:38 -0800
-Message-ID: <1484789980-6812-2-git-send-email-jonathan.richardson@broadcom.com>
-References: <1484789980-6812-1-git-send-email-jonathan.richardson@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484789980-6812-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Jonathan Richardson <jonathan.richardson@broadcom.com>
+Subject: [PATCH v2 0/3] Add support for Broadcom iProc mailbox controller
+Date: Wed, 18 Jan 2017 17:39:37 -0800
+Message-ID: <1484789980-6812-1-git-send-email-jonathan.richardson@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jonathan Richardson <jonathan.richardson@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Russell King <linux@armlinux.org.uk>, Vikram Prakash <vikram.prakash@broadcom.com>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/mailbox/brcm,iproc-mailbox.txt     | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+This patch set contains mailbox support for Broadcom iProc based SoC's. The
+mailbox controller handles all communication with a Cortex-M0 MCU processor that
+provides support for power, clock, and reset management.
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-new file mode 100644
-index 0000000..f4c4f96
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-@@ -0,0 +1,14 @@
-+* Broadcom's iProc Mailbox Controller
-+
-+Required properties:
-+- compatible: Must be "brcm,iproc-mailbox"
-+- reg: Defines the base address of the mailbox controller.
-+- #mbox-cells: Must be 1.
-+
-+Example:
-+
-+	mailbox: mailbox@03024024 {
-+		compatible = "brcm,iproc-mailbox";
-+		reg = <0x03024024 0x8>;
-+		#mbox-cells = <1>;
-+	};
+The patch set enables the mailbox controller for Cygnus and also interrupt
+support for the Cygnus CRMU GPIO driver which requires use of the M0 processor.
+
+Changes from v1:
+- Interrupt handling has been removed and will be added to an interrupt
+  controller driver and sent out in a separate patchset.
+- Moved location of bcm_iproc_mailbox.h to include/linux/mailbox as suggested by
+  Jassi.
+- Removed reading of client timeout from driver and used canned timeout. This
+  removes the need of including the client mailbox header.
+
+Jonathan Richardson (3):
+  dt-bindings: Document Broadcom iProc mailbox controller driver
+  mailbox: Add iProc mailbox controller driver
+  ARM: dts: Enable Broadcom iProc mailbox controller
+
+ .../bindings/mailbox/brcm,iproc-mailbox.txt        |  14 ++
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   6 +
+ drivers/mailbox/Kconfig                            |  10 ++
+ drivers/mailbox/Makefile                           |   2 +
+ drivers/mailbox/bcm-iproc-mailbox.c                | 199 +++++++++++++++++++++
+ include/linux/mailbox/bcm_iproc_mailbox.h          |  32 ++++
+ 6 files changed, 263 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+ create mode 100644 drivers/mailbox/bcm-iproc-mailbox.c
+ create mode 100644 include/linux/mailbox/bcm_iproc_mailbox.h
+
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
