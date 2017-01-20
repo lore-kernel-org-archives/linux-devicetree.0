@@ -1,88 +1,74 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Fri, 20 Jan 2017 08:52:25 +0100
-Message-ID: <CAPDyKFpXA_fDDQi+gqf2f3dFxkjH6D+7drTPuimuJafWxoCirg@mail.gmail.com>
-References: <1484821156-20565-1-git-send-email-yong.mao@mediatek.com>
- <1484821156-20565-2-git-send-email-yong.mao@mediatek.com>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v11 2/8] power: add power sequence library
+Date: Fri, 20 Jan 2017 15:52:39 +0800
+Message-ID: <20170120075239.GC21013@b29397-desktop>
+References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
+ <1483596119-27508-3-git-send-email-peter.chen@nxp.com>
+ <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
+ <20170110070240.GA29454@b29397-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1484821156-20565-2-git-send-email-yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Chaotian Jing <chaotian.jing-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170110070240.GA29454@b29397-desktop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: rjw@rjwysocki.net
+Cc: mark.rutland@arm.com, Peter Chen <peter.chen@nxp.com>, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, sre@kernel.org, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+devicetree, Rob
+On Tue, Jan 10, 2017 at 03:02:41PM +0800, Peter Chen wrote:
+> On Sat, Jan 07, 2017 at 10:54:56AM +0200, Krzysztof Kozlowski wrote:
+> > On Thu, Jan 05, 2017 at 02:01:53PM +0800, Peter Chen wrote:
+> > > We have an well-known problem that the device needs to do some power
+> > > sequence before it can be recognized by related host, the typical
+> > > example like hard-wired mmc devices and usb devices.
+> > > 
+> > > This power sequence is hard to be described at device tree and handled by
+> > > related host driver, so we have created a common power sequence
+> > > library to cover this requirement. The core code has supplied
+> > > some common helpers for host driver, and individual power sequence
+> > > libraries handle kinds of power sequence for devices. The pwrseq
+> > > librares always need to allocate extra instance for compatible
+> > > string match.
+> > > 
+> > > pwrseq_generic is intended for general purpose of power sequence, which
+> > > handles gpios and clocks currently, and can cover other controls in
+> > > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> > > if only one power sequence is needed, else call of_pwrseq_on_list
+> > > /of_pwrseq_off_list instead (eg, USB hub driver).
+> > > 
+> > > For new power sequence library, it can add its compatible string
+> > > to pwrseq_of_match_table, then the pwrseq core will match it with
+> > > DT's, and choose this library at runtime.
+> > > 
+> > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> > > Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> > 
+> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Tested on Odroid U3 (reset sequence for LAN9730):
+> > Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> 
+> A nice ping...
+> 
 
-On 19 January 2017 at 11:19, Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> From: yong mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->
-> Add description for mtk-hs200-cmd-int-delay
-> Add description for mtk-hs400-cmd-int-delay
-> Add description for mtk-hs400-cmd-resp-sel
->
-> Signed-off-by: Yong Mao <yong.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |    9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 0120c7f..149f472 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -21,6 +21,12 @@ Optional properties:
->  - assigned-clocks: PLL of the source clock
->  - assigned-clock-parents: parent of source clock, used for HS400 mode to get 400Mhz source clock
->  - hs400-ds-delay: HS400 DS delay setting
-> +- mtk-hs200-cmd-int-delay: HS200 command internal delay setting.
-> +                          The value is an integer from 0 to 31
+Rafael, would you please review it? This series was discussed about
+half a year, and many people need it, I hope it can be in v4.11-rc1,
+thanks.
 
-Please change to:
+-- 
 
-mediatek,hs200-cmd-delay
-
-... and if there is a unit, like ns or us, please add that a suffix.
-
-> +- mtk-hs400-cmd-int-delay: HS400 command internal delay setting
-> +                          The value is an integer from 0 to 31
-
-mediatek,hs400-cmd-delay and add unit if applicable.
-
-> +- mtk-hs400-cmd-resp-sel:  HS400 command response sample selection
-> +                          The value is an integer from 0 to 1
-
-mediatek,hs400-cmd-resp-sel
-
-And make it a boolean value instead!
-
->
->  Examples:
->  mmc0: mmc@11230000 {
-> @@ -38,4 +44,7 @@ mmc0: mmc@11230000 {
->         assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
->         assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL_D2>;
->         hs400-ds-delay = <0x14015>;
-> +       mtk-hs200-cmd-int-delay = <26>;
-> +       mtk-hs400-cmd-int-delay = <14>;
-> +       mtk-hs400-cmd-resp-sel = <0>; /* 0: rising, 1: falling */
-
-The rising/falling information belongs in description of the binding a
-few lines above. Please move it there.
-
->  };
-> --
-> 1.7.9.5
->
-
-Kind regards
-Uffe
+Best Regards,
+Peter Chen
