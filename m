@@ -1,48 +1,32 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: rskrza1: add ostm DT support
-Date: Fri, 20 Jan 2017 16:20:55 -0500
-Message-ID: <20170120212055.4157-4-chris.brandt@renesas.com>
-References: <20170120212055.4157-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120212055.4157-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 0/3] ARM: dts: add ostm support for r7s72100
+Date: Fri, 20 Jan 2017 16:20:52 -0500
+Message-ID: <20170120212055.4157-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-v2:
-* remove part that was supposed to go in dsti
-* now there is a node for each channel
----
- arch/arm/boot/dts/r7s72100-rskrza1.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patch set enables the use of the newly created driver
+renesas-ostm.c for the r7s72100 SoC.
 
-diff --git a/arch/arm/boot/dts/r7s72100-rskrza1.dts b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-index dd44181..02b59c5 100644
---- a/arch/arm/boot/dts/r7s72100-rskrza1.dts
-+++ b/arch/arm/boot/dts/r7s72100-rskrza1.dts
-@@ -61,6 +61,14 @@
- 	status = "okay";
- };
- 
-+&ostm0 {
-+	status = "okay";
-+};
-+
-+&ostm1 {
-+	status = "okay";
-+};
-+
- &scif2 {
- 	status = "okay";
- };
+v2:
+* The biggest change was now the channels are independent of each
+  other and have separate nodes in the DT. The first probed will
+  be set up as a clock source, and any additional channels probed
+  will become a clock event.
+
+
+Chris Brandt (3):
+  ARM: dts: r7s72100: add ostm clock to device tree
+  ARM: dts: r7s72100: add ostm to device tree
+  ARM: dts: rskrza1: add ostm DT support
+
+ arch/arm/boot/dts/r7s72100-rskrza1.dts     |  8 ++++++++
+ arch/arm/boot/dts/r7s72100.dtsi            | 25 +++++++++++++++++++++++++
+ include/dt-bindings/clock/r7s72100-clock.h |  4 ++++
+ 3 files changed, 37 insertions(+)
+
 -- 
 2.10.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
