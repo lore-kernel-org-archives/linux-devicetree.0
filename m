@@ -1,78 +1,97 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] usb: usb: dsps: update device tree bindings
-Date: Fri, 20 Jan 2017 10:18:31 +0100
-Message-ID: <be73e596-5773-162b-0d59-c042fb0b74fd@baylibre.com>
-References: <20170117134540.9988-1-abailon@baylibre.com>
- <20170117134540.9988-3-abailon@baylibre.com>
- <20170119181512.pb3znkxqscnrpmnz@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+Subject: [PATCH v3 2/7] NFC: trf7970a: Don't manage EN2 when not specified in DT
+Date: Fri, 20 Jan 2017 12:17:40 -0700
+Message-ID: <20170120191745.29255-3-mgreer@animalcreek.com>
+References: <20170120191745.29255-1-mgreer@animalcreek.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170119181512.pb3znkxqscnrpmnz@rob-hp-laptop>
+In-Reply-To: <20170120191745.29255-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>
+Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/19/2017 07:15 PM, Rob Herring wrote:
-> On Tue, Jan 17, 2017 at 02:45:35PM +0100, Alexandre Bailon wrote:
->> In order to make CPPI 4.1 DMA driver more generic, accesses to USBSS
->> have been removed. So it is not required anymore to define "glue"
->> register's address and size in DT.
->> Update dsps device tree bindings.
-> 
-> Looks like you are breaking compatibility here.
-> 
-> Are the glue registers already in the USB node? If so, then the DMA 
-> driver just needs to ignore the first reg entry when 4 entries are 
-> present. Or add a fixup to the DT somewhere.
-In the v3 of the patch updating the driver, I have the made the driver
-compatible with the old and new bindings.
-It gets the index of "controller" and so just ignore "glue" if it defined.
+Currently, the trf7970a driver assumes that there is a GPIO
+connected to the EN2 pin of the trf7970a part; however, that
+may not always be the case.  Some boards may tie EN2 low and
+not connect it to a GPIO.  Support these configurations by making
+the driver ignore EN2 when the second entry in the 'ti,enable-gpios'
+DT property is missing (i.e., the one that specifies the GPIO for
+EN2).
 
-Best Regards,
-Alexandre
-> 
->>
->> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/usb/am33xx-usb.txt | 9 ++++-----
->>  1 file changed, 4 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/am33xx-usb.txt b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> index 20c2ff2..ef89010 100644
->> --- a/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/am33xx-usb.txt
->> @@ -54,9 +54,9 @@ node.
->>  DMA
->>  ~~~
->>  - compatible: ti,am3359-cppi41
->> -- reg: offset and length of the following register spaces: USBSS, USB
->> +- reg: offset and length of the following register spaces: USB
->>    CPPI DMA Controller, USB CPPI DMA Scheduler, USB Queue Manager
->> -- reg-names: glue, controller, scheduler, queuemgr
->> +- reg-names: controller, scheduler, queuemgr
->>  - #dma-cells: should be set to 2. The first number represents the
->>    endpoint number (0 … 14 for endpoints 1 … 15 on instance 0 and 15 … 29
->>    for endpoints 1 … 15 on instance 1). The second number is 0 for RX and
->> @@ -183,11 +183,10 @@ usb: usb@47400000 {
->>  
->>  	cppi41dma: dma-controller@07402000 {
->>  		compatible = "ti,am3359-cppi41";
->> -		reg =  <0x47400000 0x1000
->> -			0x47402000 0x1000
->> +		reg =  <0x47402000 0x1000
->>  			0x47403000 0x1000
->>  			0x47404000 0x4000>;
->> -		reg-names = "glue", "controller", "scheduler", "queuemgr";
->> +		reg-names = "controller", "scheduler", "queuemgr";
->>  		interrupts = <17>;
->>  		interrupt-names = "glue";
->>  		#dma-cells = <2>;
->> -- 
->> 2.10.2
->>
+Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+---
+ drivers/nfc/trf7970a.c | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
+
+diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
+index 92f3cf3e012a..0c0567adefcb 100644
+--- a/drivers/nfc/trf7970a.c
++++ b/drivers/nfc/trf7970a.c
+@@ -1884,7 +1884,8 @@ static int trf7970a_power_up(struct trf7970a *trf)
+ 
+ 	usleep_range(5000, 6000);
+ 
+-	if (!(trf->quirks & TRF7970A_QUIRK_EN2_MUST_STAY_LOW)) {
++	if (gpio_is_valid(trf->en2_gpio) &&
++	    !(trf->quirks & TRF7970A_QUIRK_EN2_MUST_STAY_LOW)) {
+ 		gpio_set_value(trf->en2_gpio, 1);
+ 		usleep_range(1000, 2000);
+ 	}
+@@ -1915,7 +1916,8 @@ static int trf7970a_power_down(struct trf7970a *trf)
+ 
+ 	gpio_set_value(trf->en_gpio, 0);
+ 
+-	if (!(trf->quirks & TRF7970A_QUIRK_EN2_MUST_STAY_LOW))
++	if (gpio_is_valid(trf->en2_gpio) &&
++	    !(trf->quirks & TRF7970A_QUIRK_EN2_MUST_STAY_LOW))
+ 		gpio_set_value(trf->en2_gpio, 0);
+ 
+ 	ret = regulator_disable(trf->regulator);
+@@ -2018,7 +2020,7 @@ static int trf7970a_probe(struct spi_device *spi)
+ 	if (of_property_read_bool(np, "irq-status-read-quirk"))
+ 		trf->quirks |= TRF7970A_QUIRK_IRQ_STATUS_READ;
+ 
+-	/* There are two enable pins - both must be present */
++	/* There are two enable pins - only EN must be present in DT */
+ 	trf->en_gpio = of_get_named_gpio(np, "ti,enable-gpios", 0);
+ 	if (!gpio_is_valid(trf->en_gpio)) {
+ 		dev_err(trf->dev, "No EN GPIO property\n");
+@@ -2033,21 +2035,21 @@ static int trf7970a_probe(struct spi_device *spi)
+ 	}
+ 
+ 	trf->en2_gpio = of_get_named_gpio(np, "ti,enable-gpios", 1);
+-	if (!gpio_is_valid(trf->en2_gpio)) {
+-		dev_err(trf->dev, "No EN2 GPIO property\n");
+-		return trf->en2_gpio;
+-	}
++	if (gpio_is_valid(trf->en2_gpio)) {
++		ret = devm_gpio_request_one(trf->dev, trf->en2_gpio,
++					    GPIOF_DIR_OUT | GPIOF_INIT_LOW,
++					    "trf7970a EN2");
++		if (ret) {
++			dev_err(trf->dev, "Can't request EN2 GPIO: %d\n", ret);
++			return ret;
++		}
+ 
+-	ret = devm_gpio_request_one(trf->dev, trf->en2_gpio,
+-			GPIOF_DIR_OUT | GPIOF_INIT_LOW, "trf7970a EN2");
+-	if (ret) {
+-		dev_err(trf->dev, "Can't request EN2 GPIO: %d\n", ret);
+-		return ret;
++		if (of_property_read_bool(np, "en2-rf-quirk"))
++			trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
++	} else {
++		dev_err(trf->dev, "No EN2 GPIO property - ignoring EN2\n");
+ 	}
+ 
+-	if (of_property_read_bool(np, "en2-rf-quirk"))
+-		trf->quirks |= TRF7970A_QUIRK_EN2_MUST_STAY_LOW;
+-
+ 	ret = devm_request_threaded_irq(trf->dev, spi->irq, NULL,
+ 			trf7970a_irq, IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+ 			"trf7970a", trf);
+-- 
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
