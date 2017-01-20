@@ -1,237 +1,66 @@
-From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
-Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
-Date: Fri, 20 Jan 2017 23:03:02 +0100
-Message-ID: <20170120220302.GA20610@bigcity.dyn.berto.se>
-References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 01/18] Documentation: devicetree: amlogic: Reorder boards
+Date: Fri, 20 Jan 2017 23:21:01 +0100
+Message-ID: <20170120222118.21476-2-afaerber@suse.de>
+References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170120222118.21476-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Enforce groupment by SoCs and order alphabetically within the group
+(with some exceptions). This should facilitate adding new boards.
 
-Nice patch! It took me a while to understand why you didn't need to read =
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ Documentation/devicetree/bindings/arm/amlogic.txt | 19 +++++++++++++------
+ 1 file changed, 13 insertions(+), 6 deletions(-)
 
-the register before writing to it in cpg_mssr_deassert() :-) =
-
-
-Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
-
-On 2017-01-20 15:08:22 +0100, Geert Uytterhoeven wrote:
-> Add optional support for the Reset Control feature of the Renesas Clock
-> Pulse Generator / Module Standby and Software Reset module on R-Car
-> Gen2, R-Car Gen3, and RZ/G1 SoCs.
-> =
-
-> This allows to reset SoC devices using the Reset Controller API.
-> =
-
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++=
-++++++
->  1 file changed, 122 insertions(+)
-> =
-
-> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas=
-/renesas-cpg-mssr.c
-> index f1161a585c57e433..ea4af714ac14603a 100644
-> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
-> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-> @@ -16,6 +16,7 @@
->  #include <linux/clk.h>
->  #include <linux/clk-provider.h>
->  #include <linux/clk/renesas.h>
-> +#include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/init.h>
->  #include <linux/mod_devicetable.h>
-> @@ -25,6 +26,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_clock.h>
->  #include <linux/pm_domain.h>
-> +#include <linux/reset-controller.h>
->  #include <linux/slab.h>
->  =
-
->  #include <dt-bindings/clock/renesas-cpg-mssr.h>
-> @@ -96,6 +98,7 @@
->  /**
->   * Clock Pulse Generator / Module Standby and Software Reset Private Data
->   *
-> + * @rcdev: Optional reset controller entity
->   * @dev: CPG/MSSR device
->   * @base: CPG/MSSR register block base address
->   * @rmw_lock: protects RMW register accesses
-> @@ -105,6 +108,9 @@
->   * @last_dt_core_clk: ID of the last Core Clock exported to DT
->   */
->  struct cpg_mssr_priv {
-> +#ifdef CONFIG_RESET_CONTROLLER
-> +	struct reset_controller_dev rcdev;
-> +#endif
->  	struct device *dev;
->  	void __iomem *base;
->  	spinlock_t rmw_lock;
-> @@ -494,6 +500,118 @@ static int __init cpg_mssr_add_clk_domain(struct de=
-vice *dev,
->  	return 0;
->  }
->  =
-
-> +#ifdef CONFIG_RESET_CONTROLLER
-> +
-> +#define rcdev_to_priv(x)	container_of(x, struct cpg_mssr_priv, rcdev)
-> +
-> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
-> +			  unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
-> +	unsigned int reg =3D id / 32;
-> +	unsigned int bit =3D id % 32;
-> +	u32 bitmask =3D BIT(bit);
-> +	unsigned long flags;
-> +	u32 value;
-> +
-> +	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
-> +
-> +	/* Reset module */
-> +	spin_lock_irqsave(&priv->rmw_lock, flags);
-> +	value =3D readl(priv->base + SRCR(reg));
-> +	value |=3D bitmask;
-> +	writel(value, priv->base + SRCR(reg));
-> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> +
-> +	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
-> +	udelay(35);
-> +
-> +	/* Release module from reset state */
-> +	writel(bitmask, priv->base + SRSTCLR(reg));
-> +
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned =
-long id)
-> +{
-> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
-> +	unsigned int reg =3D id / 32;
-> +	unsigned int bit =3D id % 32;
-> +	unsigned long flags;
-> +	u32 value;
-> +
-> +	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
-> +
-> +	spin_lock_irqsave(&priv->rmw_lock, flags);
-> +	value =3D readl(priv->base + SRCR(reg));
-> +	writel(value | BIT(bit), priv->base + SRCR(reg));
-> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
-> +	unsigned int reg =3D id / 32;
-> +	unsigned int bit =3D id % 32;
-> +
-> +	dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
-> +
-> +	writel(BIT(bit), priv->base + SRSTCLR(reg));
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
-> +			   unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
-> +	unsigned int reg =3D id / 32;
-> +	unsigned int bit =3D id % 32;
-> +
-> +	return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
-> +}
-> +
-> +static const struct reset_control_ops cpg_mssr_reset_ops =3D {
-> +	.reset =3D cpg_mssr_reset,
-> +	.assert =3D cpg_mssr_assert,
-> +	.deassert =3D cpg_mssr_deassert,
-> +	.status =3D cpg_mssr_status,
-> +};
-> +
-> +static int cpg_mssr_reset_xlate(struct reset_controller_dev *rcdev,
-> +				const struct of_phandle_args *reset_spec)
-> +{
-> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
-> +	unsigned int unpacked =3D reset_spec->args[0];
-> +	unsigned int idx =3D MOD_CLK_PACK(unpacked);
-> +
-> +	if (unpacked % 100 > 31 || idx >=3D rcdev->nr_resets) {
-> +		dev_err(priv->dev, "Invalid reset index %u\n", unpacked);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return idx;
-> +}
-> +
-> +static int cpg_mssr_reset_controller_register(struct cpg_mssr_priv *priv)
-> +{
-> +	priv->rcdev.ops =3D &cpg_mssr_reset_ops;
-> +	priv->rcdev.of_node =3D priv->dev->of_node;
-> +	priv->rcdev.of_reset_n_cells =3D 1;
-> +	priv->rcdev.of_xlate =3D cpg_mssr_reset_xlate;
-> +	priv->rcdev.nr_resets =3D priv->num_mod_clks;
-> +	return devm_reset_controller_register(priv->dev, &priv->rcdev);
-> +}
-> +
-> +#else /* !CONFIG_RESET_CONTROLLER */
-> +static inline int cpg_mssr_reset_controller_register(struct cpg_mssr_pri=
-v *priv)
-> +{
-> +	return 0;
-> +}
-> +#endif /* !CONFIG_RESET_CONTROLLER */
-> +
-> +
->  static const struct of_device_id cpg_mssr_match[] =3D {
->  #ifdef CONFIG_ARCH_R8A7743
->  	{
-> @@ -591,6 +709,10 @@ static int __init cpg_mssr_probe(struct platform_dev=
-ice *pdev)
->  	if (error)
->  		return error;
->  =
-
-> +	error =3D cpg_mssr_reset_controller_register(priv);
-> +	if (error)
-> +		return error;
-> +
->  	return 0;
->  }
->  =
-
-> -- =
-
-> 1.9.1
-> =
-
-
--- =
-
-Regards,
-Niklas S=F6derlund
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index c246cd2730d9..b03d23c9ea78 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -29,23 +29,30 @@ Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+   Required root node property:
+     compatible: "amlogic,s912", "amlogic,meson-gxm";
+ 
+-Board compatible values:
++Board compatible values (grouped by SoC):
++
+   - "geniatech,atv1200" (Meson6)
++
+   - "minix,neo-x8" (Meson8)
+-  - "tronfy,mxq" (Meson8b)
++
+   - "hardkernel,odroid-c1" (Meson8b)
++  - "tronfy,mxq" (Meson8b)
++
++  - "amlogic,p200" (Meson gxbb)
++  - "amlogic,p201" (Meson gxbb)
++  - "hardkernel,odroid-c2" (Meson gxbb)
++  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+   - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
+   - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
+   - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
+-  - "hardkernel,odroid-c2" (Meson gxbb)
+-  - "amlogic,p200" (Meson gxbb)
+-  - "amlogic,p201" (Meson gxbb)
+   - "wetek,hub" (Meson gxbb)
+   - "wetek,play2" (Meson gxbb)
++
+   - "amlogic,p212" (Meson gxl s905x)
++
+   - "amlogic,p230" (Meson gxl s905d)
+   - "amlogic,p231" (Meson gxl s905d)
++
+   - "amlogic,q200" (Meson gxm s912)
+   - "amlogic,q201" (Meson gxm s912)
+-  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+   - "nexbox,a1" (Meson gxm s912)
+-- 
+2.10.2
