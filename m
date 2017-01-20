@@ -1,44 +1,69 @@
 From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v4 4/7] [media] coda: add debug output about tiling
-Date: Fri, 20 Jan 2017 15:00:22 +0100
-Message-ID: <20170120140025.3338-5-m.tretter@pengutronix.de>
-References: <20170120140025.3338-1-m.tretter@pengutronix.de>
+Subject: [PATCH v4 0/7] Add support for Video Data Order Adapter
+Date: Fri, 20 Jan 2017 15:00:18 +0100
+Message-ID: <20170120140025.3338-1-m.tretter@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170120140025.3338-1-m.tretter@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
 Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Hello,
 
-In order to make the VDOA work correctly, the CODA must produce frames
-in tiled format. Print this information in the debug output.
+This is v4 of a patch series that adds support for the Video Data Order
+Adapter (VDOA) that can be found on Freescale i.MX6. It converts the
+macroblock tiled format produced by the CODA 960 video decoder to a
+raster-ordered format for scanout.
 
-Also print the color format in fourcc instead of the numeric value.
+Changes since v3:
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
----
- drivers/media/platform/coda/coda-common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+- Patch 2/7: Add my copyright to vdoa copyright header
+- Patch 2/7: Fix offset of chroma plane to be page-aligned
+- Patch 6/7: Fix oops when releasing the coda driver by destroying vdoa
+  context after removing all buffers
+- Patch 6/7: Fix missing vdoa disable when switching from tiled to linear
+  format
 
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index fa3ed74af116..b23fe0f0fb56 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -616,8 +616,10 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
- 	}
- 
- 	v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
--		"Setting format for type %d, wxh: %dx%d, fmt: %d\n",
--		f->type, q_data->width, q_data->height, q_data->fourcc);
-+		"Setting format for type %d, wxh: %dx%d, fmt: %4.4s %c\n",
-+		f->type, q_data->width, q_data->height,
-+		(char *)&q_data->fourcc,
-+		(ctx->tiled_map_type == GDI_LINEAR_FRAME_MAP) ? 'L' : 'T');
- 
- 	return 0;
- }
+Changes since v2:
+
+- Patch 1/7: Update commit message to include binding change; fix
+  spelling/style in binding documentation
+
+Changes since v1:
+
+- Dropped patch 8/9 of v1
+- Patch 1/7: Add devicetree binding documentation for fsl-vdoa
+- Patch 6/7: I merged patch 5/9 and patch 8/9 of v1 into a single patch
+- Patch 6/7: Use dt compatible instead of a phandle to find VDOA device
+- Patch 6/7: Always check VDOA availability even if disabled via module
+  parameter and do not print a message if VDOA cannot be found
+- Patch 6/7: Do not change the CODA context in coda_try_fmt()
+- Patch 6/7: Allocate an additional internal frame if the VDOA is in use
+
+Michael Tretter (3):
+  [media] coda: fix frame index to returned error
+  [media] coda: use VDOA for un-tiling custom macroblock format
+  [media] coda: support YUYV output if VDOA is used
+
+Philipp Zabel (4):
+  [media] dt-bindings: Add a binding for Video Data Order Adapter
+  [media] coda: add i.MX6 VDOA driver
+  [media] coda: correctly set capture compose rectangle
+  [media] coda: add debug output about tiling
+
+ .../devicetree/bindings/media/fsl-vdoa.txt         |  21 ++
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   2 +
+ drivers/media/platform/Kconfig                     |   3 +
+ drivers/media/platform/coda/Makefile               |   1 +
+ drivers/media/platform/coda/coda-bit.c             |  93 ++++--
+ drivers/media/platform/coda/coda-common.c          | 175 ++++++++++-
+ drivers/media/platform/coda/coda.h                 |   3 +
+ drivers/media/platform/coda/imx-vdoa.c             | 338 +++++++++++++++++++++
+ drivers/media/platform/coda/imx-vdoa.h             |  58 ++++
+ 9 files changed, 652 insertions(+), 42 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/fsl-vdoa.txt
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.c
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.h
+
 -- 
 2.11.0
