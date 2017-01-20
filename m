@@ -1,140 +1,58 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
-Date: Fri, 20 Jan 2017 16:57:10 +0100
-Message-ID: <1484927830.2897.51.camel@pengutronix.de>
-References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Fri, 20 Jan 2017 16:05:45 +0000
+Message-ID: <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+ <20170118172502.13876-3-chris.brandt@renesas.com>
+ <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Fri, 2017-01-20 at 15:08 +0100, Geert Uytterhoeven wrote:
-> Add optional support for the Reset Control feature of the Renesas Clock
-> Pulse Generator / Module Standby and Software Reset module on R-Car
-> Gen2, R-Car Gen3, and RZ/G1 SoCs.
-
-Is there a reason to make this optional?
-
-> This allows to reset SoC devices using the Reset Controller API.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Looks good to me,
-
-Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-Just a small issue below,
-
-> ---
->  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++++++++
->  1 file changed, 122 insertions(+)
-> 
-> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-> index f1161a585c57e433..ea4af714ac14603a 100644
-> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
-> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-[...]
-> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
-> +			  unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
-> +	unsigned int reg = id / 32;
-> +	unsigned int bit = id % 32;
-> +	u32 bitmask = BIT(bit);
-
-Here you have a bitmask = BIT(bit) variable.
-
-> +	unsigned long flags;
-> +	u32 value;
-> +
-> +	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
-> +
-> +	/* Reset module */
-> +	spin_lock_irqsave(&priv->rmw_lock, flags);
-> +	value = readl(priv->base + SRCR(reg));
-> +	value |= bitmask;
-
-Here you use it.
-
-> +	writel(value, priv->base + SRCR(reg));
-> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> +
-> +	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
-> +	udelay(35);
-> +
-> +	/* Release module from reset state */
-> +	writel(bitmask, priv->base + SRSTCLR(reg));
-> +
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
-> +	unsigned int reg = id / 32;
-> +	unsigned int bit = id % 32;
-
-Here you haven't.
-
-> +	unsigned long flags;
-> +	u32 value;
-> +
-> +	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
-> +
-> +	spin_lock_irqsave(&priv->rmw_lock, flags);
-> +	value = readl(priv->base + SRCR(reg));
-> +	writel(value | BIT(bit), priv->base + SRCR(reg));
-
-Here you don't.
-
-> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
-> +			     unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
-> +	unsigned int reg = id / 32;
-> +	unsigned int bit = id % 32;
-> +
-> +	dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
-> +
-> +	writel(BIT(bit), priv->base + SRSTCLR(reg));
-
-And here ...
-
-> +	return 0;
-> +}
-> +
-> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
-> +			   unsigned long id)
-> +{
-> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
-> +	unsigned int reg = id / 32;
-> +	unsigned int bit = id % 32;
-> +
-> +	return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
-
-And here neither.
-
-I'd choose one variant over the other for consistency.
-
-regards
-Philipp
+SGVsbG8gVWxmLA0KDQpGcmlkYXksIEphbnVhcnkgMjAsIDIwMTcsIFVsZiBIYW5zc29uIHdyb3Rl
+Og0KPiA+ICstIGNsb2NrczogTW9zdCBjb250cm9sbGVycyBvbmx5IGhhdmUgMSBjbG9jayBzb3Vy
+Y2UgcGVyIGNoYW5uZWwuDQo+IEhvd2V2ZXIsIHNvbWUNCj4gPiArICAgICAgICAgaGF2ZSBhIHNl
+Y29uZCBjbG9jayBkZWRpY2F0ZWQgdG8gY2FyZCBkZXRlY3Rpb24uIElmIDIgY2xvY2tzDQo+IGFy
+ZQ0KPiA+ICsgICAgICAgICBzcGVjaWZpZWQsIHlvdSBtdXN0IG5hbWUgdGhlbSBhcyAiY29yZSIg
+YW5kICJjZCIuIElmIHRoZQ0KPiBjb250cm9sbGVyDQo+ID4gKyAgICAgICAgIG9ubHkgaGFzIDEg
+Y2xvY2ssIG5hbWluZyBpcyBub3QgcmVxdWlyZWQuDQo+IA0KPiBDb3VsZCB5b3UgcGxlYXNlIGVs
+YWJvcmF0ZSBhIGJpdCBvbiB0aGUgY2FyZCBkZXRlY3Rpb24gY2xvY2s/DQo+IA0KPiBJIGd1ZXNz
+IHRoYXQgdGhlcmUgaXMgc29tZSBraW5kIG9mIGludGVybmFsIGNhcmQgZGV0ZWN0aW9uIGxvZ2lj
+IChuYXRpdmUNCj4gY2FyZCBkZXRlY3QpIGluIHRoZSBTREhJIElQLCB3aGljaCByZXF1aXJlcyBh
+IHNlcGFyYXRlIGNsb2NrIGZvciBpdCB0bw0KPiB3b3JrPyBQZXJoYXBzIHlvdSBjYW4gc3RhdGUg
+dGhhdCBzb21laG93Pw0KDQoNClRoZSByZWFsaXR5IGlzIHRoYXQgdGhlIGNoaXAgZ3V5cyBjdXQg
+dXAgdGhlIHN0YW5kYXJkIFNESEkgSVAgdG8gYWRkIGENCidjb29sIG5ldyBmZWF0dXJlJywgYnV0
+IGFsbCBJIHdhbnQgdG8gZG8gaXMgcHV0IGl0IGJhY2sgdGhlIHdheSBpdCB3YXMuDQoNCk5PVEU6
+IFRoZSBkZXNpZ24gZ3V5cyBsaWtlIHRvIHJldXNlIElQIGJsb2NrcyBmcm9tIHByZXZpb3VzIGRl
+c2lnbnMgdGhhdCB0aGV5DQprbm93IHdvcmtlZCBhbmQgZGlkbid0IGhhdmUgYnVncy4gU28sIHRo
+ZXJlIGlzIGEgZ29vZCBjaGFuY2UgeW91IHdpbGwgc2VlIHRoaXMNCmNoYW5nZSBpbiBmdXR1cmUg
+UlovQSBkZXZpY2VzIChvciBldmVuIG90aGVyIGZ1dHVyZSBSZW5lc2FzIFNvQyBkZXZpY2VzKS4N
+ClRvIHJlbW92ZSBhbiB1bndhbnRlZCBmZWF0dXJlIGFkZHMgYWRkaXRpb25hbCBkZXNpZ24gcmlz
+ayBvZiBicmVha2luZw0Kc29tZXRoaW5nIGVsc2UuLi4uYW5kIGdpdmVuIHRoZSBjb3N0IG9mIHJl
+ZG9pbmcgc2lsaWNvbiBtYXNrIGxheWVycy4uLm5vDQplbmdpbmVlciB3YW50cyB0aGF0IG1pc3Rh
+a2Ugb24gdGhlaXIgaGFuZHMuDQoNCg0KDQo+ID4gK0V4YW1wbGUgc2hvd2luZyAyIGNsb2NrczoN
+Cj4gPiArICAgICAgIHNkaGkwOiBzZEBlODA0ZTAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNv
+bXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI3czcyMTAwIjsNCj4gPiArICAgICAgICAgICAgICAg
+cmVnID0gPDB4ZTgwNGUwMDAgMHgxMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgMjcwIElSUV9UWVBFX0xFVkVMX0hJR0gNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBHSUNfU1BJIDI3MSBJUlFfVFlQRV9MRVZFTF9ISUdIDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgR0lDX1NQSSAyNzIgSVJRX1RZUEVfTEVWRUxfSElHSD47
+DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHAxMl9jbGtzIFI3Uzcy
+MTAwX0NMS19TREhJMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICA8Jm1zdHAxMl9j
+bGtzIFI3UzcyMTAwX0NMS19TREhJMDE+Ow0KPiA+ICsgICAgICAgICAgICAgICBjbG9jay1uYW1l
+cyA9ICJjb3JlIiwgImNkIjsNCj4gPiArICAgICAgICAgICAgICAgY2FwLXNkLWhpZ2hzcGVlZDsN
+Cj4gPiArICAgICAgICAgICAgICAgY2FwLXNkaW8taXJxOw0KPiA+ICsgICAgICAgICAgICAgICBz
+dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiANCj4gVGhlIGxhc3QgbGluZSBzZWVtcyBhIGJpdCBvZGQg
+dG8gaW5jbHVkZSBpbiBhbiBleGFtcGxlLg0KDQpZb3UncmUgcmlnaHQuIEknbGwgdGFrZSB0aGF0
+IG91dC4NCg0KVGhhbmtzLA0KQ2hyaXMNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
