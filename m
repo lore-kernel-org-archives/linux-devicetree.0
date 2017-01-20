@@ -1,71 +1,41 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v5 00/14] ARM: da850-lcdk: add SATA support
-Date: Fri, 20 Jan 2017 19:52:35 +0530
-Message-ID: <f9055043-507f-74de-b2b8-9eb0eae5dad6@ti.com>
-References: <1484911325-23425-1-git-send-email-bgolaszewski@baylibre.com>
- <20170120132843.GA31487@mtj.duckdns.org>
- <86bcbb3c-87e4-3508-f4a6-26529f39d374@ti.com>
- <CAMpxmJUPh9MZKwG6k6p_mo6niXNNT02JCDgXi4DPRH2Fk3yxng@mail.gmail.com>
+From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
+ DWC_USB3_NUM_IN_EPS
+Date: Fri, 20 Jan 2017 14:19:46 +0000
+Message-ID: <84fbc0f7-3624-699b-337b-1839818d3738@nexus-software.ie>
+References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
+ <87mvemx0so.fsf@linux.intel.com>
+ <2B3535C5ECE8B5419E3ECBE300772909021B3FEC4C@US01WEMBX2.internal.synopsys.com>
+ <71877fff-11b1-0a27-8170-ff42ace181cd@nexus-software.ie>
+ <871svy9bl1.fsf@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJUPh9MZKwG6k6p_mo6niXNNT02JCDgXi4DPRH2Fk3yxng@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Tejun Heo <tj@kernel.org>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, linux-ide@vger.kernel.org, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <871svy9bl1.fsf-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 20 January 2017 07:32 PM, Bartosz Golaszewski wrote:
-> 2017-01-20 14:56 GMT+01:00 Sekhar Nori <nsekhar@ti.com>:
->> Hi Tejun,
+On 20/01/17 12:10, Felipe Balbi wrote:
+>>> And unfortunately, whether this is set or not is not visible to the
+>>> software so it will require a quirk.
 >>
->> On Friday 20 January 2017 06:58 PM, Tejun Heo wrote:
->>> On Fri, Jan 20, 2017 at 12:21:51PM +0100, Bartosz Golaszewski wrote:
->>>> This series contains all the changes necessary to make SATA work on
->>>> the da850-lcdk board.
->>>>
->>>> The first patch adds DT bindings for the ahci-da850 driver.
->>>>
->>>> The second enables relevant modules in davinci_all_defconfig.
->>>>
->>>> Patches 03/14-06/14 modify the way the clocks are handled regarding
->>>> SATA on the da850 platform. We modify the ahci driver to retrieve
->>>> the clock via con_id and model the external SATA oscillator as
->>>> a real clock.
->>>>
->>>> Patches 07/14-11/14 extend the ahci-da850 driver. Add DT support,
->>>> implement workarounds necessary to make SATA work on the da850-lcdk
->>>> board and un-hardcode the external clock multiplier.
->>>
->>> Please feel free to add
->>>
->>>  Acked-by: Tejun Heo <tj@kernel.org>
->>>
->>> to the all libata patches.  Please let me know how the patches should
->>> be routed once other parts are settled.
->>
->> I believe you can queue the libata patches independently (patches 1, 4,
->> 7, 8, 9, 10, 11). It looks like they have been written such that driver
->> continues to work with existing platform code (Bartosz, please disagree
->> if I am wrong). 1/14 still needs the ack from DT maintainers.
->>
+>> but arrived at this conclusion because I couldn't think of a reasonable
+>> guess value for IN/OUT endpoint numbers that would work if
+>> DWC_USB3_NUM_EPS == DWC_USB3_NUM_IN_EPS
 > 
-> Patch 11/14 depends on 06/14. Other than that I think it should work
-> independently.
+> Well, we can, for now at least, take the simple approach of half IN,
+> half OUT. If DWC3_USB3_NUM_EPS is odd, then OUT should take the extra
+> endpoint. If anybody complains, we can fix it later ;-)
 
-Ah, right. You recently changed 11/14 to error out in case refclkpn is
-not found instead of using a default value (do agree that current
-version is better).
+Sure, works just as well for me either way.
 
-If there are no build time dependencies still, it might be okay to queue
-these patches through their respective maintainer trees.
+---
+bod
 
-Tejun, I am open to queuing the driver changes through ARM-SoC. I guess
-with that there is little chance that SATA will be broken on linux-next
-for a longish period of time.
 
-I have Cced the ARM-SoC maintainers too.
-
-Thanks,
-Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
