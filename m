@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v3 3/9] ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
-Date: Fri, 20 Jan 2017 16:22:26 +0100
-Message-ID: <20170120152232.13943-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 4/9] ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
+Date: Fri, 20 Jan 2017 16:22:27 +0100
+Message-ID: <20170120152232.13943-5-martin.blumenstingl@googlemail.com>
 References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
  <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -19,19 +19,19 @@ allow us to specify OF-properties for the PHY itself.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 86709929fd20..358ab5159bd5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -128,6 +128,24 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 4cbd626a9e88..c7e3ea008566 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -164,7 +164,24 @@
  	status = "okay";
- 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-0 = <&eth_rmii_pins>;
  	pinctrl-names = "default";
 +	phy-handle = <&eth_phy0>;
-+	phy-mode = "rgmii";
+ 	phy-mode = "rmii";
 +
 +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
 +	snps,reset-delays-us = <0 10000 1000000>;
@@ -43,14 +43,14 @@ index 86709929fd20..358ab5159bd5 100644
 +		#size-cells = <0>;
 +
 +		eth_phy0: ethernet-phy@0 {
-+			compatible = "ethernet-phy-id001c.c916",
++			compatible = "ethernet-phy-id0243.0c54",
 +				     "ethernet-phy-ieee802.3-c22";
 +			reg = <0>;
 +		};
 +	};
  };
  
- &usb0_phy {
+ &ir {
 -- 
 2.11.0
 
