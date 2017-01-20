@@ -1,40 +1,152 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
- PHY's reset GPIO
-Date: Fri, 20 Jan 2017 18:46:58 +0100
-Message-ID: <20170120174658.GG25907@lunn.ch>
-References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
- <20170120162138.GE25907@lunn.ch>
- <CAFBinCA47Nng_jjxKrWrV_YBHr0bg+7xPaJrVswt_WnZ6wtyjA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
+Date: Fri, 20 Jan 2017 19:03:38 +0100
+Message-ID: <CAMuHMdUrtTPKjAnFNkbBJeCaHTvJkOvWRXQM4j38dAqnxA0mLw@mail.gmail.com>
+References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
+ <1484921306-9967-5-git-send-email-geert+renesas@glider.be> <1484927830.2897.51.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCA47Nng_jjxKrWrV_YBHr0bg+7xPaJrVswt_WnZ6wtyjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1484927830.2897.51.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 06:07:20PM +0100, Martin Blumenstingl wrote:
-> I though that this is good practice - the documentation doesn't say
-> that it should only be added in specific cases: [0]
+Hi Philipp,
 
-Agreed, the text should be better, listing when it is appropriate to
-use.
+On Fri, Jan 20, 2017 at 4:57 PM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> On Fri, 2017-01-20 at 15:08 +0100, Geert Uytterhoeven wrote:
+>> Add optional support for the Reset Control feature of the Renesas Clock
+>> Pulse Generator / Module Standby and Software Reset module on R-Car
+>> Gen2, R-Car Gen3, and RZ/G1 SoCs.
+>
+> Is there a reason to make this optional?
 
-> my intention behind adding the PHY ID was to make it easier to see
-> which devices uses which PHY. this is especially useful for devices
-> with RTL8211F PHY (basically all devices with RGMII PHY except the
-> P200) as these may need similar fixes than [1]
+With "optional", I mean that I don't select CONFIG_RESET_CONTROLLER, and
+make the reset controller code depend on CONFIG_RESET_CONTROLLER.
+So far we don't have any mandatory users.
 
-I would not say it is wrong to list the PHY ID, it just has
-consequences if the PHY ever changes.
+>> This allows to reset SoC devices using the Reset Controller API.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Looks good to me,
+>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-	     Andrew
+Thanks!
+
+> Just a small issue below,
+>
+>> ---
+>>  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 122 insertions(+)
+>>
+>> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+>> index f1161a585c57e433..ea4af714ac14603a 100644
+>> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+>> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+> [...]
+>> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
+>> +                       unsigned long id)
+>> +{
+>> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+>> +     unsigned int reg = id / 32;
+>> +     unsigned int bit = id % 32;
+>> +     u32 bitmask = BIT(bit);
+>
+> Here you have a bitmask = BIT(bit) variable.
+
+Because there are two users in the function.
+
+>> +     unsigned long flags;
+>> +     u32 value;
+>> +
+>> +     dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+>> +
+>> +     /* Reset module */
+>> +     spin_lock_irqsave(&priv->rmw_lock, flags);
+>> +     value = readl(priv->base + SRCR(reg));
+>> +     value |= bitmask;
+>
+> Here you use it.
+>
+>> +     writel(value, priv->base + SRCR(reg));
+>> +     spin_unlock_irqrestore(&priv->rmw_lock, flags);
+>> +
+>> +     /* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+>> +     udelay(35);
+>> +
+>> +     /* Release module from reset state */
+>> +     writel(bitmask, priv->base + SRSTCLR(reg));
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
+>> +{
+>> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+>> +     unsigned int reg = id / 32;
+>> +     unsigned int bit = id % 32;
+>
+> Here you haven't.
+>
+>> +     unsigned long flags;
+>> +     u32 value;
+>> +
+>> +     dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+>> +
+>> +     spin_lock_irqsave(&priv->rmw_lock, flags);
+>> +     value = readl(priv->base + SRCR(reg));
+>> +     writel(value | BIT(bit), priv->base + SRCR(reg));
+>
+> Here you don't.
+
+Because there's a single user in the function.
+
+>> +     spin_unlock_irqrestore(&priv->rmw_lock, flags);
+>> +     return 0;
+>> +}
+>> +
+>> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
+>> +                          unsigned long id)
+>> +{
+>> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+>> +     unsigned int reg = id / 32;
+>> +     unsigned int bit = id % 32;
+>> +
+>> +     dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
+>> +
+>> +     writel(BIT(bit), priv->base + SRSTCLR(reg));
+>
+> And here ...
+>
+>> +     return 0;
+>> +}
+>> +
+>> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
+>> +                        unsigned long id)
+>> +{
+>> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+>> +     unsigned int reg = id / 32;
+>> +     unsigned int bit = id % 32;
+>> +
+>> +     return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
+>
+> And here neither.
+>
+> I'd choose one variant over the other for consistency.
+
+OK, I'll use the "bitmask" variable in all functions.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
