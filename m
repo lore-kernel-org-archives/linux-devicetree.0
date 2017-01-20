@@ -1,158 +1,171 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh+dt@kernel.org>
 Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Fri, 20 Jan 2017 08:10:42 -0600
-Message-ID: <CAL_Jsq+w9Md4GNZX1nZJS3aVT=gBmrraQVhGnc7wT2avW7w47w@mail.gmail.com>
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com> <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
+Date: Fri, 20 Jan 2017 08:15:21 -0600
+Message-ID: <CAL_JsqL5fYVvCRgui9NQVEM+=gkGUnf7-D9KHK9YTtJyfGy3Ew@mail.gmail.com>
+References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
+ <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
+ <20170120091608.ijdhpeq2t5no75rc@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel@li
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170120091608.ijdhpeq2t5no75rc@lukather>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Heiko Stuebner <heiko@sntech.de>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, John Reitan <John.Reitan@arm.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, John Stultz <john.stultz@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Carlo Caione <carlo@caione.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Brandon Sheng <Brandon.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 1:24 PM, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, Jan 16, 2017 at 5:24 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> The ARM Mali Utgard GPU family is embedded into a number of SoCs from
->> Allwinner, Amlogic, Mediatek or Rockchip.
+On Fri, Jan 20, 2017 at 3:16 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi John,
+>
+> On Thu, Jan 19, 2017 at 11:24:38AM -0800, John Stultz wrote:
+>> On Mon, Jan 16, 2017 at 5:24 AM, Maxime Ripard
+>> <maxime.ripard@free-electrons.com> wrote:
+>> > The ARM Mali Utgard GPU family is embedded into a number of SoCs from
+>> > Allwinner, Amlogic, Mediatek or Rockchip.
+>> >
+>> > Add a binding for the GPU of that family.
+>> >
+>> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>> > ---
+>> >  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
+>> >  1 file changed, 76 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> > new file mode 100644
+>> > index 000000000000..df05ba0ec357
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> > @@ -0,0 +1,76 @@
+>> > +ARM Mali Utgard GPU
+>> > +===================
+>> > +
+>> > +Required properties:
+>> > +  - compatible:
+>> > +    * "arm,mali-utgard" and one of the following:
+>> > +      + "arm,mali-300"
+>> > +      + "arm,mali-400"
+>> > +      + "arm,mali-450"
+>> > +
+>> > +  - reg: Physical base address and length of the GPU registers
+>> > +
+>> > +  - interrupts: an entry for each entry in interrupt-names.
+>> > +    See ../interrupt-controller/interrupts.txt for details.
+>> > +
+>> > +  - interrupt-names:
+>> > +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
+>> > +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
+>> > +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
+>> > +    * gp: Geometry Processor interrupt
+>> > +    * gpmmu: Geometry Processor MMU interrupt
+>> > +
+>> > +
+>> > +Optional properties:
+>> > +  - interrupt-names:
+>> > +    * pmu: Power Management Unit interrupt, if implemented in hardware
+>> > +
+>> > +Vendor-specific bindings
+>> > +------------------------
+>> > +
+>> > +The Mali GPU is integrated very differently from one SoC to
+>> > +another. In order to accommodate those differences, you have the option
+>> > +to specify one more vendor-specific compatible, among:
+>> > +
+>> > +  - allwinner,sun4i-a10-mali
+>> > +    Required properties:
+>> > +      * clocks: an entry for each entry in clock-names
+>> > +      * clock-names:
+>> > +        + bus: bus clock for the GPU
+>> > +        + core: clock driving the GPU itself
+>> > +      * resets: phandle to the reset line for the GPU
+>> > +
+>> > +  - allwinner,sun7i-a20-mali
+>> > +    Required properties:
+>> > +      * clocks: an entry for each entry in clock-names
+>> > +      * clock-names:
+>> > +        + bus: bus clock for the GPU
+>> > +        + core: clock driving the GPU itself
+>> > +      * resets: phandle to the reset line for the GPU
+>> > +
+>> > +Example:
+>> > +
+>> > +mali: gpu@01c40000 {
+>> > +       compatible = "allwinner,sun7i-a20-mali", "arm,mali-400",
+>> > +                    "arm,mali-utgard";
+>> > +       reg = <0x01c40000 0x10000>;
+>> > +       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+>> > +                    <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+>> > +       interrupt-names = "gp",
+>> > +                         "gpmmu",
+>> > +                         "pp0",
+>> > +                         "ppmmu0",
+>> > +                         "pp1",
+>> > +                         "ppmmu1",
+>> > +                         "pmu";
+>> > +       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+>> > +       clock-names = "bus", "core";
+>> > +       resets = <&ccu RST_BUS_GPU>;
+>> > +};
 >>
->> Add a binding for the GPU of that family.
+>> Having a mali utgard binding upstream would be great. However I'm a
+>> little worried that the mali driver I've used sort of only half way
+>> uses DT, and still requires a custom built in platform driver to setup
+>> numerous other things.  Curious if you have a pointer to the kernel
+>> driver you've been using with the vendor specific bindings above?  I'd
+>> like to try to adapt what we have to your method to validate the above
+>> as generic.
+>
+> I've created a custom platform driver, so just like you it seems,
+> because I've not managed to make ARM's DT support work.
+>
+> https://github.com/mripard/sunxi-mali/blob/master/driver/src/devicedrv/mali/platform/sunxi/sunxi.c
+>
+> I haven't updated it yet with the bindings suggested above, but only
+> the interrupt and clock names have changed. The rest very much
+> applies.
+>
+> The only thing that might be vendor specific would be the (optional)
+> declaration of the mali_gpu_device_data structure. As far as I know,
+> there's two things of importance there:
+>   - the list of the valid OPPs in order to do DVFS, but that could be
+>     made generic too using the operating-points binding
+>
+>   - And the valid area for the buffers for the fbdev blobs (fb_start,
+>     fb_size and shared_mem_size). I'm not entirely happy with this one
+>     so far (which is also why I've not pushed it). We'd need to come
+>     up with a way to get the base address and size of the CMA region
+>     backing the framebuffer allocation, but I haven't find any trivial
+>     way to do so, so for now I just hardcoded it. Worst case scenario,
+>     we can hardcode values based on the compatible.
+
+memory-region property?
+
+>
+>> And, just for context, here's the node we've been using with hikey:
 >>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->>
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->> new file mode 100644
->> index 000000000000..df05ba0ec357
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->> @@ -0,0 +1,76 @@
->> +ARM Mali Utgard GPU
->> +===================
->> +
->> +Required properties:
->> +  - compatible:
->> +    * "arm,mali-utgard" and one of the following:
->> +      + "arm,mali-300"
->> +      + "arm,mali-400"
->> +      + "arm,mali-450"
->> +
->> +  - reg: Physical base address and length of the GPU registers
->> +
->> +  - interrupts: an entry for each entry in interrupt-names.
->> +    See ../interrupt-controller/interrupts.txt for details.
->> +
->> +  - interrupt-names:
->> +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
->> +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
->> +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
->> +    * gp: Geometry Processor interrupt
->> +    * gpmmu: Geometry Processor MMU interrupt
->> +
->> +
->> +Optional properties:
->> +  - interrupt-names:
->> +    * pmu: Power Management Unit interrupt, if implemented in hardware
->> +
->> +Vendor-specific bindings
->> +------------------------
->> +
->> +The Mali GPU is integrated very differently from one SoC to
->> +another. In order to accommodate those differences, you have the option
->> +to specify one more vendor-specific compatible, among:
->> +
->> +  - allwinner,sun4i-a10-mali
->> +    Required properties:
->> +      * clocks: an entry for each entry in clock-names
->> +      * clock-names:
->> +        + bus: bus clock for the GPU
->> +        + core: clock driving the GPU itself
->> +      * resets: phandle to the reset line for the GPU
->> +
->> +  - allwinner,sun7i-a20-mali
->> +    Required properties:
->> +      * clocks: an entry for each entry in clock-names
->> +      * clock-names:
->> +        + bus: bus clock for the GPU
->> +        + core: clock driving the GPU itself
->> +      * resets: phandle to the reset line for the GPU
->> +
->> +Example:
->> +
->> +mali: gpu@01c40000 {
->> +       compatible = "allwinner,sun7i-a20-mali", "arm,mali-400",
->> +                    "arm,mali-utgard";
->> +       reg = <0x01c40000 0x10000>;
->> +       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
->> +       interrupt-names = "gp",
->> +                         "gpmmu",
->> +                         "pp0",
->> +                         "ppmmu0",
->> +                         "pp1",
->> +                         "ppmmu1",
->> +                         "pmu";
->> +       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
->> +       clock-names = "bus", "core";
->> +       resets = <&ccu RST_BUS_GPU>;
->> +};
->> +
->> +
+>>                 mali:mali@f4080000 {
+>>                         compatible = "arm,mali-450", "arm,mali-utgard";
+>>                         reg = <0x0 0x3f100000 0x0 0x00708000>;
 >
->
-> Having a mali utgard binding upstream would be great. However I'm a
-> little worried that the mali driver I've used sort of only half way
-> uses DT, and still requires a custom built in platform driver to setup
-> numerous other things.  Curious if you have a pointer to the kernel
-> driver you've been using with the vendor specific bindings above?  I'd
-> like to try to adapt what we have to your method to validate the above
-> as generic.
->
-> And, just for context, here's the node we've been using with hikey:
->
->                 mali:mali@f4080000 {
->                         compatible = "arm,mali-450", "arm,mali-utgard";
->                         reg = <0x0 0x3f100000 0x0 0x00708000>;
+> This is because the hikey is using a 64 bits CPU, right?
 
-Why's the size 7MB?
-
->                         clocks = <&media_ctrl HI6220_G3D_CLK>,
->                                  <&media_ctrl HI6220_G3D_PCLK>;
->                         clock-names = "clk_g3d", "pclk_g3d";
-
-Seems like these are swapped from Maxime's order. Based on the pclk
-frequency, that's the bus clock.
-
->                         mali_def_freq = <500>;
->                         pclk_freq = <144>;
-
-There's a standard property for these with assigned-clocks.
-
->                         dfs_steps = <2>;
->                         dfs_lockprf = <1>;
->                         dfs_limit_max_prf = <1>;
->                         dfs_profile_num = <2>;
->                         dfs_profiles = <250 3 0>, <500 1 0>;
-
-This looks like a OPP table. It can all be driver data associated with
-the compatible string for now.
-
->                         mali_type = <2>;
-
-Not sure about this one.
+Having 2 cells for address and size is generally entirely pointless.
+The peripheral regions generally don't need 64-bits of address space
+or size. ranges should be used.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
