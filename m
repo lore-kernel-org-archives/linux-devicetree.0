@@ -1,93 +1,83 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
- property
-Date: Fri, 20 Jan 2017 23:35:20 +0100
-Message-ID: <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
-References: <20170120215605.15728-1-zajec5@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v4 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Fri, 20 Jan 2017 23:41:39 +0100
+Message-ID: <20170120224137.GD1438@katana>
+References: <20170120194332.1683-1-chris.brandt@renesas.com>
+ <20170120194332.1683-3-chris.brandt@renesas.com>
+ <20170120213901.GC1438@katana>
+ <SG2PR06MB1165035F107F504185B525658A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170120215605.15728-1-zajec5@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="LKTjZJSUETSlgu2t"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB1165035F107F504185B525658A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rafał,
 
-On 01/20/2017 10:56 PM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Some LEDs can be related to particular devices described in DT. This
-> property allows specifying such relations. E.g. USB LED should usually
-> be used to indicate some USB port(s) state.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
-> V2: Replace "usb-ports" with "led-triggers" property which is more generic and
->     allows specifying other devices as well.
-> 
-> When bindings patch is related to some followup implementation, they usually go
-> through the same tree.
-> 
-> Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds: Improve examples by
-> adding some context") from kernel/git/j.anaszewski/linux-leds.git . Is there any
-> way to solve this dependency issue? Or should this patch wait until 3.11 is
-> released?
-> ---
->  Documentation/devicetree/bindings/leds/common.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 24b656014089..17632a041196 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -49,6 +49,17 @@ Optional properties for child nodes:
->  - panic-indicator : This property specifies that the LED should be used,
->  		    if at all possible, as a panic indicator.
->  
-> +- led-triggers : List of devices that should trigger this LED activity. Some
-> +		 LEDs can be related to a specific device and should somehow
-> +		 indicate its state. E.g. USB 2.0 LED may react to device(s) in
-> +		 a USB 2.0 port(s). Another common example is switch or router
-> +		 with multiple Ethernet ports each of them having its own LED
-> +		 assigned (assuminled-trigger-usbportg they are not hardwired).
-> +		 In such cases this property should contain phandle(s) of
-> +		 related device(s). In many cases LED can be related to more
-> +		 than one device (e.g. one USB LED vs. multiple USB ports) so a
-> +		 list of entries can be specified.
-> +
+--LKTjZJSUETSlgu2t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This implies that it is possible to define multiple triggers for
-a LED class device but it is not supported by LED Trigger core.
-There is linux,default-trigger property which allows to define one
-trigger that will be initially assigned.
 
-I am aware that this is renamed usb-ports property from v1,
-that attempts to address Rob's comment, but we can't do that this way.
-Maybe usb-ports property could be documented in led-trigger-usbport's
-specific bindings and a reference to it could be added next to the
-related entry on the list of the available LED triggers (which is
-actually missing) in Documentation/devicetree/bindings/leds/common.txt.
+> It sounds like your suggestion is to just put the HW description in
+> the DT bindings, but move the dirty details into the driver.
+>=20
+> Keep in DT:
+>=20
+> +- clocks: Most controllers only have 1 clock source per channel. However=
+, on
+> +	  some variations of this controller, the internal card detection
+> +	  logic that exists in this controller is sectioned off to be run by a
+> +	  separate second clock source to allow the main core clock to be turned
+> +	  off to save power.
+> +	  If 2 clocks are specified by the hardware, you must name them as
+> +	  "core" and "cd".
+> +	  If the controller only has 1 clock, naming is not required.
+>=20
+>=20
+>=20
+> Move somewhere in the driver (maybe where the 2nd clock is detected):
+>=20
+> +	  Unfortunately, the existing driver architecture
+> +	  does not support such a separation of clocks.
 
->  Required properties for flash LED child nodes:
->  - flash-max-microamp : Maximum flash LED supply current in microamperes.
->  - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
-> @@ -69,6 +80,11 @@ gpio-leds {
->  		linux,default-trigger = "heartbeat";
->  		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
->  	};
-> +
-> +	usb {
-> +		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-> +		led-triggers = <&ohci_port1>, <&ehci_port1>;
-> +	};
->  };
->  
->  max77693-led {
-> 
+"such" is not explained. Maybe "does not support a seperation of clocks.
+It doesn't work with Runtime PM because ..."?
 
--- 
-Best regards,
-Jacek Anaszewski
+> +	  Additionally, it is prohibited to supply a clock to the core but not
+> +	  to the card detect circuit. That leaves you with if separate clocks
+> +	  are presented, you must treat them both as 1.
+>=20
+>=20
+> Is this what you were thinking?
+
+Exactly.
+
+
+--LKTjZJSUETSlgu2t
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIbBAEBAgAGBQJYgpIhAAoJEBQN5MwUoCm21iEP9ivLnVX3LgSHxtqx8UYvJpKJ
+3Q+v2sD61HZUcVzzoXCDr9sUCEVFq1juoor1TaNgzLWGx31cgCD0pFl+MEZ2S9A+
++rJz6xsYPOC/IITYAJvmC/8+GdK7pxkc+KWMFvlcBR/OAcZpzWHziMnkpQKKoW7o
+kR+B411kA/8kwoQpta5U+hL8Jk4Z/aQXOfiTyEDVDeZjHDUGm3+EAcSXLH2SGLd0
+EcZ5vyDbdQwAhljGtazfpnShkDM9Z4c0Jiuz+V2D9/lBYPWQBuiJmlJBf3SHKH2v
+rfd4ZVPKM1in8vGqDTNpUcON9koTIa3E/rXeWddxlCXGPiprwmuLsgyTjIZcVBl7
+EXqlvA2DQoqddXs6kulq/WAy4IeSDv8ePxe2h2R5z2opGiUXApXqm0vt7te0ert7
+tsJ6VphnJ1kpZIv4SQCa05HNhiKscBV8c4Al5MmyMbz6bpn2YJQ31pH+MXMqTN7G
++OIZIQJ6ddz5L5XzEtMapXdjfGYUGw5zguQHNUjLywg8YYTTbYPsaHQFODT/CJ6I
+P2uoqBhUIclhdStOFgWLsZZZr/vL9Mr40r2H7BfrSRB9Fg8gDVRSgtmW96/EUwv5
++/4NvjCqY06SSCbEIm89ccUhZ9Q3UEugUGPhjPTxN8wjfnHvzJKSTWKPlIfeE3y+
+ItQGojn/LZaSPo2cXpU=
+=HVRM
+-----END PGP SIGNATURE-----
+
+--LKTjZJSUETSlgu2t--
