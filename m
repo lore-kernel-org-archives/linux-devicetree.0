@@ -1,27 +1,42 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 37/37] ARM: dts: DRA7: Add pcie1 dt node for EP mode
-Date: Fri, 20 Jan 2017 10:30:00 -0800
-Message-ID: <20170120183000.GF7403@atomide.com>
-References: <1484216786-17292-1-git-send-email-kishon@ti.com>
- <1484216786-17292-38-git-send-email-kishon@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/6] ARM: dts: am335x-sl50: Update to new hardware
+Date: Fri, 20 Jan 2017 10:35:42 -0800
+Message-ID: <20170120183542.GH7403@atomide.com>
+References: <20170116165736.17197-1-enric.balletbo@collabora.com>
+ <20170116174149.GE7403@atomide.com>
+ <CAFqH_50s3oMsMK_QPFSKfOdrQ5gLcPp_PNM2emWfXO086_T8oQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484216786-17292-38-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, nsekhar@ti.com
+In-Reply-To: <CAFqH_50s3oMsMK_QPFSKfOdrQ5gLcPp_PNM2emWfXO086_T8oQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [170112 02:34]:
-> Add pcie1 dt node in order for the controller to operate in
-> endpoint mode. However since none of the dra7 based boards have
-> slots configured to operate in endpoint mode, keep EP mode
-> disabled.
+* Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170116 12:54]:
+> Hi Tony,
+> 
+> 2017-01-16 18:41 GMT+01:00 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
+> > * Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> [170116 08:58]:
+> >> Hi Tony,
+> >>
+> >> The following patches updates the device tree file for the SL50 device, there
+> >> are few v1 boards and IMHO doesn't make sense to maintain the device tree
+> >> for these old devices, so mostly of the updates are related to changes done in
+> >> the next hardware revision v2 (the one that will go out).
+> >
+> > This is only if the v1 boards are company internal and can be easily
+> > replaced. As long as that's the case I'm fine with that.
+> >
+> 
+> Yes thats the case, I don't expect see v1 board outside.
 
-Can this be merged separately later on without breaking anything?
-
-Regards,
+OK applying all into omap-for-v4.11/dt thanks.
 
 Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
