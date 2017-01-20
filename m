@@ -1,86 +1,91 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH net-next v4 2/2] net: stmmac: dwmac-meson8b: make the
- RGMII TX delay configurable
-Date: Fri, 20 Jan 2017 14:47:58 +0100
-Message-ID: <CAFBinCBvDddU0DDcDfBRPkS+mWi61C0ON5_fneog-jnjOdevXA@mail.gmail.com>
-References: <20161202233238.17561-1-martin.blumenstingl@googlemail.com>
- <20161217182119.4037-1-martin.blumenstingl@googlemail.com>
- <20161217182119.4037-3-martin.blumenstingl@googlemail.com>
- <20161218.104950.1013829528388480468.davem@davemloft.net>
- <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Fri, 20 Jan 2017 14:52:55 +0100
+Message-ID: <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCDZ_mqt8q2rG6zDy8ke5sX6L+4sVYOOhWUdO3apwFiRYw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: David Miller <davem@davemloft.net>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, netdev@vger.kernel.org, peppe.cavallaro@st.com, robh+dt@kernel.org, khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
+Hi Steve, Philipp,
 
-On Sun, Dec 18, 2016 at 5:13 PM, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
-> On Sun, Dec 18, 2016 at 4:49 PM, David Miller <davem@davemloft.net> wrote:
->> From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> Date: Sat, 17 Dec 2016 19:21:19 +0100
->>
->>> Prior to this patch we were using a hardcoded RGMII TX clock delay of
->>> 2ns (= 1/4 cycle of the 125MHz RGMII TX clock). This value works for
->>> many boards, but unfortunately not for all (due to the way the actual
->>> circuit is designed, sometimes because the TX delay is enabled in the
->>> PHY, etc.). Making the TX delay on the MAC side configurable allows us
->>> to support all possible hardware combinations.
->>>
->>> This allows fixing a compatibility issue on some boards, where the
->>> RTL8211F PHY is configured to generate the TX delay. We can now turn
->>> off the TX delay in the MAC, because otherwise we would be applying the
->>> delay twice (which results in non-working TX traffic).
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
->>
->> Is this really the safest thing to do?
->>
->> If you say the existing hard-coded setting of 1/4 cycle works on most
->> boards, and what you're trying to do is override it with an OF
->> property value for boards where the existing setting does not work,
->> then you _must_ use a default value that corresponds to what the
->> existing code does not when you don't see this new OF property.
-> it's a bit more complicated in reality: 1/4 cycle works when the TX
-> delay of the RTL8211F PHY is turned off (until recently it was always
-> enabled for phy-mode RGMII).
->
->> So please retain the current behavior of the 1/4 cycle TX delay
->> setting when you don't see the amlogic,tx-delay-ns property.
->>
->> I really think you risk breaking existing boards by not doing so,
->> unless you can have this patch tested on every such board that exists
->> and I don't think you really can feasibly and rigorously do that.
-> there's a patch in my follow-up series which adds the 2ns to the .dts
-> for all RGMII based boards: [0] (and I would keep these even if we had
-> a default value, just to make it explicit and thus easier to
-> understand for other people).
-> however, we can add the 2ns default back (I can do this if you want -
-> Rob Herring was unhappy with the missing documentation of this default
-> value [1] - so note to myself: take care of that as well). but then we
-> have to decide when to apply this default value: only when we're in
-> RGMII mode or also in any of the RGMII_*ID modes?
-could you please let me know if I should add a a fallback (2ns which
-was the old hardcoded value) to the driver or if I should simply leave
-it out (that's the way it is right now).
-I'm fine with either way, I would just like to avoid duplicate work.
-So please let me know how you prefer it.
+On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
+> In version 3:
+> 
+> Changes suggested by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+> 
+>   - prepended FIM node properties with vendor prefix "fsl,".
+> 
+>   - make mipi csi-2 receiver compatible string SoC specific:
+>     "fsl,imx6-mipi-csi2" instead of "fsl,imx-mipi-csi2".
+> 
+>   - redundant "_clk" removed from mipi csi-2 receiver clock-names property.
+> 
+>   - removed board-specific info from the media driver binding doc. These
+>     were all related to sensor bindings, which already are (adv7180)
+>     or will be (ov564x) covered in separate binding docs. All reference
+>     board info not related to DT bindings has been moved to
+>     Documentation/media/v4l-drivers/imx.rst.
+> 
+>   - removed "_mipi" from the OV5640 compatible string.
+> 
+> Changes suggested by Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>:
+> 
+>   Mostly cosmetic/non-functional changes which I won't list here, except
+>   for the following:
+> 
+>   - spin_lock_irqsave() changed to spin_lock() in a couple interrupt handlers.
+> 
+>   - fixed some unnecessary of_node_put()'s in for_each_child_of_node() loops.
+> 
+>   - check/handle return code from required reg property of CSI port nodes.
+> 
+>   - check/handle return code from clk_prepare_enable().
+> 
+> Changes suggested by Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> 
+>   - switch to VGEN3 Analog Vdd supply assuming rev. C SabreSD boards.
+> 
+>   - finally got around to passing valid IOMUX pin config values to the
+>     pin groups.
+> 
+> Other changes:
+> 
+>   - removed the FIM properties that overrided the v4l2 FIM control defaults
+>     values. This was left-over from a requirement of a customer and is not
+>     necessary here.
+> 
+>   - The FIM must be explicitly enabled in the fim child node under the CSI
+>     port nodes, using the status property. If not enabled, FIM v4l2 controls
+>     will not appear in the video capture driver.
+> 
+>   - brought in additional media types patch from Philipp Zabel. Use new
+>     MEDIA_ENT_F_VID_IF_BRIDGE in mipi csi-2 receiver subdev.
+> 
+>   - brought in latest platform generic video multiplexer subdevice driver
+>     from Philipp Zabel (squashed with patch that uses new MEDIA_ENT_F_MUX).
+> 
+>   - removed imx-media-of.h, moved those prototypes into imx-media.h.
 
+Based on the discussion on the mailinglist it seems everyone agrees that this
+is the preferred driver, correct?
+
+There are a bunch of review comments, so I will wait for a v4. I plan to merge
+that staging driver unless there are major issues with it.
+
+I am not sure if I would merge those sensor drivers in staging, I'll have to
+take a closer look at those once v4 is posted.
 
 Regards,
-Martin
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
