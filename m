@@ -1,204 +1,101 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v11 08/14] usb: otg: add OTG/dual-role core
-Date: Fri, 20 Jan 2017 17:09:59 +0530
-Message-ID: <cf0a8145-172b-5691-3b82-785d3c701ded@codeaurora.org>
-References: <1465564043-27163-1-git-send-email-rogerq@ti.com>
- <1465564043-27163-9-git-send-email-rogerq@ti.com> <575E672E.5070603@ti.com>
- <87h9coxq04.fsf@linux.intel.com> <20160620114904.GC26936@shlinux2>
- <8737o8qd00.fsf@linux.intel.com> <20160621060517.GA5108@shlinux2>
- <877fdjovef.fsf@linux.intel.com> <20160621090738.GD5108@shlinux2>
- <87h9cmoo4s.fsf@linux.intel.com> <20160621130512.GF5108@shlinux2>
- <87por9lnjd.fsf@linux.intel.com> <576A4321.6020209@ti.com>
- <87fus5ljwf.fsf@linux.intel.com> <576A4C95.4080202@ti.com>
- <CAFp+6iEpnHTWQe196zWPJu3vqb+L=47rfU_8nfuUNC=Gjvc8Gg@mail.gmail.com>
- <16136231-7dfd-2f84-064f-f78a6ffe073b@ti.com>
- <3c95b592d78aa569de33d420c4c93018@codeaurora.org>
- <2990e8dd-bff6-14c6-c978-6680d6497355@ti.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
+Date: Fri, 20 Jan 2017 13:46:27 +0200
+Message-ID: <20170120114627.GF3205@valkosipuli.retiisi.org.uk>
+References: <20161228183036.GA13139@amd>
+ <20170111225335.GA21553@amd>
+ <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
+ <cf372233-f047-6e2c-01eb-02e30e6b2de5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2990e8dd-bff6-14c6-c978-6680d6497355@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Felipe Balbi <balbi@kernel.org>, Peter Chen <hzpeterchen@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, peter.chen@freescale.com, Tony Lindgren <tony@atomide.com>, Greg KH <gregkh@linuxfoundation.org>, dan.j.williams@intel.com, Mathias Nyman <mathias.nyman@linux.intel.com>, Joao.Pinto@synopsys.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, jun.li@freescale.com, grygorii.strashko@ti.com, Rob Herring <robh@kernel.org>, nsekhar@ti.com, b-liu@ti.com, Joe Perches <joe@perches.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cf372233-f047-6e2c-01eb-02e30e6b2de5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Ivaylo,
 
+On Fri, Jan 20, 2017 at 09:59:13AM +0200, Ivaylo Dimitrov wrote:
+> Hi,
+> 
+> On 19.01.2017 23:49, Sakari Ailus wrote:
+> >Hi Pavel,
+> >
+> >On Wed, Jan 11, 2017 at 11:53:35PM +0100, Pavel Machek wrote:
+> >>From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> >>
+> >>In the vast majority of cases the bus type is known to the driver(s)
+> >>since a receiver or transmitter can only support a single one. There
+> >>are cases however where different options are possible.
+> >>
+> >>The existing V4L2 OF support tries to figure out the bus type and
+> >>parse the bus parameters based on that. This does not scale too well
+> >>as there are multiple serial busses that share common properties.
+> >>
+> >>Some hardware also supports multiple types of busses on the same
+> >>interfaces.
+> >>
+> >>Document the CSI1/CCP2 property strobe. It signifies the clock or
+> >>strobe mode.
+> >>
+> >>Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> >>Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> >>index 9cd2a36..08c4498 100644
+> >>--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> >>+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> >>@@ -76,6 +76,11 @@ Optional endpoint properties
+> >>   mode horizontal and vertical synchronization signals are provided to the
+> >>   slave device (data source) by the master device (data sink). In the master
+> >>   mode the data source device is also the source of the synchronization signals.
+> >>+- bus-type: data bus type. Possible values are:
+> >>+  0 - MIPI CSI2
+> >>+  1 - parallel / Bt656
+> >>+  2 - MIPI CSI1
+> >>+  3 - CCP2
+> >
+> >Actually, thinking about this again --- we only need to explictly specify
+> >busses if we're dealing with either CCP2 or CSI-1. The vast majority of the
+> >actual busses are and continue to be CSI-2 or either parallel or Bt.656. As
+> >they can be implicitly detected, we would have an option to just drop values
+> >0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
+> >CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
+> >bus-type will need to be supported anyway.
+> >
+> >> - bus-width: number of data lines actively used, valid for the parallel busses.
+> >> - data-shift: on the parallel data busses, if bus-width is used to specify the
+> >>   number of data lines, data-shift can be used to specify which data lines are
+> >>@@ -112,7 +117,8 @@ Optional endpoint properties
+> >>   should be the combined length of data-lanes and clock-lanes properties.
+> >>   If the lane-polarities property is omitted, the value must be interpreted
+> >>   as 0 (normal). This property is valid for serial busses only.
+> >>-
+> >>+- strobe: Whether the clock signal is used as clock or strobe. Used
+> >>+  with CCP2, for instance.
+> >
+> >How about the "ti,strobe-clock-inv" I proposed? No-one seems to know what
+> >this really truly means... or just drop it if it's not really needed.
+> >
+> 
+> Not really :), see https://www.spinics.net/lists/linux-media/msg99802.html
+> and https://www.spinics.net/lists/linux-media/msg99800.html
+> 
+> "clock/strobe", and "strobe-inv" are two distinct properties, see CSI1B_CTRL
+> description in OMAP TRM. BTW there is another property that is needed for
+> both n900 cameras to operate correctly (VP_CLK_POL, bit 12 from the same
+> reg), but that can be added later on when we have the other bits in place.
 
-On 01/20/2017 02:00 PM, Roger Quadros wrote:
-> Vivek,
->
-> On 19/01/17 17:15, vivek.gautam@codeaurora.org wrote:
->> Hi Roger,
->>
->> On 2017-01-19 17:45, Roger Quadros wrote:
->>> Vivek,
->>>
->>> On 19/01/17 13:56, Vivek Gautam wrote:
->>>> Hi,
->>>>
->>>>
->>>> On Wed, Jun 22, 2016 at 2:00 PM, Roger Quadros <rogerq@ti.com> wrote:
->>>>
->>>> Luckily hit this thread while checking about DRD role functionality for DWC3.
->>>>
->>>>> On 22/06/16 11:14, Felipe Balbi wrote:
->>>>>> Hi,
->>>>>>
->>>>>> Roger Quadros <rogerq@ti.com> writes:
->>>>>>>>>>>>>>> For the real use case, some Carplay platforms need it.
->>>>>>>>>>>>>> Carplay does *NOT* rely on OTG. Apple has its own proprietary and closed
->>>>>>>>>>>>>> specification which is not OTG-compliant.
->>>>>>>>>>>>>>
->>>>>>>>>>>>> Yes, it is not OTG-compliant, but it can co-work with some standard OTG FSM
->>>>>>>>>>>>> states to finish role swap.
->>>>>>>>>>>> What are you referring to as "finish role swap"? I don't get that.
->>>>>>>>>>> Change current role from host to peripheral.
->>>>>>>>>> Okay, we have two scenarios here:
->>>>>>>>>>
->>>>>>>>>> 1. You need full OTG compliance
->>>>>>>>>>
->>>>>>>>>>    For this, granted, you need the state machine if your HW doesn't
->>>>>>>>>>    track it. This is a given. With only one user, however, perhaps
->>>>>>>>>>    we don't need a generic layer. There are not enough different
->>>>>>>>>>    setups to design a good enough generic layer. We will end up
->>>>>>>>>>    with a pseudo-generic framework which is coupled with its only
->>>>>>>>>>    user.
->>>>>>>>>>
->>>>>>>>>> 2. Dual-role support, without OTG compliance
->>>>>>>>>>
->>>>>>>>>>    In this case, you don't need a stack. All you need is a signal
->>>>>>>>>>    to tell you state of ID pin and another to tell you state of
->>>>>>>>>>    VBUS level. If you have those, you don't need to walk an OTG
->>>>>>>>>>    state machine at all. You don't need any of those quirky OTG
->>>>>>>>>>    timers, agreed?
->>>>>>>>>>
->>>>>>>>>>    Given the above, why would you even want to use a subset of OTG
->>>>>>>>>>    state machine to implement something that's _usually_ as simple
->>>>>>>>>>    as:
->>>>>>>>>>
->>>>>>>>>> 8<----------------------------------------------------------------------
->>>>>>>>>>    vbus = read(VBUS_STATE); /* could be a gpio_get_value() */
->>>>>>>>>>          id = read(ID_STATE); /* could be a gpio_get_value() */
->>>>>>>>>>
->>>>>>>>>>          set_role(id);
->>>>>>>>>>          set_vbus(vbus);
->>>>>>>>>> ------------------------------------------------------------------------
->>>>>>>>>>
->>>>>>>>> In fact, the individual driver can do it by itself. The chipidea driver
->>>>>>>>> handles OTG and dual-role well currently. By considering this OTG/DRD
->>>>>>>>> framework is worthwhile or not, we would like to see if it can
->>>>>>>>> simplify DRD design for each driver, and can benefit the platforms which
->>>>>>>>> has different drivers for host and peripheral to finish the role switch
->>>>>>>>> well.
->>>>>>>> simplify how?  By adding unnecessary workqueues and a level indirection
->>>>>>>> that just goes back to the same driver?
->>>>>>> What do you mean by same driver?
->>>>>> dwc3 registers to OTG layer. dwc3 also registers as UDC to UDC
->>>>>> layer. When dwc3 OTG IRQ fires, dwc3 tells OTG layer about it and OTG
->>>>>> layer jumps to a callback that goes back to dwc3 to e.g. start
->>>>>> peripheral side.
->>>>>>
->>>>>> See ?!? Starts on dwc3, goes to OTG layer, goes back to DWC3.
->>>>>>
->>>>>>> Gadget driver, host driver and PHY (or MUX) driver (for ID/VBUS) can
->>>>>>> be 3 totally independent drivers unlike dwc3 where you have a single
->>>>>>> driver in control of both host and gadget.
->>>>>> That's a totally different issue and one not being tackled by OTG
->>>>>> layer, because there are no such users yet. We can't design anything
->>>>>> based solely on speculation of what might happen.
->>>>>>
->>>>>> If there aren't enough users, there is no way to design a good generic
->>>>>> layer.
->>>>>>
->>>>>>> Questions not clear to me are:
->>>>>>>
->>>>>>> 1) Which driver handles ID/VBUS events and makes a decision to do the
->>>>>>> role swap?  Probably the PHY/MUX driver?
->>>>>> This is implementation dependent. For TI's USB subsystem, we have PMIC
->>>>>> sampling VBUS/ID that and using EXTCON to tell dwc3-omap to program UTMI
->>>>>> mailbox. The same mailbox can be used in HW-mode (see AM437x) where SW
->>>>>> has no intervention.
->>>>>>
->>>>>> For Intel's USB subsystem, we have PMIC sampling VBUS/ID with an
->>>>>> internal mux (much like TI's UTMI mailbox, but slightly different) to
->>>>>> switch between a separate XHCI or a separate dwc3. The same mux can be
->>>>>> put in HW-mode where SW has no intervention.
->>>>>>
->>>>>> In any case, for Intel's stuff most of the magic happens in ASL. Our PHY
->>>>>> driver just detects role (at least for Type-C based plats) and executes
->>>>>> _DSM with correct arguments [1]. _DSM will program internal MUX, toggle
->>>>>> VBUS and, for type-C, toggle VCONN when needed.
->>>>>>
->>>>>>> 2) How does it perform the role swap? Probably a register write to the
->>>>>>> PHY/MUX without needing to stop/start controllers? Easy case is both
->>>>>>> controllers can run in co-existence without interference. Is there any
->>>>>>> platform other than dwc3 where this is not the case?
->>>>>> Again speculation. But to answer your question, only dwc3 is in such a
->>>>>> case today. But even for dwc3 we can have DRD with a much, much simpler
->>>>>> setup as I have already explained.
->>>>>>
->>>>>>> 3) Even if host and gadget controllers can operate in coexistence,
->>>>>>> there is no need for both to be running for embedded applications
->>>>>>> which are usually power conservative.  How can we achieve that?
->>>>>> Now you're also speculating that you're running on embedded applications
->>>>>> and that we _can_ power off parts of the IP. I happen to know that we
->>>>>> can't power off XHCI part of dwc3 in TI's SoC because that's fed by same
->>>>>> Clocks and power rails as the peripheral side.
->>>>>>
->>>>>> [1] https://lkml.org/lkml/2016/6/21/658
->>>>>>
->>>>> For TI's case it is dwc3 and you are implementing the role swap in the dwc3
->>>>> driver where you do intend to remove the XHCI platform device. So I'm not
->>>>> much concerned about that.
->>>>>
->>>>> I was concerned about other platforms. I guess I'll let the other platform
->>>>> people speak up as to what they need.
->>>> I will talk about the msm platforms using dwc3 hardware.
->>>> DWC3 controller on msm doesn't seem to have full otg functionality,
->>>> and the driver makes use of switching between host and device
->>>> using PRTCAPDIR register in of the core [1].
->>>> test
->>>> We plan to support this DRD role switching (swapping host and device
->>>> functionality based on id/vbus interrupts) in upstream.
->>>>
->>>> Do we see a valid case to have this framework?
->>> Felipe wanted to have a minimal dual-role logic inside dwc3 which is
->>> independent of any DRD/OTG framework.
->>>
->>> I have implemented this and will send out patches today for review.
->> Okay, good to know that. I will be happy to take a look at the
->> patches and test them for msm.
-> At least for now, I'm relying on the OTG controller to know about the VBUS and ID
-> line state and switch controller roles between host and peripheral.
-> i.e. I'm keeping the PRTCAPDIR register as OTG always.
->
-> Does the msm SoC have the dwc3 OTG controller IP?
-
-No, on msm dwc3 makes use of only DRD host and DRD device modes.
-So the PRTCAPDIR will toggle between 0x1 and 0x2.
-
-I was thinking of using extcon to report us the status of Vbus and ID.
-And then the notifier can trigger a switch between host and peripheral 
-modes.
-
->
->> Thanks for sharing the info.
->>
->>>> Or, may be add a 'drd' layer for dwc3 that handles
->>>> role switching (using PRTCAPDIR) based on the id/vbus extcon notifications.
->>>>
->>>>
->>>> [1] https://source.codeaurora.org/quic/la/kernel/msm-3.18/tree/drivers/usb/dwc3/dwc3-msm.c?h=msm-3.18
->>>>       "dwc3_otg_start_host()"
->>>>       "dwc3_otg_start_peripheral()"
->>>>
->>>>
-> --
-> cheers,
-> -roger
+Oh, indeed, my mistake. Please ignore that comment.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
