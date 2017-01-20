@@ -1,92 +1,94 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Fri, 20 Jan 2017 16:32:18 +0100
-Message-ID: <CAFBinCBQ8S7-tCnkY+Vabs3etSv-gJCsK=tE+RNJZS8+uFfB=Q@mail.gmail.com>
-References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com> <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 0/7] Add support for Video Data Order Adapter
+Date: Fri, 20 Jan 2017 16:44:44 +0100
+Message-ID: <1484927084.2897.45.camel@pengutronix.de>
+References: <20170120140025.3338-1-m.tretter@pengutronix.de>
+         <ff15e17c-fd62-f00e-e0f9-c141263868ea@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120152232.13943-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <ff15e17c-fd62-f00e-e0f9-c141263868ea@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Michael Tretter <m.tretter@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 4:22 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> This series adds the reset GPIOs for the (external) ethernet PHYs on all
-> GXBB boards.
-> Additionally it provides a ethernet PHY node which can be used to specify
-> PHY-specific properties (this may be required if more boards require the
-> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board .dts
-> consistent I chose to add the PHY node also for boards which don't have a
-> RTL8211F PHY.
->
-> Patch #7 from this series also removes ethernet support for the P200
-> board because it was broken anyways and nobody seems to have a board
-> available for testing. This was the outcome of the discussion from [0]
->
-> Patch #8 was taken from (older versions of) my other series (see [1]):
-> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
-> RGMII TX delay".
-> The binding changes for amlogic,tx-delay-ns were ACK'ed already.
->
-> Changes since v2:
-> - fixed patch #2 to really update the P200 board (as it's the P200 which
->   actually uses a Micrel KSZ9031 RGMII PHY). Thanks to Neil Armstrong for
->   spotting this huge mistake!
-> - instead of dropping ethernet support for P201 we simply re-configure it
->   to RMII mode (replaces patch #7) without a MDIO node (which keeps PHY
->   auto-scanning enabled). This got Neil Armstrong's ACK off-list already
->
-> Changes since v1:
-> - do not move the MDIO bus to meson-gx as this disables PHY auto-scanning
->   in the stmmac driver (this drops patch #1 from v1)
-> - add the ethernet PHY reset GPIO for nexbox a95x which was forgotten in
->   v1
-> - add the ethernet PHY reset GPIO for boards which were added since v1
->   (wetek hub and wetek play2)
-> - rebased to apply against the current v4.11/dt64 branch
-> - new in v2 (patch #7): disabled ethernet support for the P200 board (see
->   the commit description for more information). this patch is optional
-> - new in v2 (patch #9): removed the phy-mode property from meson-gx (see
->   the commit description for more information). this patch is optional
->
->
-> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002053.html
-> [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001834.html
->
-> Martin Blumenstingl (9):
->   ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
->   ARM64: dts: meson-gxbb-p201: fix ethernet support
->   ARM64: dts: amlogic: add the ethernet TX delay configuration
->   ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
->
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
->  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17 ++++++++++++++
->  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 26 ++++++++++++++++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
->  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 20 +++++++++++++++++
->  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26 ++++++++++++++++++++++
->  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26 ++++++++++++++++++++++
->  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
->  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
->  arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
->  12 files changed, 139 insertions(+), 7 deletions(-)
-I totally forgot to mention:
-this applies to Kevin's v4.11/dt64 branch with Jerome's Odroid-C2
-ethernet fix [0] applied on top of it
+Hi Hans,
 
+On Fri, 2017-01-20 at 15:54 +0100, Hans Verkuil wrote:
+> Looks good to me.
+>
+> Philipp, just let me know if this is ready for merging, or you can make a pull
+> request for Mauro yourself if you prefer.
 
-[0] https://git.kernel.org/cgit/linux/kernel/git/khilman/linux-amlogic.git/commit/?h=v4.11/integ&id=5a2288a68582ad3f1b42ed63ae5a3ca54e000965
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes, with the recent fixes I think this is ready for merging.
+If you don't mind picking it up, please go ahead.
+
+regards
+Philipp
+
+> Regards,
+> 
+> 	Hans
+> 
+> On 01/20/2017 03:00 PM, Michael Tretter wrote:
+> > Hello,
+> > 
+> > This is v4 of a patch series that adds support for the Video Data Order
+> > Adapter (VDOA) that can be found on Freescale i.MX6. It converts the
+> > macroblock tiled format produced by the CODA 960 video decoder to a
+> > raster-ordered format for scanout.
+> > 
+> > Changes since v3:
+> > 
+> > - Patch 2/7: Add my copyright to vdoa copyright header
+> > - Patch 2/7: Fix offset of chroma plane to be page-aligned
+> > - Patch 6/7: Fix oops when releasing the coda driver by destroying vdoa
+> >   context after removing all buffers
+> > - Patch 6/7: Fix missing vdoa disable when switching from tiled to linear
+> >   format
+> > 
+> > Changes since v2:
+> > 
+> > - Patch 1/7: Update commit message to include binding change; fix
+> >   spelling/style in binding documentation
+> > 
+> > Changes since v1:
+> > 
+> > - Dropped patch 8/9 of v1
+> > - Patch 1/7: Add devicetree binding documentation for fsl-vdoa
+> > - Patch 6/7: I merged patch 5/9 and patch 8/9 of v1 into a single patch
+> > - Patch 6/7: Use dt compatible instead of a phandle to find VDOA device
+> > - Patch 6/7: Always check VDOA availability even if disabled via module
+> >   parameter and do not print a message if VDOA cannot be found
+> > - Patch 6/7: Do not change the CODA context in coda_try_fmt()
+> > - Patch 6/7: Allocate an additional internal frame if the VDOA is in use
+> > 
+> > Michael Tretter (3):
+> >   [media] coda: fix frame index to returned error
+> >   [media] coda: use VDOA for un-tiling custom macroblock format
+> >   [media] coda: support YUYV output if VDOA is used
+> > 
+> > Philipp Zabel (4):
+> >   [media] dt-bindings: Add a binding for Video Data Order Adapter
+> >   [media] coda: add i.MX6 VDOA driver
+> >   [media] coda: correctly set capture compose rectangle
+> >   [media] coda: add debug output about tiling
+> > 
+> >  .../devicetree/bindings/media/fsl-vdoa.txt         |  21 ++
+> >  arch/arm/boot/dts/imx6qdl.dtsi                     |   2 +
+> >  drivers/media/platform/Kconfig                     |   3 +
+> >  drivers/media/platform/coda/Makefile               |   1 +
+> >  drivers/media/platform/coda/coda-bit.c             |  93 ++++--
+> >  drivers/media/platform/coda/coda-common.c          | 175 ++++++++++-
+> >  drivers/media/platform/coda/coda.h                 |   3 +
+> >  drivers/media/platform/coda/imx-vdoa.c             | 338 +++++++++++++++++++++
+> >  drivers/media/platform/coda/imx-vdoa.h             |  58 ++++
+> >  9 files changed, 652 insertions(+), 42 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/media/fsl-vdoa.txt
+> >  create mode 100644 drivers/media/platform/coda/imx-vdoa.c
+> >  create mode 100644 drivers/media/platform/coda/imx-vdoa.h
+> > 
+> 
+> 
