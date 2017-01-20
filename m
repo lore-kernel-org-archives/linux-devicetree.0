@@ -1,14 +1,13 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 4/6] dt-bindings: add device binding for the CCU of
- Allwinner V3s
-Date: Fri, 20 Jan 2017 21:32:08 +0100
-Message-ID: <20170120203208.t7qm4tpqesadr6wd@lukather>
+Subject: Re: [PATCH v3 3/6] clk: sunxi-ng: add support for V3s CCU
+Date: Fri, 20 Jan 2017 21:38:13 +0100
+Message-ID: <20170120203813.buj4d4wciuwnd2ey@lukather>
 References: <20170119175448.11445-1-icenowy@aosc.xyz>
- <20170119175448.11445-4-icenowy@aosc.xyz>
+ <20170119175448.11445-3-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1656580526390781117=="
+Content-Type: multipart/mixed; boundary="===============1270674870917537382=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170119175448.11445-4-icenowy@aosc.xyz>
+In-Reply-To: <20170119175448.11445-3-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,25 +22,36 @@ Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 
---===============1656580526390781117==
+--===============1270674870917537382==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="qmdtc5us4uy2bi7n"
+	protocol="application/pgp-signature"; boundary="5wc43upobyobtccv"
 Content-Disposition: inline
 
 
---qmdtc5us4uy2bi7n
+--5wc43upobyobtccv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 20, 2017 at 01:54:46AM +0800, Icenowy Zheng wrote:
-> Allwinner V3s is now driven by sunxi-ng CCU driver.
+On Fri, Jan 20, 2017 at 01:54:45AM +0800, Icenowy Zheng wrote:
+> V3s has a similar but cut-down CCU to H3. Some muxes, especially clocks
+> about CSI, are different, which makes it to need a new CCU driver.
 >=20
-> Add devicetree binding for it.
+> Add such a new driver for it.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+> ---
 
-Applied. Thanks,
+Having a changelog somewhere would help. Why did you drop your cover
+letter?
+
+> +static const char * const mbus_parents[] =3D { "osc24M", "pll-periph0-2x=
+", "pll-ddr" };
+
+This is more that 80 characters and triggers a warning in
+checkpatch...
+
+Anyway, fixed and applied.
 Maxime
 
 --=20
@@ -49,30 +59,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---qmdtc5us4uy2bi7n
+--5wc43upobyobtccv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYgnPIAAoJEBx+YmzsjxAgyX4P/3Fal6DrM2jgWw9WqQrri3tU
-QnQd3NVRFrxnCH4Wa7DFp8F8fBLvm2RculWQUP4iDi6vDb92vFhp6B92wGBz96x5
-RPNzsIABTtSE3A8RAUSUgzh6PoF0qKQb4ZgcSC1nstaOGfbV8lqAz8+NOG0TRvV1
-d9R+o+Ubf+lyEWlMLn+iBd5q72pzNaq4PxIJ5pI3jsibHKVaDoyocR0snoYyRYhd
-KhH9nL5QCUWrpilpKg2IN0mVcterNKU0HSDzi4caqJJbU+wYUkdsPde5bla79E2k
-/Xg6qrjKSqyVVnUphIL4+dqVdqHokzegdXHun0C0LIwsIMQizYgFj8lUUfOZu149
-GsnRpsZICv3Ff/jxUpDCluGMFUaRVa39vmCwdbPpJpOIUKItY6R2h5IgCAFOeGE8
-u59+jPf1hmhJDZRMGkkoj9a9yizZZl7GLS0wEbMSdah4d+uvWs78/TSxXKGvFPXO
-OIqXS4dGNWCUPT0hc46Te1nG5uuSo5LVFQNII/iyu6gXskgE3JPBK/96n6FCp8Fm
-YXnuuNm6eOEkGSyn8TiL8Is6Dr1WUqqgNrK7IWOfCthy0Mqw6WofzwQYNPDb1cmG
-AmWUJ23e/Wx9y0fbBeRzWDXAJRJvyyFXBtn+DMZeBhgYf94pK+pVboFhLyppel4j
-hjPo8pVl4IiS/owWLOi2
-=6SpY
+iQIcBAEBCAAGBQJYgnUxAAoJEBx+YmzsjxAgCi8P/2xlCNQwoLfTcXHXSiRh3FWW
+2GIWXSCWrKwX72VgGnSaetA/ZLA1h0UpXfcHkUtN1B1GjCtIWV08vXniA44kPi16
+5hACPPc9iSsDX8qRuemzx3l+6Cdachm2LANA+BGyObRvWK3Wa1nk7n6HSZMDYUc4
+26v2MmwpCRrmWVasa6zZDCdB81fwequ+uNSFMSzgIhB5l7lAGhYQ2g4AL92uvPFb
+evG6OHRHL37/y5UXG3mL1khcN71ztP6jkMG1+KpAD9RAtgFt1gUC+w+7ci+zmUbi
+2zEp4Z2QK0KO14HRscWb4pdVpsB8CvzX+eBVLhASnsIRS68uf1odqKgsaDUyL95U
+AIvF2q4KuFXbwNO5kWM94GGZ8ywtC71IodaQiYxZFYtk8DlxNazSoQ1m2swu4GAR
+DU9fElXGyoVa5hxoAR7BKr2IRPekcmOPfo3C80ROM92MwZYVht7Pg25dzOaFGOdx
+KCHyTcITInLZxJp+Ayf8xo4LUOJ3yC4KIGFOIl2sI2bbCl1S/Ztp4c8XMp5AFMfV
+jA21ntrn7u4FeZzGMkZgOTC3rh0mQm+8RjDlv3GacM31LaK7SLQ3iGsP15TQfsGl
+n4hsR02PhP4xqWKRWaP0ozfgqNg021rJyT1V5oGDs2zBhCzjnkqF2O60on6ZS7FS
+ojbCk7UHj0NThfkMyDcD
+=Q6YX
 -----END PGP SIGNATURE-----
 
---qmdtc5us4uy2bi7n--
+--5wc43upobyobtccv--
 
 
---===============1656580526390781117==
+--===============1270674870917537382==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -83,4 +93,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1656580526390781117==--
+--===============1270674870917537382==--
