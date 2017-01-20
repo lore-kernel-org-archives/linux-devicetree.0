@@ -1,89 +1,78 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 7/7] ARM: dts: stm32: Enable pwm1 and pwm3 for
- stm32f469-eval
-Date: Fri, 20 Jan 2017 11:36:59 +0100
-Message-ID: <eb886932-8c63-ac73-44e8-c886e51d07ff@st.com>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
- <1484832854-6314-8-git-send-email-fabrice.gasnier@st.com>
- <451b28a0-6cf3-d75a-59a2-d4e2f8a7b373@st.com>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH 6/7] arm, arm64: factorize common cpu capacity default
+ code
+Date: Fri, 20 Jan 2017 10:42:40 +0000
+Message-ID: <20170120104240.GO30747@e106622-lin>
+References: <20170119143757.14537-1-juri.lelli@arm.com>
+ <20170119143757.14537-7-juri.lelli@arm.com>
+ <e5b902a0-8c2b-a682-0f67-0b0d9ee4ef5c@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <451b28a0-6cf3-d75a-59a2-d4e2f8a7b373@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Torgue <alexandre.torgue@st.com>, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, mcoquelin.stm32@gmail.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, knaack.h@gmx.de, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <e5b902a0-8c2b-a682-0f67-0b0d9ee4ef5c@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2017 11:19 AM, Alexandre Torgue wrote:
-> Hi Fabrice
->
->
-> On 01/19/2017 02:34 PM, Fabrice Gasnier wrote:
->> Define and enable pwm1 and pwm3, timers1 & 3 trigger outputs on
->> stm32f469-eval board.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->
-> Typo issue in commit header (stm32f469 --> stm32f429)
-Hi Alexandre,
+Hi Dietmar,
 
-I'll fix this in next revision.
-Tanks for reviewing.
+On 19/01/17 16:00, Dietmar Eggemann wrote:
+> On 19/01/17 14:37, Juri Lelli wrote:
+> > arm and arm64 share lot of code relative to parsing CPU capacity
+> > information from DT, using that information for appropriate scaling and
+> > exposing a sysfs interface for chaging such values at runtime.
+> > 
+> > Factorize such code in a common place (driver/base/arch_topology.c) in
+> > preparation for further additions.
+> > 
+> > Suggested-by: Will Deacon <will.deacon@arm.com>
+> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
+> > Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Russell King <linux@armlinux.org.uk>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+> > ---
+> >  arch/arm/Kconfig             |   1 +
+> >  arch/arm/kernel/topology.c   | 213 ++------------------------------------
+> >  arch/arm64/Kconfig           |   1 +
+> >  arch/arm64/kernel/topology.c | 213 +-------------------------------------
+> >  drivers/base/Kconfig         |   8 ++
+> >  drivers/base/Makefile        |   1 +
+> >  drivers/base/arch_topology.c | 240 +++++++++++++++++++++++++++++++++++++++++++
+> >  7 files changed, 260 insertions(+), 417 deletions(-)
+> >  create mode 100644 drivers/base/arch_topology.c
+> 
+> [...]
+> 
+> > +extern unsigned long
+> > +arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
+> 
+> How about adding a driver specific prefix 'foo_' to all driver interfaces?
+> 
+> I'm asking because I would rather like to do a
+> 
+> #define arch_scale_cpu_capacity foo_scale_cpu_capacity
+> 
+> then a
+> 
+> #define arch_scale_cpu_capacity arch_scale_cpu_capacity
+> 
+> in arch/arm64/include/asm/topology.h
+> 
+> later to wire cpu-invariant load-tracking support up to the task
+> scheduler for ARM64.
+> 
+> That's probably true too for all the 'driver' interfaces which get used
+> in arch/arm{,64}/kernel/topology.c.
+> 
 
-BR,
-Fabrice
+Looks like a good way to improve clarity to me. I'll add a patch for the
+next version doing this and we see what people think.
 
->
->
->>  arch/arm/boot/dts/stm32429i-eval.dts | 28 ++++++++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts 
->> b/arch/arm/boot/dts/stm32429i-eval.dts
->> index 2181220..892100f 100644
->> --- a/arch/arm/boot/dts/stm32429i-eval.dts
->> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
->> @@ -171,3 +171,31 @@
->>      pinctrl-names = "default";
->>      status = "okay";
->>  };
->> +
->> +&timers1 {
->> +    status = "okay";
->> +
->> +    pwm {
->> +        pinctrl-0 = <&pwm1_pins>;
->> +        pinctrl-names = "default";
->> +        status = "okay";
->> +    };
->> +
->> +    timer@0 {
->> +        status = "okay";
->> +    };
->> +};
->> +
->> +&timers3 {
->> +    status = "okay";
->> +
->> +    pwm {
->> +        pinctrl-0 = <&pwm3_pins>;
->> +        pinctrl-names = "default";
->> +        status = "okay";
->> +    };
->> +
->> +    timer@2 {
->> +        status = "okay";
->> +    };
->> +};
->>
+Best,
+
+- Juri
