@@ -1,37 +1,127 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 06/18] ARM64: dts: meson-gxm-nexbox-a1: Drop UART comment
-Date: Fri, 20 Jan 2017 23:21:06 +0100
-Message-ID: <20170120222118.21476-7-afaerber@suse.de>
-References: <20170120222118.21476-1-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170120222118.21476-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Neil Armstrong <narmstrong@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] Add more recommended generic node names
+Date: Fri, 20 Jan 2017 16:29:32 -0600
+Message-ID: <20170120222932.14753-1-robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Product pictures show no DB9 connector, so this seems copy&paste.
+DT usage and hardware types have evolved quite a bit and the generic
+node names list is quite out of date. Add new entries to the list based
+on dumping out node names from dts files. This is by no means complete,
+but is low hanging fruit.
 
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts | 1 -
- 1 file changed, 1 deletion(-)
+ source/devicetree-basics.rst | 51 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 5a337d339df1..439060652689 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -102,7 +102,6 @@
- 	};
- };
+diff --git a/source/devicetree-basics.rst b/source/devicetree-basics.rst
+index be80af3d825b..93cea8e82a64 100644
+--- a/source/devicetree-basics.rst
++++ b/source/devicetree-basics.rst
+@@ -182,44 +182,95 @@ name should be one of the following choices:
+ .. hlist::
+    :columns: 3
  
--/* This UART is brought out to the DB9 connector */
- &uart_AO {
- 	status = "okay";
- 	pinctrl-0 = <&uart_ao_a_pins>;
++   * adc
++   * accelerometer
+    * atm
++   * audio-codec
++   * audio-controller
++   * backlight
++   * bluetooth
++   * bus
+    * cache-controller
++   * camera
++   * can
++   * charger
++   * clock
++   * clock-controller
+    * compact-flash
+    * can
+    * cpu
++   * cpus
+    * crypto
+    * disk
+    * display
+    * dma-controller
++   * dsp
++   * eeprom
++   * efuse
++   * endpoint
+    * ethernet
+    * ethernet-phy
+    * fdc
+    * flash
+    * gpio
++   * gpu
++   * gyrometer
++   * hdmi
+    * i2c
+    * ide
+    * interrupt-controller
+    * isa
+    * keyboard
++   * key
++   * keys
++   * lcd-controller
++   * led
++   * leds
++   * led-controller
++   * light-sensor
++   * magnetometer
++   * mailbox
+    * mdio
+    * memory
+    * memory-controller
++   * mmc
++   * mmc-slot
+    * mouse
++   * nand-controller
+    * nvram
++   * oscillator
+    * parallel
+    * pc-card
+    * pci
+    * pcie
++   * phy
++   * pinctrl
++   * pmic
++   * pmu
++   * port
++   * ports
++   * pwm
++   * regulator
++   * reset-controller
+    * rtc
+    * sata
+    * scsi
+    * serial
+    * sound
+    * spi
++   * sram-controller
++   * ssi-controller
++   * syscon
++   * temperature-sensor
+    * timer
++   * touchscreen
+    * usb
++   * usb-hub
++   * usb-phy
++   * video-codec
+    * vme
+    * watchdog
++   * wifi
+ 
+ Path Names
+ ~~~~~~~~~~
 -- 
-2.10.2
+2.10.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
