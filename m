@@ -1,75 +1,99 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
-Date: Fri, 20 Jan 2017 14:43:30 -0500
-Message-ID: <20170120194332.1683-2-chris.brandt@renesas.com>
-References: <20170120194332.1683-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170120194332.1683-1-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/9] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Fri, 20 Jan 2017 11:46:02 -0800
+Message-ID: <m2y3y53479.fsf@baylibre.com>
+References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+        <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+        <CAFBinCBQ8S7-tCnkY+Vabs3etSv-gJCsK=tE+RNJZS8+uFfB=Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCBQ8S7-tCnkY+Vabs3etSv-gJCsK=tE+RNJZS8+uFfB=Q@mail.gmail.com>
+        (Martin Blumenstingl's message of "Fri, 20 Jan 2017 16:32:18 +0100")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some controllers have 2 clock sources instead of 1. The 2nd clock
-is for the internal card detect logic and must be enabled/disabled
-along with the main core clock for proper operation.
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
-* add more clarification to the commit log
-v2:
-* changed clk2 to clk_cd
-* disable clk if clk_cd enable fails
-* changed clock name from "carddetect" to "cd"
----
- drivers/mmc/host/sh_mobile_sdhi.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+> On Fri, Jan 20, 2017 at 4:22 PM, Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> This series adds the reset GPIOs for the (external) ethernet PHYs on all
+>> GXBB boards.
+>> Additionally it provides a ethernet PHY node which can be used to specify
+>> PHY-specific properties (this may be required if more boards require the
+>> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board .dts
+>> consistent I chose to add the PHY node also for boards which don't have a
+>> RTL8211F PHY.
+>>
+>> Patch #7 from this series also removes ethernet support for the P200
+>> board because it was broken anyways and nobody seems to have a board
+>> available for testing. This was the outcome of the discussion from [0]
+>>
+>> Patch #8 was taken from (older versions of) my other series (see [1]):
+>> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
+>> RGMII TX delay".
+>> The binding changes for amlogic,tx-delay-ns were ACK'ed already.
+>>
+>> Changes since v2:
+>> - fixed patch #2 to really update the P200 board (as it's the P200 which
+>>   actually uses a Micrel KSZ9031 RGMII PHY). Thanks to Neil Armstrong for
+>>   spotting this huge mistake!
+>> - instead of dropping ethernet support for P201 we simply re-configure it
+>>   to RMII mode (replaces patch #7) without a MDIO node (which keeps PHY
+>>   auto-scanning enabled). This got Neil Armstrong's ACK off-list already
+>>
+>> Changes since v1:
+>> - do not move the MDIO bus to meson-gx as this disables PHY auto-scanning
+>>   in the stmmac driver (this drops patch #1 from v1)
+>> - add the ethernet PHY reset GPIO for nexbox a95x which was forgotten in
+>>   v1
+>> - add the ethernet PHY reset GPIO for boards which were added since v1
+>>   (wetek hub and wetek play2)
+>> - rebased to apply against the current v4.11/dt64 branch
+>> - new in v2 (patch #7): disabled ethernet support for the P200 board (see
+>>   the commit description for more information). this patch is optional
+>> - new in v2 (patch #9): removed the phy-mode property from meson-gx (see
+>>   the commit description for more information). this patch is optional
+>>
+>>
+>> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002053.html
+>> [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001834.html
+>>
+>> Martin Blumenstingl (9):
+>>   ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
+>>   ARM64: dts: meson-gxbb-p201: fix ethernet support
+>>   ARM64: dts: amlogic: add the ethernet TX delay configuration
+>>   ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
+>>
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
+>>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17 ++++++++++++++
+>>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 26 ++++++++++++++++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
+>>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 20 +++++++++++++++++
+>>  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26 ++++++++++++++++++++++
+>>  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26 ++++++++++++++++++++++
+>>  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
+>>  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
+>>  arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
+>>  12 files changed, 139 insertions(+), 7 deletions(-)
+> I totally forgot to mention:
+> this applies to Kevin's v4.11/dt64 branch with Jerome's Odroid-C2
+> ethernet fix [0] applied on top of it
 
-diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
-index 59db14b..a3f995e 100644
---- a/drivers/mmc/host/sh_mobile_sdhi.c
-+++ b/drivers/mmc/host/sh_mobile_sdhi.c
-@@ -143,6 +143,7 @@ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
- 
- struct sh_mobile_sdhi {
- 	struct clk *clk;
-+	struct clk *clk_cd;
- 	struct tmio_mmc_data mmc_data;
- 	struct tmio_mmc_dma dma_priv;
- 	struct pinctrl *pinctrl;
-@@ -190,6 +191,12 @@ static int sh_mobile_sdhi_clk_enable(struct tmio_mmc_host *host)
- 	if (ret < 0)
- 		return ret;
- 
-+	ret = clk_prepare_enable(priv->clk_cd);
-+	if (ret < 0) {
-+		clk_disable_unprepare(priv->clk);
-+		return ret;
-+	}
-+
- 	/*
- 	 * The clock driver may not know what maximum frequency
- 	 * actually works, so it should be set with the max-frequency
-@@ -255,6 +262,8 @@ static void sh_mobile_sdhi_clk_disable(struct tmio_mmc_host *host)
- 	struct sh_mobile_sdhi *priv = host_to_priv(host);
- 
- 	clk_disable_unprepare(priv->clk);
-+	if (priv->clk_cd)
-+		clk_disable_unprepare(priv->clk_cd);
- }
- 
- static int sh_mobile_sdhi_card_busy(struct mmc_host *mmc)
-@@ -572,6 +581,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
- 		goto eprobe;
- 	}
- 
-+	priv->clk_cd = devm_clk_get(&pdev->dev, "cd");
-+	if (IS_ERR(priv->clk_cd))
-+		priv->clk_cd = NULL;
-+
- 	priv->pinctrl = devm_pinctrl_get(&pdev->dev);
- 	if (!IS_ERR(priv->pinctrl)) {
- 		priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
--- 
-2.10.1
+So when Jerome's fix lands in mainline (probably by -rc5, maybe -rc6)
+I'll rebase the dt64 branch on that and apply this series.
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
