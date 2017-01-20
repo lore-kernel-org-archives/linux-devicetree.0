@@ -1,51 +1,70 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 00/13] Ingenic JZ4740 / JZ4780 pinctrl driver
-Date: Fri, 20 Jan 2017 11:17:28 +0100
-Message-ID: <775b4a87768de7263ce6ff9a38659334@mail.crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170118071530.GA18989@ulmo.ba.sec>
- <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <CACRpkdaeu9OxaSPeOrkKtKNQGUQh4puCFw8A2h=xhqVdDWgoow@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 7/7] ARM: dts: stm32: Enable pwm1 and pwm3 for
+ stm32f469-eval
+Date: Fri, 20 Jan 2017 11:19:08 +0100
+Message-ID: <451b28a0-6cf3-d75a-59a2-d4e2f8a7b373@st.com>
+References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
+ <1484832854-6314-8-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaeu9OxaSPeOrkKtKNQGUQh4puCFw8A2h=xhqVdDWgoow@mail.gmail.com>
+In-Reply-To: <1484832854-6314-8-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>, jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-20 09:40, Linus Walleij a écrit :
+Hi Fabrice
 
-> On Thu, Jan 19, 2017 at 12:19 PM, Paul Cercueil <paul@crapouillou.net> 
-> wrote:
-> 
->> The problem with pinctrl and PWM, is that the pinctrl API works by 
->> "states". A default state, sleep state, and basically any custom state 
->> that the devicetree provides. This works well until you need to 
->> control individually each pin; with 8 pins, you would need 2^8 states, 
->> each one corresponding to a given configuration.
-> 
-> I do not really understand, do you really use all 2^8 states in a given
-> system?
-> 
-> The pin control states are to be used for practical situations, not
-> for all theoretical situations.
-> 
-> You should define in your device tree the states that your
-> particular system will use. Not all possible states on all possible
-> systems.
-> 
 
-Well, that was if I wanted to dynamically set/unset the pin mux and
-configuration when requesting/freeing a PWM. Then I'd need 2^x states
-for X PWM pins.
+On 01/19/2017 02:34 PM, Fabrice Gasnier wrote:
+> Define and enable pwm1 and pwm3, timers1 & 3 trigger outputs on
+> stm32f469-eval board.
+>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
 
-Anyway, a static configuration works for me too. If at some point I
-want dynamic configuration of the pins then I'll make the PWM driver
-handle only one PWM pin and create one driver instance for each pin.
+Typo issue in commit header (stm32f469 --> stm32f429)
 
-Regards,
--Paul
+
+>  arch/arm/boot/dts/stm32429i-eval.dts | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+> index 2181220..892100f 100644
+> --- a/arch/arm/boot/dts/stm32429i-eval.dts
+> +++ b/arch/arm/boot/dts/stm32429i-eval.dts
+> @@ -171,3 +171,31 @@
+>  	pinctrl-names = "default";
+>  	status = "okay";
+>  };
+> +
+> +&timers1 {
+> +	status = "okay";
+> +
+> +	pwm {
+> +		pinctrl-0 = <&pwm1_pins>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer@0 {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&timers3 {
+> +	status = "okay";
+> +
+> +	pwm {
+> +		pinctrl-0 = <&pwm3_pins>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer@2 {
+> +		status = "okay";
+> +	};
+> +};
+>
