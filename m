@@ -1,98 +1,59 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH v3 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Fri, 20 Jan 2017 16:27:10 +0100
-Message-ID: <1484926030.26620.80.camel@baylibre.com>
-References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v14 5/5] arm64: dt: hikey: Add optee node
+Date: Fri, 20 Jan 2017 15:30:21 +0000
+Message-ID: <58822D0D.4000803@hisilicon.com>
+References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
+ <1484744296-30003-6-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484744296-30003-6-git-send-email-jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-3bDd1+5oDREiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTAxLTIwIGF0IDE2OjIyICswMTAwLCBNYXJ0aW4gQmx1bWVuc3RpbmdsIHdy
-b3RlOgo+IFRoaXMgc2VyaWVzIGFkZHMgdGhlIHJlc2V0IEdQSU9zIGZvciB0aGUgKGV4dGVybmFs
-KSBldGhlcm5ldCBQSFlzIG9uCj4gYWxsCj4gR1hCQiBib2FyZHMuCj4gQWRkaXRpb25hbGx5IGl0
-IHByb3ZpZGVzIGEgZXRoZXJuZXQgUEhZIG5vZGUgd2hpY2ggY2FuIGJlIHVzZWQgdG8KPiBzcGVj
-aWZ5Cj4gUEhZLXNwZWNpZmljIHByb3BlcnRpZXMgKHRoaXMgbWF5IGJlIHJlcXVpcmVkIGlmIG1v
-cmUgYm9hcmRzIHJlcXVpcmUKPiB0aGUKPiAiZWVlLWJyb2tlbi0xMDAwdCIgZm9yIHRoZSBSVEw4
-MjExRiBldGhlcm5ldCBQSFkpLiBUbyBtYWtlIGFsbCBib2FyZAo+IC5kdHMKPiBjb25zaXN0ZW50
-IEkgY2hvc2UgdG8gYWRkIHRoZSBQSFkgbm9kZSBhbHNvIGZvciBib2FyZHMgd2hpY2ggZG9uJ3QK
-PiBoYXZlIGEKPiBSVEw4MjExRiBQSFkuCj4gCj4gUGF0Y2ggIzcgZnJvbSB0aGlzIHNlcmllcyBh
-bHNvIHJlbW92ZXMgZXRoZXJuZXQgc3VwcG9ydCBmb3IgdGhlIFAyMDAKPiBib2FyZCBiZWNhdXNl
-IGl0IHdhcyBicm9rZW4gYW55d2F5cyBhbmQgbm9ib2R5IHNlZW1zIHRvIGhhdmUgYSBib2FyZAo+
-IGF2YWlsYWJsZSBmb3IgdGVzdGluZy4gVGhpcyB3YXMgdGhlIG91dGNvbWUgb2YgdGhlIGRpc2N1
-c3Npb24gZnJvbQo+IFswXQo+IAo+IFBhdGNoICM4IHdhcyB0YWtlbiBmcm9tIChvbGRlciB2ZXJz
-aW9ucyBvZikgbXkgb3RoZXIgc2VyaWVzIChzZWUKPiBbMV0pOgo+ICJbUEFUQ0ggbmV0LW5leHQg
-djMgMC8yXSBzdG1tYWM6IGR3bWFjLW1lc29uOGI6IGNvbmZpZ3VyYWJsZQo+IFJHTUlJIFRYIGRl
-bGF5Ii4KPiBUaGUgYmluZGluZyBjaGFuZ2VzIGZvciBhbWxvZ2ljLHR4LWRlbGF5LW5zIHdlcmUg
-QUNLJ2VkIGFscmVhZHkuCj4gCj4gQ2hhbmdlcyBzaW5jZSB2MjoKPiAtIGZpeGVkIHBhdGNoICMy
-IHRvIHJlYWxseSB1cGRhdGUgdGhlIFAyMDAgYm9hcmQgKGFzIGl0J3MgdGhlIFAyMDAKPiB3aGlj
-aAo+IMKgIGFjdHVhbGx5IHVzZXMgYSBNaWNyZWwgS1NaOTAzMSBSR01JSSBQSFkpLiBUaGFua3Mg
-dG8gTmVpbCBBcm1zdHJvbmcKPiBmb3IKPiDCoCBzcG90dGluZyB0aGlzIGh1Z2UgbWlzdGFrZSEK
-PiAtIGluc3RlYWQgb2YgZHJvcHBpbmcgZXRoZXJuZXQgc3VwcG9ydCBmb3IgUDIwMSB3ZSBzaW1w
-bHkgcmUtCj4gY29uZmlndXJlIGl0Cj4gwqAgdG8gUk1JSSBtb2RlIChyZXBsYWNlcyBwYXRjaCAj
-Nykgd2l0aG91dCBhIE1ESU8gbm9kZSAod2hpY2gga2VlcHMKPiBQSFkKPiDCoCBhdXRvLXNjYW5u
-aW5nIGVuYWJsZWQpLiBUaGlzIGdvdCBOZWlsIEFybXN0cm9uZydzIEFDSyBvZmYtbGlzdAo+IGFs
-cmVhZHkKPiAKPiBDaGFuZ2VzIHNpbmNlIHYxOgo+IC0gZG8gbm90IG1vdmUgdGhlIE1ESU8gYnVz
-IHRvIG1lc29uLWd4IGFzIHRoaXMgZGlzYWJsZXMgUEhZIGF1dG8tCj4gc2Nhbm5pbmcKPiDCoCBp
-biB0aGUgc3RtbWFjIGRyaXZlciAodGhpcyBkcm9wcyBwYXRjaCAjMSBmcm9tIHYxKQo+IC0gYWRk
-IHRoZSBldGhlcm5ldCBQSFkgcmVzZXQgR1BJTyBmb3IgbmV4Ym94IGE5NXggd2hpY2ggd2FzIGZv
-cmdvdHRlbgo+IGluCj4gwqAgdjEKPiAtIGFkZCB0aGUgZXRoZXJuZXQgUEhZIHJlc2V0IEdQSU8g
-Zm9yIGJvYXJkcyB3aGljaCB3ZXJlIGFkZGVkIHNpbmNlCj4gdjEKPiDCoCAod2V0ZWsgaHViIGFu
-ZCB3ZXRlayBwbGF5MikKPiAtIHJlYmFzZWQgdG8gYXBwbHkgYWdhaW5zdCB0aGUgY3VycmVudCB2
-NC4xMS9kdDY0IGJyYW5jaAo+IC0gbmV3IGluIHYyIChwYXRjaCAjNyk6IGRpc2FibGVkIGV0aGVy
-bmV0IHN1cHBvcnQgZm9yIHRoZSBQMjAwIGJvYXJkCj4gKHNlZQo+IMKgIHRoZSBjb21taXQgZGVz
-Y3JpcHRpb24gZm9yIG1vcmUgaW5mb3JtYXRpb24pLiB0aGlzIHBhdGNoIGlzCj4gb3B0aW9uYWwK
-PiAtIG5ldyBpbiB2MiAocGF0Y2ggIzkpOiByZW1vdmVkIHRoZSBwaHktbW9kZSBwcm9wZXJ0eSBm
-cm9tIG1lc29uLWd4Cj4gKHNlZQo+IMKgIHRoZSBjb21taXQgZGVzY3JpcHRpb24gZm9yIG1vcmUg
-aW5mb3JtYXRpb24pLiB0aGlzIHBhdGNoIGlzCj4gb3B0aW9uYWwKPiAKPiAKPiBbMF0gaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2xpbnV4LWFtbG9naWMvMjAxNy1KYW51YXJ5
-LzAKPiAwMjA1My5odG1sCj4gWzFdIGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFp
-bC9saW51eC1hbWxvZ2ljLzIwMTYtRGVjZW1iZXIvCj4gMDAxODM0Lmh0bWwKPiAKPiBNYXJ0aW4g
-Qmx1bWVuc3RpbmdsICg5KToKPiDCoCBBUk02NDogZHRzOiBtZXNvbi1neGJiLW9kcm9pZGMyOiBh
-ZGQgdGhlIGV0aGVybmV0IFBIWSdzIHJlc2V0IEdQSU8KPiDCoCBBUk02NDogZHRzOiBtZXNvbi1n
-eGJiLXAyMDA6IGFkZCB0aGUgZXRoZXJuZXQgUEhZJ3MgcmVzZXQgR1BJTwo+IMKgIEFSTTY0OiBk
-dHM6IG1lc29uLWd4YmItdmVnYS1zOTU6IGFkZCB0aGUgZXRoZXJuZXQgUEhZJ3MgcmVzZXQgR1BJ
-Two+IMKgIEFSTTY0OiBkdHM6IG1lc29uLWd4YmItbmV4Ym94LWE5NXg6IGFkZCB0aGUgZXRoZXJu
-ZXQgUEhZJ3MgcmVzZXQKPiBHUElPCj4gwqAgQVJNNjQ6IGR0czogbWVzb24tZ3hiYi13ZXRlay1o
-dWI6IGFkZCB0aGUgZXRoZXJuZXQgUEhZJ3MgcmVzZXQgR1BJTwo+IMKgIEFSTTY0OiBkdHM6IG1l
-c29uLWd4YmItd2V0ZWstcGxheTI6IGFkZCB0aGUgZXRoZXJuZXQgUEhZJ3MgcmVzZXQKPiBHUElP
-Cj4gwqAgQVJNNjQ6IGR0czogbWVzb24tZ3hiYi1wMjAxOiBmaXggZXRoZXJuZXQgc3VwcG9ydAo+
-IMKgIEFSTTY0OiBkdHM6IGFtbG9naWM6IGFkZCB0aGUgZXRoZXJuZXQgVFggZGVsYXkgY29uZmln
-dXJhdGlvbgo+IMKgIEFSTTY0OiBkdHM6IG1lc29uLWd4OiByZW1vdmUgdGhlIHBoeS1tb2RlIHBy
-b3BlcnR5IGZyb20gbWVzb24tZ3gKPiAKPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9t
-ZXNvbi1neC5kdHNpwqDCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDEgLQo+IMKgLi4uL2Jvb3QvZHRz
-L2FtbG9naWMvbWVzb24tZ3hiYi1uZXhib3gtYTk1eC5kdHPCoMKgwqDCoHwgMTcKPiArKysrKysr
-KysrKysrKwo+IMKgLi4uL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1vZHJvaWRj
-Mi5kdHMgfMKgwqA3ICsrKysrKwo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
-LWd4YmItcDIwMC5kdHPCoMKgwqDCoHwgMjYKPiArKysrKysrKysrKysrKysrKysrKysrCj4gwqBh
-cmNoL2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi1wMjAxLmR0c8KgwqDCoMKgfCAx
-MSArKysrKysrKysKPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXAy
-MHguZHRzacKgwqDCoHzCoMKgNiAtLS0tLQo+IMKgLi4uL2Jvb3QvZHRzL2FtbG9naWMvbWVzb24t
-Z3hiYi12ZWdhLXM5NS5kdHNpwqDCoMKgwqDCoMKgfCAyMAo+ICsrKysrKysrKysrKysrKysrCj4g
-wqAuLi4vYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXdldGVrLWh1Yi5kdHPCoMKgwqDCoMKg
-wqB8IDI2Cj4gKysrKysrKysrKysrKysrKysrKysrKwo+IMKgLi4uL2Jvb3QvZHRzL2FtbG9naWMv
-bWVzb24tZ3hiYi13ZXRlay1wbGF5Mi5kdHPCoMKgwqDCoHwgMjYKPiArKysrKysrKysrKysrKysr
-KysrKysrCj4gwqAuLi4vYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGwtczkwNWQtcDIzMC5kdHPC
-oMKgwqDCoMKgwqB8wqDCoDIgKysKPiDCoC4uLi9hcm02NC9ib290L2R0cy9hbWxvZ2ljL21lc29u
-LWd4bS1uZXhib3gtYTEuZHRzIHzCoMKgMiArKwo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9hbWxv
-Z2ljL21lc29uLWd4bS1xMjAwLmR0c8KgwqDCoMKgwqB8wqDCoDIgKysKPiDCoDEyIGZpbGVzIGNo
-YW5nZWQsIDEzOSBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQoKTG9va3MgZ29vZC4KClJl
-dmlld2VkLWJ5OiBKZXJvbWUgQnJ1bmV0IDxqYnJ1bmV0QGJheWxpYnJlLmNvbT4KCj4gCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+Hi Jens,
+
+On 2017/1/18 12:58, Jens Wiklander wrote:
+> From: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Signed-off-by: Jerome Forissier <jerome.forissier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Thanks!
+Fine to me.
+Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+
+Best Regards,
+Wei
+
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> index dba3c131c62c..89c15399bec2 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
+> @@ -406,6 +406,13 @@
+>  			};
+>  		};
+>  	};
+> +
+> +	firmware {
+> +		optee {
+> +			compatible = "linaro,optee-tz";
+> +			method = "smc";
+> +		};
+> +	};
+>  };
+>  
+>  &uart2 {
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
