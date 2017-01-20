@@ -1,41 +1,39 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to
- create devices
-Date: Fri, 20 Jan 2017 18:38:06 +0100
-Message-ID: <3da6854d-8361-1724-2a8a-36f28449733e@nokia.com>
-References: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
- <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
+ PHY's reset GPIO
+Date: Fri, 20 Jan 2017 18:46:58 +0100
+Message-ID: <20170120174658.GG25907@lunn.ch>
+References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
+ <20170120162138.GE25907@lunn.ch>
+ <CAFBinCA47Nng_jjxKrWrV_YBHr0bg+7xPaJrVswt_WnZ6wtyjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAFBinCA47Nng_jjxKrWrV_YBHr0bg+7xPaJrVswt_WnZ6wtyjA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+On Fri, Jan 20, 2017 at 06:07:20PM +0100, Martin Blumenstingl wrote:
+> I though that this is good practice - the documentation doesn't say
+> that it should only be added in specific cases: [0]
 
-On 27/10/16 15:00, Rob Herring wrote:
->> @@ -534,15 +535,15 @@ static int of_platform_notify(struct notifier_block *nb,
->>
->>                 /* pdev_parent may be NULL when no bus platform device */
->>                 pdev_parent = of_find_device_by_node(rd->dn->parent);
->> -               pdev = of_platform_device_create(rd->dn, NULL,
->> -                               pdev_parent ? &pdev_parent->dev : NULL);
->> +               ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
->> +                                            NULL, pdev_parent ?
->> +                                            &pdev_parent->dev : NULL, true);
-> I think this should be of_platform_default_populate() instead.
+Agreed, the text should be better, listing when it is appropriate to
+use.
 
-I've just tested: it cannot be. It calls of_platform_populate(), which ignores "status" property.
-This not only brakes half of the unit tests, but also would change the existing behavior of
-overlays (they will completely ignore "status" too).
+> my intention behind adding the PHY ID was to make it easier to see
+> which devices uses which PHY. this is especially useful for devices
+> with RTL8211F PHY (basically all devices with RGMII PHY except the
+> P200) as these may need similar fixes than [1]
 
--- 
-Best regards,
-Alexander Sverdlin.
+I would not say it is wrong to list the PHY ID, it just has
+consequences if the PHY ever changes.
+
+	     Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
