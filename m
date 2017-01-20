@@ -1,407 +1,462 @@
-From: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 6/7] [media] coda: use VDOA for un-tiling custom macroblock format
-Date: Fri, 20 Jan 2017 15:00:24 +0100
-Message-ID: <20170120140025.3338-7-m.tretter@pengutronix.de>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v4 2/7] [media] coda: add i.MX6 VDOA driver
+Date: Fri, 20 Jan 2017 15:00:20 +0100
+Message-ID: <20170120140025.3338-3-m.tretter@pengutronix.de>
 References: <20170120140025.3338-1-m.tretter@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120140025.3338-1-m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170120140025.3338-1-m.tretter@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Philipp Zabel <philipp.zabel@gmail.com>, Michael Tretter <m.tretter@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-If the CODA driver is configured to produce NV12 output and the VDOA is
-available, the VDOA can be used to transform the custom macroblock tiled
-format to a raster-ordered format for scanout.
+From: Philipp Zabel <philipp.zabel@gmail.com>
 
-In this case, set the output format of the CODA to the custom macroblock
-tiled format, disable the rotator, and use the VDOA to write to the v4l2
-buffer. The VDOA is synchronized with the CODA to always un-tile the
-frame that the CODA finished in the previous run.
+The i.MX6 Video Data Order Adapter's (VDOA) sole purpose is to convert
+from a custom macroblock tiled format produced by the CODA960 decoder
+into linear formats that can be used for scanout.
 
-Signed-off-by: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
- drivers/media/platform/coda/coda-bit.c    |  86 +++++++++++++++++-------
- drivers/media/platform/coda/coda-common.c | 104 ++++++++++++++++++++++++++++--
- drivers/media/platform/coda/coda.h        |   3 +
- 3 files changed, 163 insertions(+), 30 deletions(-)
+ drivers/media/platform/Kconfig         |   3 +
+ drivers/media/platform/coda/Makefile   |   1 +
+ drivers/media/platform/coda/imx-vdoa.c | 338 +++++++++++++++++++++++++++++++++
+ drivers/media/platform/coda/imx-vdoa.h |  58 ++++++
+ 4 files changed, 400 insertions(+)
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.c
+ create mode 100644 drivers/media/platform/coda/imx-vdoa.h
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index 309eb4eb5ad1..f608de4c52ac 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -30,6 +30,7 @@
- #include <media/videobuf2-vmalloc.h>
+diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+index d944421e392d..595652613db9 100644
+--- a/drivers/media/platform/Kconfig
++++ b/drivers/media/platform/Kconfig
+@@ -162,6 +162,9 @@ config VIDEO_CODA
+ 	   Coda is a range of video codec IPs that supports
+ 	   H.264, MPEG-4, and other video formats.
  
- #include "coda.h"
++config VIDEO_IMX_VDOA
++	def_tristate VIDEO_CODA if SOC_IMX6Q || COMPILE_TEST
++
+ config VIDEO_MEDIATEK_VPU
+ 	tristate "Mediatek Video Processor Unit"
+ 	depends on VIDEO_DEV && VIDEO_V4L2 && HAS_DMA
+diff --git a/drivers/media/platform/coda/Makefile b/drivers/media/platform/coda/Makefile
+index 9342ac57b230..858284328af9 100644
+--- a/drivers/media/platform/coda/Makefile
++++ b/drivers/media/platform/coda/Makefile
+@@ -3,3 +3,4 @@ ccflags-y += -I$(src)
+ coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-jpeg.o
+ 
+ obj-$(CONFIG_VIDEO_CODA) += coda.o
++obj-$(CONFIG_VIDEO_IMX_VDOA) += imx-vdoa.o
+diff --git a/drivers/media/platform/coda/imx-vdoa.c b/drivers/media/platform/coda/imx-vdoa.c
+new file mode 100644
+index 000000000000..f61baf7dcbc1
+--- /dev/null
++++ b/drivers/media/platform/coda/imx-vdoa.c
+@@ -0,0 +1,338 @@
++/*
++ * i.MX6 Video Data Order Adapter (VDOA)
++ *
++ * Copyright (C) 2014 Philipp Zabel
++ * Copyright (C) 2016 Pengutronix, Michael Tretter <kernel@pengutronix.de>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/dma-mapping.h>
++#include <linux/platform_device.h>
++#include <linux/videodev2.h>
++#include <linux/slab.h>
++
 +#include "imx-vdoa.h"
- #define CREATE_TRACE_POINTS
- #include "trace.h"
- 
-@@ -1517,6 +1518,10 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 	u32 val;
- 	int ret;
- 
-+	v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
-+		 "Video Data Order Adapter: %s\n",
-+		 ctx->use_vdoa ? "Enabled" : "Disabled");
 +
- 	/* Start decoding */
- 	q_data_src = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_OUTPUT);
- 	q_data_dst = get_q_data(ctx, V4L2_BUF_TYPE_VIDEO_CAPTURE);
-@@ -1535,7 +1540,8 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 	if (dst_fourcc == V4L2_PIX_FMT_NV12)
- 		ctx->frame_mem_ctrl |= CODA_FRAME_CHROMA_INTERLEAVE;
- 	if (ctx->tiled_map_type == GDI_TILED_FRAME_MB_RASTER_MAP)
--		ctx->frame_mem_ctrl |= (0x3 << 9) | CODA9_FRAME_TILED2LINEAR;
-+		ctx->frame_mem_ctrl |= (0x3 << 9) |
-+			((ctx->use_vdoa) ? 0 : CODA9_FRAME_TILED2LINEAR);
- 	coda_write(dev, ctx->frame_mem_ctrl, CODA_REG_BIT_FRAME_MEM_CTRL);
- 
- 	ctx->display_idx = -1;
-@@ -1618,6 +1624,15 @@ static int __coda_start_decoding(struct coda_ctx *ctx)
- 		 __func__, ctx->idx, width, height);
- 
- 	ctx->num_internal_frames = coda_read(dev, CODA_RET_DEC_SEQ_FRAME_NEED);
-+	/*
-+	 * If the VDOA is used, the decoder needs one additional frame,
-+	 * because the frames are freed when the next frame is decoded.
-+	 * Otherwise there are visible errors in the decoded frames (green
-+	 * regions in displayed frames) and a broken order of frames (earlier
-+	 * frames are sporadically displayed after later frames).
-+	 */
-+	if (ctx->use_vdoa)
-+		ctx->num_internal_frames += 1;
- 	if (ctx->num_internal_frames > CODA_MAX_FRAMEBUFFERS) {
- 		v4l2_err(&dev->v4l2_dev,
- 			 "not enough framebuffers to decode (%d < %d)\n",
-@@ -1724,6 +1739,7 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	struct coda_q_data *q_data_dst;
- 	struct coda_buffer_meta *meta;
- 	unsigned long flags;
-+	u32 rot_mode = 0;
- 	u32 reg_addr, reg_stride;
- 
- 	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
-@@ -1759,27 +1775,40 @@ static int coda_prepare_decode(struct coda_ctx *ctx)
- 	if (dev->devtype->product == CODA_960)
- 		coda_set_gdi_regs(ctx);
- 
--	if (dev->devtype->product == CODA_960) {
--		/*
--		 * The CODA960 seems to have an internal list of buffers with
--		 * 64 entries that includes the registered frame buffers as
--		 * well as the rotator buffer output.
--		 * ROT_INDEX needs to be < 0x40, but > ctx->num_internal_frames.
--		 */
--		coda_write(dev, CODA_MAX_FRAMEBUFFERS + dst_buf->vb2_buf.index,
--				CODA9_CMD_DEC_PIC_ROT_INDEX);
--
--		reg_addr = CODA9_CMD_DEC_PIC_ROT_ADDR_Y;
--		reg_stride = CODA9_CMD_DEC_PIC_ROT_STRIDE;
-+	if (ctx->use_vdoa &&
-+	    ctx->display_idx >= 0 &&
-+	    ctx->display_idx < ctx->num_internal_frames) {
-+		vdoa_device_run(ctx->vdoa,
-+				vb2_dma_contig_plane_dma_addr(&dst_buf->vb2_buf, 0),
-+				ctx->internal_frames[ctx->display_idx].paddr);
- 	} else {
--		reg_addr = CODA_CMD_DEC_PIC_ROT_ADDR_Y;
--		reg_stride = CODA_CMD_DEC_PIC_ROT_STRIDE;
-+		if (dev->devtype->product == CODA_960) {
-+			/*
-+			 * The CODA960 seems to have an internal list of
-+			 * buffers with 64 entries that includes the
-+			 * registered frame buffers as well as the rotator
-+			 * buffer output.
-+			 *
-+			 * ROT_INDEX needs to be < 0x40, but >
-+			 * ctx->num_internal_frames.
-+			 */
-+			coda_write(dev,
-+				   CODA_MAX_FRAMEBUFFERS + dst_buf->vb2_buf.index,
-+				   CODA9_CMD_DEC_PIC_ROT_INDEX);
++#define VDOA_NAME "imx-vdoa"
 +
-+			reg_addr = CODA9_CMD_DEC_PIC_ROT_ADDR_Y;
-+			reg_stride = CODA9_CMD_DEC_PIC_ROT_STRIDE;
-+		} else {
-+			reg_addr = CODA_CMD_DEC_PIC_ROT_ADDR_Y;
-+			reg_stride = CODA_CMD_DEC_PIC_ROT_STRIDE;
-+		}
-+		coda_write_base(ctx, q_data_dst, dst_buf, reg_addr);
-+		coda_write(dev, q_data_dst->bytesperline, reg_stride);
++#define VDOAC		0x00
++#define VDOASRR		0x04
++#define VDOAIE		0x08
++#define VDOAIST		0x0c
++#define VDOAFP		0x10
++#define VDOAIEBA00	0x14
++#define VDOAIEBA01	0x18
++#define VDOAIEBA02	0x1c
++#define VDOAIEBA10	0x20
++#define VDOAIEBA11	0x24
++#define VDOAIEBA12	0x28
++#define VDOASL		0x2c
++#define VDOAIUBO	0x30
++#define VDOAVEBA0	0x34
++#define VDOAVEBA1	0x38
++#define VDOAVEBA2	0x3c
++#define VDOAVUBO	0x40
++#define VDOASR		0x44
 +
-+		rot_mode = CODA_ROT_MIR_ENABLE | ctx->params.rot_mode;
- 	}
--	coda_write_base(ctx, q_data_dst, dst_buf, reg_addr);
--	coda_write(dev, q_data_dst->bytesperline, reg_stride);
- 
--	coda_write(dev, CODA_ROT_MIR_ENABLE | ctx->params.rot_mode,
--			CODA_CMD_DEC_PIC_ROT_MODE);
-+	coda_write(dev, rot_mode, CODA_CMD_DEC_PIC_ROT_MODE);
- 
- 	switch (dev->devtype->product) {
- 	case CODA_DX6:
-@@ -1851,6 +1880,7 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 	u32 src_fourcc;
- 	int success;
- 	u32 err_mb;
-+	int err_vdoa = 0;
- 	u32 val;
- 
- 	/* Update kfifo out pointer from coda bitstream read pointer */
-@@ -1934,13 +1964,17 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 	}
- 
-+	/* Wait until the VDOA finished writing the previous display frame */
-+	if (ctx->use_vdoa &&
-+	    ctx->display_idx >= 0 &&
-+	    ctx->display_idx < ctx->num_internal_frames) {
-+		err_vdoa = vdoa_wait_for_completion(ctx->vdoa);
++#define VDOAC_ISEL		BIT(6)
++#define VDOAC_PFS		BIT(5)
++#define VDOAC_SO		BIT(4)
++#define VDOAC_SYNC		BIT(3)
++#define VDOAC_NF		BIT(2)
++#define VDOAC_BNDM_MASK		0x3
++#define VDOAC_BAND_HEIGHT_8	0x0
++#define VDOAC_BAND_HEIGHT_16	0x1
++#define VDOAC_BAND_HEIGHT_32	0x2
++
++#define VDOASRR_START		BIT(1)
++#define VDOASRR_SWRST		BIT(0)
++
++#define VDOAIE_EITERR		BIT(1)
++#define VDOAIE_EIEOT		BIT(0)
++
++#define VDOAIST_TERR		BIT(1)
++#define VDOAIST_EOT		BIT(0)
++
++#define VDOAFP_FH_MASK		(0x1fff << 16)
++#define VDOAFP_FW_MASK		(0x3fff)
++
++#define VDOASL_VSLY_MASK	(0x3fff << 16)
++#define VDOASL_ISLY_MASK	(0x7fff)
++
++#define VDOASR_ERRW		BIT(4)
++#define VDOASR_EOB		BIT(3)
++#define VDOASR_CURRENT_FRAME	(0x3 << 1)
++#define VDOASR_CURRENT_BUFFER	BIT(1)
++
++enum {
++	V4L2_M2M_SRC = 0,
++	V4L2_M2M_DST = 1,
++};
++
++struct vdoa_data {
++	struct vdoa_ctx		*curr_ctx;
++	struct device		*dev;
++	struct clk		*vdoa_clk;
++	void __iomem		*regs;
++	int			irq;
++};
++
++struct vdoa_q_data {
++	unsigned int	width;
++	unsigned int	height;
++	unsigned int	bytesperline;
++	unsigned int	sizeimage;
++	u32		pixelformat;
++};
++
++struct vdoa_ctx {
++	struct vdoa_data	*vdoa;
++	struct completion	completion;
++	struct vdoa_q_data	q_data[2];
++};
++
++static irqreturn_t vdoa_irq_handler(int irq, void *data)
++{
++	struct vdoa_data *vdoa = data;
++	struct vdoa_ctx *curr_ctx;
++	u32 val;
++
++	/* Disable interrupts */
++	writel(0, vdoa->regs + VDOAIE);
++
++	curr_ctx = vdoa->curr_ctx;
++	if (!curr_ctx) {
++		dev_dbg(vdoa->dev,
++			"Instance released before the end of transaction\n");
++		return IRQ_HANDLED;
 +	}
 +
- 	ctx->frm_dis_flg = coda_read(dev,
- 				     CODA_REG_BIT_FRM_DIS_FLG(ctx->reg_idx));
- 
--	/*
--	 * The previous display frame was copied out by the rotator,
--	 * now it can be overwritten again
--	 */
-+	/* The previous display frame was copied out and can be overwritten */
- 	if (ctx->display_idx >= 0 &&
- 	    ctx->display_idx < ctx->num_internal_frames) {
- 		ctx->frm_dis_flg &= ~(1 << ctx->display_idx);
-@@ -2057,8 +2091,10 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 		vb2_set_plane_payload(&dst_buf->vb2_buf, 0, payload);
- 
--		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[ctx->display_idx] ?
--				  VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
-+		if (ctx->frame_errors[ctx->display_idx] || err_vdoa)
-+			coda_m2m_buf_done(ctx, dst_buf, VB2_BUF_STATE_ERROR);
-+		else
-+			coda_m2m_buf_done(ctx, dst_buf, VB2_BUF_STATE_DONE);
- 
- 		v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
- 			"job finished: decoding frame (%d) (%s)\n",
-diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
-index b23fe0f0fb56..13ee6cba6847 100644
---- a/drivers/media/platform/coda/coda-common.c
-+++ b/drivers/media/platform/coda/coda-common.c
-@@ -41,6 +41,7 @@
- #include <media/videobuf2-vmalloc.h>
- 
- #include "coda.h"
-+#include "imx-vdoa.h"
- 
- #define CODA_NAME		"coda"
- 
-@@ -66,6 +67,10 @@ static int disable_tiling;
- module_param(disable_tiling, int, 0644);
- MODULE_PARM_DESC(disable_tiling, "Disable tiled frame buffers");
- 
-+static int disable_vdoa;
-+module_param(disable_vdoa, int, 0644);
-+MODULE_PARM_DESC(disable_vdoa, "Disable Video Data Order Adapter tiled to raster-scan conversion");
++	val = readl(vdoa->regs + VDOAIST);
++	writel(val, vdoa->regs + VDOAIST);
++	if (val & VDOAIST_TERR) {
++		val = readl(vdoa->regs + VDOASR) & VDOASR_ERRW;
++		dev_err(vdoa->dev, "AXI %s error\n", val ? "write" : "read");
++	} else if (!(val & VDOAIST_EOT)) {
++		dev_warn(vdoa->dev, "Spurious interrupt\n");
++	}
++	complete(&curr_ctx->completion);
 +
- void coda_write(struct coda_dev *dev, u32 data, u32 reg)
- {
- 	v4l2_dbg(2, coda_debug, &dev->v4l2_dev,
-@@ -325,6 +330,31 @@ const char *coda_product_name(int product)
- 	}
- }
- 
-+static struct vdoa_data *coda_get_vdoa_data(void)
-+{
-+	struct device_node *vdoa_node;
-+	struct platform_device *vdoa_pdev;
-+	struct vdoa_data *vdoa_data = NULL;
-+
-+	vdoa_node = of_find_compatible_node(NULL, NULL, "fsl,imx6q-vdoa");
-+	if (!vdoa_node)
-+		return NULL;
-+
-+	vdoa_pdev = of_find_device_by_node(vdoa_node);
-+	if (!vdoa_pdev)
-+		goto out;
-+
-+	vdoa_data = platform_get_drvdata(vdoa_pdev);
-+	if (!vdoa_data)
-+		vdoa_data = ERR_PTR(-EPROBE_DEFER);
-+
-+out:
-+	if (vdoa_node)
-+		of_node_put(vdoa_node);
-+
-+	return vdoa_data;
++	return IRQ_HANDLED;
 +}
 +
- /*
-  * V4L2 ioctl() operations.
-  */
-@@ -417,6 +447,33 @@ static int coda_try_pixelformat(struct coda_ctx *ctx, struct v4l2_format *f)
- 	return 0;
- }
- 
-+static int coda_try_fmt_vdoa(struct coda_ctx *ctx, struct v4l2_format *f,
-+			     bool *use_vdoa)
++void vdoa_device_run(struct vdoa_ctx *ctx, dma_addr_t dst, dma_addr_t src)
 +{
++	struct vdoa_q_data *src_q_data, *dst_q_data;
++	struct vdoa_data *vdoa = ctx->vdoa;
++	u32 val;
++
++	vdoa->curr_ctx = ctx;
++
++	src_q_data = &ctx->q_data[V4L2_M2M_SRC];
++	dst_q_data = &ctx->q_data[V4L2_M2M_DST];
++
++	/* Progressive, no sync, 1 frame per run */
++	if (dst_q_data->pixelformat == V4L2_PIX_FMT_YUYV)
++		val = VDOAC_PFS;
++	else
++		val = 0;
++	writel(val, vdoa->regs + VDOAC);
++
++	writel(dst_q_data->height << 16 | dst_q_data->width,
++	       vdoa->regs + VDOAFP);
++
++	val = dst;
++	writel(val, vdoa->regs + VDOAIEBA00);
++
++	writel(src_q_data->bytesperline << 16 | dst_q_data->bytesperline,
++	       vdoa->regs + VDOASL);
++
++	if (dst_q_data->pixelformat == V4L2_PIX_FMT_NV12 ||
++	    dst_q_data->pixelformat == V4L2_PIX_FMT_NV21)
++		val = dst_q_data->bytesperline * dst_q_data->height;
++	else
++		val = 0;
++	writel(val, vdoa->regs + VDOAIUBO);
++
++	val = src;
++	writel(val, vdoa->regs + VDOAVEBA0);
++	val = round_up(src_q_data->bytesperline * src_q_data->height, 4096);
++	writel(val, vdoa->regs + VDOAVUBO);
++
++	/* Enable interrupts and start transfer */
++	writel(VDOAIE_EITERR | VDOAIE_EIEOT, vdoa->regs + VDOAIE);
++	writel(VDOASRR_START, vdoa->regs + VDOASRR);
++}
++EXPORT_SYMBOL(vdoa_device_run);
++
++int vdoa_wait_for_completion(struct vdoa_ctx *ctx)
++{
++	struct vdoa_data *vdoa = ctx->vdoa;
++
++	if (!wait_for_completion_timeout(&ctx->completion,
++					 msecs_to_jiffies(300))) {
++		dev_err(vdoa->dev,
++			"Timeout waiting for transfer result\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(vdoa_wait_for_completion);
++
++struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa)
++{
++	struct vdoa_ctx *ctx;
 +	int err;
 +
-+	if (f->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
-+		return -EINVAL;
++	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
++	if (!ctx)
++		return NULL;
 +
-+	if (!use_vdoa)
-+		return -EINVAL;
-+
-+	if (!ctx->vdoa) {
-+		*use_vdoa = false;
-+		return 0;
-+	}
-+
-+	err = vdoa_context_configure(NULL, f->fmt.pix.width, f->fmt.pix.height,
-+				     f->fmt.pix.pixelformat);
++	err = clk_prepare_enable(vdoa->vdoa_clk);
 +	if (err) {
-+		*use_vdoa = false;
-+		return 0;
++		kfree(ctx);
++		return NULL;
 +	}
 +
-+	*use_vdoa = true;
++	init_completion(&ctx->completion);
++	ctx->vdoa = vdoa;
++
++	return ctx;
++}
++EXPORT_SYMBOL(vdoa_context_create);
++
++void vdoa_context_destroy(struct vdoa_ctx *ctx)
++{
++	struct vdoa_data *vdoa = ctx->vdoa;
++
++	clk_disable_unprepare(vdoa->vdoa_clk);
++	kfree(ctx);
++}
++EXPORT_SYMBOL(vdoa_context_destroy);
++
++int vdoa_context_configure(struct vdoa_ctx *ctx,
++			   unsigned int width, unsigned int height,
++			   u32 pixelformat)
++{
++	struct vdoa_q_data *src_q_data;
++	struct vdoa_q_data *dst_q_data;
++
++	if (width < 16 || width  > 8192 || width % 16 != 0 ||
++	    height < 16 || height > 4096 || height % 16 != 0)
++		return -EINVAL;
++
++	if (pixelformat != V4L2_PIX_FMT_YUYV &&
++	    pixelformat != V4L2_PIX_FMT_NV12)
++		return -EINVAL;
++
++	/* If no context is passed, only check if the format is valid */
++	if (!ctx)
++		return 0;
++
++	src_q_data = &ctx->q_data[V4L2_M2M_SRC];
++	dst_q_data = &ctx->q_data[V4L2_M2M_DST];
++
++	src_q_data->width = width;
++	src_q_data->height = height;
++	src_q_data->bytesperline = width;
++	src_q_data->sizeimage =
++		round_up(src_q_data->bytesperline * height, 4096) +
++		src_q_data->bytesperline * height / 2;
++
++	dst_q_data->width = width;
++	dst_q_data->height = height;
++	dst_q_data->pixelformat = pixelformat;
++	switch (pixelformat) {
++	case V4L2_PIX_FMT_YUYV:
++		dst_q_data->bytesperline = width * 2;
++		dst_q_data->sizeimage = dst_q_data->bytesperline * height;
++		break;
++	case V4L2_PIX_FMT_NV12:
++	default:
++		dst_q_data->bytesperline = width;
++		dst_q_data->sizeimage =
++			dst_q_data->bytesperline * height * 3 / 2;
++		break;
++	}
++
++	return 0;
++}
++EXPORT_SYMBOL(vdoa_context_configure);
++
++static int vdoa_probe(struct platform_device *pdev)
++{
++	struct vdoa_data *vdoa;
++	struct resource *res;
++
++	dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
++
++	vdoa = devm_kzalloc(&pdev->dev, sizeof(*vdoa), GFP_KERNEL);
++	if (!vdoa)
++		return -ENOMEM;
++
++	vdoa->dev = &pdev->dev;
++
++	vdoa->vdoa_clk = devm_clk_get(vdoa->dev, NULL);
++	if (IS_ERR(vdoa->vdoa_clk)) {
++		dev_err(vdoa->dev, "Failed to get clock\n");
++		return PTR_ERR(vdoa->vdoa_clk);
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	vdoa->regs = devm_ioremap_resource(vdoa->dev, res);
++	if (IS_ERR(vdoa->regs))
++		return PTR_ERR(vdoa->regs);
++
++	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++	vdoa->irq = devm_request_threaded_irq(&pdev->dev, res->start, NULL,
++					vdoa_irq_handler, IRQF_ONESHOT,
++					"vdoa", vdoa);
++	if (vdoa->irq < 0) {
++		dev_err(vdoa->dev, "Failed to get irq\n");
++		return vdoa->irq;
++	}
++
++	platform_set_drvdata(pdev, vdoa);
++
 +	return 0;
 +}
 +
- static unsigned int coda_estimate_sizeimage(struct coda_ctx *ctx, u32 sizeimage,
- 					    u32 width, u32 height)
- {
-@@ -495,6 +552,7 @@ static int coda_try_fmt_vid_cap(struct file *file, void *priv,
- 	const struct coda_codec *codec;
- 	struct vb2_queue *src_vq;
- 	int ret;
-+	bool use_vdoa;
- 
- 	ret = coda_try_pixelformat(ctx, f);
- 	if (ret < 0)
-@@ -531,6 +589,10 @@ static int coda_try_fmt_vid_cap(struct file *file, void *priv,
- 		f->fmt.pix.bytesperline = round_up(f->fmt.pix.width, 16);
- 		f->fmt.pix.sizeimage = f->fmt.pix.bytesperline *
- 				       f->fmt.pix.height * 3 / 2;
++static int vdoa_remove(struct platform_device *pdev)
++{
++	return 0;
++}
 +
-+		ret = coda_try_fmt_vdoa(ctx, f, &use_vdoa);
-+		if (ret < 0)
-+			return ret;
- 	}
- 
- 	return 0;
-@@ -601,11 +663,9 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
- 
- 	switch (f->fmt.pix.pixelformat) {
- 	case V4L2_PIX_FMT_NV12:
--		if (f->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
--			ctx->tiled_map_type = GDI_TILED_FRAME_MB_RASTER_MAP;
--			if (!disable_tiling)
--				break;
--		}
-+		ctx->tiled_map_type = GDI_TILED_FRAME_MB_RASTER_MAP;
-+		if (!disable_tiling)
-+			break;
- 		/* else fall through */
- 	case V4L2_PIX_FMT_YUV420:
- 	case V4L2_PIX_FMT_YVU420:
-@@ -615,6 +675,15 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
- 		break;
- 	}
- 
-+	if (ctx->tiled_map_type == GDI_TILED_FRAME_MB_RASTER_MAP &&
-+	    !coda_try_fmt_vdoa(ctx, f, &ctx->use_vdoa) &&
-+	    ctx->use_vdoa)
-+		vdoa_context_configure(ctx->vdoa, f->fmt.pix.width,
-+				       f->fmt.pix.height,
-+				       f->fmt.pix.pixelformat);
-+	else
-+		ctx->use_vdoa = false;
++static struct of_device_id vdoa_dt_ids[] = {
++	{ .compatible = "fsl,imx6q-vdoa" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, vdoa_dt_ids);
 +
- 	v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
- 		"Setting format for type %d, wxh: %dx%d, fmt: %4.4s %c\n",
- 		f->type, q_data->width, q_data->height,
-@@ -1041,6 +1110,16 @@ static int coda_job_ready(void *m2m_priv)
- 		bool stream_end = ctx->bit_stream_param &
- 				  CODA_BIT_STREAM_END_FLAG;
- 		int num_metas = ctx->num_metas;
-+		unsigned int count;
++static struct platform_driver vdoa_driver = {
++	.probe		= vdoa_probe,
++	.remove		= vdoa_remove,
++	.driver		= {
++		.name	= VDOA_NAME,
++		.of_match_table = vdoa_dt_ids,
++	},
++};
 +
-+		count = hweight32(ctx->frm_dis_flg);
-+		if (ctx->use_vdoa && count >= (ctx->num_internal_frames - 1)) {
-+			v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
-+				 "%d: not ready: all internal buffers in use: %d/%d (0x%x)",
-+				 ctx->idx, count, ctx->num_internal_frames,
-+				 ctx->frm_dis_flg);
-+			return 0;
-+		}
- 
- 		if (ctx->hold && !src_bufs) {
- 			v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
-@@ -1731,6 +1810,13 @@ static int coda_open(struct file *file)
- 	default:
- 		ctx->reg_idx = idx;
- 	}
-+	if (ctx->dev->vdoa && !disable_vdoa) {
-+		ctx->vdoa = vdoa_context_create(dev->vdoa);
-+		if (!ctx->vdoa)
-+			v4l2_warn(&dev->v4l2_dev,
-+				  "Failed to create vdoa context: not using vdoa");
-+	}
-+	ctx->use_vdoa = false;
- 
- 	/* Power up and upload firmware if necessary */
- 	ret = pm_runtime_get_sync(&dev->plat_dev->dev);
-@@ -1812,6 +1898,9 @@ static int coda_release(struct file *file)
- 	/* If this instance is running, call .job_abort and wait for it to end */
- 	v4l2_m2m_ctx_release(ctx->fh.m2m_ctx);
- 
-+	if (ctx->vdoa)
-+		vdoa_context_destroy(ctx->vdoa);
++module_platform_driver(vdoa_driver);
 +
- 	/* In case the instance was not running, we still need to call SEQ_END */
- 	if (ctx->ops->seq_end_work) {
- 		queue_work(dev->workqueue, &ctx->seq_end_work);
-@@ -2258,6 +2347,11 @@ static int coda_probe(struct platform_device *pdev)
- 	}
- 	dev->iram_pool = pool;
- 
-+	/* Get vdoa_data if supported by the platform */
-+	dev->vdoa = coda_get_vdoa_data();
-+	if (PTR_ERR(dev->vdoa) == -EPROBE_DEFER)
-+		return -EPROBE_DEFER;
++MODULE_DESCRIPTION("Video Data Order Adapter");
++MODULE_AUTHOR("Philipp Zabel <philipp.zabel@gmail.com>");
++MODULE_ALIAS("platform:imx-vdoa");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/media/platform/coda/imx-vdoa.h b/drivers/media/platform/coda/imx-vdoa.h
+new file mode 100644
+index 000000000000..967576b2a06a
+--- /dev/null
++++ b/drivers/media/platform/coda/imx-vdoa.h
+@@ -0,0 +1,58 @@
++/*
++ * Copyright (C) 2016 Pengutronix
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version 2
++ * of the License, or (at your option) any later version.
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
 +
- 	ret = v4l2_device_register(&pdev->dev, &dev->v4l2_dev);
- 	if (ret)
- 		return ret;
-diff --git a/drivers/media/platform/coda/coda.h b/drivers/media/platform/coda/coda.h
-index 53f96661683c..7ed79eb774e7 100644
---- a/drivers/media/platform/coda/coda.h
-+++ b/drivers/media/platform/coda/coda.h
-@@ -75,6 +75,7 @@ struct coda_dev {
- 	struct platform_device	*plat_dev;
- 	const struct coda_devtype *devtype;
- 	int			firmware;
-+	struct vdoa_data	*vdoa;
- 
- 	void __iomem		*regs_base;
- 	struct clk		*clk_per;
-@@ -236,6 +237,8 @@ struct coda_ctx {
- 	int				display_idx;
- 	struct dentry			*debugfs_entry;
- 	bool				use_bit;
-+	bool				use_vdoa;
-+	struct vdoa_ctx			*vdoa;
- };
- 
- extern int coda_debug;
++#ifndef IMX_VDOA_H
++#define IMX_VDOA_H
++
++struct vdoa_data;
++struct vdoa_ctx;
++
++#if (defined CONFIG_VIDEO_IMX_VDOA || defined CONFIG_VIDEO_IMX_VDOA_MODULE)
++
++struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa);
++int vdoa_context_configure(struct vdoa_ctx *ctx,
++			   unsigned int width, unsigned int height,
++			   u32 pixelformat);
++void vdoa_context_destroy(struct vdoa_ctx *ctx);
++
++void vdoa_device_run(struct vdoa_ctx *ctx, dma_addr_t dst, dma_addr_t src);
++int vdoa_wait_for_completion(struct vdoa_ctx *ctx);
++
++#else
++
++static inline struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa)
++{
++	return NULL;
++}
++
++static inline int vdoa_context_configure(struct vdoa_ctx *ctx,
++					 unsigned int width,
++					 unsigned int height,
++					 u32 pixelformat)
++{
++	return 0;
++}
++
++static inline void vdoa_context_destroy(struct vdoa_ctx *ctx) { };
++
++static inline void vdoa_device_run(struct vdoa_ctx *ctx,
++				   dma_addr_t dst, dma_addr_t src) { };
++
++static inline int vdoa_wait_for_completion(struct vdoa_ctx *ctx)
++{
++	return 0;
++};
++
++#endif
++
++#endif /* IMX_VDOA_H */
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
