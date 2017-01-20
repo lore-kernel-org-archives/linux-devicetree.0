@@ -1,114 +1,104 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH 1/4] phy: sun4i-usb: support PHY0 on H3
- in MUSB mode
-Date: Fri, 20 Jan 2017 09:04:40 +0100
-Message-ID: <93a01892-47b5-5445-d802-f56bdac8371f@redhat.com>
-References: <20170116191449.50397-1-icenowy@aosc.xyz>
- <20170116191449.50397-2-icenowy@aosc.xyz>
- <20170117080611.tn7s7ddj2csqr27m@lukather>
- <3866431484672228@web20j.yandex.ru>
- <20170117200658.gcrcxeanthdtwg26@lukather>
- <CAGb2v67kYtrTdw9YMS7wvRa=2MWYJ=BEc9SmUOds7hNYZKOz9g@mail.gmail.com>
- <20170119143445.dmckuqjxmfhwr3h5@lukather> <1682741484838608@web2j.yandex.ru>
- <20170119202709.GA1853@excalibur.cnev.de>
-Reply-To: hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2,
+ 2/6] phy: phy-mt65xx-usb3: move clock from phy node into port nodes
+Date: Fri, 20 Jan 2017 16:18:37 +0800
+Message-ID: <1484900321-26933-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBI4JQ7CAKGQE6L4V2TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170119202709.GA1853-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Chunfeng Yun <chunfeng.yun@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-HI,
+the reference clock of HighSpeed port is 48M which comes from PLL;
+the reference clock of SuperSpeed port is 26M which usually comes
+from 26M oscillator directly, but some SoCs are not, add it for
+compatibility, and put them into port node for flexibility.
 
-On 19-01-17 21:27, Karsten Merker wrote:
-> On Thu, Jan 19, 2017 at 11:10:08PM +0800, Icenowy Zheng wrote:
->> 19.01.2017, 22:34, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->>> On Wed, Jan 18, 2017 at 04:09:32AM +0800, Chen-Yu Tsai wrote:
->>>>  On Wed, Jan 18, 2017 at 4:06 AM, Maxime Ripard
->>>>  <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>>  > On Wed, Jan 18, 2017 at 12:57:08AM +0800, Icenowy Zheng wrote:
->>>>  >> 17.01.2017, 16:06, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->>>>  >> > On Tue, Jan 17, 2017 at 03:14:46AM +0800, Icenowy Zheng wrote:
->>>>  >> >> The PHY0 on H3 can be wired either to MUSB controller or OHCI/EHCI
->>>>  >> >> controller.
->>>>  >> >>
->>>>  >> >> The original driver wired it to OHCI/EHCI controller; however, as the
->>>>  >> >> code to use PHY0 as OHCI/EHCI is missing, it makes the PHY fully
->>>>  >> >> unusable.
->>>>  >> >>
->>>>  >> >> Rename the register (according to its function and the name in BSP
->>>>  >> >> driver), and remove the code which wires the PHY0 to OHCI/EHCI, as MUSB
->>>>  >> >> can support both peripheral and host mode (although the host mode of
->>>>  >> >> MUSB is buggy).
->>>>  >> >
->>>>  >> > Can you elaborate on that? What's wrong with it?
->>>>  >>
->>>>  >> The configuration is at bit 0 of register 0x20 in PHY.
->>>>  >>
->>>>  >> When the PHY is reseted, it defaults as MUSB mode.
->>>>  >>
->>>>  >> However, the original author of the H3 PHY code seems to be lack of
->>>>  >> this knowledge (He named it PHY_UNK_H3), and changed the PHY to HCI
->>>>  >> mode.
->>>>  >>
->>>>  >> I just removed the code that wires it to HCI mode, thus it will work
->>>>  >> in MUSB mode, with my sun8i-h3-musb patch.
->>>>  >
->>>>  > I have no idea what you mean by MUSB mode.
->>>>  >
->>>>  > Do you mean that the previous code was only working in host mode, and
->>>>  > now it only works in peripheral?
->>>>
->>>>  From what I understand, with the H3, Allwinner has put a mux
->>>>  in front of the MUSB controller. The mux can send the USB data
->>>>  to/from the MUSB controller, or a standard EHCI/OHCI pair.
->>>>  This register controls said mux.
->>>>
->>>>  This means we can use a proper USB host for host mode,
->>>>  instead of the limited support in MUSB.
->>>
->>> But musb can still operate as a host, right?
->>
->> Yes!
->
-> Hello,
->
-> I don't know how the MUSB implementation in the H3 behaves as I
-> don't have any H3-based systems, but if it should happen to be
-> similar to the one in the A31s, it probably isn't a full-fledged
-> alternative to using an OHCI/EHCI controller.
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+---
+ drivers/phy/phy-mt65xx-usb3.c |   21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-You right it isn't which is why I suggested that the phy-sun4i-usb
-code should set the mux to the OCHI/EHCI pair when the id pin
-is pulled low (host-mode).
-
-> From my practical experiments with the MUSB in the A31s in host
-> mode I can report that I hadn't been able to get multiple HIDs
-> (in my case keyboard and mouse) working at the same time.  The
-> keyboard alone worked without problems, the mouse alone worked
-> without problems, but when both were connected, only one of them
-> worked.
->
-> I had at that time talked to Hans de Goede about the problem and
-> if I remenber correctly, he had mentioned that the MUSB has
-> problems servicing more than one device that does interrupt
-> transfers (as HIDs do).
->
-> Hans, can you perhaps shed some light on this?
-
-Everything you've said is correct, the MUSB can emulate a
-host-controller, but it is not really one and when possible
-should not be used as such.
-
-Regards,
-
-Hans
+diff --git a/drivers/phy/phy-mt65xx-usb3.c b/drivers/phy/phy-mt65xx-usb3.c
+index 93f57d9..0995433 100644
+--- a/drivers/phy/phy-mt65xx-usb3.c
++++ b/drivers/phy/phy-mt65xx-usb3.c
+@@ -141,6 +141,7 @@ struct mt65xx_phy_pdata {
+ struct mt65xx_phy_instance {
+ 	struct phy *phy;
+ 	void __iomem *port_base;
++	struct clk *ref_clk;	/* reference clock of anolog phy */
+ 	u32 index;
+ 	u8 type;
+ };
+@@ -148,7 +149,6 @@ struct mt65xx_phy_instance {
+ struct mt65xx_u3phy {
+ 	struct device *dev;
+ 	void __iomem *sif_base;	/* only shared sif */
+-	struct clk *u3phya_ref;	/* reference clock of usb3 anolog phy */
+ 	const struct mt65xx_phy_pdata *pdata;
+ 	struct mt65xx_phy_instance **phys;
+ 	int nphys;
+@@ -422,9 +422,9 @@ static int mt65xx_phy_init(struct phy *phy)
+ 	struct mt65xx_u3phy *u3phy = dev_get_drvdata(phy->dev.parent);
+ 	int ret;
+ 
+-	ret = clk_prepare_enable(u3phy->u3phya_ref);
++	ret = clk_prepare_enable(instance->ref_clk);
+ 	if (ret) {
+-		dev_err(u3phy->dev, "failed to enable u3phya_ref\n");
++		dev_err(u3phy->dev, "failed to enable ref_clk\n");
+ 		return ret;
+ 	}
+ 
+@@ -467,7 +467,7 @@ static int mt65xx_phy_exit(struct phy *phy)
+ 	if (instance->type == PHY_TYPE_USB2)
+ 		phy_instance_exit(u3phy, instance);
+ 
+-	clk_disable_unprepare(u3phy->u3phya_ref);
++	clk_disable_unprepare(instance->ref_clk);
+ 	return 0;
+ }
+ 
+@@ -567,12 +567,6 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+ 		return PTR_ERR(u3phy->sif_base);
+ 	}
+ 
+-	u3phy->u3phya_ref = devm_clk_get(dev, "u3phya_ref");
+-	if (IS_ERR(u3phy->u3phya_ref)) {
+-		dev_err(dev, "error to get u3phya_ref\n");
+-		return PTR_ERR(u3phy->u3phya_ref);
+-	}
+-
+ 	port = 0;
+ 	for_each_child_of_node(np, child_np) {
+ 		struct mt65xx_phy_instance *instance;
+@@ -607,6 +601,13 @@ static int mt65xx_u3phy_probe(struct platform_device *pdev)
+ 			goto put_child;
+ 		}
+ 
++		instance->ref_clk = devm_clk_get(&phy->dev, "ref_clk");
++		if (IS_ERR(instance->ref_clk)) {
++			dev_err(dev, "failed to get ref_clk(id-%d)\n", port);
++			retval = PTR_ERR(instance->ref_clk);
++			goto put_child;
++		}
++
+ 		instance->phy = phy;
+ 		instance->index = port;
+ 		phy_set_drvdata(phy, instance);
+-- 
+1.7.9.5
