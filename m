@@ -1,92 +1,63 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v3 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Fri, 20 Jan 2017 16:22:23 +0100
-Message-ID: <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 5/9] ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+Date: Fri, 20 Jan 2017 16:22:28 +0100
+Message-ID: <20170120152232.13943-6-martin.blumenstingl@googlemail.com>
 References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+ <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120152232.13943-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series adds the reset GPIOs for the (external) ethernet PHYs on all
-GXBB boards.
-Additionally it provides a ethernet PHY node which can be used to specify
-PHY-specific properties (this may be required if more boards require the
-"eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board .dts
-consistent I chose to add the PHY node also for boards which don't have a
-RTL8211F PHY.
+This resets the ethernet PHY during boot to get the PHY into a "clean"
+state.
+While here also specify the phy-handle of the ethmac node to make the
+PHY configuration similar to the one we have on GXL devices. This will
+allow us to specify OF-properties for the PHY itself.
 
-Patch #7 from this series also removes ethernet support for the P200
-board because it was broken anyways and nobody seems to have a board
-available for testing. This was the outcome of the discussion from [0]
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-Patch #8 was taken from (older versions of) my other series (see [1]):
-"[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
-RGMII TX delay".
-The binding changes for amlogic,tx-delay-ns were ACK'ed already.
-
-Changes since v2:
-- fixed patch #2 to really update the P200 board (as it's the P200 which
-  actually uses a Micrel KSZ9031 RGMII PHY). Thanks to Neil Armstrong for
-  spotting this huge mistake!
-- instead of dropping ethernet support for P201 we simply re-configure it
-  to RMII mode (replaces patch #7) without a MDIO node (which keeps PHY
-  auto-scanning enabled). This got Neil Armstrong's ACK off-list already
-
-Changes since v1:
-- do not move the MDIO bus to meson-gx as this disables PHY auto-scanning
-  in the stmmac driver (this drops patch #1 from v1)
-- add the ethernet PHY reset GPIO for nexbox a95x which was forgotten in
-  v1
-- add the ethernet PHY reset GPIO for boards which were added since v1
-  (wetek hub and wetek play2)
-- rebased to apply against the current v4.11/dt64 branch
-- new in v2 (patch #7): disabled ethernet support for the P200 board (see
-  the commit description for more information). this patch is optional
-- new in v2 (patch #9): removed the phy-mode property from meson-gx (see
-  the commit description for more information). this patch is optional
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002053.html
-[1] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001834.html
-
-Martin Blumenstingl (9):
-  ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
-  ARM64: dts: meson-gxbb-p201: fix ethernet support
-  ARM64: dts: amlogic: add the ethernet TX delay configuration
-  ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
-
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17 ++++++++++++++
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 26 ++++++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 20 +++++++++++++++++
- .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26 ++++++++++++++++++++++
- .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26 ++++++++++++++++++++++
- .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
- .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
- arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
- 12 files changed, 139 insertions(+), 7 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+index 56f855901262..47fe4e444f33 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+@@ -64,3 +64,27 @@
+ 		status = "disabled";
+ 	};
+ };
++
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-id001c.c916",
++				     "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++	};
++};
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
