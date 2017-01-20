@@ -1,79 +1,108 @@
-From: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM == DWC_USB3_NUM_IN_EPS
-Date: Fri, 20 Jan 2017 14:10:02 +0200
-Message-ID: <871svy9bl1.fsf@linux.intel.com>
-References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie> <87mvemx0so.fsf@linux.intel.com> <2B3535C5ECE8B5419E3ECBE300772909021B3FEC4C@US01WEMBX2.internal.synopsys.com> <71877fff-11b1-0a27-8170-ff42ace181cd@nexus-software.ie>
+From: Rameshwar Prasad Sahu <rsahu@apm.com>
+Subject: [PATCH v2] ata: xgene: Enable NCQ support for APM X-Gene SATA
+ controller hardware v1.1
+Date: Fri, 20 Jan 2017 17:41:58 +0530
+Message-ID: <1484914318-5406-1-git-send-email-rsahu@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <71877fff-11b1-0a27-8170-ff42ace181cd-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>, John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "gregkh@linuxfoundation.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt@kernel.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland@arm.com" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: devicetree@vger.kernel.org, mlangsdo@redhat.com, linux-scsi@vger.kernel.org, jcm@redhat.com, Rameshwar Prasad Sahu <rsahu@apm.com>, patches@apm.com, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+This patch enables NCQ support for APM X-Gene SATA controller hardware v1.1
+that was broken with hardware v1.0. Second thing, here we should not assume
+XGENE_AHCI_V2 always in case of having valid _CID in ACPI table. I need to
+remove this assumption because V1_1 also has a valid _CID for backward
+compatibly with v1.
 
+v2 changes:
+	1. Changed patch description
 
-Hi,
+Signed-off-by: Rameshwar Prasad Sahu <rsahu@apm.com>
+---
+ drivers/ata/ahci_xgene.c |   14 ++++++++------
+ 1 files changed, 8 insertions(+), 6 deletions(-)
 
-Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org> writes:
-> On 19/01/17 22:49, John Youn wrote:
->
->> So it is valid to have say, DWC_USB3_NUM_EPS=3D8 and
->> DWC_USB3_NUM_IN_EPS=3D8. Even though it is not possible to use all 8 EPs
->> as IN since you need at least one of them to be a control OUT. So you
->> could have a configuration of EP0 IN and OUT plus 6 IN EPs (total 1
->> OUT, 7 IN). Or EP0 IN and OUT plus any other combination of IN/OUT for
->> the remaining 6 EPs.
->>=20
->> With the above in mind, you can probably just redo the endpoint number
->> logic in dwc3 to handle all cases without any quirks at all.
->
-> I thought of that.
->
->> If it is disabled, it will fix the physical and logical EP number and
->> direction of the available EPs to meet timings for FPGA designs. This
->> shouldn't be used in final designs for ASICS but we don't know for
->> sure whether it has made it to any final designs or not.
->>=20
->> And unfortunately, whether this is set or not is not visible to the
->> software so it will require a quirk.
->
-> but arrived at this conclusion because I couldn't think of a reasonable
-> guess value for IN/OUT endpoint numbers that would work if
-> DWC_USB3_NUM_EPS =3D=3D DWC_USB3_NUM_IN_EPS
+diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
+index 73b19b2..8b88be9 100644
+--- a/drivers/ata/ahci_xgene.c
++++ b/drivers/ata/ahci_xgene.c
+@@ -87,6 +87,7 @@
 
-Well, we can, for now at least, take the simple approach of half IN,
-half OUT. If DWC3_USB3_NUM_EPS is odd, then OUT should take the extra
-endpoint. If anybody complains, we can fix it later ;-)
+ enum xgene_ahci_version {
+ 	XGENE_AHCI_V1 = 1,
++	XGENE_AHCI_V1_1,
+ 	XGENE_AHCI_V2,
+ };
 
-=2D-=20
-balbi
+@@ -734,6 +735,7 @@ static struct scsi_host_template ahci_platform_sht = {
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id xgene_ahci_acpi_match[] = {
+ 	{ "APMC0D0D", XGENE_AHCI_V1},
++	{ "APMC0D67", XGENE_AHCI_V1_1},
+ 	{ "APMC0D32", XGENE_AHCI_V2},
+ 	{},
+ };
+@@ -742,6 +744,7 @@ MODULE_DEVICE_TABLE(acpi, xgene_ahci_acpi_match);
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+ static const struct of_device_id xgene_ahci_of_match[] = {
+ 	{.compatible = "apm,xgene-ahci", .data = (void *) XGENE_AHCI_V1},
++	{.compatible = "apm,xgene-ahci-v1-1", .data = (void *) XGENE_AHCI_V1_1},
+ 	{.compatible = "apm,xgene-ahci-v2", .data = (void *) XGENE_AHCI_V2},
+ 	{},
+ };
+@@ -755,8 +758,7 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	const struct of_device_id *of_devid;
+ 	enum xgene_ahci_version version = XGENE_AHCI_V1;
+-	const struct ata_port_info *ppi[] = { &xgene_ahci_v1_port_info,
+-					      &xgene_ahci_v2_port_info };
++	const struct ata_port_info *ppi;
+ 	int rc;
 
------BEGIN PGP SIGNATURE-----
+ 	hpriv = ahci_platform_get_resources(pdev);
+@@ -821,8 +823,6 @@ static int xgene_ahci_probe(struct platform_device *pdev)
+ 				dev_warn(&pdev->dev, "%s: Error reading device info. Assume version1\n",
+ 					__func__);
+ 				version = XGENE_AHCI_V1;
+-			} else if (info->valid & ACPI_VALID_CID) {
+-				version = XGENE_AHCI_V2;
+ 			}
+ 		}
+ 	}
+@@ -858,18 +858,20 @@ skip_clk_phy:
 
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAliB/hoACgkQzL64meEa
-mQbo8w/9GnmSLZhaQAzT4MN7FWHa4p83igvIHiqzQH34eUTpQoO1+n2UuwQBeRcl
-028w3m8yTJPYsj8johBOB2um3GDe1/BX1iS+syFmUWVcEv7wEj52wwnhM4K0gR6I
-OlDiFJRGPi9cftLzzgKtfksjAlFiloMyneFgivuRp1dYS91L9ObwQKBhHpgtWQ+6
-YvxvG95gVcDKYO5t/uPDQbuE3H94lL2WFOGrWxTo14/9rR9tDDw0hJx7A+sVK1ta
-x8IWZ7zHGRCJNRD4d7fx4eK1r13EK0Obh1QT6YBgX0io7xCscz3ZIo6P4L8uv64P
-sMmo5DS3RskH9Yl1vPg6str+c61qY5utry4zsWtFkM/VbS5I9/SmpUN4wFMu6k2v
-gYaI2fZrpMr3IV3u6tTJ6Xorc0myk32TPbs5V6rXdXd6sJqBGHU826eGdVFaK434
-/MqviEE7BfW0gr+7ygog5v2B+uB6c1e/wE7F9031lPli1iYGj7ZoQB8+dg5n5pJX
-irHkcd9fQaRksTtRVTdPDO85qON7meDzziHoTG2ocPWqSJUaBShRS4S60l+khPrI
-fX4igUwfJeQ76CQ1nNUYApUMZV8EhoimnnwMsx+B1nl1DZaS1BxF2VZeTL5rH6Zn
-Qjh0wkKy+tRUaFH/b6cYb81lh56sqyZ1HFm0Z+DQgCPIdBC8q2I=
-=AE8m
------END PGP SIGNATURE-----
---=-=-=--
+ 	switch (version) {
+ 	case XGENE_AHCI_V1:
++		ppi = &xgene_ahci_v1_port_info;
+ 		hpriv->flags = AHCI_HFLAG_NO_NCQ;
+ 		break;
+ 	case XGENE_AHCI_V2:
++		ppi = &xgene_ahci_v2_port_info;
+ 		hpriv->flags |= AHCI_HFLAG_YES_FBS;
+ 		hpriv->irq_handler = xgene_ahci_irq_intr;
+ 		break;
+ 	default:
++		ppi = &xgene_ahci_v1_port_info;
+ 		break;
+ 	}
+
+-	rc = ahci_platform_init_host(pdev, hpriv, ppi[version - 1],
+-				     &ahci_platform_sht);
++	rc = ahci_platform_init_host(pdev, hpriv, ppi, &ahci_platform_sht);
+ 	if (rc)
+ 		goto disable_resources;
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.1
