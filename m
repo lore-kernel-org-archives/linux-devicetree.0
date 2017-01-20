@@ -1,134 +1,52 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Fri, 20 Jan 2017 10:40:40 -0800
-Message-ID: <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
- <1484929911.2897.70.camel@pengutronix.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] Documentation: dt: add bindings for ti-cpufreq
+Date: Fri, 20 Jan 2017 10:43:24 -0800
+Message-ID: <20170120184324.GJ7403@atomide.com>
+References: <20170117131808.29798-1-d-gerlach@ti.com>
+ <20170117131808.29798-3-d-gerlach@ti.com>
+ <20170119180702.62xg2ta5pq4mf7sd@rob-hp-laptop>
+ <b7d11925-879a-9be0-fdd8-45b70e642ce1@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484929911.2897.70.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <b7d11925-879a-9be0-fdd8-45b70e642ce1-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans, Philipp,
+* Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org> [170119 10:32]:
+> On 01/19/2017 12:07 PM, Rob Herring wrote:
+> > > +	/*
+> > > +	 * The three following nodes are marked with opp-suspend
+> > > +	 * because they can not be enabled simultaneously on a
+> > > +	 * single SoC.
+> > > +	 */
+> > > +	opp50@300000000 {
+> > 
+> > What's the 50, 100, 120 in the names?
+> 
+> Those are the names of the OPPs given in Table 5-7 of the AM335x data
+> manual, seen here http://www.ti.com/lit/ds/symlink/am3359.pdf . I typically
+> reference the table and document in the commit message of the actual DT
+> patches but didn't here for the binding.
 
+If you don't need the names, you could maybe use:
 
-On 01/20/2017 08:31 AM, Philipp Zabel wrote:
-> Hi Hans,
->
-> On Fri, 2017-01-20 at 14:52 +0100, Hans Verkuil wrote:
->> Hi Steve, Philipp,
->>
->> On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
->>> In version 3:
->>>
->>> Changes suggested by Rob Herring <robh@kernel.org>:
->>>
->>>    - prepended FIM node properties with vendor prefix "fsl,".
->>>
->>>    - make mipi csi-2 receiver compatible string SoC specific:
->>>      "fsl,imx6-mipi-csi2" instead of "fsl,imx-mipi-csi2".
->>>
->>>    - redundant "_clk" removed from mipi csi-2 receiver clock-names property.
->>>
->>>    - removed board-specific info from the media driver binding doc. These
->>>      were all related to sensor bindings, which already are (adv7180)
->>>      or will be (ov564x) covered in separate binding docs. All reference
->>>      board info not related to DT bindings has been moved to
->>>      Documentation/media/v4l-drivers/imx.rst.
->>>
->>>    - removed "_mipi" from the OV5640 compatible string.
->>>
->>> Changes suggested by Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>:
->>>
->>>    Mostly cosmetic/non-functional changes which I won't list here, except
->>>    for the following:
->>>
->>>    - spin_lock_irqsave() changed to spin_lock() in a couple interrupt handlers.
->>>
->>>    - fixed some unnecessary of_node_put()'s in for_each_child_of_node() loops.
->>>
->>>    - check/handle return code from required reg property of CSI port nodes.
->>>
->>>    - check/handle return code from clk_prepare_enable().
->>>
->>> Changes suggested by Fabio Estevam <festevam@gmail.com>:
->>>
->>>    - switch to VGEN3 Analog Vdd supply assuming rev. C SabreSD boards.
->>>
->>>    - finally got around to passing valid IOMUX pin config values to the
->>>      pin groups.
->>>
->>> Other changes:
->>>
->>>    - removed the FIM properties that overrided the v4l2 FIM control defaults
->>>      values. This was left-over from a requirement of a customer and is not
->>>      necessary here.
->>>
->>>    - The FIM must be explicitly enabled in the fim child node under the CSI
->>>      port nodes, using the status property. If not enabled, FIM v4l2 controls
->>>      will not appear in the video capture driver.
->>>
->>>    - brought in additional media types patch from Philipp Zabel. Use new
->>>      MEDIA_ENT_F_VID_IF_BRIDGE in mipi csi-2 receiver subdev.
->>>
->>>    - brought in latest platform generic video multiplexer subdevice driver
->>>      from Philipp Zabel (squashed with patch that uses new MEDIA_ENT_F_MUX).
->>>
->>>    - removed imx-media-of.h, moved those prototypes into imx-media.h.
->> Based on the discussion on the mailinglist it seems everyone agrees that this
->> is the preferred driver, correct?
-> No. I have some major reservations against the custom mem2mem framework
-> embedded in Steve's driver.
-> I think it is a misuse of the media entity links (which should describe
-> hardware connections) for something that should be done at the vb2 level
-> (letting one device's capture EOF interrupt trigger the next device's
-> m2m device_run without going through userspace).
-> Steve and I disagree on that point, so we'd appreciate if we could get
-> some more eyes on the above issue.
+opp100: opp@275000000 {
+	...
+};
 
-This needs some background first, so let me first describe one example
-pipeline in this driver.
+opp200: opp@300000000 {
+	...
+};
+...
 
-There is a VDIC entity in the i.MX IPU that performs de-interlacing with
-hardware filters for motion compensation. Some of the motion compensation
-modes ("low" and "medium" motion) require that the VDIC receive video
-frame fields from memory buffers (dedicated dma channels in the
-IPU are used to transfer those buffers into the VDIC).
+Regards,
 
-So one option to support those modes would be to pass the raw buffers
-from a camera sensor up to userspace to a capture device, and then pass
-them back to the VDIC for de-interlacing using a mem2mem device.
-
-Philipp and I are both in agreement that, since userland is not interested
-in the intermediate interlaced buffers in this case, but only the final
-result (motion compensated, de-interlaced frames), it is more efficient
-to provide a media link that allows passing those intermediate frames
-directly from a camera source pad to VDIC sink pad, without having
-to route them through userspace.
-
-So in order to support that, I've implemented a simple FIFO dma buffer
-queue in the driver to allow passing video buffers directly from a source
-to a sink. It is modeled loosely off the vb2 state machine and API, but
-simpler (for instance it only allows contiguous, cache-coherent buffers).
-
-This is where Philipp has an argument, that this should be done with a
-new API in videobuf2.
-
-And I'm actually in total agreement with that. I definitely agree that there
-should be a mechanism in the media framework that allows passing video
-buffers from a source pad to a sink pad using a software queue, with no
-involvement from userland.
-
-My only disagreement is when this should be implemented. I think it is
-fine to keep my custom implementation of this in the driver for now. Once
-an extension of vb2 is ready to support this feature, it would be fairly
-straightforward to strip out my custom implementation and go with the
-new API.
-
-Steve
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
