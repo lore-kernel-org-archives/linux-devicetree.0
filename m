@@ -1,79 +1,40 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 18/18] ARM64: dts: meson-gx-p23x-q20x: Reorder nodes
-Date: Fri, 20 Jan 2017 23:21:18 +0100
-Message-ID: <20170120222118.21476-19-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 03/18] ARM64: dts: meson-gxbb-vega-s95: Fix Wifi node name
+Date: Fri, 20 Jan 2017 23:21:03 +0100
+Message-ID: <20170120222118.21476-4-afaerber@suse.de>
 References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120222118.21476-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170120222118.21476-1-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sort nodes referenced by label alphabetically.
-
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 24 +++++++++++-----------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-index 419c46cc64e4..cfc26a2a3a90 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-@@ -100,11 +100,8 @@
- 	};
- };
- 
--/* This UART is brought out to the DB9 connector */
--&uart_AO {
-+&ethmac {
- 	status = "okay";
--	pinctrl-0 = <&uart_ao_a_pins>;
--	pinctrl-names = "default";
- };
- 
- &ir {
-@@ -113,6 +110,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
-+};
-+
- /* Wireless SDIO Module */
- &sd_emmc_a {
- 	status = "okay";
-@@ -177,14 +182,9 @@
- 	vqmmc-supply = <&vddio_boot>;
- };
- 
--&pwm_ef {
-+/* This UART is brought out to the DB9 connector */
-+&uart_AO {
- 	status = "okay";
--	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-0 = <&uart_ao_a_pins>;
- 	pinctrl-names = "default";
--	clocks = <&clkc CLKID_FCLK_DIV4>;
--	clock-names = "clkin0";
--};
--
--&ethmac {
--	status = "okay";
- };
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+YmNybWYgLT4gYnJjbWYKCkZpeGVzOiBhYjViMjRmZGQyZDUgKCJBUk02NDogZHRzOiBtZXNvbi1n
+eGJiLXZlZ2Etczk1OiBBZGQgU0QvU0RJTy9NTUMgYW5kIFBXTSBub2RlcyIpCkNjOiBNYXJ0aW4g
+Qmx1bWVuc3RpbmdsIDxtYXJ0aW4uYmx1bWVuc3RpbmdsQGdvb2dsZW1haWwuY29tPgpTaWduZWQt
+b2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogYXJjaC9hcm02
+NC9ib290L2R0cy9hbWxvZ2ljL21lc29uLWd4YmItdmVnYS1zOTUuZHRzaSB8IDIgKy0KIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2Fy
+Y2gvYXJtNjQvYm9vdC9kdHMvYW1sb2dpYy9tZXNvbi1neGJiLXZlZ2Etczk1LmR0c2kgYi9hcmNo
+L2FybTY0L2Jvb3QvZHRzL2FtbG9naWMvbWVzb24tZ3hiYi12ZWdhLXM5NS5kdHNpCmluZGV4IDg2
+NzA5OTI5ZmQyMC4uZTY4OGU4OTcxYTk1IDEwMDY0NAotLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRz
+L2FtbG9naWMvbWVzb24tZ3hiYi12ZWdhLXM5NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9k
+dHMvYW1sb2dpYy9tZXNvbi1neGJiLXZlZ2Etczk1LmR0c2kKQEAgLTE2Nyw3ICsxNjcsNyBAQAog
+CXZtbWMtc3VwcGx5ID0gPCZ2Y2NfM3YzPjsKIAl2cW1tYy1zdXBwbHkgPSA8JnZjY18xdjg+Owog
+Ci0JYnJjbWY6IGJjcm1mQDEgeworCWJyY21mOiBicmNtZkAxIHsKIAkJcmVnID0gPDE+OwogCQlj
+b21wYXRpYmxlID0gImJyY20sYmNtNDMyOS1mbWFjIjsKIAl9OwotLSAKMi4xMC4yCgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
