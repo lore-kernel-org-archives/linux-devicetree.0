@@ -1,81 +1,52 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v9 5/8] IIO: add bindings for STM32 timer trigger driver
-Date: Fri, 20 Jan 2017 10:15:06 +0100
-Message-ID: <1484903709-11650-6-git-send-email-benjamin.gaignard@st.com>
-References: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com>
+From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
+ DWC_USB3_NUM_IN_EPS
+Date: Fri, 20 Jan 2017 09:57:31 +0000
+Message-ID: <71877fff-11b1-0a27-8170-ff42ace181cd@nexus-software.ie>
+References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
+ <87mvemx0so.fsf@linux.intel.com>
+ <2B3535C5ECE8B5419E3ECBE300772909021B3FEC4C@US01WEMBX2.internal.synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linaro-kernel@lists.linaro.org, Benjamin Gaignard <benjamin.gaignard@st.com>, arnaud.pouliquen@st.com, benjamin.gaignard@linaro.org, gerald.baeza@st.com, fabrice.gasnier@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2B3535C5ECE8B5419E3ECBE300772909021B3FEC4C-Yu2iAY70zvrYN67daEjeMPufCSb+aD3WLzEdoUbNIic@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define bindings for STM32 timer trigger
+On 19/01/17 22:49, John Youn wrote:
 
-version 8:
-- reword "reg" parameter description
+> So it is valid to have say, DWC_USB3_NUM_EPS=8 and
+> DWC_USB3_NUM_IN_EPS=8. Even though it is not possible to use all 8 EPs
+> as IN since you need at least one of them to be a control OUT. So you
+> could have a configuration of EP0 IN and OUT plus 6 IN EPs (total 1
+> OUT, 7 IN). Or EP0 IN and OUT plus any other combination of IN/OUT for
+> the remaining 6 EPs.
+> 
+> With the above in mind, you can probably just redo the endpoint number
+> logic in dwc3 to handle all cases without any quirks at all.
 
-version 4:
-- remove triggers enumeration from DT
-- add reg parameter
+I thought of that.
 
-version 3:
-- change file name
-- add cross reference with mfd bindings
+> If it is disabled, it will fix the physical and logical EP number and
+> direction of the available EPs to meet timings for FPGA designs. This
+> shouldn't be used in final designs for ASICS but we don't know for
+> sure whether it has made it to any final designs or not.
+> 
+> And unfortunately, whether this is set or not is not visible to the
+> software so it will require a quirk.
 
-version 2:
-- only keep one compatible
-- add DT parameters to set lists of the triggers:
-  one list describe the triggers created by the device
-  another one give the triggers accepted by the device
+but arrived at this conclusion because I couldn't think of a reasonable
+guess value for IN/OUT endpoint numbers that would work if
+DWC_USB3_NUM_EPS == DWC_USB3_NUM_IN_EPS
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Acked-by: Jonathan Cameron <jic23@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+
+thanks
+
 ---
- .../bindings/iio/timer/stm32-timer-trigger.txt     | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-new file mode 100644
-index 0000000..55a653d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-@@ -0,0 +1,23 @@
-+STMicroelectronics STM32 Timers IIO timer bindings
-+
-+Must be a sub-node of an STM32 Timers device tree node.
-+See ../mfd/stm32-timers.txt for details about the parent node.
-+
-+Required parameters:
-+- compatible:	Must be "st,stm32-timer-trigger".
-+- reg:		Identify trigger hardware block.
-+
-+Example:
-+	timers@40010000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "st,stm32-timers";
-+		reg = <0x40010000 0x400>;
-+		clocks = <&rcc 0 160>;
-+		clock-names = "clk_int";
-+
-+		timer@0 {
-+			compatible = "st,stm32-timer-trigger";
-+			reg = <0>;
-+		};
-+	};
--- 
-1.9.1
+bod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
