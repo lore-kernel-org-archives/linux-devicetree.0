@@ -1,84 +1,61 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v3 12/24] add mux and video interface bridge entity
- functions
-Date: Fri, 20 Jan 2017 14:56:35 +0100
-Message-ID: <f8279cab-b37e-b157-22e6-9abe316da882@xs4all.nl>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-13-git-send-email-steve_longerbeam@mentor.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v5 00/14] ARM: da850-lcdk: add SATA support
+Date: Fri, 20 Jan 2017 19:26:41 +0530
+Message-ID: <86bcbb3c-87e4-3508-f4a6-26529f39d374@ti.com>
+References: <1484911325-23425-1-git-send-email-bgolaszewski@baylibre.com>
+ <20170120132843.GA31487@mtj.duckdns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1483755102-24785-13-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170120132843.GA31487@mtj.duckdns.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tejun Heo <tj@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
-> From: Philipp Zabel <p.zabel@pengutronix.de>
+Hi Tejun,
+
+On Friday 20 January 2017 06:58 PM, Tejun Heo wrote:
+> On Fri, Jan 20, 2017 at 12:21:51PM +0100, Bartosz Golaszewski wrote:
+>> This series contains all the changes necessary to make SATA work on
+>> the da850-lcdk board.
+>>
+>> The first patch adds DT bindings for the ahci-da850 driver.
+>>
+>> The second enables relevant modules in davinci_all_defconfig.
+>>
+>> Patches 03/14-06/14 modify the way the clocks are handled regarding
+>> SATA on the da850 platform. We modify the ahci driver to retrieve
+>> the clock via con_id and model the external SATA oscillator as
+>> a real clock.
+>>
+>> Patches 07/14-11/14 extend the ahci-da850 driver. Add DT support,
+>> implement workarounds necessary to make SATA work on the da850-lcdk
+>> board and un-hardcode the external clock multiplier.
 > 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  Documentation/media/uapi/mediactl/media-types.rst | 22 ++++++++++++++++++++++
->  include/uapi/linux/media.h                        |  6 ++++++
->  2 files changed, 28 insertions(+)
+> Please feel free to add
 > 
-> diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Documentation/media/uapi/mediactl/media-types.rst
-> index 3e03dc2..023be29 100644
-> --- a/Documentation/media/uapi/mediactl/media-types.rst
-> +++ b/Documentation/media/uapi/mediactl/media-types.rst
-> @@ -298,6 +298,28 @@ Types and flags used to represent the media graph elements
->  	  received on its sink pad and outputs the statistics data on
->  	  its source pad.
->  
-> +    -  ..  row 29
-> +
-> +       ..  _MEDIA-ENT-F-MUX:
-> +
-> +       -  ``MEDIA_ENT_F_MUX``
-
-I would prefer MEDIA_ENT_F_VID_MUX since this is video specific.
-
-Regards,
-
-	Hans
-
-> +
-> +       - Video multiplexer. An entity capable of multiplexing must have at
-> +         least two sink pads and one source pad, and must pass the video
-> +         frame(s) received from the active sink pad to the source pad. Video
-> +         frame(s) from the inactive sink pads are discarded.
-> +
-> +    -  ..  row 30
-> +
-> +       ..  _MEDIA-ENT-F-VID-IF-BRIDGE:
-> +
-> +       -  ``MEDIA_ENT_F_VID_IF_BRIDGE``
-> +
-> +       - Video interface bridge. A video interface bridge entity must have at
-> +         least one sink pad and one source pad. It receives video frame(s) on
-> +         its sink pad in one bus format (HDMI, eDP, MIPI CSI-2, ...) and
-> +         converts them and outputs them on its source pad in another bus format
-> +         (eDP, MIPI CSI-2, parallel, ...).
->  
->  ..  tabularcolumns:: |p{5.5cm}|p{12.0cm}|
->  
-> diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
-> index 4890787..08a8bfa 100644
-> --- a/include/uapi/linux/media.h
-> +++ b/include/uapi/linux/media.h
-> @@ -105,6 +105,12 @@ struct media_device_info {
->  #define MEDIA_ENT_F_PROC_VIDEO_STATISTICS	(MEDIA_ENT_F_BASE + 0x4006)
->  
->  /*
-> + * Switch and bridge entitites
-> + */
-> +#define MEDIA_ENT_F_MUX				(MEDIA_ENT_F_BASE + 0x5001)
-> +#define MEDIA_ENT_F_VID_IF_BRIDGE		(MEDIA_ENT_F_BASE + 0x5002)
-> +
-> +/*
->   * Connectors
->   */
->  /* It is a responsibility of the entity drivers to add connectors and links */
+>  Acked-by: Tejun Heo <tj@kernel.org>
 > 
+> to the all libata patches.  Please let me know how the patches should
+> be routed once other parts are settled.
+
+I believe you can queue the libata patches independently (patches 1, 4,
+7, 8, 9, 10, 11). It looks like they have been written such that driver
+continues to work with existing platform code (Bartosz, please disagree
+if I am wrong). 1/14 still needs the ack from DT maintainers.
+
+I would like to queue the platform parts (rest of the patches) through
+ARM-SoC since they will likely clash with code I have queued.
+
+Thanks,
+Sekhar
