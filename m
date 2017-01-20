@@ -1,79 +1,46 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v3 5/5] drm/rockchip/dsi: add dw-mipi power domain support
-Date: Fri, 20 Jan 2017 18:10:51 +0800
-Message-ID: <1484907051-7159-6-git-send-email-zyw@rock-chips.com>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: exynos: Add CLK_ACLK432_SCALER clock to
+ gsc_pd for Exynos5800
+Date: Fri, 20 Jan 2017 07:11:04 -0300
+Message-ID: <1a244e36-a965-3efb-4413-b40e8c549cf9@osg.samsung.com>
+References: <1484864995-10679-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484864995-10679-1-git-send-email-javier@osg.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shuah Khan <shuahkh@osg.samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Russell King <linux@armlinux.org.uk>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-UmVmZXJlbmNlIHRoZSBwb3dlciBkb21haW4gaW5jYXNlIGR3LW1pcGkgcG93ZXIgZG93biB3aGVu
-CmluIHVzZS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+
-Ci0tLQoKQ2hhbmdlcyBpbiB2MzogTm9uZQoKIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jIHwgMTYgKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2Vy
-dGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1k
-c2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCmluZGV4IDZmMGUy
-NTIuLjE0NjIxMDFlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlw
-aS1kc2kuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwpAQCAt
-MTIsNiArMTIsNyBAQAogI2luY2x1ZGUgPGxpbnV4L21hdGg2NC5oPgogI2luY2x1ZGUgPGxpbnV4
-L21vZHVsZS5oPgogI2luY2x1ZGUgPGxpbnV4L29mX2RldmljZS5oPgorI2luY2x1ZGUgPGxpbnV4
-L3BtX3J1bnRpbWUuaD4KICNpbmNsdWRlIDxsaW51eC9yZWdtYXAuaD4KICNpbmNsdWRlIDxsaW51
-eC9yZXNldC5oPgogI2luY2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KQEAgLTI5Myw2ICsyOTQs
-NyBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2kgewogCXN0cnVjdCBjbGsgKnBjbGs7CiAJc3RydWN0IGNs
-ayAqcGh5X2NmZ19jbGs7CiAKKwlpbnQgZHBtc19tb2RlOwogCXVuc2lnbmVkIGludCBsYW5lX21i
-cHM7IC8qIHBlciBsYW5lICovCiAJdTMyIGNoYW5uZWw7CiAJdTMyIGxhbmVzOwpAQCAtOTY5LDYg
-Kzk3MSw5IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZGlzYWJsZShzdHJ1Y3Qg
-ZHJtX2VuY29kZXIgKmVuY29kZXIpCiB7CiAJc3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBlbmNv
-ZGVyX3RvX2RzaShlbmNvZGVyKTsKIAorCWlmIChkc2ktPmRwbXNfbW9kZSAhPSBEUk1fTU9ERV9E
-UE1TX09OKQorCQlyZXR1cm47CisKIAlpZiAoY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGNsaykp
-IHsKIAkJZGV2X2Vycihkc2ktPmRldiwgIiVzOiBGYWlsZWQgdG8gZW5hYmxlIHBjbGtcbiIsIF9f
-ZnVuY19fKTsKIAkJcmV0dXJuOwpAQCAtOTgwLDcgKzk4NSw5IEBAIHN0YXRpYyB2b2lkIGR3X21p
-cGlfZHNpX2VuY29kZXJfZGlzYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCiAJZHJt
-X3BhbmVsX3VucHJlcGFyZShkc2ktPnBhbmVsKTsKIAogCWR3X21pcGlfZHNpX2Rpc2FibGUoZHNp
-KTsKKwlwbV9ydW50aW1lX3B1dChkc2ktPmRldik7CiAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRz
-aS0+cGNsayk7CisJZHNpLT5kcG1zX21vZGUgPSBEUk1fTU9ERV9EUE1TX09GRjsKIH0KIAogc3Rh
-dGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVyICpl
-bmNvZGVyKQpAQCAtOTkwLDExICs5OTcsMTUgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5j
-b2Rlcl9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQogCWludCBtdXggPSBkcm1f
-b2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnRfaWQoZHNpLT5kZXYtPm9mX25vZGUsIGVuY29kZXIp
-OwogCXUzMiB2YWw7CiAKKwlpZiAoZHNpLT5kcG1zX21vZGUgPT0gRFJNX01PREVfRFBNU19PTikK
-KwkJcmV0dXJuOworCiAJaWYgKGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBjbGspKSB7CiAJCWRl
-dl9lcnIoZHNpLT5kZXYsICIlczogRmFpbGVkIHRvIGVuYWJsZSBwY2xrXG4iLCBfX2Z1bmNfXyk7
-CiAJCXJldHVybjsKIAl9CiAKKwlwbV9ydW50aW1lX2dldF9zeW5jKGRzaS0+ZGV2KTsKIAlkd19t
-aXBpX2RzaV9pbml0KGRzaSk7CiAJZHdfbWlwaV9kc2lfZHBpX2NvbmZpZyhkc2kpOwogCWR3X21p
-cGlfZHNpX3BhY2tldF9oYW5kbGVyX2NvbmZpZyhkc2kpOwpAQCAtMTAzMCw2ICsxMDQxLDcgQEAg
-c3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVy
-ICplbmNvZGVyKQogCiAJcmVnbWFwX3dyaXRlKGRzaS0+Z3JmX3JlZ21hcCwgcGRhdGEtPmdyZl9z
-d2l0Y2hfcmVnLCB2YWwpOwogCWRldl9kYmcoZHNpLT5kZXYsICJ2b3AgJXMgb3V0cHV0IHRvIGRz
-aTBcbiIsIChtdXgpID8gIkxJVCIgOiAiQklHIik7CisJZHNpLT5kcG1zX21vZGUgPSBEUk1fTU9E
-RV9EUE1TX09OOwogfQogCiBzdGF0aWMgaW50CkBAIC0xMTk4LDYgKzEyMTAsNyBAQCBzdGF0aWMg
-aW50IGR3X21pcGlfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICpt
-YXN0ZXIsCiAKIAlkc2ktPmRldiA9IGRldjsKIAlkc2ktPnBkYXRhID0gcGRhdGE7CisJZHNpLT5k
-cG1zX21vZGUgPSBEUk1fTU9ERV9EUE1TX09GRjsKIAogCXJldCA9IHJvY2tjaGlwX21pcGlfcGFy
-c2VfZHQoZHNpKTsKIAlpZiAocmV0KQpAQCAtMTI3MSw2ICsxMjg0LDggQEAgc3RhdGljIGludCBk
-d19taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVy
-LAogCiAJZGV2X3NldF9kcnZkYXRhKGRldiwgZHNpKTsKIAorCXBtX3J1bnRpbWVfZW5hYmxlKGRl
-dik7CisKIAlkc2ktPmRzaV9ob3N0Lm9wcyA9ICZkd19taXBpX2RzaV9ob3N0X29wczsKIAlkc2kt
-PmRzaV9ob3N0LmRldiA9IGRldjsKIAlyZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lzdGVyKCZkc2kt
-PmRzaV9ob3N0KTsKQEAgLTEyOTMsNiArMTMwOCw3IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNp
-X3VuYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAlzdHJ1
-Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOwogCiAJbWlwaV9kc2lf
-aG9zdF91bnJlZ2lzdGVyKCZkc2ktPmRzaV9ob3N0KTsKKwlwbV9ydW50aW1lX2Rpc2FibGUoZGV2
-KTsKIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxyZWZfY2xrKTsKIH0KIAotLSAKMi42
-LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello,
+
+On 01/19/2017 07:29 PM, Javier Martinez Canillas wrote:
+> On Exynos5800 SoC the SCALER block uses 2 input clocks: CLK_ACLK_300_GSCL
+> and CLK_ACLK432_SCALER, so both needs to be ungated in order to access it.
+> 
+> The SoC manual say the CLK_ACLK432_SCALER is needed to access the internal
+> buses, so add this clock as another asynchronous bridges (ASB) clock.
+> 
+> The Exynos5420 only has the CLK_ACLK_300_GSCL clock defined. So just using
+> this definition from exynos5420.dtsi in Exynos5800 leads to the following:
+> 
+
+Please ignore this patch as suggested by Marek. Instead I'll post a patch
+to mark the clock as CLK_IS_CRITICAL, as a temporary workaround until a
+proper runtime PM based solution gets merged.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
