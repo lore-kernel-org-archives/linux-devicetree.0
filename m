@@ -1,43 +1,83 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2 9/9] ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
-Date: Fri, 20 Jan 2017 14:26:50 +0100
-Message-ID: <20170120132650.9784-10-martin.blumenstingl@googlemail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v2 0/9] meson-gx: reset RGMII PHYs and configure TX delay
+Date: Fri, 20 Jan 2017 14:26:41 +0100
+Message-ID: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
 References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
- <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120132650.9784-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-The ethmac node has to be configured for each board due to different
-pinctrl nodes for RGMII/RMII. Thus the phy-mode should be specified at
-the same place (= in the board .dts), making it easier to read the board
-.dts file (because the phy-mode is stated explicitly, without requiring
-developers to read all "parent" .dtsi as well).
+This series adds the reset GPIOs for the (external) ethernet PHYs on all
+GXBB boards.
+Additionally it provides a ethernet PHY node which can be used to specify
+PHY-specific properties (this may be required if more boards require the
+"eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board .dts
+consistent I chose to add the PHY node also for boards which don't have a
+RTL8211F PHY.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 1 -
- 1 file changed, 1 deletion(-)
+Patch #7 from this series also removes ethernet support for the P200
+board because it was broken anyways and nobody seems to have a board
+available for testing. This was the outcome of the discussion from [0]
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index c1291007b37c..85bce028c76e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -395,7 +395,6 @@
- 			       0x0 0xc8834540 0x0 0x4>;
- 			interrupts = <0 8 1>;
- 			interrupt-names = "macirq";
--			phy-mode = "rgmii";
- 			status = "disabled";
- 		};
- 
+Patch #8 was taken from (older versions of) my other series (see [1]):
+"[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
+RGMII TX delay".
+The binding changes for amlogic,tx-delay-ns were ACK'ed already.
+
+Changes since v1:
+- do not move the MDIO bus to meson-gx as this disables PHY auto-scanning
+  in the stmmac driver (this drops patch #1 from v1)
+- add the ethernet PHY reset GPIO for nexbox a95x which was forgotten in
+  v1
+- add the ethernet PHY reset GPIO for boards which were added since v1
+  (wetek hub and wetek play2)
+- rebased to apply against the current v4.11/dt64 branch
+- new in v2 (patch #7): disabled ethernet support for the P200 board (see
+  the commit description for more information). this patch is optional
+- new in v2 (patch #9): removed the phy-mode property from meson-gx (see
+  the commit description for more information). this patch is optional
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002053.html
+[1] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001834.html
+
+Martin Blumenstingl (9):
+  ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-p201: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
+  ARM64: dts: meson-gxbb-p20x: remove the ethernet node
+  ARM64: dts: amlogic: add the ethernet TX delay configuration
+  ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
+
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
+ .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17 ++++++++++++++
+ .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 26 ++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
+ .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 20 +++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26 ++++++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26 ++++++++++++++++++++++
+ .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
+ arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
+ 11 files changed, 128 insertions(+), 7 deletions(-)
+
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
