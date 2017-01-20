@@ -1,40 +1,51 @@
 From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH v3 6/7] NFC: trf7970a: Enable pins are active high not active low
-Date: Fri, 20 Jan 2017 12:17:44 -0700
-Message-ID: <20170120191745.29255-7-mgreer@animalcreek.com>
-References: <20170120191745.29255-1-mgreer@animalcreek.com>
+Subject: [PATCH v3 0/7] NFC: trf7970a: Fixups & convert to desc-based GPIO
+Date: Fri, 20 Jan 2017 12:17:38 -0700
+Message-ID: <20170120191745.29255-1-mgreer@animalcreek.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120191745.29255-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>
 Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The example DTS code for the trf7970a sets the GPIOs for the EN
-and EN2 pins to active low when they are really active high so
-correct the error.
+These trf7970a driver patches do the following things:
+ - a couple minor fixups
+ - allow EN2 to not be managed by the driver (e.g., when its tied low by
+   hardware
+ - convert the driver to use the descriptor-based GPIO interface
+ - remove support for 'vin-voltage-override' DT property
+ - change the DTS example to indicate that EN and EN2 are active high GPIOs
+ - add Mark Greer as the maintainer of the trf7970a driver
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- Documentation/devicetree/bindings/net/nfc/trf7970a.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Based on k.o. 44b4b46 (Merge tag 'armsoc-fixes' of
+git://git.kernel.org/pub/scm/linux/kernel/git/arm/arm-soc)
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 07008d334536..28e9247d8a97 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -34,8 +34,8 @@ Example (for ARM-based BeagleBone with TRF7970A on SPI1):
- 		spi-max-frequency = <2000000>;
- 		interrupt-parent = <&gpio2>;
- 		interrupts = <14 0>;
--		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,
--				  <&gpio2 5 GPIO_ACTIVE_LOW>;
-+		ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>,
-+				  <&gpio2 5 GPIO_ACTIVE_HIGH>;
- 		vin-supply = <&ldo3_reg>;
- 		autosuspend-delay = <30000>;
- 		irq-status-read-quirk;
+v2->v3:
+ - Removed "[PATCH v2 5/7] NFC: trf7970a: Clean up coding style issues"
+   because it will make merging patches from Geoff Lansberry and others
+   hard to apply.  I will resubmit once those patches have been merged
+   or rejected.
+ - Added a patch to remove 'vin-voltage-override' DT property support as
+   proper DT regulator set up makes it unnecessary.
+
+v1->v2:
+ - Commit description fixups only; no functional changes.
+
+Mark Greer (7):
+  NFC: trf7970a: Don't de-assert EN2 unless it was asserted
+  NFC: trf7970a: Don't manage EN2 when not specified in DT
+  NFC: trf7970a: Convert to descriptor based GPIO interface
+  NFC: trf7970a: Remove useless comment
+  NFC: trf7970a: Remove support for 'vin-voltage-override' DT property
+  NFC: trf7970a: Enable pins are active high not active low
+  MAINTAINERS: NFC: trf7970a: Add Mark Greer as maintainer
+
+ .../devicetree/bindings/net/nfc/trf7970a.txt       |  6 +-
+ MAINTAINERS                                        |  7 ++
+ drivers/nfc/Kconfig                                |  2 +-
+ drivers/nfc/trf7970a.c                             | 75 +++++++++-------------
+ 4 files changed, 40 insertions(+), 50 deletions(-)
+
 -- 
 2.11.0
 
