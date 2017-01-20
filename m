@@ -1,118 +1,239 @@
-Return-Path: <SRS0=Jz1C=Y7=linaro.org=baoyou.xie@kernel.org>
+Return-Path: <SRS0=RtcA=ZC=gmail.com=eddie.cai.linux@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1484577528.8415.147.camel@pengutronix.de>
-References: <1484564194-18530-1-git-send-email-baoyou.xie@linaro.org>
- <1484564194-18530-2-git-send-email-baoyou.xie@linaro.org> <1484577528.8415.147.camel@pengutronix.de>
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Date: Tue, 17 Jan 2017 08:49:15 +0800
-Message-ID: <CA+DQWkzVUPcUgDV1NLVb7zD-Vmj5kttaLuib3m=JfxRV6MC5=A@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] MAINTAINERS: add zx2967 reset controller driver to
- ARM ZTE architecture
-Content-Type: multipart/alternative; boundary=001a11445d946a403e05463fabf4
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Jun Nie <jun.nie@linaro.org>, Rob Herring <robh+dt@kernel.org>, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <40159140.kOHBSj8v8b@phil>
+References: <1484791919-4665-1-git-send-email-eddie.cai@rock-chips.com>
+ <1484791919-4665-3-git-send-email-eddie.cai@rock-chips.com> <40159140.kOHBSj8v8b@phil>
+From: Eddie Cai <eddie.cai.linux@gmail.com>
+Date: Fri, 20 Jan 2017 14:42:53 +0800
+Message-ID: <CAJrj+DP8vYd=+OrPVwpWqzG935EC5Utty+4vFVKEDe92vxZ4Gw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker board
+Content-Type: multipart/alternative; boundary=001a114ac30e995c1a054680f599
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, Eddie Cai <eddie.cai@rock-chips.com>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11445d946a403e05463fabf4
+--001a114ac30e995c1a054680f599
 Content-Type: text/plain; charset=UTF-8
 
-On 16 January 2017 at 22:38, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+2017-01-19 17:58 GMT+08:00 Heiko Stuebner <heiko@sntech.de>:
 
-> On Mon, 2017-01-16 at 18:56 +0800, Baoyou Xie wrote:
-> > Add the zx2967 reset controller driver as maintained by ARM ZTE
-> > architecture maintainers, as they're parts of the core IP.
+> Hi Eddie,
+>
+> Am Donnerstag, 19. Januar 2017, 10:11:59 CET schrieb Eddie Cai:
+> > This patch add basic support for RK3288-Tinker board. We can boot in to
+> > rootfs with this patch.
 > >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> > ---
-> >  MAINTAINERS | 2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 2793808..08f8155 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1980,10 +1980,12 @@ L:    linux-arm-kernel@lists.infradead.org
-> (moderated for non-subscribers)
-> >  S:   Maintained
-> >  F:   arch/arm/mach-zx/
-> >  F:   drivers/clk/zte/
-> > +F:   drivers/reset/reset-zx2967.c
-> >  F:   drivers/soc/zte/
-> >  F:   drivers/thermal/zx*
-> >  F:   Documentation/devicetree/bindings/arm/zte.txt
-> >  F:   Documentation/devicetree/bindings/clock/zx296702-clk.txt
-> > +F:   Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
-> >  F:   Documentation/devicetree/bindings/soc/zte/
-> >  F:   Documentation/devicetree/bindings/thermal/zx*
-> >  F:   include/dt-bindings/soc/zx*.h
+> > Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
 >
-> This patch doesn't apply on top of reset/next. I can rebase it, but it
-> will cause a trivial merge conflict with the soc/thermal additions.
+> looks good in general, just some small question down below.
 >
-> I will send v3 patch, it base on linux/next branch and conflict without
-the soc/thermal additions
+> [...]
+>
+> > +     /*
+> > +      * NOTE: vcc_sd isn't hooked up on v1.0 boards where power comes
+> from
+> > +      * vcc_io directly.  Those boards won't be able to power cycle SD
+> cards
+> > +      * but it shouldn't hurt to toggle this pin there anyway.
+> > +      */
+>
+> just to clarify, later board will have that pin connected, right?
+>
+Copy from rk3288-evb.dtsi. forgot to delete it. I will remove it next
+version
 
+>
+> > +     vcc_sd: sdmmc-regulator {
+> > +             compatible = "regulator-fixed";
+> > +             gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&sdmmc_pwr>;
+> > +             regulator-name = "vcc_sd";
+> > +             regulator-min-microvolt = <3300000>;
+> > +             regulator-max-microvolt = <3300000>;
+> > +             startup-delay-us = <100000>;
+> > +             vin-supply = <&vcc_io>;
+> > +     };
+> > +};
+>
+> [...]
+>
+> > +&hdmi {
+> > +     #address-cells = <1>;
+> > +     #size-cells = <0>;
+> > +     #sound-dai-cells = <0>;
+> > +     ddc-i2c-bus = <&i2c5>;
+> > +     status = "okay";
+> > +     /* Don't use vopl for HDMI */
+> > +     ports {
+> > +             hdmi_in: port {
+> > +                     /delete-node/ endpoint@1;
+> > +             };
+>
+> what is the reason for this? You enable both VOPs below and the linux
+> display
+> subsystem should be able to select an appropriate VOP for output just fine
+> on
+> its own. So there should be no reason for capping the hdmi's connection to
+> one
+> of the vops.
+>
+The VOP big support 4k display. is designed for HDMI  4K display. VOP
+little is for other display(eDP, LVDS, Mipi etc)
 
-> regards
-> Philipp
+>
+> > +     };
+> > +};
+>
+> [...]
+>
+> > +&usb_host0_ehci {
+> > +     no-relinquish-port;
+>
+> This seems like an unused/undocumented property
+>
+I will remove it next version
+
+>
+> > +     status = "okay";
+> > +};
+>
+> [...]
+>
+> > +&vopl {
+> > +     status = "okay";
+> > +     /* Don't use vopl for HDMI */
+> > +     vopl_out: port {
+> > +             /delete-node/ endpoint@0;
+> > +     };
+>
+> see comment at the hdmi node
+>
+> > +};
 >
 >
+> Thanks
+> Heiko
+>
 
---001a11445d946a403e05463fabf4
+--001a114ac30e995c1a054680f599
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
 <div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On 16 January 2017 at 22:38, Philipp Zabel <span dir=3D"ltr">&lt;<a hre=
-f=3D"mailto:p.zabel@pengutronix.de" target=3D"_blank">p.zabel@pengutronix.d=
-e</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
-n:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex=
-"><span class=3D"gmail-">On Mon, 2017-01-16 at 18:56 +0800, Baoyou Xie wrot=
-e:<br>
-&gt; Add the zx2967 reset controller driver as maintained by ARM ZTE<br>
-&gt; architecture maintainers, as they&#39;re parts of the core IP.<br>
+te">2017-01-19 17:58 GMT+08:00 Heiko Stuebner <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:heiko@sntech.de" target=3D"_blank">heiko@sntech.de</a>&gt;</span=
+>:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;b=
+order-left:1px solid rgb(204,204,204);padding-left:1ex">Hi Eddie,<br>
+<span class=3D"gmail-"><br>
+Am Donnerstag, 19. Januar 2017, 10:11:59 CET schrieb Eddie Cai:<br>
+&gt; This patch add basic support for RK3288-Tinker board. We can boot in t=
+o<br>
+&gt; rootfs with this patch.<br>
 &gt;<br>
-&gt; Signed-off-by: Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linaro.org"=
->baoyou.xie@linaro.org</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 MAINTAINERS | 2 ++<br>
-&gt;=C2=A0 1 file changed, 2 insertions(+)<br>
-&gt;<br>
-&gt; diff --git a/MAINTAINERS b/MAINTAINERS<br>
-&gt; index 2793808..08f8155 100644<br>
-&gt; --- a/MAINTAINERS<br>
-&gt; +++ b/MAINTAINERS<br>
-&gt; @@ -1980,10 +1980,12 @@ L:=C2=A0 =C2=A0 <a href=3D"mailto:linux-arm-ke=
-rnel@lists.infradead.org">linux-arm-kernel@lists.<wbr>infradead.org</a> (mo=
-derated for non-subscribers)<br>
-&gt;=C2=A0 S:=C2=A0 =C2=A0Maintained<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0arch/arm/mach-zx/<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/clk/zte/<br>
-&gt; +F:=C2=A0 =C2=A0drivers/reset/reset-zx2967.c<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/soc/zte/<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0drivers/thermal/zx*<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/arm/zte.tx=
-t<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/clock/zx29=
-6702-clk.<wbr>txt<br>
-&gt; +F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/reset/zte,zx296=
-7-<wbr>reset.txt<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/soc/zte/<b=
-r>
-&gt;=C2=A0 F:=C2=A0 =C2=A0Documentation/devicetree/<wbr>bindings/thermal/zx=
-*<br>
-&gt;=C2=A0 F:=C2=A0 =C2=A0include/dt-bindings/soc/zx*.h<br>
+&gt; Signed-off-by: Eddie Cai &lt;<a href=3D"mailto:eddie.cai@rock-chips.co=
+m">eddie.cai@rock-chips.com</a>&gt;<br>
 <br>
-</span>This patch doesn&#39;t apply on top of reset/next. I can rebase it, =
-but it<br>
-will cause a trivial merge conflict with the soc/thermal additions.<br>
-<br></blockquote><div>I will send v3 patch, it base on linux/next branch an=
-d conflict without the soc/thermal additions</div><div>=C2=A0</div><blockqu=
-ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
- solid rgb(204,204,204);padding-left:1ex">
-regards<br>
-<span class=3D"gmail-HOEnZb"><font color=3D"#888888">Philipp<br>
+</span>looks good in general, just some small question down below.<br>
 <br>
+[...]<br>
+<span class=3D"gmail-"><br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/*<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 * NOTE: vcc_sd isn&#39;t hooked up on v1.0 board=
+s where power comes from<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 * vcc_io directly.=C2=A0 Those boards won&#39;t =
+be able to power cycle SD cards<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 * but it shouldn&#39;t hurt to toggle this pin t=
+here anyway.<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 */<br>
+<br>
+</span>just to clarify, later board will have that pin connected, right?<br=
+></blockquote><div>Copy from rk3288-evb.dtsi. forgot to delete it. I will r=
+emove it next version =C2=A0=C2=A0</div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex">
+<span class=3D"gmail-"><br>
+&gt; +=C2=A0 =C2=A0 =C2=A0vcc_sd: sdmmc-regulator {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0compatible =3D &quot;=
+regulator-fixed&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0gpio =3D &lt;&amp;gpi=
+o7 11 GPIO_ACTIVE_LOW&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-names =3D &qu=
+ot;default&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pinctrl-0 =3D &lt;&am=
+p;sdmmc_pwr&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-name =3D &q=
+uot;vcc_sd&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-min-microvo=
+lt =3D &lt;3300000&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0regulator-max-microvo=
+lt =3D &lt;3300000&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0startup-delay-us =3D =
+&lt;100000&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0vin-supply =3D &lt;&a=
+mp;vcc_io&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
+&gt; +};<br>
+<br>
+</span>[...]<br>
+<span class=3D"gmail-"><br>
+&gt; +&amp;hdmi {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0#address-cells =3D &lt;1&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0#size-cells =3D &lt;0&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0#sound-dai-cells =3D &lt;0&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0ddc-i2c-bus =3D &lt;&amp;i2c5&gt;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/* Don&#39;t use vopl for HDMI */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0ports {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0hdmi_in: port {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
+ =C2=A0/delete-node/ endpoint@1;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
+<br>
+</span>what is the reason for this? You enable both VOPs below and the linu=
+x display<br>
+subsystem should be able to select an appropriate VOP for output just fine =
+on<br>
+its own. So there should be no reason for capping the hdmi&#39;s connection=
+ to one<br>
+of the vops.<br></blockquote><div>The VOP big support 4k display. is design=
+ed for HDMI =C2=A04K display. VOP little is for other display(eDP, LVDS, Mi=
+pi etc)</div><blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px =
+0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
+&gt; +};<br>
+<br>
+[...]<br>
+<br>
+&gt; +&amp;usb_host0_ehci {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0no-relinquish-port;<br>
+<br>
+This seems like an unused/undocumented property<br></blockquote><div>I will=
+ remove it next version=C2=A0</div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding=
+-left:1ex">
+<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
+&gt; +};<br>
+<br>
+[...]<br>
+<span class=3D"gmail-"><br>
+&gt; +&amp;vopl {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0status =3D &quot;okay&quot;;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0/* Don&#39;t use vopl for HDMI */<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0vopl_out: port {<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0/delete-node/ endpoin=
+t@0;<br>
+&gt; +=C2=A0 =C2=A0 =C2=A0};<br>
+<br>
+</span>see comment at the hdmi node<br>
+<br>
+&gt; +};<br>
+<br>
+<br>
+Thanks<br>
+<span class=3D"gmail-HOEnZb"><font color=3D"#888888">Heiko<br>
 </font></span></blockquote></div><br></div></div>
 
---001a11445d946a403e05463fabf4--
+--001a114ac30e995c1a054680f599--
