@@ -1,41 +1,38 @@
-From: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Subject: [PATCH v3 4/7] NFC: trf7970a: Remove useless comment
-Date: Fri, 20 Jan 2017 12:17:42 -0700
-Message-ID: <20170120191745.29255-5-mgreer@animalcreek.com>
-References: <20170120191745.29255-1-mgreer@animalcreek.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120191745.29255-1-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lauro Ramos Venancio <lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org>, Aloisio Almeida Jr <aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 0/3] mmc: sh_mobile_sdhi: fix missing r7s72100 clocks
+Date: Fri, 20 Jan 2017 14:43:29 -0500
+Message-ID: <20170120194332.1683-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The last entry in the trf7970a_of_match[] table must be an empty
-entry to demarcate the end of the table.  Currently, there is a
-comment indicating this but it is obvious so remove the comment.
+At first this started out as a simple typo fix, until I realized
+that the SDHI in the RZ/A1 has 2 clocks per channel and both need
+to be turned on/off.
 
-Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
----
- drivers/nfc/trf7970a.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch series adds the ability to specify 2 clocks instead of
+just 1, and does so for the RZ/A1 r7s72100.
 
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index bd3d9a09da0d..6fd85be49365 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -2211,7 +2211,7 @@ static const struct dev_pm_ops trf7970a_pm_ops = {
- 
- static const struct of_device_id trf7970a_of_match[] = {
- 	{ .compatible = "ti,trf7970a", },
--	{ /* sentinel */ },
-+	{},
- };
- MODULE_DEVICE_TABLE(of, trf7970a_of_match);
- 
+This patch has been tested on an RZ/A1 RSK board. Card detect works
+fine as well as bind/unbind.
+
+v4:
+* No code changes, only text udpates to explain why there are 2 clocks
+  and why we need to treat them as 1 clock.
+
+
+Chris Brandt (3):
+  mmc: sh_mobile_sdhi: add support for 2 clocks
+  mmc: sh_mobile_sdhi: explain clock bindings
+  ARM: dts: r7s72100: update sdhi clock bindings
+
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 28 ++++++++++++++++++++++
+ arch/arm/boot/dts/r7s72100.dtsi                    | 17 +++++++++----
+ drivers/mmc/host/sh_mobile_sdhi.c                  | 13 ++++++++++
+ include/dt-bindings/clock/r7s72100-clock.h         |  6 +++--
+ 4 files changed, 57 insertions(+), 7 deletions(-)
+
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.1
