@@ -1,65 +1,63 @@
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Subject: Re: [PATCH v3] mtd: spi-nor: add dt support for Everspin MRAMs
-Date: Fri, 20 Jan 2017 13:57:41 +0100
-Message-ID: <d33f22ff-f854-aa30-0358-3b7e5c480e93@atmel.com>
-References: <480df61d-c949-b3b0-61a4-d9db17f09e7d@atmel.com>
- <20170117110338.10756-1-u.kleine-koenig@pengutronix.de>
- <20170119175608.5okfpsfutv7oawoo@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170119175608.5okfpsfutv7oawoo@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Marek Vasut <marex@denx.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Masahiko Iwamoto <iwamoto@allied-telesis.co.jp>, linux-mtd@lists.infradead.org, kernel@pengutronix.de, Geert Uytterhoeven <geert@linux-m68k.org>, Jagan Teki <jagan@openedev.com>
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 1/3] dt: bindings: add documentation for zx2967 family watchdog controller
+Date: Fri, 20 Jan 2017 21:03:16 +0800
+Message-ID: <1484917398-15604-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 19/01/2017 =E0 18:56, Rob Herring a =E9crit :
-> On Tue, Jan 17, 2017 at 12:03:38PM +0100, Uwe Kleine-K=F6nig wrote:
->> The MR25 family doesn't support JEDEC, so they need explicit mentioning
->> in the list of supported spi IDs. This makes it possible to add these
->> using for example:
->>
->> 	compatible =3D "everspin,mr25h40";
->>
->> There was already an entry for mr25h256. Move that one out of the "keep
->> for compatibility" section and put in a new group for Everspin MRAMs.
->>
->> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
->> ---
->> Changes since (implicit) v1:
->>
->>  - use Kib instead of kib
->>
->> Changes since v2:
->>
->>  - update dt docs
->>  - handle already existing mr25h256 in m25p_ids[]
->>
->> Thanks to Cyrille for catching these.
->>
->>  Documentation/devicetree/bindings/mtd/jedec,spi-nor.txt | 2 ++
->>  drivers/mtd/devices/m25p80.c                            | 6 +++++-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
-> =
+This patch adds dt-binding documentation for zx2967 family
+watchdog controller.
 
-> Acked-by: Rob Herring <robh@kernel.org>
-> =
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/watchdog/zte,zx2967-wdt.txt           | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
 
-Applied to git://github.com/spi-nor/linux.git
+diff --git a/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt b/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
+new file mode 100644
+index 0000000..772403a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
+@@ -0,0 +1,31 @@
++ZTE zx2967 Watchdog timer
++
++Required properties:
++
++- compatible : should be one of the following.
++       * zte,zx296718-wdt
++- reg : Specifies base physical address and size of the registers.
++- clocks : Pairs of phandle and specifier referencing the controller's clocks.
++- resets : Reference to the reset controller controlling the watchdog
++           controller.
++
++Optional properties:
++
++- zte,wdt-reset-sysctrl : Directs how to reset system by the watchdog.
++	if we don't want to restart system when watchdog been triggered,
++	it's not required, vice versa.
++	It should include following fields.
++	  * phandle of aon-sysctrl.
++	  * offset of register that be written, should be 0xb0.
++	  * configure value that be written to aon-sysctrl.
++	  * bit mask, corresponding bits will be affected.
++
++Example:
++
++wdt: watchdog@1465000 {
++	compatible = "zte,zx296718-wdt";
++	reg = <0x1465000 0x1000>;
++	clocks = <&topcrm WDT_WCLK>;
++	resets = <&toprst 35>;
++	zte,wdt-reset-sysctrl = <&aon_sysctrl 0xb0 1 0x115>;
++};
+-- 
+2.7.4
 
-Thanks!
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
