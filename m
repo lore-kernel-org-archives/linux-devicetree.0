@@ -1,12 +1,14 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 2/6] arm: sunxi: add support for V3s SoC
-Date: Fri, 20 Jan 2017 21:29:23 +0100
-Message-ID: <20170120202923.p4uikl6nmhcza2sk@lukather>
-References: <20170119175448.11445-2-icenowy@aosc.xyz>
+Subject: Re: [PATCH v3 4/6] dt-bindings: add device binding for the CCU of
+ Allwinner V3s
+Date: Fri, 20 Jan 2017 21:32:08 +0100
+Message-ID: <20170120203208.t7qm4tpqesadr6wd@lukather>
+References: <20170119175448.11445-1-icenowy@aosc.xyz>
+ <20170119175448.11445-4-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1648448172728808251=="
+Content-Type: multipart/mixed; boundary="===============1656580526390781117=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170119175448.11445-2-icenowy@aosc.xyz>
+In-Reply-To: <20170119175448.11445-4-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,28 +23,25 @@ Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 
---===============1648448172728808251==
+--===============1656580526390781117==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="4sykcdevuijc4uuw"
+	protocol="application/pgp-signature"; boundary="qmdtc5us4uy2bi7n"
 Content-Disposition: inline
 
 
---4sykcdevuijc4uuw
+--qmdtc5us4uy2bi7n
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 20, 2017 at 01:54:44AM +0800, Icenowy Zheng wrote:
-> Allwinner V3s is a low-end single-core Cortex-A7 SoC, with 64MB
-> integrated DRAM, and several peripherals.
+On Fri, Jan 20, 2017 at 01:54:46AM +0800, Icenowy Zheng wrote:
+> Allwinner V3s is now driven by sunxi-ng CCU driver.
+>=20
+> Add devicetree binding for it.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 
-This didn't apply. Please make sure to send patches based on my
-current branch.
-
-Fixed the conflicts and applied.
-
+Applied. Thanks,
 Maxime
 
 --=20
@@ -50,30 +49,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---4sykcdevuijc4uuw
+--qmdtc5us4uy2bi7n
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYgnMiAAoJEBx+YmzsjxAg11sP/0VPz830IZx5cS6A1ITcGqg+
-aA7ZPQ4tmU89SVS6+2/PCEXEFBZrFXxd4EXb1urgZbtZGEyl/LC4AY4aHNbhrvpp
-oBC1dZLwwWDf1CZD+Nsw5POGcHjmsA9CMETKx9n63HhvQz//JslethplUvDqdQaP
-UPGwvuGZdDBH77sjvrJEvurVRZNaDjwQWgaRV9XCvx5K6/9esYJI8y5WoZ2MDmfx
-UTD8z1GlS5oli/4CHYQ9jp9mSH8r7mj67Vgibd5fl3FJm78Dr0AFflpWz0FpxsF9
-Wurw+1gAu/pITrZ9U9swySuvmVIV7sTRe8VRQGHeyPRNOAXg60pd6nknhp+1BtML
-3iwEX8t0Opge7VlZoENGRlt2jwb55iUuTIbziab6O2DyOUjBiQyFLsRd8GuQg6PA
-FbQUX2v4/b4nTP6y/QZQLiU8tJZyWp7wTjqo1qoaP3ZI8nWIfZ9yKHRmtnpqzE9n
-Op8MiVzL2r0IezrvzgJfEhcQeW5tG6iZVCwIbsfrn5RTMI5dpbrp/cBYT/yFhUTN
-JZTlJ+fIa5X4p1lhELJn9vYxHHf7URbqL1eRTOm0F3AGq5aal+6mPl6KWaJyhMKC
-FBRd4bv++kgNdSJt5jL6HfARc1csdlZ5qy5zKDqNehif2SXrIcXoPdAJolk9Z6jT
-k2RST4sDq1R4E/e1S+sw
-=1OX8
+iQIcBAEBCAAGBQJYgnPIAAoJEBx+YmzsjxAgyX4P/3Fal6DrM2jgWw9WqQrri3tU
+QnQd3NVRFrxnCH4Wa7DFp8F8fBLvm2RculWQUP4iDi6vDb92vFhp6B92wGBz96x5
+RPNzsIABTtSE3A8RAUSUgzh6PoF0qKQb4ZgcSC1nstaOGfbV8lqAz8+NOG0TRvV1
+d9R+o+Ubf+lyEWlMLn+iBd5q72pzNaq4PxIJ5pI3jsibHKVaDoyocR0snoYyRYhd
+KhH9nL5QCUWrpilpKg2IN0mVcterNKU0HSDzi4caqJJbU+wYUkdsPde5bla79E2k
+/Xg6qrjKSqyVVnUphIL4+dqVdqHokzegdXHun0C0LIwsIMQizYgFj8lUUfOZu149
+GsnRpsZICv3Ff/jxUpDCluGMFUaRVa39vmCwdbPpJpOIUKItY6R2h5IgCAFOeGE8
+u59+jPf1hmhJDZRMGkkoj9a9yizZZl7GLS0wEbMSdah4d+uvWs78/TSxXKGvFPXO
+OIqXS4dGNWCUPT0hc46Te1nG5uuSo5LVFQNII/iyu6gXskgE3JPBK/96n6FCp8Fm
+YXnuuNm6eOEkGSyn8TiL8Is6Dr1WUqqgNrK7IWOfCthy0Mqw6WofzwQYNPDb1cmG
+AmWUJ23e/Wx9y0fbBeRzWDXAJRJvyyFXBtn+DMZeBhgYf94pK+pVboFhLyppel4j
+hjPo8pVl4IiS/owWLOi2
+=6SpY
 -----END PGP SIGNATURE-----
 
---4sykcdevuijc4uuw--
+--qmdtc5us4uy2bi7n--
 
 
---===============1648448172728808251==
+--===============1656580526390781117==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -84,4 +83,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============1648448172728808251==--
+--===============1656580526390781117==--
