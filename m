@@ -1,55 +1,63 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/3 v2] clk: ux500: Add device tree bindings for ABx500 clocks
-Date: Fri, 20 Jan 2017 14:25:39 +0100
-Message-ID: <20170120132539.3013-1-linus.walleij@linaro.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v2 5/9] ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+Date: Fri, 20 Jan 2017 14:26:46 +0100
+Message-ID: <20170120132650.9784-6-martin.blumenstingl@googlemail.com>
+References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
+ <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120132650.9784-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the ABx500 clocks on the
-ST-Ericsson platforms.
+This resets the ethernet PHY during boot to get the PHY into a "clean"
+state.
+While here also specify the phy-handle of the ethmac node to make the
+PHY configuration similar to the one we have on GXL devices. This will
+allow us to specify OF-properties for the PHY itself.
 
-Cc: devicetree@vger.kernel.org
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
-ChangeLog v1->v2:
-- Indicate that the abx500 clocks need to be in a device tree
-  node under an ABx500 MFD device.
-- Rename the example node to clock-controller.
----
- .../devicetree/bindings/clock/stericsson,abx500.txt  | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/stericsson,abx500.txt b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
-new file mode 100644
-index 000000000000..dbaa886b223e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
-@@ -0,0 +1,20 @@
-+Clock bindings for ST-Ericsson ABx500 clocks
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+index 56f855901262..47fe4e444f33 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+@@ -64,3 +64,27 @@
+ 		status = "disabled";
+ 	};
+ };
 +
-+Required properties :
-+- compatible : shall contain the following:
-+  "stericsson,ab8500-clk"
-+- #clock-cells should be <1>
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
 +
-+The ABx500 clocks need to be placed as a subnode of an AB8500
-+device node, see mfd/ab8500.txt
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
 +
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/ste-ab8500.h header and can be used in device
-+tree sources.
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
-+Example:
-+
-+clock-controller {
-+	compatible = "stericsson,ab8500-clk";
-+	#clock-cells = <1>;
++		eth_phy0: ethernet-phy@0 {
++			compatible = "ethernet-phy-id001c.c916",
++				     "ethernet-phy-ieee802.3-c22";
++			reg = <0>;
++		};
++	};
 +};
 -- 
-2.9.3
+2.11.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
