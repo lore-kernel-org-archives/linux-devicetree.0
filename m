@@ -1,57 +1,77 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 13/13] MIPS: jz4740: Remove custom GPIO code
-Date: Fri, 20 Jan 2017 11:01:35 +0100
-Message-ID: <8944dd20e8ae6ed705dcf69e9f0ed4fd@mail.crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170117231421.16310-14-paul@crapouillou.net>
- <CACRpkdYMm0iWxmEGyQyEz4JfWukXNyGXO1rqw1dSiABgHdA1tQ@mail.gmail.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v9 8/8] ARM: dts: stm32: Enable pwm1 and pwm3 for
+ stm32f469-disco
+Date: Fri, 20 Jan 2017 11:03:19 +0100
+Message-ID: <77a0e229-1ab0-33f2-edf0-71efd76fdc4a@st.com>
+References: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com>
+ <1484903709-11650-9-git-send-email-benjamin.gaignard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYMm0iWxmEGyQyEz4JfWukXNyGXO1rqw1dSiABgHdA1tQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484903709-11650-9-git-send-email-benjamin.gaignard@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: gerald.baeza@st.com, fabrice.gasnier@st.com, arnaud.pouliquen@st.com, Benjamin Gaignard <benjamin.gaignard@st.com>, linaro-kernel@lists.linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-19 10:07, Linus Walleij a écrit :
+Hi Benjamin,
 
-> On Wed, Jan 18, 2017 at 12:14 AM, Paul Cercueil <paul@crapouillou.net> 
-> wrote:
-> 
->> All the drivers for the various hardware elements of the jz4740 SoC 
->> have been modified to use the pinctrl framework for their pin 
->> configuration needs. As such, this platform code is now unused and can 
->> be deleted. Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> 
-> I feel I might have come across as a bit harsh in the previous review 
-> of the
-> patches leading up to this one. In that case I'm sorry.
-> 
-> I can clearly see that the intent of the series is to remove this 
-> hopelessly
-> idiomatic code from the MIPS hurdle, and move these systems over
-> to standard frameworks.
-> 
-> In a way, if I look at the kernel as a whole, it would likely look 
-> better
-> after these patches were merged, than before. Even with the
-> shortcomings I painted out in the previous review comments.
-> 
-> A very complicated piece of messy code is cut from MIPS.
-> 
-> I think this is very valuable work and well worth persuing, so please
-> go ahead and work with the series, your effort is very much 
-> appreciated!
-> 
-> Yours,
-> Linus Walleij
+On 01/20/2017 10:15 AM, Benjamin Gaignard wrote:
+> Define and enable pwm1 and pwm3 for stm32f469 discovery board
+>
+> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> ---
+>  arch/arm/boot/dts/stm32f469-disco.dts | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+> index 8a163d7..92552d3 100644
+> --- a/arch/arm/boot/dts/stm32f469-disco.dts
+> +++ b/arch/arm/boot/dts/stm32f469-disco.dts
+> @@ -81,3 +81,31 @@
+>  &usart3 {
+>  	status = "okay";
+>  };
+> +
+> +&timers1 {
+> +	status = "okay";
+> +
+> +	pwm {
+> +		pinctrl-0 = <&pwm1_pins>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer@0 {
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&timers3 {
+> +	status = "okay";
+> +
+> +	pwm {
+> +		pinctrl-0 = <&pwm3_pins>;
+> +		pinctrl-names = "default";
+> +		status = "okay";
+> +	};
+> +
+> +	timer@2 {
+> +		status = "okay";
+> +	};
+> +};
+>
 
-Well thank you for your very constructive criticism ;) And for your 
-review.
-I'll submit a v2 very soon - I don't want to miss the 4.11 merge.
+Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Regards,
--Paul
+Thanks
+Alex
