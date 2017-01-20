@@ -1,57 +1,69 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Fri, 20 Jan 2017 16:05:45 +0000
-Message-ID: <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170118172502.13876-1-chris.brandt@renesas.com>
- <20170118172502.13876-3-chris.brandt@renesas.com>
- <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w@mail.gmail.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
+ PHY's reset GPIO
+Date: Fri, 20 Jan 2017 17:18:42 +0100
+Message-ID: <20170120161842.GD25907@lunn.ch>
+References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20170120152232.13943-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gVWxmLA0KDQpGcmlkYXksIEphbnVhcnkgMjAsIDIwMTcsIFVsZiBIYW5zc29uIHdyb3Rl
-Og0KPiA+ICstIGNsb2NrczogTW9zdCBjb250cm9sbGVycyBvbmx5IGhhdmUgMSBjbG9jayBzb3Vy
-Y2UgcGVyIGNoYW5uZWwuDQo+IEhvd2V2ZXIsIHNvbWUNCj4gPiArICAgICAgICAgaGF2ZSBhIHNl
-Y29uZCBjbG9jayBkZWRpY2F0ZWQgdG8gY2FyZCBkZXRlY3Rpb24uIElmIDIgY2xvY2tzDQo+IGFy
-ZQ0KPiA+ICsgICAgICAgICBzcGVjaWZpZWQsIHlvdSBtdXN0IG5hbWUgdGhlbSBhcyAiY29yZSIg
-YW5kICJjZCIuIElmIHRoZQ0KPiBjb250cm9sbGVyDQo+ID4gKyAgICAgICAgIG9ubHkgaGFzIDEg
-Y2xvY2ssIG5hbWluZyBpcyBub3QgcmVxdWlyZWQuDQo+IA0KPiBDb3VsZCB5b3UgcGxlYXNlIGVs
-YWJvcmF0ZSBhIGJpdCBvbiB0aGUgY2FyZCBkZXRlY3Rpb24gY2xvY2s/DQo+IA0KPiBJIGd1ZXNz
-IHRoYXQgdGhlcmUgaXMgc29tZSBraW5kIG9mIGludGVybmFsIGNhcmQgZGV0ZWN0aW9uIGxvZ2lj
-IChuYXRpdmUNCj4gY2FyZCBkZXRlY3QpIGluIHRoZSBTREhJIElQLCB3aGljaCByZXF1aXJlcyBh
-IHNlcGFyYXRlIGNsb2NrIGZvciBpdCB0bw0KPiB3b3JrPyBQZXJoYXBzIHlvdSBjYW4gc3RhdGUg
-dGhhdCBzb21laG93Pw0KDQoNClRoZSByZWFsaXR5IGlzIHRoYXQgdGhlIGNoaXAgZ3V5cyBjdXQg
-dXAgdGhlIHN0YW5kYXJkIFNESEkgSVAgdG8gYWRkIGENCidjb29sIG5ldyBmZWF0dXJlJywgYnV0
-IGFsbCBJIHdhbnQgdG8gZG8gaXMgcHV0IGl0IGJhY2sgdGhlIHdheSBpdCB3YXMuDQoNCk5PVEU6
-IFRoZSBkZXNpZ24gZ3V5cyBsaWtlIHRvIHJldXNlIElQIGJsb2NrcyBmcm9tIHByZXZpb3VzIGRl
-c2lnbnMgdGhhdCB0aGV5DQprbm93IHdvcmtlZCBhbmQgZGlkbid0IGhhdmUgYnVncy4gU28sIHRo
-ZXJlIGlzIGEgZ29vZCBjaGFuY2UgeW91IHdpbGwgc2VlIHRoaXMNCmNoYW5nZSBpbiBmdXR1cmUg
-UlovQSBkZXZpY2VzIChvciBldmVuIG90aGVyIGZ1dHVyZSBSZW5lc2FzIFNvQyBkZXZpY2VzKS4N
-ClRvIHJlbW92ZSBhbiB1bndhbnRlZCBmZWF0dXJlIGFkZHMgYWRkaXRpb25hbCBkZXNpZ24gcmlz
-ayBvZiBicmVha2luZw0Kc29tZXRoaW5nIGVsc2UuLi4uYW5kIGdpdmVuIHRoZSBjb3N0IG9mIHJl
-ZG9pbmcgc2lsaWNvbiBtYXNrIGxheWVycy4uLm5vDQplbmdpbmVlciB3YW50cyB0aGF0IG1pc3Rh
-a2Ugb24gdGhlaXIgaGFuZHMuDQoNCg0KDQo+ID4gK0V4YW1wbGUgc2hvd2luZyAyIGNsb2NrczoN
-Cj4gPiArICAgICAgIHNkaGkwOiBzZEBlODA0ZTAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNv
-bXBhdGlibGUgPSAicmVuZXNhcyxzZGhpLXI3czcyMTAwIjsNCj4gPiArICAgICAgICAgICAgICAg
-cmVnID0gPDB4ZTgwNGUwMDAgMHgxMDA+Ow0KPiA+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgMjcwIElSUV9UWVBFX0xFVkVMX0hJR0gNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBHSUNfU1BJIDI3MSBJUlFfVFlQRV9MRVZFTF9ISUdIDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgR0lDX1NQSSAyNzIgSVJRX1RZUEVfTEVWRUxfSElHSD47
-DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHAxMl9jbGtzIFI3Uzcy
-MTAwX0NMS19TREhJMDA+LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICA8Jm1zdHAxMl9j
-bGtzIFI3UzcyMTAwX0NMS19TREhJMDE+Ow0KPiA+ICsgICAgICAgICAgICAgICBjbG9jay1uYW1l
-cyA9ICJjb3JlIiwgImNkIjsNCj4gPiArICAgICAgICAgICAgICAgY2FwLXNkLWhpZ2hzcGVlZDsN
-Cj4gPiArICAgICAgICAgICAgICAgY2FwLXNkaW8taXJxOw0KPiA+ICsgICAgICAgICAgICAgICBz
-dGF0dXMgPSAiZGlzYWJsZWQiOw0KPiANCj4gVGhlIGxhc3QgbGluZSBzZWVtcyBhIGJpdCBvZGQg
-dG8gaW5jbHVkZSBpbiBhbiBleGFtcGxlLg0KDQpZb3UncmUgcmlnaHQuIEknbGwgdGFrZSB0aGF0
-IG91dC4NCg0KVGhhbmtzLA0KQ2hyaXMNCg==
+On Fri, Jan 20, 2017 at 04:22:25PM +0100, Martin Blumenstingl wrote:
+> This resets the ethernet PHY during boot to get the PHY into a "clean"
+> state.
+> While here also specify the phy-handle of the ethmac node to make the
+> PHY configuration similar to the one we have on GXL devices. This will
+> allow us to specify OF-properties for the PHY itself.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> index 03e3d76626dd..fa0f84cfeaa9 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> @@ -51,6 +51,30 @@
+>  	model = "Amlogic Meson GXBB P200 Development Board";
+>  };
+>  
+> +&ethmac {
+> +	status = "okay";
+> +	pinctrl-0 = <&eth_rgmii_pins>;
+> +	pinctrl-names = "default";
+> +	phy-handle = <&eth_phy0>;
+> +	phy-mode = "rgmii";
+> +
+> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+> +	snps,reset-delays-us = <0 10000 1000000>;
+> +	snps,reset-active-low;
+> +
+> +	mdio {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		eth_phy0: ethernet-phy@0 {
+
+Hi Martin
+
+ethernet-phy@3, because of the reg property.
+
+
+> +			compatible = "ethernet-phy-id0022.1620",
+> +				     "ethernet-phy-ieee802.3-c22";
+> +			reg = <3>;
+
+  Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
