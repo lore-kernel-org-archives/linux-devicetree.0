@@ -1,13 +1,14 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 5/6] ARM: dts: sunxi: add dtsi file for V3s SoC
-Date: Fri, 20 Jan 2017 21:48:11 +0100
-Message-ID: <20170120204811.oqiscwuzn3emjrx4@lukather>
+Subject: Re: [PATCH v3 6/6] ARM: dts: sunxi: add support for Lichee Pi Zero
+ board
+Date: Fri, 20 Jan 2017 21:48:54 +0100
+Message-ID: <20170120204854.axl2rz7cqlkayepd@lukather>
 References: <20170119175448.11445-1-icenowy@aosc.xyz>
- <20170119175448.11445-5-icenowy@aosc.xyz>
+ <20170119175448.11445-6-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3198829114318312645=="
+Content-Type: multipart/mixed; boundary="===============8404947240262860392=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170119175448.11445-5-icenowy@aosc.xyz>
+In-Reply-To: <20170119175448.11445-6-icenowy@aosc.xyz>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,41 +23,25 @@ Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.ker
 List-Id: devicetree@vger.kernel.org
 
 
---===============3198829114318312645==
+--===============8404947240262860392==
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cvsuelozp4qiyyig"
+	protocol="application/pgp-signature"; boundary="5w5ipbe62n64kqlt"
 Content-Disposition: inline
 
 
---cvsuelozp4qiyyig
+--5w5ipbe62n64kqlt
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 20, 2017 at 01:54:47AM +0800, Icenowy Zheng wrote:
-> As we have the pinctrl and clock support for the V3s SoC, it's now to
-> run a mainline Linux on it.
->=20
-> So add a .dtsi file for it.
+On Fri, Jan 20, 2017 at 01:54:48AM +0800, Icenowy Zheng wrote:
+> Lichee Pi Zero is a small-sized V3s board, which is
+> breadboard-compatible, and with a MicroUSB port with both OTG function
+> and power function.
 >=20
 > Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
 
-Next time, please provide a description of what that SoC in your
-commit log.
-
-> +		rtc: rtc@01c20400 {
-> +			compatible =3D "allwinner,sun6i-a31-rtc";
-> +			reg =3D <0x01c20400 0x54>;
-> +			interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +		};
-
-Did you have the chance to actually test how the RTC was behaving?
-
-Other RTC have been pretty bad at keeping time, this is probably
-something you want to check.
-
-Applied,=20
+Applied, thanks
 Maxime
 
 --=20
@@ -64,30 +49,30 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---cvsuelozp4qiyyig
+--5w5ipbe62n64kqlt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBCAAGBQJYgneHAAoJEBx+YmzsjxAgtH0P+QEK7eFuJEKq3c2/gX7Q5oBa
-dIgLeUuaq7JwQsvOrcTtQlu6cFCzlCRbQbRXF78ylfjIjh7WmIg0DKWfHbmZkSwR
-xsshWiXgmzXbo8jUmZUrPyFwtKDVU2xr1cqiSJt32r7mE3x6y/fCBSeo4I5Xrtzo
-OL8MYOZYaT0v/YAVu/zK0f0WX392FbSfvOqeh9k1E9EKru30oGZnq1eU2sT/iEaF
-pdEpal3hQZVuY8zLPoHKh8rKgYr4Uhxt4ciIH/nYMJT2rnmnqMm3F7DsujVr8QV2
-AVYoAdlze7MZwS2b32HnPknVpwi2pD1vlu6PpCRRdXzh9FgV33np+B46Sd2rqHKu
-eZtp4WfofbDHi4TleDprLa+VU0a18d3X2+1Dh4NreIrmAJxsA20ooOdAG7IZxddI
-zHZuB1Ifw7OPGVPw5mZ+7cXWGsTeV68rb4JDsABgt4gEzDJns6AHRi2y04VY+G9+
-f2FbyBr6RUKw6N/3kanXndPK+/kCfmxahdtbZgDcqeq0tr/eI1hjrrLk15A53zwM
-nd9O4sm34X/h+0CVCcZNMDIwmB4eeVeyh5SKcEo80pRjYrHgJVXKdn513P7EDtVk
-SRrBkHEuY4LO6WNK41oE/0YmymudnRFL+qBlG42chfxzoZHyZuIYQGv7wDe5LXpW
-hVIjJQuAwnJWuFZRgCNZ
-=p76S
+iQIcBAEBCAAGBQJYgne2AAoJEBx+YmzsjxAgPbEP/iMnXO3/y6LGagJxMC0F/Ncb
+JGVw+4sbJmlUAZ3Gt7LL5jyqgjz71Wc7FylnOeZxTwamjEjfZ8rfy/QiMujXtWQZ
+O05Odm2YBwQclgkNhRTLV1PNrt7LGknMWQ3Vf9oq8FtKBI7ia8PeqgFIfEr5igTb
+iOEjPSBCz1hViSuVcZBTxnv5kMyLzoX1p3oyaqafXJeLdcV/1h+7uDgr3BJgig30
+sWjKPBmts//XFudGnY0iJrlGrm1zxD0fMsMF7LT5p6sSiL4wBHzKmzBJe3DkDYDX
+tGnTnvItKJOPOk3abHdKSWnt7Q5MYlJPjzyfnPpVNbuTMD1vrjm4xiNw93nwwidE
+9vzSxHvF0j8salV/g+4uQnuowikc76WAooZsSt9iQ3a4VsX1CZlkUsf7O9gMMau+
+ww1bipBLHAnuVGuKU/BVDMprA4An259mdzBA0FTLK2a/PRxs1+sHIIFHd9rajmIp
+llzgskLu0RoSeSOVT7PvMeetkTNzEmUBmpP8HchB6Pgph7qCm1MEPW4lojXYwVc2
+2S5H9GAXFfdIPctBZhQh1uXQwy52m7B9VgsilgIbDojwe2ICzZW4wru3PqzftZwr
+KFIzcS7FYIKIg1/GxXKZFYtEqR0lRRHksHteTeX1SRxhHj0ucC4eEr4qzUExtIQr
+Ep8OZ4fGdTtEIWPnBCft
+=xtKk
 -----END PGP SIGNATURE-----
 
---cvsuelozp4qiyyig--
+--5w5ipbe62n64kqlt--
 
 
---===============3198829114318312645==
+--===============8404947240262860392==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -98,4 +83,4 @@ linux-arm-kernel mailing list
 linux-arm-kernel@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---===============3198829114318312645==--
+--===============8404947240262860392==--
