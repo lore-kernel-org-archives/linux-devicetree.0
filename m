@@ -1,58 +1,59 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Fri, 20 Jan 2017 18:12:28 +0100
-Message-ID: <CAPDyKFqCa_evsr3a_xHNy2joodgP9xiOQ1jdD0=nY-cGTWd_Hg@mail.gmail.com>
-References: <20170118172502.13876-1-chris.brandt@renesas.com>
- <20170118172502.13876-3-chris.brandt@renesas.com> <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w@mail.gmail.com>
- <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Use correct mfc_pd async-bridge
+ clock for Exynos5420
+Date: Fri, 20 Jan 2017 14:15:40 -0300
+Message-ID: <55cdceb9-d768-d5a9-7bc2-d4ef26d2e5e8@osg.samsung.com>
+References: <1484864995-10679-1-git-send-email-javier@osg.samsung.com>
+ <1484864995-10679-2-git-send-email-javier@osg.samsung.com>
+ <20170120162846.x766u3nzblqywggj@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170120162846.x766u3nzblqywggj@kozik-lap>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2017 at 17:05, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> Hello Ulf,
->
-> Friday, January 20, 2017, Ulf Hansson wrote:
->> > +- clocks: Most controllers only have 1 clock source per channel.
->> However, some
->> > +         have a second clock dedicated to card detection. If 2 clocks
->> are
->> > +         specified, you must name them as "core" and "cd". If the
->> controller
->> > +         only has 1 clock, naming is not required.
+Hello Krzysztof,
+
+On 01/20/2017 01:28 PM, Krzysztof Kozlowski wrote:
+> On Thu, Jan 19, 2017 at 07:29:55PM -0300, Javier Martinez Canillas wrote:
+>> Commit 94aed538e032 ("ARM: dts: exynos: Add async-bridge clock to MFC
+>> power domain for Exynos5420") fixed an imprecise external abort error
+>> when the MFC registers were tried to be accessed and the needed clock
+>> for the asynchronous bridges were gated.
 >>
->> Could you please elaborate a bit on the card detection clock?
+>> But according to the Exynos5420 manual the "Gating AXI clock for MFC"
+>> is not CLK_ACLK333 but CLK_MFC.
 >>
->> I guess that there is some kind of internal card detection logic (native
->> card detect) in the SDHI IP, which requires a separate clock for it to
->> work? Perhaps you can state that somehow?
->
->
-> The reality is that the chip guys cut up the standard SDHI IP to add a
-> 'cool new feature', but all I want to do is put it back the way it was.
->
-> NOTE: The design guys like to reuse IP blocks from previous designs that they
-> know worked and didn't have bugs. So, there is a good chance you will see this
-> change in future RZ/A devices (or even other future Renesas SoC devices).
-> To remove an unwanted feature adds additional design risk of breaking
-> something else....and given the cost of redoing silicon mask layers...no
-> engineer wants that mistake on their hands.
+>> The end effect is the same because CLK_ACLK333 is a parent of CLK_MFC
+>> but the correct clock should be used instead.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+>>
+>> ---
+>>
+>>  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> Is this still needed?
+> 
 
-So, one should be aware of that runtime PM support in these case is
-going to be suboptimal.
-For example, when using this native card detect, you will need to keep
-the controller runtime PM resumed as the be able to keep the clock on
-and to be able to fetch the irq. Wasting power.
+Not really, only if we care about correctness in the existing power domains
+that have their clocks defined. But as said, even currently with CLK_ACLK333
+works due to the clock hierarchy.
 
-Most SoC vendors are therefore using a GPIO card detect instead,
-although I assume you already knew that. :-)
+I think is less of an issue now that we prefer to mark clocks that needs to
+be ungated as critical instead of growing the DT ABI.
 
-[...]
-
-Kind regards
-Uffe
+> Best regards,
+> Krzysztof
+> 
+ 
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
