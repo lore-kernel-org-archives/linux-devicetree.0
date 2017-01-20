@@ -1,147 +1,73 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH v2 8/9] ARM64: dts: amlogic: add the ethernet TX delay
- configuration
-Date: Fri, 20 Jan 2017 14:26:49 +0100
-Message-ID: <20170120132650.9784-9-martin.blumenstingl@googlemail.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] ARM64: dts: meson-gxbb-p201: add the ethernet
+ PHY's reset GPIO
+Date: Fri, 20 Jan 2017 14:31:00 +0100
+Message-ID: <8a0b6c29-38f0-8474-34a2-8e3df4a5a239@baylibre.com>
 References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
  <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+ <20170120132650.9784-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, narmstrong@baylibre.com, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120132650.9784-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the amlogic,tx-delay-ns property with the old (hardcoded)
-default value of 2ns to all boards which are using an RGMII ethernet
-PHY.
+On 01/20/2017 02:26 PM, Martin Blumenstingl wrote:
+> This resets the ethernet PHY during boot to get the PHY into a "clean"
+> state.
+> While here also specify the phy-handle of the ethmac node to make the
+> PHY configuration similar to the one we have on GXL devices. This will
+> allow us to specify OF-properties for the PHY itself.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> index 39bb037a3e47..5d2cd2ecfdc4 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
+> @@ -50,3 +50,27 @@
+>  	compatible = "amlogic,p201", "amlogic,meson-gxbb";
+>  	model = "Amlogic Meson GXBB P201 Development Board";
+>  };
+> +
+> +&ethmac {
+> +	status = "okay";
+> +	pinctrl-0 = <&eth_rgmii_pins>;
+> +	pinctrl-names = "default";
+> +	phy-handle = <&eth_phy0>;
+> +	phy-mode = "rgmii";
+> +
+> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+> +	snps,reset-delays-us = <0 10000 1000000>;
+> +	snps,reset-active-low;
+> +
+> +	mdio {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		eth_phy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-id0022.1620",
+> +				     "ethernet-phy-ieee802.3-c22";
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> 
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts    | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts        | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi   | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts   | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts   | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts    | 2 ++
- arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts         | 2 ++
- 8 files changed, 16 insertions(+)
+Hi Martin,
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 6b5579522587..e63ed98d6c25 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -154,6 +154,8 @@
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-index 5d2cd2ecfdc4..70a7108b4b16 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
-@@ -58,6 +58,8 @@
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 358ab5159bd5..4301ad860a76 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -131,6 +131,8 @@
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-index 47fe4e444f33..f6d8c70a26a2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
-@@ -72,6 +72,8 @@
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-index 9a8e2f492b97..1a222ce60a30 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-@@ -94,6 +94,8 @@
- 	phy-handle = <&eth_phy0>;
- 	phy-mode = "rgmii";
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-index f66939cacd37..7663d6775823 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts
-@@ -59,6 +59,8 @@
- 	/* Select external PHY by default */
- 	phy-handle = <&external_phy>;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	/* External PHY reset is shared with internal PHY Led signals */
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-index 5a337d339df1..a0bc746adb42 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-@@ -162,6 +162,8 @@
- 	/* Select external PHY by default */
- 	phy-handle = <&external_phy>;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
- 	snps,reset-active-low;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-index 5dbc66088355..e6ac39b712b7 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts
-@@ -59,6 +59,8 @@
- 	/* Select external PHY by default */
- 	phy-handle = <&external_phy>;
- 
-+	amlogic,tx-delay-ns = <2>;
-+
- 	/* External PHY reset is shared with internal PHY Led signals */
- 	snps,reset-gpio = <&gpio GPIOZ_14 0>;
- 	snps,reset-delays-us = <0 10000 1000000>;
--- 
-2.11.0
+It seems you mismatched the p200 and the p201, it's the p201 nobody has and uses a rmii link.
+
+Neil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
