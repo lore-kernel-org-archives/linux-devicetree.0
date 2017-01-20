@@ -1,68 +1,140 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 0/6] rtc: sun6i: Fix the RTC accuracy
-Date: Fri, 20 Jan 2017 16:56:37 +0100
-Message-ID: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
+Date: Fri, 20 Jan 2017 16:57:10 +0100
+Message-ID: <1484927830.2897.51.camel@pengutronix.de>
+References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
+ <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDSJBYGBRIMBBQXGRDCAKGQEN255DQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Geert,
 
-The RTC used in the A31 and later SoC has an accuracy issue, which is
-already significant even after a couple of hours.
+On Fri, 2017-01-20 at 15:08 +0100, Geert Uytterhoeven wrote:
+> Add optional support for the Reset Control feature of the Renesas Clock
+> Pulse Generator / Module Standby and Software Reset module on R-Car
+> Gen2, R-Car Gen3, and RZ/G1 SoCs.
 
-This is due to the fact that the oscillator used by default is an internal
-and very inaccurate one.
+Is there a reason to make this optional?
 
-A first attempt at fixing that by switching to the external oscillator was
-done in the patch "rtc: sun6i: Switch to the external oscillator". However,
-it turned out to be problematic since it was tracked properly in the clock
-framework, which might lead to some clocks being disabled, even though
-their devices were not notified.
+> This allows to reset SoC devices using the Reset Controller API.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This is a second attempt, this time by making it part of the CCF. It
-turned out to be a bit more complicated than one would expect since the mux
-found inside the RTC also controls one of the input of the main clock unit.
-Therefore, it needs to be probed before the main clock unit driver.
+Looks good to me,
 
-Let me know what you think,
-Maxime
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Maxime Ripard (6):
-  rtc: sun6i: Expose the 32kHz oscillator
-  rtc: sun6i: Add some locking
-  rtc: sun6i: Disable the build as a module
-  rtc: sun6i: Force the mux to the external oscillator
-  ARM: sun8i: a23/a33: Enable the real LOSC and use it
-  ARM: sun8i: a23/a33: Add the oscillators accuracy
+Just a small issue below,
 
- Documentation/devicetree/bindings/rtc/sun6i-rtc.txt |   8 +-
- arch/arm/boot/dts/sun8i-a23-a33.dtsi                |  15 +-
- drivers/rtc/Kconfig                                 |   2 +-
- drivers/rtc/rtc-sun6i.c                             | 189 +++++++++++--
- 4 files changed, 181 insertions(+), 33 deletions(-)
+> ---
+>  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++++++++
+>  1 file changed, 122 insertions(+)
+> 
+> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+> index f1161a585c57e433..ea4af714ac14603a 100644
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+[...]
+> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
+> +			  unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+> +	unsigned int reg = id / 32;
+> +	unsigned int bit = id % 32;
+> +	u32 bitmask = BIT(bit);
 
-base-commit: 99cef370ac9939df2aeb16c96d07e842b2fa8201
--- 
-git-series 0.8.11
+Here you have a bitmask = BIT(bit) variable.
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+> +
+> +	/* Reset module */
+> +	spin_lock_irqsave(&priv->rmw_lock, flags);
+> +	value = readl(priv->base + SRCR(reg));
+> +	value |= bitmask;
+
+Here you use it.
+
+> +	writel(value, priv->base + SRCR(reg));
+> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> +
+> +	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+> +	udelay(35);
+> +
+> +	/* Release module from reset state */
+> +	writel(bitmask, priv->base + SRSTCLR(reg));
+> +
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+> +	unsigned int reg = id / 32;
+> +	unsigned int bit = id % 32;
+
+Here you haven't.
+
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+> +
+> +	spin_lock_irqsave(&priv->rmw_lock, flags);
+> +	value = readl(priv->base + SRCR(reg));
+> +	writel(value | BIT(bit), priv->base + SRCR(reg));
+
+Here you don't.
+
+> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+> +	unsigned int reg = id / 32;
+> +	unsigned int bit = id % 32;
+> +
+> +	dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
+> +
+> +	writel(BIT(bit), priv->base + SRSTCLR(reg));
+
+And here ...
+
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
+> +			   unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
+> +	unsigned int reg = id / 32;
+> +	unsigned int bit = id % 32;
+> +
+> +	return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
+
+And here neither.
+
+I'd choose one variant over the other for consistency.
+
+regards
+Philipp
