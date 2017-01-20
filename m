@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 10/18] ARM64: dts: meson-gxbb: Reorder nodes
-Date: Fri, 20 Jan 2017 23:21:10 +0100
-Message-ID: <20170120222118.21476-11-afaerber@suse.de>
+Subject: [PATCH 16/18] ARM64: dts: meson-gxl-s905x-nexbox-a95x: Reorder nodes
+Date: Fri, 20 Jan 2017 23:21:16 +0100
+Message-ID: <20170120222118.21476-17-afaerber@suse.de>
 References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -17,109 +17,61 @@ Sort nodes referenced by label alphabetically.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 76 ++++++++++++++---------------
- 1 file changed, 38 insertions(+), 38 deletions(-)
+ .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 28 +++++++++++-----------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 39a774ad83ce..5c22c794ed95 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -97,24 +97,6 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+index cea4a3eded9b..9e91f0809dcd 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+@@ -129,10 +129,10 @@
  	};
  };
  
--&cbus {
--	spifc: spi@8c80 {
--		compatible = "amlogic,meson-gxbb-spifc";
--		reg = <0x0 0x08c80 0x0 0x80>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--		clocks = <&clkc CLKID_SPI>;
--		status = "disabled";
--	};
--};
--
--&ethmac {
--	clocks = <&clkc CLKID_ETH>,
--		 <&clkc CLKID_FCLK_DIV2>,
--		 <&clkc CLKID_MPLL2>;
--	clock-names = "stmmaceth", "clkin0", "clkin1";
--};
--
- &aobus {
- 	pinctrl_aobus: pinctrl@14 {
- 		compatible = "amlogic,meson-gxbb-aobus-pinctrl";
-@@ -230,6 +212,44 @@
- 	};
- };
- 
-+&cbus {
-+	spifc: spi@8c80 {
-+		compatible = "amlogic,meson-gxbb-spifc";
-+		reg = <0x0 0x08c80 0x0 0x80>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&clkc CLKID_SPI>;
-+		status = "disabled";
+-&uart_AO {
+-	status = "okay";
+-	pinctrl-0 = <&uart_ao_a_pins>;
+-	pinctrl-names = "default";
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
 +	};
-+};
-+
-+&ethmac {
-+	clocks = <&clkc CLKID_ETH>,
-+		 <&clkc CLKID_FCLK_DIV2>,
-+		 <&clkc CLKID_MPLL2>;
-+	clock-names = "stmmaceth", "clkin0", "clkin1";
-+};
-+
-+&hiubus {
-+	clkc: clock-controller@0 {
-+		compatible = "amlogic,gxbb-clkc";
-+		#clock-cells = <1>;
-+		reg = <0x0 0x0 0x0 0x3db>;
-+	};
-+};
-+
-+&i2c_A {
-+	clocks = <&clkc CLKID_I2C>;
-+};
-+
-+&i2c_B {
-+	clocks = <&clkc CLKID_I2C>;
-+};
-+
-+&i2c_C {
-+	clocks = <&clkc CLKID_I2C>;
-+};
-+
- &periphs {
- 	pinctrl_periphs: pinctrl@4b0 {
- 		compatible = "amlogic,meson-gxbb-periphs-pinctrl";
-@@ -470,26 +490,6 @@
- 	};
  };
  
--&hiubus {
--	clkc: clock-controller@0 {
--		compatible = "amlogic,gxbb-clkc";
--		#clock-cells = <1>;
--		reg = <0x0 0x0 0x0 0x3db>;
--	};
--};
--
--&i2c_A {
--	clocks = <&clkc CLKID_I2C>;
--};
--
--&i2c_B {
--	clocks = <&clkc CLKID_I2C>;
--};
--
--&i2c_C {
--	clocks = <&clkc CLKID_I2C>;
--};
--
+ &ethmac {
+@@ -147,6 +147,14 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&pwm_ef {
++	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
++};
++
+ /* Wireless SDIO Module */
  &sd_emmc_a {
- 	clocks = <&clkc CLKID_SD_EMMC_A>,
- 		 <&xtal>,
+ 	status = "okay";
+@@ -206,16 +214,8 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+-&pwm_ef {
++&uart_AO {
+ 	status = "okay";
+-	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&clkc CLKID_FCLK_DIV4>;
+-	clock-names = "clkin0";
+-};
+-
+-&cvbs_vdac_port {
+-	cvbs_vdac_out: endpoint {
+-		remote-endpoint = <&cvbs_connector_in>;
+-	};
+ };
 -- 
 2.10.2
