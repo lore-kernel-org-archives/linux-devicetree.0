@@ -1,77 +1,58 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v3 6/9] ARM64: dts: meson-gxbb-wetek-play2: add the
- ethernet PHY's reset GPIO
-Date: Fri, 20 Jan 2017 17:23:34 +0100
-Message-ID: <79f98be7-6ddf-380a-3b53-02fe8396f638@baylibre.com>
-References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-7-martin.blumenstingl@googlemail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: dts: exynos: Use correct mfc_pd async-bridge
+ clock for Exynos5420
+Date: Fri, 20 Jan 2017 18:28:46 +0200
+Message-ID: <20170120162846.x766u3nzblqywggj@kozik-lap>
+References: <1484864995-10679-1-git-send-email-javier@osg.samsung.com>
+ <1484864995-10679-2-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170120152232.13943-7-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, khilman@baylibre.com, carlo@caione.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484864995-10679-2-git-send-email-javier@osg.samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: linux-kernel@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20/2017 04:22 PM, Martin Blumenstingl wrote:
-> This resets the ethernet PHY during boot to get the PHY into a "clean"
-> state.
-> While here also specify the phy-handle of the ethmac node to make the
-> PHY configuration similar to the one we have on GXL devices. This will
-> allow us to specify OF-properties for the PHY itself.
+On Thu, Jan 19, 2017 at 07:29:55PM -0300, Javier Martinez Canillas wrote:
+> Commit 94aed538e032 ("ARM: dts: exynos: Add async-bridge clock to MFC
+> power domain for Exynos5420") fixed an imprecise external abort error
+> when the MFC registers were tried to be accessed and the needed clock
+> for the asynchronous bridges were gated.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> But according to the Exynos5420 manual the "Gating AXI clock for MFC"
+> is not CLK_ACLK333 but CLK_MFC.
+> 
+> The end effect is the same because CLK_ACLK333 is a parent of CLK_MFC
+> but the correct clock should be used instead.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
+> 
 > ---
->  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-> index ea79fdd2c248..9a8e2f492b97 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
-> @@ -87,6 +87,30 @@
->  	};
->  };
->  
-> +&ethmac {
-> +	status = "okay";
-> +	pinctrl-0 = <&eth_rgmii_pins>;
-> +	pinctrl-names = "default";
-> +	phy-handle = <&eth_phy0>;
-> +	phy-mode = "rgmii";
-> +
-> +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
-> +	snps,reset-delays-us = <0 10000 1000000>;
-> +	snps,reset-active-low;
-> +
-> +	mdio {
-> +		compatible = "snps,dwmac-mdio";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		eth_phy0: ethernet-phy@0 {
-> +			compatible = "ethernet-phy-id001c.c916",
-> +				     "ethernet-phy-ieee802.3-c22";
-> +			reg = <0>;
-> +		};
-> +	};
-> +};
-> +
->  &i2c_A {
->  	status = "okay";
->  	pinctrl-0 = <&i2c_a_pins>;
-> 
+>  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Wetek Play 2 :
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+Is this still needed?
+
+Best regards,
+Krzysztof
+
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 906a1a42a7ea..ffb148ea91d6 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -294,7 +294,7 @@
+>  			reg = <0x10044060 0x20>;
+>  			clocks = <&clock CLK_FIN_PLL>,
+>  				 <&clock CLK_MOUT_USER_ACLK333>,
+> -				 <&clock CLK_ACLK333>;
+> +				 <&clock CLK_MFC>;
+>  			clock-names = "oscclk", "clk0","asb0";
+>  			#power-domain-cells = <0>;
+>  		};
+> -- 
+> 2.7.4
+> 
