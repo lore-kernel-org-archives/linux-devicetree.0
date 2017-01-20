@@ -1,152 +1,39 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
-Date: Fri, 20 Jan 2017 19:03:38 +0100
-Message-ID: <CAMuHMdUrtTPKjAnFNkbBJeCaHTvJkOvWRXQM4j38dAqnxA0mLw@mail.gmail.com>
-References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-5-git-send-email-geert+renesas@glider.be> <1484927830.2897.51.camel@pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 36/37] ARM: DRA7: clockdomain: Change the CLKTRCTRL of
+ CM_PCIE_CLKSTCTRL to SW_WKUP
+Date: Fri, 20 Jan 2017 10:28:50 -0800
+Message-ID: <20170120182850.GE7403@atomide.com>
+References: <1484216786-17292-1-git-send-email-kishon@ti.com>
+ <1484216786-17292-37-git-send-email-kishon@ti.com>
+ <20170113171537.GZ2630@atomide.com>
+ <587C628E.7070804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484927830.2897.51.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <587C628E.7070804@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, linux-pci@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@axis.com, linux-arm-msm@vger.kernel.org, nsekhar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+* Kishon Vijay Abraham I <kishon@ti.com> [170115 22:06]:
+> Hi Tony,
+> 
+> On Friday 13 January 2017 10:45 PM, Tony Lindgren wrote:
+> > * Kishon Vijay Abraham I <kishon@ti.com> [170112 02:35]:
+> >> The PCIe programming sequence in TRM suggests CLKSTCTRL of PCIe should
+> >> be set to SW_WKUP. There are no issues when CLKSTCTRL is set to HW_AUTO
+> >> in RC mode. However in EP mode, the host system is not able to access the
+> >> MEMSPACE and setting the CLKSTCTRL to SW_WKUP fixes it.
+> > 
+> > I guess ideally in the long run we would set this dynamically based on
+> > the selected mode, right?
+> 
+> The programming sequence mentioned in the TRM w.r.t clock programming is same
+> for both host mode or device mode. Though we never faced any issues in host
+> mode when HW_AUTO is set, it's better to follow TRM recommended settings IMHO.
 
-On Fri, Jan 20, 2017 at 4:57 PM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Fri, 2017-01-20 at 15:08 +0100, Geert Uytterhoeven wrote:
->> Add optional support for the Reset Control feature of the Renesas Clock
->> Pulse Generator / Module Standby and Software Reset module on R-Car
->> Gen2, R-Car Gen3, and RZ/G1 SoCs.
->
-> Is there a reason to make this optional?
+OK best to merge this with the whole series:
 
-With "optional", I mean that I don't select CONFIG_RESET_CONTROLLER, and
-make the reset controller code depend on CONFIG_RESET_CONTROLLER.
-So far we don't have any mandatory users.
-
->> This allows to reset SoC devices using the Reset Controller API.
->>
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Looks good to me,
->
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-Thanks!
-
-> Just a small issue below,
->
->> ---
->>  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++++++++
->>  1 file changed, 122 insertions(+)
->>
->> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
->> index f1161a585c57e433..ea4af714ac14603a 100644
->> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
->> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-> [...]
->> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
->> +                       unsigned long id)
->> +{
->> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
->> +     unsigned int reg = id / 32;
->> +     unsigned int bit = id % 32;
->> +     u32 bitmask = BIT(bit);
->
-> Here you have a bitmask = BIT(bit) variable.
-
-Because there are two users in the function.
-
->> +     unsigned long flags;
->> +     u32 value;
->> +
->> +     dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
->> +
->> +     /* Reset module */
->> +     spin_lock_irqsave(&priv->rmw_lock, flags);
->> +     value = readl(priv->base + SRCR(reg));
->> +     value |= bitmask;
->
-> Here you use it.
->
->> +     writel(value, priv->base + SRCR(reg));
->> +     spin_unlock_irqrestore(&priv->rmw_lock, flags);
->> +
->> +     /* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
->> +     udelay(35);
->> +
->> +     /* Release module from reset state */
->> +     writel(bitmask, priv->base + SRSTCLR(reg));
->> +
->> +     return 0;
->> +}
->> +
->> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned long id)
->> +{
->> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
->> +     unsigned int reg = id / 32;
->> +     unsigned int bit = id % 32;
->
-> Here you haven't.
->
->> +     unsigned long flags;
->> +     u32 value;
->> +
->> +     dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
->> +
->> +     spin_lock_irqsave(&priv->rmw_lock, flags);
->> +     value = readl(priv->base + SRCR(reg));
->> +     writel(value | BIT(bit), priv->base + SRCR(reg));
->
-> Here you don't.
-
-Because there's a single user in the function.
-
->> +     spin_unlock_irqrestore(&priv->rmw_lock, flags);
->> +     return 0;
->> +}
->> +
->> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
->> +                          unsigned long id)
->> +{
->> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
->> +     unsigned int reg = id / 32;
->> +     unsigned int bit = id % 32;
->> +
->> +     dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
->> +
->> +     writel(BIT(bit), priv->base + SRSTCLR(reg));
->
-> And here ...
->
->> +     return 0;
->> +}
->> +
->> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
->> +                        unsigned long id)
->> +{
->> +     struct cpg_mssr_priv *priv = rcdev_to_priv(rcdev);
->> +     unsigned int reg = id / 32;
->> +     unsigned int bit = id % 32;
->> +
->> +     return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
->
-> And here neither.
->
-> I'd choose one variant over the other for consistency.
-
-OK, I'll use the "bitmask" variable in all functions.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Acked-by: Tony Lindgren <tony@atomide.com>
