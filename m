@@ -1,58 +1,101 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: dts: exynos: Use correct mfc_pd async-bridge
- clock for Exynos5420
-Date: Fri, 20 Jan 2017 18:28:46 +0200
-Message-ID: <20170120162846.x766u3nzblqywggj@kozik-lap>
-References: <1484864995-10679-1-git-send-email-javier@osg.samsung.com>
- <1484864995-10679-2-git-send-email-javier@osg.samsung.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Fri, 20 Jan 2017 17:31:51 +0100
+Message-ID: <1484929911.2897.70.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484864995-10679-2-git-send-email-javier@osg.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@osg.samsung.com>
-Cc: linux-kernel@vger.kernel.org, Inki Dae <inki.dae@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Shuah Khan <shuahkh@osg.samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 07:29:55PM -0300, Javier Martinez Canillas wrote:
-> Commit 94aed538e032 ("ARM: dts: exynos: Add async-bridge clock to MFC
-> power domain for Exynos5420") fixed an imprecise external abort error
-> when the MFC registers were tried to be accessed and the needed clock
-> for the asynchronous bridges were gated.
-> 
-> But according to the Exynos5420 manual the "Gating AXI clock for MFC"
-> is not CLK_ACLK333 but CLK_MFC.
-> 
-> The end effect is the same because CLK_ACLK333 is a parent of CLK_MFC
-> but the correct clock should be used instead.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
-> 
-> ---
-> 
->  arch/arm/boot/dts/exynos5420.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Hans,
 
-Is this still needed?
-
-Best regards,
-Krzysztof
-
+On Fri, 2017-01-20 at 14:52 +0100, Hans Verkuil wrote:
+> Hi Steve, Philipp,
 > 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 906a1a42a7ea..ffb148ea91d6 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -294,7 +294,7 @@
->  			reg = <0x10044060 0x20>;
->  			clocks = <&clock CLK_FIN_PLL>,
->  				 <&clock CLK_MOUT_USER_ACLK333>,
-> -				 <&clock CLK_ACLK333>;
-> +				 <&clock CLK_MFC>;
->  			clock-names = "oscclk", "clk0","asb0";
->  			#power-domain-cells = <0>;
->  		};
-> -- 
-> 2.7.4
+> On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
+> > In version 3:
+> > 
+> > Changes suggested by Rob Herring <robh@kernel.org>:
+> > 
+> >   - prepended FIM node properties with vendor prefix "fsl,".
+> > 
+> >   - make mipi csi-2 receiver compatible string SoC specific:
+> >     "fsl,imx6-mipi-csi2" instead of "fsl,imx-mipi-csi2".
+> > 
+> >   - redundant "_clk" removed from mipi csi-2 receiver clock-names property.
+> > 
+> >   - removed board-specific info from the media driver binding doc. These
+> >     were all related to sensor bindings, which already are (adv7180)
+> >     or will be (ov564x) covered in separate binding docs. All reference
+> >     board info not related to DT bindings has been moved to
+> >     Documentation/media/v4l-drivers/imx.rst.
+> > 
+> >   - removed "_mipi" from the OV5640 compatible string.
+> > 
+> > Changes suggested by Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>:
+> > 
+> >   Mostly cosmetic/non-functional changes which I won't list here, except
+> >   for the following:
+> > 
+> >   - spin_lock_irqsave() changed to spin_lock() in a couple interrupt handlers.
+> > 
+> >   - fixed some unnecessary of_node_put()'s in for_each_child_of_node() loops.
+> > 
+> >   - check/handle return code from required reg property of CSI port nodes.
+> > 
+> >   - check/handle return code from clk_prepare_enable().
+> > 
+> > Changes suggested by Fabio Estevam <festevam@gmail.com>:
+> > 
+> >   - switch to VGEN3 Analog Vdd supply assuming rev. C SabreSD boards.
+> > 
+> >   - finally got around to passing valid IOMUX pin config values to the
+> >     pin groups.
+> > 
+> > Other changes:
+> > 
+> >   - removed the FIM properties that overrided the v4l2 FIM control defaults
+> >     values. This was left-over from a requirement of a customer and is not
+> >     necessary here.
+> > 
+> >   - The FIM must be explicitly enabled in the fim child node under the CSI
+> >     port nodes, using the status property. If not enabled, FIM v4l2 controls
+> >     will not appear in the video capture driver.
+> > 
+> >   - brought in additional media types patch from Philipp Zabel. Use new
+> >     MEDIA_ENT_F_VID_IF_BRIDGE in mipi csi-2 receiver subdev.
+> > 
+> >   - brought in latest platform generic video multiplexer subdevice driver
+> >     from Philipp Zabel (squashed with patch that uses new MEDIA_ENT_F_MUX).
+> > 
+> >   - removed imx-media-of.h, moved those prototypes into imx-media.h.
 > 
+> Based on the discussion on the mailinglist it seems everyone agrees that this
+> is the preferred driver, correct?
+
+No. I have some major reservations against the custom mem2mem framework
+embedded in Steve's driver.
+I think it is a misuse of the media entity links (which should describe
+hardware connections) for something that should be done at the vb2 level
+(letting one device's capture EOF interrupt trigger the next device's
+m2m device_run without going through userspace).
+Steve and I disagree on that point, so we'd appreciate if we could get
+some more eyes on the above issue.
+
+regards
+Philipp
