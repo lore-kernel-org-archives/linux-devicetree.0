@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 13/18] ARM64: dts: meson-gxbb-nexbox-a95x: Reorder nodes
-Date: Fri, 20 Jan 2017 23:21:13 +0100
-Message-ID: <20170120222118.21476-14-afaerber@suse.de>
+Subject: [PATCH 17/18] ARM64: dts: meson-gxm-nexbox-a1: Reorder nodes
+Date: Fri, 20 Jan 2017 23:21:17 +0100
+Message-ID: <20170120222118.21476-18-afaerber@suse.de>
 References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -17,55 +17,80 @@ Sort nodes referenced by label alphabetically.
 
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 28 +++++++++++-----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts | 58 +++++++++++-----------
+ 1 file changed, 29 insertions(+), 29 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-index 4cbd626a9e88..e642bfd5eec5 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-@@ -154,10 +154,10 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index 439060652689..804e8de80f37 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -102,10 +102,35 @@
  	};
  };
  
 -&uart_AO {
--	status = "okay";
--	pinctrl-0 = <&uart_ao_a_pins>;
--	pinctrl-names = "default";
 +&cvbs_vdac_port {
 +	cvbs_vdac_out: endpoint {
 +		remote-endpoint = <&cvbs_connector_in>;
 +	};
- };
- 
- &ethmac {
-@@ -173,6 +173,14 @@
- 	pinctrl-names = "default";
- };
- 
-+&pwm_ef {
-+	status = "okay";
-+	pinctrl-0 = <&pwm_e_pins>;
-+	pinctrl-names = "default";
-+	clocks = <&clkc CLKID_FCLK_DIV4>;
-+	clock-names = "clkin0";
 +};
 +
- /* Wireless SDIO Module */
- &sd_emmc_a {
++&ethmac {
  	status = "okay";
-@@ -232,16 +240,8 @@
+-	pinctrl-0 = <&uart_ao_a_pins>;
++
++	pinctrl-0 = <&eth_pins>;
+ 	pinctrl-names = "default";
++
++	/* Select external PHY by default */
++	phy-handle = <&external_phy>;
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	/* External PHY is in RGMII */
++	phy-mode = "rgmii";
++};
++
++&external_mdio {
++	external_phy: ethernet-phy@0 {
++		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		max-speed = <1000>;
++	};
+ };
+ 
+ &ir {
+@@ -152,33 +177,8 @@
  	vqmmc-supply = <&vddio_boot>;
  };
  
--&pwm_ef {
+-&ethmac {
 +&uart_AO {
  	status = "okay";
--	pinctrl-0 = <&pwm_e_pins>;
+-
+-	pinctrl-0 = <&eth_pins>;
 +	pinctrl-0 = <&uart_ao_a_pins>;
  	pinctrl-names = "default";
--	clocks = <&clkc CLKID_FCLK_DIV4>;
--	clock-names = "clkin0";
+-
+-	/* Select external PHY by default */
+-	phy-handle = <&external_phy>;
+-
+-	snps,reset-gpio = <&gpio GPIOZ_14 0>;
+-	snps,reset-delays-us = <0 10000 1000000>;
+-	snps,reset-active-low;
+-
+-	/* External PHY is in RGMII */
+-	phy-mode = "rgmii";
+-};
+-
+-&external_mdio {
+-	external_phy: ethernet-phy@0 {
+-		compatible = "ethernet-phy-id001c.c916", "ethernet-phy-ieee802.3-c22";
+-		reg = <0>;
+-		max-speed = <1000>;
+-	};
 -};
 -
 -&cvbs_vdac_port {
