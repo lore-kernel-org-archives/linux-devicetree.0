@@ -1,42 +1,44 @@
-From: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 5/7] [media] coda: fix frame index to returned error
-Date: Fri, 20 Jan 2017 15:00:23 +0100
-Message-ID: <20170120140025.3338-6-m.tretter@pengutronix.de>
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH v4 4/7] [media] coda: add debug output about tiling
+Date: Fri, 20 Jan 2017 15:00:22 +0100
+Message-ID: <20170120140025.3338-5-m.tretter@pengutronix.de>
 References: <20170120140025.3338-1-m.tretter@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120140025.3338-1-m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170120140025.3338-1-m.tretter@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Michael Tretter <m.tretter@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-display_idx refers to the frame that will be returned in the next round.
-The currently processed frame is ctx->display_idx and errors should be
-reported for this frame.
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-Signed-off-by: Michael Tretter <m.tretter-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In order to make the VDOA work correctly, the CODA must produce frames
+in tiled format. Print this information in the debug output.
+
+Also print the color format in fourcc instead of the numeric value.
+
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
 ---
- drivers/media/platform/coda/coda-bit.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/media/platform/coda/coda-common.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/platform/coda/coda-bit.c b/drivers/media/platform/coda/coda-bit.c
-index b6625047250d..309eb4eb5ad1 100644
---- a/drivers/media/platform/coda/coda-bit.c
-+++ b/drivers/media/platform/coda/coda-bit.c
-@@ -2057,7 +2057,7 @@ static void coda_finish_decode(struct coda_ctx *ctx)
- 		}
- 		vb2_set_plane_payload(&dst_buf->vb2_buf, 0, payload);
+diff --git a/drivers/media/platform/coda/coda-common.c b/drivers/media/platform/coda/coda-common.c
+index fa3ed74af116..b23fe0f0fb56 100644
+--- a/drivers/media/platform/coda/coda-common.c
++++ b/drivers/media/platform/coda/coda-common.c
+@@ -616,8 +616,10 @@ static int coda_s_fmt(struct coda_ctx *ctx, struct v4l2_format *f,
+ 	}
  
--		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[display_idx] ?
-+		coda_m2m_buf_done(ctx, dst_buf, ctx->frame_errors[ctx->display_idx] ?
- 				  VB2_BUF_STATE_ERROR : VB2_BUF_STATE_DONE);
+ 	v4l2_dbg(1, coda_debug, &ctx->dev->v4l2_dev,
+-		"Setting format for type %d, wxh: %dx%d, fmt: %d\n",
+-		f->type, q_data->width, q_data->height, q_data->fourcc);
++		"Setting format for type %d, wxh: %dx%d, fmt: %4.4s %c\n",
++		f->type, q_data->width, q_data->height,
++		(char *)&q_data->fourcc,
++		(ctx->tiled_map_type == GDI_LINEAR_FRAME_MAP) ? 'L' : 'T');
  
- 		v4l2_dbg(1, coda_debug, &dev->v4l2_dev,
+ 	return 0;
+ }
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
