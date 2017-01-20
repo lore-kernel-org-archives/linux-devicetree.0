@@ -1,40 +1,71 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v2 0/2] clocksource: Add renesas-ostm timer driver
-Date: Fri, 20 Jan 2017 16:20:01 -0500
-Message-ID: <20170120212003.4103-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/2] of/platform: dynamic: Use of_platform_bus_create() to create devices
+Date: Fri, 20 Jan 2017 22:02:33 +0100
+Message-ID: <20170120210234.11924-1-alexander.sverdlin@nokia.com>
+References: <20170120205745.11851-1-alexander.sverdlin@nokia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120205745.11851-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
+of_platform_notify() requires parents to have OF_POPULATED_BUS to be set
+(which is correct way to verify healthy platform bus), but uses
+of_platform_device_create() to create devices, which never sets the above
+flag. Therefore it's not possible to add platform buses via overlays.
 
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
+Use of_platform_bus_create(), which is used in non-overlay case to populate
+both buses and devices.
 
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ drivers/of/platform.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
-
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  29 ++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |  12 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 349 +++++++++++++++++++++
- 5 files changed, 392 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b8064bc2b6eb..35de1fc59fa6 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -578,6 +578,7 @@ static int of_platform_notify(struct notifier_block *nb,
+ 	struct of_reconfig_data *rd = arg;
+ 	struct platform_device *pdev_parent, *pdev;
+ 	bool children_left;
++	int ret;
+ 
+ 	switch (of_reconfig_get_state_change(action, rd)) {
+ 	case OF_RECONFIG_CHANGE_ADD:
+@@ -591,15 +592,15 @@ static int of_platform_notify(struct notifier_block *nb,
+ 
+ 		/* pdev_parent may be NULL when no bus platform device */
+ 		pdev_parent = of_find_device_by_node(rd->dn->parent);
+-		pdev = of_platform_device_create(rd->dn, NULL,
+-				pdev_parent ? &pdev_parent->dev : NULL);
++		ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
++					     NULL, pdev_parent ?
++					     &pdev_parent->dev : NULL, true);
+ 		of_dev_put(pdev_parent);
+ 
+-		if (pdev == NULL) {
++		if (ret) {
+ 			pr_err("%s: failed to create for '%s'\n",
+ 					__func__, rd->dn->full_name);
+-			/* of_platform_device_create tosses the error code */
+-			return notifier_from_errno(-EINVAL);
++			return notifier_from_errno(ret);
+ 		}
+ 		break;
+ 
 -- 
-2.10.1
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
