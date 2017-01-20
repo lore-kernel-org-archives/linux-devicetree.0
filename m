@@ -1,56 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Fri, 20 Jan 2017 15:04:28 +0000
-Message-ID: <20170120150428.GC22152@leverpostej>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v3 1/9] ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
+Date: Fri, 20 Jan 2017 16:22:24 +0100
+Message-ID: <20170120152232.13943-2-martin.blumenstingl@googlemail.com>
+References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484832916-7248-1-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170120152232.13943-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 09:35:12PM +0800, Ding Tianhong wrote:
-> Ding Tianhong (4):
->   arm64: arch_timer: Add device tree binding for hisilicon-161010101
->     erratum
->   arm64: arch_timer: Introduce a generic erratum handing mechanism for
->     fsl-a008585
->   arm64: arch_timer: Work around Erratum Hisilicon-161010101
->   arm64: arch timer: Add timer erratum property for Hip05-d02 and
->     Hip06-d03
-> 
->  Documentation/admin-guide/kernel-parameters.txt    |   9 --
->  Documentation/arm64/silicon-errata.txt             |  43 +++---
->  .../devicetree/bindings/arm/arch_timer.txt         |   6 +
->  arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
->  arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
->  arch/arm64/include/asm/arch_timer.h                |  38 ++----
->  drivers/clocksource/Kconfig                        |  18 +++
->  drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
->  8 files changed, 171 insertions(+), 95 deletions(-)
+This resets the ethernet PHY during boot to get the PHY into a "clean"
+state. While here also explicitly specify the phy-mode instead of
+relying on the default-value from meson-gx.dtsi.
 
-I've picked these up (with a few local cleanups), given that some local
-testing, and pushed the result to a branch [1] on my git repo.
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-There are likely to be clashes with the arm64 tree (e.g. for
-silicon-errata.txt), and we're also likely to have more arch timer
-updates shortly for the GTDT stuff, so I think the best bet is for both
-arm64 and the clocksource tree to pull that branch for v4.11.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index c59403adb387..6b5579522587 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -152,6 +152,11 @@
+ 	pinctrl-0 = <&eth_rgmii_pins>;
+ 	pinctrl-names = "default";
+ 	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
+ 
+ 	mdio {
+ 		compatible = "snps,dwmac-mdio";
+-- 
+2.11.0
 
-Alternatively, we could take this all through the arm64 tree, if the
-clocksource maintainers are happy with that.
-
-Thoughts?
-
-Thanks,
-Mark.
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arch-timer/hisi-161010101
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
