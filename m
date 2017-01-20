@@ -1,99 +1,88 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 0/9] meson-gx: reset RGMII PHYs and configure TX delay
-Date: Fri, 20 Jan 2017 11:46:02 -0800
-Message-ID: <m2y3y53479.fsf@baylibre.com>
-References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
-        <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
-        <CAFBinCBQ8S7-tCnkY+Vabs3etSv-gJCsK=tE+RNJZS8+uFfB=Q@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 1/6] dt-bindings: add device tree binding for
+ Allwinner V3s pinctrl
+Date: Fri, 20 Jan 2017 21:24:10 +0100
+Message-ID: <20170120202410.nqesbntbxousxggq@lukather>
+References: <20170119175448.11445-1-icenowy@aosc.xyz>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCBQ8S7-tCnkY+Vabs3etSv-gJCsK=tE+RNJZS8+uFfB=Q@mail.gmail.com>
-        (Martin Blumenstingl's message of "Fri, 20 Jan 2017 16:32:18 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============2028044968875360106=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170119175448.11445-1-icenowy@aosc.xyz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Icenowy Zheng <icenowy@aosc.xyz>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-> On Fri, Jan 20, 2017 at 4:22 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> This series adds the reset GPIOs for the (external) ethernet PHYs on all
->> GXBB boards.
->> Additionally it provides a ethernet PHY node which can be used to specify
->> PHY-specific properties (this may be required if more boards require the
->> "eee-broken-1000t" for the RTL8211F ethernet PHY). To make all board .dts
->> consistent I chose to add the PHY node also for boards which don't have a
->> RTL8211F PHY.
->>
->> Patch #7 from this series also removes ethernet support for the P200
->> board because it was broken anyways and nobody seems to have a board
->> available for testing. This was the outcome of the discussion from [0]
->>
->> Patch #8 was taken from (older versions of) my other series (see [1]):
->> "[PATCH net-next v3 0/2] stmmac: dwmac-meson8b: configurable
->> RGMII TX delay".
->> The binding changes for amlogic,tx-delay-ns were ACK'ed already.
->>
->> Changes since v2:
->> - fixed patch #2 to really update the P200 board (as it's the P200 which
->>   actually uses a Micrel KSZ9031 RGMII PHY). Thanks to Neil Armstrong for
->>   spotting this huge mistake!
->> - instead of dropping ethernet support for P201 we simply re-configure it
->>   to RMII mode (replaces patch #7) without a MDIO node (which keeps PHY
->>   auto-scanning enabled). This got Neil Armstrong's ACK off-list already
->>
->> Changes since v1:
->> - do not move the MDIO bus to meson-gx as this disables PHY auto-scanning
->>   in the stmmac driver (this drops patch #1 from v1)
->> - add the ethernet PHY reset GPIO for nexbox a95x which was forgotten in
->>   v1
->> - add the ethernet PHY reset GPIO for boards which were added since v1
->>   (wetek hub and wetek play2)
->> - rebased to apply against the current v4.11/dt64 branch
->> - new in v2 (patch #7): disabled ethernet support for the P200 board (see
->>   the commit description for more information). this patch is optional
->> - new in v2 (patch #9): removed the phy-mode property from meson-gx (see
->>   the commit description for more information). this patch is optional
->>
->>
->> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002053.html
->> [1] http://lists.infradead.org/pipermail/linux-amlogic/2016-December/001834.html
->>
->> Martin Blumenstingl (9):
->>   ARM64: dts: meson-gxbb-odroidc2: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-p200: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-nexbox-a95x: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
->>   ARM64: dts: meson-gxbb-p201: fix ethernet support
->>   ARM64: dts: amlogic: add the ethernet TX delay configuration
->>   ARM64: dts: meson-gx: remove the phy-mode property from meson-gx
->>
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  1 -
->>  .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 17 ++++++++++++++
->>  .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts |  7 ++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts    | 26 ++++++++++++++++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts    | 11 +++++++++
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   |  6 -----
->>  .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 20 +++++++++++++++++
->>  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 26 ++++++++++++++++++++++
->>  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 26 ++++++++++++++++++++++
->>  .../boot/dts/amlogic/meson-gxl-s905d-p230.dts      |  2 ++
->>  .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts |  2 ++
->>  arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts     |  2 ++
->>  12 files changed, 139 insertions(+), 7 deletions(-)
-> I totally forgot to mention:
-> this applies to Kevin's v4.11/dt64 branch with Jerome's Odroid-C2
-> ethernet fix [0] applied on top of it
+--===============2028044968875360106==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="bvvspr3z376jkvsv"
+Content-Disposition: inline
 
-So when Jerome's fix lands in mainline (probably by -rc5, maybe -rc6)
-I'll rebase the dt64 branch on that and apply this series.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--bvvspr3z376jkvsv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 20, 2017 at 01:54:43AM +0800, Icenowy Zheng wrote:
+> Allwinner V3s SoC has a pin controller like other Allwinner SoCs and got
+> supported by the sunxi-pinctrl driver now.
+>=20
+> Add a device tree binding for it.
+>=20
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.xyz>
+
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--bvvspr3z376jkvsv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYgnHlAAoJEBx+YmzsjxAguuYQAIlIabIelXIosIUazlfIQ8oT
+aqCgeEefipH2Eyeakfi8XcCbyCd3d06umFJCAEjYvSClsXyBI1vsnsA1hcyEHYcF
+0YmHQzyAXhRW/H5VlVv+rg6S3/GoaIbk9hi1bnmftaRLj1zGpqsqoUBzKx0ITTbk
+7h73qVtRrH/9j5ZBV/vMyEsck8jx39P66mHgfL80rWrxiYI9Kqm8QDxuKbv8kCwg
+AnpSFXiMpepeB0j3/uzco7fHXBHuf29np/E/0ilpZsht1i2G6QG9DXVTr+usOCWd
+q4O6eDFPbQkQRSGuiDhNM4Kddm27Fm1tWb7AxYqtZFPmJ8+EvS8ggdjX6IzsVfmH
+h5DxEJgIkZl+WekHj8Su7Izq+y39kITE61OQe8T6KEujrOa+BBWHBpRJHjc9hE8S
+ua4oh49GvPVV5X97iAhEIr6HYdKIOr0i1CE4TKKIRc+t0ABmDmIFkemqIRK799lh
+B/u2/iVtWmvDjxgvQsN4aopa4y7rF268grFDSsIdAG5yVNcZqW6Vth+IgZhukJ9m
+Dy0+XXPJlGEILz3PQII3NfPiQz+p5Gc5tttQohgaZNJz3fZJuLgLvB+QmM16RDoz
+lzRnHsVLdiZJIlf/63N+VEWSANYvKzOQ6UOZM/gH79vkl2avfsI+rtl4cnhmcj9e
+iZRklQfC9u+OoL9wmrKq
+=mmsS
+-----END PGP SIGNATURE-----
+
+--bvvspr3z376jkvsv--
+
+
+--===============2028044968875360106==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============2028044968875360106==--
