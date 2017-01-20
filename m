@@ -1,462 +1,655 @@
-From: Michael Tretter <m.tretter@pengutronix.de>
-Subject: [PATCH v4 2/7] [media] coda: add i.MX6 VDOA driver
-Date: Fri, 20 Jan 2017 15:00:20 +0100
-Message-ID: <20170120140025.3338-3-m.tretter@pengutronix.de>
-References: <20170120140025.3338-1-m.tretter@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170120140025.3338-1-m.tretter@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, kernel@pengutronix.de, Philipp Zabel <philipp.zabel@gmail.com>, Michael Tretter <m.tretter@pengutronix.de>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Fri, 20 Jan 2017 15:03:16 +0100
+Message-ID: <b7695d77-4078-f171-d592-ff679e28b8e0@xs4all.nl>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <philipp.zabel@gmail.com>
+On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled either by register bit fields or by a GPIO. The subdevice
+> passes through frame interval and mbus configuration of the active input
+> to the output side.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> --
+> 
+> - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
+>   should be unregister.
+> 
+> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
+>   to vidsw_remove().
+> 
+> - there was a line left over from a previous iteration that negated
+>   the new way of determining the pad count just before it which
+>   has been removed (num_pads = of_get_child_count(np)).
+> 
+> - Philipp Zabel has developed a set of patches that allow adding
+>   to the subdev async notifier waiting list using a chaining method
+>   from the async registered callbacks (v4l2_of_subdev_registered()
+>   and the prep patches for that). For now, I've removed the use of
+>   v4l2_of_subdev_registered() for the vidmux driver's registered
+>   callback. This doesn't affect the functionality of this driver,
+>   but allows for it to be merged now, before adding the chaining
+>   support.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  .../bindings/media/video-multiplexer.txt           |  59 +++
+>  drivers/media/platform/Kconfig                     |   8 +
+>  drivers/media/platform/Makefile                    |   2 +
+>  drivers/media/platform/video-multiplexer.c         | 472 +++++++++++++++++++++
+>  4 files changed, 541 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
+>  create mode 100644 drivers/media/platform/video-multiplexer.c
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> new file mode 100644
+> index 0000000..9d133d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> @@ -0,0 +1,59 @@
+> +Video Multiplexer
+> +=================
+> +
+> +Video multiplexers allow to select between multiple input ports. Video received
+> +on the active input port is passed through to the output port. Muxes described
+> +by this binding may be controlled by a syscon register bitfield or by a GPIO.
+> +
+> +Required properties:
+> +- compatible : should be "video-multiplexer"
+> +- reg: should be register base of the register containing the control bitfield
+> +- bit-mask: bitmask of the control bitfield in the control register
+> +- bit-shift: bit offset of the control bitfield in the control register
+> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
+> +  may be given to switch between two inputs
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <0>
+> +- port@*: at least three port nodes containing endpoints connecting to the
+> +  source and sink devices according to of_graph bindings. The last port is
+> +  the output port, all others are inputs.
+> +
+> +Example:
+> +
+> +syscon {
+> +	compatible = "syscon", "simple-mfd";
+> +
+> +	mux {
+> +		compatible = "video-multiplexer";
+> +		/* Single bit (1 << 19) in syscon register 0x04: */
+> +		reg = <0x04>;
+> +		bit-mask = <1>;
+> +		bit-shift = <19>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			mux_in0: endpoint {
+> +				remote-endpoint = <&video_source0_out>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			mux_in1: endpoint {
+> +				remote-endpoint = <&video_source1_out>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			mux_out: endpoint {
+> +				remote-endpoint = <&capture_interface_in>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
+> index d944421..65614b5 100644
+> --- a/drivers/media/platform/Kconfig
+> +++ b/drivers/media/platform/Kconfig
+> @@ -74,6 +74,14 @@ config VIDEO_M32R_AR_M64278
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called arv.
+>  
+> +config VIDEO_MULTIPLEXER
+> +	tristate "Video Multiplexer"
+> +	depends on VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER
+> +	help
+> +	  This driver provides support for SoC internal N:1 video bus
+> +	  multiplexers controlled by register bitfields as well as external
+> +	  2:1 video multiplexers controlled by a single GPIO.
+> +
+>  config VIDEO_OMAP3
+>  	tristate "OMAP 3 Camera support"
+>  	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
+> diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
+> index 5b3cb27..7cf0ee5 100644
+> --- a/drivers/media/platform/Makefile
+> +++ b/drivers/media/platform/Makefile
+> @@ -27,6 +27,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
+>  
+>  obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
+>  
+> +obj-$(CONFIG_VIDEO_MULTIPLEXER)		+= video-multiplexer.o
+> +
+>  obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
+>  obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
+>  obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
+> diff --git a/drivers/media/platform/video-multiplexer.c b/drivers/media/platform/video-multiplexer.c
+> new file mode 100644
+> index 0000000..48980c4
+> --- /dev/null
+> +++ b/drivers/media/platform/video-multiplexer.c
+> @@ -0,0 +1,472 @@
+> +/*
+> + * video stream multiplexer controlled via gpio or syscon
+> + *
+> + * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel@pengutronix.de>
+> + * Copyright (C) 2016 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_graph.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <media/v4l2-async.h>
+> +#include <media/v4l2-device.h>
+> +#include <media/v4l2-subdev.h>
+> +#include <media/v4l2-of.h>
+> +
+> +struct vidsw {
+> +	struct v4l2_subdev subdev;
+> +	unsigned int num_pads;
+> +	struct media_pad *pads;
+> +	struct v4l2_mbus_framefmt *format_mbus;
+> +	struct v4l2_fract timeperframe;
+> +	struct v4l2_of_endpoint *endpoint;
+> +	struct regmap_field *field;
+> +	struct gpio_desc *gpio;
+> +	int active;
+> +};
+> +
+> +static inline struct vidsw *v4l2_subdev_to_vidsw(struct v4l2_subdev *sd)
+> +{
+> +	return container_of(sd, struct vidsw, subdev);
+> +}
+> +
+> +static void vidsw_set_active(struct vidsw *vidsw, int active)
+> +{
+> +	vidsw->active = active;
+> +	if (active < 0)
+> +		return;
+> +
+> +	dev_dbg(vidsw->subdev.dev, "setting %d active\n", active);
+> +
+> +	if (vidsw->field)
+> +		regmap_field_write(vidsw->field, active);
+> +	else if (vidsw->gpio)
+> +		gpiod_set_value(vidsw->gpio, active);
+> +}
+> +
+> +static int vidsw_link_setup(struct media_entity *entity,
+> +			    const struct media_pad *local,
+> +			    const struct media_pad *remote, u32 flags)
+> +{
+> +	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +
+> +	/* We have no limitations on enabling or disabling our output link */
+> +	if (local->index == vidsw->num_pads - 1)
+> +		return 0;
+> +
+> +	dev_dbg(sd->dev, "link setup %s -> %s", remote->entity->name,
+> +		local->entity->name);
+> +
+> +	if (!(flags & MEDIA_LNK_FL_ENABLED)) {
+> +		if (local->index == vidsw->active) {
+> +			dev_dbg(sd->dev, "going inactive\n");
+> +			vidsw->active = -1;
+> +		}
+> +		return 0;
+> +	}
+> +
+> +	if (vidsw->active >= 0) {
+> +		struct media_pad *pad;
+> +
+> +		if (vidsw->active == local->index)
+> +			return 0;
+> +
+> +		pad = media_entity_remote_pad(&vidsw->pads[vidsw->active]);
+> +		if (pad) {
+> +			struct media_link *link;
+> +			int ret;
+> +
+> +			link = media_entity_find_link(pad,
+> +						&vidsw->pads[vidsw->active]);
+> +			if (link) {
+> +				ret = __media_entity_setup_link(link, 0);
+> +				if (ret)
+> +					return ret;
+> +			}
+> +		}
+> +	}
+> +
+> +	vidsw_set_active(vidsw, local->index);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct media_entity_operations vidsw_ops = {
+> +	.link_setup = vidsw_link_setup,
+> +};
+> +
+> +static bool vidsw_endpoint_disabled(struct device_node *ep)
+> +{
+> +	struct device_node *rpp;
+> +
+> +	if (!of_device_is_available(ep))
+> +		return true;
+> +
+> +	rpp = of_graph_get_remote_port_parent(ep);
+> +	if (!rpp)
+> +		return true;
+> +
+> +	return !of_device_is_available(rpp);
+> +}
+> +
+> +static int vidsw_async_init(struct vidsw *vidsw, struct device_node *node)
+> +{
+> +	struct device_node *ep;
+> +	u32 portno;
+> +	int numports;
+> +	int ret;
+> +	int i;
+> +	bool active_link = false;
+> +
+> +	numports = vidsw->num_pads;
+> +
+> +	for (i = 0; i < numports - 1; i++)
+> +		vidsw->pads[i].flags = MEDIA_PAD_FL_SINK;
+> +	vidsw->pads[numports - 1].flags = MEDIA_PAD_FL_SOURCE;
+> +
+> +	vidsw->subdev.entity.function = MEDIA_ENT_F_MUX;
+> +	ret = media_entity_pads_init(&vidsw->subdev.entity, numports,
+> +				     vidsw->pads);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	vidsw->subdev.entity.ops = &vidsw_ops;
+> +
+> +	for_each_endpoint_of_node(node, ep) {
+> +		struct v4l2_of_endpoint endpoint;
+> +
+> +		v4l2_of_parse_endpoint(ep, &endpoint);
+> +
+> +		portno = endpoint.base.port;
+> +		if (portno >= numports - 1)
+> +			continue;
+> +
+> +		if (vidsw_endpoint_disabled(ep)) {
+> +			dev_dbg(vidsw->subdev.dev, "port %d disabled\n", portno);
+> +			continue;
+> +		}
+> +
+> +		vidsw->endpoint[portno] = endpoint;
+> +
+> +		if (portno == vidsw->active)
+> +			active_link = true;
+> +	}
+> +
+> +	for (portno = 0; portno < numports - 1; portno++) {
+> +		if (!vidsw->endpoint[portno].base.local_node)
+> +			continue;
+> +
+> +		/* If the active input is not connected, use another */
+> +		if (!active_link) {
+> +			vidsw_set_active(vidsw, portno);
+> +			active_link = true;
+> +		}
+> +	}
+> +
+> +	return v4l2_async_register_subdev(&vidsw->subdev);
+> +}
+> +
+> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct v4l2_mbus_config *cfg)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +	struct media_pad *pad;
+> +	int ret;
+> +
+> +	if (vidsw->active == -1) {
+> +		dev_err(sd->dev, "no configuration for inactive mux\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * Retrieve media bus configuration from the entity connected to the
+> +	 * active input
+> +	 */
+> +	pad = media_entity_remote_pad(&vidsw->pads[vidsw->active]);
+> +	if (pad) {
+> +		sd = media_entity_to_v4l2_subdev(pad->entity);
+> +		ret = v4l2_subdev_call(sd, video, g_mbus_config, cfg);
+> +		if (ret == -ENOIOCTLCMD)
+> +			pad = NULL;
+> +		else if (ret < 0) {
+> +			dev_err(sd->dev, "failed to get source configuration\n");
+> +			return ret;
+> +		}
+> +	}
+> +	if (!pad) {
+> +		/* Mirror the input side on the output side */
+> +		cfg->type = vidsw->endpoint[vidsw->active].bus_type;
+> +		if (cfg->type == V4L2_MBUS_PARALLEL ||
+> +		    cfg->type == V4L2_MBUS_BT656)
+> +			cfg->flags = vidsw->endpoint[vidsw->active].bus.parallel.flags;
+> +	}
+> +
+> +	return 0;
+> +}
 
-The i.MX6 Video Data Order Adapter's (VDOA) sole purpose is to convert
-from a custom macroblock tiled format produced by the CODA960 decoder
-into linear formats that can be used for scanout.
+I am not certain this op is needed at all. In the current kernel this op is only
+used by soc_camera, pxa_camera and omap3isp (somewhat dubious). Normally this
+information should come from the device tree and there should be no need for this op.
 
-Signed-off-by: Philipp Zabel <philipp.zabel@gmail.com>
-Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
----
- drivers/media/platform/Kconfig         |   3 +
- drivers/media/platform/coda/Makefile   |   1 +
- drivers/media/platform/coda/imx-vdoa.c | 338 +++++++++++++++++++++++++++++++++
- drivers/media/platform/coda/imx-vdoa.h |  58 ++++++
- 4 files changed, 400 insertions(+)
- create mode 100644 drivers/media/platform/coda/imx-vdoa.c
- create mode 100644 drivers/media/platform/coda/imx-vdoa.h
+My (tentative) long-term plan was to get rid of this op.
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index d944421e392d..595652613db9 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -162,6 +162,9 @@ config VIDEO_CODA
- 	   Coda is a range of video codec IPs that supports
- 	   H.264, MPEG-4, and other video formats.
- 
-+config VIDEO_IMX_VDOA
-+	def_tristate VIDEO_CODA if SOC_IMX6Q || COMPILE_TEST
-+
- config VIDEO_MEDIATEK_VPU
- 	tristate "Mediatek Video Processor Unit"
- 	depends on VIDEO_DEV && VIDEO_V4L2 && HAS_DMA
-diff --git a/drivers/media/platform/coda/Makefile b/drivers/media/platform/coda/Makefile
-index 9342ac57b230..858284328af9 100644
---- a/drivers/media/platform/coda/Makefile
-+++ b/drivers/media/platform/coda/Makefile
-@@ -3,3 +3,4 @@ ccflags-y += -I$(src)
- coda-objs := coda-common.o coda-bit.o coda-gdi.o coda-h264.o coda-jpeg.o
- 
- obj-$(CONFIG_VIDEO_CODA) += coda.o
-+obj-$(CONFIG_VIDEO_IMX_VDOA) += imx-vdoa.o
-diff --git a/drivers/media/platform/coda/imx-vdoa.c b/drivers/media/platform/coda/imx-vdoa.c
-new file mode 100644
-index 000000000000..f61baf7dcbc1
---- /dev/null
-+++ b/drivers/media/platform/coda/imx-vdoa.c
-@@ -0,0 +1,338 @@
-+/*
-+ * i.MX6 Video Data Order Adapter (VDOA)
-+ *
-+ * Copyright (C) 2014 Philipp Zabel
-+ * Copyright (C) 2016 Pengutronix, Michael Tretter <kernel@pengutronix.de>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/videodev2.h>
-+#include <linux/slab.h>
-+
-+#include "imx-vdoa.h"
-+
-+#define VDOA_NAME "imx-vdoa"
-+
-+#define VDOAC		0x00
-+#define VDOASRR		0x04
-+#define VDOAIE		0x08
-+#define VDOAIST		0x0c
-+#define VDOAFP		0x10
-+#define VDOAIEBA00	0x14
-+#define VDOAIEBA01	0x18
-+#define VDOAIEBA02	0x1c
-+#define VDOAIEBA10	0x20
-+#define VDOAIEBA11	0x24
-+#define VDOAIEBA12	0x28
-+#define VDOASL		0x2c
-+#define VDOAIUBO	0x30
-+#define VDOAVEBA0	0x34
-+#define VDOAVEBA1	0x38
-+#define VDOAVEBA2	0x3c
-+#define VDOAVUBO	0x40
-+#define VDOASR		0x44
-+
-+#define VDOAC_ISEL		BIT(6)
-+#define VDOAC_PFS		BIT(5)
-+#define VDOAC_SO		BIT(4)
-+#define VDOAC_SYNC		BIT(3)
-+#define VDOAC_NF		BIT(2)
-+#define VDOAC_BNDM_MASK		0x3
-+#define VDOAC_BAND_HEIGHT_8	0x0
-+#define VDOAC_BAND_HEIGHT_16	0x1
-+#define VDOAC_BAND_HEIGHT_32	0x2
-+
-+#define VDOASRR_START		BIT(1)
-+#define VDOASRR_SWRST		BIT(0)
-+
-+#define VDOAIE_EITERR		BIT(1)
-+#define VDOAIE_EIEOT		BIT(0)
-+
-+#define VDOAIST_TERR		BIT(1)
-+#define VDOAIST_EOT		BIT(0)
-+
-+#define VDOAFP_FH_MASK		(0x1fff << 16)
-+#define VDOAFP_FW_MASK		(0x3fff)
-+
-+#define VDOASL_VSLY_MASK	(0x3fff << 16)
-+#define VDOASL_ISLY_MASK	(0x7fff)
-+
-+#define VDOASR_ERRW		BIT(4)
-+#define VDOASR_EOB		BIT(3)
-+#define VDOASR_CURRENT_FRAME	(0x3 << 1)
-+#define VDOASR_CURRENT_BUFFER	BIT(1)
-+
-+enum {
-+	V4L2_M2M_SRC = 0,
-+	V4L2_M2M_DST = 1,
-+};
-+
-+struct vdoa_data {
-+	struct vdoa_ctx		*curr_ctx;
-+	struct device		*dev;
-+	struct clk		*vdoa_clk;
-+	void __iomem		*regs;
-+	int			irq;
-+};
-+
-+struct vdoa_q_data {
-+	unsigned int	width;
-+	unsigned int	height;
-+	unsigned int	bytesperline;
-+	unsigned int	sizeimage;
-+	u32		pixelformat;
-+};
-+
-+struct vdoa_ctx {
-+	struct vdoa_data	*vdoa;
-+	struct completion	completion;
-+	struct vdoa_q_data	q_data[2];
-+};
-+
-+static irqreturn_t vdoa_irq_handler(int irq, void *data)
-+{
-+	struct vdoa_data *vdoa = data;
-+	struct vdoa_ctx *curr_ctx;
-+	u32 val;
-+
-+	/* Disable interrupts */
-+	writel(0, vdoa->regs + VDOAIE);
-+
-+	curr_ctx = vdoa->curr_ctx;
-+	if (!curr_ctx) {
-+		dev_dbg(vdoa->dev,
-+			"Instance released before the end of transaction\n");
-+		return IRQ_HANDLED;
-+	}
-+
-+	val = readl(vdoa->regs + VDOAIST);
-+	writel(val, vdoa->regs + VDOAIST);
-+	if (val & VDOAIST_TERR) {
-+		val = readl(vdoa->regs + VDOASR) & VDOASR_ERRW;
-+		dev_err(vdoa->dev, "AXI %s error\n", val ? "write" : "read");
-+	} else if (!(val & VDOAIST_EOT)) {
-+		dev_warn(vdoa->dev, "Spurious interrupt\n");
-+	}
-+	complete(&curr_ctx->completion);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+void vdoa_device_run(struct vdoa_ctx *ctx, dma_addr_t dst, dma_addr_t src)
-+{
-+	struct vdoa_q_data *src_q_data, *dst_q_data;
-+	struct vdoa_data *vdoa = ctx->vdoa;
-+	u32 val;
-+
-+	vdoa->curr_ctx = ctx;
-+
-+	src_q_data = &ctx->q_data[V4L2_M2M_SRC];
-+	dst_q_data = &ctx->q_data[V4L2_M2M_DST];
-+
-+	/* Progressive, no sync, 1 frame per run */
-+	if (dst_q_data->pixelformat == V4L2_PIX_FMT_YUYV)
-+		val = VDOAC_PFS;
-+	else
-+		val = 0;
-+	writel(val, vdoa->regs + VDOAC);
-+
-+	writel(dst_q_data->height << 16 | dst_q_data->width,
-+	       vdoa->regs + VDOAFP);
-+
-+	val = dst;
-+	writel(val, vdoa->regs + VDOAIEBA00);
-+
-+	writel(src_q_data->bytesperline << 16 | dst_q_data->bytesperline,
-+	       vdoa->regs + VDOASL);
-+
-+	if (dst_q_data->pixelformat == V4L2_PIX_FMT_NV12 ||
-+	    dst_q_data->pixelformat == V4L2_PIX_FMT_NV21)
-+		val = dst_q_data->bytesperline * dst_q_data->height;
-+	else
-+		val = 0;
-+	writel(val, vdoa->regs + VDOAIUBO);
-+
-+	val = src;
-+	writel(val, vdoa->regs + VDOAVEBA0);
-+	val = round_up(src_q_data->bytesperline * src_q_data->height, 4096);
-+	writel(val, vdoa->regs + VDOAVUBO);
-+
-+	/* Enable interrupts and start transfer */
-+	writel(VDOAIE_EITERR | VDOAIE_EIEOT, vdoa->regs + VDOAIE);
-+	writel(VDOASRR_START, vdoa->regs + VDOASRR);
-+}
-+EXPORT_SYMBOL(vdoa_device_run);
-+
-+int vdoa_wait_for_completion(struct vdoa_ctx *ctx)
-+{
-+	struct vdoa_data *vdoa = ctx->vdoa;
-+
-+	if (!wait_for_completion_timeout(&ctx->completion,
-+					 msecs_to_jiffies(300))) {
-+		dev_err(vdoa->dev,
-+			"Timeout waiting for transfer result\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(vdoa_wait_for_completion);
-+
-+struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa)
-+{
-+	struct vdoa_ctx *ctx;
-+	int err;
-+
-+	ctx = kzalloc(sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return NULL;
-+
-+	err = clk_prepare_enable(vdoa->vdoa_clk);
-+	if (err) {
-+		kfree(ctx);
-+		return NULL;
-+	}
-+
-+	init_completion(&ctx->completion);
-+	ctx->vdoa = vdoa;
-+
-+	return ctx;
-+}
-+EXPORT_SYMBOL(vdoa_context_create);
-+
-+void vdoa_context_destroy(struct vdoa_ctx *ctx)
-+{
-+	struct vdoa_data *vdoa = ctx->vdoa;
-+
-+	clk_disable_unprepare(vdoa->vdoa_clk);
-+	kfree(ctx);
-+}
-+EXPORT_SYMBOL(vdoa_context_destroy);
-+
-+int vdoa_context_configure(struct vdoa_ctx *ctx,
-+			   unsigned int width, unsigned int height,
-+			   u32 pixelformat)
-+{
-+	struct vdoa_q_data *src_q_data;
-+	struct vdoa_q_data *dst_q_data;
-+
-+	if (width < 16 || width  > 8192 || width % 16 != 0 ||
-+	    height < 16 || height > 4096 || height % 16 != 0)
-+		return -EINVAL;
-+
-+	if (pixelformat != V4L2_PIX_FMT_YUYV &&
-+	    pixelformat != V4L2_PIX_FMT_NV12)
-+		return -EINVAL;
-+
-+	/* If no context is passed, only check if the format is valid */
-+	if (!ctx)
-+		return 0;
-+
-+	src_q_data = &ctx->q_data[V4L2_M2M_SRC];
-+	dst_q_data = &ctx->q_data[V4L2_M2M_DST];
-+
-+	src_q_data->width = width;
-+	src_q_data->height = height;
-+	src_q_data->bytesperline = width;
-+	src_q_data->sizeimage =
-+		round_up(src_q_data->bytesperline * height, 4096) +
-+		src_q_data->bytesperline * height / 2;
-+
-+	dst_q_data->width = width;
-+	dst_q_data->height = height;
-+	dst_q_data->pixelformat = pixelformat;
-+	switch (pixelformat) {
-+	case V4L2_PIX_FMT_YUYV:
-+		dst_q_data->bytesperline = width * 2;
-+		dst_q_data->sizeimage = dst_q_data->bytesperline * height;
-+		break;
-+	case V4L2_PIX_FMT_NV12:
-+	default:
-+		dst_q_data->bytesperline = width;
-+		dst_q_data->sizeimage =
-+			dst_q_data->bytesperline * height * 3 / 2;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL(vdoa_context_configure);
-+
-+static int vdoa_probe(struct platform_device *pdev)
-+{
-+	struct vdoa_data *vdoa;
-+	struct resource *res;
-+
-+	dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-+
-+	vdoa = devm_kzalloc(&pdev->dev, sizeof(*vdoa), GFP_KERNEL);
-+	if (!vdoa)
-+		return -ENOMEM;
-+
-+	vdoa->dev = &pdev->dev;
-+
-+	vdoa->vdoa_clk = devm_clk_get(vdoa->dev, NULL);
-+	if (IS_ERR(vdoa->vdoa_clk)) {
-+		dev_err(vdoa->dev, "Failed to get clock\n");
-+		return PTR_ERR(vdoa->vdoa_clk);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	vdoa->regs = devm_ioremap_resource(vdoa->dev, res);
-+	if (IS_ERR(vdoa->regs))
-+		return PTR_ERR(vdoa->regs);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-+	vdoa->irq = devm_request_threaded_irq(&pdev->dev, res->start, NULL,
-+					vdoa_irq_handler, IRQF_ONESHOT,
-+					"vdoa", vdoa);
-+	if (vdoa->irq < 0) {
-+		dev_err(vdoa->dev, "Failed to get irq\n");
-+		return vdoa->irq;
-+	}
-+
-+	platform_set_drvdata(pdev, vdoa);
-+
-+	return 0;
-+}
-+
-+static int vdoa_remove(struct platform_device *pdev)
-+{
-+	return 0;
-+}
-+
-+static struct of_device_id vdoa_dt_ids[] = {
-+	{ .compatible = "fsl,imx6q-vdoa" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, vdoa_dt_ids);
-+
-+static struct platform_driver vdoa_driver = {
-+	.probe		= vdoa_probe,
-+	.remove		= vdoa_remove,
-+	.driver		= {
-+		.name	= VDOA_NAME,
-+		.of_match_table = vdoa_dt_ids,
-+	},
-+};
-+
-+module_platform_driver(vdoa_driver);
-+
-+MODULE_DESCRIPTION("Video Data Order Adapter");
-+MODULE_AUTHOR("Philipp Zabel <philipp.zabel@gmail.com>");
-+MODULE_ALIAS("platform:imx-vdoa");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/media/platform/coda/imx-vdoa.h b/drivers/media/platform/coda/imx-vdoa.h
-new file mode 100644
-index 000000000000..967576b2a06a
---- /dev/null
-+++ b/drivers/media/platform/coda/imx-vdoa.h
-@@ -0,0 +1,58 @@
-+/*
-+ * Copyright (C) 2016 Pengutronix
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef IMX_VDOA_H
-+#define IMX_VDOA_H
-+
-+struct vdoa_data;
-+struct vdoa_ctx;
-+
-+#if (defined CONFIG_VIDEO_IMX_VDOA || defined CONFIG_VIDEO_IMX_VDOA_MODULE)
-+
-+struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa);
-+int vdoa_context_configure(struct vdoa_ctx *ctx,
-+			   unsigned int width, unsigned int height,
-+			   u32 pixelformat);
-+void vdoa_context_destroy(struct vdoa_ctx *ctx);
-+
-+void vdoa_device_run(struct vdoa_ctx *ctx, dma_addr_t dst, dma_addr_t src);
-+int vdoa_wait_for_completion(struct vdoa_ctx *ctx);
-+
-+#else
-+
-+static inline struct vdoa_ctx *vdoa_context_create(struct vdoa_data *vdoa)
-+{
-+	return NULL;
-+}
-+
-+static inline int vdoa_context_configure(struct vdoa_ctx *ctx,
-+					 unsigned int width,
-+					 unsigned int height,
-+					 u32 pixelformat)
-+{
-+	return 0;
-+}
-+
-+static inline void vdoa_context_destroy(struct vdoa_ctx *ctx) { };
-+
-+static inline void vdoa_device_run(struct vdoa_ctx *ctx,
-+				   dma_addr_t dst, dma_addr_t src) { };
-+
-+static inline int vdoa_wait_for_completion(struct vdoa_ctx *ctx)
-+{
-+	return 0;
-+};
-+
-+#endif
-+
-+#endif /* IMX_VDOA_H */
--- 
-2.11.0
+If you don't need it, then I recommend it is removed.
+
+> +
+> +static int vidsw_s_stream(struct v4l2_subdev *sd, int enable)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +	struct v4l2_subdev *upstream_sd;
+> +	struct media_pad *pad;
+> +
+> +	if (vidsw->active == -1) {
+> +		dev_err(sd->dev, "Can not start streaming on inactive mux\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	pad = media_entity_remote_pad(&sd->entity.pads[vidsw->active]);
+> +	if (!pad) {
+> +		dev_err(sd->dev, "Failed to find remote source pad\n");
+> +		return -ENOLINK;
+> +	}
+> +
+> +	if (!is_media_entity_v4l2_subdev(pad->entity)) {
+> +		dev_err(sd->dev, "Upstream entity is not a v4l2 subdev\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	upstream_sd = media_entity_to_v4l2_subdev(pad->entity);
+> +
+> +	return v4l2_subdev_call(upstream_sd, video, s_stream, enable);
+> +}
+> +
+> +static int vidsw_g_frame_interval(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_frame_interval *fi)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +
+> +	fi->interval = vidsw->timeperframe;
+> +
+> +	return 0;
+> +}
+> +
+> +static int vidsw_s_frame_interval(struct v4l2_subdev *sd,
+> +				  struct v4l2_subdev_frame_interval *fi)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +
+> +	vidsw->timeperframe = fi->interval;
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct v4l2_subdev_video_ops vidsw_subdev_video_ops = {
+> +	.g_mbus_config = vidsw_g_mbus_config,
+> +	.s_stream = vidsw_s_stream,
+> +	.g_frame_interval = vidsw_g_frame_interval,
+> +	.s_frame_interval = vidsw_s_frame_interval,
+> +};
+> +
+> +static struct v4l2_mbus_framefmt *
+> +__vidsw_get_pad_format(struct v4l2_subdev *sd,
+> +		       struct v4l2_subdev_pad_config *cfg,
+> +		       unsigned int pad, u32 which)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +
+> +	switch (which) {
+> +	case V4L2_SUBDEV_FORMAT_TRY:
+> +		return v4l2_subdev_get_try_format(sd, cfg, pad);
+> +	case V4L2_SUBDEV_FORMAT_ACTIVE:
+> +		return &vidsw->format_mbus[pad];
+> +	default:
+> +		return NULL;
+> +	}
+> +}
+> +
+> +static int vidsw_get_format(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_pad_config *cfg,
+> +			    struct v4l2_subdev_format *sdformat)
+> +{
+> +	sdformat->format = *__vidsw_get_pad_format(sd, cfg, sdformat->pad,
+> +						   sdformat->which);
+> +	return 0;
+> +}
+> +
+> +static int vidsw_set_format(struct v4l2_subdev *sd,
+> +			    struct v4l2_subdev_pad_config *cfg,
+> +			    struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+> +	struct v4l2_mbus_framefmt *mbusformat;
+> +
+> +	if (sdformat->pad >= vidsw->num_pads)
+> +		return -EINVAL;
+> +
+> +	mbusformat = __vidsw_get_pad_format(sd, cfg, sdformat->pad,
+> +					    sdformat->which);
+> +	if (!mbusformat)
+> +		return -EINVAL;
+> +
+> +	/* Output pad mirrors active input pad, no limitations on input pads */
+> +	if (sdformat->pad == (vidsw->num_pads - 1) && vidsw->active >= 0)
+> +		sdformat->format = vidsw->format_mbus[vidsw->active];
+> +
+> +	*mbusformat = sdformat->format;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct v4l2_subdev_pad_ops vidsw_pad_ops = {
+> +	.get_fmt = vidsw_get_format,
+> +	.set_fmt = vidsw_set_format,
+> +};
+> +
+> +static struct v4l2_subdev_ops vidsw_subdev_ops = {
+> +	.pad = &vidsw_pad_ops,
+> +	.video = &vidsw_subdev_video_ops,
+> +};
+> +
+> +static int of_get_reg_field(struct device_node *node, struct reg_field *field)
+> +{
+> +	u32 bit_mask;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(node, "reg", &field->reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = of_property_read_u32(node, "bit-mask", &bit_mask);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = of_property_read_u32(node, "bit-shift", &field->lsb);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	field->msb = field->lsb + fls(bit_mask) - 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int vidsw_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct of_endpoint endpoint;
+> +	struct device_node *ep;
+> +	struct reg_field field;
+> +	struct vidsw *vidsw;
+> +	struct regmap *map;
+> +	unsigned int num_pads;
+> +	int ret;
+> +
+> +	vidsw = devm_kzalloc(&pdev->dev, sizeof(*vidsw), GFP_KERNEL);
+> +	if (!vidsw)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, vidsw);
+> +
+> +	v4l2_subdev_init(&vidsw->subdev, &vidsw_subdev_ops);
+> +	snprintf(vidsw->subdev.name, sizeof(vidsw->subdev.name), "%s",
+> +			np->name);
+> +	vidsw->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
+> +	vidsw->subdev.dev = &pdev->dev;
+> +
+> +	/*
+> +	 * The largest numbered port is the output port. It determines
+> +	 * total number of pads
+> +	 */
+> +	num_pads = 0;
+> +	for_each_endpoint_of_node(np, ep) {
+> +		of_graph_parse_endpoint(ep, &endpoint);
+> +		num_pads = max(num_pads, endpoint.port + 1);
+> +	}
+> +
+> +	if (num_pads < 2) {
+> +		dev_err(&pdev->dev, "Not enough ports %d\n", num_pads);
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = of_get_reg_field(np, &field);
+> +	if (ret == 0) {
+> +		map = syscon_node_to_regmap(np->parent);
+> +		if (!map) {
+> +			dev_err(&pdev->dev, "Failed to get syscon register map\n");
+> +			return PTR_ERR(map);
+> +		}
+> +
+> +		vidsw->field = devm_regmap_field_alloc(&pdev->dev, map, field);
+> +		if (IS_ERR(vidsw->field)) {
+> +			dev_err(&pdev->dev, "Failed to allocate regmap field\n");
+> +			return PTR_ERR(vidsw->field);
+> +		}
+> +
+> +		regmap_field_read(vidsw->field, &vidsw->active);
+> +	} else {
+> +		if (num_pads > 3) {
+> +			dev_err(&pdev->dev, "Too many ports %d\n", num_pads);
+> +			return -EINVAL;
+> +		}
+> +
+> +		vidsw->gpio = devm_gpiod_get(&pdev->dev, NULL, GPIOD_OUT_LOW);
+> +		if (IS_ERR(vidsw->gpio)) {
+> +			dev_warn(&pdev->dev,
+> +				 "could not request control gpio: %d\n", ret);
+> +			vidsw->gpio = NULL;
+> +		}
+> +
+> +		vidsw->active = gpiod_get_value(vidsw->gpio) ? 1 : 0;
+> +	}
+> +
+> +	vidsw->num_pads = num_pads;
+> +	vidsw->pads = devm_kzalloc(&pdev->dev, sizeof(*vidsw->pads) * num_pads,
+> +			GFP_KERNEL);
+> +	vidsw->format_mbus = devm_kzalloc(&pdev->dev,
+> +			sizeof(*vidsw->format_mbus) * num_pads, GFP_KERNEL);
+> +	vidsw->endpoint = devm_kzalloc(&pdev->dev,
+> +			sizeof(*vidsw->endpoint) * (num_pads - 1), GFP_KERNEL);
+> +
+> +	ret = vidsw_async_init(vidsw, np);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int vidsw_remove(struct platform_device *pdev)
+> +{
+> +	struct vidsw *vidsw = platform_get_drvdata(pdev);
+> +	struct v4l2_subdev *sd = &vidsw->subdev;
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	media_entity_cleanup(&sd->entity);
+> +	v4l2_device_unregister_subdev(sd);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id vidsw_dt_ids[] = {
+> +	{ .compatible = "video-multiplexer", },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver vidsw_driver = {
+> +	.probe		= vidsw_probe,
+> +	.remove		= vidsw_remove,
+> +	.driver		= {
+> +		.of_match_table = vidsw_dt_ids,
+> +		.name = "video-multiplexer",
+> +	},
+> +};
+> +
+> +module_platform_driver(vidsw_driver);
+> +
+> +MODULE_DESCRIPTION("video stream multiplexer");
+> +MODULE_AUTHOR("Sascha Hauer, Pengutronix");
+> +MODULE_AUTHOR("Philipp Zabel, Pengutronix");
+> +MODULE_LICENSE("GPL");
+> 
+
+Regards,
+
+	Hans
