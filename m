@@ -1,68 +1,106 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 00/18] ARM64: meson: DT cleanups
-Date: Fri, 20 Jan 2017 23:21:00 +0100
-Message-ID: <20170120222118.21476-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 14/18] ARM64: dts: meson-gxbb-p20x: Reorder nodes
+Date: Fri, 20 Jan 2017 23:21:14 +0100
+Message-ID: <20170120222118.21476-15-afaerber@suse.de>
+References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170120222118.21476-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-amlogic@lists.infradead.org
+Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Sort nodes referenced by label alphabetically.
 
-This series fixes several cosmetic issues, on top of v4.11/dt64 branch.
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi | 54 ++++++++++++------------
+ 1 file changed, 27 insertions(+), 27 deletions(-)
 
-Patches 3-5 rename a node, the rest should all be non-functional changes.
-Patches 10-18 could be squashed if desired.
-
-Regards,
-Andreas
-
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Andreas Färber (18):
-  Documentation: devicetree: amlogic: Reorder boards
-  ARM64: dts: amlogic: Sort Makefile
-  ARM64: dts: meson-gxbb-vega-s95: Fix Wifi node name
-  ARM64: dts: meson-gxbb-p20x: Fix Wifi node name
-  ARM64: dts: meson-gx-p23x-q20x: Fix Wifi node name
-  ARM64: dts: meson-gxm-nexbox-a1: Drop UART comment
-  ARM64: dts: meson-gxl-s905x: Comment typo fix
-  ARM64: dts: meson-gxm: Drop trailing white line
-  ARM64: dts: meson-gxbb-wetek-hub: Reference CVBS node by label
-  ARM64: dts: meson-gxbb: Reorder nodes
-  ARM64: dts: meson-gxbb-odroidc2: Reorder nodes
-  ARM64: dts: meson-gxbb-vega-s95: Reorder nodes
-  ARM64: dts: meson-gxbb-nexbox-a95x: Reorder nodes
-  ARM64: dts: meson-gxbb-p20x: Reorder nodes
-  ARM64: dts: meson-gxl: Reorder nodes
-  ARM64: dts: meson-gxl-s905x-nexbox-a95x: Reorder nodes
-  ARM64: dts: meson-gxm-nexbox-a1: Reorder nodes
-  ARM64: dts: meson-gx-p23x-q20x: Reorder nodes
-
- Documentation/devicetree/bindings/arm/amlogic.txt  | 19 ++++--
- arch/arm64/boot/dts/amlogic/Makefile               |  4 +-
- .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 26 ++++----
- .../boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts    | 28 ++++----
- .../arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 52 +++++++--------
- arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi   | 58 ++++++++---------
- .../boot/dts/amlogic/meson-gxbb-vega-s95.dtsi      | 53 ++++++++-------
- .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      |  6 +-
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        | 76 +++++++++++-----------
- .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 28 ++++----
- arch/arm64/boot/dts/amlogic/meson-gxl-s905x.dtsi   |  2 +-
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         | 40 ++++++------
- .../arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts | 59 +++++++++--------
- arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |  1 -
- 14 files changed, 228 insertions(+), 224 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index 0d134a85e3a0..b6f9d051439c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -137,11 +137,10 @@
+ 	};
+ };
+ 
+-/* This UART is brought out to the DB9 connector */
+-&uart_AO {
+-	status = "okay";
+-	pinctrl-0 = <&uart_ao_a_pins>;
+-	pinctrl-names = "default";
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
+ };
+ 
+ &ethmac {
+@@ -156,21 +155,12 @@
+ 	pinctrl-names = "default";
+ };
+ 
+-&usb0_phy {
+-	status = "okay";
+-	phy-supply = <&usb_pwr>;
+-};
+-
+-&usb1_phy {
+-	status = "okay";
+-};
+-
+-&usb0 {
+-	status = "okay";
+-};
+-
+-&usb1 {
++&pwm_ef {
+ 	status = "okay";
++	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-names = "default";
++	clocks = <&clkc CLKID_FCLK_DIV4>;
++	clock-names = "clkin0";
+ };
+ 
+ /* Wireless SDIO Module */
+@@ -237,16 +227,26 @@
+ 	vqmmc-supply = <&vddio_boot>;
+ };
+ 
+-&pwm_ef {
++/* This UART is brought out to the DB9 connector */
++&uart_AO {
+ 	status = "okay";
+-	pinctrl-0 = <&pwm_e_pins>;
++	pinctrl-0 = <&uart_ao_a_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&clkc CLKID_FCLK_DIV4>;
+-	clock-names = "clkin0";
+ };
+ 
+-&cvbs_vdac_port {
+-	cvbs_vdac_out: endpoint {
+-		remote-endpoint = <&cvbs_connector_in>;
+-	};
++&usb0_phy {
++	status = "okay";
++	phy-supply = <&usb_pwr>;
++};
++
++&usb1_phy {
++	status = "okay";
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
+ };
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
