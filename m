@@ -1,42 +1,30 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/6] ARM: dts: am335x-sl50: Update to new hardware
-Date: Fri, 20 Jan 2017 10:35:42 -0800
-Message-ID: <20170120183542.GH7403@atomide.com>
-References: <20170116165736.17197-1-enric.balletbo@collabora.com>
- <20170116174149.GE7403@atomide.com>
- <CAFqH_50s3oMsMK_QPFSKfOdrQ5gLcPp_PNM2emWfXO086_T8oQ@mail.gmail.com>
+From: Mark Greer <mgreer@animalcreek.com>
+Subject: Re: [PATCH v3 2/3] NFC: trf7970a: Add device tree option of 1.8 Volt
+ IO voltage
+Date: Fri, 20 Jan 2017 11:37:44 -0700
+Message-ID: <20170120183744.GA9749@animalcreek.com>
+References: <1482380314-16440-1-git-send-email-geoff@kuvee.com>
+ <1482380314-16440-2-git-send-email-geoff@kuvee.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFqH_50s3oMsMK_QPFSKfOdrQ5gLcPp_PNM2emWfXO086_T8oQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1482380314-16440-2-git-send-email-geoff@kuvee.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geoff Lansberry <geoff@kuvee.com>
+Cc: linux-wireless@vger.kernel.org, lauro.venancio@openbossa.org, aloisio.almeida@openbossa.org, sameo@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, justin@kuvee.com
 List-Id: devicetree@vger.kernel.org
 
-* Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170116 12:54]:
-> Hi Tony,
+On Wed, Dec 21, 2016 at 11:18:33PM -0500, Geoff Lansberry wrote:
+> The TRF7970A has configuration options for supporting hardware designs
+> with 1.8 Volt or 3.3 Volt IO.   This commit adds a device tree option,
+> using a fixed regulator binding, for setting the io voltage to match
+> the hardware configuration. If no option is supplied it defaults to
+> 3.3 volt configuration.
 > 
-> 2017-01-16 18:41 GMT+01:00 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> > * Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> [170116 08:58]:
-> >> Hi Tony,
-> >>
-> >> The following patches updates the device tree file for the SL50 device, there
-> >> are few v1 boards and IMHO doesn't make sense to maintain the device tree
-> >> for these old devices, so mostly of the updates are related to changes done in
-> >> the next hardware revision v2 (the one that will go out).
-> >
-> > This is only if the v1 boards are company internal and can be easily
-> > replaced. As long as that's the case I'm fine with that.
-> >
-> 
-> Yes thats the case, I don't expect see v1 board outside.
+> Signed-off-by: Geoff Lansberry <geoff@kuvee.com>
+> ---
+>  .../devicetree/bindings/net/nfc/trf7970a.txt       |  2 ++
+>  drivers/nfc/trf7970a.c                             | 26 +++++++++++++++++++++-
 
-OK applying all into omap-for-v4.11/dt thanks.
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Mark Greer <mgreer@animalcreek.com>
