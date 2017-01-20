@@ -1,76 +1,237 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers property
-Date: Fri, 20 Jan 2017 22:56:03 +0100
-Message-ID: <20170120215605.15728-1-zajec5@gmail.com>
+From: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>
+Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
+Date: Fri, 20 Jan 2017 23:03:02 +0100
+Message-ID: <20170120220302.GA20610@bigcity.dyn.berto.se>
+References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
+ <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi Geert,
 
-Some LEDs can be related to particular devices described in DT. This
-property allows specifying such relations. E.g. USB LED should usually
-be used to indicate some USB port(s) state.
+Nice patch! It took me a while to understand why you didn't need to read =
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Replace "usb-ports" with "led-triggers" property which is more generic and
-    allows specifying other devices as well.
+the register before writing to it in cpg_mssr_deassert() :-) =
 
-When bindings patch is related to some followup implementation, they usually go
-through the same tree.
 
-Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds: Improve examples by
-adding some context") from kernel/git/j.anaszewski/linux-leds.git . Is there any
-way to solve this dependency issue? Or should this patch wait until 3.11 is
-released?
----
- Documentation/devicetree/bindings/leds/common.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Reviewed-by: Niklas S=F6derlund <niklas.soderlund+renesas@ragnatech.se>
 
-diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-index 24b656014089..17632a041196 100644
---- a/Documentation/devicetree/bindings/leds/common.txt
-+++ b/Documentation/devicetree/bindings/leds/common.txt
-@@ -49,6 +49,17 @@ Optional properties for child nodes:
- - panic-indicator : This property specifies that the LED should be used,
- 		    if at all possible, as a panic indicator.
- 
-+- led-triggers : List of devices that should trigger this LED activity. Some
-+		 LEDs can be related to a specific device and should somehow
-+		 indicate its state. E.g. USB 2.0 LED may react to device(s) in
-+		 a USB 2.0 port(s). Another common example is switch or router
-+		 with multiple Ethernet ports each of them having its own LED
-+		 assigned (assuming they are not hardwired).
-+		 In such cases this property should contain phandle(s) of
-+		 related device(s). In many cases LED can be related to more
-+		 than one device (e.g. one USB LED vs. multiple USB ports) so a
-+		 list of entries can be specified.
-+
- Required properties for flash LED child nodes:
- - flash-max-microamp : Maximum flash LED supply current in microamperes.
- - flash-max-timeout-us : Maximum timeout in microseconds after which the flash
-@@ -69,6 +80,11 @@ gpio-leds {
- 		linux,default-trigger = "heartbeat";
- 		gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
- 	};
-+
-+	usb {
-+		gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-+		led-triggers = <&ohci_port1>, <&ehci_port1>;
-+	};
- };
- 
- max77693-led {
--- 
-2.11.0
+On 2017-01-20 15:08:22 +0100, Geert Uytterhoeven wrote:
+> Add optional support for the Reset Control feature of the Renesas Clock
+> Pulse Generator / Module Standby and Software Reset module on R-Car
+> Gen2, R-Car Gen3, and RZ/G1 SoCs.
+> =
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This allows to reset SoC devices using the Reset Controller API.
+> =
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/clk/renesas/renesas-cpg-mssr.c | 122 +++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 122 insertions(+)
+> =
+
+> diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas=
+/renesas-cpg-mssr.c
+> index f1161a585c57e433..ea4af714ac14603a 100644
+> --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+> +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/clk-provider.h>
+>  #include <linux/clk/renesas.h>
+> +#include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/init.h>
+>  #include <linux/mod_devicetable.h>
+> @@ -25,6 +26,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_clock.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/reset-controller.h>
+>  #include <linux/slab.h>
+>  =
+
+>  #include <dt-bindings/clock/renesas-cpg-mssr.h>
+> @@ -96,6 +98,7 @@
+>  /**
+>   * Clock Pulse Generator / Module Standby and Software Reset Private Data
+>   *
+> + * @rcdev: Optional reset controller entity
+>   * @dev: CPG/MSSR device
+>   * @base: CPG/MSSR register block base address
+>   * @rmw_lock: protects RMW register accesses
+> @@ -105,6 +108,9 @@
+>   * @last_dt_core_clk: ID of the last Core Clock exported to DT
+>   */
+>  struct cpg_mssr_priv {
+> +#ifdef CONFIG_RESET_CONTROLLER
+> +	struct reset_controller_dev rcdev;
+> +#endif
+>  	struct device *dev;
+>  	void __iomem *base;
+>  	spinlock_t rmw_lock;
+> @@ -494,6 +500,118 @@ static int __init cpg_mssr_add_clk_domain(struct de=
+vice *dev,
+>  	return 0;
+>  }
+>  =
+
+> +#ifdef CONFIG_RESET_CONTROLLER
+> +
+> +#define rcdev_to_priv(x)	container_of(x, struct cpg_mssr_priv, rcdev)
+> +
+> +static int cpg_mssr_reset(struct reset_controller_dev *rcdev,
+> +			  unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
+> +	unsigned int reg =3D id / 32;
+> +	unsigned int bit =3D id % 32;
+> +	u32 bitmask =3D BIT(bit);
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	dev_dbg(priv->dev, "reset %u%02u\n", reg, bit);
+> +
+> +	/* Reset module */
+> +	spin_lock_irqsave(&priv->rmw_lock, flags);
+> +	value =3D readl(priv->base + SRCR(reg));
+> +	value |=3D bitmask;
+> +	writel(value, priv->base + SRCR(reg));
+> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> +
+> +	/* Wait for at least one cycle of the RCLK clock (@ ca. 32 kHz) */
+> +	udelay(35);
+> +
+> +	/* Release module from reset state */
+> +	writel(bitmask, priv->base + SRSTCLR(reg));
+> +
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_assert(struct reset_controller_dev *rcdev, unsigned =
+long id)
+> +{
+> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
+> +	unsigned int reg =3D id / 32;
+> +	unsigned int bit =3D id % 32;
+> +	unsigned long flags;
+> +	u32 value;
+> +
+> +	dev_dbg(priv->dev, "assert %u%02u\n", reg, bit);
+> +
+> +	spin_lock_irqsave(&priv->rmw_lock, flags);
+> +	value =3D readl(priv->base + SRCR(reg));
+> +	writel(value | BIT(bit), priv->base + SRCR(reg));
+> +	spin_unlock_irqrestore(&priv->rmw_lock, flags);
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_deassert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
+> +	unsigned int reg =3D id / 32;
+> +	unsigned int bit =3D id % 32;
+> +
+> +	dev_dbg(priv->dev, "deassert %u%02u\n", reg, bit);
+> +
+> +	writel(BIT(bit), priv->base + SRSTCLR(reg));
+> +	return 0;
+> +}
+> +
+> +static int cpg_mssr_status(struct reset_controller_dev *rcdev,
+> +			   unsigned long id)
+> +{
+> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
+> +	unsigned int reg =3D id / 32;
+> +	unsigned int bit =3D id % 32;
+> +
+> +	return !!(readl(priv->base + SRCR(reg)) & BIT(bit));
+> +}
+> +
+> +static const struct reset_control_ops cpg_mssr_reset_ops =3D {
+> +	.reset =3D cpg_mssr_reset,
+> +	.assert =3D cpg_mssr_assert,
+> +	.deassert =3D cpg_mssr_deassert,
+> +	.status =3D cpg_mssr_status,
+> +};
+> +
+> +static int cpg_mssr_reset_xlate(struct reset_controller_dev *rcdev,
+> +				const struct of_phandle_args *reset_spec)
+> +{
+> +	struct cpg_mssr_priv *priv =3D rcdev_to_priv(rcdev);
+> +	unsigned int unpacked =3D reset_spec->args[0];
+> +	unsigned int idx =3D MOD_CLK_PACK(unpacked);
+> +
+> +	if (unpacked % 100 > 31 || idx >=3D rcdev->nr_resets) {
+> +		dev_err(priv->dev, "Invalid reset index %u\n", unpacked);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return idx;
+> +}
+> +
+> +static int cpg_mssr_reset_controller_register(struct cpg_mssr_priv *priv)
+> +{
+> +	priv->rcdev.ops =3D &cpg_mssr_reset_ops;
+> +	priv->rcdev.of_node =3D priv->dev->of_node;
+> +	priv->rcdev.of_reset_n_cells =3D 1;
+> +	priv->rcdev.of_xlate =3D cpg_mssr_reset_xlate;
+> +	priv->rcdev.nr_resets =3D priv->num_mod_clks;
+> +	return devm_reset_controller_register(priv->dev, &priv->rcdev);
+> +}
+> +
+> +#else /* !CONFIG_RESET_CONTROLLER */
+> +static inline int cpg_mssr_reset_controller_register(struct cpg_mssr_pri=
+v *priv)
+> +{
+> +	return 0;
+> +}
+> +#endif /* !CONFIG_RESET_CONTROLLER */
+> +
+> +
+>  static const struct of_device_id cpg_mssr_match[] =3D {
+>  #ifdef CONFIG_ARCH_R8A7743
+>  	{
+> @@ -591,6 +709,10 @@ static int __init cpg_mssr_probe(struct platform_dev=
+ice *pdev)
+>  	if (error)
+>  		return error;
+>  =
+
+> +	error =3D cpg_mssr_reset_controller_register(priv);
+> +	if (error)
+> +		return error;
+> +
+>  	return 0;
+>  }
+>  =
+
+> -- =
+
+> 1.9.1
+> =
+
+
+-- =
+
+Regards,
+Niklas S=F6derlund
