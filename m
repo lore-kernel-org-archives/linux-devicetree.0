@@ -1,59 +1,146 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
-Date: Fri, 20 Jan 2017 15:52:04 +0000
-Message-ID: <SG2PR06MB1165089B50C28BFD333299CB8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170118172502.13876-1-chris.brandt@renesas.com>
- <20170118172502.13876-2-chris.brandt@renesas.com>
- <CAPDyKFqO3YrDdKqOqJ=xKSH7uAiZ+rCPEDKMZ+c8Y5RKaVK4kg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/4] dt-bindings: add multidomain support to i.MX GPC DT binding
+Date: Fri, 20 Jan 2017 16:52:22 +0100
+Message-ID: <20170120155225.31905-2-l.stach@pengutronix.de>
+References: <20170120155225.31905-1-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFqO3YrDdKqOqJ=xKSH7uAiZ+rCPEDKMZ+c8Y5RKaVK4kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170120155225.31905-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gVWxmLA0KDQoNCk9uIEZyaWRheSwgSmFudWFyeSAyMCwgMjAxNywgVWxmIEhhbnNzb24g
-d3JvdGU6DQo+IE9uIDE4IEphbnVhcnkgMjAxNyBhdCAxODoyNSwgQ2hyaXMgQnJhbmR0IDxjaHJp
-cy5icmFuZHRAcmVuZXNhcy5jb20+DQo+IHdyb3RlOg0KPiA+IFNvbWUgY29udHJvbGxlcnMgaGF2
-ZSAyIGNsb2NrIHNvdXJjZXMgaW5zdGVhZCBvZiAxLCBzbyB0aGV5IGJvdGggbmVlZA0KPiA+IHRv
-IGJlIHR1cm5lZCBvbi9vZmYuDQo+IA0KPiBUaGlzIGRvZXNuJ3QgdGVsbCBtZSBlbm91Z2guIFBs
-ZWFzZSBlbGFib3JhdGUuDQo+IA0KPiBGb3IgZXhhbXBsZSwgdGVsbCBob3cgeW91IHRyZWF0IHRo
-ZSBjbG9ja3MsIHdoaWNoIG9mIHRoZW0gdGhhdCBpcyBvcHRpb25hbA0KPiBhbmQgd2h5Lg0KDQpC
-YXNpY2FsbHksIHRoZSBjaGlwIGRlc2lnbmVycyB3ZW50IGluIGFuZCBicm9rZSBvdXQgdGhlIGxv
-Z2ljIHRoYXQganVzdCBkb2VzDQp0aGUgY2FyZCBkZXRlY3QgKG1vcmUgb3IgbGVzcyBpdCdzIHBy
-b2JhYmx5IGp1c3Qgc29tZSBzaW1wbGUgSVJRIGxvZ2ljKSBzbw0KdGhhdCB5b3UgY291bGQgc2h1
-dCBvZmYgdGhlIElQIGJsb2NrLCBidXQgaWYgeW91IHB1dCBpbiBhIGNhcmQsIHRoZSBpbnRlcm5h
-bA0KaW50ZXJydXB0IHNpZ25hbCBzdGlsbCB3ZW50IHRvIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxl
-ciBhbmQgcmVnaXN0ZXJlZCB0aGUNCmludGVycnVwdCBldmVuIHRob3VnaCB0aGUgcmVzdCBvZiB0
-aGUgSVAgYmxvY2sgKGluY2x1ZGluZyB0aGUgcmVnaXN0ZXIgc3BhY2UpDQp3YXMgZGVhZC4NCg0K
-VGhlIGlkZWEgc2VlbXMgdG8gYmUgdGhhdCB5b3UgY291bGQgcHV0IHRoZSBlbnRpcmUgY2hpcCBp
-bnRvIGxvdyBwb3dlciBtb2RlDQphbmQgd2FrZSBpdCB1cCBpZiB5b3Ugc3R1Y2sgYSBjYXJkIGlu
-Lg0KDQpNeSBndWVzcyBpcyB0aGF0IHRoaXMgd2FzIGZvciBzb21lIGN1c3RvbWVyIHJlcXVlc3Qg
-b3Igc29tZXRoaW5nLg0KDQpQZXJzb25hbGx5Li4ueW91IGNvdWxkIGhhdmUgZG9uZSB0aGUgc2Ft
-ZSB0aGluZyBpZiB5b3UgbGFpZCBvdXQgYSBib2FyZA0KYW5kIHRpZWQgb25lIG9mIHRoZSBleHRy
-YSBJUlEgbGluZXMgdG8gdGhlIGNkIHNpZ25hbC4uLmJ1dCBJJ20gbm90IHN1cmUgaWYNCmFueW9u
-ZSB0aG91Z2h0IGFib3V0IHRoYXQgYXQgdGhlIHRpbWUuDQoNCg0KU28gdG8geW91ciByZXF1ZXN0
-LCBJIGNvdWxkIHB1dCBhbGwgdGhpcyB1Z2x5IGluZm8gaW50byB0aGUgZG9jdW1lbnRhdGlvbiwN
-CmJ1dCBiYXNpY2FsbHkgYWxsIEknbSB0cnlpbmcgdG8gZG8gaXMgam9pbiB0aGUgMiBjbG9ja3Mg
-YmFjayB0b2dldGhlcg0KdG8gbWFrZSBpdCB3b3JrIGxpa2UgYWxsIHRoZSBvdGhlciBTb0NzIHNp
-bmNlIHRoaXMgbmV3ICdmZWF0dXJlJyBtaWdodA0Kbm90IHJlYWxseSBiZSBwcmFjdGljYWwgdG8g
-ZXZlcnkgdXNlIGluIHRoaXMgZW52aXJvbm1lbnQuDQoNCg0KDQo+ID4gIHN0YXRpYyBpbnQgc2hf
-bW9iaWxlX3NkaGlfY2FyZF9idXN5KHN0cnVjdCBtbWNfaG9zdCAqbW1jKSBAQCAtNTcyLDYNCj4g
-PiArNTgxLDEwIEBAIHN0YXRpYyBpbnQgc2hfbW9iaWxlX3NkaGlfcHJvYmUoc3RydWN0IHBsYXRm
-b3JtX2RldmljZSAqcGRldikNCj4gPiAgICAgICAgICAgICAgICAgZ290byBlcHJvYmU7DQo+ID4g
-ICAgICAgICB9DQo+ID4NCj4gPiArICAgICAgIHByaXYtPmNsa19jZCA9IGRldm1fY2xrX2dldCgm
-cGRldi0+ZGV2LCAiY2QiKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIocHJpdi0+Y2xrX2NkKSkN
-Cj4gPiArICAgICAgICAgICAgICAgcHJpdi0+Y2xrX2NkID0gTlVMTDsNCj4gDQo+IElzIHRoaXMg
-Y2xvY2sgc29sZWx5IGFib3V0IGNhcmQgZGV0ZWN0aW9uPyBTbyBpbiBjYXNlcyB3aGVuIHlvdSBo
-YXZlIGENCj4gR1BJTyBjYXJkIGRldGVjdCwgdGhlIGNsb2NrIGlzbid0IG5lZWRlZD8NCj4gDQo+
-IEp1c3QgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgdGhpbmdzIGEgYml0IGJldHRlci4uLg0KDQpBY2Nv
-cmRpbmcgdG8gdGhlIGhhcmR3YXJlIG1hbnVhbCwgZW5hYmxpbmcgdGhlICJjb3JlIiBjbG9jayBi
-dXQgbm90IHRoZQ0KImNkIiBjbG9jayBpcyBub3QgYSB2YWxpZCBzZXR0aW5nLiBTbyBpbiBvdXIg
-Y2FzZSwgaXQncyBhbHdheXMgYWxsIG9yDQpub3RoaW5nLg0KDQoNCkNocmlzDQo=
+This adds a new binding for the Freescale i.MX GPC block, which allows
+to describe multiple power domains in a more natural way. The driver
+will continue to support the old binding for existing DTBs, but new
+features like the additional domains present on i.MX6SX will only be
+usable with the new binding.
+
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
+ 1 file changed, 54 insertions(+), 27 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+index 65cc0345747d..e5b660018d63 100644
+--- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+@@ -1,22 +1,41 @@
+ Freescale i.MX General Power Controller
+ =======================================
+ 
+-The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+-counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+-domains.
++The i.MX6 General Power Control (GPC) block contains DVFS load tracking
++counters and Power Gating Control (PGC).
+ 
+ Required properties:
+ - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+ - reg: should be register base and length as documented in the
+   datasheet
+-- interrupts: Should contain GPC interrupt request 1
+-- pu-supply: Link to the LDO regulator powering the PU power domain
+-- clocks: Clock phandles to devices in the PU power domain that need
+-	  to be enabled during domain power-up for reset propagation.
+-- #power-domain-cells: Should be 1, see below:
++- interrupts: Should contain one interrupt specifier for the GPC interrupt
++- clocks: Must contain an entry for each entry in clock-names.
++  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - ipg
++- pgc: a list of child nodes describing the SoC power domains controlled by the
++  power gating controller.
+ 
+-The gpc node is a power-controller as documented by the generic power domain
+-bindings in Documentation/devicetree/bindings/power/power_domain.txt.
++The power domains are generic power domain providers as documented in
++Documentation/devicetree/bindings/power/power_domain.txt. They are described as
++subnodes of the GPC and should contain the following
++
++Required properties:
++- reg: the DOMAIN_INDEX as used by the client devices to refer to this
++  power domain
++  The following DOMAIN_INDEX values are valid for i.MX6Q:
++  ARM_DOMAIN     0
++  PU_DOMAIN      1
++  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
++  DISPLAY_DOMAIN 2
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++- clocks: a number of phandles to clocks that need to be enabled during domain
++  power-up sequencing to ensure reset propagation into devices located inside
++  this power domain
++- domain-supply: a phandle to the regulator powering this domain
+ 
+ Example:
+ 
+@@ -25,14 +44,29 @@ Example:
+ 		reg = <0x020dc000 0x4000>;
+ 		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+-		pu-supply = <&reg_pu>;
+-		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+-			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+-			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+-			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+-			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+-			 <&clks IMX6QDL_CLK_VPU_AXI>;
+-		#power-domain-cells = <1>;
++		clocks = <&clks IMX6QDL_CLK_IPG>;
++		clock-names = "ipg";
++		
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			power-domain@0 {
++				reg = <0>;
++				#power-domain-cells = <0>;
++			};
++			pd_pu: power-domain@1 {
++				reg = <1>;
++				#power-domain-cells = <0>;
++				domain-supply = <&reg_pu>;
++				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
++				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
++				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
++				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
++				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
++				         <&clks IMX6QDL_CLK_VPU_AXI>;
++			};
++		};
+ 	};
+ 
+ 
+@@ -40,20 +74,13 @@ Specifying power domain for IP modules
+ ======================================
+ 
+ IP cores belonging to a power domain should contain a 'power-domains' property
+-that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+-the power domain the device belongs to.
++that is a phandle pointing to the power domain the device belongs to.
+ 
+ Example of a device that is part of the PU power domain:
+ 
+ 	vpu: vpu@02040000 {
+ 		reg = <0x02040000 0x3c000>;
+ 		/* ... */
+-		power-domains = <&gpc 1>;
++		power-domains = <&pd_pu>;
+ 		/* ... */
+ 	};
+-
+-The following DOMAIN_INDEX values are valid for i.MX6Q:
+-ARM_DOMAIN     0
+-PU_DOMAIN      1
+-The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+-DISPLAY_DOMAIN 2
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
