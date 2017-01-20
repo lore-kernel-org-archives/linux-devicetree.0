@@ -1,43 +1,60 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/3] ARM64: meson-gxbb: Add WeTek Boards
-Date: Fri, 20 Jan 2017 07:50:07 -0800
-Message-ID: <m237gd4tow.fsf@baylibre.com>
-References: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
+Date: Fri, 20 Jan 2017 15:52:04 +0000
+Message-ID: <SG2PR06MB1165089B50C28BFD333299CB8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+ <20170118172502.13876-2-chris.brandt@renesas.com>
+ <CAPDyKFqO3YrDdKqOqJ=xKSH7uAiZ+rCPEDKMZ+c8Y5RKaVK4kg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484736642-5451-1-git-send-email-narmstrong@baylibre.com> (Neil
-        Armstrong's message of "Wed, 18 Jan 2017 11:50:39 +0100")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPDyKFqO3YrDdKqOqJ=xKSH7uAiZ+rCPEDKMZ+c8Y5RKaVK4kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
-
-> This serie adds support for the WeTek Hub and Play2 boards.
-> The Hub is an extremely small IPTv Set-Top-Box and the Play2 is a more
-> traditionnal Satellite or Terrestrial and IPTv Set-Top-Box.
->
-> Both are based on the p200 Reference Design and out-of-tree support is
-> based on OpenELEC kernel at [1].
-
-Applied to v4.11/dt64 after s/OpenELEC/LibreELEC/
-
-Kevin
-
-> [1] https://github.com/wetek-enigma/linux-amlogic
->
-> Neil Armstrong (3):
->   dt-bindings: vendor-prefix: Add wetek vendor prefix
->   ARM64: dts: meson-gxbb: Add support for WeTek Hub and Play
->   dt-bindings: amlogic: Add WeTek boards
->
->  Documentation/devicetree/bindings/arm/amlogic.txt  |  2 +
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm64/boot/dts/amlogic/Makefile               |  2 +
->  .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 66 +++++++++++++++
->  .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 94 ++++++++++++++++++++++
->  5 files changed, 165 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+SGVsbG8gVWxmLA0KDQoNCk9uIEZyaWRheSwgSmFudWFyeSAyMCwgMjAxNywgVWxmIEhhbnNzb24g
+d3JvdGU6DQo+IE9uIDE4IEphbnVhcnkgMjAxNyBhdCAxODoyNSwgQ2hyaXMgQnJhbmR0IDxjaHJp
+cy5icmFuZHRAcmVuZXNhcy5jb20+DQo+IHdyb3RlOg0KPiA+IFNvbWUgY29udHJvbGxlcnMgaGF2
+ZSAyIGNsb2NrIHNvdXJjZXMgaW5zdGVhZCBvZiAxLCBzbyB0aGV5IGJvdGggbmVlZA0KPiA+IHRv
+IGJlIHR1cm5lZCBvbi9vZmYuDQo+IA0KPiBUaGlzIGRvZXNuJ3QgdGVsbCBtZSBlbm91Z2guIFBs
+ZWFzZSBlbGFib3JhdGUuDQo+IA0KPiBGb3IgZXhhbXBsZSwgdGVsbCBob3cgeW91IHRyZWF0IHRo
+ZSBjbG9ja3MsIHdoaWNoIG9mIHRoZW0gdGhhdCBpcyBvcHRpb25hbA0KPiBhbmQgd2h5Lg0KDQpC
+YXNpY2FsbHksIHRoZSBjaGlwIGRlc2lnbmVycyB3ZW50IGluIGFuZCBicm9rZSBvdXQgdGhlIGxv
+Z2ljIHRoYXQganVzdCBkb2VzDQp0aGUgY2FyZCBkZXRlY3QgKG1vcmUgb3IgbGVzcyBpdCdzIHBy
+b2JhYmx5IGp1c3Qgc29tZSBzaW1wbGUgSVJRIGxvZ2ljKSBzbw0KdGhhdCB5b3UgY291bGQgc2h1
+dCBvZmYgdGhlIElQIGJsb2NrLCBidXQgaWYgeW91IHB1dCBpbiBhIGNhcmQsIHRoZSBpbnRlcm5h
+bA0KaW50ZXJydXB0IHNpZ25hbCBzdGlsbCB3ZW50IHRvIHRoZSBpbnRlcnJ1cHQgY29udHJvbGxl
+ciBhbmQgcmVnaXN0ZXJlZCB0aGUNCmludGVycnVwdCBldmVuIHRob3VnaCB0aGUgcmVzdCBvZiB0
+aGUgSVAgYmxvY2sgKGluY2x1ZGluZyB0aGUgcmVnaXN0ZXIgc3BhY2UpDQp3YXMgZGVhZC4NCg0K
+VGhlIGlkZWEgc2VlbXMgdG8gYmUgdGhhdCB5b3UgY291bGQgcHV0IHRoZSBlbnRpcmUgY2hpcCBp
+bnRvIGxvdyBwb3dlciBtb2RlDQphbmQgd2FrZSBpdCB1cCBpZiB5b3Ugc3R1Y2sgYSBjYXJkIGlu
+Lg0KDQpNeSBndWVzcyBpcyB0aGF0IHRoaXMgd2FzIGZvciBzb21lIGN1c3RvbWVyIHJlcXVlc3Qg
+b3Igc29tZXRoaW5nLg0KDQpQZXJzb25hbGx5Li4ueW91IGNvdWxkIGhhdmUgZG9uZSB0aGUgc2Ft
+ZSB0aGluZyBpZiB5b3UgbGFpZCBvdXQgYSBib2FyZA0KYW5kIHRpZWQgb25lIG9mIHRoZSBleHRy
+YSBJUlEgbGluZXMgdG8gdGhlIGNkIHNpZ25hbC4uLmJ1dCBJJ20gbm90IHN1cmUgaWYNCmFueW9u
+ZSB0aG91Z2h0IGFib3V0IHRoYXQgYXQgdGhlIHRpbWUuDQoNCg0KU28gdG8geW91ciByZXF1ZXN0
+LCBJIGNvdWxkIHB1dCBhbGwgdGhpcyB1Z2x5IGluZm8gaW50byB0aGUgZG9jdW1lbnRhdGlvbiwN
+CmJ1dCBiYXNpY2FsbHkgYWxsIEknbSB0cnlpbmcgdG8gZG8gaXMgam9pbiB0aGUgMiBjbG9ja3Mg
+YmFjayB0b2dldGhlcg0KdG8gbWFrZSBpdCB3b3JrIGxpa2UgYWxsIHRoZSBvdGhlciBTb0NzIHNp
+bmNlIHRoaXMgbmV3ICdmZWF0dXJlJyBtaWdodA0Kbm90IHJlYWxseSBiZSBwcmFjdGljYWwgdG8g
+ZXZlcnkgdXNlIGluIHRoaXMgZW52aXJvbm1lbnQuDQoNCg0KDQo+ID4gIHN0YXRpYyBpbnQgc2hf
+bW9iaWxlX3NkaGlfY2FyZF9idXN5KHN0cnVjdCBtbWNfaG9zdCAqbW1jKSBAQCAtNTcyLDYNCj4g
+PiArNTgxLDEwIEBAIHN0YXRpYyBpbnQgc2hfbW9iaWxlX3NkaGlfcHJvYmUoc3RydWN0IHBsYXRm
+b3JtX2RldmljZSAqcGRldikNCj4gPiAgICAgICAgICAgICAgICAgZ290byBlcHJvYmU7DQo+ID4g
+ICAgICAgICB9DQo+ID4NCj4gPiArICAgICAgIHByaXYtPmNsa19jZCA9IGRldm1fY2xrX2dldCgm
+cGRldi0+ZGV2LCAiY2QiKTsNCj4gPiArICAgICAgIGlmIChJU19FUlIocHJpdi0+Y2xrX2NkKSkN
+Cj4gPiArICAgICAgICAgICAgICAgcHJpdi0+Y2xrX2NkID0gTlVMTDsNCj4gDQo+IElzIHRoaXMg
+Y2xvY2sgc29sZWx5IGFib3V0IGNhcmQgZGV0ZWN0aW9uPyBTbyBpbiBjYXNlcyB3aGVuIHlvdSBo
+YXZlIGENCj4gR1BJTyBjYXJkIGRldGVjdCwgdGhlIGNsb2NrIGlzbid0IG5lZWRlZD8NCj4gDQo+
+IEp1c3QgdHJ5aW5nIHRvIHVuZGVyc3RhbmQgdGhpbmdzIGEgYml0IGJldHRlci4uLg0KDQpBY2Nv
+cmRpbmcgdG8gdGhlIGhhcmR3YXJlIG1hbnVhbCwgZW5hYmxpbmcgdGhlICJjb3JlIiBjbG9jayBi
+dXQgbm90IHRoZQ0KImNkIiBjbG9jayBpcyBub3QgYSB2YWxpZCBzZXR0aW5nLiBTbyBpbiBvdXIg
+Y2FzZSwgaXQncyBhbHdheXMgYWxsIG9yDQpub3RoaW5nLg0KDQoNCkNocmlzDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
