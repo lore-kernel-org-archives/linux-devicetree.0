@@ -1,8 +1,8 @@
 From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
  PHY's reset GPIO
-Date: Fri, 20 Jan 2017 17:18:42 +0100
-Message-ID: <20170120161842.GD25907@lunn.ch>
+Date: Fri, 20 Jan 2017 17:21:38 +0100
+Message-ID: <20170120162138.GE25907@lunn.ch>
 References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
  <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
  <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
@@ -53,17 +53,16 @@ On Fri, Jan 20, 2017 at 04:22:25PM +0100, Martin Blumenstingl wrote:
 > +		#size-cells = <0>;
 > +
 > +		eth_phy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-id0022.1620",
 
 Hi Martin
 
-ethernet-phy@3, because of the reg property.
+You don't need to specify the PHY ID. You really only need this when
+the PHY is reporting no ID, or a wrong ID. In fact, if a new revision
+of the board is made, with a different PHY, you might have a problem,
+the wrong PHY driver is loaded.
 
-
-> +			compatible = "ethernet-phy-id0022.1620",
-> +				     "ethernet-phy-ieee802.3-c22";
-> +			reg = <3>;
-
-  Andrew
+   Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
