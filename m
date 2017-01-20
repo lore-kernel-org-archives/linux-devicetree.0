@@ -1,78 +1,92 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH 6/7] arm, arm64: factorize common cpu capacity default
- code
-Date: Fri, 20 Jan 2017 10:42:40 +0000
-Message-ID: <20170120104240.GO30747@e106622-lin>
-References: <20170119143757.14537-1-juri.lelli@arm.com>
- <20170119143757.14537-7-juri.lelli@arm.com>
- <e5b902a0-8c2b-a682-0f67-0b0d9ee4ef5c@arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
+Date: Fri, 20 Jan 2017 11:50:32 +0100
+Message-ID: <CAPDyKFqO3YrDdKqOqJ=xKSH7uAiZ+rCPEDKMZ+c8Y5RKaVK4kg@mail.gmail.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com> <20170118172502.13876-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <e5b902a0-8c2b-a682-0f67-0b0d9ee4ef5c@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170118172502.13876-2-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dietmar,
+On 18 January 2017 at 18:25, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Some controllers have 2 clock sources instead of 1, so they both need
+> to be turned on/off.
 
-On 19/01/17 16:00, Dietmar Eggemann wrote:
-> On 19/01/17 14:37, Juri Lelli wrote:
-> > arm and arm64 share lot of code relative to parsing CPU capacity
-> > information from DT, using that information for appropriate scaling and
-> > exposing a sysfs interface for chaging such values at runtime.
-> > 
-> > Factorize such code in a common place (driver/base/arch_topology.c) in
-> > preparation for further additions.
-> > 
-> > Suggested-by: Will Deacon <will.deacon@arm.com>
-> > Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> > Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Russell King <linux@armlinux.org.uk>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Will Deacon <will.deacon@arm.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-> > ---
-> >  arch/arm/Kconfig             |   1 +
-> >  arch/arm/kernel/topology.c   | 213 ++------------------------------------
-> >  arch/arm64/Kconfig           |   1 +
-> >  arch/arm64/kernel/topology.c | 213 +-------------------------------------
-> >  drivers/base/Kconfig         |   8 ++
-> >  drivers/base/Makefile        |   1 +
-> >  drivers/base/arch_topology.c | 240 +++++++++++++++++++++++++++++++++++++++++++
-> >  7 files changed, 260 insertions(+), 417 deletions(-)
-> >  create mode 100644 drivers/base/arch_topology.c
-> 
-> [...]
-> 
-> > +extern unsigned long
-> > +arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
-> 
-> How about adding a driver specific prefix 'foo_' to all driver interfaces?
-> 
-> I'm asking because I would rather like to do a
-> 
-> #define arch_scale_cpu_capacity foo_scale_cpu_capacity
-> 
-> then a
-> 
-> #define arch_scale_cpu_capacity arch_scale_cpu_capacity
-> 
-> in arch/arm64/include/asm/topology.h
-> 
-> later to wire cpu-invariant load-tracking support up to the task
-> scheduler for ARM64.
-> 
-> That's probably true too for all the 'driver' interfaces which get used
-> in arch/arm{,64}/kernel/topology.c.
-> 
+This doesn't tell me enough. Please elaborate.
 
-Looks like a good way to improve clarity to me. I'll add a patch for the
-next version doing this and we see what people think.
+For example, tell how you treat the clocks, which of them that is
+optional and why.
 
-Best,
+>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v2:
+> * changed clk2 to clk_cd
+> * disable clk if clk_cd enable fails
+> * changed clock name from "carddetect" to "cd"
+> ---
+>  drivers/mmc/host/sh_mobile_sdhi.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>
+> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> index 59db14b..a3f995e 100644
+> --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> @@ -143,6 +143,7 @@ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
+>
+>  struct sh_mobile_sdhi {
+>         struct clk *clk;
+> +       struct clk *clk_cd;
+>         struct tmio_mmc_data mmc_data;
+>         struct tmio_mmc_dma dma_priv;
+>         struct pinctrl *pinctrl;
+> @@ -190,6 +191,12 @@ static int sh_mobile_sdhi_clk_enable(struct tmio_mmc_host *host)
+>         if (ret < 0)
+>                 return ret;
+>
+> +       ret = clk_prepare_enable(priv->clk_cd);
+> +       if (ret < 0) {
+> +               clk_disable_unprepare(priv->clk);
+> +               return ret;
+> +       }
+> +
+>         /*
+>          * The clock driver may not know what maximum frequency
+>          * actually works, so it should be set with the max-frequency
+> @@ -255,6 +262,8 @@ static void sh_mobile_sdhi_clk_disable(struct tmio_mmc_host *host)
+>         struct sh_mobile_sdhi *priv = host_to_priv(host);
+>
+>         clk_disable_unprepare(priv->clk);
+> +       if (priv->clk_cd)
+> +               clk_disable_unprepare(priv->clk_cd);
+>  }
+>
+>  static int sh_mobile_sdhi_card_busy(struct mmc_host *mmc)
+> @@ -572,6 +581,10 @@ static int sh_mobile_sdhi_probe(struct platform_device *pdev)
+>                 goto eprobe;
+>         }
+>
+> +       priv->clk_cd = devm_clk_get(&pdev->dev, "cd");
+> +       if (IS_ERR(priv->clk_cd))
+> +               priv->clk_cd = NULL;
 
-- Juri
+Is this clock solely about card detection? So in cases when you have a
+GPIO card detect, the clock isn't needed?
+
+Just trying to understand things a bit better...
+
+> +
+>         priv->pinctrl = devm_pinctrl_get(&pdev->dev);
+>         if (!IS_ERR(priv->pinctrl)) {
+>                 priv->pins_default = pinctrl_lookup_state(priv->pinctrl,
+> --
+> 2.10.1
+>
+>
+
+Kind regards
+Uffe
