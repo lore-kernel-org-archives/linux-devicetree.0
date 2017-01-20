@@ -1,39 +1,55 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] Input: add STMicroelectronics FingerTip touchscreen driver
-Date: Fri, 20 Jan 2017 07:22:59 -0600
-Message-ID: <CAL_JsqJf789JUt3UHDLO0=7Hm9KXRjYuzj0awPoQsfpN9EDeig@mail.gmail.com>
-References: <20170117135441.31450-1-andi.shyti@samsung.com>
- <CGME20170117135456epcas5p2e303f0c5fa642b43fde543d5d6098dc2@epcas5p2.samsung.com>
- <20170117135441.31450-2-andi.shyti@samsung.com> <20170119181912.lzlcc5zbtue2ojp4@rob-hp-laptop>
- <20170120001914.him3d6j2fota547l@jack.zhora.eu>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170120001914.him3d6j2fota547l@jack.zhora.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andi Shyti <andi@etezian.org>
-Cc: Andi Shyti <andi.shyti@samsung.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 2/3 v2] clk: ux500: Add device tree bindings for ABx500 clocks
+Date: Fri, 20 Jan 2017 14:25:39 +0100
+Message-ID: <20170120132539.3013-1-linus.walleij@linaro.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-clk@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 6:19 PM, Andi Shyti <andi@etezian.org> wrote:
-> Hi Rob,
->
->> > +- compatible               : must be "st,stmfts"
->>
->> Seems too generic. Is this a single device?
->
-> the device is precisely called ST-Microelectronics FingerTip S
-> (stmfts). There are variants, but they all have the same name and
-> same datasheet.
+This adds device tree bindings for the ABx500 clocks on the
+ST-Ericsson platforms.
 
-Okay, then it is fine.
+Cc: devicetree@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v1->v2:
+- Indicate that the abx500 clocks need to be in a device tree
+  node under an ABx500 MFD device.
+- Rename the example node to clock-controller.
+---
+ .../devicetree/bindings/clock/stericsson,abx500.txt  | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/stericsson,abx500.txt
 
->
-> Maybe I can be more specific in the description, sometimes I
-> omitted the 'S'.
->
-> Andi
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/stericsson,abx500.txt b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+new file mode 100644
+index 000000000000..dbaa886b223e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/stericsson,abx500.txt
+@@ -0,0 +1,20 @@
++Clock bindings for ST-Ericsson ABx500 clocks
++
++Required properties :
++- compatible : shall contain the following:
++  "stericsson,ab8500-clk"
++- #clock-cells should be <1>
++
++The ABx500 clocks need to be placed as a subnode of an AB8500
++device node, see mfd/ab8500.txt
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/ste-ab8500.h header and can be used in device
++tree sources.
++
++Example:
++
++clock-controller {
++	compatible = "stericsson,ab8500-clk";
++	#clock-cells = <1>;
++};
+-- 
+2.9.3
+
