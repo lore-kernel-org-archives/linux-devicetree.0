@@ -1,194 +1,646 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v6 00/25] Support qcom's HSIC USB and rewrite USB2 HS
- support
-Date: Fri, 20 Jan 2017 15:40:06 +0800
-Message-ID: <20170120074006.GA21013@b29397-desktop>
-References: <20161228225711.698-1-stephen.boyd@linaro.org>
+From: Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker board
+Date: Fri, 20 Jan 2017 15:48:56 +0800
+Message-ID: <89e6b2ee-b964-7beb-0063-f456d931c9c0@rock-chips.com>
+References: <1484791919-4665-1-git-send-email-eddie.cai@rock-chips.com>
+ <1484791919-4665-3-git-send-email-eddie.cai@rock-chips.com>
+ <c8e937f3-1d0b-ecdc-e1af-5db2339c52ef@rock-chips.com>
+ <CAJrj+DMf1_SKnTexMxiQC=x6dywCQvh2jBJVg=zs4QtdgQ6BCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20161228225711.698-1-stephen.boyd@linaro.org>
+In-Reply-To: <CAJrj+DMf1_SKnTexMxiQC=x6dywCQvh2jBJVg=zs4QtdgQ6BCw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <stephen.boyd@linaro.org>
-Cc: linux-usb@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Peter Chen <peter.chen@nxp.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, "Ivan T. Ivanov" <iivanov.xz@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Eddie Cai <eddie.cai.linux@gmail.com>
+Cc: shawn.lin@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com, Heiko Stuebner <heiko@sntech.de>, linux@armlinux.org.uk, devicetree@vger.kernel.org, Eddie Cai <eddie.cai@rock-chips.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 02:56:46PM -0800, Stephen Boyd wrote:
-> The state of USB ChipIdea support on Qualcomm's platforms is not great.
-> The DT description of these devices requires up to three different nodes
-> for what amounts to be the same hardware block, when there should really
-> only be one. Furthermore, the "phy" driver that is in mainline (phy-msm-usb.c)
-> duplicates the OTG state machine and touches the ci controller wrapper
-> registers when it should really be focused on the phy and the ULPI accesses
-> needed to get the phy working. There's also a slimmed down phy driver for
-> the msm8916 platform, but really the phy hardware is the same as other MSMs,
-> so we have two drivers doing pretty much the same thing. This leads to a
-> situtaion where we have the chipidea core driver, the "phy" driver, and
-> sometimes the ehci-msm.c driver operating the same device all at the same
-> time with very little coordination. This just isn't very safe and is
-> confusing from a driver perspective when trying to figure out who does what.
-> Finally, there isn't any HSIC support on platforms like apq8074 so we
-> should add that.
-> 
-> This patch series updates the ChipIdea driver and the MSM wrapper
-> (ci_hdrc_msm.c) to properly handle the PHY and wrapper bits at the right
-> times in the right places. To get there, we update the ChipIdea core to
-> have support for the ULPI phy bus introduced by Heikki. Along the way
-> we fix bugs with the extcon handling for peripheral and OTG mode controllers
-> and move the parts of phy-usb-msm.c that are touching the CI controller
-> wrapper into the wrapper driver (ci_hdrc_msm.c). Finally we add support
-> for the HSIC phy based on the ULPI bus and rewrite the HS phy driver
-> (phy-usb-msm.c) as a standard ULPI phy driver.
-> 
-> Once this series is accepted, we should be able to delete the phy-usb-msm.c,
-> phy-qcom-8x16-usb.c, and ehci-msm.c drivers from the tree and use the ULPI
-> based phy driver (which also lives in drivers/phy/ instead of drivers/usb/phy/)
-> and the chipidea host core instead.
-> 
-> I've also sent separate patches for other minor pieces to make this
-> all work. The full tree can be found here[1], hacks and all to get
-> things working. I've tested this on the db410c, apq8074 dragonboard,
-> and ifc6410 with configfs gadgets and otg cables.
-> 
-> Patches based on v4.10-rc1
-> 
-> Changes from v5:
->  * Replaced "Emulate OTGSC interrupt enable path" patch with a patch
->    from Peter
->  * Updated HS phy driver to support set_mode callback to handle pullup
->  * New patch to set the mode to device or host in chipidea udc pullup
->    function to toggle the pullup for HS mode
->  * New patch to drop lock around event_notify callback to avoid lockdep
->    issues
->  * Removal of extcon usage from HS phy driver
->  * Picked up acks from Heikki and Peter on ULPI core patch
-> 
+On 2017/1/20 15:07, Eddie Cai wrote:
+> 2017-01-20 10:29 GMT+08:00 Shawn Lin <shawn.lin@rock-chips.com>:
+>>
+>> On 2017/1/19 10:11, Eddie Cai wrote:
+>>>
+>>> This patch add basic support for RK3288-Tinker board. We can boot in to rootfs
+>>> with this patch.
+>>>
+>>> Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
+>>> ---
+>>>  arch/arm/boot/dts/Makefile          |   1 +
+>>>  arch/arm/boot/dts/rk3288-tinker.dts | 556 ++++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 557 insertions(+)
+>>>  create mode 100644 arch/arm/boot/dts/rk3288-tinker.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index 7327250..4fc05b7 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -679,6 +679,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += \
+>>>         rk3288-popmetal.dtb \
+>>>         rk3288-r89.dtb \
+>>>         rk3288-rock2-square.dtb \
+>>> +       rk3288-tinker.dtb \
+>>>         rk3288-veyron-brain.dtb \
+>>>         rk3288-veyron-jaq.dtb \
+>>>         rk3288-veyron-jerry.dtb \
+>>> diff --git a/arch/arm/boot/dts/rk3288-tinker.dts b/arch/arm/boot/dts/rk3288-tinker.dts
+>>> new file mode 100644
+>>> index 0000000..37cb431
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/rk3288-tinker.dts
+>>> @@ -0,0 +1,556 @@
+>>> +/*
+>>> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd.
+>>> + *
+>>> + * This file is dual-licensed: you can use it either under the terms
+>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>> + * licensing only applies to this file, and not this project as a
+>>> + * whole.
+>>> + *
+>>> + *  a) This file is free software; you can redistribute it and/or
+>>> + *     modify it under the terms of the GNU General Public License as
+>>> + *     published by the Free Software Foundation; either version 2 of the
+>>> + *     License, or (at your option) any later version.
+>>> + *
+>>> + *     This file is distributed in the hope that it will be useful,
+>>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + *     GNU General Public License for more details.
+>>> + *
+>>> + * Or, alternatively,
+>>> + *
+>>> + *  b) Permission is hereby granted, free of charge, to any person
+>>> + *     obtaining a copy of this software and associated documentation
+>>> + *     files (the "Software"), to deal in the Software without
+>>> + *     restriction, including without limitation the rights to use,
+>>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>>> + *     sell copies of the Software, and to permit persons to whom the
+>>> + *     Software is furnished to do so, subject to the following
+>>> + *     conditions:
+>>> + *
+>>> + *     The above copyright notice and this permission notice shall be
+>>> + *     included in all copies or substantial portions of the Software.
+>>> + *
+>>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include "rk3288.dtsi"
+>>> +
+>>> +/ {
+>>> +       model = "Rockchip RK3288 Tinker Board";
+>>> +       compatible = "rockchip,rk3288-tinker", "rockchip,rk3288";
+>>> +
+>>> +       memory {
+>>> +               reg = <0x0 0x80000000>;
+>>> +               device_type = "memory";
+>>> +       };
+>>> +
+>>> +       ext_gmac: external-gmac-clock {
+>>> +               compatible = "fixed-clock";
+>>> +               #clock-cells = <0>;
+>>> +               clock-frequency = <125000000>;
+>>> +               clock-output-names = "ext_gmac";
+>>> +       };
+>>> +
+>>> +       gpio-keys {
+>>> +               compatible = "gpio-keys";
+>>> +               #address-cells = <1>;
+>>> +               #size-cells = <0>;
+>>> +               autorepeat;
+>>> +
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&pwrbtn>;
+>>> +
+>>> +               button@0 {
+>>> +                       gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+>>> +                       linux,code = <116>;
+>>> +                       label = "GPIO Key Power";
+>>> +                       linux,input-type = <1>;
+>>> +                       gpio-key,wakeup = <1>;
+>>> +                       debounce-interval = <100>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       gpio-leds {
+>>> +               compatible = "gpio-leds";
+>>> +
+>>> +               pwr-led {
+>>> +                       gpios = <&gpio2 2 GPIO_ACTIVE_HIGH>;
+>>> +                       linux,default-trigger = "default-on";
+>>> +               };
+>>> +
+>>> +               act-led {
+>>> +                       gpios=<&gpio2 3 GPIO_ACTIVE_LOW>;
+>>> +                       linux,default-trigger="mmc0";
+>>> +               };
+>>> +       };
+>>> +
+>>> +       sound {
+>>> +               compatible = "simple-audio-card";
+>>> +               simple-audio-card,format = "i2s";
+>>> +               simple-audio-card,name = "rockchip,tinker-codec";
+>>> +               simple-audio-card,mclk-fs = <512>;
+>>> +               simple-audio-card,cpu {
+>>> +                       sound-dai = <&i2s>;
+>>> +               };
+>>> +               simple-audio-card,codec {
+>>> +                       sound-dai = <&hdmi>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       vcc_sys: vsys-regulator {
+>>> +               compatible = "regulator-fixed";
+>>> +               regulator-name = "vcc_sys";
+>>> +               regulator-min-microvolt = <5000000>;
+>>> +               regulator-max-microvolt = <5000000>;
+>>> +               regulator-always-on;
+>>> +               regulator-boot-on;
+>>> +       };
+>>> +
+>>> +       /*
+>>> +        * NOTE: vcc_sd isn't hooked up on v1.0 boards where power comes from
+>>> +        * vcc_io directly.  Those boards won't be able to power cycle SD cards
+>>> +        * but it shouldn't hurt to toggle this pin there anyway.
+>>> +        */
+>>> +       vcc_sd: sdmmc-regulator {
+>>> +               compatible = "regulator-fixed";
+>>> +               gpio = <&gpio7 11 GPIO_ACTIVE_LOW>;
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&sdmmc_pwr>;
+>>> +               regulator-name = "vcc_sd";
+>>> +               regulator-min-microvolt = <3300000>;
+>>> +               regulator-max-microvolt = <3300000>;
+>>> +               startup-delay-us = <100000>;
+>>> +               vin-supply = <&vcc_io>;
+>>> +       };
+>>> +};
+>>> +
+>>> +&cpu0 {
+>>> +       cpu0-supply = <&vdd_cpu>;
+>>> +};
+>>> +
+>>> +&gmac {
+>>> +       phy-supply = <&vcc33_lan>;
+>>> +       phy-mode = "rgmii";
+>>> +       clock_in_out = "input";
+>>> +       snps,reset-gpio = <&gpio4 7 0>;
+>>> +       snps,reset-active-low;
+>>> +       snps,reset-delays-us = <0 10000 1000000>;
+>>> +       assigned-clocks = <&cru SCLK_MAC>;
+>>> +       assigned-clock-parents = <&ext_gmac>;
+>>> +       pinctrl-names = "default";
+>>> +       pinctrl-0 = <&rgmii_pins>;
+>>> +       tx_delay = <0x30>;
+>>> +       rx_delay = <0x10>;
+>>> +       status = "ok";
+>>> +};
+>>> +
+>>> +&hdmi {
+>>> +       #address-cells = <1>;
+>>> +       #size-cells = <0>;
+>>> +       #sound-dai-cells = <0>;
+>>> +       ddc-i2c-bus = <&i2c5>;
+>>> +       status = "okay";
+>>> +       /* Don't use vopl for HDMI */
+>>> +       ports {
+>>> +               hdmi_in: port {
+>>> +                       /delete-node/ endpoint@1;
+>>> +               };
+>>> +       };
+>>> +};
+>>> +
+>>> +&i2c0 {
+>>> +       status = "okay";
+>>> +       clock-frequency = <400000>;
+>>> +
+>>> +       rk808: pmic@1b {
+>>> +               compatible = "rockchip,rk808";
+>>> +               reg = <0x1b>;
+>>> +               interrupt-parent = <&gpio0>;
+>>> +               interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+>>> +               pinctrl-names = "default";
+>>> +               pinctrl-0 = <&pmic_int &global_pwroff &dvs_1 &dvs_2>;
+>>> +               dvs-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>,
+>>> +                               <&gpio0 12 GPIO_ACTIVE_HIGH>;
+>>> +
+>>> +               rockchip,system-power-controller;
+>>> +               wakeup-source;
+>>> +               #clock-cells = <1>;
+>>> +               clock-output-names = "xin32k", "rk808-clkout2";
+>>> +
+>>> +               vcc1-supply = <&vcc_sys>;
+>>> +               vcc2-supply = <&vcc_sys>;
+>>> +               vcc3-supply = <&vcc_sys>;
+>>> +               vcc4-supply = <&vcc_sys>;
+>>> +               vcc6-supply = <&vcc_sys>;
+>>> +               vcc7-supply = <&vcc_sys>;
+>>> +               vcc8-supply = <&vcc_18>;
+>>> +               vcc9-supply = <&vcc_io>;
+>>> +               vcc10-supply = <&vcc_io>;
+>>> +               vcc11-supply = <&vcc_sys>;
+>>> +               vcc12-supply = <&vcc_io>;
+>>> +               vddio-supply = <&vcc18_ldo1>;
+>>> +
+>>> +               regulators {
+>>> +                       vdd_cpu: DCDC_REG1 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <750000>;
+>>> +                               regulator-max-microvolt = <1350000>;
+>>> +                               regulator-name = "vdd_arm";
+>>> +                               regulator-ramp-delay = <6000>;
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-off-in-suspend;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vdd_gpu: DCDC_REG2 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <850000>;
+>>> +                               regulator-max-microvolt = <1250000>;
+>>> +                               regulator-name = "vdd_gpu";
+>>> +                               regulator-ramp-delay = <6000>;
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1000000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc_ddr: DCDC_REG3 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-name = "vcc_ddr";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc_io: DCDC_REG4 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <3300000>;
+>>> +                               regulator-max-microvolt = <3300000>;
+>>> +                               regulator-name = "vcc_io";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <3300000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc18_ldo1: LDO_REG1 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1800000>;
+>>> +                               regulator-max-microvolt = <1800000>;
+>>> +                               regulator-name = "vcc18_ldo1";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1800000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc33_mipi: LDO_REG2 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <3300000>;
+>>> +                               regulator-max-microvolt = <3300000>;
+>>> +                               regulator-name = "vcc33_mipi";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-off-in-suspend;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vdd_10: LDO_REG3 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1000000>;
+>>> +                               regulator-max-microvolt = <1000000>;
+>>> +                               regulator-name = "vdd_10";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1000000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc18_codec: LDO_REG4 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1800000>;
+>>> +                               regulator-max-microvolt = <1800000>;
+>>> +                               regulator-name = "vcc18_codec";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1800000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vccio_sd: LDO_REG5 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>
+>>
+>>
+>> are some other io banks or devices powered by
+>> vccio_sd, so that you mark it as boot-on and always-on?
+>
+> This board do not have emmc, It use SD card to store firmware image.
+> So have to always on.
 
-Hi Stephen,
+mmc core will take over tis properly. I undertand that the SD card will
+be always on but it shouldn't be the reason we need to it to be
+always-on. And obvious we don't need it to be boot-on since again
+mmc core will turn on it when starting to init SD card.
 
-I have pushed your first 22 patches to my ci-for-usb-next, fixed the
-conflict for patch 10, and dropped your patch 23.
+>>
+>>
+>>
+>>> +                               regulator-min-microvolt = <1800000>;
+>>> +                               regulator-max-microvolt = <3300000>;
+>>> +                               regulator-name = "vccio_sd";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <3300000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vdd10_lcd: LDO_REG6 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1000000>;
+>>> +                               regulator-max-microvolt = <1000000>;
+>>> +                               regulator-name = "vdd10_lcd";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1000000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc_18: LDO_REG7 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1800000>;
+>>> +                               regulator-max-microvolt = <1800000>;
+>>> +                               regulator-name = "vcc_18";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1800000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc18_lcd: LDO_REG8 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-min-microvolt = <1800000>;
+>>> +                               regulator-max-microvolt = <1800000>;
+>>> +                               regulator-name = "vcc18_lcd";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                                       regulator-suspend-microvolt = <1800000>;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc33_sd: SWITCH_REG1 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-name = "vcc33_sd";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                               };
+>>> +                       };
+>>> +
+>>> +                       vcc33_lan: SWITCH_REG2 {
+>>> +                               regulator-always-on;
+>>> +                               regulator-boot-on;
+>>> +                               regulator-name = "vcc33_lan";
+>>> +                               regulator-state-mem {
+>>> +                                       regulator-on-in-suspend;
+>>> +                               };
+>>> +                       };
+>>> +               };
+>>> +       };
+>>> +};
+>>> +
+>>> +&i2c2 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&i2c5 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&i2s {
+>>> +       #sound-dai-cells = <0>;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&io_domains {
+>>> +       status = "okay";
+>>> +
+>>> +       sdcard-supply = <&vccio_sd>;
+>>> +};
+>>> +
+>>> +&pinctrl {
+>>> +       pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
+>>> +               drive-strength = <8>;
+>>> +       };
+>>> +
+>>> +       pcfg_pull_up_drv_8ma: pcfg-pull-up-drv-8ma {
+>>> +               bias-pull-up;
+>>> +               drive-strength = <8>;
+>>> +       };
+>>> +
+>>> +       backlight {
+>>> +               bl_en: bl-en {
+>>> +                       rockchip,pins = <7 2 RK_FUNC_GPIO &pcfg_pull_none>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       buttons {
+>>> +               pwrbtn: pwrbtn {
+>>> +                       rockchip,pins = <0 5 RK_FUNC_GPIO &pcfg_pull_up>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       eth_phy {
+>>> +               eth_phy_pwr: eth-phy-pwr {
+>>> +                       rockchip,pins = <0 6 RK_FUNC_GPIO &pcfg_pull_none>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       pmic {
+>>> +               pmic_int: pmic-int {
+>>> +                       rockchip,pins = <RK_GPIO0 4 RK_FUNC_GPIO \
+>>> +                                       &pcfg_pull_up>;
+>>> +               };
+>>> +
+>>> +               dvs_1: dvs-1 {
+>>> +                       rockchip,pins = <RK_GPIO0 11 RK_FUNC_GPIO \
+>>> +                                       &pcfg_pull_down>;
+>>> +               };
+>>> +
+>>> +               dvs_2: dvs-2 {
+>>> +                       rockchip,pins = <RK_GPIO0 12 RK_FUNC_GPIO \
+>>> +                                       &pcfg_pull_down>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       sdmmc {
+>>> +               /*
+>>> +                * Default drive strength isn't enough to achieve even
+>>> +                * high-speed mode on EVB board so bump up to 8ma.
+>>> +                */
+>>> +               sdmmc_bus4: sdmmc-bus4 {
+>>> +                       rockchip,pins = <6 16 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+>>> +                                       <6 17 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+>>> +                                       <6 18 RK_FUNC_1 &pcfg_pull_up_drv_8ma>,
+>>> +                                       <6 19 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+>>> +               };
+>>> +
+>>> +               sdmmc_clk: sdmmc-clk {
+>>> +                       rockchip,pins = <6 20 RK_FUNC_1 \
+>>> +                                       &pcfg_pull_none_drv_8ma>;
+>>> +               };
+>>> +
+>>> +               sdmmc_cmd: sdmmc-cmd {
+>>> +                       rockchip,pins = <6 21 RK_FUNC_1 &pcfg_pull_up_drv_8ma>;
+>>> +               };
+>>> +
+>>> +               sdmmc_pwr: sdmmc-pwr {
+>>> +                       rockchip,pins = <7 11 RK_FUNC_GPIO &pcfg_pull_none>;
+>>> +               };
+>>> +       };
+>>> +
+>>> +       usb {
+>>> +               host_vbus_drv: host-vbus-drv {
+>>> +                       rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+>>> +               };
+>>> +
+>>> +               pwr_3g: pwr-3g {
+>>> +                       rockchip,pins = <7 8 RK_FUNC_GPIO &pcfg_pull_none>;
+>>> +               };
+>>> +       };
+>>> +};
+>>> +
+>>> +&pwm0 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&saradc {
+>>> +       vref-supply = <&vcc18_ldo1>;
+>>> +       status ="okay";
+>>> +};
+>>> +
+>>> +&sdmmc {
+>>> +       bus-width = <4>;
+>>> +       cap-mmc-highspeed;
+>>> +       cap-sd-highspeed;
+>>> +       card-detect-delay = <200>;
+>>> +       disable-wp;                     /* wp not hooked up */
+>>> +       num-slots = <1>;
+>>> +       pinctrl-names = "default";
+>>> +       pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
+>>> +       status = "okay";
+>>> +       supports-sd;
+>>
+>>
+>> This is not upstreamed property. We have no-sdio/no-emmc there to
+>> skip the init sequence.
+> OK, I will remove it next version
+>>
+>>
+>>> +       vmmc-supply = <&vcc_sd>;
+>>> +       vqmmc-supply = <&vccio_sd>;
+>>> +};
+>>> +
+>>> +&tsadc {
+>>> +       rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+>>> +       rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&uart0 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&uart1 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&uart2 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&uart3 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&uart4 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&usbphy {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&usb_host0_ehci {
+>>> +       no-relinquish-port;
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&usb_host1 {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&usb_otg {
+>>> +       status= "okay";
+>>> +};
+>>> +
+>>> +&vopb {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&vopb_mmu {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&vopl {
+>>> +       status = "okay";
+>>> +       /* Don't use vopl for HDMI */
+>>> +       vopl_out: port {
+>>> +               /delete-node/ endpoint@0;
+>>> +       };
+>>> +};
+>>> +
+>>> +&vopl_mmu {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>> +&wdt {
+>>> +       status = "okay";
+>>> +};
+>>> +
+>>>
+>>
+>>
+>> --
+>> Best Regards
+>> Shawn Lin
+>>
+>
+>
+>
 
-Peter
-
-> Changes from v4:
->  * Picked up Acks from Rob
->  * Updated HS phy init sequence DT property to restrict it to offsets
-> 
-> Changes from v3:
->  * Picked up Acks from Peter
->  * Updated extcon consolidation patch per Peter's comments
->  * Folded in simplification from Heikki for ULPI DT matching
-> 
-> Changes from v2:
->  * Added SoC specific compatibles in phy bindings
->  * Dropped AVVIS patch for OTG statemachine
->  * New patch to consolidate extcon handlers
->  * Picked up Acks from Peter
->  * Rebased onto v4.8-rc1
->  * Reworked ULPI OF code to look at vid == 0 instead of pid == 0
->  * Dropped ULPI bindings for vid and pid overrides
-> 
-> Changes from v1:
->  * Reworked ULPI device probing to keep using vendor/product ids that
->    come from DT if needed and falls back to OF style match when product id
->    is 0
->  * PHY init later patch was rejected so that moved to a quirk flag and
->    the msm wrapper started managing the phy on/off
->  * Updated clk requirements for HSIC phy in binding doc
->  * Added optional clk in wrapper for "housekeeping" found on older qcom
->    platforms
->  * Bug fix to OTGSC polling function
->  * Changed runtime PM patch to set as active instead of get/put
-> 
-> TODO:
->  * DMA fails on arm64 so we need something like [2] to make it work.
->  * The db410c needs a driver to toggle the onboard switch to connect
->    the usb hub instead of micro port when the usb cable is disconnected.
->    I've sent a patch set for this[3], which needs some further
->    discussion/development.
->  * apq8064 platforms need a vbus regulator to really use otg and I haven't
->    tried out the RPM based regulators yet
->  * The HSIC phy on the apq8074 dragonboard is connected to a usb4604
->    device which requires the i2c driver to probe and send an i2c
->    sequence before the HSIC controller enumerates or HSIC doesn't work.
->    Right now I have a hack to force the controller to probe defer
->    once so that usb4604 probes first. This needs a more proper solution
->    like having the DT describe a linkage between the controller and
->    the usb device so we can enforce probe ordering.
-> 
-> [1] https://git.linaro.org/people/stephen.boyd/linux.git/log/?h=usb-hsic-8074
-> [2] https://patchwork.kernel.org/patch/9319527/
-> [3] https://lkml.kernel.org/r/20160914014246.31847-1-stephen.boyd@linaro.org
-> 
-> Peter Chen (1):
->   usb: chipidea: vbus event may exist before starting gadget
-> 
-> Stephen Boyd (24):
->   of: device: Support loading a module with OF based modalias
->   of: device: Export of_device_{get_modalias,uvent_modalias} to modules
->   usb: ulpi: Support device discovery via DT
->   usb: chipidea: Only read/write OTGSC from one place
->   usb: chipidea: Handle extcon events properly
->   usb: chipidea: Add platform flag for wrapper phy management
->   usb: chipidea: Notify events when switching host mode
->   usb: chipidea: Remove locking in ci_udc_start()
->   usb: chipidea: Add support for ULPI PHY bus
->   usb: chipidea: Consolidate extcon notifiers
->   usb: chipidea: msm: Mark device as runtime pm active
->   usb: chipidea: msm: Rely on core to override AHBBURST
->   usb: chipidea: msm: Use hw_write_id_reg() instead of writel
->   usb: chipidea: msm: Add proper clk and reset support
->   usb: chipidea: msm: Mux over secondary phy at the right time
->   usb: chipidea: msm: Restore wrapper settings after reset
->   usb: chipidea: msm: Make platform data driver local instead of global
->   usb: chipidea: msm: Add reset controller for PHY POR bit
->   usb: chipidea: msm: Handle phy power states
->   usb: chipidea: msm: Be silent on probe defer errors
->   usb: chipidea: Drop lock across event_notify during gadget stop
->   usb: chipidea: Pullup D+ in device mode via phy APIs
->   phy: Add support for Qualcomm's USB HSIC phy
->   phy: Add support for Qualcomm's USB HS phy
-> 
->  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  78 ++++++
->  .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++
->  Documentation/devicetree/bindings/usb/ulpi.txt     |  20 ++
->  drivers/of/device.c                                |  25 ++
->  drivers/phy/Kconfig                                |  15 ++
->  drivers/phy/Makefile                               |   2 +
->  drivers/phy/phy-qcom-usb-hs.c                      | 243 ++++++++++++++++++
->  drivers/phy/phy-qcom-usb-hsic.c                    | 160 ++++++++++++
->  drivers/usb/chipidea/Kconfig                       |   8 +
->  drivers/usb/chipidea/Makefile                      |   1 +
->  drivers/usb/chipidea/ci.h                          |  22 +-
->  drivers/usb/chipidea/ci_hdrc_msm.c                 | 280 ++++++++++++++++++---
->  drivers/usb/chipidea/core.c                        | 126 ++++------
->  drivers/usb/chipidea/host.c                        |  10 +
->  drivers/usb/chipidea/otg.c                         |  96 +++++--
->  drivers/usb/chipidea/udc.c                         |  17 +-
->  drivers/usb/chipidea/ulpi.c                        | 113 +++++++++
->  drivers/usb/common/ulpi.c                          |  79 +++++-
->  include/linux/of_device.h                          |   6 +
->  include/linux/usb/chipidea.h                       |   9 +-
->  20 files changed, 1227 insertions(+), 148 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ulpi.txt
->  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
->  create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
->  create mode 100644 drivers/usb/chipidea/ulpi.c
-> 
-> -- 
-> 2.10.0.297.gf6727b0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
-
-Best Regards,
-Peter Chen
+Best Regards
+Shawn Lin
