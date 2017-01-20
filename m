@@ -1,31 +1,96 @@
-From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Subject: Re: [PATCH 09/13] mmc: jz4740: Let the pinctrl driver configure the  pins
-Date: Fri, 20 Jan 2017 12:59:07 +0100
-Message-ID: <81c24244706ce24a678a3d05bbf6b17c@mail.crapouillou.net>
-References: <20170117231421.16310-1-paul@crapouillou.net>
- <20170117231421.16310-10-paul@crapouillou.net>
- <CAPDyKFp4idZx+ynQByz22zwsiK+reBcvt3OdHm1kR2QUy+sUhw@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH v7 2/3] fpga manager: Add cyclone-ps-spi driver for
+ Altera FPGAs
+Date: Fri, 20 Jan 2017 20:07:23 +0800
+Message-ID: <201701202037.FWBSni3B%fengguang.wu@intel.com>
+References: <1b85ccf11096b8ef6c3a9eee9e5897c27b89a825.1484869881.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPDyKFp4idZx+ynQByz22zwsiK+reBcvt3OdHm1kR2QUy+sUhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Fbdev development list <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1b85ccf11096b8ef6c3a9eee9e5897c27b89a825.1484869881.git.stillcompiling@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Anatolij Gustschin <agust@denx.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-19 11:55, Ulf Hansson a écrit :
+Hi Joshua,
 
-> Shouldn't this be replaced with a call to:
-> pinctrl_pm_select_sleep_state();
+[auto build test WARNING on linus/master]
+[also build test WARNING on v4.10-rc4 next-20170120]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-You're totally right. I'll change it.
+url:    https://github.com/0day-ci/linux/commits/Joshua-Clayton/Altera-Cyclone-Passive-Serial-SPI-FPGA-Manager/20170120-172349
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF=-D__CHECK_ENDIAN__
 
-Thanks,
--Paul
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+sparse warnings: (new ones prefixed by >>)
+
+   include/linux/compiler.h:253:8: sparse: attribute 'no_sanitize_address': unknown attribute
+>> drivers/fpga/cyclone-ps-spi.c:86:20: sparse: incompatible types in comparison expression (different signedness)
+   drivers/fpga/cyclone-ps-spi.c:101:33: sparse: incompatible types in comparison expression (different type sizes)
+   drivers/fpga/cyclone-ps-spi.c: In function 'rev_buf':
+   drivers/fpga/cyclone-ps-spi.c:86:13: warning: comparison of distinct pointer types lacks a cast
+     while (buf < fw_end) {
+                ^
+   In file included from include/linux/delay.h:10:0,
+                    from drivers/fpga/cyclone-ps-spi.c:17:
+   drivers/fpga/cyclone-ps-spi.c: In function 'cyclonespi_write':
+   include/linux/kernel.h:753:16: warning: comparison of distinct pointer types lacks a cast
+     (void) (&min1 == &min2);   \
+                   ^
+   include/linux/kernel.h:756:2: note: in expansion of macro '__min'
+     __min(typeof(x), typeof(y),   \
+     ^~~~~
+   drivers/fpga/cyclone-ps-spi.c:101:19: note: in expansion of macro 'min'
+      size_t stride = min(fw_data_end - fw_data, SZ_4K);
+                      ^~~
+   drivers/fpga/cyclone-ps-spi.c:103:11: warning: passing argument 1 of 'rev_buf' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+      rev_buf(fw_data, stride);
+              ^~~~~~~
+   drivers/fpga/cyclone-ps-spi.c:81:13: note: expected 'char *' but argument is of type 'const char *'
+    static void rev_buf(char *buf, size_t len)
+                ^~~~~~~
+
+vim +86 drivers/fpga/cyclone-ps-spi.c
+
+    70		gpiod_set_value(conf->config, 0);
+    71		for (i = 0; i < (FPGA_MAX_DELAY / FPGA_MIN_DELAY); i++) {
+    72			usleep_range(FPGA_MIN_DELAY, FPGA_MIN_DELAY + 20);
+    73			if (!gpiod_get_value(conf->status))
+    74				return 0;
+    75		}
+    76	
+    77		dev_err(&mgr->dev, "Status pin not ready.\n");
+    78		return -EIO;
+    79	}
+    80	
+    81	static void rev_buf(char *buf, size_t len)
+    82	{
+    83		const u8 *fw_end = (buf + len);
+    84	
+    85		/* set buffer to lsb first */
+  > 86		while (buf < fw_end) {
+    87			*buf = bitrev8(*buf);
+    88			buf++;
+    89		}
+    90	}
+    91	
+    92	static int cyclonespi_write(struct fpga_manager *mgr, const char *buf,
+    93				    size_t count)
+    94	{
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
