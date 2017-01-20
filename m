@@ -1,348 +1,58 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH] arm64: dts: hisilicon: add dtsi file for Hisilicon Hi3660
- SOC
-Date: Fri, 20 Jan 2017 17:10:53 +0000
-Message-ID: <5882449D.6050502@hisilicon.com>
-References: <20170118100435.43318-1-hw.wangxiaoyin@hisilicon.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Fri, 20 Jan 2017 18:12:28 +0100
+Message-ID: <CAPDyKFqCa_evsr3a_xHNy2joodgP9xiOQ1jdD0=nY-cGTWd_Hg@mail.gmail.com>
+References: <20170118172502.13876-1-chris.brandt@renesas.com>
+ <20170118172502.13876-3-chris.brandt@renesas.com> <CAPDyKFq9psGMnKUx+SM_QGt6OKoMHgNFop6ANagtLOLwsMTT8w@mail.gmail.com>
+ <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170118100435.43318-1-hw.wangxiaoyin@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: chenya99@hisilicon.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165B5BF4296DB866F3D418B8A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wang Xiaoyin,
+On 20 January 2017 at 17:05, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> Hello Ulf,
+>
+> Friday, January 20, 2017, Ulf Hansson wrote:
+>> > +- clocks: Most controllers only have 1 clock source per channel.
+>> However, some
+>> > +         have a second clock dedicated to card detection. If 2 clocks
+>> are
+>> > +         specified, you must name them as "core" and "cd". If the
+>> controller
+>> > +         only has 1 clock, naming is not required.
+>>
+>> Could you please elaborate a bit on the card detection clock?
+>>
+>> I guess that there is some kind of internal card detection logic (native
+>> card detect) in the SDHI IP, which requires a separate clock for it to
+>> work? Perhaps you can state that somehow?
+>
+>
+> The reality is that the chip guys cut up the standard SDHI IP to add a
+> 'cool new feature', but all I want to do is put it back the way it was.
+>
+> NOTE: The design guys like to reuse IP blocks from previous designs that they
+> know worked and didn't have bugs. So, there is a good chance you will see this
+> change in future RZ/A devices (or even other future Renesas SoC devices).
+> To remove an unwanted feature adds additional design risk of breaking
+> something else....and given the cost of redoing silicon mask layers...no
+> engineer wants that mistake on their hands.
 
-On 2017/1/18 10:04, Wang Xiaoyin wrote:
-> This patch adds pinctrl dtsi file
-> 
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts  |   3 +-
->  .../arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi | 292 +++++++++++++++++++++
->  2 files changed, 293 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index 9a1d36aa84ce..de21ebfa4bd8 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -8,8 +8,7 @@
->  /dts-v1/;
->  
->  #include "hi3660.dtsi"
-> -/*#include "hi3660-ion.dtsi"*/
-> -/*#include "hikey960-pinctrl.dtsi"*/
-> +#include "hikey960-pinctrl.dtsi"
+So, one should be aware of that runtime PM support in these case is
+going to be suboptimal.
+For example, when using this native card detect, you will need to keep
+the controller runtime PM resumed as the be able to keep the clock on
+and to be able to fetch the irq. Wasting power.
 
-Can you please rebase to the 4.10-rc3 or mention which patch you are based on?
-Thanks!
+Most SoC vendors are therefore using a GPIO card detect instead,
+although I assume you already knew that. :-)
 
-Best Regards,
-Wei
+[...]
 
->  
->  / {
->  	model = "HiKey960";
-> diff --git a/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-> new file mode 100644
-> index 000000000000..98a0b78289b6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hikey960-pinctrl.dtsi
-> @@ -0,0 +1,292 @@
-> +/*
-> + * pinctrl dts fils for Hislicon HiKey960 development board
-> + *
-> + */
-> +
-> +#include <dt-bindings/pinctrl/hisi.h>
-> +
-> +/ {
-> +	soc {
-> +		/* [IOMG_000, IOMG_123] */
-> +		range: gpio-range {
-> +			#pinctrl-single,gpio-range-cells = <3>;
-> +		};
-> +		pmx0: pinmux@e896c000 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x0 0xe896c000 0x0 0x1f0>;
-> +			#pinctrl-cells = <1>;
-> +			#gpio-range-cells = <0x3>;
-> +			pinctrl-single,register-width = <0x20>;
-> +			pinctrl-single,function-mask = <0x7>;
-> +			/* pin base, nr pins & gpio function */
-> +			pinctrl-single,gpio-range = <
-> +				&range 0 7 0
-> +				&range 8 116 0>;
-> +
-> +			isp0_pmx_func: isp0_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x058 MUX_M1 /* ISP_CLK0 */
-> +					0x064 MUX_M1 /* ISP_SCL0 */
-> +					0x068 MUX_M1 /* ISP_SDA0 */
-> +				>;
-> +			};
-> +
-> +			isp1_pmx_func: isp1_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x05c MUX_M1 /* ISP_CLK1 */
-> +					0x06c MUX_M1 /* ISP_SCL1 */
-> +					0x070 MUX_M1 /* ISP_SDA1 */
-> +				>;
-> +			};
-> +
-> +			i2c3_pmx_func: i2c3_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x02c MUX_M1 /* I2C3_SCL */
-> +					0x030 MUX_M1 /* I2C3_SDA */
-> +				>;
-> +			};
-> +
-> +			i2c4_pmx_func: i2c4_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x090 MUX_M1 /* I2C4_SCL */
-> +					0x094 MUX_M1 /* I2C4_SDA */
-> +				>;
-> +			};
-> +
-> +			pcie_perstn_pmx_func: pcie_perstn_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x15c MUX_M1 /* PCIE_PERST_N */
-> +				>;
-> +			};
-> +
-> +			usbhub5734_pmx_func: usbhub5734_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x11c MUX_M0 /* GPIO_073 */
-> +					0x120 MUX_M0 /* GPIO_074 */
-> +				>;
-> +			};
-> +
-> +			spi1_pmx_func: spi1_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x034 MUX_M1 /* SPI1_CLK */
-> +					0x038 MUX_M1 /* SPI1_DI */
-> +					0x03c MUX_M1 /* SPI1_DO */
-> +					0x040 MUX_M1 /* SPI1_CS_N */
-> +				>;
-> +			};
-> +
-> +			uart0_pmx_func: uart0_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0cc MUX_M2 /* UART0_RXD */
-> +					0x0d0 MUX_M2 /* UART0_TXD */
-> +					0x0d4 MUX_M2 /* UART0_RXD_M */
-> +					0x0d8 MUX_M2 /* UART0_TXD_M */
-> +				>;
-> +			};
-> +
-> +			uart1_pmx_func: uart1_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0b0 MUX_M2 /* UART1_CTS_N */
-> +					0x0b4 MUX_M2 /* UART1_RTS_N */
-> +					0x0a8 MUX_M2 /* UART1_RXD */
-> +					0x0ac MUX_M2 /* UART1_TXD */
-> +				>;
-> +			};
-> +
-> +			uart2_pmx_func: uart2_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0bc MUX_M2 /* UART2_CTS_N */
-> +					0x0c0 MUX_M2 /* UART2_RTS_N */
-> +					0x0c8 MUX_M2 /* UART2_RXD */
-> +					0x0c4 MUX_M2 /* UART2_TXD */
-> +				>;
-> +			};
-> +
-> +			uart3_pmx_func: uart3_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0dc MUX_M1 /* UART3_CTS_N */
-> +					0x0e0 MUX_M1 /* UART3_RTS_N */
-> +					0x0e4 MUX_M1 /* UART3_RXD */
-> +					0x0e8 MUX_M1 /* UART3_TXD */
-> +				>;
-> +			};
-> +
-> +			uart4_pmx_func: uart4_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0ec MUX_M1 /* UART4_CTS_N */
-> +					0x0f0 MUX_M1 /* UART4_RTS_N */
-> +					0x0f4 MUX_M1 /* UART4_RXD */
-> +					0x0f8 MUX_M1 /* UART4_TXD */
-> +				>;
-> +			};
-> +
-> +			uart5_pmx_func: uart5_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0c4 MUX_M3 /* UART5_CTS_N */
-> +					0x0c8 MUX_M3 /* UART5_RTS_N */
-> +					0x0bc MUX_M3 /* UART5_RXD */
-> +					0x0c0 MUX_M3 /* UART5_TXD */
-> +				>;
-> +			};
-> +
-> +			uart6_pmx_func: uart6_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x0cc MUX_M1 /* UART6_CTS_N */
-> +					0x0d0 MUX_M1 /* UART6_RTS_N */
-> +					0x0d4 MUX_M1 /* UART6_RXD */
-> +					0x0d8 MUX_M1 /* UART6_TXD */
-> +				>;
-> +			};
-> +		};
-> +
-> +		/* [IOMG_MMC0_000, IOMG_MMC0_005] */
-> +		pmx1: pinmux@ff37e000 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x0 0xff37e000 0x0 0x18>;
-> +			#gpio-range-cells = <0x3>;
-> +			#pinctrl-cells = <1>;
-> +			pinctrl-single,register-width = <0x20>;
-> +			pinctrl-single,function-mask = <0x7>;
-> +			/* pin base, nr pins & gpio function */
-> +			pinctrl-single,gpio-range = <&range 0 6 0>;
-> +
-> +			sdcard_pmx_func: sdcard_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x000 MUX_M1 /* SD_CLK */
-> +					0x004 MUX_M1 /* SD_CMD */
-> +					0x008 MUX_M1 /* SD_DATA0 */
-> +					0x00c MUX_M1 /* SD_DATA1 */
-> +					0x010 MUX_M1 /* SD_DATA2 */
-> +					0x014 MUX_M1 /* SD_DATA3 */
-> +				>;
-> +			};
-> +		};
-> +
-> +		/* [IOMG_FIX_000, IOMG_FIX_011] */
-> +		pmx2: pinmux@ff3b6000 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x0 0xff3b6000 0x0 0x30>;
-> +			#pinctrl-cells = <1>;
-> +			#gpio-range-cells = <0x3>;
-> +			pinctrl-single,register-width = <0x20>;
-> +			pinctrl-single,function-mask = <0x7>;
-> +			/* pin base, nr pins & gpio function */
-> +			pinctrl-single,gpio-range = <&range 0 12 0>;
-> +
-> +			spi3_pmx_func: spi3_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x008 MUX_M1 /* SPI3_CLK */
-> +					0x00c MUX_M1 /* SPI3_DI */
-> +					0x010 MUX_M1 /* SPI3_DO */
-> +					0x014 MUX_M1 /* SPI3_CS0_N */
-> +				>;
-> +			};
-> +		};
-> +
-> +		/* [IOMG_MMC1_000, IOMG_MMC1_005] */
-> +		pmx3: pinmux@ff3fd000 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x0 0xff3fd000 0x0 0x18>;
-> +			#pinctrl-cells = <1>;
-> +			#gpio-range-cells = <0x3>;
-> +			pinctrl-single,register-width = <0x20>;
-> +			pinctrl-single,function-mask = <0x7>;
-> +			/* pin base, nr pins & gpio function */
-> +			pinctrl-single,gpio-range = <&range 0 6 0>;
-> +
-> +			sdio_pmx_func: sdio_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x000 MUX_M1 /* SDIO_CLK */
-> +					0x004 MUX_M1 /* SDIO_CMD */
-> +					0x008 MUX_M1 /* SDIO_DATA0 */
-> +					0x00c MUX_M1 /* SDIO_DATA1 */
-> +					0x010 MUX_M1 /* SDIO_DATA2 */
-> +					0x014 MUX_M1 /* SDIO_DATA3 */
-> +				>;
-> +			};
-> +		};
-> +
-> +		/* [IOMG_AO_000, IOMG_AO_041] */
-> +		pmx4: pinmux@fff11000 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x0 0xfff11000 0x0 0xa8>;
-> +			#pinctrl-cells = <1>;
-> +			#gpio-range-cells = <0x3>;
-> +			pinctrl-single,register-width = <0x20>;
-> +			pinctrl-single,function-mask = <0x7>;
-> +			/* pin base in node, nr pins & gpio function */
-> +			pinctrl-single,gpio-range = <&range 0 42 0>;
-> +
-> +			i2s2_pmx_func: i2s2_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x044 MUX_M1 /* I2S2_DI */
-> +					0x048 MUX_M1 /* I2S2_DO */
-> +					0x04c MUX_M1 /* I2S2_XCLK */
-> +					0x050 MUX_M1 /* I2S2_XFS */
-> +				>;
-> +			};
-> +
-> +			slimbus_pmx_func: slimbus_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x02c MUX_M1 /* SLIMBUS_CLK */
-> +					0x030 MUX_M1 /* SLIMBUS_DATA */
-> +				>;
-> +			};
-> +
-> +			i2c0_pmx_func: i2c0_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x014 MUX_M1 /* I2C0_SCL */
-> +					0x018 MUX_M1 /* I2C0_SDA */
-> +				>;
-> +			};
-> +
-> +			i2c1_pmx_func: i2c1_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x01c MUX_M1 /* I2C1_SCL */
-> +					0x020 MUX_M1 /* I2C1_SDA */
-> +				>;
-> +			};
-> +
-> +			i2c2_pmx_func: i2c2_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x024 MUX_M1 /* I2C2_SCL */
-> +					0x028 MUX_M1 /* I2C2_SDA */
-> +				>;
-> +			};
-> +
-> +			i2c7_pmx_func: i2c7_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x024 MUX_M3 /* I2C7_SCL */
-> +					0x028 MUX_M3 /* I2C7_SDA */
-> +				>;
-> +			};
-> +
-> +			spi2_pmx_func: spi2_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x08c MUX_M1 /* SPI2_CLK */
-> +					0x090 MUX_M1 /* SPI2_DI */
-> +					0x094 MUX_M1 /* SPI2_DO */
-> +					0x098 MUX_M1 /* SPI2_CS0_N */
-> +				>;
-> +			};
-> +
-> +			spi4_pmx_func: spi4_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x08c MUX_M4 /* SPI4_CLK */
-> +					0x090 MUX_M4 /* SPI4_DI */
-> +					0x094 MUX_M4 /* SPI4_DO */
-> +					0x098 MUX_M4 /* SPI4_CS0_N */
-> +				>;
-> +			};
-> +
-> +			i2s0_pmx_func: i2s0_pmx_func {
-> +				pinctrl-single,pins = <
-> +					0x034 MUX_M1 /* I2S0_DI */
-> +					0x038 MUX_M1 /* I2S0_DO */
-> +					0x03c MUX_M1 /* I2S0_XCLK */
-> +					0x040 MUX_M1 /* I2S0_XFS */
-> +				>;
-> +			};
-> +		};
-> +	};
-> +};
-> 
+Kind regards
+Uffe
