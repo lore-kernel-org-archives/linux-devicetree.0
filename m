@@ -1,16 +1,16 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] ARM64: dts: meson-gxbb-odroidc2: add the ethernet
+Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
  PHY's reset GPIO
-Date: Fri, 20 Jan 2017 17:23:22 +0100
-Message-ID: <3c5b07ce-78ff-edbc-adce-9ed9e70c05b4@baylibre.com>
+Date: Fri, 20 Jan 2017 17:23:26 +0100
+Message-ID: <e5b4a224-75b6-aa9d-9781-fc718d4cef42@baylibre.com>
 References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
  <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
- <20170120152232.13943-2-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120152232.13943-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170120152232.13943-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
@@ -18,33 +18,54 @@ List-Id: devicetree@vger.kernel.org
 
 On 01/20/2017 04:22 PM, Martin Blumenstingl wrote:
 > This resets the ethernet PHY during boot to get the PHY into a "clean"
-> state. While here also explicitly specify the phy-mode instead of
-> relying on the default-value from meson-gx.dtsi.
+> state.
+> While here also specify the phy-handle of the ethmac node to make the
+> PHY configuration similar to the one we have on GXL devices. This will
+> allow us to specify OF-properties for the PHY itself.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 5 +++++
->  1 file changed, 5 insertions(+)
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index c59403adb387..6b5579522587 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -152,6 +152,11 @@
->  	pinctrl-0 = <&eth_rgmii_pins>;
->  	pinctrl-names = "default";
->  	phy-handle = <&eth_phy0>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> index 03e3d76626dd..fa0f84cfeaa9 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts
+> @@ -51,6 +51,30 @@
+>  	model = "Amlogic Meson GXBB P200 Development Board";
+>  };
+>  
+> +&ethmac {
+> +	status = "okay";
+> +	pinctrl-0 = <&eth_rgmii_pins>;
+> +	pinctrl-names = "default";
+> +	phy-handle = <&eth_phy0>;
 > +	phy-mode = "rgmii";
 > +
 > +	snps,reset-gpio = <&gpio GPIOZ_14 0>;
 > +	snps,reset-delays-us = <0 10000 1000000>;
 > +	snps,reset-active-low;
->  
->  	mdio {
->  		compatible = "snps,dwmac-mdio";
+> +
+> +	mdio {
+> +		compatible = "snps,dwmac-mdio";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		eth_phy0: ethernet-phy@0 {
+> +			compatible = "ethernet-phy-id0022.1620",
+> +				     "ethernet-phy-ieee802.3-c22";
+> +			reg = <3>;
+> +		};
+> +	};
+> +};
+> +
+>  &i2c_B {
+>  	status = "okay";
+>  	pinctrl-0 = <&i2c_b_pins>;
 > 
 
-On Odroid-c2 rev 0.2 :
+On Amlogic p200 :
 Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
