@@ -1,83 +1,101 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v4 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Fri, 20 Jan 2017 23:41:39 +0100
-Message-ID: <20170120224137.GD1438@katana>
-References: <20170120194332.1683-1-chris.brandt@renesas.com>
- <20170120194332.1683-3-chris.brandt@renesas.com>
- <20170120213901.GC1438@katana>
- <SG2PR06MB1165035F107F504185B525658A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] phy: qcom-ufs: Remove -always-on property
+Date: Fri, 20 Jan 2017 14:53:46 -0800
+Message-ID: <cd2e1326e865890baedab5777e3c0474@codeaurora.org>
+References: <20170119104739.4376-1-bjorn.andersson@linaro.org>
+ <20170119104739.4376-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="LKTjZJSUETSlgu2t"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB1165035F107F504185B525658A710@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170119104739.4376-3-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 2017-01-19 02:47, Bjorn Andersson wrote:
+> The fact that a regulator is always-on is a property of the regulator,
+> not a specific consumer. Implementing this in the driver leads to a
+> system behaviour that is dependent on if the Qualcomm UFS PHY was ever
+> (partially) probed.
+> 
+> If the specific regulator should be always on in a particular device,
+> mark it so by specifying "regulator-always-on" in the regulator node.
+> 
+> Cc: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 1 -
+>  drivers/phy/phy-qcom-ufs-i.h                       | 1 -
+>  drivers/phy/phy-qcom-ufs.c                         | 5 +----
+>  3 files changed, 1 insertion(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> index b6b5130e5f65..1f69ee1a61ea 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
+> @@ -29,7 +29,6 @@ Optional properties:
+>  - vdda-pll-max-microamp : specifies max. load that can be drawn from 
+> pll supply
+>  - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power 
+> supply
+>  - vddp-ref-clk-max-microamp : specifies max. load that can be drawn
+> from this supply
+> -- vddp-ref-clk-always-on : specifies if this supply needs to be kept 
+> always on
+> 
+>  Example:
+> 
+> diff --git a/drivers/phy/phy-qcom-ufs-i.h 
+> b/drivers/phy/phy-qcom-ufs-i.h
+> index d505d98cf5f8..13b02b7de30b 100644
+> --- a/drivers/phy/phy-qcom-ufs-i.h
+> +++ b/drivers/phy/phy-qcom-ufs-i.h
+> @@ -77,7 +77,6 @@ struct ufs_qcom_phy_vreg {
+>  	int min_uV;
+>  	int max_uV;
+>  	bool enabled;
+> -	bool is_always_on;
+>  };
+> 
+>  struct ufs_qcom_phy {
+> diff --git a/drivers/phy/phy-qcom-ufs.c b/drivers/phy/phy-qcom-ufs.c
+> index bbd317158084..c145fa6e824c 100644
+> --- a/drivers/phy/phy-qcom-ufs.c
+> +++ b/drivers/phy/phy-qcom-ufs.c
+> @@ -242,9 +242,6 @@ static int ufs_qcom_phy_init_vreg(struct device 
+> *dev,
+>  			}
+>  			err = 0;
+>  		}
+> -		snprintf(prop_name, MAX_PROP_NAME, "%s-always-on", name);
+> -		vreg->is_always_on = of_property_read_bool(dev->of_node,
+> -							   prop_name);
+>  	}
+> 
+>  	if (!strcmp(name, "vdda-pll")) {
+> @@ -402,7 +399,7 @@ static int ufs_qcom_phy_disable_vreg(struct device 
+> *dev,
+>  {
+>  	int ret = 0;
+> 
+> -	if (!vreg || !vreg->enabled || vreg->is_always_on)
+> +	if (!vreg || !vreg->enabled)
+>  		goto out;
+> 
+>  	ret = regulator_disable(vreg->reg);
 
---LKTjZJSUETSlgu2t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Looks good to me.
+Reviewed-by: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-
-> It sounds like your suggestion is to just put the HW description in
-> the DT bindings, but move the dirty details into the driver.
->=20
-> Keep in DT:
->=20
-> +- clocks: Most controllers only have 1 clock source per channel. However=
-, on
-> +	  some variations of this controller, the internal card detection
-> +	  logic that exists in this controller is sectioned off to be run by a
-> +	  separate second clock source to allow the main core clock to be turned
-> +	  off to save power.
-> +	  If 2 clocks are specified by the hardware, you must name them as
-> +	  "core" and "cd".
-> +	  If the controller only has 1 clock, naming is not required.
->=20
->=20
->=20
-> Move somewhere in the driver (maybe where the 2nd clock is detected):
->=20
-> +	  Unfortunately, the existing driver architecture
-> +	  does not support such a separation of clocks.
-
-"such" is not explained. Maybe "does not support a seperation of clocks.
-It doesn't work with Runtime PM because ..."?
-
-> +	  Additionally, it is prohibited to supply a clock to the core but not
-> +	  to the card detect circuit. That leaves you with if separate clocks
-> +	  are presented, you must treat them both as 1.
->=20
->=20
-> Is this what you were thinking?
-
-Exactly.
-
-
---LKTjZJSUETSlgu2t
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIbBAEBAgAGBQJYgpIhAAoJEBQN5MwUoCm21iEP9ivLnVX3LgSHxtqx8UYvJpKJ
-3Q+v2sD61HZUcVzzoXCDr9sUCEVFq1juoor1TaNgzLWGx31cgCD0pFl+MEZ2S9A+
-+rJz6xsYPOC/IITYAJvmC/8+GdK7pxkc+KWMFvlcBR/OAcZpzWHziMnkpQKKoW7o
-kR+B411kA/8kwoQpta5U+hL8Jk4Z/aQXOfiTyEDVDeZjHDUGm3+EAcSXLH2SGLd0
-EcZ5vyDbdQwAhljGtazfpnShkDM9Z4c0Jiuz+V2D9/lBYPWQBuiJmlJBf3SHKH2v
-rfd4ZVPKM1in8vGqDTNpUcON9koTIa3E/rXeWddxlCXGPiprwmuLsgyTjIZcVBl7
-EXqlvA2DQoqddXs6kulq/WAy4IeSDv8ePxe2h2R5z2opGiUXApXqm0vt7te0ert7
-tsJ6VphnJ1kpZIv4SQCa05HNhiKscBV8c4Al5MmyMbz6bpn2YJQ31pH+MXMqTN7G
-+OIZIQJ6ddz5L5XzEtMapXdjfGYUGw5zguQHNUjLywg8YYTTbYPsaHQFODT/CJ6I
-P2uoqBhUIclhdStOFgWLsZZZr/vL9Mr40r2H7BfrSRB9Fg8gDVRSgtmW96/EUwv5
-+/4NvjCqY06SSCbEIm89ccUhZ9Q3UEugUGPhjPTxN8wjfnHvzJKSTWKPlIfeE3y+
-ItQGojn/LZaSPo2cXpU=
-=HVRM
------END PGP SIGNATURE-----
-
---LKTjZJSUETSlgu2t--
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
