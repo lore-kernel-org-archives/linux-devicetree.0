@@ -1,45 +1,43 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH 16/18] ARM64: dts: meson-gxl-s905x-nexbox-a95x: Reorder nodes
-Date: Fri, 20 Jan 2017 23:21:16 +0100
-Message-ID: <20170120222118.21476-17-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 18/18] ARM64: dts: meson-gx-p23x-q20x: Reorder nodes
+Date: Fri, 20 Jan 2017 23:21:18 +0100
+Message-ID: <20170120222118.21476-19-afaerber@suse.de>
 References: <20170120222118.21476-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170120222118.21476-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-amlogic@lists.infradead.org
-Cc: Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120222118.21476-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Sort nodes referenced by label alphabetically.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 ---
- .../dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 28 +++++++++++-----------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ .../arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi | 24 +++++++++++-----------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-index cea4a3eded9b..9e91f0809dcd 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-@@ -129,10 +129,10 @@
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+index 419c46cc64e4..cfc26a2a3a90 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+@@ -100,11 +100,8 @@
  	};
  };
  
+-/* This UART is brought out to the DB9 connector */
 -&uart_AO {
--	status = "okay";
++&ethmac {
+ 	status = "okay";
 -	pinctrl-0 = <&uart_ao_a_pins>;
 -	pinctrl-names = "default";
-+&cvbs_vdac_port {
-+	cvbs_vdac_out: endpoint {
-+		remote-endpoint = <&cvbs_connector_in>;
-+	};
  };
  
- &ethmac {
-@@ -147,6 +147,14 @@
+ &ir {
+@@ -113,6 +110,14 @@
  	pinctrl-names = "default";
  };
  
@@ -54,11 +52,12 @@ index cea4a3eded9b..9e91f0809dcd 100644
  /* Wireless SDIO Module */
  &sd_emmc_a {
  	status = "okay";
-@@ -206,16 +214,8 @@
+@@ -177,14 +182,9 @@
  	vqmmc-supply = <&vddio_boot>;
  };
  
 -&pwm_ef {
++/* This UART is brought out to the DB9 connector */
 +&uart_AO {
  	status = "okay";
 -	pinctrl-0 = <&pwm_e_pins>;
@@ -68,10 +67,13 @@ index cea4a3eded9b..9e91f0809dcd 100644
 -	clock-names = "clkin0";
 -};
 -
--&cvbs_vdac_port {
--	cvbs_vdac_out: endpoint {
--		remote-endpoint = <&cvbs_connector_in>;
--	};
+-&ethmac {
+-	status = "okay";
  };
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
