@@ -1,67 +1,57 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: Export __of_find_all_nodes()
-Date: Fri, 20 Jan 2017 10:59:35 +0100
-Message-ID: <d02c2035-9176-9132-0725-9c645194cec5@nokia.com>
-References: <20170118093849.32204-1-alexander.sverdlin@nokia.com>
- <587FDF1B.1060206@gmail.com> <d9525715-be49-1cfa-f623-084237e44b4c@nokia.com>
- <588140D4.1060103@gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 13/13] MIPS: jz4740: Remove custom GPIO code
+Date: Fri, 20 Jan 2017 11:01:35 +0100
+Message-ID: <8944dd20e8ae6ed705dcf69e9f0ed4fd@mail.crapouillou.net>
+References: <20170117231421.16310-1-paul@crapouillou.net>
+ <20170117231421.16310-14-paul@crapouillou.net>
+ <CACRpkdYMm0iWxmEGyQyEz4JfWukXNyGXO1rqw1dSiABgHdA1tQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <588140D4.1060103-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYMm0iWxmEGyQyEz4JfWukXNyGXO1rqw1dSiABgHdA1tQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Frank!
+Le 2017-01-19 10:07, Linus Walleij a écrit :
 
-On 19/01/17 23:42, Frank Rowand wrote:
->>>> +EXPORT_SYMBOL_GPL(__of_find_all_nodes);
->>>>  
->>>>  /**
->>>>   * of_find_all_nodes - Get next node in global list
->>>>
->>> Quoting Rob from the last request for this:
->>>
->>> "What driver needs this? This isn't really a function I'd expect drivers to use."
->> This one and the one from previous patch/mail are used in a module which reads DT overlays
-> If I understand correctly, that was a request to be able to use of_node_init() directly.
-> Is that correct?
-
-Correct. In case new node has to be added.
-
->> from pluggable extension boards, eventually performs some sanity checks/corrections and
->> applies these overlays. This eventual corrections require low-level access to DT.
-> Are you saying that you want to modify the device tree data structure after the overlay
-> is applied?
+> On Wed, Jan 18, 2017 at 12:14 AM, Paul Cercueil <paul@crapouillou.net> 
+> wrote:
 > 
-> The idea of sanity checks is one that I am very interested in.  Could the sanity checks
-> be done statically, either with the overlay source, or with the compiled overlay source?
-> The idea behind that question is whether the checks could be done while the overlay is
-> being developed, instead of at run time.
+>> All the drivers for the various hardware elements of the jz4740 SoC 
+>> have been modified to use the pinctrl framework for their pin 
+>> configuration needs. As such, this platform code is now unused and can 
+>> be deleted. Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 > 
-> I am also curious about what sort of corrections are made and how it is determined what
-> corrections to make.
+> I feel I might have come across as a bit harsh in the previous review 
+> of the
+> patches leading up to this one. In that case I'm sorry.
+> 
+> I can clearly see that the intent of the series is to remove this 
+> hopelessly
+> idiomatic code from the MIPS hurdle, and move these systems over
+> to standard frameworks.
+> 
+> In a way, if I look at the kernel as a whole, it would likely look 
+> better
+> after these patches were merged, than before. Even with the
+> shortcomings I painted out in the previous review comments.
+> 
+> A very complicated piece of messy code is cut from MIPS.
+> 
+> I think this is very valuable work and well worth persuing, so please
+> go ahead and work with the series, your effort is very much 
+> appreciated!
+> 
+> Yours,
+> Linus Walleij
 
-In some cases these are just bugs, in other cases new DT bindings which change with Linux
-version and in third either old overlay format, or even not overlay format.
+Well thank you for your very constructive criticism ;) And for your 
+review.
+I'll submit a v2 very soon - I don't want to miss the 4.11 merge.
 
-But I see your point here. Actually it would be possible to convert all these cases to
-overlay format and just apply an overlay. And all the API for this is already available.
-
-Let us just abandon both export patches!
-
->> I cannot judge, how relevant this usecase is for the community, but I was driven by the fact,
->> that the functions which require the functions I export are defined statically in .h files
->> and therefore are exposed to the modules.
->>
-
--- 
-Best regards,
-Alexander Sverdlin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+-Paul
