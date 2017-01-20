@@ -1,79 +1,47 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2 2/9] ARM64: dts: meson-gxbb-p201: add the ethernet
- PHY's reset GPIO
-Date: Fri, 20 Jan 2017 14:33:53 +0100
-Message-ID: <CAFBinCA1YABPzBUnprh_HprjQ8DqpEeF9OQeXKNtQ8Kp8Ou0bw@mail.gmail.com>
-References: <20161202234739.22929-1-martin.blumenstingl@googlemail.com>
- <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
- <20170120132650.9784-3-martin.blumenstingl@googlemail.com>
- <8a0b6c29-38f0-8474-34a2-8e3df4a5a239@baylibre.com>
+From: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 00/14] ARM: da850-lcdk: add SATA support
+Date: Fri, 20 Jan 2017 08:28:43 -0500
+Message-ID: <20170120132843.GA31487@mtj.duckdns.org>
+References: <1484911325-23425-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <8a0b6c29-38f0-8474-34a2-8e3df4a5a239@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, will.deacon@arm.com, robh+dt@kernel.org, catalin.marinas@arm.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, jbrunet@baylibre.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484911325-23425-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 2:31 PM, Neil Armstrong <narmstrong@baylibre.com> wrote:
-> On 01/20/2017 02:26 PM, Martin Blumenstingl wrote:
->> This resets the ethernet PHY during boot to get the PHY into a "clean"
->> state.
->> While here also specify the phy-handle of the ethmac node to make the
->> PHY configuration similar to the one we have on GXL devices. This will
->> allow us to specify OF-properties for the PHY itself.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> index 39bb037a3e47..5d2cd2ecfdc4 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p201.dts
->> @@ -50,3 +50,27 @@
->>       compatible = "amlogic,p201", "amlogic,meson-gxbb";
->>       model = "Amlogic Meson GXBB P201 Development Board";
->>  };
->> +
->> +&ethmac {
->> +     status = "okay";
->> +     pinctrl-0 = <&eth_rgmii_pins>;
->> +     pinctrl-names = "default";
->> +     phy-handle = <&eth_phy0>;
->> +     phy-mode = "rgmii";
->> +
->> +     snps,reset-gpio = <&gpio GPIOZ_14 0>;
->> +     snps,reset-delays-us = <0 10000 1000000>;
->> +     snps,reset-active-low;
->> +
->> +     mdio {
->> +             compatible = "snps,dwmac-mdio";
->> +             #address-cells = <1>;
->> +             #size-cells = <0>;
->> +
->> +             eth_phy0: ethernet-phy@0 {
->> +                     compatible = "ethernet-phy-id0022.1620",
->> +                                  "ethernet-phy-ieee802.3-c22";
->> +                     reg = <3>;
->> +             };
->> +     };
->> +};
->>
->
-> Hi Martin,
->
-> It seems you mismatched the p200 and the p201, it's the p201 nobody has and uses a rmii link.
-ouch, good catch.
-I'll send a fix for that later - thanks for spotting!
+On Fri, Jan 20, 2017 at 12:21:51PM +0100, Bartosz Golaszewski wrote:
+> This series contains all the changes necessary to make SATA work on
+> the da850-lcdk board.
+> 
+> The first patch adds DT bindings for the ahci-da850 driver.
+> 
+> The second enables relevant modules in davinci_all_defconfig.
+> 
+> Patches 03/14-06/14 modify the way the clocks are handled regarding
+> SATA on the da850 platform. We modify the ahci driver to retrieve
+> the clock via con_id and model the external SATA oscillator as
+> a real clock.
+> 
+> Patches 07/14-11/14 extend the ahci-da850 driver. Add DT support,
+> implement workarounds necessary to make SATA work on the da850-lcdk
+> board and un-hardcode the external clock multiplier.
+
+Please feel free to add
+
+ Acked-by: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+to the all libata patches.  Please let me know how the patches should
+be routed once other parts are settled.
+
+Thanks.
+
+-- 
+tejun
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
