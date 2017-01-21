@@ -1,61 +1,47 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: Document Broadcom iProc mailbox
- controller driver
-Date: Sat, 21 Jan 2017 14:40:46 -0600
-Message-ID: <20170121204046.4trovvzfxdnfevns@rob-hp-laptop>
-References: <1484789980-6812-1-git-send-email-jonathan.richardson@broadcom.com>
- <1484789980-6812-2-git-send-email-jonathan.richardson@broadcom.com>
+Subject: Re: [PATCH 1/2] dt-bindings: add Asus Tinker board
+Date: Sat, 21 Jan 2017 14:42:17 -0600
+Message-ID: <20170121204217.y54lup7wkm7y7iwp@rob-hp-laptop>
+References: <1484791919-4665-1-git-send-email-eddie.cai@rock-chips.com>
+ <1484791919-4665-2-git-send-email-eddie.cai@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484789980-6812-2-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <1484791919-4665-2-git-send-email-eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2017 at 05:39:38PM -0800, Jonathan Richardson wrote:
-
-Changelog?
-
-> Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/mailbox/brcm,iproc-mailbox.txt     | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+On Thu, Jan 19, 2017 at 10:11:58AM +0800, Eddie Cai wrote:
+> Tinker board is a credit card size develop board designed by Asus.
+> Powered by RK3288.
 > 
-> diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-> new file mode 100644
-> index 0000000..f4c4f96
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-> @@ -0,0 +1,14 @@
-> +* Broadcom's iProc Mailbox Controller
-> +
-> +Required properties:
-> +- compatible: Must be "brcm,iproc-mailbox"
-> +- reg: Defines the base address of the mailbox controller.
-> +- #mbox-cells: Must be 1.
-> +
-> +Example:
-> +
-> +	mailbox: mailbox@03024024 {
+> Signed-off-by: Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/rockchip.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+> index cc4ace6..ce1f04a 100644
+> --- a/Documentation/devicetree/bindings/arm/rockchip.txt
+> +++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+> @@ -1,5 +1,8 @@
+>  Rockchip platforms device tree bindings
+>  ---------------------------------------
+> +- Asus Tinker board
+> +    Required root node properties:
+> +      - compatible = "rockchip,rk3288-tinker", "rockchip,rk3288";
 
-Drop the leading 0.
+This should be asus,tinker if that's specific enough. At least the board 
+manufacturer should be the vendor.
 
-> +		compatible = "brcm,iproc-mailbox";
-> +		reg = <0x03024024 0x8>;
-> +		#mbox-cells = <1>;
-> +	};
+>  
+>  - Kylin RK3036 board:
+>      Required root node properties:
 > -- 
-> 1.9.1
+> 2.7.4
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
