@@ -1,23 +1,24 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 3/8] clk: renesas: cpg-mssr: Rename
- cpg_mssr_priv.mstp_lock
-Date: Fri, 20 Jan 2017 16:32:39 -0800
-Message-ID: <20170121003239.GU20800@codeaurora.org>
+Subject: Re: [PATCH 2/8] clk: renesas: cpg-mssr: Document suitability for
+ RZ/G1
+Date: Fri, 20 Jan 2017 16:32:35 -0800
+Message-ID: <20170121003235.GT20800@codeaurora.org>
 References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-4-git-send-email-geert+renesas@glider.be>
+ <1484921306-9967-3-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484921306-9967-4-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1484921306-9967-3-git-send-email-geert+renesas@glider.be>
 Sender: linux-clk-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: Philipp Zabel <p.zabel@pengutronix.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On 01/20, Geert Uytterhoeven wrote:
-> The spinlock is used to protect Read-Modify-Write register accesses,
-> which won't be limited to SMSTPCR register accesses.
+> The Renesas CPG/MSSR driver is already in active use for RZ/G1 since
+> commits c0b2d75d2a4bf6a3 ("clk: renesas: cpg-mssr: Add R8A7743 support")
+> and 9127d54bb8947159 ("clk: renesas: cpg-mssr: Add R8A7745 support").
 > 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
