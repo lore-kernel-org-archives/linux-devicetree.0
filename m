@@ -1,55 +1,137 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
-Date: Sat, 21 Jan 2017 10:37:14 +0100
-Message-ID: <20170121093714.GB1440@katana>
-References: <20170121030604.7672-1-chris.brandt@renesas.com>
- <20170121030604.7672-2-chris.brandt@renesas.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] Amlogic Meson SAR ADC support
+Date: Sat, 21 Jan 2017 12:37:42 +0000
+Message-ID: <b48c8810-171c-3e05-396b-7c77b0f6e078@kernel.org>
+References: <20170115224221.15510-1-martin.blumenstingl@googlemail.com>
+ <20170119145822.26239-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170121030604.7672-2-chris.brandt@renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170119145822.26239-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Martin,
 
---WYTEVAkct0FjGQmd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Quick process point.  Personally I'd much prefer it if new versions
+fo the patch are not posted as replies to earlier versions.  It gets
+awfully deep and hard to follow very quickly!
 
-On Fri, Jan 20, 2017 at 10:06:02PM -0500, Chris Brandt wrote:
-> Some controllers have 2 clock sources instead of 1. The 2nd clock
-> is for the internal card detect logic and must be enabled/disabled
-> along with the main core clock for proper operation.
->=20
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Thanks,
 
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Jonathan
 
+On 19/01/17 14:58, Martin Blumenstingl wrote:
+> This series add support for the SAR ADC on Amlogic Meson GXBB, GXL and
+> GXM SoCs.
+> The hardware on GXBB provides 10-bit ADC results, while GXL and GXM are
+> providing 12-bit results. Support for older SoCs (Meson8b and Meson8)
+> can be added with little effort, most of which is testing I guess (I
+> don't have any pre-GXBB hardware so I can't say).
+> 
+> A new set of clocks had to be added to the GXBB clock controller (used
+> by the GXBB/GXL/GXM SoCs) which are required to get the ADC working.
+> 
+> The ADC itself can sample multiple channels at the same time and allows
+> capturing multiple samples (which can be used for filtering/averaging).
+> The ADC results are stored inside a FIFO register. More details on what
+> the driver supports (or doesn't) can be found in the description of
+> patch #3.
+> 
+> The code is based on the public S805 (Meson8b) and S905 (GXBB)
+> datasheets, as well as by reading (various versions of) the vendor
+> driver and by inspecting the registers on the vendor kernels of my
+> testing-hardware.
+> 
+> Typical use-cases for the ADC on the Meson GX SoCs are:
+> - adc-keys ("ADC attached resistor ladder buttons")
+> - SoC temperature measurement (not supported by this driver yet as
+>   the system firmware does this already and provides the values via the
+>   SCPI protocol)
+> - "version-strapping" (different resistor values are used to indicate
+>   the board-revision)
+> - and of course typical ADC measurements
+> 
+> Thanks to Heiner Kallweit, Jonathan Cameron, Lars-Peter Clausen and
+> Peter Meerwald-Stadler for reviewing this series and providing valuable
+> input!
+> 
+> Changes since v2 (all changes are for patch #3, except where noted):
+> - fixed another typo in the interrupt (patch #4, thanks again Heiner
+>   Kallweit)
+> - change namespace of all register #defines to MESON_SAR_ADC (I
+>   intentionally decided to keep SAR_ADC in it because that's the way
+>   registers are named in the datasheet, thus making it easy to match the
+>   registers without having to look up the offset all the time)
+> - added additional parenthesis around MACRO parameters  for extra safety
+> - removed unused definition for SAR_ADC_REG3_ADC_CLK_DIV_MASK (as we
+>   already have SAR_ADC_REG3_ADC_CLK_DIV_SHIFT and
+>   SAR_ADC_REG3_ADC_CLK_DIV_WIDTH which are used instead)
+> - change value of "indexed" from "true" to "1"
+> - remove type parameter from MESON_SAR_ADC_CHAN macro as all channels are
+>   currently IIO_VOLTAGE channels
+> - fixed another multi-line comment style violation
+> - added timeout to meson_saradc_lock() (unlikely to be triggered, but
+>   better safe then sorry - which would mean that we'd be keeping one core
+>   busy infinitely)
+> - fixed meson_saradc_remove() call order (first unregister the iio_dev,
+>   then disable the hardware instead of the other way around)
+> - use "consistent prefixing", which means that all #defines now use
+>   MESON_SAR_ADC_ as prefix, while all enums, static global variables,
+>   structs and functions use meson_sar_adc_ as prefix
+> - rebased .dts and clk patches to apply to khilman's latest v4.11/dt64
+>   (a minor  conflict had to be resolved in the clk patch due to
+>   "clk: meson-gxbb: Export HDMI clocks")
+> - added Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> to all
+>   patches (thanks for testing!)
+> 
+> Changes since v1 (all changes are for patch #3, except where noted):
+> - fix IRQ number in meson-gx.dtsi (thanks to Heiner Kallweit for
+>   providing the correct value), affects patch #4
+> - move the most used members of meson_saradc_priv to the beginning
+> - remove unused struct member "completion" from meson_saradc_priv
+> - use devm_kasprintf() instead of snprintf() + devm_kstrdup()
+> - initialize indio_dev->dev.parent earlier in meson_saradc_probe()
+> - moved meson_saradc_clear_fifo() logic to a separate function
+> - add comment why a do ... while loop is required in
+>   meson_saradc_wait_busy_clear()
+> - remove SAR_ADC_NUM_CHANNELS and SAR_ADC_VALUE_MASK macros (each of them
+>   was only used once and it's an unneeded level of abstraction)
+> - fixed multiline comment syntax violations
+> - dropped unneeded log messages during initialization
+> - set iio_dev name to "meson-gxbb-saradc" or "meson-gxl-saradc"
+> - use "indio_dev->dev.parent" in all kernel log calls (dev_warn/err/etc)
+>   to make it show the OF node name (instead of the iio device name)
+> - introduce struct meson_saradc_data to hold platform-specific
+>   information (such as resolution in bits and the iio_dev name)
+> 
+> 
+> Martin Blumenstingl (4):
+>   Documentation: dt-bindings: add the Amlogic Meson SAR ADC
+>     documentation
+>   clk: gxbb: add the SAR ADC clocks and expose them
+>   iio: adc: add a driver for the SAR ADC found in Amlogic Meson SoCs
+>   ARM64: dts: meson: meson-gx: add the SAR ADC
+> 
+>  .../bindings/iio/adc/amlogic,meson-saradc.txt      |  31 +
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  10 +
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  10 +
+>  drivers/clk/meson/gxbb.c                           |  48 ++
+>  drivers/clk/meson/gxbb.h                           |   9 +-
+>  drivers/iio/adc/Kconfig                            |  12 +
+>  drivers/iio/adc/Makefile                           |   1 +
+>  drivers/iio/adc/meson_saradc.c                     | 916 +++++++++++++++++++++
+>  include/dt-bindings/clock/gxbb-clkc.h              |   4 +
+>  10 files changed, 1046 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+>  create mode 100644 drivers/iio/adc/meson_saradc.c
+> 
 
---WYTEVAkct0FjGQmd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJYgyvKAAoJEBQN5MwUoCm2bQQP/3RJ25QxzpNnb8NhjfkZgy8y
-hp/y2QbVaWZyFj0DDR9xO3hegNCVVWuiPlUBOFp5Jy+z8jCSC5tVzZfayHQNCdxZ
-/3nDCO1xkS9KG3Hdov3swkQvfxGL/KwWmZ37jj7yxLv5sGtQgHTWP5HzEAoDDHsO
-Vt6wSIw5/7xcE0ELA2jMDmD8qFO9W4O01zl16ij8rmrO08X3dZVdlhjWnyoOlMsx
-Mp3s18Mb4KLyWf++Zh+gck99Q34x5ZOBKNejkXLLim70xRW/io4x0BHeIVkmfh+s
-FYWOXUD9M7wZ4113uMZVe/UFZluGWQ5K59UBpBXvjCB6UPWGGToJw85QSEIPwS/r
-K8jzxVB6rIP4iVH7sHrjKbbmJb3+CCHqGBqFxkSmKEwHCY2emP/iiw8GPsi4TU6v
-QtDnbeN/C5vIR7FtUS0+X3kyLYEnRG/uC34Td6G3Cfii/h4EBQ6HiUObX/crt3yb
-4Y4V4y4vdNe0Uz236TlSOdowCxnOIMMTn2v+e+mjlP9zHpmCCsTPcBDu44iEFhGt
-xxM4OZeeMRjyM3gagYaMm5z3O3zDDypZiqe9PFk6j1gd/HSclTnoLblIabr2zmlm
-MEJaPfCmujCivWT9n32SmThsnEg1MwulBqWiK1ya0gPuIpTfg/sVY6pvz25C9aex
-JRIEc48y4lw5Yjux7IS8
-=Rwmc
------END PGP SIGNATURE-----
-
---WYTEVAkct0FjGQmd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
