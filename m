@@ -1,38 +1,97 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] phy: qcom-ufs: Remove -always-on property
-Date: Sat, 21 Jan 2017 14:43:02 -0600
-Message-ID: <20170121204302.ek2oovgay5odhdi3@rob-hp-laptop>
-References: <20170119104739.4376-1-bjorn.andersson@linaro.org>
- <20170119104739.4376-3-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Add support for phyCORE-AM335x PCM-953
+ carrier board
+Date: Sat, 21 Jan 2017 14:53:45 -0600
+Message-ID: <20170121205345.oij67ai5d7q7k74d@rob-hp-laptop>
+References: <1484831270-7251-1-git-send-email-t.remmet@phytec.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170119104739.4376-3-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1484831270-7251-1-git-send-email-t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 02:47:38AM -0800, Bjorn Andersson wrote:
-> The fact that a regulator is always-on is a property of the regulator,
-> not a specific consumer. Implementing this in the driver leads to a
-> system behaviour that is dependent on if the Qualcomm UFS PHY was ever
-> (partially) probed.
+On Thu, Jan 19, 2017 at 02:07:48PM +0100, Teresa Remmet wrote:
+> The phyCORE-AM335x development kit is a combination of the
+> phyCORE-AM335x SoM and a PCM-953 carrier board. The features
+> of the PCM-953 are:
+> * ETH phy on carrier board: 1x RGMII
+> * 1x CAN
+> * Up to 4x UART
+> * USB0 (otg)
+> * USB1 (host)
+> * SD slot
+> * User gpio-keys
+> * User LEDs
 > 
-> If the specific regulator should be always on in a particular device,
-> mark it so by specifying "regulator-always-on" in the regulator node.
-> 
-> Cc: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+> Reviewed-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 1 -
->  drivers/phy/phy-qcom-ufs-i.h                       | 1 -
->  drivers/phy/phy-qcom-ufs.c                         | 5 +----
->  3 files changed, 1 insertion(+), 6 deletions(-)
+>  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+>  arch/arm/boot/dts/Makefile                         |   1 +
+>  arch/arm/boot/dts/am335x-pcm-953.dtsi              | 303 +++++++++++++++++++++
+>  arch/arm/boot/dts/am335x-phycore-rdk.dts           |  27 ++
+>  4 files changed, 334 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/am335x-pcm-953.dtsi
+>  create mode 100644 arch/arm/boot/dts/am335x-phycore-rdk.dts
+
+[...]
+
+> +	user_leds: user_leds {
+> +		compatible = "gpio-leds";
+> +	};
+> +
+> +	user_buttons: user_buttons {
+> +		compatible = "gpio-keys";
+> +	};
+
+With only a compatible, I don't think there's much gain to split these 2 
+nodes. Otherwse,
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+> +&user_buttons {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&user_buttons_pins>;
+> +	status = "okay";
+> +
+> +	button@0 {
+> +		label = "home";
+> +		linux,code = <KEY_HOME>;
+> +		gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+> +		gpio-key,wakeup;
+> +	};
+> +
+> +	button@1 {
+> +		label = "menu";
+> +		linux,code = <KEY_MENU>;
+> +		gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
+> +		gpio-key,wakeup;
+> +	};
+> +};
+> +
+> +&user_leds {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&user_leds_pins>;
+> +	status = "okay";
+> +
+> +	green {
+> +		label = "green:user";
+> +		gpios = <&gpio1 30 GPIO_ACTIVE_HIGH>;
+> +		linux,default-trigger = "gpio";
+> +		default-state = "on";
+> +	};
+> +
+> +	yellow {
+> +		label = "yellow:user";
+> +		gpios = <&gpio1 31 GPIO_ACTIVE_LOW>;
+> +		linux,default-trigger = "gpio";
+> +		default-state = "on";
+> +	};
+> +};
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
