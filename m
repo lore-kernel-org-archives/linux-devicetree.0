@@ -1,68 +1,295 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 00/11] add support for VBUS max current and min voltage
- limits AXP20X and AXP22X PMICs
-Date: Sat, 21 Jan 2017 09:10:36 +0800
-Message-ID: <CAGb2v679kG8eisNa=Bmo+o0DVm7xn7x=N9i7H7mB5n_Y2X=qLw@mail.gmail.com>
-References: <20161209110419.28981-1-quentin.schulz@free-electrons.com> <20170112092821.5xkgpsbbsxaz3s7h@lukather>
+Subject: Re: [PATCH 1/6] rtc: sun6i: Expose the 32kHz oscillator
+Date: Sat, 21 Jan 2017 10:14:18 +0800
+Message-ID: <CAGb2v65N=5_=K+XaKxu-1C+R5O0FCyTbWek6c_TAoEp5W1t+SA@mail.gmail.com>
+References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
+ <f1b2a5053cf143dccf110ab0d40c082903a958a7.1484927680.git-series.maxime.ripard@free-electrons.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170112092821.5xkgpsbbsxaz3s7h@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <rtc-linux+bncBCMILY6JWQBBBE4IRPCAKGQEBD3W3FY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <f1b2a5053cf143dccf110ab0d40c082903a958a7.1484927680.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Jan 12, 2017 at 5:28 PM, Maxime Ripard
+On Fri, Jan 20, 2017 at 11:56 PM, Maxime Ripard
 <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Dec 09, 2016 at 12:04:08PM +0100, Quentin Schulz wrote:
->> The X-Powers AXP209 and AXP20X PMICs are able to set a limit for the
->> VBUS power supply for both max current and min voltage supplied. This
->> series of patch adds the possibility to set these limits from sysfs.
->>
->> Also, the AXP223 PMIC shares most of its behaviour with the AXP221 but
->> the former can set the VBUS power supply max current to 100mA, unlike
->> the latter. The AXP223 VBUS power supply driver used to probe on the
->> AXP221 compatible. This series of patch introduces a new compatible for
->> the AXP223 to be able to set the current max limit to 100mA.
->>
->> With that new compatible, boards having the AXP223 see their DT updated
->> to use the VBUS power supply driver with the correct compatible.
->>
->> This series of patch also migrates from of_device_is_compatible function
->> to the data field of of_device_id to identify the compatible used to
->> probe. This improves the code readability.
->>
->> Mostly cosmetic changes in v2 and adding volatile and writeable regs to
->> AXP20X and AXP22X MFD cells for the VBUS power supply driver.
+> The RTC controls the input source of the main 32kHz oscillator in the
+> system, feeding it to the clock unit too.
 >
-> Applied all the DT patches. I also fixed all the prefixes. Please make
-> sure to look at what prefixes are used by a given subsystem next time.
+> By default, this is using an internal, very inaccurate (+/- 30%)
+> oscillator with a divider to make it roughly around 32kHz. This is however
+> quite impractical for the RTC, since our time will not be tracked properly.
+>
+> Since this oscillator is an input of the main clock unit, and since that
+> clock unit will be probed using CLK_OF_DECLARE, we have to use it as well,
+> leading to a two stage probe: one to enable the clock, the other one to
+> enable the RTC.
+>
+> There is also a slight change in the binding that is required (and should
+> have been from the beginning), since we'll need a phandle to the external
+> oscillator used on that board. We support the old binding by not allowing
+> to switch to the external oscillator and only using the internal one (which
+> was the previous behaviour) in the case where we're missing that phandle.
 
-I'm not seeing the DT patches. FYI the old DT does not work with the
-new kernel driver updates. Because of the new AXP223 specific compatible
-for the usb-power-supply, the updated mfd driver cannot match the old
-device node, and the probe will fail at
+I'm not sure about this. The original behavior was wrong to begin with.
+We were claiming 32768 Hz in the device tree already, and any users
+would already be seeing the correct rate if we force the mux to the
+external oscillator.
 
-        if (!of_device_is_available(pdev->dev.of_node))
-                return -ENODEV;
+Furthermore, I don't think it's possible to turn the external oscillator
+off, unlike the 24 MHz main oscillator. I do agree that exposing the
+internal oscillator is the right thing to do. On some later SoCs it
+is actually directly a source for the CPUS mux.
 
-I don't see an easy way out of this though. The mfd_cell structure only
-takes one compatible string.
+The code changes below look good.
 
 Regards
 ChenYu
 
-> Thanks!
-> Maxime
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/rtc/sun6i-rtc.txt |   8 +-
+>  drivers/rtc/rtc-sun6i.c                             | 140 ++++++++++++-
+>  2 files changed, 139 insertions(+), 9 deletions(-)
 >
+> diff --git a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> index f007e428a1ab..44d788240162 100644
+> --- a/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> +++ b/Documentation/devicetree/bindings/rtc/sun6i-rtc.txt
+> @@ -8,10 +8,18 @@ Required properties:
+>                   memory mapped region.
+>  - interrupts   : IRQ lines for the RTC alarm 0 and alarm 1, in that order.
+>
+> +Required properties for new device trees
+> +- clocks       : phandle to the 32kHz external oscillator
+> +- clock-output-names : name of the LOSC clock created
+> +- #clock-cells  : must be equals to 0
+> +
+>  Example:
+>
+>  rtc: rtc@01f00000 {
+>         compatible = "allwinner,sun6i-a31-rtc";
+>         reg = <0x01f00000 0x54>;
+>         interrupts = <0 40 4>, <0 41 4>;
+> +       clock-output-names = "osc32k";
+> +       clocks = <&ext_osc32k>;
+> +       #clock-cells = <0>;
+>  };
+> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+> index c169a2cd4727..408dd512a6ac 100644
+> --- a/drivers/rtc/rtc-sun6i.c
+> +++ b/drivers/rtc/rtc-sun6i.c
+> @@ -20,6 +20,8 @@
+>   * more details.
+>   */
+>
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+>  #include <linux/delay.h>
+>  #include <linux/err.h>
+>  #include <linux/fs.h>
+> @@ -33,15 +35,20 @@
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/rtc.h>
+> +#include <linux/slab.h>
+>  #include <linux/types.h>
+>
+>  /* Control register */
+>  #define SUN6I_LOSC_CTRL                                0x0000
+> +#define SUN6I_LOSC_CTRL_KEY                    (0x16aa << 16)
+>  #define SUN6I_LOSC_CTRL_ALM_DHMS_ACC           BIT(9)
+>  #define SUN6I_LOSC_CTRL_RTC_HMS_ACC            BIT(8)
+>  #define SUN6I_LOSC_CTRL_RTC_YMD_ACC            BIT(7)
+> +#define SUN6I_LOSC_CTRL_EXT_OSC                        BIT(0)
+>  #define SUN6I_LOSC_CTRL_ACC_MASK               GENMASK(9, 7)
+>
+> +#define SUN6I_LOSC_CLK_PRESCAL                 0x0008
+> +
+>  /* RTC */
+>  #define SUN6I_RTC_YMD                          0x0010
+>  #define SUN6I_RTC_HMS                          0x0014
+> @@ -114,8 +121,128 @@ struct sun6i_rtc_dev {
+>         void __iomem *base;
+>         int irq;
+>         unsigned long alarm;
+> +
+> +       struct clk_hw hw;
+> +       struct clk_hw *int_osc;
+> +       struct clk *losc;
+>  };
+>
+> +static struct sun6i_rtc_dev *sun6i_rtc;
+> +
+> +static unsigned long sun6i_rtc_osc_recalc_rate(struct clk_hw *hw,
+> +                                              unsigned long parent_rate)
+> +{
+> +       struct sun6i_rtc_dev *rtc = container_of(hw, struct sun6i_rtc_dev, hw);
+> +       u32 val;
+> +
+> +       val = readl(rtc->base + SUN6I_LOSC_CTRL);
+> +       if (val & SUN6I_LOSC_CTRL_EXT_OSC)
+> +               return parent_rate;
+> +
+> +       val = readl(rtc->base + SUN6I_LOSC_CLK_PRESCAL);
+> +       val &= GENMASK(4, 0);
+> +
+> +       return parent_rate / (val + 1);
+> +}
+> +
+> +static u8 sun6i_rtc_osc_get_parent(struct clk_hw *hw)
+> +{
+> +       struct sun6i_rtc_dev *rtc = container_of(hw, struct sun6i_rtc_dev, hw);
+> +
+> +       return readl(rtc->base + SUN6I_LOSC_CTRL) & SUN6I_LOSC_CTRL_EXT_OSC;
+> +}
+> +
+> +static int sun6i_rtc_osc_set_parent(struct clk_hw *hw, u8 index)
+> +{
+> +       struct sun6i_rtc_dev *rtc = container_of(hw, struct sun6i_rtc_dev, hw);
+> +       u32 val;
+> +
+> +       if (index > 1)
+> +               return -EINVAL;
+> +
+> +       val = readl(rtc->base + SUN6I_LOSC_CTRL);
+> +       val &= ~SUN6I_LOSC_CTRL_EXT_OSC;
+> +       val |= SUN6I_LOSC_CTRL_KEY;
+> +       val |= index ? SUN6I_LOSC_CTRL_EXT_OSC : 0;
+> +       writel(val, rtc->base + SUN6I_LOSC_CTRL);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct clk_ops sun6i_rtc_osc_ops = {
+> +       .recalc_rate    = sun6i_rtc_osc_recalc_rate,
+> +
+> +       .get_parent     = sun6i_rtc_osc_get_parent,
+> +       .set_parent     = sun6i_rtc_osc_set_parent,
+> +};
+> +
+> +static void __init sun6i_rtc_clk_init(struct device_node *node)
+> +{
+> +       struct sun6i_rtc_dev *rtc;
+> +       struct clk_init_data init = {
+> +               .ops            = &sun6i_rtc_osc_ops,
+> +       };
+> +       const char *parents[2];
+> +
+> +       rtc = kzalloc(sizeof(*rtc), GFP_KERNEL);
+> +       if (!rtc)
+> +               pr_crit("Can't allocate RTC structure\n");
+> +
+> +       rtc->base = of_io_request_and_map(node, 0, of_node_full_name(node));
+> +       if (!rtc->base) {
+> +               pr_crit("Can't map RTC registers");
+> +               return;
+> +       }
+> +
+> +       rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
+> +                                                               "rtc-int-osc",
+> +                                                               NULL, 0,
+> +                                                               667000,
+> +                                                               300000000);
+> +       if (IS_ERR(rtc->int_osc)) {
+> +               pr_crit("Couldn't register the internal oscillator\n");
+> +               return;
+> +       }
+> +
+> +       /*
+> +        * Due to the missing clocks property we had to express the
+> +        * parenthood with the external oscillator that cannot fix (or
+> +        * at least expect to have) in the old DTs, we have to be a
+> +        * bit smart here.
+> +        *
+> +        * We deal with that by simply registering the internal
+> +        * oscillator as our parent in all cases, and try to get the
+> +        * external oscillator from the DT.
+> +        *
+> +        * In the case where we don't have it, of_clk_get_parent_name
+> +        * will return NULL, which is ok, and of_clk_get_parent_count
+> +        * will return 0, which is fine too. We will just register a
+> +        * single parent, everything works.
+> +        */
+> +       parents[0] = clk_hw_get_name(rtc->int_osc);
+> +       parents[1] = of_clk_get_parent_name(node, 0);
+> +
+> +       rtc->hw.init = &init;
+> +
+> +       init.parent_names = parents;
+> +       init.num_parents = of_clk_get_parent_count(node) + 1;
+> +       init.name = "rtc-osc";
+> +       of_property_read_string(node, "clock-output-names", &init.name);
+> +
+> +       rtc->losc = clk_register(NULL, &rtc->hw);
+> +       if (IS_ERR(rtc->losc)) {
+> +               pr_crit("Couldn't register the LOSC clock\n");
+> +               return;
+> +       }
+> +
+> +       of_clk_add_hw_provider(node, of_clk_hw_simple_get, &rtc->hw);
+> +
+> +       /* Yes, I know, this is ugly. */
+> +       sun6i_rtc = rtc;
+> +}
+> +CLK_OF_DECLARE_DRIVER(sun6i_rtc_clk, "allwinner,sun6i-a31-rtc",
+> +                     sun6i_rtc_clk_init);
+> +
+>  static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
+>  {
+>         struct sun6i_rtc_dev *chip = (struct sun6i_rtc_dev *) id;
+> @@ -349,22 +476,15 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
+>
+>  static int sun6i_rtc_probe(struct platform_device *pdev)
+>  {
+> -       struct sun6i_rtc_dev *chip;
+> -       struct resource *res;
+> +       struct sun6i_rtc_dev *chip = sun6i_rtc;
+>         int ret;
+>
+> -       chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>         if (!chip)
+> -               return -ENOMEM;
+> +               return -ENODEV;
+>
+>         platform_set_drvdata(pdev, chip);
+>         chip->dev = &pdev->dev;
+>
+> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -       chip->base = devm_ioremap_resource(&pdev->dev, res);
+> -       if (IS_ERR(chip->base))
+> -               return PTR_ERR(chip->base);
+> -
+>         chip->irq = platform_get_irq(pdev, 0);
+>         if (chip->irq < 0) {
+>                 dev_err(&pdev->dev, "No IRQ resource\n");
+> @@ -404,6 +524,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
+>         /* disable alarm wakeup */
+>         writel(0, chip->base + SUN6I_ALARM_CONFIG);
+>
+> +       clk_prepare_enable(chip->losc);
+> +
+>         chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
+>                                         &sun6i_rtc_ops, THIS_MODULE);
+>         if (IS_ERR(chip->rtc)) {
 > --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> git-series 0.8.11
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
