@@ -1,114 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 3/6] rtc: sun6i: Disable the build as a module
-Date: Sat, 21 Jan 2017 10:32:40 +0800
-Message-ID: <CAGb2v66rfO8i9MXWtbkjyaQVQjv+3ARNFPtx5maJJ_KS1ZmgOQ@mail.gmail.com>
-References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
- <de1e4b4eda6307b664c40d6c4502058f6bb88c60.1484927680.git-series.maxime.ripard@free-electrons.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCMILY6JWQBBBYMQRPCAKGQEK77GSQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <de1e4b4eda6307b664c40d6c4502058f6bb88c60.1484927680.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/3] mmc: sh_mobile_sdhi: fix missing r7s72100 clocks
+Date: Fri, 20 Jan 2017 22:06:01 -0500
+Message-ID: <20170121030604.7672-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+At first this started out as a simple typo fix, until I realized
+that the SDHI in the RZ/A1 has 2 clocks per channel and both need
+to be turned on/off.
 
-On Fri, Jan 20, 2017 at 11:56 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Since we have to provide the clock very early on, the RTC driver cannot be
-> built as a module. Make sure that won't happen.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/rtc/Kconfig     |  2 +-
->  drivers/rtc/rtc-sun6i.c | 17 +----------------
->  2 files changed, 2 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index c93c5a8fba32..53e35c138ff3 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -1434,7 +1434,7 @@ config RTC_DRV_SUN4V
->           based RTC on SUN4V systems.
->
->  config RTC_DRV_SUN6I
-> -       tristate "Allwinner A31 RTC"
-> +       bool "Allwinner A31 RTC"
->         default MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->         depends on ARCH_SUNXI
->         help
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index 872d18609183..edd5627da10f 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -554,15 +554,6 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
->         return 0;
->  }
->
-> -static int sun6i_rtc_remove(struct platform_device *pdev)
-> -{
-> -       struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
-> -
-> -       rtc_device_unregister(chip->rtc);
-> -
-> -       return 0;
-> -}
-> -
->  static const struct of_device_id sun6i_rtc_dt_ids[] = {
->         { .compatible = "allwinner,sun6i-a31-rtc" },
->         { /* sentinel */ },
-> @@ -571,15 +562,9 @@ MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
->
->  static struct platform_driver sun6i_rtc_driver = {
->         .probe          = sun6i_rtc_probe,
-> -       .remove         = sun6i_rtc_remove,
+This patch series adds the ability to specify 2 clocks instead of
+just 1, and does so for the RZ/A1 r7s72100.
 
-I might have gotten this wrong in the past. It seems that the
-.remove callback can still be called, even if the driver is
-builtin, by unbinding the driver from the device using the
-sysfs interface. So we still need it regardless.
+This patch has been tested on an RZ/A1 RSK board. Card detect works
+fine as well as bind/unbind.
 
-We can get rid of the .remove callback by switching to
-devm_rtc_device_register, but that is a separate issue.
+v5:
+* Take implementation details out of DT documentation and put into
+  the driver code.
 
-Also, a personal preference, is that this change should precede
-the clk change you mentioned in the commit message, since you
-are making this change in anticipation of possible breakage
-by that one.
+v4:
+* No code changes, only text udpates to explain why there are 2 clocks
+  and why we need to treat them as 1 clock.
 
-Regards
-ChenYu
+Chris Brandt (3):
+  mmc: sh_mobile_sdhi: add support for 2 clocks
+  mmc: sh_mobile_sdhi: explain clock bindings
+  ARM: dts: r7s72100: update sdhi clock bindings
 
->         .driver         = {
->                 .name           = "sun6i-rtc",
->                 .of_match_table = sun6i_rtc_dt_ids,
->         },
->  };
-> -
-> -module_platform_driver(sun6i_rtc_driver);
-> -
-> -MODULE_DESCRIPTION("sun6i RTC driver");
-> -MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
-> -MODULE_LICENSE("GPL");
-> +builtin_platform_driver(sun6i_rtc_driver);
-> --
-> git-series 0.8.11
+ Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 24 ++++++++++++++++++++++
+ arch/arm/boot/dts/r7s72100.dtsi                    | 17 ++++++++++-----
+ drivers/mmc/host/sh_mobile_sdhi.c                  | 24 ++++++++++++++++++++++
+ include/dt-bindings/clock/r7s72100-clock.h         |  6 ++++--
+ 4 files changed, 64 insertions(+), 7 deletions(-)
 
 -- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+2.10.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
