@@ -1,32 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: devicetree: Add Kingnovel vendor
- prefix
-Date: Sat, 21 Jan 2017 14:01:32 -0600
-Message-ID: <20170121200132.hwdu6mcggowvar72@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] Documentation: devicetree: amlogic: Add R-Box Pro
+Date: Sat, 21 Jan 2017 14:02:29 -0600
+Message-ID: <20170121200229.b7j3bumq4bd6u5jk@rob-hp-laptop>
 References: <20170117030611.23827-2-afaerber@suse.de>
  <20170117225459.4438-1-afaerber@suse.de>
+ <20170117225459.4438-2-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170117225459.4438-1-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170117225459.4438-2-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-kernel@vger.kernel.org, ada@kingnoval.com, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 17, 2017 at 11:54:57PM +0100, Andreas Färber wrote:
-> Their domain name is spelled kingnoval, but textually Kingnovel.
-> 
-> Cc: ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+On Tue, Jan 17, 2017 at 11:54:58PM +0100, Andreas F=E4rber wrote:
+> Cc: ada@kingnoval.com
+> Signed-off-by: Andreas F=E4rber <afaerber@suse.de>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  Originally I thought we would group by SoC (6, 8, 8b, gxbb, gxl, gmx, et=
+c.)
+>  but this got out of order with nexbox,a95x - so inserting kingnovel betw=
+een
+>  amlogic and nexbox here. If that's what we want going forward, we should=
+ move
+>  the old entries to make the scheme clearer. The alternative would be to
+>  reorder alphabetically within each SoC group, but nexbox,a95x with two S=
+oCs
+>  makes it difficult to categorize, we could choose gxbb as the earlier on=
+e.
+>  =
+
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 1 +
 >  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
