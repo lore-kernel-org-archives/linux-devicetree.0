@@ -1,128 +1,62 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] hwmon: (lm70) Add support for TI TMP122/124
-Date: Sat, 21 Jan 2017 12:25:21 -0800
-Message-ID: <8ada15e2-2b99-02c3-e731-c469a3d6c3bf@roeck-us.net>
-References: <20170121192010.30681-1-f.fainelli@gmail.com>
- <20170121192010.30681-3-f.fainelli@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 02/11] [media] s5p-mfc: Adding initial support for MFC
+ v10.10
+Date: Sat, 21 Jan 2017 14:28:52 -0600
+Message-ID: <20170121202852.pxxfxpqwjxewjoj5@rob-hp-laptop>
+References: <1484733729-25371-1-git-send-email-smitha.t@samsung.com>
+ <CGME20170118100723epcas5p132e0ebfad38261bed95cffc47334f9dc@epcas5p1.samsung.com>
+ <1484733729-25371-3-git-send-email-smitha.t@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170121192010.30681-3-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:HARDWARE MONITORING" <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484733729-25371-3-git-send-email-smitha.t@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Smitha T Murthy <smitha.t@samsung.com>
+Cc: devicetree@vger.kernel.org, a.hajda@samsung.com, pankaj.dubey@samsung.com, kamil@wypas.org, krzk@kernel.org, linux-kernel@vger.kernel.org, jtp.park@samsung.com, kyungmin.park@samsung.com, s.nawrocki@samsung.com, m.szyprowski@samsung.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2017 11:20 AM, Florian Fainelli wrote:
-> Add support for Texas Instruments TMP122/124 which are nearly identical to
-> their TMP121/123 except that they also support programmable temperature
-> thresholds.
->
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied to -next.
-
-Any plans to add support for the thresholds ?
-
-Thanks,
-Guenter
-
+On Wed, Jan 18, 2017 at 03:32:00PM +0530, Smitha T Murthy wrote:
+> Adding the support for MFC v10.10, with new register file and
+> necessary hw control, decoder, encoder and structural changes.
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: devicetree@vger.kernel.org 
+> Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
 > ---
->  Documentation/devicetree/bindings/hwmon/lm70.txt | 1 +
->  Documentation/hwmon/lm70                         | 8 ++++++--
->  drivers/hwmon/lm70.c                             | 9 ++++++++-
->  3 files changed, 15 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/hwmon/lm70.txt b/Documentation/devicetree/bindings/hwmon/lm70.txt
-> index e7fd921aa4f1..ea417a0d32af 100644
-> --- a/Documentation/devicetree/bindings/hwmon/lm70.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/lm70.txt
-> @@ -4,6 +4,7 @@ Required properties:
->  - compatible: one of
->  		"ti,lm70"
->  		"ti,tmp121"
-> +		"ti,tmp122"
->  		"ti,lm71"
->  		"ti,lm74"
->
-> diff --git a/Documentation/hwmon/lm70 b/Documentation/hwmon/lm70
-> index 1bb2db440671..c3a1f2ea017d 100644
-> --- a/Documentation/hwmon/lm70
-> +++ b/Documentation/hwmon/lm70
-> @@ -6,6 +6,8 @@ Supported chips:
->      Datasheet: http://www.national.com/pf/LM/LM70.html
->    * Texas Instruments TMP121/TMP123
->      Information: http://focus.ti.com/docs/prod/folders/print/tmp121.html
-> +  * Texas Instruments TMP122/TMP124
-> +    Information: http://www.ti.com/product/tmp122
->    * National Semiconductor LM71
->      Datasheet: http://www.ti.com/product/LM71
->    * National Semiconductor LM74
-> @@ -35,8 +37,10 @@ As a real (in-tree) example of this "SPI protocol driver" interfacing
->  with a "SPI master controller driver", see drivers/spi/spi_lm70llp.c
->  and its associated documentation.
->
-> -The LM74 and TMP121/TMP123 are very similar; main difference is 13-bit
-> -temperature data (0.0625 degrees celsius resolution).
-> +The LM74 and TMP121/TMP122/TMP123/TMP124 are very similar; main difference is
-> +13-bit temperature data (0.0625 degrees celsius resolution).
-> +
-> +The TMP122/TMP124 also feature configurable temperature thresholds.
->
->  The LM71 is also very similar; main difference is 14-bit temperature
->  data (0.03125 degrees celsius resolution).
-> diff --git a/drivers/hwmon/lm70.c b/drivers/hwmon/lm70.c
-> index 52c5cdd00448..543556dc563b 100644
-> --- a/drivers/hwmon/lm70.c
-> +++ b/drivers/hwmon/lm70.c
-> @@ -46,6 +46,7 @@
->  #define LM70_CHIP_TMP121	1	/* TI TMP121/TMP123 */
->  #define LM70_CHIP_LM71		2	/* NS LM71 */
->  #define LM70_CHIP_LM74		3	/* NS LM74 */
-> +#define LM70_CHIP_TMP122	4	/* TI TMP122/TMP124 */
->
->  struct lm70 {
->  	struct spi_device *spi;
-> @@ -92,7 +93,7 @@ static ssize_t temp1_input_show(struct device *dev,
->  	 * Celsius.
->  	 * So it's equivalent to multiplying by 0.25 * 1000 = 250.
->  	 *
-> -	 * LM74 and TMP121/TMP123:
-> +	 * LM74 and TMP121/TMP122/TMP123/TMP124:
->  	 * 13 bits of 2's complement data, discard LSB 3 bits,
->  	 * resolution 0.0625 degrees celsius.
->  	 *
-> @@ -106,6 +107,7 @@ static ssize_t temp1_input_show(struct device *dev,
->  		break;
->
->  	case LM70_CHIP_TMP121:
-> +	case LM70_CHIP_TMP122:
->  	case LM70_CHIP_LM74:
->  		val = ((int)raw / 8) * 625 / 10;
->  		break;
-> @@ -143,6 +145,10 @@ static const struct of_device_id lm70_of_ids[] = {
->  		.data = (void *) LM70_CHIP_TMP121,
->  	},
->  	{
-> +		.compatible = "ti,tmp122",
-> +		.data = (void *) LM70_CHIP_TMP122,
-> +	},
-> +	{
->  		.compatible = "ti,lm71",
->  		.data = (void *) LM70_CHIP_LM71,
->  	},
-> @@ -191,6 +197,7 @@ static int lm70_probe(struct spi_device *spi)
->  static const struct spi_device_id lm70_ids[] = {
->  	{ "lm70",   LM70_CHIP_LM70 },
->  	{ "tmp121", LM70_CHIP_TMP121 },
-> +	{ "tmp122", LM70_CHIP_TMP122 },
->  	{ "lm71",   LM70_CHIP_LM71 },
->  	{ "lm74",   LM70_CHIP_LM74 },
->  	{ },
->
+>  .../devicetree/bindings/media/s5p-mfc.txt          |    1 +
+>  drivers/media/platform/s5p-mfc/regs-mfc-v10.h      |   36 ++++++++++++++++
+>  drivers/media/platform/s5p-mfc/s5p_mfc.c           |   30 +++++++++++++
+>  drivers/media/platform/s5p-mfc/s5p_mfc_common.h    |    4 +-
+>  drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c      |    4 ++
+>  drivers/media/platform/s5p-mfc/s5p_mfc_dec.c       |   44 +++++++++++---------
+>  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c       |   21 +++++----
+>  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c    |    9 +++-
+>  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h    |    2 +
+>  9 files changed, 118 insertions(+), 33 deletions(-)
+>  create mode 100644 drivers/media/platform/s5p-mfc/regs-mfc-v10.h
+> 
+> diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> index 2c90128..b70c613 100644
+> --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
+> @@ -13,6 +13,7 @@ Required properties:
+>  	(c) "samsung,mfc-v7" for MFC v7 present in Exynos5420 SoC
+>  	(d) "samsung,mfc-v8" for MFC v8 present in Exynos5800 SoC
+>  	(e) "samsung,exynos5433-mfc" for MFC v8 present in Exynos5433 SoC
+> +	(f) "samsung,mfc-v10" for MFC v10 present in a variant of Exynos7 SoC
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You are up to v10 in how many SoCs? Please stop with versions and use 
+SoC numbers. It's one thing to use versions when you have many SoCs per 
+version, but that doesn't seem to be happening here.
+
+Rob
