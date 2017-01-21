@@ -1,70 +1,47 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 4/6] rtc: sun6i: Force the mux to the external oscillator
-Date: Sat, 21 Jan 2017 11:53:08 +0800
-Message-ID: <CAGb2v650f-4RZ6RrRBGcmPz8mJ4KbJwTTj6=w3HeSWUZtLAKcw@mail.gmail.com>
-References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
- <409c56f0ed1c4b0026ad60cb1218c99fe1686408.1484927680.git-series.maxime.ripard@free-electrons.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH 2/4] clk: samsung: Remove Exynos4415 driver (SoC not
+ supported anymore)
+Date: Sat, 21 Jan 2017 14:08:34 +0900
+Message-ID: <CAGTfZH2Eh67iMb7bBY2ostNUbxmOtQxy=P7ZRSEDzS4=enyMKg@mail.gmail.com>
+References: <20170114123642.15581-1-krzk@kernel.org>
+ <CGME20170114123727epcas2p296aae6459c8575d7e5def74f18e5c64d@epcas2p2.samsung.com>
+ <20170114123642.15581-3-krzk@kernel.org>
+ <c9b51cb6-f798-d41e-afff-f779b963345c@samsung.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <409c56f0ed1c4b0026ad60cb1218c99fe1686408.1484927680.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c9b51cb6-f798-d41e-afff-f779b963345c@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, Jan 20, 2017 at 11:56 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The internal oscillator is way too inaccurate to do something useful with
-> it. Switch to the external oscillator if it is available.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/rtc/rtc-sun6i.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> index edd5627da10f..1695fae24cd5 100644
-> --- a/drivers/rtc/rtc-sun6i.c
-> +++ b/drivers/rtc/rtc-sun6i.c
-> @@ -493,6 +493,7 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
->  static int sun6i_rtc_probe(struct platform_device *pdev)
->  {
->         struct sun6i_rtc_dev *chip = sun6i_rtc;
-> +       struct clk *parent;
->         int ret;
->
->         if (!chip)
-> @@ -540,6 +541,17 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
->         /* disable alarm wakeup */
->         writel(0, chip->base + SUN6I_ALARM_CONFIG);
->
-> +       parent = clk_get(&pdev->dev, NULL);
-> +       if (!IS_ERR(parent)) {
-> +               ret = clk_set_parent(chip->losc, parent);
-> +               clk_put(parent);
-> +
-> +               if (ret) {
-> +                       dev_err(&pdev->dev,
-> +                               "Failed to reparent the RTC to the external oscillator\n");
-> +                       return ret;
-> +               }
-> +       }
-
-Following what I mentioned in patch 1, maybe it is easier to force
-the mux before the clocks are registered by writing directly to
-the registers? We could also backport the changes to stable?
-
-ChenYu
-
->         clk_prepare_enable(chip->losc);
->
->         chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
-> --
-> git-series 0.8.11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgU3lsd2VzdGVyLAoKSSBhZGQgcmV2ZWl3ZWQtYnkgdGFnIGZyb20gdGhpcyBwYXRjaC4gQnV0
+LCBvbiB5b3UgdHJlZSwgdGhpcyBwYXRjaFsxXSBkb2VzbuKAmXQKaW5jbHVkZSB0aGUgbXkgcmV2
+aWV3ZWQtYnkgdGFnLgoKWzFdIGh0dHBzOi8vZ2l0LmxpbnV4dHYub3JnL3NuYXdyb2NraS9zYW1z
+dW5nLmdpdC9jb21taXQvP2g9Zm9yLXY0LjExL2Nsay9uZXh0JmlkPWNiNGFjOTQ5ZWExNDQxNmEy
+ZDU3YjdhMzQzYmM0YjU3MTA3NGUzYmQKCjIwMTctMDEtMTYgMTk6MzIgR01UKzA5OjAwIFN5bHdl
+c3RlciBOYXdyb2NraSA8cy5uYXdyb2NraUBzYW1zdW5nLmNvbT46Cj4gT24gMDEvMTQvMjAxNyAw
+MTozNiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPj4gU3VwcG9ydCBmb3IgRXh5bm9z
+NDQxNSBpcyBnb2luZyBhd2F5IGJlY2F1c2UgdGhlcmUgYXJlIG5vIGludGVybmFsIG5vcgo+PiBl
+eHRlcm5hbCB1c2Vycy4KPj4KPj4gU2luY2UgY29tbWl0IDQ2ZGNmMGZmMGRlMyAoIkFSTTogZHRz
+OiBleHlub3M6IFJlbW92ZSBleHlub3M0NDE1LmR0c2kiKSwKPj4gdGhlIHBsYXRmb3JtIGNhbm5v
+dCBiZSBpbnN0YW50aWF0ZWQgc28gcmVtb3ZlIGFsc28gdGhlIGRyaXZlcnMuCj4+Cj4+IFNpZ25l
+ZC1vZmYtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPgo+IEFwcGxp
+ZWQsIHRoYW5rcy4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwKCgoKLS0gCkJlc3QgUmVnYXJkcywKQ2hhbndvbyBDaG9pClNhbXN1bmcgRWxlY3Ry
+b25pY3MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
