@@ -1,97 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Add support for phyCORE-AM335x PCM-953
- carrier board
-Date: Sat, 21 Jan 2017 14:53:45 -0600
-Message-ID: <20170121205345.oij67ai5d7q7k74d@rob-hp-laptop>
-References: <1484831270-7251-1-git-send-email-t.remmet@phytec.de>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH linux v3 3/6] hwmon: occ: Add I2C transport
+ implementation for SCOM operations
+Date: Sun, 22 Jan 2017 07:53:17 +1100
+Message-ID: <1485031997.2495.4.camel@kernel.crashing.org>
+References: <1484601219-30196-1-git-send-email-eajames.ibm@gmail.com>
+         <1484601219-30196-4-git-send-email-eajames.ibm@gmail.com>
+         <b47e5359-5587-cc89-43e2-379eb9e95fc8@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484831270-7251-1-git-send-email-t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <b47e5359-5587-cc89-43e2-379eb9e95fc8-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, eajames.ibm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 02:07:48PM +0100, Teresa Remmet wrote:
-> The phyCORE-AM335x development kit is a combination of the
-> phyCORE-AM335x SoM and a PCM-953 carrier board. The features
-> of the PCM-953 are:
-> * ETH phy on carrier board: 1x RGMII
-> * 1x CAN
-> * Up to 4x UART
-> * USB0 (otg)
-> * USB1 (host)
-> * SD slot
-> * User gpio-keys
-> * User LEDs
-> 
-> Signed-off-by: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> Reviewed-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
->  arch/arm/boot/dts/Makefile                         |   1 +
->  arch/arm/boot/dts/am335x-pcm-953.dtsi              | 303 +++++++++++++++++++++
->  arch/arm/boot/dts/am335x-phycore-rdk.dts           |  27 ++
->  4 files changed, 334 insertions(+)
->  create mode 100644 arch/arm/boot/dts/am335x-pcm-953.dtsi
->  create mode 100644 arch/arm/boot/dts/am335x-phycore-rdk.dts
+On Sat, 2017-01-21 at 10:11 -0800, Guenter Roeck wrote:
+> > +int occ_i2c_getscom(void *bus, u32 address, u64 *data)
+> > +{
+> > +     ssize_t rc;
+> > +     u64 buf;
+> > +     struct i2c_client *client = bus;
+> > +
+> > +     rc = i2c_master_send(client, (const char *)&address,
+> > sizeof(u32));
+> > +     if (rc < 0)
+> > +             return rc;
+> > +     else if (rc != sizeof(u32))
+> > +             return -EIO;
+> > +
+> > +     rc = i2c_master_recv(client, (char *)&buf, sizeof(u64));
+> > +     if (rc < 0)
+> > +             return rc;
+> > +     else if (rc != sizeof(u64))
+> > +             return -EIO;
+> > +
+> > +     *data = be64_to_cpu(buf);
+> > +
+> > +     return 0;
+> > +}
+> > +EXPORT_SYMBOL(occ_i2c_getscom);
 
-[...]
+Additionally, this assumes that is is the only other user of that i2c
+path to P8. Something interleaving will break it. pdbg for example.
 
-> +	user_leds: user_leds {
-> +		compatible = "gpio-leds";
-> +	};
-> +
-> +	user_buttons: user_buttons {
-> +		compatible = "gpio-keys";
-> +	};
+Talk to Alistair, the right thing here would probably be to have
+a separate driver that provides the XSCOM interface via i2c to both
+in-kernel and userspace, with proper arbitration.
 
-With only a compatible, I don't think there's much gain to split these 2 
-nodes. Otherwse,
+An expedient might be to instead have the address and data cycles
+of the above be 2 i2c messages in one i2c request, thus being
+serialized somewhat atomically with other transactions to that i2c
+bus.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+You may need to make sure the underlying i2c controller driver supports
+dual messages, and if it doesn't fix it. This is rather classic 4-bytes 
+subaddress style i2c, it shouldn't be too hard.
 
-> +&user_buttons {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&user_buttons_pins>;
-> +	status = "okay";
-> +
-> +	button@0 {
-> +		label = "home";
-> +		linux,code = <KEY_HOME>;
-> +		gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-> +		gpio-key,wakeup;
-> +	};
-> +
-> +	button@1 {
-> +		label = "menu";
-> +		linux,code = <KEY_MENU>;
-> +		gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
-> +		gpio-key,wakeup;
-> +	};
-> +};
-> +
-> +&user_leds {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&user_leds_pins>;
-> +	status = "okay";
-> +
-> +	green {
-> +		label = "green:user";
-> +		gpios = <&gpio1 30 GPIO_ACTIVE_HIGH>;
-> +		linux,default-trigger = "gpio";
-> +		default-state = "on";
-> +	};
-> +
-> +	yellow {
-> +		label = "yellow:user";
-> +		gpios = <&gpio1 31 GPIO_ACTIVE_LOW>;
-> +		linux,default-trigger = "gpio";
-> +		default-state = "on";
-> +	};
-> +};
+Cheers,
+Ben.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
