@@ -1,15 +1,16 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
-Date: Fri, 20 Jan 2017 16:33:15 -0800
-Message-ID: <20170121003315.GV20800@codeaurora.org>
-References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mfd: stm32f4: Fix STM32F4_X_CLOCK()
+ macro
+Date: Fri, 20 Jan 2017 16:34:58 -0800
+Message-ID: <20170121003458.GW20800@codeaurora.org>
+References: <1483952833-14704-1-git-send-email-gabriel.fernandez@st.com>
+ <1483952833-14704-2-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1484921306-9967-5-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1483952833-14704-2-git-send-email-gabriel.fernandez@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,18 +20,20 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Michael Turquette <mturquette@baylibre.com>, Magnus Damm <magnus.damm@gmail.com>, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: gabriel.fernandez@st.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, daniel.thompson@linaro.org, radoslaw.pietrzyk@gmail.com, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nico@linaro.org>, andrea.merello@gmail.com, Michael Turquette <mturquette@baylibre.com>, olivier.bideau@st.com, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, ludovic.barre@st.com, Maxime Coquelin <mcoquelin.stm32@gmail.com>, amelie.delaunay@st.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/20, Geert Uytterhoeven wrote:
-> Add optional support for the Reset Control feature of the Renesas Clock
-> Pulse Generator / Module Standby and Software Reset module on R-Car
-> Gen2, R-Car Gen3, and RZ/G1 SoCs.
+On 01/09, gabriel.fernandez@st.com wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
 > 
-> This allows to reset SoC devices using the Reset Controller API.
+> Macro to select a clock was not correct.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Offset of enable register starts at 0x30, then calculation to select a bit is:
+> (@enable_reg - 0x30) / 4 * 32 + bit_to_select
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> Tested-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
 > ---
 
 Acked-by: Stephen Boyd <sboyd@codeaurora.org>
