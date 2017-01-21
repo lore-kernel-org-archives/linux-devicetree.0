@@ -1,81 +1,45 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3 1/4] Documentation: dt-bindings: add the Amlogic Meson
- SAR ADC documentation
-Date: Sun, 22 Jan 2017 00:10:13 +0100
-Message-ID: <CAFBinCDghzRXnzdBd0qh=LYDTpkQg7r2zdj1QE7cRKAU0fAFPQ@mail.gmail.com>
-References: <20170115224221.15510-1-martin.blumenstingl@googlemail.com>
- <20170119145822.26239-1-martin.blumenstingl@googlemail.com>
- <20170119145822.26239-2-martin.blumenstingl@googlemail.com> <20170121205635.4qeiqyeyjrweryrh@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] hwmon: (lm70) Add support for TI TMP122/124
+Date: Sat, 21 Jan 2017 15:11:02 -0800
+Message-ID: <C0A9E7E0-D4AB-4154-BC47-656F8E1FE77E@gmail.com>
+References: <20170121192010.30681-1-f.fainelli@gmail.com> <20170121192010.30681-3-f.fainelli@gmail.com> <8ada15e2-2b99-02c3-e731-c469a3d6c3bf@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170121205635.4qeiqyeyjrweryrh@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, khilman@baylibre.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, carlo@caione.org, catalin.marinas@arm.com, will.deacon@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, narmstrong@baylibre.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8ada15e2-2b99-02c3-e731-c469a3d6c3bf-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:HARDWARE MONITORING" <linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:DOCUMENTATION" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-thanks for reviewing this!
-
-On Sat, Jan 21, 2017 at 9:56 PM, Rob Herring <robh@kernel.org> wrote:
-> On Thu, Jan 19, 2017 at 03:58:19PM +0100, Martin Blumenstingl wrote:
->> This adds the devicetree binding documentation for the SAR ADC found in
->> Amlogic Meson SoCs.
->> Currently only the GXBB, GXL and GXM SoCs are supported.
+On January 21, 2017 12:25:21 PM PST, Guenter Roeck <linux@roeck-us=2Enet> w=
+rote:
+>On 01/21/2017 11:20 AM, Florian Fainelli wrote:
+>> Add support for Texas Instruments TMP122/124 which are nearly
+>identical to
+>> their TMP121/123 except that they also support programmable
+>temperature
+>> thresholds=2E
 >>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> Tested-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  .../bindings/iio/adc/amlogic,meson-saradc.txt      | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
->> new file mode 100644
->> index 000000000000..9a0bec7afc63
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
->> @@ -0,0 +1,31 @@
->> +* Amlogic Meson SAR (Successive Approximation Register) A/D converter
->> +
->> +Required properties:
->> +- compatible:        depending on the SoC this should be one of:
->> +                     - "amlogic,meson-gxbb-saradc" for GXBB
->> +                     - "amlogic,meson-gxl-saradc" for GXL and GXM
+>> Signed-off-by: Florian Fainelli <f=2Efainelli@gmail=2Ecom>
 >
-> GXL and GXM should probably be 2 compatibles.
-Amlogic's ADC driver does not differentiate between GXL and GXM
-(because both SoCs are identical except the CPU and GPU cores).
-I can still introduce a separate binding for GXM if you want (better
-safe than sorry and takes less than 5 minutes) - just let me know
+>Applied to -next=2E
 
->> +             along with the generic "amlogic,meson-saradc"
->> +- reg:               the physical base address and length of the registers
->> +- clocks:    phandle and clock identifier (see clock-names)
->> +- clock-names:       mandatory clocks:
->> +                     - "clkin" for the reference clock (typically XTAL)
->> +                     - "core" for the SAR ADC core clock
->> +             optional clocks:
->> +                     - "sana" for the analog clock
->> +                     - "adc_clk" for the ADC (sampling) clock
->> +                     - "adc_sel" for the ADC (sampling) clock mux
->> +- vref-supply:       the regulator supply for the ADC reference voltage
->> +- #io-channel-cells: must be 1, see ../iio-bindings.txt
->> +
->> +Example:
->> +     saradc: adc@8680 {
->> +             compatible = "amlogic,meson-gxl-saradc", "amlogic,meson-saradc";
->> +             #io-channel-cells = <1>;
->> +             reg = <0x0 0x8680 0x0 0x34>;
->> +             clocks = <&xtal>,
->> +                      <&clkc CLKID_SAR_ADC>,
->> +                      <&clkc CLKID_SANA>,
->> +                      <&clkc CLKID_SAR_ADC_CLK>,
->> +                      <&clkc CLKID_SAR_ADC_SEL>;
->> +             clock-names = "clkin", "core", "sana", "adc_clk", "adc_sel";
->> +     };
->> --
->> 2.11.0
->>
+Thanks was fast, thanks!
+
+>
+>Any plans to add support for the thresholds ?
+
+Yes, as mentioned in the cover letter, need to get SPI_3WIRE working with =
+the SPI controller (spi-ep93xx) to verify the thresholds do work=2E
+
+Cheers
+
+--=20
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
