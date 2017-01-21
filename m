@@ -1,47 +1,79 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH 2/4] clk: samsung: Remove Exynos4415 driver (SoC not
- supported anymore)
-Date: Sat, 21 Jan 2017 14:08:34 +0900
-Message-ID: <CAGTfZH2Eh67iMb7bBY2ostNUbxmOtQxy=P7ZRSEDzS4=enyMKg@mail.gmail.com>
-References: <20170114123642.15581-1-krzk@kernel.org>
- <CGME20170114123727epcas2p296aae6459c8575d7e5def74f18e5c64d@epcas2p2.samsung.com>
- <20170114123642.15581-3-krzk@kernel.org>
- <c9b51cb6-f798-d41e-afff-f779b963345c@samsung.com>
-Reply-To: cwchoi00@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <c9b51cb6-f798-d41e-afff-f779b963345c@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, dri-devel@lists.freedesktop.org, linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: [PATCH v3 1/2] devicetree: document new marvell-8xxx and pwrseq-sd8787 options
+Date: Fri, 20 Jan 2017 21:50:38 -0800
+Message-ID: <20170121055039.10924-2-matt@ranostay.consulting>
+References: <20170121055039.10924-1-matt@ranostay.consulting>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170121055039.10924-1-matt@ranostay.consulting>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: ulf.hansson@linaro.org, Matt Ranostay <matt@ranostay.consulting>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3lsd2VzdGVyLAoKSSBhZGQgcmV2ZWl3ZWQtYnkgdGFnIGZyb20gdGhpcyBwYXRjaC4gQnV0
-LCBvbiB5b3UgdHJlZSwgdGhpcyBwYXRjaFsxXSBkb2VzbuKAmXQKaW5jbHVkZSB0aGUgbXkgcmV2
-aWV3ZWQtYnkgdGFnLgoKWzFdIGh0dHBzOi8vZ2l0LmxpbnV4dHYub3JnL3NuYXdyb2NraS9zYW1z
-dW5nLmdpdC9jb21taXQvP2g9Zm9yLXY0LjExL2Nsay9uZXh0JmlkPWNiNGFjOTQ5ZWExNDQxNmEy
-ZDU3YjdhMzQzYmM0YjU3MTA3NGUzYmQKCjIwMTctMDEtMTYgMTk6MzIgR01UKzA5OjAwIFN5bHdl
-c3RlciBOYXdyb2NraSA8cy5uYXdyb2NraUBzYW1zdW5nLmNvbT46Cj4gT24gMDEvMTQvMjAxNyAw
-MTozNiBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPj4gU3VwcG9ydCBmb3IgRXh5bm9z
-NDQxNSBpcyBnb2luZyBhd2F5IGJlY2F1c2UgdGhlcmUgYXJlIG5vIGludGVybmFsIG5vcgo+PiBl
-eHRlcm5hbCB1c2Vycy4KPj4KPj4gU2luY2UgY29tbWl0IDQ2ZGNmMGZmMGRlMyAoIkFSTTogZHRz
-OiBleHlub3M6IFJlbW92ZSBleHlub3M0NDE1LmR0c2kiKSwKPj4gdGhlIHBsYXRmb3JtIGNhbm5v
-dCBiZSBpbnN0YW50aWF0ZWQgc28gcmVtb3ZlIGFsc28gdGhlIGRyaXZlcnMuCj4+Cj4+IFNpZ25l
-ZC1vZmYtYnk6IEtyenlzenRvZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPgo+IEFwcGxp
-ZWQsIHRoYW5rcy4KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwo+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwKCgoKLS0gCkJlc3QgUmVnYXJkcywKQ2hhbndvbyBDaG9pClNhbXN1bmcgRWxlY3Ry
-b25pY3MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+---
+ .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
+ .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
+ 2 files changed, 20 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+new file mode 100644
+index 000000000000..4bb56766982e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+@@ -0,0 +1,14 @@
++* Marvell SD8787 power sequence provider
++
++Required properties:
++- compatible: must be "mmc-pwrseq-sd8787".
++- powerdown-gpio: contains a power down GPIO specifier with active state
++- reset-gpio: contains a reset GPIO specifier with active state
++
++Example:
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-sd8787";
++		powerdown-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
++		reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
++	}
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index 980b16df74c3..0854451ff91d 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,4 +1,4 @@
+-Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
++Marvell 8787/8897/8997 (sd8787/sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
+ 
+ This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
+@@ -8,6 +8,7 @@ connects the device to the system.
+ Required properties:
+ 
+   - compatible : should be one of the following:
++	* "marvell,sd8787"
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
+ 	* "pci11ab,2b42"
+@@ -34,6 +35,9 @@ Optional properties:
+ 		 so that the wifi chip can wakeup host platform under certain condition.
+ 		 during system resume, the irq will be disabled to make sure
+ 		 unnecessary interrupt is not received.
++  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
++  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
++		 for documentation of MMC power sequence bindings.
+ 
+ Example:
+ 
+@@ -46,6 +50,7 @@ so that firmware can wakeup host using this device side pin.
+ &mmc3 {
+ 	status = "okay";
+ 	vmmc-supply = <&wlan_en_reg>;
++	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+-- 
+2.10.2
+
