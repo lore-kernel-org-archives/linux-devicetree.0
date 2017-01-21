@@ -1,26 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] Documentation: dt: iio: stm32-adc: optional dma
- support
-Date: Sat, 21 Jan 2017 14:54:40 -0600
-Message-ID: <20170121205440.s32egtpu5tmlbkdi@rob-hp-laptop>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
- <1484832854-6314-5-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/7] Documentation: arm: fix wrong reference number in DT
+ definition
+Date: Sat, 21 Jan 2017 14:55:09 -0600
+Message-ID: <20170121205509.qv4b5cku47ysnkfx@rob-hp-laptop>
+References: <20170119143757.14537-1-juri.lelli@arm.com>
+ <20170119143757.14537-2-juri.lelli@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484832854-6314-5-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: jic23@kernel.org, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
+In-Reply-To: <20170119143757.14537-2-juri.lelli@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 02:34:11PM +0100, Fabrice Gasnier wrote:
-> STM32 ADC can use dma. Add dt documentation for optional dma support.
+On Thu, Jan 19, 2017 at 02:37:51PM +0000, Juri Lelli wrote:
+> Reference to cpu capacity binding has a wrong number. Fix it.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Reported-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> Signed-off-by: Juri Lelli <juri.lelli@arm.com>
 > ---
->  Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
