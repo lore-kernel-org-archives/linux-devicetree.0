@@ -1,7 +1,7 @@
 From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Subject: [PATCH v2 5/9] ARM: dts: add support for I2SE Duckbill 2 boards
-Date: Sun, 22 Jan 2017 23:22:40 +0100
-Message-ID: <1485123764-14754-6-git-send-email-mhei@heimpold.de>
+Subject: [PATCH v2 8/9] ARM: dts: add support for I2SE Duckbill 2 SPI
+Date: Sun, 22 Jan 2017 23:22:43 +0100
+Message-ID: <1485123764-14754-9-git-send-email-mhei@heimpold.de>
 References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
@@ -10,37 +10,36 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This machine is an USB pen drive sized development board,
-based on NXP's i.MX28 CPU. In contrast to the previous
-model "Duckbill", the "Duckbill 2" series has internal
-eMMC storage.
+This machine is based on I2SE's Duckbill 2 board and is sold as part of I2SE's
+PLC Bundle for IoT. This is a development kit for Homeplug Green PHY based
+powerline products based on Qualcomms QCA7000 chip.
 
 Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile             |   1 +
- arch/arm/boot/dts/imx28-duckbill-2.dts | 183 +++++++++++++++++++++++++++++++++
- 2 files changed, 184 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-duckbill-2.dts
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/imx28-duckbill-2-spi.dts | 199 +++++++++++++++++++++++++++++
+ 2 files changed, 200 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-spi.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f10fe85..fa4664b 100644
+index d7fcb4dc..d2d2486 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -475,6 +475,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-cfa10056.dtb \
- 	imx28-cfa10057.dtb \
- 	imx28-cfa10058.dtb \
-+	imx28-duckbill-2.dtb \
+@@ -478,6 +478,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
+ 	imx28-duckbill-2-485.dts \
+ 	imx28-duckbill-2.dtb \
+ 	imx28-duckbill-2-enocean.dts \
++	imx28-duckbill-2-spi.dts \
  	imx28-duckbill.dtb \
  	imx28-eukrea-mbmx283lc.dtb \
  	imx28-eukrea-mbmx287lc.dtb \
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2.dts b/arch/arm/boot/dts/imx28-duckbill-2.dts
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2-spi.dts b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
 new file mode 100644
-index 0000000..2510b20
+index 0000000..738eaa7
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx28-duckbill-2.dts
-@@ -0,0 +1,183 @@
++++ b/arch/arm/boot/dts/imx28-duckbill-2-spi.dts
+@@ -0,0 +1,199 @@
 +/*
 + * Copyright (C) 2015-2017 I2SE GmbH <info-eS4NqCHxEME@public.gmane.org>
 + * Copyright (C) 2016 Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
@@ -59,8 +58,12 @@ index 0000000..2510b20
 +#include "imx28.dtsi"
 +
 +/ {
-+	model = "I2SE Duckbill 2";
++	model = "I2SE Duckbill 2 SPI";
 +	compatible = "i2se,duckbill", "fsl,imx28";
++
++	aliases {
++		ethernet1 = &qca7000;
++	};
 +
 +	memory {
 +		reg = <0x40000000 0x08000000>;
@@ -80,13 +83,22 @@ index 0000000..2510b20
 +			};
 +
 +			ssp2: ssp@80014000 {
-+				compatible = "fsl,imx28-mmc";
++				compatible = "fsl,imx28-spi";
 +				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc2_4bit_pins_b
-+					&mmc2_cd_cfg &mmc2_sck_cfg_b>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_3p3v>;
++				pinctrl-0 = <&spi2_pins_a>;
 +				status = "okay";
++
++				qca7000: ethernet@0 {
++					compatible = "qca,qca7000";
++					pinctrl-names = "default";
++					pinctrl-0 = <&qca7000_pins>;
++					reg = <0>;
++					interrupt-parent = <&gpio3>;
++					interrupts = <3 IRQ_TYPE_EDGE_RISING>;
++					spi-cpha;
++					spi-cpol;
++					spi-max-frequency = <8000000>;
++				};
 +			};
 +
 +			pinctrl@80018000 {
@@ -123,11 +135,26 @@ index 0000000..2510b20
 +					fsl,pull-up = <MXS_PULL_DISABLE>;
 +				};
 +
-+				led_pins: leds@0 {
++				led_pins: led@0 {
 +					reg = <0>;
 +					fsl,pinmux-ids = <
 +						MX28_PAD_SAIF0_MCLK__GPIO_3_20
 +						MX28_PAD_SAIF0_LRCLK__GPIO_3_21
++					>;
++					fsl,drive-strength = <MXS_DRIVE_4mA>;
++					fsl,voltage = <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up = <MXS_PULL_DISABLE>;
++				};
++
++				qca7000_pins: qca7000@0 {
++					reg = <0>;
++					fsl,pinmux-ids = <
++						MX28_PAD_AUART0_RTS__GPIO_3_3    /* Interrupt */
++						MX28_PAD_LCD_D13__GPIO_1_13      /* QCA7K reset */
++						MX28_PAD_LCD_D14__GPIO_1_14      /* GPIO 0 */
++						MX28_PAD_LCD_D15__GPIO_1_15      /* GPIO 1 */
++						MX28_PAD_LCD_D18__GPIO_1_18      /* GPIO 2 */
++						MX28_PAD_LCD_D21__GPIO_1_21      /* GPIO 3 */
 +					>;
 +					fsl,drive-strength = <MXS_DRIVE_4mA>;
 +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
@@ -138,18 +165,6 @@ index 0000000..2510b20
 +
 +		apbx@80040000 {
 +			lradc@80050000 {
-+				status = "okay";
-+			};
-+
-+			i2c0: i2c@80058000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&i2c0_pins_a>;
-+				status = "okay";
-+			};
-+
-+			auart0: serial@8006a000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&auart0_2pins_a>;
 +				status = "okay";
 +			};
 +
