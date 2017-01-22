@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v4 3/9] ARM64: dts: meson-gxbb-vega-s95: add the ethernet PHY's reset GPIO
-Date: Sun, 22 Jan 2017 19:10:22 +0100
-Message-ID: <20170122181028.5014-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH v4 6/9] ARM64: dts: meson-gxbb-wetek-play2: add the ethernet PHY's reset GPIO
+Date: Sun, 22 Jan 2017 19:10:25 +0100
+Message-ID: <20170122181028.5014-7-martin.blumenstingl@googlemail.com>
 References: <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
  <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -18,19 +18,23 @@ PHY configuration similar to the one we have on GXL devices. This will
 allow us to specify OF-properties for the PHY itself.
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ .../boot/dts/amlogic/meson-gxbb-wetek-play2.dts    | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-index 81024886d232..9bb9cf765076 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-@@ -115,6 +115,24 @@
- 	status = "okay";
- 	pinctrl-0 = <&eth_rgmii_pins>;
- 	pinctrl-names = "default";
-+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+index ea79fdd2c248..c1392ed8dd4c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-play2.dts
+@@ -87,6 +87,29 @@
+ 	};
+ };
+ 
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
 +	phy-handle = <&eth_phy0>;
 +	phy-mode = "rgmii";
 +
@@ -48,9 +52,11 @@ index 81024886d232..9bb9cf765076 100644
 +			reg = <0>;
 +		};
 +	};
- };
- 
- &ir {
++};
++
+ &i2c_A {
+ 	status = "okay";
+ 	pinctrl-0 = <&i2c_a_pins>;
 -- 
 2.11.0
 
