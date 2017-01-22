@@ -1,39 +1,193 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCHv5 2/2] dt-bindings: iio: document MAX11100 ADC
-Date: Sun, 22 Jan 2017 13:21:43 +0000
-Message-ID: <d1ed3238-cba8-b53f-b178-f51445acd207@kernel.org>
-References: <1484757053-7102-1-git-send-email-jacopo+renesas@jmondi.org>
- <1484757053-7102-3-git-send-email-jacopo+renesas@jmondi.org>
- <20170121203307.3ylfbh3xlhp5mkjs@rob-hp-laptop>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 12/12] mux: support simplified bindings for single-user
+ gpio mux
+Date: Sun, 22 Jan 2017 13:30:02 +0000
+Message-ID: <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-13-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170121203307.3ylfbh3xlhp5mkjs@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: wsa+renesas@sang-engineering.com, magnus.damm@gmail.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, marek.vasut@gmail.com, geert@linux-m68k.org, mark.rutland@arm.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484755035-25927-13-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/17 20:33, Rob Herring wrote:
-> On Wed, Jan 18, 2017 at 05:30:53PM +0100, Jacopo Mondi wrote:
->> Add device tree bindings documentation for Maxim MAX11100 single-channel
->> ADC
->>
->> Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
->> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
->> ---
->>  .../devicetree/bindings/iio/adc/max11100.txt          | 19 +++++++++++++++++++
->>  1 file changed, 19 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max11100.txt
+On 18/01/17 15:57, Peter Rosin wrote:
+> Allow bindings for a GPIO controlled mux to be specified in the
+> mux consumer node.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
-Thanks and added.
+> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Code is good as far as I am concerned. Only question is whether this
+is worth the hassle given the normal bindings don't give that high
+a burden in complexity!
 
-Jonathan
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't really care either way:)
+
+> ---
+>  drivers/mux/Kconfig    |  5 +----
+>  drivers/mux/mux-core.c | 23 +++++++++++++++++++++--
+>  drivers/mux/mux-gpio.c | 28 +++++++++++++++++++++-------
+>  drivers/mux/mux-gpio.h | 13 +++++++++++++
+>  4 files changed, 56 insertions(+), 13 deletions(-)
+>  create mode 100644 drivers/mux/mux-gpio.h
 > 
+> diff --git a/drivers/mux/Kconfig b/drivers/mux/Kconfig
+> index d13fcf98958e..cd161c228537 100644
+> --- a/drivers/mux/Kconfig
+> +++ b/drivers/mux/Kconfig
+> @@ -29,7 +29,7 @@ config MUX_ADG792A
+>  	  be called mux-adg792a.
+>  
+>  config MUX_GPIO
+> -	tristate "GPIO-controlled Multiplexer"
+> +	bool "GPIO-controlled Multiplexer"
+>  	depends on OF && GPIOLIB
+>  	help
+>  	  GPIO-controlled Multiplexer controller.
+> @@ -39,7 +39,4 @@ config MUX_GPIO
+>  	  states. The GPIO pins can be connected (by the hardware) to several
+>  	  multiplexers, which in that case will be operated in parallel.
+>  
+> -	  To compile the driver as a module, choose M here: the module will
+> -	  be called mux-gpio.
+> -
+>  endif
+> diff --git a/drivers/mux/mux-core.c b/drivers/mux/mux-core.c
+> index 16a61253d164..0caafd6f5a77 100644
+> --- a/drivers/mux/mux-core.c
+> +++ b/drivers/mux/mux-core.c
+> @@ -21,6 +21,8 @@
+>  #include <linux/of_platform.h>
+>  #include <linux/slab.h>
+>  
+> +#include "mux-gpio.h"
+> +
+>  static struct class mux_class = {
+>  	.name = "mux",
+>  	.owner = THIS_MODULE,
+> @@ -314,9 +316,26 @@ struct mux_control *mux_control_get(struct device *dev, const char *mux_name)
+>  	ret = of_parse_phandle_with_args(np,
+>  					 "mux-controls", "#mux-control-cells",
+>  					 index, &args);
+> +
+> +#ifdef CONFIG_MUX_GPIO
+> +	if (ret == -ENOENT && !mux_name) {
+> +		mux_chip = mux_gpio_alloc(dev);
+> +		if (!IS_ERR(mux_chip)) {
+> +			ret = devm_mux_chip_register(dev, mux_chip);
+> +			if (ret < 0)
+> +				return ERR_PTR(ret);
+> +			get_device(&mux_chip->dev);
+> +			return mux_chip->mux;
+> +		}
+> +
+> +		ret = PTR_ERR(mux_chip);
+> +	}
+> +#endif
+> +
+>  	if (ret) {
+> -		dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+> -			np->full_name, mux_name ?: "", index);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "%s: failed to get mux-control %s(%i)\n",
+> +				np->full_name, mux_name ?: "", index);
+>  		return ERR_PTR(ret);
+>  	}
+>  
+> diff --git a/drivers/mux/mux-gpio.c b/drivers/mux/mux-gpio.c
+> index 48ca4d6b4fc7..2ab8735e3415 100644
+> --- a/drivers/mux/mux-gpio.c
+> +++ b/drivers/mux/mux-gpio.c
+> @@ -18,6 +18,8 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/property.h>
+>  
+> +#include "mux-gpio.h"
+> +
+>  struct mux_gpio {
+>  	struct gpio_descs *gpios;
+>  	int *val;
+> @@ -48,24 +50,21 @@ static const struct of_device_id mux_gpio_dt_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, mux_gpio_dt_ids);
+>  
+> -static int mux_gpio_probe(struct platform_device *pdev)
+> +struct mux_chip *mux_gpio_alloc(struct device *dev)
+>  {
+> -	struct device *dev = &pdev->dev;
+> -	struct device_node *np = dev->of_node;
+>  	struct mux_chip *mux_chip;
+>  	struct mux_gpio *mux_gpio;
+>  	int pins;
+> -	u32 idle_state;
+>  	int ret;
+>  
+>  	pins = gpiod_count(dev, "mux");
+>  	if (pins < 0)
+> -		return pins;
+> +		return ERR_PTR(pins);
+>  
+>  	mux_chip = devm_mux_chip_alloc(dev, 1, sizeof(*mux_gpio) +
+>  				       pins * sizeof(*mux_gpio->val));
+>  	if (!mux_chip)
+> -		return -ENOMEM;
+> +		return ERR_PTR(-ENOMEM);
+>  
+>  	mux_gpio = mux_chip_priv(mux_chip);
+>  	mux_gpio->val = (int *)(mux_gpio + 1);
+> @@ -76,11 +75,26 @@ static int mux_gpio_probe(struct platform_device *pdev)
+>  		ret = PTR_ERR(mux_gpio->gpios);
+>  		if (ret != -EPROBE_DEFER)
+>  			dev_err(dev, "failed to get gpios\n");
+> -		return ret;
+> +		return ERR_PTR(ret);
+>  	}
+>  	WARN_ON(pins != mux_gpio->gpios->ndescs);
+>  	mux_chip->mux->states = 1 << pins;
+>  
+> +	return mux_chip;
+> +}
+> +EXPORT_SYMBOL_GPL(mux_gpio_alloc);
+> +
+> +static int mux_gpio_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct mux_chip *mux_chip;
+> +	u32 idle_state;
+> +	int ret;
+> +
+> +	mux_chip = mux_gpio_alloc(dev);
+> +	if (IS_ERR(mux_chip))
+> +		return PTR_ERR(mux_chip);
+> +
+>  	ret = device_property_read_u32(dev, "idle-state", &idle_state);
+>  	if (ret >= 0) {
+>  		if (idle_state >= mux_chip->mux->states) {
+> diff --git a/drivers/mux/mux-gpio.h b/drivers/mux/mux-gpio.h
+> new file mode 100644
+> index 000000000000..fe3e8d0173aa
+> --- /dev/null
+> +++ b/drivers/mux/mux-gpio.h
+> @@ -0,0 +1,13 @@
+> +/*
+> + * GPIO-controlled multiplexer driver interface
+> + *
+> + * Copyright (C) 2017 Axentia Technologies AB
+> + *
+> + * Author: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +struct mux_chip *mux_gpio_alloc(struct device *dev);
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
