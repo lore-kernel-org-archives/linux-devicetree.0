@@ -1,37 +1,42 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Chris Brandt <Chris.Brandt@renesas.com>
 Subject: RE: [PATCH v2 2/3] ARM: dts: r7s72100: add ostm to device tree
-Date: Sun, 22 Jan 2017 14:08:57 +0000
-Message-ID: <SG2PR06MB11659E40D144D9F71B037D8A8A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Date: Sun, 22 Jan 2017 14:13:08 +0000
+Message-ID: <SG2PR06MB11650A7C8014AB5880E1BED28A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
 References: <20170120212055.4157-1-chris.brandt@renesas.com>
  <20170120212055.4157-3-chris.brandt@renesas.com>
- <4db44120-aa9f-2cb4-aad7-2baa8fcfe7c0@cogentembedded.com>
+ <CAMuHMdXQCqs4bCR8o+BC5ak0rE64bQOEz65udFntcQSRkU6+cw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4db44120-aa9f-2cb4-aad7-2baa8fcfe7c0-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXQCqs4bCR8o+BC5ak0rE64bQOEz65udFntcQSRkU6+cw@mail.gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2VyZ2VpLA0KDQpPbiBTYXR1cmRheSwgSmFudWFyeSAyMSwgMjAxNywgU2VyZ2VpIFNo
-dHlseW92IHdyb3RlOg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEw
+SGVsbG8gR2VlcnQsDQoNCk9uIFN1bmRheSwgSmFudWFyeSAyMiwgMjAxNywgR2VlcnQgVXl0dGVy
+aG9ldmVuIHdyb3RlOg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEw
 MC5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEwMC5kdHNpIGluZGV4IGQ1OTQ2
 ZGYuLjQ3YjIxNjUgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjdzNzIxMDAu
 ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I3czcyMTAwLmR0c2kNCj4gPiBAQCAt
-NTA1LDQgKzUwNSwyMCBAQA0KPiA+ICAJCWNhcC1zZGlvLWlycTsNCj4gPiAgCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOw0KPiA+ICAJfTsNCj4gPiArDQo+ID4gKwlvc3RtMDogb3N0bUBmY2ZlYzAwMCB7
-DQo+IA0KPiAgICAgQWNjb3JkaW5nIHRvIGRldmljZXRyZWUub3JnLCB0aGUgbm9kZSBuYW1lIHNo
-b3VsZCBiZSBnZW5lcmljLCBpLmUuDQo+ICJ0aW1lckAuLi4iLg0KPiANCj4gPiArCQljb21wYXRp
-YmxlID0gInJlbmVzYXMscjdzNzIxMDAtb3N0bSIsICJyZW5lc2FzLG9zdG0iOw0KPiA+ICsJCXJl
-ZyA9IDwweGZjZmVjMDAwIDB4MzA+Ow0KPiA+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMDIg
-SVJRX1RZUEVfRURHRV9SSVNJTkc+Ow0KPiA+ICsJCWNsb2NrcyA9IDwmbXN0cDVfY2xrcyBSN1M3
-MjEwMF9DTEtfT1NUTTA+Ow0KPiA+ICsJCXN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gKwl9Ow0K
-PiA+ICsNCj4gPiArCW9zdG0xOiBvc3RtQGZjZmVjNDAwIHsNCj4gDQo+ICAgICBMaWtld2lzZS4N
-Cj4gDQoNCk9LLiBJIHdpbGwgY2hhbmdlIGl0Lg0KVGhhbmsgeW91IQ0KDQpDaHJpcw0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+NTA1LDQgKzUwNSwyMCBAQA0KPiA+ICAgICAgICAgICAgICAgICBjYXAtc2Rpby1pcnE7DQo+ID4g
+ICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gICAgICAgICB9Ow0KPiA+
+ICsNCj4gPiArICAgICAgIG9zdG0wOiBvc3RtQGZjZmVjMDAwIHsNCj4gPiArICAgICAgICAgICAg
+ICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHI3czcyMTAwLW9zdG0iLCAicmVuZXNhcyxvc3RtIjsN
+Cj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4ZmNmZWMwMDAgMHgzMD47DQo+ID4gKyAgICAg
+ICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxMDIgSVJRX1RZUEVfRURHRV9SSVNJTkc+
+Ow0KPiA+ICsgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHA1X2Nsa3MgUjdTNzIxMDBfQ0xL
+X09TVE0wPjsNCj4gDQo+IE1pc3NpbmcgcG93ZXItZG9tYWlucyBwcm9wZXJ0eToNCj4gDQo+ICAg
+ICAgICAgcG93ZXItZG9tYWlucyA9IDwmY3BnX2Nsb2Nrcz47DQo+IA0KPiA+ICsgICAgICAgICAg
+ICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+ID4gKyAg
+ICAgICBvc3RtMTogb3N0bUBmY2ZlYzQwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAicmVuZXNhcyxyN3M3MjEwMC1vc3RtIiwgInJlbmVzYXMsb3N0bSI7DQo+ID4gKyAgICAg
+ICAgICAgICAgIHJlZyA9IDwweGZjZmVjNDAwIDB4MzA+Ow0KPiA+ICsgICAgICAgICAgICAgICBp
+bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTAzIElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4gPiArICAg
+ICAgICAgICAgICAgY2xvY2tzID0gPCZtc3RwNV9jbGtzIFI3UzcyMTAwX0NMS19PU1RNMT47DQo+
+IA0KPiBMaWtld2lzZS4NCg0KT0suIFRoYW5rIHlvdS4NCg0KDQo+IEJUVywgdGhleSdyZSBhbHNv
+IG1pc3NpbmcgZm9yIHRoZSBsYXN0IGFkZGVkIGRldmljZSBub2RlcyAoTU1DIGFuZCBTREhJKS4N
+Cg0KT0ssIEkgd2lsbCBzdWJtaXQgcGF0Y2hlcyBmb3IgdGhlbSBhcyB3ZWxsLg0KDQpUaGFuayB5
+b3UgZm9yIHRoZSByZXZpZXcuDQoNCkNocmlzDQoNCg==
