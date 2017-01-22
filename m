@@ -1,81 +1,139 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/6] rtc: sun6i: Fix the RTC accuracy
-Date: Sun, 22 Jan 2017 15:32:44 +0100
-Message-ID: <20170122143244.n2d4fpxnt62tkwtt@piout.net>
-References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add possibility to select drdy
+ pin
+Date: Sun, 22 Jan 2017 14:34:01 +0000
+Message-ID: <3ca71ff6-fa9e-449a-8a21-7607ca2c2c55@kernel.org>
+References: <20170122103052.8769-1-lorenzo.bianconi@st.com>
+ <20170122103052.8769-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBDMFSPCAKGQEAY4XY4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170122103052.8769-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/01/2017 at 16:56:37 +0100, Maxime Ripard wrote :
-> Hi,
+On 22/01/17 10:30, Lorenzo Bianconi wrote:
+> Add capability to route data ready signal on pin 1 or pin 2 of the package
 > 
-> The RTC used in the A31 and later SoC has an accuracy issue, which is
-> already significant even after a couple of hours.
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 66 +++++++++++++++++++++++++---
+>  1 file changed, 60 insertions(+), 6 deletions(-)
 > 
-> This is due to the fact that the oscillator used by default is an internal
-> and very inaccurate one.
-> 
-> A first attempt at fixing that by switching to the external oscillator was
-> done in the patch "rtc: sun6i: Switch to the external oscillator". However,
-> it turned out to be problematic since it was tracked properly in the clock
-> framework, which might lead to some clocks being disabled, even though
-> their devices were not notified.
-> 
-> This is a second attempt, this time by making it part of the CCF. It
-> turned out to be a bit more complicated than one would expect since the mux
-> found inside the RTC also controls one of the input of the main clock unit.
-> Therefore, it needs to be probed before the main clock unit driver.
-> 
-> Let me know what you think,
-> Maxime
-> 
-> Maxime Ripard (6):
->   rtc: sun6i: Expose the 32kHz oscillator
->   rtc: sun6i: Add some locking
->   rtc: sun6i: Disable the build as a module
->   rtc: sun6i: Force the mux to the external oscillator
->   ARM: sun8i: a23/a33: Enable the real LOSC and use it
->   ARM: sun8i: a23/a33: Add the oscillators accuracy
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index f869dfa..bc50164 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -37,11 +37,14 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  
+> +#include <linux/platform_data/st_sensors_pdata.h>
+> +
+>  #include "st_lsm6dsx.h"
+>  
+>  #define ST_LSM6DSX_REG_ACC_DEC_MASK		GENMASK(2, 0)
+>  #define ST_LSM6DSX_REG_GYRO_DEC_MASK		GENMASK(5, 3)
+>  #define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+> +#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+>  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+>  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+>  #define ST_LSM6DSX_REG_RESET_ADDR		0x12
+> @@ -532,10 +535,63 @@ static const struct iio_info st_lsm6dsx_gyro_info = {
+>  
+>  static const unsigned long st_lsm6dsx_available_scan_masks[] = {0x7, 0x0};
+>  
+> +#ifdef CONFIG_OF
+Perhaps rely on the -ENOSYS return from
+of_property_read_u32 stub instead of having the ifdefs around something so
+simple.
+
+> +static int st_lsm6dsx_of_get_drdy_pin(struct st_lsm6dsx_hw *hw, int *drdy_pin)
+> +{
+> +	struct device_node *np = hw->dev->of_node;
+> +	int err;
+> +
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	err = of_property_read_u32(np, "st,drdy-int-pin", drdy_pin);
+> +	if (err == -ENODATA) {
+> +		/* if the property has not been specified use default value */
+> +		*drdy_pin = 1;
+> +		err = 0;
+> +	}
+> +
+> +	return err;
+> +}
+> +#else
+> +static int st_lsm6dsx_of_get_drdy_pin(struct st_lsm6dsx_hw *hw, int *drdy_pin)
+> +{
+> +	return -EINVAL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+> +static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+> +{
+> +	int err = 0, drdy_pin;
+> +
+> +	if (st_lsm6dsx_of_get_drdy_pin(hw, &drdy_pin) < 0) {
+> +		struct st_sensors_platform_data *pdata;
+> +		struct device *dev = hw->dev;
+> +
+> +		pdata = (struct st_sensors_platform_data *)dev->platform_data;
+> +		drdy_pin = pdata ? pdata->drdy_int_pin : 1;
+> +	}
+> +
+> +	switch (drdy_pin) {
+> +	case 1:
+> +		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
+> +		break;
+> +	case 2:
+> +		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
+> +		break;
+> +	default:
+> +		dev_err(hw->dev, "unsupported data ready pin\n");
+> +		err = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+>  {
+> +	u8 data, drdy_int_reg;
+>  	int err;
+> -	u8 data;
+>  
+>  	data = ST_LSM6DSX_REG_RESET_MASK;
+>  	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_RESET_ADDR, sizeof(data),
+> @@ -563,14 +619,12 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+>  		return err;
+>  
+>  	/* enable FIFO watermak interrupt */
+> -	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT1_ADDR,
+> -					 ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+> +	err = st_lsm6dsx_get_drdy_reg(hw, &drdy_int_reg);
+>  	if (err < 0)
+>  		return err;
+>  
+> -	/* redirect INT2 on INT1 */
+> -	return st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT2_ON_INT1_ADDR,
+> -					  ST_LSM6DSX_REG_INT2_ON_INT1_MASK, 1);
+Does removing this potentially break existing setups?
+
+> +	return st_lsm6dsx_write_with_mask(hw, drdy_int_reg,
+> +					  ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+>  }
+>  
+>  static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
 > 
 
-As Chen-Yu mentioned, maybe you can reorder some patches so they can go
-in stable.
-
->  Documentation/devicetree/bindings/rtc/sun6i-rtc.txt |   8 +-
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi                |  15 +-
->  drivers/rtc/Kconfig                                 |   2 +-
->  drivers/rtc/rtc-sun6i.c                             | 189 +++++++++++--
->  4 files changed, 181 insertions(+), 33 deletions(-)
-> 
-> base-commit: 99cef370ac9939df2aeb16c96d07e842b2fa8201
-> -- 
-> git-series 0.8.11
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
