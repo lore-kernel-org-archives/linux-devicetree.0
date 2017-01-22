@@ -1,90 +1,80 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/6] rtc: sun6i: Force the mux to the external oscillator
-Date: Sun, 22 Jan 2017 15:44:14 +0100
-Message-ID: <20170122144414.fvir5la7cgocxfqn@piout.net>
-References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
- <409c56f0ed1c4b0026ad60cb1218c99fe1686408.1484927680.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v650f-4RZ6RrRBGcmPz8mJ4KbJwTTj6=w3HeSWUZtLAKcw@mail.gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/22] mtd: add DT bindings for the Cortina Systems Gemini
+ Flash
+Date: Sun, 22 Jan 2017 15:40:00 +0100
+Message-ID: <fdc38613-18c2-3ae3-09e6-d8103c0a8f93@gmail.com>
+References: <20170122122119.10510-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBSMKSPCAKGQEFJR4NFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v650f-4RZ6RrRBGcmPz8mJ4KbJwTTj6=w3HeSWUZtLAKcw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170122122119.10510-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/2017 at 11:53:08 +0800, Chen-Yu Tsai wrote :
-> Hi,
+On 01/22/2017 01:21 PM, Linus Walleij wrote:
+> This adds device tree bindings for the Cortina systems Gemini
+> flash controller, a simple physmap which however need a few
+> syscon bits to be poked to operate properly.
 > 
-> On Fri, Jan 20, 2017 at 11:56 PM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > The internal oscillator is way too inaccurate to do something useful with
-> > it. Switch to the external oscillator if it is available.
-> >
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  drivers/rtc/rtc-sun6i.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-> > index edd5627da10f..1695fae24cd5 100644
-> > --- a/drivers/rtc/rtc-sun6i.c
-> > +++ b/drivers/rtc/rtc-sun6i.c
-> > @@ -493,6 +493,7 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
-> >  static int sun6i_rtc_probe(struct platform_device *pdev)
-> >  {
-> >         struct sun6i_rtc_dev *chip = sun6i_rtc;
-> > +       struct clk *parent;
-> >         int ret;
-> >
-> >         if (!chip)
-> > @@ -540,6 +541,17 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
-> >         /* disable alarm wakeup */
-> >         writel(0, chip->base + SUN6I_ALARM_CONFIG);
-> >
-> > +       parent = clk_get(&pdev->dev, NULL);
-> > +       if (!IS_ERR(parent)) {
-> > +               ret = clk_set_parent(chip->losc, parent);
-> > +               clk_put(parent);
-> > +
-> > +               if (ret) {
-> > +                       dev_err(&pdev->dev,
-> > +                               "Failed to reparent the RTC to the external oscillator\n");
-> > +                       return ret;
-> > +               }
-> > +       }
-> 
-> Following what I mentioned in patch 1, maybe it is easier to force
-> the mux before the clocks are registered by writing directly to
-> the registers? We could also backport the changes to stable?
-> 
+> Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-I'd say that the risk to break existing platforms is low enough to
-backport that patch to stable.
-Maxime as you are certainly the one that will handle the potential
-breakage, I'll let you choose what you want to do.
+Looks pretty OK to me:
+Reviewed-by: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+> ---
+> MTD maintainers: please just apply this to the MTD tree when
+> you are happy with it. It is functionally orthogonal to the rest
+> of the series and is just in the series for context.
+> ---
+>  .../bindings/mtd/cortina,gemini-flash.txt          | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/cortina,gemini-flash.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/cortina,gemini-flash.txt b/Documentation/devicetree/bindings/mtd/cortina,gemini-flash.txt
+> new file mode 100644
+> index 000000000000..3fa1b34d69ad
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/cortina,gemini-flash.txt
+> @@ -0,0 +1,24 @@
+> +Flash device on Cortina Systems Gemini SoC
+> +
+> +This flash is regular CFI compatible (Intel or AMD extended) flash chips with
+> +some special bits that can be controlled by the machine's system controller.
+> +
+> +Required properties:
+> +- compatible : must be "cortina,gemini-flash", "cfi-flash";
+> +- reg : memory address for the flash chip
+> +- syscon : must be a phandle to the system controller
+> +- bank-width : width in bytes of flash interface, should be <2>
+> +
+> +For the rest of the properties, see mtd-physmap.txt.
+> +
+> +The device tree may optionally contain sub-nodes describing partitions of the
+> +address space. See partition.txt for more detail.
+> +
+> +Example:
+> +
+> +flash@30000000 {
+> +	compatible = "cortina,gemini-flash", "cfi-flash";
+> +	reg = <0x30000000 0x01000000>;
+> +	syscon = <&syscon>;
+> +	bank-width = <2>;
+> +};
+> 
 
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
