@@ -1,50 +1,47 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH] Documentation: net: phy: improve explanation when to specify the PHY ID
-Date: Sun, 22 Jan 2017 17:41:32 +0100
-Message-ID: <20170122164132.13967-1-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v3 2/9] ARM64: dts: meson-gxbb-p200: add the ethernet
+ PHY's reset GPIO
+Date: Sun, 22 Jan 2017 17:48:25 +0100
+Message-ID: <CAFBinCD+7R2cVQ-Dcr=CxRuBBFajCb-QG68ZGpza5VwprCkztQ@mail.gmail.com>
+References: <20170120132650.9784-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+ <20170120152232.13943-3-martin.blumenstingl@googlemail.com>
+ <20170120162138.GE25907@lunn.ch> <CAFBinCA47Nng_jjxKrWrV_YBHr0bg+7xPaJrVswt_WnZ6wtyjA@mail.gmail.com>
+ <20170120174658.GG25907@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120174658.GG25907-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew-g2DYL2Zd6BY@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The old description basically read like "ethernet-phy-idAAAA.BBBB" can
-be specified when you know the actual PHY ID. However, specifying this
-has a side-effect: it forces Linux to bind to a certain PHY driver (the
-one that matches the ID given in the compatible string), ignoring the ID
-which is reported by the actual PHY.
-Whenever a device is shipped with (multiple) different PHYs during it's
-production lifetime then explicitly specifying
-"ethernet-phy-idAAAA.BBBB" could break certain revisions of that device.
+On Fri, Jan 20, 2017 at 6:46 PM, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+> On Fri, Jan 20, 2017 at 06:07:20PM +0100, Martin Blumenstingl wrote:
+>> I though that this is good practice - the documentation doesn't say
+>> that it should only be added in specific cases: [0]
+>
+> Agreed, the text should be better, listing when it is appropriate to
+> use.
+>
+>> my intention behind adding the PHY ID was to make it easier to see
+>> which devices uses which PHY. this is especially useful for devices
+>> with RTL8211F PHY (basically all devices with RGMII PHY except the
+>> P200) as these may need similar fixes than [1]
+>
+> I would not say it is wrong to list the PHY ID, it just has
+> consequences if the PHY ever changes.
+thanks for pointing this out again, I'll re-spin this series and
+remove the PHY's "compatible" property from all patches.
+I also sent a patch which hopefully makes the documentation a bit more
+clear: [0]
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
-Thanks to Andrew Lunn for pointing the documentation issue out to me in:
-http://lists.infradead.org/pipermail/linux-amlogic/2017-January/002141.html
+Regards,
+Martin
 
 
- Documentation/devicetree/bindings/net/phy.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
-index ff1bc4b1bb3b..fb5056b22685 100644
---- a/Documentation/devicetree/bindings/net/phy.txt
-+++ b/Documentation/devicetree/bindings/net/phy.txt
-@@ -19,8 +19,9 @@ Optional Properties:
-   specifications. If neither of these are specified, the default is to
-   assume clause 22.
- 
--  If the phy's identifier is known then the list may contain an entry
--  of the form: "ethernet-phy-idAAAA.BBBB" where
-+  If the PHY reports an incorrect ID (or none at all) then the
-+  "compatible" list may contain an entry with the correct PHY ID in the
-+  form: "ethernet-phy-idAAAA.BBBB" where
-      AAAA - The value of the 16 bit Phy Identifier 1 register as
-             4 hex digits. This is the chip vendor OUI bits 3:18
-      BBBB - The value of the 16 bit Phy Identifier 2 register as
--- 
-2.11.0
-
+[0] http://marc.info/?l=linux-netdev&m=148510331812986&w=2
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
