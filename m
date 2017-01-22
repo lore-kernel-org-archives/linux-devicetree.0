@@ -1,345 +1,553 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v4 3/3] watchdog: zx2967: add watchdog controller driver for ZTE's zx2967 family
-Date: Sun, 22 Jan 2017 16:16:48 +0800
-Message-ID: <1485073008-26699-3-git-send-email-baoyou.xie@linaro.org>
-References: <1485073008-26699-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485073008-26699-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH] iio:temperature:Add irq and threshold events support
+ for TI TMP007 sensor
+Date: Sun, 22 Jan 2017 10:19:06 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1701221002030.31271@pmeerw.net>
+References: <20170121150147.GA7781@gmail.com>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170121150147.GA7781-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds watchdog controller driver for ZTE's zx2967 family.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- drivers/watchdog/Kconfig      |  10 ++
- drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/zx2967_wdt.c | 282 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 293 insertions(+)
- create mode 100644 drivers/watchdog/zx2967_wdt.c
+I'd prefer subject "iio:temperature:tmp007: Add irq and threshold events support"
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index acb00b5..05093a2 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called aspeed_wdt.
- 
-+config ZX2967_WATCHDOG
-+	tristate "ZTE zx2967 SoCs watchdog support"
-+	depends on ARCH_ZX
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include support for the watchdog timer
-+	  in ZTE zx2967 SoCs.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called zx2967_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 0c3d35e..bf2d296 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
- obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
- obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
- obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
-+obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
- 
- # AVR32 Architecture
- obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
-new file mode 100644
-index 0000000..7340605
---- /dev/null
-+++ b/drivers/watchdog/zx2967_wdt.c
-@@ -0,0 +1,282 @@
-+/*
-+ * watchdog driver for ZTE's zx2967 family
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie@linaro.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/watchdog.h>
-+
-+#define ZX2967_WDT_CFG_REG			0x4
-+#define ZX2967_WDT_LOAD_REG			0x8
-+#define ZX2967_WDT_REFRESH_REG			0x18
-+#define ZX2967_WDT_START_REG			0x1c
-+
-+#define ZX2967_WDT_REFRESH_MASK			0x3f
-+
-+#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
-+#define ZX2967_WDT_START_EN			0x1
-+
-+#define ZX2967_WDT_WRITEKEY			0x12340000
-+
-+#define ZX2967_WDT_DIV_DEFAULT			16
-+#define ZX2967_WDT_DEFAULT_TIMEOUT		32
-+#define ZX2967_WDT_MIN_TIMEOUT			1
-+#define ZX2967_WDT_MAX_TIMEOUT			500
-+#define ZX2967_WDT_MAX_COUNT			0xffff
-+
-+#define ZX2967_WDT_CLK_FREQ			0x8000
-+
-+#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
-+
-+struct zx2967_wdt {
-+	struct clk		*clock;
-+	void __iomem		*reg_base;
-+	unsigned int		conf;
-+	unsigned int		load;
-+	unsigned int		flags;
-+	struct watchdog_device	wdt_device;
-+	struct notifier_block	restart_handler;
-+};
-+
-+static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
-+{
-+	return readl_relaxed(wdt->reg_base + reg);
-+}
-+
-+static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
-+{
-+	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
-+}
-+
-+static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
-+	val ^= ZX2967_WDT_REFRESH_MASK;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
-+}
-+
-+static int
-+zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
-+	unsigned int count;
-+
-+	count = timeout * ZX2967_WDT_CLK_FREQ;
-+	if (count > divisor * ZX2967_WDT_MAX_COUNT)
-+		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
-+	count = DIV_ROUND_UP(count, divisor);
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
-+	zx2967_wdt_refresh(wdt);
-+	wdt->load = count;
-+	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
-+
-+	return 0;
-+}
-+
-+static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val |= ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val &= ~ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static int zx2967_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_set_timeout(wdd, wdd->timeout);
-+	__zx2967_wdt_start(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	__zx2967_wdt_stop(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_refresh(wdt);
-+
-+	return 0;
-+}
-+
-+#define ZX2967_WDT_OPTIONS \
-+	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
-+static const struct watchdog_info zx2967_wdt_ident = {
-+	.options          =     ZX2967_WDT_OPTIONS,
-+	.firmware_version =	0,
-+	.identity         =	"zx2967 watchdog",
-+};
-+
-+static struct watchdog_ops zx2967_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = zx2967_wdt_start,
-+	.stop = zx2967_wdt_stop,
-+	.ping = zx2967_wdt_keepalive,
-+	.set_timeout = zx2967_wdt_set_timeout,
-+};
-+
-+static void zx2967_wdt_reset_sysctrl(struct device *dev)
-+{
-+	int ret;
-+	struct device_node *np = NULL;
-+	void __iomem *regmap;
-+	unsigned int offset, mask, config;
-+	struct of_phandle_args out_args;
-+
-+	ret = of_parse_phandle_with_fixed_args(dev->of_node,
-+			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
-+	if (ret)
-+		return;
-+
-+	offset = out_args.args[0];
-+	config = out_args.args[1];
-+	mask = out_args.args[2];
-+
-+	regmap = syscon_node_to_regmap(out_args.np);
-+	if (IS_ERR(regmap))
-+		goto out;
-+
-+	regmap_update_bits(regmap, offset, mask, config);
-+out:
-+	of_node_put(np);
-+}
-+
-+static int zx2967_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct zx2967_wdt *wdt;
-+	struct resource *base;
-+	int ret;
-+	struct reset_control *rstc;
-+
-+	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, wdt);
-+
-+	wdt->wdt_device.info = &zx2967_wdt_ident;
-+	wdt->wdt_device.ops = &zx2967_wdt_ops;
-+	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
-+	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
-+	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
-+	wdt->wdt_device.parent = &pdev->dev;
-+
-+	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->reg_base = devm_ioremap_resource(dev, base);
-+	if (IS_ERR(wdt->reg_base)) {
-+		dev_err(dev, "ioremap failed\n");
-+		return PTR_ERR(wdt->reg_base);
-+	}
-+
-+	zx2967_wdt_reset_sysctrl(dev);
-+
-+	wdt->clock = devm_clk_get(dev, NULL);
-+	if (IS_ERR(wdt->clock)) {
-+		dev_err(dev, "failed to find watchdog clock source\n");
-+		return PTR_ERR(wdt->clock);
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clock);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
-+
-+	rstc = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(rstc)) {
-+		dev_err(dev, "failed to get rstc");
-+		ret = PTR_ERR(rstc);
-+		goto fail_get_reset_control;
-+	}
-+
-+	reset_control_assert(rstc);
-+	mdelay(10);
-+	reset_control_deassert(rstc);
-+
-+	watchdog_set_drvdata(&wdt->wdt_device, wdt);
-+	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
-+
-+	ret = watchdog_register_device(&wdt->wdt_device);
-+	if (ret)
-+		goto fail_register;
-+
-+	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
-+		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
-+
-+	return 0;
-+
-+fail_get_reset_control:
-+	watchdog_unregister_device(&wdt->wdt_device);
-+fail_register:
-+	clk_disable_unprepare(wdt->clock);
-+	return ret;
-+}
-+
-+static int zx2967_wdt_remove(struct platform_device *pdev)
-+{
-+	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdt_device);
-+	clk_disable_unprepare(wdt->clock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_wdt_match[] = {
-+	{ .compatible = "zte,zx296718-wdt", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
-+
-+static struct platform_driver zx2967_wdt_driver = {
-+	.probe		= zx2967_wdt_probe,
-+	.remove		= zx2967_wdt_remove,
-+	.driver		= {
-+		.name	= "zx2967-wdt",
-+		.of_match_table	= of_match_ptr(zx2967_wdt_match),
-+	},
-+};
-+module_platform_driver(zx2967_wdt_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
-+MODULE_LICENSE("GPL v2");
+> This patch adds support for ALERT irq and limit threshold events for TI TMP007 - 16 bit IR thermopile sensor
+> with integrated math engine.
+> 
+> Following threshold events are supported:
+> 1. TObj high limit
+> 2. TObj low limit
+> 3. TDie high limit
+> 4. TDie low limit
+
+comments below
+I suggest to separate clearup from actually adding events support, so two 
+patches
+it would be nice if the driver can operate without irq also (irq is 
+optional in DT...)
+
+> Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+
+note: this applies on top of patch...
+
+>  .../devicetree/bindings/iio/temperature/tmp007.txt |   8 +
+>  drivers/iio/temperature/tmp007.c                   | 334 ++++++++++++++++++---
+>  2 files changed, 304 insertions(+), 38 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+> index 3b8f41f..07c1658 100644
+> --- a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+> +++ b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+> @@ -18,10 +18,18 @@ Required properties:
+>  		   1	 SDA	   0x46
+>  		   1     SCL       0x47
+>  
+> +Optional properties:
+> +
+> +  - interrupt-parent: should be the phandle for the interrupt controller
+> +
+> +  - interrupts: interrupt mapping for GPIO IRQ
+> +
+>  Example:
+>  
+>  tmp007@40 {
+>          compatible = "ti,tmp007";
+>          reg = <0x40>;
+> +        interrupt-parent = <&gpio0>;
+> +        interrupts = <5 8>;
+
+why are there two GPIOs?
+
+>  };
+>  
+> diff --git a/drivers/iio/temperature/tmp007.c b/drivers/iio/temperature/tmp007.c
+> index 24c6c16..73b5b8d 100644
+> --- a/drivers/iio/temperature/tmp007.c
+> +++ b/drivers/iio/temperature/tmp007.c
+> @@ -11,9 +11,10 @@
+>   *
+>   * (7-bit I2C slave address (0x40 - 0x47), changeable via ADR pins)
+>   *
+> - * Note: This driver assumes that the sensor has been calibrated beforehand
+> - *
+> - * TODO: ALERT irq, limit threshold events
+> + * Note:
+> + * 1. This driver assumes that the sensor has been calibrated beforehand
+> + * 2. Limit threshold events are enabled at the start
+> + * 3. Operating mode: INT
+>   *
+>   */
+>  
+> @@ -24,35 +25,49 @@
+>  #include <linux/pm.h>
+>  #include <linux/bitops.h>
+>  #include <linux/of.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+> -
+> -#define TMP007_TDIE 0x01
+> -#define TMP007_CONFIG 0x02
+> -#define TMP007_TOBJECT 0x03
+> -#define TMP007_STATUS 0x04
+> -#define TMP007_STATUS_MASK 0x05
+> -#define TMP007_MANUFACTURER_ID 0x1e
+> -#define TMP007_DEVICE_ID 0x1f
+> -
+> -#define TMP007_CONFIG_CONV_EN BIT(12)
+> -#define TMP007_CONFIG_COMP_EN BIT(5)
+> -#define TMP007_CONFIG_TC_EN BIT(6)
+> -#define TMP007_CONFIG_CR_MASK GENMASK(11, 9)
+> -#define TMP007_CONFIG_CR_SHIFT 9
+> -
+> -#define TMP007_STATUS_CONV_READY BIT(14)
+> -#define TMP007_STATUS_DATA_VALID BIT(9)
+> -
+> -#define TMP007_MANUFACTURER_MAGIC 0x5449
+> -#define TMP007_DEVICE_MAGIC 0x0078
+> -
+> -#define TMP007_TEMP_SHIFT 2
+> +#include <linux/iio/events.h>
+> +
+> +#define TMP007_TDIE			0x01
+
+this has a lot of clutter; the patch also reformats the #defines by adding 
+whitespace; don't do this in the same patch
+
+> +#define TMP007_CONFIG			0x02
+> +#define TMP007_TOBJECT			0x03
+> +#define TMP007_STATUS			0x04
+> +#define TMP007_STATUS_MASK		0x05
+> +#define TMP007_TOBJ_HIGH_LIMIT		0x06
+> +#define TMP007_TOBJ_LOW_LIMIT		0x07
+> +#define TMP007_TDIE_HIGH_LIMIT		0x08
+> +#define TMP007_TDIE_LOW_LIMIT		0x09
+> +#define TMP007_MANUFACTURER_ID		0x1e
+> +#define TMP007_DEVICE_ID		0x1f
+> +
+> +#define TMP007_CONFIG_CONV_EN		BIT(12)
+> +#define TMP007_CONFIG_TC_EN		BIT(6)
+> +#define TMP007_CONFIG_CR_MASK		GENMASK(11, 9)
+> +#define TMP007_CONFIG_ALERT_EN		BIT(8)
+> +#define TMP007_CONFIG_CR_SHIFT		9
+> +
+> +/* Status register flags */
+> +#define TMP007_STATUS_ALERT	BIT(15)
+> +#define TMP007_STATUS_CONV_READY	BIT(14)
+> +#define TMP007_STATUS_OHF		BIT(13)
+> +#define TMP007_STATUS_OLF		BIT(12)
+> +#define TMP007_STATUS_LHF		BIT(11)
+> +#define TMP007_STATUS_LLF		BIT(10)
+> +#define TMP007_STATUS_DATA_VALID	BIT(9)
+> +
+> +#define TMP007_MANUFACTURER_MAGIC	0x5449
+> +#define TMP007_DEVICE_MAGIC		0x0078
+> +
+> +#define TMP007_TEMP_SHIFT		2
+>  
+>  struct tmp007_data {
+>  	struct i2c_client *client;
+>  	u16 config;
+> +	u16 status_mask;
+>  };
+>  
+>  static const int tmp007_avgs[5][2] = { {4, 0}, {2, 0}, {1, 0},
+> @@ -70,7 +85,7 @@ static int tmp007_read_temperature(struct tmp007_data *data, u8 reg)
+>  			return ret;
+>  		if ((ret & TMP007_STATUS_CONV_READY) &&
+>  			!(ret & TMP007_STATUS_DATA_VALID))
+> -				break;
+
+another unrelated cleanup
+
+> +			break;
+>  		msleep(100);
+>  	}
+>  
+> @@ -156,6 +171,185 @@ static int tmp007_write_raw(struct iio_dev *indio_dev,
+>  	return -EINVAL;
+>  }
+>  
+> +static irqreturn_t tmp007_interrupt_handler(int irq, void *private)
+> +{
+> +	struct iio_dev *indio_dev = private;
+> +	struct tmp007_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret = i2c_smbus_read_word_swapped(data->client, TMP007_STATUS);
+> +	if (ret < 0)
+
+|| !(ret & (_STATUSS_OHF | STATUS_OLF | ..))
+
+> +		return IRQ_NONE;
+> +
+> +	if (ret & TMP007_STATUS_OHF)
+> +		iio_push_event(indio_dev,
+> +				IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
+> +					IIO_MOD_TEMP_OBJECT,
+> +					IIO_EV_TYPE_THRESH,
+> +					IIO_EV_DIR_RISING),
+> +				iio_get_time_ns(indio_dev));
+> +
+> +	if (ret & TMP007_STATUS_OLF)
+> +		iio_push_event(indio_dev,
+> +				IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
+> +					IIO_MOD_TEMP_OBJECT,
+> +					IIO_EV_TYPE_THRESH,
+> +					IIO_EV_DIR_FALLING),
+> +				iio_get_time_ns(indio_dev));
+> +
+> +	if (ret & TMP007_STATUS_LHF)
+> +		iio_push_event(indio_dev,
+> +				IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
+> +					IIO_MOD_TEMP_AMBIENT,
+> +					IIO_EV_TYPE_THRESH,
+> +					IIO_EV_DIR_RISING),
+> +				iio_get_time_ns(indio_dev));
+> +
+> +	if (ret & TMP007_STATUS_LLF)
+> +		iio_push_event(indio_dev,
+> +				IIO_MOD_EVENT_CODE(IIO_TEMP, 0,
+> +					IIO_MOD_TEMP_AMBIENT,
+> +					IIO_EV_TYPE_THRESH,
+> +					IIO_EV_DIR_FALLING),
+> +				iio_get_time_ns(indio_dev));
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int tmp007_write_event_config(struct iio_dev *indio_dev,
+> +		const struct iio_chan_spec *chan, enum iio_event_type type,
+> +		enum iio_event_direction dir, int state)
+> +{
+> +	struct tmp007_data *data = iio_priv(indio_dev);
+> +	unsigned int status_mask;
+> +	int ret;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_TEMP_AMBIENT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			status_mask = TMP007_STATUS_LHF;
+> +		else
+> +			status_mask = TMP007_STATUS_LLF;
+> +		break;
+> +	case IIO_MOD_TEMP_OBJECT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			status_mask = TMP007_STATUS_OHF;
+> +		else
+> +			status_mask = TMP007_STATUS_OLF;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+
+mutex around this?
+
+> +	ret = i2c_smbus_read_word_swapped(data->client, TMP007_STATUS_MASK);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (state)
+> +		ret |= status_mask;
+> +	else
+> +		ret &= ~status_mask;
+> +
+> +	return i2c_smbus_write_word_swapped(data->client, TMP007_STATUS_MASK,
+> +					data->status_mask = ret);
+> +}
+> +
+> +static int tmp007_read_event_config(struct iio_dev *indio_dev,
+> +		const struct iio_chan_spec *chan, enum iio_event_type type,
+> +		enum iio_event_direction dir)
+> +{
+> +	struct tmp007_data *data = iio_priv(indio_dev);
+> +	unsigned int mask;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_TEMP_AMBIENT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			mask = TMP007_STATUS_LHF;
+> +		else
+> +			mask = TMP007_STATUS_LLF;
+> +		break;
+> +	case IIO_MOD_TEMP_OBJECT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			mask = TMP007_STATUS_OHF;
+> +		else
+> +			mask = TMP007_STATUS_OLF;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return (bool)(data->status_mask & mask);
+
+return type is int, maybe use !! to force to 0/1
+
+return !!(data->status_mask & mask);
+
+> +}
+> +
+> +static int tmp007_read_thresh(struct iio_dev *indio_dev,
+> +		const struct iio_chan_spec *chan, enum iio_event_type type,
+> +		enum iio_event_direction dir, enum iio_event_info info,
+> +		int *val, int *val2)
+> +{
+> +	struct tmp007_data *data = iio_priv(indio_dev);
+> +	int ret;
+> +	u8 reg;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_TEMP_AMBIENT: /* LSB: 0.5 degree Celsius */
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			reg = TMP007_TDIE_HIGH_LIMIT;
+> +		else
+> +			reg = TMP007_TDIE_LOW_LIMIT;
+> +		break;
+> +	case IIO_MOD_TEMP_OBJECT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			reg = TMP007_TOBJ_HIGH_LIMIT;
+> +		else
+> +			reg = TMP007_TOBJ_LOW_LIMIT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = i2c_smbus_read_word_swapped(data->client, reg);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Shift length 7 bits = 6(15:6) + 1(0.5 LSB) */
+> +	*val = sign_extend32(ret, 15) >> 7;
+> +
+> +	return IIO_VAL_INT;
+> +}
+> +
+> +static int tmp007_write_thresh(struct iio_dev *indio_dev,
+> +		const struct iio_chan_spec *chan, enum iio_event_type type,
+> +		enum iio_event_direction dir, enum iio_event_info info,
+> +		int val, int val2)
+> +{
+> +	struct tmp007_data *data = iio_priv(indio_dev);
+> +	u8 reg;
+> +
+> +	switch (chan->channel2) {
+> +	case IIO_MOD_TEMP_AMBIENT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			reg = TMP007_TDIE_HIGH_LIMIT;
+> +		else
+> +			reg = TMP007_TDIE_LOW_LIMIT;
+> +		break;
+> +	case IIO_MOD_TEMP_OBJECT:
+> +		if (dir == IIO_EV_DIR_RISING)
+> +			reg = TMP007_TOBJ_HIGH_LIMIT;
+> +		else
+> +			reg = TMP007_TOBJ_LOW_LIMIT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Full scale value is +/- 256 degree Celsius */
+
+I guess we want to specify milli degree Celsius according to sysfs-bus-iio 
+for in_temp_raw
+
+> +	if (val < -256 || val > 255)
+> +		return -EINVAL;
+> +
+> +	/* Shift length 7 bits = 6(15:6) + 1(0.5 LSB) */
+> +	return i2c_smbus_write_word_swapped(data->client, reg, (val << 7));
+> +}
+> +
+>  static IIO_CONST_ATTR(sampling_frequency_available, "4 2 1 0.5 0.25");
+>  
+>  static struct attribute *tmp007_attributes[] = {
+> @@ -167,6 +361,36 @@ static const struct attribute_group tmp007_attribute_group = {
+>  	.attrs = tmp007_attributes,
+>  };
+>  
+> +static const struct iio_event_spec tmp007_obj_event[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+> +static const struct iio_event_spec tmp007_die_event[] = {
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_RISING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +	{
+> +		.type = IIO_EV_TYPE_THRESH,
+> +		.dir = IIO_EV_DIR_FALLING,
+> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
+> +			BIT(IIO_EV_INFO_ENABLE),
+> +	},
+> +};
+> +
+>  static const struct iio_chan_spec tmp007_channels[] = {
+>  	{
+>  		.type = IIO_TEMP,
+> @@ -175,6 +399,8 @@ static const struct iio_chan_spec tmp007_channels[] = {
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+>  				BIT(IIO_CHAN_INFO_SCALE),
+>  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> +		.event_spec = tmp007_die_event,
+> +		.num_event_specs = ARRAY_SIZE(tmp007_die_event),
+>  	},
+>  	{
+>  		.type = IIO_TEMP,
+> @@ -183,12 +409,18 @@ static const struct iio_chan_spec tmp007_channels[] = {
+>  		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
+>  				BIT(IIO_CHAN_INFO_SCALE),
+>  		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ),
+> -	}
+> +		.event_spec = tmp007_obj_event,
+> +		.num_event_specs = ARRAY_SIZE(tmp007_obj_event),
+> +	},
+>  };
+>  
+>  static const struct iio_info tmp007_info = {
+> -	.read_raw = tmp007_read_raw,
+> -	.write_raw = tmp007_write_raw,
+> +	.read_raw = &tmp007_read_raw,
+> +	.write_raw = &tmp007_write_raw,
+
+unrelated change, no need for & for a function
+
+> +	.read_event_config = &tmp007_read_event_config,
+> +	.write_event_config = &tmp007_write_event_config,
+> +	.read_event_value = &tmp007_read_thresh,
+> +	.write_event_value = &tmp007_write_thresh,
+>  	.attrs = &tmp007_attribute_group,
+>  	.driver_module = THIS_MODULE,
+>  };
+> @@ -214,7 +446,6 @@ static int tmp007_probe(struct i2c_client *client,
+>  	struct tmp007_data *data;
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+> -	u16  status;
+>  
+>  	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_WORD_DATA))
+>  		return -EOPNOTSUPP;
+> @@ -243,8 +474,8 @@ static int tmp007_probe(struct i2c_client *client,
+>  	/*
+>  	 * Set Configuration register:
+>  	 * 1. Conversion ON
+> -	 * 2. Comparator mode
+> -	 * 3. Transient correction enable
+> +	 * 2. Transient correction enable
+> +	 * 3. ALERT enable
+>  	 */
+>  
+>  	ret = i2c_smbus_read_word_swapped(data->client, TMP007_CONFIG);
+> @@ -252,7 +483,7 @@ static int tmp007_probe(struct i2c_client *client,
+>  		return ret;
+>  
+>  	data->config = ret;
+> -	data->config |= (TMP007_CONFIG_CONV_EN | TMP007_CONFIG_COMP_EN | TMP007_CONFIG_TC_EN);
+> +	data->config |= (TMP007_CONFIG_CONV_EN | TMP007_CONFIG_TC_EN | TMP007_CONFIG_ALERT_EN);
+>  
+>  	ret = i2c_smbus_write_word_swapped(data->client, TMP007_CONFIG,
+>  					data->config);
+> @@ -260,22 +491,39 @@ static int tmp007_probe(struct i2c_client *client,
+>  		return ret;
+>  
+>  	/*
+> +	 * Only the following flags can activate ALERT pin. Data conversion/validity flags
+> +	 * flags can still be polled for getting temperature data
+> +	 *
+>  	 * Set Status Mask register:
+> -	 * 1. Conversion ready enable
+> -	 * 2. Data valid enable
+> +	 * 1. Object temperature high limit enable
+> +	 * 2. Object temperature low limit enable
+> +	 * 3. TDIE temperature high limit enable
+> +	 * 4. TDIE temperature low limit enable
+>  	 */
+>  
+>  	ret = i2c_smbus_read_word_swapped(data->client, TMP007_STATUS_MASK);
+>  	if (ret < 0)
+>  		goto error_powerdown;
+>  
+> -	status = ret;
+> -	status |= (TMP007_STATUS_CONV_READY | TMP007_STATUS_DATA_VALID);
+> +	data->status_mask = ret;
+> +	data->status_mask |= (TMP007_STATUS_OHF | TMP007_STATUS_OLF
+> +				| TMP007_STATUS_LHF | TMP007_STATUS_LLF);
+>  
+> -	ret = i2c_smbus_write_word_swapped(data->client, TMP007_STATUS_MASK, status);
+> +	ret = i2c_smbus_write_word_swapped(data->client, TMP007_STATUS_MASK, data->status_mask);
+>  	if (ret < 0)
+>  		goto error_powerdown;
+>  
+> +	if (client->irq) {
+> +		ret = devm_request_threaded_irq(&client->dev, client->irq,
+> +				NULL, tmp007_interrupt_handler,
+> +				IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +				tmp007_id->name, indio_dev);
+> +		if (ret) {
+> +			dev_err(&client->dev, "irq request error %d\n", -ret);
+> +			goto error_powerdown;
+> +		}
+> +	}
+
+what happens when there is no IRQ? it would be nice to still use the 
+driver (without event capability)
+
+> +
+>  	return iio_device_register(indio_dev);
+>  
+>  error_powerdown:
+> @@ -312,6 +560,16 @@ static int tmp007_resume(struct device *dev)
+>  	return i2c_smbus_write_word_swapped(data->client, TMP007_CONFIG,
+>  			data->config | TMP007_CONFIG_CONV_EN);
+>  }
+> +#else
+
+this seems to be unrelated to the patch
+
+> +static int tmp007_suspend(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int tmp007_resume(struct device *dev)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  static SIMPLE_DEV_PM_OPS(tmp007_pm_ops, tmp007_suspend, tmp007_resume);
+> 
+
 -- 
-2.7.4
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
