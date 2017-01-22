@@ -1,7 +1,7 @@
 From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Subject: [PATCH v2 6/9] ARM: dts: add support for I2SE Duckbill 2 485
-Date: Sun, 22 Jan 2017 23:22:41 +0100
-Message-ID: <1485123764-14754-7-git-send-email-mhei@heimpold.de>
+Subject: [PATCH v2 5/9] ARM: dts: add support for I2SE Duckbill 2 boards
+Date: Sun, 22 Jan 2017 23:22:40 +0100
+Message-ID: <1485123764-14754-6-git-send-email-mhei@heimpold.de>
 References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
@@ -10,36 +10,37 @@ To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This machine is based on I2SE's Duckbill 2 board and features a
-RS-485 daugther board. This device is intended to be used for
-e.g. home automation purposes.
+This machine is an USB pen drive sized development board,
+based on NXP's i.MX28 CPU. In contrast to the previous
+model "Duckbill", the "Duckbill 2" series has internal
+eMMC storage.
 
 Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                 |   1 +
- arch/arm/boot/dts/imx28-duckbill-2-485.dts | 189 +++++++++++++++++++++++++++++
- 2 files changed, 190 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-485.dts
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/imx28-duckbill-2.dts | 183 +++++++++++++++++++++++++++++++++
+ 2 files changed, 184 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index fa4664b..e0f3f4e 100644
+index f10fe85..fa4664b 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
 @@ -475,6 +475,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
  	imx28-cfa10056.dtb \
  	imx28-cfa10057.dtb \
  	imx28-cfa10058.dtb \
-+	imx28-duckbill-2-485.dts \
- 	imx28-duckbill-2.dtb \
++	imx28-duckbill-2.dtb \
  	imx28-duckbill.dtb \
  	imx28-eukrea-mbmx283lc.dtb \
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-485.dts b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
+ 	imx28-eukrea-mbmx287lc.dtb \
+diff --git a/arch/arm/boot/dts/imx28-duckbill-2.dts b/arch/arm/boot/dts/imx28-duckbill-2.dts
 new file mode 100644
-index 0000000..a748968
+index 0000000..2510b20
 --- /dev/null
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-485.dts
-@@ -0,0 +1,189 @@
++++ b/arch/arm/boot/dts/imx28-duckbill-2.dts
+@@ -0,0 +1,183 @@
 +/*
 + * Copyright (C) 2015-2017 I2SE GmbH <info-eS4NqCHxEME@public.gmane.org>
 + * Copyright (C) 2016 Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
@@ -58,7 +59,7 @@ index 0000000..a748968
 +#include "imx28.dtsi"
 +
 +/ {
-+	model = "I2SE Duckbill 2 485";
++	model = "I2SE Duckbill 2";
 +	compatible = "i2se,duckbill", "fsl,imx28";
 +
 +	memory {
@@ -127,8 +128,6 @@ index 0000000..a748968
 +					fsl,pinmux-ids = <
 +						MX28_PAD_SAIF0_MCLK__GPIO_3_20
 +						MX28_PAD_SAIF0_LRCLK__GPIO_3_21
-+						MX28_PAD_I2C0_SCL__GPIO_3_24
-+						MX28_PAD_I2C0_SDA__GPIO_3_25
 +					>;
 +					fsl,drive-strength = <MXS_DRIVE_4mA>;
 +					fsl,voltage = <MXS_VOLTAGE_HIGH>;
@@ -139,6 +138,12 @@ index 0000000..a748968
 +
 +		apbx@80040000 {
 +			lradc@80050000 {
++				status = "okay";
++			};
++
++			i2c0: i2c@80058000 {
++				pinctrl-names = "default";
++				pinctrl-0 = <&i2c0_pins_a>;
 +				status = "okay";
 +			};
 +
@@ -216,16 +221,6 @@ index 0000000..a748968
 +			label = "duckbill:green:status";
 +			gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
 +			linux,default-trigger = "heartbeat";
-+		};
-+
-+		rs485-red {
-+			label = "duckbill:red:rs485";
-+			gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		rs485-green {
-+			label = "duckbill:green:rs485";
-+			gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
 +		};
 +	};
 +};
