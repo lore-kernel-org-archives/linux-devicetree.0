@@ -1,42 +1,144 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v2 2/3] ARM: dts: r7s72100: add ostm to device tree
-Date: Sun, 22 Jan 2017 14:13:08 +0000
-Message-ID: <SG2PR06MB11650A7C8014AB5880E1BED28A730@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170120212055.4157-1-chris.brandt@renesas.com>
- <20170120212055.4157-3-chris.brandt@renesas.com>
- <CAMuHMdXQCqs4bCR8o+BC5ak0rE64bQOEz65udFntcQSRkU6+cw@mail.gmail.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/6] rtc: sun6i: Expose the 32kHz oscillator
+Date: Sun, 22 Jan 2017 15:17:08 +0100
+Message-ID: <20170122141708.gccmxpeukuglal6i@piout.net>
+References: <cover.180d5ae6bc36ead9625d208824f5cbd7114cf92e.1484927680.git-series.maxime.ripard@free-electrons.com>
+ <f1b2a5053cf143dccf110ab0d40c082903a958a7.1484927680.git-series.maxime.ripard@free-electrons.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXQCqs4bCR8o+BC5ak0rE64bQOEz65udFntcQSRkU6+cw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCKYNX7Y3IMBBZP5SLCAKGQEAR5TMFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <f1b2a5053cf143dccf110ab0d40c082903a958a7.1484927680.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gR2VlcnQsDQoNCk9uIFN1bmRheSwgSmFudWFyeSAyMiwgMjAxNywgR2VlcnQgVXl0dGVy
-aG9ldmVuIHdyb3RlOg0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEw
-MC5kdHNpDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9yN3M3MjEwMC5kdHNpIGluZGV4IGQ1OTQ2
-ZGYuLjQ3YjIxNjUgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjdzNzIxMDAu
-ZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I3czcyMTAwLmR0c2kNCj4gPiBAQCAt
-NTA1LDQgKzUwNSwyMCBAQA0KPiA+ICAgICAgICAgICAgICAgICBjYXAtc2Rpby1pcnE7DQo+ID4g
-ICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNhYmxlZCI7DQo+ID4gICAgICAgICB9Ow0KPiA+
-ICsNCj4gPiArICAgICAgIG9zdG0wOiBvc3RtQGZjZmVjMDAwIHsNCj4gPiArICAgICAgICAgICAg
-ICAgY29tcGF0aWJsZSA9ICJyZW5lc2FzLHI3czcyMTAwLW9zdG0iLCAicmVuZXNhcyxvc3RtIjsN
-Cj4gPiArICAgICAgICAgICAgICAgcmVnID0gPDB4ZmNmZWMwMDAgMHgzMD47DQo+ID4gKyAgICAg
-ICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxMDIgSVJRX1RZUEVfRURHRV9SSVNJTkc+
-Ow0KPiA+ICsgICAgICAgICAgICAgICBjbG9ja3MgPSA8Jm1zdHA1X2Nsa3MgUjdTNzIxMDBfQ0xL
-X09TVE0wPjsNCj4gDQo+IE1pc3NpbmcgcG93ZXItZG9tYWlucyBwcm9wZXJ0eToNCj4gDQo+ICAg
-ICAgICAgcG93ZXItZG9tYWlucyA9IDwmY3BnX2Nsb2Nrcz47DQo+IA0KPiA+ICsgICAgICAgICAg
-ICAgICBzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsgICAgICAgfTsNCj4gPiArDQo+ID4gKyAg
-ICAgICBvc3RtMTogb3N0bUBmY2ZlYzQwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAicmVuZXNhcyxyN3M3MjEwMC1vc3RtIiwgInJlbmVzYXMsb3N0bSI7DQo+ID4gKyAgICAg
-ICAgICAgICAgIHJlZyA9IDwweGZjZmVjNDAwIDB4MzA+Ow0KPiA+ICsgICAgICAgICAgICAgICBp
-bnRlcnJ1cHRzID0gPEdJQ19TUEkgMTAzIElSUV9UWVBFX0VER0VfUklTSU5HPjsNCj4gPiArICAg
-ICAgICAgICAgICAgY2xvY2tzID0gPCZtc3RwNV9jbGtzIFI3UzcyMTAwX0NMS19PU1RNMT47DQo+
-IA0KPiBMaWtld2lzZS4NCg0KT0suIFRoYW5rIHlvdS4NCg0KDQo+IEJUVywgdGhleSdyZSBhbHNv
-IG1pc3NpbmcgZm9yIHRoZSBsYXN0IGFkZGVkIGRldmljZSBub2RlcyAoTU1DIGFuZCBTREhJKS4N
-Cg0KT0ssIEkgd2lsbCBzdWJtaXQgcGF0Y2hlcyBmb3IgdGhlbSBhcyB3ZWxsLg0KDQpUaGFuayB5
-b3UgZm9yIHRoZSByZXZpZXcuDQoNCkNocmlzDQoNCg==
+Hi,
+
+On 20/01/2017 at 16:56:38 +0100, Maxime Ripard wrote :
+> +
+> +	rtc = kzalloc(sizeof(*rtc), GFP_KERNEL);
+> +	if (!rtc)
+> +		pr_crit("Can't allocate RTC structure\n");
+> +
+
+The message is unnecessary but you probably want to stop there and
+return.
+
+> +	rtc->base = of_io_request_and_map(node, 0, of_node_full_name(node));
+> +	if (!rtc->base) {
+> +		pr_crit("Can't map RTC registers");
+> +		return;
+> +	}
+> +
+> +	rtc->int_osc = clk_hw_register_fixed_rate_with_accuracy(NULL,
+> +								"rtc-int-osc",
+> +								NULL, 0,
+> +								667000,
+> +								300000000);
+> +	if (IS_ERR(rtc->int_osc)) {
+> +		pr_crit("Couldn't register the internal oscillator\n");
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Due to the missing clocks property we had to express the
+> +	 * parenthood with the external oscillator that cannot fix (or
+> +	 * at least expect to have) in the old DTs, we have to be a
+> +	 * bit smart here.
+> +	 *
+> +	 * We deal with that by simply registering the internal
+> +	 * oscillator as our parent in all cases, and try to get the
+> +	 * external oscillator from the DT.
+> +	 *
+> +	 * In the case where we don't have it, of_clk_get_parent_name
+> +	 * will return NULL, which is ok, and of_clk_get_parent_count
+> +	 * will return 0, which is fine too. We will just register a
+> +	 * single parent, everything works.
+> +	 */
+> +	parents[0] = clk_hw_get_name(rtc->int_osc);
+> +	parents[1] = of_clk_get_parent_name(node, 0);
+> +
+> +	rtc->hw.init = &init;
+> +
+> +	init.parent_names = parents;
+> +	init.num_parents = of_clk_get_parent_count(node) + 1;
+> +	init.name = "rtc-osc";
+> +	of_property_read_string(node, "clock-output-names", &init.name);
+> +
+> +	rtc->losc = clk_register(NULL, &rtc->hw);
+> +	if (IS_ERR(rtc->losc)) {
+> +		pr_crit("Couldn't register the LOSC clock\n");
+> +		return;
+> +	}
+> +
+> +	of_clk_add_hw_provider(node, of_clk_hw_simple_get, &rtc->hw);
+> +
+> +	/* Yes, I know, this is ugly. */
+> +	sun6i_rtc = rtc;
+> +}
+> +CLK_OF_DECLARE_DRIVER(sun6i_rtc_clk, "allwinner,sun6i-a31-rtc",
+> +		      sun6i_rtc_clk_init);
+> +
+>  static irqreturn_t sun6i_rtc_alarmirq(int irq, void *id)
+>  {
+>  	struct sun6i_rtc_dev *chip = (struct sun6i_rtc_dev *) id;
+> @@ -349,22 +476,15 @@ static const struct rtc_class_ops sun6i_rtc_ops = {
+>  
+>  static int sun6i_rtc_probe(struct platform_device *pdev)
+>  {
+> -	struct sun6i_rtc_dev *chip;
+> -	struct resource *res;
+> +	struct sun6i_rtc_dev *chip = sun6i_rtc;
+>  	int ret;
+>  
+> -	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
+>  	if (!chip)
+> -		return -ENOMEM;
+> +		return -ENODEV;
+>  
+>  	platform_set_drvdata(pdev, chip);
+>  	chip->dev = &pdev->dev;
+>  
+> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	chip->base = devm_ioremap_resource(&pdev->dev, res);
+> -	if (IS_ERR(chip->base))
+> -		return PTR_ERR(chip->base);
+> -
+>  	chip->irq = platform_get_irq(pdev, 0);
+>  	if (chip->irq < 0) {
+>  		dev_err(&pdev->dev, "No IRQ resource\n");
+> @@ -404,6 +524,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
+>  	/* disable alarm wakeup */
+>  	writel(0, chip->base + SUN6I_ALARM_CONFIG);
+>  
+> +	clk_prepare_enable(chip->losc);
+> +
+>  	chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
+>  					&sun6i_rtc_ops, THIS_MODULE);
+>  	if (IS_ERR(chip->rtc)) {
+> -- 
+> git-series 0.8.11
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
