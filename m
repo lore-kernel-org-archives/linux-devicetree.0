@@ -1,59 +1,47 @@
-From: Michael Heimpold <mhei@heimpold.de>
-Subject: [PATCH v2 1/9] ARM: dts: imx28: add alternative pinmuxing for mmc2
-Date: Sun, 22 Jan 2017 23:22:36 +0100
-Message-ID: <1485123764-14754-2-git-send-email-mhei@heimpold.de>
-References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/3] watchdog: add DT bindings for Cortina
+	Gemini
+Date: Sun, 22 Jan 2017 23:38:26 +0100
+Message-ID: <20170122223826.29178-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, Michael Heimpold <michael.heimpold@i2se.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Janos Laube <janos.dev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Heimpold <michael.heimpold@i2se.com>
-
-Signed-off-by: Michael Heimpold <michael.heimpold@i2se.com>
----
- arch/arm/boot/dts/imx28.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 3aabf65..bc5cf41 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -581,6 +581,22 @@
- 					fsl,pull-up = <MXS_PULL_ENABLE>;
- 				};
- 
-+				mmc2_4bit_pins_b: mmc2-4bit@1 {
-+					reg = <1>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_SSP2_SCK__SSP2_SCK
-+						MX28_PAD_SSP2_MOSI__SSP2_CMD
-+						MX28_PAD_SSP2_MISO__SSP2_D0
-+						MX28_PAD_SSP2_SS0__SSP2_D3
-+						MX28_PAD_SSP2_SS1__SSP2_D1
-+						MX28_PAD_SSP2_SS2__SSP2_D2
-+						MX28_PAD_AUART1_RX__SSP2_CARD_DETECT
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_8mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_ENABLE>;
-+				};
-+
- 				mmc2_cd_cfg: mmc2-cd-cfg {
- 					fsl,pinmux-ids = <
- 						MX28_PAD_AUART1_RX__SSP2_CARD_DETECT
--- 
-2.7.4
+VGhpcyBhZGRzIERUIGJpbmRpbmdzIGZvciB0aGUgQ29ydGluYSBzeXN0ZW1zIEdlbWluaSBTb0MK
+d2F0Y2hkb2cgdGltZXIuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKU2lnbmVkLW9m
+Zi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPgotLS0KIC4uLi9i
+aW5kaW5ncy93YXRjaGRvZy9jb3J0aW5hLGdlbWluLXdhdGNoZG9nLnR4dCAgICAgICAgfCAxNyAr
+KysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cv
+Y29ydGluYSxnZW1pbi13YXRjaGRvZy50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvY29ydGluYSxnZW1pbi13YXRjaGRvZy50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvY29ydGluYSxnZW1pbi13
+YXRjaGRvZy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5kOGRm
+YjljYzQxY2YKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvd2F0Y2hkb2cvY29ydGluYSxnZW1pbi13YXRjaGRvZy50eHQKQEAgLTAsMCArMSwxNyBA
+QAorQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBTb0MgV2F0Y2hkb2cKKworUmVxdWlyZWQgcHJvcGVy
+dGllcyA6CistIGNvbXBhdGlibGUgOiBtdXN0IGJlICJjb3J0aW5hLGdlbWluaS13YXRjaGRvZyIK
+Ky0gcmVnIDogc2hhbGwgY29udGFpbiBiYXNlIHJlZ2lzdGVyIGxvY2F0aW9uIGFuZCBsZW5ndGgK
+Ky0gaW50ZXJydXB0cyA6IHNoYWxsIGNvbnRhaW4gdGhlIGludGVycnVwdCBmb3IgdGhlIHdhdGNo
+ZG9nCisKKy0gdGltZW91dC1zZWMgOiBzaGFsbCBjb250YWluIHRoZSBkZWZhdWx0IHdhdGNoZG9n
+IHRpbWVvdXQgaW4gc2Vjb25kcywKKyAgICAgICAgICAgICAgICBpZiB1bnNldCwgdGhlIGRlZmF1
+bHQgdGltZW91dCBpcyAxMyBzZWNvbmRzCisKK0V4YW1wbGU6CisKK3dhdGNoZG9nQDQxMDAwMDAw
+IHsKKwljb21wYXRpYmxlID0gImNvcnRpbmEsZ2VtaW5pLXdhdGNoZG9nIjsKKwlyZWcgPSA8MHg0
+MTAwMDAwMCAweDEwMDA+OworCWludGVycnVwdHMgPSA8MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsK
+K307Ci0tIAoyLjkuMwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpvcGVud3J0LWRldmVsIG1haWxpbmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53
+cnQub3JnCmh0dHBzOi8vbGlzdHMub3BlbndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZv
+L29wZW53cnQtZGV2ZWwK
