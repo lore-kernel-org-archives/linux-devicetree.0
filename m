@@ -1,65 +1,48 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH 2/3] pinctrl: meson: meson-gxl: add the pwm_ao_b pin
-Date: Sun, 22 Jan 2017 22:05:27 +0100
-Message-ID: <20170122210528.892-3-martin.blumenstingl@googlemail.com>
-References: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, linux-amlogic@lists.infradead.org, linus.walleij@linaro.org, khilman@baylibre.com, carlo@caione.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, will.deacon@arm.com, catalin.marinas@arm.com, mark.rutland@arm.com, robh+dt@kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+From: Rask Ingemann Lambertsen <rask@formelder.dk>
+Subject: [PATCH] ARM: dts: tegra: =?iso-8859-1?Q?Fi?=
+ =?iso-8859-1?Q?x_missing_card_detection_in_Trimslice_=B5SD?= card slot
+Date: Sun, 22 Jan 2017 22:17:48 +0100
+Message-ID: <20170122211747.exirq4nvb2xj6dk6@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, linux-tegra@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the pwm_ao_b pin. Unfortunately the registers for
-the pwm_ao pins are not documented at all. The source for the pwm_ao_b
-pin from this patch is the Khadas VIM GPL kernel source, which sets bit
-3 and unsets bits 4 and 31 to enable the PWM LEDs.
+Card insertion and removal currently goes undetected. AFAIK there's no
+way to generate interrupts on card changes in this slot, so use polling.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
 ---
- drivers/pinctrl/meson/pinctrl-meson-gxl.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/arm/boot/dts/tegra20-trimslice.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-index 25694f7094c7..6ff321a7366d 100644
---- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-+++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-@@ -222,6 +222,8 @@ static const unsigned int uart_rts_ao_b_pins[]	= { PIN(GPIOAO_3, 0) };
+diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
+index 381747f..87b07fb 100644
+--- a/arch/arm/boot/dts/tegra20-trimslice.dts
++++ b/arch/arm/boot/dts/tegra20-trimslice.dts
+@@ -366,6 +366,7 @@
  
- static const unsigned int remote_input_ao_pins[] = {PIN(GPIOAO_7, 0) };
+ 	sdhci@c8000000 {
+ 		status = "okay";
++		broken-cd;
+ 		bus-width = <4>;
+ 	};
  
-+static const unsigned int pwm_ao_b_pins[]	= { PIN(GPIOAO_9, 0) };
-+
- static struct meson_pmx_group meson_gxl_periphs_groups[] = {
- 	GPIO_GROUP(GPIOZ_0, EE_OFF),
- 	GPIO_GROUP(GPIOZ_1, EE_OFF),
-@@ -418,6 +420,7 @@ static struct meson_pmx_group meson_gxl_aobus_groups[] = {
- 	GROUP(uart_cts_ao_b,	0,	8),
- 	GROUP(uart_rts_ao_b,	0,	7),
- 	GROUP(remote_input_ao,	0,	0),
-+	GROUP(pwm_ao_b,		0,	3),
- };
- 
- static const char * const gpio_periphs_groups[] = {
-@@ -523,6 +526,10 @@ static const char * const remote_input_ao_groups[] = {
- 	"remote_input_ao",
- };
- 
-+static const char * const pwm_ao_b_groups[] = {
-+	"pwm_ao_b",
-+};
-+
- static struct meson_pmx_func meson_gxl_periphs_functions[] = {
- 	FUNCTION(gpio_periphs),
- 	FUNCTION(emmc),
-@@ -544,6 +551,7 @@ static struct meson_pmx_func meson_gxl_aobus_functions[] = {
- 	FUNCTION(uart_ao),
- 	FUNCTION(uart_ao_b),
- 	FUNCTION(remote_input_ao),
-+	FUNCTION(pwm_ao_b),
- };
- 
- static struct meson_bank meson_gxl_periphs_banks[] = {
 -- 
-2.11.0
+2.10.2
 
+-- 
+Rask Ingemann Lambertsen
