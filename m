@@ -1,44 +1,152 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to
- create devices
-Date: Sat, 21 Jan 2017 13:51:57 -0600
-Message-ID: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
-References: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
- <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw@mail.gmail.com> <3da6854d-8361-1724-2a8a-36f28449733e@nokia.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: add possibility to select drdy
+ pin
+Date: Sun, 22 Jan 2017 16:20:34 +0100
+Message-ID: <20170122152033.o5crgdbsemdmv6rk@lorenzobianconi.net>
+References: <20170122103052.8769-1-lorenzo.bianconi@st.com>
+ <20170122103052.8769-2-lorenzo.bianconi@st.com>
+ <3ca71ff6-fa9e-449a-8a21-7607ca2c2c55@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3da6854d-8361-1724-2a8a-36f28449733e-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3ca71ff6-fa9e-449a-8a21-7607ca2c2c55-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 11:38 AM, Alexander Sverdlin
-<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
-> Hello Rob,
->
-> On 27/10/16 15:00, Rob Herring wrote:
->>> @@ -534,15 +535,15 @@ static int of_platform_notify(struct notifier_block *nb,
->>>
->>>                 /* pdev_parent may be NULL when no bus platform device */
->>>                 pdev_parent = of_find_device_by_node(rd->dn->parent);
->>> -               pdev = of_platform_device_create(rd->dn, NULL,
->>> -                               pdev_parent ? &pdev_parent->dev : NULL);
->>> +               ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
->>> +                                            NULL, pdev_parent ?
->>> +                                            &pdev_parent->dev : NULL, true);
->> I think this should be of_platform_default_populate() instead.
->
-> I've just tested: it cannot be. It calls of_platform_populate(), which ignores "status" property.
-> This not only brakes half of the unit tests, but also would change the existing behavior of
-> overlays (they will completely ignore "status" too).
+Hi Jonathan,
 
-That's a bug. I assume that's only at the 1st level or things would be
-completely broken.
+thanks for the review :)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 22/01/17 10:30, Lorenzo Bianconi wrote:
+> > Add capability to route data ready signal on pin 1 or pin 2 of the package
+> > 
+> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> > ---
+> >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 66 +++++++++++++++++++++++++---
+> >  1 file changed, 60 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > index f869dfa..bc50164 100644
+> > --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> > @@ -37,11 +37,14 @@
+> >  #include <linux/iio/iio.h>
+> >  #include <linux/iio/sysfs.h>
+> >  
+> > +#include <linux/platform_data/st_sensors_pdata.h>
+> > +
+> >  #include "st_lsm6dsx.h"
+> >  
+> >  #define ST_LSM6DSX_REG_ACC_DEC_MASK		GENMASK(2, 0)
+> >  #define ST_LSM6DSX_REG_GYRO_DEC_MASK		GENMASK(5, 3)
+> >  #define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+> > +#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+> >  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+> >  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+> >  #define ST_LSM6DSX_REG_RESET_ADDR		0x12
+> > @@ -532,10 +535,63 @@ static const struct iio_info st_lsm6dsx_gyro_info = {
+> >  
+> >  static const unsigned long st_lsm6dsx_available_scan_masks[] = {0x7, 0x0};
+> >  
+> > +#ifdef CONFIG_OF
+> Perhaps rely on the -ENOSYS return from
+> of_property_read_u32 stub instead of having the ifdefs around something so
+> simple.
+
+ack, will do in v2
+
+> 
+> > +static int st_lsm6dsx_of_get_drdy_pin(struct st_lsm6dsx_hw *hw, int *drdy_pin)
+> > +{
+> > +	struct device_node *np = hw->dev->of_node;
+> > +	int err;
+> > +
+> > +	if (!np)
+> > +		return -EINVAL;
+> > +
+> > +	err = of_property_read_u32(np, "st,drdy-int-pin", drdy_pin);
+> > +	if (err == -ENODATA) {
+> > +		/* if the property has not been specified use default value */
+> > +		*drdy_pin = 1;
+> > +		err = 0;
+> > +	}
+> > +
+> > +	return err;
+> > +}
+> > +#else
+> > +static int st_lsm6dsx_of_get_drdy_pin(struct st_lsm6dsx_hw *hw, int *drdy_pin)
+> > +{
+> > +	return -EINVAL;
+> > +}
+> > +#endif /* CONFIG_OF */
+> > +
+> > +static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+> > +{
+> > +	int err = 0, drdy_pin;
+> > +
+> > +	if (st_lsm6dsx_of_get_drdy_pin(hw, &drdy_pin) < 0) {
+> > +		struct st_sensors_platform_data *pdata;
+> > +		struct device *dev = hw->dev;
+> > +
+> > +		pdata = (struct st_sensors_platform_data *)dev->platform_data;
+> > +		drdy_pin = pdata ? pdata->drdy_int_pin : 1;
+> > +	}
+> > +
+> > +	switch (drdy_pin) {
+> > +	case 1:
+> > +		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
+> > +		break;
+> > +	case 2:
+> > +		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
+> > +		break;
+> > +	default:
+> > +		dev_err(hw->dev, "unsupported data ready pin\n");
+> > +		err = -EINVAL;
+> > +		break;
+> > +	}
+> > +
+> > +	return err;
+> > +}
+> > +
+> >  static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+> >  {
+> > +	u8 data, drdy_int_reg;
+> >  	int err;
+> > -	u8 data;
+> >  
+> >  	data = ST_LSM6DSX_REG_RESET_MASK;
+> >  	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_RESET_ADDR, sizeof(data),
+> > @@ -563,14 +619,12 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+> >  		return err;
+> >  
+> >  	/* enable FIFO watermak interrupt */
+> > -	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT1_ADDR,
+> > -					 ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+> > +	err = st_lsm6dsx_get_drdy_reg(hw, &drdy_int_reg);
+> >  	if (err < 0)
+> >  		return err;
+> >  
+> > -	/* redirect INT2 on INT1 */
+> > -	return st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT2_ON_INT1_ADDR,
+> > -					  ST_LSM6DSX_REG_INT2_ON_INT1_MASK, 1);
+> Does removing this potentially break existing setups?
+> 
+
+No, it doesn't since INT2 was not configured yet
+
+> > +	return st_lsm6dsx_write_with_mask(hw, drdy_int_reg,
+> > +					  ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+> >  }
+> >  
+> >  static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
+> > 
+> 
+
+Regards,
+Lorenzo
+
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch; unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp; umount; make clean; sleep
