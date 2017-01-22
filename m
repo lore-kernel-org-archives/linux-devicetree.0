@@ -1,45 +1,78 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] hwmon: (lm70) Add support for TI TMP122/124
-Date: Sat, 21 Jan 2017 16:01:10 -0800
-Message-ID: <34100f4e-abbb-6bf0-c5a3-f4c2963b3d31@roeck-us.net>
-References: <20170121192010.30681-1-f.fainelli@gmail.com>
- <20170121192010.30681-3-f.fainelli@gmail.com>
- <8ada15e2-2b99-02c3-e731-c469a3d6c3bf@roeck-us.net>
- <C0A9E7E0-D4AB-4154-BC47-656F8E1FE77E@gmail.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 6/6] dt-bindings: mt8173-mtu3: add reference clock
+Date: Sun, 22 Jan 2017 09:49:40 +0800
+Message-ID: <1485049780.10292.78.camel@mhfsdcap03>
+References: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
+         <1484719707-12107-6-git-send-email-chunfeng.yun@mediatek.com>
+         <20170121201155.cqcihopdc3kjyfi6@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <C0A9E7E0-D4AB-4154-BC47-656F8E1FE77E@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170121201155.cqcihopdc3kjyfi6@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2017 03:11 PM, Florian Fainelli wrote:
-> On January 21, 2017 12:25:21 PM PST, Guenter Roeck <linux@roeck-us.net> wrote:
->> On 01/21/2017 11:20 AM, Florian Fainelli wrote:
->>> Add support for Texas Instruments TMP122/124 which are nearly
->> identical to
->>> their TMP121/123 except that they also support programmable
->> temperature
->>> thresholds.
->>>
->>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>
->> Applied to -next.
->
-> Thanks was fast, thanks!
->
+Hi,
 
-Lucky you, the patches caught up with me me while I was going through the backlog.
+On Sat, 2017-01-21 at 14:11 -0600, Rob Herring wrote:
+> On Wed, Jan 18, 2017 at 02:08:27PM +0800, Chunfeng Yun wrote:
+> > add a reference clock for compatibility
+> 
+> Why? This block suddenly has 2 clocks instead of 1?
+In fact, there is a reference clock which comes from 26M oscillator
+directly. I ignore it because it is a fixed-clock in DTS, and always
+turned on for mt8173. But later, I find that I made a mistake before
+when I bring up it on a new platform whose reference clock comes from
+PLL, and need control it. So here add it, no matter it is a fixed-clock
+or not.
 
->>
->> Any plans to add support for the thresholds ?
->
-> Yes, as mentioned in the cover letter, need to get SPI_3WIRE working with the SPI controller (spi-ep93xx) to verify the thresholds do work.
->
-Guess the hint is that one should read the cover letter :-)
-
-Guenter
-
+> 
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/usb/mt8173-mtu3.txt        |   10 +++++-----
+> >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> > index e049d19..8c976cd 100644
+> > --- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> > +++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
+> > @@ -10,7 +10,7 @@ Required properties:
+> >   - vusb33-supply : regulator of USB avdd3.3v
+> >   - clocks : a list of phandle + clock-specifier pairs, one for each
+> >  	entry in clock-names
+> > - - clock-names : must contain "sys_ck" for clock of controller;
+> > + - clock-names : must contain "sys_ck" and "ref_ck" for clock of controller;
+> >  	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
+> >  	depends on "mediatek,enable-wakeup"
+> >   - phys : a list of phandle + phy specifier pairs
+> > @@ -56,10 +56,10 @@ ssusb: usb@11271000 {
+> >  	phys = <&phy_port0 PHY_TYPE_USB3>,
+> >  	       <&phy_port1 PHY_TYPE_USB2>;
+> >  	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> > -	clocks = <&topckgen CLK_TOP_USB30_SEL>,
+> > +	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
+> >  		 <&pericfg CLK_PERI_USB0>,
+> >  		 <&pericfg CLK_PERI_USB1>;
+> > -	clock-names = "sys_ck",
+> > +	clock-names = "sys_ck", "ref_ck",
+> >  		      "wakeup_deb_p0",
+> >  		      "wakeup_deb_p1";
+> >  	vusb33-supply = <&mt6397_vusb_reg>;
+> > @@ -79,8 +79,8 @@ ssusb: usb@11271000 {
+> >  		reg-names = "mac";
+> >  		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+> >  		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+> > -		clocks = <&topckgen CLK_TOP_USB30_SEL>;
+> > -		clock-names = "sys_ck";
+> > +		clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
+> > +		clock-names = "sys_ck", "ref_ck";
+> >  		vusb33-supply = <&mt6397_vusb_reg>;
+> >  		status = "disabled";
+> >  	};
+> > -- 
+> > 1.7.9.5
+> > 
