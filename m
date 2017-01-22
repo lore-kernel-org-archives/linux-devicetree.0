@@ -1,69 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 11/22] ARM: dts: add top-level DT bindings
-	for Cortina Gemini
-Date: Sun, 22 Jan 2017 13:22:19 +0100
-Message-ID: <20170122122219.10611-1-linus.walleij@linaro.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] devicetree: add documentation for MAX30102 oximeter
+Date: Sun, 22 Jan 2017 12:22:57 +0000
+Message-ID: <e4840c7d-06b1-2d36-4da7-05581690fd73@kernel.org>
+References: <20170120054100.902-1-matt@ranostay.consulting>
+ <20170120054100.902-2-matt@ranostay.consulting>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Janos Laube <janos.dev@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120054100.902-2-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHRoZSB0b3AgbGV2ZWwgU29DIGJpbmRpbmdzIGZvciBDb3J0aW5hIHN5c3RlbXMg
-R2VtaW5pCnBsYXRmb3Jtcy4KCkNjOiBKYW5vcyBMYXViZSA8amFub3MuZGV2QGdtYWlsLmNvbT4K
-Q2M6IFBhdWxpdXMgWmFsZWNrYXMgPHBhdWxpdXMuemFsZWNrYXNAZ21haWwuY29tPgpDYzogSGFu
-cyBVbGxpIEtyb2xsIDx1bGxpLmtyb2xsQGdvb2dsZW1haWwuY29tPgpDYzogRmxvcmlhbiBGYWlu
-ZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+CkNjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZwpTaWduZWQtb2ZmLWJ5OiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+
-Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9nZW1pbmkudHh0IHwg
-NTggKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgNTggaW5zZXJ0aW9u
-cygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vZ2VtaW5pLnR4dAoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vZ2VtaW5pLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9hcm0vZ2VtaW5pLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwMDAwMDAu
-LjI4Y2U3ZGIwY2ZkMwotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9hcm0vZ2VtaW5pLnR4dApAQCAtMCwwICsxLDU4IEBACitDb3J0aW5hIHN5c3Rl
-bXMgR2VtaW5pIHBsYXRmb3JtcworCitUaGUgZ2VtaW5pIFNvQyBpcyBhbiBBUk12NCBTb0MgZnJv
-bSBDb3J0aW5hIHN5c3RlbXMgdXNlZCBmb3IgTkFTCithbmQgc2ltaWxhciB1c2VjYXNlcy4KKwor
-UmVxdWlyZWQgcHJvcGVydGllcyAoaW4gcm9vdCBub2RlKToKKwljb21wYXRpYmxlID0gImNvcnRp
-bmEsZ2VtaW5pIjsKKworUmVxdWlyZWQgbm9kZXM6CisKKy0gc3lzY29uOiB0aGUgcm9vdCBub2Rl
-IG11c3QgaGF2ZSBhIHN5c3RlbSBjb250cm9sbGVyIG5vZGUgcG9pbnRpbmcgdG8gdGhlCisgIGds
-b2JhbCBjb250cm9sIHJlZ2lzdGVycywgd2l0aCB0aGUgY29tcGF0aWJsZSBzdHJpbmcKKyAgImNv
-cnRpbmEsZ2VtaW5pLXN5c2NvbiIsICJzeXNjb24iOworCistIHRpbWVyOiB0aGUgcm9vdCBub2Rl
-IG11c3QgaGF2ZSBhIHRpbWVyIG5vZGUgcG9pbnRpbmcgdG8gdGhlIFNvQyB0aW1lcgorICBibG9j
-aywgd2l0aCB0aGUgY29tcGF0aWJsZSBzdHJpbmcgImNvcnRpbmEsZ2VtaW5pLXRpbWVyIgorICBT
-ZWU6IGNsb2Nrc291cmNlL2NvcnRpbmEsZ2VtaW5pLXRpbWVyLnR4dAorCistIGludGNvbjogdGhl
-IHJvb3Qgbm9kZSBtdXN0IGhhdmUgYW4gaW50ZXJydXB0IGNvbnRyb2xsZXIgbm9kZSBwb2ludGlu
-ZyB0bworICB0aGUgU29DIGludGVycnVwdCBjb250cm9sbGVyIGJsb2NrLCB3aXRoIHRoZSBjb21w
-YXRpYmxlIHN0cmluZworICAiY29ydGluYSxnZW1pbmktaW50ZXJydXB0LWNvbnRyb2xsZXIiCisg
-IFNlZSBpbnRlcnJ1cHQtY29udHJvbGxlci9jb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJv
-bGxlci50eHQKKworRXhhbXBsZToKKworLyB7CisJaW50ZXJydXB0LXBhcmVudCA9IDwmaW50Y29u
-PjsKKworCXN5c2Nvbjogc3lzY29uQDQwMDAwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJjb3J0aW5h
-LGdlbWluaS1zeXNjb24iLCAic3lzY29uIjsKKwkJcmVnID0gPDB4NDAwMDAwMDAgMHgxMDAwPjsK
-Kwl9OworCisJdGltZXJANDMwMDAwMDAgeworCQljb21wYXRpYmxlID0gImNvcnRpbmEsZ2VtaW5p
-LXRpbWVyIjsKKwkJcmVnID0gPDB4NDMwMDAwMDAgMHgxMDAwPjsKKwkJaW50ZXJydXB0LXBhcmVu
-dCA9IDwmaW50Y29uPjsKKwkJaW50ZXJydXB0cyA9IDwxNCBJUlFfVFlQRV9FREdFX1JJU0lORz4s
-IC8qIFRpbWVyIDEgKi8KKwkJCSAgIDwxNSBJUlFfVFlQRV9FREdFX1JJU0lORz4sIC8qIFRpbWVy
-IDIgKi8KKwkJCSAgIDwxNiBJUlFfVFlQRV9FREdFX1JJU0lORz47IC8qIFRpbWVyIDMgKi8KKwkJ
-c3lzY29uID0gPCZzeXNjb24+OworCX07CisKKwl1YXJ0MDogc2VyaWFsQDQyMDAwMDAwIHsKKwkJ
-Y29tcGF0aWJsZSA9ICJuczE2NTUwYSI7CisJCXJlZyA9IDwweDQyMDAwMDAwIDB4MTAwPjsKKwkJ
-Y2xvY2stZnJlcXVlbmN5ID0gPDQ4MDAwMDAwPjsKKwkJaW50ZXJydXB0cyA9IDwxOCBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsKKwkJcmVnLXNoaWZ0ID0gPDI+OworCX07CisKKwlpbnRjb246IGludGVy
-cnVwdC1jb250cm9sbGVyQDQ4MDAwMDAwIHsKKwkJY29tcGF0aWJsZSA9ICJjb3J0aW5hLGdlbWlu
-aS1pbnRlcnJ1cHQtY29udHJvbGxlciI7CisJCXJlZyA9IDwweDQ4MDAwMDAwIDB4MTAwMD47CisJ
-CWludGVycnVwdC1jb250cm9sbGVyOworCQkjaW50ZXJydXB0LWNlbGxzID0gPDI+OworCX07Cit9
-OwotLSAKMi45LjMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18Kb3BlbndydC1kZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZlbEBsaXN0cy5vcGVud3J0
-Lm9yZwpodHRwczovL2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9v
-cGVud3J0LWRldmVsCg==
+On 20/01/17 05:40, Matt Ranostay wrote:
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/health/max30102.txt    | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/health/max30102.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/health/max30102.txt b/Documentation/devicetree/bindings/iio/health/max30102.txt
+> new file mode 100644
+> index 000000000000..c93d1bb25597
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/health/max30102.txt
+> @@ -0,0 +1,30 @@
+> +Maxim MAX30102 heart rate and pulse oximeter sensor
+> +
+> +* https://datasheets.maximintegrated.com/en/ds/MAX30102.pdf
+> +
+> +Required properties:
+> +  - compatible: must be "maxim,max30102"
+> +  - reg: the I2C address of the sensor
+> +  - interrupt-parent: should be the phandle for the interrupt controller
+> +  - interrupts: the sole interrupt generated by the device
+> +
+> +  Refer to interrupt-controller/interrupts.txt for generic
+> +  interrupt client node bindings.
+> +
+> +Optional properties:
+> +  - maxim,red-led-current-microamp: configuration for RED LED current
+> +  - maxim,ir-led-current-microamp: configuration for IR LED current
+> +
+> +    Note that each step is approximately 200 microamps, ranging from 0 uA to
+> +    50800 uA.
+Are these due to the hardware present, or are we looking at something that should
+be controllable from userspace?
+> +
+> +Example:
+> +
+> +max30100@57 {
+> +	compatible = "maxim,max30102";
+> +	reg = <57>;
+> +	maxim,red-led-current-microamp = <7000>;
+> +	maxim,ir-led-current-microamp = <7000>;
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <16 2>;
+> +};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
