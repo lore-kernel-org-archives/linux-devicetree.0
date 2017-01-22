@@ -1,32 +1,62 @@
-From: kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH v2 04/14] GPIO: Add gpio-ingenic driver
-Date: Mon, 23 Jan 2017 01:49:25 +0800
-Message-ID: <201701230130.T42P6EcW%fengguang.wu@intel.com>
-References: <20170122144947.16158-5-paul@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170122144947.16158-5-paul@crapouillou.net>
-Sender: linux-mmc-owner@vger.kernel.org
-Cc: kbuild-all@01.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com, Paul Cercueil <paul@crapouillou.net>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v4 5/9] ARM64: dts: meson-gxbb-wetek-hub: add the ethernet PHY's reset GPIO
+Date: Sun, 22 Jan 2017 19:10:24 +0100
+Message-ID: <20170122181028.5014-6-martin.blumenstingl@googlemail.com>
+References: <20170120152232.13943-1-martin.blumenstingl@googlemail.com>
+ <20170122181028.5014-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170122181028.5014-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+This resets the ethernet PHY during boot to get the PHY into a "clean"
+state.
+While here also specify the phy-handle of the ethmac node to make the
+PHY configuration similar to the one we have on GXL devices. This will
+allow us to specify OF-properties for the PHY itself.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v4.10-rc4 next-20170120]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Paul-Cercueil/Ingenic-JZ4740-JZ4780-pinctrl-driver/20170122-232326
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/gpio/gpio-ingenic.c:101:2-3: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ .../boot/dts/amlogic/meson-gxbb-wetek-hub.dts      | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+index 6e35265dc2fc..ad9eb3efa3ec 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek-hub.dts
+@@ -64,3 +64,26 @@
+ &cvbs_connector {
+ 	status = "disabled";
+ };
++
++&ethmac {
++	status = "okay";
++	pinctrl-0 = <&eth_rgmii_pins>;
++	pinctrl-names = "default";
++	phy-handle = <&eth_phy0>;
++	phy-mode = "rgmii";
++
++	snps,reset-gpio = <&gpio GPIOZ_14 0>;
++	snps,reset-delays-us = <0 10000 1000000>;
++	snps,reset-active-low;
++
++	mdio {
++		compatible = "snps,dwmac-mdio";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		eth_phy0: ethernet-phy@0 {
++			/* Realtek RTL8211F (0x001cc916) */
++			reg = <0>;
++		};
++	};
++};
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
