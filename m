@@ -1,177 +1,75 @@
 From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Subject: [PATCH v2 4/9] ARM: dts: imx28-duckbill: enable spi, i2c and uart pins
-Date: Sun, 22 Jan 2017 23:22:39 +0100
-Message-ID: <1485123764-14754-5-git-send-email-mhei@heimpold.de>
-References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
+Subject: [PATCH v2 0/9] ARM: dts: support I2SE Duckbill devices
+Date: Sun, 22 Jan 2017 23:22:35 +0100
+Message-ID: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-While at tweak some more settings for the default product:
-- enable lradc
-- adjust USB dr mode
-- add default triggers for LEDs
-- get rid of regulators simple-bus container
-- adjust phy reset duration
+This series updates/adds Device Tree support for I2SE's Duckbill
+device family.
 
-Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
----
- arch/arm/boot/dts/imx28-duckbill.dts | 81 +++++++++++++++++++++++++-----------
- 1 file changed, 56 insertions(+), 25 deletions(-)
+The Duckbill devices are small, pen-drive sized boards based on
+NXP's i.MX28 SoC. While the initial variants (Duckbill series) were
+equipped with a micro SD card slot only, the latest generation
+(Duckbill 2 series) have an additional internal eMMC onboard.
 
-diff --git a/arch/arm/boot/dts/imx28-duckbill.dts b/arch/arm/boot/dts/imx28-duckbill.dts
-index ce1a7ef..3e4385d 100644
---- a/arch/arm/boot/dts/imx28-duckbill.dts
-+++ b/arch/arm/boot/dts/imx28-duckbill.dts
-@@ -1,5 +1,6 @@
- /*
-- * Copyright (C) 2013 Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-+ * Copyright (C) 2013-2014,2016 Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-+ * Copyright (C) 2015-2017 I2SE GmbH <info-eS4NqCHxEME@public.gmane.org>
-  *
-  * The code contained herein is licensed under the GNU General Public
-  * License. You may obtain a copy of the GNU General Public License
-@@ -10,6 +11,7 @@
-  */
- 
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "imx28.dtsi"
- 
- / {
-@@ -32,6 +34,13 @@
- 				status = "okay";
- 			};
- 
-+			ssp2: ssp@80014000 {
-+				compatible = "fsl,imx28-spi";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&spi2_pins_a>;
-+				status = "okay";
-+			};
-+
- 			pinctrl@80018000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&hog_pins_a>;
-@@ -39,14 +48,24 @@
- 				hog_pins_a: hog@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
--						MX28_PAD_SSP0_DATA7__GPIO_2_7 /* PHY Reset */
-+						MX28_PAD_LCD_D17__GPIO_1_17    /* Revision detection */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				mac0_phy_reset_pin: mac0-phy-reset@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_SSP0_DATA7__GPIO_2_7    /* PHY Reset */
- 					>;
- 					fsl,drive-strength = <MXS_DRIVE_4mA>;
- 					fsl,voltage = <MXS_VOLTAGE_HIGH>;
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
--				led_pins_a: led_gpio@0 {
-+				led_pins: leds@0 {
- 					reg = <0>;
- 					fsl,pinmux-ids = <
- 						MX28_PAD_AUART1_RX__GPIO_3_4
-@@ -60,6 +79,22 @@
- 		};
- 
- 		apbx@80040000 {
-+			lradc@80050000 {
-+				status = "okay";
-+			};
-+
-+			i2c0: i2c@80058000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&i2c0_pins_a>;
-+				status = "okay";
-+			};
-+
-+			auart0: serial@8006a000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&auart0_2pins_a>;
-+				status = "okay";
-+			};
-+
- 			duart: serial@80074000 {
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&duart_pins_a>;
-@@ -75,47 +110,43 @@
- 	ahb@80080000 {
- 		usb0: usb@80080000 {
- 			status = "okay";
-+			dr_mode = "peripheral";
- 		};
- 
- 		mac0: ethernet@800f0000 {
- 			phy-mode = "rmii";
- 			pinctrl-names = "default";
--			pinctrl-0 = <&mac0_pins_a>;
-+			pinctrl-0 = <&mac0_pins_a>, <&mac0_phy_reset_pin>;
- 			phy-supply = <&reg_3p3v>;
- 			phy-reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
--			phy-reset-duration = <100>;
-+			phy-reset-duration = <25>;
- 			status = "okay";
- 		};
- 	};
- 
--	regulators {
--		compatible = "simple-bus";
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		reg_3p3v: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "3P3V";
--			regulator-min-microvolt = <3300000>;
--			regulator-max-microvolt = <3300000>;
--			regulator-always-on;
--		};
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
- 	};
- 
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
--		pinctrl-0 = <&led_pins_a>;
-+		pinctrl-0 = <&led_pins>;
- 
--		status {
--			label = "duckbill:green:status";
--			gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
--		};
--
--		failure {
-+		status-red {
- 			label = "duckbill:red:status";
- 			gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		status-green {
-+			label = "duckbill:green:status";
-+			gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
- 		};
- 	};
- };
+Both device generations consists of four "family members":
+
+- Duckbill/Duckbill 2: generic board, intended to be used as
+  baseboard for custom designs and/or as development board
+
+- Duckbill EnOcean/Duckbill 2 EnOcean: come with an EnOcean
+  daugther board equipped with the popular TCM310 module
+
+- Duckbill 485/Duckbill 2 485: as the name implies, these
+  devices are intended to be used as Ethernet - RS485 converters
+
+- Duckbill SPI/Duckbill 2 SPI: not sold separately, but used
+  in I2SE's development kits for Green PHY HomePlug Powerline
+  communication
+
+Because the Duckbill series is EOL, this patch series only adds
+support for the latest Duckbill 2 series devices. However,
+support for the generic Duckbill board was already mainline,
+so update it to match vendor tree DT.
+
+Changes since v1:
+- dropped device tree include (shared common definitions)
+- added patch 9 (DT documentation file)
+- applied reviewers hints
+- rebased
+
+Michael Heimpold (9):
+  ARM: dts: imx28: add alternative pinmuxing for mmc2
+  ARM: dts: imx28: rename mmc2_sck_cfg to prepare for an alternative
+    muxing setup
+  ARM: dts: imx28: add alternative muxing for mmc2_sck_cfg
+  ARM: dts: imx28-duckbill: enable spi, i2c and uart pins
+  ARM: dts: add support for I2SE Duckbill 2 boards
+  ARM: dts: add support for I2SE Duckbill 2 485
+  ARM: dts: add support for I2SE Duckbill 2 EnOcean
+  ARM: dts: add support for I2SE Duckbill 2 SPI
+  Documentation: DT: add entries for I2SE boards
+
+ Documentation/devicetree/bindings/arm/i2se.txt |  22 +++
+ arch/arm/boot/dts/Makefile                     |   4 +
+ arch/arm/boot/dts/imx28-duckbill-2-485.dts     | 189 +++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill-2-enocean.dts | 220 +++++++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill-2-spi.dts     | 199 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill-2.dts         | 183 ++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill.dts           |  81 ++++++---
+ arch/arm/boot/dts/imx28-m28cu3.dts             |   2 +-
+ arch/arm/boot/dts/imx28.dtsi                   |  28 +++-
+ 9 files changed, 901 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-485.dts
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-spi.dts
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2.dts
+
 -- 
 2.7.4
 
