@@ -1,55 +1,91 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 06/22] gpio: add DT bindings for Cortina
-	Gemini GPIO
-Date: Sun, 22 Jan 2017 13:18:30 +0100
-Message-ID: <20170122121830.10336-1-linus.walleij@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 08/22] rtc: Add device tree probing to the Gemini driver
+Date: Sun, 22 Jan 2017 13:19:50 +0100
+Message-ID: <20170122121950.10449-1-linus.walleij@linaro.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Janos Laube <janos.dev@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBDE6RCFOWIARB3WGSLCAKGQE72LYNWA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGZhaXJseSBzdGFuZGFyZCBEVCBiaW5kaW5ncyBmb3IgdGhlIENvcnRpbmEgU3lz
-dGVtcwpHZW1pbmkgR1BJTyBjb250cm9sbGVyLgoKQ2M6IEphbm9zIExhdWJlIDxqYW5vcy5kZXZA
-Z21haWwuY29tPgpDYzogUGF1bGl1cyBaYWxlY2thcyA8cGF1bGl1cy56YWxlY2thc0BnbWFpbC5j
-b20+CkNjOiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3JvbGxAZ29vZ2xlbWFpbC5jb20+CkNjOiBG
-bG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdl
-ci5rZXJuZWwub3JnClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpA
-bGluYXJvLm9yZz4KLS0tCk5vdGUgdG8gc2VsZjoganVzdCBhcHBseSB0aGlzIHRvIHRoZSBHUElP
-IHRyZWUgd2hlbiBkaXNjdXNzaW9uIGlzIG92ZXIuCi0tLQogLi4uL2JpbmRpbmdzL2dwaW8vY29y
-dGluYSxnZW1pbmktZ3Bpby50eHQgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysr
-CiAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2NvcnRpbmEsZ2VtaW5pLWdwaW8u
-dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8v
-Y29ydGluYSxnZW1pbmktZ3Bpby50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZ3Bpby9jb3J0aW5hLGdlbWluaS1ncGlvLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
-eCAwMDAwMDAwMDAwMDAuLjVjOTI0NmMwNTRlNQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2NvcnRpbmEsZ2VtaW5pLWdwaW8udHh0CkBA
-IC0wLDAgKzEsMjQgQEAKK0NvcnRpbmEgU3lzdGVtcyBHZW1pbmkgR1BJTyBDb250cm9sbGVyCisK
-K1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgImNvcnRpbmEs
-Z2VtaW5pLWdwaW8iCistIHJlZyA6IFNob3VsZCBjb250YWluIHJlZ2lzdGVycyBsb2NhdGlvbiBh
-bmQgbGVuZ3RoCistIGludGVycnVwdHMgOiBTaG91bGQgY29udGFpbiB0aGUgaW50ZXJydXB0IGxp
-bmUgZm9yIHRoZSBHUElPIGJsb2NrCistIGdwaW8tY29udHJvbGxlciA6IG1hcmtzIHRoaXMgYXMg
-YSBHUElPIGNvbnRyb2xsZXIKKy0gI2dwaW8tY2VsbHMgOiBTaG91bGQgYmUgMiwgc2VlIGdwaW8v
-Z3Bpby50eHQKKy0gaW50ZXJydXB0LWNvbnRyb2xsZXIgOiBtYXJrcyB0aGlzIGFzIGFuIGludGVy
-cnVwdCBjb250cm9sbGVyCistICNpbnRlcnJ1cHQtY2VsbHMgOiBhIHN0YW5kYXJkIHR3by1jZWxs
-IGludGVycnVwdCBmbGFnLCBzZWUKKyAgaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50
-eHQKKworRXhhbXBsZToKKworZ3Bpb0A0ZDAwMDAwMCB7CisJY29tcGF0aWJsZSA9ICJjb3J0aW5h
-LGdlbWluaS1ncGlvIjsKKwlyZWcgPSA8MHg0ZDAwMDAwMCAweDEwMD47CisJaW50ZXJydXB0cyA9
-IDwyMiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwlncGlvLWNvbnRyb2xsZXI7CisJI2dwaW8tY2Vs
-bHMgPSA8Mj47CisJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJI2ludGVycnVwdC1jZWxscyA9IDwy
-PjsKK307Ci0tIAoyLjkuMwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpvcGVud3J0LWRldmVsIG1haWxpbmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9w
-ZW53cnQub3JnCmh0dHBzOi8vbGlzdHMub3BlbndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3Rp
-bmZvL29wZW53cnQtZGV2ZWwK
+This adds bindings and simple probing for the Cortina Systems Gemini
+SoC RTC.
+
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+RTC maintainers: please just apply this to the RTC tree when you
+are pleased with it. It is functionally orthogonal to the rest of
+the series and just in a series for context.
+---
+ Documentation/devicetree/bindings/rtc/cortina,gemini.txt | 14 ++++++++++++++
+ drivers/rtc/rtc-gemini.c                                 |  7 +++++++
+ 2 files changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt b/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+new file mode 100644
+index 000000000000..4ce4e794ddbb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+@@ -0,0 +1,14 @@
++* Cortina Systems Gemini RTC
++
++Gemini SoC real-time clock.
++
++Required properties:
++- compatible : Should be "cortina,gemini-rtc"
++
++Examples:
++
++rtc@45000000 {
++	compatible = "cortina,gemini-rtc";
++	reg = <0x45000000 0x100>;
++	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
++};
+diff --git a/drivers/rtc/rtc-gemini.c b/drivers/rtc/rtc-gemini.c
+index 688debc14348..ccf0dbadb62d 100644
+--- a/drivers/rtc/rtc-gemini.c
++++ b/drivers/rtc/rtc-gemini.c
+@@ -159,9 +159,16 @@ static int gemini_rtc_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id gemini_rtc_dt_match[] = {
++	{ .compatible = "cortina,gemini-rtc" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gemini_rtc_dt_match);
++
+ static struct platform_driver gemini_rtc_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
++		.of_match_table = gemini_rtc_dt_match,
+ 	},
+ 	.probe		= gemini_rtc_probe,
+ 	.remove		= gemini_rtc_remove,
+-- 
+2.9.3
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
