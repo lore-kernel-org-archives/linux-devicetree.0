@@ -1,63 +1,55 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 04/22] clocksource: add DT bindings for Cortina Gemini
-Date: Sun, 22 Jan 2017 13:17:07 +0100
-Message-ID: <20170122121707.10200-1-linus.walleij@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 06/22] gpio: add DT bindings for Cortina
+	Gemini GPIO
+Date: Sun, 22 Jan 2017 13:18:30 +0100
+Message-ID: <20170122121830.10336-1-linus.walleij@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Janos Laube <janos.dev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cortina Systems Gemini
-timer block used in these SoCs.
-
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-clocksource maintainers: please just apply this when you feel
-pleased with it. These portions are functionally orthogonal to
-the series, it is just in a series for context.
----
- .../bindings/timer/cortina,gemini-timer.txt        | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-
-diff --git a/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt b/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-new file mode 100644
-index 000000000000..16ea1d3b2e9e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
-@@ -0,0 +1,22 @@
-+Cortina Systems Gemini timer
-+
-+This timer is embedded in the Cortina Systems Gemini SoCs.
-+
-+Required properties:
-+
-+- compatible : Must be "cortina,gemini-timer"
-+- reg : Should contain registers location and length
-+- interrupts : Should contain the three timer interrupts with
-+  flags for rising edge
-+- syscon : a phandle to the global Gemini system controller
-+
-+Example:
-+
-+timer@43000000 {
-+	compatible = "cortina,gemini-timer";
-+	reg = <0x43000000 0x1000>;
-+	interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
-+		   <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
-+		   <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
-+	syscon = <&syscon>;
-+};
--- 
-2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGZhaXJseSBzdGFuZGFyZCBEVCBiaW5kaW5ncyBmb3IgdGhlIENvcnRpbmEgU3lz
+dGVtcwpHZW1pbmkgR1BJTyBjb250cm9sbGVyLgoKQ2M6IEphbm9zIExhdWJlIDxqYW5vcy5kZXZA
+Z21haWwuY29tPgpDYzogUGF1bGl1cyBaYWxlY2thcyA8cGF1bGl1cy56YWxlY2thc0BnbWFpbC5j
+b20+CkNjOiBIYW5zIFVsbGkgS3JvbGwgPHVsbGkua3JvbGxAZ29vZ2xlbWFpbC5jb20+CkNjOiBG
+bG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxpQGdtYWlsLmNvbT4KQ2M6IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpA
+bGluYXJvLm9yZz4KLS0tCk5vdGUgdG8gc2VsZjoganVzdCBhcHBseSB0aGlzIHRvIHRoZSBHUElP
+IHRyZWUgd2hlbiBkaXNjdXNzaW9uIGlzIG92ZXIuCi0tLQogLi4uL2JpbmRpbmdzL2dwaW8vY29y
+dGluYSxnZW1pbmktZ3Bpby50eHQgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysr
+CiAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2NvcnRpbmEsZ2VtaW5pLWdwaW8u
+dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dwaW8v
+Y29ydGluYSxnZW1pbmktZ3Bpby50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZ3Bpby9jb3J0aW5hLGdlbWluaS1ncGlvLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRl
+eCAwMDAwMDAwMDAwMDAuLjVjOTI0NmMwNTRlNQotLS0gL2Rldi9udWxsCisrKyBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncGlvL2NvcnRpbmEsZ2VtaW5pLWdwaW8udHh0CkBA
+IC0wLDAgKzEsMjQgQEAKK0NvcnRpbmEgU3lzdGVtcyBHZW1pbmkgR1BJTyBDb250cm9sbGVyCisK
+K1JlcXVpcmVkIHByb3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZSA6IE11c3QgYmUgImNvcnRpbmEs
+Z2VtaW5pLWdwaW8iCistIHJlZyA6IFNob3VsZCBjb250YWluIHJlZ2lzdGVycyBsb2NhdGlvbiBh
+bmQgbGVuZ3RoCistIGludGVycnVwdHMgOiBTaG91bGQgY29udGFpbiB0aGUgaW50ZXJydXB0IGxp
+bmUgZm9yIHRoZSBHUElPIGJsb2NrCistIGdwaW8tY29udHJvbGxlciA6IG1hcmtzIHRoaXMgYXMg
+YSBHUElPIGNvbnRyb2xsZXIKKy0gI2dwaW8tY2VsbHMgOiBTaG91bGQgYmUgMiwgc2VlIGdwaW8v
+Z3Bpby50eHQKKy0gaW50ZXJydXB0LWNvbnRyb2xsZXIgOiBtYXJrcyB0aGlzIGFzIGFuIGludGVy
+cnVwdCBjb250cm9sbGVyCistICNpbnRlcnJ1cHQtY2VsbHMgOiBhIHN0YW5kYXJkIHR3by1jZWxs
+IGludGVycnVwdCBmbGFnLCBzZWUKKyAgaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50
+eHQKKworRXhhbXBsZToKKworZ3Bpb0A0ZDAwMDAwMCB7CisJY29tcGF0aWJsZSA9ICJjb3J0aW5h
+LGdlbWluaS1ncGlvIjsKKwlyZWcgPSA8MHg0ZDAwMDAwMCAweDEwMD47CisJaW50ZXJydXB0cyA9
+IDwyMiBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwlncGlvLWNvbnRyb2xsZXI7CisJI2dwaW8tY2Vs
+bHMgPSA8Mj47CisJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJI2ludGVycnVwdC1jZWxscyA9IDwy
+PjsKK307Ci0tIAoyLjkuMwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpvcGVud3J0LWRldmVsIG1haWxpbmcgbGlzdApvcGVud3J0LWRldmVsQGxpc3RzLm9w
+ZW53cnQub3JnCmh0dHBzOi8vbGlzdHMub3BlbndydC5vcmcvY2dpLWJpbi9tYWlsbWFuL2xpc3Rp
+bmZvL29wZW53cnQtZGV2ZWwK
