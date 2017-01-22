@@ -1,58 +1,79 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 04/12] driver: clk: imx: Add clock driver for imx6sll
-Date: Sun, 22 Jan 2017 02:14:35 +0000
-Message-ID: <AM3PR04MB530CDCAC082173FDDDFEEFA87730@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-5-git-send-email-ping.bai@nxp.com>
- <20170110003753.GM17126@codeaurora.org>
- <AM3PR04MB5307CB38AA904535AF8D80D87670@AM3PR04MB530.eurprd04.prod.outlook.com>
- <20170112220536.GP17126@codeaurora.org>
- <AM3PR04MB53027B627AE8CEC6D7D0D1B87780@AM3PR04MB530.eurprd04.prod.outlook.com>
- <20170121010009.GC8801@codeaurora.org>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v11 2/8] power: add power sequence library
+Date: Sun, 22 Jan 2017 10:14:58 +0800
+Message-ID: <20170122021458.GB6522@b29397-desktop>
+References: <1483596119-27508-1-git-send-email-peter.chen@nxp.com>
+ <1483596119-27508-3-git-send-email-peter.chen@nxp.com>
+ <20170107085456.w5dhm7qadqa6tc7v@kozik-lap>
+ <20170110070240.GA29454@b29397-desktop>
+ <20170120075239.GC21013@b29397-desktop>
+ <CAJZ5v0h09A2XWLEk7v9XPe+4fP7HDr6AqZzBmvBi_V5nhLoiRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170121010009.GC8801@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0h09A2XWLEk7v9XPe+4fP7HDr6AqZzBmvBi_V5nhLoiRw@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Peter Chen <peter.chen@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mail@maciej.szmigiero.name, Pawel Moll <pawel.moll@arm.com>, Linux PM <linux-pm@vger.kernel.org>, Sascha
 List-Id: devicetree@vger.kernel.org
 
-> > > > The reason why we enable these two clks here is in below commit
-> > > > commit
-> > > > a5120e89e7e187a91852896f586876c7a2030804
-> > > > Author: Peter Chen <peter.chen@freescale.com>
-> > > > Date:   Fri Jan 18 10:38:05 2013 +0800
-> > > >       ARM i.MX6: change mxs usbphy clock usage
-> > > >
-> > >
-> > > So can we mark these clks with CLK_IS_CRITICAL flag then instead?
-> > > Or are they disabled out of the bootloader?
-> > >
+On Fri, Jan 20, 2017 at 11:21:27AM +0100, Rafael J. Wysocki wrote:
+> On Fri, Jan 20, 2017 at 8:52 AM, Peter Chen <hzpeterchen@gmail.com> wrote:
+> > On Tue, Jan 10, 2017 at 03:02:41PM +0800, Peter Chen wrote:
+> >> On Sat, Jan 07, 2017 at 10:54:56AM +0200, Krzysztof Kozlowski wrote:
+> >> > On Thu, Jan 05, 2017 at 02:01:53PM +0800, Peter Chen wrote:
+> >> > > We have an well-known problem that the device needs to do some power
+> >> > > sequence before it can be recognized by related host, the typical
+> >> > > example like hard-wired mmc devices and usb devices.
+> >> > >
+> >> > > This power sequence is hard to be described at device tree and handled by
+> >> > > related host driver, so we have created a common power sequence
+> >> > > library to cover this requirement. The core code has supplied
+> >> > > some common helpers for host driver, and individual power sequence
+> >> > > libraries handle kinds of power sequence for devices. The pwrseq
+> >> > > librares always need to allocate extra instance for compatible
+> >> > > string match.
+> >> > >
+> >> > > pwrseq_generic is intended for general purpose of power sequence, which
+> >> > > handles gpios and clocks currently, and can cover other controls in
+> >> > > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
+> >> > > if only one power sequence is needed, else call of_pwrseq_on_list
+> >> > > /of_pwrseq_off_list instead (eg, USB hub driver).
+> >> > >
+> >> > > For new power sequence library, it can add its compatible string
+> >> > > to pwrseq_of_match_table, then the pwrseq core will match it with
+> >> > > DT's, and choose this library at runtime.
+> >> > >
+> >> > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> >> > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> >> > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> >> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+> >> > > Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> >> >
+> >> > Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >> > Tested on Odroid U3 (reset sequence for LAN9730):
+> >> > Tested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> >> >
+> >>
+> >> A nice ping...
+> >>
 > >
-> > Sure, using 'CLK_IS_CRITICAL'  should be ok for clks_init_on clocks.
-> > But for  USBPHY*_GATE, it is only enabled when CONIG_USB_MXC_PHY is
-> > true.  And another concern is if we need to add CLK_IS_CRITICAL flag to
-> clks_init_on clocks, we may need to add new wrapper function to register
-> these critical clock. It is not very good.
+> > Rafael, would you please review it? This series was discussed about
+> > half a year, and many people need it, I hope it can be in v4.11-rc1,
+> > thanks.
 > 
-> Ok so set the critical flag when CONFIG_USB_MXC_PHY is enabled?
-> That isn't too hard to do.
+> I'm travelling now
+> (http://marc.info/?l=linux-pm&m=148410629024194&w=2) and (as stated in
+> this message) I'll get to the patches when I'm back home.
+> 
+> There is a good chance for your code to go into 4.11-rc1 if the review
+> comments so far have been addressed.
 > 
 
-Ok, thanks, I will address this in V3.
+Thanks, Rafael. I think I have addressed all your comments.
 
-> > 
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux
-> Foundation Collaborative Project
+-- 
+
+Best Regards,
+Peter Chen
