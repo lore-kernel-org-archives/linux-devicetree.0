@@ -1,55 +1,139 @@
-From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf@tronnes.org>
-Subject: [PATCH 8/9] dt-bindings: Add Multi-Inno MI0283QT binding
-Date: Sun, 22 Jan 2017 19:11:16 +0100
-Message-ID: <20170122181117.8210-9-noralf@tronnes.org>
-References: <20170122181117.8210-1-noralf@tronnes.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH v4 0/3] Amlogic Meson SAR ADC support
+Date: Sun, 22 Jan 2017 19:17:11 +0100
+Message-ID: <20170122181714.6259-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170122181117.8210-1-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGRldmljZS10cmVlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIE1JMDI4M1FUIGRp
-c3BsYXkgcGFuZWwuCgpTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9u
-bmVzLm9yZz4KLS0tCgpEYXRhc2hlZXQ6IGh0dHBzOi8vY2RuLXNob3AuYWRhZnJ1aXQuY29tL2Rh
-dGFzaGVldHMvTUkwMjgzUVQtMTErVjEuMS5QREYKCgogLi4uL2JpbmRpbmdzL2Rpc3BsYXkvbXVs
-dGktaW5ubyxtaTAyODNxdC50eHQgICAgICAgfCAyNyArKysrKysrKysrKysrKysrKysrKysrCiAx
-IGZpbGUgY2hhbmdlZCwgMjcgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L211bHRpLWlubm8sbWkwMjgzcXQu
-dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvbXVsdGktaW5ubyxtaTAyODNxdC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tdWx0aS1pbm5vLG1pMDI4M3F0LnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0
-NAppbmRleCAwMDAwMDAwLi5lZWQ0OGMzCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXVsdGktaW5ubyxtaTAyODNxdC50eHQKQEAg
-LTAsMCArMSwyNyBAQAorTXVsdGktSW5ubyBNSTAyODNRVCBkaXNwbGF5IHBhbmVsCisKK1JlcXVp
-cmVkIHByb3BlcnRpZXM6CistIGNvbXBhdGlibGU6CSJtdWx0aS1pbm5vLG1pMDI4M3F0Ii4KKwor
-VGhlIG5vZGUgZm9yIHRoaXMgZHJpdmVyIG11c3QgYmUgYSBjaGlsZCBub2RlIG9mIGEgU1BJIGNv
-bnRyb2xsZXIsIGhlbmNlCithbGwgbWFuZGF0b3J5IHByb3BlcnRpZXMgZGVzY3JpYmVkIGluIC4u
-L3NwaS9zcGktYnVzLnR4dCBtdXN0IGJlIHNwZWNpZmllZC4KKworT3B0aW9uYWwgcHJvcGVydGll
-czoKKy0gZGMtZ3Bpb3M6CUQvQyBwaW4uIFRoZSBwcmVzZW5jZS9hYnNlbmNlIG9mIHRoaXMgR1BJ
-TyBkZXRlcm1pbmVzCisJCXRoZSBwYW5lbCBpbnRlcmZhY2UgbW9kZSAoSU1bMzowXSBwaW5zKToK
-KwkJLSBwcmVzZW50OiBJTT14MTEwIDQtd2lyZSA4LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UK
-KwkJLSBhYnNlbnQ6ICBJTT14MTAxIDMtd2lyZSA5LWJpdCBkYXRhIHNlcmlhbCBpbnRlcmZhY2UK
-Ky0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgorLSBwb3dlci1zdXBwbHk6CUEgcmVndWxhdG9yIG5v
-ZGUgZm9yIHRoZSBzdXBwbHkgdm9sdGFnZS4KKy0gYmFja2xpZ2h0OglwaGFuZGxlIG9mIHRoZSBi
-YWNrbGlnaHQgZGV2aWNlIGF0dGFjaGVkIHRvIHRoZSBwYW5lbAorLSByb3RhdGlvbjoJcGFuZWwg
-cm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQorCitF
-eGFtcGxlOgorCW1pMDI4M3F0QDB7CisJCWNvbXBhdGlibGUgPSAibXVsdGktaW5ubyxtaTAyODNx
-dCI7CisJCXJlZyA9IDwwPjsKKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MzIwMDAwMDA+OworCQly
-b3RhdGlvbiA9IDw5MD47CisJCWRjLWdwaW9zID0gPCZncGlvIDI1IDA+OworCQliYWNrbGlnaHQg
-PSA8JmJhY2tsaWdodD47CisJfTsKLS0KMi4xMC4yCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+This series add support for the SAR ADC on Amlogic Meson GXBB, GXL and
+GXM SoCs.
+The hardware on GXBB provides 10-bit ADC results, while GXL and GXM are
+providing 12-bit results. Support for older SoCs (Meson8b and Meson8)
+can be added with little effort, most of which is testing I guess (I
+don't have any pre-GXBB hardware so I can't say).
+
+A new set of clocks had to be added to the GXBB clock controller (used
+by the GXBB/GXL/GXM SoCs) which are required to get the ADC working.
+
+The ADC itself can sample multiple channels at the same time and allows
+capturing multiple samples (which can be used for filtering/averaging).
+The ADC results are stored inside a FIFO register. More details on what
+the driver supports (or doesn't) can be found in the description of
+patch #3.
+
+The code is based on the public S805 (Meson8b) and S905 (GXBB)
+datasheets, as well as by reading (various versions of) the vendor
+driver and by inspecting the registers on the vendor kernels of my
+testing-hardware.
+
+Typical use-cases for the ADC on the Meson GX SoCs are:
+- adc-keys ("ADC attached resistor ladder buttons")
+- SoC temperature measurement (not supported by this driver yet as
+  the system firmware does this already and provides the values via the
+  SCPI protocol)
+- "version-strapping" (different resistor values are used to indicate
+  the board-revision)
+- and of course typical ADC measurements
+
+Thanks to Heiner Kallweit, Jonathan Cameron, Lars-Peter Clausen and
+Peter Meerwald-Stadler for reviewing this series and providing valuable
+input!
+
+Changes since v3 [0]:
+- removed the clock patch (patch #2 in older versions) because it is
+  already applied into Kevin's (linux-amlogic.git) v4.11/dt64 branch
+- introduced a separate compatible string for "amlogic,meson-gxm-saradc"
+  (and updated the documentation, changed meson-gxm.dtsi and adjusted
+  the driver accordingly, affects all remaining patches)
+- use __maybe_unused instead of #ifdef CONFIG_PM_SLEEP for the _suspend
+  and _resume functions (affects patch #2 only)
+- fixed a grammar issue in the commit description of patch #3 (thanks
+  Andreas Färber)
+- rebased .dts changes on top of Andreas Färber's Amlogic dts cleanup
+  (affects patch #3 only)
+- moved reg property right after the compatible property and moved the
+  status property to the end of the saradc node (affects patch #3 only)
+
+Changes since v2 (all changes are for patch #3, except where noted):
+- fixed another typo in the interrupt (patch #4, thanks again Heiner
+  Kallweit)
+- change namespace of all register #defines to MESON_SAR_ADC (I
+  intentionally decided to keep SAR_ADC in it because that's the way
+  registers are named in the datasheet, thus making it easy to match the
+  registers without having to look up the offset all the time)
+- added additional parenthesis around MACRO parameters  for extra safety
+- removed unused definition for SAR_ADC_REG3_ADC_CLK_DIV_MASK (as we
+  already have SAR_ADC_REG3_ADC_CLK_DIV_SHIFT and
+  SAR_ADC_REG3_ADC_CLK_DIV_WIDTH which are used instead)
+- change value of "indexed" from "true" to "1"
+- remove type parameter from MESON_SAR_ADC_CHAN macro as all channels are
+  currently IIO_VOLTAGE channels
+- fixed another multi-line comment style violation
+- added timeout to meson_saradc_lock() (unlikely to be triggered, but
+  better safe then sorry - which would mean that we'd be keeping one core
+  busy infinitely)
+- fixed meson_saradc_remove() call order (first unregister the iio_dev,
+  then disable the hardware instead of the other way around)
+- use "consistent prefixing", which means that all #defines now use
+  MESON_SAR_ADC_ as prefix, while all enums, static global variables,
+  structs and functions use meson_sar_adc_ as prefix
+- rebased .dts and clk patches to apply to khilman's latest v4.11/dt64
+  (a minor  conflict had to be resolved in the clk patch due to
+  "clk: meson-gxbb: Export HDMI clocks")
+- added Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> to all
+  patches (thanks for testing!)
+
+Changes since v1 (all changes are for patch #3, except where noted):
+- fix IRQ number in meson-gx.dtsi (thanks to Heiner Kallweit for
+  providing the correct value), affects patch #4
+- move the most used members of meson_saradc_priv to the beginning
+- remove unused struct member "completion" from meson_saradc_priv
+- use devm_kasprintf() instead of snprintf() + devm_kstrdup()
+- initialize indio_dev->dev.parent earlier in meson_saradc_probe()
+- moved meson_saradc_clear_fifo() logic to a separate function
+- add comment why a do ... while loop is required in
+  meson_saradc_wait_busy_clear()
+- remove SAR_ADC_NUM_CHANNELS and SAR_ADC_VALUE_MASK macros (each of them
+  was only used once and it's an unneeded level of abstraction)
+- fixed multiline comment syntax violations
+- dropped unneeded log messages during initialization
+- set iio_dev name to "meson-gxbb-saradc" or "meson-gxl-saradc"
+- use "indio_dev->dev.parent" in all kernel log calls (dev_warn/err/etc)
+  to make it show the OF node name (instead of the iio device name)
+- introduce struct meson_saradc_data to hold platform-specific
+  information (such as resolution in bits and the iio_dev name)
+
+[0] http://marc.info/?l=linux-iio&m=148483794819784&w=2
+
+
+Martin Blumenstingl (3):
+  Documentation: dt-bindings: add the Amlogic Meson SAR ADC
+    documentation
+  iio: adc: add a driver for the SAR ADC found in Amlogic Meson SoCs
+  ARM64: dts: meson: meson-gx: add the SAR ADC
+
+ .../bindings/iio/adc/amlogic,meson-saradc.txt      |  32 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  10 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  10 +
+ arch/arm64/boot/dts/amlogic/meson-gxm.dtsi         |   4 +
+ drivers/iio/adc/Kconfig                            |  12 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/meson_saradc.c                     | 922 +++++++++++++++++++++
+ 8 files changed, 999 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+ create mode 100644 drivers/iio/adc/meson_saradc.c
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
