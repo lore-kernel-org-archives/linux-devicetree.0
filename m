@@ -1,119 +1,70 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] iio: distance: srf08: add driver ABI documentation
-Date: Sun, 22 Jan 2017 22:11:36 +0000
-Message-ID: <3022f9cf-31d0-b49d-7fad-338f5786f8c3@kernel.org>
-References: <20170117135006.GA22903@andreas>
- <2e87aeed-a611-e160-c245-f5b16f2ef304@kernel.org>
- <20170122204110.GA1840@andreas>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170122204110.GA1840@andreas>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Liam Breck <liam@networkimprov.net>
+Subject: [PATCH v4 2/8] devicetree: power: add battery state machine documentation
+Date: Sun, 22 Jan 2017 14:22:12 -0800
+Message-ID: <20170122222212.27086-1-liam@networkimprov.net>
+References: <20170122071404.9654-3-matt@ranostay.consulting>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <20170122071404.9654-3-matt@ranostay.consulting>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sre@kernel.org, tony@atomide.com, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22/01/17 20:41, Andreas Klinger wrote:
-> Hi Jonathan,
-> 
-> see question below.
-> 
-> Andreas
-> 
-> 
-> Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> schrieb am Sun, 22. Jan 13:41:
->> On 17/01/17 13:50, Andreas Klinger wrote:
->>> Add sysfs-bus-iio-distance-srf08 for individual attributes of the driver,
->>> especially:
->>>  - sensitivity which the device documentation calls gain for amplifying the
->>>    signal
->>>  - max_range for limiting the maximum distance for expected echos and
->>>    therefore limiting the time waiting for telegrams
->>>
->>> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
->>> ---
->>>  .../ABI/testing/sysfs-bus-iio-distance-srf08       | 27 ++++++++++++++++++++++
->>>  1 file changed, 27 insertions(+)
->>>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
->>>
->>> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08 b/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
->>> new file mode 100644
->>> index 000000000000..e96c28064748
->>> --- /dev/null
->>> +++ b/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
->>> @@ -0,0 +1,27 @@
->>> +What		/sys/bus/iio/devices/iio:deviceX/in_distance_raw
->>> +Date:		January 2017
->>> +KernelVersion:	4.11
->>> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> +Description:
->>> +		Get the current distance in meters between the sensor and
->>> +		the first object recognized
->> Generally no need to document what are effectively standard elements.
->> Just leads to the possibility of disagreements in the docs! 
->> Still no harm here really.
->>> +
->>> +What		/sys/bus/iio/devices/iio:deviceX/sensor_sensitivity
->>> +Date:		January 2017
->>> +KernelVersion:	4.11
->>> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> +Description:
->>> +		Show or set the gain boost of the amp, from 0-31 range.
->>> +		default 31
->>> +
->>> +What		/sys/bus/iio/devices/iio:deviceX/sensor_max_range
->>> +Date:		January 2017
->>> +KernelVersion:	4.11
->>> +Contact:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> +Description:
->>> +		Show or set the maximum range between the sensor and the
->>> +		first object echoed in millimeters.
->>> +		This setting limits the time the driver is waiting for a
->>> +		echo.
->>> +		Can be set between 43 and 11008 in a grid of 43 mm.
->>> +		default 6020
->> This needs to be in the same units as the range - so m.
-> 
-> Just to clarify:
-> There should be a floating point number be passed to the driver and being parsed
-> there, e. g.:
-> 0.043 or 6.020
-> right?
-That's fine.  Just use the core functions that are already in place for this in
-your own parsing. iio_str_to_fixpoint should do the job for you.
+I think Matt meant the following :-)
 
-It may seem fiddly but however carefully we pick a base unit we never allow enough
-range to represent everything that turns up in the future.  Hence the trickery with
-'fixed point' values where we can redefine the two parts.
-> 
-> Or should this number be passed using the scale attribute like the raw value
-> does? So that the scale is used by both the value itself and the attribute.
-Interesting point. I'm trying to think of an equivalent where the unit is shared like
-this.  The event attributes (thresholds) do use scale, but they aren't really
-the same thing...
+Note: nominal-microvolt is not the correct term for termination voltage.
+Changed to termination-microvolt
+---
 
-I think if we wanted to do that we'd need to call it something that made it clear.
-More than possible that we'll get a colour sensor down the line with a max range or
-something silly like that (focusing optics perhaps?) - so may not always be obvious.
+Documentation on battery properties that can be defined for
+fine tuning fuel gauge state machines.
 
-Could stick a _raw on the end of it.
+From: Matt Ranostay <matt@ranostay.consulting>
+Cc: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+---
+ .../devicetree/bindings/power/supply/battery.txt   | 34 ++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
 
-Anyone else reading this and have any thoughts?
-
-Jonathan
-
-> 
->> I'm not 100% sure this is the best ABI we can do for this. However, supporting
->> this as a legacy abi if we come up with something more general will be a very
->> small burden, so lets not stall the driver on this!
->>
->> Jonathan
->>>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+new file mode 100644
+index 000000000000..398b4d622883
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+@@ -0,0 +1,34 @@
++Battery Characteristics
++
++Required Properties:
++ - compatible: Must be "fixed-battery"
++
++Optional Properties:
++ - termination-microvolt: dead battery voltage
++ - design-microwatt-hours: battery design energy
++ - design-microamp-hours: battery design capacity
++
++Batteries must be referenced by chargers and/or fuel-gauges
++using a phandle. The phandle's property should be named
++"monitored-battery".
++
++Example:
++
++	bat: battery {
++		compatible = "fixed-battery";
++		terminate-microvolt = <3700000>;
++		design-microwatt-hours = <5290000>;
++		design-microamp-hours = <1430000>;
++	};
++
++	charger: charger@0 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
++
++	fuel_gauge: fuel_gauge@0 {
++		....
++		monitored-battery = <&bat>;
++		...
++	};
