@@ -1,169 +1,87 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 13/16] arm: dts: rename mt7623-evb.dts to arch/arm/boot/dts/mt7623n-rfb.dtsi
-Date: Mon, 23 Jan 2017 12:29:32 +0100
-Message-ID: <1485170975-51813-14-git-send-email-john@phrozen.org>
-References: <1485170975-51813-1-git-send-email-john@phrozen.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485170975-51813-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v4 2/4] ASoC: es8328: Add support for slave mode
+Date: Mon, 23 Jan 2017 11:41:47 +0100
+Message-ID: <20170123104149.2508-3-romain.perier@collabora.com>
+References: <20170123104149.2508-1-romain.perier@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170123104149.2508-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-There are 2 versions of the SoC. MT7623N is almost identical to MT7623A
-but has some additional multimedia features. The reference boards are
-available as NAND or MMC and might have a different ethernet setup. In
-order to reduce the duplication of devicetree code we add an intermediate
-dtsi file for these reference boards. Additionally MTK/WCN pointed out,
-that the EVB is yet another board and the board in question is infact the
-RFB. Take this into account while renaming the files.
+Currently, the function that changes the DAI format only supports master
+mode. Trying to use a slave mode exits the function with -EINVAL and
+leave the codec misconfigured. This commits adds support for enabling
+the slave mode.
 
- Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek.txt |    4 +--
- arch/arm/boot/dts/Makefile                         |    2 +-
- arch/arm/boot/dts/mt7623-evb.dts                   |   33 --------------------
- arch/arm/boot/dts/mt7623n-rfb-nand.dts             |   21 +++++++++++++
- arch/arm/boot/dts/mt7623n-rfb.dtsi                 |   29 +++++++++++++++++
- 5 files changed, 53 insertions(+), 36 deletions(-)
- delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
- create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
- create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index c860b24..71149cb 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -38,9 +38,9 @@ Supported boards:
- - Evaluation board for MT6795(Helio X10):
-     Required root node properties:
-       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
--- Evaluation board for MT7623:
-+- Reference  board for MT7623N with NAND:
-     Required root node properties:
--      - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
-+      - compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
- - MTK mt8127 tablet moose EVB:
-     Required root node properties:
-       - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cccdbcb..9735c2c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -976,7 +976,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
- 	mt6580-evbp1.dtb \
- 	mt6589-aquaris5.dtb \
- 	mt6592-evb.dtb \
--	mt7623-evb.dtb \
-+	mt7623n-rfb-nand.dtb \
- 	mt8127-moose.dtb \
- 	mt8135-evbp1.dtb
- dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
-diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623-evb.dts
-deleted file mode 100644
-index 58ed038..0000000
---- a/arch/arm/boot/dts/mt7623-evb.dts
-+++ /dev/null
-@@ -1,33 +0,0 @@
--/*
-- * Copyright (c) 2016 MediaTek Inc.
-- * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
--
--/dts-v1/;
--#include "mt7623-mt6323.dtsi"
--
--/ {
--	model = "MediaTek MT7623 evaluation board";
--	compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
--
--	chosen {
--		stdout-path = &uart2;
--	};
--
--	memory {
--		reg = <0 0x80000000 0 0x40000000>;
--	};
--};
--
--&uart2 {
--	status = "okay";
--};
-diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-new file mode 100644
-index 0000000..436d51c
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (c) 2016 MediaTek Inc.
-+ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+/dts-v1/;
-+#include "mt7623n-rfb.dtsi"
-+
-+/ {
-+	model = "MediaTek MT7623N NAND reference board";
-+	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
-+};
-diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-new file mode 100644
-index 0000000..d46390e
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
-@@ -0,0 +1,29 @@
-+/*
-+ * Copyright (c) 2016 MediaTek Inc.
-+ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "mt7623-mt6323.dtsi"
-+
-+/ {
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	memory {
-+		reg = <0 0x80000000 0 0x40000000>;
-+	};
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
+
+ sound/soc/codecs/es8328.c | 28 ++++++++++++++++++++++------
+ 1 file changed, 22 insertions(+), 6 deletions(-)
+
+diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
+index 37722194..054e123 100644
+--- a/sound/soc/codecs/es8328.c
++++ b/sound/soc/codecs/es8328.c
+@@ -588,10 +588,18 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	struct snd_soc_codec *codec = codec_dai->codec;
+ 	u8 dac_mode = 0;
+ 	u8 adc_mode = 0;
++	bool master;
+ 
+-	/* set master/slave audio interface */
+-	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
+-		return -EINVAL;
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++		case SND_SOC_DAIFMT_CBM_CFM:
++			master = true;
++			break;
++		case SND_SOC_DAIFMT_CBS_CFS:
++			master = false;
++			break;
++		default:
++			return -EINVAL;
++	}
+ 
+ 	/* interface format */
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+@@ -620,9 +628,17 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
+ 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
+ 
+-	/* Master serial port mode, with BCLK generated automatically */
+-	snd_soc_update_bits(codec, ES8328_MASTERMODE,
+-			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
++	if (master) {
++		/* Master serial port mode, with BCLK generated automatically */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC,
++				    ES8328_MASTERMODE_MSC);
++	} else {
++		/* Slave serial port mode */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC,
++				    0);
++	}
+ 
+ 	return 0;
+ }
 -- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.9.3
