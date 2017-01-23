@@ -1,76 +1,57 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/9] ARM: dts: rockchip: update compatible property for rk3228 timer
-Date: Mon, 23 Jan 2017 19:13:06 +0300
-Message-ID: <FD75C944-4CE5-4393-8E49-79E47101D77F@gmail.com>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-3-git-send-email-al.kochet@gmail.com> <20170123154046.GF2166@mai>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123154046.GF2166@mai>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 5/9] ARM: dts: rockchip: disable arm-global-timer for rk3188
+Date: Mon, 23 Jan 2017 17:14:22 +0100
+Message-ID: <1513239.YT6aWj25Ep@diego>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-6-git-send-email-al.kochet@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1480436092-10728-6-git-send-email-al.kochet@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Daniel!
+Am Dienstag, 29. November 2016, 19:14:48 CET schrieb Alexander Kochetkov:
+> arm-global-timer can provide clockevents, clocksource and shed_clock. But
+> on rk3188 platform it provide only clocksource and shed_clock. clockevents
+> from  arm-global-timer is not used by kernel because there is another
+> clockevent provider with higher rating (smp-twd).
+> 
+> My commit from the series implement clocksource and shed_clock using
+> rockchip_timer. But sched clock from rk_timer is not selected by kernel
+> due to lower frequency than arm-global-timer, and clocksource from
+> rk_timer is not selected by kernel due to lower rating than
+> arm-global-timer. And I don't want to increase clocksource rating
+> because ratings greater 300 used for high frequency clocksources.
+> 
+> clocksource and shed_clock is quite unstable, because their rate depends
+> on cpu frequency. So disable arm-global-timer and use clocksource and
+> sched_clock from rockchip_timer.
 
-:
-> +
-> +&timer {
-> +	compatible =3D "rockchip,rk3228-timer", "rockchip,rk3288-timer";
-> +};
+That commit message is hard to understand in its entirety, but this last 
+paragraph is essentially enough to describe the problem. So maybe you could 
+shorten that somehow.
 
-> 23 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 18:40, Daniel Lezcano =
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=
-=B0):
->=20
-> I'm not sure this is correct, to which timer &timer will refer ?
->=20
->        timer {
->                compatible =3D "arm,armv7-timer";
-> 		...
-> 	}
->=20
->        timer: timer@110c0000 {
->                compatible =3D "rockchip,rk3288-timer";
-> 		...
-> 	}
 
-The block '&timer { =E2=80=A6}' change compatible string for 'timer: =
-timer@110c0000=E2=80=99 timer'. It refers to it using =E2=80=99timer:=E2=80=
-=99 label.
-'arm,armv7-timer=E2=80=99 has =E2=80=99timer=E2=80=99 node name without =
-label and cannot be addressed in underline dts files.
+Heiko
 
-> Why not change the compatible string in the timer definition in =
-rk322x.dtsi ?
 
-Initially my patch series was for rk3188 only. I declared rk3188 timer =
-using rk3228 compatible string[1].
-Heiko reviewed the series and suggest[2] to use another =
-=E2=80=98compatible=3D=E2=80=98 binding for rk3188. And
-suggest[3] to update rockchip,rk-timer.txt bindings, like =
-mmc/rockchip-dw-mshc.txt does.
-So I updated rockchip,rk-timer.txt. rk322x family has has two parts =
-rk3228 and rk3229. So I replaced
-rk322x to rk3228 and rk3229 and updated dts file to match bindings.
-
-[1] =
-http://lists.infradead.org/pipermail/linux-rockchip/2016-November/013152.h=
-tml
-[2] =
-http://lists.infradead.org/pipermail/linux-rockchip/2016-November/013174.h=
-tml
-[3] =
-http://lists.infradead.org/pipermail/linux-rockchip/2016-November/013174.h=
-tml
-
-> Same comment for the other patches doing these changes.
->=20
->  -- Daniel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> ---
+>  arch/arm/boot/dts/rk3188.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+> index 0dc52fe..44da3d42 100644
+> --- a/arch/arm/boot/dts/rk3188.dtsi
+> +++ b/arch/arm/boot/dts/rk3188.dtsi
+> @@ -546,6 +546,7 @@
+> 
+>  &global_timer {
+>  	interrupts = <GIC_PPI 11 0xf04>;
+> +	status = "disabled";
+>  };
+> 
+>  &local_timer {
