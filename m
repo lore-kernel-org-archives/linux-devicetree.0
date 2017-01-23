@@ -1,166 +1,183 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v12 07/12] drm/mediatek: cleaning up and refine
-Date: Mon, 23 Jan 2017 19:05:20 +0800
-Message-ID: <1485169525-22163-8-git-send-email-yt.shen@mediatek.com>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v12 08/12] drm/mediatek: add dsi interrupt control
+Date: Mon, 23 Jan 2017 19:05:21 +0800
+Message-ID: <1485169525-22163-9-git-send-email-yt.shen@mediatek.com>
 References: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485169525-22163-1-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, shaoming chen <shaoming.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Y2xlYW5pbmcgdXAgdW51c2VkIGRlZmluZSBhbmQgcmVmaW5lIGZ1bmN0aW9uIG5hbWUgYW5kIHZh
-cmlhYmxlCgpTaWduZWQtb2ZmLWJ5OiBzaGFvbWluZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlh
-dGVrLmNvbT4KU2lnbmVkLW9mZi1ieTogWVQgU2hlbiA8eXQuc2hlbkBtZWRpYXRlay5jb20+CkFj
-a2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHNpLmMgICAgIHwgNzMgKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0t
-LS0tLQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMgfCAgOCArKy0tCiAy
-IGZpbGVzIGNoYW5nZWQsIDM5IGluc2VydGlvbnMoKyksIDQyIGRlbGV0aW9ucygtKQoKZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RzaS5jCmluZGV4IDJjNDJmOTAuLjZmNGIzYmIgMTAwNjQ0Ci0tLSBh
-L2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kc2kuYwpAQCAtMjcsOSArMjcsNiBAQAogCiAjaW5jbHVkZSAibXRrX2Ry
-bV9kZHBfY29tcC5oIgogCi0jZGVmaW5lIERTSV9WSURFT19GSUZPX0RFUFRICSgxOTIwIC8gNCkK
-LSNkZWZpbmUgRFNJX0hPU1RfRklGT19ERVBUSAk2NAotCiAjZGVmaW5lIERTSV9TVEFSVAkJMHgw
-MAogCiAjZGVmaW5lIERTSV9DT05fQ1RSTAkJMHgxMApAQCAtNDYsNyArNDMsNyBAQAogI2RlZmlu
-ZSBNSVhfTU9ERQkJCUJJVCgxNykKIAogI2RlZmluZSBEU0lfVFhSWF9DVFJMCQkweDE4Ci0jZGVm
-aW5lIFZDX05VTQkJCQkoMiA8PCAwKQorI2RlZmluZSBWQ19OVU0JCQkJQklUKDEpCiAjZGVmaW5l
-IExBTkVfTlVNCQkJKDB4ZiA8PCAyKQogI2RlZmluZSBESVNfRU9UCQkJCUJJVCg2KQogI2RlZmlu
-ZSBOVUxMX0VOCQkJCUJJVCg3KQpAQCAtMTY0LDcgKzE2MSw3IEBAIHN0YXRpYyB2b2lkIG10a19k
-c2lfbWFzayhzdHJ1Y3QgbXRrX2RzaSAqZHNpLCB1MzIgb2Zmc2V0LCB1MzIgbWFzaywgdTMyIGRh
-dGEpCiAJd3JpdGVsKCh0ZW1wICYgfm1hc2spIHwgKGRhdGEgJiBtYXNrKSwgZHNpLT5yZWdzICsg
-b2Zmc2V0KTsKIH0KIAotc3RhdGljIHZvaWQgZHNpX3BoeV90aW1jb25maWcoc3RydWN0IG10a19k
-c2kgKmRzaSkKK3N0YXRpYyB2b2lkIG10a19kc2lfcGh5X3RpbWNvbmZpZyhzdHJ1Y3QgbXRrX2Rz
-aSAqZHNpKQogewogCXUzMiB0aW1jb24wLCB0aW1jb24xLCB0aW1jb24yLCB0aW1jb24zOwogCXUz
-MiB1aSwgY3ljbGVfdGltZTsKQEAgLTE5Niw3ICsxOTMsNyBAQCBzdGF0aWMgdm9pZCBtdGtfZHNp
-X2Rpc2FibGUoc3RydWN0IG10a19kc2kgKmRzaSkKIAltdGtfZHNpX21hc2soZHNpLCBEU0lfQ09O
-X0NUUkwsIERTSV9FTiwgMCk7CiB9CiAKLXN0YXRpYyB2b2lkIG10a19kc2lfcmVzZXQoc3RydWN0
-IG10a19kc2kgKmRzaSkKK3N0YXRpYyB2b2lkIG10a19kc2lfcmVzZXRfZW5naW5lKHN0cnVjdCBt
-dGtfZHNpICpkc2kpCiB7CiAJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX0NPTl9DVFJMLCBEU0lfUkVT
-RVQsIERTSV9SRVNFVCk7CiAJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX0NPTl9DVFJMLCBEU0lfUkVT
-RVQsIDApOwpAQCAtMjY3LDggKzI2NCw4IEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wb3dlcm9uKHN0
-cnVjdCBtdGtfZHNpICpkc2kpCiAJfQogCiAJbXRrX2RzaV9lbmFibGUoZHNpKTsKLQltdGtfZHNp
-X3Jlc2V0KGRzaSk7Ci0JZHNpX3BoeV90aW1jb25maWcoZHNpKTsKKwltdGtfZHNpX3Jlc2V0X2Vu
-Z2luZShkc2kpOworCW10a19kc2lfcGh5X3RpbWNvbmZpZyhkc2kpOwogCiAJcmV0dXJuIDA7CiAK
-QEAgLTI4MSwzMyArMjc4LDMzIEBAIHN0YXRpYyBpbnQgbXRrX2RzaV9wb3dlcm9uKHN0cnVjdCBt
-dGtfZHNpICpkc2kpCiAJcmV0dXJuIHJldDsKIH0KIAotc3RhdGljIHZvaWQgZHNpX2Nsa191bHBf
-bW9kZV9lbnRlcihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQorc3RhdGljIHZvaWQgbXRrX2RzaV9jbGtf
-dWxwX21vZGVfZW50ZXIoc3RydWN0IG10a19kc2kgKmRzaSkKIHsKIAltdGtfZHNpX21hc2soZHNp
-LCBEU0lfUEhZX0xDQ09OLCBMQ19IU19UWF9FTiwgMCk7CiAJbXRrX2RzaV9tYXNrKGRzaSwgRFNJ
-X1BIWV9MQ0NPTiwgTENfVUxQTV9FTiwgMCk7CiB9CiAKLXN0YXRpYyB2b2lkIGRzaV9jbGtfdWxw
-X21vZGVfbGVhdmUoc3RydWN0IG10a19kc2kgKmRzaSkKK3N0YXRpYyB2b2lkIG10a19kc2lfY2xr
-X3VscF9tb2RlX2xlYXZlKHN0cnVjdCBtdGtfZHNpICpkc2kpCiB7CiAJbXRrX2RzaV9tYXNrKGRz
-aSwgRFNJX1BIWV9MQ0NPTiwgTENfVUxQTV9FTiwgMCk7CiAJbXRrX2RzaV9tYXNrKGRzaSwgRFNJ
-X1BIWV9MQ0NPTiwgTENfV0FLRVVQX0VOLCBMQ19XQUtFVVBfRU4pOwogCW10a19kc2lfbWFzayhk
-c2ksIERTSV9QSFlfTENDT04sIExDX1dBS0VVUF9FTiwgMCk7CiB9CiAKLXN0YXRpYyB2b2lkIGRz
-aV9sYW5lMF91bHBfbW9kZV9lbnRlcihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQorc3RhdGljIHZvaWQg
-bXRrX2RzaV9sYW5lMF91bHBfbW9kZV9lbnRlcihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewogCW10
-a19kc2lfbWFzayhkc2ksIERTSV9QSFlfTEQwQ09OLCBMRDBfSFNfVFhfRU4sIDApOwogCW10a19k
-c2lfbWFzayhkc2ksIERTSV9QSFlfTEQwQ09OLCBMRDBfVUxQTV9FTiwgMCk7CiB9CiAKLXN0YXRp
-YyB2b2lkIGRzaV9sYW5lMF91bHBfbW9kZV9sZWF2ZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQorc3Rh
-dGljIHZvaWQgbXRrX2RzaV9sYW5lMF91bHBfbW9kZV9sZWF2ZShzdHJ1Y3QgbXRrX2RzaSAqZHNp
-KQogewogCW10a19kc2lfbWFzayhkc2ksIERTSV9QSFlfTEQwQ09OLCBMRDBfVUxQTV9FTiwgMCk7
-CiAJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX1BIWV9MRDBDT04sIExEMF9XQUtFVVBfRU4sIExEMF9X
-QUtFVVBfRU4pOwogCW10a19kc2lfbWFzayhkc2ksIERTSV9QSFlfTEQwQ09OLCBMRDBfV0FLRVVQ
-X0VOLCAwKTsKIH0KIAotc3RhdGljIGJvb2wgZHNpX2Nsa19oc19zdGF0ZShzdHJ1Y3QgbXRrX2Rz
-aSAqZHNpKQorc3RhdGljIGJvb2wgbXRrX2RzaV9jbGtfaHNfc3RhdGUoc3RydWN0IG10a19kc2kg
-KmRzaSkKIHsKIAl1MzIgdG1wX3JlZzE7CiAKQEAgLTMxNSwxNSArMzEyLDE1IEBAIHN0YXRpYyBi
-b29sIGRzaV9jbGtfaHNfc3RhdGUoc3RydWN0IG10a19kc2kgKmRzaSkKIAlyZXR1cm4gKCh0bXBf
-cmVnMSAmIExDX0hTX1RYX0VOKSA9PSAxKSA/IHRydWUgOiBmYWxzZTsKIH0KIAotc3RhdGljIHZv
-aWQgZHNpX2Nsa19oc19tb2RlKHN0cnVjdCBtdGtfZHNpICpkc2ksIGJvb2wgZW50ZXIpCitzdGF0
-aWMgdm9pZCBtdGtfZHNpX2Nsa19oc19tb2RlKHN0cnVjdCBtdGtfZHNpICpkc2ksIGJvb2wgZW50
-ZXIpCiB7Ci0JaWYgKGVudGVyICYmICFkc2lfY2xrX2hzX3N0YXRlKGRzaSkpCisJaWYgKGVudGVy
-ICYmICFtdGtfZHNpX2Nsa19oc19zdGF0ZShkc2kpKQogCQltdGtfZHNpX21hc2soZHNpLCBEU0lf
-UEhZX0xDQ09OLCBMQ19IU19UWF9FTiwgTENfSFNfVFhfRU4pOwotCWVsc2UgaWYgKCFlbnRlciAm
-JiBkc2lfY2xrX2hzX3N0YXRlKGRzaSkpCisJZWxzZSBpZiAoIWVudGVyICYmIG10a19kc2lfY2xr
-X2hzX3N0YXRlKGRzaSkpCiAJCW10a19kc2lfbWFzayhkc2ksIERTSV9QSFlfTENDT04sIExDX0hT
-X1RYX0VOLCAwKTsKIH0KIAotc3RhdGljIHZvaWQgZHNpX3NldF9tb2RlKHN0cnVjdCBtdGtfZHNp
-ICpkc2kpCitzdGF0aWMgdm9pZCBtdGtfZHNpX3NldF9tb2RlKHN0cnVjdCBtdGtfZHNpICpkc2kp
-CiB7CiAJdTMyIHZpZF9tb2RlID0gQ01EX01PREU7CiAKQEAgLTMzOCw3ICszMzUsNyBAQCBzdGF0
-aWMgdm9pZCBkc2lfc2V0X21vZGUoc3RydWN0IG10a19kc2kgKmRzaSkKIAl3cml0ZWwodmlkX21v
-ZGUsIGRzaS0+cmVncyArIERTSV9NT0RFX0NUUkwpOwogfQogCi1zdGF0aWMgdm9pZCBkc2lfcHNf
-Y29udHJvbF92YWN0KHN0cnVjdCBtdGtfZHNpICpkc2kpCitzdGF0aWMgdm9pZCBtdGtfZHNpX3Bz
-X2NvbnRyb2xfdmFjdChzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewogCXN0cnVjdCB2aWRlb21vZGUg
-KnZtID0gJmRzaS0+dm07CiAJdTMyIGRzaV9idWZfYnBwLCBwc193YzsKQEAgLTM3Miw3ICszNjks
-NyBAQCBzdGF0aWMgdm9pZCBkc2lfcHNfY29udHJvbF92YWN0KHN0cnVjdCBtdGtfZHNpICpkc2kp
-CiAJd3JpdGVsKHBzX3djLCBkc2ktPnJlZ3MgKyBEU0lfSFNUWF9DS0xfV0MpOwogfQogCi1zdGF0
-aWMgdm9pZCBkc2lfcnh0eF9jb250cm9sKHN0cnVjdCBtdGtfZHNpICpkc2kpCitzdGF0aWMgdm9p
-ZCBtdGtfZHNpX3J4dHhfY29udHJvbChzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewogCXUzMiB0bXBf
-cmVnOwogCkBAIC0zOTcsOSArMzk0LDkgQEAgc3RhdGljIHZvaWQgZHNpX3J4dHhfY29udHJvbChz
-dHJ1Y3QgbXRrX2RzaSAqZHNpKQogCXdyaXRlbCh0bXBfcmVnLCBkc2ktPnJlZ3MgKyBEU0lfVFhS
-WF9DVFJMKTsKIH0KIAotc3RhdGljIHZvaWQgZHNpX3BzX2NvbnRyb2woc3RydWN0IG10a19kc2kg
-KmRzaSkKK3N0YXRpYyB2b2lkIG10a19kc2lfcHNfY29udHJvbChzdHJ1Y3QgbXRrX2RzaSAqZHNp
-KQogewotCXVuc2lnbmVkIGludCBkc2lfdG1wX2J1Zl9icHA7CisJdTMyIGRzaV90bXBfYnVmX2Jw
-cDsKIAl1MzIgdG1wX3JlZzsKIAogCXN3aXRjaCAoZHNpLT5mb3JtYXQpIHsKQEAgLTQyOSwxMiAr
-NDI2LDEyIEBAIHN0YXRpYyB2b2lkIGRzaV9wc19jb250cm9sKHN0cnVjdCBtdGtfZHNpICpkc2kp
-CiAJd3JpdGVsKHRtcF9yZWcsIGRzaS0+cmVncyArIERTSV9QU0NUUkwpOwogfQogCi1zdGF0aWMg
-dm9pZCBkc2lfY29uZmlnX3Zkb190aW1pbmcoc3RydWN0IG10a19kc2kgKmRzaSkKK3N0YXRpYyB2
-b2lkIG10a19kc2lfY29uZmlnX3Zkb190aW1pbmcoc3RydWN0IG10a19kc2kgKmRzaSkKIHsKLQl1
-bnNpZ25lZCBpbnQgaG9yaXpvbnRhbF9zeW5jX2FjdGl2ZV9ieXRlOwotCXVuc2lnbmVkIGludCBo
-b3Jpem9udGFsX2JhY2twb3JjaF9ieXRlOwotCXVuc2lnbmVkIGludCBob3Jpem9udGFsX2Zyb250
-cG9yY2hfYnl0ZTsKLQl1bnNpZ25lZCBpbnQgZHNpX3RtcF9idWZfYnBwOworCXUzMiBob3Jpem9u
-dGFsX3N5bmNfYWN0aXZlX2J5dGU7CisJdTMyIGhvcml6b250YWxfYmFja3BvcmNoX2J5dGU7CisJ
-dTMyIGhvcml6b250YWxfZnJvbnRwb3JjaF9ieXRlOworCXUzMiBkc2lfdG1wX2J1Zl9icHA7CiAK
-IAlzdHJ1Y3QgdmlkZW9tb2RlICp2bSA9ICZkc2ktPnZtOwogCkBAIC00NjMsNyArNDYwLDcgQEAg
-c3RhdGljIHZvaWQgZHNpX2NvbmZpZ192ZG9fdGltaW5nKHN0cnVjdCBtdGtfZHNpICpkc2kpCiAJ
-d3JpdGVsKGhvcml6b250YWxfYmFja3BvcmNoX2J5dGUsIGRzaS0+cmVncyArIERTSV9IQlBfV0Mp
-OwogCXdyaXRlbChob3Jpem9udGFsX2Zyb250cG9yY2hfYnl0ZSwgZHNpLT5yZWdzICsgRFNJX0hG
-UF9XQyk7CiAKLQlkc2lfcHNfY29udHJvbChkc2kpOworCW10a19kc2lfcHNfY29udHJvbChkc2kp
-OwogfQogCiBzdGF0aWMgdm9pZCBtdGtfZHNpX3N0YXJ0KHN0cnVjdCBtdGtfZHNpICpkc2kpCkBA
-IC00ODAsOCArNDc3LDggQEAgc3RhdGljIHZvaWQgbXRrX2RzaV9wb3dlcm9mZihzdHJ1Y3QgbXRr
-X2RzaSAqZHNpKQogCWlmICgtLWRzaS0+cmVmY291bnQgIT0gMCkKIAkJcmV0dXJuOwogCi0JZHNp
-X2xhbmUwX3VscF9tb2RlX2VudGVyKGRzaSk7Ci0JZHNpX2Nsa191bHBfbW9kZV9lbnRlcihkc2kp
-OworCW10a19kc2lfbGFuZTBfdWxwX21vZGVfZW50ZXIoZHNpKTsKKwltdGtfZHNpX2Nsa191bHBf
-bW9kZV9lbnRlcihkc2kpOwogCiAJbXRrX2RzaV9kaXNhYmxlKGRzaSk7CiAKQEAgLTUxMSwxOCAr
-NTA4LDE4IEBAIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNpX2VuYWJsZShzdHJ1Y3QgbXRrX2Rz
-aSAqZHNpKQogCQlyZXR1cm47CiAJfQogCi0JZHNpX3J4dHhfY29udHJvbChkc2kpOworCW10a19k
-c2lfcnh0eF9jb250cm9sKGRzaSk7CiAKLQlkc2lfY2xrX3VscF9tb2RlX2xlYXZlKGRzaSk7Ci0J
-ZHNpX2xhbmUwX3VscF9tb2RlX2xlYXZlKGRzaSk7Ci0JZHNpX2Nsa19oc19tb2RlKGRzaSwgMCk7
-Ci0JZHNpX3NldF9tb2RlKGRzaSk7CisJbXRrX2RzaV9jbGtfdWxwX21vZGVfbGVhdmUoZHNpKTsK
-KwltdGtfZHNpX2xhbmUwX3VscF9tb2RlX2xlYXZlKGRzaSk7CisJbXRrX2RzaV9jbGtfaHNfbW9k
-ZShkc2ksIDApOworCW10a19kc2lfc2V0X21vZGUoZHNpKTsKIAotCWRzaV9wc19jb250cm9sX3Zh
-Y3QoZHNpKTsKLQlkc2lfY29uZmlnX3Zkb190aW1pbmcoZHNpKTsKKwltdGtfZHNpX3BzX2NvbnRy
-b2xfdmFjdChkc2kpOworCW10a19kc2lfY29uZmlnX3Zkb190aW1pbmcoZHNpKTsKIAotCWRzaV9z
-ZXRfbW9kZShkc2kpOwotCWRzaV9jbGtfaHNfbW9kZShkc2ksIDEpOworCW10a19kc2lfc2V0X21v
-ZGUoZHNpKTsKKwltdGtfZHNpX2Nsa19oc19tb2RlKGRzaSwgMSk7CiAKIAltdGtfZHNpX3N0YXJ0
-KGRzaSk7CiAKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfbWlwaV90
-eC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMKaW5kZXggYzRhMDE2
-NS4uZmQ4NDkxNCAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBp
-X3R4LmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19taXBpX3R4LmMKQEAgLTEz
-NCw3ICsxMzQsNyBAQCBzdHJ1Y3QgbXRrX21pcGl0eF9kYXRhIHsKIHN0cnVjdCBtdGtfbWlwaV90
-eCB7CiAJc3RydWN0IGRldmljZSAqZGV2OwogCXZvaWQgX19pb21lbSAqcmVnczsKLQl1bnNpZ25l
-ZCBpbnQgZGF0YV9yYXRlOworCXUzMiBkYXRhX3JhdGU7CiAJY29uc3Qgc3RydWN0IG10a19taXBp
-dHhfZGF0YSAqZHJpdmVyX2RhdGE7CiAJc3RydWN0IGNsa19odyBwbGxfaHc7CiAJc3RydWN0IGNs
-ayAqcGxsOwpAQCAtMTcyLDcgKzE3Miw3IEBAIHN0YXRpYyB2b2lkIG10a19taXBpX3R4X3VwZGF0
-ZV9iaXRzKHN0cnVjdCBtdGtfbWlwaV90eCAqbWlwaV90eCwgdTMyIG9mZnNldCwKIHN0YXRpYyBp
-bnQgbXRrX21pcGlfdHhfcGxsX3ByZXBhcmUoc3RydWN0IGNsa19odyAqaHcpCiB7CiAJc3RydWN0
-IG10a19taXBpX3R4ICptaXBpX3R4ID0gbXRrX21pcGlfdHhfZnJvbV9jbGtfaHcoaHcpOwotCXVu
-c2lnbmVkIGludCB0eGRpdiwgdHhkaXYwLCB0eGRpdjE7CisJdTggdHhkaXYsIHR4ZGl2MCwgdHhk
-aXYxOwogCXU2NCBwY3c7CiAKIAlkZXZfZGJnKG1pcGlfdHgtPmRldiwgInByZXBhcmU6ICV1IEh6
-XG4iLCBtaXBpX3R4LT5kYXRhX3JhdGUpOwpAQCAtMzI2LDcgKzMyNiw3IEBAIHN0YXRpYyB1bnNp
-Z25lZCBsb25nIG10a19taXBpX3R4X3BsbF9yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywK
-IHN0YXRpYyBpbnQgbXRrX21pcGlfdHhfcG93ZXJfb25fc2lnbmFsKHN0cnVjdCBwaHkgKnBoeSkK
-IHsKIAlzdHJ1Y3QgbXRrX21pcGlfdHggKm1pcGlfdHggPSBwaHlfZ2V0X2RydmRhdGEocGh5KTsK
-LQl1bnNpZ25lZCBpbnQgcmVnOworCXUzMiByZWc7CiAKIAlmb3IgKHJlZyA9IE1JUElUWF9EU0lf
-Q0xPQ0tfTEFORTsKIAkgICAgIHJlZyA8PSBNSVBJVFhfRFNJX0RBVEFfTEFORTM7IHJlZyArPSA0
-KQpAQCAtMzU3LDcgKzM1Nyw3IEBAIHN0YXRpYyBpbnQgbXRrX21pcGlfdHhfcG93ZXJfb24oc3Ry
-dWN0IHBoeSAqcGh5KQogc3RhdGljIHZvaWQgbXRrX21pcGlfdHhfcG93ZXJfb2ZmX3NpZ25hbChz
-dHJ1Y3QgcGh5ICpwaHkpCiB7CiAJc3RydWN0IG10a19taXBpX3R4ICptaXBpX3R4ID0gcGh5X2dl
-dF9kcnZkYXRhKHBoeSk7Ci0JdW5zaWduZWQgaW50IHJlZzsKKwl1MzIgcmVnOwogCiAJbXRrX21p
-cGlfdHhfc2V0X2JpdHMobWlwaV90eCwgTUlQSVRYX0RTSV9UT1BfQ09OLAogCQkJICAgICBSR19E
-U0lfUEFEX1RJRV9MT1dfRU4pOwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+From: shaoming chen <shaoming.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+add dsi interrupt control
+
+Signed-off-by: shaoming chen <shaoming.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 92 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 92 insertions(+)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index 6f4b3bb..474861a 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -18,6 +18,7 @@
+ #include <drm/drm_panel.h>
+ #include <linux/clk.h>
+ #include <linux/component.h>
++#include <linux/irq.h>
+ #include <linux/of.h>
+ #include <linux/of_platform.h>
+ #include <linux/of_graph.h>
+@@ -29,6 +30,16 @@
+ 
+ #define DSI_START		0x00
+ 
++#define DSI_INTEN		0x08
++
++#define DSI_INTSTA		0x0c
++#define LPRX_RD_RDY_INT_FLAG		BIT(0)
++#define CMD_DONE_INT_FLAG		BIT(1)
++#define TE_RDY_INT_FLAG			BIT(2)
++#define VM_DONE_INT_FLAG		BIT(3)
++#define EXT_TE_RDY_INT_FLAG		BIT(4)
++#define DSI_BUSY			BIT(31)
++
+ #define DSI_CON_CTRL		0x10
+ #define DSI_RESET			BIT(0)
+ #define DSI_EN				BIT(1)
+@@ -71,6 +82,9 @@
+ 
+ #define DSI_HSTX_CKL_WC		0x64
+ 
++#define DSI_RACK		0x84
++#define RACK				BIT(0)
++
+ #define DSI_PHY_LCCON		0x104
+ #define LC_HS_TX_EN			BIT(0)
+ #define LC_ULPM_EN			BIT(1)
+@@ -137,6 +151,8 @@ struct mtk_dsi {
+ 	struct videomode vm;
+ 	int refcount;
+ 	bool enabled;
++	u32 irq_data;
++	wait_queue_head_t irq_wait_queue;
+ };
+ 
+ static inline struct mtk_dsi *encoder_to_dsi(struct drm_encoder *e)
+@@ -469,6 +485,64 @@ static void mtk_dsi_start(struct mtk_dsi *dsi)
+ 	writel(1, dsi->regs + DSI_START);
+ }
+ 
++static void mtk_dsi_set_interrupt_enable(struct mtk_dsi *dsi)
++{
++	u32 inten = LPRX_RD_RDY_INT_FLAG | CMD_DONE_INT_FLAG | VM_DONE_INT_FLAG;
++
++	writel(inten, dsi->regs + DSI_INTEN);
++}
++
++static void mtk_dsi_irq_data_set(struct mtk_dsi *dsi, u32 irq_bit)
++{
++	dsi->irq_data |= irq_bit;
++}
++
++static __maybe_unused void mtk_dsi_irq_data_clear(struct mtk_dsi *dsi, u32 irq_bit)
++{
++	dsi->irq_data &= ~irq_bit;
++}
++
++static __maybe_unused s32 mtk_dsi_wait_for_irq_done(struct mtk_dsi *dsi, u32 irq_flag,
++				     unsigned int timeout)
++{
++	s32 ret = 0;
++	unsigned long jiffies = msecs_to_jiffies(timeout);
++
++	ret = wait_event_interruptible_timeout(dsi->irq_wait_queue,
++					       dsi->irq_data & irq_flag,
++					       jiffies);
++	if (ret == 0) {
++		DRM_WARN("Wait DSI IRQ(0x%08x) Timeout\n", irq_flag);
++
++		mtk_dsi_enable(dsi);
++		mtk_dsi_reset_engine(dsi);
++	}
++
++	return ret;
++}
++
++static irqreturn_t mtk_dsi_irq(int irq, void *dev_id)
++{
++	struct mtk_dsi *dsi = dev_id;
++	u32 status, tmp;
++	u32 flag = LPRX_RD_RDY_INT_FLAG | CMD_DONE_INT_FLAG | VM_DONE_INT_FLAG;
++
++	status = readl(dsi->regs + DSI_INTSTA) & flag;
++
++	if (status) {
++		do {
++			mtk_dsi_mask(dsi, DSI_RACK, RACK, RACK);
++			tmp = readl(dsi->regs + DSI_INTSTA);
++		} while (tmp & DSI_BUSY);
++
++		mtk_dsi_mask(dsi, DSI_INTSTA, status, 0);
++		mtk_dsi_irq_data_set(dsi, status);
++		wake_up_interruptible(&dsi->irq_wait_queue);
++	}
++
++	return IRQ_HANDLED;
++}
++
+ static void mtk_dsi_poweroff(struct mtk_dsi *dsi)
+ {
+ 	if (WARN_ON(dsi->refcount == 0))
+@@ -517,6 +591,7 @@ static void mtk_output_dsi_enable(struct mtk_dsi *dsi)
+ 
+ 	mtk_dsi_ps_control_vact(dsi);
+ 	mtk_dsi_config_vdo_timing(dsi);
++	mtk_dsi_set_interrupt_enable(dsi);
+ 
+ 	mtk_dsi_set_mode(dsi);
+ 	mtk_dsi_clk_hs_mode(dsi, 1);
+@@ -818,6 +893,7 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *remote_node, *endpoint;
+ 	struct resource *regs;
++	int irq_num;
+ 	int comp_id;
+ 	int ret;
+ 
+@@ -894,6 +970,22 @@ static int mtk_dsi_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	irq_num = platform_get_irq(pdev, 0);
++	if (irq_num < 0) {
++		dev_err(&pdev->dev, "failed to request dsi irq resource\n");
++		return -EPROBE_DEFER;
++	}
++
++	irq_set_status_flags(irq_num, IRQ_TYPE_LEVEL_LOW);
++	ret = devm_request_irq(&pdev->dev, irq_num, mtk_dsi_irq,
++			       IRQF_TRIGGER_LOW, dev_name(&pdev->dev), dsi);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to request mediatek dsi irq\n");
++		return -EPROBE_DEFER;
++	}
++
++	init_waitqueue_head(&dsi->irq_wait_queue);
++
+ 	platform_set_drvdata(pdev, dsi);
+ 
+ 	return component_add(&pdev->dev, &mtk_dsi_component_ops);
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
