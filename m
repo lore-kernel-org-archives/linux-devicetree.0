@@ -1,355 +1,102 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 12/16] arm: dts: add mt7623-mt6323.dtsi file
-Date: Mon, 23 Jan 2017 12:29:31 +0100
-Message-ID: <1485170975-51813-13-git-send-email-john@phrozen.org>
+From: John Crispin <john@phrozen.org>
+Subject: [PATCH 11/16] arm: dts: add usb nodes to the mt7623.dtsi file
+Date: Mon, 23 Jan 2017 12:29:30 +0100
+Message-ID: <1485170975-51813-12-git-send-email-john@phrozen.org>
 References: <1485170975-51813-1-git-send-email-john@phrozen.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485170975-51813-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485170975-51813-1-git-send-email-john@phrozen.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, John Crispin <john@phrozen.org>
 List-Id: devicetree@vger.kernel.org
 
-MediaTek produces various PMICs. Which one is used depends on the actual
-circuit design. Instead of adding the correct PMIC node to every dts file
-we instead add a new intermediate dtsi file which adds the PMIC node.
-Additionally we also add the phandles for the regulators to various nodes.
+Add USB nodes to the mt7623.dtsi file.
 
-Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Signed-off-by: John Crispin <john@phrozen.org>
 ---
- arch/arm/boot/dts/mt7623-evb.dts     |    2 +-
- arch/arm/boot/dts/mt7623-mt6323.dtsi |  273 ++++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/mt7623.dtsi        |    8 +-
- 3 files changed, 278 insertions(+), 5 deletions(-)
- create mode 100644 arch/arm/boot/dts/mt7623-mt6323.dtsi
+ arch/arm/boot/dts/mt7623.dtsi |   59 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
 
-diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623-evb.dts
-index a9ee2d6..58ed038 100644
---- a/arch/arm/boot/dts/mt7623-evb.dts
-+++ b/arch/arm/boot/dts/mt7623-evb.dts
-@@ -13,7 +13,7 @@
-  */
- 
- /dts-v1/;
--#include "mt7623.dtsi"
-+#include "mt7623-mt6323.dtsi"
- 
- / {
- 	model = "MediaTek MT7623 evaluation board";
-diff --git a/arch/arm/boot/dts/mt7623-mt6323.dtsi b/arch/arm/boot/dts/mt7623-mt6323.dtsi
-new file mode 100644
-index 0000000..88ab818
---- /dev/null
-+++ b/arch/arm/boot/dts/mt7623-mt6323.dtsi
-@@ -0,0 +1,273 @@
-+/*
-+ * Copyright (c) 2016 MediaTek Inc.
-+ * Author: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include "mt7623.dtsi"
-+
-+&cpu0 {
-+	proc-supply = <&mt6323_vproc_reg>;
-+};
-+
-+&cpu1 {
-+	proc-supply = <&mt6323_vproc_reg>;
-+};
-+
-+&cpu2 {
-+	proc-supply = <&mt6323_vproc_reg>;
-+};
-+
-+&cpu3 {
-+	proc-supply = <&mt6323_vproc_reg>;
-+};
-+
-+&pwrap {
-+	pmic: mt6323 {
-+		compatible = "mediatek,mt6323";
-+		interrupt-parent = <&pio>;
-+		interrupts = <150 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+
-+		mt6323regulator: mt6323regulator{
-+			compatible = "mediatek,mt6323-regulator";
-+
-+			mt6323_vproc_reg: buck_vproc{
-+				regulator-name = "vproc";
-+				regulator-min-microvolt = < 700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-ramp-delay = <12500>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vsys_reg: buck_vsys{
-+				regulator-name = "vsys";
-+				regulator-min-microvolt = <1400000>;
-+				regulator-max-microvolt = <2987500>;
-+				regulator-ramp-delay = <25000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vpa_reg: buck_vpa{
-+				regulator-name = "vpa";
-+				regulator-min-microvolt = < 500000>;
-+				regulator-max-microvolt = <3650000>;
-+			};
-+
-+			mt6323_vtcxo_reg: ldo_vtcxo{
-+				regulator-name = "vtcxo";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <90>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcn28_reg: ldo_vcn28{
-+				regulator-name = "vcn28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_bt_reg: ldo_vcn33_bt{
-+				regulator-name = "vcn33_bt";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_vcn33_wifi_reg: ldo_vcn33_wifi{
-+				regulator-name = "vcn33_wifi";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3600000>;
-+				regulator-enable-ramp-delay = <185>;
-+			};
-+
-+			mt6323_va_reg: ldo_va{
-+				regulator-name = "va";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcama_reg: ldo_vcama{
-+				regulator-name = "vcama";
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vio28_reg: ldo_vio28{
-+				regulator-name = "vio28";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vusb_reg: ldo_vusb{
-+				regulator-name = "vusb";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmc_reg: ldo_vmc{
-+				regulator-name = "vmc";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vmch_reg: ldo_vmch{
-+				regulator-name = "vmch";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vemc3v3_reg: ldo_vemc3v3{
-+				regulator-name = "vemc3v3";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vgp1_reg: ldo_vgp1{
-+				regulator-name = "vgp1";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp2_reg: ldo_vgp2{
-+				regulator-name = "vgp2";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vgp3_reg: ldo_vgp3{
-+				regulator-name = "vgp3";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcn18_reg: ldo_vcn18{
-+				regulator-name = "vcn18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim1_reg: ldo_vsim1{
-+				regulator-name = "vsim1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vsim2_reg: ldo_vsim2{
-+				regulator-name = "vsim2";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vrtc_reg: ldo_vrtc{
-+				regulator-name = "vrtc";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamaf_reg: ldo_vcamaf{
-+				regulator-name = "vcamaf";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vibr_reg: ldo_vibr{
-+				regulator-name = "vibr";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-enable-ramp-delay = <36>;
-+			};
-+
-+			mt6323_vrf18_reg: ldo_vrf18{
-+				regulator-name = "vrf18";
-+				regulator-min-microvolt = <1825000>;
-+				regulator-max-microvolt = <1825000>;
-+				regulator-enable-ramp-delay = <187>;
-+			};
-+
-+			mt6323_vm_reg: ldo_vm{
-+				regulator-name = "vm";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vio18_reg: ldo_vio18{
-+				regulator-name = "vio18";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+
-+			mt6323_vcamd_reg: ldo_vcamd{
-+				regulator-name = "vcamd";
-+				regulator-min-microvolt = <1200000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+
-+			mt6323_vcamio_reg: ldo_vcamio{
-+				regulator-name = "vcamio";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-enable-ramp-delay = <216>;
-+			};
-+		};
-+	};
-+};
-+
-+&usb1 {
-+	vusb33-supply = <&mt6323_vusb_reg>;
-+};
-+
-+&mmc0 {
-+	vmmc-supply = <&mt6323_vemc3v3_reg>;
-+	vqmmc-supply = <&mt6323_vio18_reg>;
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&mt6323_vmch_reg>;
-+	vqmmc-supply = <&mt6323_vmc_reg>;
-+};
 diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 540f70c..b256ff51 100644
+index 791f3b1..540f70c 100644
 --- a/arch/arm/boot/dts/mt7623.dtsi
 +++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -30,22 +30,22 @@
- 		#size-cells = <0>;
- 		enable-method = "mediatek,mt6589-smp";
+@@ -340,6 +340,65 @@
+ 		status = "disabled";
+ 	};
  
--		cpu@0 {
-+		cpu0: cpu@0 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x0>;
- 		};
--		cpu@1 {
-+		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x1>;
- 		};
--		cpu@2 {
-+		cpu2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x2>;
- 		};
--		cpu@3 {
-+		cpu3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a7";
- 			reg = <0x3>;
++	usb1: usb@1a1c0000 {
++		compatible = "mediatek,mt7623-xhci",
++			     "mediatek,mt8173-xhci";
++		reg = <0 0x1a1c0000 0 0x1000>,
++		      <0 0x1a1c4700 0 0x0100>;
++		reg-names = "mac", "ippc";
++		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
++			 <&topckgen CLK_TOP_ETHIF_SEL>;
++		clock-names = "sys_ck", "ethif";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
++		phys = <&phy_port0 PHY_TYPE_USB3>;
++		status = "disabled";
++	};
++
++	u3phy1: usb-phy@1a1c4000 {
++		compatible = "mediatek,mt7623-u3phy",
++			     "mediatek,mt8173-u3phy";
++		reg = <0 0x1a1c4000 0 0x0700>;
++		clocks = <&clk26m>;
++		clock-names = "u3phya_ref";
++		#phy-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "disabled";
++
++		phy_port0: phy_port0: port@1a1c4800 {
++			reg = <0 0x1a1c4800 0 0x800>;
++			#phy-cells = <1>;
++			status = "okay";
++		};
++	};
++
++	usb2: usb@1a240000 {
++		compatible = "mediatek,mt7623-xhci",
++			     "mediatek,mt8173-xhci";
++		reg = <0 0x1a240000 0 0x1000>,
++		      <0 0x1a244700 0 0x0100>;
++		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
++			 <&topckgen CLK_TOP_ETHIF_SEL>;
++		clock-names = "sys_ck", "ethif";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
++		phys = <&u3phy2 0>;
++		status = "disabled";
++	};
++
++	u3phy2: usb-phy@1a244000 {
++		compatible = "mediatek,mt7623-u3phy",
++			     "mediatek,mt8173-u3phy";
++		reg = <0 0x1a244000 0 0x0700>,
++		      <0 0x1a244800 0 0x0800>;
++		clocks = <&clk26m>;
++		clock-names = "u3phya_ref";
++		#phy-cells = <1>;
++		status = "disabled";
++	};
++
+ 	hifsys: syscon@1a000000 {
+ 		compatible = "mediatek,mt7623-hifsys",
+ 			     "mediatek,mt2701-hifsys",
 -- 
 1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
