@@ -1,43 +1,113 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v12 10/12] drm/mediatek: add non-continuous clock mode and EOT
- packet control
-Date: Mon, 23 Jan 2017 19:05:23 +0800
-Message-ID: <1485169525-22163-11-git-send-email-yt.shen@mediatek.com>
-References: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Mon, 23 Jan 2017 12:08:41 +0100
+Message-ID: <2b6ae556-df48-6b6b-87f1-d092eba586b9@xs4all.nl>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+ <1484929911.2897.70.camel@pengutronix.de>
+ <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
+ <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
+ <1485169204.2874.57.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485169204.2874.57.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.orgSteve
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCB3aWxsIHVwZGF0ZSBkc2kgY2xvY2sgY29udHJvbCBtZXRob2QuCjEuIGRzaSBu
-b24tY29udGludWUgY2xvY2sgbW9kZSB3aWxsIGVuaGFuY2UgYW50aXN0YXRpYyBlZmZlY3QgZm9y
-IHBhbmVsCjIuIEVPVCBwYWNrZXQgY29udHJvbCB3aWxsIGp1ZGdlIHdoZXRoZXIgZHNpIHNlbmQg
-ZW5kIG9mIHBhY2tldCBvciBub3QKYnkgY3VzdG9taXplCgpTaWduZWQtb2ZmLWJ5OiBzaGFvbWlu
-ZyBjaGVuIDxzaGFvbWluZy5jaGVuQG1lZGlhdGVrLmNvbT4KU2lnbmVkLW9mZi1ieTogWVQgU2hl
-biA8eXQuc2hlbkBtZWRpYXRlay5jb20+CkFja2VkLWJ5OiBDSyBIdSA8Y2suaHVAbWVkaWF0ZWsu
-Y29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHNpLmMgfCAzICsrKwogMSBm
-aWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9tZWRpYXRlay9tdGtfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RzaS5j
-CmluZGV4IGIzYzdmZDguLjg1ZjIyZDIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYwpA
-QCAtNDMxLDYgKzQzMSw5IEBAIHN0YXRpYyB2b2lkIG10a19kc2lfcnh0eF9jb250cm9sKHN0cnVj
-dCBtdGtfZHNpICpkc2kpCiAJCWJyZWFrOwogCX0KIAorCXRtcF9yZWcgfD0gKGRzaS0+bW9kZV9m
-bGFncyAmIE1JUElfRFNJX0NMT0NLX05PTl9DT05USU5VT1VTKSA8PCA2OworCXRtcF9yZWcgfD0g
-KGRzaS0+bW9kZV9mbGFncyAmIE1JUElfRFNJX01PREVfRU9UX1BBQ0tFVCkgPj4gMzsKKwogCXdy
-aXRlbCh0bXBfcmVnLCBkc2ktPnJlZ3MgKyBEU0lfVFhSWF9DVFJMKTsKIH0KIAotLSAKMS45LjEK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
-bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
-c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 01/23/2017 12:00 PM, Philipp Zabel wrote:
+> On Fri, 2017-01-20 at 21:39 +0100, Hans Verkuil wrote:
+> [...]
+>>> There is a VDIC entity in the i.MX IPU that performs de-interlacing with
+>>> hardware filters for motion compensation. Some of the motion compensation
+>>> modes ("low" and "medium" motion) require that the VDIC receive video
+>>> frame fields from memory buffers (dedicated dma channels in the
+>>> IPU are used to transfer those buffers into the VDIC).
+>>>
+>>> So one option to support those modes would be to pass the raw buffers
+>>> from a camera sensor up to userspace to a capture device, and then pass
+>>> them back to the VDIC for de-interlacing using a mem2mem device.
+>>>
+>>> Philipp and I are both in agreement that, since userland is not interested
+>>> in the intermediate interlaced buffers in this case, but only the final
+>>> result (motion compensated, de-interlaced frames), it is more efficient
+>>> to provide a media link that allows passing those intermediate frames
+>>> directly from a camera source pad to VDIC sink pad, without having
+>>> to route them through userspace.
+>>>
+>>> So in order to support that, I've implemented a simple FIFO dma buffer
+>>> queue in the driver to allow passing video buffers directly from a source
+>>> to a sink. It is modeled loosely off the vb2 state machine and API, but
+>>> simpler (for instance it only allows contiguous, cache-coherent buffers).
+>>>
+>>> This is where Philipp has an argument, that this should be done with a
+>>> new API in videobuf2.
+> 
+> That is one part of the argument. I'm glad to understand now that we
+> agree about this.
+> 
+>>> And I'm actually in total agreement with that. I definitely agree that there
+>>> should be a mechanism in the media framework that allows passing video
+>>> buffers from a source pad to a sink pad using a software queue, with no
+>>> involvement from userland.
+> 
+> That is the other part of the argument. I do not agree that these
+> software queue "links" should be presented to userspace as media pad
+> links between two entities of a media device. 
+> 
+> First, that would limit the links to subdevices contained in the same
+> media graph, while this should work between any two capture and output
+> queues of different devices.
+> Assume for example, we want to encode the captured, deinterlaced video
+> to h.264 with the coda VPU driver. A software queue link could be
+> established between the CSI capture and the VDIC deinterlacer input,
+> just as between the VDIC deinterlacer output and the coda VPU input.
+> Technically, there would be no difference between those two linked
+> capture/output queue pairs. But the coda driver is a completely separate
+> mem2mem device. And since it is not part of the i.MX media graph, there
+> is no entity pad to link to.
+> Or assume there is an USB analog capture device that produces interlaced
+> frames. I think it should be possible to connect its capture queue to
+> the VDIC deinterlacer output queue just the same way as linking the CSI
+> to the VDIC (in software queue mode).
+> 
+> Second, the subdevice pad formats describe wire formats, not memory
+> formats. The user might want to choose between 4:2:2 and 4:2:0
+> subsampled YUV formats for the intermediate buffer, for example,
+> depending on memory bandwidth constraints and quality requirements. This
+> is impossible with the media entity / subdevice pad links.
+> 
+> I think an interface where userspace configures the capture and output
+> queues via v4l2 API, passes dma buffers around from one to the other
+> queue, and then puts both queues into a free running mode would be a
+> much better fit for this mechanism.
+> 
+>>> My only disagreement is when this should be implemented. I think it is
+>>> fine to keep my custom implementation of this in the driver for now. Once
+>>> an extension of vb2 is ready to support this feature, it would be fairly
+>>> straightforward to strip out my custom implementation and go with the
+>>> new API.
+>>
+>> For a staging driver this isn't necessary, as long as it is documented in
+>> the TODO file that this needs to be fixed before it can be moved out of
+>> staging. The whole point of staging is that there is still work to be
+>> done in the driver, after all :-)
+> 
+> Absolutely. The reason I am arguing against merging the mem2mem media
+> control links so vehemently is that I am convinced the userspace
+> interface is wrong, and I am afraid that even though in staging, it
+> might become established.
+
+As long as it is mentioned in the TODO, and ideally in the Kconfig as well,
+then I'm fine with it.
+
+The big advantage of being in the kernel is that it is much easier to start
+providing fixes, improvements, etc. If you use a staging driver you know
+that there is no guarantee whatsoever with respect to stable ABI/APIs.
+
+Regards,
+
+	Hans
