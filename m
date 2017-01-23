@@ -1,45 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [V2 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Mon, 23 Jan 2017 13:46:57 +0000
-Message-ID: <20170123134656.GC16286@leverpostej>
-References: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
- <1484034915-48879-2-git-send-email-puck.chen@hisilicon.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v2 0/3] Add support for es8323 and hdmi audio
+	to the firefly-rk3288
+Date: Mon, 23 Jan 2017 14:47:44 +0100
+Message-ID: <20170123134747.1385-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1484034915-48879-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 10, 2017 at 03:55:15PM +0800, Chen Feng wrote:
-> +	memory@0 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x00400000 0x0 0xbfe00000>;
-> +	};
+This set of patches enables support for the es8323 codecs on the
+firefly-rk3288. It adds the required DT definitions to link rockchip-i2s
+to the es8388 analog output. As the support for HDMI audio is also
+built-in in the corresponding ASoC machine driver, HDMI audio output is
+also enabled.
 
-The unit-address here is incorrect. The base address of this memory is
-not zero.
+Changes in v2:
+ - Adapted DT for the firefly-rk3288 to the ASoC machine driver
+   rk3288-hdmi-analog
+ - Added patch 02/03 to this series
+ - Re-wrote this cover letter
 
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
-> +		clock-frequency = <1920000>;
-> +	};
+Romain Perier (3):
+  SoC: es8328-i2c: Add compatible for ES8323
+  arm: dts: rockchip: Don't set otp-gpio pinctrl by default in
+    rk3288.dtsi
+  arm: dts: Add support for ES8323 to the Firefly-RK3288
 
-This clock-frequency property should not be required; please remove it.
+ Documentation/devicetree/bindings/sound/es8328.txt |  5 +++-
+ arch/arm/boot/dts/rk3288-evb.dtsi                  |  4 +++
+ arch/arm/boot/dts/rk3288-firefly.dtsi              | 34 ++++++++++++++++++++++
+ arch/arm/boot/dts/rk3288-veyron.dtsi               |  4 +++
+ arch/arm/boot/dts/rk3288.dtsi                      |  4 ---
+ sound/soc/codecs/es8328-i2c.c                      |  2 ++
+ 6 files changed, 48 insertions(+), 5 deletions(-)
 
-Your FW should program CNTFRQ_EL0 with the timer frequency.
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.9.3
