@@ -1,41 +1,54 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 2/4] Documentation: devicetree: Add LED subnode binding for MT6323 PMIC
-Date: Mon, 23 Jan 2017 11:54:43 +0800
-Message-ID: <1485143685-11808-3-git-send-email-sean.wang@mediatek.com>
-References: <1485143685-11808-1-git-send-email-sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485143685-11808-1-git-send-email-sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rpurdie@rpsys.net, jacek.anaszewski@gmail.com, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 1/3] dt: bindings: add documentation for zx2967 family i2c controller
+Date: Mon, 23 Jan 2017 13:03:24 +0800
+Message-ID: <1485147806-17792-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+This patch adds dt-binding documentation for zx2967 family
+i2c controller.
 
-This patch adds documentation for devicetree bindings
-for LED support as the subnode of MT6323 PMIC
-
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/mt6397.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/i2c/i2c-zx2967.txt         | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/mt6397.txt b/Documentation/devicetree/bindings/mfd/mt6397.txt
-index 949c85f..c568d52 100644
---- a/Documentation/devicetree/bindings/mfd/mt6397.txt
-+++ b/Documentation/devicetree/bindings/mfd/mt6397.txt
-@@ -34,6 +34,10 @@ Optional subnodes:
- - clk
- 	Required properties:
- 		- compatible: "mediatek,mt6397-clk"
-+- led
-+	Required properties:
-+		- compatible: "mediatek,mt6323-led"
-+	see Documentation/devicetree/bindings/leds/leds-mt6323.txt
- 
- Example:
- 	pwrap: pwrap@1000f000 {
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+new file mode 100644
+index 0000000..cb806d1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+@@ -0,0 +1,22 @@
++ZTE zx2967 I2C controller
++
++Required properties:
++ - compatible: must be "zte,zx296718-i2c"
++ - reg: physical address and length of the device registers
++ - interrupts: a single interrupt specifier
++ - clocks: clock for the device
++ - #address-cells: should be <1>
++ - #size-cells: should be <0>
++ - clock-frequency: the desired I2C bus clock frequency.
++
++Examples:
++
++	i2c@112000 {
++		compatible = "zte,zx296718-i2c";
++		reg = <0x00112000 0x1000>;
++		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&osc24m>;
++		#address-cells = <1>
++		#size-cells = <0>;
++		clock-frequency = <1600000>;
++	};
 -- 
-1.9.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
