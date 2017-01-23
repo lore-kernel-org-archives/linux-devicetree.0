@@ -1,83 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 3/4] phy: qcom-ufs: Remove -always-on property
-Date: Sun, 22 Jan 2017 13:17:48 -0800
-Message-ID: <20170122211749.22803-3-bjorn.andersson@linaro.org>
-References: <20170122211749.22803-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170122211749.22803-1-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
+Date: Mon, 23 Jan 2017 13:24:36 +0800
+Message-ID: <20170123052434.GC5662@dragon>
+References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <ec9676f344eb4786a28a3c7b969f0e94-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The fact that a regulator is always-on is a property of the regulator,
-not a specific consumer. Implementing this in the driver leads to a
-system behaviour that is dependent on if the Qualcomm UFS PHY was ever
-(partially) probed.
+On Fri, Dec 02, 2016 at 03:37:22PM +0100, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
+> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+> 
+> Apart from the already enabled Designware HDMI port, the Utilite Pro
+> has a second display pipeline which has the following shape:
+> 
+>   IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
+>                                 --> HDMI connector.
+> Enable support for it.
+> 
+> In addition, since this pipeline is hardwired to IPU1, sever the link
+> between IPU1 and the SoC-internal Designware HDMI encoder forcing the
+> latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
+> possible to drive both displays at high resolution due to the bandwidth
+> limitations of a single IPU.
+> 
+> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
 
-If the specific regulator should be always on in a particular device,
-mark it so by specifying "regulator-always-on" in the regulator node.
-
-Reviewed-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-Reviewed-by: Subhash Jadavani <subhashj@codeaurora.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v1:
-- Picked up reviewd-bys from Vivek and Subhash
-
- Documentation/devicetree/bindings/ufs/ufs-qcom.txt | 1 -
- drivers/phy/phy-qcom-ufs-i.h                       | 1 -
- drivers/phy/phy-qcom-ufs.c                         | 5 +----
- 3 files changed, 1 insertion(+), 6 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-index b6b5130e5f65..1f69ee1a61ea 100644
---- a/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-+++ b/Documentation/devicetree/bindings/ufs/ufs-qcom.txt
-@@ -29,7 +29,6 @@ Optional properties:
- - vdda-pll-max-microamp : specifies max. load that can be drawn from pll supply
- - vddp-ref-clk-supply   : phandle to UFS device ref_clk pad power supply
- - vddp-ref-clk-max-microamp : specifies max. load that can be drawn from this supply
--- vddp-ref-clk-always-on : specifies if this supply needs to be kept always on
- 
- Example:
- 
-diff --git a/drivers/phy/phy-qcom-ufs-i.h b/drivers/phy/phy-qcom-ufs-i.h
-index d505d98cf5f8..13b02b7de30b 100644
---- a/drivers/phy/phy-qcom-ufs-i.h
-+++ b/drivers/phy/phy-qcom-ufs-i.h
-@@ -77,7 +77,6 @@ struct ufs_qcom_phy_vreg {
- 	int min_uV;
- 	int max_uV;
- 	bool enabled;
--	bool is_always_on;
- };
- 
- struct ufs_qcom_phy {
-diff --git a/drivers/phy/phy-qcom-ufs.c b/drivers/phy/phy-qcom-ufs.c
-index bbd317158084..c145fa6e824c 100644
---- a/drivers/phy/phy-qcom-ufs.c
-+++ b/drivers/phy/phy-qcom-ufs.c
-@@ -242,9 +242,6 @@ static int ufs_qcom_phy_init_vreg(struct device *dev,
- 			}
- 			err = 0;
- 		}
--		snprintf(prop_name, MAX_PROP_NAME, "%s-always-on", name);
--		vreg->is_always_on = of_property_read_bool(dev->of_node,
--							   prop_name);
- 	}
- 
- 	if (!strcmp(name, "vdda-pll")) {
-@@ -402,7 +399,7 @@ static int ufs_qcom_phy_disable_vreg(struct device *dev,
- {
- 	int ret = 0;
- 
--	if (!vreg || !vreg->enabled || vreg->is_always_on)
-+	if (!vreg || !vreg->enabled)
- 		goto out;
- 
- 	ret = regulator_disable(vreg->reg);
--- 
-2.11.0
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
