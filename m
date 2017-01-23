@@ -1,37 +1,53 @@
 From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 0/3] ARM: dts: add ostm support for r7s72100
-Date: Mon, 23 Jan 2017 08:55:17 -0500
-Message-ID: <20170123135520.28834-1-chris.brandt@renesas.com>
+Subject: [PATCH v3 2/3] ARM: dts: r7s72100: add ostm to device tree
+Date: Mon, 23 Jan 2017 08:55:19 -0500
+Message-ID: <20170123135520.28834-3-chris.brandt@renesas.com>
+References: <20170123135520.28834-1-chris.brandt@renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170123135520.28834-1-chris.brandt@renesas.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
 Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch set enables the use of the newly created driver
-renesas-ostm.c for the r7s72100 SoC.
-
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+---
 v3:
-* Changed ostm@fcfec000 to timer@fcfec000
-* Added power-domains to nodes
-
+* changed ostm@xxx to timer@xxx
+* added power-domains to nodes
 v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
+* wrap clock lines to avoid 80 char max
+* split into 2 separate channel nodes
+---
+ arch/arm/boot/dts/r7s72100.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-
-
-Chris Brandt (3):
-  ARM: dts: r7s72100: add ostm clock to device tree
-  ARM: dts: r7s72100: add ostm to device tree
-  ARM: dts: rskrza1: add ostm DT support
-
- arch/arm/boot/dts/r7s72100-rskrza1.dts     |  8 ++++++++
- arch/arm/boot/dts/r7s72100.dtsi            | 27 +++++++++++++++++++++++++++
- include/dt-bindings/clock/r7s72100-clock.h |  4 ++++
- 3 files changed, 39 insertions(+)
-
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index d5946df..74e684f 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -505,4 +505,22 @@
+ 		cap-sdio-irq;
+ 		status = "disabled";
+ 	};
++
++	ostm0: timer@fcfec000 {
++		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
++		reg = <0xfcfec000 0x30>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
++
++	ostm1: timer@fcfec400 {
++		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
++		reg = <0xfcfec400 0x30>;
++		interrupts = <GIC_SPI 103 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM1>;
++		power-domains = <&cpg_clocks>;
++		status = "disabled";
++	};
+ };
 -- 
 2.10.1
