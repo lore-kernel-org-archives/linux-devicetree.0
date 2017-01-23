@@ -1,91 +1,58 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v3 5/5] drm/rockchip/dsi: add dw-mipi power domain support
-Date: Mon, 23 Jan 2017 13:03:01 -0500
-Message-ID: <20170123180301.GC25789@trickycodes.roam.corp.google.com>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
- <1484907051-7159-6-git-send-email-zyw@rock-chips.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] ASoC: rockchip: Add machine driver for RK3288
+ boards that use analog/HDMI
+Date: Mon, 23 Jan 2017 18:08:28 +0000
+Message-ID: <20170123180828.s66tpj6yiopnezy2@sirena.org.uk>
+References: <20170123104149.2508-1-romain.perier@collabora.com>
+ <20170123104149.2508-4-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="eruzgxvmquxakrwe"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484907051-7159-6-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170123104149.2508-4-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjAsIDIwMTcgYXQgMDY6MTA6NTFQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gUmVmZXJlbmNlIHRoZSBwb3dlciBkb21haW4gaW5jYXNlIGR3LW1pcGkgcG93ZXIgZG93
-biB3aGVuCj4gaW4gdXNlLgo+IAoKUmV2aWV3ZWQtYnk6IFNlYW4gUGF1bCA8c2VhbnBhdWxAY2hy
-b21pdW0ub3JnPgoKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMu
-Y29tPgo+IC0tLQo+IAo+IENoYW5nZXMgaW4gdjM6IE5vbmUKPiAKPiAgZHJpdmVycy9ncHUvZHJt
-L3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgfCAxNiArKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBj
-aGFuZ2VkLCAxNiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1p
-cGktZHNpLmMKPiBpbmRleCA2ZjBlMjUyLi4xNDYyMTAxZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9y
-b2NrY2hpcC9kdy1taXBpLWRzaS5jCj4gQEAgLTEyLDYgKzEyLDcgQEAKPiAgI2luY2x1ZGUgPGxp
-bnV4L21hdGg2NC5oPgo+ICAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gICNpbmNsdWRlIDxs
-aW51eC9vZl9kZXZpY2UuaD4KPiArI2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4KPiAgI2lu
-Y2x1ZGUgPGxpbnV4L3JlZ21hcC5oPgo+ICAjaW5jbHVkZSA8bGludXgvcmVzZXQuaD4KPiAgI2lu
-Y2x1ZGUgPGxpbnV4L21mZC9zeXNjb24uaD4KPiBAQCAtMjkzLDYgKzI5NCw3IEBAIHN0cnVjdCBk
-d19taXBpX2RzaSB7Cj4gIAlzdHJ1Y3QgY2xrICpwY2xrOwo+ICAJc3RydWN0IGNsayAqcGh5X2Nm
-Z19jbGs7Cj4gIAo+ICsJaW50IGRwbXNfbW9kZTsKPiAgCXVuc2lnbmVkIGludCBsYW5lX21icHM7
-IC8qIHBlciBsYW5lICovCj4gIAl1MzIgY2hhbm5lbDsKPiAgCXUzMiBsYW5lczsKPiBAQCAtOTY5
-LDYgKzk3MSw5IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZGlzYWJsZShzdHJ1
-Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIHsKPiAgCXN0cnVjdCBkd19taXBpX2RzaSAqZHNp
-ID0gZW5jb2Rlcl90b19kc2koZW5jb2Rlcik7Cj4gIAo+ICsJaWYgKGRzaS0+ZHBtc19tb2RlICE9
-IERSTV9NT0RFX0RQTVNfT04pCj4gKwkJcmV0dXJuOwo+ICsKPiAgCWlmIChjbGtfcHJlcGFyZV9l
-bmFibGUoZHNpLT5wY2xrKSkgewo+ICAJCWRldl9lcnIoZHNpLT5kZXYsICIlczogRmFpbGVkIHRv
-IGVuYWJsZSBwY2xrXG4iLCBfX2Z1bmNfXyk7Cj4gIAkJcmV0dXJuOwo+IEBAIC05ODAsNyArOTg1
-LDkgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBkcm1f
-ZW5jb2RlciAqZW5jb2RlcikKPiAgCWRybV9wYW5lbF91bnByZXBhcmUoZHNpLT5wYW5lbCk7Cj4g
-IAo+ICAJZHdfbWlwaV9kc2lfZGlzYWJsZShkc2kpOwo+ICsJcG1fcnVudGltZV9wdXQoZHNpLT5k
-ZXYpOwo+ICAJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGNsayk7Cj4gKwlkc2ktPmRwbXNf
-bW9kZSA9IERSTV9NT0RFX0RQTVNfT0ZGOwo+ICB9Cj4gIAo+ICBzdGF0aWMgdm9pZCBkd19taXBp
-X2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gQEAgLTk5
-MCwxMSArOTk3LDE1IEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJfZW5hYmxlKHN0
-cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgCWludCBtdXggPSBkcm1fb2ZfZW5jb2Rlcl9h
-Y3RpdmVfZW5kcG9pbnRfaWQoZHNpLT5kZXYtPm9mX25vZGUsIGVuY29kZXIpOwo+ICAJdTMyIHZh
-bDsKPiAgCj4gKwlpZiAoZHNpLT5kcG1zX21vZGUgPT0gRFJNX01PREVfRFBNU19PTikKPiArCQly
-ZXR1cm47Cj4gKwo+ICAJaWYgKGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBjbGspKSB7Cj4gIAkJ
-ZGV2X2Vycihkc2ktPmRldiwgIiVzOiBGYWlsZWQgdG8gZW5hYmxlIHBjbGtcbiIsIF9fZnVuY19f
-KTsKPiAgCQlyZXR1cm47Cj4gIAl9Cj4gIAo+ICsJcG1fcnVudGltZV9nZXRfc3luYyhkc2ktPmRl
-dik7Cj4gIAlkd19taXBpX2RzaV9pbml0KGRzaSk7Cj4gIAlkd19taXBpX2RzaV9kcGlfY29uZmln
-KGRzaSk7Cj4gIAlkd19taXBpX2RzaV9wYWNrZXRfaGFuZGxlcl9jb25maWcoZHNpKTsKPiBAQCAt
-MTAzMCw2ICsxMDQxLDcgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9lbmFibGUo
-c3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQo+ICAKPiAgCXJlZ21hcF93cml0ZShkc2ktPmdy
-Zl9yZWdtYXAsIHBkYXRhLT5ncmZfc3dpdGNoX3JlZywgdmFsKTsKPiAgCWRldl9kYmcoZHNpLT5k
-ZXYsICJ2b3AgJXMgb3V0cHV0IHRvIGRzaTBcbiIsIChtdXgpID8gIkxJVCIgOiAiQklHIik7Cj4g
-Kwlkc2ktPmRwbXNfbW9kZSA9IERSTV9NT0RFX0RQTVNfT047Cj4gIH0KPiAgCj4gIHN0YXRpYyBp
-bnQKPiBAQCAtMTE5OCw2ICsxMjEwLDcgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9iaW5kKHN0
-cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAKPiAgCWRzaS0+ZGV2
-ID0gZGV2Owo+ICAJZHNpLT5wZGF0YSA9IHBkYXRhOwo+ICsJZHNpLT5kcG1zX21vZGUgPSBEUk1f
-TU9ERV9EUE1TX09GRjsKPiAgCj4gIAlyZXQgPSByb2NrY2hpcF9taXBpX3BhcnNlX2R0KGRzaSk7
-Cj4gIAlpZiAocmV0KQo+IEBAIC0xMjcxLDYgKzEyODQsOCBAQCBzdGF0aWMgaW50IGR3X21pcGlf
-ZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCj4gIAo+
-ICAJZGV2X3NldF9kcnZkYXRhKGRldiwgZHNpKTsKPiAgCj4gKwlwbV9ydW50aW1lX2VuYWJsZShk
-ZXYpOwo+ICsKPiAgCWRzaS0+ZHNpX2hvc3Qub3BzID0gJmR3X21pcGlfZHNpX2hvc3Rfb3BzOwo+
-ICAJZHNpLT5kc2lfaG9zdC5kZXYgPSBkZXY7Cj4gIAlyZXQgPSBtaXBpX2RzaV9ob3N0X3JlZ2lz
-dGVyKCZkc2ktPmRzaV9ob3N0KTsKPiBAQCAtMTI5Myw2ICsxMzA4LDcgQEAgc3RhdGljIHZvaWQg
-ZHdfbWlwaV9kc2lfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFz
-dGVyLAo+ICAJc3RydWN0IGR3X21pcGlfZHNpICpkc2kgPSBkZXZfZ2V0X2RydmRhdGEoZGV2KTsK
-PiAgCj4gIAltaXBpX2RzaV9ob3N0X3VucmVnaXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwo+ICsJcG1f
-cnVudGltZV9kaXNhYmxlKGRldik7Cj4gIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxy
-ZWZfY2xrKTsKPiAgfQo+ICAKPiAtLSAKPiAyLjYuMwo+IAo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUg
-RW5naW5lZXIsIEdvb2dsZSAvIENocm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+--eruzgxvmquxakrwe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Jan 23, 2017 at 11:41:48AM +0100, Romain Perier wrote:
+
+This looks mostly fine but:
+
+> +	machine->gpio_hp_det = of_get_named_gpio(np,
+> +		"rockchip,hp-det-gpios", 0);
+> +	if (machine->gpio_hp_det == -EPROBE_DEFER)
+> +		return -EPROBE_DEFER;
+
+Rather than explicitly checking for probe defer here it's better to
+check for the error code that indicates there's nothing to find (-ENODEV
+IIRC but I might be misremembering for GPIO).  That way if there's some
+actual error like running out of memory allocating some structure that's
+required then we'll not just silently ignore it.
+
+--eruzgxvmquxakrwe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliGRpsACgkQJNaLcl1U
+h9ByBwf/TdiOCjxv3D6cOn5eNYMi29qwKJIEz2ZFaY9eLP8I652Z5ltxsiJL+C6v
+8gmKPzXQPWYu/XOtKRC4TtC9LKvSGg76CQHndgB+qLwPA/59lbXGNPFfTZwJl/Nf
+ZghkqsildElJ83NKVaBBTk/HksQ0j+KQlesO+9NT7UoRtXX6CiU3Bz6IKjpOtJD5
+7+0wekiKn5j9yXGUrk90PvtNdeowgtMjRmFUq6gdJpPaOIVz0jmLvO9PqYmlS2Uz
+IL3rmz6LDUnbKEH5FfiiMwiuD2bAdHpwpz7s2VUzZRDh1yrmC2K5dR0dHutSkwD0
+1ICNXtdXppfd+GXTFnPgro0NSefqng==
+=i5XN
+-----END PGP SIGNATURE-----
+
+--eruzgxvmquxakrwe--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
