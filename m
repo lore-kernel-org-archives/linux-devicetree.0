@@ -1,77 +1,153 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 1/9] drm/fb-cma-helper: Add
- drm_fbdev_cma_set_suspend_unlocked()
-Date: Mon, 23 Jan 2017 10:07:13 +0100
-Message-ID: <20170123090713.s3dctg7iofcjfdql@phenom.ffwll.local>
-References: <20170122181117.8210-1-noralf@tronnes.org>
- <20170122181117.8210-2-noralf@tronnes.org>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v14 3/5] tee: add OP-TEE driver
+Date: Mon, 23 Jan 2017 10:08:53 +0100
+Message-ID: <20170123090852.GB1910@jax>
+References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
+ <12500736.cNG1jjvVpX@wuerfel>
+ <20170119145621.GA4958@jax>
+ <8183743.bSJXZpMh95@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170122181117.8210-2-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com
+In-Reply-To: <8183743.bSJXZpMh95@wuerfel>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F . Davis" <afd@ti.com>, broonie@kernel.org, scott.branden@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKYW4gMjIsIDIwMTcgYXQgMDc6MTE6MDlQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
-IHdyb3RlOgo+IEFkZCBhIENNQSB2ZXJzaW9uIG9mIGRybV9mYl9oZWxwZXJfc2V0X3N1c3BlbmRf
-dW5sb2NrZWQoKS4KPiAKPiBDYzogbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tCj4g
-U2lnbmVkLW9mZi1ieTogTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gLS0t
-Cj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIHwgMTggKysrKysrKysrKysr
-KysrKysrCj4gIGluY2x1ZGUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmggICAgIHwgIDIgKysKPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
-cnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9mYl9j
-bWFfaGVscGVyLmMKPiBpbmRleCA0MzY0YWJmLi4wZWY4YjI4IDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Ry
-bV9mYl9jbWFfaGVscGVyLmMKPiBAQCAtNjIyLDMgKzYyMiwyMSBAQCB2b2lkIGRybV9mYmRldl9j
-bWFfc2V0X3N1c3BlbmQoc3RydWN0IGRybV9mYmRldl9jbWEgKmZiZGV2X2NtYSwgaW50IHN0YXRl
-KQo+ICAJCWRybV9mYl9oZWxwZXJfc2V0X3N1c3BlbmQoJmZiZGV2X2NtYS0+ZmJfaGVscGVyLCBz
-dGF0ZSk7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZmJkZXZfY21hX3NldF9zdXNwZW5kKTsK
-ClJhbmRvbSBpZGVhIGZvciBhIGNsZWFudXAgc2VyaWVzOiBHZXR0aW5nIHJpZCBvZgpkcm1fZmJf
-aGVscGVyX3NldF9zdXNwZW5kLiBJIHRoaW5rZiBmb3IgYWxtb3N0IGFsbCBkcml2ZXJzIHdlIGNh
-biB1c2UgdGhlCnVubG9ja2VkIG9uZSwgd2hpY2ggaGFzIHRoZSB1cHNpZGUgdGhhdCBpdCBkb2Vz
-bid0IHN0YWxsIHRoZSByZXN1bWUgcGF0aApvbiB0aGUgY29udGVuZGVkIGNvbnNvbGVfbG9jay4K
-CkFueXdheSwgYXBwbGllZCB0aGlzIG9uZSBoZXJlLCB0aGFua3MuCi1EYW5pZWwKCj4gKwo+ICsv
-KioKPiArICogZHJtX2ZiZGV2X2NtYV9zZXRfc3VzcGVuZF91bmxvY2tlZCAtIHdyYXBwZXIgYXJv
-dW5kCj4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkcm1fZmJfaGVs
-cGVyX3NldF9zdXNwZW5kX3VubG9ja2VkCj4gKyAqIEBmYmRldl9jbWE6IFRoZSBkcm1fZmJkZXZf
-Y21hIHN0cnVjdCwgbWF5IGJlIE5VTEwKPiArICogQHN0YXRlOiBkZXNpcmVkIHN0YXRlLCB6ZXJv
-IHRvIHJlc3VtZSwgbm9uLXplcm8gdG8gc3VzcGVuZAo+ICsgKgo+ICsgKiBDYWxscyBkcm1fZmJf
-aGVscGVyX3NldF9zdXNwZW5kLCB3aGljaCBpcyBhIHdyYXBwZXIgYXJvdW5kCj4gKyAqIGZiX3Nl
-dF9zdXNwZW5kIGltcGxlbWVudGVkIGJ5IGZiZGV2IGNvcmUuCj4gKyAqLwo+ICt2b2lkIGRybV9m
-YmRldl9jbWFfc2V0X3N1c3BlbmRfdW5sb2NrZWQoc3RydWN0IGRybV9mYmRldl9jbWEgKmZiZGV2
-X2NtYSwKPiArCQkJCQlpbnQgc3RhdGUpCj4gK3sKPiArCWlmIChmYmRldl9jbWEpCj4gKwkJZHJt
-X2ZiX2hlbHBlcl9zZXRfc3VzcGVuZF91bmxvY2tlZCgmZmJkZXZfY21hLT5mYl9oZWxwZXIsCj4g
-KwkJCQkJCSAgIHN0YXRlKTsKPiArfQo+ICtFWFBPUlRfU1lNQk9MKGRybV9mYmRldl9jbWFfc2V0
-X3N1c3BlbmRfdW5sb2NrZWQpOwo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fZmJfY21h
-X2hlbHBlci5oIGIvaW5jbHVkZS9kcm0vZHJtX2ZiX2NtYV9oZWxwZXIuaAo+IGluZGV4IDlmNGUz
-NGUuLjhkZDZlNTUgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2ZiX2NtYV9oZWxwZXIu
-aAo+ICsrKyBiL2luY2x1ZGUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmgKPiBAQCAtMjYsNiArMjYs
-OCBAQCB2b2lkIGRybV9mYmRldl9jbWFfZmluaShzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAqZmJkZXZf
-Y21hKTsKPiAgdm9pZCBkcm1fZmJkZXZfY21hX3Jlc3RvcmVfbW9kZShzdHJ1Y3QgZHJtX2ZiZGV2
-X2NtYSAqZmJkZXZfY21hKTsKPiAgdm9pZCBkcm1fZmJkZXZfY21hX2hvdHBsdWdfZXZlbnQoc3Ry
-dWN0IGRybV9mYmRldl9jbWEgKmZiZGV2X2NtYSk7Cj4gIHZvaWQgZHJtX2ZiZGV2X2NtYV9zZXRf
-c3VzcGVuZChzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAqZmJkZXZfY21hLCBpbnQgc3RhdGUpOwo+ICt2
-b2lkIGRybV9mYmRldl9jbWFfc2V0X3N1c3BlbmRfdW5sb2NrZWQoc3RydWN0IGRybV9mYmRldl9j
-bWEgKmZiZGV2X2NtYSwKPiArCQkJCQlpbnQgc3RhdGUpOwo+ICAKPiAgdm9pZCBkcm1fZmJfY21h
-X2Rlc3Ryb3koc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIpOwo+ICBpbnQgZHJtX2ZiX2NtYV9j
-cmVhdGVfaGFuZGxlKHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAo+IC0tIAo+IDIuMTAuMgo+
-IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJp
-LWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoK
-LS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0
-dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Fri, Jan 20, 2017 at 05:57:51PM +0100, Arnd Bergmann wrote:
+> On Thursday, January 19, 2017 3:56:23 PM CET Jens Wiklander wrote:
+> > On Wed, Jan 18, 2017 at 05:28:17PM +0100, Arnd Bergmann wrote:
+> > > On Wednesday, January 18, 2017 1:58:14 PM CET Jens Wiklander wrote:
+> 
+> > > > +static int __init optee_driver_init(void)
+> > > > +{
+> > > > +	struct device_node *node;
+> > > > +
+> > > > +	/*
+> > > > +	 * Preferred path is /firmware/optee, but it's the matching that
+> > > > +	 * matters.
+> > > > +	 */
+> > > > +	for_each_matching_node(node, optee_match)
+> > > > +		of_platform_device_create(node, NULL, NULL);
+> > > > +
+> > > > +	return platform_driver_register(&optee_driver);
+> > > > +}
+> > > > +module_init(optee_driver_init);
+> > > > +
+> > > > +static void __exit optee_driver_exit(void)
+> > > > +{
+> > > > +	platform_driver_unregister(&optee_driver);
+> > > > +}
+> > > > +module_exit(optee_driver_exit);
+> > > 
+> > > What is the platform driver good for if the same module has to create the
+> > > platform devices itself?
+> > 
+> > The platform device(s) are created here because the optee node is below
+> > "/firmware" instead of the root where it would have had the platform
+> > device created automatically.
+> > 
+> > I think it's useful to be able to unload the module, the early reviews
+> > of this patch set was much focused around that. Regardless I'll need
+> > some device as parent for the devices created during optee_probe() and
+> > using a platform device for that seems natural.
+> > 
+> > I'd rather keep the platform driver. Perhaps some variant of the pattern
+> > in qcom_scm_init() (drivers/firmware/qcom_scm.c) is useful, except that
+> > I need to find out what to do about the life cycle of the objects
+> > created with of_platform_populate().
+> 
+> My point was that I don't think we need devices here at all. It's different
+> when you talk to external hardware that has register resource etc that
+> can be best abstracted as a real device, but for other firmware features
+> we don't normally add one.
+> 
+> Module unloading can also be done without the device.
+> 
+> > > 
+> > > I'd just skip it and do
+> > > 
+> > > 	for_each_matching_node(node, optee_match)
+> > > 		optee_probe(node);
+> > > 
+> > > I also suspect that module unloading is broken here if you don't clean
+> > > up the platform devices in the end, so you should already remove the
+> > > exit function to prevent unloading.
+> > 
+> > Does the platform devices really need cleaning? I mean
+> > of_platform_default_populate_init() creates a bunch of platform devices
+> > which are just left there even if unused. Here we're doing the same
+> > thing except that we're doing it for a specific node in the DT.
+> 
+> I think it will work if you don't clean them up, but it feels wrong
+> to have a loadable module that creates devices when loaded but doesn't
+> remove them when unloaded.
+> 
+> This could be done differently by having the device creation done in
+> one driver and the the user of that device in another driver, but I
+> think just killing off the device achieves the same in a simpler way.
+
+I see your point. My final concern here is that with device we got
+entries in sysfs and uevents that could be used to automatically start
+the correct supplicant. Different drivers are likely to require
+different supplicants. Starting the correct supplicant based on uevents
+is a quite elegant solution which I'm not sure how to support when
+skipping devices. Perhaps I could create an object below
+<sysfs>/firmware/tee ?
+
+> 
+> > > > +/*
+> > > > + * Get revision of Trusted OS.
+> > > > + *
+> > > > + * Used by non-secure world to figure out which version of the Trusted OS
+> > > > + * is installed. Note that the returned revision is the revision of the
+> > > > + * Trusted OS, not of the API.
+> > > > + *
+> > > > + * Returns revision in 2 32-bit words in the same way as
+> > > > + * OPTEE_MSG_CALLS_REVISION described above.
+> > > > + */
+> > > > +#define OPTEE_MSG_OS_OPTEE_REVISION_MAJOR	1
+> > > > +#define OPTEE_MSG_OS_OPTEE_REVISION_MINOR	0
+> > > > +#define OPTEE_MSG_FUNCID_GET_OS_REVISION	0x0001
+> > > 
+> > > Just for my understanding, what is the significance of these numbers,
+> > > i.e. which code (user space, kernel driver, trusted OS) provides
+> > > the uuid and which one provides the version? The code comments almost
+> > > make sense to me, but I don't see why specific versions are listed
+> > > in this header.
+> > 
+> > You're right, OPTEE_MSG_OS_OPTEE_REVISION_* should be removed. The
+> > actual version the secure OS is of a mostly informational nature. The
+> > same goes the OS UUID, but I suppose the actual UUID used by the
+> > upstream version of OP-TEE OS could be interesting to know.
+> ...
+> > > What is the expected behavior when one side reports a version that
+> > > is unknown? Can one side claim to be backwards compatible with
+> > > a previous version, or does each new version need support on
+> > > all three sides?
+> > 
+> > The UUID and version of the message protocol are important to match
+> > correctly as otherwise it could mean that there's something unexpected
+> > in secure world that following the message protocol would be undefined
+> > behaviour. All changes to the message protocol should be backwards
+> > compatible in the sense that the driver and secure world need to
+> > negotiate eventual extensions while probing. That's what we're doing in
+> > optee_msg_exchange_capabilities().
+> 
+> Ok, then maybe the "compatible" identifier in DT should be sufficient
+> to ensure that the capability exchange works, and the rest be based
+> on that?
+> 
+> We tend to avoid version checks for APIs in the kernel because they
+> never work in practice, but the capability check should be fine.
+
+UUID and version of the message protocol is required by ARM SMC Calling
+Convention. It will be there anyway so we could just as well check it in
+the probe function to catch eventual mismatches in configuration. Since
+we're using capabilities to manage extensions of the protocol I think
+the minor version could be ignored by probe.
+
+Thanks,
+Jens
