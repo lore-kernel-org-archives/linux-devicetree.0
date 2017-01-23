@@ -1,102 +1,57 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
- property
-Date: Mon, 23 Jan 2017 21:51:49 +0100
-Message-ID: <d54867f6-5b29-c5a1-db26-ae9d9640e22c@gmail.com>
-References: <20170120215605.15728-1-zajec5@gmail.com>
- <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
- <20170123164537.ldq6de64adjkefbr@rob-hp-laptop>
+From: Matt Ranostay <matt@ranostay.consulting>
+Subject: Re: [PATCH v3 1/2] devicetree: document new marvell-8xxx and
+ pwrseq-sd8787 options
+Date: Mon, 23 Jan 2017 13:00:21 -0800
+Message-ID: <CAJ_EiST4286EbMKDP3qVpYRw+i9L0aJUj40wQ3K8JhsvcQETZw@mail.gmail.com>
+References: <20170121055039.10924-1-matt@ranostay.consulting>
+ <20170121055039.10924-2-matt@ranostay.consulting> <20170123170409.rnmnf4ssjpd2yk3l@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170123164537.ldq6de64adjkefbr@rob-hp-laptop>
-Sender: linux-leds-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170123170409.rnmnf4ssjpd2yk3l@rob-hp-laptop>
+Sender: linux-mmc-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: linux-mmc@vger.kernel.org, Linux Kernel <linux-kernel@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2017 05:45 PM, Rob Herring wrote:
-> On Fri, Jan 20, 2017 at 11:35:20PM +0100, Jacek Anaszewski wrote:
->> Hi Rafał,
+On Mon, Jan 23, 2017 at 9:04 AM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jan 20, 2017 at 09:50:38PM -0800, Matt Ranostay wrote:
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+>> ---
+>>  .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
+>>  .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
+>>  2 files changed, 20 insertions(+), 1 deletion(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
 >>
->> On 01/20/2017 10:56 PM, Rafał Miłecki wrote:
->>> From: Rafał Miłecki <rafal@milecki.pl>
->>>
->>> Some LEDs can be related to particular devices described in DT. This
->>> property allows specifying such relations. E.g. USB LED should usually
->>> be used to indicate some USB port(s) state.
->>>
->>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
->>> ---
->>> V2: Replace "usb-ports" with "led-triggers" property which is more generic and
->>>     allows specifying other devices as well.
->>>
->>> When bindings patch is related to some followup implementation, they usually go
->>> through the same tree.
->>>
->>> Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds: Improve examples by
->>> adding some context") from kernel/git/j.anaszewski/linux-leds.git . Is there any
->>> way to solve this dependency issue? Or should this patch wait until 3.11 is
->>> released?
->>> ---
->>>  Documentation/devicetree/bindings/leds/common.txt | 16 ++++++++++++++++
->>>  1 file changed, 16 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
->>> index 24b656014089..17632a041196 100644
->>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>> @@ -49,6 +49,17 @@ Optional properties for child nodes:
->>>  - panic-indicator : This property specifies that the LED should be used,
->>>  		    if at all possible, as a panic indicator.
->>>  
->>> +- led-triggers : List of devices that should trigger this LED activity. Some
->>> +		 LEDs can be related to a specific device and should somehow
->>> +		 indicate its state. E.g. USB 2.0 LED may react to device(s) in
->>> +		 a USB 2.0 port(s). Another common example is switch or router
->>> +		 with multiple Ethernet ports each of them having its own LED
->>> +		 assigned (assuminled-trigger-usbportg they are not hardwired).
->>> +		 In such cases this property should contain phandle(s) of
->>> +		 related device(s). In many cases LED can be related to more
->>> +		 than one device (e.g. one USB LED vs. multiple USB ports) so a
->>> +		 list of entries can be specified.
->>> +
->>
->> This implies that it is possible to define multiple triggers for
->> a LED class device but it is not supported by LED Trigger core.
-> 
-> Not really relevant for designing (and future proofing) a binding.
+>> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+>> new file mode 100644
+>> index 000000000000..4bb56766982e
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+>> @@ -0,0 +1,14 @@
+>> +* Marvell SD8787 power sequence provider
+>> +
+>> +Required properties:
+>> +- compatible: must be "mmc-pwrseq-sd8787".
+>> +- powerdown-gpio: contains a power down GPIO specifier with active state
+>> +- reset-gpio: contains a reset GPIO specifier with active state
+>
+> My comments on the previous v3 still apply.
 
-But relevant for LED Trigger ABI, which would have to be changed to
-support the semantics in this form. I think that changing the property
-name to linux,trigger-sources would make its purpose more clear.
+Ah yikes.. forgot to increment the patchset.  And noticed the gpio
+isn't gpios... will fixed in "v4"
 
-Note that we have to also associate somehow this property with the
-triggers that will make use of the information it provides. I can
-imagine also other compound triggers that could benefit on it.
+Thanks,
 
-What follows, the trigger sources would trigger LED activity only
-if the LED class device was assigned appropriate trigger. We need to
-define somewhere which triggers support this property.
+Matt
 
-Trigger specific bindings?
-
->> There is linux,default-trigger property which allows to define one
->> trigger that will be initially assigned.
->>
->> I am aware that this is renamed usb-ports property from v1,
->> that attempts to address Rob's comment, but we can't do that this way.
->> Maybe usb-ports property could be documented in led-trigger-usbport's
->> specific bindings and a reference to it could be added next to the
->> related entry on the list of the available LED triggers (which is
->> actually missing) in Documentation/devicetree/bindings/leds/common.txt.
-> 
-> I'm not going to accept something specific to USB. So the choice is make 
-> the existing property work for USB or design something more flexible and 
-> generic.
-
-
--- 
-Best regards,
-Jacek Anaszewski
+>
+>> +
+>> +Example:
+>> +
+>> +     wifi_pwrseq: wifi_pwrseq {
+>> +             compatible = "mmc-pwrseq-sd8787";
+>> +             powerdown-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+>> +             reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
+>> +     }
