@@ -1,22 +1,79 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: vf610-zii-dev: add EEPROM entry to Rev C
-Date: Mon, 23 Jan 2017 15:38:03 +0800
-Message-ID: <20170123073801.GK5662@dragon>
-References: <20170112230620.1735-1-vivien.didelot@savoirfairelinux.com>
+From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Mon, 23 Jan 2017 15:36:41 +0800
+Message-ID: <56554f95-b51d-abc7-8ac0-7f561728375a@huawei.com>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <20170120150428.GC22152@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170112230620.1735-1-vivien.didelot@savoirfairelinux.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, andrew@lunn.ch, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@savoirfairelinux.com, Sascha Hauer <kernel@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, cphealy@gmail.com
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170120150428.GC22152@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 12, 2017 at 06:06:20PM -0500, Vivien Didelot wrote:
-> The ZII Dev Rev C board has EEPROMs hanging the 88E6390 Ethernet switch
-> chips. Add an "eeprom-length" property to allow access from ethtool.
-> 
-> Signed-off-by: Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 
-Applied, thanks.
+
+On 2017/1/20 23:04, Mark Rutland wrote:
+> On Thu, Jan 19, 2017 at 09:35:12PM +0800, Ding Tianhong wrote:
+>> Ding Tianhong (4):
+>>   arm64: arch_timer: Add device tree binding for hisilicon-161010101
+>>     erratum
+>>   arm64: arch_timer: Introduce a generic erratum handing mechanism for
+>>     fsl-a008585
+>>   arm64: arch_timer: Work around Erratum Hisilicon-161010101
+>>   arm64: arch timer: Add timer erratum property for Hip05-d02 and
+>>     Hip06-d03
+>>
+>>  Documentation/admin-guide/kernel-parameters.txt    |   9 --
+>>  Documentation/arm64/silicon-errata.txt             |  43 +++---
+>>  .../devicetree/bindings/arm/arch_timer.txt         |   6 +
+>>  arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
+>>  arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
+>>  arch/arm64/include/asm/arch_timer.h                |  38 ++----
+>>  drivers/clocksource/Kconfig                        |  18 +++
+>>  drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
+>>  8 files changed, 171 insertions(+), 95 deletions(-)
+> 
+> I've picked these up (with a few local cleanups), given that some local
+> testing, and pushed the result to a branch [1] on my git repo.
+> 
+> There are likely to be clashes with the arm64 tree (e.g. for
+> silicon-errata.txt), and we're also likely to have more arch timer
+> updates shortly for the GTDT stuff, so I think the best bet is for both
+> arm64 and the clocksource tree to pull that branch for v4.11.
+> 
+> Alternatively, we could take this all through the arm64 tree, if the
+> clocksource maintainers are happy with that.
+> 
+> Thoughts?
+> 
+
+Hi Mark:
+
+It is really a great milestone now, Thanks for the help, and I will still wait
+for Marc's new opinion for this version, hoping no need to change anything else. :)
+
+Thanks
+Ding
+
+> Thanks,
+> Mark.
+> 
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arch-timer/hisi-161010101
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
