@@ -1,87 +1,97 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: [PATCHv4 1/5] clk: mvebu: support for 98DX3236 SoC
-Date: Mon, 23 Jan 2017 07:53:21 +0000
-Message-ID: <be295fd327674a2ca91437456db7a047@svr-chch-ex1.atlnz.lc>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-2-chris.packham@alliedtelesis.co.nz>
- <20170121004819.GA8801@codeaurora.org>
+From: Marcin Nowakowski <marcin.nowakowski-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 00/21] MIPS memblock: Remove bootmem code and switch to
+ NO_BOOTMEM
+Date: Mon, 23 Jan 2017 08:55:02 +0100
+Message-ID: <7c333d34-fda6-9302-b84e-c0785c23733e@imgtec.com>
+References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1482113266-13207-1-git-send-email-fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, rabinv-VrBV9hrLPhE@public.gmane.org, matt.redfearn-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Sergey.Semin-vHJ8rsvMqnUPfZBKTuL5GA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/17 13:48, Stephen Boyd wrote:=0A=
-> On 01/13, Chris Packham wrote:=0A=
->> @@ -158,6 +170,14 @@ static const struct coreclk_soc_desc axp_coreclks =
-=3D {=0A=
->>  	.num_ratios =3D ARRAY_SIZE(axp_coreclk_ratios),=0A=
->>  };=0A=
->>=0A=
->> +static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {=0A=
->> +	.get_tclk_freq =3D mv98dx3236_get_tclk_freq,=0A=
->> +	.get_cpu_freq =3D mv98dx3236_get_cpu_freq,=0A=
->> +	.get_clk_ratio =3D NULL,=0A=
->> +	.ratios =3D NULL,=0A=
->> +	.num_ratios =3D 0,=0A=
->=0A=
-> Are these intentionally initialized to 0 explicitly? Otherwise we=0A=
-> could leave them out and it's all the same.=0A=
->=0A=
-=0A=
-No reason, just didn't remove the unused members when copying the =0A=
-armada-xp example above.=0A=
-=0A=
->> +};=0A=
->> +=0A=
->>  /*=0A=
->>   * Clock Gating Control=0A=
->>   */=0A=
-> [..]=0A=
->> @@ -243,5 +245,30 @@ static void __init of_cpu_clk_setup(struct device_n=
-ode *node)=0A=
->>  	iounmap(clock_complex_base);=0A=
->>  }=0A=
->>=0A=
->> +/* Use this function to call the generic setup with the correct=0A=
->> + * clock operation=0A=
->> + */=0A=
->> +static void __init of_cpu_clk_setup(struct device_node *node)=0A=
->> +{=0A=
->> +	_of_cpu_clk_setup(node, &cpu_ops);=0A=
->> +}=0A=
->> +=0A=
->>  CLK_OF_DECLARE(armada_xp_cpu_clock, "marvell,armada-xp-cpu-clock",=0A=
->>  					 of_cpu_clk_setup);=0A=
->> +=0A=
->> +/* Define the clock and operations for the mv98dx3236 - it cannot perfo=
-rm=0A=
->> + * any operations.=0A=
->> + */=0A=
->> +static const struct clk_ops mv98dx3236_cpu_ops =3D {=0A=
->> +	.recalc_rate =3D NULL,=0A=
->> +	.round_rate =3D NULL,=0A=
->> +	.set_rate =3D NULL,=0A=
->=0A=
-> But clk_set_rate() works silently? Why not just register a clk=0A=
-> provider that returns a NULL pointer? Then there isn't any=0A=
-> structure to maintain?=0A=
->=0A=
-=0A=
-Not 100% sure what you mean. Something like this?=0A=
-=0A=
-+static void __init of_mv98dx3236_cpu_clk_setup(struct device_node *node)=
-=0A=
-+{=0A=
-+       of_clk_add_provider(node, of_clk_src_simple_get, NULL);=0A=
-+}=0A=
-=0A=
-Seems to work as expected (i.e. does nothing, kernel boots/runs).=0A=
-=0A=
+Hi Serge,
+
+Thanks for this patch series, it's really useful. I've tested it on 
+Malta and Ci40 and it seems to work well (I've posted a few small 
+comments separately).
+
+
+On 19.12.2016 03:07, Serge Semin wrote:
+> Most of the modern platforms supported by linux kernel have already
+> been cleaned up of old bootmem allocator by moving to nobootmem
+> interface wrapping up the memblock. This patchset is the first
+> attempt to do the similar improvement for MIPS for UMA systems
+> only.
+>
+> Even though the porting was performed as much careful as possible
+> there still might be problem with support of some platforms,
+> especially Loonson3 or SGI IP27, which perform early memory manager
+> initialization by their self.
+
+> The patchset is split so individual patch being consistent in
+> functional and buildable ways. But the MIPS early memory manager
+> will work correctly only either with or without the whole set being
+> applied. For the same reason a reviewer should not pay much attention
+> to methods bootmem_init(), arch_mem_init(), paging_init() and
+> mem_init() until they are fully refactored.
+
+I'm not sure this can be merged that way? It would be up to Ralf to 
+decide, but it is generally expected that all intermediate patches not 
+only build, but also work correctly. I understand that this might be 
+difficult to achieve given the scale of changes required here.
+
+> The patchset is applied on top of kernel v4.9.
+
+Can you please work on cleaning up the issues discussed in the comments 
+so far as well as rebasing (and updating) the changes onto linux-next? 
+There are a few patches I made related to kexec and kernel relocation 
+that will force changes in your code (although I admit that the changes 
+I did for kexec/relocation were in some places unnecessarily complex 
+because of the mess in the bootmem handling in MIPS that you are now 
+trying to clean up).
+
+
+Thanks,
+Marcin
+
+> Signed-off-by: Serge Semin <fancer.lancer-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Serge Semin (21):
+>   MIPS memblock: Unpin dts memblock sanity check method
+>   MIPS memblock: Add dts mem and reserved-mem callbacks
+>   MIPS memblock: Alter traditional add_memory_region() method
+>   MIPS memblock: Alter user-defined memory parameter parser
+>   MIPS memblock: Alter initrd memory reservation method
+>   MIPS memblock: Alter kexec-crashkernel parameters parser
+>   MIPS memblock: Alter elfcorehdr parameters parser
+>   MIPS memblock: Move kernel parameters parser into individual method
+>   MIPS memblock: Move kernel memory reservation to individual method
+>   MIPS memblock: Discard bootmem allocator initialization
+>   MIPS memblock: Add memblock sanity check method
+>   MIPS memblock: Add memblock print outs in debug
+>   MIPS memblock: Add memblock allocator initialization
+>   MIPS memblock: Alter IO resources initialization method
+>   MIPS memblock: Alter weakened MAAR initialization method
+>   MIPS memblock: Alter paging initialization method
+>   MIPS memblock: Alter high memory freeing method
+>   MIPS memblock: Slightly improve buddy allocator init method
+>   MIPS memblock: Add print out method of kernel virtual memory layout
+>   MIPS memblock: Add free low memory test method call
+>   MIPS memblock: Deactivate old bootmem allocator
+>
+>  arch/mips/Kconfig        |   2 +-
+>  arch/mips/kernel/prom.c  |  32 +-
+>  arch/mips/kernel/setup.c | 958 +++++++++++++++--------------
+>  arch/mips/mm/init.c      | 234 ++++---
+>  drivers/of/fdt.c         |  47 +-
+>  include/linux/of_fdt.h   |   1 +
+>  6 files changed, 739 insertions(+), 535 deletions(-)
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
