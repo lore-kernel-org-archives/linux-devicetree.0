@@ -1,86 +1,40 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Mon, 23 Jan 2017 10:55:23 -0600
-Message-ID: <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
-References: <20170121030604.7672-1-chris.brandt@renesas.com>
- <20170121030604.7672-3-chris.brandt@renesas.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 10/18] ARM64: dts: meson-gxbb: Reorder nodes
+Date: Mon, 23 Jan 2017 17:56:24 +0100
+Message-ID: <d58f8343-8369-95ac-3c21-ba8f35e7ac89@suse.de>
+References: <20170120222118.21476-1-afaerber@suse.de>
+ <20170120222118.21476-11-afaerber@suse.de>
+ <20170123165208.4ujwm6rjz2b3dom5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170121030604.7672-3-chris.brandt@renesas.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123165208.4ujwm6rjz2b3dom5@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 10:06:03PM -0500, Chris Brandt wrote:
-> In the case of a single clock source, you don't need names. However,
-> if the controller has 2 clock sources, you need to name them correctly
-> so the driver can find the 2nd one. The 2nd clock is for the internal
-> card detect logic.
+Am 23.01.2017 um 17:52 schrieb Rob Herring:
+> On Fri, Jan 20, 2017 at 11:21:10PM +0100, Andreas Färber wrote:
+>> Sort nodes referenced by label alphabetically.
 > 
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> ---
-> v4:
-> * just explain there might be 2 clocks, don't explain how
->   we will use them in the driver
-> v3:
-> * add more clarification about why there are sometimes 2 clocks
->   and what you should do with them.
-> * remove 'status = "disabled"' from example
-> v2:
-> * fix spelling and change wording
-> * changed clock name from "carddetect" to "cd"
-> ---
->  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> index a1650ed..1464c16 100644
-> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> @@ -25,8 +25,32 @@ Required properties:
->  		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
->  		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
->  
-> +- clocks: Most controllers only have 1 clock source per channel. However, on
-> +	  some variations of this controller, the internal card detection
+> Seems to be pointless churn.
 
-This should be explicit as to which compatible strings have 2 clocks and 
-which have 1 clock.
+We are constantly adding new nodes, so this avoids duplicates, mismerges
+and uncertainties of where things should be added. Thought that would be
+obvious, as I've been asked to do it elsewhere.
 
-> +	  logic that exists in this controller is sectioned off to be run by a
-> +	  separate second clock source to allow the main core clock to be turned
-> +	  off to save power.
-> +	  If 2 clocks are specified by the hardware, you must name them as
-> +	  "core" and "cd".
-> +	  If the controller only has 1 clock, naming is not required.
-> +
->  Optional properties:
->  - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
->  - pinctrl-names: should be "default", "state_uhs"
->  - pinctrl-0: should contain default/high speed pin ctrl
->  - pinctrl-1: should contain uhs mode pin ctrl
-> +
-> +Example showing 2 clocks:
-> +	sdhi0: sd@e804e000 {
+It also helps with diff -u'ing .dts files to see actual differences.
 
-mmc@...
+Regards,
+Andreas
 
-> +		compatible = "renesas,sdhi-r7s72100";
-> +		reg = <0xe804e000 0x100>;
-> +		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH
-> +			      GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH
-> +			      GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +		clocks = <&mstp12_clks R7S72100_CLK_SDHI00>,
-> +			 <&mstp12_clks R7S72100_CLK_SDHI01>;
-> +		clock-names = "core", "cd";
-> +		cap-sd-highspeed;
-> +		cap-sdio-irq;
-> +	};
-> -- 
-> 2.10.1
-> 
-> 
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
