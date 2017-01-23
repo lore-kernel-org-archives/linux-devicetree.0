@@ -1,93 +1,201 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Mon, 23 Jan 2017 07:17:30 +0000
-Message-ID: <AM3PR04MB530E214A598B06ECFFE551487720@AM3PR04MB530.eurprd04.prod.outlook.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com>
- <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
- <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
- <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkda1a4+yOrzBnKs6J84PS0StwQ68gHxDub_u7i5ofU9s7w@mail.gmail.com>
- <AM3PR04MB530F532D867C08824DADDC9877C0@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdaxvf6eHujfvKuOsRb69aL8+4jTE-aR3a6ywhytTEu6Hw@mail.gmail.com>
- <20170123060454.GD5662@dragon>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH 1/2] hwmon: (lm70) Utilize dev_warn instead of pr_warn
+Date: Mon, 23 Jan 2017 08:18:04 +0100 (CET)
+Message-ID: <alpine.DEB.2.20.1701230812480.2116@hadrien>
+References: <20170121192010.30681-1-f.fainelli@gmail.com> <20170121192010.30681-2-f.fainelli@gmail.com> <1485153837.12563.23.camel@perches.com> <637f229a-cfbb-938e-4700-89b180c8b2c0@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170123060454.GD5662@dragon>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Anson Huang <anson.huang@nxp.com>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <637f229a-cfbb-938e-4700-89b180c8b2c0@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Joe Perches <joe@perches.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> > >>
-> > >> > Another thing is that we can use a pins-tool program developed by
-> > >> > NXP to  generate the pinctrl configuration code that can be used
-> > >> > directly in dts. This tiny program can avoid pin function
-> > >> > conflict. As on i.MX, there are so may pins, each pin can be used =
-for up 8
-> function.
-> > >> > Configuring the pins is a time-consuming work.  This tools is
-> > >> > very useful for
-> > >> customer to generate the dts code.
-> > >>
-> > >> I understand, but every silicon vendor has such a tool, all are
-> > >> different, proprietary and unfriendly to programmers and open
-> > >> source developers, who need to understand how the hardware is
-> > >> working without magic tools and secret data sheets to fix bugs.
-> > >>
-> > >> For the people working with maintaining the code it is paramount
-> > >> that DTS files are self-descriptive.
-> > >
-> > > OK.  Thanks for your comments.  Adding generic-pinconf in imx
-> > > pinctrl needs some time to finish and the legacy method still need be=
- here
-> even if generic-pinconf is added.
-> > > Do you plan to pick this legacy binding patch for now?
+
+
+On Sun, 22 Jan 2017, Guenter Roeck wrote:
+
+> On 01/22/2017 10:43 PM, Joe Perches wrote:
+> > On Sat, 2017-01-21 at 11:20 -0800, Florian Fainelli wrote:
+> > > We have a device reference, utilize it instead of pr_warn().
 > >
-> > As I said earlier:
+> > There is at least one more hwmon to convert in applesmc.c
 > >
-> > > atleast I need an indication from one of the i.MX maintainers how
-> > > they want to proceed.
->=20
-> Sorry for being late for the discussion.
->=20
-> To be honest, I did not really expect so many i.MX6 variants coming to us=
-.  Just
-> out of curiosity, are there any more in the pipeline to come, or is this =
-the last
-> known one?
->=20
+> > Perhaps a coccinelle script?
+> >
+> > Two questions for Julia Lawall:
+> >
+> > o is there a better way to do this than repeat the blocks
+> >   one for each replacement
+> > o can struct device * dev be made an arbitrary identifier
+>
+> Definitely yes here; otherwise you only catch the ones named 'dev'.
+> Did you try "identifier dev;" ?
 
-AFAIK, this should be the last variant of i.MX6. But not the last one of i.=
-MX family.
+Definitely do that.
 
-> I understand that there are now more generic support available at pinctrl=
- core
-> level for us to use than the time we initial designed i.MX pinctrl driver=
-.  But I
-> intend to agree with Jacky that imx6sll can be supported by the existing =
-driver,
-> since it doesn't require any additional driver changes.
->=20
-> If any new generation of i.MX family require changes on the existing pinc=
-trl
-> driver, we should probably push back for a redesign to use generic suppor=
-t as
-> much as possible.  @Jacky, how does i.MX8 pinctrl look like?  How same or
-> different as/from i.MX6 pinctrl?
->=20
+>
+> The type of fn is irrelevant; you don't need to specify it.
 
-i.MX8 kernel support is in development stage. The code has not been finaliz=
-ed.
-For now, i.MX8 shares most of the pinctrl code with i.MX6 and use the same =
-pinconfig method.
+Agreed.
 
-> Just my opinion.
->=20
-> Shawn
+> There is also the case where 'struct device *dev' is a local variable
+>
+> fn(...) {
+> ...
+> struct device *dev = e;
+> <...
+> ...>
+> }
+
+Here, you don't need the fn(...) { ... } part.  It would also be good to
+say:
+
+expression e != NULL;
+
+dev could also be initialized:
+
+@@
+struct device *dev;
+expression e != NULL;
+expression e1;
+@@
+
+dev = e;
+<...
+-
++
+...>
+? dev = e1; // stop when dev is reinitialized, to avoid a double match
+
+The rules can all be merged together with a disjunction:
+
+(
+- pr_emerg
++ dev_emerg
+|
+- pr_crit
++ dev_crit  // fill in all cases
+)
+  (
++ dev,
+  ...)
+
+julia
+
+
+> or when it isn't but is still available
+>
+> fn (..., struct \(platform_device\|i2c_device\|spi_device\) *pdev, ...) {
+> }
+>
+> >
+> > $ cat dev_printk.cocci
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_emerg(
+> > +	dev_emerg(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_crit(
+> > +	dev_crit(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_alert(
+> > +	dev_alert(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_err(
+> > +	dev_err(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_notice(
+> > +	dev_notice(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_warn(
+> > +	dev_warn(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_info(
+> > +	dev_info(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> > @@
+> > identifier fn;
+> > type T;
+> > @@
+> >
+> > T fn ( ..., struct device * dev, ... ) {
+> > <...
+> > -	pr_debug(
+> > +	dev_dbg(dev,
+> > 	...);
+> > ...>
+> > }
+> >
+> >
+>
+>
