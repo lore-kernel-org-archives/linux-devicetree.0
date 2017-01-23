@@ -1,34 +1,41 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
-Date: Mon, 23 Jan 2017 17:58:57 +0800
-Message-ID: <20170123095856.GP5662@dragon>
-References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
- <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: imx6dl: fix GPIO4 range
+Date: Mon, 23 Jan 2017 18:10:06 +0800
+Message-ID: <20170123101004.GQ5662@dragon>
+References: <1484734191-18556-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <1484734191-18556-1-git-send-email-sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Julien Boibessot <julien.boibessot-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 18, 2017 at 10:53:31AM +0000, Marc Zyngier wrote:
-> Since everybody copied my own mistake from the DT binding example,
-> let's address all the offenders in one swift go.
+On Wed, Jan 18, 2017 at 11:09:51AM +0100, Sébastien Szymanski wrote:
+> GPIO4_11 is on pin 152(MX6DL_PAD_KEY_ROW2) and not on pin
+> 151(MX6DL_PAD_KEY_ROW1).
 > 
-> Most of them got the CPU interface size wrong (4kB, while it should
-> be 8kB), except for both keystone platforms which got the control
-> interface wrong (4kB instead of 8kB).
+> I found the error while booting a mainline kernel on APF6S SoM and
+> noticed the following message:
 > 
-> In the couple of cases were I knew for sure what implementation
-> was used, I've added the "arm,gic-400" compatible string. I'm 99%
-> sure that this is what everyong is using, but short of having the
-> TRM for all the other SoCs, I've let them alone.
+> [    2.609337] imx6dl-pinctrl 20e0000.iomuxc: pin MX6DL_PAD_KEY_ROW1
+> already requested by 20a8000.gpio:105; cannot claim for 20a8000.gpio:107
+> [    2.621884] imx6dl-pinctrl 20e0000.iomuxc: pin-151 (20a8000.gpio:107)
+> status -22
+> [    2.629303] spi_imx 2008000.ecspi: Can't get CS GPIO 107
 > 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  arch/arm/boot/dts/imx6ul.dtsi        | 4 ++--
+> With this patch, the message is gone and spi_imx driver probes correctly.
+> 
+> Fixes: bb728d662bed ("ARM: dts: add gpio-ranges property to iMX GPIO
+> controllers")
+> 
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 
-Acked-by: Shawn Guo <shawnguo@kernel.org>
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
