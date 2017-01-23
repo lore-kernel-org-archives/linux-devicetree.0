@@ -1,59 +1,30 @@
-From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of/platform: Ignore disabled devices in
- of_platform_populate()
-Date: Mon, 23 Jan 2017 16:09:57 +0100
-Message-ID: <34599a91-7fd8-8e08-b399-382d6c528332@nokia.com>
-References: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
- <20170123125204.22233-1-alexander.sverdlin@nokia.com>
- <711e6067-ab41-8217-b947-2b4c356aaaba@nokia.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to mmcif
+Date: Mon, 23 Jan 2017 16:12:16 +0100
+Message-ID: <CAMuHMdULpxoNaTUX2Dc7R=d+FUb_V45H9=XXfsW3RKBTowE4Uw@mail.gmail.com>
+References: <20170123141349.29844-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <711e6067-ab41-8217-b947-2b4c356aaaba-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170123141349.29844-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/17 15:33, Alexander Sverdlin wrote:
->> Check the status property and give up early enough. Otherwise
->> OF_POPULATED_BUS might be set for disabled bus which will prevent
->> it from being populated later (if enabled).
->>
->> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  drivers/of/platform.c | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> index 35de1fc59fa6..060621d94f1a 100644
->> --- a/drivers/of/platform.c
->> +++ b/drivers/of/platform.c
->> @@ -476,6 +476,10 @@ int of_platform_populate(struct device_node *root,
->>  	root = root ? of_node_get(root) : of_find_node_by_path("/");
->>  	if (!root)
->>  		return -EINVAL;
->> +	if (!of_device_is_available(root)) {
->> +		of_node_put(root);
->> +		return 0;
->> +	}
->>  
->>  	pr_debug("%s()\n", __func__);
->>  	pr_debug(" starting at: %s\n", root->full_name);
-> no, this one also doesn't allow to switch to of_platform_default_populate(),
-> please ignore the patch.
+On Mon, Jan 23, 2017 at 3:13 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-Well, the patch seems to fix a real problem because OF_POPULATED_BUS would be
-set for disabled buses, which will prevent their enabling later. Even if there
-is no in-tree call site stumbles upon this issue. 
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
--- 
-Best regards,
-Alexander Sverdlin.
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
