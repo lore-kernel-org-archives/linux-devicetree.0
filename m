@@ -1,54 +1,57 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] Add support for es8388 and hdmi audio on the rock2
-Date: Mon, 23 Jan 2017 17:54:51 +0000
-Message-ID: <20170123175451.hwvuum4ismutrbsf@sirena.org.uk>
-References: <20170123104149.2508-1-romain.perier@collabora.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Mon, 23 Jan 2017 17:56:41 +0000
+Message-ID: <SG2PR06MB1165F465C5802912ED62820C8A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170121030604.7672-1-chris.brandt@renesas.com>
+ <20170121030604.7672-3-chris.brandt@renesas.com>
+ <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qh7uxobyyv5bwgbo"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170123104149.2508-1-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Rob,
 
---qh7uxobyyv5bwgbo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Mon, Jan 23, 2017 at 11:41:45AM +0100, Romain Perier wrote:
+On Monday, January 23, 2017, Rob Herring wrote:
+> > --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> > @@ -25,8 +25,32 @@ Required properties:
+> >  		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
+> >  		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
+> >
+> > +- clocks: Most controllers only have 1 clock source per channel.
+> However, on
+> > +	  some variations of this controller, the internal card detection
+>=20
+> This should be explicit as to which compatible strings have 2 clocks and
+> which have 1 clock.
 
-> Changes in v4:
->  - Add support for multi codecs in the asoc machine driver, so the driver
->    matches the hw architecture (analog and hdmi audio are connected on
->    the same i2s line)
->  - Renamed the driver to rk3288-hdmi-analog.c and changed its
->    documentation
->  - Add built-in support for hdmi audio in this driver
->  - Add support for the property 'rockchip,routing'
+OK. I'll make a list like I did for sh_mmcif:
 
-This is the first version that has been sumbitted upstream.
+https://patchwork.kernel.org/patch/9512091/
 
---qh7uxobyyv5bwgbo
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliGQ2sACgkQJNaLcl1U
-h9DWrgf/cabHv+hPcw1cw88lEyI/z6V1qI/t3uKPTq8W381/n8UvI74wKx5yuHuS
-XJ4GEpe6N7K1tD9+8vPQkkC6dxOYlkOwwXFgwfPtgDLZaLRt1wybyoRkolohJpil
-WFMUT6hhfmagvyYIEvPRsMiNVuVUomX0umMZCFpo6CjoJ1ChIiPC3S2iZvwJJhG5
-phMUfPD+Q95bbh/ZGH2eIKI9+/oizFnFqVyhzuOLKCLGkSTUgSeteAjE3ySqL8q3
-eaMtvtkhCN0HfySxcI+VYqbM0qxOQj34GobXsLjoLPj1w+EAT11pjjauc2VubZ6S
-c1+e7Gk2Vw3RYtgwQMQmUDHW+16c+A==
-=yj7b
------END PGP SIGNATURE-----
+> > +
+> > +Example showing 2 clocks:
+> > +	sdhi0: sd@e804e000 {
+>=20
+> mmc@...
 
---qh7uxobyyv5bwgbo--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm confused. I see that for all SDHI controllers, it either "sd@" or "sdhc=
+i@".
+
+$ grep sdhi $(find arch/arm/boot/dts -name "*.dtsi")
+
+$ grep sdhci $(find arch/arm/boot/dts -name "*.dtsi")
+
+
+Regards,
+Chris
