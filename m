@@ -1,188 +1,262 @@
 From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v12 11/12] drm/mediatek: update DSI sub driver flow for
- sending commands to panel
-Date: Mon, 23 Jan 2017 19:05:24 +0800
-Message-ID: <1485169525-22163-12-git-send-email-yt.shen@mediatek.com>
+Subject: [PATCH v12 12/12] drm/mediatek: add support for Mediatek SoC MT2701
+Date: Mon, 23 Jan 2017 19:05:25 +0800
+Message-ID: <1485169525-22163-13-git-send-email-yt.shen@mediatek.com>
 References: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: dri-devel@lists.freedesktop.org, Philipp Zabel <p.zabel@pengutronix.de>, CK Hu <ck.hu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, emil.l.velikov@gmail.com, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, yingjoe.chen@mediatek.com, shaoming chen <shaoming.chen@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, yingjoe.chen@mediatek.com, emil.l.velikov@gmail.com, thierry.reding@gmail.com, Daniel Kurtz <djkurtz@chromium.org>, YT Shen <yt.shen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBwYXRjaCB1cGRhdGUgZW5hYmxlL2Rpc2FibGUgZmxvdyBvZiBEU0kgbW9kdWxlLgpPcmln
-aW5hbCBmbG93IHdvcmtzIG9uIHRoZXJlIGlzIGEgYnJpZGdlIGNoaXA6IERTSSAtPiBicmlkZ2Ug
-LT4gcGFuZWwuCkluIHRoaXMgY2FzZTogRFNJIC0+IHBhbmVsLCB0aGUgRFNJIHN1YiBkcml2ZXIg
-ZmxvdyBzaG91bGQgYmUgdXBkYXRlZC4KV2UgbmVlZCB0byBpbml0aWFsaXplIERTSSBmaXJzdCBz
-byB0aGF0IHdlIGNhbiBzZW5kIGNvbW1hbmRzIHRvIHBhbmVsLgoKU2lnbmVkLW9mZi1ieTogc2hh
-b21pbmcgY2hlbiA8c2hhb21pbmcuY2hlbkBtZWRpYXRlay5jb20+ClNpZ25lZC1vZmYtYnk6IFlU
-IFNoZW4gPHl0LnNoZW5AbWVkaWF0ZWsuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
-ay9tdGtfZHNpLmMgfCAyNjYgKysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLQog
-MSBmaWxlIGNoYW5nZWQsIDE2MSBpbnNlcnRpb25zKCspLCAxMDUgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYyBiL2RyaXZlcnMvZ3B1
-L2RybS9tZWRpYXRlay9tdGtfZHNpLmMKaW5kZXggODVmMjJkMi4uYWEzNTQxZSAxMDA2NDQKLS0t
-IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kc2kuYworKysgYi9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RzaS5jCkBAIC0xMjYsNiArMTI2LDEwIEBACiAjZGVmaW5lIENMS19I
-U19QT1NUCQkJKDB4ZmYgPDwgOCkKICNkZWZpbmUgQ0xLX0hTX0VYSVQJCQkoMHhmZiA8PCAxNikK
-IAorI2RlZmluZSBEU0lfVk1fQ01EX0NPTgkJMHgxMzAKKyNkZWZpbmUgVk1fQ01EX0VOCQkJQklU
-KDApCisjZGVmaW5lIFRTX1ZGUF9FTgkJCUJJVCg1KQorCiAjZGVmaW5lIERTSV9DTURRMAkJMHgx
-ODAKICNkZWZpbmUgQ09ORklHCQkJCSgweGZmIDw8IDApCiAjZGVmaW5lIFNIT1JUX1BBQ0tFVAkJ
-CTAKQEAgLTIzOSw4NSArMjQzLDYgQEAgc3RhdGljIHZvaWQgbXRrX2RzaV9yZXNldF9lbmdpbmUo
-c3RydWN0IG10a19kc2kgKmRzaSkKIAltdGtfZHNpX21hc2soZHNpLCBEU0lfQ09OX0NUUkwsIERT
-SV9SRVNFVCwgMCk7CiB9CiAKLXN0YXRpYyBpbnQgbXRrX2RzaV9wb3dlcm9uKHN0cnVjdCBtdGtf
-ZHNpICpkc2kpCi17Ci0Jc3RydWN0IGRldmljZSAqZGV2ID0gZHNpLT5kZXY7Ci0JaW50IHJldDsK
-LQl1NjQgcGl4ZWxfY2xvY2ssIHRvdGFsX2JpdHM7Ci0JdTMyIGh0b3RhbCwgaHRvdGFsX2JpdHMs
-IGJpdF9wZXJfcGl4ZWwsIG92ZXJoZWFkX2N5Y2xlcywgb3ZlcmhlYWRfYml0czsKLQotCWlmICgr
-K2RzaS0+cmVmY291bnQgIT0gMSkKLQkJcmV0dXJuIDA7Ci0KLQlzd2l0Y2ggKGRzaS0+Zm9ybWF0
-KSB7Ci0JY2FzZSBNSVBJX0RTSV9GTVRfUkdCNTY1OgotCQliaXRfcGVyX3BpeGVsID0gMTY7Ci0J
-CWJyZWFrOwotCWNhc2UgTUlQSV9EU0lfRk1UX1JHQjY2Nl9QQUNLRUQ6Ci0JCWJpdF9wZXJfcGl4
-ZWwgPSAxODsKLQkJYnJlYWs7Ci0JY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2OgotCWNhc2UgTUlQ
-SV9EU0lfRk1UX1JHQjg4ODoKLQlkZWZhdWx0OgotCQliaXRfcGVyX3BpeGVsID0gMjQ7Ci0JCWJy
-ZWFrOwotCX0KLQotCS8qKgotCSAqIHZtLnBpeGVsY2xvY2sgaXMgaW4ga0h6LCBwaXhlbF9jbG9j
-ayB1bml0IGlzIEh6LCBzbyBtdWx0aXBseSBieSAxMDAwCi0JICogaHRvdGFsX3RpbWUgPSBodG90
-YWwgKiBieXRlX3Blcl9waXhlbCAvIG51bV9sYW5lcwotCSAqIG92ZXJoZWFkX3RpbWUgPSBscHgg
-KyBoc19wcmVwYXJlICsgaHNfemVybyArIGhzX3RyYWlsICsgaHNfZXhpdAotCSAqIG1pcGlfcmF0
-aW8gPSAoaHRvdGFsX3RpbWUgKyBvdmVyaGVhZF90aW1lKSAvIGh0b3RhbF90aW1lCi0JICogZGF0
-YV9yYXRlID0gcGl4ZWxfY2xvY2sgKiBiaXRfcGVyX3BpeGVsICogbWlwaV9yYXRpbyAvIG51bV9s
-YW5lczsKLQkgKi8KLQlwaXhlbF9jbG9jayA9IGRzaS0+dm0ucGl4ZWxjbG9jayAqIDEwMDA7Ci0J
-aHRvdGFsID0gZHNpLT52bS5oYWN0aXZlICsgZHNpLT52bS5oYmFja19wb3JjaCArIGRzaS0+dm0u
-aGZyb250X3BvcmNoICsKLQkJCWRzaS0+dm0uaHN5bmNfbGVuOwotCWh0b3RhbF9iaXRzID0gaHRv
-dGFsICogYml0X3Blcl9waXhlbDsKLQotCW92ZXJoZWFkX2N5Y2xlcyA9IFRfTFBYICsgVF9IU19Q
-UkVQICsgVF9IU19aRVJPICsgVF9IU19UUkFJTCArCi0JCQlUX0hTX0VYSVQ7Ci0Jb3ZlcmhlYWRf
-Yml0cyA9IG92ZXJoZWFkX2N5Y2xlcyAqIGRzaS0+bGFuZXMgKiA4OwotCXRvdGFsX2JpdHMgPSBo
-dG90YWxfYml0cyArIG92ZXJoZWFkX2JpdHM7Ci0KLQlkc2ktPmRhdGFfcmF0ZSA9IERJVl9ST1VO
-RF9VUF9VTEwocGl4ZWxfY2xvY2sgKiB0b3RhbF9iaXRzLAotCQkJCQkgIGh0b3RhbCAqIGRzaS0+
-bGFuZXMpOwotCi0JcmV0ID0gY2xrX3NldF9yYXRlKGRzaS0+aHNfY2xrLCBkc2ktPmRhdGFfcmF0
-ZSk7Ci0JaWYgKHJldCA8IDApIHsKLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gc2V0IGRhdGEg
-cmF0ZTogJWRcbiIsIHJldCk7Ci0JCWdvdG8gZXJyX3JlZmNvdW50OwotCX0KLQotCXBoeV9wb3dl
-cl9vbihkc2ktPnBoeSk7Ci0KLQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5lbmdpbmVf
-Y2xrKTsKLQlpZiAocmV0IDwgMCkgewotCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBlbmFibGUg
-ZW5naW5lIGNsb2NrOiAlZFxuIiwgcmV0KTsKLQkJZ290byBlcnJfcGh5X3Bvd2VyX29mZjsKLQl9
-Ci0KLQlyZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUoZHNpLT5kaWdpdGFsX2Nsayk7Ci0JaWYgKHJl
-dCA8IDApIHsKLQkJZGV2X2VycihkZXYsICJGYWlsZWQgdG8gZW5hYmxlIGRpZ2l0YWwgY2xvY2s6
-ICVkXG4iLCByZXQpOwotCQlnb3RvIGVycl9kaXNhYmxlX2VuZ2luZV9jbGs7Ci0JfQotCi0JbXRr
-X2RzaV9lbmFibGUoZHNpKTsKLQltdGtfZHNpX3Jlc2V0X2VuZ2luZShkc2kpOwotCW10a19kc2lf
-cGh5X3RpbWNvbmZpZyhkc2kpOwotCi0JcmV0dXJuIDA7Ci0KLWVycl9kaXNhYmxlX2VuZ2luZV9j
-bGs6Ci0JY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+ZW5naW5lX2Nsayk7Ci1lcnJfcGh5X3Bv
-d2VyX29mZjoKLQlwaHlfcG93ZXJfb2ZmKGRzaS0+cGh5KTsKLWVycl9yZWZjb3VudDoKLQlkc2kt
-PnJlZmNvdW50LS07Ci0JcmV0dXJuIHJldDsKLX0KLQogc3RhdGljIHZvaWQgbXRrX2RzaV9jbGtf
-dWxwX21vZGVfZW50ZXIoc3RydWN0IG10a19kc2kgKmRzaSkKIHsKIAltdGtfZHNpX21hc2soZHNp
-LCBEU0lfUEhZX0xDQ09OLCBMQ19IU19UWF9FTiwgMCk7CkBAIC0zNjUsMTYgKzI5MCwyMyBAQCBz
-dGF0aWMgdm9pZCBtdGtfZHNpX3NldF9tb2RlKHN0cnVjdCBtdGtfZHNpICpkc2kpCiAJdTMyIHZp
-ZF9tb2RlID0gQ01EX01PREU7CiAKIAlpZiAoZHNpLT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfTU9E
-RV9WSURFTykgewotCQl2aWRfbW9kZSA9IFNZTkNfUFVMU0VfTU9ERTsKLQotCQlpZiAoKGRzaS0+
-bW9kZV9mbGFncyAmIE1JUElfRFNJX01PREVfVklERU9fQlVSU1QpICYmCi0JCSAgICAhKGRzaS0+
-bW9kZV9mbGFncyAmIE1JUElfRFNJX01PREVfVklERU9fU1lOQ19QVUxTRSkpCisJCWlmIChkc2kt
-Pm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJREVPX0JVUlNUKQogCQkJdmlkX21vZGUgPSBC
-VVJTVF9NT0RFOworCQllbHNlIGlmIChkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9NT0RFX1ZJ
-REVPX1NZTkNfUFVMU0UpCisJCQl2aWRfbW9kZSA9IFNZTkNfUFVMU0VfTU9ERTsKKwkJZWxzZQor
-CQkJdmlkX21vZGUgPSBTWU5DX0VWRU5UX01PREU7CiAJfQogCiAJd3JpdGVsKHZpZF9tb2RlLCBk
-c2ktPnJlZ3MgKyBEU0lfTU9ERV9DVFJMKTsKIH0KIAorc3RhdGljIHZvaWQgbXRrX2RzaV9zZXRf
-dm1fY21kKHN0cnVjdCBtdGtfZHNpICpkc2kpCit7CisJbXRrX2RzaV9tYXNrKGRzaSwgRFNJX1ZN
-X0NNRF9DT04sIFZNX0NNRF9FTiwgVk1fQ01EX0VOKTsKKwltdGtfZHNpX21hc2soZHNpLCBEU0lf
-Vk1fQ01EX0NPTiwgVFNfVkZQX0VOLCBUU19WRlBfRU4pOworfQorCiBzdGF0aWMgdm9pZCBtdGtf
-ZHNpX3BzX2NvbnRyb2xfdmFjdChzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewogCXN0cnVjdCB2aWRl
-b21vZGUgKnZtID0gJmRzaS0+dm07CkBAIC01MTIsNiArNDQ0LDE2IEBAIHN0YXRpYyB2b2lkIG10
-a19kc2lfc3RhcnQoc3RydWN0IG10a19kc2kgKmRzaSkKIAl3cml0ZWwoMSwgZHNpLT5yZWdzICsg
-RFNJX1NUQVJUKTsKIH0KIAorc3RhdGljIHZvaWQgbXRrX2RzaV9zdG9wKHN0cnVjdCBtdGtfZHNp
-ICpkc2kpCit7CisJd3JpdGVsKDAsIGRzaS0+cmVncyArIERTSV9TVEFSVCk7Cit9CisKK3N0YXRp
-YyB2b2lkIG10a19kc2lfc2V0X2NtZF9tb2RlKHN0cnVjdCBtdGtfZHNpICpkc2kpCit7CisJd3Jp
-dGVsKENNRF9NT0RFLCBkc2ktPnJlZ3MgKyBEU0lfTU9ERV9DVFJMKTsKK30KKwogc3RhdGljIHZv
-aWQgbXRrX2RzaV9zZXRfaW50ZXJydXB0X2VuYWJsZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewog
-CXUzMiBpbnRlbiA9IExQUlhfUkRfUkRZX0lOVF9GTEFHIHwgQ01EX0RPTkVfSU5UX0ZMQUcgfCBW
-TV9ET05FX0lOVF9GTEFHOwpAQCAtNTcwLDYgKzUxMiwxMjEgQEAgc3RhdGljIGlycXJldHVybl90
-IG10a19kc2lfaXJxKGludCBpcnEsIHZvaWQgKmRldl9pZCkKIAlyZXR1cm4gSVJRX0hBTkRMRUQ7
-CiB9CiAKK3N0YXRpYyBzMzIgbXRrX2RzaV9zd2l0Y2hfdG9fY21kX21vZGUoc3RydWN0IG10a19k
-c2kgKmRzaSwgdTggaXJxX2ZsYWcsIHUzMiB0KQoreworCW10a19kc2lfaXJxX2RhdGFfY2xlYXIo
-ZHNpLCBpcnFfZmxhZyk7CisJbXRrX2RzaV9zZXRfY21kX21vZGUoZHNpKTsKKworCWlmICghbXRr
-X2RzaV93YWl0X2Zvcl9pcnFfZG9uZShkc2ksIGlycV9mbGFnLCB0KSkgeworCQlEUk1fRVJST1Io
-ImZhaWxlZCB0byBzd2l0Y2ggY21kIG1vZGVcbiIpOworCQlyZXR1cm4gLUVUSU1FOworCX0gZWxz
-ZSB7CisJCXJldHVybiAwOworCX0KK30KKworc3RhdGljIGludCBtdGtfZHNpX3Bvd2Vyb24oc3Ry
-dWN0IG10a19kc2kgKmRzaSkKK3sKKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSBkc2ktPmRldjsKKwlp
-bnQgcmV0OworCXU2NCBwaXhlbF9jbG9jaywgdG90YWxfYml0czsKKwl1MzIgaHRvdGFsLCBodG90
-YWxfYml0cywgYml0X3Blcl9waXhlbCwgb3ZlcmhlYWRfY3ljbGVzLCBvdmVyaGVhZF9iaXRzOwor
-CisJaWYgKCsrZHNpLT5yZWZjb3VudCAhPSAxKQorCQlyZXR1cm4gMDsKKworCXN3aXRjaCAoZHNp
-LT5mb3JtYXQpIHsKKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I1NjU6CisJCWJpdF9wZXJfcGl4ZWwg
-PSAxNjsKKwkJYnJlYWs7CisJY2FzZSBNSVBJX0RTSV9GTVRfUkdCNjY2X1BBQ0tFRDoKKwkJYml0
-X3Blcl9waXhlbCA9IDE4OworCQlicmVhazsKKwljYXNlIE1JUElfRFNJX0ZNVF9SR0I2NjY6CisJ
-Y2FzZSBNSVBJX0RTSV9GTVRfUkdCODg4OgorCWRlZmF1bHQ6CisJCWJpdF9wZXJfcGl4ZWwgPSAy
-NDsKKwkJYnJlYWs7CisJfQorCisJLyoqCisJICogdm0ucGl4ZWxjbG9jayBpcyBpbiBrSHosIHBp
-eGVsX2Nsb2NrIHVuaXQgaXMgSHosIHNvIG11bHRpcGx5IGJ5IDEwMDAKKwkgKiBodG90YWxfdGlt
-ZSA9IGh0b3RhbCAqIGJ5dGVfcGVyX3BpeGVsIC8gbnVtX2xhbmVzCisJICogb3ZlcmhlYWRfdGlt
-ZSA9IGxweCArIGhzX3ByZXBhcmUgKyBoc196ZXJvICsgaHNfdHJhaWwgKyBoc19leGl0CisJICog
-bWlwaV9yYXRpbyA9IChodG90YWxfdGltZSArIG92ZXJoZWFkX3RpbWUpIC8gaHRvdGFsX3RpbWUK
-KwkgKiBkYXRhX3JhdGUgPSBwaXhlbF9jbG9jayAqIGJpdF9wZXJfcGl4ZWwgKiBtaXBpX3JhdGlv
-IC8gbnVtX2xhbmVzOworCSAqLworCXBpeGVsX2Nsb2NrID0gZHNpLT52bS5waXhlbGNsb2NrICog
-MTAwMDsKKwlodG90YWwgPSBkc2ktPnZtLmhhY3RpdmUgKyBkc2ktPnZtLmhiYWNrX3BvcmNoICsg
-ZHNpLT52bS5oZnJvbnRfcG9yY2ggKworCQkJZHNpLT52bS5oc3luY19sZW47CisJaHRvdGFsX2Jp
-dHMgPSBodG90YWwgKiBiaXRfcGVyX3BpeGVsOworCisJb3ZlcmhlYWRfY3ljbGVzID0gVF9MUFgg
-KyBUX0hTX1BSRVAgKyBUX0hTX1pFUk8gKyBUX0hTX1RSQUlMICsKKwkJCVRfSFNfRVhJVDsKKwlv
-dmVyaGVhZF9iaXRzID0gb3ZlcmhlYWRfY3ljbGVzICogZHNpLT5sYW5lcyAqIDg7CisJdG90YWxf
-Yml0cyA9IGh0b3RhbF9iaXRzICsgb3ZlcmhlYWRfYml0czsKKworCWRzaS0+ZGF0YV9yYXRlID0g
-RElWX1JPVU5EX1VQX1VMTChwaXhlbF9jbG9jayAqIHRvdGFsX2JpdHMsCisJCQkJCSAgaHRvdGFs
-ICogZHNpLT5sYW5lcyk7CisKKwlyZXQgPSBjbGtfc2V0X3JhdGUoZHNpLT5oc19jbGssIGRzaS0+
-ZGF0YV9yYXRlKTsKKwlpZiAocmV0IDwgMCkgeworCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBz
-ZXQgZGF0YSByYXRlOiAlZFxuIiwgcmV0KTsKKwkJZ290byBlcnJfcmVmY291bnQ7CisJfQorCisJ
-cGh5X3Bvd2VyX29uKGRzaS0+cGh5KTsKKworCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2kt
-PmVuZ2luZV9jbGspOworCWlmIChyZXQgPCAwKSB7CisJCWRldl9lcnIoZGV2LCAiRmFpbGVkIHRv
-IGVuYWJsZSBlbmdpbmUgY2xvY2s6ICVkXG4iLCByZXQpOworCQlnb3RvIGVycl9waHlfcG93ZXJf
-b2ZmOworCX0KKworCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPmRpZ2l0YWxfY2xrKTsK
-KwlpZiAocmV0IDwgMCkgeworCQlkZXZfZXJyKGRldiwgIkZhaWxlZCB0byBlbmFibGUgZGlnaXRh
-bCBjbG9jazogJWRcbiIsIHJldCk7CisJCWdvdG8gZXJyX2Rpc2FibGVfZW5naW5lX2NsazsKKwl9
-CisKKwltdGtfZHNpX2VuYWJsZShkc2kpOworCW10a19kc2lfcmVzZXRfZW5naW5lKGRzaSk7CisJ
-bXRrX2RzaV9waHlfdGltY29uZmlnKGRzaSk7CisKKwltdGtfZHNpX3J4dHhfY29udHJvbChkc2kp
-OworCW10a19kc2lfcHNfY29udHJvbF92YWN0KGRzaSk7CisJbXRrX2RzaV9zZXRfdm1fY21kKGRz
-aSk7CisJbXRrX2RzaV9jb25maWdfdmRvX3RpbWluZyhkc2kpOworCW10a19kc2lfc2V0X2ludGVy
-cnVwdF9lbmFibGUoZHNpKTsKKworCW10a19kc2lfY2xrX3VscF9tb2RlX2xlYXZlKGRzaSk7CisJ
-bXRrX2RzaV9sYW5lMF91bHBfbW9kZV9sZWF2ZShkc2kpOworCW10a19kc2lfY2xrX2hzX21vZGUo
-ZHNpLCAwKTsKKworCWlmIChkc2ktPnBhbmVsKSB7CisJCWlmIChkcm1fcGFuZWxfcHJlcGFyZShk
-c2ktPnBhbmVsKSkgeworCQkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gcHJlcGFyZSB0aGUgcGFuZWxc
-biIpOworCQkJZ290byBlcnJfZGlzYWJsZV9kaWdpdGFsX2NsazsKKwkJfQorCX0KKworCW10a19k
-c2lfc2V0X21vZGUoZHNpKTsKKwltdGtfZHNpX2Nsa19oc19tb2RlKGRzaSwgMSk7CisKKwltdGtf
-ZHNpX3N0YXJ0KGRzaSk7CisKKwlyZXR1cm4gMDsKK2Vycl9kaXNhYmxlX2RpZ2l0YWxfY2xrOgor
-CWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2ktPmRpZ2l0YWxfY2xrKTsKK2Vycl9kaXNhYmxlX2Vu
-Z2luZV9jbGs6CisJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+ZW5naW5lX2Nsayk7CitlcnJf
-cGh5X3Bvd2VyX29mZjoKKwlwaHlfcG93ZXJfb2ZmKGRzaS0+cGh5KTsKK2Vycl9yZWZjb3VudDoK
-Kwlkc2ktPnJlZmNvdW50LS07CisJcmV0dXJuIHJldDsKK30KKwogc3RhdGljIHZvaWQgbXRrX2Rz
-aV9wb3dlcm9mZihzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogewogCWlmIChXQVJOX09OKGRzaS0+cmVm
-Y291bnQgPT0gMCkpCkBAIC01NzgsNiArNjM1LDE3IEBAIHN0YXRpYyB2b2lkIG10a19kc2lfcG93
-ZXJvZmYoc3RydWN0IG10a19kc2kgKmRzaSkKIAlpZiAoLS1kc2ktPnJlZmNvdW50ICE9IDApCiAJ
-CXJldHVybjsKIAorCW10a19kc2lfc3RvcChkc2kpOworCWlmICghbXRrX2RzaV9zd2l0Y2hfdG9f
-Y21kX21vZGUoZHNpLCBWTV9ET05FX0lOVF9GTEFHLCA1MDApKSB7CisJCWlmIChkc2ktPnBhbmVs
-KSB7CisJCQlpZiAoZHJtX3BhbmVsX3VucHJlcGFyZShkc2ktPnBhbmVsKSkgeworCQkJCURSTV9F
-UlJPUigiZmFpbGVkIHRvIHVucHJlcGFyZSB0aGUgcGFuZWxcbiIpOworCQkJCXJldHVybjsKKwkJ
-CX0KKwkJfQorCX0KKworCW10a19kc2lfcmVzZXRfZW5naW5lKGRzaSk7CiAJbXRrX2RzaV9sYW5l
-MF91bHBfbW9kZV9lbnRlcihkc2kpOwogCW10a19kc2lfY2xrX3VscF9tb2RlX2VudGVyKGRzaSk7
-CiAKQEAgLTU5NiwzNiArNjY0LDI0IEBAIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNpX2VuYWJs
-ZShzdHJ1Y3QgbXRrX2RzaSAqZHNpKQogCWlmIChkc2ktPmVuYWJsZWQpCiAJCXJldHVybjsKIAot
-CWlmIChkc2ktPnBhbmVsKSB7Ci0JCWlmIChkcm1fcGFuZWxfcHJlcGFyZShkc2ktPnBhbmVsKSkg
-ewotCQkJRFJNX0VSUk9SKCJmYWlsZWQgdG8gc2V0dXAgdGhlIHBhbmVsXG4iKTsKLQkJCXJldHVy
-bjsKLQkJfQotCX0KLQogCXJldCA9IG10a19kc2lfcG93ZXJvbihkc2kpOwogCWlmIChyZXQgPCAw
-KSB7CiAJCURSTV9FUlJPUigiZmFpbGVkIHRvIHBvd2VyIG9uIGRzaVxuIik7CiAJCXJldHVybjsK
-IAl9CiAKLQltdGtfZHNpX3J4dHhfY29udHJvbChkc2kpOwotCi0JbXRrX2RzaV9jbGtfdWxwX21v
-ZGVfbGVhdmUoZHNpKTsKLQltdGtfZHNpX2xhbmUwX3VscF9tb2RlX2xlYXZlKGRzaSk7Ci0JbXRr
-X2RzaV9jbGtfaHNfbW9kZShkc2ksIDApOwotCW10a19kc2lfc2V0X21vZGUoZHNpKTsKLQotCW10
-a19kc2lfcHNfY29udHJvbF92YWN0KGRzaSk7Ci0JbXRrX2RzaV9jb25maWdfdmRvX3RpbWluZyhk
-c2kpOwotCW10a19kc2lfc2V0X2ludGVycnVwdF9lbmFibGUoZHNpKTsKLQotCW10a19kc2lfc2V0
-X21vZGUoZHNpKTsKLQltdGtfZHNpX2Nsa19oc19tb2RlKGRzaSwgMSk7Ci0KLQltdGtfZHNpX3N0
-YXJ0KGRzaSk7CisJaWYgKGRzaS0+cGFuZWwpIHsKKwkJaWYgKGRybV9wYW5lbF9lbmFibGUoZHNp
-LT5wYW5lbCkpIHsKKwkJCURSTV9FUlJPUigiZmFpbGVkIHRvIGVuYWJsZSB0aGUgcGFuZWxcbiIp
-OworCQkJZ290byBlcnJfZHNpX3Bvd2VyX29mZjsKKwkJfQorCX0KIAogCWRzaS0+ZW5hYmxlZCA9
-IHRydWU7CisKKwlyZXR1cm47CitlcnJfZHNpX3Bvd2VyX29mZjoKKwltdGtfZHNpX3Bvd2Vyb2Zm
-KGRzaSk7CiB9CiAKIHN0YXRpYyB2b2lkIG10a19vdXRwdXRfZHNpX2Rpc2FibGUoc3RydWN0IG10
-a19kc2kgKmRzaSkKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
-ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9kcmktZGV2ZWwK
+This patch add support for the Mediatek MT2701 DISP subsystem.
+There is only one OVL engine in MT2701.
+
+Signed-off-by: YT Shen <yt.shen@mediatek.com>
+Acked-by: CK Hu <ck.hu@mediatek.com>
+---
+ drivers/gpu/drm/mediatek/mtk_disp_ovl.c     |  8 ++++++++
+ drivers/gpu/drm/mediatek/mtk_disp_rdma.c    |  6 ++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp.c      | 17 +++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c |  7 +++++++
+ drivers/gpu/drm/mediatek/mtk_drm_drv.c      | 29 +++++++++++++++++++++++++++++
+ drivers/gpu/drm/mediatek/mtk_dsi.c          |  1 +
+ drivers/gpu/drm/mediatek/mtk_mipi_tx.c      |  6 ++++++
+ 7 files changed, 74 insertions(+)
+
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+index 4552178..a14d7d6 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
+@@ -35,6 +35,7 @@
+ #define DISP_REG_OVL_PITCH(n)			(0x0044 + 0x20 * (n))
+ #define DISP_REG_OVL_RDMA_CTRL(n)		(0x00c0 + 0x20 * (n))
+ #define DISP_REG_OVL_RDMA_GMC(n)		(0x00c8 + 0x20 * (n))
++#define DISP_REG_OVL_ADDR_MT2701		0x0040
+ #define DISP_REG_OVL_ADDR_MT8173		0x0f40
+ #define DISP_REG_OVL_ADDR(ovl, n)		((ovl)->data->addr + 0x20 * (n))
+ 
+@@ -303,12 +304,19 @@ static int mtk_disp_ovl_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct mtk_disp_ovl_data mt2701_ovl_driver_data = {
++	.addr = DISP_REG_OVL_ADDR_MT2701,
++	.fmt_rgb565_is_0 = false,
++};
++
+ static const struct mtk_disp_ovl_data mt8173_ovl_driver_data = {
+ 	.addr = DISP_REG_OVL_ADDR_MT8173,
+ 	.fmt_rgb565_is_0 = true,
+ };
+ 
+ static const struct of_device_id mtk_disp_ovl_driver_dt_match[] = {
++	{ .compatible = "mediatek,mt2701-disp-ovl",
++	  .data = &mt2701_ovl_driver_data},
+ 	{ .compatible = "mediatek,mt8173-disp-ovl",
+ 	  .data = &mt8173_ovl_driver_data},
+ 	{},
+diff --git a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+index e5e5318..b68a513 100644
+--- a/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
++++ b/drivers/gpu/drm/mediatek/mtk_disp_rdma.c
+@@ -236,11 +236,17 @@ static int mtk_disp_rdma_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct mtk_disp_rdma_data mt2701_rdma_driver_data = {
++	.fifo_size = SZ_4K,
++};
++
+ static const struct mtk_disp_rdma_data mt8173_rdma_driver_data = {
+ 	.fifo_size = SZ_8K,
+ };
+ 
+ static const struct of_device_id mtk_disp_rdma_driver_dt_match[] = {
++	{ .compatible = "mediatek,mt2701-disp-rdma",
++	  .data = &mt2701_rdma_driver_data},
+ 	{ .compatible = "mediatek,mt8173-disp-rdma",
+ 	  .data = &mt8173_rdma_driver_data},
+ 	{},
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+index a9b209c..8130f3d 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+@@ -60,6 +60,13 @@
+ #define MT8173_MUTEX_MOD_DISP_PWM1		BIT(24)
+ #define MT8173_MUTEX_MOD_DISP_OD		BIT(25)
+ 
++#define MT2701_MUTEX_MOD_DISP_OVL		BIT(3)
++#define MT2701_MUTEX_MOD_DISP_WDMA		BIT(6)
++#define MT2701_MUTEX_MOD_DISP_COLOR		BIT(7)
++#define MT2701_MUTEX_MOD_DISP_BLS		BIT(9)
++#define MT2701_MUTEX_MOD_DISP_RDMA0		BIT(10)
++#define MT2701_MUTEX_MOD_DISP_RDMA1		BIT(12)
++
+ #define MUTEX_SOF_SINGLE_MODE		0
+ #define MUTEX_SOF_DSI0			1
+ #define MUTEX_SOF_DSI1			2
+@@ -92,6 +99,15 @@ struct mtk_ddp {
+ 	const unsigned int		*mutex_mod;
+ };
+ 
++static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
++	[DDP_COMPONENT_BLS] = MT2701_MUTEX_MOD_DISP_BLS,
++	[DDP_COMPONENT_COLOR0] = MT2701_MUTEX_MOD_DISP_COLOR,
++	[DDP_COMPONENT_OVL0] = MT2701_MUTEX_MOD_DISP_OVL,
++	[DDP_COMPONENT_RDMA0] = MT2701_MUTEX_MOD_DISP_RDMA0,
++	[DDP_COMPONENT_RDMA1] = MT2701_MUTEX_MOD_DISP_RDMA1,
++	[DDP_COMPONENT_WDMA0] = MT2701_MUTEX_MOD_DISP_WDMA,
++};
++
+ static const unsigned int mt8173_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+ 	[DDP_COMPONENT_AAL] = MT8173_MUTEX_MOD_DISP_AAL,
+ 	[DDP_COMPONENT_COLOR0] = MT8173_MUTEX_MOD_DISP_COLOR0,
+@@ -390,6 +406,7 @@ static int mtk_ddp_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id ddp_driver_dt_match[] = {
++	{ .compatible = "mediatek,mt2701-disp-mutex", .data = mt2701_mutex_mod},
+ 	{ .compatible = "mediatek,mt8173-disp-mutex", .data = mt8173_mutex_mod},
+ 	{},
+ };
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+index f6e853a..8b52416 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+@@ -39,6 +39,7 @@
+ #define DISP_REG_UFO_START			0x0000
+ 
+ #define DISP_COLOR_CFG_MAIN			0x0400
++#define DISP_COLOR_START_MT2701			0x0f00
+ #define DISP_COLOR_START_MT8173			0x0c00
+ #define DISP_COLOR_START(comp)			((comp)->data->color_offset)
+ #define DISP_COLOR_WIDTH(comp)			(DISP_COLOR_START(comp) + 0x50)
+@@ -285,11 +286,17 @@ struct mtk_ddp_comp_match {
+ 	[DDP_COMPONENT_WDMA1]	= { MTK_DISP_WDMA,	1, NULL },
+ };
+ 
++static const struct mtk_disp_color_data mt2701_color_driver_data = {
++	.color_offset = DISP_COLOR_START_MT2701,
++};
++
+ static const struct mtk_disp_color_data mt8173_color_driver_data = {
+ 	.color_offset = DISP_COLOR_START_MT8173,
+ };
+ 
+ static const struct of_device_id mtk_disp_color_driver_dt_match[] = {
++	{ .compatible = "mediatek,mt2701-disp-color",
++	  .data = &mt2701_color_driver_data},
+ 	{ .compatible = "mediatek,mt8173-disp-color",
+ 	  .data = &mt8173_color_driver_data},
+ 	{},
+diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+index 074fe31..7daabae 100644
+--- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
++++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+@@ -128,6 +128,19 @@ static int mtk_atomic_commit(struct drm_device *drm,
+ 	.atomic_commit = mtk_atomic_commit,
+ };
+ 
++static const enum mtk_ddp_comp_id mt2701_mtk_ddp_main[] = {
++	DDP_COMPONENT_OVL0,
++	DDP_COMPONENT_RDMA0,
++	DDP_COMPONENT_COLOR0,
++	DDP_COMPONENT_BLS,
++	DDP_COMPONENT_DSI0,
++};
++
++static const enum mtk_ddp_comp_id mt2701_mtk_ddp_ext[] = {
++	DDP_COMPONENT_RDMA1,
++	DDP_COMPONENT_DPI0,
++};
++
+ static const enum mtk_ddp_comp_id mt8173_mtk_ddp_main[] = {
+ 	DDP_COMPONENT_OVL0,
+ 	DDP_COMPONENT_COLOR0,
+@@ -147,6 +160,14 @@ static int mtk_atomic_commit(struct drm_device *drm,
+ 	DDP_COMPONENT_DPI0,
+ };
+ 
++static const struct mtk_mmsys_driver_data mt2701_mmsys_driver_data = {
++	.main_path = mt2701_mtk_ddp_main,
++	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
++	.ext_path = mt2701_mtk_ddp_ext,
++	.ext_len = ARRAY_SIZE(mt2701_mtk_ddp_ext),
++	.shadow_register = true,
++};
++
+ static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+ 	.main_path = mt8173_mtk_ddp_main,
+ 	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
+@@ -340,16 +361,22 @@ static void mtk_drm_unbind(struct device *dev)
+ };
+ 
+ static const struct of_device_id mtk_ddp_comp_dt_ids[] = {
++	{ .compatible = "mediatek,mt2701-disp-ovl",   .data = (void *)MTK_DISP_OVL },
+ 	{ .compatible = "mediatek,mt8173-disp-ovl",   .data = (void *)MTK_DISP_OVL },
++	{ .compatible = "mediatek,mt2701-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+ 	{ .compatible = "mediatek,mt8173-disp-rdma",  .data = (void *)MTK_DISP_RDMA },
+ 	{ .compatible = "mediatek,mt8173-disp-wdma",  .data = (void *)MTK_DISP_WDMA },
++	{ .compatible = "mediatek,mt2701-disp-color", .data = (void *)MTK_DISP_COLOR },
+ 	{ .compatible = "mediatek,mt8173-disp-color", .data = (void *)MTK_DISP_COLOR },
+ 	{ .compatible = "mediatek,mt8173-disp-aal",   .data = (void *)MTK_DISP_AAL},
+ 	{ .compatible = "mediatek,mt8173-disp-gamma", .data = (void *)MTK_DISP_GAMMA, },
+ 	{ .compatible = "mediatek,mt8173-disp-ufoe",  .data = (void *)MTK_DISP_UFOE },
++	{ .compatible = "mediatek,mt2701-dsi",	      .data = (void *)MTK_DSI },
+ 	{ .compatible = "mediatek,mt8173-dsi",        .data = (void *)MTK_DSI },
+ 	{ .compatible = "mediatek,mt8173-dpi",        .data = (void *)MTK_DPI },
++	{ .compatible = "mediatek,mt2701-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
+ 	{ .compatible = "mediatek,mt8173-disp-mutex", .data = (void *)MTK_DISP_MUTEX },
++	{ .compatible = "mediatek,mt2701-disp-pwm",   .data = (void *)MTK_DISP_BLS },
+ 	{ .compatible = "mediatek,mt8173-disp-pwm",   .data = (void *)MTK_DISP_PWM },
+ 	{ .compatible = "mediatek,mt8173-disp-od",    .data = (void *)MTK_DISP_OD },
+ 	{ }
+@@ -523,6 +550,8 @@ static SIMPLE_DEV_PM_OPS(mtk_drm_pm_ops, mtk_drm_sys_suspend,
+ 			 mtk_drm_sys_resume);
+ 
+ static const struct of_device_id mtk_drm_of_ids[] = {
++	{ .compatible = "mediatek,mt2701-mmsys",
++	  .data = &mt2701_mmsys_driver_data},
+ 	{ .compatible = "mediatek,mt8173-mmsys",
+ 	  .data = &mt8173_mmsys_driver_data},
+ 	{ }
+diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
+index aa3541e..c007be65 100644
+--- a/drivers/gpu/drm/mediatek/mtk_dsi.c
++++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
+@@ -1225,6 +1225,7 @@ static int mtk_dsi_remove(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id mtk_dsi_of_match[] = {
++	{ .compatible = "mediatek,mt2701-dsi" },
+ 	{ .compatible = "mediatek,mt8173-dsi" },
+ 	{ },
+ };
+diff --git a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+index fd84914..90e9131 100644
+--- a/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
++++ b/drivers/gpu/drm/mediatek/mtk_mipi_tx.c
+@@ -465,11 +465,17 @@ static int mtk_mipi_tx_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct mtk_mipitx_data mt2701_mipitx_data = {
++	.mppll_preserve = (3 << 8)
++};
++
+ static const struct mtk_mipitx_data mt8173_mipitx_data = {
+ 	.mppll_preserve = (0 << 8)
+ };
+ 
+ static const struct of_device_id mtk_mipi_tx_match[] = {
++	{ .compatible = "mediatek,mt2701-mipi-tx",
++	  .data = &mt2701_mipitx_data },
+ 	{ .compatible = "mediatek,mt8173-mipi-tx",
+ 	  .data = &mt8173_mipitx_data },
+ 	{},
+-- 
+1.9.1
