@@ -1,148 +1,78 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 10/14] mmc: jz4740: Let the pinctrl driver configure
- the pins
-Date: Mon, 23 Jan 2017 11:40:12 +0100
-Message-ID: <CAPDyKFpqs+w4jsYNBeH3VuB08Yp72JPh7wcYZZHJKSKeuAGE2A@mail.gmail.com>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170122144947.16158-1-paul@crapouillou.net> <20170122144947.16158-11-paul@crapouillou.net>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/7] rtc: sun6i: Fix the RTC accuracy
+Date: Mon, 23 Jan 2017 11:41:45 +0100
+Message-ID: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard@free-electrons.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170122144947.16158-11-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mips@linux-mips.org, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, Linux
+Return-path: <rtc-linux+bncBDSJBYGBRIMBB7F3S7CAKGQEAJCIDWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 January 2017 at 15:49, Paul Cercueil <paul@crapouillou.net> wrote:
-> Now that the JZ4740 and similar SoCs have a pinctrl driver, we rely on
-> the pins being properly configured before the driver probes.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Hi,
 
-Acked-by: Ulf Hansson <ulf.hansson@linaro.org>
+The RTC used in the A31 and later SoC has an accuracy issue, which is
+already significant even after a couple of hours.
 
-Kind regards
-Uffe
+This is due to the fact that the oscillator used by default is an internal
+and very inaccurate one.
 
-> ---
->  drivers/mmc/host/jz4740_mmc.c | 45 +++++--------------------------------------
->  1 file changed, 5 insertions(+), 40 deletions(-)
->
-> v2: Set pin sleep/default state in suspend/resume callbacks
->
-> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
-> index 819ad32964fc..b5fec5b7ee7b 100644
-> --- a/drivers/mmc/host/jz4740_mmc.c
-> +++ b/drivers/mmc/host/jz4740_mmc.c
-> @@ -20,14 +20,13 @@
->  #include <linux/irq.h>
->  #include <linux/interrupt.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/delay.h>
->  #include <linux/scatterlist.h>
->  #include <linux/clk.h>
->
->  #include <linux/bitops.h>
-> -#include <linux/gpio.h>
-> -#include <asm/mach-jz4740/gpio.h>
->  #include <asm/cacheflush.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/dmaengine.h>
-> @@ -906,15 +905,6 @@ static const struct mmc_host_ops jz4740_mmc_ops = {
->         .enable_sdio_irq = jz4740_mmc_enable_sdio_irq,
->  };
->
-> -static const struct jz_gpio_bulk_request jz4740_mmc_pins[] = {
-> -       JZ_GPIO_BULK_PIN(MSC_CMD),
-> -       JZ_GPIO_BULK_PIN(MSC_CLK),
-> -       JZ_GPIO_BULK_PIN(MSC_DATA0),
-> -       JZ_GPIO_BULK_PIN(MSC_DATA1),
-> -       JZ_GPIO_BULK_PIN(MSC_DATA2),
-> -       JZ_GPIO_BULK_PIN(MSC_DATA3),
-> -};
-> -
->  static int jz4740_mmc_request_gpio(struct device *dev, int gpio,
->         const char *name, bool output, int value)
->  {
-> @@ -978,15 +968,6 @@ static void jz4740_mmc_free_gpios(struct platform_device *pdev)
->                 gpio_free(pdata->gpio_power);
->  }
->
-> -static inline size_t jz4740_mmc_num_pins(struct jz4740_mmc_host *host)
-> -{
-> -       size_t num_pins = ARRAY_SIZE(jz4740_mmc_pins);
-> -       if (host->pdata && host->pdata->data_1bit)
-> -               num_pins -= 3;
-> -
-> -       return num_pins;
-> -}
-> -
->  static int jz4740_mmc_probe(struct platform_device* pdev)
->  {
->         int ret;
-> @@ -1027,15 +1008,9 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
->                 goto err_free_host;
->         }
->
-> -       ret = jz_gpio_bulk_request(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
-> -       if (ret) {
-> -               dev_err(&pdev->dev, "Failed to request mmc pins: %d\n", ret);
-> -               goto err_free_host;
-> -       }
-> -
->         ret = jz4740_mmc_request_gpios(mmc, pdev);
->         if (ret)
-> -               goto err_gpio_bulk_free;
-> +               goto err_release_dma;
->
->         mmc->ops = &jz4740_mmc_ops;
->         mmc->f_min = JZ_MMC_CLK_RATE / 128;
-> @@ -1091,10 +1066,9 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
->         free_irq(host->irq, host);
->  err_free_gpios:
->         jz4740_mmc_free_gpios(pdev);
-> -err_gpio_bulk_free:
-> +err_release_dma:
->         if (host->use_dma)
->                 jz4740_mmc_release_dma_channels(host);
-> -       jz_gpio_bulk_free(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
->  err_free_host:
->         mmc_free_host(mmc);
->
-> @@ -1114,7 +1088,6 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
->         free_irq(host->irq, host);
->
->         jz4740_mmc_free_gpios(pdev);
-> -       jz_gpio_bulk_free(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
->
->         if (host->use_dma)
->                 jz4740_mmc_release_dma_channels(host);
-> @@ -1128,20 +1101,12 @@ static int jz4740_mmc_remove(struct platform_device *pdev)
->
->  static int jz4740_mmc_suspend(struct device *dev)
->  {
-> -       struct jz4740_mmc_host *host = dev_get_drvdata(dev);
-> -
-> -       jz_gpio_bulk_suspend(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
-> -
-> -       return 0;
-> +       return pinctrl_pm_select_sleep_state(dev);
->  }
->
->  static int jz4740_mmc_resume(struct device *dev)
->  {
-> -       struct jz4740_mmc_host *host = dev_get_drvdata(dev);
-> -
-> -       jz_gpio_bulk_resume(jz4740_mmc_pins, jz4740_mmc_num_pins(host));
-> -
-> -       return 0;
-> +       return pinctrl_pm_select_default_state(dev);
->  }
->
->  static SIMPLE_DEV_PM_OPS(jz4740_mmc_pm_ops, jz4740_mmc_suspend,
-> --
-> 2.11.0
->
+A first attempt at fixing that by switching to the external oscillator was
+done in the patch "rtc: sun6i: Switch to the external oscillator". However,
+it turned out to be problematic since it was tracked properly in the clock
+framework, which might lead to some clocks being disabled, even though
+their devices were not notified.
+
+This is a second attempt, this time by making it part of the CCF. It
+turned out to be a bit more complicated than one would expect since the mux
+found inside the RTC also controls one of the input of the main clock unit.
+Therefore, it needs to be probed before the main clock unit driver.
+
+Let me know what you think,
+Maxime
+
+Changes from v1:
+  - Force the muxing to the external oscillator even for old DT
+  - Make the patches a bit more stable friendly
+  - Change the bindings to have a cell of 1, to account for the external
+    output of the oscillator
+  - Split the driver remove() removal into a separate patch and switched to
+    devm
+  - Reordered the patches
+
+Maxime Ripard (7):
+  rtc: sun6i: Disable the build as a module
+  rtc: sun6i: Add some locking
+  rtc: sun6i: Switch to the external oscillator
+  rtc: sun6i: Expose the 32kHz oscillator
+  rtc: sun6i: Switch to devm_rtc_device_register
+  ARM: sun8i: a23/a33: Enable the real LOSC and use it
+  ARM: sun8i: a23/a33: Add the oscillators accuracy
+
+ Documentation/devicetree/bindings/rtc/sun6i-rtc.txt |  10 +-
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi                |  15 +-
+ drivers/rtc/Kconfig                                 |   2 +-
+ drivers/rtc/rtc-sun6i.c                             | 182 ++++++++++---
+ 4 files changed, 174 insertions(+), 35 deletions(-)
+
+base-commit: 99cef370ac9939df2aeb16c96d07e842b2fa8201
+-- 
+git-series 0.8.11
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
