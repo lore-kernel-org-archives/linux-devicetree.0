@@ -1,46 +1,52 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 05/14] ARM: davinci: da850: add con_id for the SATA clock
-Date: Mon, 23 Jan 2017 18:00:47 +0100
-Message-ID: <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
-References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] ARM: dts: support I2SE Duckbill devices
+Date: Mon, 23 Jan 2017 18:05:04 +0100
+Message-ID: <2d2cf6f5-f264-7744-a5ec-35c47d58e39f@i2se.com>
+References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=iso-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: linux-ide@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, fabio.estevam-3arQi8VN3Tc@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The ahci-da850 SATA driver is now capable of retrieving clocks by
-con_id. Add the connection id for the sysclk2-derived SATA clock.
+Am 22.01.2017 um 23:22 schrieb Michael Heimpold:
+> This series updates/adds Device Tree support for I2SE's Duckbill
+> device family.
+>
+> The Duckbill devices are small, pen-drive sized boards based on
+> NXP's i.MX28 SoC. While the initial variants (Duckbill series) were
+> equipped with a micro SD card slot only, the latest generation
+> (Duckbill 2 series) have an additional internal eMMC onboard.
+>
+> Both device generations consists of four "family members":
+>
+> - Duckbill/Duckbill 2: generic board, intended to be used as
+>   baseboard for custom designs and/or as development board
+>
+> - Duckbill EnOcean/Duckbill 2 EnOcean: come with an EnOcean
+>   daugther board equipped with the popular TCM310 module
+>
+> - Duckbill 485/Duckbill 2 485: as the name implies, these
+>   devices are intended to be used as Ethernet - RS485 converters
+>
+> - Duckbill SPI/Duckbill 2 SPI: not sold separately, but used
+>   in I2SE's development kits for Green PHY HomePlug Powerline
+>   communication
+>
+> Because the Duckbill series is EOL, this patch series only adds
+> support for the latest Duckbill 2 series devices. However,
+> support for the generic Duckbill board was already mainline,
+> so update it to match vendor tree DT.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/mach-davinci/da850.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 
-diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-index 1d873d1..dbf1daa 100644
---- a/arch/arm/mach-davinci/da850.c
-+++ b/arch/arm/mach-davinci/da850.c
-@@ -571,7 +571,7 @@ static struct clk_lookup da850_clks[] = {
- 	CLK("spi_davinci.0",	NULL,		&spi0_clk),
- 	CLK("spi_davinci.1",	NULL,		&spi1_clk),
- 	CLK("vpif",		NULL,		&vpif_clk),
--	CLK("ahci_da850",		NULL,		&sata_clk),
-+	CLK("ahci_da850",	"sata",		&sata_clk),
- 	CLK("davinci-rproc.0",	NULL,		&dsp_clk),
- 	CLK(NULL,		NULL,		&ehrpwm_clk),
- 	CLK("ehrpwm.0",		"fck",		&ehrpwm0_clk),
--- 
-2.9.3
+for patches 1,2,3,5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
