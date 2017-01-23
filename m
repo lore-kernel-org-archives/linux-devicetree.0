@@ -1,54 +1,65 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
-Date: Mon, 23 Jan 2017 21:41:29 +0100
-Message-ID: <CAMuHMdUVwQoqQbrsGtbvxK9PoHae3n=UuJYijTMToUsdc=8=mQ@mail.gmail.com>
-References: <20170121144212.8858-1-marek.vasut@gmail.com> <20170123170827.tkatb2aizjhbfifo@rob-hp-laptop>
- <63b3660b-6ce0-134c-ef79-c06430c735c5@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 8/9] dt-bindings: Add Multi-Inno MI0283QT binding
+Date: Mon, 23 Jan 2017 14:43:42 -0600
+Message-ID: <20170123204342.duusbehci4uktlrh@rob-hp-laptop>
+References: <20170122181117.8210-1-noralf@tronnes.org>
+ <20170122181117.8210-9-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <63b3660b-6ce0-134c-ef79-c06430c735c5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170122181117.8210-9-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-On Mon, Jan 23, 2017 at 8:56 PM, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 01/23/2017 06:08 PM, Rob Herring wrote:
->> On Sat, Jan 21, 2017 at 03:42:11PM +0100, Marek Vasut wrote:
->>> new file mode 100644
->>> index 000000000000..081947367135
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-
->>> +Required properties:
->>> +- compatible:       Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
->>
->> Need to enumerate <chip>.
->
-> It's enumerated below , the only special-case we handle at this point is
-> the r8a7792 , which has extra interrupt block which we don't use anyway,
-> but the driver disables those interrupts.
-
-It is not enumerated below. You just give an example for r8a7791.
-
-Please list all supported/tested compatible values, so checkpatch
-can validate compatible values in DTS patches adding GyroADC device
-nodes.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBKYW4gMjIsIDIwMTcgYXQgMDc6MTE6MTZQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
+IHdyb3RlOgo+IEFkZCBkZXZpY2UtdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBN
+STAyODNRVCBkaXNwbGF5IHBhbmVsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5vcmFsZiBUcsO4bm5l
+cyA8bm9yYWxmQHRyb25uZXMub3JnPgo+IC0tLQo+IAo+IERhdGFzaGVldDogaHR0cHM6Ly9jZG4t
+c2hvcC5hZGFmcnVpdC5jb20vZGF0YXNoZWV0cy9NSTAyODNRVC0xMStWMS4xLlBERgo+IAo+IAo+
+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9tdWx0aS1pbm5vLG1pMDI4M3F0LnR4dCAgICAgICB8IDI3
+ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMo
+KykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L211bHRpLWlubm8sbWkwMjgzcXQudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L211bHRpLWlubm8sbWkwMjgzcXQu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXVsdGktaW5u
+byxtaTAyODNxdC50eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmVl
+ZDQ4YzMKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbXVsdGktaW5ubyxtaTAyODNxdC50eHQKPiBAQCAtMCwwICsxLDI3IEBA
+Cj4gK011bHRpLUlubm8gTUkwMjgzUVQgZGlzcGxheSBwYW5lbAo+ICsKPiArUmVxdWlyZWQgcHJv
+cGVydGllczoKPiArLSBjb21wYXRpYmxlOgkibXVsdGktaW5ubyxtaTAyODNxdCIuCj4gKwo+ICtU
+aGUgbm9kZSBmb3IgdGhpcyBkcml2ZXIgbXVzdCBiZSBhIGNoaWxkIG5vZGUgb2YgYSBTUEkgY29u
+dHJvbGxlciwgaGVuY2UKPiArYWxsIG1hbmRhdG9yeSBwcm9wZXJ0aWVzIGRlc2NyaWJlZCBpbiAu
+Li9zcGkvc3BpLWJ1cy50eHQgbXVzdCBiZSBzcGVjaWZpZWQuCj4gKwo+ICtPcHRpb25hbCBwcm9w
+ZXJ0aWVzOgo+ICstIGRjLWdwaW9zOglEL0MgcGluLiBUaGUgcHJlc2VuY2UvYWJzZW5jZSBvZiB0
+aGlzIEdQSU8gZGV0ZXJtaW5lcwo+ICsJCXRoZSBwYW5lbCBpbnRlcmZhY2UgbW9kZSAoSU1bMzow
+XSBwaW5zKToKPiArCQktIHByZXNlbnQ6IElNPXgxMTAgNC13aXJlIDgtYml0IGRhdGEgc2VyaWFs
+IGludGVyZmFjZQo+ICsJCS0gYWJzZW50OiAgSU09eDEwMSAzLXdpcmUgOS1iaXQgZGF0YSBzZXJp
+YWwgaW50ZXJmYWNlCj4gKy0gcmVzZXQtZ3Bpb3M6CVJlc2V0IHBpbgo+ICstIHBvd2VyLXN1cHBs
+eToJQSByZWd1bGF0b3Igbm9kZSBmb3IgdGhlIHN1cHBseSB2b2x0YWdlLgo+ICstIGJhY2tsaWdo
+dDoJcGhhbmRsZSBvZiB0aGUgYmFja2xpZ2h0IGRldmljZSBhdHRhY2hlZCB0byB0aGUgcGFuZWwK
+PiArLSByb3RhdGlvbjoJcGFuZWwgcm90YXRpb24gaW4gZGVncmVlcyBjb3VudGVyIGNsb2Nrd2lz
+ZSAoMCw5MCwxODAsMjcwKQoKVGhpcyBpc24ndCBhIHN0YW5kYXJkIHByb3BlcnR5LCBidXQgcHJv
+YmFibHkgc2hvdWxkIGJlLiBQbGVhc2UgZG9jdW1lbnQgCmluIGEgY29tbW9uIHNwb3QuCgo+ICsK
+PiArRXhhbXBsZToKPiArCW1pMDI4M3F0QDB7Cj4gKwkJY29tcGF0aWJsZSA9ICJtdWx0aS1pbm5v
+LG1pMDI4M3F0IjsKPiArCQlyZWcgPSA8MD47Cj4gKwkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MzIw
+MDAwMDA+Owo+ICsJCXJvdGF0aW9uID0gPDkwPjsKPiArCQlkYy1ncGlvcyA9IDwmZ3BpbyAyNSAw
+PjsKPiArCQliYWNrbGlnaHQgPSA8JmJhY2tsaWdodD47Cj4gKwl9Owo+IC0tCj4gMi4xMC4yCj4g
+Cj4gLS0KPiBUbyB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5z
+dWJzY3JpYmUgZGV2aWNldHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
+b21vQHZnZXIua2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2Vy
+Lmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbApfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
