@@ -1,64 +1,89 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Mon, 23 Jan 2017 23:40:27 +0100
-Message-ID: <efbf6061-6408-b46e-8b37-b0182d69030f@linaro.org>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <20170120150428.GC22152@leverpostej> <20170123103958.GC4622@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170123103958.GC4622@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+From: Joshua Clayton <stillcompiling@gmail.com>
+Subject: [PATCH v8 0/3] Altera Cyclone Passive Serial SPI FPGA Manager
+Date: Mon, 23 Jan 2017 14:51:03 -0800
+Message-ID: <cover.1485211400.git.stillcompiling@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Anatolij Gustschin <agust@denx.de>, Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjMvMDEvMjAxNyAxMTozOSwgV2lsbCBEZWFjb24gd3JvdGU6Cj4gT24gRnJpLCBKYW4gMjAs
-IDIwMTcgYXQgMDM6MDQ6MjhQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdyb3RlOgo+PiBPbiBUaHUs
-IEphbiAxOSwgMjAxNyBhdCAwOTozNToxMlBNICswODAwLCBEaW5nIFRpYW5ob25nIHdyb3RlOgo+
-Pj4gRGluZyBUaWFuaG9uZyAoNCk6Cj4+PiAgIGFybTY0OiBhcmNoX3RpbWVyOiBBZGQgZGV2aWNl
-IHRyZWUgYmluZGluZyBmb3IgaGlzaWxpY29uLTE2MTAxMDEwMQo+Pj4gICAgIGVycmF0dW0KPj4+
-ICAgYXJtNjQ6IGFyY2hfdGltZXI6IEludHJvZHVjZSBhIGdlbmVyaWMgZXJyYXR1bSBoYW5kaW5n
-IG1lY2hhbmlzbSBmb3IKPj4+ICAgICBmc2wtYTAwODU4NQo+Pj4gICBhcm02NDogYXJjaF90aW1l
-cjogV29yayBhcm91bmQgRXJyYXR1bSBIaXNpbGljb24tMTYxMDEwMTAxCj4+PiAgIGFybTY0OiBh
-cmNoIHRpbWVyOiBBZGQgdGltZXIgZXJyYXR1bSBwcm9wZXJ0eSBmb3IgSGlwMDUtZDAyIGFuZAo+
-Pj4gICAgIEhpcDA2LWQwMwo+Pj4KPj4+ICBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5l
-bC1wYXJhbWV0ZXJzLnR4dCAgICB8ICAgOSAtLQo+Pj4gIERvY3VtZW50YXRpb24vYXJtNjQvc2ls
-aWNvbi1lcnJhdGEudHh0ICAgICAgICAgICAgIHwgIDQzICsrKy0tLQo+Pj4gIC4uLi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2FybS9hcmNoX3RpbWVyLnR4dCAgICAgICAgIHwgICA2ICsKPj4+ICBhcmNo
-L2FybTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaXAwNS5kdHNpICAgICAgICAgICB8ICAgMSArCj4+
-PiAgYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGljb24vaGlwMDYuZHRzaSAgICAgICAgICAgfCAg
-IDEgKwo+Pj4gIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vYXJjaF90aW1lci5oICAgICAgICAgICAg
-ICAgIHwgIDM4ICsrLS0tLQo+Pj4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyAgICAgICAg
-ICAgICAgICAgICAgICAgIHwgIDE4ICsrKwo+Pj4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvYXJtX2Fy
-Y2hfdGltZXIuYyAgICAgICAgICAgICAgIHwgMTUwICsrKysrKysrKysrKysrKy0tLS0tLQo+Pj4g
-IDggZmlsZXMgY2hhbmdlZCwgMTcxIGluc2VydGlvbnMoKyksIDk1IGRlbGV0aW9ucygtKQo+Pgo+
-PiBJJ3ZlIHBpY2tlZCB0aGVzZSB1cCAod2l0aCBhIGZldyBsb2NhbCBjbGVhbnVwcyksIGdpdmVu
-IHRoYXQgc29tZSBsb2NhbAo+PiB0ZXN0aW5nLCBhbmQgcHVzaGVkIHRoZSByZXN1bHQgdG8gYSBi
-cmFuY2ggWzFdIG9uIG15IGdpdCByZXBvLgo+Pgo+PiBUaGVyZSBhcmUgbGlrZWx5IHRvIGJlIGNs
-YXNoZXMgd2l0aCB0aGUgYXJtNjQgdHJlZSAoZS5nLiBmb3IKPj4gc2lsaWNvbi1lcnJhdGEudHh0
-KSwgYW5kIHdlJ3JlIGFsc28gbGlrZWx5IHRvIGhhdmUgbW9yZSBhcmNoIHRpbWVyCj4+IHVwZGF0
-ZXMgc2hvcnRseSBmb3IgdGhlIEdURFQgc3R1ZmYsIHNvIEkgdGhpbmsgdGhlIGJlc3QgYmV0IGlz
-IGZvciBib3RoCj4+IGFybTY0IGFuZCB0aGUgY2xvY2tzb3VyY2UgdHJlZSB0byBwdWxsIHRoYXQg
-YnJhbmNoIGZvciB2NC4xMS4KPj4KPj4gQWx0ZXJuYXRpdmVseSwgd2UgY291bGQgdGFrZSB0aGlz
-IGFsbCB0aHJvdWdoIHRoZSBhcm02NCB0cmVlLCBpZiB0aGUKPj4gY2xvY2tzb3VyY2UgbWFpbnRh
-aW5lcnMgYXJlIGhhcHB5IHdpdGggdGhhdC4KPiAKPiBGaW5lIGJ5IG1lLCBidXQgSSdkIG5lZWQg
-YXQgbGVhc3QgRGFuaWVsJ3MgYWNrIGJlZm9yZSB0YWtpbmcgdGhlc2UuCgpPaywgSSB3aWxsIGhh
-dmUgYSBsb29rIGF0IHRoZW0gdG9tb3Jyb3cuCgogIC0tIERhbmllbAoKLS0gCiA8aHR0cDovL3d3
-dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFS
-TSBTb0NzCgpGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xp
-bmFybz4gRmFjZWJvb2sgfAo8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRl
-ciB8CjxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nCgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
-YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
-aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This series adds an FPGA manager for Altera cyclone FPGAs
+that can program them using an spi port and a couple of gpios, using
+Alteras passive serial protocol.
+
+Changes from v7:
+Add Rob Herrings Ack on the bindings change (Thanks!)
+Change const u8* to const char * to make sparse happy
+
+Changes from v6:
+- moved bitrev8x4() out (I'll submit it in a separate patch set)
+- Changed the dts format to match what is already done in barebox
+  (see https://git.pengutronix.de/cgit/barebox/tree/Documentation/devicetree/bindings/firmware/altr,passive-serial.txt)
+- Changed error message from "Status pin should be low" to "Status
+  pin failed to show a reset" for better clarity
+- Fixed any whitespace problems that had crept in.
+
+Changes from v5:
+- Rebased on next-20161214xi
+- Corrected for FPGA Mgr API change in  write_init() and write_complete()
+- Better describe the device cyclone-ps-spi runs on in the file header.
+- Split the bitrev8x4 patch into generic and arch specific patches...
+- Added AARCH64 and MIPS implementations of bitrev8x4()... they all have to 
+  have an implementation for it to compile cleanly across platforms
+- Added the changes to imx6q-evi.dts to the patch set.
+
+Changes from v4:
+- Added the needed return statement to __arch_bitrev8x4()
+- Added Rob Herrings ACK for and fix a typo in the commit log of patch 2
+
+Changes from v3:
+- Fixed up the state() function to return the state of the status pin
+  reqested by Alan Tull
+- Switched the pin to ACTIVE_LOW and coresponding logic level, and updated
+  the corresponding documentation. Thanks Rob Herring for pointing out my
+  mistake.
+- Per Rob Herring, switched from "gpio" to "gpios" in dts
+
+Changes from v2:
+- Merged patch 3 and 4 as suggested in review by Moritz Fischer
+- Changed FPGA_MIN_DELAY from 250 to 50 ms is the time advertized by
+  Altera. This now works, as we don't assume it is done
+
+Changes from v1:
+- Changed the name from cyclone-spi-fpga-mgr to cyclone-ps-spi-fpga-mgr
+  This name change was requested by Alan Tull, to be specific about which
+  programming method is being employed on the fpga.
+- Changed the name of the reset-gpio to config-gpio to closer match the
+  way the pins are described in the Altera manual
+- Moved MODULE_LICENCE, _AUTHOR, and _DESCRIPTION to the bottom
+
+- Added a bitrev8x4() function to the bitrev headers and implemented ARM
+ const, runtime, and ARM specific faster versions (This may end up
+ needing to be a standalone patch)
+
+- Moved the bitswapping into cyclonespi_write(), as requested.
+  This falls short of my desired generic lsb first spi support, but is a step
+  in that direction.
+
+- Fixed whitespace problems introduced during refactoring
+
+- Replaced magic number for initial delay with a descriptive macro
+- Poll the fpga to see when it is ready rather than a fixed 1 ms sleep
+
+Joshua Clayton (3):
+  doc: dt: add cyclone-ps-spi binding document
+  fpga manager: Add cyclone-ps-spi driver for Altera FPGAs
+  ARM: dts: imx6q-evi: support cyclone-ps-spi
+
+ .../bindings/fpga/altera-passive-serial.txt        |  25 +++
+ arch/arm/boot/dts/imx6q-evi.dts                    |  16 ++
+ drivers/fpga/Kconfig                               |   7 +
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/cyclone-ps-spi.c                      | 185 +++++++++++++++++++++
+ 5 files changed, 234 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
+ create mode 100644 drivers/fpga/cyclone-ps-spi.c
+
+-- 
+2.9.3
