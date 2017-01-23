@@ -1,43 +1,56 @@
-From: Jeremy McNicoll <jmcnicol@redhat.com>
-Subject: Re: [PATCH V2 4/4] dts: doc: rename rpm_requests to respect DT
- naming conventions
-Date: Mon, 23 Jan 2017 02:39:47 -0800
-Message-ID: <20170123103947.GA22659@mini-rhel.redhat.com>
-References: <1484614729-26751-1-git-send-email-jeremymc@redhat.com>
- <1484614729-26751-5-git-send-email-jeremymc@redhat.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Mon, 23 Jan 2017 10:39:58 +0000
+Message-ID: <20170123103958.GC4622@arm.com>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <20170120150428.GC22152@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484614729-26751-5-git-send-email-jeremymc@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
+In-Reply-To: <20170120150428.GC22152@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, marc.zyngier-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 16, 2017 at 04:58:49PM -0800, Jeremy McNicoll wrote:
-> Node names cannot have an underscore '_' in the name.
-> Simply rename 'rpm_request' nodes to 'rpm-request'.
+On Fri, Jan 20, 2017 at 03:04:28PM +0000, Mark Rutland wrote:
+> On Thu, Jan 19, 2017 at 09:35:12PM +0800, Ding Tianhong wrote:
+> > Ding Tianhong (4):
+> >   arm64: arch_timer: Add device tree binding for hisilicon-161010101
+> >     erratum
+> >   arm64: arch_timer: Introduce a generic erratum handing mechanism for
+> >     fsl-a008585
+> >   arm64: arch_timer: Work around Erratum Hisilicon-161010101
+> >   arm64: arch timer: Add timer erratum property for Hip05-d02 and
+> >     Hip06-d03
+> > 
+> >  Documentation/admin-guide/kernel-parameters.txt    |   9 --
+> >  Documentation/arm64/silicon-errata.txt             |  43 +++---
+> >  .../devicetree/bindings/arm/arch_timer.txt         |   6 +
+> >  arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
+> >  arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
+> >  arch/arm64/include/asm/arch_timer.h                |  38 ++----
+> >  drivers/clocksource/Kconfig                        |  18 +++
+> >  drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
+> >  8 files changed, 171 insertions(+), 95 deletions(-)
 > 
-> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
-> ---
->  Documentation/devicetree/bindings/clock/qcom,rpmcc.txt              | 2 +-
->  .../devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt        | 2 +-
->  Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt         | 6 +++---
->  Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt             | 2 +-
->  arch/arm/boot/dts/qcom-apq8074-dragonboard.dts                      | 2 +-
->  arch/arm/boot/dts/qcom-apq8084.dtsi                                 | 2 +-
->  arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts            | 2 +-
->  arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts               | 2 +-
->  arch/arm/boot/dts/qcom-msm8974.dtsi                                 | 2 +-
->  arch/arm64/boot/dts/qcom/msm8916.dtsi                               | 2 +-
->  arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi                       | 2 +-
->  11 files changed, 13 insertions(+), 13 deletions(-)
->
+> I've picked these up (with a few local cleanups), given that some local
+> testing, and pushed the result to a branch [1] on my git repo.
+> 
+> There are likely to be clashes with the arm64 tree (e.g. for
+> silicon-errata.txt), and we're also likely to have more arch timer
+> updates shortly for the GTDT stuff, so I think the best bet is for both
+> arm64 and the clocksource tree to pull that branch for v4.11.
+> 
+> Alternatively, we could take this all through the arm64 tree, if the
+> clocksource maintainers are happy with that.
 
-Just in case someone trips over this thread in the future.
+Fine by me, but I'd need at least Daniel's ack before taking these.
 
-Table 2.1 from http://www.devicetree.org/specifications-pdf
-provides useful information on naming conventions.
-
--jeremy
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
