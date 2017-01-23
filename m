@@ -1,158 +1,32 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 1/2] hwmon: (lm70) Utilize dev_warn instead of pr_warn
-Date: Sun, 22 Jan 2017 23:01:26 -0800
-Message-ID: <637f229a-cfbb-938e-4700-89b180c8b2c0@roeck-us.net>
-References: <20170121192010.30681-1-f.fainelli@gmail.com>
- <20170121192010.30681-2-f.fainelli@gmail.com>
- <1485153837.12563.23.camel@perches.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/1] ARM: dts: add Armadeus Systems OPOS6UL and
+ OPOS6ULDEV support
+Date: Mon, 23 Jan 2017 15:02:58 +0800
+Message-ID: <20170123070256.GG5662@dragon>
+References: <1484055173-29943-1-git-send-email-sebastien.szymanski@armadeus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1485153837.12563.23.camel@perches.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484055173-29943-1-git-send-email-sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?S=E9bastien?= Szymanski <sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Julien Boibessot <julien.boibessot-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2017 10:43 PM, Joe Perches wrote:
-> On Sat, 2017-01-21 at 11:20 -0800, Florian Fainelli wrote:
->> We have a device reference, utilize it instead of pr_warn().
->
-> There is at least one more hwmon to convert in applesmc.c
->
-> Perhaps a coccinelle script?
->
-> Two questions for Julia Lawall:
->
-> o is there a better way to do this than repeat the blocks
->   one for each replacement
-> o can struct device * dev be made an arbitrary identifier
+On Tue, Jan 10, 2017 at 02:32:53PM +0100, Sébastien Szymanski wrote:
+> OPOS6UL is an i.MX6UL based SoM.
+> OPOS6ULDev is a carrier board for the OPOS6UL SoM.
+> 
+> For more details see:
+> http://www.opossom.com/english/products-processor_boards-opos6ul.html
+> http://www.opossom.com/english/products-development_boards-opos6ul_dev.html
+> 
+> Signed-off-by: Sébastien Szymanski <sebastien.szymanski-d2DlULPkwbNWk0Htik3J/w@public.gmane.org>
 
-Definitely yes here; otherwise you only catch the ones named 'dev'.
-Did you try "identifier dev;" ?
-
-The type of fn is irrelevant; you don't need to specify it.
-
-There is also the case where 'struct device *dev' is a local variable
-
-fn(...) {
-...
-struct device *dev = e;
-<...
-...>
-}
-
-or when it isn't but is still available
-
-fn (..., struct \(platform_device\|i2c_device\|spi_device\) *pdev, ...) {
-}
-
->
-> $ cat dev_printk.cocci
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_emerg(
-> +	dev_emerg(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_crit(
-> +	dev_crit(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_alert(
-> +	dev_alert(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_err(
-> +	dev_err(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_notice(
-> +	dev_notice(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_warn(
-> +	dev_warn(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_info(
-> +	dev_info(dev,
-> 	...);
-> ...>
-> }
->
-> @@
-> identifier fn;
-> type T;
-> @@
->
-> T fn ( ..., struct device * dev, ... ) {
-> <...
-> -	pr_debug(
-> +	dev_dbg(dev,
-> 	...);
-> ...>
-> }
->
->
-
+Applied, thanks.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
