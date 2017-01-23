@@ -1,25 +1,163 @@
-From: "Anna Blanchard" <bakilo-BqOKqZwFU5RlTmQpc8brENi2O/JbrIOy@public.gmane.org>
-Subject: Hallo,
-Date: Mon, 23 Jan 2017 16:06:59 -0000
-Message-ID: <2E080C5D170D4BA589FFEFBE1069DECD.MAI@riva.thesecurededicatedserver.com>
-Reply-To: <annabl.banchard-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: add multidomain support to i.MX GPC DT
+ binding
+Date: Mon, 23 Jan 2017 10:26:18 -0600
+Message-ID: <20170123162618.tohyqu5wluhrcmvd@rob-hp-laptop>
+References: <20170120155225.31905-1-l.stach@pengutronix.de>
+ <20170120155225.31905-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="_iso-2022-jp$ESC"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170120155225.31905-2-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, kernel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hallo,
+On Fri, Jan 20, 2017 at 04:52:22PM +0100, Lucas Stach wrote:
+> This adds a new binding for the Freescale i.MX GPC block, which allows
+> to describe multiple power domains in a more natural way. The driver
+> will continue to support the old binding for existing DTBs, but new
+> features like the additional domains present on i.MX6SX will only be
+> usable with the new binding.
+>
+> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> ---
+>  .../devicetree/bindings/power/fsl,imx-gpc.txt      | 81 ++++++++++++++--------
+>  1 file changed, 54 insertions(+), 27 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> index 65cc0345747d..e5b660018d63 100644
+> --- a/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> +++ b/Documentation/devicetree/bindings/power/fsl,imx-gpc.txt
+> @@ -1,22 +1,41 @@
+>  Freescale i.MX General Power Controller
+>  =======================================
+>  
+> -The i.MX6Q General Power Control (GPC) block contains DVFS load tracking
+> -counters and Power Gating Control (PGC) for the CPU and PU (GPU/VPU) power
+> -domains.
+> +The i.MX6 General Power Control (GPC) block contains DVFS load tracking
+> +counters and Power Gating Control (PGC).
+>  
+>  Required properties:
+>  - compatible: Should be "fsl,imx6q-gpc" or "fsl,imx6sl-gpc"
+>  - reg: should be register base and length as documented in the
+>    datasheet
+> -- interrupts: Should contain GPC interrupt request 1
+> -- pu-supply: Link to the LDO regulator powering the PU power domain
+> -- clocks: Clock phandles to devices in the PU power domain that need
+> -	  to be enabled during domain power-up for reset propagation.
+> -- #power-domain-cells: Should be 1, see below:
+> +- interrupts: Should contain one interrupt specifier for the GPC interrupt
+> +- clocks: Must contain an entry for each entry in clock-names.
+> +  See Documentation/devicetree/bindings/clocks/clock-bindings.txt for details.
+> +- clock-names: Must include the following entries:
+> +  - ipg
+> +- pgc: a list of child nodes describing the SoC power domains controlled by the
+> +  power gating controller.
 
-Es ist gut, euch heute zu schreiben, obwohl wir uns noch nicht kennen oder kennen gelernt haben. Mein Name ist Frau Anna Blanchard. Ich war verheiratet mit dem späten Mr. William Blanchard, der in der Elfenbeinküste als Investor für einen Zeitraum von 19 Jahren. Er verließ einen Betrag von $ 4.500.000,00 mit einem Finanzinstitut in Cote D'Ivoire. Vor kurzem hat mein Arzt mir gesagt, dass ich nicht mehr als acht Monate von jetzt wegen meiner Krebserkrankung leben.
+pgc is a node, not a property. Call it 'power-domains' instead.
 
-Nachdem ich meinen Zustand erkannt hatte, entschied ich mich, diesen Fonds einer Organisation oder einer guten Person zu spenden, die sie für den Vorteil der weniger Privilegierten nutzen wird. Mit einem Teil davon zu etablieren Unternehmen, die Arbeitsplätze für die arbeitslose Bevölkerung zu schaffen ist auch eine gute Idee. Jede Verzögerung in Ihrer Antwort kann mir Raum geben, nach einer anderen guten Person für diesen gleichen Zweck zu suchen. Möge Gott dich segnen.
-Dein,
-Frau Anna Blanchard
+>  
+> -The gpc node is a power-controller as documented by the generic power domain
+> -bindings in Documentation/devicetree/bindings/power/power_domain.txt.
+> +The power domains are generic power domain providers as documented in
+> +Documentation/devicetree/bindings/power/power_domain.txt. They are described as
+> +subnodes of the GPC and should contain the following
+> +
+> +Required properties:
+> +- reg: the DOMAIN_INDEX as used by the client devices to refer to this
+> +  power domain
+> +  The following DOMAIN_INDEX values are valid for i.MX6Q:
+> +  ARM_DOMAIN     0
+> +  PU_DOMAIN      1
+> +  The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> +  DISPLAY_DOMAIN 2
+> +
+> +- #power-domain-cells: Should be 0
+> +
+> +Optional properties:
+> +- clocks: a number of phandles to clocks that need to be enabled during domain
+> +  power-up sequencing to ensure reset propagation into devices located inside
+> +  this power domain
+> +- domain-supply: a phandle to the regulator powering this domain
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+'power-supply' is more common for when we don't really have a name.
+
+>  Example:
+>  
+> @@ -25,14 +44,29 @@ Example:
+>  		reg = <0x020dc000 0x4000>;
+>  		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>,
+>  			     <0 90 IRQ_TYPE_LEVEL_HIGH>;
+> -		pu-supply = <&reg_pu>;
+> -		clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> -			 <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> -			 <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> -			 <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> -			 <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> -			 <&clks IMX6QDL_CLK_VPU_AXI>;
+> -		#power-domain-cells = <1>;
+> +		clocks = <&clks IMX6QDL_CLK_IPG>;
+> +		clock-names = "ipg";
+> +		
+> +		pgc {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			power-domain@0 {
+> +				reg = <0>;
+> +				#power-domain-cells = <0>;
+> +			};
+> +			pd_pu: power-domain@1 {
+> +				reg = <1>;
+> +				#power-domain-cells = <0>;
+> +				domain-supply = <&reg_pu>;
+> +				clocks = <&clks IMX6QDL_CLK_GPU3D_CORE>,
+> +				         <&clks IMX6QDL_CLK_GPU3D_SHADER>,
+> +				         <&clks IMX6QDL_CLK_GPU2D_CORE>,
+> +				         <&clks IMX6QDL_CLK_GPU2D_AXI>,
+> +				         <&clks IMX6QDL_CLK_OPENVG_AXI>,
+> +				         <&clks IMX6QDL_CLK_VPU_AXI>;
+> +			};
+> +		};
+>  	};
+>  
+>  
+> @@ -40,20 +74,13 @@ Specifying power domain for IP modules
+>  ======================================
+>  
+>  IP cores belonging to a power domain should contain a 'power-domains' property
+> -that is a phandle pointing to the gpc device node and a DOMAIN_INDEX specifying
+> -the power domain the device belongs to.
+> +that is a phandle pointing to the power domain the device belongs to.
+>  
+>  Example of a device that is part of the PU power domain:
+>  
+>  	vpu: vpu@02040000 {
+>  		reg = <0x02040000 0x3c000>;
+>  		/* ... */
+> -		power-domains = <&gpc 1>;
+> +		power-domains = <&pd_pu>;
+>  		/* ... */
+>  	};
+> -
+> -The following DOMAIN_INDEX values are valid for i.MX6Q:
+> -ARM_DOMAIN     0
+> -PU_DOMAIN      1
+> -The following additional DOMAIN_INDEX value is valid for i.MX6SL:
+> -DISPLAY_DOMAIN 2
+> -- 
+> 2.11.0
+> 
