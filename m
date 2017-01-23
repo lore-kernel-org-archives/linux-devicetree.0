@@ -1,132 +1,64 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCHv3] Documentation: dt-bindings: Add binding documentation for TI clkctrl clocks
-Date: Mon, 23 Jan 2017 14:17:02 -0800
-Message-ID: <20170123221702.18420-1-tony@atomide.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Tero Kristo <t-kristo@ti.com>
-Cc: devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-omap@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Mon, 23 Jan 2017 23:40:27 +0100
+Message-ID: <efbf6061-6408-b46e-8b37-b0182d69030f@linaro.org>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <20170120150428.GC22152@leverpostej> <20170123103958.GC4622@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170123103958.GC4622@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, marc.zyngier@arm.com, catalin.marinas@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
-clock controller instance for each interconnect target module. The clkctrl
-controls functional and interface clocks for the module.
-
-The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
-With this binding and a related clock device driver we can start moving the
-clkctrl clock handling to live in drivers/clk/ti.
-
-Note that this binding allows keeping the clockdomain related parts out of
-drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
-a separate driver in drivers/soc/ti and genpd. If the clockdomain driver
-needs to know it's clocks, we can just set the the clkctrl device
-instances to be children of the related clockdomain device.
-
-Each clkctrl clock can have multiple optional gate clocks, and multiple
-optional mux clocks. To represent this in device tree, it seems that
-it is best done using four clock cells #clock-cells = <2> property.
-
-The reasons for using #clock-cells = <2> are:
-
-1. We need to specify the clkctrl offset from the instance base. Otherwise
-   we end up with a large number of device tree nodes that need to be
-   patched when new clocks are discovered in a clkctrl clock with minor
-   hardware revision changes for example
-
-2. On omap5 CM_L3INIT_USB_HOST_HS_CLKCTRL has ten OPTFCLKEN bits. So we
-   need to use a separate cell for optional gate clocks to avoid address
-   space conflicts
-
-There is probably no need to list input clocks for each clkctrl clock
-instance in the binding. If we want to add them, the standard clocks
-binding can be used for that.
-
-For hardware reference, see omap4430 TRM "Table 3-1312. L4PER_CM2 Registers
-Mapping Summary" for example. It shows one instance of a clkctrl clock
-controller with multiple clkctrl registers.
-
-Cc: Paul Walmsley <paul@pwsan.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
-Changes from v2 to v3:
-
-- Changed the #clock-cells from 4 to 2 based on comments from Tero
-  and dropped the related patch description parts. I've kept Rob's
-  ack from v2 as the changes are a subset of v2 and what was discussed
-  already with the v1 patch
-
-Changes from v1 to v2:
-
-- Use #clock-cells to avoid address space conflicts
-
-- Consider also optional mux clocks as pointed out by Tero
-
----
- .../devicetree/bindings/clock/ti-clkctrl.txt       | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-
-diff --git a/Documentation/devicetree/bindings/clock/ti-clkctrl.txt b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti-clkctrl.txt
-@@ -0,0 +1,56 @@
-+Texas Instruments clkctrl clock binding
-+
-+Texas Instruments SoCs can have a clkctrl clock controller for each
-+interconnect target module. The clkctrl clock controller manages functional
-+and interface clocks for each module. Each clkctrl controller can also
-+gate one or more optional functional clocks for a module, and can have one
-+or more clock muxes. There is a clkctrl clock controller typically for each
-+interconnect target module on omap4 and later variants.
-+
-+The clock consumers can specify the index of the clkctrl clock using
-+the hardware offset from the clkctrl instance register space. The optional
-+clocks can be specified by clkctrl hardware offset and the index of the
-+optional clock.
-+
-+For more information, please see the Linux clock framework binding at
-+Documentation/devicetree/bindings/clock/clock-bindings.txt.
-+
-+Required properties :
-+- compatible : shall be "ti,clkctrl"
-+- #clock-cells : shall contain 2 with the first entry being the instance
-+		 offset from the clock domain base and the second being the
-+		 clock index
-+
-+Example: Clock controller node on omap 4430:
-+
-+&cm2 {
-+	l4per: cm@1400 {
-+		cm_l4per@0 {
-+			cm_l4per_clkctrl: clk@20 {
-+				compatible = "ti,clkctrl";
-+				reg = <0x20 0x1b0>;
-+				#clock-cells = <4>;
-+			};
-+		};
-+	};
-+};
-+
-+Example: Preprocessor helper macros in dt-bindings/clock/ti-clkctrl.h
-+
-+#define OMAP4_CLKCTRL_OFFSET		0x20
-+#define OMAP4_CLKCTRL_INDEX(offset)	((offset) - OMAP4_CLKCTRL_OFFSET)
-+#define MODULEMODE_HWCTRL		1
-+#define MODULEMODE_SWCTRL		2
-+
-+#define OMAP4_GPTIMER10_CLKTRL		OMAP4_CLKCTRL_INDEX(0x28)
-+#define OMAP4_GPTIMER11_CLKTRL		OMAP4_CLKCTRL_INDEX(0x30)
-+#define OMAP4_GPTIMER2_CLKTRL		OMAP4_CLKCTRL_INDEX(0x38)
-+...
-+#define OMAP4_GPIO2_CLKCTRL		OMAP_CLKCTRL_INDEX(0x60)
-+
-+Example: Clock consumer node for GPIO2:
-+
-+&gpio2 {
-+       clocks = <&cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 0
-+		 &cm_l4per_clkctrl OMAP4_GPIO2_CLKCTRL 8>;
-+};
--- 
-2.11.0
+T24gMjMvMDEvMjAxNyAxMTozOSwgV2lsbCBEZWFjb24gd3JvdGU6Cj4gT24gRnJpLCBKYW4gMjAs
+IDIwMTcgYXQgMDM6MDQ6MjhQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdyb3RlOgo+PiBPbiBUaHUs
+IEphbiAxOSwgMjAxNyBhdCAwOTozNToxMlBNICswODAwLCBEaW5nIFRpYW5ob25nIHdyb3RlOgo+
+Pj4gRGluZyBUaWFuaG9uZyAoNCk6Cj4+PiAgIGFybTY0OiBhcmNoX3RpbWVyOiBBZGQgZGV2aWNl
+IHRyZWUgYmluZGluZyBmb3IgaGlzaWxpY29uLTE2MTAxMDEwMQo+Pj4gICAgIGVycmF0dW0KPj4+
+ICAgYXJtNjQ6IGFyY2hfdGltZXI6IEludHJvZHVjZSBhIGdlbmVyaWMgZXJyYXR1bSBoYW5kaW5n
+IG1lY2hhbmlzbSBmb3IKPj4+ICAgICBmc2wtYTAwODU4NQo+Pj4gICBhcm02NDogYXJjaF90aW1l
+cjogV29yayBhcm91bmQgRXJyYXR1bSBIaXNpbGljb24tMTYxMDEwMTAxCj4+PiAgIGFybTY0OiBh
+cmNoIHRpbWVyOiBBZGQgdGltZXIgZXJyYXR1bSBwcm9wZXJ0eSBmb3IgSGlwMDUtZDAyIGFuZAo+
+Pj4gICAgIEhpcDA2LWQwMwo+Pj4KPj4+ICBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5l
+bC1wYXJhbWV0ZXJzLnR4dCAgICB8ICAgOSAtLQo+Pj4gIERvY3VtZW50YXRpb24vYXJtNjQvc2ls
+aWNvbi1lcnJhdGEudHh0ICAgICAgICAgICAgIHwgIDQzICsrKy0tLQo+Pj4gIC4uLi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2FybS9hcmNoX3RpbWVyLnR4dCAgICAgICAgIHwgICA2ICsKPj4+ICBhcmNo
+L2FybTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaXAwNS5kdHNpICAgICAgICAgICB8ICAgMSArCj4+
+PiAgYXJjaC9hcm02NC9ib290L2R0cy9oaXNpbGljb24vaGlwMDYuZHRzaSAgICAgICAgICAgfCAg
+IDEgKwo+Pj4gIGFyY2gvYXJtNjQvaW5jbHVkZS9hc20vYXJjaF90aW1lci5oICAgICAgICAgICAg
+ICAgIHwgIDM4ICsrLS0tLQo+Pj4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyAgICAgICAg
+ICAgICAgICAgICAgICAgIHwgIDE4ICsrKwo+Pj4gIGRyaXZlcnMvY2xvY2tzb3VyY2UvYXJtX2Fy
+Y2hfdGltZXIuYyAgICAgICAgICAgICAgIHwgMTUwICsrKysrKysrKysrKysrKy0tLS0tLQo+Pj4g
+IDggZmlsZXMgY2hhbmdlZCwgMTcxIGluc2VydGlvbnMoKyksIDk1IGRlbGV0aW9ucygtKQo+Pgo+
+PiBJJ3ZlIHBpY2tlZCB0aGVzZSB1cCAod2l0aCBhIGZldyBsb2NhbCBjbGVhbnVwcyksIGdpdmVu
+IHRoYXQgc29tZSBsb2NhbAo+PiB0ZXN0aW5nLCBhbmQgcHVzaGVkIHRoZSByZXN1bHQgdG8gYSBi
+cmFuY2ggWzFdIG9uIG15IGdpdCByZXBvLgo+Pgo+PiBUaGVyZSBhcmUgbGlrZWx5IHRvIGJlIGNs
+YXNoZXMgd2l0aCB0aGUgYXJtNjQgdHJlZSAoZS5nLiBmb3IKPj4gc2lsaWNvbi1lcnJhdGEudHh0
+KSwgYW5kIHdlJ3JlIGFsc28gbGlrZWx5IHRvIGhhdmUgbW9yZSBhcmNoIHRpbWVyCj4+IHVwZGF0
+ZXMgc2hvcnRseSBmb3IgdGhlIEdURFQgc3R1ZmYsIHNvIEkgdGhpbmsgdGhlIGJlc3QgYmV0IGlz
+IGZvciBib3RoCj4+IGFybTY0IGFuZCB0aGUgY2xvY2tzb3VyY2UgdHJlZSB0byBwdWxsIHRoYXQg
+YnJhbmNoIGZvciB2NC4xMS4KPj4KPj4gQWx0ZXJuYXRpdmVseSwgd2UgY291bGQgdGFrZSB0aGlz
+IGFsbCB0aHJvdWdoIHRoZSBhcm02NCB0cmVlLCBpZiB0aGUKPj4gY2xvY2tzb3VyY2UgbWFpbnRh
+aW5lcnMgYXJlIGhhcHB5IHdpdGggdGhhdC4KPiAKPiBGaW5lIGJ5IG1lLCBidXQgSSdkIG5lZWQg
+YXQgbGVhc3QgRGFuaWVsJ3MgYWNrIGJlZm9yZSB0YWtpbmcgdGhlc2UuCgpPaywgSSB3aWxsIGhh
+dmUgYSBsb29rIGF0IHRoZW0gdG9tb3Jyb3cuCgogIC0tIERhbmllbAoKLS0gCiA8aHR0cDovL3d3
+dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFS
+TSBTb0NzCgpGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xp
+bmFybz4gRmFjZWJvb2sgfAo8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRl
+ciB8CjxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nCgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBt
+YWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
