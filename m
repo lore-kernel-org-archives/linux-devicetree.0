@@ -1,59 +1,34 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH v4 9/9] clocksource/drivers/rockchip_timer: implement clocksource timer
-Date: Mon, 23 Jan 2017 18:09:41 +0100
-Message-ID: <2966820.3ediQCxqSR@diego>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-1-git-send-email-al.kochet@gmail.com> <1480436092-10728-10-git-send-email-al.kochet@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] iio:temperature:Add irq and threshold events support for
+ TI TMP007 sensor
+Date: Mon, 23 Jan 2017 11:10:08 -0600
+Message-ID: <20170123171008.s3hkvmxhro4qycia@rob-hp-laptop>
+References: <20170121150147.GA7781@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1480436092-10728-10-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170121150147.GA7781-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 29. November 2016, 19:14:52 CET schrieb Alexander Kochetkov:
-> The clock supplying the arm-global-timer on the rk3188 is coming from the
-> the cpu clock itself and thus changes its rate everytime cpufreq adjusts
-> the cpu frequency making this timer unsuitable as a stable clocksource
-> and sched clock.
+On Sat, Jan 21, 2017 at 08:31:47PM +0530, Manivannan Sadhasivam wrote:
+> This patch adds support for ALERT irq and limit threshold events for TI TMP007 - 16 bit IR thermopile sensor
+> with integrated math engine.
 > 
-> The rk3188, rk3288 and following socs share a separate timer block already
-> handled by the rockchip-timer driver. Therefore adapt this driver to also
-> be able to act as clocksource and sched clock on rk3188.
+> Following threshold events are supported:
+> 1. TObj high limit
+> 2. TObj low limit
+> 3. TDie high limit
+> 4. TDie low limit
 > 
-> In order to test clocksource you can run following commands and check
-> how much time it take in real. On rk3188 it take about ~45 seconds.
-> 
->     cpufreq-set -f 1.6GHZ
->     date; sleep 60; date
-> 
-> In order to use the patch you need to declare two timers in the dts
-> file. The first timer will be initialized as clockevent provider
-> and the second one as clocksource. The clockevent must be from
-> alive subsystem as it used as backup for the local timers at sleep
-> time.
-> 
-> The patch does not break compatibility with older device tree files.
-> The older device tree files contain only one timer. The timer
-> will be initialized as clockevent, as expected.
-> 
-> rk3288 (and probably anything newer) is irrelevant to this patch,
-> as it has the arch timer interface. This patch may be usefull
-> for Cortex-A9/A5 based parts.
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/temperature/tmp007.txt |   8 +
 
-[...]
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-> @@ -120,13 +161,46 @@ static irqreturn_t rk_timer_interrupt(int irq, void
-> *dev_id) return IRQ_HANDLED;
->  }
-> 
-> +static cycle_t rk_timer_clocksource_read(struct clocksource *cs)
-^^
-../drivers/clocksource/rockchip_timer.c:164:8: error: unknown type name ‘cycle_t’
- static cycle_t rk_timer_clocksource_read(struct clocksource *cs)
-
-looks like something in clocksources changed since november
+>  drivers/iio/temperature/tmp007.c                   | 334 ++++++++++++++++++---
+>  2 files changed, 304 insertions(+), 38 deletions(-)
