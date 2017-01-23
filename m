@@ -1,37 +1,39 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-utilite-pro: enable 2nd display pipeline
-Date: Mon, 23 Jan 2017 13:24:36 +0800
-Message-ID: <20170123052434.GC5662@dragon>
-References: <ec9676f344eb4786a28a3c7b969f0e94@rwthex-s1-b.rwth-ad.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH] aspeed: dts: g5: Update GPIO pin range to mux extra banks
+Date: Mon, 23 Jan 2017 15:57:45 +1030
+Message-ID: <20170123052745.9575-1-andrew@aj.id.au>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ec9676f344eb4786a28a3c7b969f0e94-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 02, 2016 at 03:37:22PM +0100, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> 
-> Apart from the already enabled Designware HDMI port, the Utilite Pro
-> has a second display pipeline which has the following shape:
-> 
->   IPU1 DI0 --> Parallel display --> tfp410 rgb24 to DVI encoder
->                                 --> HDMI connector.
-> Enable support for it.
-> 
-> In addition, since this pipeline is hardwired to IPU1, sever the link
-> between IPU1 and the SoC-internal Designware HDMI encoder forcing the
-> latter to be connected to IPU2 instead of IPU1. Otherwise, it is not
-> possible to drive both displays at high resolution due to the bandwidth
-> limitations of a single IPU.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+The Aspeed GPIO driver recently gained support for banks Y, Z, AA, AB and AC.
+Update the devicetree so GPIO requests for these pins are routed via pinmux,
+else the export succeeds but the GPIOs are non-functional.
 
-Applied, thanks.
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+---
+ arch/arm/boot/dts/aspeed-g5.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index b664fe380936..a9305b964b11 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -920,8 +920,8 @@
+ 				compatible = "aspeed,ast2500-gpio";
+ 				reg = <0x1e780000 0x1000>;
+ 				interrupts = <20>;
+-				gpio-ranges = <&pinctrl 0 0 220>;
+ 				interrupt-controller;
++				gpio-ranges = <&pinctrl 0 0 232>;
+ 			};
+ 
+ 			timer: timer@1e782000 {
+-- 
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
