@@ -1,157 +1,66 @@
 From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 4/9] drm: Add DRM support for tiny LCD displays
-Date: Mon, 23 Jan 2017 10:28:05 +0100
-Message-ID: <20170123092805.grj5ehghbbdqn54k@phenom.ffwll.local>
+Subject: Re: [PATCH 5/9] drm/tinydrm: Add helper functions
+Date: Mon, 23 Jan 2017 10:32:47 +0100
+Message-ID: <20170123093247.looyh2url6ch3udr@phenom.ffwll.local>
 References: <20170122181117.8210-1-noralf@tronnes.org>
- <20170122181117.8210-5-noralf@tronnes.org>
+ <20170122181117.8210-6-noralf@tronnes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170122181117.8210-5-noralf@tronnes.org>
+In-Reply-To: <20170122181117.8210-6-noralf@tronnes.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 22, 2017 at 07:11:12PM +0100, Noralf Trønnes wrote:
-> tinydrm provides helpers for very simple displays that can use
-> CMA backed framebuffers and need flushing on changes.
+On Sun, Jan 22, 2017 at 07:11:13PM +0100, Noralf Trønnes wrote:
+> Add common functionality needed by many tinydrm drivers.
 > 
 > Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
 
-Looks all pretty. A bunch of ideas below, but all optional. For merging I
-think simplest to first get the core patches in through drm-misc, and then
-you can submit a pull request to Dave for tinydrm+backends (just needs an
-ack for the dt parts from dt maintainers), including MAINTAINERS entry.
-Ack from my side.
-
-Thanks, Daniel
+Bunch of comments below, all optional.
+-Daniel
 
 > ---
->  Documentation/gpu/drm-kms-helpers.rst       |  15 ++
->  MAINTAINERS                                 |   7 +
->  drivers/gpu/drm/Kconfig                     |   2 +
->  drivers/gpu/drm/Makefile                    |   1 +
->  drivers/gpu/drm/tinydrm/Kconfig             |   8 +
->  drivers/gpu/drm/tinydrm/Makefile            |   1 +
->  drivers/gpu/drm/tinydrm/core/Makefile       |   3 +
->  drivers/gpu/drm/tinydrm/core/tinydrm-core.c | 374 ++++++++++++++++++++++++++++
->  drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c | 244 ++++++++++++++++++
->  include/drm/tinydrm/tinydrm.h               | 115 +++++++++
->  10 files changed, 770 insertions(+)
->  create mode 100644 drivers/gpu/drm/tinydrm/Kconfig
->  create mode 100644 drivers/gpu/drm/tinydrm/Makefile
->  create mode 100644 drivers/gpu/drm/tinydrm/core/Makefile
->  create mode 100644 drivers/gpu/drm/tinydrm/core/tinydrm-core.c
->  create mode 100644 drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
->  create mode 100644 include/drm/tinydrm/tinydrm.h
+>  Documentation/gpu/drm-kms-helpers.rst          |   6 +
+>  drivers/gpu/drm/tinydrm/core/Makefile          |   2 +-
+>  drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c | 490 +++++++++++++++++++++++++
+>  include/drm/tinydrm/tinydrm-helpers.h          | 100 +++++
+>  4 files changed, 597 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c
+>  create mode 100644 include/drm/tinydrm/tinydrm-helpers.h
 > 
 > diff --git a/Documentation/gpu/drm-kms-helpers.rst b/Documentation/gpu/drm-kms-helpers.rst
-> index 03040aa..a86bd7f 100644
+> index a86bd7f..be07e76 100644
 > --- a/Documentation/gpu/drm-kms-helpers.rst
 > +++ b/Documentation/gpu/drm-kms-helpers.rst
-> @@ -272,3 +272,18 @@ Auxiliary Modeset Helpers
+> @@ -287,3 +287,9 @@ tinydrm Helper Reference
 >  
->  .. kernel-doc:: drivers/gpu/drm/drm_modeset_helper.c
+>  .. kernel-doc:: drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
 >     :export:
 > +
-> +tinydrm Helper Reference
-> +========================
-> +
-> +.. kernel-doc:: drivers/gpu/drm/tinydrm/core/tinydrm-core.c
-> +   :doc: overview
-> +
-> +.. kernel-doc:: include/drm/tinydrm/tinydrm.h
+> +.. kernel-doc:: include/drm/tinydrm/tinydrm-helpers.h
 > +   :internal:
 > +
-> +.. kernel-doc:: drivers/gpu/drm/tinydrm/core/tinydrm-core.c
+> +.. kernel-doc:: drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c
 > +   :export:
-> +
-> +.. kernel-doc:: drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
-> +   :export:
-
-Since tinydrm is more like a special driver than a helper I think it would
-make sense to move the docs into the driver section, next to the include
-for the i915 stuff. That means a new tinydrm.rst and including it in
-gpu/index.rst.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 741f35f..817e0fe 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4365,6 +4365,13 @@ DRM DRIVER FOR TDFX VIDEO CARDS
->  S:	Orphan / Obsolete
->  F:	drivers/gpu/drm/tdfx/
->  
-> +DRM DRIVERS FOR TINY DISPLAYS
-> +M:	Noralf Trønnes <noralf@tronnes.org>
-> +W:	https://github.com/notro/tinydrm/wiki
-> +S:	Maintained
-> +F:	drivers/gpu/drm/tinydrm/
-> +F:	include/drm/tinydrm/
-> +
->  DRM DRIVER FOR USB DISPLAYLINK VIDEO ADAPTERS
->  M:	Dave Airlie <airlied@redhat.com>
->  S:	Odd Fixes
-> diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-> index 90bc65d..88e01e08e 100644
-> --- a/drivers/gpu/drm/Kconfig
-> +++ b/drivers/gpu/drm/Kconfig
-> @@ -263,6 +263,8 @@ source "drivers/gpu/drm/mxsfb/Kconfig"
->  
->  source "drivers/gpu/drm/meson/Kconfig"
->  
-> +source "drivers/gpu/drm/tinydrm/Kconfig"
-> +
->  # Keep legacy drivers last
->  
->  menuconfig DRM_LEGACY
-> diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-> index 92de399..3ee9579 100644
-> --- a/drivers/gpu/drm/Makefile
-> +++ b/drivers/gpu/drm/Makefile
-> @@ -94,3 +94,4 @@ obj-$(CONFIG_DRM_ARCPGU)+= arc/
->  obj-y			+= hisilicon/
->  obj-$(CONFIG_DRM_ZTE)	+= zte/
->  obj-$(CONFIG_DRM_MXSFB)	+= mxsfb/
-> +obj-$(CONFIG_DRM_TINYDRM) += tinydrm/
-> diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
-> new file mode 100644
-> index 0000000..ffb873f
-> --- /dev/null
-> +++ b/drivers/gpu/drm/tinydrm/Kconfig
-> @@ -0,0 +1,8 @@
-> +menuconfig DRM_TINYDRM
-> +	tristate "Support for simple displays"
-> +	depends on DRM
-> +	select DRM_KMS_HELPER
-> +	select DRM_KMS_CMA_HELPER
-> +	help
-> +	  Choose this option if you have a tinydrm supported display.
-> +	  If M is selected the module will be called tinydrm.
-> diff --git a/drivers/gpu/drm/tinydrm/Makefile b/drivers/gpu/drm/tinydrm/Makefile
-> new file mode 100644
-> index 0000000..7476ed1
-> --- /dev/null
-> +++ b/drivers/gpu/drm/tinydrm/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_DRM_TINYDRM)		+= core/
 > diff --git a/drivers/gpu/drm/tinydrm/core/Makefile b/drivers/gpu/drm/tinydrm/core/Makefile
-> new file mode 100644
-> index 0000000..4f14a0f
-> --- /dev/null
+> index 4f14a0f..fb221e6 100644
+> --- a/drivers/gpu/drm/tinydrm/core/Makefile
 > +++ b/drivers/gpu/drm/tinydrm/core/Makefile
-> @@ -0,0 +1,3 @@
-> +tinydrm-y := tinydrm-core.o tinydrm-pipe.o
-> +
-> +obj-$(CONFIG_DRM_TINYDRM) += tinydrm.o
-> diff --git a/drivers/gpu/drm/tinydrm/core/tinydrm-core.c b/drivers/gpu/drm/tinydrm/core/tinydrm-core.c
+> @@ -1,3 +1,3 @@
+> -tinydrm-y := tinydrm-core.o tinydrm-pipe.o
+> +tinydrm-y := tinydrm-core.o tinydrm-pipe.o tinydrm-helpers.o
+>  
+>  obj-$(CONFIG_DRM_TINYDRM) += tinydrm.o
+> diff --git a/drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c b/drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c
 > new file mode 100644
-> index 0000000..492b478
+> index 0000000..fc02e01
 > --- /dev/null
-> +++ b/drivers/gpu/drm/tinydrm/core/tinydrm-core.c
-> @@ -0,0 +1,374 @@
+> +++ b/drivers/gpu/drm/tinydrm/core/tinydrm-helpers.c
+> @@ -0,0 +1,490 @@
 > +/*
 > + * Copyright (C) 2016 Noralf Trønnes
 > + *
@@ -161,397 +70,507 @@ gpu/index.rst.
 > + * (at your option) any later version.
 > + */
 > +
-> +#include <drm/drm_atomic.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc_helper.h>
 > +#include <drm/tinydrm/tinydrm.h>
-> +#include <linux/device.h>
-> +#include <linux/dma-buf.h>
+> +#include <drm/tinydrm/tinydrm-helpers.h>
+> +#include <linux/backlight.h>
+> +#include <linux/pm.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/swab.h>
+> +
+> +static unsigned int spi_max;
+> +module_param(spi_max, uint, 0400);
+> +MODULE_PARM_DESC(spi_max, "Set a lower SPI max transfer size");
 > +
 > +/**
-> + * DOC: overview
+> + * tinydrm_merge_clips - Merge clip rectangles
+> + * @dst: Destination clip rectangle
+> + * @src: Source clip rectangle(s)
+> + * @num_clips: Number of @src clip rectangles
+> + * @flags: Dirty fb ioctl flags
+> + * @max_width: Maximum width of @dst
+> + * @max_height: Maximum height of @dst
 > + *
-> + * This library provides driver helpers for very simple display hardware.
-> + *
-> + * It is based on &drm_simple_display_pipe coupled with a &drm_connector which
-> + * has only one fixed &drm_display_mode. The framebuffers are backed by the
-> + * cma helper and have support for framebuffer flushing (dirty).
-> + * fbdev support is also included.
-> + *
-> + * The driver allocates &tinydrm_device, initializes it using
-> + * devm_tinydrm_init(), sets up the pipeline using tinydrm_display_pipe_init()
-> + * and registers the DRM device using devm_tinydrm_register().
-> + */
-> +
-> +/**
-> + * tinydrm_lastclose - DRM lastclose helper
-> + * @drm: DRM device
-> + *
-> + * This function ensures that fbdev is restored when drm_lastclose() is called
-> + * on the last drm_release(). Drivers can use this as their
-> + * &drm_driver->lastclose callback.
-> + */
-> +void tinydrm_lastclose(struct drm_device *drm)
-> +{
-> +	struct tinydrm_device *tdev = drm->dev_private;
-> +
-> +	DRM_DEBUG_KMS("\n");
-> +	drm_fbdev_cma_restore_mode(tdev->fbdev_cma);
-> +}
-> +EXPORT_SYMBOL(tinydrm_lastclose);
-
-I wonder whether we should have a pointer in dev->mode_config for the
-fbdev stuff, and then a helper for generic kms lastclose in the fbdev
-helper (so that it's useable for both cma and non-cma drivers). We
-copy-paste this one-liner wrapper sooooo many times.
-
-Just an idea for a follow-up/separate series.
-
-> +
-> +/**
-> + * tinydrm_gem_cma_prime_import_sg_table - Produce a CMA GEM object from
-> + *     another driver's scatter/gather table of pinned pages
-> + * @drm: DRM device to import into
-> + * @attach: DMA-BUF attachment
-> + * @sgt: Scatter/gather table of pinned pages
-> + *
-> + * This function imports a scatter/gather table exported via DMA-BUF by
-> + * another driver using drm_gem_cma_prime_import_sg_table(). It sets the
-> + * kernel virtual address on the CMA object. Drivers should use this as their
-> + * &drm_driver->gem_prime_import_sg_table callback if they need the virtual
-> + * address. tinydrm_gem_cma_free_object() should be used in combination with
-> + * this function.
+> + * This function merges @src clip rectangle(s) into @dst. If @src is NULL,
+> + * @max_width and @min_width is used to set a full @dst clip rectangle.
 > + *
 > + * Returns:
-> + * A pointer to a newly created GEM object or an ERR_PTR-encoded negative
-> + * error code on failure.
+> + * true if it's a full clip, false otherwise
 > + */
-> +struct drm_gem_object *
-> +tinydrm_gem_cma_prime_import_sg_table(struct drm_device *drm,
-> +				      struct dma_buf_attachment *attach,
-> +				      struct sg_table *sgt)
+> +bool tinydrm_merge_clips(struct drm_clip_rect *dst,
+> +			 struct drm_clip_rect *src, unsigned int num_clips,
+> +			 unsigned int flags, u32 max_width, u32 max_height)
 > +{
-> +	struct drm_gem_cma_object *cma_obj;
-> +	struct drm_gem_object *obj;
-> +	void *vaddr;
+> +	unsigned int i;
 > +
-> +	vaddr = dma_buf_vmap(attach->dmabuf);
-> +	if (!vaddr) {
-> +		DRM_ERROR("Failed to vmap PRIME buffer\n");
-> +		return ERR_PTR(-ENOMEM);
+> +	if (!src || !num_clips) {
+> +		dst->x1 = 0;
+> +		dst->x2 = max_width;
+> +		dst->y1 = 0;
+> +		dst->y2 = max_height;
+> +		return true;
 > +	}
 > +
-> +	obj = drm_gem_cma_prime_import_sg_table(drm, attach, sgt);
-> +	if (IS_ERR(obj)) {
-> +		dma_buf_vunmap(attach->dmabuf, vaddr);
-> +		return obj;
+> +	dst->x1 = ~0;
+> +	dst->y1 = ~0;
+> +	dst->x2 = 0;
+> +	dst->y2 = 0;
+> +
+> +	for (i = 0; i < num_clips; i++) {
+> +		if (flags & DRM_MODE_FB_DIRTY_ANNOTATE_COPY)
+> +			i++;
+> +		dst->x1 = min(dst->x1, src[i].x1);
+> +		dst->x2 = max(dst->x2, src[i].x2);
+> +		dst->y1 = min(dst->y1, src[i].y1);
+> +		dst->y2 = max(dst->y2, src[i].y2);
 > +	}
 > +
-> +	cma_obj = to_drm_gem_cma_obj(obj);
-> +	cma_obj->vaddr = vaddr;
+> +	if (dst->x2 > max_width || dst->y2 > max_height ||
+> +	    dst->x1 >= dst->x2 || dst->y1 >= dst->y2) {
+> +		DRM_DEBUG_KMS("Illegal clip: x1=%u, x2=%u, y1=%u, y2=%u\n",
+> +			      dst->x1, dst->x2, dst->y1, dst->y2);
+> +		dst->x1 = 0;
+> +		dst->y1 = 0;
+> +		dst->x2 = max_width;
+> +		dst->y2 = max_height;
+> +	}
 > +
-> +	return obj;
+> +	return (dst->x2 - dst->x1) == max_width &&
+> +	       (dst->y2 - dst->y1) == max_height;
 > +}
-> +EXPORT_SYMBOL(tinydrm_gem_cma_prime_import_sg_table);
+> +EXPORT_SYMBOL(tinydrm_merge_clips);
+
+Argh, the drm_clip_rect vs. drm_rect confusion strikes again :(
+
 > +
 > +/**
-> + * tinydrm_gem_cma_free_object - Free resources associated with a CMA GEM
-> + *                               object
-> + * @gem_obj: GEM object to free
-> + *
-> + * This function frees the backing memory of the CMA GEM object, cleans up the
-> + * GEM object state and frees the memory used to store the object itself using
-> + * drm_gem_cma_free_object(). It also handles PRIME buffers which has the kernel
-> + * virtual address set by tinydrm_gem_cma_prime_import_sg_table(). Drivers
-> + * can use this as their &drm_driver->gem_free_object callback.
+> + * tinydrm_memcpy - Copy clip buffer
+> + * @dst: Destination buffer
+> + * @vaddr: Source buffer
+> + * @fb: DRM framebuffer
+> + * @clip: Clip rectangle area to copy
 > + */
-> +void tinydrm_gem_cma_free_object(struct drm_gem_object *gem_obj)
+> +void tinydrm_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		    struct drm_clip_rect *clip)
 > +{
-> +	if (gem_obj->import_attach) {
-> +		struct drm_gem_cma_object *cma_obj;
+> +	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
+> +	unsigned int pitch = fb->pitches[0];
+> +	void *src = vaddr + (clip->y1 * pitch) + (clip->x1 * cpp);
+> +	size_t len = (clip->x2 - clip->x1) * cpp;
+> +	unsigned int y;
 > +
-> +		cma_obj = to_drm_gem_cma_obj(gem_obj);
-> +		dma_buf_vunmap(gem_obj->import_attach->dmabuf, cma_obj->vaddr);
-> +		cma_obj->vaddr = NULL;
+> +	for (y = clip->y1; y < clip->y2; y++) {
+> +		memcpy(dst, src, len);
+> +		src += pitch;
+> +		dst += len;
 > +	}
-> +
-> +	drm_gem_cma_free_object(gem_obj);
 > +}
-> +EXPORT_SYMBOL_GPL(tinydrm_gem_cma_free_object);
+> +EXPORT_SYMBOL(tinydrm_memcpy);
 > +
-> +const struct file_operations tinydrm_fops = {
-> +	.owner		= THIS_MODULE,
-> +	.open		= drm_open,
-> +	.release	= drm_release,
-> +	.unlocked_ioctl	= drm_ioctl,
-> +#ifdef CONFIG_COMPAT
-> +	.compat_ioctl	= drm_compat_ioctl,
+> +/**
+> + * tinydrm_swab16 - Swap bytes into clip buffer
+> + * @dst: RGB565 destination buffer
+> + * @vaddr: RGB565 source buffer
+> + * @fb: DRM framebuffer
+> + * @clip: Clip rectangle area to copy
+> + */
+> +
+> +
+> +/*
+> +
+> +FIXME
+> +
+> +Doing a memcpy to a temporary buffer before swapping bytes, increases
+> +framerate by 26%, instead of swapping directly from the source buffer
+> +which is drm_gem_cma_object->vaddr.
+> +
+> +Why is that?
+> +
+> +(swapping is needed because Raspberry Pi is Little Endian and doesn't
+> +have 16-bit SPI support).
+> +
+> +# SPI @32MHz
+> +$ modetest <...> 320x240@RG16 -v
+> +
+> +no tmp buffer
+> +freq: 18.91Hz
+> +
+> +tmp buffer
+> +freq: 23.98Hz
+> +
+> +
+> +*/
+> +static void *buf;
+> +
+> +void tinydrm_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		    struct drm_clip_rect *clip)
+> +{
+> +#if 1
+> +	unsigned int pitch = fb->pitches[0];
+> +	unsigned int x, y;
+> +	u16 *src;
+> +
+> +	if (!buf)
+> +		buf = kmalloc(320 * 2, GFP_KERNEL);
+> +	if (WARN_ON_ONCE(!buf))
+> +		return;
+> +
+> +	for (y = clip->y1; y < clip->y2; y++) {
+> +		src = vaddr + (y * pitch);
+> +		src += clip->x1;
+> +		memcpy(buf, src, (clip->x2 - clip->x1) * 2);
+> +		src = buf;
+> +		for (x = clip->x1; x < clip->x2; x++)
+> +			*dst++ = swab16(*src++);
+> +	}
+> +#else
+> +	unsigned int pitch = fb->pitches[0];
+> +	unsigned int x, y;
+> +	u16 *src;
+> +
+> +	for (y = clip->y1; y < clip->y2; y++) {
+> +		src = vaddr + (y * pitch);
+> +		src += clip->x1;
+> +		for (x = clip->x1; x < clip->x2; x++)
+> +			*dst++ = swab16(*src++);
+> +	}
 > +#endif
-> +	.poll		= drm_poll,
-> +	.read		= drm_read,
-> +	.llseek		= no_llseek,
-> +	.mmap		= drm_gem_cma_mmap,
-> +};
-> +EXPORT_SYMBOL(tinydrm_fops);
-> +
-> +static struct drm_framebuffer *
-> +tinydrm_fb_create(struct drm_device *drm, struct drm_file *file_priv,
-> +		  const struct drm_mode_fb_cmd2 *mode_cmd)
-> +{
-> +	struct tinydrm_device *tdev = drm->dev_private;
-> +
-> +	return drm_fb_cma_create_with_funcs(drm, file_priv, mode_cmd,
-> +					    tdev->fb_funcs);
 > +}
-> +
-> +static const struct drm_mode_config_funcs tinydrm_mode_config_funcs = {
-> +	.fb_create = tinydrm_fb_create,
-> +	.atomic_check = drm_atomic_helper_check,
-> +	.atomic_commit = drm_atomic_helper_commit,
-> +};
-> +
-> +static int tinydrm_init(struct device *parent, struct tinydrm_device *tdev,
-> +			const struct drm_framebuffer_funcs *fb_funcs,
-> +			struct drm_driver *driver)
-> +{
-> +	struct drm_device *drm;
-> +
-> +	mutex_init(&tdev->dirty_lock);
-> +	tdev->fb_funcs = fb_funcs;
-> +
-> +	/*
-> +	 * We don't embed drm_device, because that prevent us from using
-> +	 * devm_kzalloc() to allocate tinydrm_device in the driver since
-> +	 * drm_dev_unref() frees the structure. The devm_ functions provide
-> +	 * for easy error handling.
-> +	 */
-> +	drm = drm_dev_alloc(driver, parent);
-
-There's a patch series from Chris Wilson to add a ->release callback and
-properly fix this.
-
-> +	if (IS_ERR(drm))
-> +		return PTR_ERR(drm);
-> +
-> +	tdev->drm = drm;
-> +	drm->dev_private = tdev;
-> +	drm_mode_config_init(drm);
-> +	drm->mode_config.funcs = &tinydrm_mode_config_funcs;
-> +
-> +	return 0;
-> +}
-> +
-> +static void tinydrm_fini(struct tinydrm_device *tdev)
-> +{
-> +	DRM_DEBUG_KMS("\n");
-> +
-> +	drm_mode_config_cleanup(tdev->drm);
-> +	mutex_destroy(&tdev->dirty_lock);
-> +	tdev->drm->dev_private = NULL;
-> +	drm_dev_unref(tdev->drm);
-> +}
-> +
-> +static void devm_tinydrm_release(void *data)
-> +{
-> +	tinydrm_fini(data);
-> +}
+> +EXPORT_SYMBOL(tinydrm_swab16);
 > +
 > +/**
-> + * devm_tinydrm_init - Initialize tinydrm device
-> + * @parent: Parent device object
-> + * @tdev: tinydrm device
-> + * @fb_funcs: Framebuffer functions
-> + * @driver: DRM driver
+> + * tinydrm_xrgb8888_to_rgb565 - Convert XRGB8888 to RGB565 clip buffer
+> + * @dst: RGB565 destination buffer
+> + * @vaddr: XRGB8888 source buffer
+> + * @fb: DRM framebuffer
+> + * @clip: Clip rectangle area to copy
+> + * @swap: Swap bytes
 > + *
-> + * This function initializes @tdev, the underlying DRM device and it's
-> + * mode_config. Resources will be automatically freed on driver detach (devres)
-> + * using drm_mode_config_cleanup() and drm_dev_unref().
+> + * Drivers can use this function for RGB565 devices that don't natively
+> + * support XRGB8888.
+> + */
+> +void tinydrm_xrgb8888_to_rgb565(u16 *dst, void *vaddr,
+> +				struct drm_framebuffer *fb,
+> +				struct drm_clip_rect *clip, bool swap)
+> +{
+> +	unsigned int pitch = fb->pitches[0];
+> +	unsigned int x, y;
+> +	u16 val16;
+> +	u32 *src;
+> +
+> +	for (y = clip->y1; y < clip->y2; y++) {
+> +		src = vaddr + (y * pitch);
+> +		src += clip->x1;
+> +		for (x = clip->x1; x < clip->x2; x++) {
+> +			val16 = ((*src & 0x00F80000) >> 8) |
+> +				((*src & 0x0000FC00) >> 5) |
+> +				((*src & 0x000000F8) >> 3);
+> +			src++;
+> +			if (swap)
+> +				*dst++ = swab16(val16);
+> +			else
+> +				*dst++ = val16;
+> +		}
+> +	}
+> +}
+> +EXPORT_SYMBOL(tinydrm_xrgb8888_to_rgb565);
+
+I wonder whether the above would make sense in drm core as some kind of fb
+helpers. But we can do that once there's a clear need.
+
+> +
+> +#ifdef CONFIG_BACKLIGHT_CLASS_DEVICE
+> +/**
+> + * tinydrm_of_find_backlight - Find backlight device in device-tree
+> + * @dev: Device
+> + *
+> + * This function looks for a DT node pointed to by a property named 'backlight'
+> + * and uses of_find_backlight_by_node() to get the backlight device.
+> + * Additionally if the brightness property is zero, it is set to
+> + * max_brightness.
+> + *
+> + * Returns:
+> + * NULL if there's no backlight property.
+> + * Error pointer -EPROBE_DEFER if the DT node is found, but no backlight device
+> + * is found.
+> + * If the backlight device is found, a pointer to the structure is returned.
+> + */
+> +struct backlight_device *tinydrm_of_find_backlight(struct device *dev)
+> +{
+> +	struct backlight_device *backlight;
+> +	struct device_node *np;
+> +
+> +	np = of_parse_phandle(dev->of_node, "backlight", 0);
+> +	if (!np)
+> +		return NULL;
+> +
+> +	backlight = of_find_backlight_by_node(np);
+> +	of_node_put(np);
+> +
+> +	if (!backlight)
+> +		return ERR_PTR(-EPROBE_DEFER);
+> +
+> +	if (!backlight->props.brightness) {
+> +		backlight->props.brightness = backlight->props.max_brightness;
+> +		DRM_DEBUG_KMS("Backlight brightness set to %d\n",
+> +			      backlight->props.brightness);
+> +	}
+
+I
+> +
+> +	return backlight;
+> +}
+> +EXPORT_SYMBOL(tinydrm_of_find_backlight);
+> +
+> +/**
+> + * tinydrm_enable_backlight - Enable backlight helper
+> + * @backlight: Backlight device
 > + *
 > + * Returns:
 > + * Zero on success, negative error code on failure.
 > + */
-> +int devm_tinydrm_init(struct device *parent, struct tinydrm_device *tdev,
-> +		      const struct drm_framebuffer_funcs *fb_funcs,
-> +		      struct drm_driver *driver)
+> +int tinydrm_enable_backlight(struct backlight_device *backlight)
 > +{
+> +	unsigned int old_state;
 > +	int ret;
 > +
-> +	ret = tinydrm_init(parent, tdev, fb_funcs, driver);
-> +	if (ret)
-> +		return ret;
+> +	if (!backlight)
+> +		return 0;
 > +
-> +	ret = devm_add_action(parent, devm_tinydrm_release, tdev);
+> +	old_state = backlight->props.state;
+> +	backlight->props.state &= ~BL_CORE_SUSPENDED;
+> +	DRM_DEBUG_KMS("Backlight state: 0x%x -> 0x%x\n", old_state,
+> +		      backlight->props.state);
+> +
+> +	ret = backlight_update_status(backlight);
 > +	if (ret)
-> +		tinydrm_fini(tdev);
+> +		DRM_ERROR("Failed to enable backlight %d\n", ret);
 > +
 > +	return ret;
 > +}
-> +EXPORT_SYMBOL(devm_tinydrm_init);
-> +
-> +static int tinydrm_register(struct tinydrm_device *tdev)
-> +{
-> +	struct drm_device *drm = tdev->drm;
-> +	int bpp = drm->mode_config.preferred_depth;
-> +	struct drm_fbdev_cma *fbdev;
-> +	int ret;
-> +
-> +	ret = drm_dev_register(tdev->drm, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fbdev = drm_fbdev_cma_init_with_funcs(drm, bpp ? bpp : 32,
-> +					      drm->mode_config.num_crtc,
-> +					      drm->mode_config.num_connector,
-> +					      tdev->fb_funcs);
-> +	if (IS_ERR(fbdev))
-> +		DRM_ERROR("Failed to initialize fbdev: %ld\n", PTR_ERR(fbdev));
-> +	else
-> +		tdev->fbdev_cma = fbdev;
-> +
-> +	return 0;
-> +}
-> +
-> +static void tinydrm_unregister(struct tinydrm_device *tdev)
-> +{
-> +	DRM_DEBUG_KMS("\n");
-> +
-> +	drm_crtc_force_disable_all(tdev->drm);
-> +
-> +	if (tdev->fbdev_cma)
-> +		drm_fbdev_cma_fini(tdev->fbdev_cma);
-> +
-> +	drm_dev_unregister(tdev->drm);
-> +}
-> +
-> +static void devm_tinydrm_register_release(void *data)
-> +{
-> +	tinydrm_unregister(data);
-> +}
+> +EXPORT_SYMBOL(tinydrm_enable_backlight);
 > +
 > +/**
-> + * devm_tinydrm_register - Register tinydrm device
-> + * @tdev: tinydrm device
-> + *
-> + * This function registers the underlying DRM device and fbdev.
-> + * These resources will be automatically unregistered on driver detach (devres)
-> + * and the display pipeline will be disabled.
+> + * tinydrm_disable_backlight - Disable backlight helper
+> + * @backlight: Backlight device
 > + *
 > + * Returns:
 > + * Zero on success, negative error code on failure.
 > + */
-> +int devm_tinydrm_register(struct tinydrm_device *tdev)
+> +int tinydrm_disable_backlight(struct backlight_device *backlight)
 > +{
-> +	struct device *dev = tdev->drm->dev;
+> +	unsigned int old_state;
 > +	int ret;
 > +
-> +	ret = tinydrm_register(tdev);
-> +	if (ret)
-> +		return ret;
+> +	if (!backlight)
+> +		return 0;
 > +
-> +	ret = devm_add_action(dev, devm_tinydrm_register_release, tdev);
+> +	old_state = backlight->props.state;
+> +	backlight->props.state |= BL_CORE_SUSPENDED;
+> +	DRM_DEBUG_KMS("Backlight state: 0x%x -> 0x%x\n", old_state,
+> +		      backlight->props.state);
+> +	ret = backlight_update_status(backlight);
 > +	if (ret)
-> +		tinydrm_unregister(tdev);
+> +		DRM_ERROR("Failed to disable backlight %d\n", ret);
 > +
 > +	return ret;
 > +}
-> +EXPORT_SYMBOL(devm_tinydrm_register);
+> +EXPORT_SYMBOL(tinydrm_disable_backlight);
+> +#endif
+> +
+> +#ifdef CONFIG_SPI
 > +
 > +/**
-> + * tinydrm_shutdown - Shutdown tinydrm
-> + * @tdev: tinydrm device
+> + * tinydrm_spi_max_transfer_size - Determine max SPI transfer size
+> + * @spi: SPI device
+> + * @max_len: Maximum buffer size needed (optional)
 > + *
-> + * This function makes sure that the display pipeline is disabled.
-> + * Used by drivers in their shutdown callback to turn off the display
-> + * on machine shutdown and reboot.
+> + * This function returns the maximum size to use for SPI transfers. It checks
+> + * the SPI master, the optional @max_len and the module parameter spi_max and
+> + * returns the smallest.
+> + *
+> + * Returns:
+> + * Maximum size for SPI transfers
 > + */
-> +void tinydrm_shutdown(struct tinydrm_device *tdev)
+> +size_t tinydrm_spi_max_transfer_size(struct spi_device *spi, size_t max_len)
 > +{
-> +	drm_crtc_force_disable_all(tdev->drm);
+> +	size_t ret;
+> +
+> +	ret = min(spi_max_transfer_size(spi), spi->master->max_dma_len);
+> +	if (max_len)
+> +		ret = min(ret, max_len);
+> +	if (spi_max)
+> +		ret = min_t(size_t, ret, spi_max);
+> +	ret &= ~0x3;
+> +	if (ret < 4)
+> +		ret = 4;
+> +
+> +	return ret;
 > +}
-> +EXPORT_SYMBOL(tinydrm_shutdown);
+> +EXPORT_SYMBOL(tinydrm_spi_max_transfer_size);
 > +
 > +/**
-> + * tinydrm_suspend - Suspend tinydrm
-> + * @tdev: tinydrm device
+> + * tinydrm_spi_bpw_supported - Check if bits per word is supported
+> + * @spi: SPI device
+> + * @bpw: Bits per word
 > + *
-> + * Used in driver PM operations to suspend tinydrm.
-> + * Suspends fbdev and DRM.
-> + * Resume with tinydrm_resume().
+> + * This function checks to see if the SPI master driver supports @bpw.
+> + *
+> + * Returns:
+> + * True if @bpw is supported, false otherwise.
+> + */
+> +bool tinydrm_spi_bpw_supported(struct spi_device *spi, u8 bpw)
+> +{
+> +	u32 bpw_mask = spi->master->bits_per_word_mask;
+> +
+> +	if (bpw == 8)
+> +		return true;
+> +
+> +	if (!bpw_mask) {
+> +		dev_warn_once(&spi->dev,
+> +			      "bits_per_word_mask not set, assume 8-bit only\n");
+> +		return false;
+> +	}
+> +
+> +	if (bpw_mask & SPI_BPW_MASK(bpw))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL(tinydrm_spi_bpw_supported);
+> +
+> +static void
+> +tinydrm_dbg_spi_print(struct spi_device *spi, struct spi_transfer *tr,
+> +		      const void *buf, int idx, bool tx)
+> +{
+> +	u32 speed_hz = tr->speed_hz ? tr->speed_hz : spi->max_speed_hz;
+> +	char linebuf[3 * 32];
+> +
+> +	hex_dump_to_buffer(buf, tr->len, 16,
+> +			   DIV_ROUND_UP(tr->bits_per_word, 8),
+> +			   linebuf, sizeof(linebuf), false);
+> +
+> +	printk(KERN_DEBUG
+> +	       "    tr(%i): speed=%u%s, bpw=%i, len=%u, %s_buf=[%s%s]\n", idx,
+> +	       speed_hz > 1000000 ? speed_hz / 1000000 : speed_hz / 1000,
+> +	       speed_hz > 1000000 ? "MHz" : "kHz", tr->bits_per_word, tr->len,
+> +	       tx ? "tx" : "rx", linebuf, tr->len > 16 ? " ..." : "");
+> +}
+> +
+> +/* called through tinydrm_dbg_spi_message() */
+> +void _tinydrm_dbg_spi_message(struct spi_device *spi, struct spi_message *m)
+> +{
+> +	struct spi_transfer *tmp;
+> +	struct list_head *pos;
+> +	int i = 0;
+> +
+> +	list_for_each(pos, &m->transfers) {
+> +		tmp = list_entry(pos, struct spi_transfer, transfer_list);
+> +
+> +		if (tmp->tx_buf)
+> +			tinydrm_dbg_spi_print(spi, tmp, tmp->tx_buf, i, true);
+> +		if (tmp->rx_buf)
+> +			tinydrm_dbg_spi_print(spi, tmp, tmp->rx_buf, i, false);
+> +		i++;
+> +	}
+> +}
+> +EXPORT_SYMBOL(_tinydrm_dbg_spi_message);
+> +
+> +/**
+> + * tinydrm_spi_transfer - SPI transfer helper
+> + * @spi: SPI device
+> + * @speed_hz: Override speed (optional)
+> + * @header: Optional header transfer
+> + * @bpw: Bits per word
+> + * @buf: Buffer to transfer
+> + * @len: Buffer length
+> + *
+> + * This SPI transfer helper breaks up the transfer of @buf into chunks which
+> + * the SPI master driver can handle. If the machine is Little Endian and the
+> + * SPI master driver doesn't support 16 bits per word, it swaps the bytes and
+> + * does a 8-bit transfer.
+> + * If @header is set, it is prepended to each SPI message.
 > + *
 > + * Returns:
 > + * Zero on success, negative error code on failure.
 > + */
-> +int tinydrm_suspend(struct tinydrm_device *tdev)
+> +int tinydrm_spi_transfer(struct spi_device *spi, u32 speed_hz,
+> +			 struct spi_transfer *header, u8 bpw, const void *buf,
+> +			 size_t len)
 > +{
-> +	struct drm_atomic_state *state;
+> +	struct spi_transfer tr = {
+> +		.bits_per_word = bpw,
+> +		.speed_hz = speed_hz,
+> +	};
+> +	struct spi_message m;
+> +	u16 *swap_buf = NULL;
+> +	size_t max_chunk;
+> +	size_t chunk;
+> +	int ret = 0;
 > +
-> +	if (tdev->suspend_state) {
-> +		DRM_ERROR("Failed to suspend: state already set\n");
+> +	if (WARN_ON_ONCE(bpw != 8 && bpw != 16))
 > +		return -EINVAL;
+> +
+> +	max_chunk = tinydrm_spi_max_transfer_size(spi, 0);
+> +
+> +	if (drm_debug & DRM_UT_DRIVER)
+> +		pr_debug("[drm:%s] bpw=%u, max_chunk=%zu, transfers:\n",
+> +			 __func__, bpw, max_chunk);
+> +
+> +	if (bpw == 16 && !tinydrm_spi_bpw_supported(spi, 16)) {
+> +		tr.bits_per_word = 8;
+> +		if (tinydrm_machine_little_endian()) {
+> +			swap_buf = kmalloc(min(len, max_chunk), GFP_KERNEL);
+> +			if (!swap_buf)
+> +				return -ENOMEM;
+> +		}
 > +	}
 > +
-> +	drm_fbdev_cma_set_suspend_unlocked(tdev->fbdev_cma, 1);
-
-Hm, random idea for faster suspend: On resume we can use the worker to
-avoid stalling on console_lock. On suspedn we could use a
-set_suspend_async/complete pair, which first launches the worker and later
-on waits for it to complete. If we do this around the (usually rather
-slow) call to drm_atomic_helper_suspend, then we could hide all that
-latency.
-
-> +	state = drm_atomic_helper_suspend(tdev->drm);
-> +	if (IS_ERR(state)) {
-> +		drm_fbdev_cma_set_suspend_unlocked(tdev->fbdev_cma, 0);
-> +		return PTR_ERR(state);
-> +	}
+> +	spi_message_init(&m);
+> +	if (header)
+> +		spi_message_add_tail(header, &m);
+> +	spi_message_add_tail(&tr, &m);
 > +
-> +	tdev->suspend_state = state;
+> +	while (len) {
+> +		chunk = min(len, max_chunk);
+> +
+> +		tr.tx_buf = buf;
+> +		tr.len = chunk;
+> +
+> +		if (swap_buf) {
+> +			const u16 *buf16 = buf;
+> +			unsigned int i;
+> +
+> +			for (i = 0; i < chunk / 2; i++)
+> +				swap_buf[i] = swab16(buf16[i]);
+> +
+> +			tr.tx_buf = swap_buf;
+> +		}
+> +
+> +		buf += chunk;
+> +		len -= chunk;
+> +
+> +		tinydrm_dbg_spi_message(spi, &m);
+> +		ret = spi_sync(spi, &m);
+> +		if (ret)
+> +			return ret;
+> +	};
 > +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL(tinydrm_suspend);
+> +EXPORT_SYMBOL(tinydrm_spi_transfer);
+
+Hm, might be worth it to try and move the spi helpers into the spi core
+code. But imo better to merge this now and move later on, than delay
+merging tinydrm.
+
 > +
-> +/**
-> + * tinydrm_resume - Resume tinydrm
-> + * @tdev: tinydrm device
-> + *
-> + * Used in driver PM operations to resume tinydrm.
-> + * Suspend with tinydrm_suspend().
-> + *
-> + * Returns:
-> + * Zero on success, negative error code on failure.
-> + */
-> +int tinydrm_resume(struct tinydrm_device *tdev)
-> +{
-> +	struct drm_atomic_state *state = tdev->suspend_state;
-> +	int ret;
-> +
-> +	if (!state) {
-> +		DRM_ERROR("Failed to resume: state is not set\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	tdev->suspend_state = NULL;
-> +
-> +	ret = drm_atomic_helper_resume(tdev->drm, state);
-> +	if (ret) {
-> +		DRM_ERROR("Error resuming state: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	drm_fbdev_cma_set_suspend_unlocked(tdev->fbdev_cma, 0);
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(tinydrm_resume);
-> +
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c b/drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
+> +#endif /* CONFIG_SPI */
+> diff --git a/include/drm/tinydrm/tinydrm-helpers.h b/include/drm/tinydrm/tinydrm-helpers.h
 > new file mode 100644
-> index 0000000..4327b04
+> index 0000000..78175fe
 > --- /dev/null
-> +++ b/drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
-> @@ -0,0 +1,244 @@
+> +++ b/include/drm/tinydrm/tinydrm-helpers.h
+> @@ -0,0 +1,100 @@
 > +/*
 > + * Copyright (C) 2016 Noralf Trønnes
 > + *
@@ -561,376 +580,97 @@ latency.
 > + * (at your option) any later version.
 > + */
 > +
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_modes.h>
-> +#include <drm/tinydrm/tinydrm.h>
+> +#ifndef __LINUX_TINYDRM_HELPERS_H
+> +#define __LINUX_TINYDRM_HELPERS_H
 > +
-> +struct tinydrm_connector {
-> +	struct drm_connector base;
-> +	const struct drm_display_mode *mode;
-> +};
-> +
-> +static inline struct tinydrm_connector *
-> +to_tinydrm_connector(struct drm_connector *connector)
-> +{
-> +	return container_of(connector, struct tinydrm_connector, base);
-> +}
-> +
-> +static int tinydrm_connector_get_modes(struct drm_connector *connector)
-> +{
-> +	struct tinydrm_connector *tconn = to_tinydrm_connector(connector);
-> +	struct drm_display_mode *mode;
-> +
-> +	mode = drm_mode_duplicate(connector->dev, tconn->mode);
-> +	if (!mode) {
-> +		DRM_ERROR("Failed to duplicate mode\n");
-> +		return 0;
-> +	}
-> +
-> +	if (mode->name[0] == '\0')
-> +		drm_mode_set_name(mode);
-> +
-> +	mode->type |= DRM_MODE_TYPE_PREFERRED;
-> +	drm_mode_probed_add(connector, mode);
-> +
-> +	if (mode->width_mm) {
-> +		connector->display_info.width_mm = mode->width_mm;
-> +		connector->display_info.height_mm = mode->height_mm;
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +static const struct drm_connector_helper_funcs tinydrm_connector_hfuncs = {
-> +	.get_modes = tinydrm_connector_get_modes,
-> +	.best_encoder = drm_atomic_helper_best_encoder,
-> +};
-> +
-> +static enum drm_connector_status
-> +tinydrm_connector_detect(struct drm_connector *connector, bool force)
-> +{
-> +	if (drm_device_is_unplugged(connector->dev))
-> +		return connector_status_disconnected;
-> +
-> +	return connector->status;
-> +}
-> +
-> +static void tinydrm_connector_destroy(struct drm_connector *connector)
-> +{
-> +	struct tinydrm_connector *tconn = to_tinydrm_connector(connector);
-> +
-> +	drm_connector_cleanup(connector);
-> +	kfree(tconn);
-> +}
-> +
-> +static const struct drm_connector_funcs tinydrm_connector_funcs = {
-> +	.dpms = drm_atomic_helper_connector_dpms,
-> +	.reset = drm_atomic_helper_connector_reset,
-> +	.detect = tinydrm_connector_detect,
-> +	.fill_modes = drm_helper_probe_single_connector_modes,
-> +	.destroy = tinydrm_connector_destroy,
-> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +struct drm_connector *
-> +tinydrm_connector_create(struct drm_device *drm,
-> +			 const struct drm_display_mode *mode,
-> +			 int connector_type)
-> +{
-> +	struct tinydrm_connector *tconn;
-> +	struct drm_connector *connector;
-> +	int ret;
-> +
-> +	tconn = kzalloc(sizeof(*tconn), GFP_KERNEL);
-> +	if (!tconn)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	tconn->mode = mode;
-> +	connector = &tconn->base;
-> +
-> +	drm_connector_helper_add(connector, &tinydrm_connector_hfuncs);
-> +	ret = drm_connector_init(drm, connector, &tinydrm_connector_funcs,
-> +				 connector_type);
-> +	if (ret) {
-> +		kfree(tconn);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	connector->status = connector_status_connected;
-> +
-> +	return connector;
-> +}
+> +struct backlight_device;
+> +struct tinydrm_device;
+> +struct drm_clip_rect;
+> +struct spi_transfer;
+> +struct spi_message;
+> +struct spi_device;
+> +struct device;
 > +
 > +/**
-> + * tinydrm_display_pipe_update - Display pipe update helper
-> + * @pipe: Simple display pipe
-> + * @old_state: Old plane state
-> + *
-> + * This function does a full framebuffer flush if the plane framebuffer
-> + * has changed. It also handles vblank events. Drivers can use this as their
-> + * &drm_simple_display_pipe_funcs->update callback.
-> + */
-> +void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
-> +				 struct drm_plane_state *old_state)
-> +{
-> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-> +	struct drm_framebuffer *fb = pipe->plane.state->fb;
-> +	struct drm_crtc *crtc = &tdev->pipe.crtc;
-> +
-> +	if (!fb)
-> +		DRM_DEBUG_KMS("fb unset\n");
-> +	else if (!old_state->fb)
-> +		DRM_DEBUG_KMS("fb set\n");
-> +	else if (fb != old_state->fb)
-> +		DRM_DEBUG_KMS("fb changed\n");
-> +	else
-> +		DRM_DEBUG_KMS("No fb change\n");
-> +
-> +	if (fb && (fb != old_state->fb)) {
-> +		pipe->plane.fb = fb;
-> +		if (fb->funcs->dirty)
-> +			fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
-
-I like the idea, but my cunning long-term plan is that we'd extend the
-atomic support to support a dirty rectangle. Together with the
-non-blocking stuff we could then implement fb->funcs->dirty in terms of
-atomic. But here you implement atomic in terms of ->dirty, and we'd end up
-with a loop.
-
-Personally I'd just drop this helper here and move this part into the
-backend modules ...
-
-> +	}
-> +
-> +	if (crtc->state->event) {
-> +		DRM_DEBUG_KMS("crtc event\n");
-> +		spin_lock_irq(&crtc->dev->event_lock);
-> +		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-> +		spin_unlock_irq(&crtc->dev->event_lock);
-> +		crtc->state->event = NULL;
-
-... because this here is kinda a hack, since it's not synchronized with
-the screen update. Otoh these tiny panels are kinda special.
-
-> +	}
-> +}
-> +EXPORT_SYMBOL(tinydrm_display_pipe_update);
-> +
-> +/**
-> + * tinydrm_display_pipe_prepare_fb - Display pipe prepare_fb helper
-> + * @pipe: Simple display pipe
-> + * @plane_state: Plane state
-> + *
-> + * This function uses drm_fb_cma_prepare_fb() to check if the plane FB has an
-> + * dma-buf attached, extracts the exclusive fence and attaches it to plane
-> + * state for the atomic helper to wait on. Drivers can use this as their
-> + * &drm_simple_display_pipe_funcs->prepare_fb callback.
-> + */
-> +int tinydrm_display_pipe_prepare_fb(struct drm_simple_display_pipe *pipe,
-> +				    struct drm_plane_state *plane_state)
-> +{
-> +	return drm_fb_cma_prepare_fb(&pipe->plane, plane_state);
-> +}
-> +EXPORT_SYMBOL(tinydrm_display_pipe_prepare_fb);
-> +
-> +static int tinydrm_rotate_mode(struct drm_display_mode *mode,
-> +			       unsigned int rotation)
-> +{
-> +	if (rotation == 0 || rotation == 180) {
-> +		return 0;
-> +	} else if (rotation == 90 || rotation == 270) {
-> +		swap(mode->hdisplay, mode->vdisplay);
-> +		swap(mode->hsync_start, mode->vsync_start);
-> +		swap(mode->hsync_end, mode->vsync_end);
-> +		swap(mode->htotal, mode->vtotal);
-> +		swap(mode->width_mm, mode->height_mm);
-> +		return 0;
-> +	} else {
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +/**
-> + * tinydrm_display_pipe_init - Initialize display pipe
-> + * @tdev: tinydrm device
-> + * @funcs: Display pipe functions
-> + * @connector_type: Connector type
-> + * @formats: Array of supported formats (DRM_FORMAT\_\*)
-> + * @format_count: Number of elements in @formats
-> + * @mode: Supported mode
-> + * @rotation: Initial @mode rotation in degrees Counter Clock Wise
-> + *
-> + * This function sets up a &drm_simple_display_pipe with a &drm_connector that
-> + * has one fixed &drm_display_mode which is rotated according to @rotation.
+> + * tinydrm_machine_little_endian - Machine is little endian
 > + *
 > + * Returns:
-> + * Zero on success, negative error code on failure.
+> + * true if *defined(__LITTLE_ENDIAN)*, false otherwise
 > + */
-> +int
-> +tinydrm_display_pipe_init(struct tinydrm_device *tdev,
-> +			  const struct drm_simple_display_pipe_funcs *funcs,
-> +			  int connector_type,
-> +			  const uint32_t *formats,
-> +			  unsigned int format_count,
-> +			  const struct drm_display_mode *mode,
-> +			  unsigned int rotation)
+> +static inline bool tinydrm_machine_little_endian(void)
 > +{
-> +	struct drm_device *drm = tdev->drm;
-> +	struct drm_display_mode *mode_copy;
-> +	struct drm_connector *connector;
-> +	int ret;
+> +#if defined(__LITTLE_ENDIAN)
+> +	return true;
+> +#else
+> +	return false;
+> +#endif
+> +}
 > +
-> +	mode_copy = devm_kmalloc(drm->dev, sizeof(*mode_copy), GFP_KERNEL);
-> +	if (!mode_copy)
-> +		return -ENOMEM;
+> +bool tinydrm_merge_clips(struct drm_clip_rect *dst,
+> +			 struct drm_clip_rect *src, unsigned int num_clips,
+> +			 unsigned int flags, u32 max_width, u32 max_height);
+> +void tinydrm_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		    struct drm_clip_rect *clip);
+> +void tinydrm_swab16(u16 *dst, void *vaddr, struct drm_framebuffer *fb,
+> +		    struct drm_clip_rect *clip);
+> +void tinydrm_xrgb8888_to_rgb565(u16 *dst, void *vaddr,
+> +				struct drm_framebuffer *fb,
+> +				struct drm_clip_rect *clip, bool swap);
 > +
-> +	*mode_copy = *mode;
-> +	ret = tinydrm_rotate_mode(mode_copy, rotation);
-> +	if (ret) {
-> +		DRM_ERROR("Illegal rotation value %u\n", rotation);
-> +		return -EINVAL;
-> +	}
+> +#ifdef CONFIG_BACKLIGHT_CLASS_DEVICE
+> +struct backlight_device *tinydrm_of_find_backlight(struct device *dev);
+> +int tinydrm_enable_backlight(struct backlight_device *backlight);
+> +int tinydrm_disable_backlight(struct backlight_device *backlight);
+> +#else
+> +static inline struct backlight_device *
+> +tinydrm_of_find_backlight(struct device *dev)
+> +{
+> +	return NULL;
+> +}
 > +
-> +	drm->mode_config.min_width = mode_copy->hdisplay;
-> +	drm->mode_config.max_width = mode_copy->hdisplay;
-> +	drm->mode_config.min_height = mode_copy->vdisplay;
-> +	drm->mode_config.max_height = mode_copy->vdisplay;
-> +
-> +	connector = tinydrm_connector_create(drm, mode_copy, connector_type);
-> +	if (IS_ERR(connector))
-> +		return PTR_ERR(connector);
-> +
-> +	ret = drm_simple_display_pipe_init(drm, &tdev->pipe, funcs, formats,
-> +					   format_count, connector);
-> +	if (ret)
-> +		return ret;
-> +
+> +static inline int tinydrm_enable_backlight(struct backlight_device *backlight)
+> +{
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL(tinydrm_display_pipe_init);
-> diff --git a/include/drm/tinydrm/tinydrm.h b/include/drm/tinydrm/tinydrm.h
-> new file mode 100644
-> index 0000000..cf9ca20
-> --- /dev/null
-> +++ b/include/drm/tinydrm/tinydrm.h
-> @@ -0,0 +1,115 @@
-> +/*
-> + * Copyright (C) 2016 Noralf Trønnes
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
 > +
-> +#ifndef __LINUX_TINYDRM_H
-> +#define __LINUX_TINYDRM_H
-> +
-> +#include <drm/drm_gem_cma_helper.h>
-> +#include <drm/drm_fb_cma_helper.h>
-> +#include <drm/drm_simple_kms_helper.h>
-> +
-> +/**
-> + * struct tinydrm_device - tinydrm device
-> + * @drm: DRM device
-> + * @pipe: Display pipe structure
-> + * @dirty_lock: Serializes framebuffer flushing
-> + * @fbdev_cma: CMA fbdev structure
-> + * @suspend_state: Atomic state when suspended
-> + * @fb_funcs: Framebuffer functions used when creating framebuffers
-> + */
-> +struct tinydrm_device {
-> +	struct drm_device *drm;
-> +	struct drm_simple_display_pipe pipe;
-> +	struct mutex dirty_lock;
-> +	struct drm_fbdev_cma *fbdev_cma;
-> +	struct drm_atomic_state *suspend_state;
-> +	const struct drm_framebuffer_funcs *fb_funcs;
-> +};
-> +
-> +static inline struct tinydrm_device *
-> +pipe_to_tinydrm(struct drm_simple_display_pipe *pipe)
+> +static inline int
+> +tinydrm_disable_backlight(struct backlight_device *backlight)
 > +{
-> +	return container_of(pipe, struct tinydrm_device, pipe);
+> +	return 0;
 > +}
+> +#endif
 > +
+> +size_t tinydrm_spi_max_transfer_size(struct spi_device *spi, size_t max_len);
+> +bool tinydrm_spi_bpw_supported(struct spi_device *spi, u8 bpw);
+> +int tinydrm_spi_transfer(struct spi_device *spi, u32 speed_hz,
+> +			 struct spi_transfer *header, u8 bpw, const void *buf,
+> +			 size_t len);
+> +void _tinydrm_dbg_spi_message(struct spi_device *spi, struct spi_message *m);
+> +
+> +#ifdef DEBUG
 > +/**
-> + * TINYDRM_GEM_DRIVER_OPS - default tinydrm gem operations
+> + * tinydrm_dbg_spi_message - Dump SPI message
+> + * @spi: SPI device
+> + * @m: SPI message
 > + *
-> + * This macro provides a shortcut for setting the tinydrm GEM operations in
-> + * the &drm_driver structure.
+> + * Dumps info about the transfers in a SPI message including buffer content.
+> + * DEBUG has to be defined for this function to be enabled alongside setting
+> + * the DRM_UT_DRIVER bit of &drm_debug.
 > + */
-> +#define TINYDRM_GEM_DRIVER_OPS \
-> +	.gem_free_object	= tinydrm_gem_cma_free_object, \
-> +	.gem_vm_ops		= &drm_gem_cma_vm_ops, \
-> +	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd, \
-> +	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle, \
-> +	.gem_prime_import	= drm_gem_prime_import, \
-> +	.gem_prime_export	= drm_gem_prime_export, \
-> +	.gem_prime_get_sg_table	= drm_gem_cma_prime_get_sg_table, \
-> +	.gem_prime_import_sg_table = tinydrm_gem_cma_prime_import_sg_table, \
-> +	.gem_prime_vmap		= drm_gem_cma_prime_vmap, \
-> +	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap, \
-> +	.gem_prime_mmap		= drm_gem_cma_prime_mmap, \
-> +	.dumb_create		= drm_gem_cma_dumb_create, \
-> +	.dumb_map_offset	= drm_gem_cma_dumb_map_offset, \
-> +	.dumb_destroy		= drm_gem_dumb_destroy, \
-> +	.fops			= &tinydrm_fops
+> +static inline void tinydrm_dbg_spi_message(struct spi_device *spi,
+> +					   struct spi_message *m)
+> +{
+> +	if (drm_debug & DRM_UT_DRIVER)
+> +		_tinydrm_dbg_spi_message(spi, m);
+> +}
+> +#else
+> +static inline void tinydrm_dbg_spi_message(struct spi_device *spi,
+> +					   struct spi_message *m)
+> +{
+> +}
+> +#endif /* DEBUG */
 > +
-> +/**
-> + * TINYDRM_MODE - tinydrm display mode
-> + * @hd: Horizontal resolution, width
-> + * @vd: Vertical resolution, height
-> + * @hd_mm: Display width in millimeters
-> + * @vd_mm: Display height in millimeters
-> + *
-> + * This macro creates a &drm_display_mode for use with tinydrm.
-> + */
-> +#define TINYDRM_MODE(hd, vd, hd_mm, vd_mm) \
-> +	.hdisplay = (hd), \
-> +	.hsync_start = (hd), \
-> +	.hsync_end = (hd), \
-> +	.htotal = (hd), \
-> +	.vdisplay = (vd), \
-> +	.vsync_start = (vd), \
-> +	.vsync_end = (vd), \
-> +	.vtotal = (vd), \
-> +	.width_mm = (hd_mm), \
-> +	.height_mm = (vd_mm), \
-> +	.type = DRM_MODE_TYPE_DRIVER, \
-> +	.clock = 1 /* pass validation */
-> +
-> +extern const struct file_operations tinydrm_fops;
-> +void tinydrm_lastclose(struct drm_device *drm);
-> +void tinydrm_gem_cma_free_object(struct drm_gem_object *gem_obj);
-> +struct drm_gem_object *
-> +tinydrm_gem_cma_prime_import_sg_table(struct drm_device *drm,
-> +				      struct dma_buf_attachment *attach,
-> +				      struct sg_table *sgt);
-> +int devm_tinydrm_init(struct device *parent, struct tinydrm_device *tdev,
-> +		      const struct drm_framebuffer_funcs *fb_funcs,
-> +		      struct drm_driver *driver);
-> +int devm_tinydrm_register(struct tinydrm_device *tdev);
-> +void tinydrm_shutdown(struct tinydrm_device *tdev);
-> +int tinydrm_suspend(struct tinydrm_device *tdev);
-> +int tinydrm_resume(struct tinydrm_device *tdev);
-> +
-> +void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
-> +				 struct drm_plane_state *old_state);
-> +int tinydrm_display_pipe_prepare_fb(struct drm_simple_display_pipe *pipe,
-> +				    struct drm_plane_state *plane_state);
-> +int
-> +tinydrm_display_pipe_init(struct tinydrm_device *tdev,
-> +			  const struct drm_simple_display_pipe_funcs *funcs,
-> +			  int connector_type,
-> +			  const uint32_t *formats,
-> +			  unsigned int format_count,
-> +			  const struct drm_display_mode *mode,
-> +			  unsigned int rotation);
-> +
-> +#endif /* __LINUX_TINYDRM_H */
+> +#endif /* __LINUX_TINYDRM_HELPERS_H */
 > -- 
 > 2.10.2
 > 
