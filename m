@@ -1,26 +1,50 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Documentation: dt: iio: imu: st_lsm6dsx: add
- st,drdy-int-pin property
-Date: Mon, 23 Jan 2017 14:45:11 -0600
-Message-ID: <20170123204511.4u3tjhyqg5sdrzbb@rob-hp-laptop>
-References: <20170122183225.2539-1-lorenzo.bianconi@st.com>
- <20170122183225.2539-3-lorenzo.bianconi@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170122183225.2539-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: Stephen Boyd <stephen.boyd@linaro.org>
+Subject: [PATCH v3 0/3] OF phandle nexus support + GPIO nexus
+Date: Mon, 23 Jan 2017 12:48:48 -0800
+Message-ID: <20170123204851.12808-1-stephen.boyd@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 22, 2017 at 07:32:25PM +0100, Lorenzo Bianconi wrote:
-> Add st,drdy-int-pin property to select interrupt pin of the package
-> 
-> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 2 ++
->  1 file changed, 2 insertions(+)
+This is one small chunk of work related to DT overlays for expansion
+boards. It would be good to have a way to expose #<list>-cells types of
+providers through a connector in a standard way. So we introduce a way
+to make "nexus" nodes for these types of properties to remap the consumer
+number space to the other side of the connector's number space. It's
+basically a copy of the interrupt nexus implementation, but without
+the address space matching design and interrupt-parent walking.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+The first patch implements a generic method to do this, and the second patch
+adds a unit test for it. The third patch is more of an example than anything
+else. It shows how we would modify frameworks to use the new API.
+
+Changes since v2:
+ * Picked up Linus' ack on the gpio core patch
+ * Made const stack arrays static (Rob Herring)
+ * Used of_property_read_u32() instead of open coding (Rob Herring)
+
+Changes since v1:
+ * Addition of optional pass-thru parameter
+ * Reduction of strings passed to 1 instead of 3 (or 4 now)
+ * Updated gpio patch for the new function signature
+ * Updated test-case for new funciton signature and pass-thru parameter
+ * Updated kernel-doc to be correct and highlighted difference between
+   this API and of_parse_phandle_with_args()
+
+Stephen Boyd (3):
+  of: Support parsing phandle argument lists through a nexus node
+  of: unittest: Add phandle remapping test
+  gpio: Support gpio nexus dt bindings
+
+ drivers/gpio/gpiolib-of.c                   |   4 +-
+ drivers/of/base.c                           | 184 ++++++++++++++++++++++++++++
+ drivers/of/unittest-data/testcases.dts      |  11 ++
+ drivers/of/unittest-data/tests-phandle.dtsi |  25 ++++
+ drivers/of/unittest.c                       | 120 ++++++++++++++++++
+ include/linux/of.h                          |  12 ++
+ 6 files changed, 354 insertions(+), 2 deletions(-)
+
+-- 
+2.10.0.297.gf6727b0
