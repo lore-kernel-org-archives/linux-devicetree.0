@@ -1,80 +1,41 @@
-From: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
-Subject: Re: [PATCH 10/21] MIPS memblock: Discard bootmem allocator
- initialization
-Date: Mon, 23 Jan 2017 08:55:27 +0100
-Message-ID: <780ca27f-d582-4911-a1a6-bd5c8792c587@imgtec.com>
-References: <1482113266-13207-1-git-send-email-fancer.lancer@gmail.com>
- <1482113266-13207-11-git-send-email-fancer.lancer@gmail.com>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Mon, 23 Jan 2017 08:18:35 +0000
+Message-ID: <6eb30a9ec3cf4fc9971f33742f334980@svr-chch-ex1.atlnz.lc>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+ <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz>
+ <20170119100244.GX27312@n2100.armlinux.org.uk>
+ <c873040cba1a4d5aa15dbaf3c5cc44e0@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1482113266-13207-11-git-send-email-fancer.lancer@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Serge Semin <fancer.lancer@gmail.com>, ralf@linux-mips.org, paul.burton@imgtec.com, rabinv@axis.com, matt.redfearn@imgtec.com, james.hogan@imgtec.com, alexander.sverdlin@nokia.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: Sergey.Semin@t-platforms.ru, linux-mips@linux-mips.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kalyan Kinthada <Kalyan.Kinthada-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Serge,
-
-On 19.12.2016 03:07, Serge Semin wrote:
-> Bootmem allocator initialization needs to be discarded.
-> PFN limit constants are still in use by some subsystems, so they
-> need to be properly initialized. The initialization is moved into
-> a separate method and performed with help of commonly used
-> platform-specific constants. It might me too simplified, but most
-> of the kernel platforms do it the same way. Moreover it's much
-> easier to debug it, when it's not that complicated.
->
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> ---
->  arch/mips/kernel/setup.c | 193 ++++-------------------------
->  1 file changed, 21 insertions(+), 172 deletions(-)
->
-> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> index e746793..6562f55 100644
-> --- a/arch/mips/kernel/setup.c
-> +++ b/arch/mips/kernel/setup.c
-> @@ -626,6 +626,25 @@ static void __init request_crashkernel(struct resource *res) { }
->  #endif /* !CONFIG_KEXEC */
->
->  /*
-> + * Calcualte PFN limits with respect to the defined memory layout
-> + */
-> +static void __init find_pfn_limits(void)
-> +{
-> +	phys_addr_t ram_end = memblock_end_of_DRAM();
-> +
-> +	min_low_pfn = ARCH_PFN_OFFSET;
-> +	max_low_pfn = PFN_UP(HIGHMEM_START);
-
-This doesn't look right - as this may set max_low_pfn to more than the 
-actual physical memory size. In some cases this might be a serious 
-problem and it doesn't look like any other platform does that.
-Even in MIPS code you can find uses of max_low_pfn that would be 
-seriously affected by this change (vpe loader with 
-CONFIG_MIPS_VPE_LOADER_TOM).
-
-> +	max_pfn = PFN_UP(ram_end);
-> +#ifdef CONFIG_HIGHMEM
-> +	highstart_pfn = max_low_pfn;
-> +	highend_pfn = max_pfn <= highstart_pfn ? highstart_pfn : max_pfn;
-> +#endif
-> +	pr_info("PFNs: low min %lu, low max %lu, high start %lu, high end %lu,"
-> +		"max %lu\n",
-> +		min_low_pfn, max_low_pfn, highstart_pfn, highend_pfn, max_pfn);
-> +}
-> +
-> +/*
->   * Initialize the bootmem allocator. It also setup initrd related data
->   * if needed.
->   */
-
-
-
-I fully agree with you that the current initialisation code is really 
-complex and difficult to debug, but the modified one seems a bit too 
-simplified.
-
-Regards,
-Marcin
+On 20/01/17 10:10, Chris Packham wrote:=0A=
+> On 19/01/17 23:03, Russell King - ARM Linux wrote:=0A=
+>> On Fri, Jan 13, 2017 at 10:12:18PM +1300, Chris Packham wrote:=0A=
+>>> +static struct mvebu_mpp_ctrl mv98dx3236_mpp_controls[] =3D {=0A=
+>>> +	MPP_FUNC_CTRL(0, 32, NULL, armada_xp_mpp_ctrl),=0A=
+>>> +};=0A=
+>>=0A=
+>> As Linus has taken my mvebu pinctrl series, this will need to be=0A=
+>> changed to "mvebu_mmio_mpp_ctrl" rather than "armada_xp_mpp_ctrl"=0A=
+>> when it's merged.=0A=
+>>=0A=
+>=0A=
+> OK I was thinking about rebasing my series so maybe it's time.=0A=
+>=0A=
+=0A=
+I noticed the mvebu pinctrl series isn't in Linus's (Torvalds) tree. Is =0A=
+this on the cards for v4.10 or is it waiting for the next merge window? =0A=
+In other words should I send v5 or my series now or wait for this to be =0A=
+merged so I can rebase on top of it?=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
