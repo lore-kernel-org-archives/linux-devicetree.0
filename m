@@ -1,32 +1,62 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 01/12] dt-bindings: display: mediatek: update
- supported chips
-Date: Mon, 23 Jan 2017 15:02:07 -0600
-Message-ID: <20170123210127.ypfc73qszldjkv7y@rob-hp-laptop>
-References: <1485169525-22163-1-git-send-email-yt.shen@mediatek.com>
- <1485169525-22163-2-git-send-email-yt.shen@mediatek.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v4 2/4] Documentation: dt: add bindings for ti-cpufreq
+Date: Mon, 23 Jan 2017 15:48:10 -0600
+Message-ID: <91a2d778-ce39-19dd-33cd-77e4eda0d8b7@ti.com>
+References: <20170117131808.29798-1-d-gerlach@ti.com>
+ <20170117131808.29798-3-d-gerlach@ti.com>
+ <20170119180702.62xg2ta5pq4mf7sd@rob-hp-laptop>
+ <b7d11925-879a-9be0-fdd8-45b70e642ce1@ti.com>
+ <20170120184324.GJ7403@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485169525-22163-2-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, CK Hu <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170120184324.GJ7403@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 07:05:14PM +0800, YT Shen wrote:
-> Add decriptions about supported chips, including MT2701 & MT8173
-> 
-> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt | 2 ++
->  Documentation/devicetree/bindings/display/mediatek/mediatek,dsi.txt  | 2 ++
->  2 files changed, 4 insertions(+)
+On 01/20/2017 12:43 PM, Tony Lindgren wrote:
+> * Dave Gerlach <d-gerlach@ti.com> [170119 10:32]:
+>> On 01/19/2017 12:07 PM, Rob Herring wrote:
+>>>> +	/*
+>>>> +	 * The three following nodes are marked with opp-suspend
+>>>> +	 * because they can not be enabled simultaneously on a
+>>>> +	 * single SoC.
+>>>> +	 */
+>>>> +	opp50@300000000 {
+>>>
+>>> What's the 50, 100, 120 in the names?
+>>
+>> Those are the names of the OPPs given in Table 5-7 of the AM335x data
+>> manual, seen here http://www.ti.com/lit/ds/symlink/am3359.pdf . I typically
+>> reference the table and document in the commit message of the actual DT
+>> patches but didn't here for the binding.
+>
+> If you don't need the names, you could maybe use:
+>
+> opp100: opp@275000000 {
+> 	...
+> };
+>
+> opp200: opp@300000000 {
+> 	...
+> };
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for the suggestion, but we have duplicate frequencies that have 
+different voltages defined for them, so the scheme opp@<freq> won't work 
+because then we end up with duplicate nodes. OPPs are a defined by a 
+number of parameters, not just frequency, so always naming the nodes 
+opp@<freq> won't cover all scenarios.
+
+Regards,
+Dave
+
+> ...
+>
+> Regards,
+>
+> Tony
+>
+
