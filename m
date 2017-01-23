@@ -1,83 +1,73 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Mon, 23 Jan 2017 10:31:15 +0000
-Message-ID: <20170123103114.GB16286@leverpostej>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <20170120150428.GC22152@leverpostej>
- <8818973b-602b-e71f-a12b-3e894aa0e619@linaro.org>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v4 1/4] ASoC: es8328-i2c: Add compatible for
+	ES8388
+Date: Mon, 23 Jan 2017 11:41:46 +0100
+Message-ID: <20170123104149.2508-2-romain.perier@collabora.com>
+References: <20170123104149.2508-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <8818973b-602b-e71f-a12b-3e894aa0e619-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hanjun Guo <hanjun.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fu Wei <fu.wei-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170123104149.2508-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 22, 2017 at 03:59:57PM +0800, Hanjun Guo wrote:
-> On 2017/1/20 23:04, Mark Rutland wrote:
-> >On Thu, Jan 19, 2017 at 09:35:12PM +0800, Ding Tianhong wrote:
-> >>Ding Tianhong (4):
-> >>  arm64: arch_timer: Add device tree binding for hisilicon-161010101
-> >>    erratum
-> >>  arm64: arch_timer: Introduce a generic erratum handing mechanism for
-> >>    fsl-a008585
-> >>  arm64: arch_timer: Work around Erratum Hisilicon-161010101
-> >>  arm64: arch timer: Add timer erratum property for Hip05-d02 and
-> >>    Hip06-d03
-> >>
-> >> Documentation/admin-guide/kernel-parameters.txt    |   9 --
-> >> Documentation/arm64/silicon-errata.txt             |  43 +++---
-> >> .../devicetree/bindings/arm/arch_timer.txt         |   6 +
-> >> arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
-> >> arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
-> >> arch/arm64/include/asm/arch_timer.h                |  38 ++----
-> >> drivers/clocksource/Kconfig                        |  18 +++
-> >> drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
-> >> 8 files changed, 171 insertions(+), 95 deletions(-)
-> >
-> >I've picked these up (with a few local cleanups), given that some local
-> >testing, and pushed the result to a branch [1] on my git repo.
-> >
-> >There are likely to be clashes with the arm64 tree (e.g. for
-> >silicon-errata.txt), and we're also likely to have more arch timer
-> >updates shortly for the GTDT stuff,
-> 
-> Yes, GTDT patches conflict with this patch set but it's easy to
-> fix.
+This commit adds a compatible string for everest,es8388. This is
+an audio codec that is compatible with es8328.
 
-Sure. What I meant is that I'd prefer to fix any such conflict myself
-(i.e. by basing the GTDT patches atop of this), before passing this
-upwards.
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-> >so I think the best bet is for both arm64 and the clocksource tree to
-> >pull that branch for v4.11.
-> >
-> >Alternatively, we could take this all through the arm64 tree, if the
-> >clocksource maintainers are happy with that.
-> >
-> >Thoughts?
-> 
-> GTDT patch set is adding ACPI support for arch timer, and it's
-> only used for ARM64 now, in order to handler the conflict easily,
-> I think take them all through arm64 tree is better
+Changes in v4: None
+Changes in v3: None
+Changes in v2:
+- Fixed wrong use of the i2c_device_id data structure
 
-In either case I believe we should be able to handle the conflict. Going
-through one tree (i.e. arm64) would simplify things substantially,
-though.
+ Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-This really comes down to what the clocksource maintainers prefer.
-
-> (I was working with Fuwei for the GTDT patch set and I hope it's not
-> blocked by "who will merge the code"...)
-
-Hopefully this is just a formality. :)
-
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 30ea8a3..33fbf05 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,7 @@ This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+-  - compatible : "everest,es8328"
++  - compatible  : Should be "everest,es8328" or "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 2d05b5d..318ab28 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -20,12 +20,14 @@
+ 
+ static const struct i2c_device_id es8328_id[] = {
+ 	{ "es8328", 0 },
++	{ "es8388", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
+ 	{ .compatible = "everest,es8328", },
++	{ .compatible = "everest,es8388", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, es8328_of_match);
+-- 
+2.9.3
