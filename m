@@ -1,120 +1,51 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
-Date: Mon, 23 Jan 2017 12:48:41 -0500
-Message-ID: <20170123174841.GB25789@trickycodes.roam.corp.google.com>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
- <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/8] devicetree: property-units: add mWh and mAh units
+Date: Mon, 23 Jan 2017 11:50:18 -0600
+Message-ID: <20170123175018.kja7jizc3l7zorcr@rob-hp-laptop>
+References: <20170122071404.9654-1-matt@ranostay.consulting>
+ <20170122071404.9654-2-matt@ranostay.consulting>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170122071404.9654-2-matt@ranostay.consulting>
+Sender: linux-pm-owner@vger.kernel.org
+To: Matt Ranostay <matt@ranostay.consulting>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, sre@kernel.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 06:10:49PM +0800, Chris Zhong wrote:
-> The MIPI DSI do not need check the validity of resolution, the max
-> resolution should depend VOP. Hence, remove rk3288_mipi_dsi_mode_valid
-> here.
-
-Does vop actually enforce this, though? I see that mode_config.max_width is
-4096, but there is no bounds checking in mode_fixup().
-
-The connector is currently rejecting everything greater than 2047. So I think
-you're going to regress behavior here.
-
-Sean
-
-
+On Sat, Jan 21, 2017 at 11:13:57PM -0800, Matt Ranostay wrote:
+> Add entries for microwatt-hours and microamp-hours to property
+> units.
 > 
-> Signed-off-by: Chris Zhong <zyw@rock-chips.com>
+> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+
+Please add acks when posting new versions. You're missing Sebastian's 
+and mine.
+
 > ---
+>  Documentation/devicetree/bindings/property-units.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> Changes in v3: None
-> 
->  drivers/gpu/drm/rockchip/dw-mipi-dsi.c | 39 ----------------------------------
->  1 file changed, 39 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> index a93ce97..6f0e252 100644
-> --- a/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> +++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi.c
-> @@ -278,8 +278,6 @@ struct dw_mipi_dsi_plat_data {
->  	u32 grf_dsi0_mode;
->  	u32 grf_dsi0_mode_reg;
->  	unsigned int max_data_lanes;
-> -	enum drm_mode_status (*mode_valid)(struct drm_connector *connector,
-> -					   struct drm_display_mode *mode);
->  };
+> diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+> index 12278d79f6c0..5e8d220cc2b6 100644
+> --- a/Documentation/devicetree/bindings/property-units.txt
+> +++ b/Documentation/devicetree/bindings/property-units.txt
+> @@ -25,8 +25,10 @@ Distance
+>  Electricity
+>  ----------------------------------------
+>  -microamp	: micro amps
+> +-microamp-hours : micro amp hours
+>  -ohms		: Ohms
+>  -micro-ohms	: micro Ohms
+> +-microwatt-hours: micro Watt hours
+>  -microvolt	: micro volts
 >  
->  struct dw_mipi_dsi {
-> @@ -1081,23 +1079,8 @@ static int dw_mipi_dsi_connector_get_modes(struct drm_connector *connector)
->  	return drm_panel_get_modes(dsi->panel);
->  }
->  
-> -static enum drm_mode_status dw_mipi_dsi_mode_valid(
-> -					struct drm_connector *connector,
-> -					struct drm_display_mode *mode)
-> -{
-> -	struct dw_mipi_dsi *dsi = con_to_dsi(connector);
-> -
-> -	enum drm_mode_status mode_status = MODE_OK;
-> -
-> -	if (dsi->pdata->mode_valid)
-> -		mode_status = dsi->pdata->mode_valid(connector, mode);
-> -
-> -	return mode_status;
-> -}
-> -
->  static struct drm_connector_helper_funcs dw_mipi_dsi_connector_helper_funcs = {
->  	.get_modes = dw_mipi_dsi_connector_get_modes,
-> -	.mode_valid = dw_mipi_dsi_mode_valid,
->  };
->  
->  static void dw_mipi_dsi_drm_connector_destroy(struct drm_connector *connector)
-> @@ -1168,33 +1151,11 @@ static int rockchip_mipi_parse_dt(struct dw_mipi_dsi *dsi)
->  	return 0;
->  }
->  
-> -static enum drm_mode_status rk3288_mipi_dsi_mode_valid(
-> -					struct drm_connector *connector,
-> -					struct drm_display_mode *mode)
-> -{
-> -	/*
-> -	 * The VID_PKT_SIZE field in the DSI_VID_PKT_CFG
-> -	 * register is 11-bit.
-> -	 */
-> -	if (mode->hdisplay > 0x7ff)
-> -		return MODE_BAD_HVALUE;
-> -
-> -	/*
-> -	 * The V_ACTIVE_LINES field in the DSI_VTIMING_CFG
-> -	 * register is 11-bit.
-> -	 */
-> -	if (mode->vdisplay > 0x7ff)
-> -		return MODE_BAD_VVALUE;
-> -
-> -	return MODE_OK;
-> -}
-> -
->  static struct dw_mipi_dsi_plat_data rk3288_mipi_dsi_drv_data = {
->  	.dsi0_en_bit = RK3288_DSI0_SEL_VOP_LIT,
->  	.dsi1_en_bit = RK3288_DSI1_SEL_VOP_LIT,
->  	.grf_switch_reg = RK3288_GRF_SOC_CON6,
->  	.max_data_lanes = 4,
-> -	.mode_valid = rk3288_mipi_dsi_mode_valid,
->  };
->  
->  static struct dw_mipi_dsi_plat_data rk3399_mipi_dsi_drv_data = {
+>  Temperature
 > -- 
-> 2.6.3
+> 2.10.2
 > 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
