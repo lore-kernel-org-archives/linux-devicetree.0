@@ -1,87 +1,123 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v4 2/4] ASoC: es8328: Add support for slave mode
-Date: Mon, 23 Jan 2017 11:41:47 +0100
-Message-ID: <20170123104149.2508-3-romain.perier@collabora.com>
-References: <20170123104149.2508-1-romain.perier@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170123104149.2508-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH 16/16] arm: dts: enable the nand device on the mt7623n nand rfb
+Date: Mon, 23 Jan 2017 12:29:35 +0100
+Message-ID: <1485170975-51813-17-git-send-email-john@phrozen.org>
+References: <1485170975-51813-1-git-send-email-john@phrozen.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485170975-51813-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the function that changes the DAI format only supports master
-mode. Trying to use a slave mode exits the function with -EINVAL and
-leave the codec misconfigured. This commits adds support for enabling
-the slave mode.
+Enable the nand device and setup pinmux on the mt7632m rfb with nand
+support.
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
+Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 ---
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts |   88 ++++++++++++++++++++++++++++++++
+ 1 file changed, 88 insertions(+)
 
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- sound/soc/codecs/es8328.c | 28 ++++++++++++++++++++++------
- 1 file changed, 22 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index 37722194..054e123 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -588,10 +588,18 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	struct snd_soc_codec *codec = codec_dai->codec;
- 	u8 dac_mode = 0;
- 	u8 adc_mode = 0;
-+	bool master;
- 
--	/* set master/slave audio interface */
--	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
--		return -EINVAL;
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+		case SND_SOC_DAIFMT_CBM_CFM:
-+			master = true;
-+			break;
-+		case SND_SOC_DAIFMT_CBS_CFS:
-+			master = false;
-+			break;
-+		default:
-+			return -EINVAL;
-+	}
- 
- 	/* interface format */
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-@@ -620,9 +628,17 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
- 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
- 
--	/* Master serial port mode, with BCLK generated automatically */
--	snd_soc_update_bits(codec, ES8328_MASTERMODE,
--			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
-+	if (master) {
-+		/* Master serial port mode, with BCLK generated automatically */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC,
-+				    ES8328_MASTERMODE_MSC);
-+	} else {
-+		/* Slave serial port mode */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC,
-+				    0);
-+	}
- 
- 	return 0;
- }
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+index 436d51c..9356095 100644
+--- a/arch/arm/boot/dts/mt7623n-rfb-nand.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+@@ -19,3 +19,91 @@
+ 	model = "MediaTek MT7623N NAND reference board";
+ 	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+ };
++
++&pio {
++	nand_pins_default: nanddefault {
++		pins_dat {
++			pinmux = <MT7623_PIN_111_MSDC0_DAT7_FUNC_NLD7>,
++				 <MT7623_PIN_112_MSDC0_DAT6_FUNC_NLD6>,
++				 <MT7623_PIN_114_MSDC0_DAT4_FUNC_NLD4>,
++				 <MT7623_PIN_118_MSDC0_DAT3_FUNC_NLD3>,
++				 <MT7623_PIN_121_MSDC0_DAT0_FUNC_NLD0>,
++				 <MT7623_PIN_120_MSDC0_DAT1_FUNC_NLD1>,
++				 <MT7623_PIN_113_MSDC0_DAT5_FUNC_NLD5>,
++				 <MT7623_PIN_115_MSDC0_RSTB_FUNC_NLD8>,
++				 <MT7623_PIN_119_MSDC0_DAT2_FUNC_NLD2>;
++			input-enable;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up;
++		};
++
++		pins_we {
++			pinmux = <MT7623_PIN_117_MSDC0_CLK_FUNC_NWEB>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-up = <MTK_PUPD_SET_R1R0_10>;
++		};
++
++		pins_ale {
++			pinmux = <MT7623_PIN_116_MSDC0_CMD_FUNC_NALE>;
++			drive-strength = <MTK_DRIVE_8mA>;
++			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
++		};
++	};
++};
++
++&nandc {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&nand_pins_default>;
++	nand@0 {
++		reg = <0>;
++		spare_per_sector = <64>;
++		nand-ecc-mode = "hw";
++		nand-ecc-strength = <12>;
++		nand-ecc-step-size = <1024>;
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			partition@0 {
++				label = "preloader";
++				reg = <0x0 0x40000>;
++			};
++
++			partition@40000 {
++				label = "uboot";
++				reg = <0x40000 0x80000>;
++			};
++
++			partition@C0000 {
++				label = "uboot-env";
++				reg = <0xC0000 0x40000>;
++			};
++
++			partition@140000 {
++				label = "bootimg";
++				reg = <0x140000 0x2000000>;
++			};
++
++			partition@2140000 {
++				label = "recovery";
++				reg = <0x2140000 0x2000000>;
++			};
++
++			partition@4140000 {
++				label = "rootfs";
++				reg = <0x4140000 0x1000000>;
++			};
++
++			partition@5140000 {
++				label = "usrdata";
++				reg = <0x5140000 0x1000000>;
++			};
++		};
++	};
++};
++
++&bch {
++	status = "okay";
++};
 -- 
-2.9.3
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
