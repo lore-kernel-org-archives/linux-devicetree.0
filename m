@@ -1,64 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH 6/6] dt-bindings: phy-mt65xx-usb: add support for
- mt2712 platform
-Date: Mon, 23 Jan 2017 08:04:17 -0600
-Message-ID: <CAL_JsqJkJwwfqq6ezyNiQXyefR8V=q6_hOUPVmssEGs_pdxhuA@mail.gmail.com>
-References: <1484719214-11989-1-git-send-email-chunfeng.yun@mediatek.com>
- <1484719214-11989-6-git-send-email-chunfeng.yun@mediatek.com>
- <20170121200844.k5ivauhws43ac2s2@rob-hp-laptop> <1485053419.10292.88.camel@mhfsdcap03>
+From: Joyes Dadi <"YD."@biscuit.ocn.ne.jp>
+Subject: Urgent Please,,
+Date: Mon, 23 Jan 2017 22:53:07 +0900 (JST)
+Message-ID: <2141291600.25782489.1485179587240.JavaMail.root@biscuit.ocn.ne.jp>
+Reply-To: Joyes Dadi <joyesdadi767-xnxYRYGmInRAgIPG3DZhQQ@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485053419.10292.88.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux USB List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 21, 2017 at 8:50 PM, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> On Sat, 2017-01-21 at 14:08 -0600, Rob Herring wrote:
->> On Wed, Jan 18, 2017 at 02:00:14PM +0800, Chunfeng Yun wrote:
->> > add a new compatible string for "mt2712", and a new reference clock
->> > for SuperSpeed analog phy;
->> >
->> > Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> > ---
->> >  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   81 +++++++++++++++++---
->> >  1 file changed, 70 insertions(+), 11 deletions(-)
+Good Day Dear,
 
-[...]
+My name is Ms. Joyes Dadi, I am glad you are reading this letter and I hope
+we will start our communication and I know that this message will look strange,
+surprising and probably unbelievable to you, but it is the reality. I want to
+make a donation of money to you.
 
->> > @@ -31,21 +37,27 @@ Example:
->> >  u3phy: usb-phy@11290000 {
->> >     compatible = "mediatek,mt8173-u3phy";
->> >     reg = <0 0x11290000 0 0x800>;
->> > -   clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
->> > -   clock-names = "u3phya_ref";
->> > +   clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>, <&clk26m>;
->> > +   clock-names = "u2ref_clk", "u3ref_clk";
->> >     #address-cells = <2>;
->> >     #size-cells = <2>;
->> >     ranges;
->> >     status = "okay";
->> >
->> > -   phy_port0: port@11290800 {
->> > -           reg = <0 0x11290800 0 0x800>;
->> > +   u2port0: port@11290800 {
->>
->> port is for OF graph. This should be usb-phy@... instead.
-> Is there any problems if u2port0's name@addr is the same as its parent's
-> (u3phy)?  as following:
->         u3phy: usb-phy@11290000 {
->                 compatible = ...;
->                 // no reg property
->                 clocks = ...;
->                 u2port0: usb-phy@11290000 {
->                         reg = ...;
->         }
+I contact you by the will of God. I am a firm German woman specialized in
+mining gold and diamonds in Africa. But now, I'm very sick of a cancer. My
+husband died in an accident two years ago with our two children and now I have
+cancer of the esophagus that damaged almost all the cells in my system/agencies
+and I'll die soon according to my doctor.
 
-No problem, that is fine.
+My most concern now is, we grew up in the orphanage and were married in
+orphanage. If I die this deposited fund will soon be left alone in the hand of
+the bank, and I do want to it that  way. Please, if you can be reliable and
+sincere to accept my humble proposal; I have (10.5Millions Euro) in a fixed
+deposit account; I will order the Bank to transfer the money into your account
+in your country immediately, and then you will take the fund to  your country
+and invest it to the orphanage homes Please, answer as quickly as possible.
 
-Rob
+God bless you.
+Ms. Joyes Dadi
+Email: joyesdadi767-xnxYRYGmInRAgIPG3DZhQQ@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
