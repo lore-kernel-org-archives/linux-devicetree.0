@@ -1,37 +1,57 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using
- rockchip timer
-Date: Mon, 23 Jan 2017 15:47:44 +0100
-Message-ID: <20170123144744.GE2166@mai>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
- <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
- <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com>
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH v5 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
+Date: Mon, 23 Jan 2017 14:48:45 +0000
+Message-ID: <SG2PR06MB11656145E7F0EEA7117F09A08A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170121030604.7672-1-chris.brandt@renesas.com>
+ <20170121030604.7672-2-chris.brandt@renesas.com>
+ <CAMuHMdWwqa7CbNCRr8q60hDVsj243-ZjHCPp+o9R2a6Dg7YNWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E6DD9335-0D2D-47CB-8098-5F96C2E08139-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWwqa7CbNCRr8q60hDVsj243-ZjHCPp+o9R2a6Dg7YNWQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 21, 2016 at 05:21:05PM +0300, Alexander Kochetkov wrote:
-> Hello Heiko, Daniel!
-> 
-> Are there any reasons why the patches [1][2] are not applied yet into kernel?
-> How can I help in applying patches?
-
-Hi Alexander,
-
-sorry for the delay. Let me review them before taking the patchset.
-
-Heiko, can you have a look to them also ?
-
-Thanks.
-
-  -- Daniel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgSmFudWFyeSAyMywgMjAxNywgR2VlcnQgVXl0dGVyaG9l
+dmVuOg0KPiA+IEBAIC0xOTAsNiArMTkxLDEyIEBAIHN0YXRpYyBpbnQgc2hfbW9iaWxlX3NkaGlf
+Y2xrX2VuYWJsZShzdHJ1Y3QNCj4gdG1pb19tbWNfaG9zdCAqaG9zdCkNCj4gPiAgICAgICAgIGlm
+IChyZXQgPCAwKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+DQo+ID4gKyAg
+ICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUocHJpdi0+Y2xrX2NkKTsNCj4gPiArICAgICAg
+IGlmIChyZXQgPCAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFy
+ZShwcml2LT5jbGspOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAg
+ICAgfQ0KPiA+ICsNCj4gDQo+IEFzIGVuYWJsaW5nIHRoZSAiY29yZSIgY2xvY2sgYnV0IG5vdCB0
+aGUgImNkIiBjbG9jayBpcyBub3QgYSB2YWxpZCBzZXR0aW5nLA0KPiBzaG91bGRuJ3QgdGhlIGNk
+IGNsb2NrIGJlIGVuYWJsZWQgZmlyc3Q/DQoNCkknbSBwcmV0dHkgc3VyZSB0aGUgY2hpcCBkZXNp
+Z25lcnMganVzdCBkaWRuJ3Qgd2FudCB5b3UgdG8gJ3VzZScgdGhlDQpwZXJpcGhlcmFsIHdpdGgg
+dGhhdCBjbG9jayBjb25maWd1cmF0aW9uLCBhbmQgd2UgYXJlIG5vdCB1c2luZyBpdCBpbg0KYmV0
+d2VlbiB0aG9zZSAyIGxpbmVzIHNvIEkgcGVyc29uYWxseSB0aGluayBpdCdzIGZpbmUuDQoNCklm
+IEkgbmVlZCB0byBjaGFuZ2UgaXQgdG8gZ2V0IGl0IGFwcHJvdmVkLCBsZXQgbWUga25vdyBhbmQg
+SSdsbCBjaGFuZ2UNCnRoZSBjb2RlIGFyb3VuZC4NCg0KKEluIHJlYWxpdHksIEkgY2hlY2tlZCBh
+bmQgdGhlIFNESEkgZG9lcyB3b3JrIHdpdGggdGhlIGNkIGNsb2NrIG9mZiwNCmJ1dCBJIGRvbid0
+IGtub3cgaWYgdGhlIHJlc3RyaWN0aW9uIGluIHRoZSBzcGVjIHdhcyBiZWNhdXNlIHRoZXkgbmV2
+ZXINCmZ1bGx5IHRlc3RlZCB0aGUgdXNlIG9mIGl0IHRoYXQgd2F5IGJlY2F1c2UgaXQgd2Fzbid0
+IGEgZGVzaWduIGdvYWwgZm9yDQp0aGVtLikNCg0KDQoNCj4gPiAgICAgICAgIC8qDQo+ID4gICAg
+ICAgICAgKiBUaGUgY2xvY2sgZHJpdmVyIG1heSBub3Qga25vdyB3aGF0IG1heGltdW0gZnJlcXVl
+bmN5DQo+ID4gICAgICAgICAgKiBhY3R1YWxseSB3b3Jrcywgc28gaXQgc2hvdWxkIGJlIHNldCB3
+aXRoIHRoZSBtYXgtZnJlcXVlbmN5DQo+ID4gQEAgLTI1NSw2ICsyNjIsOCBAQCBzdGF0aWMgdm9p
+ZCBzaF9tb2JpbGVfc2RoaV9jbGtfZGlzYWJsZShzdHJ1Y3QNCj4gdG1pb19tbWNfaG9zdCAqaG9z
+dCkNCj4gPiAgICAgICAgIHN0cnVjdCBzaF9tb2JpbGVfc2RoaSAqcHJpdiA9IGhvc3RfdG9fcHJp
+dihob3N0KTsNCj4gPg0KPiA+ICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmNs
+ayk7DQo+ID4gKyAgICAgICBpZiAocHJpdi0+Y2xrX2NkKQ0KPiANCj4gTm8gbmVlZCB0byBjaGVj
+ayBmb3IgYSBOVUxMIHBvaW50ZXIgZmlyc3QuDQoNCk9LLCBJIHNlZSB0aGF0IElTX0VSUl9PUl9O
+VUxMKGNsaykgaXMgZG9uZSBmb3IgY2xrX2Rpc2FibGVfdW5wcmVwYXJlIHNvDQpJJ2xsIHRha2Ug
+dGhlIGNoZWNrIG91dC4NClRoYW5rIHlvdS4NCg0KDQo+ID4gKyAgICAgICAgICAgICAgIGNsa19k
+aXNhYmxlX3VucHJlcGFyZShwcml2LT5jbGtfY2QpOw0KPiANCj4gRGlzYWJsaW5nIGlzIGFscmVh
+ZHkgZG9uZSBpbiB0aGUgY29ycmVjdCBvcmRlciA7LSkNCg0KSSBndWVzcyB5b3UgY291bGQgZ2V0
+IGludG8gc29tZSB0aGVvcmV0aWNhbCB0ZWNobmljYWwgZGlzY3Vzc2lvbiBhcm91bmQNCmlmIGl0
+IGlzIE9LIHRvIGVuYWJsZS9kaXNhYmxlIHRoZSBjbG9ja3MgaW4gYW55IG9yZGVyIChhcyBsb25n
+IGFzIHlvdQ0KZG9uJ3QgdXNlIHRoZSBTREhJIGluIGJldHdlZW4pLCB0aGVuIHlvdSB3b3VsZCB3
+YW50IHRvIGVuYWJsZSB0aGUgY2QNCmNpcmN1aXQgbGFzdCwgYW5kIGRpc2FibGUgaXQgZmlyc3Qg
+c28geW91IHdvdWxkIGVuc3VyZSB0aGF0IG5vIGNkDQppbnRlcnJ1cHRzIGFyZSBiZWluZyByZWdp
+c3RlcmVkIHdoZW4gdGhlIGNvcmUgY2xvY2sgaXMgb2ZmPw0KSW4gdGhhdCBjYXNlLCB0aGUgY3Vy
+cmVudCBlbmFibGUgb3JkZXIgc2hvdWxkIHJlbWFpbiBidXQgdGhlIGRpc2FibGUNCm9yZGVyIHNo
+b3VsZCBjaGFuZ2UuDQoNCk9waW5pb25zPz8/DQoNCg0KVGhhbmsgeW91LA0KQ2hyaXMNCg==
