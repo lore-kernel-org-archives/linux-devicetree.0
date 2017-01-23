@@ -1,52 +1,110 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] ARM: dts: support I2SE Duckbill devices
-Date: Mon, 23 Jan 2017 18:05:04 +0100
-Message-ID: <2d2cf6f5-f264-7744-a5ec-35c47d58e39f@i2se.com>
-References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v6 09/14] sata: ahci: export ahci_do_hardreset() locally
+Date: Mon, 23 Jan 2017 18:00:51 +0100
+Message-ID: <1485190856-4711-10-git-send-email-bgolaszewski@baylibre.com>
+References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 22.01.2017 um 23:22 schrieb Michael Heimpold:
-> This series updates/adds Device Tree support for I2SE's Duckbill
-> device family.
->
-> The Duckbill devices are small, pen-drive sized boards based on
-> NXP's i.MX28 SoC. While the initial variants (Duckbill series) were
-> equipped with a micro SD card slot only, the latest generation
-> (Duckbill 2 series) have an additional internal eMMC onboard.
->
-> Both device generations consists of four "family members":
->
-> - Duckbill/Duckbill 2: generic board, intended to be used as
->   baseboard for custom designs and/or as development board
->
-> - Duckbill EnOcean/Duckbill 2 EnOcean: come with an EnOcean
->   daugther board equipped with the popular TCM310 module
->
-> - Duckbill 485/Duckbill 2 485: as the name implies, these
->   devices are intended to be used as Ethernet - RS485 converters
->
-> - Duckbill SPI/Duckbill 2 SPI: not sold separately, but used
->   in I2SE's development kits for Green PHY HomePlug Powerline
->   communication
->
-> Because the Duckbill series is EOL, this patch series only adds
-> support for the latest Duckbill 2 series devices. However,
-> support for the generic Duckbill board was already mainline,
-> so update it to match vendor tree DT.
+We need a way to retrieve the information about the online state of
+the link in the ahci-da850 driver.
 
-Acked-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Create a new function: ahci_do_hardreset() which is called from
+ahci_hardreset() for backwards compatibility, but has an additional
+argument: 'online' - which can be used to check if the link is online
+after this function returns.
 
-for patches 1,2,3,5
+The new routine will be used in the ahci-da850 driver to avoid code
+duplication when implementing a workaround for tha da850 SATA
+controller quirk/instability.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ drivers/ata/ahci.h    |  3 +++
+ drivers/ata/libahci.c | 18 +++++++++++++-----
+ 2 files changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index 0cc08f8..5db6ab2 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -398,6 +398,9 @@ int ahci_do_softreset(struct ata_link *link, unsigned int *class,
+ 		      int pmp, unsigned long deadline,
+ 		      int (*check_ready)(struct ata_link *link));
+ 
++int ahci_do_hardreset(struct ata_link *link, unsigned int *class,
++		      unsigned long deadline, bool *online);
++
+ unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
+ int ahci_stop_engine(struct ata_port *ap);
+ void ahci_start_fis_rx(struct ata_port *ap);
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index ee7db31..3159f9e 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -1519,8 +1519,8 @@ static int ahci_pmp_retry_softreset(struct ata_link *link, unsigned int *class,
+ 	return rc;
+ }
+ 
+-static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+-			  unsigned long deadline)
++int ahci_do_hardreset(struct ata_link *link, unsigned int *class,
++		      unsigned long deadline, bool *online)
+ {
+ 	const unsigned long *timing = sata_ehc_deb_timing(&link->eh_context);
+ 	struct ata_port *ap = link->ap;
+@@ -1528,7 +1528,6 @@ static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+ 	struct ahci_host_priv *hpriv = ap->host->private_data;
+ 	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
+ 	struct ata_taskfile tf;
+-	bool online;
+ 	int rc;
+ 
+ 	DPRINTK("ENTER\n");
+@@ -1540,17 +1539,26 @@ static int ahci_hardreset(struct ata_link *link, unsigned int *class,
+ 	tf.command = ATA_BUSY;
+ 	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+ 
+-	rc = sata_link_hardreset(link, timing, deadline, &online,
++	rc = sata_link_hardreset(link, timing, deadline, online,
+ 				 ahci_check_ready);
+ 
+ 	hpriv->start_engine(ap);
+ 
+-	if (online)
++	if (*online)
+ 		*class = ahci_dev_classify(ap);
+ 
+ 	DPRINTK("EXIT, rc=%d, class=%u\n", rc, *class);
+ 	return rc;
+ }
++EXPORT_SYMBOL_GPL(ahci_do_hardreset);
++
++static int ahci_hardreset(struct ata_link *link, unsigned int *class,
++			  unsigned long deadline)
++{
++	bool online;
++
++	return ahci_do_hardreset(link, class, deadline, &online);
++}
+ 
+ static void ahci_postreset(struct ata_link *link, unsigned int *class)
+ {
+-- 
+2.9.3
