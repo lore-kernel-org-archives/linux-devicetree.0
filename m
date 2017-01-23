@@ -1,102 +1,169 @@
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH 11/16] arm: dts: add usb nodes to the mt7623.dtsi file
-Date: Mon, 23 Jan 2017 12:29:30 +0100
-Message-ID: <1485170975-51813-12-git-send-email-john@phrozen.org>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH 13/16] arm: dts: rename mt7623-evb.dts to arch/arm/boot/dts/mt7623n-rfb.dtsi
+Date: Mon, 23 Jan 2017 12:29:32 +0100
+Message-ID: <1485170975-51813-14-git-send-email-john@phrozen.org>
 References: <1485170975-51813-1-git-send-email-john@phrozen.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485170975-51813-1-git-send-email-john@phrozen.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, linux-arm-kernel@lists.infradead.org, John Crispin <john@phrozen.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485170975-51813-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add USB nodes to the mt7623.dtsi file.
+There are 2 versions of the SoC. MT7623N is almost identical to MT7623A
+but has some additional multimedia features. The reference boards are
+available as NAND or MMC and might have a different ethernet setup. In
+order to reduce the duplication of devicetree code we add an intermediate
+dtsi file for these reference boards. Additionally MTK/WCN pointed out,
+that the EVB is yet another board and the board in question is infact the
+RFB. Take this into account while renaming the files.
 
-Signed-off-by: John Crispin <john@phrozen.org>
+ Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt7623.dtsi |   59 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +--
+ arch/arm/boot/dts/Makefile                         |    2 +-
+ arch/arm/boot/dts/mt7623-evb.dts                   |   33 --------------------
+ arch/arm/boot/dts/mt7623n-rfb-nand.dts             |   21 +++++++++++++
+ arch/arm/boot/dts/mt7623n-rfb.dtsi                 |   29 +++++++++++++++++
+ 5 files changed, 53 insertions(+), 36 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/mt7623-evb.dts
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb-nand.dts
+ create mode 100644 arch/arm/boot/dts/mt7623n-rfb.dtsi
 
-diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 791f3b1..540f70c 100644
---- a/arch/arm/boot/dts/mt7623.dtsi
-+++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -340,6 +340,65 @@
- 		status = "disabled";
- 	};
- 
-+	usb1: usb@1a1c0000 {
-+		compatible = "mediatek,mt7623-xhci",
-+			     "mediatek,mt8173-xhci";
-+		reg = <0 0x1a1c0000 0 0x1000>,
-+		      <0 0x1a1c4700 0 0x0100>;
-+		reg-names = "mac", "ippc";
-+		interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&hifsys CLK_HIFSYS_USB0PHY>,
-+			 <&topckgen CLK_TOP_ETHIF_SEL>;
-+		clock-names = "sys_ck", "ethif";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-+		phys = <&phy_port0 PHY_TYPE_USB3>;
-+		status = "disabled";
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index c860b24..71149cb 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -38,9 +38,9 @@ Supported boards:
+ - Evaluation board for MT6795(Helio X10):
+     Required root node properties:
+       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
+-- Evaluation board for MT7623:
++- Reference  board for MT7623N with NAND:
+     Required root node properties:
+-      - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
++      - compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
+ - MTK mt8127 tablet moose EVB:
+     Required root node properties:
+       - compatible = "mediatek,mt8127-moose", "mediatek,mt8127";
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index cccdbcb..9735c2c 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -976,7 +976,7 @@ dtb-$(CONFIG_ARCH_MEDIATEK) += \
+ 	mt6580-evbp1.dtb \
+ 	mt6589-aquaris5.dtb \
+ 	mt6592-evb.dtb \
+-	mt7623-evb.dtb \
++	mt7623n-rfb-nand.dtb \
+ 	mt8127-moose.dtb \
+ 	mt8135-evbp1.dtb
+ dtb-$(CONFIG_ARCH_ZX) += zx296702-ad1.dtb
+diff --git a/arch/arm/boot/dts/mt7623-evb.dts b/arch/arm/boot/dts/mt7623-evb.dts
+deleted file mode 100644
+index 58ed038..0000000
+--- a/arch/arm/boot/dts/mt7623-evb.dts
++++ /dev/null
+@@ -1,33 +0,0 @@
+-/*
+- * Copyright (c) 2016 MediaTek Inc.
+- * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License version 2 as
+- * published by the Free Software Foundation.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- */
+-
+-/dts-v1/;
+-#include "mt7623-mt6323.dtsi"
+-
+-/ {
+-	model = "MediaTek MT7623 evaluation board";
+-	compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
+-
+-	chosen {
+-		stdout-path = &uart2;
+-	};
+-
+-	memory {
+-		reg = <0 0x80000000 0 0x40000000>;
+-	};
+-};
+-
+-&uart2 {
+-	status = "okay";
+-};
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-nand.dts b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+new file mode 100644
+index 0000000..436d51c
+--- /dev/null
++++ b/arch/arm/boot/dts/mt7623n-rfb-nand.dts
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++/dts-v1/;
++#include "mt7623n-rfb.dtsi"
++
++/ {
++	model = "MediaTek MT7623N NAND reference board";
++	compatible = "mediatek,mt7623n-rfb-nand", "mediatek,mt7623";
++};
+diff --git a/arch/arm/boot/dts/mt7623n-rfb.dtsi b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+new file mode 100644
+index 0000000..d46390e
+--- /dev/null
++++ b/arch/arm/boot/dts/mt7623n-rfb.dtsi
+@@ -0,0 +1,29 @@
++/*
++ * Copyright (c) 2016 MediaTek Inc.
++ * Author: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include "mt7623-mt6323.dtsi"
++
++/ {
++	chosen {
++		stdout-path = &uart2;
 +	};
 +
-+	u3phy1: usb-phy@1a1c4000 {
-+		compatible = "mediatek,mt7623-u3phy",
-+			     "mediatek,mt8173-u3phy";
-+		reg = <0 0x1a1c4000 0 0x0700>;
-+		clocks = <&clk26m>;
-+		clock-names = "u3phya_ref";
-+		#phy-cells = <1>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "disabled";
-+
-+		phy_port0: phy_port0: port@1a1c4800 {
-+			reg = <0 0x1a1c4800 0 0x800>;
-+			#phy-cells = <1>;
-+			status = "okay";
-+		};
++	memory {
++		reg = <0 0x80000000 0 0x40000000>;
 +	};
++};
 +
-+	usb2: usb@1a240000 {
-+		compatible = "mediatek,mt7623-xhci",
-+			     "mediatek,mt8173-xhci";
-+		reg = <0 0x1a240000 0 0x1000>,
-+		      <0 0x1a244700 0 0x0100>;
-+		interrupts = <GIC_SPI 197 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&hifsys CLK_HIFSYS_USB1PHY>,
-+			 <&topckgen CLK_TOP_ETHIF_SEL>;
-+		clock-names = "sys_ck", "ethif";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_HIF>;
-+		phys = <&u3phy2 0>;
-+		status = "disabled";
-+	};
-+
-+	u3phy2: usb-phy@1a244000 {
-+		compatible = "mediatek,mt7623-u3phy",
-+			     "mediatek,mt8173-u3phy";
-+		reg = <0 0x1a244000 0 0x0700>,
-+		      <0 0x1a244800 0 0x0800>;
-+		clocks = <&clk26m>;
-+		clock-names = "u3phya_ref";
-+		#phy-cells = <1>;
-+		status = "disabled";
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
++&uart2 {
++	status = "okay";
++};
 -- 
 1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
