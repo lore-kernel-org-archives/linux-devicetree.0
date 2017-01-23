@@ -1,78 +1,87 @@
-From: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Mon, 23 Jan 2017 15:36:41 +0800
-Message-ID: <56554f95-b51d-abc7-8ac0-7f561728375a@huawei.com>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <20170120150428.GC22152@leverpostej>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [PATCHv4 1/5] clk: mvebu: support for 98DX3236 SoC
+Date: Mon, 23 Jan 2017 07:53:21 +0000
+Message-ID: <be295fd327674a2ca91437456db7a047@svr-chch-ex1.atlnz.lc>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+ <20170113091222.7132-2-chris.packham@alliedtelesis.co.nz>
+ <20170121004819.GA8801@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170120150428.GC22152@leverpostej>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 2017/1/20 23:04, Mark Rutland wrote:
-> On Thu, Jan 19, 2017 at 09:35:12PM +0800, Ding Tianhong wrote:
->> Ding Tianhong (4):
->>   arm64: arch_timer: Add device tree binding for hisilicon-161010101
->>     erratum
->>   arm64: arch_timer: Introduce a generic erratum handing mechanism for
->>     fsl-a008585
->>   arm64: arch_timer: Work around Erratum Hisilicon-161010101
->>   arm64: arch timer: Add timer erratum property for Hip05-d02 and
->>     Hip06-d03
->>
->>  Documentation/admin-guide/kernel-parameters.txt    |   9 --
->>  Documentation/arm64/silicon-errata.txt             |  43 +++---
->>  .../devicetree/bindings/arm/arch_timer.txt         |   6 +
->>  arch/arm64/boot/dts/hisilicon/hip05.dtsi           |   1 +
->>  arch/arm64/boot/dts/hisilicon/hip06.dtsi           |   1 +
->>  arch/arm64/include/asm/arch_timer.h                |  38 ++----
->>  drivers/clocksource/Kconfig                        |  18 +++
->>  drivers/clocksource/arm_arch_timer.c               | 150 +++++++++++++++------
->>  8 files changed, 171 insertions(+), 95 deletions(-)
-> 
-> I've picked these up (with a few local cleanups), given that some local
-> testing, and pushed the result to a branch [1] on my git repo.
-> 
-> There are likely to be clashes with the arm64 tree (e.g. for
-> silicon-errata.txt), and we're also likely to have more arch timer
-> updates shortly for the GTDT stuff, so I think the best bet is for both
-> arm64 and the clocksource tree to pull that branch for v4.11.
-> 
-> Alternatively, we could take this all through the arm64 tree, if the
-> clocksource maintainers are happy with that.
-> 
-> Thoughts?
-> 
-
-Hi Mark:
-
-It is really a great milestone now, Thanks for the help, and I will still wait
-for Marc's new opinion for this version, hoping no need to change anything else. :)
-
-Thanks
-Ding
-
-> Thanks,
-> Mark.
-> 
-> [1] git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git arch-timer/hisi-161010101
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> .
-> 
-
+On 21/01/17 13:48, Stephen Boyd wrote:=0A=
+> On 01/13, Chris Packham wrote:=0A=
+>> @@ -158,6 +170,14 @@ static const struct coreclk_soc_desc axp_coreclks =
+=3D {=0A=
+>>  	.num_ratios =3D ARRAY_SIZE(axp_coreclk_ratios),=0A=
+>>  };=0A=
+>>=0A=
+>> +static const struct coreclk_soc_desc mv98dx3236_coreclks =3D {=0A=
+>> +	.get_tclk_freq =3D mv98dx3236_get_tclk_freq,=0A=
+>> +	.get_cpu_freq =3D mv98dx3236_get_cpu_freq,=0A=
+>> +	.get_clk_ratio =3D NULL,=0A=
+>> +	.ratios =3D NULL,=0A=
+>> +	.num_ratios =3D 0,=0A=
+>=0A=
+> Are these intentionally initialized to 0 explicitly? Otherwise we=0A=
+> could leave them out and it's all the same.=0A=
+>=0A=
+=0A=
+No reason, just didn't remove the unused members when copying the =0A=
+armada-xp example above.=0A=
+=0A=
+>> +};=0A=
+>> +=0A=
+>>  /*=0A=
+>>   * Clock Gating Control=0A=
+>>   */=0A=
+> [..]=0A=
+>> @@ -243,5 +245,30 @@ static void __init of_cpu_clk_setup(struct device_n=
+ode *node)=0A=
+>>  	iounmap(clock_complex_base);=0A=
+>>  }=0A=
+>>=0A=
+>> +/* Use this function to call the generic setup with the correct=0A=
+>> + * clock operation=0A=
+>> + */=0A=
+>> +static void __init of_cpu_clk_setup(struct device_node *node)=0A=
+>> +{=0A=
+>> +	_of_cpu_clk_setup(node, &cpu_ops);=0A=
+>> +}=0A=
+>> +=0A=
+>>  CLK_OF_DECLARE(armada_xp_cpu_clock, "marvell,armada-xp-cpu-clock",=0A=
+>>  					 of_cpu_clk_setup);=0A=
+>> +=0A=
+>> +/* Define the clock and operations for the mv98dx3236 - it cannot perfo=
+rm=0A=
+>> + * any operations.=0A=
+>> + */=0A=
+>> +static const struct clk_ops mv98dx3236_cpu_ops =3D {=0A=
+>> +	.recalc_rate =3D NULL,=0A=
+>> +	.round_rate =3D NULL,=0A=
+>> +	.set_rate =3D NULL,=0A=
+>=0A=
+> But clk_set_rate() works silently? Why not just register a clk=0A=
+> provider that returns a NULL pointer? Then there isn't any=0A=
+> structure to maintain?=0A=
+>=0A=
+=0A=
+Not 100% sure what you mean. Something like this?=0A=
+=0A=
++static void __init of_mv98dx3236_cpu_clk_setup(struct device_node *node)=
+=0A=
++{=0A=
++       of_clk_add_provider(node, of_clk_src_simple_get, NULL);=0A=
++}=0A=
+=0A=
+Seems to work as expected (i.e. does nothing, kernel boots/runs).=0A=
+=0A=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
