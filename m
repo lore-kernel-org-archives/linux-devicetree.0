@@ -1,101 +1,77 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v5 5/5] i2c: mux: pca954x: Add irq-mask-enable to delay
- enabling irqs
-Date: Mon, 23 Jan 2017 17:02:04 +0800
-Message-ID: <35c35708-3bbc-88d1-1d60-4faf68ca5af9@electromag.com.au>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-6-git-send-email-preid@electromag.com.au>
- <312e32e9-a828-d692-895b-4042729e5417@axentia.se>
- <61c38233-abf2-df31-6f7c-c4214f4103aa@electromag.com.au>
- <71f756e1-4677-8b59-81a2-2b12fbf12621@axentia.se>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/9] drm/fb-cma-helper: Add
+ drm_fbdev_cma_set_suspend_unlocked()
+Date: Mon, 23 Jan 2017 10:07:13 +0100
+Message-ID: <20170123090713.s3dctg7iofcjfdql@phenom.ffwll.local>
+References: <20170122181117.8210-1-noralf@tronnes.org>
+ <20170122181117.8210-2-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <71f756e1-4677-8b59-81a2-2b12fbf12621@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170122181117.8210-2-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-On 20/01/2017 06:56, Peter Rosin wrote:
-> On 2017-01-19 08:48, Phil Reid wrote:
->> On 18/01/2017 20:19, Peter Rosin wrote:
->>> On 2017-01-17 09:00, Phil Reid wrote:
-
-[snip]
-
->>> Hmm, this whole thing is fiddly and while it solves your problem it doesn't
->>> allow for solving the more general problem when there are "problematic"
->>> devices mixed with other devices. At least, I don't see it. And the
->>> limitations we are walking into with tracking number of enables etc suggests
->>> that we are attacking this at the wrong level. Maybe you should try to work
->>> around the hw limitations not in the pca954x driver, but in the irq core?
->>
->> I'm looking at the option of getting the hardware changed to not route
->> the irq for my chips thru the i2c mux. Fortunately the hardware is going thru a
->> revision for some other changes. Messing with the irq core sounds dangerous
->> with my level of knowledge.
->
-> Yeah, but I bet you'd get some attention from people with more irq
-> experience. That can't be bad :-)
->
->> The other way I think I can tackle it after reading the datasheet for the ltc1760 is that
->> it'll deassert it's irq (smbalert) line when the host sends a ARA request on the bus segment.
->> There's a driver in the kernel for this already, but it's not DT enable and doesn't
->> handle multiple bus segments. I'll have a look at that as well.
->> Pretty sure it would need the mux to become an irq parent as per patch 1-3 of this series.
->> This would be so the system can figure out which segment to do the poll on.
->
-> Yeah sounds neater. It has the slight drawback that it may not work
-> for pure i2c buses since it an SMB thing??
->
-> BTW, why do you need special treatment for multiple segments? Will it not
-> simply have an ARA appear on whatever i2c bus the device sits on? And if
-> something requests to send an ARA message on a bus that happens to be a
-> muxed segment, my mental picture is that the mux will be operated as usual
-> so that the ARA appears on the muxed segment. Maybe I'm missing something?
-
-My think was the following.
-When the SMBALERT is asserted a ARA needs to be sent by the master.
-If the device sending the SMBALERT is behind a mux when need to know which segment of the bus to enable.
-Using shared interrupts should work I think, but you have to iterate thru each bus segment.
-If the alert device is nested behind a couple of muxes this could get expensive.
-But yeah otherwise I think the correct mux segment will get enabled automatically.
-The current SMBALERT driver only seems to attached to the root i2c adapter.
-
-
->
->> But p4-5 could be dropped which is where we're stuck I think.
->
-> Yes, I dislike to add a workaround for a specific case that might get
-> in the way for anybody wishing to fix a bigger, more generic, problem...
->
->> Looking at this approach it shouldn't matter if the ltc1760 driver has registered yet or not.
->> This approach possibly has a lot more generic appeal I think.
->>
->> Thoughts on just submitting p1-3 for now while I figure out the SMB alert approach?
->
-> Yes, looks like a plan. Thanks in advance!
-
-Thanks, I'll do a new version with just p1-3.
-
-
->>>>
->>>> -	if (!data->irq_mask)
->>>> -		enable_irq(data->client->irq);
->>>>  	data->irq_mask |= BIT(pos);
->>>> +	if (!data->irq_enabled
->>>> +	    && (data->irq_mask & mask_enable) == mask_enable) {
->>>
->>> I think the coding standard says that the && should be at the end of the
->>> first line. Didn't checkpatch complain?
->>
->> No it didn't complain. and I wasn't sure which way to do this.
->
-> Ah, you need the --strict option for that to show up...
->
-Haven't come across that option, I'll give it a try in future.
-
--- 
-Regards
-Phil Reid
+T24gU3VuLCBKYW4gMjIsIDIwMTcgYXQgMDc6MTE6MDlQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
+IHdyb3RlOgo+IEFkZCBhIENNQSB2ZXJzaW9uIG9mIGRybV9mYl9oZWxwZXJfc2V0X3N1c3BlbmRf
+dW5sb2NrZWQoKS4KPiAKPiBDYzogbGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tCj4g
+U2lnbmVkLW9mZi1ieTogTm9yYWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gLS0t
+Cj4gIGRyaXZlcnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIHwgMTggKysrKysrKysrKysr
+KysrKysrCj4gIGluY2x1ZGUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmggICAgIHwgIDIgKysKPiAg
+MiBmaWxlcyBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9mYl9j
+bWFfaGVscGVyLmMKPiBpbmRleCA0MzY0YWJmLi4wZWY4YjI4IDEwMDY0NAo+IC0tLSBhL2RyaXZl
+cnMvZ3B1L2RybS9kcm1fZmJfY21hX2hlbHBlci5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL2Ry
+bV9mYl9jbWFfaGVscGVyLmMKPiBAQCAtNjIyLDMgKzYyMiwyMSBAQCB2b2lkIGRybV9mYmRldl9j
+bWFfc2V0X3N1c3BlbmQoc3RydWN0IGRybV9mYmRldl9jbWEgKmZiZGV2X2NtYSwgaW50IHN0YXRl
+KQo+ICAJCWRybV9mYl9oZWxwZXJfc2V0X3N1c3BlbmQoJmZiZGV2X2NtYS0+ZmJfaGVscGVyLCBz
+dGF0ZSk7Cj4gIH0KPiAgRVhQT1JUX1NZTUJPTChkcm1fZmJkZXZfY21hX3NldF9zdXNwZW5kKTsK
+ClJhbmRvbSBpZGVhIGZvciBhIGNsZWFudXAgc2VyaWVzOiBHZXR0aW5nIHJpZCBvZgpkcm1fZmJf
+aGVscGVyX3NldF9zdXNwZW5kLiBJIHRoaW5rZiBmb3IgYWxtb3N0IGFsbCBkcml2ZXJzIHdlIGNh
+biB1c2UgdGhlCnVubG9ja2VkIG9uZSwgd2hpY2ggaGFzIHRoZSB1cHNpZGUgdGhhdCBpdCBkb2Vz
+bid0IHN0YWxsIHRoZSByZXN1bWUgcGF0aApvbiB0aGUgY29udGVuZGVkIGNvbnNvbGVfbG9jay4K
+CkFueXdheSwgYXBwbGllZCB0aGlzIG9uZSBoZXJlLCB0aGFua3MuCi1EYW5pZWwKCj4gKwo+ICsv
+KioKPiArICogZHJtX2ZiZGV2X2NtYV9zZXRfc3VzcGVuZF91bmxvY2tlZCAtIHdyYXBwZXIgYXJv
+dW5kCj4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBkcm1fZmJfaGVs
+cGVyX3NldF9zdXNwZW5kX3VubG9ja2VkCj4gKyAqIEBmYmRldl9jbWE6IFRoZSBkcm1fZmJkZXZf
+Y21hIHN0cnVjdCwgbWF5IGJlIE5VTEwKPiArICogQHN0YXRlOiBkZXNpcmVkIHN0YXRlLCB6ZXJv
+IHRvIHJlc3VtZSwgbm9uLXplcm8gdG8gc3VzcGVuZAo+ICsgKgo+ICsgKiBDYWxscyBkcm1fZmJf
+aGVscGVyX3NldF9zdXNwZW5kLCB3aGljaCBpcyBhIHdyYXBwZXIgYXJvdW5kCj4gKyAqIGZiX3Nl
+dF9zdXNwZW5kIGltcGxlbWVudGVkIGJ5IGZiZGV2IGNvcmUuCj4gKyAqLwo+ICt2b2lkIGRybV9m
+YmRldl9jbWFfc2V0X3N1c3BlbmRfdW5sb2NrZWQoc3RydWN0IGRybV9mYmRldl9jbWEgKmZiZGV2
+X2NtYSwKPiArCQkJCQlpbnQgc3RhdGUpCj4gK3sKPiArCWlmIChmYmRldl9jbWEpCj4gKwkJZHJt
+X2ZiX2hlbHBlcl9zZXRfc3VzcGVuZF91bmxvY2tlZCgmZmJkZXZfY21hLT5mYl9oZWxwZXIsCj4g
+KwkJCQkJCSAgIHN0YXRlKTsKPiArfQo+ICtFWFBPUlRfU1lNQk9MKGRybV9mYmRldl9jbWFfc2V0
+X3N1c3BlbmRfdW5sb2NrZWQpOwo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2RybS9kcm1fZmJfY21h
+X2hlbHBlci5oIGIvaW5jbHVkZS9kcm0vZHJtX2ZiX2NtYV9oZWxwZXIuaAo+IGluZGV4IDlmNGUz
+NGUuLjhkZDZlNTUgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9kcm0vZHJtX2ZiX2NtYV9oZWxwZXIu
+aAo+ICsrKyBiL2luY2x1ZGUvZHJtL2RybV9mYl9jbWFfaGVscGVyLmgKPiBAQCAtMjYsNiArMjYs
+OCBAQCB2b2lkIGRybV9mYmRldl9jbWFfZmluaShzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAqZmJkZXZf
+Y21hKTsKPiAgdm9pZCBkcm1fZmJkZXZfY21hX3Jlc3RvcmVfbW9kZShzdHJ1Y3QgZHJtX2ZiZGV2
+X2NtYSAqZmJkZXZfY21hKTsKPiAgdm9pZCBkcm1fZmJkZXZfY21hX2hvdHBsdWdfZXZlbnQoc3Ry
+dWN0IGRybV9mYmRldl9jbWEgKmZiZGV2X2NtYSk7Cj4gIHZvaWQgZHJtX2ZiZGV2X2NtYV9zZXRf
+c3VzcGVuZChzdHJ1Y3QgZHJtX2ZiZGV2X2NtYSAqZmJkZXZfY21hLCBpbnQgc3RhdGUpOwo+ICt2
+b2lkIGRybV9mYmRldl9jbWFfc2V0X3N1c3BlbmRfdW5sb2NrZWQoc3RydWN0IGRybV9mYmRldl9j
+bWEgKmZiZGV2X2NtYSwKPiArCQkJCQlpbnQgc3RhdGUpOwo+ICAKPiAgdm9pZCBkcm1fZmJfY21h
+X2Rlc3Ryb3koc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIpOwo+ICBpbnQgZHJtX2ZiX2NtYV9j
+cmVhdGVfaGFuZGxlKHN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiLAo+IC0tIAo+IDIuMTAuMgo+
+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJp
+LWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoK
+LS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCmh0
+dHA6Ly9ibG9nLmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
