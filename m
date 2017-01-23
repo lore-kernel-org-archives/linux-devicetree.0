@@ -1,50 +1,56 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 0/3] Add support for es8323 and hdmi audio
-	to the firefly-rk3288
-Date: Mon, 23 Jan 2017 14:47:44 +0100
-Message-ID: <20170123134747.1385-1-romain.perier@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v3 1/3] ARM: dts: r7s72100: add ostm clock to device tree
+Date: Mon, 23 Jan 2017 08:55:18 -0500
+Message-ID: <20170123135520.28834-2-chris.brandt@renesas.com>
+References: <20170123135520.28834-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170123135520.28834-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This set of patches enables support for the es8323 codecs on the
-firefly-rk3288. It adds the required DT definitions to link rockchip-i2s
-to the es8388 analog output. As the support for HDMI audio is also
-built-in in the corresponding ASoC machine driver, HDMI audio output is
-also enabled.
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ arch/arm/boot/dts/r7s72100.dtsi            | 9 +++++++++
+ include/dt-bindings/clock/r7s72100-clock.h | 4 ++++
+ 2 files changed, 13 insertions(+)
 
-Changes in v2:
- - Adapted DT for the firefly-rk3288 to the ASoC machine driver
-   rk3288-hdmi-analog
- - Added patch 02/03 to this series
- - Re-wrote this cover letter
-
-Romain Perier (3):
-  SoC: es8328-i2c: Add compatible for ES8323
-  arm: dts: rockchip: Don't set otp-gpio pinctrl by default in
-    rk3288.dtsi
-  arm: dts: Add support for ES8323 to the Firefly-RK3288
-
- Documentation/devicetree/bindings/sound/es8328.txt |  5 +++-
- arch/arm/boot/dts/rk3288-evb.dtsi                  |  4 +++
- arch/arm/boot/dts/rk3288-firefly.dtsi              | 34 ++++++++++++++++++++++
- arch/arm/boot/dts/rk3288-veyron.dtsi               |  4 +++
- arch/arm/boot/dts/rk3288.dtsi                      |  4 ---
- sound/soc/codecs/es8328-i2c.c                      |  2 ++
- 6 files changed, 48 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
+index 3dd427d..d5946df 100644
+--- a/arch/arm/boot/dts/r7s72100.dtsi
++++ b/arch/arm/boot/dts/r7s72100.dtsi
+@@ -108,6 +108,15 @@
+ 			clock-output-names = "scif0", "scif1", "scif2", "scif3", "scif4", "scif5", "scif6", "scif7";
+ 		};
+ 
++		mstp5_clks: mstp5_clks@fcfe0428 {
++			#clock-cells = <1>;
++			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
++			reg = <0xfcfe0428 4>;
++			clocks = <&p0_clk>, <&p0_clk>;
++			clock-indices = <R7S72100_CLK_OSTM0 R7S72100_CLK_OSTM1>;
++			clock-output-names = "ostm0", "ostm1";
++		};
++
+ 		mstp7_clks: mstp7_clks@fcfe0430 {
+ 			#clock-cells = <1>;
+ 			compatible = "renesas,r7s72100-mstp-clocks", "renesas,cpg-mstp-clocks";
+diff --git a/include/dt-bindings/clock/r7s72100-clock.h b/include/dt-bindings/clock/r7s72100-clock.h
+index 29e01ed..ce09915 100644
+--- a/include/dt-bindings/clock/r7s72100-clock.h
++++ b/include/dt-bindings/clock/r7s72100-clock.h
+@@ -25,6 +25,10 @@
+ #define R7S72100_CLK_SCIF6	1
+ #define R7S72100_CLK_SCIF7	0
+ 
++/* MSTP5 */
++#define R7S72100_CLK_OSTM0	1
++#define R7S72100_CLK_OSTM1	0
++
+ /* MSTP7 */
+ #define R7S72100_CLK_ETHER	4
+ 
 -- 
-2.9.3
+2.10.1
