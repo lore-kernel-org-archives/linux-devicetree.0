@@ -1,62 +1,87 @@
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH 1/2] dt-bindings: pwm: Add MediaTek PWM bindings
-Date: Mon, 23 Jan 2017 19:34:36 +0100
-Message-ID: <1485196477-669-1-git-send-email-john@phrozen.org>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, =?UTF-8?q?Sean=20Wang=20=28=E7=8E=8B=E5=BF=97=E4=BA=98=29?= <sean.wang@mediatek.com>, John Crispin <john@phrozen.org>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH 01/18] Documentation: devicetree: amlogic: Reorder boards
+Date: Mon, 23 Jan 2017 19:36:08 +0100
+Message-ID: <31ca7ebb-6101-891f-e8c4-298635d1979e@suse.de>
+References: <20170120222118.21476-1-afaerber@suse.de>
+ <20170120222118.21476-2-afaerber@suse.de>
+ <20170123164831.ux2kkofq7xf2whnp@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170123164831.ux2kkofq7xf2whnp@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device-tree binding of MediaTek PWM. The PWM has 5 channels.
-This has been tested on MT7623 only but should work on all the other MTK
-SoCs that contain this core.
+Am 23.01.2017 um 17:48 schrieb Rob Herring:
+> On Fri, Jan 20, 2017 at 11:21:01PM +0100, Andreas Färber wrote:
+>> Enforce groupment by SoCs and order alphabetically within the group
+>> (with some exceptions). This should facilitate adding new boards.
+>>
+>> Signed-off-by: Andreas Färber <afaerber@suse.de>
+>> ---
+>>  Documentation/devicetree/bindings/arm/amlogic.txt | 19 +++++++++++++------
+>>  1 file changed, 13 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> index c246cd2730d9..b03d23c9ea78 100644
+>> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+>> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> @@ -29,23 +29,30 @@ Boards with the Amlogic Meson GXM S912 SoC shall have the following properties:
+>>    Required root node property:
+>>      compatible: "amlogic,s912", "amlogic,meson-gxm";
+>>  
+>> -Board compatible values:
+>> +Board compatible values (grouped by SoC):
+> 
+> ...and alphabetical order within each SoC.
 
-Signed-off-by: John Crispin <john@phrozen.org>
----
- .../devicetree/bindings/pwm/pwm-mediatek.txt       |   34 ++++++++++++++++++++
- 1 file changed, 34 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
+...except for pro, meta, telos, which are in increasing feature set
+order - should we reorder them, or ignore but still write alphabetical?
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-new file mode 100644
-index 0000000..54c59b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-@@ -0,0 +1,34 @@
-+MediaTek PWM controller
-+
-+Required properties:
-+ - compatible: should be "mediatek,<name>-pwm":
-+   - "mediatek,mt7623-pwm": found on mt7623 SoC.
-+ - reg: physical base address and length of the controller's registers.
-+ - #pwm-cells: must be 2. See pwm.txt in this directory for a description of
-+   the cell format.
-+ - clocks: phandle and clock specifier of the PWM reference clock.
-+ - clock-names: must contain the following:
-+   - "top": the top clock generator
-+   - "main": clock used by the PWM core
-+   - "pwm1-5": the five per PWM clocks
-+ - pinctrl-names: Must contain a "default" entry.
-+ - pinctrl-0: One property must exist for each entry in pinctrl-names.
-+   See pinctrl/pinctrl-bindings.txt for details of the property values.
-+
-+Example:
-+	pwm0: pwm@11006000 {
-+		compatible = "mediatek,mt7623-pwm";
-+		reg = <0 0x11006000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&topckgen CLK_TOP_PWM_SEL>,
-+			 <&pericfg CLK_PERI_PWM>,
-+			 <&pericfg CLK_PERI_PWM1>,
-+			 <&pericfg CLK_PERI_PWM2>,
-+			 <&pericfg CLK_PERI_PWM3>,
-+			 <&pericfg CLK_PERI_PWM4>,
-+			 <&pericfg CLK_PERI_PWM5>;
-+		clock-names = "top", "main", "pwm1", "pwm2",
-+			      "pwm3", "pwm4", "pwm5";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm0_pins>;
-+	};
+Regards,
+Andreas
+
+> 
+>> +
+>>    - "geniatech,atv1200" (Meson6)
+>> +
+>>    - "minix,neo-x8" (Meson8)
+>> -  - "tronfy,mxq" (Meson8b)
+>> +
+>>    - "hardkernel,odroid-c1" (Meson8b)
+>> +  - "tronfy,mxq" (Meson8b)
+>> +
+>> +  - "amlogic,p200" (Meson gxbb)
+>> +  - "amlogic,p201" (Meson gxbb)
+>> +  - "hardkernel,odroid-c2" (Meson gxbb)
+>> +  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+>>    - "tronsmart,vega-s95-pro", "tronsmart,vega-s95" (Meson gxbb)
+>>    - "tronsmart,vega-s95-meta", "tronsmart,vega-s95" (Meson gxbb)
+>>    - "tronsmart,vega-s95-telos", "tronsmart,vega-s95" (Meson gxbb)
+>> -  - "hardkernel,odroid-c2" (Meson gxbb)
+>> -  - "amlogic,p200" (Meson gxbb)
+>> -  - "amlogic,p201" (Meson gxbb)
+>>    - "wetek,hub" (Meson gxbb)
+>>    - "wetek,play2" (Meson gxbb)
+>> +
+>>    - "amlogic,p212" (Meson gxl s905x)
+>> +
+>>    - "amlogic,p230" (Meson gxl s905d)
+>>    - "amlogic,p231" (Meson gxl s905d)
+>> +
+>>    - "amlogic,q200" (Meson gxm s912)
+>>    - "amlogic,q201" (Meson gxm s912)
+>> -  - "nexbox,a95x" (Meson gxbb or Meson gxl s905x)
+>>    - "nexbox,a1" (Meson gxm s912)
+>> -- 
+>> 2.10.2
+>>
+
+
 -- 
-1.7.10.4
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
