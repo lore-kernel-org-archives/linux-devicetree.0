@@ -1,47 +1,27 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 2/3] pinctrl: meson: meson-gxl: add the pwm_ao_b pin
-Date: Mon, 23 Jan 2017 11:12:45 -0800
-Message-ID: <CAOi56cV1+2uAMfBe0XQnvwq711fMiXJ+kKRAv9vUO70ZGKhtPQ@mail.gmail.com>
-References: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
- <20170122210528.892-3-martin.blumenstingl@googlemail.com> <m2sho91tk5.fsf@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/3] dt: bindings: add documentation for zx2967 family
+ watchdog controller
+Date: Mon, 23 Jan 2017 13:55:07 -0600
+Message-ID: <20170123195507.swr4tk3zkpq7gzg3@rob-hp-laptop>
+References: <1485073008-26699-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <m2sho91tk5.fsf@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-gpio@vger.kernel.org, linux-amlogic <linux-amlogic@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485073008-26699-1-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 11:10 AM, Kevin Hilman <khilman@baylibre.com> wrote:
-> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
->
->> This adds support for the pwm_ao_b pin. Unfortunately the registers for
->> the pwm_ao pins are not documented at all. The source for the pwm_ao_b
->> pin from this patch is the Khadas VIM GPL kernel source, which sets bit
->> 3 and unsets bits 4 and 31 to enable the PWM LEDs.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->>  drivers/pinctrl/meson/pinctrl-meson-gxl.c | 8 ++++++++
->>  1 file changed, 8 insertions(+)
->>
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> index 25694f7094c7..6ff321a7366d 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
->> @@ -222,6 +222,8 @@ static const unsigned int uart_rts_ao_b_pins[]    = { PIN(GPIOAO_3, 0) };
->>
->>  static const unsigned int remote_input_ao_pins[] = {PIN(GPIOAO_7, 0) };
->>
->> +static const unsigned int pwm_ao_b_pins[]    = { PIN(GPIOAO_9, 0) };
->> +
->
-> Hmm, the S905 public data sheet[1] shows this as GPIOAO_13.
->
+On Sun, Jan 22, 2017 at 04:16:46PM +0800, Baoyou Xie wrote:
+> This patch adds dt-binding documentation for zx2967 family
+> watchdog controller.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  .../bindings/watchdog/zte,zx2967-wdt.txt           | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
 
-gack, nevermind.  I see now this is for GXL, not GXBB.  Ignore my comments.
-
-Linus, feel free to apply with:
-
-Acked-by: Kevin Hilman <khilman@baylibre.com>
+Acked-by: Rob Herring <robh@kernel.org>
