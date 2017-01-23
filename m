@@ -1,114 +1,51 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v4 4/4] arm: dts: Add support for ES8388 to the
-	Radxa Rock 2
-Date: Mon, 23 Jan 2017 11:41:49 +0100
-Message-ID: <20170123104149.2508-5-romain.perier@collabora.com>
-References: <20170123104149.2508-1-romain.perier@collabora.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of/platform: Ignore disabled devices in of_platform_populate()
+Date: Mon, 23 Jan 2017 13:21:51 +0100
+Message-ID: <20170123122151.21908-1-alexander.sverdlin@nokia.com>
+References: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170123104149.2508-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device
-found at address 0x10. It also adds the definition for connecting
-the Rockchip I2S to the es8388 analog output.
+Check the status property and give up early enough. Otherwise
+OF_POPULATED_BUS might be set for disabled bus which will prevent
+it from being populated later (if enabled).
 
-This commit is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.com> with some improvements.
-
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
+Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
+ drivers/of/platform.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Changes in v4:
- - Updated to the new DT binding
- - Added the property 'rockchip,routing'
- - Renamed the node sound_es8388 to sound_i2s
-Changes in v3: None
-Changes in v2: None
-
- arch/arm/boot/dts/rk3288-rock2-square.dts | 39 +++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index dd3ad2e..6b176b8 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -86,6 +86,19 @@
- 		#sound-dai-cells = <0>;
- 	};
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 35de1fc59fa6..5ad8c13f754a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -473,9 +473,13 @@ int of_platform_populate(struct device_node *root,
+ 	struct device_node *child;
+ 	int rc = 0;
  
-+	sound_i2s {
-+		compatible = "rockchip,rk3288-hdmi-analog";
-+		rockchip,model = "I2S";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8388>;
-+		rockchip,routing = "Analog", "LOUT2",
-+				   "Analog", "ROUT2";
-+		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&headphone>;
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&hym8563>;
-@@ -173,10 +186,29 @@
- 	};
- };
+-	root = root ? of_node_get(root) : of_find_node_by_path("/");
++	if (!root)
++		root = of_find_node_by_path("/");
+ 	if (!root)
+ 		return -EINVAL;
++	if (!of_device_is_available(root))
++		return 0;
++	of_node_get(root);
  
-+&i2c2 {
-+	status = "okay";
-+
-+	es8388: es8388@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vcca_codec>;
-+		DVDD-supply = <&vcca_codec>;
-+		HPVDD-supply = <&vcca_codec>;
-+		PVDD-supply = <&vcca_codec>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
-+};
-+
- &i2c5 {
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ir {
- 		ir_int: ir-int {
-@@ -190,6 +222,13 @@
- 		};
- 	};
- 
-+	sound {
-+		headphone: headphone {
-+			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
-+					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+ 	pr_debug("%s()\n", __func__);
+ 	pr_debug(" starting at: %s\n", root->full_name);
 -- 
-2.9.3
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
