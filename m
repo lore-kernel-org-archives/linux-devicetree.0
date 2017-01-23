@@ -1,57 +1,44 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Mon, 23 Jan 2017 17:56:41 +0000
-Message-ID: <SG2PR06MB1165F465C5802912ED62820C8A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170121030604.7672-1-chris.brandt@renesas.com>
- <20170121030604.7672-3-chris.brandt@renesas.com>
- <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using
+ rockchip timer
+Date: Mon, 23 Jan 2017 18:57:40 +0100
+Message-ID: <20170123175740.GI2166@mai>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
+ <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com>
+ <20170123144744.GE2166@mai>
+ <1793912.WfGyM7qEjy@diego>
+ <58B283B0-02F6-4342-A6D2-7E082E04863E@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <58B283B0-02F6-4342-A6D2-7E082E04863E@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+On Mon, Jan 23, 2017 at 08:24:47PM +0300, Alexander Kochetkov wrote:
+> Heiko, Daniel, thanks a lot for review!
+> I’ll send v5 series this week.
+> 
+> Heiko, Daniel, may I add 'Reviewed-by:’ to patch series?
+> 
+> Reviewed-by: Heiko Stübner <heiko@sntech.de> ?
+> Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org> ?
+> 
 
+I will answer with the corresponding tag myself when you send the v5.
 
-On Monday, January 23, 2017, Rob Herring wrote:
-> > --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
-> > @@ -25,8 +25,32 @@ Required properties:
-> >  		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
-> >  		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
-> >
-> > +- clocks: Most controllers only have 1 clock source per channel.
-> However, on
-> > +	  some variations of this controller, the internal card detection
->=20
-> This should be explicit as to which compatible strings have 2 clocks and
-> which have 1 clock.
+Thanks.
 
-OK. I'll make a list like I did for sh_mmcif:
+  -- Daniel
 
-https://patchwork.kernel.org/patch/9512091/
+-- 
 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-
-> > +
-> > +Example showing 2 clocks:
-> > +	sdhi0: sd@e804e000 {
->=20
-> mmc@...
-
-I'm confused. I see that for all SDHI controllers, it either "sd@" or "sdhc=
-i@".
-
-$ grep sdhi $(find arch/arm/boot/dts -name "*.dtsi")
-
-$ grep sdhci $(find arch/arm/boot/dts -name "*.dtsi")
-
-
-Regards,
-Chris
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
