@@ -1,31 +1,29 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date: Mon, 23 Jan 2017 19:18:36 +0100
-Message-ID: <20170123181836.GO10895@lunn.ch>
-References: <20170123142206.5390-1-jlu@pengutronix.de>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/9] ARM: dts: support I2SE Duckbill devices
+Date: Mon, 23 Jan 2017 16:18:38 -0200
+Message-ID: <CAOMZO5CbPPR7GSjUvPQaHGCTTiFw8PrQfiwa_j2x9+WyKuseZg@mail.gmail.com>
+References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170123142206.5390-1-jlu@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Jan Luebbe <jlu@pengutronix.de>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485123764-14754-1-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 03:22:06PM +0100, Jan Luebbe wrote:
-> The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> called DRSGMII.
-> 
-> This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> from DT. The MVNETA then configures the SERDES protocol value
-> accordingly.
+Hi Michael,
 
-Hi Jan
+On Sun, Jan 22, 2017 at 8:22 PM, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org> wrote:
 
-So this sets the PHY to 2.5Gbps. What about the MAC? Currently,
-mvneta_adjust_link() knows about SPEED_1000 and SPEED_100. Does it now
-need to know about SPEED_2500? mvneta_ethtool_set_link_ksettings()?
+> - Duckbill 485/Duckbill 2 485: as the name implies, these
+>   devices are intended to be used as Ethernet - RS485 converters
+
+Just curious: do you use mxs-auart to interface to a rs485
+transceiver? If so, would you have mxs-auart patches that add rs485?
 
 Thanks
-	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
