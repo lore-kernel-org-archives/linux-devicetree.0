@@ -1,46 +1,58 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/8] clk: renesas: cpg-mssr: Add support for reset control
-Date: Mon, 23 Jan 2017 11:14:11 +0100
-Message-ID: <CAMuHMdUu=FwygW168GLVp2JtKbbB_R2wQLzq_3_TxLiu5ww6kA@mail.gmail.com>
-References: <1484921306-9967-1-git-send-email-geert+renesas@glider.be>
- <1484921306-9967-5-git-send-email-geert+renesas@glider.be> <20170120220302.GA20610@bigcity.dyn.berto.se>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v8 12/12] mux: support simplified bindings for single-user
+ gpio mux
+Date: Mon, 23 Jan 2017 11:24:18 +0100
+Message-ID: <d32f335f-56f2-38c1-e4d9-4629926dbe21@axentia.se>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-13-git-send-email-peda@axentia.se>
+ <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170120220302.GA20610@bigcity.dyn.berto.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Philipp Zabel <p.zabel@pengutronix.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Niklas,
+On 2017-01-22 14:30, Jonathan Cameron wrote:
+> On 18/01/17 15:57, Peter Rosin wrote:
+>> Allow bindings for a GPIO controlled mux to be specified in the
+>> mux consumer node.
+>>
+>> Signed-off-by: Peter Rosin <peda@axentia.se>
+> Code is good as far as I am concerned. Only question is whether this
 
-On Fri, Jan 20, 2017 at 11:03 PM, Niklas S=C3=B6derlund
-<niklas.soderlund@ragnatech.se> wrote:
-> Nice patch! It took me a while to understand why you didn't need to read
-> the register before writing to it in cpg_mssr_deassert() :-)
+Hmmm, now that I think some more about it, the code supporting the
+simplified binding (patch 12/12) is a bit fishy in one respect.
 
-Yeah, deassertion and assertion are asymmetrical.
+A driver that calls mux_control_get and gets a mux_control that happens
+to be backed by an implicit mux chip (i.e. using the simplified binding)
+will not be able to reverse the resource allocation with less than a
+complete destruction of itself. Now, this is likely not a problem in
+most cases, but I bet it will creep up at the most inopportune time. And
+your remark that I'm the one that has to maintain this makes me dislike
+this concept...
 
-Note that on older (not yet supported) SH/R-Mobile parts, there are no
-reset clear registers, and deassertion is symmetrical.
+I.e. mux_control_put *should* reverse mux_control_get, but this simply
+does not happen for the implicit mux chips, as implicit mux chips are
+not put away until the owning device is put away.
 
-> Reviewed-by: Niklas S=C3=B6derlund <niklas.soderlund+renesas@ragnatech.se=
->
+Every time I have tried to come up with a way to implement the simplified
+bindings I seem to hit one of these subtleties.
 
-Thanks!
+> is worth the hassle given the normal bindings don't give that high
+> a burden in complexity!
 
-Gr{oetje,eeting}s,
+I am missing an ack from Rob though.
 
-                        Geert
+> I don't really care either way:)
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+But Rob seems to care, this series just has to find a way to get out of
+his too-much-churn-will-look-at-it-later list. I sadly don't know how to
+pull that trick...
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Cheers,
+peda
+
