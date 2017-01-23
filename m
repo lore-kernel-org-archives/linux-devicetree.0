@@ -1,27 +1,86 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 10/18] ARM64: dts: meson-gxbb: Reorder nodes
-Date: Mon, 23 Jan 2017 10:52:08 -0600
-Message-ID: <20170123165208.4ujwm6rjz2b3dom5@rob-hp-laptop>
-References: <20170120222118.21476-1-afaerber@suse.de>
- <20170120222118.21476-11-afaerber@suse.de>
+Subject: Re: [PATCH v5 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Mon, 23 Jan 2017 10:55:23 -0600
+Message-ID: <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
+References: <20170121030604.7672-1-chris.brandt@renesas.com>
+ <20170121030604.7672-3-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170120222118.21476-11-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-amlogic@lists.infradead.org, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20170121030604.7672-3-chris.brandt@renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 11:21:10PM +0100, Andreas Färber wrote:
-> Sort nodes referenced by label alphabetically.
-
-Seems to be pointless churn.
-
+On Fri, Jan 20, 2017 at 10:06:03PM -0500, Chris Brandt wrote:
+> In the case of a single clock source, you don't need names. However,
+> if the controller has 2 clock sources, you need to name them correctly
+> so the driver can find the 2nd one. The 2nd clock is for the internal
+> card detect logic.
 > 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 76 ++++++++++++++---------------
->  1 file changed, 38 insertions(+), 38 deletions(-)
+> v4:
+> * just explain there might be 2 clocks, don't explain how
+>   we will use them in the driver
+> v3:
+> * add more clarification about why there are sometimes 2 clocks
+>   and what you should do with them.
+> * remove 'status = "disabled"' from example
+> v2:
+> * fix spelling and change wording
+> * changed clock name from "carddetect" to "cd"
+> ---
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> index a1650ed..1464c16 100644
+> --- a/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/tmio_mmc.txt
+> @@ -25,8 +25,32 @@ Required properties:
+>  		"renesas,sdhi-r8a7795" - SDHI IP on R8A7795 SoC
+>  		"renesas,sdhi-r8a7796" - SDHI IP on R8A7796 SoC
+>  
+> +- clocks: Most controllers only have 1 clock source per channel. However, on
+> +	  some variations of this controller, the internal card detection
+
+This should be explicit as to which compatible strings have 2 clocks and 
+which have 1 clock.
+
+> +	  logic that exists in this controller is sectioned off to be run by a
+> +	  separate second clock source to allow the main core clock to be turned
+> +	  off to save power.
+> +	  If 2 clocks are specified by the hardware, you must name them as
+> +	  "core" and "cd".
+> +	  If the controller only has 1 clock, naming is not required.
+> +
+>  Optional properties:
+>  - toshiba,mmc-wrprotect-disable: write-protect detection is unavailable
+>  - pinctrl-names: should be "default", "state_uhs"
+>  - pinctrl-0: should contain default/high speed pin ctrl
+>  - pinctrl-1: should contain uhs mode pin ctrl
+> +
+> +Example showing 2 clocks:
+> +	sdhi0: sd@e804e000 {
+
+mmc@...
+
+> +		compatible = "renesas,sdhi-r7s72100";
+> +		reg = <0xe804e000 0x100>;
+> +		interrupts = <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH
+> +			      GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH
+> +			      GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		clocks = <&mstp12_clks R7S72100_CLK_SDHI00>,
+> +			 <&mstp12_clks R7S72100_CLK_SDHI01>;
+> +		clock-names = "core", "cd";
+> +		cap-sd-highspeed;
+> +		cap-sdio-irq;
+> +	};
+> -- 
+> 2.10.1
+> 
+> 
