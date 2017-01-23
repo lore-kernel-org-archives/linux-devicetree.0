@@ -1,93 +1,45 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: Re: [RFC v2 1/5] UDC: Split the driver into amd (pci) and Synopsys
- core driver
-Date: Mon, 23 Jan 2017 18:35:30 +0530
-Message-ID: <CAEHZuqMoKTG5qB6B-OC7k+2yOYFb_BqLL4WqfD6rGNSHiBVnww@mail.gmail.com>
-References: <1484640308-25976-1-git-send-email-raviteja.garimella@broadcom.com>
- <1484640308-25976-2-git-send-email-raviteja.garimella@broadcom.com>
- <e1453122-164a-e1a8-6aa6-fb25eb33101f@gmail.com> <CAEHZuqO2x8FYW6AWbS5KshMt9UG7R4gWTfG_VaT+rNcAZ5d4Lg@mail.gmail.com>
- <db1037e7-33f2-95ce-2f7a-60fe98d75e0c@gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [V2 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
+Date: Mon, 23 Jan 2017 13:46:57 +0000
+Message-ID: <20170123134656.GC16286@leverpostej>
+References: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
+ <1484034915-48879-2-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <db1037e7-33f2-95ce-2f7a-60fe98d75e0c@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1484034915-48879-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Tue, Jan 10, 2017 at 03:55:15PM +0800, Chen Feng wrote:
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x00400000 0x0 0xbfe00000>;
+> +	};
 
-On Fri, Jan 20, 2017 at 12:58 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 01/19/2017 02:44 AM, Raviteja Garimella wrote:
->> Hi,
->>
->> On Thu, Jan 19, 2017 at 12:15 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
->>> On 01/17/2017 12:05 AM, Raviteja Garimella wrote:
->>>> This patch splits the amd5536udc driver into two -- one that does
->>>> pci device registration and the other file that does the rest of
->>>> the driver tasks like the gadget/ep ops etc for Synopsys UDC.
->>>>
->>>> This way of splitting helps in exporting core driver symbols which
->>>> can be used by any other platform/pci driver that is written for
->>>> the same Synopsys USB device controller.
->>>>
->>>> The current patch also includes a change in the Kconfig and Makefile.
->>>> A new config option USB_SNP_CORE will be selected automatically when
->>>> any one of the platform or pci driver for the same UDC is selected.
->>>>
->>>> Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
->>>
->>> Although the changes you have done make sense and it is most certainly a
->>> good idea to split udc core from bus specific glue logic, it is really
->>> hard to review the changes per-se because of the file rename, could that
->>> happen at a later time?
->>
->> If you start looking at this specific patch from the header file (amd5536udc.h),
->> the additions in there comprise of:
->> - 9 function declarations
->> - some module parameter variable declarations that's moved out from the older
->>   common file amd5536udc.c
->> - 2 #includes that are needed by all files.
->
-> Well, I don't really question the changes themselves, rather how this is
-> presented as a patch series to reviewers.
->
-> What I would do, to help introduce both the rename, and the splitting of
-> core vs. bus-glue specific changes is:
->
-> - have an initial patch which extracts the core functionality of the
-> driver and the PCI bus glue logic into adm5536udc_pci.c and left
-> adm5536udc.c intact (that would be a small delta to review)
->
-> - have a second patch that performs the file rename from adm5536udc.c
-> into snps_udc_core.c and updates adm5536udc_pci.c eventually as a result
-> of that, then again, a reviewer can ignore the rename part (don't format
-> to generate your patches with git format-patch -M in that case) and just
-> focus on the conversion part for adm5536udc_pci.c
->
+The unit-address here is incorrect. The base address of this memory is
+not zero.
 
-Just waited for any more comments coming in. I will submit the next version
-as PATCH like the way you suggested.
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
+> +		clock-frequency = <1920000>;
+> +	};
 
->>
->> So, basically what's done for this split is that:
->> 1. the static keyword is removed from those 9 functions in the new file
->>     snps_udc_core.c and are exported.
->> 2. The module parameters declarations (since they are used in both core
->>     and pci file) are moved to the header file now.
->
-> These should really be part of the commit messages for each commit doing
-> the changes, this is meant to help a reviewer understand what you are
-> doing, and to some degree, will help him/her make an educated decision
-> as to what part of the code the focus should be put on.
->
+This clock-frequency property should not be required; please remove it.
 
-Will do.
+Your FW should program CNTFRQ_EL0 with the timer frequency.
 
 Thanks,
-Ravi
-
-> Thanks
-> --
-> Florian
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
