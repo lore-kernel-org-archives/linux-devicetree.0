@@ -1,12 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/7] rtc: sun6i: Fix the RTC accuracy
-Date: Mon, 23 Jan 2017 11:41:45 +0100
-Message-ID: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 1/7] rtc: sun6i: Disable the build as a module
+Date: Mon, 23 Jan 2017 11:41:46 +0100
+Message-ID: <ad6de80f5065d8aa1ac7babca05e5f19b6038820.1485168100.git-series.maxime.ripard@free-electrons.com>
+References: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard@free-electrons.com>
 Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBDSJBYGBRIMBB7F3S7CAKGQEAJCIDWY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <rtc-linux+bncBDSJBYGBRIMBB7N3S7CAKGQEXQ4HXNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/rtc-linux
@@ -14,56 +18,47 @@ List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:r
 List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/rtc-linux/subscribe>
 To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Since we have to provide the clock very early on, the RTC driver cannot be
+built as a module. Make sure that won't happen.
 
-The RTC used in the A31 and later SoC has an accuracy issue, which is
-already significant even after a couple of hours.
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/rtc/Kconfig     | 2 +-
+ drivers/rtc/rtc-sun6i.c | 7 +------
+ 2 files changed, 2 insertions(+), 7 deletions(-)
 
-This is due to the fact that the oscillator used by default is an internal
-and very inaccurate one.
-
-A first attempt at fixing that by switching to the external oscillator was
-done in the patch "rtc: sun6i: Switch to the external oscillator". However,
-it turned out to be problematic since it was tracked properly in the clock
-framework, which might lead to some clocks being disabled, even though
-their devices were not notified.
-
-This is a second attempt, this time by making it part of the CCF. It
-turned out to be a bit more complicated than one would expect since the mux
-found inside the RTC also controls one of the input of the main clock unit.
-Therefore, it needs to be probed before the main clock unit driver.
-
-Let me know what you think,
-Maxime
-
-Changes from v1:
-  - Force the muxing to the external oscillator even for old DT
-  - Make the patches a bit more stable friendly
-  - Change the bindings to have a cell of 1, to account for the external
-    output of the oscillator
-  - Split the driver remove() removal into a separate patch and switched to
-    devm
-  - Reordered the patches
-
-Maxime Ripard (7):
-  rtc: sun6i: Disable the build as a module
-  rtc: sun6i: Add some locking
-  rtc: sun6i: Switch to the external oscillator
-  rtc: sun6i: Expose the 32kHz oscillator
-  rtc: sun6i: Switch to devm_rtc_device_register
-  ARM: sun8i: a23/a33: Enable the real LOSC and use it
-  ARM: sun8i: a23/a33: Add the oscillators accuracy
-
- Documentation/devicetree/bindings/rtc/sun6i-rtc.txt |  10 +-
- arch/arm/boot/dts/sun8i-a23-a33.dtsi                |  15 +-
- drivers/rtc/Kconfig                                 |   2 +-
- drivers/rtc/rtc-sun6i.c                             | 182 ++++++++++---
- 4 files changed, 174 insertions(+), 35 deletions(-)
-
-base-commit: 99cef370ac9939df2aeb16c96d07e842b2fa8201
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index c93c5a8fba32..53e35c138ff3 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -1434,7 +1434,7 @@ config RTC_DRV_SUN4V
+ 	  based RTC on SUN4V systems.
+ 
+ config RTC_DRV_SUN6I
+-	tristate "Allwinner A31 RTC"
++	bool "Allwinner A31 RTC"
+ 	default MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+ 	depends on ARCH_SUNXI
+ 	help
+diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
+index c169a2cd4727..a6136cb99851 100644
+--- a/drivers/rtc/rtc-sun6i.c
++++ b/drivers/rtc/rtc-sun6i.c
+@@ -439,9 +439,4 @@ static struct platform_driver sun6i_rtc_driver = {
+ 		.of_match_table = sun6i_rtc_dt_ids,
+ 	},
+ };
+-
+-module_platform_driver(sun6i_rtc_driver);
+-
+-MODULE_DESCRIPTION("sun6i RTC driver");
+-MODULE_AUTHOR("Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>");
+-MODULE_LICENSE("GPL");
++builtin_platform_driver(sun6i_rtc_driver);
 -- 
 git-series 0.8.11
 
