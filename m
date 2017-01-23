@@ -1,64 +1,91 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: arm64: dts: mt8173: add node for thermal calibration
-Date: Mon, 23 Jan 2017 10:20:02 +0100
-Message-ID: <f33ae1e4-ff12-7468-67e4-5e5b28dd67bb@gmail.com>
-References: <1484286771-35913-1-git-send-email-dawei.chien@mediatek.com>
- <CAGS+omA=aip76=8CcGY7gPUrHj9eLLem=8MBziz99fVDq86zPQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v5 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
+Date: Mon, 23 Jan 2017 10:22:35 +0100
+Message-ID: <CAMuHMdWwqa7CbNCRr8q60hDVsj243-ZjHCPp+o9R2a6Dg7YNWQ@mail.gmail.com>
+References: <20170121030604.7672-1-chris.brandt@renesas.com> <20170121030604.7672-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGS+omA=aip76=8CcGY7gPUrHj9eLLem=8MBziz99fVDq86zPQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Kurtz <djkurtz@chromium.org>, Dawei Chien <dawei.chien@mediatek.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, srv_heupstream <srv_heupstream@mediatek.com>, Sascha Hauer <kernel@pengutronix.de>, Punit Agrawal <punit.agrawal@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170121030604.7672-2-chris.brandt@renesas.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Chris,
 
-
-On 01/13/2017 09:51 AM, Daniel Kurtz wrote:
-> On Fri, Jan 13, 2017 at 1:52 PM, Dawei Chien <dawei.chien@mediatek.com> wrote:
->>
->> From: "dawei.chien@mediatek.com" <dawei.chien@mediatek.com>
->>
->> Add this for supporting thermal calibration by e-fuse data.
->>
->> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
+On Sat, Jan 21, 2017 at 4:06 AM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Some controllers have 2 clock sources instead of 1. The 2nd clock
+> is for the internal card detect logic and must be enabled/disabled
+> along with the main core clock for proper operation.
 >
-> Reviewed-by: Daniel Kurtz <djkurtz@chromium.org>
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v4:
+> * add technical explanation within probe routine
+> v3:
+> * add more clarification to the commit log
+> v2:
+> * changed clk2 to clk_cd
+> * disable clk if clk_cd enable fails
+> * changed clock name from "carddetect" to "cd"
+
+Thanks for the updates!
+
+> ---
+>  drivers/mmc/host/sh_mobile_sdhi.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
 >
+> diff --git a/drivers/mmc/host/sh_mobile_sdhi.c b/drivers/mmc/host/sh_mobile_sdhi.c
+> index 59db14b..360d922 100644
+> --- a/drivers/mmc/host/sh_mobile_sdhi.c
+> +++ b/drivers/mmc/host/sh_mobile_sdhi.c
+> @@ -143,6 +143,7 @@ MODULE_DEVICE_TABLE(of, sh_mobile_sdhi_of_match);
+>
+>  struct sh_mobile_sdhi {
+>         struct clk *clk;
+> +       struct clk *clk_cd;
+>         struct tmio_mmc_data mmc_data;
+>         struct tmio_mmc_dma dma_priv;
+>         struct pinctrl *pinctrl;
+> @@ -190,6 +191,12 @@ static int sh_mobile_sdhi_clk_enable(struct tmio_mmc_host *host)
+>         if (ret < 0)
+>                 return ret;
+>
+> +       ret = clk_prepare_enable(priv->clk_cd);
+> +       if (ret < 0) {
+> +               clk_disable_unprepare(priv->clk);
+> +               return ret;
+> +       }
+> +
 
-applied, thanks
+As enabling the "core" clock but not the "cd" clock is not a valid setting,
+shouldn't the cd clock be enabled first?
 
->> ---
->>  arch/arm64/boot/dts/mediatek/mt8173.dtsi | 7 +++++++
->>  1 file changed, 7 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> index 12e7027..adfac1e 100644
->> --- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> +++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
->> @@ -401,6 +401,11 @@
->>                 efuse: efuse@10206000 {
->>                         compatible = "mediatek,mt8173-efuse";
->>                         reg = <0 0x10206000 0 0x1000>;
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->> +                       thermal_calibration: calib@528 {
->> +                               reg = <0x528 0xc>;
->> +                       };
->>                 };
->>
->>                 apmixedsys: clock-controller@10209000 {
->> @@ -574,6 +579,8 @@
->>                         resets = <&pericfg MT8173_PERI_THERM_SW_RST>;
->>                         mediatek,auxadc = <&auxadc>;
->>                         mediatek,apmixedsys = <&apmixedsys>;
->> +                       nvmem-cells = <&thermal_calibration>;
->> +                       nvmem-cell-names = "calibration-data";
->>                 };
->>
->>                 nor_flash: spi@1100d000 {
->> --
->> 1.9.1
->>
+>         /*
+>          * The clock driver may not know what maximum frequency
+>          * actually works, so it should be set with the max-frequency
+> @@ -255,6 +262,8 @@ static void sh_mobile_sdhi_clk_disable(struct tmio_mmc_host *host)
+>         struct sh_mobile_sdhi *priv = host_to_priv(host);
+>
+>         clk_disable_unprepare(priv->clk);
+> +       if (priv->clk_cd)
+
+No need to check for a NULL pointer first.
+
+> +               clk_disable_unprepare(priv->clk_cd);
+
+Disabling is already done in the correct order ;-)
+
+>  }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
