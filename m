@@ -1,62 +1,60 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH v2 9/9] Documentation: DT: add entries for I2SE boards
-Date: Mon, 23 Jan 2017 18:20:51 +0100
-Message-ID: <189e072d-50b8-796c-c27b-5d77cc6dd12c@i2se.com>
-References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
- <1485123764-14754-10-git-send-email-mhei@heimpold.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 7bit
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using rockchip timer
+Date: Mon, 23 Jan 2017 20:24:47 +0300
+Message-ID: <58B283B0-02F6-4342-A6D2-7E082E04863E@gmail.com>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com> <20170123144744.GE2166@mai> <1793912.WfGyM7qEjy@diego>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485123764-14754-10-git-send-email-mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+In-Reply-To: <1793912.WfGyM7qEjy@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+To: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 22.01.2017 um 23:22 schrieb Michael Heimpold:
-> This patch adds the missing devicetree binding documentation for I2SE's
-> Duckbill and Duckbill 2 series boards.
->
-> Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/i2se.txt | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
->
-> diff --git a/Documentation/devicetree/bindings/arm/i2se.txt b/Documentation/devicetree/bindings/arm/i2se.txt
-> new file mode 100644
-> index 0000000..9f30382
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/i2se.txt
-> @@ -0,0 +1,22 @@
-> +I2SE Device Tree Bindings
-> +-------------------------
-> +
-> +Duckbill Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl.imx28";
-> +
-> +Duckbill 2 Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl.imx28";
-> +
-> +Duckbill 2 485 Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl.imx28";
-> +
-> +Duckbill 2 EnOcean Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl.imx28";
-> +
-> +Duckbill 2 SPI Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl.imx28";
+Heiko, Daniel, thanks a lot for review!
+I=E2=80=99ll send v5 series this week.
 
-Please replace all fsl.imx28 with fsl,imx28
+Heiko, Daniel, may I add 'Reviewed-by:=E2=80=99 to patch series?
 
-Maybe this patch should come before adding the Duckbill 2 board dts files.
+Reviewed-by: Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> ?
+Reviewed-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> ?
+
+Regards,
+Alexander.
+
+> 23 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 20:12, Heiko St=C3=BCbner =
+<heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0):
+>=20
+> Am Montag, 23. Januar 2017, 15:47:44 CET schrieb Daniel Lezcano:
+>> On Wed, Dec 21, 2016 at 05:21:05PM +0300, Alexander Kochetkov wrote:
+>>> Hello Heiko, Daniel!
+>>>=20
+>>> Are there any reasons why the patches [1][2] are not applied yet =
+into
+>>> kernel? How can I help in applying patches?
+>>=20
+>> Hi Alexander,
+>>=20
+>> sorry for the delay. Let me review them before taking the patchset.
+>>=20
+>> Heiko, can you have a look to them also ?
+>=20
+> somehow this series moved down to much in my inbox, sorry.
+>=20
+> Devicetree changes look good, except where I commented.
+> I guess it would be best (least intrusive) if I queue up the (then =
+fixed)=20
+> devicetree changes after you are satisfied with the code parts.
+>=20
+> I've also looked over the code changes again, test-build them and =
+found the=20
+> build error mentioned separately. Overall they look good though.
+>=20
+>=20
+> Heiko
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
