@@ -1,177 +1,492 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
-Date: Mon, 23 Jan 2017 12:13:26 +0100
-Message-ID: <1485170006.2874.63.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-         <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
-         <1484320822.31475.96.camel@pengutronix.de>
-         <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
-         <1484574468.8415.136.camel@pengutronix.de>
-         <e38feca9-ed6f-8288-e006-768d6ba2fe5a@gmail.com>
+From: Wei-Ning Huang <wnhuang@google.com>
+Subject: Re: [PATCH 2/4] sdio: mediatek: Support sdio feature
+Date: Mon, 23 Jan 2017 19:24:11 +0800
+Message-ID: <CABicQ-W103YX8OR+20Kjjg1yKFzw1Bu1aZuQNAsd3DSVVHcxJQ@mail.gmail.com>
+References: <1478585341-6749-1-git-send-email-yong.mao@mediatek.com> <1478585341-6749-3-git-send-email-yong.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <e38feca9-ed6f-8288-e006-768d6ba2fe5a@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1478585341-6749-3-git-send-email-yong.mao@mediatek.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Yong Mao <yong.mao@mediatek.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, YH Huang <yh.huang@mediatek.com>, Mathias Nyman <mathias.nyman@linux.intel.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, Chaotian Jing <chaotian.jing@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, Douglas Anderson <dianders@chromium.org>, Geert Uytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, linux-mmc@vger.kernel.org, linux-mediatek@lists.infrad
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+On Tue, Nov 8, 2016 at 2:08 PM, Yong Mao <yong.mao@mediatek.com> wrote:
+> From: yong mao <yong.mao@mediatek.com>
+>
+> 1. Add irqlock to protect accessing the shared register
+> 2. Modify the implementation of msdc_card_busy due to SDIO
+> 3. Implement enable_sdio_irq
+> 4. Add msdc_recheck_sdio_irq mechanism to make sure all
+>    interrupts can be processed immediately
+>
+> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> ---
+>  drivers/mmc/host/mtk-sd.c |  167 ++++++++++++++++++++++++++++++++++-----=
+------
+>  1 file changed, 129 insertions(+), 38 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index b29683b..37edf30 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -117,6 +117,7 @@
+>  #define MSDC_PS_CDSTS           (0x1 << 1)     /* R  */
+>  #define MSDC_PS_CDDEBOUNCE      (0xf << 12)    /* RW */
+>  #define MSDC_PS_DAT             (0xff << 16)   /* R  */
+> +#define MSDC_PS_DATA1           (0x1 << 17)    /* R  */
+>  #define MSDC_PS_CMD             (0x1 << 24)    /* R  */
+>  #define MSDC_PS_WP              (0x1 << 31)    /* R  */
+>
+> @@ -304,6 +305,7 @@ struct msdc_host {
+>         int cmd_rsp;
+>
+>         spinlock_t lock;
+> +       spinlock_t irqlock;     /* sdio irq lock */
+>         struct mmc_request *mrq;
+>         struct mmc_command *cmd;
+>         struct mmc_data *data;
+> @@ -322,12 +324,14 @@ struct msdc_host {
+>         struct pinctrl_state *pins_uhs;
+>         struct delayed_work req_timeout;
+>         int irq;                /* host interrupt */
+> +       bool irq_thread_alive;
+>
+>         struct clk *src_clk;    /* msdc source clock */
+>         struct clk *h_clk;      /* msdc h_clk */
+>         u32 mclk;               /* mmc subsystem clock frequency */
+>         u32 src_clk_freq;       /* source clock frequency */
+>         u32 sclk;               /* SD/MS bus clock frequency */
+> +       bool clock_on;
+>         unsigned char timing;
+>         bool vqmmc_enabled;
+>         u32 hs400_ds_delay;
+> @@ -387,6 +391,7 @@ static void msdc_reset_hw(struct msdc_host *host)
+>
+>  static void msdc_cmd_next(struct msdc_host *host,
+>                 struct mmc_request *mrq, struct mmc_command *cmd);
+> +static void msdc_recheck_sdio_irq(struct msdc_host *host);
+>
+>  static const u32 cmd_ints_mask =3D MSDC_INTEN_CMDRDY | MSDC_INTEN_RSPCRC=
+ERR |
+>                         MSDC_INTEN_CMDTMO | MSDC_INTEN_ACMDRDY |
+> @@ -513,6 +518,7 @@ static void msdc_gate_clock(struct msdc_host *host)
+>  {
+>         clk_disable_unprepare(host->src_clk);
+>         clk_disable_unprepare(host->h_clk);
+> +       host->clock_on =3D false;
+>  }
+>
+>  static void msdc_ungate_clock(struct msdc_host *host)
+> @@ -521,6 +527,7 @@ static void msdc_ungate_clock(struct msdc_host *host)
+>         clk_prepare_enable(host->src_clk);
+>         while (!(readl(host->base + MSDC_CFG) & MSDC_CFG_CKSTB))
+>                 cpu_relax();
+> +       host->clock_on =3D true;
+>  }
+>
+>  static void msdc_set_mclk(struct msdc_host *host, unsigned char timing, =
+u32 hz)
+> @@ -529,6 +536,7 @@ static void msdc_set_mclk(struct msdc_host *host, uns=
+igned char timing, u32 hz)
+>         u32 flags;
+>         u32 div;
+>         u32 sclk;
+> +       unsigned long irq_flags;
+>
+>         if (!hz) {
+>                 dev_dbg(host->dev, "set mclk to 0\n");
+> @@ -537,8 +545,11 @@ static void msdc_set_mclk(struct msdc_host *host, un=
+signed char timing, u32 hz)
+>                 return;
+>         }
+>
+> +       spin_lock_irqsave(&host->irqlock, irq_flags);
+>         flags =3D readl(host->base + MSDC_INTEN);
+>         sdr_clr_bits(host->base + MSDC_INTEN, flags);
+> +       spin_unlock_irqrestore(&host->irqlock, irq_flags);
+> +
+>         sdr_clr_bits(host->base + MSDC_CFG, MSDC_CFG_HS400_CK_MODE);
+>         if (timing =3D=3D MMC_TIMING_UHS_DDR50 ||
+>             timing =3D=3D MMC_TIMING_MMC_DDR52 ||
+> @@ -588,7 +599,10 @@ static void msdc_set_mclk(struct msdc_host *host, un=
+signed char timing, u32 hz)
+>         host->timing =3D timing;
+>         /* need because clk changed. */
+>         msdc_set_timeout(host, host->timeout_ns, host->timeout_clks);
+> +
+> +       spin_lock_irqsave(&host->irqlock, irq_flags);
+>         sdr_set_bits(host->base + MSDC_INTEN, flags);
+> +       spin_unlock_irqrestore(&host->irqlock, irq_flags);
+>
+>         /*
+>          * mmc_select_hs400() will drop to 50Mhz and High speed mode,
+> @@ -690,6 +704,7 @@ static inline u32 msdc_cmd_prepare_raw_cmd(struct msd=
+c_host *host,
+>  static void msdc_start_data(struct msdc_host *host, struct mmc_request *=
+mrq,
+>                             struct mmc_command *cmd, struct mmc_data *dat=
+a)
+>  {
+> +       unsigned long flags;
+>         bool read;
+>
+>         WARN_ON(host->data);
+> @@ -698,8 +713,12 @@ static void msdc_start_data(struct msdc_host *host, =
+struct mmc_request *mrq,
+>
+>         mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+>         msdc_dma_setup(host, &host->dma, data);
+> +
+> +       spin_lock_irqsave(&host->irqlock, flags);
+>         sdr_set_bits(host->base + MSDC_INTEN, data_ints_mask);
+>         sdr_set_field(host->base + MSDC_DMA_CTRL, MSDC_DMA_CTRL_START, 1)=
+;
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+> +
+>         dev_dbg(host->dev, "DMA start\n");
+>         dev_dbg(host->dev, "%s: cmd=3D%d DMA data: %d blocks; read=3D%d\n=
+",
+>                         __func__, cmd->opcode, data->blocks, read);
+> @@ -756,6 +775,7 @@ static void msdc_request_done(struct msdc_host *host,=
+ struct mmc_request *mrq)
+>         if (mrq->data)
+>                 msdc_unprepare_data(host, mrq);
+>         mmc_request_done(host->mmc, mrq);
+> +       msdc_recheck_sdio_irq(host);
+>  }
+>
+>  /* returns true if command is fully handled; returns false otherwise */
+> @@ -779,15 +799,17 @@ static bool msdc_cmd_done(struct msdc_host *host, i=
+nt events,
+>                                         | MSDC_INT_CMDTMO)))
+>                 return done;
+>
+> -       spin_lock_irqsave(&host->lock, flags);
+>         done =3D !host->cmd;
+> +       spin_lock_irqsave(&host->lock, flags);
+>         host->cmd =3D NULL;
+>         spin_unlock_irqrestore(&host->lock, flags);
+>
+>         if (done)
+>                 return true;
+>
+> +       spin_lock_irqsave(&host->irqlock, flags);
+>         sdr_clr_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+>
+>         if (cmd->flags & MMC_RSP_PRESENT) {
+>                 if (cmd->flags & MMC_RSP_136) {
+> @@ -902,6 +924,7 @@ static inline bool msdc_cmd_is_ready(struct msdc_host=
+ *host,
+>  static void msdc_start_command(struct msdc_host *host,
+>                 struct mmc_request *mrq, struct mmc_command *cmd)
+>  {
+> +       unsigned long flags;
+>         u32 rawcmd;
+>
+>         WARN_ON(host->cmd);
+> @@ -920,7 +943,10 @@ static void msdc_start_command(struct msdc_host *hos=
+t,
+>         rawcmd =3D msdc_cmd_prepare_raw_cmd(host, mrq, cmd);
+>         mod_delayed_work(system_wq, &host->req_timeout, DAT_TIMEOUT);
+>
+> +       spin_lock_irqsave(&host->irqlock, flags);
+>         sdr_set_bits(host->base + MSDC_INTEN, cmd_ints_mask);
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+> +
+>         writel(cmd->arg, host->base + SDC_ARG);
+>         writel(rawcmd, host->base + SDC_CMD);
+>  }
+> @@ -1013,8 +1039,8 @@ static bool msdc_data_xfer_done(struct msdc_host *h=
+ost, u32 events,
+>              | MSDC_INT_DMA_BDCSERR | MSDC_INT_DMA_GPDCSERR
+>              | MSDC_INT_DMA_PROTECT);
+>
+> -       spin_lock_irqsave(&host->lock, flags);
+>         done =3D !host->data;
+> +       spin_lock_irqsave(&host->lock, flags);
+>         if (check_data)
+>                 host->data =3D NULL;
+>         spin_unlock_irqrestore(&host->lock, flags);
+> @@ -1029,7 +1055,11 @@ static bool msdc_data_xfer_done(struct msdc_host *=
+host, u32 events,
+>                                 1);
+>                 while (readl(host->base + MSDC_DMA_CFG) & MSDC_DMA_CFG_ST=
+S)
+>                         cpu_relax();
+> +
+> +               spin_lock_irqsave(&host->irqlock, flags);
+>                 sdr_clr_bits(host->base + MSDC_INTEN, data_ints_mask);
+> +               spin_unlock_irqrestore(&host->irqlock, flags);
+> +
+>                 dev_dbg(host->dev, "DMA stop\n");
+>
+>                 if ((events & MSDC_INT_XFER_COMPL) && (!stop || !stop->er=
+ror)) {
+> @@ -1134,44 +1164,47 @@ static void msdc_request_timeout(struct work_stru=
+ct *work)
+>
+>  static irqreturn_t msdc_irq(int irq, void *dev_id)
+>  {
+> +       unsigned long flags;
+>         struct msdc_host *host =3D (struct msdc_host *) dev_id;
+> +       struct mmc_request *mrq;
+> +       struct mmc_command *cmd;
+> +       struct mmc_data *data;
+> +       u32 events, event_mask;
+> +
+> +       spin_lock_irqsave(&host->irqlock, flags);
+> +       events =3D readl(host->base + MSDC_INT);
+> +       event_mask =3D readl(host->base + MSDC_INTEN);
+> +       /* clear interrupts */
+> +       writel(events & event_mask, host->base + MSDC_INT);
+> +
+> +       mrq =3D host->mrq;
+> +       cmd =3D host->cmd;
+> +       data =3D host->data;
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+> +
+> +       if ((events & event_mask) & MSDC_INT_SDIOIRQ) {
+> +               mmc_signal_sdio_irq(host->mmc);
+> +               if (!mrq)
+> +                       return IRQ_HANDLED;
+> +       }
+>
+> -       while (true) {
+> -               unsigned long flags;
+> -               struct mmc_request *mrq;
+> -               struct mmc_command *cmd;
+> -               struct mmc_data *data;
+> -               u32 events, event_mask;
+> -
+> -               spin_lock_irqsave(&host->lock, flags);
+> -               events =3D readl(host->base + MSDC_INT);
+> -               event_mask =3D readl(host->base + MSDC_INTEN);
+> -               /* clear interrupts */
+> -               writel(events & event_mask, host->base + MSDC_INT);
+> -
+> -               mrq =3D host->mrq;
+> -               cmd =3D host->cmd;
+> -               data =3D host->data;
+> -               spin_unlock_irqrestore(&host->lock, flags);
+> -
+> -               if (!(events & event_mask))
+> -                       break;
+> +       if (!(events & (event_mask & ~MSDC_INT_SDIOIRQ)))
+> +               return IRQ_HANDLED;
+>
+> -               if (!mrq) {
+> -                       dev_err(host->dev,
+> -                               "%s: MRQ=3DNULL; events=3D%08X; event_mas=
+k=3D%08X\n",
+> -                               __func__, events, event_mask);
+> -                       WARN_ON(1);
+> -                       break;
+> -               }
+> +       if (!mrq) {
+> +               dev_err(host->dev,
+> +                       "%s: MRQ=3DNULL; events=3D%08X; event_mask=3D%08X=
+\n",
+> +                       __func__, events, event_mask);
+> +               WARN_ON(1);
+> +               return IRQ_HANDLED;
+> +       }
+>
+> -               dev_dbg(host->dev, "%s: events=3D%08X\n", __func__, event=
+s);
+> +       dev_dbg(host->dev, "%s: events=3D%08X\n", __func__, events);
+>
+> -               if (cmd)
+> -                       msdc_cmd_done(host, events, mrq, cmd);
+> -               else if (data)
+> -                       msdc_data_xfer_done(host, events, mrq, data);
+> -       }
+> +       if (cmd)
+> +               msdc_cmd_done(host, events, mrq, cmd);
+> +       else if (data)
+> +               msdc_data_xfer_done(host, events, mrq, data);
+>
+>         return IRQ_HANDLED;
+>  }
+> @@ -1179,6 +1212,7 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+>  static void msdc_init_hw(struct msdc_host *host)
+>  {
+>         u32 val;
+> +       unsigned long flags;
+>
+>         /* Configure to MMC/SD mode, clock free running */
+>         sdr_set_bits(host->base + MSDC_CFG, MSDC_CFG_MODE | MSDC_CFG_CKPD=
+N);
+> @@ -1190,9 +1224,11 @@ static void msdc_init_hw(struct msdc_host *host)
+>         sdr_clr_bits(host->base + MSDC_PS, MSDC_PS_CDEN);
+>
+>         /* Disable and clear all interrupts */
+> +       spin_lock_irqsave(&host->irqlock, flags);
+>         writel(0, host->base + MSDC_INTEN);
+>         val =3D readl(host->base + MSDC_INT);
+>         writel(val, host->base + MSDC_INT);
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+>
+>         writel(0, host->base + MSDC_PAD_TUNE);
+>         writel(0, host->base + MSDC_IOCON);
+> @@ -1207,9 +1243,11 @@ static void msdc_init_hw(struct msdc_host *host)
+>          */
+>         sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIO);
+>
+> -       /* disable detect SDIO device interrupt function */
+> -       sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> -
+> +       if (host->mmc->caps & MMC_CAP_SDIO_IRQ)
+> +               sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> +       else
+> +               /* disable detect SDIO device interrupt function */
+> +               sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+>         /* Configure to default data timeout */
+>         sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+>
+> @@ -1221,11 +1259,15 @@ static void msdc_init_hw(struct msdc_host *host)
+>  static void msdc_deinit_hw(struct msdc_host *host)
+>  {
+>         u32 val;
+> +       unsigned long flags;
+> +
+>         /* Disable and clear all interrupts */
+> +       spin_lock_irqsave(&host->irqlock, flags);
+>         writel(0, host->base + MSDC_INTEN);
+>
+>         val =3D readl(host->base + MSDC_INT);
+>         writel(val, host->base + MSDC_INT);
+> +       spin_unlock_irqrestore(&host->irqlock, flags);
+>  }
+>
+>  /* init gpd and bd list in msdc_drv_probe */
+> @@ -1493,6 +1535,52 @@ static void msdc_hw_reset(struct mmc_host *mmc)
+>         sdr_clr_bits(host->base + EMMC_IOCON, 1);
+>  }
+>
+> +/**
+> + * msdc_recheck_sdio_irq - recheck whether the SDIO IRQ is lost
+> + * @host: The host to check.
+> + *
+> + * Host controller may lost interrupt in some special case.
+> + * Add sdio IRQ recheck mechanism to make sure all interrupts
+> + * can be processed immediately
+> + *
+> + */
+> +static void msdc_recheck_sdio_irq(struct msdc_host *host)
+> +{
+> +       u32 reg_int, reg_ps;
+> +
+> +       if (host->clock_on &&
+> +           (host->mmc->caps & MMC_CAP_SDIO_IRQ) &&
+> +           host->irq_thread_alive) {
+> +               reg_int =3D readl(host->base + MSDC_INT);
+> +               reg_ps  =3D readl(host->base + MSDC_PS);
+> +               if (!((reg_int & MSDC_INT_SDIOIRQ) ||
+> +                     (reg_ps & MSDC_PS_DATA1))) {
+> +                       mmc_signal_sdio_irq(host->mmc);
+> +               }
+> +       }
+> +}
+> +
+> +static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+> +{
+> +       unsigned long flags;
+> +       struct msdc_host *host =3D mmc_priv(mmc);
+> +
+> +       host->irq_thread_alive =3D true;
+> +       if (enable) {
+> +               pm_runtime_get_sync(host->dev);\
+This cause problems in kernel >=3D 3.19. Since pm_runtime_get_sync calls
+__might_sleep, and you are not suppose to sleep in a IRQ handler.
 
-On Sun, 2017-01-22 at 18:31 -0800, Steve Longerbeam wrote:
-> 
-> On 01/16/2017 05:47 AM, Philipp Zabel wrote:
-> > On Sat, 2017-01-14 at 14:46 -0800, Steve Longerbeam wrote:
-> > [...]
-> >>>> +Unprocessed Video Capture:
-> >>>> +--------------------------
-> >>>> +
-> >>>> +Send frames directly from sensor to camera interface, with no
-> >>>> +conversions:
-> >>>> +
-> >>>> +-> ipu_smfc -> camif
-> >>> I'd call this capture interface, this is not just for cameras. Or maybe
-> >>> idmac if you want to mirror hardware names?
-> >> Camif is so named because it is the V4L2 user interface for video
-> >> capture. I suppose it could be named "capif", but that doesn't role
-> >> off the tongue quite as well.
-> > Agreed, capif sounds weird. I find camif a bit confusing though, because
-> > Samsung S3C has a camera interface that is actually called "CAMIF".
-> 
-> how about simply "capture" ?
+2017-01-20T00:32:49.855603-08:00 WARNING kernel: [   11.068860] do not
+call blocking ops when !TASK_RUNNING; state=3D1 set at
+[<ffffffc0007a350c>] sdio_irq_thread+0x11c/0x1dc
+...
+2017-01-20T00:32:49.856042-08:00 EMERG kernel: [   12.136156] Call
+trace:
+2017-01-20T00:32:49.856044-08:00 WARNING kernel: [   12.138584]
+[<ffffffc000249d84>] __might_sleep+0x64/0x90
+2017-01-20T00:32:49.856047-08:00 WARNING kernel: [   12.143855]
+[<ffffffc000630f54>] __pm_runtime_resume+0x40/0x9c
+2017-01-20T00:32:49.856049-08:00 WARNING kernel: [   12.149644]
+[<ffffffc0007ae994>] msdc_enable_sdio_irq+0x44/0xd0
+2017-01-20T00:32:49.856051-08:00 WARNING kernel: [   12.155516]
+[<ffffffc0007a3544>] sdio_irq_thread+0x154/0x1dc
+2017-01-20T00:32:49.856053-08:00 WARNING kernel: [   12.161131]
+[<ffffffc00023f30c>] kthread+0x10c/0x114
+2017-01-20T00:32:49.856055-08:00 WARNING kernel: [   12.166056]
+[<ffffffc000203dd0>] ret_from_fork+0x10/0x40
+2017-01-20T00:32:49.856057-08:00 WARNING kernel: [   12.171368] sched:
+RT throttling activated for rt_rq ffffffc0fff5a5c0 (cpu 1)
+2017-01-20T00:32:49.856059-08:00 WARNING kernel: [   12.171368]
+potential CPU hogs:
+2017-01-20T00:32:49.856061-08:00 WARNING kernel: [   12.171368]
+ ksdioirqd/mmc2 (1772)
 
-That sounds good to me.
+dw_mmc also enables autosuspend but it didn't call any pm_runtime_get*
+function in it's enable_sdio_irq function, I don't really know how it
+worked around this.
+Ulf, any suggestions on how we can do this?
 
-[...]
-> > Chapter 37.4.2.3 "FCW & FCR - Format converter write and read" in the
-> > IDMAC chapter states that all internal submodules only work on 8-bit per
-> > component formats with four components: YUVA or RGBA.
-> 
-> Right, the "direct" IPU internal (that do not transfer buffers to/from
-> memory via IDMAC channels) should only allow the IPU internal
-> formats YUVA and RGBA. I get you now.
-> 
-> The "direct" pads now only accept MEDIA_BUS_FMT_AYUV8_1X32 and
-> MEDIA_BUS_FMT_ARGB8888_1X32.
-> 
-> Those pads are:
-> 
-> ipu_csi:1
-> ipu_vdic:1
-> ipu_ic_prp:0
-> ipu_ic_prp:1
-> ipu_ic_prpenc:0
-> ipu_ic_prpenc:1
-> ipu_ic_prpvf:0
-> ipu_ic_prpvf:1
+Wei-Ning
 
-Yes, that is what I meant. The csi:1 can then be extended to support
-additional expanded/packed/raw formats for the SMFC->memory path.
+> +               msdc_recheck_sdio_irq(host);
+> +
+> +               spin_lock_irqsave(&host->irqlock, flags);
+> +               sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> +               sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ)=
+;
+> +               spin_unlock_irqrestore(&host->irqlock, flags);
+> +       } else {
+> +               spin_lock_irqsave(&host->irqlock, flags);
+> +               sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ)=
+;
+> +               spin_unlock_irqrestore(&host->irqlock, flags);
+> +       }
+> +}
+> +
+>  static struct mmc_host_ops mt_msdc_ops =3D {
+>         .post_req =3D msdc_post_req,
+>         .pre_req =3D msdc_pre_req,
+> @@ -1504,6 +1592,7 @@ static void msdc_hw_reset(struct mmc_host *mmc)
+>         .execute_tuning =3D msdc_execute_tuning,
+>         .prepare_hs400_tuning =3D msdc_prepare_hs400_tuning,
+>         .hw_reset =3D msdc_hw_reset,
+> +       .enable_sdio_irq =3D msdc_enable_sdio_irq,
+>  };
+>
+>  static int msdc_drv_probe(struct platform_device *pdev)
+> @@ -1600,6 +1689,7 @@ static int msdc_drv_probe(struct platform_device *p=
+dev)
+>         mmc_dev(mmc)->dma_mask =3D &host->dma_mask;
+>
+>         host->timeout_clks =3D 3 * 1048576;
+> +       host->irq_thread_alive =3D false;
+>         host->dma.gpd =3D dma_alloc_coherent(&pdev->dev,
+>                                 2 * sizeof(struct mt_gpdma_desc),
+>                                 &host->dma.gpd_addr, GFP_KERNEL);
+> @@ -1613,6 +1703,7 @@ static int msdc_drv_probe(struct platform_device *p=
+dev)
+>         msdc_init_gpd_bd(host, &host->dma);
+>         INIT_DELAYED_WORK(&host->req_timeout, msdc_request_timeout);
+>         spin_lock_init(&host->lock);
+> +       spin_lock_init(&host->irqlock);
+>
+>         platform_set_drvdata(pdev, mmc);
+>         msdc_ungate_clock(host);
+> --
+> 1.7.9.5
+>
 
-> >> There does not appear to be support in the FSU for linking a write channel
-> >> to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
-> >> is support for the direct link from CSI (which I am using), but that's
-> >> not an
-> >> IDMAC channel link.
-> >>
-> >> There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
-> >> 0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
-> > As I read it, that is 0 and 2 only, no idea why. But since there are
-> > only 2 CSIs, that shouldn't be a problem.
-> 
-> ipu_csi1 is now transferring on IDMAC/SMFC channel 2 (ipu_csi0 still
-> at channel 0).
 
-Ok.
 
-> >>>> +static const u32 power_off_seq[] = {
-> >>>> +	IMX_MEDIA_GRP_ID_IC_PP,
-> >>>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
-> >>>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
-> >>>> +	IMX_MEDIA_GRP_ID_SMFC,
-> >>>> +	IMX_MEDIA_GRP_ID_CSI,
-> >>>> +	IMX_MEDIA_GRP_ID_VIDMUX,
-> >>>> +	IMX_MEDIA_GRP_ID_SENSOR,
-> >>>> +	IMX_MEDIA_GRP_ID_CSI2,
-> >>>> +};
-> >>> This seems somewhat arbitrary. Why is a power sequence needed?
-> >> The CSI-2 receiver must be powered up before the sensor, that's the
-> >> only requirement IIRC. The others have no s_power requirement. So I
-> >> can probably change this to power up in the frontend -> backend order
-> >> (IC_PP to sensor). And vice-versa for power off.
-> > Yes, I think that should work (see below).
-> 
-> Actually there are problems using this, see below.
-[...]
-> >>>> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
-> >>> This should really be handled by v4l2_pipeline_pm_use.
-> >> I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
-> >> doing some other stuff that bothered me, at least that's what I remember.
-> >> I will revisit this.
-> > I have used it with a tc358743 -> mipi-csi2 pipeline, it didn't cause
-> > any problems. It would be better to reuse and, if necessary, fix the
-> > existing infrastructure where available.
-> 
-> I tried this API, by switching to v4l2_pipeline_pm_use() in camif 
-> open/release,
-> and switched to v4l2_pipeline_link_notify() instead of 
-> imx_media_link_notify()
-> in the media driver's media_device_ops.
-> 
-> This API assumes the video device has an open file handle while the media
-> links are being established. This doesn't work for me, I want to be able to
-> establish the links using 'media-ctl -l', and that won't work unless 
-> there is an
-> open file handle on the video capture device node.
-> 
-> Also, I looked into calling v4l2_pipeline_pm_use() during 
-> imx_media_link_notify(),
-> instead of imx_media_pipeline_set_power(). Again there are problems with 
-> that.
-> 
-> First, v4l2_pipeline_pm_use() acquires the graph mutex, so it can't be 
-> called inside
-> link_notify which already acquires that lock. The header for this 
-> function also
-> clearly states it should only be called in open/release.
-
-So why not call it in open/release then?
-
-> Second, ignoring the above locking issue for a moment, 
-> v4l2_pipeline_pm_use()
-> will call s_power on the sensor _first_, then the mipi csi-2 s_power, 
-> when executing
-> media-ctl -l '"ov5640 1-003c":0 -> "imx6-mipi-csi2":0[1]'. Which is the 
-> wrong order.
-> In my version which enforces the correct power on order, the mipi csi-2 
-> s_power
-> is called first in that link setup, followed by the sensor.
-
-I don't understand why you want to power up subdevs as soon as the links
-are established. Shouldn't that rather be done for all subdevices in the
-pipeline when the corresponding capture device is opened?
-It seems to me that powering up the pipeline should be the last step
-before userspace actually starts the capture.
-
-[...]
-> >>>> +	/* there must be at least one CSI in first IPU */
-> >>> Why?
-> >> Well yeah, imx-media doesn't necessarily need a CSI if things
-> >> like the VDIC or post-processor are being used by an output
-> >> overlay pipeline, for example. I'll fix this.
-> > I haven't even thought that far, but there could be boards with only a
-> > parallel sensor connected to IPU2 CSI1 and IPU1 disabled for power
-> > saving reasons.
-> 
-> done! A very simple change to imx_media_add_internal_subdevs(),
-> and now no CSI's are necessary, but the remaining IPU internal entities
-> are loaded and linked just fine without them, so for example with no
-> CSI's in IPU2, the VDIC entity in IPU2 is still present in the graph and
-> could still be used in the future by a mem2mem device for instance.
-
-Excellent, thanks.
-
-regards
-Philipp
+--=20
+Wei-Ning Huang, =E9=BB=83=E5=81=89=E5=AF=A7 | Software Engineer, Google Inc=
+., Taiwan |
+wnhuang@google.com | Cell: +886 910-380678
