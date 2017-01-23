@@ -1,110 +1,42 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv2] Documentation: dt-bindings: Add binding documentation
- for TI clkctrl clocks
-Date: Mon, 23 Jan 2017 20:29:38 +0200
-Message-ID: <f3c4154d-09d0-3930-4452-1f7d61622f3d@ti.com>
-References: <20170117225302.10844-1-tony@atomide.com>
- <40b1f6a8-fc5c-b619-9570-bc2f9731af89@ti.com>
- <20170123162828.GR7403@atomide.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM64: dts: meson-gxm-rbox-pro: Add board compatible
+ string
+Date: Mon, 23 Jan 2017 19:32:18 +0100
+Message-ID: <7244aa99-e122-b0c8-98e2-94e72c7600a4@suse.de>
+References: <20170117030611.23827-2-afaerber@suse.de>
+ <20170117225459.4438-1-afaerber@suse.de>
+ <20170117225459.4438-3-afaerber@suse.de> <m2h94p3aee.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123162828.GR7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <m2h94p3aee.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/17 18:28, Tony Lindgren wrote:
-> * Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org> [170123 06:45]:
->> On 18/01/17 00:53, Tony Lindgren wrote:
->>> Texas Instruments omap variant SoCs starting with omap4 have a clkctrl
->>> clock controller instance for each interconnect target module. The clkctrl
->>> controls functional and interface clocks for the module.
->>>
->>> The clkctrl clocks are currently handled by arch/arm/mach-omap2 hwmod code.
->>> With this binding and a related clock device driver we can start moving the
->>> clkctrl clock handling to live in drivers/clk/ti.
->>>
->>> Note that this binding allows keeping the clockdomain related parts out of
->>> drivers/clock. The CLKCTCTRL and DYNAMICDEP registers can be handled by
->>> a separate driver in drivers/soc/ti and genpd. If the clockdomain driver
->>> needs to know it's clocks, we can just set the the clkctrl device
->>> instances to be children of the related clockdomain device.
->>>
->>> Each clkctrl clock can have multiple optional gate clocks, and multiple
->>> optional mux clocks. To represent this in device tree, it seems that
->>> it is best done using four clock cells #clock-cells = <4> property.
->>>
->>> The reasons for using #clock-cells = <4> are:
->>>
->>> 1. We need to specify the clkctrl offset from the instance base. Otherwise
->>>    we end up with a large number of device tree nodes that need to be
->>>    patched when new clocks are discovered in a clkctrl clock with minor
->>>    hardware revision changes for example
->>>
->>> 2. On omap5 CM_L3INIT_USB_HOST_HS_CLKCTRL has ten OPTFCLKEN bits. So we
->>>    need to use a separate cell for optional gate clocks to avoid address
->>>    space conflicts
->>>
->>> 3. Some clkctrl instances can also also optional mux clocks. To address
->>>    them properly we need also a separate cell for the optional mux
->>>    clock index
->>>
->>> 4. The modulemode clock needs a flag passed to it for hardware or
->>>    software controlled mode
->>
->> Hi Tony,
->>
->> I think #clock-cells = <4> is too much. I believe we only need 2:
->>
->> - one entry for clkctrl offset
->> - one entry for clock offset within the clkctrl entry (0 = module clock, 8+
->> = opt-clocks / mux clocks / dividers)
->
-> OK the less #clock-cells the better as long as it's enough :)
->
->> Fields 2 / 3 in your proposal are mutually exclusive, if either field is
->> non-zero, the other one must be zero. And, the opt clocks / mux / divs
->> always have different values for these.
->
-> OK. Just to confirm the assumptions then:
->
-> 1. The optional mux clock the consumer needs to select the right
->    source clock with with clk_set_parent()
+Am 23.01.2017 um 19:21 schrieb Kevin Hilman:
+> Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org> writes:
+> 
+>> Cc: ada-MUr+2Ic57fgS+FvcfC7Uqw@public.gmane.org
+>> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>>  To be squashed in v2.
+> 
+> FYI, since you mention v2 here, i'll wait on this series and assume
+> you'll update it on top of your cleanup series.
 
-Yes. And for this you need to fetch a clock handle via some mechanism 
-(of_clk_get, clk_get...) Clock consumers can't directly use parent IDs.
+Yes, I am waiting on the board documentation cleanup to be merged before
+I rebase though. The others shouldn't matter here.
 
->
-> 2. The optional divider clock rate must be set by the consumer
->    using clk_set_rate()
+Regards,
+Andreas
 
-Yes again.
-
->
-> And in that case we again don't need to define any artificial
-> clock indexes, which is good if new clocks are discovered between
-> various SoC revisions.
->
->> Field 4 is kind of redundant also, as the module clock must be registered at
->> the clkctrl probe time, it is too late for the clock consumer to provide the
->> proper setting for the clock during its own probe. It seems I need to add
->> static data to driver which basically has this information in place already.
->
-> OK yeah good point, the "clocks" is a consumer property.
->
-> So in that case we must also assume that if any clock consumer needs
-> to change between HWSUP or SWSUP, it needs to be done with some yet
-> to be determined API. We have not needed that so far AFAIK though.
->
-> If there are no issues with the above, I'm naturally fine using the
-> #clock-cells = <2> :)
-
-Yeah, clock-cells = <2>; seems to work just fine in the WIP codebase I have.
-
--Tero
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
