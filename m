@@ -1,49 +1,54 @@
 From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of/platform: dynamic: Use of_platform_bus_create() to
- create devices
-Date: Mon, 23 Jan 2017 16:07:07 +0100
-Message-ID: <83d2dd4b-667c-b707-a895-dcab72d73367@nokia.com>
-References: <b317f693-98b5-ba1e-1184-83735a68db9b@nokia.com>
- <CAL_JsqJZ__mUwRT14BmNQKaa_mAPsJm0iWP8sb6Oqs+_-Gu5hw@mail.gmail.com>
- <3da6854d-8361-1724-2a8a-36f28449733e@nokia.com>
- <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
+Subject: Re: [PATCH v2] of/platform: Ignore disabled devices in
+ of_platform_populate()
+Date: Mon, 23 Jan 2017 16:09:57 +0100
+Message-ID: <34599a91-7fd8-8e08-b399-382d6c528332@nokia.com>
+References: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
+ <20170123125204.22233-1-alexander.sverdlin@nokia.com>
+ <711e6067-ab41-8217-b947-2b4c356aaaba@nokia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <711e6067-ab41-8217-b947-2b4c356aaaba-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 21/01/17 20:51, Rob Herring wrote:
-> On Fri, Jan 20, 2017 at 11:38 AM, Alexander Sverdlin
-> <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
->> Hello Rob,
+On 23/01/17 15:33, Alexander Sverdlin wrote:
+>> Check the status property and give up early enough. Otherwise
+>> OF_POPULATED_BUS might be set for disabled bus which will prevent
+>> it from being populated later (if enabled).
 >>
->> On 27/10/16 15:00, Rob Herring wrote:
->>>> @@ -534,15 +535,15 @@ static int of_platform_notify(struct notifier_block *nb,
->>>>
->>>>                 /* pdev_parent may be NULL when no bus platform device */
->>>>                 pdev_parent = of_find_device_by_node(rd->dn->parent);
->>>> -               pdev = of_platform_device_create(rd->dn, NULL,
->>>> -                               pdev_parent ? &pdev_parent->dev : NULL);
->>>> +               ret = of_platform_bus_create(rd->dn, of_default_bus_match_table,
->>>> +                                            NULL, pdev_parent ?
->>>> +                                            &pdev_parent->dev : NULL, true);
->>> I think this should be of_platform_default_populate() instead.
->> I've just tested: it cannot be. It calls of_platform_populate(), which ignores "status" property.
->> This not only brakes half of the unit tests, but also would change the existing behavior of
->> overlays (they will completely ignore "status" too).
-> That's a bug. I assume that's only at the 1st level or things would be
-> completely broken.
+>> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> ---
+>>  drivers/of/platform.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 35de1fc59fa6..060621d94f1a 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -476,6 +476,10 @@ int of_platform_populate(struct device_node *root,
+>>  	root = root ? of_node_get(root) : of_find_node_by_path("/");
+>>  	if (!root)
+>>  		return -EINVAL;
+>> +	if (!of_device_is_available(root)) {
+>> +		of_node_put(root);
+>> +		return 0;
+>> +	}
+>>  
+>>  	pr_debug("%s()\n", __func__);
+>>  	pr_debug(" starting at: %s\n", root->full_name);
+> no, this one also doesn't allow to switch to of_platform_default_populate(),
+> please ignore the patch.
 
-well, after two unsuccessful attempts to use of_platform_default_populate() in of_platform_notify()
-I see what the actual problem is: of_platform_*populate() do not populate the root node itself,
-therefore they are not suitable for of_platform_notify().
+Well, the patch seems to fix a real problem because OF_POPULATED_BUS would be
+set for disabled buses, which will prevent their enabling later. Even if there
+is no in-tree call site stumbles upon this issue. 
 
 -- 
 Best regards,
