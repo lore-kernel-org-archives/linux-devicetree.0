@@ -1,34 +1,39 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] iio:temperature:Add irq and threshold events support for
- TI TMP007 sensor
-Date: Mon, 23 Jan 2017 11:10:08 -0600
-Message-ID: <20170123171008.s3hkvmxhro4qycia@rob-hp-laptop>
-References: <20170121150147.GA7781@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using rockchip timer
+Date: Mon, 23 Jan 2017 18:12:42 +0100
+Message-ID: <1793912.WfGyM7qEjy@diego>
+References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com> <20170123144744.GE2166@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170121150147.GA7781-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170123144744.GE2166@mai>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Alexander Kochetkov <al.kochet@gmail.com>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 21, 2017 at 08:31:47PM +0530, Manivannan Sadhasivam wrote:
-> This patch adds support for ALERT irq and limit threshold events for TI TMP007 - 16 bit IR thermopile sensor
-> with integrated math engine.
+Am Montag, 23. Januar 2017, 15:47:44 CET schrieb Daniel Lezcano:
+> On Wed, Dec 21, 2016 at 05:21:05PM +0300, Alexander Kochetkov wrote:
+> > Hello Heiko, Daniel!
+> > 
+> > Are there any reasons why the patches [1][2] are not applied yet into
+> > kernel? How can I help in applying patches?
 > 
-> Following threshold events are supported:
-> 1. TObj high limit
-> 2. TObj low limit
-> 3. TDie high limit
-> 4. TDie low limit
+> Hi Alexander,
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/iio/temperature/tmp007.txt |   8 +
+> sorry for the delay. Let me review them before taking the patchset.
+> 
+> Heiko, can you have a look to them also ?
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+somehow this series moved down to much in my inbox, sorry.
 
->  drivers/iio/temperature/tmp007.c                   | 334 ++++++++++++++++++---
->  2 files changed, 304 insertions(+), 38 deletions(-)
+Devicetree changes look good, except where I commented.
+I guess it would be best (least intrusive) if I queue up the (then fixed) 
+devicetree changes after you are satisfied with the code parts.
+
+I've also looked over the code changes again, test-build them and found the 
+build error mentioned separately. Overall they look good though.
+
+
+Heiko
