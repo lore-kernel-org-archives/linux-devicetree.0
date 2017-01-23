@@ -1,67 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/14] devicetree: bindings: add bindings for
- ahci-da850
-Date: Mon, 23 Jan 2017 09:49:31 -0600
-Message-ID: <20170123154931.zyrcg5grqvia435t@rob-hp-laptop>
-References: <1484911325-23425-1-git-send-email-bgolaszewski@baylibre.com>
- <1484911325-23425-2-git-send-email-bgolaszewski@baylibre.com>
- <5615fb6b-af26-c2fb-1f97-416548a9faaf@ti.com>
+From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
+ DWC_USB3_NUM_IN_EPS
+Date: Mon, 23 Jan 2017 15:49:53 +0000
+Message-ID: <81853e89-c22a-cf7f-bbc7-abe4f9a59456@nexus-software.ie>
+References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
+ <20170123153815.qxridbif7dg4k23z@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5615fb6b-af26-c2fb-1f97-416548a9faaf@ti.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123153815.qxridbif7dg4k23z@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 07:02:08PM +0530, Sekhar Nori wrote:
-> Hi Rob,
-> 
-> On Friday 20 January 2017 04:51 PM, Bartosz Golaszewski wrote:
-> > Add DT bindings for the TI DA850 AHCI SATA controller.
-> > 
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Could you ack this binding?
+On 23/01/17 15:38, Rob Herring wrote:
 
-First I'm seeing it that I recall and v5? That either means the DT list 
-wasn't copied or new versions are being sent out faster than can be 
-reviewed. Sending new versions puts you at the back of the queue.
-
+>>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
+>> + - snps,num_in_eps_quirk: when set core will over-ride the num_in_eps value.
+>> + - snps,num_in_eps_override: the value that will be used for num_in_eps when
+>> +			num_in_eps_quirk is true
 > 
-> Thanks,
-> Sekhar
-> 
-> > ---
-> >  Documentation/devicetree/bindings/ata/ahci-da850.txt | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
-> > new file mode 100644
-> > index 0000000..268fe87
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
-> > @@ -0,0 +1,15 @@
-> > +Device tree binding for the TI DA850 AHCI SATA Controller
-> > +---------------------------------------------------------
-> > +
-> > +Required properties:
-> > +  - compatible: must be "ti,da850-ahci"
-> > +  - reg: physical base addresses and sizes of the controller's register areas
+> Why do you need 2 properties? Presence of the prop eanbles the override 
+> and the value of the prop provides the value.
 
-Need to state how many and what the regions are.
+We don't, sorry Rob I didn't CC you on the follow up patch, we've
+decided to do everything in-code minus any DT bindings.
 
-> > +  - interrupts: interrupt specifier (refer to the interrupt binding)
-> > +
-> > +Example:
-> > +
-> > +	sata: sata@218000 {
-> > +		compatible = "ti,da850-ahci";
-> > +		reg = <0x218000 0x2000>, <0x22c018 0x4>;
-> > +		interrupts = <67>;
-> > +	};
-> > 
-> 
+---
+bod
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
