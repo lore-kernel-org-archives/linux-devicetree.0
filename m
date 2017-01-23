@@ -1,60 +1,47 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Kevin Hilman <khilman@baylibre.com>
 Subject: Re: [PATCH 2/3] pinctrl: meson: meson-gxl: add the pwm_ao_b pin
-Date: Mon, 23 Jan 2017 11:10:18 -0800
-Message-ID: <m2sho91tk5.fsf@baylibre.com>
+Date: Mon, 23 Jan 2017 11:12:45 -0800
+Message-ID: <CAOi56cV1+2uAMfBe0XQnvwq711fMiXJ+kKRAv9vUO70ZGKhtPQ@mail.gmail.com>
 References: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
-        <20170122210528.892-3-martin.blumenstingl@googlemail.com>
+ <20170122210528.892-3-martin.blumenstingl@googlemail.com> <m2sho91tk5.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170122210528.892-3-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> (Martin
-        Blumenstingl's message of "Sun, 22 Jan 2017 22:05:27 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <m2sho91tk5.fsf@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-gpio@vger.kernel.org, linux-amlogic <linux-amlogic@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Carlo Caione <carlo@caione.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
-
-> This adds support for the pwm_ao_b pin. Unfortunately the registers for
-> the pwm_ao pins are not documented at all. The source for the pwm_ao_b
-> pin from this patch is the Khadas VIM GPL kernel source, which sets bit
-> 3 and unsets bits 4 and 31 to enable the PWM LEDs.
+On Mon, Jan 23, 2017 at 11:10 AM, Kevin Hilman <khilman@baylibre.com> wrote:
+> Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 >
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  drivers/pinctrl/meson/pinctrl-meson-gxl.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+>> This adds support for the pwm_ao_b pin. Unfortunately the registers for
+>> the pwm_ao pins are not documented at all. The source for the pwm_ao_b
+>> pin from this patch is the Khadas VIM GPL kernel source, which sets bit
+>> 3 and unsets bits 4 and 31 to enable the PWM LEDs.
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>> ---
+>>  drivers/pinctrl/meson/pinctrl-meson-gxl.c | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> index 25694f7094c7..6ff321a7366d 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> @@ -222,6 +222,8 @@ static const unsigned int uart_rts_ao_b_pins[]    = { PIN(GPIOAO_3, 0) };
+>>
+>>  static const unsigned int remote_input_ao_pins[] = {PIN(GPIOAO_7, 0) };
+>>
+>> +static const unsigned int pwm_ao_b_pins[]    = { PIN(GPIOAO_9, 0) };
+>> +
 >
-> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> index 25694f7094c7..6ff321a7366d 100644
-> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
-> @@ -222,6 +222,8 @@ static const unsigned int uart_rts_ao_b_pins[]	= { PIN(GPIOAO_3, 0) };
->  
->  static const unsigned int remote_input_ao_pins[] = {PIN(GPIOAO_7, 0) };
->  
-> +static const unsigned int pwm_ao_b_pins[]	= { PIN(GPIOAO_9, 0) };
-> +
+> Hmm, the S905 public data sheet[1] shows this as GPIOAO_13.
+>
 
-Hmm, the S905 public data sheet[1] shows this as GPIOAO_13.
+gack, nevermind.  I see now this is for GXL, not GXBB.  Ignore my comments.
 
->  static struct meson_pmx_group meson_gxl_periphs_groups[] = {
->  	GPIO_GROUP(GPIOZ_0, EE_OFF),
->  	GPIO_GROUP(GPIOZ_1, EE_OFF),
-> @@ -418,6 +420,7 @@ static struct meson_pmx_group meson_gxl_aobus_groups[] = {
->  	GROUP(uart_cts_ao_b,	0,	8),
->  	GROUP(uart_rts_ao_b,	0,	7),
->  	GROUP(remote_input_ao,	0,	0),
-> +	GROUP(pwm_ao_b,		0,	3),
->  };
+Linus, feel free to apply with:
 
-but it does show as ao_reg[3].
-
-Kevin
-
-[1] http://dn.odroid.com/S905/DataSheet/S905_Public_Datasheet_V1.1.4.pdf
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Kevin Hilman <khilman@baylibre.com>
