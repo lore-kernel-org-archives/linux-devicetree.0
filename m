@@ -1,46 +1,34 @@
-From: Jagan Teki <jagan@openedev.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: imx6ul: Add Engicam Is.IoT MX6UL eMMC
- initial support
-Date: Mon, 23 Jan 2017 10:49:24 +0100
-Message-ID: <02a7c35f-46c8-392a-732a-e34f82b547fd@openedev.com>
-References: <1484867375-22411-1-git-send-email-jagan@openedev.com>
- <1484867375-22411-2-git-send-email-jagan@openedev.com>
- <20170123094735.GO5662@dragon>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 2/2] ARM: DTS: Fix register map for virt-capable GIC
+Date: Mon, 23 Jan 2017 17:58:57 +0800
+Message-ID: <20170123095856.GP5662@dragon>
+References: <1484736811-24002-1-git-send-email-marc.zyngier@arm.com>
+ <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170123094735.GO5662@dragon>
+Content-Disposition: inline
+In-Reply-To: <1484736811-24002-3-git-send-email-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>, Jagan Teki <jagan@amarulasolutions.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 23 January 2017 10:47 AM, Shawn Guo wrote:
-> On Fri, Jan 20, 2017 at 12:09:34AM +0100, Jagan Teki wrote:
->> From: Jagan Teki <jagan@amarulasolutions.com>
->>
->> Engicam Is.IoT MX6UL has separate module for eMMC, so add emmc dts
->> file for imx6ul-isiot.dtsi, usdhc2 node represent eMMC.
->>
->> dmesg:
->> -----
->> mmc1: SDHCI controller on 2194000.usdhc [2194000.usdhc] using ADMA
->> mmc1: new DDR MMC card at address 0001
->> mmcblk1: mmc1:0001 M62704 3.53 GiB
->>
->> Cc: Matteo Lisi <matteo.lisi@engicam.com>
->> Cc: Michael Trimarchi <michael@amarulasolutions.com>
->> Cc: Signed-off-by: Shawn Guo <shawnguo@kernel.org>
->
-> You only want to Cc me, not sign it off for me.  I removed the it when
-> applying.
+On Wed, Jan 18, 2017 at 10:53:31AM +0000, Marc Zyngier wrote:
+> Since everybody copied my own mistake from the DT binding example,
+> let's address all the offenders in one swift go.
+> 
+> Most of them got the CPU interface size wrong (4kB, while it should
+> be 8kB), except for both keystone platforms which got the control
+> interface wrong (4kB instead of 8kB).
+> 
+> In the couple of cases were I knew for sure what implementation
+> was used, I've added the "arm,gic-400" compatible string. I'm 99%
+> sure that this is what everyong is using, but short of having the
+> TRM for all the other SoCs, I've let them alone.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  arch/arm/boot/dts/imx6ul.dtsi        | 4 ++--
 
-Sorry, I accidentally did this will take care for next time.
-
-thanks!
--- 
-Jagan Teki
-Free Software Engineer | www.openedev.com
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+Acked-by: Shawn Guo <shawnguo@kernel.org>
