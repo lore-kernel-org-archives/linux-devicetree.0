@@ -1,67 +1,82 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 2/9] drm: debugfs: Remove all files automatically on
- cleanup
-Date: Mon, 23 Jan 2017 10:10:50 +0100
-Message-ID: <20170123091050.rk5xzdkn4ro2tuws@phenom.ffwll.local>
-References: <20170122181117.8210-1-noralf@tronnes.org>
- <20170122181117.8210-3-noralf@tronnes.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: document renesas-ostm timer
+Date: Mon, 23 Jan 2017 10:15:09 +0100
+Message-ID: <CAMuHMdU+wfKj+B+7vHCnLMaakL6o9phJkYPex272z4UurcXemg@mail.gmail.com>
+References: <20170120212003.4103-1-chris.brandt@renesas.com> <20170120212003.4103-2-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170122181117.8210-3-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170120212003.4103-2-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKYW4gMjIsIDIwMTcgYXQgMDc6MTE6MTBQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
-IHdyb3RlOgo+IEluc3RlYWQgb2YgaGF2aW5nIHRoZSBkcml2ZXJzIGNhbGwgZHJtX2RlYnVnZnNf
-cmVtb3ZlX2ZpbGVzKCkgaW4KPiB0aGVpciBkcm1fZHJpdmVyLT5kZWJ1Z2ZzX2NsZWFudXAgaG9v
-aywgZG8gaXQgYXV0b21hdGljYWxseSBieQo+IHRyYXZlcnNpbmcgbWlub3ItPmRlYnVnZnNfbGlz
-dC4KPiBBbHNvIHVzZSBkZWJ1Z2ZzX3JlbW92ZV9yZWN1cnNpdmUoKSBzbyBkcml2ZXJzIHdobyBh
-ZGQgdGhlaXIgb3duCj4gZGVidWdmcyBmaWxlcyBkb24ndCBoYXZlIHRvIGtlZXAgdHJhY2sgb2Yg
-dGhlbSBmb3IgcmVtb3ZhbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5v
-cmFsZkB0cm9ubmVzLm9yZz4KCk1ha2VzIHNlbnNlLCBidXQgdGhhdCBsZWF2ZXMgdXMgd2l0aCBh
-IHBpbGUgb2YgZGVhZCBjb2RlIGluIGRyaXZlcnM/IENhbgp5b3UgcGxzIGdvIHRocm91Z2ggdGhl
-bSBhbmQgcmVtb3ZlIHRoaXMgYWxsIChpbmNsdWRpbmcgdGhlIGRlYnVnZnNfY2xlYW51cApob29r
-KSwgYW5kIHRoZW4gcmVtb3ZpbmcgdGhlIHJlbWFpbmluZyAobm93IGRlYWQpIGNvZGUgaW4gdGhl
-IGNvcmU/CgpUaGFua3MsIERhbmllbAo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vZHJtX2RlYnVn
-ZnMuYyB8IDE3ICsrKysrKysrKysrKysrKy0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRp
-b25zKCspLCAyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-ZHJtX2RlYnVnZnMuYyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZGVidWdmcy5jCj4gaW5kZXggMzdm
-ZDYxMi4uMDUxMGNlMiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vZHJtX2RlYnVnZnMu
-Ywo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fZGVidWdmcy5jCj4gQEAgLTIxOCw2ICsyMTgs
-MTkgQEAgaW50IGRybV9kZWJ1Z2ZzX3JlbW92ZV9maWxlcyhjb25zdCBzdHJ1Y3QgZHJtX2luZm9f
-bGlzdCAqZmlsZXMsIGludCBjb3VudCwKPiAgfQo+ICBFWFBPUlRfU1lNQk9MKGRybV9kZWJ1Z2Zz
-X3JlbW92ZV9maWxlcyk7Cj4gIAo+ICtzdGF0aWMgdm9pZCBkcm1fZGVidWdmc19yZW1vdmVfYWxs
-X2ZpbGVzKHN0cnVjdCBkcm1fbWlub3IgKm1pbm9yKQo+ICt7Cj4gKwlzdHJ1Y3QgZHJtX2luZm9f
-bm9kZSAqbm9kZSwgKnRtcDsKPiArCj4gKwltdXRleF9sb2NrKCZtaW5vci0+ZGVidWdmc19sb2Nr
-KTsKPiArCWxpc3RfZm9yX2VhY2hfZW50cnlfc2FmZShub2RlLCB0bXAsICZtaW5vci0+ZGVidWdm
-c19saXN0LCBsaXN0KSB7Cj4gKwkJZGVidWdmc19yZW1vdmUobm9kZS0+ZGVudCk7Cj4gKwkJbGlz
-dF9kZWwoJm5vZGUtPmxpc3QpOwo+ICsJCWtmcmVlKG5vZGUpOwo+ICsJfQo+ICsJbXV0ZXhfdW5s
-b2NrKCZtaW5vci0+ZGVidWdmc19sb2NrKTsKPiArfQo+ICsKPiAgLyoqCj4gICAqIENsZWFudXAg
-dGhlIGRlYnVnZnMgZmlsZXN5c3RlbSByZXNvdXJjZXMuCj4gICAqCj4gQEAgLTI0NSw5ICsyNTgs
-OSBAQCBpbnQgZHJtX2RlYnVnZnNfY2xlYW51cChzdHJ1Y3QgZHJtX21pbm9yICptaW5vcikKPiAg
-CQl9Cj4gIAl9Cj4gIAo+IC0JZHJtX2RlYnVnZnNfcmVtb3ZlX2ZpbGVzKGRybV9kZWJ1Z2ZzX2xp
-c3QsIERSTV9ERUJVR0ZTX0VOVFJJRVMsIG1pbm9yKTsKPiArCWRybV9kZWJ1Z2ZzX3JlbW92ZV9h
-bGxfZmlsZXMobWlub3IpOwo+ICAKPiAtCWRlYnVnZnNfcmVtb3ZlKG1pbm9yLT5kZWJ1Z2ZzX3Jv
-b3QpOwo+ICsJZGVidWdmc19yZW1vdmVfcmVjdXJzaXZlKG1pbm9yLT5kZWJ1Z2ZzX3Jvb3QpOwo+
-ICAJbWlub3ItPmRlYnVnZnNfcm9vdCA9IE5VTEw7Cj4gIAo+ICAJcmV0dXJuIDA7Cj4gLS0gCj4g
-Mi4xMC4yCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCgotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9y
-YXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZHJpLWRldmVsCg==
+Hi Chris,
+
+On Fri, Jan 20, 2017 at 10:20 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+>
+> ---
+> v2:
+> * remove sw implementation specific portions
+> ---
+>  .../devicetree/bindings/timer/renesas,ostm.txt     | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> new file mode 100644
+> index 0000000..06d7d71
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+> @@ -0,0 +1,29 @@
+> +* Renesas OS Timer (OSTM)
+> +
+> +The OSTM is a multi-channel 32-bit timer/counter with fixed clock
+> +source that can operate in either interval count down timer or free-running
+> +compare match mode.
+> +
+> +Channels are independent from each other.
+> +
+> +Required Properties:
+> +
+> +  - compatible: must be one or more of the following:
+> +    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
+> +    - "renesas,ostm" for any OSTM
+> +               This is a fallback for the above renesas,*-ostm entries
+> +
+> +  - reg: base address and length of the register block for a timer channel.
+> +
+> +  - interrupts: interrupt specifier for the timer channel.
+> +
+> +  - clocks: clock specifier for the timer channel.
+> +
+> +Example: R7S72100 (RZ/A1H) OSTM node
+> +
+> +       ostm0: ostm@fcfec000 {
+
+timer@fcfec000
+
+If you fix that:
+
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+> +               compatible = "renesas,r7s72100-ostm", "renesas,ostm";
+> +               reg = <0xfcfec000 0x30>;
+> +               interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
+> +               clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
+> +       };
+> --
+> 2.10.1
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
