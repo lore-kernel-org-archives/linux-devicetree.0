@@ -1,201 +1,61 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH 1/2] hwmon: (lm70) Utilize dev_warn instead of pr_warn
-Date: Mon, 23 Jan 2017 08:18:04 +0100 (CET)
-Message-ID: <alpine.DEB.2.20.1701230812480.2116@hadrien>
-References: <20170121192010.30681-1-f.fainelli@gmail.com> <20170121192010.30681-2-f.fainelli@gmail.com> <1485153837.12563.23.camel@perches.com> <637f229a-cfbb-938e-4700-89b180c8b2c0@roeck-us.net>
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH v2 00/12] Add basic code support for imx6sll
+Date: Mon, 23 Jan 2017 07:18:51 +0000
+Message-ID: <AM3PR04MB530E1929B64CEE28B3DFCE587720@AM3PR04MB530.eurprd04.prod.outlook.com>
+References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
+ <20170123061034.GE5662@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <637f229a-cfbb-938e-4700-89b180c8b2c0@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Joe Perches <joe@perches.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:HARDWARE MONITORING" <linux-hwmon@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170123061034.GE5662@dragon>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrad>
 List-Id: devicetree@vger.kernel.org
 
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+>=20
+> On Tue, Dec 27, 2016 at 05:47:38PM +0800, Bai Ping wrote:
+> > The i.MX 6SoloLiteLite application processors are NXP's latest
+> > additions to a growing family of multimedia-focused products offering
+> > high-performance processing optimized for lowest power consumption.
+> > The i.MX 6SoloLiteLite processors feature NXP's advanced
+> > implementation of the ARM Cortex-A9 core, which can be interfaced with
+> > LPDDR3 and LPDDR2 DRAM memory devices.
+> >
+> > i.MX6SLL is a new SOC of the i.MX6 family, shares many common modules,
+> > so most of the MSL code can be resued from i.MX6 serious SOC.
+> >
+> >
+> > change for V2:
+> >     -  address comments in dts and dtsi from Fabio.
+> >     -  split the doc update into two patch, fix typo.
+> >     -  address comments in clock driver, add necessary 'const'qualifier=
+.
+> >
+> > Bai Ping (12):
+> >   ARM: imx: Add basic msl support for imx6sll
+> >   driver: clocksource: add gpt timer for imx6sll
+> >   Document: dt: binding: imx: update clock doc for imx6sll
+> >   driver: clk: imx: Add clock driver for imx6sll
+> >   Document: dt: binding: imx: update pinctrl doc for imx6sll
+> >   driver: pinctrl: imx: Add pinctrl driver support for imx6sll
+> >   ARM: dts: imx: Add basic dtsi for imx6sll
+> >   ARM: dts: imx: Add imx6sll EVK board dts support
+> >   ARM: debug: Add low level debug support for imx6sll
+> >   ARM: imx: Add suspend/resume support for imx6sll
+> >   ARM: imx: correct i.mx6sll dram io low power mode
+> >   ARM: configs: enable imx6sll support in defconfig
+>=20
+> I do not think you need to necessarily put them into a series, since they=
+ will go
+> through different sub-system maintainers.  If there are dependencies
+> between them, you should manage to get the prerequisite parts get merged
+> first.
 
+ok, got it.=20
 
-On Sun, 22 Jan 2017, Guenter Roeck wrote:
-
-> On 01/22/2017 10:43 PM, Joe Perches wrote:
-> > On Sat, 2017-01-21 at 11:20 -0800, Florian Fainelli wrote:
-> > > We have a device reference, utilize it instead of pr_warn().
-> >
-> > There is at least one more hwmon to convert in applesmc.c
-> >
-> > Perhaps a coccinelle script?
-> >
-> > Two questions for Julia Lawall:
-> >
-> > o is there a better way to do this than repeat the blocks
-> >   one for each replacement
-> > o can struct device * dev be made an arbitrary identifier
->
-> Definitely yes here; otherwise you only catch the ones named 'dev'.
-> Did you try "identifier dev;" ?
-
-Definitely do that.
-
->
-> The type of fn is irrelevant; you don't need to specify it.
-
-Agreed.
-
-> There is also the case where 'struct device *dev' is a local variable
->
-> fn(...) {
-> ...
-> struct device *dev = e;
-> <...
-> ...>
-> }
-
-Here, you don't need the fn(...) { ... } part.  It would also be good to
-say:
-
-expression e != NULL;
-
-dev could also be initialized:
-
-@@
-struct device *dev;
-expression e != NULL;
-expression e1;
-@@
-
-dev = e;
-<...
--
-+
-...>
-? dev = e1; // stop when dev is reinitialized, to avoid a double match
-
-The rules can all be merged together with a disjunction:
-
-(
-- pr_emerg
-+ dev_emerg
-|
-- pr_crit
-+ dev_crit  // fill in all cases
-)
-  (
-+ dev,
-  ...)
-
-julia
-
-
-> or when it isn't but is still available
->
-> fn (..., struct \(platform_device\|i2c_device\|spi_device\) *pdev, ...) {
-> }
->
-> >
-> > $ cat dev_printk.cocci
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_emerg(
-> > +	dev_emerg(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_crit(
-> > +	dev_crit(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_alert(
-> > +	dev_alert(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_err(
-> > +	dev_err(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_notice(
-> > +	dev_notice(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_warn(
-> > +	dev_warn(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_info(
-> > +	dev_info(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> > @@
-> > identifier fn;
-> > type T;
-> > @@
-> >
-> > T fn ( ..., struct device * dev, ... ) {
-> > <...
-> > -	pr_debug(
-> > +	dev_dbg(dev,
-> > 	...);
-> > ...>
-> > }
-> >
-> >
->
->
+>=20
+> Shawn
