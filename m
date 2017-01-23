@@ -1,57 +1,69 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 1/3] mmc: sh_mobile_sdhi: add support for 2 clocks
-Date: Mon, 23 Jan 2017 14:48:45 +0000
-Message-ID: <SG2PR06MB11656145E7F0EEA7117F09A08A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170121030604.7672-1-chris.brandt@renesas.com>
- <20170121030604.7672-2-chris.brandt@renesas.com>
- <CAMuHMdWwqa7CbNCRr8q60hDVsj243-ZjHCPp+o9R2a6Dg7YNWQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Mon, 23 Jan 2017 08:52:04 -0600
+Message-ID: <20170123145204.5lablvhf7m2hf3na@rob-hp-laptop>
+References: <20170119163631.10668-1-andrew.smirnov@gmail.com>
+ <20170119163631.10668-4-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWwqa7CbNCRr8q60hDVsj243-ZjHCPp+o9R2a6Dg7YNWQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170119163631.10668-4-andrew.smirnov@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-pci@vger.kernel.org, yurovsky@gmail.com, Richard Zhu <hongxing.zhu@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgSmFudWFyeSAyMywgMjAxNywgR2VlcnQgVXl0dGVyaG9l
-dmVuOg0KPiA+IEBAIC0xOTAsNiArMTkxLDEyIEBAIHN0YXRpYyBpbnQgc2hfbW9iaWxlX3NkaGlf
-Y2xrX2VuYWJsZShzdHJ1Y3QNCj4gdG1pb19tbWNfaG9zdCAqaG9zdCkNCj4gPiAgICAgICAgIGlm
-IChyZXQgPCAwKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+DQo+ID4gKyAg
-ICAgICByZXQgPSBjbGtfcHJlcGFyZV9lbmFibGUocHJpdi0+Y2xrX2NkKTsNCj4gPiArICAgICAg
-IGlmIChyZXQgPCAwKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGNsa19kaXNhYmxlX3VucHJlcGFy
-ZShwcml2LT5jbGspOw0KPiA+ICsgICAgICAgICAgICAgICByZXR1cm4gcmV0Ow0KPiA+ICsgICAg
-ICAgfQ0KPiA+ICsNCj4gDQo+IEFzIGVuYWJsaW5nIHRoZSAiY29yZSIgY2xvY2sgYnV0IG5vdCB0
-aGUgImNkIiBjbG9jayBpcyBub3QgYSB2YWxpZCBzZXR0aW5nLA0KPiBzaG91bGRuJ3QgdGhlIGNk
-IGNsb2NrIGJlIGVuYWJsZWQgZmlyc3Q/DQoNCkknbSBwcmV0dHkgc3VyZSB0aGUgY2hpcCBkZXNp
-Z25lcnMganVzdCBkaWRuJ3Qgd2FudCB5b3UgdG8gJ3VzZScgdGhlDQpwZXJpcGhlcmFsIHdpdGgg
-dGhhdCBjbG9jayBjb25maWd1cmF0aW9uLCBhbmQgd2UgYXJlIG5vdCB1c2luZyBpdCBpbg0KYmV0
-d2VlbiB0aG9zZSAyIGxpbmVzIHNvIEkgcGVyc29uYWxseSB0aGluayBpdCdzIGZpbmUuDQoNCklm
-IEkgbmVlZCB0byBjaGFuZ2UgaXQgdG8gZ2V0IGl0IGFwcHJvdmVkLCBsZXQgbWUga25vdyBhbmQg
-SSdsbCBjaGFuZ2UNCnRoZSBjb2RlIGFyb3VuZC4NCg0KKEluIHJlYWxpdHksIEkgY2hlY2tlZCBh
-bmQgdGhlIFNESEkgZG9lcyB3b3JrIHdpdGggdGhlIGNkIGNsb2NrIG9mZiwNCmJ1dCBJIGRvbid0
-IGtub3cgaWYgdGhlIHJlc3RyaWN0aW9uIGluIHRoZSBzcGVjIHdhcyBiZWNhdXNlIHRoZXkgbmV2
-ZXINCmZ1bGx5IHRlc3RlZCB0aGUgdXNlIG9mIGl0IHRoYXQgd2F5IGJlY2F1c2UgaXQgd2Fzbid0
-IGEgZGVzaWduIGdvYWwgZm9yDQp0aGVtLikNCg0KDQoNCj4gPiAgICAgICAgIC8qDQo+ID4gICAg
-ICAgICAgKiBUaGUgY2xvY2sgZHJpdmVyIG1heSBub3Qga25vdyB3aGF0IG1heGltdW0gZnJlcXVl
-bmN5DQo+ID4gICAgICAgICAgKiBhY3R1YWxseSB3b3Jrcywgc28gaXQgc2hvdWxkIGJlIHNldCB3
-aXRoIHRoZSBtYXgtZnJlcXVlbmN5DQo+ID4gQEAgLTI1NSw2ICsyNjIsOCBAQCBzdGF0aWMgdm9p
-ZCBzaF9tb2JpbGVfc2RoaV9jbGtfZGlzYWJsZShzdHJ1Y3QNCj4gdG1pb19tbWNfaG9zdCAqaG9z
-dCkNCj4gPiAgICAgICAgIHN0cnVjdCBzaF9tb2JpbGVfc2RoaSAqcHJpdiA9IGhvc3RfdG9fcHJp
-dihob3N0KTsNCj4gPg0KPiA+ICAgICAgICAgY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmNs
-ayk7DQo+ID4gKyAgICAgICBpZiAocHJpdi0+Y2xrX2NkKQ0KPiANCj4gTm8gbmVlZCB0byBjaGVj
-ayBmb3IgYSBOVUxMIHBvaW50ZXIgZmlyc3QuDQoNCk9LLCBJIHNlZSB0aGF0IElTX0VSUl9PUl9O
-VUxMKGNsaykgaXMgZG9uZSBmb3IgY2xrX2Rpc2FibGVfdW5wcmVwYXJlIHNvDQpJJ2xsIHRha2Ug
-dGhlIGNoZWNrIG91dC4NClRoYW5rIHlvdS4NCg0KDQo+ID4gKyAgICAgICAgICAgICAgIGNsa19k
-aXNhYmxlX3VucHJlcGFyZShwcml2LT5jbGtfY2QpOw0KPiANCj4gRGlzYWJsaW5nIGlzIGFscmVh
-ZHkgZG9uZSBpbiB0aGUgY29ycmVjdCBvcmRlciA7LSkNCg0KSSBndWVzcyB5b3UgY291bGQgZ2V0
-IGludG8gc29tZSB0aGVvcmV0aWNhbCB0ZWNobmljYWwgZGlzY3Vzc2lvbiBhcm91bmQNCmlmIGl0
-IGlzIE9LIHRvIGVuYWJsZS9kaXNhYmxlIHRoZSBjbG9ja3MgaW4gYW55IG9yZGVyIChhcyBsb25n
-IGFzIHlvdQ0KZG9uJ3QgdXNlIHRoZSBTREhJIGluIGJldHdlZW4pLCB0aGVuIHlvdSB3b3VsZCB3
-YW50IHRvIGVuYWJsZSB0aGUgY2QNCmNpcmN1aXQgbGFzdCwgYW5kIGRpc2FibGUgaXQgZmlyc3Qg
-c28geW91IHdvdWxkIGVuc3VyZSB0aGF0IG5vIGNkDQppbnRlcnJ1cHRzIGFyZSBiZWluZyByZWdp
-c3RlcmVkIHdoZW4gdGhlIGNvcmUgY2xvY2sgaXMgb2ZmPw0KSW4gdGhhdCBjYXNlLCB0aGUgY3Vy
-cmVudCBlbmFibGUgb3JkZXIgc2hvdWxkIHJlbWFpbiBidXQgdGhlIGRpc2FibGUNCm9yZGVyIHNo
-b3VsZCBjaGFuZ2UuDQoNCk9waW5pb25zPz8/DQoNCg0KVGhhbmsgeW91LA0KQ2hyaXMNCg==
+On Thu, Jan 19, 2017 at 08:36:31AM -0800, Andrey Smirnov wrote:
+> Add various bits of code needed to support i.MX7D variant of the IP.
+> 
+> Cc: yurovsky@gmail.com
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Fabio Estevam <festevam@gmail.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
+>  drivers/pci/host/pci-imx6.c                        | 188 ++++++++++++++++++---
+>  include/linux/mfd/syscon/imx7-gpc.h                |  18 ++
+>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+>  include/linux/mfd/syscon/imx7-src.h                |  18 ++
+>  5 files changed, 208 insertions(+), 26 deletions(-)
+>  create mode 100644 include/linux/mfd/syscon/imx7-gpc.h
+>  create mode 100644 include/linux/mfd/syscon/imx7-src.h
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 83aeb1f..20b9382 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -4,7 +4,8 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
+>  
+>  Required properties:
+> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+> +- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie",
+> +  	      "fsl,imx6qp-pcie", "fsl,imx7d-pcie"
+
+Please reformat to one valid combination per line.
+
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> @@ -34,6 +35,9 @@ Additional required properties for imx6sx-pcie:
+>  - clock names: Must include the following additional entries:
+>  	- "pcie_inbound_axi"
+>  
+> +Additional required properties for imx7d-pcie:
+> +- pcie-phy-supply: Should specify the regulator supplying PCIe PHY
+> +
+>  Example:
+>  
+>  	pcie@0x01000000 {
