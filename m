@@ -1,7 +1,7 @@
 From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 07/16] arm: dts: add i2c nodes to the mt7623.dtsi file
-Date: Mon, 23 Jan 2017 12:29:26 +0100
-Message-ID: <1485170975-51813-8-git-send-email-john@phrozen.org>
+Subject: [PATCH 03/16] arm: dts: add power domain controller device node
+Date: Mon, 23 Jan 2017 12:29:22 +0100
+Message-ID: <1485170975-51813-4-git-send-email-john@phrozen.org>
 References: <1485170975-51813-1-git-send-email-john@phrozen.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1485170975-51813-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
@@ -10,69 +10,45 @@ To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add I2C nodes to the mt7623.dtsi file.
+Add power domain controller node (scpsys) for MT7623.
 
 Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 ---
- arch/arm/boot/dts/mt7623.dtsi |   45 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+ arch/arm/boot/dts/mt7623.dtsi |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
-index 6099f05..8ac4569 100644
+index 87a55f5..9252680 100644
 --- a/arch/arm/boot/dts/mt7623.dtsi
 +++ b/arch/arm/boot/dts/mt7623.dtsi
-@@ -236,6 +236,51 @@
- 		status = "disabled";
+@@ -15,6 +15,7 @@
+ #include <dt-bindings/interrupt-controller/irq.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/mt2701-clk.h>
++#include <dt-bindings/power/mt2701-power.h>
+ #include <dt-bindings/reset/mt2701-resets.h>
+ #include "skeleton64.dtsi"
+ 
+@@ -104,6 +105,19 @@
+ 		#reset-cells = <1>;
  	};
  
-+	i2c0: i2c@11007000 {
-+		compatible = "mediatek,mt7623-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11007000 0 0x70>,
-+		      <0 0x11000200 0 0x80>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C0>,
-+			 <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
++	scpsys: scpsys@10006000 {
++		compatible = "mediatek,mt7623-scpsys",
++			     "mediatek,mt2701-scpsys",
++			     "syscon";
++		#power-domain-cells = <1>;
++		reg = <0 0x10006000 0 0x1000>;
++		infracfg = <&infracfg>;
++		clocks = <&topckgen CLK_TOP_MM_SEL>,
++			 <&topckgen CLK_TOP_MFG_SEL>,
++			 <&topckgen CLK_TOP_ETHIF_SEL>;
++		clock-names = "mm", "mfg", "ethif";
 +	};
 +
-+	i2c1: i2c@11008000 {
-+		compatible = "mediatek,mt7623-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11008000 0 0x70>,
-+		      <0 0x11000280 0 0x80>;
-+		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C1>,
-+			 <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
-+	i2c2: i2c@11009000 {
-+		compatible = "mediatek,mt7623-i2c",
-+			     "mediatek,mt6577-i2c";
-+		reg = <0 0x11009000 0 0x70>,
-+		      <0 0x11000300 0 0x80>;
-+		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_LOW>;
-+		clock-div = <16>;
-+		clocks = <&pericfg CLK_PERI_I2C2>,
-+			 <&pericfg CLK_PERI_AP_DMA>;
-+		clock-names = "main", "dma";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	hifsys: syscon@1a000000 {
- 		compatible = "mediatek,mt7623-hifsys",
- 			     "mediatek,mt2701-hifsys",
+ 	watchdog: watchdog@10007000 {
+ 		compatible = "mediatek,mt7623-wdt",
+ 			     "mediatek,mt6589-wdt";
 -- 
 1.7.10.4
 
