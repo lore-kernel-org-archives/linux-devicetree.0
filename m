@@ -1,58 +1,114 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v8 12/12] mux: support simplified bindings for single-user
- gpio mux
-Date: Mon, 23 Jan 2017 11:24:18 +0100
-Message-ID: <d32f335f-56f2-38c1-e4d9-4629926dbe21@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-13-git-send-email-peda@axentia.se>
- <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
+From: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Add support for phyCORE-AM335x PCM-953
+ carrier board
+Date: Mon, 23 Jan 2017 11:27:12 +0100
+Message-ID: <1485167232.3082.9.camel@phytec.de>
+References: <1484831270-7251-1-git-send-email-t.remmet@phytec.de>
+         <20170121205345.oij67ai5d7q7k74d@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170121205345.oij67ai5d7q7k74d@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?ISO-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-22 14:30, Jonathan Cameron wrote:
-> On 18/01/17 15:57, Peter Rosin wrote:
->> Allow bindings for a GPIO controlled mux to be specified in the
->> mux consumer node.
->>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
-> Code is good as far as I am concerned. Only question is whether this
+Hello Rob,
 
-Hmmm, now that I think some more about it, the code supporting the
-simplified binding (patch 12/12) is a bit fishy in one respect.
+Am Samstag, den 21.01.2017, 14:53 -0600 schrieb Rob Herring:
+> On Thu, Jan 19, 2017 at 02:07:48PM +0100, Teresa Remmet wrote:
+> > 
+> > The phyCORE-AM335x development kit is a combination of the
+> > phyCORE-AM335x SoM and a PCM-953 carrier board. The features
+> > of the PCM-953 are:
+> > * ETH phy on carrier board: 1x RGMII
+> > * 1x CAN
+> > * Up to 4x UART
+> > * USB0 (otg)
+> > * USB1 (host)
+> > * SD slot
+> > * User gpio-keys
+> > * User LEDs
+> > 
+> > Signed-off-by: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+> > Reviewed-by: Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>
+> > ---
+> >  .../devicetree/bindings/arm/omap/omap.txt          |   3 +
+> >  arch/arm/boot/dts/Makefile                         |   1 +
+> >  arch/arm/boot/dts/am335x-pcm-953.dtsi              | 303
+> > +++++++++++++++++++++
+> >  arch/arm/boot/dts/am335x-phycore-rdk.dts           |  27 ++
+> >  4 files changed, 334 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/am335x-pcm-953.dtsi
+> >  create mode 100644 arch/arm/boot/dts/am335x-phycore-rdk.dts
+> [...]
+> 
+> > 
+> > +	user_leds: user_leds {
+> > +		compatible = "gpio-leds";
+> > +	};
+> > +
+> > +	user_buttons: user_buttons {
+> > +		compatible = "gpio-keys";
+> > +	};
+> With only a compatible, I don't think there's much gain to split
+> these 2 
+> nodes. Otherwse,
 
-A driver that calls mux_control_get and gets a mux_control that happens
-to be backed by an implicit mux chip (i.e. using the simplified binding)
-will not be able to reverse the resource allocation with less than a
-complete destruction of itself. Now, this is likely not a problem in
-most cases, but I bet it will creep up at the most inopportune time. And
-your remark that I'm the one that has to maintain this makes me dislike
-this concept...
+whould it be ok to open up the root node again below? Or should I
+better move the nodes up? Which does mess up the order then. We
+orinented here on the am335x-pepper.dts. They also only keep the
+compatibles in the root node.
 
-I.e. mux_control_put *should* reverse mux_control_get, but this simply
-does not happen for the implicit mux chips, as implicit mux chips are
-not put away until the owning device is put away.
+Thanks,
+Teresa
 
-Every time I have tried to come up with a way to implement the simplified
-bindings I seem to hit one of these subtleties.
-
-> is worth the hassle given the normal bindings don't give that high
-> a burden in complexity!
-
-I am missing an ack from Rob though.
-
-> I don't really care either way:)
-
-But Rob seems to care, this series just has to find a way to get out of
-his too-much-churn-will-look-at-it-later list. I sadly don't know how to
-pull that trick...
-
-Cheers,
-peda
-
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+> > 
+> > +&user_buttons {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&user_buttons_pins>;
+> > +	status = "okay";
+> > +
+> > +	button@0 {
+> > +		label = "home";
+> > +		linux,code = <KEY_HOME>;
+> > +		gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
+> > +		gpio-key,wakeup;
+> > +	};
+> > +
+> > +	button@1 {
+> > +		label = "menu";
+> > +		linux,code = <KEY_MENU>;
+> > +		gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
+> > +		gpio-key,wakeup;
+> > +	};
+> > +};
+> > +
+> > +&user_leds {
+> > +	pinctrl-names = "default";
+> > +	pinctrl-0 = <&user_leds_pins>;
+> > +	status = "okay";
+> > +
+> > +	green {
+> > +		label = "green:user";
+> > +		gpios = <&gpio1 30 GPIO_ACTIVE_HIGH>;
+> > +		linux,default-trigger = "gpio";
+> > +		default-state = "on";
+> > +	};
+> > +
+> > +	yellow {
+> > +		label = "yellow:user";
+> > +		gpios = <&gpio1 31 GPIO_ACTIVE_LOW>;
+> > +		linux,default-trigger = "gpio";
+> > +		default-state = "on";
+> > +	};
+> > +};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
