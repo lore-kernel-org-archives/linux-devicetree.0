@@ -1,66 +1,76 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 5/7] rtc: sun6i: Switch to devm_rtc_device_register
-Date: Mon, 23 Jan 2017 11:41:50 +0100
-Message-ID: <fa6f39ee82429e1851597202b0706a8bd9871bc7.1485168100.git-series.maxime.ripard@free-electrons.com>
-References: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 0/13] arm64: allwinner: a64: Enable MMC support
+Date: Mon, 23 Jan 2017 11:58:42 +0100
+Message-ID: <20170123105842.37q23ecxecrjr6so@lukather>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cen64qteailglgvu"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a devm variant of rtc_device_register, switch to it.
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/rtc/rtc-sun6i.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+--cen64qteailglgvu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/rtc/rtc-sun6i.c b/drivers/rtc/rtc-sun6i.c
-index 37f65c50ab2d..613f42ade533 100644
---- a/drivers/rtc/rtc-sun6i.c
-+++ b/drivers/rtc/rtc-sun6i.c
-@@ -543,8 +543,8 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
- 
- 	clk_prepare_enable(chip->losc);
- 
--	chip->rtc = rtc_device_register("rtc-sun6i", &pdev->dev,
--					&sun6i_rtc_ops, THIS_MODULE);
-+	chip->rtc = devm_rtc_device_register(&pdev->dev, "rtc-sun6i",
-+					     &sun6i_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(chip->rtc)) {
- 		dev_err(&pdev->dev, "unable to register device\n");
- 		return PTR_ERR(chip->rtc);
-@@ -555,15 +555,6 @@ static int sun6i_rtc_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int sun6i_rtc_remove(struct platform_device *pdev)
--{
--	struct sun6i_rtc_dev *chip = platform_get_drvdata(pdev);
--
--	rtc_device_unregister(chip->rtc);
--
--	return 0;
--}
--
- static const struct of_device_id sun6i_rtc_dt_ids[] = {
- 	{ .compatible = "allwinner,sun6i-a31-rtc" },
- 	{ /* sentinel */ },
-@@ -572,7 +563,6 @@ MODULE_DEVICE_TABLE(of, sun6i_rtc_dt_ids);
- 
- static struct platform_driver sun6i_rtc_driver = {
- 	.probe		= sun6i_rtc_probe,
--	.remove		= sun6i_rtc_remove,
- 	.driver		= {
- 		.name		= "sun6i-rtc",
- 		.of_match_table = sun6i_rtc_dt_ids,
--- 
-git-series 0.8.11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Ulf,
+
+On Mon, Jan 16, 2017 at 05:56:50PM +0100, Maxime Ripard wrote:
+> Hi,
+>=20
+> Here is a new attempt at getting the MMC controllers running, following t=
+he
+> work done by Andre.
+>=20
+> This has been tested on a board with one SDIO device (a Marvell WiFi chip)
+> and a Kingston eMMC with 1.8V IOs.
+>=20
+> For SDIO, the HS DDR mode works just fine. That serie also enables the
+> SDR104 mode to work on the devices that are capable of this.
+>=20
+> For the eMMC, HS200 with the voltage switch works. HS400 doesn't at the
+> moment, but since it's significantly more complex, and at the same time
+> Allwinner recommends to limit its frequency to 100MHz, this doesn't have
+> any benefits. If there's any at some point, this can be added later.
+
+Unless you have objections, I'd really like this to be in
+4.11. There's a bunch of things where I'm not entirely sure
+(especially the clock gating part), it would be great if you could
+have a look.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--cen64qteailglgvu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYheHdAAoJEBx+YmzsjxAgyQIQAKO+Cd2sHm89WDnMnWxoroP0
+QpMpRWV3uh97m+Ju2PjAHEn2+vds+L2/PJXHcnNgPgVtwZ2RtDg2uPfcWqPfJzuU
+MDYG1LwJJrew7mal8JKwrYA6OyEONTb9EWXQ1GZLsCOX2uVwkrnL+kfLDaUM4tFX
+wfFcuDbCMTiSJIKfTQFu+2VyEiWOG/9aFPLbH3HHEg2uHK86CQriutTBM7+lh3A3
+DFcaWtkJz4qFmZAOQVIQ1pPS97mASjRpaQhXovtIOME3n6WwEI7MYWLrCYepQCaj
+SocVeCahyWfe1HhasiDPXG9lpaXF7ZF8koTXtpeBzbYnKUlSO0zwkbUXtBUsqqfS
+Y2j18rjap5o/46DFlgWJ/Ttd0jWITcLmKk8ZMfPYeuxn/qEqfUJ2Rj2u0iqx5UOM
+tyFtegUn1ZnhveT2vbyboALYuboXzprR/ZHov26KFt6FLG9wG8IWuuHEYgKfehoa
+e89rkFSbjjzf0Zztmf92mFfARd7M+85m3k1voVJDSRfGEsNJA79IUI0kR5aok4Qj
+CCxZn3kutfbqLnPBD7D32rDiNdRRExZk7xP+a/qODR6K3NJ5SaEluhbbXI0iMxnd
+QDIMYyo/DJsbmGyuph4OV/vzPtuSyjbodVAgn7wC2wMqpa4yQswoGVA6co/02pOk
+YFtcP844EyuDqgUeYs6U
+=ip82
+-----END PGP SIGNATURE-----
+
+--cen64qteailglgvu--
