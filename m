@@ -1,37 +1,79 @@
-From: Bryan O'Donoghue <pure.logic-SyKdqv6vbfZdzvEItQ6vdLNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc3: add quirk to handle DWC_USB3_NUM ==
- DWC_USB3_NUM_IN_EPS
-Date: Mon, 23 Jan 2017 15:49:53 +0000
-Message-ID: <81853e89-c22a-cf7f-bbc7-abe4f9a59456@nexus-software.ie>
-References: <1484855882-4936-1-git-send-email-pure.logic@nexus-software.ie>
- <20170123153815.qxridbif7dg4k23z@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123153815.qxridbif7dg4k23z@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: [PATCH v2 0/2] ARM: DTS: Fix broken GICv2 register maps
+Date: Mon, 23 Jan 2017 15:56:12 +0000
+Message-ID: <1485186974-13678-1-git-send-email-marc.zyngier@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gma>
 List-Id: devicetree@vger.kernel.org
 
-On 23/01/17 15:38, Rob Herring wrote:
+For a GICv2 (which happens to be virtualization capable), the
+architecture mandates the following regions:
 
->>   - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
->> + - snps,num_in_eps_quirk: when set core will over-ride the num_in_eps value.
->> + - snps,num_in_eps_override: the value that will be used for num_in_eps when
->> +			num_in_eps_quirk is true
-> 
-> Why do you need 2 properties? Presence of the prop eanbles the override 
-> and the value of the prop provides the value.
+	     GICD: 4kB
+	     GICC: 8kB
+	     GICH: 8kB
+	     GICV: 8kB
 
-We don't, sorry Rob I didn't CC you on the follow up patch, we've
-decided to do everything in-code minus any DT bindings.
+Unfortunately, I made a mistake in one of the examples contained in
+the DT binding document, and everyone duplicated that same mistake all
+over the map.
 
----
-bod
+This small series fixes the DT binding, and hopefully updates all the
+offending DTs to be compliant with the architecture. Unless someone
+suddenly wakes up and spots something wrong, I'll send a pull-request
+to the arm-soc team by the end of tomorrow.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* From v1:
+  - Added a few GIC-400 compatibility strings where reported by people
+    having TRMs at hand
+  - Fixed the commit messages
+  - Added Acks and RBs
+
+Marc Zyngier (2):
+  dt-bindings: arm,gic: Fix binding example for a virt-capable GIC
+  ARM: DTS: Fix register map for virt-capable GIC
+
+ Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt | 4 ++--
+ arch/arm/boot/dts/alpine.dtsi                                      | 2 +-
+ arch/arm/boot/dts/axm55xx.dtsi                                     | 2 +-
+ arch/arm/boot/dts/dra7.dtsi                                        | 2 +-
+ arch/arm/boot/dts/ecx-2000.dts                                     | 2 +-
+ arch/arm/boot/dts/exynos3250.dtsi                                  | 2 +-
+ arch/arm/boot/dts/exynos5.dtsi                                     | 4 ++--
+ arch/arm/boot/dts/exynos5260.dtsi                                  | 2 +-
+ arch/arm/boot/dts/exynos5440.dtsi                                  | 2 +-
+ arch/arm/boot/dts/imx6ul.dtsi                                      | 4 ++--
+ arch/arm/boot/dts/keystone-k2g.dtsi                                | 4 ++--
+ arch/arm/boot/dts/keystone.dtsi                                    | 4 ++--
+ arch/arm/boot/dts/ls1021a.dtsi                                     | 4 ++--
+ arch/arm/boot/dts/mt2701.dtsi                                      | 2 +-
+ arch/arm/boot/dts/mt6580.dtsi                                      | 2 +-
+ arch/arm/boot/dts/mt6589.dtsi                                      | 2 +-
+ arch/arm/boot/dts/mt7623.dtsi                                      | 2 +-
+ arch/arm/boot/dts/mt8127.dtsi                                      | 2 +-
+ arch/arm/boot/dts/mt8135.dtsi                                      | 2 +-
+ arch/arm/boot/dts/omap5.dtsi                                       | 2 +-
+ arch/arm/boot/dts/r8a73a4.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7743.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7745.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7790.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7791.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7792.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7793.dtsi                                     | 2 +-
+ arch/arm/boot/dts/r8a7794.dtsi                                     | 2 +-
+ arch/arm/boot/dts/rk1108.dtsi                                      | 2 +-
+ arch/arm/boot/dts/rk3036.dtsi                                      | 2 +-
+ arch/arm/boot/dts/rk322x.dtsi                                      | 2 +-
+ arch/arm/boot/dts/rk3288.dtsi                                      | 2 +-
+ arch/arm/boot/dts/sun6i-a31.dtsi                                   | 2 +-
+ arch/arm/boot/dts/sun7i-a20.dtsi                                   | 4 ++--
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi                               | 2 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi                                  | 2 +-
+ arch/arm/boot/dts/sun8i-h3.dtsi                                    | 2 +-
+ arch/arm/boot/dts/sun9i-a80.dtsi                                   | 2 +-
+ 38 files changed, 45 insertions(+), 45 deletions(-)
+
+-- 
+2.1.4
