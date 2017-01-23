@@ -1,64 +1,75 @@
-From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [V2 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Mon, 23 Jan 2017 14:03:27 +0000
-Message-ID: <58860D2F.6070007@hisilicon.com>
-References: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
- <1484034915-48879-2-git-send-email-puck.chen@hisilicon.com>
- <20170123134656.GC16286@leverpostej>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v2 1/3] SoC: es8328-i2c: Add compatible for
+	ES8323
+Date: Mon, 23 Jan 2017 14:47:45 +0100
+Message-ID: <20170123134747.1385-2-romain.perier@collabora.com>
+References: <20170123134747.1385-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123134656.GC16286@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170123134747.1385-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+This commit adds a compatible string for everest,es8323. This is an
+audio codec that is compatible with es8328 and can be found for example
+on the Firefly-RK3288 board.
 
-On 2017/1/23 13:46, Mark Rutland wrote:
-> On Tue, Jan 10, 2017 at 03:55:15PM +0800, Chen Feng wrote:
->> +	memory@0 {
->> +		device_type = "memory";
->> +		reg = <0x0 0x00400000 0x0 0xbfe00000>;
->> +	};
-> 
-> The unit-address here is incorrect. The base address of this memory is
-> not zero.
-> 
->> +	timer {
->> +		compatible = "arm,armv8-timer";
->> +		interrupt-parent = <&gic>;
->> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>,
->> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW)>;
->> +		clock-frequency = <1920000>;
->> +	};
-> 
-> This clock-frequency property should not be required; please remove it.
-> 
-> Your FW should program CNTFRQ_EL0 with the timer frequency.
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-Thanks!
+Changes in v2: None
 
-Hi Chen Feng,
+ Documentation/devicetree/bindings/sound/es8328.txt | 5 ++++-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-Can you send out the v3 to address above comments?
-And I will pick up it soon.
-
-Best Regards,
-Wei
-
-> 
-> Thanks,
-> Mark.
-> 
-> .
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 33fbf05..86b6d6e 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,10 @@ This device supports both I2C and SPI.
+ 
+ Required properties:
+ 
+-  - compatible  : Should be "everest,es8328" or "everest,es8388"
++  - compatible  : Should be one of the following:
++	- "everest,es8323"
++	- "everest,es8328"
++	- "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 318ab28..be3f03c 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -19,6 +19,7 @@
+ #include "es8328.h"
+ 
+ static const struct i2c_device_id es8328_id[] = {
++	{ "es8323", 0 },
+ 	{ "es8328", 0 },
+ 	{ "es8388", 0 },
+ 	{ }
+@@ -26,6 +27,7 @@ static const struct i2c_device_id es8328_id[] = {
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
++	{ .compatible = "everest,es8323", },
+ 	{ .compatible = "everest,es8328", },
+ 	{ .compatible = "everest,es8388", },
+ 	{ }
+-- 
+2.9.3
