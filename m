@@ -1,84 +1,88 @@
-From: Jan Luebbe <jlu@pengutronix.de>
-Subject: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date: Mon, 23 Jan 2017 15:22:06 +0100
-Message-ID: <20170123142206.5390-1-jlu@pengutronix.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>, Jan Luebbe <jlu@pengutronix.de>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v2 2/3] arm: dts: rockchip: Don't set otp-gpio
+	pinctrl by default in rk3288.dtsi
+Date: Mon, 23 Jan 2017 14:47:46 +0100
+Message-ID: <20170123134747.1385-3-romain.perier@collabora.com>
+References: <20170123134747.1385-1-romain.perier@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170123134747.1385-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
+Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-called DRSGMII.
+The tsadc supports two reset methods: the cru and the otp_gpio. All
+boards except veyron and the evb simply use the cru-method and reuse the
+pin for something else. On the Firefly-RK3288 this is for example the
+case with the headphone. To prevent pinctrl-conflicts with these don't
+set the otp-gpio pinctrl by default but only in the boards using it.
 
-This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-from DT. The MVNETA then configures the SERDES protocol value
-accordingly.
-
-It was successfully tested on a MV78460 connected to a FPGA.
-
-Signed-off-by: Jan Luebbe <jlu@pengutronix.de>
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
 ---
- Documentation/devicetree/bindings/net/ethernet.txt | 1 +
- drivers/net/ethernet/marvell/mvneta.c              | 5 +++++
- include/linux/phy.h                                | 3 +++
- 3 files changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index 05150957ecfd..de40c5977d8f 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -29,6 +29,7 @@ The following properties are common to the Ethernet controllers:
-   * "smii"
-   * "xgmii"
-   * "trgmii"
-+  * "drsgmii"
- - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
- - phy-handle: phandle, specifies a reference to a node representing a PHY
-   device; this property is described in ePAPR and so preferred;
-diff --git a/drivers/net/ethernet/marvell/mvneta.c b/drivers/net/ethernet/marvell/mvneta.c
-index e05e22705cf7..8cb43e0d9d0e 100644
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -105,6 +105,7 @@
- #define MVNETA_SERDES_CFG			 0x24A0
- #define      MVNETA_SGMII_SERDES_PROTO		 0x0cc7
- #define      MVNETA_QSGMII_SERDES_PROTO		 0x0667
-+#define      MVNETA_DRSGMII_SERDES_PROTO	 0x1107
- #define MVNETA_TYPE_PRIO                         0x24bc
- #define      MVNETA_FORCE_UNI                    BIT(21)
- #define MVNETA_TXQ_CMD_1                         0x24e4
-@@ -4047,6 +4048,10 @@ static int mvneta_port_power_up(struct mvneta_port *pp, int phy_mode)
- 	 * SGMII or QSGMII mode, the RGMII bit needs to be set.
- 	 */
- 	switch(phy_mode) {
-+	case PHY_INTERFACE_MODE_DRSGMII:
-+		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_DRSGMII_SERDES_PROTO);
-+		ctrl |= MVNETA_GMAC2_PCS_ENABLE | MVNETA_GMAC2_PORT_RGMII;
-+		break;
- 	case PHY_INTERFACE_MODE_QSGMII:
- 		mvreg_write(pp, MVNETA_SERDES_CFG, MVNETA_QSGMII_SERDES_PROTO);
- 		ctrl |= MVNETA_GMAC2_PCS_ENABLE | MVNETA_GMAC2_PORT_RGMII;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index f7d95f644eed..a3d83bc96035 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -82,6 +82,7 @@ typedef enum {
- 	PHY_INTERFACE_MODE_MOCA,
- 	PHY_INTERFACE_MODE_QSGMII,
- 	PHY_INTERFACE_MODE_TRGMII,
-+	PHY_INTERFACE_MODE_DRSGMII,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
+Changes in v2:
+- Added this patch
+
+ arch/arm/boot/dts/rk3288-evb.dtsi    | 4 ++++
+ arch/arm/boot/dts/rk3288-veyron.dtsi | 4 ++++
+ arch/arm/boot/dts/rk3288.dtsi        | 4 ----
+ 3 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
+index bf7ccfa..7160d07 100644
+--- a/arch/arm/boot/dts/rk3288-evb.dtsi
++++ b/arch/arm/boot/dts/rk3288-evb.dtsi
+@@ -290,6 +290,10 @@
+ };
  
-@@ -142,6 +143,8 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "qsgmii";
- 	case PHY_INTERFACE_MODE_TRGMII:
- 		return "trgmii";
-+	case PHY_INTERFACE_MODE_DRSGMII:
-+		return "drsgmii";
- 	default:
- 		return "unknown";
- 	}
+ &tsadc {
++	pinctrl-names = "init", "default", "sleep";
++	pinctrl-0 = <&otp_gpio>;
++	pinctrl-1 = <&otp_out>;
++	pinctrl-2 = <&otp_gpio>;
+ 	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
+ 	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
+ 	status = "okay";
+diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
+index 2251d28..e7801d8 100644
+--- a/arch/arm/boot/dts/rk3288-veyron.dtsi
++++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
+@@ -393,6 +393,10 @@
+ &tsadc {
+ 	status = "okay";
+ 
++	pinctrl-names = "init", "default", "sleep";
++	pinctrl-0 = <&otp_gpio>;
++	pinctrl-1 = <&otp_out>;
++	pinctrl-2 = <&otp_gpio>;
+ 	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
+ 	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
+ };
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 4fad133..f419e4d 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -532,10 +532,6 @@
+ 		clock-names = "tsadc", "apb_pclk";
+ 		resets = <&cru SRST_TSADC>;
+ 		reset-names = "tsadc-apb";
+-		pinctrl-names = "init", "default", "sleep";
+-		pinctrl-0 = <&otp_gpio>;
+-		pinctrl-1 = <&otp_out>;
+-		pinctrl-2 = <&otp_gpio>;
+ 		#thermal-sensor-cells = <1>;
+ 		rockchip,hw-tshut-temp = <95000>;
+ 		status = "disabled";
 -- 
-2.11.0
+2.9.3
