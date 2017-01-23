@@ -1,23 +1,54 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 6/9] clocksource/drivers/rockchip_timer: split
- bc_timer into rk_timer and rk_clock_event_device
-Date: Mon, 23 Jan 2017 17:26:24 +0100
-Message-ID: <20170123162624.GG2166@mai>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
- <1480436092-10728-1-git-send-email-al.kochet@gmail.com>
- <1480436092-10728-7-git-send-email-al.kochet@gmail.com>
+From: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] Documentation: dt-bindings: tmp007: Add optional interrupt
+ support
+Date: Mon, 23 Jan 2017 21:58:09 +0530
+Message-ID: <20170123162809.GA16800@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1480436092-10728-7-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Heiko Stuebner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 29, 2016 at 07:14:49PM +0300, Alexander Kochetkov wrote:
-> The patch move ce field out of struct bc_timer into struct
-> rk_clock_event_device and rename struct bc_timer to struct rk_timer.
+This patch adds optional interrupt binding support for TI TMP007 - IR thermopiler sensor
 
-Why ?
+Signed-off-by: Manivannan Sadhasivam <manivannanece23-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+
+Created separate patch for devicetree and driver.
+
+ Documentation/devicetree/bindings/iio/temperature/tmp007.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+index 3b8f41f..b63aba9 100644
+--- a/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
++++ b/Documentation/devicetree/bindings/iio/temperature/tmp007.txt
+@@ -18,10 +18,18 @@ Required properties:
+ 		   1	 SDA	   0x46
+ 		   1     SCL       0x47
+ 
++Optional properties:
++
++  - interrupt-parent: should be the phandle for the interrupt controller
++
++  - interrupts: interrupt mapping for GPIO IRQ (level active low)
++
+ Example:
+ 
+ tmp007@40 {
+         compatible = "ti,tmp007";
+         reg = <0x40>;
++	interrupt-parent = <&gpio0>;
++	interrupts = <5 0x08>;
+ };
+ 
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
