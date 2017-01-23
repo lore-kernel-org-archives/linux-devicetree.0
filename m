@@ -1,49 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/2] devicetree: document new marvell-8xxx and
- pwrseq-sd8787 options
-Date: Mon, 23 Jan 2017 11:04:09 -0600
-Message-ID: <20170123170409.rnmnf4ssjpd2yk3l@rob-hp-laptop>
-References: <20170121055039.10924-1-matt@ranostay.consulting>
- <20170121055039.10924-2-matt@ranostay.consulting>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v6 04/14] sata: ahci-da850: get the sata clock using a
+ connection id
+Date: Mon, 23 Jan 2017 18:00:46 +0100
+Message-ID: <1485190856-4711-5-git-send-email-bgolaszewski@baylibre.com>
+References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170121055039.10924-2-matt@ranostay.consulting>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Ranostay <matt@ranostay.consulting>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 09:50:38PM -0800, Matt Ranostay wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> ---
->  .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
->  .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
->  2 files changed, 20 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> new file mode 100644
-> index 000000000000..4bb56766982e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
-> @@ -0,0 +1,14 @@
-> +* Marvell SD8787 power sequence provider
-> +
-> +Required properties:
-> +- compatible: must be "mmc-pwrseq-sd8787".
-> +- powerdown-gpio: contains a power down GPIO specifier with active state
-> +- reset-gpio: contains a reset GPIO specifier with active state
+In preparation for using two clocks in the driver (the sysclk2-based
+clock and the external REFCLK), check if we got a functional clock
+after calling ahci_platform_get_resources(). If not, retry calling
+clk_get() with con_id specified.
 
-My comments on the previous v3 still apply.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+---
+ drivers/ata/ahci_da850.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-> +
-> +Example:
-> +
-> +	wifi_pwrseq: wifi_pwrseq {
-> +		compatible = "mmc-pwrseq-sd8787";
-> +		powerdown-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
-> +		reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
-> +	}
+diff --git a/drivers/ata/ahci_da850.c b/drivers/ata/ahci_da850.c
+index 267a3d3..8cfdc86 100644
+--- a/drivers/ata/ahci_da850.c
++++ b/drivers/ata/ahci_da850.c
+@@ -71,12 +71,28 @@ static int ahci_da850_probe(struct platform_device *pdev)
+ 	struct ahci_host_priv *hpriv;
+ 	struct resource *res;
+ 	void __iomem *pwrdn_reg;
++	struct clk *clk;
+ 	int rc;
+ 
+ 	hpriv = ahci_platform_get_resources(pdev);
+ 	if (IS_ERR(hpriv))
+ 		return PTR_ERR(hpriv);
+ 
++	/*
++	 * Internally ahci_platform_get_resources() calls clk_get(dev, NULL)
++	 * when trying to obtain the first clock. This SATA controller uses
++	 * two clocks for which we specify two connection ids. If we don't
++	 * have a clock at this point - call clk_get() again with
++	 * con_id = "sata".
++	 */
++	if (!hpriv->clks[0]) {
++		clk = clk_get(dev, "sata");
++		if (IS_ERR(clk))
++			return PTR_ERR(clk);
++
++		hpriv->clks[0] = clk;
++	}
++
+ 	rc = ahci_platform_enable_resources(hpriv);
+ 	if (rc)
+ 		return rc;
+-- 
+2.9.3
