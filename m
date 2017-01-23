@@ -1,75 +1,83 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 1/3] SoC: es8328-i2c: Add compatible for
-	ES8323
-Date: Mon, 23 Jan 2017 14:47:45 +0100
-Message-ID: <20170123134747.1385-2-romain.perier@collabora.com>
-References: <20170123134747.1385-1-romain.perier@collabora.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [V2 2/2] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
+Date: Mon, 23 Jan 2017 14:13:31 +0000
+Message-ID: <1f003ff0-656d-6d2f-20e3-9f9e7010e236@arm.com>
+References: <1484034915-48879-1-git-send-email-puck.chen@hisilicon.com>
+ <1484034915-48879-2-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170123134747.1385-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484034915-48879-2-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, puck.chen-H32Fclmsjq1BDgjK7y7TUQ@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, qijiwen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a compatible string for everest,es8323. This is an
-audio codec that is compatible with es8328 and can be found for example
-on the Firefly-RK3288 board.
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
 
-Changes in v2: None
+On 10/01/17 07:55, Chen Feng wrote:
+> Add initial dtsi file to support Hisilicon Hi3660 SoC with
+> support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
+> 
+> Also add dts file to support HiKey960 development board which
+> based on Hi3660 SoC.
+> The output console is earlycon "earlycon=pl011,0xfdf05000".
+> And the con_init uart5 with a fixed clock, which already
+> configured at bootloader.
+> 
+> When clock is available, the uart5 will be modified.
+> 
+> Tested on HiKey960 Board.
+> 
+> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  34 +++++
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 156 ++++++++++++++++++++++
+>  3 files changed, 191 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+>  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> 
 
- Documentation/devicetree/bindings/sound/es8328.txt | 5 ++++-
- sound/soc/codecs/es8328-i2c.c                      | 2 ++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> new file mode 100644
+> index 0000000..7f9805c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -0,0 +1,156 @@
+> +/*
+> + * dts file for Hisilicon Hi3660 SoC
+> + *
+> + * Copyright (C) 2016, Hisilicon Ltd.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "hisilicon,hi3660";
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	psci {
+> +		compatible = "arm,psci-0.2";
+> +		method = "smc";
+> +	};
 
-diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
-index 33fbf05..86b6d6e 100644
---- a/Documentation/devicetree/bindings/sound/es8328.txt
-+++ b/Documentation/devicetree/bindings/sound/es8328.txt
-@@ -4,7 +4,10 @@ This device supports both I2C and SPI.
- 
- Required properties:
- 
--  - compatible  : Should be "everest,es8328" or "everest,es8388"
-+  - compatible  : Should be one of the following:
-+	- "everest,es8323"
-+	- "everest,es8328"
-+	- "everest,es8388"
-   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
-   - AVDD-supply : Regulator providing analog supply voltage 3.3V
-   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
-diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
-index 318ab28..be3f03c 100644
---- a/sound/soc/codecs/es8328-i2c.c
-+++ b/sound/soc/codecs/es8328-i2c.c
-@@ -19,6 +19,7 @@
- #include "es8328.h"
- 
- static const struct i2c_device_id es8328_id[] = {
-+	{ "es8323", 0 },
- 	{ "es8328", 0 },
- 	{ "es8388", 0 },
- 	{ }
-@@ -26,6 +27,7 @@ static const struct i2c_device_id es8328_id[] = {
- MODULE_DEVICE_TABLE(i2c, es8328_id);
- 
- static const struct of_device_id es8328_of_match[] = {
-+	{ .compatible = "everest,es8323", },
- 	{ .compatible = "everest,es8328", },
- 	{ .compatible = "everest,es8388", },
- 	{ }
+[...]
+
+> +
+> +		cpu0: cpu@0 {
+> +			compatible = "arm,armv8";
+
+You can add more specific compatibles as you mentioned this SoC contains
+Cortex A53 & A73.
+
 -- 
-2.9.3
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
