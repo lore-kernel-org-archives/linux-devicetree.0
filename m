@@ -1,57 +1,49 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v6 01/14] devicetree: bindings: add bindings for ahci-da850
-Date: Mon, 23 Jan 2017 18:00:43 +0100
-Message-ID: <1485190856-4711-2-git-send-email-bgolaszewski@baylibre.com>
-References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/2] devicetree: document new marvell-8xxx and
+ pwrseq-sd8787 options
+Date: Mon, 23 Jan 2017 11:04:09 -0600
+Message-ID: <20170123170409.rnmnf4ssjpd2yk3l@rob-hp-laptop>
+References: <20170121055039.10924-1-matt@ranostay.consulting>
+ <20170121055039.10924-2-matt@ranostay.consulting>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: linux-ide@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170121055039.10924-2-matt@ranostay.consulting>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Matt Ranostay <matt@ranostay.consulting>
+Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for the TI DA850 AHCI SATA controller.
+On Fri, Jan 20, 2017 at 09:50:38PM -0800, Matt Ranostay wrote:
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
+> ---
+>  .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt          | 14 ++++++++++++++
+>  .../devicetree/bindings/net/wireless/marvell-8xxx.txt      |  7 ++++++-
+>  2 files changed, 20 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+> new file mode 100644
+> index 000000000000..4bb56766982e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+> @@ -0,0 +1,14 @@
+> +* Marvell SD8787 power sequence provider
+> +
+> +Required properties:
+> +- compatible: must be "mmc-pwrseq-sd8787".
+> +- powerdown-gpio: contains a power down GPIO specifier with active state
+> +- reset-gpio: contains a reset GPIO specifier with active state
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- Documentation/devicetree/bindings/ata/ahci-da850.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
+My comments on the previous v3 still apply.
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-da850.txt b/Documentation/devicetree/bindings/ata/ahci-da850.txt
-new file mode 100644
-index 0000000..5f81934
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/ahci-da850.txt
-@@ -0,0 +1,18 @@
-+Device tree binding for the TI DA850 AHCI SATA Controller
-+---------------------------------------------------------
-+
-+Required properties:
-+  - compatible: must be "ti,da850-ahci"
-+  - reg: physical base addresses and sizes of the two register regions
-+         used by the controller: the register map as defined by the
-+         AHCI 1.1 standard and the Power Down Control Register (PWRDN)
-+         for enabling/disabling the SATA clock receiver
-+  - interrupts: interrupt specifier (refer to the interrupt binding)
-+
-+Example:
-+
-+	sata: sata@218000 {
-+		compatible = "ti,da850-ahci";
-+		reg = <0x218000 0x2000>, <0x22c018 0x4>;
-+		interrupts = <67>;
-+	};
--- 
-2.9.3
+> +
+> +Example:
+> +
+> +	wifi_pwrseq: wifi_pwrseq {
+> +		compatible = "mmc-pwrseq-sd8787";
+> +		powerdown-gpio = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
+> +		reset-gpio = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
+> +	}
