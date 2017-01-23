@@ -1,88 +1,58 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v2 2/3] arm: dts: rockchip: Don't set otp-gpio
-	pinctrl by default in rk3288.dtsi
-Date: Mon, 23 Jan 2017 14:47:46 +0100
-Message-ID: <20170123134747.1385-3-romain.perier@collabora.com>
-References: <20170123134747.1385-1-romain.perier@collabora.com>
+From: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] of/platform: Ignore disabled devices in
+ of_platform_populate()
+Date: Mon, 23 Jan 2017 15:33:26 +0100
+Message-ID: <711e6067-ab41-8217-b947-2b4c356aaaba@nokia.com>
+References: <CAL_JsqKb8KUgit-q_cOON8VgZBsrXEQd2EcC0iF=ou_271Vg_w@mail.gmail.com>
+ <20170123125204.22233-1-alexander.sverdlin@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170123134747.1385-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org
-Cc: Romain Perier <romain.perier@collabora.com>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123125204.22233-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The tsadc supports two reset methods: the cru and the otp_gpio. All
-boards except veyron and the evb simply use the cru-method and reuse the
-pin for something else. On the Firefly-RK3288 this is for example the
-case with the headphone. To prevent pinctrl-conflicts with these don't
-set the otp-gpio pinctrl by default but only in the boards using it.
+Hello all,
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
+On 23/01/17 13:52, Alexander Sverdlin wrote:
+> Check the status property and give up early enough. Otherwise
+> OF_POPULATED_BUS might be set for disabled bus which will prevent
+> it from being populated later (if enabled).
+> 
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/of/platform.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 35de1fc59fa6..060621d94f1a 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -476,6 +476,10 @@ int of_platform_populate(struct device_node *root,
+>  	root = root ? of_node_get(root) : of_find_node_by_path("/");
+>  	if (!root)
+>  		return -EINVAL;
+> +	if (!of_device_is_available(root)) {
+> +		of_node_put(root);
+> +		return 0;
+> +	}
+>  
+>  	pr_debug("%s()\n", __func__);
+>  	pr_debug(" starting at: %s\n", root->full_name);
 
-Changes in v2:
-- Added this patch
+no, this one also doesn't allow to switch to of_platform_default_populate(),
+please ignore the patch.
 
- arch/arm/boot/dts/rk3288-evb.dtsi    | 4 ++++
- arch/arm/boot/dts/rk3288-veyron.dtsi | 4 ++++
- arch/arm/boot/dts/rk3288.dtsi        | 4 ----
- 3 files changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk3288-evb.dtsi b/arch/arm/boot/dts/rk3288-evb.dtsi
-index bf7ccfa..7160d07 100644
---- a/arch/arm/boot/dts/rk3288-evb.dtsi
-+++ b/arch/arm/boot/dts/rk3288-evb.dtsi
-@@ -290,6 +290,10 @@
- };
- 
- &tsadc {
-+	pinctrl-names = "init", "default", "sleep";
-+	pinctrl-0 = <&otp_gpio>;
-+	pinctrl-1 = <&otp_out>;
-+	pinctrl-2 = <&otp_gpio>;
- 	rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
- 	rockchip,hw-tshut-polarity = <0>; /* tshut polarity 0:LOW 1:HIGH */
- 	status = "okay";
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index 2251d28..e7801d8 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -393,6 +393,10 @@
- &tsadc {
- 	status = "okay";
- 
-+	pinctrl-names = "init", "default", "sleep";
-+	pinctrl-0 = <&otp_gpio>;
-+	pinctrl-1 = <&otp_out>;
-+	pinctrl-2 = <&otp_gpio>;
- 	rockchip,hw-tshut-mode = <1>; /* tshut mode 0:CRU 1:GPIO */
- 	rockchip,hw-tshut-polarity = <1>; /* tshut polarity 0:LOW 1:HIGH */
- };
-diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
-index 4fad133..f419e4d 100644
---- a/arch/arm/boot/dts/rk3288.dtsi
-+++ b/arch/arm/boot/dts/rk3288.dtsi
-@@ -532,10 +532,6 @@
- 		clock-names = "tsadc", "apb_pclk";
- 		resets = <&cru SRST_TSADC>;
- 		reset-names = "tsadc-apb";
--		pinctrl-names = "init", "default", "sleep";
--		pinctrl-0 = <&otp_gpio>;
--		pinctrl-1 = <&otp_out>;
--		pinctrl-2 = <&otp_gpio>;
- 		#thermal-sensor-cells = <1>;
- 		rockchip,hw-tshut-temp = <95000>;
- 		status = "disabled";
 -- 
-2.9.3
+Best regards,
+Alexander Sverdlin.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
