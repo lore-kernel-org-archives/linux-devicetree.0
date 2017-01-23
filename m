@@ -1,137 +1,749 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v13 2/5] tee: generic TEE subsystem
-Date: Mon, 23 Jan 2017 09:20:02 +0100
-Message-ID: <20170123082001.GA1910@jax>
-References: <1479480700-554-1-git-send-email-jens.wiklander@linaro.org>
- <5825882.vZRDMrBMkW@wuerfel> <20170119164541.GA22094@jax>
- <8436100.O3a8W3D0ph@wuerfel>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC v2 1/4] ARM: dts: imx6qdl: add HummingBoard2 boards
+Date: Mon, 23 Jan 2017 16:33:24 +0800
+Message-ID: <20170123083320.GL5662@dragon>
+References: <20170113144449.GQ14217@n2100.armlinux.org.uk>
+ <E1cS36a-0002wB-Vy@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8436100.O3a8W3D0ph@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: valentin.manea@huawei.com, devicetree@vger.kernel.org, javier@javigon.com, emmanuel.michel@st.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Wei Xu <xuwei5@hisilicon.com>, Nishanth Menon <nm@ti.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robh+dt@kernel.org>, broonie@kernel.org, Al Viro <viro@zeniv.linux.org.uk>, "Andrew F. Davis" <afd@ti.com>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, jean-michel.delorme@st.com, Michal Simek <michal.simek@xilinx.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <E1cS36a-0002wB-Vy-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjAsIDIwMTcgYXQgMDU6NDc6NDBQTSArMDEwMCwgQXJuZCBCZXJnbWFubiB3
-cm90ZToKPiBPbiBUaHVyc2RheSwgSmFudWFyeSAxOSwgMjAxNyA1OjQ1OjQzIFBNIENFVCBKZW5z
-IFdpa2xhbmRlciB3cm90ZToKPiA+IAo+ID4gT24gV2VkLCBKYW4gMTgsIDIwMTcgYXQgMDk6MTk6
-MjVQTSArMDEwMCwgQXJuZCBCZXJnbWFubiB3cm90ZToKPiA+ID4gT24gRnJpZGF5LCBOb3ZlbWJl
-ciAxOCwgMjAxNiAzOjUxOjM3IFBNIENFVCBKZW5zIFdpa2xhbmRlciB3cm90ZToKPiA+ID4gPiBJ
-bml0aWFsIHBhdGNoIGZvciBnZW5lcmljIFRFRSBzdWJzeXN0ZW0uCj4gPiA+ID4gVGhpcyBzdWJz
-eXN0ZW0gcHJvdmlkZXM6Cj4gPiA+ID4gKiBSZWdpc3RyYXRpb24vdW4tcmVnaXN0cmF0aW9uIG9m
-IFRFRSBkcml2ZXJzLgo+ID4gPiA+ICogU2hhcmVkIG1lbW9yeSBiZXR3ZWVuIG5vcm1hbCB3b3Js
-ZCBhbmQgc2VjdXJlIHdvcmxkLgo+ID4gPiA+ICogSW9jdGwgaW50ZXJmYWNlIGZvciBpbnRlcmFj
-dGlvbiB3aXRoIHVzZXIgc3BhY2UuCj4gPiA+ID4gKiBTeXNmcyBpbXBsZW1lbnRhdGlvbl9pZCBv
-ZiBURUUgZHJpdmVyCj4gPiA+ID4gCj4gPiA+ID4gQSBURUUgKFRydXN0ZWQgRXhlY3V0aW9uIEVu
-dmlyb25tZW50KSBkcml2ZXIgaXMgYSBkcml2ZXIgdGhhdCBpbnRlcmZhY2VzCj4gPiA+ID4gd2l0
-aCBhIHRydXN0ZWQgT1MgcnVubmluZyBpbiBzb21lIHNlY3VyZSBlbnZpcm9ubWVudCwgZm9yIGV4
-YW1wbGUsCj4gPiA+ID4gVHJ1c3Rab25lIG9uIEFSTSBjcHVzLCBvciBhIHNlcGFyYXRlIHNlY3Vy
-ZSBjby1wcm9jZXNzb3IgZXRjLgo+ID4gPiA+IAo+ID4gPiA+IFRoZSBURUUgc3Vic3lzdGVtIGNh
-biBzZXJ2ZSBhIFRFRSBkcml2ZXIgZm9yIGEgR2xvYmFsIFBsYXRmb3JtIGNvbXBsaWFudAo+ID4g
-PiA+IFRFRSwgYnV0IGl0J3Mgbm90IGxpbWl0ZWQgdG8gb25seSBHbG9iYWwgUGxhdGZvcm0gVEVF
-cy4KPiA+ID4gPiAKPiA+ID4gPiBUaGlzIHBhdGNoIGJ1aWxkcyBvbiBvdGhlciBzaW1pbGFyIGlt
-cGxlbWVudGF0aW9ucyB0cnlpbmcgdG8gc29sdmUKPiA+ID4gPiB0aGUgc2FtZSBwcm9ibGVtOgo+
-ID4gPiA+ICogIm9wdGVlX2xpbnV4ZHJpdmVyIiBieSBhbW9uZyBvdGhlcnMKPiA+ID4gPiAgIEpl
-YW4tbWljaGVsIERFTE9STUU8amVhbi1taWNoZWwuZGVsb3JtZUBzdC5jb20+IGFuZAo+ID4gPiA+
-ICAgRW1tYW51ZWwgTUlDSEVMIDxlbW1hbnVlbC5taWNoZWxAc3QuY29tPgo+ID4gPiA+ICogIkdl
-bmVyaWMgVHJ1c3Rab25lIERyaXZlciIgYnkgSmF2aWVyIEdvbnrDoWxleiA8amF2aWVyQGphdmln
-b24uY29tPgo+ID4gPiAKPiA+ID4gQ2FuIHlvdSBnaXZlIGFuIGV4YW1wbGUgZm9yIGEgc3lzdGVt
-IHRoYXQgd291bGQgY29udGFpbiBtb3JlIHRoYW4gb25lCj4gPiA+IFRFRT8gSSBzZWUgdGhhdCB5
-b3Ugc3VwcG9ydCBkeW5hbWljIHJlZ2lzdHJhdGlvbiwgYW5kIGl0J3MgY2xlYXIgdGhhdAo+ID4g
-PiB0aGVyZSBjYW4gYmUgbW9yZSB0aGFuIG9uZSB0eXBlIG9mIFRFRSwgYnV0IHdoeSB3b3VsZCBv
-bmUgaGF2ZSBtb3JlCj4gPiA+IHRoYW4gb25lIGF0IGEgdGltZSwgYW5kIHdoeSBub3QgbW9yZSB0
-aGFuIDMyPwo+ID4gCj4gPiBJIGtub3cgdGhhdCBTVCBoYXMgc3lzdGVtcyB3aGVyZSB0aGVyZSdz
-IG9uZSBURUUgaW4gVHJ1c3Rab25lIGFuZAo+ID4gYW5vdGhlciBURUUgb24gYSBzZXBhcmF0ZSBz
-ZWN1cmUgY28tcHJvY2Vzc29yLiBJZiB5b3UgaGF2ZSBzZXZlcmFsIFRFRXMKPiA+IGl0J3MgcHJv
-YmFibHkgYmVjYXVzZSB0aGV5IGhhdmUgZGlmZmVyZW50IGNhcGFiaWxpdGllcyAocGVyZm9ybWFu
-Y2UKPiA+IHZlcnN1cyBsZXZlbCBvZiBzZWN1cml0eSkuIEp1c3QgZ29pbmcgYmV5b25kIHR3byBv
-ciB0aHJlZSBkaWZmZXJlbnQKPiA+IGxldmVscyBvZiBzZWN1cml0eSB3aXRoIGRpZmZlcmVudCBU
-RUVzIHNvdW5kcyBhIGJpdCBleHRyZW1lLCBzbyBhCj4gPiBtYXhpbXVtIG9mIDMyIG9yIDE2IHNo
-b3VsZCBiZSBmYWlybHkgc2FmZS4gSWYgaXQgdHVybnMgb3V0IEknbSB3cm9uZyBpbgo+ID4gdGhp
-cyBhc3N1bXB0aW9uIGl0J3Mgbm90IHRoYXQgaGFyZCB0byBjb3JyZWN0IGl0Lgo+IAo+IE9rCj4g
-Cj4gPiA+IAo+ID4gPiA+ICsJaWYgKGNvcHlfZnJvbV91c2VyKCZhcmcsIHVhcmcsIHNpemVvZihh
-cmcpKSkKPiA+ID4gPiArCQlyZXR1cm4gLUVGQVVMVDsKPiA+ID4gPiArCj4gPiA+ID4gKwlpZiAo
-c2l6ZW9mKGFyZykgKyBURUVfSU9DVExfUEFSQU1fU0laRShhcmcubnVtX3BhcmFtcykgIT0gYnVm
-LmJ1Zl9sZW4pCj4gPiA+ID4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gPiA+ID4gKwo+ID4gPiA+ICsJ
-aWYgKGFyZy5udW1fcGFyYW1zKSB7Cj4gPiA+ID4gKwkJcGFyYW1zID0ga2NhbGxvYyhhcmcubnVt
-X3BhcmFtcywgc2l6ZW9mKHN0cnVjdCB0ZWVfcGFyYW0pLAo+ID4gPiA+ICsJCQkJIEdGUF9LRVJO
-RUwpOwo+ID4gPiA+ICsJCWlmICghcGFyYW1zKQo+ID4gPiA+ICsJCQlyZXR1cm4gLUVOT01FTTsK
-PiA+ID4gCj4gPiA+IEl0IHdvdWxkIGJlIGdvb2QgdG8gaGF2ZSBhbiB1cHBlciBib3VuZCBvbiB0
-aGUgbnVtYmVyIG9mIHBhcmFtZXRlcnMKPiA+ID4gdG8gbGltaXQgdGhlIHNpemUgb2YgdGhlIG1l
-bW9yeSBhbGxvY2F0aW9uIGhlcmUuCj4gPiAKPiA+IFRoaXMgaXMgYWxyZWFkeSBsaW1pdGVkIGR1
-ZSB0bzoKPiA+IAo+ID4gVGhlIHRlc3Qgd2l0aDogYnVmLmJ1Zl9sZW4gPiBURUVfTUFYX0FSR19T
-SVpFCj4gPiAKPiA+IEFuZCB0aGVuIGFub3RoZXIgdGVzdCB0aGF0IHRoZSBudW1iZXIgb2YgcGFy
-YW1ldGVycyBtYXRjaGVzIHRoZSBidWZmZXIgc2l6ZQo+ID4gd2l0aDogc2l6ZW9mKGFyZykgKyBU
-RUVfSU9DVExfUEFSQU1fU0laRShhcmcubnVtX3BhcmFtcykgIT0gYnVmLmJ1Zl9sZW4KPiAKPiBP
-aywgbWFrZXMgc2Vuc2UuCj4gCj4gPiA+IAo+ID4gPiA+ICsvKioKPiA+ID4gPiArICogc3RydWN0
-IHRlZV9pb2N0bF9wYXJhbSAtIHBhcmFtZXRlcgo+ID4gPiA+ICsgKiBAYXR0cjogYXR0cmlidXRl
-cwo+ID4gPiA+ICsgKiBAbWVtcmVmOiBhIG1lbW9yeSByZWZlcmVuY2UKPiA+ID4gPiArICogQHZh
-bHVlOiBhIHZhbHVlCj4gPiA+ID4gKyAqCj4gPiA+ID4gKyAqIEBhdHRyICYgVEVFX1BBUkFNX0FU
-VFJfVFlQRV9NQVNLIGluZGljYXRlcyBpZiBtZW1yZWYgb3IgdmFsdWUgaXMgdXNlZCBpbgo+ID4g
-PiA+ICsgKiB0aGUgdW5pb24uIFRFRV9QQVJBTV9BVFRSX1RZUEVfVkFMVUVfKiBpbmRpY2F0ZXMg
-dmFsdWUgYW5kCj4gPiA+ID4gKyAqIFRFRV9QQVJBTV9BVFRSX1RZUEVfTUVNUkVGXyogaW5kaWNh
-dGVzIG1lbXJlZi4gVEVFX1BBUkFNX0FUVFJfVFlQRV9OT05FCj4gPiA+ID4gKyAqIGluZGljYXRl
-cyB0aGF0IG5vbmUgb2YgdGhlIG1lbWJlcnMgYXJlIHVzZWQuCj4gPiA+ID4gKyAqLwo+ID4gPiA+
-ICtzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIHsKPiA+ID4gPiArCV9fdTY0IGF0dHI7Cj4gPiA+ID4g
-Kwl1bmlvbiB7Cj4gPiA+ID4gKwkJc3RydWN0IHRlZV9pb2N0bF9wYXJhbV9tZW1yZWYgbWVtcmVm
-Owo+ID4gPiA+ICsJCXN0cnVjdCB0ZWVfaW9jdGxfcGFyYW1fdmFsdWUgdmFsdWU7Cj4gPiA+ID4g
-Kwl9IHU7Cj4gPiA+ID4gK307Cj4gPiA+ID4gKwo+ID4gPiA+ICsjZGVmaW5lIFRFRV9JT0NUTF9V
-VUlEX0xFTgkJMTYKPiA+ID4gPiArCj4gPiA+IAo+ID4gPiBIYXZpbmcgYSB1bmlvbiBpbiBhbiBp
-b2N0bCBhcmd1bWVudCBzZWVtcyBvZGQuIEhhdmUgeW91IGNvbnNpZGVyZWQKPiA+ID4gdXNpbmcg
-dHdvIGRpZmZlcmVudCBpb2N0bCBjb21tYW5kIG51bWJlcnMgZGVwZW5kaW5nIG9uIHRoZSB0eXBl
-Pwo+ID4gCj4gPiBzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIGlzIHVzZWQgYXMgYW4gYXJyYXkgYW5k
-IHNvbWUgcGFyYW1ldGVycyBjYW4gYmUKPiA+IG1lbXJlZnMgd2hpbGUgb3RoZXIgYXJlIHZhbHVl
-cy4KPiAKPiBHb3QgaXQuIEkgc3RpbGwgdGhpbmsgaXQncyBhIGJpdCBhd2t3YXJkIG9uIHRoZSB1
-c2VyIEFCSSBzaWRlLgo+IEkgYWxzbyBzZWUgdGhhdCAodW5saWtlIHRoZSBpbi1rZXJuZWwgaW50
-ZXJmYWNlKSB0ZWVfaW9jdGxfcGFyYW1fbWVtcmVmCj4gYW5kIHRlZV9pb2N0bF9wYXJhbV92YWx1
-ZSBhcmUgYm90aCBkZWZpbmVkIGluIHRlcm1zIG9mIHRocmVlIF9fdTY0Cj4gbWVtYmVycy4KCkFj
-dHVhbGx5IHRoZSBsYXN0IG1lbWJlciBvZiBzdHJ1Y3QgdGVlX2lvY3RsX3BhcmFtX21lbXJlZiBp
-cyBhbiBfX3M2NCwKYnV0IHRoYXQgZG9lc24ndCBtYXR0ZXIgbXVjaCBvbmUganVzdCBoYXZlIHRv
-IGJlIGEgbGl0dGxlIGNhcmVmdWwuCgo+IAo+IEhvdyBhYm91dCBzaW1wbHkgdXNpbmcgb25lIGZv
-cm1hdCBoZXJlIGFuZCBtYWtpbmcgdGhpcwo+IAo+IHN0cnVjdCB0ZWVfaW9jdGxfcGFyYW0gewo+
-ICAgIF9fdTY0IGF0dHI7Cj4gICAgX191NjQgYTsKPiAgICBfX3U2NCBiOwo+ICAgIF9fdTY0IGM7
-Cj4gfTsKPiAKPiBHaXZlbiB0aGF0IHlvdSBuZWVkIGEgd3JhcHBlciB0byBzZXQgdGhlIHBvaW50
-ZXIgaW4gbWVtcmVmIGFueXdheT8KPiAKPiBIYXZpbmcgYW4gaW9jdGwgd2l0aCBhIHZhcmlhYmxl
-IG51bWJlciBvZiB2YXJpYWJsZSB0eXBlIGFyZ3VtZW50cwo+IGlzIHJlYWxseSBhIHdlYWtuZXNz
-IG9mIHRoZSBBQkksIGJ1dCBJIGRvbid0IHNlZSBhIGdvb2Qgd2F5IGFyb3VuZAo+IGl0IGVpdGhl
-ciwgdGhlIGFib3ZlIHdvdWxkIGp1c3QgbWFrZSBpdCBzbGlnaHRseSBtb3JlIGRpcmVjdC4KCk9L
-LCBJJ2xsIGNoYW5nZS4KCj4gCj4gPiA+ID4gKy8qKgo+ID4gPiA+ICsgKiBzdHJ1Y3QgdGVlX2lv
-Y2xfc3VwcF9zZW5kX2FyZyAtIFNlbmQgYSByZXNwb25zZSB0byBhIHJlY2VpdmVkIHJlcXVlc3QK
-PiA+ID4gPiArICogQHJldDoJW291dF0gcmV0dXJuIHZhbHVlCj4gPiA+ID4gKyAqIEBudW1fcGFy
-YW1zCVtpbl0gbnVtYmVyIG9mIHBhcmFtZXRlcnMgZm9sbG93aW5nIHRoaXMgc3RydWN0Cj4gPiA+
-ID4gKyAqLwo+ID4gPiA+ICtzdHJ1Y3QgdGVlX2lvY2xfc3VwcF9zZW5kX2FyZyB7Cj4gPiA+ID4g
-KwlfX3UzMiByZXQ7Cj4gPiA+ID4gKwlfX3UzMiBudW1fcGFyYW1zOwo+ID4gPiA+ICsJLyoKPiA+
-ID4gPiArCSAqIHRoaXMgc3RydWN0IGlzIDggYnl0ZSBhbGlnbmVkIHNpbmNlIHRoZSAnc3RydWN0
-IHRlZV9pb2N0bF9wYXJhbScKPiA+ID4gPiArCSAqIHdoaWNoIGZvbGxvd3MgcmVxdWlyZXMgOCBi
-eXRlIGFsaWdubWVudC4KPiA+ID4gPiArCSAqCj4gPiA+ID4gKwkgKiBDb21tZW50ZWQgb3V0IGVs
-ZW1lbnQgdXNlZCB0byB2aXN1YWxpemUgdGhlIGxheW91dCBkeW5hbWljIHBhcnQKPiA+ID4gPiAr
-CSAqIG9mIHRoZSBzdHJ1Y3QuIFRoaXMgZmllbGQgaXMgbm90IGF2YWlsYWJsZSBhdCBhbGwgaWYK
-PiA+ID4gPiArCSAqIG51bV9wYXJhbXMgPT0gMC4KPiA+ID4gPiArCSAqCj4gPiA+ID4gKwkgKiBz
-dHJ1Y3QgdGVlX2lvY3RsX3BhcmFtIHBhcmFtc1tudW1fcGFyYW1zXTsKPiA+ID4gPiArCSAqLwo+
-ID4gPiA+ICt9IF9fYWxpZ25lZCg4KTsKPiA+ID4gCj4gPiA+IEknZCBtYWtlIHRoYXQgCj4gPiA+
-IAo+ID4gPiAJc3RydWN0IHRlZV9pb2N0bF9wYXJhbSBwYXJhbXNbMF07Cj4gPiA+IAo+ID4gPiBh
-cyB3ZWwgaGVyZSwgYXMgSSBhbHNvIGNvbW1lbnRlZCBpbiBwYXRjaCAzIHRoYXQgaGFzIGEgc2lt
-aWxhciBzdHJ1Y3R1cmUuCj4gPiAKPiA+IEknbSBjb25jZXJuZWQgdGhhdCB0aGlzIG1heSBjYXVz
-ZSB3YXJuaW5ncyB3aGVuIGNvbXBpbGluZyBmb3IgdXNlciBzcGFjZQo+ID4gZGVwZW5kaW5nIG9u
-IGNvbXBpbGVyIGFuZCBvcHRpb25zLiBBbSBJIHRvbyBjYXV0aW91cyBoZXJlPwo+IAo+IFNlZSBo
-dHRwczovL2djYy5nbnUub3JnL29ubGluZWRvY3MvZ2NjL1plcm8tTGVuZ3RoLmh0bWwKPiAKPiBJ
-IGFjdHVhbGx5IG1pc3JlbWVtYmVyZWQgaXQgYW5kIHRoZSBzeW50YXggSSBsaXN0ZWQgaXMgR0ND
-IHNwZWNpZmljLAo+IGJ1dCBDOTkgYWxsb3dzICJmbGV4aWJsZSBhcnJheXMiLiBJIHRoaW5rIHRo
-ZXJlIGlzIG5vIHByb2JsZW0gcmVseWluZwo+IG9uIEM5OSBoZXJlLCB3ZSBhbHJlYWR5IHJlbHkg
-b24gQzk5IGZlYXR1cmVzIGVsc2V3aGVyZSBpbiBoZWFkZXJzLgoKT0ssIEknbGwgY2hhbmdlLgoK
-VGhhbmtzLApKZW5zCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Jan 13, 2017 at 02:45:24PM +0000, Russell King wrote:
+> From: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> 
+> This adds support for the Hummingboard Gate and Edge devices from
+> SolidRun.
+> 
+> Signed-off-by: Jon Nettleton <jon-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                   |   2 +
+>  arch/arm/boot/dts/imx6dl-hummingboard2.dts   |  52 +++
+>  arch/arm/boot/dts/imx6q-hummingboard2.dts    |  60 +++
+>  arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi | 543 +++++++++++++++++++++++++++
+>  4 files changed, 657 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-hummingboard2.dts
+>  create mode 100644 arch/arm/boot/dts/imx6q-hummingboard2.dts
+>  create mode 100644 arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 7327250f0bb6..09227cc15199 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -348,6 +348,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-gw552x.dtb \
+>  	imx6dl-gw553x.dtb \
+>  	imx6dl-hummingboard.dtb \
+> +	imx6dl-hummingboard2.dtb \
+>  	imx6dl-icore.dtb \
+>  	imx6dl-nit6xlite.dtb \
+>  	imx6dl-nitrogen6x.dtb \
+> @@ -390,6 +391,7 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6q-gw553x.dtb \
+>  	imx6q-h100.dtb \
+>  	imx6q-hummingboard.dtb \
+> +	imx6q-hummingboard2.dtb \
+>  	imx6q-icore.dtb \
+>  	imx6q-icore-rqs.dtb \
+>  	imx6q-marsboard.dtb \
+> diff --git a/arch/arm/boot/dts/imx6dl-hummingboard2.dts b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+> new file mode 100644
+> index 000000000000..990b5050de5b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-hummingboard2.dts
+> @@ -0,0 +1,52 @@
+> +/*
+> + * Device Tree file for SolidRun HummingBoard2
+> + * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> + * Based on work by Russell King
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+
+The licence text is still the mangled version.
+
+> +/dts-v1/;
+> +
+> +#include "imx6dl.dtsi"
+> +#include "imx6qdl-hummingboard2.dtsi"
+> +
+> +/ {
+> +	model = "SolidRun HummingBoard2 Solo/DualLite";
+> +	compatible = "solidrun,hummingboard2/dl", "fsl,imx6dl";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6q-hummingboard2.dts b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+> new file mode 100644
+> index 000000000000..f5eec9163bb8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6q-hummingboard2.dts
+> @@ -0,0 +1,60 @@
+> +/*
+> + * Device Tree file for SolidRun HummingBoard2
+> + * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> + * Based on work by Russell King
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+
+Ditto
+
+> +/dts-v1/;
+> +
+> +#include "imx6q.dtsi"
+> +#include "imx6qdl-hummingboard2.dtsi"
+> +
+> +/ {
+> +	model = "SolidRun HummingBoard2 Dual/Quad";
+> +	compatible = "solidrun,hummingboard2/q", "fsl,imx6q";
+> +};
+> +
+> +&sata {
+> +	status = "okay";
+> +	fsl,transmit-level-mV = <1104>;
+> +	fsl,transmit-boost-mdB = <0>;
+> +	fsl,transmit-atten-16ths = <9>;
+> +	fsl,no-spread-spectrum;
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> new file mode 100644
+> index 000000000000..11b63f6f2b89
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6qdl-hummingboard2.dtsi
+> @@ -0,0 +1,543 @@
+> +/*
+> + * Device Tree file for SolidRun HummingBoard2
+> + * Copyright (C) 2015 Rabeeh Khoury <rabeeh-UBr1pzP51AyaMJb+Lgu22Q@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+
+This one is correct.
+
+> +#include "imx6qdl-microsom.dtsi"
+> +#include "imx6qdl-microsom-ar8035.dtsi"
+> +
+> +/ {
+> +	chosen {
+> +		stdout-path = &uart1;
+> +	};
+> +
+> +	ir_recv: ir-receiver {
+> +		compatible = "gpio-ir-receiver";
+> +		gpios = <&gpio7 9 1>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_gpio7_9>;
+> +		linux,rc-map-name = "rc-rc6-mce";
+> +	};
+> +
+> +	usdhc2_pwrseq: usdhc2-pwrseq {
+> +		compatible = "mmc-pwrseq-simple";
+> +		reset-gpios = <&gpio4 30 GPIO_ACTIVE_HIGH>;
+> +	};
+> +
+> +	reg_3p3v: regulator-3p3v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "3P3V";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_1p8v: regulator-1p8v {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "1P8V";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <1800000>;
+> +		regulator-always-on;
+> +	};
+> +
+> +	reg_usbh1_vbus: regulator-usb-h1-vbus {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio1 0 0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_usbh1_vbus>;
+> +		regulator-name = "usb_h1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	reg_usbotg_vbus: regulator-usb-otg-vbus {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio3 22 0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_usbotg_vbus>;
+> +		regulator-name = "usb_otg_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	reg_usbh2_vbus: regulator-usb-h2-vbus {
+> +		compatible = "regulator-gpio";
+> +		enable-active-high;
+> +		enable-gpio = <&gpio2 13 0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_usbh2_vbus>;
+> +		regulator-name = "usb_h2_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	reg_usbh3_vbus: regulator-usb-h3-vbus {
+> +		compatible = "regulator-gpio";
+> +		enable-active-high;
+> +		enable-gpio = <&gpio7 10 0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_usbh3_vbus>;
+> +		regulator-name = "usb_h3_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	sound-sgtl5000 {
+> +		audio-codec = <&sgtl5000>;
+> +		audio-routing =
+> +			"MIC_IN", "Mic Jack",
+> +			"Mic Jack", "Mic Bias",
+> +			"Headphone Jack", "HP_OUT";
+> +		compatible = "fsl,imx-audio-sgtl5000";
+> +		model = "On-board Codec";
+> +		mux-ext-port = <5>;
+> +		mux-int-port = <1>;
+> +		ssi-controller = <&ssi1>;
+> +	};
+> +};
+> +
+> +&audmux {
+> +	status = "okay";
+> +};
+> +
+> +&ecspi2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_ecspi2>;
+> +	cs-gpios = <&gpio2 26 0>;
+> +	status = "okay";
+> +};
+> +
+> +&hdmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_hdmi>;
+> +	ddc-i2c-bus = <&i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_i2c1>;
+> +	status = "okay";
+> +
+> +	pcf8523: rtc@68 {
+> +		compatible = "nxp,pcf8523";
+> +		reg = <0x68>;
+> +		nxp,12p5_pf;
+> +	};
+
+I do not see this support in mainline kernel.
+
+Shawn
+
+> +
+> +	sgtl5000: codec@0a {
+> +		clocks = <&clks IMX6QDL_CLK_CKO>;
+> +		compatible = "fsl,sgtl5000";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_hummingboard2_sgtl5000>;
+> +		reg = <0x0a>;
+> +		VDDA-supply = <&reg_3p3v>;
+> +		VDDIO-supply = <&reg_3p3v>;
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_i2c2>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_i2c3>;
+> +	status = "okay";
+> +};
+> +
+> +&iomuxc {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hog>;
+> +
+> +	hummingboard2 {
+> +		pinctrl_hog: hoggrp {
+> +		fsl,pins = <
+> +				/*
+> +				 * 36 pin headers GPIO description. The pins
+> +				 * numbering as following -
+> +				 *
+> +				 * 	3.2v	5v	74	75
+> +				 *	73	72	71	70
+> +				 *	69	68	67	66
+> +				 *
+> +				 *	77	78	79	76
+> +				 *	65	64	61	60
+> +				 *	53	52	51	50
+> +				 *	49	48	166	132
+> +				 *	95	94	90	91
+> +				 *	GND	54	24	204
+> +				 *
+> +				 * The GPIO numbers can be extracted using
+> +				 * signal name from below.
+> +				 * Example -
+> +				 * MX6QDL_PAD_EIM_DA10__GPIO3_IO10 is
+> +				 * GPIO(3,10) which is (3-1)*32+10 = gpio 74
+> +				 *
+> +				 * i.e. The mapping of GPIO(X,Y) to Linux gpio
+> +				 * number is : gpio number = (X-1) * 32 + Y
+> +				 */
+> +				/* DI1_PIN15 */
+> +				MX6QDL_PAD_EIM_DA10__GPIO3_IO10 0x400130b1
+> +				/* DI1_PIN02 */
+> +				MX6QDL_PAD_EIM_DA11__GPIO3_IO11 0x400130b1
+> +				/* DISP1_DATA00 */
+> +				MX6QDL_PAD_EIM_DA9__GPIO3_IO09 0x400130b1
+> +				/* DISP1_DATA01 */
+> +				MX6QDL_PAD_EIM_DA8__GPIO3_IO08 0x400130b1
+> +				/* DISP1_DATA02 */
+> +				MX6QDL_PAD_EIM_DA7__GPIO3_IO07 0x400130b1
+> +				/* DISP1_DATA03 */
+> +				MX6QDL_PAD_EIM_DA6__GPIO3_IO06 0x400130b1
+> +				/* DISP1_DATA04 */
+> +				MX6QDL_PAD_EIM_DA5__GPIO3_IO05 0x400130b1
+> +				/* DISP1_DATA05 */
+> +				MX6QDL_PAD_EIM_DA4__GPIO3_IO04 0x400130b1
+> +				/* DISP1_DATA06 */
+> +				MX6QDL_PAD_EIM_DA3__GPIO3_IO03 0x400130b1
+> +				/* DISP1_DATA07 */
+> +				MX6QDL_PAD_EIM_DA2__GPIO3_IO02 0x400130b1
+> +				/* DI1_D0_CS */
+> +				MX6QDL_PAD_EIM_DA13__GPIO3_IO13 0x400130b1
+> +				/* DI1_D1_CS */
+> +				MX6QDL_PAD_EIM_DA14__GPIO3_IO14 0x400130b1
+> +				/* DI1_PIN01 */
+> +				MX6QDL_PAD_EIM_DA15__GPIO3_IO15 0x400130b1
+> +				/* DI1_PIN03 */
+> +				MX6QDL_PAD_EIM_DA12__GPIO3_IO12 0x400130b1
+> +				/* DISP1_DATA08 */
+> +				MX6QDL_PAD_EIM_DA1__GPIO3_IO01 0x400130b1
+> +				/* DISP1_DATA09 */
+> +				MX6QDL_PAD_EIM_DA0__GPIO3_IO00 0x400130b1
+> +				/* DISP1_DATA10 */
+> +				MX6QDL_PAD_EIM_EB1__GPIO2_IO29 0x400130b1
+> +				/* DISP1_DATA11 */
+> +				MX6QDL_PAD_EIM_EB0__GPIO2_IO28 0x400130b1
+> +				/* DISP1_DATA12 */
+> +				MX6QDL_PAD_EIM_A17__GPIO2_IO21 0x400130b1
+> +				/* DISP1_DATA13 */
+> +				MX6QDL_PAD_EIM_A18__GPIO2_IO20 0x400130b1
+> +				/* DISP1_DATA14 */
+> +				MX6QDL_PAD_EIM_A19__GPIO2_IO19 0x400130b1
+> +				/* DISP1_DATA15 */
+> +				MX6QDL_PAD_EIM_A20__GPIO2_IO18 0x400130b1
+> +				/* DISP1_DATA16 */
+> +				MX6QDL_PAD_EIM_A21__GPIO2_IO17 0x400130b1
+> +				/* DISP1_DATA17 */
+> +				MX6QDL_PAD_EIM_A22__GPIO2_IO16 0x400130b1
+> +				/* DISP1_DATA18 */
+> +				MX6QDL_PAD_EIM_A23__GPIO6_IO06 0x400130b1
+> +				/* DISP1_DATA19 */
+> +				MX6QDL_PAD_EIM_A24__GPIO5_IO04 0x400130b1
+> +				/* DISP1_DATA20 */
+> +				MX6QDL_PAD_EIM_D31__GPIO3_IO31 0x400130b1
+> +				/* DISP1_DATA21 */
+> +				MX6QDL_PAD_EIM_D30__GPIO3_IO30 0x400130b1
+> +				/* DISP1_DATA22 */
+> +				MX6QDL_PAD_EIM_D26__GPIO3_IO26 0x400130b1
+> +				/* DISP1_DATA23 */
+> +				MX6QDL_PAD_EIM_D27__GPIO3_IO27 0x400130b1
+> +				/* DI1_DISP_CLK */
+> +				MX6QDL_PAD_EIM_A16__GPIO2_IO22 0x400130b1
+> +				/* SPDIF_IN */
+> +				MX6QDL_PAD_ENET_RX_ER__GPIO1_IO24 0x400130b1
+> +				/* SPDIF_OUT */
+> +				MX6QDL_PAD_GPIO_17__GPIO7_IO12 0x400130b1
+> +
+> +				/* MikroBUS GPIO pin number 10 */
+> +				MX6QDL_PAD_EIM_LBA__GPIO2_IO27 0x400130b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_ecspi2: hummingboard2-ecspi2grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_OE__ECSPI2_MISO	0x100b1
+> +				MX6QDL_PAD_EIM_CS1__ECSPI2_MOSI	0x100b1
+> +				MX6QDL_PAD_EIM_CS0__ECSPI2_SCLK	0x100b1
+> +				MX6QDL_PAD_EIM_RW__GPIO2_IO26	0x000b1 /* CS */
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_gpio7_9: hummingboard2-gpio7_9 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD4_CMD__GPIO7_IO09 0x80000000
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_hdmi: hummingboard2-hdmi {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_ROW2__HDMI_TX_CEC_LINE 0x1f8b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_i2c1: hummingboard2-i2c1 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_D21__I2C1_SCL 0x4001b8b1
+> +				MX6QDL_PAD_EIM_D28__I2C1_SDA 0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_i2c2: hummingboard2-i2c2 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_KEY_COL3__I2C2_SCL 0x4001b8b1
+> +				MX6QDL_PAD_KEY_ROW3__I2C2_SDA 0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_i2c3: hummingboard2-i2c3 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_D17__I2C3_SCL 0x4001b8b1
+> +				MX6QDL_PAD_EIM_D18__I2C3_SDA 0x4001b8b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_mipi: hummingboard2_mipi {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD4_DAT2__GPIO2_IO10 0x4001b8b1
+> +				MX6QDL_PAD_KEY_COL4__GPIO4_IO14 0x4001b8b1
+> +				MX6QDL_PAD_NANDF_CS2__CCM_CLKO2 0x130b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_pcie_reset: hummingboard2-pcie-reset {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD4_DAT3__GPIO2_IO11 0x1b0b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_pwm1: pwm1grp {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_DISP0_DAT8__PWM1_OUT 0x1b0b1
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_sgtl5000: hummingboard2-sgtl5000 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_DISP0_DAT19__AUD5_RXD 0x130b0
+> +				MX6QDL_PAD_KEY_COL0__AUD5_TXC 0x130b0
+> +				MX6QDL_PAD_KEY_ROW0__AUD5_TXD 0x110b0
+> +				MX6QDL_PAD_KEY_COL1__AUD5_TXFS 0x130b0
+> +				MX6QDL_PAD_GPIO_5__CCM_CLKO1 0x130b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usbh1_vbus: hummingboard2-usbh1-vbus {
+> +			fsl,pins = <MX6QDL_PAD_GPIO_0__GPIO1_IO00 0x1b0b0>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usbh2_vbus: hummingboard2-usbh2-vbus {
+> +			fsl,pins = <MX6QDL_PAD_SD4_DAT5__GPIO2_IO13 0x1b0b0>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usbh3_vbus: hummingboard2-usbh3-vbus {
+> +			fsl,pins = <MX6QDL_PAD_SD4_CLK__GPIO7_IO10 0x1b0b0>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usbotg_id: hummingboard2-usbotg-id {
+> +			/*
+> +			 * Similar to pinctrl_usbotg_2, but we want it
+> +			 * pulled down for a fixed host connection.
+> +			 */
+> +			fsl,pins = <MX6QDL_PAD_GPIO_1__USB_OTG_ID 0x13059>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usbotg_vbus: hummingboard2-usbotg-vbus {
+> +			fsl,pins = <MX6QDL_PAD_EIM_D22__GPIO3_IO22 0x1b0b0>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usdhc2_aux: hummingboard2-usdhc2-aux {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_GPIO_4__GPIO1_IO04    0x13071
+> +				MX6QDL_PAD_KEY_ROW1__SD2_VSELECT 0x1b071
+> +				MX6QDL_PAD_DISP0_DAT9__GPIO4_IO30 0x1b0b0
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usdhc2: hummingboard2-usdhc2 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x17059
+> +				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x10059
+> +				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x17059
+> +				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x17059
+> +				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x17059
+> +				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x13059
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usdhc2_100mhz: hummingboard2-usdhc2-100mhz {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x170b9
+> +				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x100b9
+> +				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x170b9
+> +				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x170b9
+> +				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x170b9
+> +				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x130b9
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usdhc2_200mhz: hummingboard2-usdhc2-200mhz {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD2_CMD__SD2_CMD    0x170f9
+> +				MX6QDL_PAD_SD2_CLK__SD2_CLK    0x100f9
+> +				MX6QDL_PAD_SD2_DAT0__SD2_DATA0 0x170f9
+> +				MX6QDL_PAD_SD2_DAT1__SD2_DATA1 0x170f9
+> +				MX6QDL_PAD_SD2_DAT2__SD2_DATA2 0x170f9
+> +				MX6QDL_PAD_SD2_DAT3__SD2_DATA3 0x130f9
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_usdhc3: hummingboard2-usdhc3 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_SD3_CMD__SD3_CMD    0x17059
+> +				MX6QDL_PAD_SD3_CLK__SD3_CLK    0x10059
+> +				MX6QDL_PAD_SD3_DAT0__SD3_DATA0 0x17059
+> +				MX6QDL_PAD_SD3_DAT1__SD3_DATA1 0x17059
+> +				MX6QDL_PAD_SD3_DAT2__SD3_DATA2 0x17059
+> +				MX6QDL_PAD_SD3_DAT3__SD3_DATA3 0x17059
+> +				MX6QDL_PAD_SD3_DAT4__SD3_DATA4 0x17059
+> +				MX6QDL_PAD_SD3_DAT5__SD3_DATA5 0x17059
+> +				MX6QDL_PAD_SD3_DAT6__SD3_DATA6 0x17059
+> +				MX6QDL_PAD_SD3_DAT7__SD3_DATA7 0x17059
+> +				MX6QDL_PAD_SD3_RST__SD3_RESET  0x17059
+> +			>;
+> +		};
+> +
+> +		pinctrl_hummingboard2_uart3: hummingboard2-uart3 {
+> +			fsl,pins = <
+> +				MX6QDL_PAD_EIM_D25__UART3_TX_DATA	0x1b0b1
+> +				MX6QDL_PAD_EIM_D24__UART3_RX_DATA	0x40013000
+> +			>;
+> +		};
+> +	};
+> +};
+> +
+> +&ldb {
+> +	status = "disabled";
+> +
+> +	lvds-channel@0 {
+> +		fsl,data-mapping = "spwg";
+> +		fsl,data-width = <18>;
+> +	};
+> +};
+> +
+> +&pcie {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_pcie_reset>;
+> +	reset-gpio = <&gpio2 11 0>;
+> +	status = "okay";
+> +};
+> +
+> +&pwm1 {
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pinctrl_hummingboard2_pwm1>;
+> +        status = "okay";
+> +};
+> +
+> +&pwm3 {
+> +	status = "disabled";
+> +};
+> +
+> +&pwm4 {
+> +	status = "disabled";
+> +};
+> +
+> +&ssi1 {
+> +	status = "okay";
+> +};
+> +
+> +&usbh1 {
+> +	disable-over-current;
+> +	vbus-supply = <&reg_usbh1_vbus>;
+> +	status = "okay";
+> +};
+> +
+> +&usbotg {
+> +	disable-over-current;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_usbotg_id>;
+> +	vbus-supply = <&reg_usbotg_vbus>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc2 {
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <
+> +		&pinctrl_hummingboard2_usdhc2_aux
+> +		&pinctrl_hummingboard2_usdhc2
+> +	>;
+> +	pinctrl-1 = <
+> +		&pinctrl_hummingboard2_usdhc2_aux
+> +		&pinctrl_hummingboard2_usdhc2_100mhz
+> +	>;
+> +	pinctrl-2 = <
+> +		&pinctrl_hummingboard2_usdhc2_aux
+> +		&pinctrl_hummingboard2_usdhc2_200mhz
+> +	>;
+> +	mmc-pwrseq = <&usdhc2_pwrseq>;
+> +	cd-gpios = <&gpio1 4 0>;
+> +	status = "okay";
+> +};
+> +
+> +&usdhc3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <
+> +		&pinctrl_hummingboard2_usdhc3
+> +	>;
+> +	vmmc-supply = <&reg_3p3v>;
+> +	vqmmc-supply = <&reg_3p3v>;
+> +	bus-width = <8>;
+> +	non-removable;
+> +	status = "okay";
+> +};
+> +
+> +&uart3 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hummingboard2_uart3>;
+> +	status = "okay";
+> +};
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
