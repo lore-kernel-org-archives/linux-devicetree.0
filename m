@@ -1,45 +1,65 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 0/2] clocksource: Add renesas-ostm timer driver
-Date: Mon, 23 Jan 2017 08:54:21 -0500
-Message-ID: <20170123135423.28780-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 2/2] ARM: sun8i: dt: Add mali node
+Date: Mon, 23 Jan 2017 15:00:46 +0100
+Message-ID: <681511dd6370b9146ae8e3f8009eba1e15d36cc0.1485180017.git-series.maxime.ripard@free-electrons.com>
+References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
+The A23 and A33 have an ARM Mali 400 GPU. Now that we have a binding, add
+it to our DT.
 
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+), 0 deletions(-)
 
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
-
-v3:
-* Changed ostm@fcfec000 to timer@fcfec000
-* Added power-domains to nodes
-
-v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
-
-
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  30 ++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |  12 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 349 +++++++++++++++++++++
- 5 files changed, 393 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
-
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index e4991a78ad73..982705719ef2 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -486,6 +486,32 @@
+ 			#size-cells = <0>;
+ 		};
+ 
++		mali: gpu@01c40000 {
++			compatible = "allwinner,sun8i-a23-mali",
++				     "allwinner,sun7i-a20-mali", "arm,mali-400";
++			reg = <0x01c40000 0x10000>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "gp",
++					  "gpmmu",
++					  "pp0",
++					  "ppmmu0",
++					  "pp1",
++					  "ppmmu1",
++					  "pmu";
++			clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
++			clock-names = "bus", "core";
++			resets = <&ccu RST_BUS_GPU>;
++
++			assigned-clocks = <&ccu CLK_GPU>;
++			assigned-clock-rates = <408000000>;
++		};
++
+ 		gic: interrupt-controller@01c81000 {
+ 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+ 			reg = <0x01c81000 0x1000>,
 -- 
-2.10.1
+git-series 0.8.11
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
