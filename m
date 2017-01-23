@@ -1,60 +1,215 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 4/5] dt: add bindings for ZTE tvenc device
-Date: Mon, 23 Jan 2017 09:33:51 +0800
-Message-ID: <20170123013350.GA5662@dragon>
-References: <1484843100-16284-1-git-send-email-shawnguo@kernel.org>
- <1484843100-16284-5-git-send-email-shawnguo@kernel.org>
- <1484845877.24339.51.camel@pengutronix.de>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
+Date: Sun, 22 Jan 2017 18:31:37 -0800
+Message-ID: <e38feca9-ed6f-8288-e006-768d6ba2fe5a@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
+ <1484320822.31475.96.camel@pengutronix.de>
+ <a94025b4-c4dd-de51-572e-d2615a7246e4@gmail.com>
+ <1484574468.8415.136.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1484845877.24339.51.camel@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Baoyou Xie <xie.baoyou@zte.com.cn>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Jun Nie <jun.nie@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484574468.8415.136.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMTksIDIwMTcgYXQgMDY6MTE6MTdQTSArMDEwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gQW0gRnJlaXRhZywgZGVuIDIwLjAxLjIwMTcsIDAwOjI0ICswODAwIHNjaHJpZWIgU2hh
-d24gR3VvOgo+ID4gRnJvbTogU2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4KPiA+IAo+
-ID4gSXQgYWRkcyBiaW5kaW5ncyBkb2MgZm9yIFpURSBWT1UgVFYgRW5jb2RlciBkZXZpY2UuCj4g
-PiAKPiA+IFNpZ25lZC1vZmYtYnk6IFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+Cj4g
-PiAtLS0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS96dGUs
-dm91LnR4dCB8IDE1ICsrKysrKysrKysrKysrKwo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNl
-cnRpb25zKCspCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3p0ZSx2b3UudHh0Cj4gPiBpbmRleCA3NDBlNWJkMmU0ZjcuLjljMzU2
-Mjg0MjMyYiAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L3p0ZSx2b3UudHh0Cj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvZGlzcGxheS96dGUsdm91LnR4dAo+ID4gQEAgLTQ5LDYgKzQ5LDE1IEBAIFJlcXVp
-cmVkIHByb3BlcnRpZXM6Cj4gPiAgCSJvc2NfY2xrIgo+ID4gIAkieGNsayIKPiA+ICAKPiA+ICsq
-IFRWIEVuY29kZXIgb3V0cHV0IGRldmljZQo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6
-Cj4gPiArIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJ6dGUsengyOTY3MTgtdHZlbmMiCj4gPiAr
-IC0gcmVnOiBQaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgVFZFTkMgZGV2
-aWNlIElPIHJlZ2lvbgo+ID4gKyAtIHp0ZSx0dmVuYy1wb3dlci1jb250cm9sOiB0aGUgcGhhbmRs
-ZSB0byBTWVNDVFJMIGJsb2NrIGZvbGxvd2VkIGJ5IHR3bwo+ID4gKyAgIGludGVnZXIgY2VsbHMu
-ICBUaGUgZmlyc3QgY2VsbCBpcyB0aGUgb2Zmc2V0IG9mIFNZU0NUUkwgcmVnaXN0ZXIgdXNlZAo+
-ID4gKyAgIHRvIGNvbnRyb2wgVFYgRW5jb2RlciBEQUMgcG93ZXIsIGFuZCB0aGUgc2Vjb25kIGNl
-bGwgaXMgdGhlIGJpdCBtYXNrLgo+IAo+IEkgZG9uJ3Qga25vdyBtdWNoIGFib3V0IHRoaXMgcGxh
-dGZvcm0sIGJ1dCBzaG91bGRuJ3QgdGhpcyBiZSBoYW5kbGVkCj4gd2l0aCBhIHByb3BlciBwb3dl
-ciBkb21haW4gZHJpdmVyLCByYXRoZXIgdGhhbiBiYXNoaW5nIGJpdHMgZGlyZWN0bHk/CgpUaGVy
-ZSBpcyBhIHBvd2VyIGRvbWFpbiBjb250cm9sbGVyIChQQ1UpIG9uIFpURSBwbGF0Zm9ybSB3aGlj
-aCBjb250cm9scwpwb3dlciBmb3IgYSBsaXN0IG9mIGhhcmR3YXJlIGJsb2NrcyBbMV0uICBUVkVO
-QyBEQUMgaXMgbm90IG9uIHRoZSBsaXN0LgpSYXRoZXIgdGhhbiBQQ1UsIGl0J3MgY29udHJvbGxl
-ZCBieSBTWVNDVFJMIGJsb2NrIHdoaWNoIGNvbnRhaW5zIHZhcmlvdXMKY29udHJvbCBiaXRzIGZv
-ciB2YXJpb3VzIGFzcGVjdHMgb2YgdGhlIHN5c3RlbS4KClNoYXduCgpbMV0gaHR0cHM6Ly9naXQu
-a2VybmVsLm9yZy9jZ2l0L2xpbnV4L2tlcm5lbC9naXQvc2hhd25ndW8vbGludXguZ2l0L2NvbW1p
-dC8/aD16dGUvcG0tZG9tYWlucyZpZD1lZWExZDk5YjkwMGZlMTlkY2UzMDQyZGFjNTU1YzI3MDIy
-MWJlMTQ3Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+On 01/16/2017 05:47 AM, Philipp Zabel wrote:
+> On Sat, 2017-01-14 at 14:46 -0800, Steve Longerbeam wrote:
+> [...]
+>>>> +Unprocessed Video Capture:
+>>>> +--------------------------
+>>>> +
+>>>> +Send frames directly from sensor to camera interface, with no
+>>>> +conversions:
+>>>> +
+>>>> +-> ipu_smfc -> camif
+>>> I'd call this capture interface, this is not just for cameras. Or maybe
+>>> idmac if you want to mirror hardware names?
+>> Camif is so named because it is the V4L2 user interface for video
+>> capture. I suppose it could be named "capif", but that doesn't role
+>> off the tongue quite as well.
+> Agreed, capif sounds weird. I find camif a bit confusing though, because
+> Samsung S3C has a camera interface that is actually called "CAMIF".
+
+how about simply "capture" ?
+
+
+<snip>
+
+>>> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
+>> I agree this looks very intuitive, but technically correct for the
+>> csi1:1 and camif1:0 pads would be a 32-bit YUV format.
+>> (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+>>
+>> I think it would be better to use the correct format
+>> I'm not sure I follow you here.
+> The ov5640 sends UYVY2X8 on the wire, so pads "ov5640_mipi 1-0040":0
+> up to "ipu1_csi1":0 are correct. But the CSI writes 32-bit YUV values
+> into the SMFC, so the CSI output pad and the IDMAC input pad should have
+> a YUV8_1X32 format.
+>
+> Chapter 37.4.2.3 "FCW & FCR - Format converter write and read" in the
+> IDMAC chapter states that all internal submodules only work on 8-bit per
+> component formats with four components: YUVA or RGBA.
+
+Right, the "direct" IPU internal (that do not transfer buffers to/from
+memory via IDMAC channels) should only allow the IPU internal
+formats YUVA and RGBA. I get you now.
+
+The "direct" pads now only accept MEDIA_BUS_FMT_AYUV8_1X32 and
+MEDIA_BUS_FMT_ARGB8888_1X32.
+
+Those pads are:
+
+ipu_csi:1
+ipu_vdic:1
+ipu_ic_prp:0
+ipu_ic_prp:1
+ipu_ic_prpenc:0
+ipu_ic_prpenc:1
+ipu_ic_prpvf:0
+ipu_ic_prpvf:1
+
+
+<snip>
+>
+>> There does not appear to be support in the FSU for linking a write channel
+>> to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
+>> is support for the direct link from CSI (which I am using), but that's
+>> not an
+>> IDMAC channel link.
+>>
+>> There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
+>> 0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
+> As I read it, that is 0 and 2 only, no idea why. But since there are
+> only 2 CSIs, that shouldn't be a problem.
+
+ipu_csi1 is now transferring on IDMAC/SMFC channel 2 (ipu_csi0 still
+at channel 0).
+
+<snip>
+
+>>>> +static const u32 power_off_seq[] = {
+>>>> +	IMX_MEDIA_GRP_ID_IC_PP,
+>>>> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
+>>>> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
+>>>> +	IMX_MEDIA_GRP_ID_SMFC,
+>>>> +	IMX_MEDIA_GRP_ID_CSI,
+>>>> +	IMX_MEDIA_GRP_ID_VIDMUX,
+>>>> +	IMX_MEDIA_GRP_ID_SENSOR,
+>>>> +	IMX_MEDIA_GRP_ID_CSI2,
+>>>> +};
+>>> This seems somewhat arbitrary. Why is a power sequence needed?
+>> The CSI-2 receiver must be powered up before the sensor, that's the
+>> only requirement IIRC. The others have no s_power requirement. So I
+>> can probably change this to power up in the frontend -> backend order
+>> (IC_PP to sensor). And vice-versa for power off.
+> Yes, I think that should work (see below).
+
+Actually there are problems using this, see below.
+
+>>> [...]
+>>>> +/*
+>>>> + * Turn current pipeline power on/off starting from start_entity.
+>>>> + * Must be called with mdev->graph_mutex held.
+>>>> + */
+>>>> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
+>>>> +				 struct media_entity_graph *graph,
+>>>> +				 struct media_entity *start_entity, bool on)
+>>>> +{
+>>>> +	struct media_entity *entity;
+>>>> +	struct v4l2_subdev *sd;
+>>>> +	int i, ret = 0;
+>>>> +	u32 id;
+>>>> +
+>>>> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
+>>>> +		id = on ? power_on_seq[i] : power_off_seq[i];
+>>>> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
+>>>> +		if (!entity)
+>>>> +			continue;
+>>>> +
+>>>> +		sd = media_entity_to_v4l2_subdev(entity);
+>>>> +
+>>>> +		ret = v4l2_subdev_call(sd, core, s_power, on);
+>>>> +		if (ret && ret != -ENOIOCTLCMD)
+>>>> +			break;
+>>>> +	}
+>>>> +
+>>>> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
+>>> This should really be handled by v4l2_pipeline_pm_use.
+>> I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
+>> doing some other stuff that bothered me, at least that's what I remember.
+>> I will revisit this.
+> I have used it with a tc358743 -> mipi-csi2 pipeline, it didn't cause
+> any problems. It would be better to reuse and, if necessary, fix the
+> existing infrastructure where available.
+
+I tried this API, by switching to v4l2_pipeline_pm_use() in camif 
+open/release,
+and switched to v4l2_pipeline_link_notify() instead of 
+imx_media_link_notify()
+in the media driver's media_device_ops.
+
+This API assumes the video device has an open file handle while the media
+links are being established. This doesn't work for me, I want to be able to
+establish the links using 'media-ctl -l', and that won't work unless 
+there is an
+open file handle on the video capture device node.
+
+Also, I looked into calling v4l2_pipeline_pm_use() during 
+imx_media_link_notify(),
+instead of imx_media_pipeline_set_power(). Again there are problems with 
+that.
+
+First, v4l2_pipeline_pm_use() acquires the graph mutex, so it can't be 
+called inside
+link_notify which already acquires that lock. The header for this 
+function also
+clearly states it should only be called in open/release.
+
+Second, ignoring the above locking issue for a moment, 
+v4l2_pipeline_pm_use()
+will call s_power on the sensor _first_, then the mipi csi-2 s_power, 
+when executing
+media-ctl -l '"ov5640 1-003c":0 -> "imx6-mipi-csi2":0[1]'. Which is the 
+wrong order.
+In my version which enforces the correct power on order, the mipi csi-2 
+s_power
+is called first in that link setup, followed by the sensor.
+
+
+
+>>>> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
+>>>> +				   struct imx_media_subdev *csi[4])
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	/* there must be at least one CSI in first IPU */
+>>> Why?
+>> Well yeah, imx-media doesn't necessarily need a CSI if things
+>> like the VDIC or post-processor are being used by an output
+>> overlay pipeline, for example. I'll fix this.
+> I haven't even thought that far, but there could be boards with only a
+> parallel sensor connected to IPU2 CSI1 and IPU1 disabled for power
+> saving reasons.
+
+done! A very simple change to imx_media_add_internal_subdevs(),
+and now no CSI's are necessary, but the remaining IPU internal entities
+are loaded and linked just fine without them, so for example with no
+CSI's in IPU2, the VDIC entity in IPU2 is still present in the graph and
+could still be used in the future by a mem2mem device for instance.
+
+Steve
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
