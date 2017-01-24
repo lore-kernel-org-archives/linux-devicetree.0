@@ -1,58 +1,65 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for hisilicon
- 161010801 erratum
-Date: Tue, 24 Jan 2017 13:42:56 +0000
-Message-ID: <588759E0.1010804@huawei.com>
-References: <588625E3.9040703@huawei.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <588625E3.9040703-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
+Date: Tue, 24 Jan 2017 14:48:09 +0100
+Message-ID: <20170124134809.23315-1-richard.genoud@gmail.com>
+Return-path: <stable-owner@vger.kernel.org>
+Sender: stable-owner@vger.kernel.org
+To: Felipe Balbi <balbi@kernel.org>, Huang Rui <ray.huang@amd.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Linux USB Mailing List <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Richard Genoud <richard.genoud@gmail.com>, stable@vger.kernel.org, #@vger.kernel.org, 4.4+@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This erratum describes the limitation of certain HiSilicon platforms
-to support the SMMU mappings for MSI transactions and on those platforms
-the MSI transactions has to be bypassed by SMMU. The IIDR register of the
-GICv3 ITS on these platforms are not properly populated to differentiate
-the hardware, hence describe it in device tree.
+Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
+the USB ports on odroid-XU4 don't work anymore.
 
-Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Inserting an usb key (USB2.0) on the USB3.0 port result in:
+[   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
+[   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
+[   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
+[   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
+[   74.606276] usb 3-1: USB disconnect, device number 2
+[   74.613565] usb 4-1: USB disconnect, device number 2
+[   74.621208] usb usb3-port1: couldn't allocate usb_device
+NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
+NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
+
+If the lines:
+	if (dwc->revision > DWC3_REVISION_194A)
+		reg |= DWC3_GUSB3PIPECTL_SUSPHY;
+are commented out, the USB3.0 start working.
+
+For a full analyse: https://lkml.org/lkml/2017/1/18/678
+
+Felipe suggested that suspend should be disabled temporarily while
+what's wrong with DCW3 is figured out.
+
+Tested on Odroid XU4
+
+Suggested-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Tested-by: Richard Genoud <richard.genoud@gmail.com>
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+Cc: stable@vger.kernel.org # 4.4+
+Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
 ---
- .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt         | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-index 4c29cda..84af301 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
-@@ -75,6 +75,12 @@ These nodes must have the following properties:
- - reg: Specifies the base physical address and size of the ITS
-   registers.
-
-+Optional
-+- hisilicon,erratum-161010801 : A boolean property. Indicates the presence of
-+  erratum 161010801, which says that these platforms doesn't support  SMMU
-+  mapping for MSI transactions and those transactions has to be bypassed
-+  by SMMU.
+diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+index 2faf88627a48..f62dbd9b5ad3 100644
+--- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
++++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+@@ -43,6 +43,15 @@
+ 	status = "okay";
+ };
+ 
++&usbdrd_dwc3_0 {
++	/*
++	 * without that, usb devices are not recognized when
++	 * they are plugged.
++	 * cf: https://lkml.org/lkml/2017/1/18/678
++	 */
++	snps,dis_u3_susphy_quirk;
++};
 +
- The main GIC node must contain the appropriate #address-cells,
- #size-cells and ranges properties for the reg property of all ITS
- nodes.
--- 
-1.9.1
-
-
-
-
-
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ &usbdrd_dwc3_1 {
+ 	dr_mode = "host";
+ };
