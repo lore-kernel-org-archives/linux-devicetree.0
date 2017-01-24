@@ -1,121 +1,57 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
- a nexus node
-Date: Tue, 24 Jan 2017 12:05:20 -0600
-Message-ID: <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
-References: <20170123204851.12808-1-stephen.boyd@linaro.org>
- <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
+Date: Tue, 24 Jan 2017 19:19:47 +0100
+Message-ID: <CAMuHMdUJ1mPtTHknc+D-98xz6=FbtKTTETBqswgae=9UnJUbDg@mail.gmail.com>
+References: <20170121144212.8858-1-marek.vasut@gmail.com> <20170123170827.tkatb2aizjhbfifo@rob-hp-laptop>
+ <63b3660b-6ce0-134c-ef79-c06430c735c5@gmail.com> <CAMuHMdUVwQoqQbrsGtbvxK9PoHae3n=UuJYijTMToUsdc=8=mQ@mail.gmail.com>
+ <d4fc63bf-c455-2ac4-15d2-6f240799d3e9@gmail.com> <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
+ <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5886F5ED.3030509@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 12:36 AM, Frank Rowand <frowand.list@gmail.com> wrote:
-> Hi Stephen,
->
-> Sorry I did not get to v1 and v2 in a timely manner.
->
->
-> On 01/23/17 12:48, Stephen Boyd wrote:
->> Platforms like 96boards have a standardized connector/expansion
->> slot that exposes signals like GPIOs to expansion boards in an
->> SoC agnostic way. We'd like the DT overlays for the expansion
->> boards to be written once without knowledge of the SoC on the
->> other side of the connector. This avoids the unscalable
->> combinatorial explosion of a different DT overlay for each
->> expansion board and SoC pair.
->>
->> We need a way to describe the GPIOs routed through the connector
->> in an SoC agnostic way. Let's introduce nexus property parsing
->> into the OF core to do this. This is largely based on the
->> interrupt nexus support we already have. This allows us to remap
->> a phandle list in a consumer node (e.g. reset-gpios) through a
->> connector in a generic way (e.g. via gpio-map). Do this in a
->> generic routine so that we can remap any sort of variable length
->> phandle list.
->>
->> Taking GPIOs as an example, the connector would be a GPIO nexus,
->> supporting the remapping of a GPIO specifier space to multiple
->> GPIO providers on the SoC. DT would look as shown below, where
->> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
->> expansion port where boards can be plugged in, and
->> 'expansion_device' is a device on the expansion board.
->>
->>       soc {
->>               soc_gpio1: gpio-controller1 {
->>                       #gpio-cells = <2>;
->>               };
->>
->>               soc_gpio2: gpio-controller2 {
->>                       #gpio-cells = <2>;
->>               };
->>       };
->>
->>       connector: connector {
->>               #gpio-cells = <2>;
->>               gpio-map = <0 0 &soc_gpio1 1 0>,
->>                          <1 0 &soc_gpio2 4 0>,
->>                          <2 0 &soc_gpio1 3 0>,
->>                          <3 0 &soc_gpio2 2 0>;
->>               gpio-map-mask = <0xf 0x0>;
->>               gpio-map-pass-thru = <0x0 0x1>
->>       };
->>
->>       expansion_device {
->>               reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
->>       };
->
-> The how to architect connectors and plugs threads fell asleep before
-> coming to a resolution.  We need to revive that discussion.
->
-> One of the concepts of the plug and connector architecture is that
-> a main board may contain multiple connectors of the same type (or
-> different types, but the same type is sufficient for this discussion).
->
-> The node describing the card that plugs into one of the connectors
-> does not know the phandle of the connector it is going to be
-> connected to.  Some other mechanism is provided to allow a card
-> to be plugged into any of the available connectors.  If there are
-> two identical cards plugged into two connectors, then both cards
-> have the same exact device tree node.  But some mechanism will
-> exist to resolve (or "link") the two card nodes to the different
-> connector nodes.
->
-> As a result of this, in the above example the reset-gpios property
-> in the node 'expansion_device' can not contain '&connector'.  The
-> concept of &connector belongs to the entire expansion_device node,
-> not to individual properties within the node.
+Hi Marek,
 
-I think this is easily solved with a connector having 2 halves and
-that we need to search parents for *-map properties. Inheriting from
-parents is a common pattern in DT though perhaps not walking the
-parents of a phandle. So we'd have something like this:
+On Tue, Jan 24, 2017 at 5:39 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+> On 01/24/2017 08:30 AM, Geert Uytterhoeven wrote:
+>> On Tue, Jan 24, 2017 at 12:15 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>> What about this ?
+>>>
+>>> - compatible:   Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
+>>>                 The <chip> can be either of:
+>>>                 r8a7791 - for the GyroADC block present in r8a7791 SoC
+>>>                 r8a7792 - for the GyroADC with interrupt block present
+>>>                           in r8a7792 SoC
+>>
+>> No, we need the exact string in the document, cfr. all other Renesas bindings.
+>>
+>> "renesas,r8a7791-gyroadc"
+>> "renesas,r8a7792-gyroadc"
+>
+> This ?
+>
+> - compatible:   Should be "<soc-specific>", "renesas,rcar-gyroadc".
+>                 The <soc-specific> should be one of:
+>                 renesas,r8a7791-gyroadc - for the GyroADC block present
+>                                           in r8a7791 SoC
+>                 renesas,r8a7792-gyroadc - for the GyroADC with interrupt
+>                                           block present in r8a7792 SoC
 
-base-connector-1 {
-  gpio-map = ...
-  connector {
-    child {
-      some-gpios = <&connector 1>;
-    };
-  };
-};
+Yes. I had expected that double quotes were mandatory, but apparently
+checkpatch doesn't require that.
 
-base-connector-2 {
-  gpio-map = ...
-  connector {
-    child {
-      some-gpios = <&connector 1>;
-    };
-  };
-};
+Gr{oetje,eeting}s,
 
-Now, how we resolve that /connector from an overlay targets
-/base-connector-1 and /base-connector-2 is an orthogonal issue and one
-that's going to be connector specific (at least for probe-able
-connectors).
+                        Geert
 
-Rob
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
