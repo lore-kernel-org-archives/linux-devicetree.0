@@ -1,162 +1,120 @@
 From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
- 161010801
-Date: Tue, 24 Jan 2017 15:39:04 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA8174AC552@lhreml504-mbs>
-References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
- <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
- <5f303abc-209b-3828-ca8c-4ec0977f89ea@arm.com>
+Subject: RE: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+ hisilicon 161010801 erratum
+Date: Tue, 24 Jan 2017 15:42:27 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA8174AC577@lhreml504-mbs>
+References: <588625E3.9040703@huawei.com> <588759E0.1010804@huawei.com>
+ <20170124135224.GB7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC371@lhreml504-mbs>
+ <20170124142851.GE7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC4AB@lhreml504-mbs>
+ <97734ae1-86bf-7239-ec54-2ed7a8db85fb@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5f303abc-209b-3828-ca8c-4ec0977f89ea@arm.com>
+In-Reply-To: <97734ae1-86bf-7239-ec54-2ed7a8db85fb@arm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+To: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "will.deacon@arm.com" <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linuxarm <linuxarm@huawei.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-+Eric
+
 
 > -----Original Message-----
-> From: Robin Murphy [mailto:robin.murphy@arm.com]
-> Sent: Tuesday, January 24, 2017 2:42 PM
-> To: Marc Zyngier; Shameerali Kolothum Thodi; mark.rutland@arm.com;
-> will.deacon@arm.com
-> Cc: linux-arm-kernel@lists.infradead.org; Linuxarm; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; John Garry;
-> Guohanjun (Hanjun Guo)
-> Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon
-> erratum 161010801
+> From: Marc Zyngier [mailto:marc.zyngier@arm.com]
+> Sent: Tuesday, January 24, 2017 3:28 PM
+> To: Shameerali Kolothum Thodi; Mark Rutland
+> Cc: will.deacon@arm.com; linux-kernel@vger.kernel.org; Linuxarm;
+> devicetree@vger.kernel.org; John Garry; Guohanjun (Hanjun Guo)
+> Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+> hisilicon 161010801 erratum
 > 
-> On 24/01/17 14:11, Marc Zyngier wrote:
-> > + Robin,
+> On 24/01/17 15:13, Shameerali Kolothum Thodi wrote:
 > >
-> > On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
-> >> The HiSilicon erratum 161010801 describes the limitation of certain
-> >> HiSilicon platforms to support the SMMU mappings for MSI
-> transactions.
-> >>
-> >> On these platforms GICv3 ITS translator is presented with the
-> deviceID
-> >> by extending the MSI payload data to 64 bits to include the
-> deviceID.
-> >> Hence, the PCIe controller on this platforms has to differentiate
-> the
-> >> MSI payload against other DMA payload and has to modify the MSI
-> payload.
-> >> This basically makes it difficult for this platforms to have a SMMU
-> >> translation for MSI. Also these platforms doesn't have a proper IIDR
-> >> register to use the existing IIDR based quirk mechanism.
-> >>
-> >> This workaround based on the devicetree binding property, supports
-> >> bypassing the SMMU for the MSI transactions on this platforms.
-> >>
-> >> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
-> >> ---
-> >>  arch/arm64/Kconfig               | 15 ++++++++++++
-> >>  drivers/irqchip/irq-gic-common.h |  1 +
-> >>  drivers/irqchip/irq-gic-v3-its.c | 52
-> +++++++++++++++++++++++++++++++++++++++-
-> >>  3 files changed, 67 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> >> index 0ae0427..8d600b0 100644
-> >> --- a/arch/arm64/Kconfig
-> >> +++ b/arch/arm64/Kconfig
-> >> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
-> >>
-> >>  	  If unsure, say Y.
-> >>
-> >> +config HISILICON_ERRATUM_161010801
-> >> +	bool "HiSilicon erratum 161010801"
-> >> +	default y
-> >> +	help
-> >> +	  Enable workaround for erratum 161010801.
-> >> +
-> >> +	  This implements a gicv3-its errata workaround for HiSilicon
-> >> +	  platforms Hip05/Hip07. These platforms cannot support the MSI
-> >> +	  interrupt remapping and MSI transaction has to be bypassed by
-> SMMU.
-> >> +
-> >> +	  The fix is to avoid calling the remapping hook into the SMMU
-> >> +	  driver from the its_irq_compose_msi_msg().
-> >> +
-> >> +	  If unsure, say Y.
-> >> +
-> >>  endmenu
-> >>
-> >>
-> >> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-
-> gic-common.h
-> >> index 205e5fd..de0385a 100644
-> >> --- a/drivers/irqchip/irq-gic-common.h
-> >> +++ b/drivers/irqchip/irq-gic-common.h
-> >> @@ -26,6 +26,7 @@ struct gic_quirk {
-> >>  	void (*init)(void *data);
-> >>  	u32 iidr;
-> >>  	u32 mask;
-> >> +	const char *erratum;
-> >>  };
-> >>
-> >>  int gic_configure_irq(unsigned int irq, unsigned int type,
-> >> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-
-> gic-v3-its.c
-> >> index f471939..0a326f6 100644
-> >> --- a/drivers/irqchip/irq-gic-v3-its.c
-> >> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> >> @@ -44,6 +44,7 @@
-> >>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
-> >>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
-> >>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
-> >> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
-> >>
-> >>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
-> >>
-> >> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct
-> irq_data *d, struct msi_msg *msg)
-> >>  	msg->address_hi		= upper_32_bits(addr);
-> >>  	msg->data		= its_get_event_id(d);
-> >>
-> >> -	iommu_dma_map_msi_msg(d->irq, msg);
-> >> +	if (!(its->flags & ITS_FLAGS_WORKAROUND_HISILICON_161010801))
-> >> +		iommu_dma_map_msi_msg(d->irq, msg);
 > >
-> > Let's contemplate this for a moment. If we're on the affected ITS,
-> we're
-> > using the physical address of the GITS_TRANSLATER register. What
-> > guarantees that this is not going to conflict with an IOVA that DMA
-> is
-> > going to use? From looking at these patches, my feeling is "not
-> much".
+> >> -----Original Message-----
+> >> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> >> Sent: Tuesday, January 24, 2017 2:29 PM
+> >> To: Shameerali Kolothum Thodi
+> >> Cc: marc.zyngier@arm.com; will.deacon@arm.com; linux-
+> >> kernel@vger.kernel.org; Linuxarm; devicetree@vger.kernel.org; John
+> >> Garry; Guohanjun (Hanjun Guo)
+> >> Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding
+> >> for hisilicon 161010801 erratum
+> >>
+> >> On Tue, Jan 24, 2017 at 02:00:30PM +0000, Shameerali Kolothum Thodi
+> >> wrote:
+> >>>> -----Original Message-----
+> >>>> From: Mark Rutland [mailto:mark.rutland@arm.com]
+> >>
+> >>>> On Tue, Jan 24, 2017 at 01:42:56PM +0000, Shameerali Kolothum
+> Thodi
+> >>>> wrote:
+> >>
+> >>>>> +Optional
+> >>>>> +- hisilicon,erratum-161010801 : A boolean property. Indicates
+> >> the
+> >>>>> +presence of
+> >>>>> +  erratum 161010801, which says that these platforms doesn't
+> >>>>> +support SMMU
+> >>>>> +  mapping for MSI transactions and those transactions has to be
+> >>>>> +bypassed
+> >>>>> +  by SMMU.
+> >>>>
+> >>>> What exactly is meant by "doesn't support SMMU mapping" here? What
+> >>>> precisely is the problem in HW?
+> >>>
+> >>> On this platforms the ITS doorbell deviceID information is embedded
+> >> in
+> >>> the MSI payload. To do this, the PCIe controller differentiates the
+> >>> MSI payload and DMA payload and modifies the MSI payload to add the
+> >> deviceID information.
+> >>> The way it modifies this is by comparing against a SYS_CTRL
+> register
+> >>> which is configured by UEFI with the ITS doorbell phys address.
+> >>
+> >> Ok. Some part of this will need to go in the binding description.
+> >>
+> >> How does this interact with translations via the SMMU?
+> >>
+> >> Do writes matching this address:
+> >>
+> >> (a) always bypass translation.
+> >> (b) get translated after modification.
+> >> (c) other?
 > >
-> > So if I'm right, you're opening the door to some interesting memory
-> > corruption if the two regions ever intersect.
+> > PCIe RC has a configuration setting to enable/disable SMMU bypass for
+> > PCIe MSI write and with this patch series we are using the disable
+> > mode. So it bypasses SMMU always for MSI but not for DMA.
 > >
-> > Robin, what do you think?
+> > As per our SoC engineers this implementation seems to be based on an
+> > earlier version of GIC spec earlier version the GIC spec(Document
+> > number:PRD03-GENC-010745 18.0) where it says:
+> >
+> > "Implementations may choose to transform writes to GITS_TRANSLATER by
+> either:
+> >  -multiplexing the device ID onto the address bus (which is what GIC-
+> 500 provides
+> >   a mechanism for), or
+> >  -extending the data value to 64 bits, providing the device ID in the
+> upper bits,
+> >   and transforming the access to become a 64-bit write"
 > 
-> Yup. Unless the ITS physical address is actually reserved from the IOVA
-> domain, it's still free to be allocated for DMA mappings, and if that
-> ever happens then you'll get odd bits of data landing in the ITS
-> instead
-> of RAM, and maybe even locked-up devices or worse if the doorbell gives
-> back decode errors on read attempts. It's essentially the exact same
-> problem as we have with memory-mapped PCI windows, and needs to be
-> solved in the same fashion, i.e. between the SMMU and the IOMMU-DMA
-> code.
+> Crucially, that should be done by performing the up-scaling just as the
+> write reaches the ITS translation register, and *not* when the write
+> leaves the RC. If you up-scale it early, you end-up in this silly
+> situation.
+> 
+> > Though I can't find the same in latest GIC spec.
+> 
+> Because that's not an architecture feature, but an implement decision.
+> And whatever the implementation does, it should be invisible to SW.
+> Unfortunately, bypassing the SMMU is not exactly invisible...
+> 
 
-Is this something that can incorporated in Eric's latest patch series[1]?
-It does mentions reserved regions can be:
-- directly mapped regions
-- regions that cannot be iommu mapped (PCI host bridge windows, ...)
-- MSI regions (because they belong to another address space or because
-  they are not translated by the IOMMU and need special handling)
-
-Though I am not clear our case comes under "the MSI regions that are
-not translated by the IOMMU and need special handling" or not.
+Totally agree. Unfortunately this is the way our implementation is :(
 
 Thanks,
 Shameer
-
-[1] https://github.com/eauger/linux/commit/5b35ea30de0b34fe4d02f7da8fab0995514781ff
