@@ -1,47 +1,99 @@
 From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Tue, 24 Jan 2017 15:27:51 +0000
-Message-ID: <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
+Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+ hisilicon 161010801 erratum
+Date: Tue, 24 Jan 2017 15:28:13 +0000
+Message-ID: <97734ae1-86bf-7239-ec54-2ed7a8db85fb@arm.com>
+References: <588625E3.9040703@huawei.com> <588759E0.1010804@huawei.com>
+ <20170124135224.GB7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC371@lhreml504-mbs>
+ <20170124142851.GE7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC4AB@lhreml504-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <765699aa-cbc6-67eb-9108-cbf335338e4c-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA8174AC4AB@lhreml504-mbs>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/17 15:08, Daniel Lezcano wrote:
-> On 19/01/2017 14:35, Ding Tianhong wrote:
->> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
->> potential to contain an erroneous value when the timer value changes".
->> Accesses to TVAL (both read and write) are also affected due to the implicit counter
->> read.  Accesses to CVAL are not affected.
->>
->> The workaround is to reread the system count registers until the value of the second
->> read is larger than the first one by less than 32, the system counter can be guaranteed
->> not to return wrong value twice by back-to-back read and the error value is always larger
->> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
+On 24/01/17 15:13, Shameerali Kolothum Thodi wrote:
 > 
-> Why not use another clocksource instead of adding a workaround with a
-> non negligible overhead and more complexity in the code ?
+> 
+>> -----Original Message-----
+>> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+>> Sent: Tuesday, January 24, 2017 2:29 PM
+>> To: Shameerali Kolothum Thodi
+>> Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; linux-
+>> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; John
+>> Garry; Guohanjun (Hanjun Guo)
+>> Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+>> hisilicon 161010801 erratum
+>>
+>> On Tue, Jan 24, 2017 at 02:00:30PM +0000, Shameerali Kolothum Thodi
+>> wrote:
+>>>> -----Original Message-----
+>>>> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+>>
+>>>> On Tue, Jan 24, 2017 at 01:42:56PM +0000, Shameerali Kolothum Thodi
+>>>> wrote:
+>>
+>>>>> +Optional
+>>>>> +- hisilicon,erratum-161010801 : A boolean property. Indicates
+>> the
+>>>>> +presence of
+>>>>> +  erratum 161010801, which says that these platforms doesn't
+>>>>> +support SMMU
+>>>>> +  mapping for MSI transactions and those transactions has to be
+>>>>> +bypassed
+>>>>> +  by SMMU.
+>>>>
+>>>> What exactly is meant by "doesn't support SMMU mapping" here? What
+>>>> precisely is the problem in HW?
+>>>
+>>> On this platforms the ITS doorbell deviceID information is embedded
+>> in
+>>> the MSI payload. To do this, the PCIe controller differentiates the
+>>> MSI payload and DMA payload and modifies the MSI payload to add the
+>> deviceID information.
+>>> The way it modifies this is by comparing against a SYS_CTRL register
+>>> which is configured by UEFI with the ITS doorbell phys address.
+>>
+>> Ok. Some part of this will need to go in the binding description.
+>>
+>> How does this interact with translations via the SMMU?
+>>
+>> Do writes matching this address:
+>>
+>> (a) always bypass translation.
+>> (b) get translated after modification.
+>> (c) other?
+> 
+> PCIe RC has a configuration setting to enable/disable SMMU
+> bypass for PCIe MSI write and with this patch series we
+> are using the disable mode. So it bypasses SMMU always for
+> MSI but not for DMA. 
+> 
+> As per our SoC engineers this implementation seems to be based on an earlier
+> version of GIC spec earlier version the GIC spec(Document 
+> number:PRD03-GENC-010745 18.0) where it says:
+> 
+> "Implementations may choose to transform writes to GITS_TRANSLATER by either:
+>  -multiplexing the device ID onto the address bus (which is what GIC-500 provides
+>   a mechanism for), or
+>  -extending the data value to 64 bits, providing the device ID in the upper bits,
+>   and transforming the access to become a 64-bit write"
 
-The overhead only affects the affected systems, since it is guarded by a
-static key (the same static key that guards the FSL workaround that is
-already in mainline).
+Crucially, that should be done by performing the up-scaling just as the
+write reaches the ITS translation register, and *not* when the write
+leaves the RC. If you up-scale it early, you end-up in this silly situation.
 
-As for creating a different clocksources, this would in turn make the
-integration with the arch code more complex (arm64 relies on having
-working architected timers, with or without workarounds) and the
-integration with KVM (which relies on the same), and in the end create
-quite a lot of duplication. Are we going to create a separate
-clocksource for each potential erratum that people with screwed hardware
-come up with?
+> Though I can't find the same in latest GIC spec.
 
-I'd prefer to organise the mess rather than spread it everywhere.
+Because that's not an architecture feature, but an implement decision.
+And whatever the implementation does, it should be invisible to SW.
+Unfortunately, bypassing the SMMU is not exactly invisible...
 
 Thanks,
 
