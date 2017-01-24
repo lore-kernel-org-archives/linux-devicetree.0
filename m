@@ -1,117 +1,65 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Tue, 24 Jan 2017 14:32:13 +0100
-Message-ID: <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [RFC 0/4] irqchip, gicv3-its: Workaround for hisilicon 161010801
+ erratum(bypass SMMU for MSI)
+Date: Tue, 24 Jan 2017 13:40:10 +0000
+Message-ID: <5887593A.201@huawei.com>
+References: <588625CB.5060303@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170124113658.GW16020@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <588625CB.5060303-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On certain HiSilicon platforms (Hip05/Hip07) the GIC ITS and
+PCIe RC deviates from the standard implementation and this breaks
+PCIe MSI functionality when SMMU is enabled.
+
+The HiSilicon erratum 161010801 describes this limitation of certain
+HiSilicon platforms to support the SMMU mappings for MSI transactions.
+On these platforms GICv3 ITS translator is presented with the deviceID
+by extending the MSI payload data to 64 bits to include the deviceID.
+Hence, the PCIe controller on this platforms has to differentiate the
+MSI payload against other DMA payload and has to modify the MSI payload.
+This basically makes it difficult for this platforms to have a SMMU
+translation for MSI.
+
+This patch implements a quirk to bypass the SMMU MSI transactions
+on these platforms.The quirk is implemented in GICv3 ITS driver.
+
+On top of this, the GICv3 ITS IIDR register is not populated correctly
+on these platforms and this makes it difficult to use the existing
+IIDR based quirk implementation in the GICv3 ITS driver.
+This patch series adds a quirk mechanism based on device tree binding
+or ACPI OEM information.
+
+shameer (4):
+  irqchip, gicv3-its: Add device tree binding for hisilicon 161010801
+    erratum
+  irqchip, gicv3-its:Workaround for HiSilicon erratum 161010801
+  irqchip, gicv3-its: Introduce ACPI generic quirk framework
+  irqchip, gicv3-its: Add HiSilicon acpi based erratum data.
+
+ .../bindings/interrupt-controller/arm,gic-v3.txt   |   6 ++
+ arch/arm64/Kconfig                                 |  15 +++
+ drivers/irqchip/irq-gic-common.h                   |   1 +
+ drivers/irqchip/irq-gic-v3-its.c                   | 117 ++++++++++++++++++++-
+ 4 files changed, 138 insertions(+), 1 deletion(-)
+
+-- 
+1.9.1
 
 
-On 01/24/2017 12:36 PM, Lee Jones wrote:
-> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
->> On 01/24/2017 09:22 AM, Lee Jones wrote:
->>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
->>>
->>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
->>>
->>> Same time as what?
->> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
->> capture (through ASOC).
->>>
->>>> conversion and audio PDM microphone.
->>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
->>>> For this it exports an API to handles filters and channels resources.
->>>
->>> This looks like an ADC driver?  What is it that makes it an MFD?
->> Yes it a kind of ADC but that supports 2 features audio and iio.
->> So it has to support 2 features based on 2 separate Frameworks.
-> 
-> I'm still unsure why it needs to live in MFD.
-> 
-> By the looks of it, this driver needs to move into IIO and you need to
-> call into it from ASoC.
-> 
-
-I think i introduce confusion by speaking about ADC for audio...
-
-1) IIO handles sigma delta ADCs that can be used as example for motor
-controls. the aim is to get value based on an application request or
-using some triggers.
-example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
-
-2) For audio part, we speak about Digital mems microphones that generate
-PDM format stream. PDM is a continuous real time stream dedicated to
-audio record and must be handled in ASOC ( codec Dmic part driver is
-/sound/soc/codec/dmic.c).
-DMIC example:
-http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
-
-Form my point of view it very strange to handle DMICs in IIO, as it is
-not designed to support audio streams.it is two separate features that
-are not compatible.
-
-Now, from software point of view
-That would means that IIO declares ADCs that it can not expose, because
-DMIC is not IIO standard. But IIO inkern API needs that device is
-declared... So i should define a specific API in IIO for ASOC driver.
 
 
->>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>> ---
->>>>  drivers/mfd/Kconfig             |   11 +
->>>>  drivers/mfd/Makefile            |    2 +
->>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
->>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
->>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
->>>>  5 files changed, 1601 insertions(+)
->>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
->>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
->>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
->>>>
->>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>> index c6df644..4bb660b 100644
->>>> --- a/drivers/mfd/Kconfig
->>>> +++ b/drivers/mfd/Kconfig
->>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->>>>  	  in various ST Microelectronics and ST-Ericsson embedded
->>>>  	  Nomadik series.
->>>>  
->>>> +config MFD_STM32_DFSDM
->>>> +	tristate "ST Microelectronics STM32 DFSDM"
->>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
->>>> +	select MFD_CORE
->>>> +	select REGMAP
->>>> +	select REGMAP_MMIO
->>>> +	help
->>>> +	  Select this option to enable the STM32 Digital Filter
->>>> +	  for Sigma Delta Modulators (DFSDM) driver used
->>>> +	  in various STM32 series.
->>>> +
->>>>  menu "Multimedia Capabilities Port drivers"
->>>>  	depends on ARCH_SA1100
->>>
->>> [...]
->>>
->>
->> Regards
->> Arnaud
-> 
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
