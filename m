@@ -1,97 +1,117 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] ARM: dts: imx53-qsb-common: fix FEC pinmux config
-Date: Tue, 24 Jan 2017 21:19:59 +0800
-Message-ID: <20170124131958.GX5662@dragon>
-References: <20170123151459.29691-1-linux-kernel-dev@beckhoff.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Tue, 24 Jan 2017 14:32:13 +0100
+Message-ID: <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+ <20170124113658.GW16020@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170123151459.29691-1-linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170124113658.GW16020@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 04:14:59PM +0100, linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org wrote:
-> From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-> 
-> The pinmux configuration in device tree is different from manual
-> muxing in <u-boot>/board/freescale/mx53loco/mx53loco.c
-> It seems the device tree configuration is never used by any kernel
-> driver and the correct setting, preconfigured by u-boot, was never
-> overwritten. So this issue never showed up anywhere.
 
-The change is fine.  But the commit log may need to be rewritten,
-because pad config value 0x80000000 is defined as leaving the register
-untouched, i.e. using whatever is in register, reset value or the one
-configured by firmware.  See NO_PAD_CTL in
-Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt.
 
+On 01/24/2017 12:36 PM, Lee Jones wrote:
+> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
+>> On 01/24/2017 09:22 AM, Lee Jones wrote:
+>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
+>>>
+>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
+>>>
+>>> Same time as what?
+>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
+>> capture (through ASOC).
+>>>
+>>>> conversion and audio PDM microphone.
+>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
+>>>> For this it exports an API to handles filters and channels resources.
+>>>
+>>> This looks like an ADC driver?  What is it that makes it an MFD?
+>> Yes it a kind of ADC but that supports 2 features audio and iio.
+>> So it has to support 2 features based on 2 separate Frameworks.
 > 
-> ---
-> I stumbled upon this difference, while adding the imx53 based CX9020
-> Embedded PC to u-boot bootloader. "New" boards are encouraged to use
-> device tree for pinmuxing in u-boot, so I tried to reuse
-> imx53-qsb-common.dtsi for that. That failed with a high packet loss on
-> the fec_mxc device. With the attached patch that device tree based
-> pinmuxing seems successful in u-boot. My suggestion is to apply it to
-> imx53-qsb-common.dtsi, too. That will help other "late adopters" and
-> prevent similar issues, in case any kernel driver starts using this
-> pinmux configurations.
+> I'm still unsure why it needs to live in MFD.
 > 
-> Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+> By the looks of it, this driver needs to move into IIO and you need to
+> call into it from ASoC.
+> 
 
-Your SoB should be put into commit log, i.e. above the first occurrence
-of "---".
+I think i introduce confusion by speaking about ADC for audio...
 
-Shawn
+1) IIO handles sigma delta ADCs that can be used as example for motor
+controls. the aim is to get value based on an application request or
+using some triggers.
+example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
 
-> ---
->  arch/arm/boot/dts/imx53-qsb-common.dtsi | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
+2) For audio part, we speak about Digital mems microphones that generate
+PDM format stream. PDM is a continuous real time stream dedicated to
+audio record and must be handled in ASOC ( codec Dmic part driver is
+/sound/soc/codec/dmic.c).
+DMIC example:
+http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
+
+Form my point of view it very strange to handle DMICs in IIO, as it is
+not designed to support audio streams.it is two separate features that
+are not compatible.
+
+Now, from software point of view
+That would means that IIO declares ADCs that it can not expose, because
+DMIC is not IIO standard. But IIO inkern API needs that device is
+declared... So i should define a specific API in IIO for ASOC driver.
+
+
+>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>>>> ---
+>>>>  drivers/mfd/Kconfig             |   11 +
+>>>>  drivers/mfd/Makefile            |    2 +
+>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
+>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
+>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
+>>>>  5 files changed, 1601 insertions(+)
+>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
+>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
+>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
+>>>>
+>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>> index c6df644..4bb660b 100644
+>>>> --- a/drivers/mfd/Kconfig
+>>>> +++ b/drivers/mfd/Kconfig
+>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
+>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
+>>>>  	  Nomadik series.
+>>>>  
+>>>> +config MFD_STM32_DFSDM
+>>>> +	tristate "ST Microelectronics STM32 DFSDM"
+>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>>>> +	select MFD_CORE
+>>>> +	select REGMAP
+>>>> +	select REGMAP_MMIO
+>>>> +	help
+>>>> +	  Select this option to enable the STM32 Digital Filter
+>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
+>>>> +	  in various STM32 series.
+>>>> +
+>>>>  menu "Multimedia Capabilities Port drivers"
+>>>>  	depends on ARCH_SA1100
+>>>
+>>> [...]
+>>>
+>>
+>> Regards
+>> Arnaud
 > 
-> diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-> index c05e7cfd0cbc..40b3e31935d0 100644
-> --- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
-> +++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-> @@ -215,16 +215,16 @@
->  
->  		pinctrl_fec: fecgrp {
->  			fsl,pins = <
-> -				MX53_PAD_FEC_MDC__FEC_MDC		0x80000000
-> -				MX53_PAD_FEC_MDIO__FEC_MDIO		0x80000000
-> -				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x80000000
-> -				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x80000000
-> -				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x80000000
-> -				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x80000000
-> -				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x80000000
-> -				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x80000000
-> -				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x80000000
-> -				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x80000000
-> +				MX53_PAD_FEC_MDC__FEC_MDC		0x4
-> +				MX53_PAD_FEC_MDIO__FEC_MDIO		0x1fc
-> +				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x180
-> +				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x180
-> +				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x180
-> +				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x180
-> +				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x180
-> +				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x4
-> +				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x4
-> +				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x4
->  			>;
->  		};
->  
-> -- 
-> 2.11.0
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
