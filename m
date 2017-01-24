@@ -1,57 +1,65 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
-Date: Tue, 24 Jan 2017 19:19:47 +0100
-Message-ID: <CAMuHMdUJ1mPtTHknc+D-98xz6=FbtKTTETBqswgae=9UnJUbDg@mail.gmail.com>
-References: <20170121144212.8858-1-marek.vasut@gmail.com> <20170123170827.tkatb2aizjhbfifo@rob-hp-laptop>
- <63b3660b-6ce0-134c-ef79-c06430c735c5@gmail.com> <CAMuHMdUVwQoqQbrsGtbvxK9PoHae3n=UuJYijTMToUsdc=8=mQ@mail.gmail.com>
- <d4fc63bf-c455-2ac4-15d2-6f240799d3e9@gmail.com> <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
- <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
+From: Sergio Prado <sergio.prado-1e4yhPs3/ABSwrhanM7KvQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: usb: add DT binding for s3c2410 USB
+ device controller
+Date: Tue, 24 Jan 2017 16:21:30 -0200
+Message-ID: <20170124182130.GA17635@sprado-desktop>
+References: <1484172150-32075-1-git-send-email-sergio.prado@e-labworks.com>
+ <1484172150-32075-2-git-send-email-sergio.prado@e-labworks.com>
+ <20170118200845.qj4qzgav4ffcz5pa@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170118200845.qj4qzgav4ffcz5pa@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+On Wed, Jan 18, 2017 at 02:08:45PM -0600, Rob Herring wrote:
+> On Wed, Jan 11, 2017 at 08:02:29PM -0200, Sergio Prado wrote:
+> > + - clocks: Should reference the bus and host clocks
+> > + - clock-names: Should contain two strings
+> > +		"uclk" for the USB bus clock
+> > +		"usb-device" for the USB device clock
+> 
+> Perhaps just "bus" and "device".
 
-On Tue, Jan 24, 2017 at 5:39 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> On 01/24/2017 08:30 AM, Geert Uytterhoeven wrote:
->> On Tue, Jan 24, 2017 at 12:15 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
->>> What about this ?
->>>
->>> - compatible:   Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
->>>                 The <chip> can be either of:
->>>                 r8a7791 - for the GyroADC block present in r8a7791 SoC
->>>                 r8a7792 - for the GyroADC with interrupt block present
->>>                           in r8a7792 SoC
->>
->> No, we need the exact string in the document, cfr. all other Renesas bindings.
->>
->> "renesas,r8a7791-gyroadc"
->> "renesas,r8a7792-gyroadc"
->
-> This ?
->
-> - compatible:   Should be "<soc-specific>", "renesas,rcar-gyroadc".
->                 The <soc-specific> should be one of:
->                 renesas,r8a7791-gyroadc - for the GyroADC block present
->                                           in r8a7791 SoC
->                 renesas,r8a7792-gyroadc - for the GyroADC with interrupt
->                                           block present in r8a7792 SoC
+OK, I'll rename.
 
-Yes. I had expected that double quotes were mandatory, but apparently
-checkpatch doesn't require that.
+> > +
+> > +Optional properties:
+> > + - samsung,vbus-gpio: specifies a gpio that allows to detect whether
+> > +   vbus is present - USB is connected (active high, input).
+> > + - samsung,pullup-gpio: If present, specifies a gpio to control the
+> > +   USB D+ pullup (active high, output).
+> 
+> "-gpios", not "-gpio" is preferred.
+> 
+> These should be common property names if we're going to have them. The 
+> problem with just "vbus-gpios" is does that mean an enable control or 
+> status as you have. I guess in the former case, that should always be 
+> modeled as a regulator.
+> 
+> Also, these should all be part of a connector node as these controls are 
+> more related to the USB connector than the controller. And I don't mean 
+> extcon here because those bindings are a mess.
 
-Gr{oetje,eeting}s,
+There are other bindings that are doing the same thing I did, like the
+property "atmel,vbus-gpio" in atmel-usb.txt and "samsung,vbus-gpio" in
+exynos-usb.txt. Also, I did not find any example of a connector node doing
+this. Can you point me out to an example, or should I just rename to
+"-gpios" in this case?
 
-                        Geert
+> 
+> Rob
 
+-- 
+Sergio Prado
+Embedded Labworks
+Office: +55 11 2628-3461
+Mobile: +55 11 97123-3420
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
