@@ -1,59 +1,95 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 3/3] dmaengine: cppi41: Fix teardown warnings
-Date: Tue, 24 Jan 2017 10:58:48 +0100
-Message-ID: <20170124095848.14593-4-abailon@baylibre.com>
-References: <20170124095848.14593-1-abailon@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124095848.14593-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Tue, 24 Jan 2017 11:03:48 +0100
+Message-ID: <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com> <20170104205536.15963-3-d-gerlach@ti.com>
+ <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop> <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
+ <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
+ <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com> <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
+ <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com> <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
+ <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com> <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com>
+ <m2ziip2puf.fsf@baylibre.com> <CAL_Jsq+Vp8iYrAUmuSRzeeY_G6CUqFqG6XB6erDxo1RYo3g4=g@mail.gmail.com>
+ <CAPDyKFqzs59N5bc89X-96Fgy9b=_+s8zYmHHshQeDrJCnaqprA@mail.gmail.com>
+ <58821CA2.4050701@ti.com> <CAPDyKFpTyn2isNahywmOOSWiZKov9xsudyWi_i-FejXjC+1AZw@mail.gmail.com>
+ <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Rob Herring <robh@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Tero Kristo <t-kristo@ti.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-During the teardown of a RX channel, because there is only one
-completion queue available for RX channel, descriptor of another
-channel may be popped which will cause 2 warnings:
-- the first one because we popped a wrong descriptor
-  (neither the channel's descriptor, nor the teardown descriptor).
-- the second one happen during the teardown of another channel,
-  because we can't find the channel descriptor
-  (that is, the one that caused the first warning).
-To avoid that, use one free queue instead of a transmit completion queue.
+On 23 January 2017 at 21:11, Dave Gerlach <d-gerlach@ti.com> wrote:
+> On 01/20/2017 10:52 AM, Ulf Hansson wrote:
+>>
+>> [...]
+>>
+>>>>> Another option is create something new either common or TI SCI
+>>>>> specific. It could be just a table of ids and phandles in the SCI
+>>>>> node. I'm much more comfortable with an isolated property in one node
+>>>>> than something scattered throughout the DT.
+>>>>
+>>>>
+>>>> To me, this seems like the best possible solution.
+>>>>
+>>>> However, perhaps we should also consider the SCPI Generic power domain
+>>>> (drivers/firmware/scpi_pm_domain.c), because I believe it's closely
+>>>> related.
+>>>> To change the power state of a device, this PM domain calls
+>>>> scpi_device_set|get_power_state() (drivers/firmware/arm_scpi.c), which
+>>>> also needs a device id as a parameter. Very similar to our case with
+>>>> the TI SCI domain.
+>>>>
+>>>> Currently these SCPI device ids lacks corresponding DT bindings, so
+>>>> the scpi_pm_domain tries to work around it by assigning ids
+>>>> dynamically at genpd creation time.
+>>>>
+>>>> That makes me wonder, whether we should think of something
+>>>> common/generic?
+>>>
+>>>
+>>> When you say something common/generic, do you mean a better binding for
+>>> genpd,
+>>> or something bigger than that like a new driver? Because I do think a
+>>> phandle
+>>> cell left open for the genpd provider to interpret solves both the scpi
+>>> and
+>>> ti-sci problem we are facing here in the best way. Using generic PM
+>>> domains lets
+>>> us do exactly what we want apart from interpreting the phandle cell with
+>>> our
+>>> driver, and I feel like anything else we try at this point is just going
+>>> to be
+>>> to work around that. Is bringing back genpd xlate something we can
+>>> discuss?
+>>
+>>
+>> Bringing back xlate, how would that help? Wouldn't that just mean that
+>> you will get one genpd per device? That's not an option, I think we
+>> are all in agreement to that.
+>
+>
+> Sure, perhaps the custom xlate wouldn't be the right way to do it, as we
+> wouldn't be able to associate a device directly to a phandle, at least with
+> how it was implemented before, but I think we can skip that entirely. Does
+> opening up the interpretation of the cells of the 'power-domains' phandle
+> not solve all of these issues? Is that out of the question?
+>
+> genpd_xlate_simple currently just makes sure the args_count of the
+> 'power-domains' phandle was zero and bails if it was not. Why couldn't we
+> remove this check and let the driver interpret it while still using
+> of_genpd_add_provider_simple to register the provider? It's still a 'simple'
+> provider from the perspective of the genpd framework and the actual pm
+> domain mapping will not change, but now the driver can parse the cells and
+> do whatever it needs to, such as reading a device id.
+>
+> I think that's a bit more flexible and will avoid breaking anything that is
+> there today.
 
-Note that fix doesn't fix all the teardown warnings:
-I still get some when I run some corner case.
+Would you mind providing an example? Perhaps also some code snippets
+dealing with the parsing?
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/dma/cppi41.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-index 5c501da..9fdd824 100644
---- a/drivers/dma/cppi41.c
-+++ b/drivers/dma/cppi41.c
-@@ -629,7 +629,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
- 		if (!c->is_tx) {
- 			reg |= GCR_STARV_RETRY;
- 			reg |= GCR_DESC_TYPE_HOST;
--			reg |= c->q_comp_num;
-+			reg |= cdd->td_queue.complete;
- 		}
- 		reg |= GCR_TEARDOWN;
- 		cppi_writel(reg, c->gcr_reg);
-@@ -640,7 +640,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
- 	if (!c->td_seen || !c->td_desc_seen) {
- 
- 		desc_phys = cppi41_pop_desc(cdd, cdd->td_queue.complete);
--		if (!desc_phys)
-+		if (!desc_phys && c->is_tx)
- 			desc_phys = cppi41_pop_desc(cdd, c->q_comp_num);
- 
- 		if (desc_phys == c->desc_phys) {
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
