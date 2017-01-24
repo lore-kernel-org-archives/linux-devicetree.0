@@ -1,82 +1,121 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] rtc: sun6i: Fix the RTC accuracy
-Date: Tue, 24 Jan 2017 18:49:35 +0100
-Message-ID: <20170124174935.att4s7mqfbyxkxqk@piout.net>
-References: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard@free-electrons.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
+ a nexus node
+Date: Tue, 24 Jan 2017 12:05:20 -0600
+Message-ID: <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
+References: <20170123204851.12808-1-stephen.boyd@linaro.org>
+ <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <rtc-linux+bncBCKYNX7Y3IMBBOVHT3CAKGQEKD3ML3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <cover.6bd4d4760c24d09845ad09c212fcd487d78da5ad.1485168100.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5886F5ED.3030509@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Stephen Boyd <stephen.boyd@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 24, 2017 at 12:36 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+> Hi Stephen,
+>
+> Sorry I did not get to v1 and v2 in a timely manner.
+>
+>
+> On 01/23/17 12:48, Stephen Boyd wrote:
+>> Platforms like 96boards have a standardized connector/expansion
+>> slot that exposes signals like GPIOs to expansion boards in an
+>> SoC agnostic way. We'd like the DT overlays for the expansion
+>> boards to be written once without knowledge of the SoC on the
+>> other side of the connector. This avoids the unscalable
+>> combinatorial explosion of a different DT overlay for each
+>> expansion board and SoC pair.
+>>
+>> We need a way to describe the GPIOs routed through the connector
+>> in an SoC agnostic way. Let's introduce nexus property parsing
+>> into the OF core to do this. This is largely based on the
+>> interrupt nexus support we already have. This allows us to remap
+>> a phandle list in a consumer node (e.g. reset-gpios) through a
+>> connector in a generic way (e.g. via gpio-map). Do this in a
+>> generic routine so that we can remap any sort of variable length
+>> phandle list.
+>>
+>> Taking GPIOs as an example, the connector would be a GPIO nexus,
+>> supporting the remapping of a GPIO specifier space to multiple
+>> GPIO providers on the SoC. DT would look as shown below, where
+>> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
+>> expansion port where boards can be plugged in, and
+>> 'expansion_device' is a device on the expansion board.
+>>
+>>       soc {
+>>               soc_gpio1: gpio-controller1 {
+>>                       #gpio-cells = <2>;
+>>               };
+>>
+>>               soc_gpio2: gpio-controller2 {
+>>                       #gpio-cells = <2>;
+>>               };
+>>       };
+>>
+>>       connector: connector {
+>>               #gpio-cells = <2>;
+>>               gpio-map = <0 0 &soc_gpio1 1 0>,
+>>                          <1 0 &soc_gpio2 4 0>,
+>>                          <2 0 &soc_gpio1 3 0>,
+>>                          <3 0 &soc_gpio2 2 0>;
+>>               gpio-map-mask = <0xf 0x0>;
+>>               gpio-map-pass-thru = <0x0 0x1>
+>>       };
+>>
+>>       expansion_device {
+>>               reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
+>>       };
+>
+> The how to architect connectors and plugs threads fell asleep before
+> coming to a resolution.  We need to revive that discussion.
+>
+> One of the concepts of the plug and connector architecture is that
+> a main board may contain multiple connectors of the same type (or
+> different types, but the same type is sufficient for this discussion).
+>
+> The node describing the card that plugs into one of the connectors
+> does not know the phandle of the connector it is going to be
+> connected to.  Some other mechanism is provided to allow a card
+> to be plugged into any of the available connectors.  If there are
+> two identical cards plugged into two connectors, then both cards
+> have the same exact device tree node.  But some mechanism will
+> exist to resolve (or "link") the two card nodes to the different
+> connector nodes.
+>
+> As a result of this, in the above example the reset-gpios property
+> in the node 'expansion_device' can not contain '&connector'.  The
+> concept of &connector belongs to the entire expansion_device node,
+> not to individual properties within the node.
 
-On 23/01/2017 at 11:41:45 +0100, Maxime Ripard wrote :
-> Hi,
-> 
-> The RTC used in the A31 and later SoC has an accuracy issue, which is
-> already significant even after a couple of hours.
-> 
-> This is due to the fact that the oscillator used by default is an internal
-> and very inaccurate one.
-> 
-> A first attempt at fixing that by switching to the external oscillator was
-> done in the patch "rtc: sun6i: Switch to the external oscillator". However,
-> it turned out to be problematic since it was tracked properly in the clock
-> framework, which might lead to some clocks being disabled, even though
-> their devices were not notified.
-> 
-> This is a second attempt, this time by making it part of the CCF. It
-> turned out to be a bit more complicated than one would expect since the mux
-> found inside the RTC also controls one of the input of the main clock unit.
-> Therefore, it needs to be probed before the main clock unit driver.
-> 
-> Let me know what you think,
-> Maxime
-> 
-> Changes from v1:
->   - Force the muxing to the external oscillator even for old DT
->   - Make the patches a bit more stable friendly
->   - Change the bindings to have a cell of 1, to account for the external
->     output of the oscillator
->   - Split the driver remove() removal into a separate patch and switched to
->     devm
->   - Reordered the patches
-> 
-> Maxime Ripard (7):
->   rtc: sun6i: Disable the build as a module
->   rtc: sun6i: Add some locking
->   rtc: sun6i: Switch to the external oscillator
->   rtc: sun6i: Expose the 32kHz oscillator
->   rtc: sun6i: Switch to devm_rtc_device_register
->   ARM: sun8i: a23/a33: Enable the real LOSC and use it
->   ARM: sun8i: a23/a33: Add the oscillators accuracy
-> 
+I think this is easily solved with a connector having 2 halves and
+that we need to search parents for *-map properties. Inheriting from
+parents is a common pattern in DT though perhaps not walking the
+parents of a phandle. So we'd have something like this:
 
-I've applied 1/7 to 5/7. Thanks!
+base-connector-1 {
+  gpio-map = ...
+  connector {
+    child {
+      some-gpios = <&connector 1>;
+    };
+  };
+};
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+base-connector-2 {
+  gpio-map = ...
+  connector {
+    child {
+      some-gpios = <&connector 1>;
+    };
+  };
+};
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Now, how we resolve that /connector from an overlay targets
+/base-connector-1 and /base-connector-2 is an orthogonal issue and one
+that's going to be connector specific (at least for probe-able
+connectors).
+
+Rob
