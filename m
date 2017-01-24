@@ -1,64 +1,40 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 1/3] dt: bindings: add documentation for zx2967 family watchdog controller
-Date: Tue, 24 Jan 2017 16:58:40 +0800
-Message-ID: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [V3 3/3] dt-bindings: Add a support cpu type for cortex-a73
+Date: Tue, 24 Jan 2017 16:57:29 +0800
+Message-ID: <1485248249-117383-3-git-send-email-puck.chen@hisilicon.com>
+References: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485248249-117383-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lulu.luxiaobo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, frong.fan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, oliver.fu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds dt-binding documentation for zx2967 family
-watchdog controller.
+Add arm cpu type cortex-a73
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 ---
- .../bindings/watchdog/zte,zx2967-wdt.txt           | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
+ Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt b/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
-new file mode 100644
-index 0000000..772403a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
-@@ -0,0 +1,31 @@
-+ZTE zx2967 Watchdog timer
-+
-+Required properties:
-+
-+- compatible : should be one of the following.
-+       * zte,zx296718-wdt
-+- reg : Specifies base physical address and size of the registers.
-+- clocks : Pairs of phandle and specifier referencing the controller's clocks.
-+- resets : Reference to the reset controller controlling the watchdog
-+           controller.
-+
-+Optional properties:
-+
-+- zte,wdt-reset-sysctrl : Directs how to reset system by the watchdog.
-+	if we don't want to restart system when watchdog been triggered,
-+	it's not required, vice versa.
-+	It should include following fields.
-+	  * phandle of aon-sysctrl.
-+	  * offset of register that be written, should be 0xb0.
-+	  * configure value that be written to aon-sysctrl.
-+	  * bit mask, corresponding bits will be affected.
-+
-+Example:
-+
-+wdt: watchdog@1465000 {
-+	compatible = "zte,zx296718-wdt";
-+	reg = <0x1465000 0x1000>;
-+	clocks = <&topcrm WDT_WCLK>;
-+	resets = <&toprst 35>;
-+	zte,wdt-reset-sysctrl = <&aon_sysctrl 0xb0 1 0x115>;
-+};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a1bcfee..d748774 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -158,6 +158,7 @@ nodes to be present and contain the properties described below.
+ 			    "arm,cortex-a53"
+ 			    "arm,cortex-a57"
+ 			    "arm,cortex-a72"
++			    "arm,cortex-a73"
+ 			    "arm,cortex-m0"
+ 			    "arm,cortex-m0+"
+ 			    "arm,cortex-m1"
 -- 
-2.7.4
+1.9.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
