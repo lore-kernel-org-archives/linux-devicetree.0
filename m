@@ -1,44 +1,86 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v4 5/6] dt-bindings: add power domain node for dw-mipi-rockchip
-Date: Tue, 24 Jan 2017 10:38:05 +0800
-Message-ID: <1485225486-669-6-git-send-email-zyw@rock-chips.com>
-References: <1485225486-669-1-git-send-email-zyw@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1485225486-669-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Subject: [PATCH v4 1/2] devicetree: document new marvell-8xxx and pwrseq-sd8787 options
+Date: Mon, 23 Jan 2017 19:08:29 -0800
+Message-ID: <20170124030830.21766-2-matt@ranostay.consulting>
+References: <20170124030830.21766-1-matt@ranostay.consulting>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170124030830.21766-1-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KQWNrZWQtYnk6
-IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Ci0tLQoKQ2hhbmdlcyBpbiB2NDogTm9uZQpD
-aGFuZ2VzIGluIHYzOiBOb25lCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2Nr
-Y2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQgICAgICB8IDMgKysrCiAxIGZpbGUgY2hhbmdl
-ZCwgMyBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9kc2lfcm9ja2NoaXAudHh0IGIvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfbWlwaV9k
-c2lfcm9ja2NoaXAudHh0CmluZGV4IDBmODI1NjguLjE4OGY2ZjcgMTAwNjQ0Ci0tLSBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X21pcGlfZHNp
-X3JvY2tjaGlwLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9yb2NrY2hpcC9kd19taXBpX2RzaV9yb2NrY2hpcC50eHQKQEAgLTE1LDYgKzE1LDkgQEAg
-UmVxdWlyZWQgcHJvcGVydGllczoKIC0gcG9ydHM6IGNvbnRhaW4gYSBwb3J0IG5vZGUgd2l0aCBl
-bmRwb2ludCBkZWZpbml0aW9ucyBhcyBkZWZpbmVkIGluIFsyXS4KICAgRm9yIHZvcGIsc2V0IHRo
-ZSByZWcgPSA8MD4gYW5kIHNldCB0aGUgcmVnID0gPDE+IGZvciB2b3BsLgogCitPcHRpb25hbCBw
-cm9wZXJ0aWVzOgorLSBwb3dlci1kb21haW5zOiBhIHBoYW5kbGUgdG8gbWlwaSBkc2kgcG93ZXIg
-ZG9tYWluIG5vZGUuCisKIFsxXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xv
-Y2svY2xvY2stYmluZGluZ3MudHh0CiBbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CiAKLS0gCjIuNi4zCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+---
+ .../devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt        | 16 ++++++++++++++++
+ .../devicetree/bindings/net/wireless/marvell-8xxx.txt    |  7 ++++++-
+ 2 files changed, 22 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+
+diff --git a/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+new file mode 100644
+index 000000000000..22e9340e4ba2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/mmc-pwrseq-sd8787.txt
+@@ -0,0 +1,16 @@
++* Marvell SD8787 power sequence provider
++
++Required properties:
++- compatible: must be "mmc-pwrseq-sd8787".
++- powerdown-gpios: contains a power down GPIO specifier with the
++		   default active state
++- reset-gpios: contains a reset GPIO specifier with the default
++		   active state
++
++Example:
++
++	wifi_pwrseq: wifi_pwrseq {
++		compatible = "mmc-pwrseq-sd8787";
++		powerdown-gpios = <&twl_gpio 0 GPIO_ACTIVE_LOW>;
++		reset-gpios = <&twl_gpio 1 GPIO_ACTIVE_LOW>;
++	}
+diff --git a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+index 980b16df74c3..0854451ff91d 100644
+--- a/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
++++ b/Documentation/devicetree/bindings/net/wireless/marvell-8xxx.txt
+@@ -1,4 +1,4 @@
+-Marvell 8897/8997 (sd8897/sd8997/pcie8997) SDIO/PCIE devices
++Marvell 8787/8897/8997 (sd8787/sd8897/sd8997/pcie8997) SDIO/PCIE devices
+ ------
+ 
+ This node provides properties for controlling the Marvell SDIO/PCIE wireless device.
+@@ -8,6 +8,7 @@ connects the device to the system.
+ Required properties:
+ 
+   - compatible : should be one of the following:
++	* "marvell,sd8787"
+ 	* "marvell,sd8897"
+ 	* "marvell,sd8997"
+ 	* "pci11ab,2b42"
+@@ -34,6 +35,9 @@ Optional properties:
+ 		 so that the wifi chip can wakeup host platform under certain condition.
+ 		 during system resume, the irq will be disabled to make sure
+ 		 unnecessary interrupt is not received.
++  - vmmc-supply: a phandle of a regulator, supplying VCC to the card
++  - mmc-pwrseq:  phandle to the MMC power sequence node. See "mmc-pwrseq-*"
++		 for documentation of MMC power sequence bindings.
+ 
+ Example:
+ 
+@@ -46,6 +50,7 @@ so that firmware can wakeup host using this device side pin.
+ &mmc3 {
+ 	status = "okay";
+ 	vmmc-supply = <&wlan_en_reg>;
++	mmc-pwrseq = <&wifi_pwrseq>;
+ 	bus-width = <4>;
+ 	cap-power-off-card;
+ 	keep-power-in-suspend;
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
