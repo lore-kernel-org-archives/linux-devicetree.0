@@ -1,131 +1,130 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
- 161010801
-Date: Tue, 24 Jan 2017 14:52:08 +0000
-Message-ID: <6f2e2055-ceff-8a83-96cd-1d1f8213ae1d@arm.com>
-References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
- <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
- <5f303abc-209b-3828-ca8c-4ec0977f89ea@arm.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
+Date: Tue, 24 Jan 2017 16:02:53 +0100
+Message-ID: <3890508.0j97LNriXL@diego>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com> <1485260203-14216-6-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5f303abc-209b-3828-ca8c-4ec0977f89ea-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1485260203-14216-6-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/17 14:41, Robin Murphy wrote:
-> On 24/01/17 14:11, Marc Zyngier wrote:
->> + Robin,
->>
->> On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
->>> The HiSilicon erratum 161010801 describes the limitation of certain
->>> HiSilicon platforms to support the SMMU mappings for MSI transactions.
->>>
->>> On these platforms GICv3 ITS translator is presented with the deviceID
->>> by extending the MSI payload data to 64 bits to include the deviceID.
->>> Hence, the PCIe controller on this platforms has to differentiate the
->>> MSI payload against other DMA payload and has to modify the MSI payload.
->>> This basically makes it difficult for this platforms to have a SMMU
->>> translation for MSI. Also these platforms doesn't have a proper IIDR
->>> register to use the existing IIDR based quirk mechanism.
->>>
->>> This workaround based on the devicetree binding property, supports
->>> bypassing the SMMU for the MSI transactions on this platforms.
->>>
->>> Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  arch/arm64/Kconfig               | 15 ++++++++++++
->>>  drivers/irqchip/irq-gic-common.h |  1 +
->>>  drivers/irqchip/irq-gic-v3-its.c | 52 +++++++++++++++++++++++++++++++++++++++-
->>>  3 files changed, 67 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->>> index 0ae0427..8d600b0 100644
->>> --- a/arch/arm64/Kconfig
->>> +++ b/arch/arm64/Kconfig
->>> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
->>>
->>>  	  If unsure, say Y.
->>>
->>> +config HISILICON_ERRATUM_161010801
->>> +	bool "HiSilicon erratum 161010801"
->>> +	default y
->>> +	help
->>> +	  Enable workaround for erratum 161010801.
->>> +
->>> +	  This implements a gicv3-its errata workaround for HiSilicon
->>> +	  platforms Hip05/Hip07. These platforms cannot support the MSI
->>> +	  interrupt remapping and MSI transaction has to be bypassed by SMMU.
->>> +
->>> +	  The fix is to avoid calling the remapping hook into the SMMU
->>> +	  driver from the its_irq_compose_msi_msg().
->>> +
->>> +	  If unsure, say Y.
->>> +
->>>  endmenu
->>>
->>>
->>> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
->>> index 205e5fd..de0385a 100644
->>> --- a/drivers/irqchip/irq-gic-common.h
->>> +++ b/drivers/irqchip/irq-gic-common.h
->>> @@ -26,6 +26,7 @@ struct gic_quirk {
->>>  	void (*init)(void *data);
->>>  	u32 iidr;
->>>  	u32 mask;
->>> +	const char *erratum;
->>>  };
->>>
->>>  int gic_configure_irq(unsigned int irq, unsigned int type,
->>> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
->>> index f471939..0a326f6 100644
->>> --- a/drivers/irqchip/irq-gic-v3-its.c
->>> +++ b/drivers/irqchip/irq-gic-v3-its.c
->>> @@ -44,6 +44,7 @@
->>>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
->>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
->>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
->>> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
->>>
->>>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
->>>
->>> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
->>>  	msg->address_hi		= upper_32_bits(addr);
->>>  	msg->data		= its_get_event_id(d);
->>>
->>> -	iommu_dma_map_msi_msg(d->irq, msg);
->>> +	if (!(its->flags & ITS_FLAGS_WORKAROUND_HISILICON_161010801))
->>> +		iommu_dma_map_msi_msg(d->irq, msg);
->>
->> Let's contemplate this for a moment. If we're on the affected ITS, we're
->> using the physical address of the GITS_TRANSLATER register. What
->> guarantees that this is not going to conflict with an IOVA that DMA is
->> going to use? From looking at these patches, my feeling is "not much".
->>
->> So if I'm right, you're opening the door to some interesting memory
->> corruption if the two regions ever intersect.
->>
->> Robin, what do you think?
+Am Dienstag, 24. Januar 2017, 15:16:40 CET schrieb Alexander Kochetkov:
+> The patch move ce field out of struct bc_timer into struct
+> rk_clock_event_device and rename struct bc_timer to struct rk_timer.
 > 
-> Yup. Unless the ITS physical address is actually reserved from the IOVA
-> domain, it's still free to be allocated for DMA mappings, and if that
-> ever happens then you'll get odd bits of data landing in the ITS instead
-> of RAM, and maybe even locked-up devices or worse if the doorbell gives
-> back decode errors on read attempts. It's essentially the exact same
-> problem as we have with memory-mapped PCI windows, and needs to be
-> solved in the same fashion, i.e. between the SMMU and the IOMMU-DMA code.
+> The main idea for the commit is to exctact low level timer
+> routines from current implementation so they could be
+> reused in the following clocksource implementation commit.
+> 
+> This is refactoring step without functional changes.
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 
-We're in violent agreement, and I'll leave the matter into your capable
-hands! ;-)
+Please don't add Reviewed-by tags without explicit mention of them by 
+reviewers. (Also it's spelled wrong).
 
-Thanks,
+I haven't looked that deeply into the driver itself and the changes made to 
+feel comfortable with a "Reviewed-by".
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> ---
+>  drivers/clocksource/rockchip_timer.c |   33
+> ++++++++++++++++++++++----------- 1 file changed, 22 insertions(+), 11
+> deletions(-)
+> 
+> diff --git a/drivers/clocksource/rockchip_timer.c
+> b/drivers/clocksource/rockchip_timer.c index 23e267a..6d68d4c 100644
+> --- a/drivers/clocksource/rockchip_timer.c
+> +++ b/drivers/clocksource/rockchip_timer.c
+> @@ -29,18 +29,28 @@
+>  #define TIMER_MODE_USER_DEFINED_COUNT		(1 << 1)
+>  #define TIMER_INT_UNMASK			(1 << 2)
+> 
+> -struct bc_timer {
+> -	struct clock_event_device ce;
+> +struct rk_timer {
+>  	void __iomem *base;
+>  	void __iomem *ctrl;
+>  	u32 freq;
+>  };
+> 
+> -static struct bc_timer bc_timer;
+> +struct rk_clock_event_device {
+> +	struct clock_event_device ce;
+> +	struct rk_timer timer;
+> +};
+> +
+> +static struct rk_clock_event_device bc_timer;
+> +
+> +static inline struct rk_clock_event_device*
+> +rk_clock_event_device(struct clock_event_device *ce)
+> +{
+> +	return container_of(ce, struct rk_clock_event_device, ce);
+> +}
+> 
+> -static inline struct bc_timer *rk_timer(struct clock_event_device *ce)
+> +static inline struct rk_timer *rk_timer(struct clock_event_device *ce)
+>  {
+> -	return container_of(ce, struct bc_timer, ce);
+> +	return &rk_clock_event_device(ce)->timer;
+>  }
+> 
+>  static inline void __iomem *rk_base(struct clock_event_device *ce)
+> @@ -116,16 +126,17 @@ static irqreturn_t rk_timer_interrupt(int irq, void
+> *dev_id) static int __init rk_timer_init(struct device_node *np, u32
+> ctrl_reg) {
+>  	struct clock_event_device *ce = &bc_timer.ce;
+> +	struct rk_timer *timer = &bc_timer.timer;
+>  	struct clk *timer_clk;
+>  	struct clk *pclk;
+>  	int ret = -EINVAL, irq;
+> 
+> -	bc_timer.base = of_iomap(np, 0);
+> -	if (!bc_timer.base) {
+> +	timer->base = of_iomap(np, 0);
+> +	if (!timer->base) {
+>  		pr_err("Failed to get base address for '%s'\n", TIMER_NAME);
+>  		return -ENXIO;
+>  	}
+> -	bc_timer.ctrl = bc_timer.base + ctrl_reg;
+> +	timer->ctrl = timer->base + ctrl_reg;
+> 
+>  	pclk = of_clk_get_by_name(np, "pclk");
+>  	if (IS_ERR(pclk)) {
+> @@ -153,7 +164,7 @@ static int __init rk_timer_init(struct device_node *np,
+> u32 ctrl_reg) goto out_timer_clk;
+>  	}
+> 
+> -	bc_timer.freq = clk_get_rate(timer_clk);
+> +	timer->freq = clk_get_rate(timer_clk);
+> 
+>  	irq = irq_of_parse_and_map(np, 0);
+>  	if (!irq) {
+> @@ -181,7 +192,7 @@ static int __init rk_timer_init(struct device_node *np,
+> u32 ctrl_reg) goto out_irq;
+>  	}
+> 
+> -	clockevents_config_and_register(ce, bc_timer.freq, 1, UINT_MAX);
+> +	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
+> 
+>  	return 0;
+> 
+> @@ -190,7 +201,7 @@ static int __init rk_timer_init(struct device_node *np,
+> u32 ctrl_reg) out_timer_clk:
+>  	clk_disable_unprepare(pclk);
+>  out_unmap:
+> -	iounmap(bc_timer.base);
+> +	iounmap(timer->base);
+> 
+>  	return ret;
+>  }
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
