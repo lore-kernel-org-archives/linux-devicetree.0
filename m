@@ -1,147 +1,128 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 2/7] iio: adc: stm32: Enable use of stm32 timer triggers
-Date: Tue, 24 Jan 2017 15:37:03 +0100
-Message-ID: <6e42a729-3513-5586-13dc-10cf5e90f6a3@st.com>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
- <1484832854-6314-3-git-send-email-fabrice.gasnier@st.com>
- <9826347e-d8e4-2386-cc7a-dd2c4909494b@kernel.org>
+From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
+ 161010801
+Date: Tue, 24 Jan 2017 14:41:59 +0000
+Message-ID: <5f303abc-209b-3828-ca8c-4ec0977f89ea@arm.com>
+References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
+ <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9826347e-d8e4-2386-cc7a-dd2c4909494b@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <aa915b29-453f-6817-500f-1c6b457c0368-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2017 01:55 PM, Jonathan Cameron wrote:
-> On 19/01/17 13:34, Fabrice Gasnier wrote:
->> STM32 ADC has external timer trigger sources. Use stm32 timer triggers
->> API (e.g. is_stm32_timer_trigger()) with local ADC lookup table to
->> validate a trigger can be used.
->> This also provides correct trigger selection value (e.g. extsel).
+On 24/01/17 14:11, Marc Zyngier wrote:
+> + Robin,
+> 
+> On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
+>> The HiSilicon erratum 161010801 describes the limitation of certain
+>> HiSilicon platforms to support the SMMU mappings for MSI transactions.
 >>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> Looks good. Observations inline.
+>> On these platforms GICv3 ITS translator is presented with the deviceID
+>> by extending the MSI payload data to 64 bits to include the deviceID.
+>> Hence, the PCIe controller on this platforms has to differentiate the
+>> MSI payload against other DMA payload and has to modify the MSI payload.
+>> This basically makes it difficult for this platforms to have a SMMU
+>> translation for MSI. Also these platforms doesn't have a proper IIDR
+>> register to use the existing IIDR based quirk mechanism.
+>>
+>> This workaround based on the devicetree binding property, supports
+>> bypassing the SMMU for the MSI transactions on this platforms.
+>>
+>> Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 >> ---
->>  drivers/iio/adc/Kconfig     |  2 ++
->>  drivers/iio/adc/stm32-adc.c | 60 +++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 62 insertions(+)
+>>  arch/arm64/Kconfig               | 15 ++++++++++++
+>>  drivers/irqchip/irq-gic-common.h |  1 +
+>>  drivers/irqchip/irq-gic-v3-its.c | 52 +++++++++++++++++++++++++++++++++++++++-
+>>  3 files changed, 67 insertions(+), 1 deletion(-)
 >>
->> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->> index 33341f4..9a7b090 100644
->> --- a/drivers/iio/adc/Kconfig
->> +++ b/drivers/iio/adc/Kconfig
->> @@ -447,6 +447,8 @@ config STM32_ADC_CORE
->>  	depends on OF
->>  	depends on REGULATOR
->>  	select IIO_BUFFER
->> +	select MFD_STM32_TIMERS
->> +	select IIO_STM32_TIMER_TRIGGER
->>  	select IIO_TRIGGERED_BUFFER
->>  	help
->>  	  Select this option to enable the core driver for STMicroelectronics
->> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
->> index 8d0b74b..30708bc 100644
->> --- a/drivers/iio/adc/stm32-adc.c
->> +++ b/drivers/iio/adc/stm32-adc.c
->> @@ -23,6 +23,7 @@
->>  #include <linux/delay.h>
->>  #include <linux/iio/iio.h>
->>  #include <linux/iio/buffer.h>
->> +#include <linux/iio/timer/stm32-timer-trigger.h>
->>  #include <linux/iio/trigger.h>
->>  #include <linux/iio/trigger_consumer.h>
->>  #include <linux/iio/triggered_buffer.h>
->> @@ -122,6 +123,35 @@ enum stm32_adc_exten {
->>  	STM32_EXTEN_HWTRIG_BOTH_EDGES,
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 0ae0427..8d600b0 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
+>>
+>>  	  If unsure, say Y.
+>>
+>> +config HISILICON_ERRATUM_161010801
+>> +	bool "HiSilicon erratum 161010801"
+>> +	default y
+>> +	help
+>> +	  Enable workaround for erratum 161010801.
+>> +
+>> +	  This implements a gicv3-its errata workaround for HiSilicon
+>> +	  platforms Hip05/Hip07. These platforms cannot support the MSI
+>> +	  interrupt remapping and MSI transaction has to be bypassed by SMMU.
+>> +
+>> +	  The fix is to avoid calling the remapping hook into the SMMU
+>> +	  driver from the its_irq_compose_msi_msg().
+>> +
+>> +	  If unsure, say Y.
+>> +
+>>  endmenu
+>>
+>>
+>> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+>> index 205e5fd..de0385a 100644
+>> --- a/drivers/irqchip/irq-gic-common.h
+>> +++ b/drivers/irqchip/irq-gic-common.h
+>> @@ -26,6 +26,7 @@ struct gic_quirk {
+>>  	void (*init)(void *data);
+>>  	u32 iidr;
+>>  	u32 mask;
+>> +	const char *erratum;
 >>  };
 >>
->> +/* extsel - trigger mux selection value */
->> +enum stm32_adc_extsel {
->> +	STM32_EXT0,
->> +	STM32_EXT1,
->> +	STM32_EXT2,
->> +	STM32_EXT3,
->> +	STM32_EXT4,
->> +	STM32_EXT5,
->> +	STM32_EXT6,
->> +	STM32_EXT7,
->> +	STM32_EXT8,
->> +	STM32_EXT9,
->> +	STM32_EXT10,
->> +	STM32_EXT11,
->> +	STM32_EXT12,
->> +	STM32_EXT13,
->> +	STM32_EXT14,
->> +	STM32_EXT15,
->> +};
->> +
->> +/**
->> + * struct stm32_adc_trig_info - ADC trigger info
->> + * @name:		name of the trigger, corresponding to its source
->> + * @extsel:		trigger selection
->> + */
->> +struct stm32_adc_trig_info {
->> +	const char *name;
->> +	enum stm32_adc_extsel extsel;
->> +};
+>>  int gic_configure_irq(unsigned int irq, unsigned int type,
+>> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+>> index f471939..0a326f6 100644
+>> --- a/drivers/irqchip/irq-gic-v3-its.c
+>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+>> @@ -44,6 +44,7 @@
+>>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+>> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
 >>
->>  /**
->>   * struct stm32_adc - private data of each ADC IIO instance
->> @@ -218,6 +248,26 @@ struct stm32_adc_regs {
->>  	{ STM32F4_ADC_SQR1, STM32F4_SQ16_MASK, STM32F4_SQ16_SHIFT },
->>  };
+>>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
 >>
->> +/* STM32F4 external trigger sources for all instances */
->> +static struct stm32_adc_trig_info stm32f4_adc_timer_trigs[] = {
->> +	{ TIM1_CH1, STM32_EXT0 },
->> +	{ TIM1_CH2, STM32_EXT1 },
->> +	{ TIM1_CH3, STM32_EXT2 },
->> +	{ TIM2_CH2, STM32_EXT3 },
->> +	{ TIM2_CH3, STM32_EXT4 },
->> +	{ TIM2_CH4, STM32_EXT5 },
->> +	{ TIM2_TRGO, STM32_EXT6 },
->> +	{ TIM3_CH1, STM32_EXT7 },
->> +	{ TIM3_TRGO, STM32_EXT8 },
->> +	{ TIM4_CH4, STM32_EXT9 },
->> +	{ TIM5_CH1, STM32_EXT10 },
->> +	{ TIM5_CH2, STM32_EXT11 },
->> +	{ TIM5_CH3, STM32_EXT12 },
->> +	{ TIM8_CH1, STM32_EXT13 },
->> +	{ TIM8_TRGO, STM32_EXT14 },
->> +	{}, /* sentinel */
->> +};
->> +
->>  /**
->>   * STM32 ADC registers access routines
->>   * @adc: stm32 adc instance
->> @@ -362,6 +412,16 @@ static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
->>  static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
->>  				     struct iio_trigger *trig)
->>  {
->> +	int i;
-> Ah. This makes more sense than patch 1 on it's own did.
->> +
->> +	/* lookup triggers registered by stm32 timer trigger driver */
->> +	for (i = 0; stm32f4_adc_timer_trigs[i].name; i++) {
->> +		if (is_stm32_timer_trigger(trig) &&
->> +		    !strcmp(stm32f4_adc_timer_trigs[i].name, trig->name)) {
->> +			return stm32f4_adc_timer_trigs[i].extsel;
-> Good. The combination of the first check and the name match should make this safe
-> against those triggers that can be assigned arbitrary names.
-
-Do you wish I add a comment about it ?
-
-Best Regards,
-Fabrice
-
->> +		}
->> +	}
->> +
->>  	return -EINVAL;
->>  }
+>> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>>  	msg->address_hi		= upper_32_bits(addr);
+>>  	msg->data		= its_get_event_id(d);
 >>
->>
+>> -	iommu_dma_map_msi_msg(d->irq, msg);
+>> +	if (!(its->flags & ITS_FLAGS_WORKAROUND_HISILICON_161010801))
+>> +		iommu_dma_map_msi_msg(d->irq, msg);
+> 
+> Let's contemplate this for a moment. If we're on the affected ITS, we're
+> using the physical address of the GITS_TRANSLATER register. What
+> guarantees that this is not going to conflict with an IOVA that DMA is
+> going to use? From looking at these patches, my feeling is "not much".
+> 
+> So if I'm right, you're opening the door to some interesting memory
+> corruption if the two regions ever intersect.
 >
+> Robin, what do you think?
+
+Yup. Unless the ITS physical address is actually reserved from the IOVA
+domain, it's still free to be allocated for DMA mappings, and if that
+ever happens then you'll get odd bits of data landing in the ITS instead
+of RAM, and maybe even locked-up devices or worse if the doorbell gives
+back decode errors on read attempts. It's essentially the exact same
+problem as we have with memory-mapped PCI windows, and needs to be
+solved in the same fashion, i.e. between the SMMU and the IOMMU-DMA code.
+
+Robin.
+
+> 
+> 	M.
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
