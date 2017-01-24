@@ -1,51 +1,169 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: add power-domains to mmcif
-Date: Tue, 24 Jan 2017 16:32:30 +0000
-Message-ID: <SG2PR06MB1165BD8C33491336E74AFE5A8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170123141349.29844-1-chris.brandt@renesas.com>
- <CAMuHMdULpxoNaTUX2Dc7R=d+FUb_V45H9=XXfsW3RKBTowE4Uw@mail.gmail.com>
- <20170124123304.GC20529@verge.net.au>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH 4/9] drm: Add DRM support for tiny LCD displays
+Date: Tue, 24 Jan 2017 17:35:44 +0100
+Message-ID: <e272852f-0bdb-4d12-6bbe-5dd22e8551ce@tronnes.org>
+References: <20170122181117.8210-1-noralf@tronnes.org>
+ <20170122181117.8210-5-noralf@tronnes.org>
+ <20170123092805.grj5ehghbbdqn54k@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124123304.GC20529-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170123092805.grj5ehghbbdqn54k@phenom.ffwll.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: daniel@ffwll.ch
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, January 24, 2017, Simon Horman wrote:
-> On Mon, Jan 23, 2017 at 04:12:16PM +0100, Geert Uytterhoeven wrote:
-> > On Mon, Jan 23, 2017 at 3:13 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org=
+
+Den 23.01.2017 10.28, skrev Daniel Vetter:
+> On Sun, Jan 22, 2017 at 07:11:12PM +0100, Noralf Trønnes wrote:
+>> tinydrm provides helpers for very simple displays that can use
+>> CMA backed framebuffers and need flushing on changes.
+>>
+>> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
+> Looks all pretty. A bunch of ideas below, but all optional. For merging I
+> think simplest to first get the core patches in through drm-misc, and then
+> you can submit a pull request to Dave for tinydrm+backends (just needs an
+> ack for the dt parts from dt maintainers), including MAINTAINERS entry.
+> Ack from my side.
+
+So when the tinydrm core patches are in:
+- tinydrm patches are posted to dri-devel.
+- DT patches need ack.
+- If there's no comments or resolved, I send a pull request to Dave.
+
+How often and when do I send pull requests?
+(I have seen *-next, *-fixes, * for 4.xx)
+
+Do drivers _always_ need a MAINTANERS entry, or is it preferred,
+nice to have, not so important, ...
+
+
+>> +/**
+>> + * tinydrm_display_pipe_update - Display pipe update helper
+>> + * @pipe: Simple display pipe
+>> + * @old_state: Old plane state
+>> + *
+>> + * This function does a full framebuffer flush if the plane framebuffer
+>> + * has changed. It also handles vblank events. Drivers can use this as their
+>> + * &drm_simple_display_pipe_funcs->update callback.
+>> + */
+>> +void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
+>> +				 struct drm_plane_state *old_state)
+>> +{
+>> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+>> +	struct drm_framebuffer *fb = pipe->plane.state->fb;
+>> +	struct drm_crtc *crtc = &tdev->pipe.crtc;
+>> +
+>> +	if (!fb)
+>> +		DRM_DEBUG_KMS("fb unset\n");
+>> +	else if (!old_state->fb)
+>> +		DRM_DEBUG_KMS("fb set\n");
+>> +	else if (fb != old_state->fb)
+>> +		DRM_DEBUG_KMS("fb changed\n");
+>> +	else
+>> +		DRM_DEBUG_KMS("No fb change\n");
+>> +
+>> +	if (fb && (fb != old_state->fb)) {
+>> +		pipe->plane.fb = fb;
+>> +		if (fb->funcs->dirty)
+>> +			fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
+> I like the idea, but my cunning long-term plan is that we'd extend the
+> atomic support to support a dirty rectangle. Together with the
+> non-blocking stuff we could then implement fb->funcs->dirty in terms of
+> atomic. But here you implement atomic in terms of ->dirty, and we'd end up
+> with a loop.
 >
-> wrote:
-> > > Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> >
-> > Reported-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> > Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->=20
-> Should this be queued up as a fix for v4.10 with the following tag?
->=20
-> Fixes: 887862227ba3 ("ARM: dts: r7s72100: add mmcif to device tree")
+> Personally I'd just drop this helper here and move this part into the
+> backend modules ...
+>
+>> +	}
+>> +
+>> +	if (crtc->state->event) {
+>> +		DRM_DEBUG_KMS("crtc event\n");
+>> +		spin_lock_irq(&crtc->dev->event_lock);
+>> +		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+>> +		spin_unlock_irq(&crtc->dev->event_lock);
+>> +		crtc->state->event = NULL;
+> ... because this here is kinda a hack, since it's not synchronized with
+> the screen update. Otoh these tiny panels are kinda special.
 
-I assume it can. I'm not sure how it effect the driver one way good or bad
-(that's a question for Geert I think).
-SDHI for r7s72100 needs it too, I just didn't send that yet because my othe=
-r
-fix will cause a merge conflict because it is modifying the same line. But,=
-=20
-that patch is taking longer than I expected.
+Yeah, you're right it's only synchronized if the framebuffer changes.
+So this won't catch events that's not page flip events.
+afaict DRM_EVENT_VBLANK is the only other event. When is that used?
 
-My guess is that power-domains is for runtime power management...which seem=
-s
-to be a sore subject for r7s72100 at this point.
+How about if I check for events as well so the fb is always flushed
+if someone wants know?
+
+void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
+                  struct drm_plane_state *old_state)
+{
+     struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+     struct drm_framebuffer *fb = pipe->plane.state->fb;
+     struct drm_crtc *crtc = &tdev->pipe.crtc;
+
+     if (fb && (fb != old_state->fb || crtc->state->event)) {
+         pipe->plane.fb = fb;
+         if (fb->funcs->dirty)
+             fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
+     }
+
+     if (crtc->state->event) {
+         spin_lock_irq(&crtc->dev->event_lock);
+         drm_crtc_send_vblank_event(crtc, crtc->state->event);
+         spin_unlock_irq(&crtc->dev->event_lock);
+         crtc->state->event = NULL;
+     }
+}
 
 
-Chris
+Or maybe I should send the event in the dirty() function instead?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
+                  struct drm_plane_state *old_state)
+{
+     struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
+     struct drm_framebuffer *fb = pipe->plane.state->fb;
+     struct drm_crtc *crtc = &tdev->pipe.crtc;
+
+     if (fb && (fb != old_state->fb || crtc->state->event)) {
+         pipe->plane.fb = fb;
+         if (fb->funcs->dirty)
+             fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
+     }
+}
+
+void tinydrm_send_pending_event(struct tinydrm_device *tdev)
+{
+     struct drm_crtc *crtc = &tdev->pipe.crtc;
+
+     if (!crtc->state->event)
+         return;
+
+     spin_lock_irq(&crtc->dev->event_lock);
+     drm_crtc_send_vblank_event(crtc, crtc->state->event);
+     spin_unlock_irq(&crtc->dev->event_lock);
+     crtc->state->event = NULL;
+}
+
+static int mipi_dbi_fb_dirty(struct drm_framebuffer *fb,
+                  struct drm_file *file_priv,
+                  unsigned int flags, unsigned int color,
+                  struct drm_clip_rect *clips,
+                  unsigned int num_clips)
+{
+     <snip>
+     mutex_lock(&tdev->dirty_lock);
+
+     <flush>
+
+     tinydrm_send_pending_event(tdev);
+
+     mutex_unlock(&tdev->dirty_lock);
+
+     return ret;
+}
+
+
+Noralf.
