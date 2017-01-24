@@ -1,73 +1,69 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v5 0/4] Add support for es8388 and hdmi audio
-	on the rock2
-Date: Tue, 24 Jan 2017 11:08:31 +0100
-Message-ID: <20170124100835.9540-1-romain.perier@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4] ARM: dts: da850: Add the CPPI 4.1 DMA to the USB OTG controller
+Date: Tue, 24 Jan 2017 11:22:52 +0100
+Message-ID: <20170124102252.15142-1-abailon@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This set of patches adds a machine driver for rk3288-based boards that have
-the built-in HDMI audio and a generic analog output. It also adds slave mode
-to the es8328 driver that currently only supported the master mode. Then, it
-adds the required DT definitions to link rockchip-i2s to the es8388 analog
-output and to hdmi audio.
+This adds the CPPI 4.1 DMA controller to the USB OTG controller.
 
-This work is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.co.uk> with some improvements, changes and more
-commits.
+Changes since v3:
+- Don't use a wildcard for compatible property.
 
-Changes in v5:
- - Fixed coding style issue in patch 2/4 (the switch case).
- - Moved the code for the master mode and the slave mode into the switch case for patch 2/4
- - Fixed error handling for patch 3/4
-Changes in v4:
- - Add support for multi codecs in the asoc machine driver, so the driver
-   matches the hw architecture (analog and hdmi audio are connected on
-   the same i2s line)
- - Renamed the driver to rk3288-hdmi-analog.c and changed its
-   documentation
- - Add built-in support for hdmi audio in this driver
- - Add support for the property 'rockchip,routing'
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/da850.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-Changes in v3:
- - Cosmetic changes in rockchip_es8388.c
- - Added missing email to MODULE_AUTHOR in rockchip_es8388.c
-Changes in v2:
- - Fixed wrong use of the data structure i2c_device_id
- - Fixed wrong dependencies for SND_SOC_ROCKCHIP_ES8388
-
-Romain Perier (4):
-  ASoC: es8328-i2c: Add compatible for ES8388
-  ASoC: es8328: Add support for slave mode
-  ASoC: rockchip: Add machine driver for RK3288 boards that use
-    analog/HDMI
-  arm: dts: Add support for ES8388 to the Radxa Rock 2
-
- Documentation/devicetree/bindings/sound/es8328.txt |   2 +-
- .../bindings/sound/rockchip,rk3288-hdmi-analog.txt |  36 +++
- arch/arm/boot/dts/rk3288-rock2-square.dts          |  39 +++
- sound/soc/codecs/es8328-i2c.c                      |   2 +
- sound/soc/codecs/es8328.c                          |  20 +-
- sound/soc/rockchip/Kconfig                         |  10 +
- sound/soc/rockchip/Makefile                        |   2 +
- sound/soc/rockchip/rk3288_hdmi_analog.c            | 299 +++++++++++++++++++++
- 8 files changed, 403 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
- create mode 100644 sound/soc/rockchip/rk3288_hdmi_analog.c
-
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 104155d..f4a637a 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -396,12 +396,37 @@
+ 		usb0: usb@200000 {
+ 			compatible = "ti,da830-musb";
+ 			reg = <0x200000 0x10000>;
++			ranges;
+ 			interrupts = <58>;
+ 			interrupt-names = "mc";
+ 			dr_mode = "otg";
+ 			phys = <&usb_phy 0>;
+ 			phy-names = "usb-phy";
+ 			status = "disabled";
++
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			dmas = <&cppi41dma 0 0 &cppi41dma 1 0
++				&cppi41dma 2 0 &cppi41dma 3 0
++				&cppi41dma 0 1 &cppi41dma 1 1
++				&cppi41dma 2 1 &cppi41dma 3 1>;
++			dma-names =
++				"rx1", "rx2", "rx3", "rx4",
++				"tx1", "tx2", "tx3", "tx4";
++
++			cppi41dma: dma-controller@201000 {
++				compatible = "ti,da830-cppi41";
++				reg =  <0x201000 0x1000
++					0x202000 0x1000
++					0x204000 0x4000>;
++				reg-names = "controller",
++					    "scheduler", "queuemgr";
++				interrupts = <58>;
++				#dma-cells = <2>;
++				#dma-channels = <4>;
++				status = "okay";
++			};
+ 		};
+ 		mdio: mdio@224000 {
+ 			compatible = "ti,davinci_mdio";
 -- 
-2.9.3
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
