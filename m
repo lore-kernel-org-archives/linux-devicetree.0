@@ -1,52 +1,104 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/4] ASoC: es8328-i2c: Add compatible for ES8388
-Date: Tue, 24 Jan 2017 12:12:22 +0000
-Message-ID: <20170124121222.twygwy2fph3ticfa@sirena.org.uk>
-References: <20170124100835.9540-1-romain.perier@collabora.com>
- <20170124100835.9540-2-romain.perier@collabora.com>
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/8] Implement clocksource for rockchip SoC using rockchip timer
+Date: Tue, 24 Jan 2017 15:16:35 +0300
+Message-ID: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fa33xd4kgdi4xzsv"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170124100835.9540-2-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---fa33xd4kgdi4xzsv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This patch series contain:
+- devicetree bindings clarification for rockchip timers
+- dts files fixes for rk3228-evb, rk3229-evb and rk3188
+- implementation of clocksource and sched clock for rockchip SoC
 
-On Tue, Jan 24, 2017 at 11:08:32AM +0100, Romain Perier wrote:
-> This commit adds a compatible string for everest,es8388. This is
-> an audio codec that is compatible with es8328.
+The clock supplying the arm-global-timer on the rk3188 is coming from the
+the cpu clock itself and thus changes its rate everytime cpufreq adjusts
+the cpu frequency making this timer unsuitable as a stable clocksource.
 
-Please don't resubmit patches that have already been applied, you should
-submit patches against current code in the tree you're expecting things
-to be applied to.  If any updates are needed to a patch that's already
-been applied you should submit incremental patches which make those
-updates.  This avoids having to change published git commits which could
-cause problems for people working against git.
+The rk3188, rk3288 and following socs share a separate timer block already
+handled by the rockchip-timer driver. Therefore adapt this driver to also
+be able to act as clocksource on rk3188.
 
---fa33xd4kgdi4xzsv
-Content-Type: application/pgp-signature; name="signature.asc"
+In order to test clocksource you can run following commands and check
+how much time it take in real. On rk3188 it take about ~45 seconds.
 
------BEGIN PGP SIGNATURE-----
+       cpufreq-set -f 1.6GHZ
+       date; sleep 60; date
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliHRKUACgkQJNaLcl1U
-h9BIbwf/ayPr6O5Sp3xnZVKkCx3c2EI/PF/FoM81u3aN0NHm/nhSPbrSWb7WBc7n
-J5A4txKgwEJRU1lcYPfoXjn5LUfUePugEsDJSMrBJhpaYwC9hof0AfubhnptMc5X
-LN9SL2uQaU0qjA1Wi1LhdMEmw/LJzUWrP2FBmAWXWW/y4lgZRHu3O38pJEZaEPBr
-Q1EFcRzy04N+OxsdybuUasC8jQBtKYRLxS/ucuI2NhrzoGkiYGm+QQ8QEmqUd1UL
-87S9HljLOiuMeqwUSqBHrCuK5gGFfx8XeDcxr4KyZ5JVJl3MhRuwbJTF1rNIOzYF
-Z1OPOpm3+WhbOXIX5XUI8FnMjGvWvQ==
-=rXjW
------END PGP SIGNATURE-----
+rk3288 (and probably anything newer) is irrelevant to this patch,
+as it has the arch timer interface. This patch may be usefull
+for Cortex-A9/A5 based parts.
 
---fa33xd4kgdi4xzsv--
+Regards,
+Alexander.
+
+Changes in v5:
+- Add 'Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>' to 1/8
+  http://lists.infradead.org/pipermail/linux-rockchip/2016-December/013308.html
+- Add 'Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>' to series
+- change timer compatible property in the rk322x.dtsi 2/8
+  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013784.html
+- updated comment message for 4/8
+  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013786.html
+- updated comment message for 5/8
+  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013787.html
+- fixed build error for 8/8
+  http://lists.infradead.org/pipermail/linux-rockchip/2017-January/013789.html
+
+Changes in v4:
+merged 7 and 8 from series 3
+merged 10, 11, 12, 13 from series 3
+fixed commit message
+
+Changes in v3:
+added patches:
+ARM: dts: rockchip: disable arm-global-timer for rk3188
+clocksource/drivers/rockchip_timer: Prevent ftrace recursion
+
+devicetree v1 patches:
+https://patchwork.ozlabs.org/patch/699019/
+https://patchwork.ozlabs.org/patch/699020/
+
+kernel v1 patches:
+https://patchwork.kernel.org/patch/9443975/
+https://patchwork.kernel.org/patch/9443971/
+https://patchwork.kernel.org/patch/9443959/
+https://patchwork.kernel.org/patch/9443963/
+https://patchwork.kernel.org/patch/9443979/
+https://patchwork.kernel.org/patch/9443989/
+https://patchwork.kernel.org/patch/9443987/
+https://patchwork.kernel.org/patch/9443977/
+https://patchwork.kernel.org/patch/9443991/
+
+Alexander Kochetkov (8):
+  dt-bindings: clarify compatible property for rockchip timers
+  ARM: dts: rockchip: update compatible property for rk322x timer
+  ARM: dts: rockchip: add timer entries to rk3188 SoC
+  ARM: dts: rockchip: disable arm-global-timer for rk3188
+  clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and
+    rk_clock_event_device
+  clocksource/drivers/rockchip_timer: low level routines take rk_timer
+    as parameter
+  clocksource/drivers/rockchip_timer: move TIMER_INT_UNMASK out of
+    rk_timer_enable()
+  clocksource/drivers/rockchip_timer: implement clocksource timer
+
+ .../bindings/timer/rockchip,rk-timer.txt           |   12 +-
+ arch/arm/boot/dts/rk3188.dtsi                      |   17 ++
+ arch/arm/boot/dts/rk322x.dtsi                      |    2 +-
+ drivers/clocksource/rockchip_timer.c               |  207 +++++++++++++++-----
+ 4 files changed, 183 insertions(+), 55 deletions(-)
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
