@@ -1,76 +1,105 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v4 1/3] mmc: dt-bindings: update Mediatek MMC bindings
-Date: Tue, 24 Jan 2017 09:02:32 +0100
-Message-ID: <CAPDyKFqo7fMTp3YPJwgoa4u3iAie2U884VUfTnMQ_js8neMqTQ@mail.gmail.com>
-References: <1484988923-1543-1-git-send-email-yong.mao@mediatek.com>
- <1484988923-1543-2-git-send-email-yong.mao@mediatek.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, ARM, IIO and PWM due
+ for the v4.10 merge window
+Date: Tue, 24 Jan 2017 08:12:44 +0000
+Message-ID: <20170124081244.GP16020@dell>
+References: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com>
+ <20170123121222.GJ16020@dell>
+ <CAOesGMhx6ZWekgW01-7GRcMiWtAohcfGdcu1FhkP=bTfsjBCmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484988923-1543-2-git-send-email-yong.mao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yong Mao <yong.mao@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mediatek@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Eddie Huang <eddie.huang@mediatek.com>, Chaotian Jing <chaotian.jing@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMhx6ZWekgW01-7GRcMiWtAohcfGdcu1FhkP=bTfsjBCmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza@s
 List-Id: devicetree@vger.kernel.org
 
-+Rob, devicetree
+On Mon, 23 Jan 2017, Olof Johansson wrote:
+> On Mon, Jan 23, 2017 at 4:12 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > Arm, IIO and PWM Maintainers,
+> >
+> > Enjoy!
+> >
+> > The following changes since commit 7ce7d89f48834cefece7804d38fc5d85382edf77:
+> >
+> >   Linux 4.10-rc1 (2016-12-25 16:13:08 -0800)
+> >
+> > are available in the git repository at:
+> >
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-iio-pwm-v4.10
+> >
+> > for you to fetch changes up to 94df449273475980a39f1bf47f1e3d2b07ce6577:
+> >
+> >   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco (2017-01-23 12:06:28 +0000)
+> >
+> > ----------------------------------------------------------------
+> > Immutable branch between MFD, ARM, IIO and PWM due for the v4.10 merge window
+> >
+> > ----------------------------------------------------------------
+> > Benjamin Gaignard (8):
+> >       dt-bindings: mfd: Add bindings for STM32 Timers driver
+> >       mfd: Add STM32 Timers driver
+> >       dt-bindings: pwm: Add STM32 bindings
+> >       pwm: Add driver for STM32 plaftorm
+> >       iio: Add bindings for STM32 timer trigger driver
+> >       iio: Add STM32 timer trigger driver
+> >       ARM: dts: stm32: add Timers driver for stm32f429 MCU
+> >       ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
+> >
+> >  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
+> >  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
+> >  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
+> >  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
+> >  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++++++++
+> >  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
+> >  drivers/iio/trigger/Kconfig                        |   9 +
+> >  drivers/iio/trigger/Makefile                       |   1 +
+> >  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++++++++++++
+> >  drivers/mfd/Kconfig                                |  11 +
+> >  drivers/mfd/Makefile                               |   2 +
+> >  drivers/mfd/stm32-timers.c                         |  80 +++++
+> >  drivers/pwm/Kconfig                                |   9 +
+> >  drivers/pwm/Makefile                               |   1 +
+> >  drivers/pwm/pwm-stm32.c                            | 398 +++++++++++++++++++++
+> >  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
+> >  include/linux/mfd/stm32-timers.h                   |  71 ++++
+> >  17 files changed, 1422 insertions(+)
+> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+> >  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> >  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+> >  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
+> >  create mode 100644 drivers/mfd/stm32-timers.c
+> >  create mode 100644 drivers/pwm/pwm-stm32.c
+> >  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
+> >  create mode 100644 include/linux/mfd/stm32-timers.h
+> 
+> May I ask why you're creating an immutable branch of all this contents?
+> 
+> We should get the dts/dtsi contents like usual from any maintainer;
+> just the DT updates in a branch.
+> 
+> Sometimes (but less and less due to us discouraging the use) we need
+> an immutable branch that includes dt-include updates. But I don't see
+> any of those in this contents.
+> 
+> I.e. I guess I can see the need between mfd and downstream trees
+> (iio/pwm), but not the DTS contents at this time. Or am I missing
+> something here?
 
-On 21 January 2017 at 09:55, Yong Mao <yong.mao@mediatek.com> wrote:
-> From: yong mao <yong.mao@mediatek.com>
->
-> Add description for mediatek,hs200-cmd-int-delay
-> Add description for mediatek,hs400-cmd-int-delay
-> Add description for mediatek,hs400-cmd-resp-sel-rising
->
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+I agree with you.  However, since one of the STM32 Maintainers Acked
+the DTS patches, and the other one hasn't been heard from for months,
+I took that to mean he wanted me to apply and take them through the
+MFD tree.
 
-You need an ack from a DT maintainer for this. I have added Rob and
-the devicetree list on cc.
+A misunderstanding or misaction perhaps, but this is the normal
+assumption.
 
-Kind regards
-Uffe
-
-> ---
->  Documentation/devicetree/bindings/mmc/mtk-sd.txt |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> index 0120c7f..4182ea3 100644
-> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> @@ -21,6 +21,15 @@ Optional properties:
->  - assigned-clocks: PLL of the source clock
->  - assigned-clock-parents: parent of source clock, used for HS400 mode to get 400Mhz source clock
->  - hs400-ds-delay: HS400 DS delay setting
-> +- mediatek,hs200-cmd-int-delay: HS200 command internal delay setting.
-> +                               This field has total 32 stages.
-> +                               The value is an integer from 0 to 31.
-> +- mediatek,hs400-cmd-int-delay: HS400 command internal delay setting
-> +                               This field has total 32 stages.
-> +                               The value is an integer from 0 to 31.
-> +- mediatek,hs400-cmd-resp-sel-rising:  HS400 command response sample selection
-> +                                      If present,HS400 command responses are sampled on rising edges.
-> +                                      If not present,HS400 command responses are sampled on falling edges.
->
->  Examples:
->  mmc0: mmc@11230000 {
-> @@ -38,4 +47,7 @@ mmc0: mmc@11230000 {
->         assigned-clocks = <&topckgen CLK_TOP_MSDC50_0_SEL>;
->         assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL_D2>;
->         hs400-ds-delay = <0x14015>;
-> +       mediatek,hs200-cmd-int-delay = <26>;
-> +       mediatek,hs400-cmd-int-delay = <14>;
-> +       mediatek,hs400-cmd-resp-sel-rising;
->  };
-> --
-> 1.7.9.5
->
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
