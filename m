@@ -1,174 +1,246 @@
-From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Tue, 24 Jan 2017 22:10:07 +0530
-Message-ID: <CAFp+6iFM54tMBbpE8pDehx1s9+_tNdOxLLNc5AdP3RS-vgjoew@mail.gmail.com>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
- <587C88FE.2040900@ti.com> <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
- <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org> <20170119214258.GD7829@codeaurora.org>
- <58871F6D.1090206@ti.com> <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
- <5887619B.70108@ti.com>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
+ 161010801
+Date: Tue, 24 Jan 2017 16:40:51 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA8174AC66F@lhreml504-mbs>
+References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
+ <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
+ <5f303abc-209b-3828-ca8c-4ec0977f89ea@arm.com>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC552@lhreml504-mbs>
+ <9764b04c-f610-ecca-e4ee-021d16371d7d@arm.com>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC5FC@lhreml504-mbs>
+ <0a89ccd6-213f-98c5-e883-976a49c3f7d3@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5887619B.70108-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <0a89ccd6-213f-98c5-e883-976a49c3f7d3@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "eric.auger@redhat.com" <eric.auger@redhat.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
 
-On Tue, Jan 24, 2017 at 7:45 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> Hi,
->
-> On Tuesday 24 January 2017 07:35 PM, Vivek Gautam wrote:
->> On Tue, Jan 24, 2017 at 3:03 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>> Hi,
->>>
->>> On Friday 20 January 2017 03:12 AM, Stephen Boyd wrote:
->>>> On 01/19, Vivek Gautam wrote:
->>>>>
->>>>> On 01/19/2017 06:10 AM, Stephen Boyd wrote:
->>>>>>>
->>>>>> Didn't we already move away from subnodes for lanes in an earlier
->>>>>> revision of these patches? I seem to recall we did that because
->>>>>> lanes are not devices and the whole "phy as a bus" concept not
->>>>>> making sense.
->>>>>
->>>>> Yea, we started out without having any sub-nodes and we
->>>>> argued that we don't require them since the qmp device is
->>>>> represented by the qmp node itself.
->>>>> The lanes otoh are representative of gen_phys and related properties.
->>>>>
->>>>> In the driver -
->>>>> "struct qmp_phy " represents the lanes and holds "struct phy",
->>>>> "struct qcom_qmp" represents the qmp block as a whole and holds
->>>>> "struct device"
->>>>> Does this make lanes qualify to be childs of qmp ?
->>>>
->>>> Hmm... maybe I was recalling the DSI phy binding. I think there
->>>> are lanes there too but we decided to just have one node.
->>>>
->>>>>
->>>>> "phy as a bus" (just trying to understand here) -
->>>>> let's say a usb phy controller has one HSIC phy port and one USB2 phy port.
->>>>> So, should this phy controller be a bus providing two ports (and so
->>>>> we will have
->>>>> couple of child nodes to the phy controller) ?
->>>>>
->>>>
->>>> Typically in DT a subnode or collection of subnodes means there's
->>>> some sort of bus involved. Usually each node corresponds to a
->>>> struct device, and the parent node corresponds to the bus or
->>>> controller for the logical bus.
->>>>
->>>> In this case (only PCIe though? not UFS or USB?) it seems like we
->>>> have multiple phys that share a common register space, but
->>>> otherwise they have their own register space and power
->>>> management. Would you have each PCIe controller point to a
->>>> different subnode for their associated phy? I'm trying to
->>>> understand the benefit of the subnodes if they aren't treated as
->>>> struct devices.
->>>
->>> Yes, instead of having all the controller having a phandle to the same PHY and
->>> then using other mechanisms to differentiate between the PHYs, each controller
->>> can have a phandle to the exact port that it is connected to.
->>>
->>> This also gives a better representation of the hardware and can avoid lot of
->>> boilerplate code in the driver.
->>
->> Below is one binding that works for me.
->> --------------------
->>                phy@34000 {
->>                         compatible = "qcom,msm8996-qmp-pcie-phy";
->>                         reg = <0x034000 0x488>;
->>                         #clock-cells = <1>;
->>                         #address-cells = <1>;
->>                         #size-cells = <1>;
->>                         ranges;
->>
->>                         clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
->>                                 <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
->>                                 <&gcc GCC_PCIE_CLKREF_CLK>;
->>                         clock-names = "aux", "cfg_ahb", "ref";
->>
->>                         vdda-phy-supply = <&pm8994_l28>;
->>                         vdda-pll-supply = <&pm8994_l12>;
->>
->>                         resets = <&gcc GCC_PCIE_PHY_BCR>,
->>                                 <&gcc GCC_PCIE_PHY_COM_BCR>,
->>                                 <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
->>                         reset-names = "phy", "common", "cfg";
->>
->>                         pciephy_p0: port@0 {
->>                                 reg = <0x035000 0x130>,
->>                                         <0x035200 0x200>,
->>                                         <0x035400 0x1dc>;
->>                                 #phy-cells = <0>;
->>
->>                                 clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
->>                                 clock-names = "pipe0";
->>                                 resets = <&gcc GCC_PCIE_0_PHY_BCR>;
->>                                 reset-names = "lane0";
->>                         };
->>
->>                       pciephy_p1: port@1 {
->>                                 reg = <0x036000 0x130>,
->>                                         <0x036200 0x200>,
->>                                         <0x036400 0x1dc>;
->>                                 #phy-cells = <0>;
->>
->>                                 clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
->>                                 clock-names = "pipe1";
->>                                 resets = <&gcc GCC_PCIE_1_PHY_BCR>;
->>                                 reset-names = "lane1";
->>                         };
->>
->>                         pciephy_p2: port@2 {
->>                                 reg = <0x037000 0x130>,
->>                                         <0x037200 0x200>,
->>                                         <0x037400 0x1dc>;
->>                                 #phy-cells = <0>;
->>
->>                                 clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
->>                                 clock-names = "pipe2";
->>                                 resets = <&gcc GCC_PCIE_2_PHY_BCR>;
->>                                 reset-names = "lane2";
->>                         };
->>                 };
->> --------------------
->>
->> let me know if this looks okay.
->
-> looks good to me.
+> -----Original Message-----
+> From: Robin Murphy [mailto:robin.murphy@arm.com]
+> Sent: Tuesday, January 24, 2017 4:30 PM
+> To: Shameerali Kolothum Thodi; Marc Zyngier; mark.rutland@arm.com;
+> will.deacon@arm.com; eric.auger@redhat.com
+> Cc: linux-arm-kernel@lists.infradead.org; Linuxarm; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; John Garry;
+> Guohanjun (Hanjun Guo)
+> Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon
+> erratum 161010801
+> 
+> On 24/01/17 16:14, Shameerali Kolothum Thodi wrote:
+> >
+> >
+> >> -----Original Message-----
+> >> From: Marc Zyngier [mailto:marc.zyngier@arm.com]
+> >> Sent: Tuesday, January 24, 2017 3:50 PM
+> >> To: Shameerali Kolothum Thodi; Robin Murphy; mark.rutland@arm.com;
+> >> will.deacon@arm.com; eric.auger@redhat.com
+> >> Cc: linux-arm-kernel@lists.infradead.org; Linuxarm; linux-
+> >> kernel@vger.kernel.org; devicetree@vger.kernel.org; John Garry;
+> >> Guohanjun (Hanjun Guo)
+> >> Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon
+> >> erratum 161010801
+> >>
+> >> On 24/01/17 15:39, Shameerali Kolothum Thodi wrote:
+> >>> +Eric
+> >>>
+> >>>> -----Original Message-----
+> >>>> From: Robin Murphy [mailto:robin.murphy@arm.com]
+> >>>> Sent: Tuesday, January 24, 2017 2:42 PM
+> >>>> To: Marc Zyngier; Shameerali Kolothum Thodi; mark.rutland@arm.com;
+> >>>> will.deacon@arm.com
+> >>>> Cc: linux-arm-kernel@lists.infradead.org; Linuxarm; linux-
+> >>>> kernel@vger.kernel.org; devicetree@vger.kernel.org; John Garry;
+> >>>> Guohanjun (Hanjun Guo)
+> >>>> Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon
+> >>>> erratum 161010801
+> >>>>
+> >>>> On 24/01/17 14:11, Marc Zyngier wrote:
+> >>>>> + Robin,
+> >>>>>
+> >>>>> On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
+> >>>>>> The HiSilicon erratum 161010801 describes the limitation of
+> >> certain
+> >>>>>> HiSilicon platforms to support the SMMU mappings for MSI
+> >>>> transactions.
+> >>>>>>
+> >>>>>> On these platforms GICv3 ITS translator is presented with the
+> >>>> deviceID
+> >>>>>> by extending the MSI payload data to 64 bits to include the
+> >>>> deviceID.
+> >>>>>> Hence, the PCIe controller on this platforms has to
+> differentiate
+> >>>> the
+> >>>>>> MSI payload against other DMA payload and has to modify the MSI
+> >>>> payload.
+> >>>>>> This basically makes it difficult for this platforms to have a
+> >> SMMU
+> >>>>>> translation for MSI. Also these platforms doesn't have a proper
+> >>>>>> IIDR register to use the existing IIDR based quirk mechanism.
+> >>>>>>
+> >>>>>> This workaround based on the devicetree binding property,
+> supports
+> >>>>>> bypassing the SMMU for the MSI transactions on this platforms.
+> >>>>>>
+> >>>>>> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
+> >>>>>> ---
+> >>>>>>  arch/arm64/Kconfig               | 15 ++++++++++++
+> >>>>>>  drivers/irqchip/irq-gic-common.h |  1 +
+> >>>>>> drivers/irqchip/irq-gic-v3-its.c | 52
+> >>>> +++++++++++++++++++++++++++++++++++++++-
+> >>>>>>  3 files changed, 67 insertions(+), 1 deletion(-)
+> >>>>>>
+> >>>>>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig index
+> >>>>>> 0ae0427..8d600b0 100644
+> >>>>>> --- a/arch/arm64/Kconfig
+> >>>>>> +++ b/arch/arm64/Kconfig
+> >>>>>> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
+> >>>>>>
+> >>>>>>  	  If unsure, say Y.
+> >>>>>>
+> >>>>>> +config HISILICON_ERRATUM_161010801
+> >>>>>> +	bool "HiSilicon erratum 161010801"
+> >>>>>> +	default y
+> >>>>>> +	help
+> >>>>>> +	  Enable workaround for erratum 161010801.
+> >>>>>> +
+> >>>>>> +	  This implements a gicv3-its errata workaround for
+> >> HiSilicon
+> >>>>>> +	  platforms Hip05/Hip07. These platforms cannot support the
+> >> MSI
+> >>>>>> +	  interrupt remapping and MSI transaction has to be
+> >> bypassed by
+> >>>> SMMU.
+> >>>>>> +
+> >>>>>> +	  The fix is to avoid calling the remapping hook into the
+> >> SMMU
+> >>>>>> +	  driver from the its_irq_compose_msi_msg().
+> >>>>>> +
+> >>>>>> +	  If unsure, say Y.
+> >>>>>> +
+> >>>>>>  endmenu
+> >>>>>>
+> >>>>>>
+> >>>>>> diff --git a/drivers/irqchip/irq-gic-common.h
+> >>>>>> b/drivers/irqchip/irq-
+> >>>> gic-common.h
+> >>>>>> index 205e5fd..de0385a 100644
+> >>>>>> --- a/drivers/irqchip/irq-gic-common.h
+> >>>>>> +++ b/drivers/irqchip/irq-gic-common.h
+> >>>>>> @@ -26,6 +26,7 @@ struct gic_quirk {
+> >>>>>>  	void (*init)(void *data);
+> >>>>>>  	u32 iidr;
+> >>>>>>  	u32 mask;
+> >>>>>> +	const char *erratum;
+> >>>>>>  };
+> >>>>>>
+> >>>>>>  int gic_configure_irq(unsigned int irq, unsigned int type, diff
+> >>>>>> --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-
+> >>>> gic-v3-its.c
+> >>>>>> index f471939..0a326f6 100644
+> >>>>>> --- a/drivers/irqchip/irq-gic-v3-its.c
+> >>>>>> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> >>>>>> @@ -44,6 +44,7 @@
+> >>>>>>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+> >>>>>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+> >>>>>>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+> >>>>>> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
+> >>>>>>
+> >>>>>>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
+> >>>>>>
+> >>>>>> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct
+> >>>> irq_data *d, struct msi_msg *msg)
+> >>>>>>  	msg->address_hi		= upper_32_bits(addr);
+> >>>>>>  	msg->data		= its_get_event_id(d);
+> >>>>>>
+> >>>>>> -	iommu_dma_map_msi_msg(d->irq, msg);
+> >>>>>> +	if (!(its->flags &
+> >> ITS_FLAGS_WORKAROUND_HISILICON_161010801))
+> >>>>>> +		iommu_dma_map_msi_msg(d->irq, msg);
+> >>>>>
+> >>>>> Let's contemplate this for a moment. If we're on the affected
+> ITS,
+> >>>> we're
+> >>>>> using the physical address of the GITS_TRANSLATER register. What
+> >>>>> guarantees that this is not going to conflict with an IOVA that
+> DMA
+> >>>> is
+> >>>>> going to use? From looking at these patches, my feeling is "not
+> >>>> much".
+> >>>>>
+> >>>>> So if I'm right, you're opening the door to some interesting
+> memory
+> >>>>> corruption if the two regions ever intersect.
+> >>>>>
+> >>>>> Robin, what do you think?
+> >>>>
+> >>>> Yup. Unless the ITS physical address is actually reserved from the
+> >>>> IOVA domain, it's still free to be allocated for DMA mappings, and
+> >> if
+> >>>> that ever happens then you'll get odd bits of data landing in the
+> >> ITS
+> >>>> instead of RAM, and maybe even locked-up devices or worse if the
+> >>>> doorbell gives back decode errors on read attempts. It's
+> essentially
+> >>>> the exact same problem as we have with memory-mapped PCI windows,
+> >> and
+> >>>> needs to be solved in the same fashion, i.e. between the SMMU and
+> >> the
+> >>>> IOMMU-DMA code.
+> >>>
+> >>> Is this something that can incorporated in Eric's latest patch
+> >> series[1]?
+> >>> It does mentions reserved regions can be:
+> >>> - directly mapped regions
+> >>> - regions that cannot be iommu mapped (PCI host bridge windows,
+> ...)
+> >>> - MSI regions (because they belong to another address space or
+> >> because
+> >>>   they are not translated by the IOMMU and need special handling)
+> >>>
+> >>> Though I am not clear our case comes under "the MSI regions that
+> are
+> >>> not translated by the IOMMU and need special handling" or not.
+> >>
+> >> Well, given that in your case, the IOMMU never sees the MSI write,
+> it
+> >> definitely falls into the "not translated" category.
+> >>
+> >> As for handling it on top of Eric's series, that's probably the most
+> >> reasonable thing to do, which also means that none of this should
+> >> appear in the ITS driver. Robin seems to have an idea on how to
+> >> approach this.
+> >
+> > Ok. Thanks for that Marc/Robin.
+> >
+> > But I am not sure we can get away with ITS driver. Because current
+> vfio
+> > patch series[1] treats GICV3 ITS as irq safe and is setting
+> > IRQ_DOMAIN_FLAG_MSI_REMAP in ITS driver. But this is not the case
+> with
+> > our ITS.
+> 
+> As far as I understand, it *is* the case, and largely the reason we're
+> here in the first place. "MSI remapping" is an x86-specific term for
+> the
+> part of their IOMMU which intercepts writes to the architectural MSI
+> region and can "remap" a given device's interrupts to different targets
+> on the CPU side - i.e. more or less the same thing the ITS does with
+> the
+> device ID data which your implementation apparently needs this
+> address-matching widget to append to the write. If your ITS couldn't
+> actually distinguish between requesters (like a GICv2m) we'd have a
+> *much* bigger problem.
 
-Great.
+Ok. Got it. Since the PCIe RC tags the transaction with the device ID,
+the ITS is able to perform IRQ isolation and is safe.
 
-Rob, please let me know if above bindings look okay to you.
-I can re-spin the bindings patch then.
-
-Thanks
-
-Regards
-Vivek
-
->
-> Thanks
-> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Shameer
