@@ -1,159 +1,114 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [alsa-devel] [RFC][PATCH] ASoC: add simple-graph-card document
-Date: Tue, 24 Jan 2017 15:10:48 +0100
-Message-ID: <c4541388-904f-9886-7e8a-a609ed9feaa7@samsung.com>
-References: <87r33z4maj.wl%kuninori.morimoto.gx@renesas.com>
- <CAL_Jsq+pDkfijyKV0ALzZUrH-NVzmLaNj6ivAEFO98NUOXGojw@mail.gmail.com>
- <871svymrnt.wl%kuninori.morimoto.gx@renesas.com>
- <CAL_JsqLOwQn_hz3B5gFL-zr-Pm_8PX+b-sAQhLwkioD7E-ODAw@mail.gmail.com>
- <87wpdm1cyq.wl%kuninori.morimoto.gx@renesas.com>
- <CGME20170123091136epcas2p15643b17d26e629545b3848b22e1afa68@epcas2p1.samsung.com>
- <87tw8q1bct.wl%kuninori.morimoto.gx@renesas.com>
- <6e3976e8-d26c-e39e-e886-4ab00ce79d01@samsung.com>
- <87sho9fgju.wl%kuninori.morimoto.gx@renesas.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
+ 161010801
+Date: Tue, 24 Jan 2017 14:11:25 +0000
+Message-ID: <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
+References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <87sho9fgju.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <58875B0D.4080303-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2017 01:30 AM, Kuninori Morimoto wrote:
->>> +Simple-Graph-Card:
->>
->> This binding is likely going to cover most of existing sound system
->> configuration, at least it looks as it has a potential to be scalable
->> enough.  So perhaps we could treat is as a more generic binding and
->> could drop the "Simple" word now?  I'm not 100% sure it's a good idea,
->> but maybe we could make it "Generic Sound Card DT Binding"?
-> (snip)
->>> +Required properties:
->>> +
->>> +- compatible				: "asoc-simple-graph-card";
->>
->> "asoc" is Linux related, we shouldn't be putting this in the compatible string.
->> Perhaps "generic-sound-card" ? Again, I'm sure if it is expected to have such
->> a generic kind of DT binding.
-> 
-> This is OF-graph version of existing "simple-card"
-> (sound/soc/generic/simple-card.c).
-> As you know, ASoC sound card can have many features, but what this sound card
-> can do is just CPU-Codec connection and some small additional things.
-> You can use this card if you want to just connect CPU-Codec,
-> but if you want to use more advanced feature on your sound card,
-> then, you need to create your own sound card.
-> Of course we can expand simple card, but has some limitation.
-> 
-> For example, we have simple-scu-card.c which is for DPCM version of simple card.
-> As you can see, these are using almost same DT bindings, but using different
-> feature because normal sound card and DPCM sound card are totally different.
++ Robin,
 
-Is the main difference between "normal" and DPCM card that in case of the
-former the data flow routes are static and the latter allows dynamic
-reconfiguration of sound data routes? AFAIU DPCM stands here for Dynamic
-PCM [1], rather than Differential Pulse Code Modulation.
+On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
+> The HiSilicon erratum 161010801 describes the limitation of certain
+> HiSilicon platforms to support the SMMU mappings for MSI transactions.
+> 
+> On these platforms GICv3 ITS translator is presented with the deviceID
+> by extending the MSI payload data to 64 bits to include the deviceID.
+> Hence, the PCIe controller on this platforms has to differentiate the
+> MSI payload against other DMA payload and has to modify the MSI payload.
+> This basically makes it difficult for this platforms to have a SMMU
+> translation for MSI. Also these platforms doesn't have a proper IIDR
+> register to use the existing IIDR based quirk mechanism.
+> 
+> This workaround based on the devicetree binding property, supports
+> bypassing the SMMU for the MSI transactions on this platforms.
+> 
+> Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/Kconfig               | 15 ++++++++++++
+>  drivers/irqchip/irq-gic-common.h |  1 +
+>  drivers/irqchip/irq-gic-v3-its.c | 52 +++++++++++++++++++++++++++++++++++++++-
+>  3 files changed, 67 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 0ae0427..8d600b0 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
+> 
+>  	  If unsure, say Y.
+> 
+> +config HISILICON_ERRATUM_161010801
+> +	bool "HiSilicon erratum 161010801"
+> +	default y
+> +	help
+> +	  Enable workaround for erratum 161010801.
+> +
+> +	  This implements a gicv3-its errata workaround for HiSilicon
+> +	  platforms Hip05/Hip07. These platforms cannot support the MSI
+> +	  interrupt remapping and MSI transaction has to be bypassed by SMMU.
+> +
+> +	  The fix is to avoid calling the remapping hook into the SMMU
+> +	  driver from the its_irq_compose_msi_msg().
+> +
+> +	  If unsure, say Y.
+> +
+>  endmenu
+> 
+> 
+> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
+> index 205e5fd..de0385a 100644
+> --- a/drivers/irqchip/irq-gic-common.h
+> +++ b/drivers/irqchip/irq-gic-common.h
+> @@ -26,6 +26,7 @@ struct gic_quirk {
+>  	void (*init)(void *data);
+>  	u32 iidr;
+>  	u32 mask;
+> +	const char *erratum;
+>  };
+> 
+>  int gic_configure_irq(unsigned int irq, unsigned int type,
+> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+> index f471939..0a326f6 100644
+> --- a/drivers/irqchip/irq-gic-v3-its.c
+> +++ b/drivers/irqchip/irq-gic-v3-its.c
+> @@ -44,6 +44,7 @@
+>  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
+>  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
+> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
+> 
+>  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
+> 
+> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
+>  	msg->address_hi		= upper_32_bits(addr);
+>  	msg->data		= its_get_event_id(d);
+> 
+> -	iommu_dma_map_msi_msg(d->irq, msg);
+> +	if (!(its->flags & ITS_FLAGS_WORKAROUND_HISILICON_161010801))
+> +		iommu_dma_map_msi_msg(d->irq, msg);
 
-It seems the graph based binding could cover above both cases.  Apologies
-if this has been explained before, but what are main reasons for introducing
-the graph based binding?
+Let's contemplate this for a moment. If we're on the affected ITS, we're
+using the physical address of the GITS_TRANSLATER register. What
+guarantees that this is not going to conflict with an IOVA that DMA is
+going to use? From looking at these patches, my feeling is "not much".
 
-Is the SCU part in "ASoC simple SCU Sound Card" derived from "(S)ample Rate
-(C)onverter (U)nit" ?
+So if I'm right, you're opening the door to some interesting memory
+corruption if the two regions ever intersect.
 
-> Thus, unfortunately, using "generic" in compatible is a little bit over-kill.
-> So I and Mark had named it as "simple" card.
-> Thus I want to keep this "simple" on this OF-graph version driver too.
-[...]
->> I wouldn't be making a separate case for single DAI. The 'ports' node can
->> be omitted, port@0, port@1 nodes could be put under respective device nodes
->> and in the 'sound' node we would have 'dais' property pointing to the CPU
->> DAI port,  not the endpoint.  The endpoint is supposed to describe one of
->> possible configurations of the port.  I think we want phandles to the 'port'
->> nodes, not phandles to the 'endpoint' nodes in the 'sound' node.
-> 
-> Last 2 line was unfortunately not clear for me. do you mean
-> dais = <&cpu_port>; on card ?
-> This driver want to handle both single/multi DAI connection,
-> so, using same rule is more easy and simple.
-> If my understanding was correct, do you mean like below ?
+Robin, what do you think?
 
-Yes, exactly.
-
-> 	cpu: cpu {
-> 		...
-> 		cpu_port: port {
-> 			cpu_out: endpoint {
-> 				remote-endpoint = <&codec_in>;
-> 			};
-> 		};
-> 	};
-> 
-> 	codec: codec {
-> 		...
-> 		codec_port: port {
-> 			codec_in: endpoint {
-> 				remote-endpoint = <&cpu_out>;
-> 			};
-> 		};
-> 	};
-> 
-> 	card {
-> 		compatible = "asoc-simple-graph-card";
-> 
-> 		dais = <&cpu_port>;
-> 	};
-> 
-> If so, I want Multi DAI like this
-> 
-> 	cpu: cpu {
-> 		...
-> 		ports {
-> 			cpu0_port: port {
-> 				cpu0_out: endpoint {
-> 					remote-endpoint = <&codec0_in>;
-> 				};
-> 			};
-> 			cpu1_port: port {
-> 				cpu1_out: endpoint {
-> 					remote-endpoint = <&codec1_in>;
-> 				};
-> 			};
-> 		};
-> 	};
-> 
-> 	codec0: codec@0 {
-> 		...
-> 		codec0_port: port {
-> 			codec0_in: endpoint {
-> 				remote-endpoint = <&cpu0_out>;
-> 			};
-> 		};
-> 	};
-> 
-> 	codec1: codec@1 {
-> 		...
-> 		codec1_port: port {
-> 			codec1_in: endpoint {
-> 				remote-endpoint = <&cpu1_out>;
-> 			};
-> 		};
-> 	};
-> 
-> 	card {
-> 		compatible = "asoc-simple-graph-card";
-> 
-> 		dais = <&cpu0_port
-> 			&cpu1_port>;
-> 	};
-
-[1] https://kernel.org/doc/html/latest/sound/soc/dpcm.html
-
---
-Thanks,
-Sylwester
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
