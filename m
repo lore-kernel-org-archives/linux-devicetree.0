@@ -1,169 +1,79 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 4/9] drm: Add DRM support for tiny LCD displays
-Date: Tue, 24 Jan 2017 17:35:44 +0100
-Message-ID: <e272852f-0bdb-4d12-6bbe-5dd22e8551ce@tronnes.org>
-References: <20170122181117.8210-1-noralf@tronnes.org>
- <20170122181117.8210-5-noralf@tronnes.org>
- <20170123092805.grj5ehghbbdqn54k@phenom.ffwll.local>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Tue, 24 Jan 2017 17:35:51 +0100
+Message-ID: <20170124163551.GB2021@mai>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
+ <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170123092805.grj5ehghbbdqn54k@phenom.ffwll.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: daniel@ffwll.ch
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <35cf654f-3944-fc76-5120-25e33f71be4f-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 24, 2017 at 03:27:51PM +0000, Marc Zyngier wrote:
+> On 24/01/17 15:08, Daniel Lezcano wrote:
+> > On 19/01/2017 14:35, Ding Tianhong wrote:
+> >> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
+> >> potential to contain an erroneous value when the timer value changes".
+> >> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+> >> read.  Accesses to CVAL are not affected.
+> >>
+> >> The workaround is to reread the system count registers until the value of the second
+> >> read is larger than the first one by less than 32, the system counter can be guaranteed
+> >> not to return wrong value twice by back-to-back read and the error value is always larger
+> >> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
+> > 
+> > Why not use another clocksource instead of adding a workaround with a
+> > non negligible overhead and more complexity in the code ?
+> 
+> The overhead only affects the affected systems, since it is guarded by a
+> static key (the same static key that guards the FSL workaround that is
+> already in mainline).
 
-Den 23.01.2017 10.28, skrev Daniel Vetter:
-> On Sun, Jan 22, 2017 at 07:11:12PM +0100, Noralf Trønnes wrote:
->> tinydrm provides helpers for very simple displays that can use
->> CMA backed framebuffers and need flushing on changes.
->>
->> Signed-off-by: Noralf Trønnes <noralf@tronnes.org>
-> Looks all pretty. A bunch of ideas below, but all optional. For merging I
-> think simplest to first get the core patches in through drm-misc, and then
-> you can submit a pull request to Dave for tinydrm+backends (just needs an
-> ack for the dt parts from dt maintainers), including MAINTAINERS entry.
-> Ack from my side.
+Yes, that is what I understood so far.
+ 
+> As for creating a different clocksources, this would in turn make the
+> integration with the arch code more complex (arm64 relies on having
+> working architected timers, with or without workarounds) and the
+> integration with KVM (which relies on the same), and in the end create
+> quite a lot of duplication. Are we going to create a separate
+> clocksource for each potential erratum that people with screwed hardware
+> come up with?
 
-So when the tinydrm core patches are in:
-- tinydrm patches are posted to dri-devel.
-- DT patches need ack.
-- If there's no comments or resolved, I send a pull request to Dave.
+That wasn't my point. The way the errata are handled in this patchset is
+elegant and I have nothing against it. I'm worried about the accumulation of
+fixes, hacks, workarounds in this driver. So my naive question is about not
+using an identified bogus clocksource and use another one available on the
+board, which is I believe often the case, instead of trying to deal with bogus
+hardware. Apparently, that is not possible because 1) of KVM, 2) of duplication
+and 3) of integration with the ARM64 code.
 
-How often and when do I send pull requests?
-(I have seen *-next, *-fixes, * for 4.xx)
+Does it mean it is not possible to use another clocksource/clockevent than the
+armv8-timer ?
 
-Do drivers _always_ need a MAINTANERS entry, or is it preferred,
-nice to have, not so important, ...
+Can you elaborate these three points ? 
 
+> I'd prefer to organise the mess rather than spread it everywhere.
 
->> +/**
->> + * tinydrm_display_pipe_update - Display pipe update helper
->> + * @pipe: Simple display pipe
->> + * @old_state: Old plane state
->> + *
->> + * This function does a full framebuffer flush if the plane framebuffer
->> + * has changed. It also handles vblank events. Drivers can use this as their
->> + * &drm_simple_display_pipe_funcs->update callback.
->> + */
->> +void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
->> +				 struct drm_plane_state *old_state)
->> +{
->> +	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
->> +	struct drm_framebuffer *fb = pipe->plane.state->fb;
->> +	struct drm_crtc *crtc = &tdev->pipe.crtc;
->> +
->> +	if (!fb)
->> +		DRM_DEBUG_KMS("fb unset\n");
->> +	else if (!old_state->fb)
->> +		DRM_DEBUG_KMS("fb set\n");
->> +	else if (fb != old_state->fb)
->> +		DRM_DEBUG_KMS("fb changed\n");
->> +	else
->> +		DRM_DEBUG_KMS("No fb change\n");
->> +
->> +	if (fb && (fb != old_state->fb)) {
->> +		pipe->plane.fb = fb;
->> +		if (fb->funcs->dirty)
->> +			fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
-> I like the idea, but my cunning long-term plan is that we'd extend the
-> atomic support to support a dirty rectangle. Together with the
-> non-blocking stuff we could then implement fb->funcs->dirty in terms of
-> atomic. But here you implement atomic in terms of ->dirty, and we'd end up
-> with a loop.
->
-> Personally I'd just drop this helper here and move this part into the
-> backend modules ...
->
->> +	}
->> +
->> +	if (crtc->state->event) {
->> +		DRM_DEBUG_KMS("crtc event\n");
->> +		spin_lock_irq(&crtc->dev->event_lock);
->> +		drm_crtc_send_vblank_event(crtc, crtc->state->event);
->> +		spin_unlock_irq(&crtc->dev->event_lock);
->> +		crtc->state->event = NULL;
-> ... because this here is kinda a hack, since it's not synchronized with
-> the screen update. Otoh these tiny panels are kinda special.
+I will add this punchline to my fortune database :)
 
-Yeah, you're right it's only synchronized if the framebuffer changes.
-So this won't catch events that's not page flip events.
-afaict DRM_EVENT_VBLANK is the only other event. When is that used?
+  -- Daniel
 
-How about if I check for events as well so the fb is always flushed
-if someone wants know?
+-- 
 
-void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
-                  struct drm_plane_state *old_state)
-{
-     struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-     struct drm_framebuffer *fb = pipe->plane.state->fb;
-     struct drm_crtc *crtc = &tdev->pipe.crtc;
+ <http://www.linaro.org/> Linaro.org â”‚ Open source software for ARM SoCs
 
-     if (fb && (fb != old_state->fb || crtc->state->event)) {
-         pipe->plane.fb = fb;
-         if (fb->funcs->dirty)
-             fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
-     }
-
-     if (crtc->state->event) {
-         spin_lock_irq(&crtc->dev->event_lock);
-         drm_crtc_send_vblank_event(crtc, crtc->state->event);
-         spin_unlock_irq(&crtc->dev->event_lock);
-         crtc->state->event = NULL;
-     }
-}
-
-
-Or maybe I should send the event in the dirty() function instead?
-
-void tinydrm_display_pipe_update(struct drm_simple_display_pipe *pipe,
-                  struct drm_plane_state *old_state)
-{
-     struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-     struct drm_framebuffer *fb = pipe->plane.state->fb;
-     struct drm_crtc *crtc = &tdev->pipe.crtc;
-
-     if (fb && (fb != old_state->fb || crtc->state->event)) {
-         pipe->plane.fb = fb;
-         if (fb->funcs->dirty)
-             fb->funcs->dirty(fb, NULL, 0, 0, NULL, 0);
-     }
-}
-
-void tinydrm_send_pending_event(struct tinydrm_device *tdev)
-{
-     struct drm_crtc *crtc = &tdev->pipe.crtc;
-
-     if (!crtc->state->event)
-         return;
-
-     spin_lock_irq(&crtc->dev->event_lock);
-     drm_crtc_send_vblank_event(crtc, crtc->state->event);
-     spin_unlock_irq(&crtc->dev->event_lock);
-     crtc->state->event = NULL;
-}
-
-static int mipi_dbi_fb_dirty(struct drm_framebuffer *fb,
-                  struct drm_file *file_priv,
-                  unsigned int flags, unsigned int color,
-                  struct drm_clip_rect *clips,
-                  unsigned int num_clips)
-{
-     <snip>
-     mutex_lock(&tdev->dirty_lock);
-
-     <flush>
-
-     tinydrm_send_pending_event(tdev);
-
-     mutex_unlock(&tdev->dirty_lock);
-
-     return ret;
-}
-
-
-Noralf.
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
