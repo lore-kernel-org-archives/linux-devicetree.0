@@ -1,79 +1,73 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Tue, 24 Jan 2017 17:35:51 +0100
-Message-ID: <20170124163551.GB2021@mai>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
- <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
+Date: Tue, 24 Jan 2017 17:39:43 +0100
+Message-ID: <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
+References: <20170121144212.8858-1-marek.vasut@gmail.com>
+ <20170123170827.tkatb2aizjhbfifo@rob-hp-laptop>
+ <63b3660b-6ce0-134c-ef79-c06430c735c5@gmail.com>
+ <CAMuHMdUVwQoqQbrsGtbvxK9PoHae3n=UuJYijTMToUsdc=8=mQ@mail.gmail.com>
+ <d4fc63bf-c455-2ac4-15d2-6f240799d3e9@gmail.com>
+ <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <35cf654f-3944-fc76-5120-25e33f71be4f-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 03:27:51PM +0000, Marc Zyngier wrote:
-> On 24/01/17 15:08, Daniel Lezcano wrote:
-> > On 19/01/2017 14:35, Ding Tianhong wrote:
-> >> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
-> >> potential to contain an erroneous value when the timer value changes".
-> >> Accesses to TVAL (both read and write) are also affected due to the implicit counter
-> >> read.  Accesses to CVAL are not affected.
-> >>
-> >> The workaround is to reread the system count registers until the value of the second
-> >> read is larger than the first one by less than 32, the system counter can be guaranteed
-> >> not to return wrong value twice by back-to-back read and the error value is always larger
-> >> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
-> > 
-> > Why not use another clocksource instead of adding a workaround with a
-> > non negligible overhead and more complexity in the code ?
+On 01/24/2017 08:30 AM, Geert Uytterhoeven wrote:
+> Hi Marek,
 > 
-> The overhead only affects the affected systems, since it is guarded by a
-> static key (the same static key that guards the FSL workaround that is
-> already in mainline).
+> On Tue, Jan 24, 2017 at 12:15 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>> On 01/23/2017 09:41 PM, Geert Uytterhoeven wrote:
+>>> On Mon, Jan 23, 2017 at 8:56 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
+>>>> On 01/23/2017 06:08 PM, Rob Herring wrote:
+>>>>> On Sat, Jan 21, 2017 at 03:42:11PM +0100, Marek Vasut wrote:
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..081947367135
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+>>>
+>>>>>> +Required properties:
+>>>>>> +- compatible:       Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
+>>>>>
+>>>>> Need to enumerate <chip>.
+>>>>
+>>>> It's enumerated below , the only special-case we handle at this point is
+>>>> the r8a7792 , which has extra interrupt block which we don't use anyway,
+>>>> but the driver disables those interrupts.
+>>>
+>>> It is not enumerated below. You just give an example for r8a7791.
+>>>
+>>> Please list all supported/tested compatible values, so checkpatch
+>>> can validate compatible values in DTS patches adding GyroADC device
+>>> nodes.
+>>
+>> What about this ?
+>>
+>> - compatible:   Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
+>>                 The <chip> can be either of:
+>>                 r8a7791 - for the GyroADC block present in r8a7791 SoC
+>>                 r8a7792 - for the GyroADC with interrupt block present
+>>                           in r8a7792 SoC
+> 
+> No, we need the exact string in the document, cfr. all other Renesas bindings.
+> 
+> "renesas,r8a7791-gyroadc"
+> "renesas,r8a7792-gyroadc"
 
-Yes, that is what I understood so far.
- 
-> As for creating a different clocksources, this would in turn make the
-> integration with the arch code more complex (arm64 relies on having
-> working architected timers, with or without workarounds) and the
-> integration with KVM (which relies on the same), and in the end create
-> quite a lot of duplication. Are we going to create a separate
-> clocksource for each potential erratum that people with screwed hardware
-> come up with?
+This ?
 
-That wasn't my point. The way the errata are handled in this patchset is
-elegant and I have nothing against it. I'm worried about the accumulation of
-fixes, hacks, workarounds in this driver. So my naive question is about not
-using an identified bogus clocksource and use another one available on the
-board, which is I believe often the case, instead of trying to deal with bogus
-hardware. Apparently, that is not possible because 1) of KVM, 2) of duplication
-and 3) of integration with the ARM64 code.
-
-Does it mean it is not possible to use another clocksource/clockevent than the
-armv8-timer ?
-
-Can you elaborate these three points ? 
-
-> I'd prefer to organise the mess rather than spread it everywhere.
-
-I will add this punchline to my fortune database :)
-
-  -- Daniel
+- compatible:   Should be "<soc-specific>", "renesas,rcar-gyroadc".
+                The <soc-specific> should be one of:
+                renesas,r8a7791-gyroadc - for the GyroADC block present
+                                          in r8a7791 SoC
+                renesas,r8a7792-gyroadc - for the GyroADC with interrupt
+                                          block present in r8a7792 SoC
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Marek Vasut
