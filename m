@@ -1,67 +1,59 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: name the mtd device with an optional label
- property
-Date: Tue, 24 Jan 2017 15:27:04 +0100
-Message-ID: <20170124152704.03598ae5@bbrezillon>
-References: <1484573225-19095-1-git-send-email-clg@kaod.org>
-        <1484573225-19095-2-git-send-email-clg@kaod.org>
-        <20170124151353.5bbffae0@bbrezillon>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+ hisilicon 161010801 erratum
+Date: Tue, 24 Jan 2017 14:28:51 +0000
+Message-ID: <20170124142851.GE7572@leverpostej>
+References: <588625E3.9040703@huawei.com>
+ <588759E0.1010804@huawei.com>
+ <20170124135224.GB7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC371@lhreml504-mbs>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124151353.5bbffae0@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <5FC3163CFD30C246ABAA99954A238FA8174AC371@lhreml504-mbs>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Jan 2017 15:13:53 +0100
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On Tue, Jan 24, 2017 at 02:00:30PM +0000, Shameerali Kolothum Thodi wrote:
+> > -----Original Message-----
+> > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
 
-> >  	if (mtd->dev.parent) {
-> >  		if (!mtd->owner && mtd->dev.parent->driver)
-> >  			mtd->owner = mtd->dev.parent->driver->owner;  
+> > On Tue, Jan 24, 2017 at 01:42:56PM +0000, Shameerali Kolothum Thodi
+> > wrote:
+
+> > > +Optional
+> > > +- hisilicon,erratum-161010801 : A boolean property. Indicates the
+> > > +presence of
+> > > +  erratum 161010801, which says that these platforms doesn't support
+> > > +SMMU
+> > > +  mapping for MSI transactions and those transactions has to be
+> > > +bypassed
+> > > +  by SMMU.
+> > 
+> > What exactly is meant by "doesn't support SMMU mapping" here? What
+> > precisely is the problem in HW?
 > 
-> --->8---  
-> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> index 13f8052b9ff9..a12b68f941e3 100644
-> --- a/include/linux/mtd/mtd.h
-> +++ b/include/linux/mtd/mtd.h
-> @@ -385,6 +385,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
->                                    struct device_node *np)
->  {
->         mtd->dev.of_node = np;
-> +
-> +       of_property_read_string(np, "label", mtd->name);
->  }
->  
->  static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+> On this platforms the ITS doorbell deviceID information is embedded in the MSI 
+> payload. To do this, the PCIe controller differentiates the MSI payload and 
+> DMA payload and modifies the MSI payload to add the deviceID information.
+> The way it modifies this is by comparing against a SYS_CTRL register which
+> is configured by UEFI with the ITS doorbell phys address.
 
-Sorry, I forgot to compile test this change. Here is a valid version:
+Ok. Some part of this will need to go in the binding description.
 
---->8---
-diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-index 13f8052b9ff9..581057f8d9a5 100644
---- a/include/linux/mtd/mtd.h
-+++ b/include/linux/mtd/mtd.h
-@@ -24,6 +24,7 @@
- #include <linux/uio.h>
- #include <linux/notifier.h>
- #include <linux/device.h>
-+#include <linux/of.h>
- 
- #include <mtd/mtd-abi.h>
- 
-@@ -385,6 +386,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
-                                   struct device_node *np)
- {
-        mtd->dev.of_node = np;
-+
-+       of_property_read_string(np, "label", &mtd->name);
- }
- 
- static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+How does this interact with translations via the SMMU?
+
+Do writes matching this address:
+
+(a) always bypass translation.
+(b) get translated after modification.
+(c) other?
+
+Thanks,
+Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
