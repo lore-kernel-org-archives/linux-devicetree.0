@@ -1,178 +1,123 @@
-From: "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Subject: [PATCH V6 3/5] OF: Add missing I/O range exception for indirect-IO  devices
-Date: Tue, 24 Jan 2017 15:05:23 +0800
-Message-ID: <1485241525-201782-4-git-send-email-yuanzhichang@hisilicon.com>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
+ a nexus node
+Date: Mon, 23 Jan 2017 22:36:29 -0800
+Message-ID: <5886F5ED.3030509@gmail.com>
+References: <20170123204851.12808-1-stephen.boyd@linaro.org>
+ <20170123204851.12808-2-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, brian.starkey@arm.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org
-Cc: lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com, "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170123204851.12808-2-stephen.boyd@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There are some special ISA/LPC devices that work on a specific I/O range where
-it is not correct to specify a 'ranges' property in DTS parent node as cpu
-addresses translated from DTS node are only for memory space on some
-architectures, such as Arm64. Without the parent 'ranges' property, current
-of_translate_address() return an error.
-Here we add special handlings for this case.
-During the OF address translation, some checkings will be perfromed to
-identify whether the device node is registered as indirect-IO. If yes, the I/O
-translation will be done in a different way from that one of PCI MMIO.
-In this way, the I/O 'reg' property of the special ISA/LPC devices will be
-parsed correctly.
+Hi Stephen,
 
-Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
-Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/of/address.c | 87 ++++++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 71 insertions(+), 16 deletions(-)
+Sorry I did not get to v1 and v2 in a timely manner.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index d85d228..6a424ec 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -545,9 +545,14 @@ static int of_translate_one(struct device_node *parent, struct of_bus *bus,
-  * that translation is impossible (that is we are not dealing with a value
-  * that can be mapped to a cpu physical address). This is not really specified
-  * that way, but this is traditionally the way IBM at least do things
-+ *
-+ * Whenever the translation fails, the *host pointer will be set to the
-+ * device that lacks a tranlation, and the return code is relative to
-+ * that node.
-  */
- static u64 __of_translate_address(struct device_node *dev,
--				  const __be32 *in_addr, const char *rprop)
-+				  const __be32 *in_addr, const char *rprop,
-+				  struct device_node **host)
- {
- 	struct device_node *parent = NULL;
- 	struct of_bus *bus, *pbus;
-@@ -560,6 +565,7 @@ static u64 __of_translate_address(struct device_node *dev,
- 	/* Increase refcount at current level */
- 	of_node_get(dev);
- 
-+	*host = NULL;
- 	/* Get parent & match bus type */
- 	parent = of_get_parent(dev);
- 	if (parent == NULL)
-@@ -592,6 +598,18 @@ static u64 __of_translate_address(struct device_node *dev,
- 			break;
- 		}
- 
-+		/*
-+		 * For indirectIO device which has no ranges property, get
-+		 * the address from reg directly.
-+		 */
-+		if (extio_find_node(&dev->fwnode)) {
-+			result = of_read_number(addr + 1, na - 1);
-+			pr_debug("indirectIO matched(%s) 0x%llx\n",
-+					of_node_full_name(dev), result);
-+			*host = of_node_get(dev);
-+			break;
-+		}
-+
- 		/* Get new parent bus and counts */
- 		pbus = of_match_bus(parent);
- 		pbus->count_cells(dev, &pna, &pns);
-@@ -624,13 +642,32 @@ static u64 __of_translate_address(struct device_node *dev,
- 
- u64 of_translate_address(struct device_node *dev, const __be32 *in_addr)
- {
--	return __of_translate_address(dev, in_addr, "ranges");
-+	struct device_node *host;
-+	u64 ret;
-+
-+	ret =  __of_translate_address(dev, in_addr, "ranges", &host);
-+	if (host) {
-+		of_node_put(host);
-+		return OF_BAD_ADDR;
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL(of_translate_address);
- 
- u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- {
--	return __of_translate_address(dev, in_addr, "dma-ranges");
-+	struct device_node *host;
-+	u64 ret;
-+
-+	ret = __of_translate_address(dev, in_addr, "dma-ranges", &host);
-+
-+	if (host) {
-+		of_node_put(host);
-+		return OF_BAD_ADDR;
-+	}
-+
-+	return ret;
- }
- EXPORT_SYMBOL(of_translate_dma_address);
- 
-@@ -672,29 +709,47 @@ const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
- }
- EXPORT_SYMBOL(of_get_address);
- 
-+static u64 of_translate_ioport(struct device_node *dev, const __be32 *in_addr)
-+{
-+	u64 taddr;
-+	unsigned long port;
-+	struct device_node *host;
-+
-+	taddr = __of_translate_address(dev, in_addr, "ranges", &host);
-+	if (host) {
-+		/* host specific port access */
-+		port = extio_translate(&host->fwnode, taddr);
-+		of_node_put(host);
-+	} else {
-+		/* memory mapped I/O range */
-+		port = pci_address_to_pio(taddr);
-+	}
-+
-+	if (port == (unsigned long)-1)
-+		return OF_BAD_ADDR;
-+
-+	return port;
-+}
-+
- static int __of_address_to_resource(struct device_node *dev,
- 		const __be32 *addrp, u64 size, unsigned int flags,
- 		const char *name, struct resource *r)
- {
- 	u64 taddr;
- 
--	if ((flags & (IORESOURCE_IO | IORESOURCE_MEM)) == 0)
-+	if (flags & IORESOURCE_MEM)
-+		taddr = of_translate_address(dev, addrp);
-+	else if (flags & IORESOURCE_IO)
-+		taddr = of_translate_ioport(dev, addrp);
-+	else
- 		return -EINVAL;
--	taddr = of_translate_address(dev, addrp);
-+
- 	if (taddr == OF_BAD_ADDR)
- 		return -EINVAL;
- 	memset(r, 0, sizeof(struct resource));
--	if (flags & IORESOURCE_IO) {
--		unsigned long port;
--		port = pci_address_to_pio(taddr);
--		if (port == (unsigned long)-1)
--			return -EINVAL;
--		r->start = port;
--		r->end = port + size - 1;
--	} else {
--		r->start = taddr;
--		r->end = taddr + size - 1;
--	}
-+
-+	r->start = taddr;
-+	r->end = taddr + size - 1;
- 	r->flags = flags;
- 	r->name = name ? name : dev->full_name;
- 
--- 
-1.9.1
+
+On 01/23/17 12:48, Stephen Boyd wrote:
+> Platforms like 96boards have a standardized connector/expansion
+> slot that exposes signals like GPIOs to expansion boards in an
+> SoC agnostic way. We'd like the DT overlays for the expansion
+> boards to be written once without knowledge of the SoC on the
+> other side of the connector. This avoids the unscalable
+> combinatorial explosion of a different DT overlay for each
+> expansion board and SoC pair.
+> 
+> We need a way to describe the GPIOs routed through the connector
+> in an SoC agnostic way. Let's introduce nexus property parsing
+> into the OF core to do this. This is largely based on the
+> interrupt nexus support we already have. This allows us to remap
+> a phandle list in a consumer node (e.g. reset-gpios) through a
+> connector in a generic way (e.g. via gpio-map). Do this in a
+> generic routine so that we can remap any sort of variable length
+> phandle list.
+> 
+> Taking GPIOs as an example, the connector would be a GPIO nexus,
+> supporting the remapping of a GPIO specifier space to multiple
+> GPIO providers on the SoC. DT would look as shown below, where
+> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
+> expansion port where boards can be plugged in, and
+> 'expansion_device' is a device on the expansion board.
+> 
+> 	soc {
+> 		soc_gpio1: gpio-controller1 {
+> 			#gpio-cells = <2>;
+> 		};
+> 
+> 		soc_gpio2: gpio-controller2 {
+> 			#gpio-cells = <2>;
+> 		};
+> 	};
+> 
+> 	connector: connector {
+> 		#gpio-cells = <2>;
+> 		gpio-map = <0 0 &soc_gpio1 1 0>,
+> 			   <1 0 &soc_gpio2 4 0>,
+> 			   <2 0 &soc_gpio1 3 0>,
+> 			   <3 0 &soc_gpio2 2 0>;
+> 		gpio-map-mask = <0xf 0x0>;
+> 		gpio-map-pass-thru = <0x0 0x1>
+> 	};
+> 
+> 	expansion_device {
+> 		reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
+> 	};
+
+The how to architect connectors and plugs threads fell asleep before
+coming to a resolution.  We need to revive that discussion.
+
+One of the concepts of the plug and connector architecture is that
+a main board may contain multiple connectors of the same type (or
+different types, but the same type is sufficient for this discussion).
+
+The node describing the card that plugs into one of the connectors
+does not know the phandle of the connector it is going to be
+connected to.  Some other mechanism is provided to allow a card
+to be plugged into any of the available connectors.  If there are
+two identical cards plugged into two connectors, then both cards
+have the same exact device tree node.  But some mechanism will
+exist to resolve (or "link") the two card nodes to the different
+connector nodes.
+
+As a result of this, in the above example the reset-gpios property
+in the node 'expansion_device' can not contain '&connector'.  The
+concept of &connector belongs to the entire expansion_device node,
+not to individual properties within the node.
+
+I'm not sure where this puts us.  I'm thinking....
+
+-Frank
+
+> 
+> The GPIO core would use of_parse_phandle_with_args_map() instead
+> of of_parse_phandle_with_args() and arrive at the same type of
+> result, a phandle and argument list. The difference is that the
+> phandle and arguments will be remapped through the nexus node to
+> the underlying SoC GPIO controller node. In the example above,
+> we would remap 'reset-gpios' from <&connector 2 GPIO_ACTIVE_LOW>
+> to <&soc_gpio1 3 GPIO_ACTIVE_LOW>.
+> 
+> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
+> ---
+>  drivers/of/base.c  | 184 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h |  12 ++++
+>  2 files changed, 196 insertions(+)
+
+< snip >
