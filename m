@@ -1,160 +1,56 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 3/7] iio: adc: stm32: add trigger polarity extended
- attribute
-Date: Tue, 24 Jan 2017 15:41:24 +0100
-Message-ID: <e78b51ed-5257-b60d-74a7-962fa0f92699@st.com>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
- <1484832854-6314-4-git-send-email-fabrice.gasnier@st.com>
- <17e5b8ba-0ef3-34eb-aa30-a899f87616f7@kernel.org>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
+Date: Tue, 24 Jan 2017 14:43:10 +0000
+Message-ID: <SG2PR06MB11652097D0BFA1A058F9CFBC8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170123135423.28780-1-chris.brandt@renesas.com>
+ <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
+ <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170124143222.GA2021@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <17e5b8ba-0ef3-34eb-aa30-a899f87616f7-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170124143222.GA2021@mai>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 01/22/2017 01:58 PM, Jonathan Cameron wrote:
-> On 19/01/17 13:34, Fabrice Gasnier wrote:
->> Define extended attribute so that user may choose rising, falling or both
->> edges for external trigger sources.
->> Default to rising edge in case it isn't set.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> Creates a custom attibute.  Documentation please!
-> /Documentation/ABI/testing/sysfs-bus-iio-stm32 or similar.
-
-Ok, I'll add something like:
-Documentation/ABI/testing/sysfs-bus-iio-adc-stm32:
-
-+What:		/sys/bus/iio/devices/triggerX/trigger_polarity
-+KernelVersion:	4.11
-+Contact:	fabrice.gasnier-qxv4g6HH51o@public.gmane.org
-+Description:
-+		The STM32 ADC can be configured to use external trigger sources
-+		(e.g. timers, pwm or exti gpio). Then, it can be tuned to start
-+		conversions on external trigger by either:
-+		- "rising-edge"
-+		- "falling-edge"
-+		- "both-edges".
-+		Reading returns current trigger polarity.
-+		Writing value before enabling conversions sets trigger polarity.
-
-Best Regards,
-Thanks,
-Fabrice
->
-> The approach seems reasonable, but easier to discuss when it's
-> formally described.
->
-> I'd also not care about characters saved and go with
-> trigger_polarity rather than the short form (unless this you have
-> a good reason for it!)
->
-> Jonathan
->> ---
->>  drivers/iio/adc/stm32-adc.c | 51 ++++++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 50 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
->> index 30708bc..9753c39 100644
->> --- a/drivers/iio/adc/stm32-adc.c
->> +++ b/drivers/iio/adc/stm32-adc.c
->> @@ -164,6 +164,7 @@ struct stm32_adc_trig_info {
->>   * @lock:		spinlock
->>   * @bufi:		data buffer index
->>   * @num_conv:		expected number of scan conversions
->> + * @exten:		external trigger config (enable/polarity)
->>   */
->>  struct stm32_adc {
->>  	struct stm32_adc_common	*common;
->> @@ -175,6 +176,7 @@ struct stm32_adc {
->>  	spinlock_t		lock;		/* interrupt lock */
->>  	int			bufi;
->>  	int			num_conv;
->> +	enum stm32_adc_exten	exten;
->>  };
->>
->>  /**
->> @@ -449,7 +451,9 @@ static int stm32_adc_set_trig(struct iio_dev *indio_dev,
->>
->>  		/* set trigger source, default to rising edge */
->>  		extsel = ret;
->> -		exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
->> +		if (adc->exten == STM32_EXTEN_SWTRIG)
->> +			adc->exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
->> +		exten = adc->exten;
->>  	}
->>
->>  	spin_lock_irqsave(&adc->lock, flags);
->> @@ -463,6 +467,39 @@ static int stm32_adc_set_trig(struct iio_dev *indio_dev,
->>  	return 0;
->>  }
->>
->> +static int stm32_adc_set_trig_pol(struct iio_dev *indio_dev,
->> +				  const struct iio_chan_spec *chan,
->> +				  unsigned int type)
->> +{
->> +	struct stm32_adc *adc = iio_priv(indio_dev);
->> +
->> +	adc->exten = type;
->> +
->> +	return 0;
->> +}
->> +
->> +static int stm32_adc_get_trig_pol(struct iio_dev *indio_dev,
->> +				  const struct iio_chan_spec *chan)
->> +{
->> +	struct stm32_adc *adc = iio_priv(indio_dev);
->> +
->> +	return adc->exten;
->> +}
->> +
->> +static const char * const stm32_trig_pol_items[] = {
->> +	[STM32_EXTEN_SWTRIG] = "swtrig",
->> +	[STM32_EXTEN_HWTRIG_RISING_EDGE] = "rising-edge",
->> +	[STM32_EXTEN_HWTRIG_FALLING_EDGE] = "falling-edge",
->> +	[STM32_EXTEN_HWTRIG_BOTH_EDGES] = "both-edges",
->> +};
->> +
->> +const struct iio_enum stm32_adc_trig_pol = {
->> +	.items = stm32_trig_pol_items,
->> +	.num_items = ARRAY_SIZE(stm32_trig_pol_items),
->> +	.get = stm32_adc_get_trig_pol,
->> +	.set = stm32_adc_set_trig_pol,
->> +};
->> +
->>  /**
->>   * stm32_adc_single_conv() - Performs a single conversion
->>   * @indio_dev: IIO device
->> @@ -745,6 +782,17 @@ static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
->>  	return IRQ_HANDLED;
->>  }
->>
->> +static const struct iio_chan_spec_ext_info stm32_adc_ext_info[] = {
->> +	IIO_ENUM("trigger_pol", IIO_SHARED_BY_ALL, &stm32_adc_trig_pol),
->> +	{
->> +		.name = "trigger_pol_available",
->> +		.shared = IIO_SHARED_BY_ALL,
->> +		.read = iio_enum_available_read,
->> +		.private = (uintptr_t)&stm32_adc_trig_pol,
->> +	},
->> +	{},
->> +};
->> +
->>  static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->>  				    struct iio_chan_spec *chan,
->>  				    const struct stm32_adc_chan_spec *channel,
->> @@ -760,6 +808,7 @@ static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
->>  	chan->scan_type.sign = 'u';
->>  	chan->scan_type.realbits = 12;
->>  	chan->scan_type.storagebits = 16;
->> +	chan->ext_info = stm32_adc_ext_info;
->>  }
->>
->>  static int stm32_adc_chan_of_init(struct iio_dev *indio_dev)
->>
->
+SGkgRGFuaWVsLA0KDQpPbiBUdWVzZGF5LCBKYW51YXJ5IDI0LCAyMDE3LCBEYW5pZWwgTGV6Y2Fu
+byB3cm90ZToNCj4gPiA+ID4gK2Vhcmx5X3BsYXRmb3JtX2luaXQoImVhcmx5dGltZXIiLCAmb3N0
+bV90aW1lcik7DQo+ID4gPiA+ICtzdWJzeXNfaW5pdGNhbGwob3N0bV9pbml0KTsgbW9kdWxlX2V4
+aXQob3N0bV9leGl0KTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArTU9EVUxFX0FVVEhPUigiQ2hyaXMg
+QnJhbmR0Iik7DQo+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlJlbmVzYXMgT1NUTSBUaW1l
+ciBEcml2ZXIiKTsNCj4gPiA+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsNCj4gPiA+DQo+
+ID4gPiBNYXliZSB5b3UgY2FuIHRyeSB3aXRoIGJ1aWx0aW5fcGxhdGZvcm0gPw0KPiA+DQo+ID4g
+R29vZCBpZGVhLiBCdXQsIG5vdyBJIGdldCBhICJTZWN0aW9uIG1pc21hdGNoIiBkdXJpbmcgbGlu
+ayB0aW1lIHNvDQo+ID4gSSdsbCBoYXZlIHRvIGZpZ3VyZSBvdXQgd2h5IHRoYXQgaXMuDQo+IA0K
+PiBNbWgsIEkgdGhpbmsgaXQgd291bGQgYmUgbW9yZSBjb25zaXN0ZW50IHRvIGNvbnZlcnQgdGhp
+cyB0bzoNCj4gDQo+IENMT0NLU09VUkNFX09GX0RFQ0xBUkUob3N0bSwgInJlbmVzYXMsb3N0bSIs
+IG9zdG1faW5pdCk7DQo+IA0KPiBUaGUgb25seSBwcm9ibGVtIGlzIHRvIGdldCB0aGUgc3RydWN0
+IGRldmljZSBhc3NvY2lhdGVkIHRvIHRoZSBvZl9ub2RlDQo+IHBhc3NlZCBhcyBwYXJhbWV0ZXIg
+dG8gb3N0bV9pbml0IGluIG9yZGVyIHRvIHVzZSB0aGUgZGV2bV8qIEFQSS4NCj4gDQo+IEkgdGhp
+bmsgb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSBzaG91bGQgcmV0dXJuIHRoZSBwbGF0Zm9ybV9kZXZp
+Y2UsIHRoZW4NCj4gcGRldi0+ZGV2LiBJZiB0aGF0IHdvcmtzIHRoZSBvdGhlciBkcml2ZXJzIHdp
+bGwgYmVuZWZpdCBmcm9tIHRoYXQgdG8NCj4gcGRldi0+cmVtb3ZlIGFsbA0KPiB0aGUgcm9sbGJh
+Y2sgY29kZSBldmVyeXdoZXJlLg0KDQoNClNvIEkgcmVhbGl6ZWQgdGhhdCBpbiBvcmRlciB0byB1
+c2UgYnVpbHRpbl9wbGF0Zm9ybSwgSSBjYW4ndCBoYXZlIGFueSBvZiB0aGUNCmZ1bmN0aW9ucyBp
+biBfX2luaXQgYmVjYXVzZSB0aGUgYnVpbGQgc3lzdGVtIGhhcyBubyBpZGVhIHRoYXQgSSBuZXZl
+ciBwbGFuDQpvbiByZW1vdmluZyBvciBwcm9iaW5nIGFnYWluIGFmdGVyIGJvb3QuIEJ1dCwgZXZl
+biBpZiBJIHRha2Ugb3V0IGFsbCB0aGUNCl9faW5pdCBmcm9tIG15IGNvZGUsIEknbSBzdGlsbCBj
+YWxsaW5nIGNsb2Nrc291cmNlX21taW9faW5pdCB3aGljaCBpcyBfX2luaXQNCnNvIEkgY2FuIG5l
+dmVyIGVzY2FwZSB0aGUgIlNlY3Rpb24gbWlzbWF0Y2giLg0KDQpUaGlzIGxlYXZlcyBtZSB3aXRo
+IDIgb3B0aW9uczoNCg0KMSkgUHVsbCB0aGUgY2xvY2tzb3VyY2VfbW1pbyBkcml2ZXIgY29kZSBp
+bnRvIG15IGRyaXZlciBhbmQgbGVhdmUgZXZlcnl0aGluZw0KICAgb3V0IG9mIF9faW5pdA0KMikg
+UmV3cml0ZSBhcyBhIERUIGRyaXZlciB1c2luZyBDTE9DS1NPVVJDRV9PRl9ERUNMQVJFIHdoaWNo
+IHB1dHMgbW9zdCBvZg0KICAgdGhlIGNvZGUgaW4gX19pbml0DQoNCk9mIGNvdXJzZSB0aGUgYmV0
+dGVyIChsb3dlciBzeXN0ZW0gbWVtb3J5KSBhbnN3ZXIgaXMgIzIuDQoNCkknbGwgdHJ5IHlvdXIg
+dHJpY2sgYWJvdXQgb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSBiZWNhdXNlIHdoaWxlIHRoZXJlIGFy
+ZQ0KZXF1aXZhbGVudCBPRiBmdW5jdGlvbnMgZm9yIG1hcHBpbmcgcmVzb3VyY2VzLCBJIGRvIGxp
+a2UgdGhlIGF1dG8tcm9sbGJhY2sNCmZlYXR1cmUgb2YgZGVtdg0KDQpUaGFuayB5b3UsDQpDaHJp
+cw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
