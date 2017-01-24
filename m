@@ -1,40 +1,42 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v5 2/3] MAINTAINERS: add zx2967 watchdog controller driver to ARM ZTE architecture
-Date: Tue, 24 Jan 2017 16:58:41 +0800
-Message-ID: <1485248322-24299-2-git-send-email-baoyou.xie@linaro.org>
-References: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [V3 1/3] document: dt: add binding for Hi3660 SoC
+Date: Tue, 24 Jan 2017 16:57:27 +0800
+Message-ID: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lulu.luxiaobo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, frong.fan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, oliver.fu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the zx2967 watchdog controller driver as maintained by ARM ZTE
-architecture maintainers, as they're parts of the core IP.
+Add binding for hisilicon Hi3660 SoC and HiKey960 Board.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- MAINTAINERS | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index edfdea3..275c434 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1990,11 +1990,13 @@ F:	drivers/clk/zte/
- F:	drivers/reset/reset-zx2967.c
- F:	drivers/soc/zte/
- F:	drivers/thermal/zx*
-+F:	drivers/watchdog/zx2967_wdt.c
- F:	Documentation/devicetree/bindings/arm/zte.txt
- F:	Documentation/devicetree/bindings/clock/zx296702-clk.txt
- F:	Documentation/devicetree/bindings/reset/zte,zx2967-reset.txt
- F:	Documentation/devicetree/bindings/soc/zte/
- F:	Documentation/devicetree/bindings/thermal/zx*
-+F:	Documentation/devicetree/bindings/watchdog/zte,zx2967-wdt.txt
- F:	include/dt-bindings/soc/zx*.h
+diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+index 7df79a7..6de2398 100644
+--- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
++++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
+@@ -8,6 +8,10 @@ Hi6220 SoC
+ Required root node properties:
+ 	- compatible = "hisilicon,hi6220";
  
- ARM/ZYNQ ARCHITECTURE
++Hi3660 SoC
++Required root node properties:
++	- compatible = "hisilicon,hi3660";
++
+ HiKey Board
+ Required root node properties:
+ 	- compatible = "hisilicon,hi6220-hikey", "hisilicon,hi6220";
 -- 
-2.7.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
