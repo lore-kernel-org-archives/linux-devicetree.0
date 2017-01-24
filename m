@@ -1,48 +1,80 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date: Tue, 24 Jan 2017 09:34:18 +0100
-Message-ID: <1485246858.5508.47.camel@pengutronix.de>
-References: <20170123142206.5390-1-jlu@pengutronix.de>
-         <20170123181836.GO10895@lunn.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v30 11/11] Documentation: dt: chosen properties for arm64 kdump
+Date: Tue, 24 Jan 2017 17:53:20 +0900
+Message-ID: <20170124085320.3973-1-takahiro.akashi@linaro.org>
+References: <20170124084638.3770-1-takahiro.akashi@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123181836.GO10895-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20170124084638.3770-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
 
-On Mo, 2017-01-23 at 19:18 +0100, Andrew Lunn wrote:
-> On Mon, Jan 23, 2017 at 03:22:06PM +0100, Jan Luebbe wrote:
-> > The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> > called DRSGMII.
-> > 
-> > This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> > from DT. The MVNETA then configures the SERDES protocol value
-> > accordingly.
->
-> So this sets the PHY to 2.5Gbps. What about the MAC? Currently,
-> mvneta_adjust_link() knows about SPEED_1000 and SPEED_100. Does it now
-> need to know about SPEED_2500? mvneta_ethtool_set_link_ksettings()?
+Add documentation for DT properties:
+	linux,usable-memory-range
+	linux,elfcorehdr
+used by arm64 kdump. Those decribe the usable memory range for crash dump
+kernel and the elfcorehdr's location within it, respectively.
 
-It works without any other changes. ;)
+Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: added "linux,crashkernel-base" and "-size" ]
+Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/chosen.txt | 37 ++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-Initially I looked at adding a SPEED_2500, but I wasn't sure which code
-would need to handle the new value. Would the path from the ethtool
-ioctl to the driver be enough (mvneta_ethtool_set_link_ksettings() as
-you said)?
-
-Regards,
-Jan
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 6ae9d82d4c37..8dc82431acc1 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -52,3 +52,40 @@ This property is set (currently only on PowerPC, and only needed on
+ book3e) by some versions of kexec-tools to tell the new kernel that it
+ is being booted by kexec, as the booting environment may differ (e.g.
+ a different secondary CPU release mechanism)
++
++linux,usable-memory-range
++-------------------------
++
++This property (arm64 only) holds a base address and size, describing a
++limited region in which memory may be considered available for use by
++the kernel. Memory outside of this range is not available for use.
++
++This property describes a limitation: memory within this range is only
++valid when also described through another mechanism that the kernel
++would otherwise use to determine available memory (e.g. memory nodes
++or the EFI memory map). Valid memory may be sparse within the range.
++e.g.
++
++/ {
++	chosen {
++		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
++	};
++};
++
++The main usage is for crash dump kernel to identify its own usable
++memory and exclude, at its boot time, any other memory areas that are
++part of the panicked kernel's memory.
++
++linux,elfcorehdr
++----------------
++
++This property (currently used only on arm64) holds the memory range,
++the address and the size, of the elf core header which mainly describes
++the panicked kernel's memory layout as PT_LOAD segments of elf format.
++e.g.
++
++/ {
++	chosen {
++		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
++	};
++};
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
