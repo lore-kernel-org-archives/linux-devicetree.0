@@ -1,152 +1,160 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Tue, 24 Jan 2017 19:35:40 +0530
-Message-ID: <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
- <587C88FE.2040900@ti.com> <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
- <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org> <20170119214258.GD7829@codeaurora.org>
- <58871F6D.1090206@ti.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [alsa-devel] [RFC][PATCH] ASoC: add simple-graph-card document
+Date: Tue, 24 Jan 2017 15:10:48 +0100
+Message-ID: <c4541388-904f-9886-7e8a-a609ed9feaa7@samsung.com>
+References: <87r33z4maj.wl%kuninori.morimoto.gx@renesas.com>
+ <CAL_Jsq+pDkfijyKV0ALzZUrH-NVzmLaNj6ivAEFO98NUOXGojw@mail.gmail.com>
+ <871svymrnt.wl%kuninori.morimoto.gx@renesas.com>
+ <CAL_JsqLOwQn_hz3B5gFL-zr-Pm_8PX+b-sAQhLwkioD7E-ODAw@mail.gmail.com>
+ <87wpdm1cyq.wl%kuninori.morimoto.gx@renesas.com>
+ <CGME20170123091136epcas2p15643b17d26e629545b3848b22e1afa68@epcas2p1.samsung.com>
+ <87tw8q1bct.wl%kuninori.morimoto.gx@renesas.com>
+ <6e3976e8-d26c-e39e-e886-4ab00ce79d01@samsung.com>
+ <87sho9fgju.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <58871F6D.1090206@ti.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <87sho9fgju.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux-DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 3:03 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
->
-> On Friday 20 January 2017 03:12 AM, Stephen Boyd wrote:
->> On 01/19, Vivek Gautam wrote:
->>>
->>> On 01/19/2017 06:10 AM, Stephen Boyd wrote:
->>>>>
->>>> Didn't we already move away from subnodes for lanes in an earlier
->>>> revision of these patches? I seem to recall we did that because
->>>> lanes are not devices and the whole "phy as a bus" concept not
->>>> making sense.
->>>
->>> Yea, we started out without having any sub-nodes and we
->>> argued that we don't require them since the qmp device is
->>> represented by the qmp node itself.
->>> The lanes otoh are representative of gen_phys and related properties.
->>>
->>> In the driver -
->>> "struct qmp_phy " represents the lanes and holds "struct phy",
->>> "struct qcom_qmp" represents the qmp block as a whole and holds
->>> "struct device"
->>> Does this make lanes qualify to be childs of qmp ?
+On 01/24/2017 01:30 AM, Kuninori Morimoto wrote:
+>>> +Simple-Graph-Card:
 >>
->> Hmm... maybe I was recalling the DSI phy binding. I think there
->> are lanes there too but we decided to just have one node.
+>> This binding is likely going to cover most of existing sound system
+>> configuration, at least it looks as it has a potential to be scalable
+>> enough.  So perhaps we could treat is as a more generic binding and
+>> could drop the "Simple" word now?  I'm not 100% sure it's a good idea,
+>> but maybe we could make it "Generic Sound Card DT Binding"?
+> (snip)
+>>> +Required properties:
+>>> +
+>>> +- compatible				: "asoc-simple-graph-card";
 >>
->>>
->>> "phy as a bus" (just trying to understand here) -
->>> let's say a usb phy controller has one HSIC phy port and one USB2 phy port.
->>> So, should this phy controller be a bus providing two ports (and so
->>> we will have
->>> couple of child nodes to the phy controller) ?
->>>
->>
->> Typically in DT a subnode or collection of subnodes means there's
->> some sort of bus involved. Usually each node corresponds to a
->> struct device, and the parent node corresponds to the bus or
->> controller for the logical bus.
->>
->> In this case (only PCIe though? not UFS or USB?) it seems like we
->> have multiple phys that share a common register space, but
->> otherwise they have their own register space and power
->> management. Would you have each PCIe controller point to a
->> different subnode for their associated phy? I'm trying to
->> understand the benefit of the subnodes if they aren't treated as
->> struct devices.
->
-> Yes, instead of having all the controller having a phandle to the same PHY and
-> then using other mechanisms to differentiate between the PHYs, each controller
-> can have a phandle to the exact port that it is connected to.
->
-> This also gives a better representation of the hardware and can avoid lot of
-> boilerplate code in the driver.
+>> "asoc" is Linux related, we shouldn't be putting this in the compatible string.
+>> Perhaps "generic-sound-card" ? Again, I'm sure if it is expected to have such
+>> a generic kind of DT binding.
+> 
+> This is OF-graph version of existing "simple-card"
+> (sound/soc/generic/simple-card.c).
+> As you know, ASoC sound card can have many features, but what this sound card
+> can do is just CPU-Codec connection and some small additional things.
+> You can use this card if you want to just connect CPU-Codec,
+> but if you want to use more advanced feature on your sound card,
+> then, you need to create your own sound card.
+> Of course we can expand simple card, but has some limitation.
+> 
+> For example, we have simple-scu-card.c which is for DPCM version of simple card.
+> As you can see, these are using almost same DT bindings, but using different
+> feature because normal sound card and DPCM sound card are totally different.
 
-Below is one binding that works for me.
---------------------
-               phy@34000 {
-                        compatible = "qcom,msm8996-qmp-pcie-phy";
-                        reg = <0x034000 0x488>;
-                        #clock-cells = <1>;
-                        #address-cells = <1>;
-                        #size-cells = <1>;
-                        ranges;
+Is the main difference between "normal" and DPCM card that in case of the
+former the data flow routes are static and the latter allows dynamic
+reconfiguration of sound data routes? AFAIU DPCM stands here for Dynamic
+PCM [1], rather than Differential Pulse Code Modulation.
 
-                        clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
-                                <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
-                                <&gcc GCC_PCIE_CLKREF_CLK>;
-                        clock-names = "aux", "cfg_ahb", "ref";
+It seems the graph based binding could cover above both cases.  Apologies
+if this has been explained before, but what are main reasons for introducing
+the graph based binding?
 
-                        vdda-phy-supply = <&pm8994_l28>;
-                        vdda-pll-supply = <&pm8994_l12>;
+Is the SCU part in "ASoC simple SCU Sound Card" derived from "(S)ample Rate
+(C)onverter (U)nit" ?
 
-                        resets = <&gcc GCC_PCIE_PHY_BCR>,
-                                <&gcc GCC_PCIE_PHY_COM_BCR>,
-                                <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
-                        reset-names = "phy", "common", "cfg";
+> Thus, unfortunately, using "generic" in compatible is a little bit over-kill.
+> So I and Mark had named it as "simple" card.
+> Thus I want to keep this "simple" on this OF-graph version driver too.
+[...]
+>> I wouldn't be making a separate case for single DAI. The 'ports' node can
+>> be omitted, port@0, port@1 nodes could be put under respective device nodes
+>> and in the 'sound' node we would have 'dais' property pointing to the CPU
+>> DAI port,  not the endpoint.  The endpoint is supposed to describe one of
+>> possible configurations of the port.  I think we want phandles to the 'port'
+>> nodes, not phandles to the 'endpoint' nodes in the 'sound' node.
+> 
+> Last 2 line was unfortunately not clear for me. do you mean
+> dais = <&cpu_port>; on card ?
+> This driver want to handle both single/multi DAI connection,
+> so, using same rule is more easy and simple.
+> If my understanding was correct, do you mean like below ?
 
-                        pciephy_p0: port@0 {
-                                reg = <0x035000 0x130>,
-                                        <0x035200 0x200>,
-                                        <0x035400 0x1dc>;
-                                #phy-cells = <0>;
+Yes, exactly.
 
-                                clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-                                clock-names = "pipe0";
-                                resets = <&gcc GCC_PCIE_0_PHY_BCR>;
-                                reset-names = "lane0";
-                        };
+> 	cpu: cpu {
+> 		...
+> 		cpu_port: port {
+> 			cpu_out: endpoint {
+> 				remote-endpoint = <&codec_in>;
+> 			};
+> 		};
+> 	};
+> 
+> 	codec: codec {
+> 		...
+> 		codec_port: port {
+> 			codec_in: endpoint {
+> 				remote-endpoint = <&cpu_out>;
+> 			};
+> 		};
+> 	};
+> 
+> 	card {
+> 		compatible = "asoc-simple-graph-card";
+> 
+> 		dais = <&cpu_port>;
+> 	};
+> 
+> If so, I want Multi DAI like this
+> 
+> 	cpu: cpu {
+> 		...
+> 		ports {
+> 			cpu0_port: port {
+> 				cpu0_out: endpoint {
+> 					remote-endpoint = <&codec0_in>;
+> 				};
+> 			};
+> 			cpu1_port: port {
+> 				cpu1_out: endpoint {
+> 					remote-endpoint = <&codec1_in>;
+> 				};
+> 			};
+> 		};
+> 	};
+> 
+> 	codec0: codec@0 {
+> 		...
+> 		codec0_port: port {
+> 			codec0_in: endpoint {
+> 				remote-endpoint = <&cpu0_out>;
+> 			};
+> 		};
+> 	};
+> 
+> 	codec1: codec@1 {
+> 		...
+> 		codec1_port: port {
+> 			codec1_in: endpoint {
+> 				remote-endpoint = <&cpu1_out>;
+> 			};
+> 		};
+> 	};
+> 
+> 	card {
+> 		compatible = "asoc-simple-graph-card";
+> 
+> 		dais = <&cpu0_port
+> 			&cpu1_port>;
+> 	};
 
-                      pciephy_p1: port@1 {
-                                reg = <0x036000 0x130>,
-                                        <0x036200 0x200>,
-                                        <0x036400 0x1dc>;
-                                #phy-cells = <0>;
+[1] https://kernel.org/doc/html/latest/sound/soc/dpcm.html
 
-                                clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
-                                clock-names = "pipe1";
-                                resets = <&gcc GCC_PCIE_1_PHY_BCR>;
-                                reset-names = "lane1";
-                        };
-
-                        pciephy_p2: port@2 {
-                                reg = <0x037000 0x130>,
-                                        <0x037200 0x200>,
-                                        <0x037400 0x1dc>;
-                                #phy-cells = <0>;
-
-                                clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
-                                clock-names = "pipe2";
-                                resets = <&gcc GCC_PCIE_2_PHY_BCR>;
-                                reset-names = "lane2";
-                        };
-                };
---------------------
-
-let me know if this looks okay.
-
-
-Regards
-Vivek
-
->
-> Thanks
-> Kishon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--
+Thanks,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
