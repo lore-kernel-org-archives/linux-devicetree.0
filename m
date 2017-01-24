@@ -1,38 +1,172 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 5/8] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
-Date: Tue, 24 Jan 2017 18:16:20 +0300
-Message-ID: <14EAE124-D504-4480-A6D4-EB7EFFC3C561@gmail.com>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com> <1485260203-14216-6-git-send-email-al.kochet@gmail.com> <3890508.0j97LNriXL@diego>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2, 6/6] dt-bindings: phy-mt65xx-usb: add support for new
+ version phy
+Date: Tue, 24 Jan 2017 16:19:50 +0100
+Message-ID: <3774cacd-84b8-acda-a01d-fbd93a2c9da7@gmail.com>
+References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3890508.0j97LNriXL@diego>
+In-Reply-To: <1484900321-26933-6-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Chunfeng,
 
-> 24 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 18:02, Heiko St=C3=BCbner =
-<heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0):
->=20
-> Please don't add Reviewed-by tags without explicit mention of them by=20=
+On 01/20/2017 09:18 AM, Chunfeng Yun wrote:
+> add a new compatible string for "mt2712", and move reference clock
+> into each port node;
+>
+> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   91 +++++++++++++++++---
+>  1 file changed, 77 insertions(+), 14 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> index 33a2b1e..1d06604 100644
+> --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> @@ -6,21 +6,27 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
+>  Required properties (controller (parent) node):
+>   - compatible	: should be one of
+>  		  "mediatek,mt2701-u3phy"
+> +		  "mediatek,mt2712-u3phy"
+>  		  "mediatek,mt8173-u3phy"
+> - - reg		: offset and length of register for phy, exclude port's
+> -		  register.
+> - - clocks	: a list of phandle + clock-specifier pairs, one for each
+> -		  entry in clock-names
+> - - clock-names	: must contain
+> -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
+>
+>  Required nodes	: a sub-node is required for each port the controller
+>  		  provides. Address range information including the usual
+>  		  'reg' property is used inside these nodes to describe
+>  		  the controller's topology.
+>
+> +Optional properties (controller (parent) node):
+> + - reg		: offset and length of register shared by multiple ports,
+> +		  exclude port's private register. It is needed on mt2701
+> +		  and mt8173, but not on mt2712.
+> +
+>  Required properties (port (child) node):
+>  - reg		: address and length of the register set for the port.
+> +- clocks	: a list of phandle + clock-specifier pairs, one for each
+> +		  entry in clock-names
+> +- clock-names	: must contain
+> +		  "ref_clk": 48M reference clock for HighSpeed analog phy; and
+> +			26M reference clock for SuperSpeed analog phy, sometimes is
+> +			24M, 25M or 27M, depended on platform.
+>  - #phy-cells	: should be 1 (See second example)
+>  		  cell after port phandle is phy type from:
+>  			- PHY_TYPE_USB2
 
-> reviewers. (Also it's spelled wrong).
->=20
-> I haven't looked that deeply into the driver itself and the changes =
-made to=20
-> feel comfortable with a "Reviewed-by".
+The old bindings will need to be supported by the driver, they have to 
+stay here with a comment that they are deprecated.
 
-Than I posted another linux code I was asked to add such tags (and =
-others)
-to add credits to people.
+Regards,
+Matthias
 
-Sorry for that.
-
-v6? or feel free to drop any tags during merge.
-
+> @@ -31,21 +37,31 @@ Example:
+>  u3phy: usb-phy@11290000 {
+>  	compatible = "mediatek,mt8173-u3phy";
+>  	reg = <0 0x11290000 0 0x800>;
+> -	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> -	clock-names = "u3phya_ref";
+>  	#address-cells = <2>;
+>  	#size-cells = <2>;
+>  	ranges;
+>  	status = "okay";
+>
+> -	phy_port0: port@11290800 {
+> -		reg = <0 0x11290800 0 0x800>;
+> +	u2port0: port@11290800 {
+> +		reg = <0 0x11290800 0 0x100>;
+> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> +		clock-names = "ref_clk";
+>  		#phy-cells = <1>;
+>  		status = "okay";
+>  	};
+>
+> -	phy_port1: port@11291000 {
+> -		reg = <0 0x11291000 0 0x800>;
+> +	u3port0: port@11290900 {
+> +		reg = <0 0x11290800 0 0x700>;
+> +		clocks = <&clk26m>;
+> +		clock-names = "ref_clk";
+> +		#phy-cells = <1>;
+> +		status = "okay";
+> +	};
+> +
+> +	u2port1: port@11291000 {
+> +		reg = <0 0x11291000 0 0x100>;
+> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> +		clock-names = "ref_clk";
+>  		#phy-cells = <1>;
+>  		status = "okay";
+>  	};
+> @@ -64,7 +80,54 @@ Example:
+>
+>  usb30: usb@11270000 {
+>  	...
+> -	phys = <&phy_port0 PHY_TYPE_USB3>;
+> -	phy-names = "usb3-0";
+> +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+> +	phy-names = "usb2-0", "usb3-0";
+>  	...
+>  };
+> +
+> +
+> +Layout differences of banks between mt8173/mt2701 and mt2712
+> +-------------------------------------------------------------
+> +mt8173 and mt2701:
+> +port        offset    bank
+> +shared      0x0000    SPLLC
+> +            0x0100    FMREG
+> +u2 port0    0x0800    U2PHY_COM
+> +u3 port0    0x0900    U3PHYD
+> +            0x0a00    U3PHYD_BANK2
+> +            0x0b00    U3PHYA
+> +            0x0c00    U3PHYA_DA
+> +u2 port1    0x1000    U2PHY_COM
+> +u3 port1    0x1100    U3PHYD
+> +            0x1200    U3PHYD_BANK2
+> +            0x1300    U3PHYA
+> +            0x1400    U3PHYA_DA
+> +u2 port2    0x1800    U2PHY_COM
+> +            ...
+> +
+> +mt2712:
+> +port        offset    bank
+> +u2 port0    0x0000    MISC
+> +            0x0100    FMREG
+> +            0x0300    U2PHY_COM
+> +u3 port0    0x0700    SPLLC
+> +            0x0800    CHIP
+> +            0x0900    U3PHYD
+> +            0x0a00    U3PHYD_BANK2
+> +            0x0b00    U3PHYA
+> +            0x0c00    U3PHYA_DA
+> +u2 port1    0x1000    MISC
+> +            0x1100    FMREG
+> +            0x1300    U2PHY_COM
+> +u3 port1    0x1700    SPLLC
+> +            0x1800    CHIP
+> +            0x1900    U3PHYD
+> +            0x1a00    U3PHYD_BANK2
+> +            0x1b00    U3PHYA
+> +            0x1c00    U3PHYA_DA
+> +u2 port2    0x2000    MISC
+> +            ...
+> +
+> +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
+> +mt8173/mt2701 are put back into each port; a new bank MISC for
+> +u2 ports and CHIP for u3 ports are added on mt2712.
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
