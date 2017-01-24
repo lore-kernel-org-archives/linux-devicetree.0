@@ -1,110 +1,56 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: [RFC 3/4] irqchip, gicv3-its: Introduce ACPI generic quirk framework
-Date: Tue, 24 Jan 2017 13:50:12 +0000
-Message-ID: <58875B94.80100@huawei.com>
-References: <5886266C.3070506@huawei.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+ hisilicon 161010801 erratum
+Date: Tue, 24 Jan 2017 13:52:24 +0000
+Message-ID: <20170124135224.GB7572@leverpostej>
+References: <588625E3.9040703@huawei.com>
+ <588759E0.1010804@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5886266C.3070506@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <588759E0.1010804@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, will.deacon@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john.garry@huawei.com, guohanjun@huawei.com
+To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Cc: marc.zyngier@arm.com, will.deacon@arm.com, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, john.garry@huawei.com, guohanjun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-The current quirk mechanism is based on the IIDR register.
-This introduces a ACPI MADT OEM information based erratum
-support for platforms on which the IIDR registers are not
-properly populated.
+Hi,
 
-Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
----
- drivers/irqchip/irq-gic-v3-its.c | 62 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+I see this wasn't Cc'd to LAKML, unlike the cover letter, and patch 3
+(which isn't threaded against the cover letter).
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 0a326f6..9fa12b7 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -1858,6 +1858,66 @@ static int __init its_of_probe(struct device_node *node)
+Please use a consistent Cc list, with patches in-reply to the cover
+letter.
 
- #ifdef CONFIG_ACPI
+On Tue, Jan 24, 2017 at 01:42:56PM +0000, Shameerali Kolothum Thodi wrote:
+> This erratum describes the limitation of certain HiSilicon platforms
+> to support the SMMU mappings for MSI transactions and on those platforms
+> the MSI transactions has to be bypassed by SMMU. The IIDR register of the
+> GICv3 ITS on these platforms are not properly populated to differentiate
+> the hardware, hence describe it in device tree.
+> 
+> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
+> ---
+>  .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt         | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> index 4c29cda..84af301 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+> @@ -75,6 +75,12 @@ These nodes must have the following properties:
+>  - reg: Specifies the base physical address and size of the ITS
+>    registers.
+> 
+> +Optional
+> +- hisilicon,erratum-161010801 : A boolean property. Indicates the presence of
+> +  erratum 161010801, which says that these platforms doesn't support  SMMU
+> +  mapping for MSI transactions and those transactions has to be bypassed
+> +  by SMMU.
 
-+struct acpi_madt_its_quirks {
-+	char oem_id[ACPI_OEM_ID_SIZE+1];
-+	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE+1];
-+	u32  oem_revision;
-+	u32  its_id;
-+	const char *erratum;
-+};
-+
-+/*Upadate as per the board OEM ID and TABLE ID*/
-+struct acpi_madt_its_quirks acpi_its_quirks[] __initdata = {
-+
-+};
-+
-+static void acpi_its_enable_erratum(const char  *erratum)
-+{
-+	const struct gic_quirk *quirks = its_quirks;
-+	int i = 0;
-+
-+	for (; quirks->desc; quirks++) {
-+		if ((quirks->erratum) && (!strcmp(quirks->erratum, erratum)))
-+			erratum_workarounds[i++] = quirks;
-+	}
-+}
-+
-+static void __init acpi_its_oem_check(char *oem_id, char *oem_table_id,
-+				u32 oem_revision)
-+{
-+	struct acpi_madt_its_quirks *quirks = acpi_its_quirks;
-+
-+	for (; quirks->erratum; quirks++) {
-+		if (!memcmp(quirks->oem_id, oem_id, ACPI_OEM_ID_SIZE) &&
-+		    !memcmp(quirks->oem_table_id, oem_table_id,
-+		    ACPI_OEM_TABLE_ID_SIZE) &&
-+		    quirks->oem_revision == oem_revision) {
-+			acpi_its_enable_erratum(quirks->erratum);
-+		}
-+	}
-+}
-+
-+static int __init acpi_parse_madt(struct acpi_table_header *madt_table)
-+{
-+	struct acpi_table_madt *table;
-+
-+	table = (struct acpi_table_madt *)madt_table;
-+	acpi_its_oem_check(table->header.oem_id,
-+		table->header.oem_table_id, table->header.oem_revision);
-+
-+	return 0;
-+}
-+
-+void __init its_acpi_quirks_enable(u32  its_id)
-+{
-+	struct acpi_madt_its_quirks *quirks = acpi_its_quirks;
-+
-+	for (; quirks->erratum; quirks++) {
-+		if (quirks->its_id == its_id)
-+			acpi_table_parse(ACPI_SIG_MADT, acpi_parse_madt);
-+	}
-+}
-+
- #define ACPI_GICV3_ITS_MEM_SIZE (SZ_128K)
+What exactly is meant by "doesn't support SMMU mapping" here? What
+precisely is the problem in HW?
 
- static int __init gic_acpi_parse_madt_its(struct acpi_subtable_header *header,
-@@ -1888,6 +1948,8 @@ static int __init gic_acpi_parse_madt_its(struct acpi_subtable_header *header,
- 		goto dom_err;
- 	}
-
-+	its_acpi_quirks_enable(its_entry->translation_id);
-+
- 	err = its_probe_one(&res, dom_handle, NUMA_NO_NODE);
- 	if (!err)
- 		return 0;
--- 
-1.9.1
-
-
-.
+Thanks,
+Mark.
