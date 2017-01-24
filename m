@@ -1,65 +1,110 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Tue, 24 Jan 2017 14:48:09 +0100
-Message-ID: <20170124134809.23315-1-richard.genoud@gmail.com>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: Felipe Balbi <balbi@kernel.org>, Huang Rui <ray.huang@amd.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org, Linux USB Mailing List <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Richard Genoud <richard.genoud@gmail.com>, stable@vger.kernel.org, #@vger.kernel.org, 4.4+@vger.kernel.org
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: [RFC 3/4] irqchip, gicv3-its: Introduce ACPI generic quirk framework
+Date: Tue, 24 Jan 2017 13:50:12 +0000
+Message-ID: <58875B94.80100@huawei.com>
+References: <5886266C.3070506@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5886266C.3070506@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, will.deacon@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, john.garry@huawei.com, guohanjun@huawei.com
 List-Id: devicetree@vger.kernel.org
 
-Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
-the USB ports on odroid-XU4 don't work anymore.
+The current quirk mechanism is based on the IIDR register.
+This introduces a ACPI MADT OEM information based erratum
+support for platforms on which the IIDR registers are not
+properly populated.
 
-Inserting an usb key (USB2.0) on the USB3.0 port result in:
-[   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
-[   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
-[   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
-[   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
-[   74.606276] usb 3-1: USB disconnect, device number 2
-[   74.613565] usb 4-1: USB disconnect, device number 2
-[   74.621208] usb usb3-port1: couldn't allocate usb_device
-NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
-NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
-
-If the lines:
-	if (dwc->revision > DWC3_REVISION_194A)
-		reg |= DWC3_GUSB3PIPECTL_SUSPHY;
-are commented out, the USB3.0 start working.
-
-For a full analyse: https://lkml.org/lkml/2017/1/18/678
-
-Felipe suggested that suspend should be disabled temporarily while
-what's wrong with DCW3 is figured out.
-
-Tested on Odroid XU4
-
-Suggested-by: Felipe Balbi <felipe.balbi@linux.intel.com>
-Tested-by: Richard Genoud <richard.genoud@gmail.com>
-Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
-Cc: stable@vger.kernel.org # 4.4+
-Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
+Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
 ---
- arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 62 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-index 2faf88627a48..f62dbd9b5ad3 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-@@ -43,6 +43,15 @@
- 	status = "okay";
- };
- 
-+&usbdrd_dwc3_0 {
-+	/*
-+	 * without that, usb devices are not recognized when
-+	 * they are plugged.
-+	 * cf: https://lkml.org/lkml/2017/1/18/678
-+	 */
-+	snps,dis_u3_susphy_quirk;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 0a326f6..9fa12b7 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -1858,6 +1858,66 @@ static int __init its_of_probe(struct device_node *node)
+
+ #ifdef CONFIG_ACPI
+
++struct acpi_madt_its_quirks {
++	char oem_id[ACPI_OEM_ID_SIZE+1];
++	char oem_table_id[ACPI_OEM_TABLE_ID_SIZE+1];
++	u32  oem_revision;
++	u32  its_id;
++	const char *erratum;
 +};
 +
- &usbdrd_dwc3_1 {
- 	dr_mode = "host";
- };
++/*Upadate as per the board OEM ID and TABLE ID*/
++struct acpi_madt_its_quirks acpi_its_quirks[] __initdata = {
++
++};
++
++static void acpi_its_enable_erratum(const char  *erratum)
++{
++	const struct gic_quirk *quirks = its_quirks;
++	int i = 0;
++
++	for (; quirks->desc; quirks++) {
++		if ((quirks->erratum) && (!strcmp(quirks->erratum, erratum)))
++			erratum_workarounds[i++] = quirks;
++	}
++}
++
++static void __init acpi_its_oem_check(char *oem_id, char *oem_table_id,
++				u32 oem_revision)
++{
++	struct acpi_madt_its_quirks *quirks = acpi_its_quirks;
++
++	for (; quirks->erratum; quirks++) {
++		if (!memcmp(quirks->oem_id, oem_id, ACPI_OEM_ID_SIZE) &&
++		    !memcmp(quirks->oem_table_id, oem_table_id,
++		    ACPI_OEM_TABLE_ID_SIZE) &&
++		    quirks->oem_revision == oem_revision) {
++			acpi_its_enable_erratum(quirks->erratum);
++		}
++	}
++}
++
++static int __init acpi_parse_madt(struct acpi_table_header *madt_table)
++{
++	struct acpi_table_madt *table;
++
++	table = (struct acpi_table_madt *)madt_table;
++	acpi_its_oem_check(table->header.oem_id,
++		table->header.oem_table_id, table->header.oem_revision);
++
++	return 0;
++}
++
++void __init its_acpi_quirks_enable(u32  its_id)
++{
++	struct acpi_madt_its_quirks *quirks = acpi_its_quirks;
++
++	for (; quirks->erratum; quirks++) {
++		if (quirks->its_id == its_id)
++			acpi_table_parse(ACPI_SIG_MADT, acpi_parse_madt);
++	}
++}
++
+ #define ACPI_GICV3_ITS_MEM_SIZE (SZ_128K)
+
+ static int __init gic_acpi_parse_madt_its(struct acpi_subtable_header *header,
+@@ -1888,6 +1948,8 @@ static int __init gic_acpi_parse_madt_its(struct acpi_subtable_header *header,
+ 		goto dom_err;
+ 	}
+
++	its_acpi_quirks_enable(its_entry->translation_id);
++
+ 	err = its_probe_one(&res, dom_handle, NUMA_NO_NODE);
+ 	if (!err)
+ 		return 0;
+-- 
+1.9.1
+
+
+.
