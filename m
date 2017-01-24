@@ -1,87 +1,67 @@
-From: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [of/unittest] 815d74b35e:  BUG: unable to handle kernel NULL
- pointer dereference at 00000012
-Date: Tue, 24 Jan 2017 23:21:07 +0900
-Message-ID: <20170124142107.GA628@tigerII.localdomain>
-References: <5887386c.KVVQelScITHnzTIS%fengguang.wu@intel.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: name the mtd device with an optional label
+ property
+Date: Tue, 24 Jan 2017 15:27:04 +0100
+Message-ID: <20170124152704.03598ae5@bbrezillon>
+References: <1484573225-19095-1-git-send-email-clg@kaod.org>
+        <1484573225-19095-2-git-send-email-clg@kaod.org>
+        <20170124151353.5bbffae0@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5887386c.KVVQelScITHnzTIS%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170124151353.5bbffae0@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, 24 Jan 2017 15:13:53 +0100
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Cc Steven
+> >  	if (mtd->dev.parent) {
+> >  		if (!mtd->owner && mtd->dev.parent->driver)
+> >  			mtd->owner = mtd->dev.parent->driver->owner;  
+> 
+> --->8---  
+> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> index 13f8052b9ff9..a12b68f941e3 100644
+> --- a/include/linux/mtd/mtd.h
+> +++ b/include/linux/mtd/mtd.h
+> @@ -385,6 +385,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
+>                                    struct device_node *np)
+>  {
+>         mtd->dev.of_node = np;
+> +
+> +       of_property_read_string(np, "label", mtd->name);
+>  }
+>  
+>  static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
 
-On (01/24/17 19:20), kernel test robot wrote:
->     of/unittest: fix infinite loop in of_unittest_destroy_tracked_overlays()
->
->     of_overlay_destroy() can return `-ENODEV' error code once it
->     failed to find the requested overlay in `ov_idr'. However,
->     of_unittest_destroy_tracked_overlays() does not handle this
->     error code correctly and continues to call of_overlay_destroy()
->     on the 'missing' overlay over and over again. This results in
->     a printk flood
->
->     [..]
->     [   33.497583] of_overlay_destroy: Could not find overlay #6
->     [   33.497583] of_overlay_destroy: Could not find overlay #6
->     [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
->     [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
->     [   33.497586] of_overlay_destroy: Could not find overlay #6
->     [   33.497586] of_overlay_destroy: Could not find overlay #6
->     [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
->     [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
->     [..]
+Sorry, I forgot to compile test this change. Here is a valid version:
 
-hm, frankly... I see no connection.
-// I even checked the date of the mail, because the commit is from March 2016.
-
-> [   14.130887] sock: process `trinity-main' is using obsolete setsockopt SO_BSDCOMPAT
-> [   18.803451] BUG: unable to handle kernel NULL pointer dereference at 00000012
-> [   18.805819] IP: [<c9aa6893>] perf_prepare_sample+0x82/0x2a7
-> [   18.807694] *pde = 00000000 
-> [   18.809017] Oops: 0000 [#1] DEBUG_PAGEALLOC 
-> [   18.810162] Modules linked in:
-> [   18.811069] CPU: 0 PID: 12140 Comm: trinity-main Not tainted 4.5.0-rc1-00010-g815d74b #1
-> [   18.812906] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.9.3-20161025_171302-gandalf 04/01/2014
-> [   18.815004] task: d013ca00 ti: d0614000 task.ti: d0614000
-> [   18.816107] EIP: 0060:[<c9aa6893>] EFLAGS: 00010206 CPU: 0
-> [   18.817247] EIP is at perf_prepare_sample+0x82/0x2a7
-> [   18.818305] EAX: 00000012 EBX: d0615d24 ECX: 00000008 EDX: 00000001
-> [   18.819499] ESI: d0615e00 EDI: d06184b0 EBP: d0615d08 ESP: d0615ce4
-> [   18.820713]  DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 0068
-> [   18.821827] CR0: 80050033 CR2: 00000012 CR3: 1068d000 CR4: 00040610
-> [   18.823044] DR0: c0100220 DR1: 080ce000 DR2: 00000000 DR3: 00000000
-> [   18.824240] DR6: ffff0ff0 DR7: 00010602
-> [   18.825162] Stack:
-> [   18.825885]  00000000 00000000 c9aa6ab8 00000000 00000000 000021ea d06184b0 d0615e00
-> [   18.828238]  d0615fb4 d0615d50 c9aa6af3 d0615fb4 00000002 00000000 00000000 c9aa6ab8
-> [   18.830578]  00000009 00300002 d013ce78 d0615d3c c9a2888f d013ce78 d0615d48 c9a07cf5
-> [   18.832911] Call Trace:
-> [   18.833732]  [<c9aa6ab8>] ? perf_prepare_sample+0x2a7/0x2a7
-> [   18.834865]  [<c9aa6af3>] perf_event_output+0x3b/0x89
-> [   18.835929]  [<c9aa6ab8>] ? perf_prepare_sample+0x2a7/0x2a7
-> [   18.837114]  [<c9a2888f>] ? kvm_sched_clock_read+0x9/0x18
-> [   18.838211]  [<c9a07cf5>] ? sched_clock+0x9/0xd
-> [   18.839217]  [<c9aa6ca6>] __perf_event_overflow+0x165/0x1d2
-> [   18.840381]  [<c9aa742f>] perf_swevent_overflow+0x46/0x60
-> [   18.841481]  [<c9aa750b>] perf_swevent_event+0xc2/0xcc
-> [   18.842554]  [<c9aa7ab1>] ___perf_sw_event+0x24b/0x25b
-> [   18.843678]  [<c9a07cf5>] ? sched_clock+0x9/0xd
-> [   18.844687]  [<c9a28871>] ? kvm_clock_read+0x14/0x1d
-> [   18.845744]  [<c9a2888f>] ? kvm_sched_clock_read+0x9/0x18
-
-
-this doesn't look like 'of/unittest' related problem to me.
-a NULL deref in perf_prepare_sample(). hm.
-
-	-ss
+--->8---
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 13f8052b9ff9..581057f8d9a5 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -24,6 +24,7 @@
+ #include <linux/uio.h>
+ #include <linux/notifier.h>
+ #include <linux/device.h>
++#include <linux/of.h>
+ 
+ #include <mtd/mtd-abi.h>
+ 
+@@ -385,6 +386,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
+                                   struct device_node *np)
+ {
+        mtd->dev.of_node = np;
++
++       of_property_read_string(np, "label", &mtd->name);
+ }
+ 
+ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
