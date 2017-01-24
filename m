@@ -1,39 +1,27 @@
-From: Alexander Kochetkov <al.kochet@gmail.com>
-Subject: [PATCH v5 2/8] ARM: dts: rockchip: update compatible property for rk322x timer
-Date: Tue, 24 Jan 2017 15:16:37 +0300
-Message-ID: <1485260203-14216-3-git-send-email-al.kochet@gmail.com>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] ARM: dts: add ostm support for r7s72100
+Date: Tue, 24 Jan 2017 13:27:27 +0100
+Message-ID: <20170124122726.GB20529@verge.net.au>
+References: <20170123135520.28834-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>, Alexander Kochetkov <al.kochet@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170123135520.28834-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Property set to '"rockchip,rk3228-timer", "rockchip,rk3288-timer"'
-to match devicetree bindings.
+On Mon, Jan 23, 2017 at 08:55:17AM -0500, Chris Brandt wrote:
+> This patch set enables the use of the newly created driver
+> renesas-ostm.c for the r7s72100 SoC.
 
-Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-Suggested-by: Heiko Stübner <heiko@sntech.de>
----
- arch/arm/boot/dts/rk322x.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks Chris,
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 9d3aee5..aaeacf8 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -325,7 +325,7 @@
- 	};
- 
- 	timer: timer@110c0000 {
--		compatible = "rockchip,rk3288-timer";
-+		compatible = "rockchip,rk3228-timer", "rockchip,rk3288-timer";
- 		reg = <0x110c0000 0x20>;
- 		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 		clocks = <&xin24m>, <&cru PCLK_TIMER>;
--- 
-1.7.9.5
+I have queued this series up for v4.11.
+It should appear in net-next in linux-next day or so.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
