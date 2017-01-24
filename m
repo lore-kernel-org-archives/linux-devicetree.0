@@ -1,171 +1,147 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
-Date: Tue, 24 Jan 2017 15:32:22 +0100
-Message-ID: <20170124143222.GA2021@mai>
-References: <20170123135423.28780-1-chris.brandt@renesas.com>
- <20170123135423.28780-3-chris.brandt@renesas.com>
- <20170123175210.GH2166@mai>
- <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 2/7] iio: adc: stm32: Enable use of stm32 timer triggers
+Date: Tue, 24 Jan 2017 15:37:03 +0100
+Message-ID: <6e42a729-3513-5586-13dc-10cf5e90f6a3@st.com>
+References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
+ <1484832854-6314-3-git-send-email-fabrice.gasnier@st.com>
+ <9826347e-d8e4-2386-cc7a-dd2c4909494b@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB11657AE9653A4B66B1EA02718A750-ESzmfEwOt/xoAsOJh7vwSm0DtJ1/0DrXvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9826347e-d8e4-2386-cc7a-dd2c4909494b@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 04:45:47AM +0000, Chris Brandt wrote:
+On 01/22/2017 01:55 PM, Jonathan Cameron wrote:
+> On 19/01/17 13:34, Fabrice Gasnier wrote:
+>> STM32 ADC has external timer trigger sources. Use stm32 timer triggers
+>> API (e.g. is_stm32_timer_trigger()) with local ADC lookup table to
+>> validate a trigger can be used.
+>> This also provides correct trigger selection value (e.g. extsel).
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Looks good. Observations inline.
+>> ---
+>>  drivers/iio/adc/Kconfig     |  2 ++
+>>  drivers/iio/adc/stm32-adc.c | 60 +++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 62 insertions(+)
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 33341f4..9a7b090 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -447,6 +447,8 @@ config STM32_ADC_CORE
+>>  	depends on OF
+>>  	depends on REGULATOR
+>>  	select IIO_BUFFER
+>> +	select MFD_STM32_TIMERS
+>> +	select IIO_STM32_TIMER_TRIGGER
+>>  	select IIO_TRIGGERED_BUFFER
+>>  	help
+>>  	  Select this option to enable the core driver for STMicroelectronics
+>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+>> index 8d0b74b..30708bc 100644
+>> --- a/drivers/iio/adc/stm32-adc.c
+>> +++ b/drivers/iio/adc/stm32-adc.c
+>> @@ -23,6 +23,7 @@
+>>  #include <linux/delay.h>
+>>  #include <linux/iio/iio.h>
+>>  #include <linux/iio/buffer.h>
+>> +#include <linux/iio/timer/stm32-timer-trigger.h>
+>>  #include <linux/iio/trigger.h>
+>>  #include <linux/iio/trigger_consumer.h>
+>>  #include <linux/iio/triggered_buffer.h>
+>> @@ -122,6 +123,35 @@ enum stm32_adc_exten {
+>>  	STM32_EXTEN_HWTRIG_BOTH_EDGES,
+>>  };
+>>
+>> +/* extsel - trigger mux selection value */
+>> +enum stm32_adc_extsel {
+>> +	STM32_EXT0,
+>> +	STM32_EXT1,
+>> +	STM32_EXT2,
+>> +	STM32_EXT3,
+>> +	STM32_EXT4,
+>> +	STM32_EXT5,
+>> +	STM32_EXT6,
+>> +	STM32_EXT7,
+>> +	STM32_EXT8,
+>> +	STM32_EXT9,
+>> +	STM32_EXT10,
+>> +	STM32_EXT11,
+>> +	STM32_EXT12,
+>> +	STM32_EXT13,
+>> +	STM32_EXT14,
+>> +	STM32_EXT15,
+>> +};
+>> +
+>> +/**
+>> + * struct stm32_adc_trig_info - ADC trigger info
+>> + * @name:		name of the trigger, corresponding to its source
+>> + * @extsel:		trigger selection
+>> + */
+>> +struct stm32_adc_trig_info {
+>> +	const char *name;
+>> +	enum stm32_adc_extsel extsel;
+>> +};
+>>
+>>  /**
+>>   * struct stm32_adc - private data of each ADC IIO instance
+>> @@ -218,6 +248,26 @@ struct stm32_adc_regs {
+>>  	{ STM32F4_ADC_SQR1, STM32F4_SQ16_MASK, STM32F4_SQ16_SHIFT },
+>>  };
+>>
+>> +/* STM32F4 external trigger sources for all instances */
+>> +static struct stm32_adc_trig_info stm32f4_adc_timer_trigs[] = {
+>> +	{ TIM1_CH1, STM32_EXT0 },
+>> +	{ TIM1_CH2, STM32_EXT1 },
+>> +	{ TIM1_CH3, STM32_EXT2 },
+>> +	{ TIM2_CH2, STM32_EXT3 },
+>> +	{ TIM2_CH3, STM32_EXT4 },
+>> +	{ TIM2_CH4, STM32_EXT5 },
+>> +	{ TIM2_TRGO, STM32_EXT6 },
+>> +	{ TIM3_CH1, STM32_EXT7 },
+>> +	{ TIM3_TRGO, STM32_EXT8 },
+>> +	{ TIM4_CH4, STM32_EXT9 },
+>> +	{ TIM5_CH1, STM32_EXT10 },
+>> +	{ TIM5_CH2, STM32_EXT11 },
+>> +	{ TIM5_CH3, STM32_EXT12 },
+>> +	{ TIM8_CH1, STM32_EXT13 },
+>> +	{ TIM8_TRGO, STM32_EXT14 },
+>> +	{}, /* sentinel */
+>> +};
+>> +
+>>  /**
+>>   * STM32 ADC registers access routines
+>>   * @adc: stm32 adc instance
+>> @@ -362,6 +412,16 @@ static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
+>>  static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
+>>  				     struct iio_trigger *trig)
+>>  {
+>> +	int i;
+> Ah. This makes more sense than patch 1 on it's own did.
+>> +
+>> +	/* lookup triggers registered by stm32 timer trigger driver */
+>> +	for (i = 0; stm32f4_adc_timer_trigs[i].name; i++) {
+>> +		if (is_stm32_timer_trigger(trig) &&
+>> +		    !strcmp(stm32f4_adc_timer_trigs[i].name, trig->name)) {
+>> +			return stm32f4_adc_timer_trigs[i].extsel;
+> Good. The combination of the first check and the name match should make this safe
+> against those triggers that can be assigned arbitrary names.
 
-Hi Chris,
+Do you wish I add a comment about it ?
 
-[ ... ]
+Best Regards,
+Fabrice
 
-> > > +	bool "Renesas OSTM timer driver" if COMPILE_TEST
-> > > +	depends on GENERIC_CLOCKEVENTS
-> > > +	select CLKSRC_MMIO
-> > > +	default SYS_SUPPORTS_RENESAS_OSTM
-> > 
-> > - default SYS_SUPPORTS_RENESAS_OSTM
-> > 
-> > Except I missing something, I don' the point of having this intermediate
-> > config option.
-> 
-> I was basically following what all the other clocksource drivers do.
-> Selecting an ARCH will then set SYS_SUPPORTS_xxTIMERxx which will then
-> force xxTIMERxx=y.
-
-Yeah, little by little these options are clean up to be more consistent across
-the different drivers. The sh/mtu drivers are different from the other drivers.
-
-The idea with the config option is to let the platform to select the drivers,
-and optionnaly allows the compilation on other architecture to increase the
-compilation test coverage. That is the reason of COMPILE_TEST.
-
-> But, if "COMPILE_TEST" is set, you can choose what clocksource timers
-> you want to build in.
-> 
-> Is your suggestion to do away with the COMPILE_TEST ability and
-> just force RENESAS_OSTM=y if ARCH_R7S72100 is selected?
-
-Just like that:
-
-config RENESAS_OSTM
-	bool "Renesas OSTM timer driver" if COMPILE_TEST
-	depends on GENERIC_CLOCKEVENTS
-	select CLKSRC_MMIO
-	help
-	  Enables the support for the Renesas OSTM
-
-And then from arch/arm/mach-shmobile/Kconfig:
-
-	select RENESAS_OSTM
-
-
-> > > +#include <linux/module.h>
-> > 
-> > Please remove everything module related here and below. This driver is not
-> > supposed to be removed and it is compiled in with the Kconfig option.
-> 
-> Good point. I will remove.
-> 
-> I guess if you can't compile it as a module, you don't need things like
-> 'MODULE_LICENSE'.
-
-Right.
-
-[ ... ]
-
-> > > +static int __init ostm_init_clksrc(struct ostm_device *ostm) {
-> > > +	int ret;
-> > > +
-> > > +	/* irq not used (clock sources don't use interrupts) */
-> > > +
-> > > +	/* stop counter */
-> > 
-> > One line comment is usually in the network code. Please use multiline.
-> > 
-> > /*
-> >  * Bla bla
-> >  */
-> 
-> I'm confused. Do you mean:
-> 
-> A) use multiline formatting for every single-line comment throughout
->    the file?
-> 
-> B) use multiline for any place where you have 2 or more single-line
->    comments back to back?
-
-I think it is simpler if you just ignore my comment, remove all your comments
-in this function, implement a couple of wrapper (eg. clksrc_stop, clksrc_start)
-which will speak by themselves.
-
-By the way, is it normal stopping the clockevent is the same code than stopping
-the clocksource ?
-
-[ ... ]
-
-> > > +	if (!is_early_platform_device(pdev)) {
-> > > +		pm_runtime_set_active(&pdev->dev);
-> > > +		pm_runtime_enable(&pdev->dev);
-> > > +	}
-> > 
-> > Can you clarify why the 'early' is needed here ?
-> 
-> Actually, it means nothing.
-> 
-> I was using sh_mtu2.c and sh_cmt.c as reference and they were registering
-> an "earlytimer" which made me think the kernel would probe this driver
-> early in boot....but....now I see that is just a SH4 kernel specific thing.
-> 
-> So, I will remove all the early platform reference stuff.
-> 
-> Of course I still have the question of how are you supposed to get a
-> clocksource up and running early in boot. (but I'll figure that out later).
-
-Until the hardware clocksource is registered, the jiffies are used as source of
-time. That happens at the very early boot time. The clockevent must be
-registered early to update the jiffies but you won't have to care about that if
-you use the macro below.
-
-[ ... ]
-
-> > > +early_platform_init("earlytimer", &ostm_timer);
-> > > +subsys_initcall(ostm_init); module_exit(ostm_exit);
-> > > +
-> > > +MODULE_AUTHOR("Chris Brandt");
-> > > +MODULE_DESCRIPTION("Renesas OSTM Timer Driver"); MODULE_LICENSE("GPL
-> > > +v2");
-> > 
-> > Maybe you can try with builtin_platform ?
-> 
-> Good idea. But, now I get a "Section mismatch" during link time so I'll
-> have to figure out why that is.
-
-Mmh, I think it would be more consistent to convert this to:
-
-CLOCKSOURCE_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
-
-The only problem is to get the struct device associated to the of_node passed
-as parameter to ostm_init in order to use the devm_* API.
-
-I think of_find_device_by_node should return the platform_device, then
-pdev->dev. If that works the other drivers will benefit from that to remove all
-the rollback code everywhere.
-
-  -- Daniel
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +		}
+>> +	}
+>> +
+>>  	return -EINVAL;
+>>  }
+>>
+>>
+>
