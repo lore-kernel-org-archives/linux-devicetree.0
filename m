@@ -1,94 +1,79 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3] arm: dts: mt2701: Add thermal device node.
-Date: Tue, 24 Jan 2017 11:26:06 +0100
-Message-ID: <50d4ca10-cf7a-84d4-1e8c-fdcbbe2f7145@gmail.com>
-References: <1484645049-4477-1-git-send-email-erin.lo@mediatek.com>
- <1484645049-4477-2-git-send-email-erin.lo@mediatek.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
+Date: Tue, 24 Jan 2017 11:31:18 +0100
+Message-ID: <20170124113118.304a860c@bbrezillon>
+References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
+        <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
+        <20170113172825.75d545a3@bbrezillon>
+        <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
+        <20170113175628.1793f433@bbrezillon>
+        <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
+        <20170114092958.022f2fc8@bbrezillon>
+        <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
+        <20170116094032.6f471f11@bbrezillon>
+        <20170117143650.5db87148@free-electrons.com>
+        <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
+        <20170119103829.524ce715@free-electrons.com>
+        <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ@mail.gmail.com>
+        <20170119091428.598eb987@bbrezillon>
+        <CAL_Jsq+S-FYy4SmjJ3fWzBugw2zCj5TQkkfUA8QVL7SLJW3E1g@mail.gmail.com>
+        <1485052600.19995.10.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1484645049-4477-2-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <1485052600.19995.10.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Dawei Chien <dawei.chien@mediatek.com>
+To: Guochun Mao <guochun.mao@mediatek.com>
+Cc: Rob Herring <robh@kernel.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Weinberger <richard@nod.at>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, 22 Jan 2017 10:36:40 +0800
+Guochun Mao <guochun.mao@mediatek.com> wrote:
 
+> Hi,
+> On Thu, 2017-01-19 at 08:18 -0600, Rob Herring wrote:
+> > On Thu, Jan 19, 2017 at 2:14 AM, Boris Brezillon  
+> > > One last question and I'm done: is something like that acceptable?
+> > >
+> > >         compatible = "<vendor>,<old-soc>","<vendor>,<new-soc>";
+> > >
+> > > This can happen when someone adds support for an unsupported feature
+> > > on a brand new SoC, and then someone else use the same driver for an
+> > > older SoC embedding the same IP but still wants to add a new compatible
+> > > just in case these 2 IPs appear to be slightly different.  
+> > 
+> > Yes, it's old and new compatible strings in this case and it's newest
+> > compatible string first.
+> >   
+> > > Here the order of compat strings is no longer following a clear rule
+> > > like 'most-specific compatible first' or 'newest IP/SoC version first',
+> > > it's completely dependent on the order these IPs were supported in the
+> > > OS (Linux). I'm perfectly fine with that BTW, just want to make sure
+> > > this is authorized.  
+> > 
+> > I guess we should say "newest compatible for IP first" instead. There
+> > are some exceptions where we add fallbacks later on, but that falls
+> > under the most-specific part.
+> > 
+> > It's order that the bindings are defined, not Linux support really,
+> > but in practice those are the same.
+> > 
+> > Rob  
+> 
+> Thanks for all your effort for code reviewing.
+> Our mt2701-nor's hardware is designed base on mt8713-nor,
+> even so, there would be some slight difference.
+> If I don't misunderstand your viewpoint in this discussion,
+> there's no need to drop mt2701-nor compatible.
 
-On 01/17/2017 10:24 AM, Erin Lo wrote:
-> From: Dawei Chien <dawei.chien@mediatek.com>
->
-> Add thermal controller device nodes for MT2701.
->
-> Signed-off-by: Dawei Chien <dawei.chien@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
->  arch/arm/boot/dts/mt2701.dtsi | 43 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->
+No, just update the documentation as suggested by Rob.
 
-Applied, thanks
+> And if not, is there any other suggestion?
 
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 4cfec57..26a88cb 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -89,6 +89,36 @@
->  		clock-output-names = "rtc32k";
->  	};
->
-> +	thermal-zones {
-> +		cpu_thermal: cpu_thermal {
-> +			polling-delay-passive = <1000>; /* milliseconds */
-> +			polling-delay = <1000>; /* milliseconds */
-> +
-> +			thermal-sensors = <&thermal 0>;
-> +			sustainable-power = <1000>;
-> +
-> +			trips {
-> +				threshold: trip-point@0 {
-> +					temperature = <68000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				target: trip-point@1 {
-> +					temperature = <85000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu_crit: cpu_crit@0 {
-> +					temperature = <115000>;
-> +					hysteresis = <2000>;
-> +					type = "critical";
-> +				};
-> +			};
-> +		};
-> +	};
-> +
->  	timer {
->  		compatible = "arm,armv7-timer";
->  		interrupt-parent = <&gic>;
-> @@ -270,6 +300,19 @@
->  		status = "disabled";
->  	};
->
-> +	thermal: thermal@1100b000 {
-> +		#thermal-sensor-cells = <0>;
-> +		compatible = "mediatek,mt2701-thermal";
-> +		reg = <0 0x1100b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&pericfg CLK_PERI_THERM>, <&pericfg CLK_PERI_AUXADC>;
-> +		clock-names = "therm", "auxadc";
-> +		resets = <&pericfg MT2701_PERI_THERM_SW_RST>;
-> +		reset-names = "therm";
-> +		mediatek,auxadc = <&auxadc>;
-> +		mediatek,apmixedsys = <&apmixedsys>;
-> +	};
-> +
->  	nandc: nfi@1100d000 {
->  		compatible = "mediatek,mt2701-nfc";
->  		reg = <0 0x1100d000 0 0x1000>;
->
+Nope, and my apologies for being so insistent on something I obviously
+misunderstood.
+
+Regards,
+
+Boris
