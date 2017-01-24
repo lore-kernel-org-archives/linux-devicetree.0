@@ -1,84 +1,50 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Tue, 24 Jan 2017 09:30:27 +0100
-Message-ID: <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
+Date: Tue, 24 Jan 2017 09:34:18 +0100
+Message-ID: <1485246858.5508.47.camel@pengutronix.de>
+References: <20170123142206.5390-1-jlu@pengutronix.de>
+         <20170123181836.GO10895@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170124082249.GR16020@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123181836.GO10895-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
+Hi Andrew,
 
-On 01/24/2017 09:22 AM, Lee Jones wrote:
-> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
-> 
->> DFSDM hardware IP can be used at the same time for ADC sigma delta
-> 
-> Same time as what?
-DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
-capture (through ASOC).
-> 
->> conversion and audio PDM microphone.
->> MFD driver is in charge of configuring IP registers and managing IP clocks.
->> For this it exports an API to handles filters and channels resources.
-> 
-> This looks like an ADC driver?  What is it that makes it an MFD?
-Yes it a kind of ADC but that supports 2 features audio and iio.
-So it has to support 2 features based on 2 separate Frameworks.
+On Mo, 2017-01-23 at 19:18 +0100, Andrew Lunn wrote:
+> On Mon, Jan 23, 2017 at 03:22:06PM +0100, Jan Luebbe wrote:
+> > The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
+> > called DRSGMII.
+> > 
+> > This patch adds a corresponding phy-mode string 'drsgmii' and parses it
+> > from DT. The MVNETA then configures the SERDES protocol value
+> > accordingly.
+>
+> So this sets the PHY to 2.5Gbps. What about the MAC? Currently,
+> mvneta_adjust_link() knows about SPEED_1000 and SPEED_100. Does it now
+> need to know about SPEED_2500? mvneta_ethtool_set_link_ksettings()?
 
-> 
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>  drivers/mfd/Kconfig             |   11 +
->>  drivers/mfd/Makefile            |    2 +
->>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
->>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
->>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
->>  5 files changed, 1601 insertions(+)
->>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
->>  create mode 100644 drivers/mfd/stm32-dfsdm.c
->>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index c6df644..4bb660b 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->>  	  in various ST Microelectronics and ST-Ericsson embedded
->>  	  Nomadik series.
->>  
->> +config MFD_STM32_DFSDM
->> +	tristate "ST Microelectronics STM32 DFSDM"
->> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
->> +	select MFD_CORE
->> +	select REGMAP
->> +	select REGMAP_MMIO
->> +	help
->> +	  Select this option to enable the STM32 Digital Filter
->> +	  for Sigma Delta Modulators (DFSDM) driver used
->> +	  in various STM32 series.
->> +
->>  menu "Multimedia Capabilities Port drivers"
->>  	depends on ARCH_SA1100
-> 
-> [...]
-> 
+It works without any other changes. ;)
 
-Regards
-Arnaud
+Initially I looked at adding a SPEED_2500, but I wasn't sure which code
+would need to handle the new value. Would the path from the ethtool
+ioctl to the driver be enough (mvneta_ethtool_set_link_ksettings() as
+you said)?
+
+Regards,
+Jan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
