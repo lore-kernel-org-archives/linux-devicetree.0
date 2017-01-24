@@ -1,40 +1,254 @@
-From: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: [V3 3/3] dt-bindings: Add a support cpu type for cortex-a73
-Date: Tue, 24 Jan 2017 16:57:29 +0800
-Message-ID: <1485248249-117383-3-git-send-email-puck.chen@hisilicon.com>
+From: Chen Feng <puck.chen@hisilicon.com>
+Subject: [V3 2/3] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
+Date: Tue, 24 Jan 2017 16:57:28 +0800
+Message-ID: <1485248249-117383-2-git-send-email-puck.chen@hisilicon.com>
 References: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485248249-117383-1-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lulu.luxiaobo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, frong.fan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, oliver.fu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dan.zhao@hisilicon.com, xuyiping@hisilicon.com, lulu.luxiaobo@hisilicon.com, frong.fan@hisilicon.com, saberlily.xia@hisilicon.com, oliver.fu@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-Add arm cpu type cortex-a73
+Add initial dtsi file to support Hisilicon Hi3660 SoC with
+support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
 
-Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Also add dts file to support HiKey960 development board which
+based on Hi3660 SoC.
+The output console is earlycon "earlycon=pl011,0xfdf05000".
+And the con_init uart5 with a fixed clock, which already
+configured at bootloader.
+
+When clock is available, the uart5 will be modified.
+
+Tested on HiKey960 Board.
+
+Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  35 +++++
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 160 ++++++++++++++++++++++
+ 3 files changed, 196 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+ create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index a1bcfee..d748774 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -158,6 +158,7 @@ nodes to be present and contain the properties described below.
- 			    "arm,cortex-a53"
- 			    "arm,cortex-a57"
- 			    "arm,cortex-a72"
-+			    "arm,cortex-a73"
- 			    "arm,cortex-m0"
- 			    "arm,cortex-m0+"
- 			    "arm,cortex-m1"
+diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
+index c8b8f80..c3a6c19 100644
+--- a/arch/arm64/boot/dts/hisilicon/Makefile
++++ b/arch/arm64/boot/dts/hisilicon/Makefile
+@@ -1,3 +1,4 @@
++dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
+ dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+new file mode 100644
+index 0000000..9ed9e68
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -0,0 +1,35 @@
++/*
++ * dts file for Hisilicon HiKey960 Development Board
++ *
++ * Copyright (C) 2016, Hisilicon Ltd.
++ *
++ */
++
++/dts-v1/;
++
++#include "hi3660.dtsi"
++
++/ {
++	model = "HiKey960";
++	compatible = "hisilicon,hi3660";
++
++	aliases {
++		serial5 = &uart5;       /* console UART */
++	};
++
++	chosen {
++		stdout-path = "serial5:115200n8";
++	};
++
++	memory@0 {
++		device_type = "memory";
++		/* rewrite this at bootloader */
++		reg = <0x0 0x0 0x0 0x0>;
++	};
++
++	soc {
++		uart5: uart@fdf05000 {
++			status = "okay";
++		};
++	};
++};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+new file mode 100644
+index 0000000..3983086
+--- /dev/null
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -0,0 +1,160 @@
++/*
++ * dts file for Hisilicon Hi3660 SoC
++ *
++ * Copyright (C) 2016, Hisilicon Ltd.
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "hisilicon,hi3660";
++	interrupt-parent = <&gic>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	psci {
++		compatible = "arm,psci-0.2";
++		method = "smc";
++	};
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++				core2 {
++					cpu = <&cpu2>;
++				};
++				core3 {
++					cpu = <&cpu3>;
++				};
++			};
++			cluster1 {
++				core0 {
++					cpu = <&cpu4>;
++				};
++				core1 {
++					cpu = <&cpu5>;
++				};
++				core2 {
++					cpu = <&cpu6>;
++				};
++				core3 {
++					cpu = <&cpu7>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++		};
++
++		cpu1: cpu@1 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x1>;
++			enable-method = "psci";
++		};
++
++		cpu2: cpu@2 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x2>;
++			enable-method = "psci";
++		};
++
++		cpu3: cpu@3 {
++			compatible = "arm,cortex-a53", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x3>;
++			enable-method = "psci";
++		};
++
++		cpu4: cpu@100 {
++			compatible = "arm,cortex-a73", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x100>;
++			enable-method = "psci";
++		};
++
++		cpu5: cpu@101 {
++			compatible = "arm,cortex-a73", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x101>;
++			enable-method = "psci";
++		};
++
++		cpu6: cpu@102 {
++			compatible = "arm,cortex-a73", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x102>;
++			enable-method = "psci";
++		};
++
++		cpu7: cpu@103 {
++			compatible = "arm,cortex-a73", "arm,armv8";
++			device_type = "cpu";
++			reg = <0x0 0x103>;
++			enable-method = "psci";
++		};
++	};
++
++	gic: interrupt-controller@e82b0000 {
++		compatible = "arm,gic-400";
++		reg = <0x0 0xe82b1000 0 0x1000>, /* GICD */
++		      <0x0 0xe82b2000 0 0x2000>, /* GICC */
++		      <0x0 0xe82b4000 0 0x2000>, /* GICH */
++		      <0x0 0xe82b6000 0 0x2000>; /* GICV */
++		#address-cells = <0>;
++		#interrupt-cells = <3>;
++		interrupt-controller;
++		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) |
++					 IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) |
++					  IRQ_TYPE_LEVEL_LOW)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) |
++					  IRQ_TYPE_LEVEL_LOW)>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		fixed_uart5: fixed_19_2M {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <19200000>;
++			clock-output-names = "fixed:uart5";
++		};
++
++		uart5: uart@fdf05000 {
++			compatible = "arm,pl011", "arm,primecell";
++			reg = <0x0 0xfdf05000 0x0 0x1000>;
++			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&fixed_uart5 &fixed_uart5>;
++			clock-names = "uartclk", "apb_pclk";
++			status = "disabled";
++		};
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
