@@ -1,172 +1,53 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2, 6/6] dt-bindings: phy-mt65xx-usb: add support for new
- version phy
-Date: Tue, 24 Jan 2017 16:19:50 +0100
-Message-ID: <3774cacd-84b8-acda-a01d-fbd93a2c9da7@gmail.com>
-References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
- <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Tue, 24 Jan 2017 15:27:51 +0000
+Message-ID: <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484900321-26933-6-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <765699aa-cbc6-67eb-9108-cbf335338e4c-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunfeng,
+On 24/01/17 15:08, Daniel Lezcano wrote:
+> On 19/01/2017 14:35, Ding Tianhong wrote:
+>> Erratum Hisilicon-161010101 says that the ARM generic timer counter "has the
+>> potential to contain an erroneous value when the timer value changes".
+>> Accesses to TVAL (both read and write) are also affected due to the implicit counter
+>> read.  Accesses to CVAL are not affected.
+>>
+>> The workaround is to reread the system count registers until the value of the second
+>> read is larger than the first one by less than 32, the system counter can be guaranteed
+>> not to return wrong value twice by back-to-back read and the error value is always larger
+>> than the correct one by 32. Writes to TVAL are replaced with an equivalent write to CVAL.
+> 
+> Why not use another clocksource instead of adding a workaround with a
+> non negligible overhead and more complexity in the code ?
 
-On 01/20/2017 09:18 AM, Chunfeng Yun wrote:
-> add a new compatible string for "mt2712", and move reference clock
-> into each port node;
->
-> Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   91 +++++++++++++++++---
->  1 file changed, 77 insertions(+), 14 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> index 33a2b1e..1d06604 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> @@ -6,21 +6,27 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
->  Required properties (controller (parent) node):
->   - compatible	: should be one of
->  		  "mediatek,mt2701-u3phy"
-> +		  "mediatek,mt2712-u3phy"
->  		  "mediatek,mt8173-u3phy"
-> - - reg		: offset and length of register for phy, exclude port's
-> -		  register.
-> - - clocks	: a list of phandle + clock-specifier pairs, one for each
-> -		  entry in clock-names
-> - - clock-names	: must contain
-> -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
->
->  Required nodes	: a sub-node is required for each port the controller
->  		  provides. Address range information including the usual
->  		  'reg' property is used inside these nodes to describe
->  		  the controller's topology.
->
-> +Optional properties (controller (parent) node):
-> + - reg		: offset and length of register shared by multiple ports,
-> +		  exclude port's private register. It is needed on mt2701
-> +		  and mt8173, but not on mt2712.
-> +
->  Required properties (port (child) node):
->  - reg		: address and length of the register set for the port.
-> +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> +		  entry in clock-names
-> +- clock-names	: must contain
-> +		  "ref_clk": 48M reference clock for HighSpeed analog phy; and
-> +			26M reference clock for SuperSpeed analog phy, sometimes is
-> +			24M, 25M or 27M, depended on platform.
->  - #phy-cells	: should be 1 (See second example)
->  		  cell after port phandle is phy type from:
->  			- PHY_TYPE_USB2
+The overhead only affects the affected systems, since it is guarded by a
+static key (the same static key that guards the FSL workaround that is
+already in mainline).
 
-The old bindings will need to be supported by the driver, they have to 
-stay here with a comment that they are deprecated.
+As for creating a different clocksources, this would in turn make the
+integration with the arch code more complex (arm64 relies on having
+working architected timers, with or without workarounds) and the
+integration with KVM (which relies on the same), and in the end create
+quite a lot of duplication. Are we going to create a separate
+clocksource for each potential erratum that people with screwed hardware
+come up with?
 
-Regards,
-Matthias
+I'd prefer to organise the mess rather than spread it everywhere.
 
-> @@ -31,21 +37,31 @@ Example:
->  u3phy: usb-phy@11290000 {
->  	compatible = "mediatek,mt8173-u3phy";
->  	reg = <0 0x11290000 0 0x800>;
-> -	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> -	clock-names = "u3phya_ref";
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  	ranges;
->  	status = "okay";
->
-> -	phy_port0: port@11290800 {
-> -		reg = <0 0x11290800 0 0x800>;
-> +	u2port0: port@11290800 {
-> +		reg = <0 0x11290800 0 0x100>;
-> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +		clock-names = "ref_clk";
->  		#phy-cells = <1>;
->  		status = "okay";
->  	};
->
-> -	phy_port1: port@11291000 {
-> -		reg = <0 0x11291000 0 0x800>;
-> +	u3port0: port@11290900 {
-> +		reg = <0 0x11290800 0 0x700>;
-> +		clocks = <&clk26m>;
-> +		clock-names = "ref_clk";
-> +		#phy-cells = <1>;
-> +		status = "okay";
-> +	};
-> +
-> +	u2port1: port@11291000 {
-> +		reg = <0 0x11291000 0 0x100>;
-> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +		clock-names = "ref_clk";
->  		#phy-cells = <1>;
->  		status = "okay";
->  	};
-> @@ -64,7 +80,54 @@ Example:
->
->  usb30: usb@11270000 {
->  	...
-> -	phys = <&phy_port0 PHY_TYPE_USB3>;
-> -	phy-names = "usb3-0";
-> +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
-> +	phy-names = "usb2-0", "usb3-0";
->  	...
->  };
-> +
-> +
-> +Layout differences of banks between mt8173/mt2701 and mt2712
-> +-------------------------------------------------------------
-> +mt8173 and mt2701:
-> +port        offset    bank
-> +shared      0x0000    SPLLC
-> +            0x0100    FMREG
-> +u2 port0    0x0800    U2PHY_COM
-> +u3 port0    0x0900    U3PHYD
-> +            0x0a00    U3PHYD_BANK2
-> +            0x0b00    U3PHYA
-> +            0x0c00    U3PHYA_DA
-> +u2 port1    0x1000    U2PHY_COM
-> +u3 port1    0x1100    U3PHYD
-> +            0x1200    U3PHYD_BANK2
-> +            0x1300    U3PHYA
-> +            0x1400    U3PHYA_DA
-> +u2 port2    0x1800    U2PHY_COM
-> +            ...
-> +
-> +mt2712:
-> +port        offset    bank
-> +u2 port0    0x0000    MISC
-> +            0x0100    FMREG
-> +            0x0300    U2PHY_COM
-> +u3 port0    0x0700    SPLLC
-> +            0x0800    CHIP
-> +            0x0900    U3PHYD
-> +            0x0a00    U3PHYD_BANK2
-> +            0x0b00    U3PHYA
-> +            0x0c00    U3PHYA_DA
-> +u2 port1    0x1000    MISC
-> +            0x1100    FMREG
-> +            0x1300    U2PHY_COM
-> +u3 port1    0x1700    SPLLC
-> +            0x1800    CHIP
-> +            0x1900    U3PHYD
-> +            0x1a00    U3PHYD_BANK2
-> +            0x1b00    U3PHYA
-> +            0x1c00    U3PHYA_DA
-> +u2 port2    0x2000    MISC
-> +            ...
-> +
-> +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
-> +mt8173/mt2701 are put back into each port; a new bank MISC for
-> +u2 ports and CHIP for u3 ports are added on mt2712.
->
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
