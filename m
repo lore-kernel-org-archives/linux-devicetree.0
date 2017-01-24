@@ -1,124 +1,116 @@
-From: Andre Przywara <andre.przywara@arm.com>
-Subject: Re: [PATCH v3 3/13] mmc: sunxi: Always set signal delay to 0 for A64
-Date: Tue, 24 Jan 2017 09:15:45 +0000
-Message-ID: <b09f2ee5-77b3-eb2e-d749-d76a310bf1b0@arm.com>
-References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
- <67fd7dad745b49bb8edb7391655eaddf6f35160e.1484585798.git-series.maxime.ripard@free-electrons.com>
- <CAPDyKFoatUWz0AwY6e73OCguDx70B1B5OAoPUYX-JDPsru+aZw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Tue, 24 Jan 2017 14:49:53 +0530
+Message-ID: <58871C39.50403@ti.com>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com> <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+ <20170118180347.GO10531@minitux>
+ <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoatUWz0AwY6e73OCguDx70B1B5OAoPUYX-JDPsru+aZw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Vivek Gautam <vivek.gautam@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+Hi,
 
-On 24/01/17 08:16, Ulf Hansson wrote:
-> On 16 January 2017 at 17:56, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> Experience have shown that the using the  autocalibration could severely
->> degrade the performances of the MMC bus.
+On Monday 23 January 2017 03:43 PM, Vivek Gautam wrote:
+> On Wed, Jan 18, 2017 at 11:33 PM, Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+>> On Wed 18 Jan 01:13 PST 2017, Vivek Gautam wrote:
+>>> On 01/16/2017 02:15 PM, Kishon Vijay Abraham I wrote:
+>>>> Hi,
+>>>>
+>>>> On Tuesday 10 January 2017 04:21 PM, Vivek Gautam wrote:
+>> [..]
+>>>>> +static const struct qusb2_phy_init_tbl msm8996_init_tbl[] = {
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE1, 0xf8),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE2, 0xb3),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE3, 0x83),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TUNE4, 0xc0),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_TUNE, 0x30),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL1, 0x79),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_USER_CTL2, 0x21),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PORT_TEST2, 0x14),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_AUTOPGM_CTL1, 0x9f),
+>>>>> + QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+>>>>> +};
+>>>> I wish all this data comes from device tree and one API in phy-core can do all
+>>>> these settings. Your other driver qcom-qmp also seems to have a bunch of
+>>>> similar settings.
+>>>>
+>>>> The problem is every vendor driver adds a bunch of code to perform the same
+>>>> thing again and again when all of these settings can be done by a single phy API.
+>>>
+>>> Yes, i understand this. You have commented similar thing in the patch from
+>>> Jaehoon -
+>>> [PATCH V2 2/5] phy: phy-exynos-pcie: Add support for Exynos PCIe phy
+>>>
+>>> I would like to understand the requirements here.
+>>> Would you like me to get all this information from the device tree -
+>>> an array of register offset and value pair, which we can then program
+>>> by calling a phy_ops (may be calibrate) ? Something of this sort:
+>>>
+>>> phy-calibrate-data = <val1, register_offset1>,
+>>>                                   <val2, register_offset2>,
+>>>                                   <val3, register_offset3>,
+>>>                                   ....
+>>>
+>>> I am sure having such information in the driver (like i have in my patch)
+>>> makes the driver look more clumsy.
+>>> But, all this data can be pretty huge - a set of some 100+ register-value
+>>> pairs
+>>> for QMP phy, for example. So, will it be okay to get this from device tree ?
+>>> We also note here that such information changes from one IP version to
+>>> another.
+>>> I remember Rob having some concerns about it.
+>>>
 >>
->> Allwinner is using in its BSP a delay set to 0 for all the modes but HS400.
->> Remove the calibration code for now, and add comments to document our
->> findings.
+>> The devicetree is supposed to describe which hardware components a
+>> certain device has, most of the time this carries a set of properties to
+>> describe how this piece is connected and configured.
+>>
+>> A dump of magic register values does not describe how the QMP is
+>> connected to anything and is, as far as this patch shows, static for
+>> this particular hardware block.
+
+device tree has also been used to have configuration information. see [1]
+
 > 
-> So doesn't this break some platforms using HS400? Or are you saying
-> those are already broken?
+> Yes, that's correct. The QMP and QUSB2 phy init sequences are a bunch
+> of static values for a particular IP version. These values hardly give a
+> meaningful data to put few phy bindings that could be referenced
+> to configure the phy further.
 
-This is a sunxi specific calibration routine, which was introduced
-lately (e1b8dfd1b1c6) to be used by the Allwinner's enhanced MMC
-controller. This is only used by devices using the sun50i-a64-mmc
-compatible, of which this series introduces the first user.
-
-So there is no way this can regress in any way, since the code wasn't
-actually used before.
-
-Cheers,
-Andre.
-
+Not really. You can have clearly defined phy binding to give meaningful data.
+Every driver doing the same configuration bloats the driver and these
+configuration values are just magic values which hardly can be reviewed by anyone.
 > 
 >>
->> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
->> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->> ---
->>  drivers/mmc/host/sunxi-mmc.c | 50 ++++++++++++-------------------------
->>  1 file changed, 17 insertions(+), 33 deletions(-)
+>> Further more moving this blob to devicetree will not allow us to treat
+>> the various QMP configurations as one HW block, as there are other
+>> differences as well.
 >>
->> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
->> index 019f95e8e7c5..b9c8a62bc212 100644
->> --- a/drivers/mmc/host/sunxi-mmc.c
->> +++ b/drivers/mmc/host/sunxi-mmc.c
->> @@ -683,41 +683,19 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>> Like many other drivers it's possible to create a generic version that
+>> has every bit of logic driven by configuration from devicetree, but like
+>> most of those cases this is not the way we split things.
 >>
->>  static int sunxi_mmc_calibrate(struct sunxi_mmc_host *host, int reg_off)
->>  {
->> -       u32 reg = readl(host->reg_base + reg_off);
->> -       u32 delay;
->> -       unsigned long timeout;
->> -
->>         if (!host->cfg->can_calibrate)
->>                 return 0;
->>
->> -       reg &= ~(SDXC_CAL_DL_MASK << SDXC_CAL_DL_SW_SHIFT);
->> -       reg &= ~SDXC_CAL_DL_SW_EN;
->> -
->> -       writel(reg | SDXC_CAL_START, host->reg_base + reg_off);
->> -
->> -       dev_dbg(mmc_dev(host->mmc), "calibration started\n");
->> -
->> -       timeout = jiffies + HZ * SDXC_CAL_TIMEOUT;
->> -
->> -       while (!((reg = readl(host->reg_base + reg_off)) & SDXC_CAL_DONE)) {
->> -               if (time_before(jiffies, timeout))
->> -                       cpu_relax();
->> -               else {
->> -                       reg &= ~SDXC_CAL_START;
->> -                       writel(reg, host->reg_base + reg_off);
->> -
->> -                       return -ETIMEDOUT;
->> -               }
->> -       }
->> -
->> -       delay = (reg >> SDXC_CAL_DL_SHIFT) & SDXC_CAL_DL_MASK;
->> -
->> -       reg &= ~SDXC_CAL_START;
->> -       reg |= (delay << SDXC_CAL_DL_SW_SHIFT) | SDXC_CAL_DL_SW_EN;
->> -
->> -       writel(reg, host->reg_base + reg_off);
->> -
->> -       dev_dbg(mmc_dev(host->mmc), "calibration ended, reg is 0x%x\n", reg);
->> +       /*
->> +        * FIXME:
->> +        * This is not clear how the calibration is supposed to work
->> +        * yet. The best rate have been obtained by simply setting the
->> +        * delay to 0, as Allwinner does in its BSP.
->> +        *
->> +        * The only mode that doesn't have such a delay is HS400, that
->> +        * is in itself a TODO.
->> +        */
->> +       writel(SDXC_CAL_DL_SW_EN, host->reg_base + reg_off);
->>
->>         return 0;
->>  }
->> @@ -809,7 +787,13 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
->>         if (ret)
->>                 return ret;
->>
->> -       /* TODO: enable calibrate on sdc2 SDXC_REG_DS_DL_REG of A64 */
->> +       /*
->> +        * FIXME:
->> +        *
->> +        * In HS400 we'll also need to calibrate the data strobe
->> +        * signal. This should only happen on the MMC2 controller (at
->> +        * least on the A64).
->> +        */
->>
->>         return sunxi_mmc_oclk_onoff(host, 1);
->>  }
->> --
->> git-series 0.8.11
+>> And this has the side effect of keeping the dts files human readable,
+>> human understandable and human maintainable.
+
+right. That's why I recommend having clearly defined bindings.
+	phy,tx-<param1> = <val, offset, mask>
+	phy,tx-<param2> = <val, offset, mask>
+	phy,tx-<param3> = <val, offset, mask>
+
+
+[1] -> https://www.linuxplumbersconf.org/2016/ocw/proposals/4047
+
+Thanks
+Kishon
