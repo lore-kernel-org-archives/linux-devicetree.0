@@ -1,80 +1,84 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 7/13] mmc: sunxi: Add more debug messages
-Date: Tue, 24 Jan 2017 09:22:24 +0100
-Message-ID: <CAPDyKFqE7hMdwweE4zX4TcH5qCThb2_NQh5PNA_4coJQUrCwfg@mail.gmail.com>
-References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
- <102ea884b296dae38ab28369ce14aa7a7998dc80.1484585798.git-series.maxime.ripard@free-electrons.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Tue, 24 Jan 2017 09:30:27 +0100
+Message-ID: <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <102ea884b296dae38ab28369ce14aa7a7998dc80.1484585798.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170124082249.GR16020@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16 January 2017 at 17:56, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
-> Add a bit more debug messages that can be helpful when debugging the clock
-> setup.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/mmc/host/sunxi-mmc.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-> index f0f6922bca8a..40ed287ceb1c 100644
-> --- a/drivers/mmc/host/sunxi-mmc.c
-> +++ b/drivers/mmc/host/sunxi-mmc.c
-> @@ -661,6 +661,9 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
->         unsigned long expire = jiffies + msecs_to_jiffies(750);
->         u32 rval;
->
-> +       dev_dbg(mmc_dev(host->mmc), "%sabling the clock\n",
-> +               oclk_en ? "en" : "dis");
-> +
->         rval = mmc_readl(host, REG_CLKCR);
->         rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON | SDXC_MASK_DATA0);
->
-> @@ -737,6 +740,7 @@ static int sunxi_mmc_clk_set_phase(struct sunxi_mmc_host *host,
->                         index = SDXC_CLK_50M_DDR;
->                 }
->         } else {
-> +               dev_dbg(mmc_dev(host->mmc), "Invalid clock... returning\n");
->                 return -EINVAL;
->         }
->
-> @@ -753,6 +757,9 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
->         u32 rval, clock = ios->clock;
->         int ret;
->
-> +       dev_dbg(mmc_dev(host->mmc), "setting clk to %u (requested %u)\n",
-> +               clock, ios->clock);
-> +
->
+Hello Lee,
 
-A better option is to update mmc->actual_clock. That value is
-available (and the requested value) though the debugFS nodes.
+On 01/24/2017 09:22 AM, Lee Jones wrote:
+> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
+> 
+>> DFSDM hardware IP can be used at the same time for ADC sigma delta
+> 
+> Same time as what?
+DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
+capture (through ASOC).
+> 
+>> conversion and audio PDM microphone.
+>> MFD driver is in charge of configuring IP registers and managing IP clocks.
+>> For this it exports an API to handles filters and channels resources.
+> 
+> This looks like an ADC driver?  What is it that makes it an MFD?
+Yes it a kind of ADC but that supports 2 features audio and iio.
+So it has to support 2 features based on 2 separate Frameworks.
 
->         ret = sunxi_mmc_oclk_onoff(host, 0);
->         if (ret)
->                 return ret;
-> @@ -771,8 +778,7 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
->                         clock, rate);
->                 return rate;
->         }
-> -       dev_dbg(mmc_dev(host->mmc), "setting clk to %d, rounded %ld\n",
-> -               clock, rate);
-> +       dev_dbg(mmc_dev(host->mmc), "Rounded clk to %ld\n", rate);
->
+> 
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> ---
+>>  drivers/mfd/Kconfig             |   11 +
+>>  drivers/mfd/Makefile            |    2 +
+>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
+>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
+>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
+>>  5 files changed, 1601 insertions(+)
+>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
+>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
+>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
+>>
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index c6df644..4bb660b 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
+>>  	  in various ST Microelectronics and ST-Ericsson embedded
+>>  	  Nomadik series.
+>>  
+>> +config MFD_STM32_DFSDM
+>> +	tristate "ST Microelectronics STM32 DFSDM"
+>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>> +	select MFD_CORE
+>> +	select REGMAP
+>> +	select REGMAP_MMIO
+>> +	help
+>> +	  Select this option to enable the STM32 Digital Filter
+>> +	  for Sigma Delta Modulators (DFSDM) driver used
+>> +	  in various STM32 series.
+>> +
+>>  menu "Multimedia Capabilities Port drivers"
+>>  	depends on ARCH_SA1100
+> 
+> [...]
+> 
 
-Ditto.
-
->         /* setting clock rate */
->         ret = clk_set_rate(host->clk_mmc, rate);
-> --
-> git-series 0.8.11
-
-Kind regards
-Uffe
+Regards
+Arnaud
