@@ -1,98 +1,124 @@
-From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4] net: ethernet: faraday: To support device tree usage.
-Date: Tue, 24 Jan 2017 16:46:14 +0800
-Message-ID: <20170124084606.GA11764@app09>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v3 3/13] mmc: sunxi: Always set signal delay to 0 for A64
+Date: Tue, 24 Jan 2017 09:15:45 +0000
+Message-ID: <b09f2ee5-77b3-eb2e-d749-d76a310bf1b0@arm.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+ <67fd7dad745b49bb8edb7391655eaddf6f35160e.1484585798.git-series.maxime.ripard@free-electrons.com>
+ <CAPDyKFoatUWz0AwY6e73OCguDx70B1B5OAoPUYX-JDPsru+aZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoatUWz0AwY6e73OCguDx70B1B5OAoPUYX-JDPsru+aZw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We also use the same binding document to describe the same faraday ethernet
-controller and add faraday to vendor-prefixes.txt.
+Hi Ulf,
 
-Signed-off-by: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes in v4:
-  - Use the same binding document to describe the same faraday ethernet controller and add faraday to vendor-prefixes.txt.
-Changes in v3:
-  - Nothing changed in this patch but I have committed andestech to vendor-prefixes.txt.
-Changes in v2:
-  - Change atmac100_of_ids to ftmac100_of_ids
+On 24/01/17 08:16, Ulf Hansson wrote:
+> On 16 January 2017 at 17:56, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> Experience have shown that the using the  autocalibration could severely
+>> degrade the performances of the MMC bus.
+>>
+>> Allwinner is using in its BSP a delay set to 0 for all the modes but HS400.
+>> Remove the calibration code for now, and add comments to document our
+>> findings.
+> 
+> So doesn't this break some platforms using HS400? Or are you saying
+> those are already broken?
 
----
- .../net/{moxa,moxart-mac.txt => faraday,ftmac.txt} |    7 +++++--
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/net/ethernet/faraday/ftmac100.c            |    7 +++++++
- 3 files changed, 13 insertions(+), 2 deletions(-)
- rename Documentation/devicetree/bindings/net/{moxa,moxart-mac.txt => faraday,ftmac.txt} (68%)
+This is a sunxi specific calibration routine, which was introduced
+lately (e1b8dfd1b1c6) to be used by the Allwinner's enhanced MMC
+controller. This is only used by devices using the sun50i-a64-mmc
+compatible, of which this series introduces the first user.
 
-diff --git a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-similarity index 68%
-rename from Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-rename to Documentation/devicetree/bindings/net/faraday,ftmac.txt
-index 583418b..be4f55e 100644
---- a/Documentation/devicetree/bindings/net/moxa,moxart-mac.txt
-+++ b/Documentation/devicetree/bindings/net/faraday,ftmac.txt
-@@ -1,8 +1,11 @@
--MOXA ART Ethernet Controller
-+Faraday Ethernet Controller
- 
- Required properties:
- 
--- compatible : Must be "moxa,moxart-mac"
-+- compatible : Must contain "faraday,ftmac", as well as one of
-+		the SoC specific identifiers:
-+		"andestech,atmac100"
-+		"moxa,moxart-mac"
- - reg : Should contain register location and length
- - interrupts : Should contain the mac interrupt number
- 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e..489c336 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -102,6 +102,7 @@ everest	Everest Semiconductor Co. Ltd.
- everspin	Everspin Technologies, Inc.
- excito	Excito
- ezchip	EZchip Semiconductor
-+faraday	Faraday Technology Corporation
- fcs	Fairchild Semiconductor
- firefly	Firefly
- focaltech	FocalTech Systems Co.,Ltd
-diff --git a/drivers/net/ethernet/faraday/ftmac100.c b/drivers/net/ethernet/faraday/ftmac100.c
-index dce5f7b..5d70ee9 100644
---- a/drivers/net/ethernet/faraday/ftmac100.c
-+++ b/drivers/net/ethernet/faraday/ftmac100.c
-@@ -1172,11 +1172,17 @@ static int __exit ftmac100_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id ftmac100_of_ids[] = {
-+	{ .compatible = "andestech,atmac100" },
-+	{ }
-+};
-+
- static struct platform_driver ftmac100_driver = {
- 	.probe		= ftmac100_probe,
- 	.remove		= __exit_p(ftmac100_remove),
- 	.driver		= {
- 		.name	= DRV_NAME,
-+		.of_match_table = ftmac100_of_ids
- 	},
- };
- 
-@@ -1200,3 +1206,4 @@ static void __exit ftmac100_exit(void)
- MODULE_AUTHOR("Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>");
- MODULE_DESCRIPTION("FTMAC100 driver");
- MODULE_LICENSE("GPL");
-+MODULE_DEVICE_TABLE(of, ftmac100_of_ids);
--- 
-1.7.9.5
+So there is no way this can regress in any way, since the code wasn't
+actually used before.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Andre.
+
+> 
+>>
+>> Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+>> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+>> ---
+>>  drivers/mmc/host/sunxi-mmc.c | 50 ++++++++++++-------------------------
+>>  1 file changed, 17 insertions(+), 33 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+>> index 019f95e8e7c5..b9c8a62bc212 100644
+>> --- a/drivers/mmc/host/sunxi-mmc.c
+>> +++ b/drivers/mmc/host/sunxi-mmc.c
+>> @@ -683,41 +683,19 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>>
+>>  static int sunxi_mmc_calibrate(struct sunxi_mmc_host *host, int reg_off)
+>>  {
+>> -       u32 reg = readl(host->reg_base + reg_off);
+>> -       u32 delay;
+>> -       unsigned long timeout;
+>> -
+>>         if (!host->cfg->can_calibrate)
+>>                 return 0;
+>>
+>> -       reg &= ~(SDXC_CAL_DL_MASK << SDXC_CAL_DL_SW_SHIFT);
+>> -       reg &= ~SDXC_CAL_DL_SW_EN;
+>> -
+>> -       writel(reg | SDXC_CAL_START, host->reg_base + reg_off);
+>> -
+>> -       dev_dbg(mmc_dev(host->mmc), "calibration started\n");
+>> -
+>> -       timeout = jiffies + HZ * SDXC_CAL_TIMEOUT;
+>> -
+>> -       while (!((reg = readl(host->reg_base + reg_off)) & SDXC_CAL_DONE)) {
+>> -               if (time_before(jiffies, timeout))
+>> -                       cpu_relax();
+>> -               else {
+>> -                       reg &= ~SDXC_CAL_START;
+>> -                       writel(reg, host->reg_base + reg_off);
+>> -
+>> -                       return -ETIMEDOUT;
+>> -               }
+>> -       }
+>> -
+>> -       delay = (reg >> SDXC_CAL_DL_SHIFT) & SDXC_CAL_DL_MASK;
+>> -
+>> -       reg &= ~SDXC_CAL_START;
+>> -       reg |= (delay << SDXC_CAL_DL_SW_SHIFT) | SDXC_CAL_DL_SW_EN;
+>> -
+>> -       writel(reg, host->reg_base + reg_off);
+>> -
+>> -       dev_dbg(mmc_dev(host->mmc), "calibration ended, reg is 0x%x\n", reg);
+>> +       /*
+>> +        * FIXME:
+>> +        * This is not clear how the calibration is supposed to work
+>> +        * yet. The best rate have been obtained by simply setting the
+>> +        * delay to 0, as Allwinner does in its BSP.
+>> +        *
+>> +        * The only mode that doesn't have such a delay is HS400, that
+>> +        * is in itself a TODO.
+>> +        */
+>> +       writel(SDXC_CAL_DL_SW_EN, host->reg_base + reg_off);
+>>
+>>         return 0;
+>>  }
+>> @@ -809,7 +787,13 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+>>         if (ret)
+>>                 return ret;
+>>
+>> -       /* TODO: enable calibrate on sdc2 SDXC_REG_DS_DL_REG of A64 */
+>> +       /*
+>> +        * FIXME:
+>> +        *
+>> +        * In HS400 we'll also need to calibrate the data strobe
+>> +        * signal. This should only happen on the MMC2 controller (at
+>> +        * least on the A64).
+>> +        */
+>>
+>>         return sunxi_mmc_oclk_onoff(host, 1);
+>>  }
+>> --
+>> git-series 0.8.11
