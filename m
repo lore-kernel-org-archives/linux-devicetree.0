@@ -1,54 +1,264 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
-Date: Tue, 24 Jan 2017 20:19:50 +0000
-Message-ID: <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170123135423.28780-1-chris.brandt@renesas.com>
- <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
- <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170124143222.GA2021@mai>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v5 2/3] Bluetooth: btusb: Add out-of-band wakeup support
+Date: Tue, 24 Jan 2017 13:20:21 -0800
+Message-ID: <20170124212020.GA68405@google.com>
+References: <20170112180107.63244-1-rajatja@google.com>
+ <20170112180107.63244-2-rajatja@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124143222.GA2021@mai>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170112180107.63244-2-rajatja@google.com>
+Sender: netdev-owner@vger.kernel.org
+To: Rajat Jain <rajatja@google.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Gustavo Padovan <gustavo@padovan.org>, Johan Hedberg <johan.hedberg@gmail.com>, Amitkumar Karwar <akarwar@marvell.com>, Wei-Ning Huang <wnhuang@chromium.org>, Xinming Hu <huxm@marvell.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org, rajatxjain@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBUdWVzZGF5LCBKYW51YXJ5IDI0LCAyMDE3LCBEYW5pZWwgTGV6Y2Fu
-byB3cm90ZToNCj4gPiA+ID4gK2Vhcmx5X3BsYXRmb3JtX2luaXQoImVhcmx5dGltZXIiLCAmb3N0
-bV90aW1lcik7DQo+ID4gPiA+ICtzdWJzeXNfaW5pdGNhbGwob3N0bV9pbml0KTsgbW9kdWxlX2V4
-aXQob3N0bV9leGl0KTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArTU9EVUxFX0FVVEhPUigiQ2hyaXMg
-QnJhbmR0Iik7DQo+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlJlbmVzYXMgT1NUTSBUaW1l
-ciBEcml2ZXIiKTsNCj4gPiA+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsNCj4gPiA+DQo+
-ID4gPiBNYXliZSB5b3UgY2FuIHRyeSB3aXRoIGJ1aWx0aW5fcGxhdGZvcm0gPw0KPiA+DQo+ID4g
-R29vZCBpZGVhLiBCdXQsIG5vdyBJIGdldCBhICJTZWN0aW9uIG1pc21hdGNoIiBkdXJpbmcgbGlu
-ayB0aW1lIHNvDQo+ID4gSSdsbCBoYXZlIHRvIGZpZ3VyZSBvdXQgd2h5IHRoYXQgaXMuDQo+IA0K
-PiBNbWgsIEkgdGhpbmsgaXQgd291bGQgYmUgbW9yZSBjb25zaXN0ZW50IHRvIGNvbnZlcnQgdGhp
-cyB0bzoNCj4gDQo+IENMT0NLU09VUkNFX09GX0RFQ0xBUkUob3N0bSwgInJlbmVzYXMsb3N0bSIs
-IG9zdG1faW5pdCk7DQo+IA0KPiBUaGUgb25seSBwcm9ibGVtIGlzIHRvIGdldCB0aGUgc3RydWN0
-IGRldmljZSBhc3NvY2lhdGVkIHRvIHRoZSBvZl9ub2RlDQo+IHBhc3NlZCBhcyBwYXJhbWV0ZXIg
-dG8gb3N0bV9pbml0IGluIG9yZGVyIHRvIHVzZSB0aGUgZGV2bV8qIEFQSS4NCj4gDQo+IEkgdGhp
-bmsgb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSBzaG91bGQgcmV0dXJuIHRoZSBwbGF0Zm9ybV9kZXZp
-Y2UsIHRoZW4NCj4gcGRldi0+ZGV2LiBJZiB0aGF0IHdvcmtzIHRoZSBvdGhlciBkcml2ZXJzIHdp
-bGwgYmVuZWZpdCBmcm9tIHRoYXQgdG8NCj4gcGRldi0+cmVtb3ZlIGFsbA0KPiB0aGUgcm9sbGJh
-Y2sgY29kZSBldmVyeXdoZXJlLg0KDQoNCkl0IHdhcyBhIGdvb2QgaWRlYS4uLi5idXQgaXQgd2ls
-bCBub3Qgd29yay4NCg0KV2hpbGUgQ0xPQ0tTT1VSQ0VfT0ZfREVDTEFSRSBpcyBnb29kIGF0IHB1
-dHRpbmcgdGhlIGRyaXZlciBhdCB0aGUNCmZyb250IG9mIHRoZSBsaW5lIGZvciBsb2FkaW5nLCBp
-dCdzIHRvbyBlYXJseSBpbiBib290IHRvIGRldGVjdA0KYSBwbGF0Zm9ybV9kZXZpY2UuDQoNCm9m
-X2ZpbmRfZGV2aWNlX2J5X25vZGUgY2FsbHMgYnVzX2ZpbmRfZGV2aWNlLiBCdXQgdGhlIGZpcnN0
-IHRoaW5nIHRoYXQNCmJ1c19maW5kX2RldmljZSBkb2VzIGlzOg0KDQoJaWYgKCFidXMgfHwgIWJ1
-cy0+cCkNCgkJcmV0dXJuIE5VTEw7DQoNCkJ1dCBidXMtPnA9MCBzbyBpdCByZXR1cm5zIGltbWVk
-aWF0ZWx5Lg0KDQoNCk9mIGNvdXJzZSBjaGFuZ2luZyB0aGUgY29kZSBvdmVyIHRvOg0KICAgICAg
-ICBkZXZtX2t6YWxsb2MgLT4gZGV2bV9remFsbG9jDQpkZXZtX2lvcmVtYXBfbm9jYWNoZSAtPiBv
-Zl9pb19yZXF1ZXN0X2FuZF9tYXANCiAgICBwbGF0Zm9ybV9nZXRfaXJxIC0+IGlycV9vZl9wYXJz
-ZV9hbmRfbWFwDQogICAgICAgICAgICAgZGV2X2VyciAtPiBwcl9lcnINCg0KDQpUaGVuIHRoaW5n
-cyB3b3JrLCBidXQgSSdtIGJhY2sgdG8gbWFuYWdpbmcgdGhlIHJvbGxiYWNrIGNvZGUgbWFudWFs
-bHkuDQoNCg0KQW55IG90aGVyIGlkZWFzIG9uIGhvdyB0byBnZXQgdGhlIGNvcnJlc3BvbmRpbmcg
-cGxhdGZvcm1fZGV2aWNlIGZvcg0KYSBEVCBub2RlPw0KDQoNCkNocmlzDQoNCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Rajat,
+
+On Thu, Jan 12, 2017 at 10:01:06AM -0800, Rajat Jain wrote:
+> Some onboard BT chips (e.g. Marvell 8997) contain a wakeup pin that
+> can be connected to a gpio on the CPU side, and can be used to wakeup
+> the host out-of-band. This can be useful in situations where the
+> in-band wakeup is not possible or not preferable (e.g. the in-band
+> wakeup may require the USB host controller to remain active, and
+> hence consuming more system power during system sleep).
+> 
+> The oob gpio interrupt to be used for wakeup on the CPU side, is
+> read from the device tree node, (using standard interrupt descriptors).
+> A devcie tree binding document is also added for the driver. The
+> compatible string is in compliance with
+> Documentation/devicetree/bindings/usb/usb-device.txt
+> 
+> Signed-off-by: Rajat Jain <rajatja@google.com>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> v5: Move the call to pm_wakeup_event() to the begining of irq handler.
+> v4: Move the set_bit(BTUSB_OOB_WAKE_DISABLED,..) call to the beginning of
+>     btusb_config_oob_wake()
+> v3: Add Brian's "Reviewed-by"
+> v2: * Use interrupt-names ("wakeup") instead of assuming first interrupt.
+>     * Leave it on device tree to specify IRQ flags (level /edge triggered)
+>     * Mark the device as non wakeable on exit.
+> 
+>  Documentation/devicetree/bindings/net/btusb.txt | 40 ++++++++++++
+>  drivers/bluetooth/btusb.c                       | 85 +++++++++++++++++++++++++
+>  2 files changed, 125 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/btusb.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
+> new file mode 100644
+> index 000000000000..2c0355c85972
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/btusb.txt
+> @@ -0,0 +1,40 @@
+> +Generic Bluetooth controller over USB (btusb driver)
+> +---------------------------------------------------
+> +
+> +Required properties:
+> +
+> +  - compatible : should comply with the format "usbVID,PID" specified in
+> +		 Documentation/devicetree/bindings/usb/usb-device.txt
+> +		 At the time of writing, the only OF supported devices
+> +		 (more may be added later) are:
+> +
+> +		  "usb1286,204e" (Marvell 8997)
+> +
+> +Optional properties:
+> +
+> +  - interrupt-parent: phandle of the parent interrupt controller
+> +  - interrupt-names: (see below)
+> +  - interrupts : The interrupt specified by the name "wakeup" is the interrupt
+> +		 that shall be used for out-of-band wake-on-bt. Driver will
+> +		 request this interrupt for wakeup. During system suspend, the
+> +		 irq will be enabled so that the bluetooth chip can wakeup host
+> +		 platform out of band. During system resume, the irq will be
+> +		 disabled to make sure unnecessary interrupt is not received.
+> +
+> +Example:
+> +
+> +Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
+> +
+> +&usb_host1_ehci {
+> +    status = "okay";
+> +    #address-cells = <1>;
+> +    #size-cells = <0>;
+> +
+> +    mvl_bt1: bt@1 {
+> +	compatible = "usb1286,204e";
+> +	reg = <1>;
+> +	interrupt-parent = <&gpio0>;
+> +	interrupt-name = "wakeup";
+> +	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
+> +    };
+> +};
+> diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+> index ce22cefceed1..0a777bb407b1 100644
+> --- a/drivers/bluetooth/btusb.c
+> +++ b/drivers/bluetooth/btusb.c
+> @@ -24,6 +24,8 @@
+>  #include <linux/module.h>
+>  #include <linux/usb.h>
+>  #include <linux/firmware.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <asm/unaligned.h>
+>  
+>  #include <net/bluetooth/bluetooth.h>
+> @@ -369,6 +371,7 @@ static const struct usb_device_id blacklist_table[] = {
+>  #define BTUSB_BOOTING		9
+>  #define BTUSB_RESET_RESUME	10
+>  #define BTUSB_DIAG_RUNNING	11
+> +#define BTUSB_OOB_WAKE_DISABLED	12
+>  
+>  struct btusb_data {
+>  	struct hci_dev       *hdev;
+> @@ -416,6 +419,8 @@ struct btusb_data {
+>  	int (*recv_bulk)(struct btusb_data *data, void *buffer, int count);
+>  
+>  	int (*setup_on_usb)(struct hci_dev *hdev);
+> +
+> +	int oob_wake_irq;   /* irq for out-of-band wake-on-bt */
+>  };
+>  
+>  static inline void btusb_free_frags(struct btusb_data *data)
+> @@ -2728,6 +2733,66 @@ static int btusb_bcm_set_diag(struct hci_dev *hdev, bool enable)
+>  }
+>  #endif
+>  
+> +#ifdef CONFIG_PM
+> +static irqreturn_t btusb_oob_wake_handler(int irq, void *priv)
+> +{
+> +	struct btusb_data *data = priv;
+> +
+> +	pm_wakeup_event(&data->udev->dev, 0);
+> +
+> +	/* Disable only if not already disabled (keep it balanced) */
+> +	if (!test_and_set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags)) {
+> +		disable_irq_nosync(irq);
+> +		disable_irq_wake(irq);
+> +	}
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static const struct of_device_id btusb_match_table[] = {
+> +	{ .compatible = "usb1286,204e" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, btusb_match_table);
+> +
+> +/* Use an oob wakeup pin? */
+> +static int btusb_config_oob_wake(struct hci_dev *hdev)
+> +{
+> +	struct btusb_data *data = hci_get_drvdata(hdev);
+> +	struct device *dev = &data->udev->dev;
+> +	int irq, ret;
+> +
+> +	set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags);
+> +
+> +	if (!of_match_device(btusb_match_table, dev))
+> +		return 0;
+> +
+> +	/* Move on if no IRQ specified */
+> +	irq = of_irq_get_byname(dev->of_node, "wakeup");
+> +	if (irq <= 0) {
+> +		bt_dev_dbg(hdev, "%s: no OOB Wakeup IRQ in DT", __func__);
+> +		return 0;
+> +	}
+> +
+> +	ret = devm_request_irq(&hdev->dev, irq, btusb_oob_wake_handler,
+> +			       0, "OOB Wake-on-BT", data);
+> +	if (ret) {
+> +		bt_dev_err(hdev, "%s: IRQ request failed", __func__);
+> +		return ret;
+> +	}
+> +
+> +	ret = device_init_wakeup(dev, true);
+> +	if (ret) {
+> +		bt_dev_err(hdev, "%s: failed to init_wakeup\n", __func__);
+
+bt_dev_err() includes the newlines for you, but you'd added an extra one
+here (but not above).
+
+> +		return ret;
+> +	}
+> +
+> +	data->oob_wake_irq = irq;
+> +	disable_irq(irq);
+> +	bt_dev_info(hdev, "OOB Wake-on-BT configured at IRQ %u\n", irq);
+
+And here.
+
+> +	return 0;
+> +}
+> +#endif
+> +
+>  static int btusb_probe(struct usb_interface *intf,
+>  		       const struct usb_device_id *id)
+>  {
+> @@ -2849,6 +2914,11 @@ static int btusb_probe(struct usb_interface *intf,
+>  	hdev->send   = btusb_send_frame;
+>  	hdev->notify = btusb_notify;
+>  
+> +#ifdef CONFIG_PM
+> +	err = btusb_config_oob_wake(hdev);
+> +	if (err)
+> +		goto out_free_dev;
+> +#endif
+>  	if (id->driver_info & BTUSB_CW6622)
+>  		set_bit(HCI_QUIRK_BROKEN_STORED_LINK_KEY, &hdev->quirks);
+>  
+> @@ -3061,6 +3131,9 @@ static void btusb_disconnect(struct usb_interface *intf)
+>  			usb_driver_release_interface(&btusb_driver, data->isoc);
+>  	}
+>  
+> +	if (data->oob_wake_irq)
+> +		device_init_wakeup(&data->udev->dev, false);
+> +
+>  	hci_free_dev(hdev);
+>  }
+>  
+> @@ -3089,6 +3162,12 @@ static int btusb_suspend(struct usb_interface *intf, pm_message_t message)
+>  	btusb_stop_traffic(data);
+>  	usb_kill_anchored_urbs(&data->tx_anchor);
+>  
+> +	if (data->oob_wake_irq && device_may_wakeup(&data->udev->dev)) {
+> +		clear_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags);
+> +		enable_irq_wake(data->oob_wake_irq);
+> +		enable_irq(data->oob_wake_irq);
+> +	}
+> +
+>  	/* Optionally request a device reset on resume, but only when
+>  	 * wakeups are disabled. If wakeups are enabled we assume the
+>  	 * device will stay powered up throughout suspend.
+> @@ -3126,6 +3205,12 @@ static int btusb_resume(struct usb_interface *intf)
+>  	if (--data->suspend_count)
+>  		return 0;
+>  
+> +	/* Disable only if not already disabled (keep it balanced) */
+> +	if (!test_and_set_bit(BTUSB_OOB_WAKE_DISABLED, &data->flags)) {
+
+As I mentioned elsewhere, the negative form (i.e., DISABLED instead of
+ENABLED) seems a little backward to me. It has the small effect of
+meaning that the default behavior is actually to pretend that OOB wake
+was enabled, and so if somehow btusb_config_oob_wake() wasn't called
+(e.g., if CONFIG_PM is not enabled, or if the code gets refactored) this
+then btusb_resume() will behave badly.
+
+Now, this doesn't create an immediate problem (btusb_resume() should
+never be called if !CONFIG_PM), but it does suggest that maybe it would
+be better for the default (0) value to mean "disabled".
+
+Brian
+
+> +		disable_irq(data->oob_wake_irq);
+> +		disable_irq_wake(data->oob_wake_irq);
+> +	}
+> +
+>  	if (!test_bit(HCI_RUNNING, &hdev->flags))
+>  		goto done;
+>  
+> -- 
+> 2.11.0.390.gc69c2f50cf-goog
+> 
