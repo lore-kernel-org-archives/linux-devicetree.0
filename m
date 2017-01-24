@@ -1,58 +1,67 @@
-From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v9 3/3] ARM: dts: imx6q-evi: support cyclone-ps-spi
-Date: Tue, 24 Jan 2017 14:19:34 -0800
-Message-ID: <8466629f15d8c34be20d574012b0e829680a6393.1485295905.git.stillcompiling@gmail.com>
-References: <cover.1485295905.git.stillcompiling@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1485295905.git.stillcompiling@gmail.com>
-In-Reply-To: <cover.1485295905.git.stillcompiling@gmail.com>
-References: <cover.1485295905.git.stillcompiling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Anatolij Gustschin <agust@denx.de>, Joshua Clayton <stillcompiling@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fpga@vger.kernel.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 08/16] arm: dts: add spi nodes to the mt7623.dtsi file
+Date: Tue, 24 Jan 2017 23:39:21 +0100
+Message-ID: <69d73342-d710-5f6d-567b-8e75a84fdb18@gmail.com>
+References: <1485170975-51813-1-git-send-email-john@phrozen.org>
+ <1485170975-51813-9-git-send-email-john@phrozen.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485170975-51813-9-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for Altera cyclone V FPGA connected to an spi port
-to the evi devicetree file
 
-Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
----
- arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-index 79a0bd5..e531bf7 100644
---- a/arch/arm/boot/dts/imx6q-evi.dts
-+++ b/arch/arm/boot/dts/imx6q-evi.dts
-@@ -83,6 +83,15 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
- 	status = "okay";
-+
-+	fpga_spi: cyclonespi@0 {
-+		compatible = "altr,fpga-passive-serial";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		pinctrl-0 = <&pinctrl_fpgaspi>;
-+		nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-+		nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-+	};
- };
- 
- &ecspi3 {
-@@ -316,6 +325,13 @@
- 		>;
- 	};
- 
-+	pinctrl_fpgaspi: fpgaspigrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x1b0b0
-+			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_gpminand: gpminandgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
--- 
-2.9.3
+On 01/23/2017 12:29 PM, John Crispin wrote:
+> Add SPI nodes to the mt7623.dtsi file.
+>
+> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt7623.dtsi |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+> index 8ac4569..c8f38e1 100644
+> --- a/arch/arm/boot/dts/mt7623.dtsi
+> +++ b/arch/arm/boot/dts/mt7623.dtsi
+> @@ -15,6 +15,7 @@
+>  #include <dt-bindings/interrupt-controller/irq.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/mt2701-clk.h>
+> +#include <dt-bindings/phy/phy.h>
+
+Why do you need this include here?
+
+Regards,
+Matthias
+
+>  #include <dt-bindings/pinctrl/mt7623-pinfunc.h>
+>  #include <dt-bindings/power/mt2701-power.h>
+>  #include <dt-bindings/reset/mt2701-resets.h>
+> @@ -281,6 +282,17 @@
+>  		status = "disabled";
+>  	};
+>
+> +	spi: spi@1100a000 {
+> +		compatible = "mediatek,mt7623-spi",
+> +			     "mediatek,mt6589-spi";
+> +		reg = <0 0x1100a000 0 0x1000>;
+> +		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&pericfg CLK_PERI_SPI0>;
+> +		clock-names = "main";
+> +
+> +		status = "disabled";
+> +	};
+> +
+>  	hifsys: syscon@1a000000 {
+>  		compatible = "mediatek,mt7623-hifsys",
+>  			     "mediatek,mt2701-hifsys",
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
