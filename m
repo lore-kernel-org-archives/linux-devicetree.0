@@ -1,45 +1,96 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Tue, 24 Jan 2017 16:08:31 +0100
-Message-ID: <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: RE: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+ hisilicon 161010801 erratum
+Date: Tue, 24 Jan 2017 15:13:42 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA8174AC4AB@lhreml504-mbs>
+References: <588625E3.9040703@huawei.com> <588759E0.1010804@huawei.com>
+ <20170124135224.GB7572@leverpostej>
+ <5FC3163CFD30C246ABAA99954A238FA8174AC371@lhreml504-mbs>
+ <20170124142851.GE7572@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ding Tianhong <dingtianhong@huawei.com>, catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com, mark.rutland@arm.com, oss@buserror.net, devicetree@vger.kernel.org, shawnguo@kernel.org, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, linuxarm@huawei.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170124142851.GE7572@leverpostej>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "marc.zyngier-5wv7dgnIgG8@public.gmane.org" <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, "will.deacon-5wv7dgnIgG8@public.gmane.org" <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linuxarm <linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, "Guohanjun (Hanjun Guo)" <guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTkvMDEvMjAxNyAxNDozNSwgRGluZyBUaWFuaG9uZyB3cm90ZToKPiBFcnJhdHVtIEhpc2ls
-aWNvbi0xNjEwMTAxMDEgc2F5cyB0aGF0IHRoZSBBUk0gZ2VuZXJpYyB0aW1lciBjb3VudGVyICJo
-YXMgdGhlCj4gcG90ZW50aWFsIHRvIGNvbnRhaW4gYW4gZXJyb25lb3VzIHZhbHVlIHdoZW4gdGhl
-IHRpbWVyIHZhbHVlIGNoYW5nZXMiLgo+IEFjY2Vzc2VzIHRvIFRWQUwgKGJvdGggcmVhZCBhbmQg
-d3JpdGUpIGFyZSBhbHNvIGFmZmVjdGVkIGR1ZSB0byB0aGUgaW1wbGljaXQgY291bnRlcgo+IHJl
-YWQuICBBY2Nlc3NlcyB0byBDVkFMIGFyZSBub3QgYWZmZWN0ZWQuCj4gCj4gVGhlIHdvcmthcm91
-bmQgaXMgdG8gcmVyZWFkIHRoZSBzeXN0ZW0gY291bnQgcmVnaXN0ZXJzIHVudGlsIHRoZSB2YWx1
-ZSBvZiB0aGUgc2Vjb25kCj4gcmVhZCBpcyBsYXJnZXIgdGhhbiB0aGUgZmlyc3Qgb25lIGJ5IGxl
-c3MgdGhhbiAzMiwgdGhlIHN5c3RlbSBjb3VudGVyIGNhbiBiZSBndWFyYW50ZWVkCj4gbm90IHRv
-IHJldHVybiB3cm9uZyB2YWx1ZSB0d2ljZSBieSBiYWNrLXRvLWJhY2sgcmVhZCBhbmQgdGhlIGVy
-cm9yIHZhbHVlIGlzIGFsd2F5cyBsYXJnZXIKPiB0aGFuIHRoZSBjb3JyZWN0IG9uZSBieSAzMi4g
-V3JpdGVzIHRvIFRWQUwgYXJlIHJlcGxhY2VkIHdpdGggYW4gZXF1aXZhbGVudCB3cml0ZSB0byBD
-VkFMLgoKV2h5IG5vdCB1c2UgYW5vdGhlciBjbG9ja3NvdXJjZSBpbnN0ZWFkIG9mIGFkZGluZyBh
-IHdvcmthcm91bmQgd2l0aCBhCm5vbiBuZWdsaWdpYmxlIG92ZXJoZWFkIGFuZCBtb3JlIGNvbXBs
-ZXhpdHkgaW4gdGhlIGNvZGUgPwoKCi0tIAogPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExpbmFy
-by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwoKRm9sbG93IExpbmFy
-bzogIDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwKPGh0
-dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfAo8aHR0cDovL3d3dy5saW5h
-cm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
-bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+
+
+> -----Original Message-----
+> From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> Sent: Tuesday, January 24, 2017 2:29 PM
+> To: Shameerali Kolothum Thodi
+> Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org; will.deacon-5wv7dgnIgG8@public.gmane.org; linux-
+> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Linuxarm; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; John
+> Garry; Guohanjun (Hanjun Guo)
+> Subject: Re: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for
+> hisilicon 161010801 erratum
+> 
+> On Tue, Jan 24, 2017 at 02:00:30PM +0000, Shameerali Kolothum Thodi
+> wrote:
+> > > -----Original Message-----
+> > > From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> 
+> > > On Tue, Jan 24, 2017 at 01:42:56PM +0000, Shameerali Kolothum Thodi
+> > > wrote:
+> 
+> > > > +Optional
+> > > > +- hisilicon,erratum-161010801 : A boolean property. Indicates
+> the
+> > > > +presence of
+> > > > +  erratum 161010801, which says that these platforms doesn't
+> > > > +support SMMU
+> > > > +  mapping for MSI transactions and those transactions has to be
+> > > > +bypassed
+> > > > +  by SMMU.
+> > >
+> > > What exactly is meant by "doesn't support SMMU mapping" here? What
+> > > precisely is the problem in HW?
+> >
+> > On this platforms the ITS doorbell deviceID information is embedded
+> in
+> > the MSI payload. To do this, the PCIe controller differentiates the
+> > MSI payload and DMA payload and modifies the MSI payload to add the
+> deviceID information.
+> > The way it modifies this is by comparing against a SYS_CTRL register
+> > which is configured by UEFI with the ITS doorbell phys address.
+> 
+> Ok. Some part of this will need to go in the binding description.
+> 
+> How does this interact with translations via the SMMU?
+> 
+> Do writes matching this address:
+> 
+> (a) always bypass translation.
+> (b) get translated after modification.
+> (c) other?
+
+PCIe RC has a configuration setting to enable/disable SMMU
+bypass for PCIe MSI write and with this patch series we
+are using the disable mode. So it bypasses SMMU always for
+MSI but not for DMA. 
+
+As per our SoC engineers this implementation seems to be based on an earlier
+version of GIC spec earlier version the GIC spec(Document 
+number:PRD03-GENC-010745 18.0) where it says:
+
+"Implementations may choose to transform writes to GITS_TRANSLATER by either:
+ -multiplexing the device ID onto the address bus (which is what GIC-500 provides
+  a mechanism for), or
+ -extending the data value to 64 bits, providing the device ID in the upper bits,
+  and transforming the access to become a 64-bit write"
+
+Though I can't find the same in latest GIC spec.
+
+Thanks,
+Shameer
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
