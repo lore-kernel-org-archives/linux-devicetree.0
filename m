@@ -1,68 +1,54 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v4 2/8] devicetree: power: add battery state machine documentation
-Date: Tue, 24 Jan 2017 11:56:33 -0800
-Message-ID: <CAKvHMgS9ZxE2qxDqeAVRJFzerjkJV=io58aQjtU51j=kFzbYtw@mail.gmail.com>
-References: <20170122071404.9654-3-matt@ranostay.consulting> <20170122222212.27086-1-liam@networkimprov.net>
+From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
+Date: Tue, 24 Jan 2017 20:19:50 +0000
+Message-ID: <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+References: <20170123135423.28780-1-chris.brandt@renesas.com>
+ <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
+ <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170124143222.GA2021@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170122222212.27086-1-liam@networkimprov.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sebastian Reichel <sre@kernel.org>, Tony Lindgren <tony@atomide.com>, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170124143222.GA2021@mai>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 22, 2017 at 2:22 PM, Liam Breck <liam@networkimprov.net> wrote:
-> I think Matt meant the following :-)
->
-> Note: nominal-microvolt is not the correct term for termination voltage.
-> Changed to termination-microvolt
-> ---
->
-> Documentation on battery properties that can be defined for
-> fine tuning fuel gauge state machines.
->
-> From: Matt Ranostay <matt@ranostay.consulting>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-> ---
->  .../devicetree/bindings/power/supply/battery.txt   | 34 ++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/battery.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
-> new file mode 100644
-> index 000000000000..398b4d622883
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> @@ -0,0 +1,34 @@
-> +Battery Characteristics
-> +
-> +Required Properties:
-> + - compatible: Must be "fixed-battery"
-> +
-> +Optional Properties:
-> + - termination-microvolt: dead battery voltage
-> + - design-microwatt-hours: battery design energy
-> + - design-microamp-hours: battery design capacity
-
-
-Two more battery characteristics should be included. Battery chargers
-need them (for instance, BQ24190).
-
-- precharge-microamps: maximum charge current during precharge
-  phase (typically 20% of battery capacity)
-
-- termination-microamps: a charge cycle terminates when the
-  battery voltage is above recharge threshold, and the current is below
-  this setting (typically 10% of battery capacity)
-
-Perhaps termination-microvolt should be called terminal-microvolt or
-similar to avoid confusion.
-
-Sebastian, did you want to include the other fields from your example?
-
-        /* Nokia BL-5J */
-        nominal-microvolt = <3700000>;
-        chemistry-type = <POWER_SUPPLY_LI_ION>;
+SGkgRGFuaWVsLA0KDQpPbiBUdWVzZGF5LCBKYW51YXJ5IDI0LCAyMDE3LCBEYW5pZWwgTGV6Y2Fu
+byB3cm90ZToNCj4gPiA+ID4gK2Vhcmx5X3BsYXRmb3JtX2luaXQoImVhcmx5dGltZXIiLCAmb3N0
+bV90aW1lcik7DQo+ID4gPiA+ICtzdWJzeXNfaW5pdGNhbGwob3N0bV9pbml0KTsgbW9kdWxlX2V4
+aXQob3N0bV9leGl0KTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArTU9EVUxFX0FVVEhPUigiQ2hyaXMg
+QnJhbmR0Iik7DQo+ID4gPiA+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlJlbmVzYXMgT1NUTSBUaW1l
+ciBEcml2ZXIiKTsNCj4gPiA+ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsNCj4gPiA+DQo+
+ID4gPiBNYXliZSB5b3UgY2FuIHRyeSB3aXRoIGJ1aWx0aW5fcGxhdGZvcm0gPw0KPiA+DQo+ID4g
+R29vZCBpZGVhLiBCdXQsIG5vdyBJIGdldCBhICJTZWN0aW9uIG1pc21hdGNoIiBkdXJpbmcgbGlu
+ayB0aW1lIHNvDQo+ID4gSSdsbCBoYXZlIHRvIGZpZ3VyZSBvdXQgd2h5IHRoYXQgaXMuDQo+IA0K
+PiBNbWgsIEkgdGhpbmsgaXQgd291bGQgYmUgbW9yZSBjb25zaXN0ZW50IHRvIGNvbnZlcnQgdGhp
+cyB0bzoNCj4gDQo+IENMT0NLU09VUkNFX09GX0RFQ0xBUkUob3N0bSwgInJlbmVzYXMsb3N0bSIs
+IG9zdG1faW5pdCk7DQo+IA0KPiBUaGUgb25seSBwcm9ibGVtIGlzIHRvIGdldCB0aGUgc3RydWN0
+IGRldmljZSBhc3NvY2lhdGVkIHRvIHRoZSBvZl9ub2RlDQo+IHBhc3NlZCBhcyBwYXJhbWV0ZXIg
+dG8gb3N0bV9pbml0IGluIG9yZGVyIHRvIHVzZSB0aGUgZGV2bV8qIEFQSS4NCj4gDQo+IEkgdGhp
+bmsgb2ZfZmluZF9kZXZpY2VfYnlfbm9kZSBzaG91bGQgcmV0dXJuIHRoZSBwbGF0Zm9ybV9kZXZp
+Y2UsIHRoZW4NCj4gcGRldi0+ZGV2LiBJZiB0aGF0IHdvcmtzIHRoZSBvdGhlciBkcml2ZXJzIHdp
+bGwgYmVuZWZpdCBmcm9tIHRoYXQgdG8NCj4gcGRldi0+cmVtb3ZlIGFsbA0KPiB0aGUgcm9sbGJh
+Y2sgY29kZSBldmVyeXdoZXJlLg0KDQoNCkl0IHdhcyBhIGdvb2QgaWRlYS4uLi5idXQgaXQgd2ls
+bCBub3Qgd29yay4NCg0KV2hpbGUgQ0xPQ0tTT1VSQ0VfT0ZfREVDTEFSRSBpcyBnb29kIGF0IHB1
+dHRpbmcgdGhlIGRyaXZlciBhdCB0aGUNCmZyb250IG9mIHRoZSBsaW5lIGZvciBsb2FkaW5nLCBp
+dCdzIHRvbyBlYXJseSBpbiBib290IHRvIGRldGVjdA0KYSBwbGF0Zm9ybV9kZXZpY2UuDQoNCm9m
+X2ZpbmRfZGV2aWNlX2J5X25vZGUgY2FsbHMgYnVzX2ZpbmRfZGV2aWNlLiBCdXQgdGhlIGZpcnN0
+IHRoaW5nIHRoYXQNCmJ1c19maW5kX2RldmljZSBkb2VzIGlzOg0KDQoJaWYgKCFidXMgfHwgIWJ1
+cy0+cCkNCgkJcmV0dXJuIE5VTEw7DQoNCkJ1dCBidXMtPnA9MCBzbyBpdCByZXR1cm5zIGltbWVk
+aWF0ZWx5Lg0KDQoNCk9mIGNvdXJzZSBjaGFuZ2luZyB0aGUgY29kZSBvdmVyIHRvOg0KICAgICAg
+ICBkZXZtX2t6YWxsb2MgLT4gZGV2bV9remFsbG9jDQpkZXZtX2lvcmVtYXBfbm9jYWNoZSAtPiBv
+Zl9pb19yZXF1ZXN0X2FuZF9tYXANCiAgICBwbGF0Zm9ybV9nZXRfaXJxIC0+IGlycV9vZl9wYXJz
+ZV9hbmRfbWFwDQogICAgICAgICAgICAgZGV2X2VyciAtPiBwcl9lcnINCg0KDQpUaGVuIHRoaW5n
+cyB3b3JrLCBidXQgSSdtIGJhY2sgdG8gbWFuYWdpbmcgdGhlIHJvbGxiYWNrIGNvZGUgbWFudWFs
+bHkuDQoNCg0KQW55IG90aGVyIGlkZWFzIG9uIGhvdyB0byBnZXQgdGhlIGNvcnJlc3BvbmRpbmcg
+cGxhdGZvcm1fZGV2aWNlIGZvcg0KYSBEVCBub2RlPw0KDQoNCkNocmlzDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
