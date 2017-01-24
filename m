@@ -1,194 +1,46 @@
-From: Jeremy McNicoll <jeremymc@redhat.com>
-Subject: [PATCH V3 6/6] dts: doc: rename rpm_requests to respect DT naming conventions
-Date: Tue, 24 Jan 2017 01:36:28 -0800
-Message-ID: <1485250588-24698-7-git-send-email-jeremymc@redhat.com>
-References: <1485250588-24698-1-git-send-email-jeremymc@redhat.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1485250588-24698-1-git-send-email-jeremymc@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com, jeremymc@redhat.com
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/3] dmaengine: cppi41: Add dma support to da8xx
+Date: Tue, 24 Jan 2017 10:58:45 +0100
+Message-ID: <20170124095848.14593-1-abailon@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Node names cannot have an underscore '_' in the name.
-Simply rename 'rpm_request' nodes to 'rpm-request' and
-adjust associated documentation to reflect reality.
+This series add support of DA8xx to CPPI 4.1 driver.
+As the CPPI 4.1 is now generic, we only had to add the glue for DA8xx.
 
-Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
----
- Documentation/devicetree/bindings/clock/qcom,rpmcc.txt              | 2 +-
- .../devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt        | 2 +-
- Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt         | 6 +++---
- Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt             | 2 +-
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts                      | 2 +-
- arch/arm/boot/dts/qcom-apq8084.dtsi                                 | 2 +-
- arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts            | 2 +-
- arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts               | 2 +-
- arch/arm/boot/dts/qcom-msm8974.dtsi                                 | 2 +-
- arch/arm64/boot/dts/qcom/msm8916.dtsi                               | 2 +-
- arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi                       | 2 +-
- 11 files changed, 13 insertions(+), 13 deletions(-)
+This serie should applied on top of 
+"[PATCH v3 0/7] dmaengine: cppi41: Make CPPI 4.1 driver more generic".
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-index 87d3714..7154858 100644
---- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-+++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
-@@ -24,7 +24,7 @@ Example:
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8916";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-index 4e3dfb5..6b984cc 100644
---- a/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
-@@ -187,7 +187,7 @@ see regulator.txt.
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8974";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-index a48049c..30e1c75 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd-rpm.txt
-@@ -11,7 +11,7 @@ RPM node itself.
- 
- = SUBDEVICES
- 
--The RPM exposes resources to its subnodes.  The rpm_requests node must be
-+The RPM exposes resources to its subnodes.  The rpm-requests node must be
- present and this subnode may contain children that designate regulator
- resources.
- 
-@@ -29,7 +29,7 @@ resources.
- 	Definition: must be "rpm_requests"
- 
- Refer to Documentation/devicetree/bindings/regulator/qcom,smd-rpm-regulator.txt
--for information on the regulator subnodes that can exist under the rpm_requests.
-+for information on the regulator subnodes that can exist under the rpm-requests.
- 
- Example:
- 
-@@ -48,7 +48,7 @@ Example:
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8974";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
-index ea1dc75..3d4a61c 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,smd.txt
-@@ -82,7 +82,7 @@ The following example represents a smd node, with one edge representing the
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8974";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-index ad51df2..ccae434 100644
---- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -126,7 +126,7 @@
- 
- 	smd {
- 		rpm {
--			rpm_requests {
-+			rpm-requests {
- 				pm8841-regulators {
- 					s1 {
- 						regulator-min-microvolt = <675000>;
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 80d4886..002fd69 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -461,7 +461,7 @@
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-apq8084";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-index 382bcc3..a24c6b4 100644
---- a/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -19,7 +19,7 @@
- 
- 	smd {
- 		rpm {
--			rpm_requests {
-+			rpm-requests {
- 				pm8841-regulators {
- 					s1 {
- 						regulator-min-microvolt = <675000>;
-diff --git a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-index e7c1577..ec937c9 100644
---- a/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-sony-xperia-honami.dts
-@@ -60,7 +60,7 @@
- 
- 	smd {
- 		rpm {
--			rpm_requests {
-+			rpm-requests {
- 				pm8841-regulators {
- 					s1 {
- 						regulator-min-microvolt = <675000>;
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index 49d579f..0c09049 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -672,7 +672,7 @@
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8974";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index f8ff327..69eb846 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -866,7 +866,7 @@
- 			qcom,ipc = <&apcs 8 0>;
- 			qcom,smd-edge = <15>;
- 
--			rpm_requests {
-+			rpm-requests {
- 				compatible = "qcom,rpm-msm8916";
- 				qcom,smd-channels = "rpm_requests";
- 
-diff --git a/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi b/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
-index e9765e1..9b6ce50 100644
---- a/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8994-smd-rpm.dtsi
-@@ -13,7 +13,7 @@
- 
- &smd_rpm {
- 	rpm {
--		rpm_requests {
-+		rpm-requests {
- 			pm8994-regulators {
- 
- 				vdd_l1-supply = <&pm8994_s1>;
+Changes in v3:
+ - Fix few typos
+ - Don't use a wildcard for the compatible property
+
+Changes in v2:
+- most of patches of v1 has been moved to the series
+  "[PATCH v2 0/7] dmaengine: cppi41: Make CPPI 4.1 driver more generic".
+- some patches of v1 has been removed because they were no required
+  anymore because CPPI 4.1 driver has been made more generic.
+- In v1, the driver were managing the clock for DA8xx paltform.
+  This is not needed as CPPI 4.1 will be a child of MUSB DA8xx glue,
+  we can use PM runtime and let the DA8xx glue driver manage it.
+
+Alexandre Bailon (3):
+  dt/bindings: da8xx-usb: Add binding for the CPPI 4.1 DMA controller
+  dmaengine: cppi41: Add support of DA8xx to CPPI 4.1
+  dmaengine: cppi41: Fix teardown warnings
+
+ .../devicetree/bindings/usb/da8xx-usb.txt          | 39 ++++++++++++++++++++++
+ drivers/dma/Kconfig                                |  6 ++--
+ drivers/dma/cppi41.c                               | 27 +++++++++++++--
+ 3 files changed, 67 insertions(+), 5 deletions(-)
+
 -- 
-2.6.1
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
