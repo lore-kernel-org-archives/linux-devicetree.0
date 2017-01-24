@@ -1,89 +1,56 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 2/8] serial: st-asc: Provide RTS functionality
-Date: Tue, 24 Jan 2017 13:43:04 +0000
-Message-ID: <20170124134310.27512-3-lee.jones@linaro.org>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [RFC 1/4] irqchip, gicv3-its: Add device tree binding for hisilicon
+ 161010801 erratum
+Date: Tue, 24 Jan 2017 13:42:56 +0000
+Message-ID: <588759E0.1010804@huawei.com>
+References: <588625E3.9040703@huawei.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124134310.27512-1-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <588625E3.9040703-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Until this point, it has not been possible for userland serial
-applications (e.g. stty) to toggle the UART RTS line.  This can
-be useful with certain configurations. For example, when using
-a Mezzanine on a Linaro 96board, RTS line is used to take the
-on-board microcontroller in and out of reset.
+This erratum describes the limitation of certain HiSilicon platforms
+to support the SMMU mappings for MSI transactions and on those platforms
+the MSI transactions has to be bypassed by SMMU. The IIDR register of the
+GICv3 ITS on these platforms are not properly populated to differentiate
+the hardware, hence describe it in device tree.
 
-Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- drivers/tty/serial/st-asc.c | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
+ .../devicetree/bindings/interrupt-controller/arm,gic-v3.txt         | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-index 69e6232..397df50 100644
---- a/drivers/tty/serial/st-asc.c
-+++ b/drivers/tty/serial/st-asc.c
-@@ -30,6 +30,7 @@
- #include <linux/of_platform.h>
- #include <linux/serial_core.h>
- #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
- 
- #define DRIVER_NAME "st-asc"
- #define ASC_SERIAL_NAME "ttyAS"
-@@ -38,6 +39,7 @@
- 
- struct asc_port {
- 	struct uart_port port;
-+	struct gpio_desc *rts;
- 	struct clk *clk;
- 	unsigned int hw_flow_control:1;
- 	unsigned int force_m1:1;
-@@ -391,12 +393,27 @@ static unsigned int asc_tx_empty(struct uart_port *port)
- 
- static void asc_set_mctrl(struct uart_port *port, unsigned int mctrl)
- {
-+	struct asc_port *ascport = to_asc_port(port);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+index 4c29cda..84af301 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+@@ -75,6 +75,12 @@ These nodes must have the following properties:
+ - reg: Specifies the base physical address and size of the ITS
+   registers.
+
++Optional
++- hisilicon,erratum-161010801 : A boolean property. Indicates the presence of
++  erratum 161010801, which says that these platforms doesn't support  SMMU
++  mapping for MSI transactions and those transactions has to be bypassed
++  by SMMU.
 +
- 	/*
--	 * This routine is used for seting signals of: DTR, DCD, CTS/RTS
--	 * We use ASC's hardware for CTS/RTS, so don't need any for that.
--	 * Some boards have DTR and DCD implemented using PIO pins,
--	 * code to do this should be hooked in here.
-+	 * This routine is used for seting signals of: DTR, DCD, CTS and RTS.
-+	 * We use ASC's hardware for CTS/RTS when hardware flow-control is
-+	 * enabled, however if the RTS line is required for another purpose,
-+	 * commonly controlled using HUP from userspace, then we need to toggle
-+	 * it manually, using GPIO.
-+	 *
-+	 * Some boards also have DTR and DCD implemented using PIO pins, code to
-+	 * do this should be hooked in here.
- 	 */
-+
-+	if (!ascport->rts)
-+		return;
-+
-+	/* If HW flow-control is enabled, we can't fiddle with the RTS line */
-+	if (asc_in(port, ASC_CTL) & ASC_CTL_CTSENABLE)
-+		return;
-+
-+	gpiod_set_value(ascport->rts, mctrl & TIOCM_RTS);
- }
- 
- static unsigned int asc_get_mctrl(struct uart_port *port)
-@@ -726,6 +743,8 @@ static struct asc_port *asc_of_get_asc_port(struct platform_device *pdev)
- 							"st,hw-flow-control");
- 	asc_ports[id].force_m1 =  of_property_read_bool(np, "st,force_m1");
- 	asc_ports[id].port.line = id;
-+	asc_ports[id].rts = NULL;
-+
- 	return &asc_ports[id];
- }
- 
+ The main GIC node must contain the appropriate #address-cells,
+ #size-cells and ranges properties for the reg property of all ITS
+ nodes.
 -- 
-2.10.2
+1.9.1
+
+
+
+
+
+
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
