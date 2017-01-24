@@ -1,254 +1,337 @@
-From: Chen Feng <puck.chen@hisilicon.com>
-Subject: [V3 2/3] arm64: dts: Add dts files for Hisilicon Hi3660 SoC
-Date: Tue, 24 Jan 2017 16:57:28 +0800
-Message-ID: <1485248249-117383-2-git-send-email-puck.chen@hisilicon.com>
-References: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v5 3/3] watchdog: zx2967: add watchdog controller driver for ZTE's zx2967 family
+Date: Tue, 24 Jan 2017 16:58:42 +0800
+Message-ID: <1485248322-24299-3-git-send-email-baoyou.xie@linaro.org>
+References: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
+In-Reply-To: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: xuwei5@hisilicon.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, sudeep.holla@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: dan.zhao@hisilicon.com, xuyiping@hisilicon.com, lulu.luxiaobo@hisilicon.com, frong.fan@hisilicon.com, saberlily.xia@hisilicon.com, oliver.fu@hisilicon.com
+To: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-Add initial dtsi file to support Hisilicon Hi3660 SoC with
-support of Octal core CPUs in two clusters(4 * A53 & 4 * A73).
+This patch adds watchdog controller driver for ZTE's zx2967 family.
 
-Also add dts file to support HiKey960 development board which
-based on Hi3660 SoC.
-The output console is earlycon "earlycon=pl011,0xfdf05000".
-And the con_init uart5 with a fixed clock, which already
-configured at bootloader.
-
-When clock is available, the uart5 will be modified.
-
-Tested on HiKey960 Board.
-
-Signed-off-by: Chen Feng <puck.chen@hisilicon.com>
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 ---
- arch/arm64/boot/dts/hisilicon/Makefile            |   1 +
- arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  35 +++++
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi         | 160 ++++++++++++++++++++++
- 3 files changed, 196 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+ drivers/watchdog/Kconfig      |  10 ++
+ drivers/watchdog/Makefile     |   1 +
+ drivers/watchdog/zx2967_wdt.c | 274 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 285 insertions(+)
+ create mode 100644 drivers/watchdog/zx2967_wdt.c
 
-diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-index c8b8f80..c3a6c19 100644
---- a/arch/arm64/boot/dts/hisilicon/Makefile
-+++ b/arch/arm64/boot/dts/hisilicon/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
- dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index acb00b5..05093a2 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called aspeed_wdt.
+ 
++config ZX2967_WATCHDOG
++	tristate "ZTE zx2967 SoCs watchdog support"
++	depends on ARCH_ZX
++	select WATCHDOG_CORE
++	help
++	  Say Y here to include support for the watchdog timer
++	  in ZTE zx2967 SoCs.
++	  To compile this driver as a module, choose M here: the
++	  module will be called zx2967_wdt.
++
+ # AVR32 Architecture
+ 
+ config AT32AP700X_WDT
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 0c3d35e..bf2d296 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+ obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+ obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
++obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+ 
+ # AVR32 Architecture
+ obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
 new file mode 100644
-index 0000000..9ed9e68
+index 0000000..89a7018
 --- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-@@ -0,0 +1,35 @@
++++ b/drivers/watchdog/zx2967_wdt.c
+@@ -0,0 +1,274 @@
 +/*
-+ * dts file for Hisilicon HiKey960 Development Board
++ * watchdog driver for ZTE's zx2967 family
 + *
-+ * Copyright (C) 2016, Hisilicon Ltd.
++ * Copyright (C) 2017 ZTE Ltd.
 + *
++ * Author: Baoyou Xie <baoyou.xie@linaro.org>
++ *
++ * License terms: GNU General Public License (GPL) version 2
 + */
 +
-+/dts-v1/;
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/reset.h>
++#include <linux/watchdog.h>
 +
-+#include "hi3660.dtsi"
++#define ZX2967_WDT_CFG_REG			0x4
++#define ZX2967_WDT_LOAD_REG			0x8
++#define ZX2967_WDT_REFRESH_REG			0x18
++#define ZX2967_WDT_START_REG			0x1c
 +
-+/ {
-+	model = "HiKey960";
-+	compatible = "hisilicon,hi3660";
++#define ZX2967_WDT_REFRESH_MASK			0x3f
 +
-+	aliases {
-+		serial5 = &uart5;       /* console UART */
-+	};
++#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
++#define ZX2967_WDT_START_EN			0x1
 +
-+	chosen {
-+		stdout-path = "serial5:115200n8";
-+	};
++#define ZX2967_WDT_WRITEKEY			0x12340000
 +
-+	memory@0 {
-+		device_type = "memory";
-+		/* rewrite this at bootloader */
-+		reg = <0x0 0x0 0x0 0x0>;
-+	};
++#define ZX2967_WDT_DIV_DEFAULT			16
++#define ZX2967_WDT_DEFAULT_TIMEOUT		32
++#define ZX2967_WDT_MIN_TIMEOUT			1
++#define ZX2967_WDT_MAX_TIMEOUT			500
++#define ZX2967_WDT_MAX_COUNT			0xffff
 +
-+	soc {
-+		uart5: uart@fdf05000 {
-+			status = "okay";
-+		};
-+	};
++#define ZX2967_WDT_CLK_FREQ			0x8000
++
++#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
++
++struct zx2967_wdt {
++	struct watchdog_device	wdt_device;
++	void __iomem		*reg_base;
++	struct clk		*clock;
 +};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-new file mode 100644
-index 0000000..3983086
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -0,0 +1,160 @@
-+/*
-+ * dts file for Hisilicon Hi3660 SoC
-+ *
-+ * Copyright (C) 2016, Hisilicon Ltd.
-+ */
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
++static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
++{
++	return readl_relaxed(wdt->reg_base + reg);
++}
 +
-+/ {
-+	compatible = "hisilicon,hi3660";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
++static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
++{
++	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
++}
 +
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
++static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
++{
++	u32 val;
 +
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
++	val ^= ZX2967_WDT_REFRESH_MASK;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
++}
 +
-+		cpu-map {
-+			cluster0 {
-+				core0 {
-+					cpu = <&cpu0>;
-+				};
-+				core1 {
-+					cpu = <&cpu1>;
-+				};
-+				core2 {
-+					cpu = <&cpu2>;
-+				};
-+				core3 {
-+					cpu = <&cpu3>;
-+				};
-+			};
-+			cluster1 {
-+				core0 {
-+					cpu = <&cpu4>;
-+				};
-+				core1 {
-+					cpu = <&cpu5>;
-+				};
-+				core2 {
-+					cpu = <&cpu6>;
-+				};
-+				core3 {
-+					cpu = <&cpu7>;
-+				};
-+			};
-+		};
++static int
++zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
++	unsigned int count;
 +
-+		cpu0: cpu@0 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
++	count = timeout * ZX2967_WDT_CLK_FREQ;
++	if (count > divisor * ZX2967_WDT_MAX_COUNT)
++		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
++	count = DIV_ROUND_UP(count, divisor);
++	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
++	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
++	zx2967_wdt_refresh(wdt);
++	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
 +
-+		cpu1: cpu@1 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
++	return 0;
++}
 +
-+		cpu2: cpu@2 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
++static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
++{
++	u32 val;
 +
-+		cpu3: cpu@3 {
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
++	val |= ZX2967_WDT_START_EN;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
++}
 +
-+		cpu4: cpu@100 {
-+			compatible = "arm,cortex-a73", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x100>;
-+			enable-method = "psci";
-+		};
++static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
++{
++	u32 val;
 +
-+		cpu5: cpu@101 {
-+			compatible = "arm,cortex-a73", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x101>;
-+			enable-method = "psci";
-+		};
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
++	val &= ~ZX2967_WDT_START_EN;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
++}
 +
-+		cpu6: cpu@102 {
-+			compatible = "arm,cortex-a73", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x102>;
-+			enable-method = "psci";
-+		};
++static int zx2967_wdt_start(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
 +
-+		cpu7: cpu@103 {
-+			compatible = "arm,cortex-a73", "arm,armv8";
-+			device_type = "cpu";
-+			reg = <0x0 0x103>;
-+			enable-method = "psci";
-+		};
-+	};
++	zx2967_wdt_set_timeout(wdd, wdd->timeout);
++	__zx2967_wdt_start(wdt);
 +
-+	gic: interrupt-controller@e82b0000 {
-+		compatible = "arm,gic-400";
-+		reg = <0x0 0xe82b1000 0 0x1000>, /* GICD */
-+		      <0x0 0xe82b2000 0 0x2000>, /* GICC */
-+		      <0x0 0xe82b4000 0 0x2000>, /* GICH */
-+		      <0x0 0xe82b6000 0 0x2000>; /* GICV */
-+		#address-cells = <0>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) |
-+					 IRQ_TYPE_LEVEL_HIGH)>;
-+	};
++	return 0;
++}
 +
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) |
-+					  IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) |
-+					  IRQ_TYPE_LEVEL_LOW)>;
-+	};
++static int zx2967_wdt_stop(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
 +
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
++	__zx2967_wdt_stop(wdt);
 +
-+		fixed_uart5: fixed_19_2M {
-+			compatible = "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <19200000>;
-+			clock-output-names = "fixed:uart5";
-+		};
++	return 0;
++}
 +
-+		uart5: uart@fdf05000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0x0 0xfdf05000 0x0 0x1000>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&fixed_uart5 &fixed_uart5>;
-+			clock-names = "uartclk", "apb_pclk";
-+			status = "disabled";
-+		};
-+	};
++static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	zx2967_wdt_refresh(wdt);
++
++	return 0;
++}
++
++#define ZX2967_WDT_OPTIONS \
++	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
++static const struct watchdog_info zx2967_wdt_ident = {
++	.options          =     ZX2967_WDT_OPTIONS,
++	.firmware_version =	0,
++	.identity         =	"zx2967 watchdog",
 +};
++
++static struct watchdog_ops zx2967_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = zx2967_wdt_start,
++	.stop = zx2967_wdt_stop,
++	.ping = zx2967_wdt_keepalive,
++	.set_timeout = zx2967_wdt_set_timeout,
++};
++
++static void zx2967_wdt_reset_sysctrl(struct device *dev)
++{
++	int ret;
++	void __iomem *regmap;
++	unsigned int offset, mask, config;
++	struct of_phandle_args out_args;
++
++	ret = of_parse_phandle_with_fixed_args(dev->of_node,
++			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
++	if (ret)
++		return;
++
++	offset = out_args.args[0];
++	config = out_args.args[1];
++	mask = out_args.args[2];
++
++	regmap = syscon_node_to_regmap(out_args.np);
++	if (IS_ERR(regmap))
++		return;
++
++	regmap_update_bits(regmap, offset, mask, config);
++}
++
++static int zx2967_wdt_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct zx2967_wdt *wdt;
++	struct resource *base;
++	int ret;
++	struct reset_control *rstc;
++
++	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
++	if (!wdt)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, wdt);
++
++	wdt->wdt_device.info = &zx2967_wdt_ident;
++	wdt->wdt_device.ops = &zx2967_wdt_ops;
++	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
++	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
++	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
++	wdt->wdt_device.parent = &pdev->dev;
++
++	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	wdt->reg_base = devm_ioremap_resource(dev, base);
++	if (IS_ERR(wdt->reg_base)) {
++		dev_err(dev, "ioremap failed\n");
++		return PTR_ERR(wdt->reg_base);
++	}
++
++	zx2967_wdt_reset_sysctrl(dev);
++
++	wdt->clock = devm_clk_get(dev, NULL);
++	if (IS_ERR(wdt->clock)) {
++		dev_err(dev, "failed to find watchdog clock source\n");
++		return PTR_ERR(wdt->clock);
++	}
++
++	ret = clk_prepare_enable(wdt->clock);
++	if (ret < 0) {
++		dev_err(dev, "failed to enable clock\n");
++		return ret;
++	}
++	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
++
++	rstc = devm_reset_control_get(dev, NULL);
++	if (IS_ERR(rstc)) {
++		dev_err(dev, "failed to get rstc");
++		ret = PTR_ERR(rstc);
++		goto fail_get_reset_control;
++	}
++
++	reset_control_assert(rstc);
++	mdelay(10);
++	reset_control_deassert(rstc);
++
++	watchdog_set_drvdata(&wdt->wdt_device, wdt);
++	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
++
++	ret = watchdog_register_device(&wdt->wdt_device);
++	if (ret)
++		goto fail_register;
++
++	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
++		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
++
++	return 0;
++
++fail_register:
++	watchdog_unregister_device(&wdt->wdt_device);
++fail_get_reset_control:
++	clk_disable_unprepare(wdt->clock);
++	return ret;
++}
++
++static int zx2967_wdt_remove(struct platform_device *pdev)
++{
++	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
++
++	watchdog_unregister_device(&wdt->wdt_device);
++	clk_disable_unprepare(wdt->clock);
++
++	return 0;
++}
++
++static const struct of_device_id zx2967_wdt_match[] = {
++	{ .compatible = "zte,zx296718-wdt", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
++
++static struct platform_driver zx2967_wdt_driver = {
++	.probe		= zx2967_wdt_probe,
++	.remove		= zx2967_wdt_remove,
++	.driver		= {
++		.name	= "zx2967-wdt",
++		.of_match_table	= of_match_ptr(zx2967_wdt_match),
++	},
++};
++module_platform_driver(zx2967_wdt_driver);
++
++MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
++MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
++MODULE_LICENSE("GPL v2");
 -- 
-1.9.1
+2.7.4
