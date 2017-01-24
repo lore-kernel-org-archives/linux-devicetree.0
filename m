@@ -1,114 +1,84 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
- 161010801
-Date: Tue, 24 Jan 2017 14:11:25 +0000
-Message-ID: <aa915b29-453f-6817-500f-1c6b457c0368@arm.com>
-References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/3] mtd: name the mtd device with an optional label
+ property
+Date: Tue, 24 Jan 2017 15:13:53 +0100
+Message-ID: <20170124151353.5bbffae0@bbrezillon>
+References: <1484573225-19095-1-git-send-email-clg@kaod.org>
+        <1484573225-19095-2-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <58875B0D.4080303-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1484573225-19095-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Robin Murphy <Robin.Murphy-5wv7dgnIgG8@public.gmane.org>
+To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ Robin,
+Hi Cédric,
 
-On 24/01/17 13:47, Shameerali Kolothum Thodi wrote:
-> The HiSilicon erratum 161010801 describes the limitation of certain
-> HiSilicon platforms to support the SMMU mappings for MSI transactions.
+On Mon, 16 Jan 2017 14:27:03 +0100
+Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
+
+> This can be used to easily identify a specific chip on a system with
+> multiple chips.
 > 
-> On these platforms GICv3 ITS translator is presented with the deviceID
-> by extending the MSI payload data to 64 bits to include the deviceID.
-> Hence, the PCIe controller on this platforms has to differentiate the
-> MSI payload against other DMA payload and has to modify the MSI payload.
-> This basically makes it difficult for this platforms to have a SMMU
-> translation for MSI. Also these platforms doesn't have a proper IIDR
-> register to use the existing IIDR based quirk mechanism.
-> 
-> This workaround based on the devicetree binding property, supports
-> bypassing the SMMU for the MSI transactions on this platforms.
-> 
-> Signed-off-by: shameer <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
 > ---
->  arch/arm64/Kconfig               | 15 ++++++++++++
->  drivers/irqchip/irq-gic-common.h |  1 +
->  drivers/irqchip/irq-gic-v3-its.c | 52 +++++++++++++++++++++++++++++++++++++++-
->  3 files changed, 67 insertions(+), 1 deletion(-)
+>  drivers/mtd/mtdcore.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0ae0427..8d600b0 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -485,6 +485,21 @@ config CAVIUM_ERRATUM_27456
-> 
->  	  If unsure, say Y.
-> 
-> +config HISILICON_ERRATUM_161010801
-> +	bool "HiSilicon erratum 161010801"
-> +	default y
-> +	help
-> +	  Enable workaround for erratum 161010801.
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 052772f7caef..bf61557b599d 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -654,6 +654,13 @@ static int mtd_add_device_partitions(struct mtd_info *mtd,
+>   */
+>  static void mtd_set_dev_defaults(struct mtd_info *mtd)
+>  {
+> +	/*
+> +	 * If DT support is enabled and we have a valid of_node pointer, try to
+> +	 * extract the MTD name from the label property.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_OF) && mtd->dev.of_node)
+> +		of_property_read_string(mtd->dev.of_node, "label", &mtd->name);
 > +
-> +	  This implements a gicv3-its errata workaround for HiSilicon
-> +	  platforms Hip05/Hip07. These platforms cannot support the MSI
-> +	  interrupt remapping and MSI transaction has to be bypassed by SMMU.
-> +
-> +	  The fix is to avoid calling the remapping hook into the SMMU
-> +	  driver from the its_irq_compose_msi_msg().
-> +
-> +	  If unsure, say Y.
-> +
->  endmenu
-> 
-> 
-> diff --git a/drivers/irqchip/irq-gic-common.h b/drivers/irqchip/irq-gic-common.h
-> index 205e5fd..de0385a 100644
-> --- a/drivers/irqchip/irq-gic-common.h
-> +++ b/drivers/irqchip/irq-gic-common.h
-> @@ -26,6 +26,7 @@ struct gic_quirk {
->  	void (*init)(void *data);
->  	u32 iidr;
->  	u32 mask;
-> +	const char *erratum;
->  };
-> 
->  int gic_configure_irq(unsigned int irq, unsigned int type,
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index f471939..0a326f6 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -44,6 +44,7 @@
->  #define ITS_FLAGS_CMDQ_NEEDS_FLUSHING		(1ULL << 0)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_22375	(1ULL << 1)
->  #define ITS_FLAGS_WORKAROUND_CAVIUM_23144	(1ULL << 2)
-> +#define ITS_FLAGS_WORKAROUND_HISILICON_161010801	(1ULL << 3)
-> 
->  #define RDIST_FLAGS_PROPBASE_NEEDS_FLUSHING	(1 << 0)
-> 
-> @@ -659,7 +660,8 @@ static void its_irq_compose_msi_msg(struct irq_data *d, struct msi_msg *msg)
->  	msg->address_hi		= upper_32_bits(addr);
->  	msg->data		= its_get_event_id(d);
-> 
-> -	iommu_dma_map_msi_msg(d->irq, msg);
-> +	if (!(its->flags & ITS_FLAGS_WORKAROUND_HISILICON_161010801))
-> +		iommu_dma_map_msi_msg(d->irq, msg);
 
-Let's contemplate this for a moment. If we're on the affected ITS, we're
-using the physical address of the GITS_TRANSLATER register. What
-guarantees that this is not going to conflict with an IOVA that DMA is
-going to use? From looking at these patches, my feeling is "not much".
+I realize this kind of thing would be better placed in mtd_set_of_node()
+(see the patch below). Modifying the mtd->name pointer in the back of
+MTD drivers is not such a good idea (suppose the driver allocated the
+memory with a regular kmalloc() and tries to free mtd->name in the remove
+path).
 
-So if I'm right, you're opening the door to some interesting memory
-corruption if the two regions ever intersect.
+If we move that to mtd_set_of_node(), drivers that wants to support this
+label property just have to check if mtd->name is NULL (after calling
+mtd_set_of_node() or nand_set_flash_node()) before assigning a default
+name.
+For unmodified drivers we keep the existing behavior: they'll just
+unconditionally override mtd->name with their own value (which might or
+might not be dynamically allocated).
 
-Robin, what do you think?
+>  	if (mtd->dev.parent) {
+>  		if (!mtd->owner && mtd->dev.parent->driver)
+>  			mtd->owner = mtd->dev.parent->driver->owner;
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+--->8---
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 13f8052b9ff9..a12b68f941e3 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -385,6 +385,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
+                                   struct device_node *np)
+ {
+        mtd->dev.of_node = np;
++
++       of_property_read_string(np, "label", mtd->name);
+ }
+ 
+ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
