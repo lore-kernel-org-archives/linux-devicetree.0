@@ -1,53 +1,87 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
- 161010801
-Date: Tue, 24 Jan 2017 14:15:05 +0000
-Message-ID: <20170124141505.GD7572@leverpostej>
-References: <5886262C.6070108@huawei.com>
- <58875B0D.4080303@huawei.com>
+From: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [of/unittest] 815d74b35e:  BUG: unable to handle kernel NULL
+ pointer dereference at 00000012
+Date: Tue, 24 Jan 2017 23:21:07 +0900
+Message-ID: <20170124142107.GA628@tigerII.localdomain>
+References: <5887386c.KVVQelScITHnzTIS%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <58875B0D.4080303-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5887386c.KVVQelScITHnzTIS%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shameerali Kolothum Thodi <shameerali.kolothum.thodi-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: marc.zyngier-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, guohanjun-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org
+To: kernel test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, LKP <lkp-JC7UmRfGjtg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, wfg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 01:47:57PM +0000, Shameerali Kolothum Thodi wrote:
-> The HiSilicon erratum 161010801 describes the limitation of certain
-> HiSilicon platforms to support the SMMU mappings for MSI transactions.
-> 
-> On these platforms GICv3 ITS translator is presented with the deviceID
-> by extending the MSI payload data to 64 bits to include the deviceID.
-> Hence, the PCIe controller on this platforms has to differentiate the
-> MSI payload against other DMA payload and has to modify the MSI payload.
-> This basically makes it difficult for this platforms to have a SMMU
-> translation for MSI.
+Hello,
 
-Do you mean that the PCIe root controller looking at the (virtual)
-addresses of DMA and comparing these against the (physical) address of
-the ITS in order to determine if a write is an MSI?
+Cc Steven
 
-I can't see anything in this patch specifically enabling bypass for
-MSIs. Do writes to the ITS (physical) address always bypass the SMMU,
-and go straight to the ITS? Regardless of translation applied to other
-DMA?
+On (01/24/17 19:20), kernel test robot wrote:
+>     of/unittest: fix infinite loop in of_unittest_destroy_tracked_overlays()
+>
+>     of_overlay_destroy() can return `-ENODEV' error code once it
+>     failed to find the requested overlay in `ov_idr'. However,
+>     of_unittest_destroy_tracked_overlays() does not handle this
+>     error code correctly and continues to call of_overlay_destroy()
+>     on the 'missing' overlay over and over again. This results in
+>     a printk flood
+>
+>     [..]
+>     [   33.497583] of_overlay_destroy: Could not find overlay #6
+>     [   33.497583] of_overlay_destroy: Could not find overlay #6
+>     [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
+>     [   33.497584] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
+>     [   33.497586] of_overlay_destroy: Could not find overlay #6
+>     [   33.497586] of_overlay_destroy: Could not find overlay #6
+>     [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
+>     [   33.497587] ### dt-test ### of_unittest_destroy_tracked_overlays: overlay destroy failed for #6
+>     [..]
 
-It sounds like this will have severe implications for virtualization.
+hm, frankly... I see no connection.
+// I even checked the date of the mail, because the commit is from March 2016.
 
-> Also these platforms doesn't have a proper IIDR
-> register to use the existing IIDR based quirk mechanism.
+> [   14.130887] sock: process `trinity-main' is using obsolete setsockopt SO_BSDCOMPAT
+> [   18.803451] BUG: unable to handle kernel NULL pointer dereference at 00000012
+> [   18.805819] IP: [<c9aa6893>] perf_prepare_sample+0x82/0x2a7
+> [   18.807694] *pde = 00000000 
+> [   18.809017] Oops: 0000 [#1] DEBUG_PAGEALLOC 
+> [   18.810162] Modules linked in:
+> [   18.811069] CPU: 0 PID: 12140 Comm: trinity-main Not tainted 4.5.0-rc1-00010-g815d74b #1
+> [   18.812906] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.9.3-20161025_171302-gandalf 04/01/2014
+> [   18.815004] task: d013ca00 ti: d0614000 task.ti: d0614000
+> [   18.816107] EIP: 0060:[<c9aa6893>] EFLAGS: 00010206 CPU: 0
+> [   18.817247] EIP is at perf_prepare_sample+0x82/0x2a7
+> [   18.818305] EAX: 00000012 EBX: d0615d24 ECX: 00000008 EDX: 00000001
+> [   18.819499] ESI: d0615e00 EDI: d06184b0 EBP: d0615d08 ESP: d0615ce4
+> [   18.820713]  DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 0068
+> [   18.821827] CR0: 80050033 CR2: 00000012 CR3: 1068d000 CR4: 00040610
+> [   18.823044] DR0: c0100220 DR1: 080ce000 DR2: 00000000 DR3: 00000000
+> [   18.824240] DR6: ffff0ff0 DR7: 00010602
+> [   18.825162] Stack:
+> [   18.825885]  00000000 00000000 c9aa6ab8 00000000 00000000 000021ea d06184b0 d0615e00
+> [   18.828238]  d0615fb4 d0615d50 c9aa6af3 d0615fb4 00000002 00000000 00000000 c9aa6ab8
+> [   18.830578]  00000009 00300002 d013ce78 d0615d3c c9a2888f d013ce78 d0615d48 c9a07cf5
+> [   18.832911] Call Trace:
+> [   18.833732]  [<c9aa6ab8>] ? perf_prepare_sample+0x2a7/0x2a7
+> [   18.834865]  [<c9aa6af3>] perf_event_output+0x3b/0x89
+> [   18.835929]  [<c9aa6ab8>] ? perf_prepare_sample+0x2a7/0x2a7
+> [   18.837114]  [<c9a2888f>] ? kvm_sched_clock_read+0x9/0x18
+> [   18.838211]  [<c9a07cf5>] ? sched_clock+0x9/0xd
+> [   18.839217]  [<c9aa6ca6>] __perf_event_overflow+0x165/0x1d2
+> [   18.840381]  [<c9aa742f>] perf_swevent_overflow+0x46/0x60
+> [   18.841481]  [<c9aa750b>] perf_swevent_event+0xc2/0xcc
+> [   18.842554]  [<c9aa7ab1>] ___perf_sw_event+0x24b/0x25b
+> [   18.843678]  [<c9a07cf5>] ? sched_clock+0x9/0xd
+> [   18.844687]  [<c9a28871>] ? kvm_clock_read+0x14/0x1d
+> [   18.845744]  [<c9a2888f>] ? kvm_sched_clock_read+0x9/0x18
 
-What exactly is wrong with the IIDR on these platforms? That sounds like
-an erratum as of itself.
 
-What precise value do reads of the IIDR return? Or do reads result in
-other erroneous behaviour?
+this doesn't look like 'of/unittest' related problem to me.
+a NULL deref in perf_prepare_sample(). hm.
 
-Thanks,
-Mark.
+	-ss
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
