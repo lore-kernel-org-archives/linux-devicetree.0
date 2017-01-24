@@ -1,22 +1,22 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: anatop: Add support for "anatop-enable-bit"" to the regulator tree
-Date: Tue, 24 Jan 2017 18:39:35 +0000
-Message-ID: <E1cW60F-0006ff-CJ@debutante>
-References: <20170110163015.22444-2-andrew.smirnov@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170110163015.22444-2-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, yurovsky@gmail.com, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.orglinux-kernel@vger.kernel.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: es8328-i2c: Add compatible for ES8388" to the asoc tree
+Date: Tue, 24 Jan 2017 18:39:21 +0000
+Message-ID: <E1cW601-0006aO-73@debutante>
+References: <20170116081753.13666-2-romain.perier@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170116081753.13666-2-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   regulator: anatop: Add support for "anatop-enable-bit"
+   ASoC: es8328-i2c: Add compatible for ES8388
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -37,58 +37,57 @@ to this mail.
 Thanks,
 Mark
 
->From ca7734ad77b4ffb83a03c80b8d64d40c7ef49263 Mon Sep 17 00:00:00 2001
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Date: Tue, 10 Jan 2017 08:30:14 -0800
-Subject: [PATCH] regulator: anatop: Add support for "anatop-enable-bit"
+>From 5f166156dbd4c0cf85632799ee7330d24deeec4e Mon Sep 17 00:00:00 2001
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Date: Mon, 23 Jan 2017 11:41:46 +0100
+Subject: [PATCH] ASoC: es8328-i2c: Add compatible for ES8388
 
-Add code to support support for "anatop-enable-bit" device-tree
-property. This property translates to LINREG_ENABLE bit in real hardware
-and is present on 1p1, 2p5 and 3p0 regulators on i.MX6 and 1p0d regulator
-on i.MX7.
+This commit adds a compatible string for everest,es8388. This is
+an audio codec that is compatible with es8328.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/regulator/anatop-regulator.txt       |  1 +
- drivers/regulator/anatop-regulator.c                         | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
+ Documentation/devicetree/bindings/sound/es8328.txt | 2 +-
+ sound/soc/codecs/es8328-i2c.c                      | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-index 37c4ea076f88..1d58c8cfdbc0 100644
---- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-@@ -14,6 +14,7 @@ Optional properties:
- - anatop-delay-bit-shift: Bit shift for the step time register
- - anatop-delay-bit-width: Number of bits used in the step time register
- - vin-supply: The supply for this regulator
-+- anatop-enable-bit: Regulator enable bit offset
+diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+index 30ea8a318ae9..33fbf058c997 100644
+--- a/Documentation/devicetree/bindings/sound/es8328.txt
++++ b/Documentation/devicetree/bindings/sound/es8328.txt
+@@ -4,7 +4,7 @@ This device supports both I2C and SPI.
  
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index 3a6d0290c54c..b041f277a38b 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -301,7 +301,19 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 			return -EINVAL;
- 		}
- 	} else {
-+		u32 enable_bit;
-+
- 		rdesc->ops = &anatop_rops;
-+
-+		if (!of_property_read_u32(np, "anatop-enable-bit",
-+					  &enable_bit)) {
-+			anatop_rops.enable  = regulator_enable_regmap;
-+			anatop_rops.disable = regulator_disable_regmap;
-+			anatop_rops.is_enabled = regulator_is_enabled_regmap;
-+
-+			rdesc->enable_reg = sreg->control_reg;
-+			rdesc->enable_mask = BIT(enable_bit);
-+		}
- 	}
+ Required properties:
  
- 	/* register regulator */
+-  - compatible : "everest,es8328"
++  - compatible  : Should be "everest,es8328" or "everest,es8388"
+   - DVDD-supply : Regulator providing digital core supply voltage 1.8 - 3.6V
+   - AVDD-supply : Regulator providing analog supply voltage 3.3V
+   - PVDD-supply : Regulator providing digital IO supply voltage 1.8 - 3.6V
+diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+index 2d05b5d3a6ce..318ab28c5351 100644
+--- a/sound/soc/codecs/es8328-i2c.c
++++ b/sound/soc/codecs/es8328-i2c.c
+@@ -20,12 +20,14 @@
+ 
+ static const struct i2c_device_id es8328_id[] = {
+ 	{ "es8328", 0 },
++	{ "es8388", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, es8328_id);
+ 
+ static const struct of_device_id es8328_of_match[] = {
+ 	{ .compatible = "everest,es8328", },
++	{ .compatible = "everest,es8388", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, es8328_of_match);
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
