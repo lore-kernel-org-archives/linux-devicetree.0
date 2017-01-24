@@ -1,123 +1,90 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
- a nexus node
-Date: Mon, 23 Jan 2017 22:36:29 -0800
-Message-ID: <5886F5ED.3030509@gmail.com>
-References: <20170123204851.12808-1-stephen.boyd@linaro.org>
- <20170123204851.12808-2-stephen.boyd@linaro.org>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [GIT PULL] Immutable branch between MFD, ARM, IIO and PWM due for
+ the v4.10 merge window
+Date: Mon, 23 Jan 2017 22:42:17 -0800
+Message-ID: <CAOesGMhx6ZWekgW01-7GRcMiWtAohcfGdcu1FhkP=bTfsjBCmQ@mail.gmail.com>
+References: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com> <20170123121222.GJ16020@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170123204851.12808-2-stephen.boyd@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <stephen.boyd@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123121222.GJ16020@dell>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza@s
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Hi Lee,
 
-Sorry I did not get to v1 and v2 in a timely manner.
+On Mon, Jan 23, 2017 at 4:12 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Arm, IIO and PWM Maintainers,
+>
+> Enjoy!
+>
+> The following changes since commit 7ce7d89f48834cefece7804d38fc5d85382edf77:
+>
+>   Linux 4.10-rc1 (2016-12-25 16:13:08 -0800)
+>
+> are available in the git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-arm-iio-pwm-v4.10
+>
+> for you to fetch changes up to 94df449273475980a39f1bf47f1e3d2b07ce6577:
+>
+>   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco (2017-01-23 12:06:28 +0000)
+>
+> ----------------------------------------------------------------
+> Immutable branch between MFD, ARM, IIO and PWM due for the v4.10 merge window
+>
+> ----------------------------------------------------------------
+> Benjamin Gaignard (8):
+>       dt-bindings: mfd: Add bindings for STM32 Timers driver
+>       mfd: Add STM32 Timers driver
+>       dt-bindings: pwm: Add STM32 bindings
+>       pwm: Add driver for STM32 plaftorm
+>       iio: Add bindings for STM32 timer trigger driver
+>       iio: Add STM32 timer trigger driver
+>       ARM: dts: stm32: add Timers driver for stm32f429 MCU
+>       ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
+>
+>  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
+>  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
+>  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
+>  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
+>  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++++++++
+>  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
+>  drivers/iio/trigger/Kconfig                        |   9 +
+>  drivers/iio/trigger/Makefile                       |   1 +
+>  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++++++++++++
+>  drivers/mfd/Kconfig                                |  11 +
+>  drivers/mfd/Makefile                               |   2 +
+>  drivers/mfd/stm32-timers.c                         |  80 +++++
+>  drivers/pwm/Kconfig                                |   9 +
+>  drivers/pwm/Makefile                               |   1 +
+>  drivers/pwm/pwm-stm32.c                            | 398 +++++++++++++++++++++
+>  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
+>  include/linux/mfd/stm32-timers.h                   |  71 ++++
+>  17 files changed, 1422 insertions(+)
+>  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-stm32
+>  create mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+>  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
+>  create mode 100644 drivers/mfd/stm32-timers.c
+>  create mode 100644 drivers/pwm/pwm-stm32.c
+>  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
+>  create mode 100644 include/linux/mfd/stm32-timers.h
 
+May I ask why you're creating an immutable branch of all this contents?
 
-On 01/23/17 12:48, Stephen Boyd wrote:
-> Platforms like 96boards have a standardized connector/expansion
-> slot that exposes signals like GPIOs to expansion boards in an
-> SoC agnostic way. We'd like the DT overlays for the expansion
-> boards to be written once without knowledge of the SoC on the
-> other side of the connector. This avoids the unscalable
-> combinatorial explosion of a different DT overlay for each
-> expansion board and SoC pair.
-> 
-> We need a way to describe the GPIOs routed through the connector
-> in an SoC agnostic way. Let's introduce nexus property parsing
-> into the OF core to do this. This is largely based on the
-> interrupt nexus support we already have. This allows us to remap
-> a phandle list in a consumer node (e.g. reset-gpios) through a
-> connector in a generic way (e.g. via gpio-map). Do this in a
-> generic routine so that we can remap any sort of variable length
-> phandle list.
-> 
-> Taking GPIOs as an example, the connector would be a GPIO nexus,
-> supporting the remapping of a GPIO specifier space to multiple
-> GPIO providers on the SoC. DT would look as shown below, where
-> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
-> expansion port where boards can be plugged in, and
-> 'expansion_device' is a device on the expansion board.
-> 
-> 	soc {
-> 		soc_gpio1: gpio-controller1 {
-> 			#gpio-cells = <2>;
-> 		};
-> 
-> 		soc_gpio2: gpio-controller2 {
-> 			#gpio-cells = <2>;
-> 		};
-> 	};
-> 
-> 	connector: connector {
-> 		#gpio-cells = <2>;
-> 		gpio-map = <0 0 &soc_gpio1 1 0>,
-> 			   <1 0 &soc_gpio2 4 0>,
-> 			   <2 0 &soc_gpio1 3 0>,
-> 			   <3 0 &soc_gpio2 2 0>;
-> 		gpio-map-mask = <0xf 0x0>;
-> 		gpio-map-pass-thru = <0x0 0x1>
-> 	};
-> 
-> 	expansion_device {
-> 		reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
-> 	};
+We should get the dts/dtsi contents like usual from any maintainer;
+just the DT updates in a branch.
 
-The how to architect connectors and plugs threads fell asleep before
-coming to a resolution.  We need to revive that discussion.
+Sometimes (but less and less due to us discouraging the use) we need
+an immutable branch that includes dt-include updates. But I don't see
+any of those in this contents.
 
-One of the concepts of the plug and connector architecture is that
-a main board may contain multiple connectors of the same type (or
-different types, but the same type is sufficient for this discussion).
+I.e. I guess I can see the need between mfd and downstream trees
+(iio/pwm), but not the DTS contents at this time. Or am I missing
+something here?
 
-The node describing the card that plugs into one of the connectors
-does not know the phandle of the connector it is going to be
-connected to.  Some other mechanism is provided to allow a card
-to be plugged into any of the available connectors.  If there are
-two identical cards plugged into two connectors, then both cards
-have the same exact device tree node.  But some mechanism will
-exist to resolve (or "link") the two card nodes to the different
-connector nodes.
-
-As a result of this, in the above example the reset-gpios property
-in the node 'expansion_device' can not contain '&connector'.  The
-concept of &connector belongs to the entire expansion_device node,
-not to individual properties within the node.
-
-I'm not sure where this puts us.  I'm thinking....
-
--Frank
-
-> 
-> The GPIO core would use of_parse_phandle_with_args_map() instead
-> of of_parse_phandle_with_args() and arrive at the same type of
-> result, a phandle and argument list. The difference is that the
-> phandle and arguments will be remapped through the nexus node to
-> the underlying SoC GPIO controller node. In the example above,
-> we would remap 'reset-gpios' from <&connector 2 GPIO_ACTIVE_LOW>
-> to <&soc_gpio1 3 GPIO_ACTIVE_LOW>.
-> 
-> Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-> ---
->  drivers/of/base.c  | 184 +++++++++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  12 ++++
->  2 files changed, 196 insertions(+)
-
-< snip >
+-Olof
