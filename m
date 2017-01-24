@@ -1,563 +1,71 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] soc/imx: add new GPC driver
-Date: Tue, 24 Jan 2017 20:49:56 +0800
-Message-ID: <20170124124954.GT5662@dragon>
-References: <20170120155225.31905-1-l.stach@pengutronix.de>
- <20170120155225.31905-4-l.stach@pengutronix.de>
+From: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v14 3/5] tee: add OP-TEE driver
+Date: Tue, 24 Jan 2017 13:53:31 +0100
+Message-ID: <20170124125330.GA30998@jax>
+References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
+ <8183743.bSJXZpMh95@wuerfel>
+ <20170123090852.GB1910@jax>
+ <5564439.UZohRc66aK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170120155225.31905-4-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <5564439.UZohRc66aK@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 04:52:24PM +0100, Lucas Stach wrote:
-> This is an almost complete re-write of the previous GPC power gating control
-> code found in the IMX architecture code. It supports both the old and the new
-> DT binding, allowing more domains to be added later and generally makes the
-> driver easier to extend, while keeping compatibility with existing DTBs.
-
-Shouldn't we generally wrap the commit log around column 72?
-
+On Mon, Jan 23, 2017 at 05:16:15PM +0100, Arnd Bergmann wrote:
+> On Monday, January 23, 2017 10:08:53 AM CET Jens Wiklander wrote:
+> > On Fri, Jan 20, 2017 at 05:57:51PM +0100, Arnd Bergmann wrote:
+> > > On Thursday, January 19, 2017 3:56:23 PM CET Jens Wiklander wrote:
+> > > > On Wed, Jan 18, 2017 at 05:28:17PM +0100, Arnd Bergmann wrote:
 > 
-> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/soc/Makefile     |   1 +
->  drivers/soc/imx/Makefile |   1 +
->  drivers/soc/imx/gpc.c    | 480 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 482 insertions(+)
->  create mode 100644 drivers/soc/imx/Makefile
->  create mode 100644 drivers/soc/imx/gpc.c
+> > > > Does the platform devices really need cleaning? I mean
+> > > > of_platform_default_populate_init() creates a bunch of platform devices
+> > > > which are just left there even if unused. Here we're doing the same
+> > > > thing except that we're doing it for a specific node in the DT.
+> > > 
+> > > I think it will work if you don't clean them up, but it feels wrong
+> > > to have a loadable module that creates devices when loaded but doesn't
+> > > remove them when unloaded.
+> > > 
+> > > This could be done differently by having the device creation done in
+> > > one driver and the the user of that device in another driver, but I
+> > > think just killing off the device achieves the same in a simpler way.
+> > 
+> > I see your point. My final concern here is that with device we got
+> > entries in sysfs and uevents that could be used to automatically start
+> > the correct supplicant. Different drivers are likely to require
+> > different supplicants. Starting the correct supplicant based on uevents
+> > is a quite elegant solution which I'm not sure how to support when
+> > skipping devices. Perhaps I could create an object below
+> > <sysfs>/firmware/tee ?
 > 
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 50c23d0bd457..42b3fc7687bb 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -6,6 +6,7 @@ obj-y				+= bcm/
->  obj-$(CONFIG_ARCH_DOVE)		+= dove/
->  obj-$(CONFIG_MACH_DOVE)		+= dove/
->  obj-y				+= fsl/
-> +obj-$(CONFIG_ARCH_MXC)		+= imx/
->  obj-$(CONFIG_ARCH_MEDIATEK)	+= mediatek/
->  obj-$(CONFIG_ARCH_QCOM)		+= qcom/
->  obj-$(CONFIG_ARCH_RENESAS)	+= renesas/
-> diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
-> new file mode 100644
-> index 000000000000..35861f5b2802
-> --- /dev/null
-> +++ b/drivers/soc/imx/Makefile
-> @@ -0,0 +1 @@
-> +obj-y += gpc.o
-> diff --git a/drivers/soc/imx/gpc.c b/drivers/soc/imx/gpc.c
-> new file mode 100644
-> index 000000000000..24bc0c6b72d8
-> --- /dev/null
-> +++ b/drivers/soc/imx/gpc.c
-> @@ -0,0 +1,480 @@
-> +/*
-> + * Copyright 2015-2017 Pengutronix, Lucas Stach <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + * Copyright 2011-2013 Freescale Semiconductor, Inc.
-> + *
-> + * The code contained herein is licensed under the GNU General Public
-> + * License. You may obtain a copy of the GNU General Public License
-> + * Version 2 or later at the following locations:
-> + *
-> + * http://www.opensource.org/licenses/gpl-license.html
-> + * http://www.gnu.org/copyleft/gpl.html
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/delay.h>
-> +#include <linux/io.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
-> +
-> +#define GPC_CNTR		0x000
-> +
-> +#define GPC_PGC_PDN_OFFS	0x0
-> +#define GPC_PGC_PUPSCR_OFFS	0x4
-> +#define GPC_PGC_PDNSCR_OFFS	0x8
-> +#define GPC_PGC_SW2ISO_SHIFT	0x8
-> +#define GPC_PGC_SW_SHIFT	0x0
-> +
-> +#define GPC_PGC_GPU_PDN		0x260
-> +#define GPC_PGC_GPU_PUPSCR	0x264
-> +#define GPC_PGC_GPU_PDNSCR	0x268
-> +
-> +#define GPU_VPU_PUP_REQ		BIT(1)
-> +#define GPU_VPU_PDN_REQ		BIT(0)
-> +
-> +#define GPC_CLK_MAX		6
-> +
-> +struct imx_pm_domain {
-> +	struct generic_pm_domain base;
-> +	struct regmap *regmap;
-> +	struct regulator *supply;
-> +	struct clk *clk[GPC_CLK_MAX];
-> +	int num_clks;
-> +	unsigned int reg_offs;
-> +	signed char cntr_pdn_bit;
-> +	unsigned int ipg_rate_mhz;
-> +};
-> +
-> +static inline struct imx_pm_domain *
-> +to_imx_pm_domain(struct generic_pm_domain *genpd)
-> +{
-> +	return container_of(genpd, struct imx_pm_domain, base);
-> +}
-> +
-> +static int imx6_pm_domain_power_off(struct generic_pm_domain *genpd)
-> +{
-> +	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
-> +	int iso, iso2sw;
-> +	u32 val;
-> +
-> +	/* Read ISO and ISO2SW power down delays */
-> +	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
-> +	iso = val & 0x3f;
-> +	iso2sw = (val >> 8) & 0x3f;
-> +
-> +	/* Gate off domain when powered down */
-> +	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_PDN_OFFS,
-> +			   0x1, 0x1);
-> +
-> +	/* Request GPC to power down domain */
-> +	val = BIT(pd->cntr_pdn_bit);
-> +	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
-> +
-> +	/* Wait ISO + ISO2SW IPG clock cycles */
-> +	udelay(DIV_ROUND_UP(iso + iso2sw, pd->ipg_rate_mhz));
-> +
-> +	if (pd->supply)
-> +		regulator_disable(pd->supply);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx6_pm_domain_power_on(struct generic_pm_domain *genpd)
-> +{
-> +	struct imx_pm_domain *pd = to_imx_pm_domain(genpd);
-> +	int i, ret, sw, sw2iso;
-> +	u32 val;
-> +
-> +	if (pd->supply) {
-> +		ret = regulator_enable(pd->supply);
-> +		if (ret) {
-> +			pr_err("%s: failed to enable regulator: %d\n",
-> +			       __func__, ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	/* Enable reset clocks for all devices in the domain */
-> +	for (i = 0; i < pd->num_clks; i++)
-> +		clk_prepare_enable(pd->clk[i]);
-> +
-> +	/* Gate off domain when powered down */
-> +	regmap_update_bits(pd->regmap, pd->reg_offs + GPC_PGC_PDN_OFFS,
-> +			   0x1, 0x1);
-> +
-> +	/* Read ISO and ISO2SW power down delays */
-> +	regmap_read(pd->regmap, pd->reg_offs + GPC_PGC_PUPSCR_OFFS, &val);
-> +	sw = val & 0x3f;
-> +	sw2iso = (val >> 8) & 0x3f;
-> +
-> +	/* Request GPC to power up domain */
-> +	val = BIT(pd->cntr_pdn_bit + 1);
-> +	regmap_update_bits(pd->regmap, GPC_CNTR, val, val);
-> +
-> +	/* Wait ISO + ISO2SW IPG clock cycles */
-> +	udelay(DIV_ROUND_UP(sw + sw2iso, pd->ipg_rate_mhz));
-> +
-> +	/* Disable reset clocks for all devices in the domain */
-> +	for (i = 0; i < pd->num_clks; i++)
-> +		clk_disable_unprepare(pd->clk[i]);
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_pgc_get_clocks(struct device *dev, struct imx_pm_domain *domain)
-> +{
-> +	int i, ret;
-> +
-> +	for (i = 0; ; i++) {
-> +		struct clk *clk = of_clk_get(dev->of_node, i);
-> +		if (IS_ERR(clk))
-> +			break;
-> +		if (i >= GPC_CLK_MAX) {
-> +			dev_err(dev, "more than %d clocks\n", GPC_CLK_MAX);
-> +			ret = -EINVAL;
-> +			goto clk_err;
-> +		}
-> +		domain->clk[i] = clk;
-> +	}
-> +	domain->num_clks = i;
-> +
-> +	return 0;
-> +
-> +clk_err:
-> +	for (; i >= 0; i--)
-> +		clk_put(domain->clk[i]);
-> +
-> +	return ret;
-> +}
-> +
-> +static void imx_pgc_put_clocks(struct imx_pm_domain *domain)
-> +{
-> +	int i;
-> +
-> +	for (i = domain->num_clks - 1; i >= 0; i--)
-> +		clk_put(domain->clk[i]);
-> +}
-> +
-> +static int imx_pgc_parse_dt(struct device *dev, struct imx_pm_domain *domain)
-> +{
-> +	/* try to get the domain supply regulator */
-> +	domain->supply = devm_regulator_get_optional(dev, "domain");
-> +	if (IS_ERR(domain->supply)) {
-> +		if (PTR_ERR(domain->supply) == -ENODEV)
-> +			domain->supply = NULL;
-> +		else
-> +			return PTR_ERR(domain->supply);
-> +	}
-> +
-> +	/* try to get all clocks needed for reset propagation */
-> +	return imx_pgc_get_clocks(dev, domain);
-> +}
-> +
-> +static int imx_pgc_power_domain_probe(struct platform_device *pdev)
-> +{
-> +	struct imx_pm_domain *domain = pdev->dev.platform_data;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	/* if this PD is associated with a DT node try to parse it */
-> +	if (dev->of_node) {
-> +		ret = imx_pgc_parse_dt(dev, domain);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	/* initially power on the domain */
-> +	if (domain->base.power_on)
-> +		domain->base.power_on(&domain->base);
-> +
-> +	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
-> +		pm_genpd_init(&domain->base, NULL, false);
-> +		ret = of_genpd_add_provider_simple(dev->of_node, &domain->base);
-> +		if (ret)
-> +			goto genpd_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +genpd_err:
-> +	pm_genpd_remove(&domain->base);
-> +	imx_pgc_put_clocks(domain);
-> +
-> +	return ret;
-> +}
-> +
-> +static int imx_pgc_power_domain_remove(struct platform_device *pdev)
-> +{
-> +	struct imx_pm_domain *domain = pdev->dev.platform_data;
-> +
-> +	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
-> +		of_genpd_del_provider(pdev->dev.of_node);
-> +		pm_genpd_remove(&domain->base);
-> +		imx_pgc_put_clocks(domain);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct platform_device_id imx_pgc_power_domain_id[] = {
-> +	{ "imx-pgc-power-domain"},
-> +	{ },
-> +};
-> +
-> +static struct platform_driver imx_pgc_power_domain_driver = {
-> +	.driver = {
-> +		.name = "imx-pgc-pd",
-> +	},
-> +	.probe = imx_pgc_power_domain_probe,
-> +	.remove = imx_pgc_power_domain_remove,
-
-Not sure how .remove hook is going to be useful for a
-builtin_platform_driver.
-
-> +	.id_table = imx_pgc_power_domain_id,
-> +};
-> +builtin_platform_driver(imx_pgc_power_domain_driver)
-> +
-> +static struct genpd_power_state imx6_pm_domain_pu_state = {
-> +	.power_off_latency_ns = 25000,
-> +	.power_on_latency_ns = 2000000,
-> +};
-> +
-> +static struct imx_pm_domain imx_gpc_domains[] = {
-> +	{
-> +		.base = {
-> +			.name = "ARM",
-> +		},
-> +	}, {
-> +		.base = {
-> +			.name = "PU",
-> +			.power_off = imx6_pm_domain_power_off,
-> +			.power_on = imx6_pm_domain_power_on,
-> +			.states = &imx6_pm_domain_pu_state,
-> +			.state_count = 1,
-> +		},
-> +		.reg_offs = 0x260,
-> +		.cntr_pdn_bit = 0,
-> +	}, {
-> +		.base = {
-> +			.name = "DISPLAY",
-> +			.power_off = imx6_pm_domain_power_off,
-> +			.power_on = imx6_pm_domain_power_on,
-> +		},
-> +		.reg_offs = 0x240,
-> +		.cntr_pdn_bit = 4,
-> +	}
-> +};
-> +
-> +struct imx_gpc_dt_data {
-> +	int num_domains;
-> +};
-> +
-> +static const struct imx_gpc_dt_data imx6q_dt_data = {
-> +	.num_domains = 2,
-> +};
-> +
-> +static const struct imx_gpc_dt_data imx6sl_dt_data = {
-> +	.num_domains = 3,
-> +};
-> +
-> +static const struct of_device_id imx_gpc_dt_ids[] = {
-> +	{ .compatible = "fsl,imx6q-gpc", .data = &imx6q_dt_data },
-> +	{ .compatible = "fsl,imx6sl-gpc", .data = &imx6sl_dt_data },
-> +	{ }
-> +};
-> +
-> +static bool imx_gpc_readable_reg(struct device *dev, unsigned int reg)
-> +{
-> +	return (reg % 4 == 0) && (reg <= 0x2ac);
-> +}
-> +
-> +static bool imx_gpc_volatile_reg(struct device *dev, unsigned int reg)
-> +{
-> +	if (reg == GPC_CNTR)
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static const struct regmap_config imx_gpc_regmap_config = {
-> +	.cache_type = REGCACHE_FLAT,
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +
-> +	.readable_reg = imx_gpc_readable_reg,
-> +	.volatile_reg = imx_gpc_volatile_reg,
-> +
-> +	.max_register = 0x2ac,
-> +};
-> +
-> +static struct generic_pm_domain *imx_gpc_onecell_domains[] = {
-> +	&imx_gpc_domains[0].base,
-> +	&imx_gpc_domains[1].base,
-> +};
-> +
-> +static struct genpd_onecell_data imx_gpc_onecell_data = {
-> +	.domains = imx_gpc_onecell_domains,
-> +	.num_domains = 2,
-> +};
-> +
-> +static int imx_gpc_old_dt_init(struct device *dev, struct regmap *regmap)
-> +{
-> +	struct imx_pm_domain *domain;
-> +	int i, ret;
-> +
-> +	for (i = 0; i < 2; i++) {
-> +		domain = &imx_gpc_domains[i];
-> +		domain->regmap = regmap;
-> +		domain->ipg_rate_mhz = 33;
-
-I see it's being 66MHz in the existing driver code.  What's the reason
-behind this change?
-
-> +
-> +		if (i == 1) {
-> +			domain->supply = devm_regulator_get(dev, "pu");
-> +			if (IS_ERR(domain->supply))
-> +				return PTR_ERR(domain->supply);;
-> +
-> +			ret = imx_pgc_get_clocks(dev, domain);
-> +			if (ret)
-> +				goto clk_err;
-> +
-> +			domain->base.power_on(&domain->base);
-> +		}
-> +	}
-> +
-> +	for (i = 0; i < 2; i++)
-> +		pm_genpd_init(&imx_gpc_domains[i].base, NULL, false);
-> +
-> +	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
-> +		ret = of_genpd_add_provider_onecell(dev->of_node,
-> +						    &imx_gpc_onecell_data);
-> +		if (ret)
-> +			goto genpd_err;
-> +	}
-> +
-> +	return 0;
-> +
-> +genpd_err:
-> +	pm_genpd_remove(&imx_gpc_domains[1].base);
-> +	imx_pgc_put_clocks(&imx_gpc_domains[1]);
-> +clk_err:
-> +	pm_genpd_remove(&imx_gpc_domains[0].base);
-
-I do not think that imx_gpc_domains[0].base is already registered on
-clk_err path.
-
-> +
-> +	return ret;
-> +}
-> +
-> +static int imx_gpc_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *of_id =
-> +			of_match_device(imx_gpc_dt_ids, &pdev->dev);
-> +	const struct imx_gpc_dt_data *of_id_data = of_id->data;
-> +	struct device_node *pgc_node;
-> +	struct regmap *regmap;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	pgc_node = of_get_child_by_name(pdev->dev.of_node, "pgc");
-> +
-> +	/* bail out if DT too old and doesn't provide the necessary info */
-> +	if (!of_property_read_bool(pdev->dev.of_node, "#power-domain-cells") &&
-> +	    !pgc_node)
-> +		return 0;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
-> +					   &imx_gpc_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		ret = PTR_ERR(regmap);
-> +		dev_err(&pdev->dev, "failed to init regmap: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	if (!pgc_node) {
-> +		/* old DT layout is only supported for mx6q aka 2 domains */
-> +		if (of_id_data->num_domains != 2) {
-> +			dev_err(&pdev->dev, "could not find pgc DT node\n");
-> +			return -ENODEV;
-> +		}
-> +
-> +		ret = imx_gpc_old_dt_init(&pdev->dev, regmap);
-> +		if (ret)
-> +			return ret;
-> +	} else {
-> +		struct imx_pm_domain *domain;
-> +		struct platform_device *pd_pdev;
-> +		struct device_node *np;
-> +		struct clk *ipg_clk;
-> +		unsigned int ipg_rate_mhz;
-> +		int domain_index;
-> +
-> +		ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-> +		if (IS_ERR(ipg_clk))
-> +			return PTR_ERR(ipg_clk);
-> +		ipg_rate_mhz = clk_get_rate(ipg_clk) / 1000000;
-> +
-> +		for_each_child_of_node(pgc_node, np) {
-> +			ret = of_property_read_u32(np, "reg", &domain_index);
-> +			if (ret) {
-> +				of_node_put(np);
-> +				return ret;
-> +			}
-
-Should we have a check here to ensure that domain_index doesn't exceed
-imx_gpc_domains[] array size?
-
-Shawn
-
-> +
-> +			domain = &imx_gpc_domains[domain_index];
-> +			domain->regmap = regmap;
-> +			domain->ipg_rate_mhz = ipg_rate_mhz;
-> +
-> +			pd_pdev = platform_device_alloc("imx-pgc-power-domain",
-> +							domain_index);
-> +			pd_pdev->dev.platform_data = domain;
-> +			pd_pdev->dev.parent = &pdev->dev;
-> +			pd_pdev->dev.of_node = np;
-> +
-> +			ret = platform_device_add(pd_pdev);
-> +			if (ret) {
-> +				platform_device_put(pd_pdev);
-> +				of_node_put(np);
-> +				return ret;
-> +			}
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_gpc_remove(struct platform_device *pdev)
-> +{
-> +	int ret;
-> +
-> +	/*
-> +	 * If the old DT binding is used the toplevel driver needs to
-> +	 * de-register the power domains
-> +	 */
-> +	if (!of_get_child_by_name(pdev->dev.of_node, "pgc")) {
-> +		of_genpd_del_provider(pdev->dev.of_node);
-> +
-> +		ret = pm_genpd_remove(&imx_gpc_domains[1].base);
-> +		if (ret)
-> +			return ret;
-> +		imx_pgc_put_clocks(&imx_gpc_domains[1]);
-> +
-> +		ret = pm_genpd_remove(&imx_gpc_domains[0].base);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct platform_driver imx_gpc_driver = {
-> +	.driver = {
-> +		.name = "imx-gpc",
-> +		.of_match_table = imx_gpc_dt_ids,
-> +	},
-> +	.probe = imx_gpc_probe,
-> +	.remove = imx_gpc_remove,
-> +};
-> +builtin_platform_driver(imx_gpc_driver)
-> -- 
-> 2.11.0
+> Putting the objects somewhere other than /sys/devices sounds good, yes.
+> This would also help with TEE implementations that might get probed
+> differently.
 > 
+> I think the natural place would be /sys/class/tee/, as we normally
+> require something in /sys/class anyway to support the character
+> device.
+> 
+> /sys/firmware/tee/ sounds less fitting, as there other TEE implementations
+> are not necessarily firmware based, as you point out. 
+> /sys/firmware/op-tee certainly makes sense for anything that is specific
+> to OP-TEE in particular, while /sys/class/tee would be for anything
+> that uses the ioctl interface. This part is particularly important to
+> get right from the start, just like the ioctls themselves we can't make
+> incompatible changes here later once there are users relying on the
+> upstream kernel interfaces.
+
+/sys/class/tee/ sounds good, I'll use that. It's more or less what we
+also have today.
+
+Thanks for the help with this review.
+
+Jens
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
