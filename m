@@ -1,42 +1,38 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] ARM: dts: imx28-duckbill: enable spi, i2c and
- uart pins
-Date: Tue, 24 Jan 2017 21:00:59 +0800
-Message-ID: <20170124130058.GW5662@dragon>
-References: <1485123764-14754-1-git-send-email-mhei@heimpold.de>
- <1485123764-14754-5-git-send-email-mhei@heimpold.de>
- <96eabd96-64a6-7fbc-bb4b-223244358a42@i2se.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
+Date: Tue, 24 Jan 2017 14:19:55 +0100
+Message-ID: <20170124131955.GA27016@lunn.ch>
+References: <20170123142206.5390-1-jlu@pengutronix.de>
+ <20170123181836.GO10895@lunn.ch>
+ <1485246858.5508.47.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <96eabd96-64a6-7fbc-bb4b-223244358a42-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <1485246858.5508.47.camel@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Jan =?iso-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, davem@davemloft.net, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 06:00:02PM +0100, Stefan Wahren wrote:
-> Hi,
+> It works without any other changes. ;)
 > 
-> Am 22.01.2017 um 23:22 schrieb Michael Heimpold:
-> > While at tweak some more settings for the default product:
-> > - enable lradc
-> > - adjust USB dr mode
-> > - add default triggers for LEDs
-> > - get rid of regulators simple-bus container
-> > - adjust phy reset duration
-> 
-> since the subject line suggests something different as the actual
-> complete patch does, this needs to be changed.
-> 
-> @Shawn, @Fabio: Do we need a single patch for every point or is it
-> possible to squash some?
+> Initially I looked at adding a SPEED_2500, but I wasn't sure which code
+> would need to handle the new value. Would the path from the ethtool
+> ioctl to the driver be enough (mvneta_ethtool_set_link_ksettings() as
+> you said)?
 
-I prefer to squash if possible.
+You have this connected to an FPGA? Do you have a traditional PHY in
+the FPGA? Or are you implementing something more like an Ethernet
+switch?
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I don't know this driver too well, but what often happens is the PHY
+performs autoneg and the phylib then calls the adjust_link function to
+set the MAC to what has been negotiated. So if you have a PHY attached
+which can do 2.5Ghz, you might be seeing calls to adjust_link with
+SPEED_2500.
+
+What does ethtool <devname> show?
+
+Thanks
+     Andrew
