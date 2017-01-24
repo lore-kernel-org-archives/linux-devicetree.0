@@ -1,1448 +1,1366 @@
-Return-Path: <SRS0=2zCc=Y4=gmail.com=slongerbeam@kernel.org>
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
- <1484320822.31475.96.camel@pengutronix.de>
-Message-ID: <2b1d2418-1ad4-6373-cb07-c3aeab48187f@gmail.com>
-Date: Sat, 14 Jan 2017 14:42:08 -0800
+Return-Path: <SRS0=YIjh=ZG=st.com=fabrice.gasnier@kernel.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 1/7] iio: adc: stm32: add support for triggered buffer
+ mode
+References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
+ <1484832854-6314-2-git-send-email-fabrice.gasnier@st.com>
+ <82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org>
+Message-ID: <2c683b78-6c78-3224-0646-37793deba0e9@st.com>
+Date: Tue, 24 Jan 2017 15:35:28 +0100
 MIME-Version: 1.0
-In-Reply-To: <1484320822.31475.96.camel@pengutronix.de>
+In-Reply-To: <82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org>
 Content-Type: multipart/alternative;
- boundary="------------71EDDE909EB2426C3885C669"
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+	boundary="------------7638252C2B8812C8396BE4B7"
+To: Jonathan Cameron <jic23@kernel.org>, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-ID: <devicetree@vger.kernel.org>
 
-This is a multi-part message in MIME format.
---------------71EDDE909EB2426C3885C669
-Content-Type: text/plain; charset=utf-8; format=flowed
+--------------7638252C2B8812C8396BE4B7
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
 
-
-
-On 01/13/2017 07:20 AM, Philipp Zabel wrote:
-> Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
->> +For image capture, the IPU contains the following internal subunits:
->> +
->> +- Image DMA Controller (IDMAC)
->> +- Camera Serial Interface (CSI)
->> +- Image Converter (IC)
->> +- Sensor Multi-FIFO Controller (SMFC)
->> +- Image Rotator (IRT)
->> +- Video De-Interlace Controller (VDIC)
-> Nitpick: Video De-Interlacing or Combining Block (VDIC)
-
-done.
-
->> +
->> +The IDMAC is the DMA controller for transfer of image frames to and from
->> +memory. Various dedicated DMA channels exist for both video capture and
->> +display paths.
->> +
->> +The CSI is the frontend capture unit that interfaces directly with
->> +capture sensors over Parallel, BT.656/1120, and MIPI CSI-2 busses.
->> +
->> +The IC handles color-space conversion, resizing, and rotation
->> +operations.
-> And horizontal flipping.
-
-done.
-
-
->> There are three independent "tasks" within the IC that can
->> +carry out conversions concurrently: pre-processing encoding,
->> +pre-processing preview, and post-processing.
-> s/preview/viewfinder/ seems to be the commonly used name.
-
-replaced everywhere in the doc.
-
-> This paragraph could mention that a single hardware unit is used
-> transparently time multiplexed by the three tasks at different
-> granularity for the downsizing, main processing, and rotation sections.
-> The downscale unit switches between tasks at 8-pixel burst granularity,
-> the main processing unit at line granularity. The rotation units switch
-> only at frame granularity.
-
-I've added that info.
-
->> +The SMFC is composed of four independent channels that each can transfer
->> +captured frames from sensors directly to memory concurrently.
->> +
->> +The IRT carries out 90 and 270 degree image rotation operations.
-> ... on 8x8 pixel blocks, supported by the IDMAC which handles block
-> transfers, block reordering, and vertical flipping.
-
-done.
-
->> +The VDIC handles the conversion of interlaced video to progressive, with
->> +support for different motion compensation modes (low, medium, and high
->> +motion). The deinterlaced output frames from the VDIC can be sent to the
->> +IC pre-process preview task for further conversions.
->> +
->> +In addition to the IPU internal subunits, there are also two units
->> +outside the IPU that are also involved in video capture on i.MX:
->> +
->> +- MIPI CSI-2 Receiver for camera sensors with the MIPI CSI-2 bus
->> +  interface. This is a Synopsys DesignWare core.
->> +- A video multiplexer for selecting among multiple sensor inputs to
->> +  send to a CSI.
-> Two of them, actually.
-
-done.
-
->> +
->> +- Includes a Frame Interval Monitor (FIM) that can correct vertical sync
->> +  problems with the ADV718x video decoders. See below for a description
->> +  of the FIM.
-> Could this also be used to calculate more precise capture timestamps?
-
-An input capture function could do that, triggered off a VSYNC or FIELD
-signal such as on the ADV718x. The FIM is only used to calculate
-frame intervals at this point, but its input capture method could be
-used to also record more accurate timestamps.
-
-
->> +Capture Pipelines
->> +-----------------
->> +
->> +The following describe the various use-cases supported by the pipelines.
->> +
->> +The links shown do not include the frontend sensor, video mux, or mipi
->> +csi-2 receiver links. This depends on the type of sensor interface
->> +(parallel or mipi csi-2). So in all cases, these pipelines begin with:
->> +
->> +sensor -> ipu_csi_mux -> ipu_csi -> ...
->> +
->> +for parallel sensors, or:
->> +
->> +sensor -> imx-mipi-csi2 -> (ipu_csi_mux) -> ipu_csi -> ...
->> +
->> +for mipi csi-2 sensors. The imx-mipi-csi2 receiver may need to route
->> +to the video mux (ipu_csi_mux) before sending to the CSI, depending
->> +on the mipi csi-2 virtual channel, hence ipu_csi_mux is shown in
->> +parenthesis.
->> +
->> +Unprocessed Video Capture:
->> +--------------------------
->> +
->> +Send frames directly from sensor to camera interface, with no
->> +conversions:
->> +
->> +-> ipu_smfc -> camif
-> I'd call this capture interface, this is not just for cameras. Or maybe
-> idmac if you want to mirror hardware names?
-
-Camif is so named because it is the V4L2 user interface for video
-capture. I suppose it could be named "capif", but that doesn't role
-off the tongue quite as well.
-
->> +Note the ipu_smfc can do pixel reordering within the same colorspace.
-> That isn't a feature of the SMFC, but of the IDMAC (FCW & FCR).
-
-yes, the doc is re-worded to make that more clear.
-
->> +For example, its sink pad can take UYVY2X8, but its source pad can
->> +output YUYV2X8.
-> I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
-> in the CSI chapter, for 8-bit per component data, the internal format
-> between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
-> (or "bayer/generic data"). In either case, the internal format does not
-> change along the way.
-
-these are pixels in memory buffers, not the IPU internal formats.
-
-
->> +IC Direct Conversions:
->> +----------------------
->> +
->> +This pipeline uses the preprocess encode entity to route frames directly
->> +from the CSI to the IC (bypassing the SMFC), to carry out scaling up to
->> +1024x1024 resolution, CSC, and image rotation:
->> +
->> +-> ipu_ic_prpenc -> camif
->> +
->> +This can be a useful capture pipeline for heavily loaded memory bus
->> +traffic environments, since it has minimal IDMAC channel usage.
-> Note that if rotation is enabled, transfers between IC processing and
-> rotation still have to go through memory once.
-
-yep.
-
->> +Post-Processing Conversions:
->> +----------------------------
->> +
->> +This pipeline routes frames from the SMFC to the post-processing
->> +entity.
-> No, frames written by the CSI -> SMFC -> IDMAC path are read back into
-> the post-processing entity.
-
-that's true. The post-processing entity kicks off its read channels
-to transfer those frames into the post-processor. Anyway this wording
-will change after doing away with the SMFC entity.
-
-
->> +   media-ctl -V "\"ipu1_csi0\":1 [fmt:YUYV2X8/640x480]"
->> +   media-ctl -V "\"ipu1_smfc0\":0 [fmt:YUYV2X8/640x480]"
->> +   media-ctl -V "\"ipu1_smfc0\":1 [fmt:UYVY2X8/640x480]"
-> I think the smfc entities should be dropped.
-
-yes working on that.
-
->> +   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
->> +   # Configure pads for OV5640 pipeline
->> +   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
->> +   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
-> [...]
->> +   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
-> I agree this looks very intuitive, but technically correct for the
-> csi1:1 and camif1:0 pads would be a 32-bit YUV format.
-> (MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+On 01/22/2017 01:53 PM, Jonathan Cameron wrote:
+> On 19/01/17 13:34, Fabrice Gasnier wrote:
+>> STM32 ADC conversions can be launched using hardware triggers.
+>> It can be used to start conversion sequences (group of channels).
+>> Selected channels are select via sequence registers.
+>> Trigger source is selected via 'extsel' (external trigger mux).
+>> Trigger polarity is set to rising edge by default.
+>>
+>> Signed-off-by: Fabrice Gasnier<fabrice.gasnier@st.com>
+> A few small bits and pieces inline. The only significant element is about
+> making the data flow conform a little better to our poorly documented :(
+> typical data flow.  All about what the trigger is responsible for rather than
+> the device.
 >
-> I think it would be better to use the correct format
+> Looks pretty good to me!
 
-I'm not sure I follow you here.
+Hi Jonathan,
 
->   as that will allow
-> to chose the regular vs. companded packings in the future for formats
-> with more than 8 bits per component.
->
->> +   media-ctl -V "\"camif1\":1 [fmt:UYVY2X8/640x480]"
->> +
->> +Streaming can then begin independently on device nodes /dev/video0
->> +and /dev/video1.
->> +
->> +SabreAuto with ADV7180 decoder
->> +------------------------------
->> +
->> +On the SabreAuto, an on-board ADV7180 SD decoder is connected to the
->> +parallel bus input on the internal video mux to IPU1 CSI0.
->> +
->> +The following example configures a pipeline to capture from the ADV7180
->> +video decoder, assuming NTSC 720x480 input signals, with Motion
->> +Compensated de-interlacing (not shown: all pad field types should be set
->> +as indicated). $outputfmt can be any format supported by the
->> +ipu1_ic_prpvf entity at its output pad:
->> +
->> +.. code-block:: none
->> +
->> +   # Setup links
->> +   media-ctl -l '"adv7180 3-0021":0 -> "ipu1_csi0_mux":1[1]'
->> +   media-ctl -l '"ipu1_csi0_mux":2 -> "ipu1_csi0":0[1]'
->> +   media-ctl -l '"ipu1_csi0":1 -> "ipu1_smfc0":0[1]'
->> +   media-ctl -l '"ipu1_smfc0":1 -> "ipu1_ic_prpvf":0[1]'
->> +   media-ctl -l '"ipu1_ic_prpvf":1 -> "camif0":0[1]'
->> +   media-ctl -l '"camif0":1 -> "camif0 devnode":0[1]'
->> +   # Configure pads
->> +   # pad field types for below pads must be an interlaced type
->> +   # such as "ALTERNATE"
-> I think alternate should only extend as far as the CSI, since the CSI
-> can only capture NTSC/PAL fields in a fixed order.
+Many thanks for reviewing.
+Please find bellow some answers and a few questions.
 
-Agreed, I'm doing the translation from alternate to seq_bt/seq_tb depending
-on sensor std in imx-vdic.c, but it should move upstream. Will fix.
+> Jonathan
+>> ---
+>>   drivers/iio/adc/Kconfig     |   2 +
+>>   drivers/iio/adc/stm32-adc.c | 349 +++++++++++++++++++++++++++++++++++++++++++-
+>>   2 files changed, 348 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>> index 9c8b558..33341f4 100644
+>> --- a/drivers/iio/adc/Kconfig
+>> +++ b/drivers/iio/adc/Kconfig
+>> @@ -446,6 +446,8 @@ config STM32_ADC_CORE
+>>   	depends on ARCH_STM32 || COMPILE_TEST
+>>   	depends on OF
+>>   	depends on REGULATOR
+>> +	select IIO_BUFFER
+>> +	select IIO_TRIGGERED_BUFFER
+>>   	help
+>>   	  Select this option to enable the core driver for STMicroelectronics
+>>   	  STM32 analog-to-digital converter (ADC).
+>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+>> index 5715e79..8d0b74b 100644
+>> --- a/drivers/iio/adc/stm32-adc.c
+>> +++ b/drivers/iio/adc/stm32-adc.c
+>> @@ -22,11 +22,16 @@
+>>   #include <linux/clk.h>
+>>   #include <linux/delay.h>
+>>   #include <linux/iio/iio.h>
+>> +#include <linux/iio/buffer.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/iio/trigger_consumer.h>
+>> +#include <linux/iio/triggered_buffer.h>
+>>   #include <linux/interrupt.h>
+>>   #include <linux/io.h>
+>>   #include <linux/module.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/of.h>
+>> +#include <linux/slab.h>
+>>   
+>>   #include "stm32-adc-core.h"
+>>   
+>> @@ -58,21 +63,66 @@
+>>   
+>>   /* STM32F4_ADC_CR2 - bit fields */
+>>   #define STM32F4_SWSTART			BIT(30)
+>> +#define STM32F4_EXTEN_SHIFT		28
+>>   #define STM32F4_EXTEN_MASK		GENMASK(29, 28)
+>> +#define STM32F4_EXTSEL_SHIFT		24
+>> +#define STM32F4_EXTSEL_MASK		GENMASK(27, 24)
+>>   #define STM32F4_EOCS			BIT(10)
+>>   #define STM32F4_ADON			BIT(0)
+>>   
+>>   /* STM32F4_ADC_SQR1 - bit fields */
+>>   #define STM32F4_L_SHIFT			20
+>>   #define STM32F4_L_MASK			GENMASK(23, 20)
+>> +#define STM32F4_SQ16_SHIFT		15
+>> +#define STM32F4_SQ16_MASK		GENMASK(19, 15)
+>> +#define STM32F4_SQ15_SHIFT		10
+>> +#define STM32F4_SQ15_MASK		GENMASK(14, 10)
+>> +#define STM32F4_SQ14_SHIFT		5
+>> +#define STM32F4_SQ14_MASK		GENMASK(9, 5)
+>> +#define STM32F4_SQ13_SHIFT		0
+>> +#define STM32F4_SQ13_MASK		GENMASK(4, 0)
+>> +
+>> +/* STM32F4_ADC_SQR2 - bit fields */
+>> +#define STM32F4_SQ12_SHIFT		25
+>> +#define STM32F4_SQ12_MASK		GENMASK(29, 25)
+>> +#define STM32F4_SQ11_SHIFT		20
+>> +#define STM32F4_SQ11_MASK		GENMASK(24, 20)
+>> +#define STM32F4_SQ10_SHIFT		15
+>> +#define STM32F4_SQ10_MASK		GENMASK(19, 15)
+>> +#define STM32F4_SQ9_SHIFT		10
+>> +#define STM32F4_SQ9_MASK		GENMASK(14, 10)
+>> +#define STM32F4_SQ8_SHIFT		5
+>> +#define STM32F4_SQ8_MASK		GENMASK(9, 5)
+>> +#define STM32F4_SQ7_SHIFT		0
+>> +#define STM32F4_SQ7_MASK		GENMASK(4, 0)
+>>   
+>>   /* STM32F4_ADC_SQR3 - bit fields */
+>> +#define STM32F4_SQ6_SHIFT		25
+>> +#define STM32F4_SQ6_MASK		GENMASK(29, 25)
+>> +#define STM32F4_SQ5_SHIFT		20
+>> +#define STM32F4_SQ5_MASK		GENMASK(24, 20)
+>> +#define STM32F4_SQ4_SHIFT		15
+>> +#define STM32F4_SQ4_MASK		GENMASK(19, 15)
+>> +#define STM32F4_SQ3_SHIFT		10
+>> +#define STM32F4_SQ3_MASK		GENMASK(14, 10)
+>> +#define STM32F4_SQ2_SHIFT		5
+>> +#define STM32F4_SQ2_MASK		GENMASK(9, 5)
+>>   #define STM32F4_SQ1_SHIFT		0
+>>   #define STM32F4_SQ1_MASK		GENMASK(4, 0)
+>>
+> Given all the above are only used in a big table which basically says what
+> the are, I wonder in this particular case if there is any real benefit to
+> using the defines?  Might actually be clearer just to have the numbers
+> inline.  What do you think?  I'm not fussed either way.
 
->> +   media-ctl -V "\"adv7180 3-0021\":0 [fmt:UYVY2X8/720x480]"
->> +   media-ctl -V "\"ipu1_csi0_mux\":1 [fmt:UYVY2X8/720x480]"
->  From here the interlaced field type should be sequential in the correct
-> order depending on NTSC/PAL.
+As you're suggesting it, I'll send an updated version without all these 
+definitions.
 
-right.
-
->> +
->> +Frame Interval Monitor
->> +----------------------
->> +
->> +The adv718x decoders can occasionally send corrupt fields during
->> +NTSC/PAL signal re-sync (too little or too many video lines). When
->> +this happens, the IPU triggers a mechanism to re-establish vertical
->> +sync by adding 1 dummy line every frame, which causes a rolling effect
->> +from image to image, and can last a long time before a stable image is
->> +recovered. Or sometimes the mechanism doesn't work at all, causing a
->> +permanent split image (one frame contains lines from two consecutive
->> +captured images).
-> Is it only SabreAuto on which the FIM mechanism can be used due to the
-> pad routing?
-
-No, FIM can be used on any target, the fim child node of ipu_csi just
-needs to be enabled via status property.
-
-> [...]
->> +/*
->> + * DMA buffer ring handling
->> + */
->> +struct imx_media_dma_buf_ring {
->> +	struct imx_media_dev *imxmd;
->> +
->> +	/* the ring */
->> +	struct imx_media_dma_buf buf[IMX_MEDIA_MAX_RING_BUFS];
->> +	/* the scratch buffer for underruns */
->> +	struct imx_media_dma_buf scratch;
->> +
->> +	/* buffer generator */
->> +	struct media_entity *src;
->> +	/* buffer receiver */
->> +	struct media_entity *sink;
->> +
->> +	spinlock_t lock;
->> +
->> +	int num_bufs;
->> +	unsigned long last_seq;
+>> +#define STM32_ADC_MAX_SQ		16	/* SQ1..SQ16 */
+>>   #define STM32_ADC_TIMEOUT_US		100000
+>>   #define STM32_ADC_TIMEOUT	(msecs_to_jiffies(STM32_ADC_TIMEOUT_US / 1000))
+>>   
+>> +/* External trigger enable */
+>> +enum stm32_adc_exten {
+>> +	STM32_EXTEN_SWTRIG,
+>> +	STM32_EXTEN_HWTRIG_RISING_EDGE,
+>> +	STM32_EXTEN_HWTRIG_FALLING_EDGE,
+>> +	STM32_EXTEN_HWTRIG_BOTH_EDGES,
 >> +};
-> I don't think this belongs in the capture driver at all.
-> Memory-to-memory transfers should be handled at the videobuf2 level.
+>> +
+>> +
+>>   /**
+>>    * struct stm32_adc - private data of each ADC IIO instance
+>>    * @common:		reference to ADC block common data
+>> @@ -82,6 +132,8 @@
+>>    * @clk:		clock for this adc instance
+>>    * @irq:		interrupt for this adc instance
+>>    * @lock:		spinlock
+>> + * @bufi:		data buffer index
+>> + * @num_conv:		expected number of scan conversions
+>>    */
+>>   struct stm32_adc {
+>>   	struct stm32_adc_common	*common;
+>> @@ -91,6 +143,8 @@ struct stm32_adc {
+>>   	struct clk		*clk;
+>>   	int			irq;
+>>   	spinlock_t		lock;		/* interrupt lock */
+>> +	int			bufi;
+>> +	int			num_conv;
+>>   };
+>>   
+>>   /**
+>> @@ -105,6 +159,18 @@ struct stm32_adc_chan_spec {
+>>   	const char		*name;
+>>   };
+>>   
+>> +/**
+>> + * stm32_adc_regs - stm32 ADC misc registers & bitfield desc
+>> + * @reg:		register offset
+>> + * @mask:		bitfield mask
+>> + * @shift:		left shift
+>> + */
+>> +struct stm32_adc_regs {
+>> +	int reg;
+>> +	int mask;
+>> +	int shift;
+> You could use the FIELD_PREP macro to avoid having to store both the mask
+> and shift.  Up to you though as definitely a matter for personal taste!
 
-see below.
+Thanks for pointing this out. I haven't noticed these macros before that.
+But this applies only to compile-time constant. This cannot be used with 
+bellow
+array.
 
-> [...]
->> +static struct imx_media_dma_buf *
->> +__dma_buf_queue(struct imx_media_dma_buf_ring *ring, int index)
+>> +};
+>> +
+>>   /* Input definitions common for all STM32F4 instances */
+>>   static const struct stm32_adc_chan_spec stm32f4_adc123_channels[] = {
+>>   	{ IIO_VOLTAGE, 0, "in0" },
+>> @@ -126,6 +192,33 @@ struct stm32_adc_chan_spec {
+>>   };
+>>   
+>>   /**
+>> + * stm32f4_sqr_regs - describe regular sequence registers
+>> + * - L: sequence len (register & bit field)
+>> + * - SQ1..SQ16: sequence entries (register & bit field)
+>> + */
+>> +static const struct stm32_adc_regs stm32f4_sqr_regs[STM32_ADC_MAX_SQ + 1] = {
+>> +	/* L: len bit field description to be kept as first element */
+>> +	{ STM32F4_ADC_SQR1, STM32F4_L_MASK, STM32F4_L_SHIFT },
+>> +	/* SQ1..SQ16 registers & bit fields */
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ1_MASK, STM32F4_SQ1_SHIFT },
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ2_MASK, STM32F4_SQ2_SHIFT },
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ3_MASK, STM32F4_SQ3_SHIFT },
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ4_MASK, STM32F4_SQ4_SHIFT },
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ5_MASK, STM32F4_SQ5_SHIFT },
+>> +	{ STM32F4_ADC_SQR3, STM32F4_SQ6_MASK, STM32F4_SQ6_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ7_MASK, STM32F4_SQ7_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ8_MASK, STM32F4_SQ8_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ9_MASK, STM32F4_SQ9_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ10_MASK, STM32F4_SQ10_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ11_MASK, STM32F4_SQ11_SHIFT },
+>> +	{ STM32F4_ADC_SQR2, STM32F4_SQ12_MASK, STM32F4_SQ12_SHIFT },
+>> +	{ STM32F4_ADC_SQR1, STM32F4_SQ13_MASK, STM32F4_SQ13_SHIFT },
+>> +	{ STM32F4_ADC_SQR1, STM32F4_SQ14_MASK, STM32F4_SQ14_SHIFT },
+>> +	{ STM32F4_ADC_SQR1, STM32F4_SQ15_MASK, STM32F4_SQ15_SHIFT },
+>> +	{ STM32F4_ADC_SQR1, STM32F4_SQ16_MASK, STM32F4_SQ16_SHIFT },
+>> +};
+>> +
+>> +/**
+>>    * STM32 ADC registers access routines
+>>    * @adc: stm32 adc instance
+>>    * @reg: reg offset in adc instance
+>> @@ -211,6 +304,106 @@ static void stm32_adc_stop_conv(struct stm32_adc *adc)
+>>   }
+>>   
+>>   /**
+>> + * stm32_adc_conf_scan_seq() - Build regular channels scan sequence
+>> + * @indio_dev: IIO device
+>> + * @scan_mask: channels to be converted
+>> + *
+>> + * Conversion sequence :
+>> + * Configure ADC scan sequence based on selected channels in scan_mask.
+>> + * Add channels to SQR registers, from scan_mask LSB to MSB, then
+>> + * program sequence len.
+>> + */
+>> +static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
+>> +				   const unsigned long *scan_mask)
 >> +{
->> +	struct imx_media_dma_buf *buf;
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +	const struct iio_chan_spec *chan;
+>> +	u32 val, bit;
+>> +	int i = 0;
 >> +
->> +	if (index >= ring->num_bufs)
->> +		return ERR_PTR(-EINVAL);
+>> +	for_each_set_bit(bit, scan_mask, indio_dev->masklength) {
+>> +		chan = indio_dev->channels + bit;
+>> +		/*
+>> +		 * Assign one channel per SQ entry in regular
+>> +		 * sequence, starting with SQ1.
+>> +		 */
+>> +		i++;
+>> +		if (i > STM32_ADC_MAX_SQ)
+>> +			return -EINVAL;
 >> +
->> +	buf = &ring->buf[index];
->> +	if (WARN_ON(buf->state != IMX_MEDIA_BUF_STATUS_PREPARED))
->> +		return ERR_PTR(-EINVAL);
+>> +		dev_dbg(&indio_dev->dev, "%s chan %d to SQ%d\n",
+>> +			__func__, chan->channel, i);
 >> +
->> +	buf->state = IMX_MEDIA_BUF_STATUS_QUEUED;
->> +	buf->seq = ring->last_seq++;
->> +
->> +	return buf;
->> +}
-> Is this a whole software buffer queue implementation? I thought the
-> whole point of putting the custom mem2mem framework into the capture
-> driver was to use the hardware FSU channel linking?
-
-  see below.
-
-> What is the purpose of this if the sink should be triggered by the FSU?
-
-Ok, here is where I need to make an admission.
-
-The only FSU links I have attempted (and which currently have entries
-in the fsu_link_info[] table), are the enc/vf/pp --> IRT links for rotation.
-
-There does not appear to be support in the FSU for linking a write channel
-to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field. There
-is support for the direct link from CSI (which I am using), but that's 
-not an
-IDMAC channel link.
-
-There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC) channels
-0..2 (and 3? it's not clear, and not clear whether this includes channel 1).
-But I think this links to channel 12, and not to channels 8,9,10 to the 
-VDIC.
-Or will it? It's worth experimenting. It would have helped if FSL listed 
-which
-IDMAC channels these FSU links correspond to, instead of making us guess
-at it.
-
-In any event, the docs are not clear enough to implement a real FSU
-link to the VDIC read channels, if it's even possible. And trying to get
-programming help from FSL can be difficult, and no coding examples
-for this link AFAIK.
-
-So I ended resorted to linking to VDIC channels 8,9,10 with a software
-approach, instead of attempting a hardware FSU link.
-
-The EOF interrupt handler for the SMFC channels informs the VDIC
-entity via a v4l2_subdev_ioctl() call that a buffer is available. The
-VDIC then manually kicks off its read channels to bring that buffer
-(and a previous buffer for F(n-1) field) into the VDIC.
-
-There is a small amount of extra overhead going this route compared
-to a FSU hardware link: there is the EOF irq latency (a few usec), and
-the CPU overhead for the VDIC to manually start the read channels,
-which is also a few usec at most (see prepare_vdi_in_buffers() in
-imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU
-use plus irq latency) under normal system load.
-
-Of course, in order to implement this software link, I had to implement
-a straightforward FIFO dma buffer ring. The sink (VDIC) allocates the ring
-at stream on, and the source requests a pointer to this ring in its own
-stream on. Passing buffers from source to sink then follows a 
-straightforward
-FIFO queue/done/dequeue/queue model: sink queues buffers to src, src
-grabs queued buffers and makes them active, src signals completed
-buffers to sink, sink dequeues buffers in response, and sink queues
-buffers back when it is finished with them.
-
-
-> [...]
->> +/*
->> + * The subdevs have to be powered on/off, and streaming
->> + * enabled/disabled, in a specific sequence.
->> + */
->> +static const u32 stream_on_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +};
->> +
->> +static const u32 stream_off_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +};
->> +
->> +#define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
->> +
->> +static const u32 power_on_seq[] = {
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +};
->> +
->> +static const u32 power_off_seq[] = {
->> +	IMX_MEDIA_GRP_ID_IC_PP,
->> +	IMX_MEDIA_GRP_ID_IC_PRPVF,
->> +	IMX_MEDIA_GRP_ID_IC_PRPENC,
->> +	IMX_MEDIA_GRP_ID_SMFC,
->> +	IMX_MEDIA_GRP_ID_CSI,
->> +	IMX_MEDIA_GRP_ID_VIDMUX,
->> +	IMX_MEDIA_GRP_ID_SENSOR,
->> +	IMX_MEDIA_GRP_ID_CSI2,
->> +};
-> This seems somewhat arbitrary. Why is a power sequence needed?
-
-The CSI-2 receiver must be powered up before the sensor, that's the
-only requirement IIRC. The others have no s_power requirement. So I
-can probably change this to power up in the frontend -> backend order
-(IC_PP to sensor). And vice-versa for power off.
-
-
-> [...]
->> +/*
->> + * Turn current pipeline power on/off starting from start_entity.
->> + * Must be called with mdev->graph_mutex held.
->> + */
->> +int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
->> +				 struct media_entity_graph *graph,
->> +				 struct media_entity *start_entity, bool on)
->> +{
->> +	struct media_entity *entity;
->> +	struct v4l2_subdev *sd;
->> +	int i, ret = 0;
->> +	u32 id;
->> +
->> +	for (i = 0; i < NUM_POWER_ENTITIES; i++) {
->> +		id = on ? power_on_seq[i] : power_off_seq[i];
->> +		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
->> +		if (!entity)
->> +			continue;
->> +
->> +		sd = media_entity_to_v4l2_subdev(entity);
->> +
->> +		ret = v4l2_subdev_call(sd, core, s_power, on);
->> +		if (ret && ret != -ENOIOCTLCMD)
->> +			break;
+>> +		val = stm32_adc_readl(adc, stm32f4_sqr_regs[i].reg);
+>> +		val &= ~stm32f4_sqr_regs[i].mask;
+>> +		val |= chan->channel << stm32f4_sqr_regs[i].shift;
+>> +		stm32_adc_writel(adc, stm32f4_sqr_regs[i].reg, val);
 >> +	}
 >> +
->> +	return (ret && ret != -ENOIOCTLCMD) ? ret : 0;
+>> +	if (!i)
+>> +		return -EINVAL;
+>> +
+>> +	/* Sequence len */
+>> +	val = stm32_adc_readl(adc, stm32f4_sqr_regs[0].reg);
+>> +	val &= ~stm32f4_sqr_regs[0].mask;
+>> +	val |= ((i - 1) << stm32f4_sqr_regs[0].shift);
+>> +	stm32_adc_writel(adc, stm32f4_sqr_regs[0].reg, val);
+>> +
+>> +	return 0;
 >> +}
->> +EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
-> This should really be handled by v4l2_pipeline_pm_use.
-
-I thought about this earlier, but v4l2_pipeline_pm_use() seems to be
-doing some other stuff that bothered me, at least that's what I remember.
-I will revisit this.
-
->> +/*
->> + * Inherit the v4l2 controls from all entities in a pipeline
->> + * to the given video device.
->> + * Must be called with mdev->graph_mutex held.
+>> +
+>> +/**
+>> + * stm32_adc_get_trig_extsel() - Get external trigger selection
+>> + * @indio_dev: IIO device
+>> + * @trig: trigger
+>> + *
+>> + * Returns trigger extsel value, if trig matches, -EINVAL otherwise.
 >> + */
->> +int imx_media_inherit_controls(struct imx_media_dev *imxmd,
->> +			       struct video_device *vfd,
->> +			       struct media_entity *start_entity)
+>> +static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
+>> +				     struct iio_trigger *trig)
 >> +{
->> +	struct media_entity_graph graph;
->> +	struct media_entity *entity;
->> +	struct v4l2_subdev *sd;
+>> +	return -EINVAL;
+> ?????
+
+Sorry about that... I've split into separate patches to ease the review.
+I agree this is miss-leading on first sight.
+Would you like me to squash patch 2 into this ?
+Or I can put a temporary comment here, removed then in patch 2...
+Or keep it as it is... please let me know if this matters.
+
+>> +}
+>> +
+>> +/**
+>> + * stm32_adc_set_trig() - Set a regular trigger
+>> + * @indio_dev: IIO device
+>> + * @trig: IIO trigger
+>> + *
+>> + * Set trigger source/polarity (e.g. SW, or HW with polarity) :
+>> + * - if HW trigger disabled (e.g. trig == NULL, conversion launched by sw)
+>> + * - if HW trigger enabled, set source & polarity
+>> + */
+>> +static int stm32_adc_set_trig(struct iio_dev *indio_dev,
+>> +			      struct iio_trigger *trig)
+>> +{
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +	u32 val, extsel = 0, exten = STM32_EXTEN_SWTRIG;
+>> +	unsigned long flags;
 >> +	int ret;
 >> +
->> +	ret = media_entity_graph_walk_init(&graph, &imxmd->md);
+>> +	if (trig) {
+>> +		ret = stm32_adc_get_trig_extsel(indio_dev, trig);
+>> +		if (ret < 0)
+>> +			return ret;
+>> +
+>> +		/* set trigger source, default to rising edge */
+> Interesting.  The complexity of this device kicks in again.
+>
+> If we are talking true exposed hardware pin (which I think it can be?) then
+> this ought to come from DT.  For the case of trigging on either edge of the
+> pwm style signals, we probably want to figure some way of allowing userspace
+> to control this.  For now in either case this is fine though! Got to start
+> somewhere.
+
+You're completely right. I haven't included support for "exti" trigger 
+(e.g. exti gpio)
+in this patchset (only pwm/timers).
+But this would make sense to set polarity in dt in this case. I'll think 
+about this.
+I'm opened to suggestion, but if you're okay, i'll keep this for now.
+
+>> +		extsel = ret;
+>> +		exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
+>> +	}
+>> +
+>> +	spin_lock_irqsave(&adc->lock, flags);
+>> +	val = stm32_adc_readl(adc, STM32F4_ADC_CR2);
+>> +	val &= ~(STM32F4_EXTEN_MASK | STM32F4_EXTSEL_MASK);
+>> +	val |= exten << STM32F4_EXTEN_SHIFT;
+>> +	val |= extsel << STM32F4_EXTSEL_SHIFT;
+>> +	stm32_adc_writel(adc, STM32F4_ADC_CR2, val);
+>> +	spin_unlock_irqrestore(&adc->lock, flags);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +/**
+>>    * stm32_adc_single_conv() - Performs a single conversion
+>>    * @indio_dev: IIO device
+>>    * @chan: IIO channel
+>> @@ -234,6 +427,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+>>   	reinit_completion(&adc->completion);
+>>   
+>>   	adc->buffer = &result;
+>> +	adc->bufi = 0;
+>>   
+>>   	/* Program chan number in regular sequence */
+>>   	val = stm32_adc_readl(adc, STM32F4_ADC_SQR3);
+>> @@ -301,17 +495,58 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+>>   static irqreturn_t stm32_adc_isr(int irq, void *data)
+>>   {
+>>   	struct stm32_adc *adc = data;
+>> +	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+>>   	u32 status = stm32_adc_readl(adc, STM32F4_ADC_SR);
+>>   
+>>   	if (status & STM32F4_EOC) {
+>> -		*adc->buffer = stm32_adc_readw(adc, STM32F4_ADC_DR);
+>> -		complete(&adc->completion);
+> Normally I'd have put the separation between trigger and device a bit
+> earlier and had the actual reads in the function called by iio_trigger_poll
+> (and here after the wait for completion for the sysfs reads).
+>
+> I think it will make little practical difference, but it will conform better
+> to the data flow model (that kicks around in my head and has been in various
+> presentations others have done) of the trigger indicating either:
+> 1. Data ready
+> 2. Data should be ready - i.e. grab it now if on demand.
+>
+> The device side is responsible for then actually doing the read.
+>
+> Code wise I think this means moving a few lines but I may have missed some
+> details.
+
+1 - yes, for sysfs read, as ADC is converting a single value, Data Register
+(DR) read can be moved after the wait for completion. I haven't thought 
+about it
+in the original patchset.
+Then, only slight change would be to mask EOC interrupt here, or clear 
+EOC flag,
+because reading DR from ISR plays a dual role:
+- actual data read
+- clear EOC status flag.
+I'll add a comment to mention this.
+
+I don't see improvement in doing this, but I can update this for single 
+(raw) conversion.
+
+2 - But, regarding buffer mode, when converting sequence of two or more 
+channels,
+I'm not sure this is achievable: there is no internal fifo in ADC 
+hardware IP.
+Then it needs one interrupt per channel (or use DMA).
+Once channel group has been converted, iio_trigger_poll() can be called.
+So I need to fill buffer from the ISR (actual read), for each channel.
+
+In the end, it's advised to use DMA, especially when converting at 
+'high' rates
+or with two or more channels, to free up some CPU load, and avoid possible
+overun.
+
+Shall I add comment to describe this here ?
+Do you agree to keep this part of ISR as it is now ?
+
+>> +		adc->buffer[adc->bufi] = stm32_adc_readw(adc, STM32F4_ADC_DR);
+>> +		if (iio_buffer_enabled(indio_dev)) {
+>> +			adc->bufi++;
+>> +			if (adc->bufi >= adc->num_conv) {
+>> +				stm32_adc_conv_irq_disable(adc);
+>> +				iio_trigger_poll(indio_dev->trig);
+>> +			}
+>> +		} else {
+>> +			complete(&adc->completion);
+>> +		}
+>>   		return IRQ_HANDLED;
+>>   	}
+>>   
+>>   	return IRQ_NONE;
+>>   }
+>>   
+>> +/**
+>> + * stm32_adc_validate_trigger() - validate trigger for stm32 adc
+>> + * @indio_dev: IIO device
+>> + * @trig: new trigger
+>> + *
+>> + * Returns: 0 if trig matches one of the triggers registered by stm32 adc
+>> + * driver, -EINVAL otherwise.
+>> + */
+>> +static int stm32_adc_validate_trigger(struct iio_dev *indio_dev,
+>> +				      struct iio_trigger *trig)
+>> +{
+>> +	return stm32_adc_get_trig_extsel(indio_dev, trig) < 0 ? -EINVAL : 0;
+>> +}
+>> +
+>> +static int stm32_adc_update_scan_mode(struct iio_dev *indio_dev,
+>> +				      const unsigned long *scan_mask)
+>> +{
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +	int ret;
+>> +	u32 bit;
+>> +
+>> +	adc->num_conv = 0;
+>> +	for_each_set_bit(bit, scan_mask, indio_dev->masklength)
+>> +		adc->num_conv++;
+> Isn't there a count bits function? bitmap_weight I think which using the
+> hamming weight.
+I'll fix this.
+
+>> +
+>> +	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
 >> +	if (ret)
 >> +		return ret;
 >> +
->> +	media_entity_graph_walk_start(&graph, start_entity);
->> +
->> +	while ((entity = media_entity_graph_walk_next(&graph))) {
->> +		if (is_media_entity_v4l2_video_device(entity))
->> +			continue;
->> +
->> +		sd = media_entity_to_v4l2_subdev(entity);
->> +
->> +		dev_dbg(imxmd->dev, "%s: adding controls from %s\n",
->> +			__func__, sd->name);
->> +
->> +		ret = v4l2_ctrl_add_handler(vfd->ctrl_handler,
->> +					    sd->ctrl_handler,
->> +					    NULL);
->> +		if (ret)
->> +			break;
->> +	}
->> +
->> +	media_entity_graph_walk_cleanup(&graph);
->> +	return ret;
+>> +	return 0;
 >> +}
->> +EXPORT_SYMBOL_GPL(imx_media_inherit_controls);
 >> +
->> +MODULE_DESCRIPTION("i.MX5/6 v4l2 media controller driver");
->> +MODULE_AUTHOR("Steve Longerbeam<steve_longerbeam@mentor.com>");
->> +MODULE_LICENSE("GPL");
->> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
->> new file mode 100644
->> index 0000000..357654d
->> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-media-dev.c
-> This file is full of code that should live in the v4l2 core.
-
-Agreed. Stuff like imx_media_inherit_controls() really should be widely
-available.
-
->> +int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
->> +				   struct imx_media_subdev *csi[4])
+>>   static int stm32_adc_of_xlate(struct iio_dev *indio_dev,
+>>   			      const struct of_phandle_args *iiospec)
+>>   {
+>> @@ -350,11 +585,106 @@ static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
+>>   
+>>   static const struct iio_info stm32_adc_iio_info = {
+>>   	.read_raw = stm32_adc_read_raw,
+>> +	.validate_trigger = stm32_adc_validate_trigger,
+>> +	.update_scan_mode = stm32_adc_update_scan_mode,
+>>   	.debugfs_reg_access = stm32_adc_debugfs_reg_access,
+>>   	.of_xlate = stm32_adc_of_xlate,
+>>   	.driver_module = THIS_MODULE,
+>>   };
+>>   
+>> +static int stm32_adc_buffer_preenable(struct iio_dev *indio_dev)
 >> +{
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +
+>> +	/* Reset adc buffer index */
+>> +	adc->bufi = 0;
+>> +
+>> +	/* Allocate adc buffer */
+>> +	adc->buffer = kzalloc(indio_dev->scan_bytes, GFP_KERNEL);
+> Is this big enough to justify a separate allocation?  I'd be tempted to
+> just allocate the maximum possible size as part of the stm32_adc structure..
+
+So, you advise probe-time allocation for this buffer, why not ? :-)
+This would allow to simplify handling here, possibly remove 
+preenable/postdisable
+routines.
+I'll do this in next patchset.
+
+>> +	if (!adc->buffer)
+>> +		return -ENOMEM;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
+>> +{
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
 >> +	int ret;
 >> +
->> +	/* there must be at least one CSI in first IPU */
-> Why?
-
-Well yeah, imx-media doesn't necessarily need a CSI if things
-like the VDIC or post-processor are being used by an output
-overlay pipeline, for example. I'll fix this.
-
->> +
->> +/* parse inputs property from a sensor node */
->> +static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
->> +				   struct imx_media_subdev *sensor,
->> +				   struct device_node *sensor_np)
->> +{
->> +	struct imx_media_sensor_input *sinput = &sensor->input;
->> +	int ret, i;
->> +
->> +	for (i = 0; i < IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
->> +		const char *input_name;
->> +		u32 val;
->> +
->> +		ret = of_property_read_u32_index(sensor_np, "inputs", i, &val);
->> +		if (ret)
->> +			break;
->> +
->> +		sinput->value[i] = val;
->> +
->> +		ret = of_property_read_string_index(sensor_np, "input-names",
->> +						    i, &input_name);
->> +		/*
->> +		 * if input-names not provided, they will be set using
->> +		 * the subdev name once the sensor is known during
->> +		 * async bind
->> +		 */
->> +		if (!ret)
->> +			strncpy(sinput->name[i], input_name,
->> +				sizeof(sinput->name[i]));
+>> +	ret = stm32_adc_set_trig(indio_dev, indio_dev->trig);
+>> +	if (ret) {
+>> +		dev_err(&indio_dev->dev, "Can't set trigger\n");
+>> +		return ret;
 >> +	}
 >> +
->> +	sinput->num = i;
+>> +	ret = iio_triggered_buffer_postenable(indio_dev);
+>> +	if (ret < 0)
+> Handle unwinding of previous calls if this fails.
+I'll fix this.
+
+Thanks again, Regards,
+Fabrice
+
+>> +		return ret;
 >> +
->> +	/* if no inputs provided just assume a single input */
->> +	if (sinput->num == 0)
->> +		sinput->num = 1;
+>> +	stm32_adc_conv_irq_enable(adc);
+>> +	stm32_adc_start_conv(adc);
+>> +
+>> +	return 0;
 >> +}
-> This should be parsed by the sensor driver, not imx-media.
-
-you're probably right. I'll submit a patch for adv7180.c.
-
-
->> +static void of_parse_sensor(struct imx_media_dev *imxmd,
->> +			    struct imx_media_subdev *sensor,
->> +			    struct device_node *sensor_np)
+>> +
+>> +static int stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
 >> +{
->> +	struct device_node *endpoint;
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +	int ret;
 >> +
->> +	of_parse_sensor_inputs(imxmd, sensor, sensor_np);
+>> +	stm32_adc_stop_conv(adc);
+>> +	stm32_adc_conv_irq_disable(adc);
 >> +
->> +	endpoint = of_graph_get_next_endpoint(sensor_np, NULL);
->> +	if (endpoint) {
->> +		v4l2_of_parse_endpoint(endpoint, &sensor->sensor_ep);
->> +		of_node_put(endpoint);
+>> +	ret = iio_triggered_buffer_predisable(indio_dev);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = stm32_adc_set_trig(indio_dev, NULL);
+>> +	if (ret)
+>> +		dev_err(&indio_dev->dev, "Can't clear trigger\n");
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static int stm32_adc_buffer_postdisable(struct iio_dev *indio_dev)
+>> +{
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +
+>> +	kfree(adc->buffer);
+>> +	adc->buffer = NULL;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct iio_buffer_setup_ops stm32_adc_buffer_setup_ops = {
+>> +	.preenable = &stm32_adc_buffer_preenable,
+>> +	.postenable = &stm32_adc_buffer_postenable,
+>> +	.predisable = &stm32_adc_buffer_predisable,
+>> +	.postdisable = &stm32_adc_buffer_postdisable,
+>> +};
+>> +
+>> +static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
+>> +{
+>> +	struct iio_poll_func *pf = p;
+>> +	struct iio_dev *indio_dev = pf->indio_dev;
+>> +	struct stm32_adc *adc = iio_priv(indio_dev);
+>> +
+>> +	dev_dbg(&indio_dev->dev, "%s bufi=%d\n", __func__, adc->bufi);
+>> +
+>> +	/* reset buffer index */
+>> +	adc->bufi = 0;
+>> +	iio_push_to_buffers_with_timestamp(indio_dev, adc->buffer,
+>> +					   pf->timestamp);
+>> +
+>> +	iio_trigger_notify_done(indio_dev->trig);
+>> +
+>> +	/* re-enable eoc irq */
+>> +	stm32_adc_conv_irq_enable(adc);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>>   static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
+>>   				    struct iio_chan_spec *chan,
+>>   				    const struct stm32_adc_chan_spec *channel,
+>> @@ -471,14 +801,26 @@ static int stm32_adc_probe(struct platform_device *pdev)
+>>   	if (ret < 0)
+>>   		goto err_clk_disable;
+>>   
+>> +	ret = iio_triggered_buffer_setup(indio_dev,
+>> +					 &iio_pollfunc_store_time,
+>> +					 &stm32_adc_trigger_handler,
+>> +					 &stm32_adc_buffer_setup_ops);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "buffer setup failed\n");
+>> +		goto err_clk_disable;
 >> +	}
->> +}
 >> +
->> +static int of_get_port_count(const struct device_node *np)
->> +{
->> +	struct device_node *child;
->> +	int num = 0;
+>>   	ret = iio_device_register(indio_dev);
+>>   	if (ret) {
+>>   		dev_err(&pdev->dev, "iio dev register failed\n");
+>> -		goto err_clk_disable;
+>> +		goto err_buffer_cleanup;
+>>   	}
+>>   
+>>   	return 0;
+>>   
+>> +err_buffer_cleanup:
+>> +	iio_triggered_buffer_cleanup(indio_dev);
 >> +
->> +	/* if this node is itself a port, return 1 */
->> +	if (of_node_cmp(np->name, "port") == 0)
->> +		return 1;
->> +
->> +	for_each_child_of_node(np, child)
->> +		if (of_node_cmp(child->name, "port") == 0)
->> +			num++;
->> +
->> +	return num;
->> +}
-> If this is extended to handle the ports subnode properly, it could be
-> moved into drivers/of/base.c.
-
-More that eventually needs exporting, agreed.
+>>   err_clk_disable:
+>>   	clk_disable_unprepare(adc->clk);
+>>   
+>> @@ -491,6 +833,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
+>>   	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+>>   
+>>   	iio_device_unregister(indio_dev);
+>> +	iio_triggered_buffer_cleanup(indio_dev);
+>>   	clk_disable_unprepare(adc->clk);
+>>   
+>>   	return 0;
+>>
 
 
-Steve
-
-
---------------71EDDE909EB2426C3885C669
-Content-Type: text/html; charset=utf-8
-Content-Transfer-Encoding: 8bit
+--------------7638252C2B8812C8396BE4B7
+Content-Type: text/html; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 
 <html>
   <head>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="Content-Type" content="text/html;
+      charset=windows-1252">
   </head>
   <body bgcolor="#FFFFFF" text="#000000">
-    <p><br>
-    </p>
-    <br>
-    <div class="moz-cite-prefix">On 01/13/2017 07:20 AM, Philipp Zabel
-      wrote:<br>
-    </div>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    On 01/22/2017 01:53 PM, Jonathan Cameron wrote:<br>
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
-      <pre wrap="">Am Freitag, den 06.01.2017, 18:11 -0800 schrieb Steve Longerbeam:
+      <pre wrap="">On 19/01/17 13:34, Fabrice Gasnier wrote:
 </pre>
       <blockquote type="cite">
-        <pre wrap="">+For image capture, the IPU contains the following internal subunits:
-+
-+- Image DMA Controller (IDMAC)
-+- Camera Serial Interface (CSI)
-+- Image Converter (IC)
-+- Sensor Multi-FIFO Controller (SMFC)
-+- Image Rotator (IRT)
-+- Video De-Interlace Controller (VDIC)
-</pre>
-      </blockquote>
-      <pre wrap="">Nitpick: Video De-Interlacing or Combining Block (VDIC)
-</pre>
-    </blockquote>
-    <br>
-    done.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <blockquote type="cite">
-        <pre wrap="">+
-+The IDMAC is the DMA controller for transfer of image frames to and from
-+memory. Various dedicated DMA channels exist for both video capture and
-+display paths.
-+
-+The CSI is the frontend capture unit that interfaces directly with
-+capture sensors over Parallel, BT.656/1120, and MIPI CSI-2 busses.
-+
-+The IC handles color-space conversion, resizing, and rotation
-+operations. 
-</pre>
-      </blockquote>
-      <pre wrap="">And horizontal flipping.</pre>
-    </blockquote>
-    <br>
-    done.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">There are three independent "tasks" within the IC that can
-+carry out conversions concurrently: pre-processing encoding,
-+pre-processing preview, and post-processing.
-</pre>
-      </blockquote>
-      <pre wrap="">s/preview/viewfinder/ seems to be the commonly used name.</pre>
-    </blockquote>
-    <br>
-    replaced everywhere in the doc.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-This paragraph could mention that a single hardware unit is used
-transparently time multiplexed by the three tasks at different
-granularity for the downsizing, main processing, and rotation sections.
-The downscale unit switches between tasks at 8-pixel burst granularity,
-the main processing unit at line granularity. The rotation units switch
-only at frame granularity.</pre>
-    </blockquote>
-    <br>
-    I've added that info.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+The SMFC is composed of four independent channels that each can transfer
-+captured frames from sensors directly to memory concurrently.
-+
-+The IRT carries out 90 and 270 degree image rotation operations.
-</pre>
-      </blockquote>
-      <pre wrap="">... on 8x8 pixel blocks, supported by the IDMAC which handles block
-transfers, block reordering, and vertical flipping.
-</pre>
-    </blockquote>
-    <br>
-    done.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <blockquote type="cite">
-        <pre wrap="">+The VDIC handles the conversion of interlaced video to progressive, with
-+support for different motion compensation modes (low, medium, and high
-+motion). The deinterlaced output frames from the VDIC can be sent to the
-+IC pre-process preview task for further conversions.
-+
-+In addition to the IPU internal subunits, there are also two units
-+outside the IPU that are also involved in video capture on i.MX:
-+
-+- MIPI CSI-2 Receiver for camera sensors with the MIPI CSI-2 bus
-+  interface. This is a Synopsys DesignWare core.
-+- A video multiplexer for selecting among multiple sensor inputs to
-+  send to a CSI.
-</pre>
-      </blockquote>
-      <pre wrap="">Two of them, actually.
-</pre>
-    </blockquote>
-    <br>
-    done.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <blockquote type="cite">
-        <pre wrap="">+
-+- Includes a Frame Interval Monitor (FIM) that can correct vertical sync
-+  problems with the ADV718x video decoders. See below for a description
-+  of the FIM.
-</pre>
-      </blockquote>
-      <pre wrap="">Could this also be used to calculate more precise capture timestamps?</pre>
-    </blockquote>
-    <br>
-    An input capture function could do that, triggered off a VSYNC or
-    FIELD<br>
-    signal such as on the ADV718x. The FIM is only used to calculate<br>
-    frame intervals at this point, but its input capture method could be<br>
-    used to also record more accurate timestamps.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+Capture Pipelines
-+-----------------
-+
-+The following describe the various use-cases supported by the pipelines.
-+
-+The links shown do not include the frontend sensor, video mux, or mipi
-+csi-2 receiver links. This depends on the type of sensor interface
-+(parallel or mipi csi-2). So in all cases, these pipelines begin with:
-+
-+sensor -&gt; ipu_csi_mux -&gt; ipu_csi -&gt; ...
-+
-+for parallel sensors, or:
-+
-+sensor -&gt; imx-mipi-csi2 -&gt; (ipu_csi_mux) -&gt; ipu_csi -&gt; ...
-+
-+for mipi csi-2 sensors. The imx-mipi-csi2 receiver may need to route
-+to the video mux (ipu_csi_mux) before sending to the CSI, depending
-+on the mipi csi-2 virtual channel, hence ipu_csi_mux is shown in
-+parenthesis.
-+
-+Unprocessed Video Capture:
-+--------------------------
-+
-+Send frames directly from sensor to camera interface, with no
-+conversions:
-+
-+-&gt; ipu_smfc -&gt; camif
-</pre>
-      </blockquote>
-      <pre wrap="">I'd call this capture interface, this is not just for cameras. Or maybe
-idmac if you want to mirror hardware names?</pre>
-    </blockquote>
-    <br>
-    Camif is so named because it is the V4L2 user interface for video<br>
-    capture. I suppose it could be named "capif", but that doesn't role<br>
-    off the tongue quite as well.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+Note the ipu_smfc can do pixel reordering within the same colorspace.
-</pre>
-      </blockquote>
-      <pre wrap="">That isn't a feature of the SMFC, but of the IDMAC (FCW &amp; FCR).</pre>
-    </blockquote>
-    <br>
-    yes, the doc is re-worded to make that more clear.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+For example, its sink pad can take UYVY2X8, but its source pad can
-+output YUYV2X8.
-</pre>
-      </blockquote>
-      <pre wrap="">I don't think this is correct. Re-reading "37.4.3.7 Packing to memory"
-in the CSI chapter, for 8-bit per component data, the internal format
-between CSI, SMFC, and IDMAC is always some 32-bit RGBx/YUVx variant
-(or "bayer/generic data"). In either case, the internal format does not
-change along the way.</pre>
-    </blockquote>
-    <br>
-    these are pixels in memory buffers, not the IPU internal formats.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+IC Direct Conversions:
-+----------------------
-+
-+This pipeline uses the preprocess encode entity to route frames directly
-+from the CSI to the IC (bypassing the SMFC), to carry out scaling up to
-+1024x1024 resolution, CSC, and image rotation:
-+
-+-&gt; ipu_ic_prpenc -&gt; camif
-+
-+This can be a useful capture pipeline for heavily loaded memory bus
-+traffic environments, since it has minimal IDMAC channel usage.
-</pre>
-      </blockquote>
-      <pre wrap="">Note that if rotation is enabled, transfers between IC processing and
-rotation still have to go through memory once.</pre>
-    </blockquote>
-    <br>
-    yep.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+Post-Processing Conversions:
-+----------------------------
-+
-+This pipeline routes frames from the SMFC to the post-processing
-+entity.
-</pre>
-      </blockquote>
-      <pre wrap="">No, frames written by the CSI -&gt; SMFC -&gt; IDMAC path are read back into
-the post-processing entity.</pre>
-    </blockquote>
-    <br>
-    that's true. The post-processing entity kicks off its read channels<br>
-    to transfer those frames into the post-processor. Anyway this
-    wording<br>
-    will change after doing away with the SMFC entity.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+   media-ctl -V "\"ipu1_csi0\":1 [fmt:YUYV2X8/640x480]"
-+   media-ctl -V "\"ipu1_smfc0\":0 [fmt:YUYV2X8/640x480]"
-+   media-ctl -V "\"ipu1_smfc0\":1 [fmt:UYVY2X8/640x480]"
-</pre>
-      </blockquote>
-      <pre wrap="">I think the smfc entities should be dropped.</pre>
-    </blockquote>
-    <br>
-    yes working on that.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+   media-ctl -V "\"camif0\":0 [fmt:UYVY2X8/640x480]"
-+   media-ctl -V "\"camif0\":1 [fmt:UYVY2X8/640x480]"
-+   # Configure pads for OV5640 pipeline
-+   media-ctl -V "\"ov5640_mipi 1-0040\":0 [fmt:UYVY2X8/640x480]"
-+   media-ctl -V "\"imx-mipi-csi2\":0 [fmt:UYVY2X8/640x480]"
-+   media-ctl -V "\"imx-mipi-csi2\":2 [fmt:UYVY2X8/640x480]"
-+   media-ctl -V "\"ipu1_csi1\":0 [fmt:UYVY2X8/640x480]"
-+   media-ctl -V "\"ipu1_csi1\":1 [fmt:UYVY2X8/640x480]"
-</pre>
-      </blockquote>
-      <pre wrap="">[...]
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+   media-ctl -V "\"camif1\":0 [fmt:UYVY2X8/640x480]"
-</pre>
-      </blockquote>
-      <pre wrap="">I agree this looks very intuitive, but technically correct for the
-csi1:1 and camif1:0 pads would be a 32-bit YUV format.
-(MEDIA_BUS_FMT_YUV8_1X32_PADLO doesn't exist yet).
+        <pre wrap="">STM32 ADC conversions can be launched using hardware triggers.
+It can be used to start conversion sequences (group of channels).
+Selected channels are select via sequence registers.
+Trigger source is selected via 'extsel' (external trigger mux).
+Trigger polarity is set to rising edge by default.
 
-I think it would be better to use the correct format</pre>
+Signed-off-by: Fabrice Gasnier <a class="moz-txt-link-rfc2396E" href="mailto:fabrice.gasnier@st.com">&lt;fabrice.gasnier@st.com&gt;</a>
+</pre>
+      </blockquote>
+      <pre wrap="">A few small bits and pieces inline. The only significant element is about
+making the data flow conform a little better to our poorly documented :(
+typical data flow.  All about what the trigger is responsible for rather than
+the device.
+
+Looks pretty good to me!</pre>
     </blockquote>
     <br>
-    I'm not sure I follow you here.<br>
+    Hi Jonathan,<br>
     <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    Many thanks for reviewing.<br>
+    Please find bellow some answers and a few questions.<br>
+    <br>
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
-      <pre wrap=""> as that will allow
-to chose the regular vs. companded packings in the future for formats
-with more than 8 bits per component.
+      <pre wrap="">
+Jonathan
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">---
+ drivers/iio/adc/Kconfig     |   2 +
+ drivers/iio/adc/stm32-adc.c | 349 +++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 348 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 9c8b558..33341f4 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -446,6 +446,8 @@ config STM32_ADC_CORE
+ 	depends on ARCH_STM32 || COMPILE_TEST
+ 	depends on OF
+ 	depends on REGULATOR
++	select IIO_BUFFER
++	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Select this option to enable the core driver for STMicroelectronics
+ 	  STM32 analog-to-digital converter (ADC).
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 5715e79..8d0b74b 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -22,11 +22,16 @@
+ #include &lt;linux/clk.h&gt;
+ #include &lt;linux/delay.h&gt;
+ #include &lt;linux/iio/iio.h&gt;
++#include &lt;linux/iio/buffer.h&gt;
++#include &lt;linux/iio/trigger.h&gt;
++#include &lt;linux/iio/trigger_consumer.h&gt;
++#include &lt;linux/iio/triggered_buffer.h&gt;
+ #include &lt;linux/interrupt.h&gt;
+ #include &lt;linux/io.h&gt;
+ #include &lt;linux/module.h&gt;
+ #include &lt;linux/platform_device.h&gt;
+ #include &lt;linux/of.h&gt;
++#include &lt;linux/slab.h&gt;
+ 
+ #include "stm32-adc-core.h"
+ 
+@@ -58,21 +63,66 @@
+ 
+ /* STM32F4_ADC_CR2 - bit fields */
+ #define STM32F4_SWSTART			BIT(30)
++#define STM32F4_EXTEN_SHIFT		28
+ #define STM32F4_EXTEN_MASK		GENMASK(29, 28)
++#define STM32F4_EXTSEL_SHIFT		24
++#define STM32F4_EXTSEL_MASK		GENMASK(27, 24)
+ #define STM32F4_EOCS			BIT(10)
+ #define STM32F4_ADON			BIT(0)
+ 
+ /* STM32F4_ADC_SQR1 - bit fields */
+ #define STM32F4_L_SHIFT			20
+ #define STM32F4_L_MASK			GENMASK(23, 20)
++#define STM32F4_SQ16_SHIFT		15
++#define STM32F4_SQ16_MASK		GENMASK(19, 15)
++#define STM32F4_SQ15_SHIFT		10
++#define STM32F4_SQ15_MASK		GENMASK(14, 10)
++#define STM32F4_SQ14_SHIFT		5
++#define STM32F4_SQ14_MASK		GENMASK(9, 5)
++#define STM32F4_SQ13_SHIFT		0
++#define STM32F4_SQ13_MASK		GENMASK(4, 0)
++
++/* STM32F4_ADC_SQR2 - bit fields */
++#define STM32F4_SQ12_SHIFT		25
++#define STM32F4_SQ12_MASK		GENMASK(29, 25)
++#define STM32F4_SQ11_SHIFT		20
++#define STM32F4_SQ11_MASK		GENMASK(24, 20)
++#define STM32F4_SQ10_SHIFT		15
++#define STM32F4_SQ10_MASK		GENMASK(19, 15)
++#define STM32F4_SQ9_SHIFT		10
++#define STM32F4_SQ9_MASK		GENMASK(14, 10)
++#define STM32F4_SQ8_SHIFT		5
++#define STM32F4_SQ8_MASK		GENMASK(9, 5)
++#define STM32F4_SQ7_SHIFT		0
++#define STM32F4_SQ7_MASK		GENMASK(4, 0)
+ 
+ /* STM32F4_ADC_SQR3 - bit fields */
++#define STM32F4_SQ6_SHIFT		25
++#define STM32F4_SQ6_MASK		GENMASK(29, 25)
++#define STM32F4_SQ5_SHIFT		20
++#define STM32F4_SQ5_MASK		GENMASK(24, 20)
++#define STM32F4_SQ4_SHIFT		15
++#define STM32F4_SQ4_MASK		GENMASK(19, 15)
++#define STM32F4_SQ3_SHIFT		10
++#define STM32F4_SQ3_MASK		GENMASK(14, 10)
++#define STM32F4_SQ2_SHIFT		5
++#define STM32F4_SQ2_MASK		GENMASK(9, 5)
+ #define STM32F4_SQ1_SHIFT		0
+ #define STM32F4_SQ1_MASK		GENMASK(4, 0)
 
 </pre>
-      <blockquote type="cite">
-        <pre wrap="">+   media-ctl -V "\"camif1\":1 [fmt:UYVY2X8/640x480]"
-+
-+Streaming can then begin independently on device nodes /dev/video0
-+and /dev/video1.
-+
-+SabreAuto with ADV7180 decoder
-+------------------------------
-+
-+On the SabreAuto, an on-board ADV7180 SD decoder is connected to the
-+parallel bus input on the internal video mux to IPU1 CSI0.
-+
-+The following example configures a pipeline to capture from the ADV7180
-+video decoder, assuming NTSC 720x480 input signals, with Motion
-+Compensated de-interlacing (not shown: all pad field types should be set
-+as indicated). $outputfmt can be any format supported by the
-+ipu1_ic_prpvf entity at its output pad:
-+
-+.. code-block:: none
-+
-+   # Setup links
-+   media-ctl -l '"adv7180 3-0021":0 -&gt; "ipu1_csi0_mux":1[1]'
-+   media-ctl -l '"ipu1_csi0_mux":2 -&gt; "ipu1_csi0":0[1]'
-+   media-ctl -l '"ipu1_csi0":1 -&gt; "ipu1_smfc0":0[1]'
-+   media-ctl -l '"ipu1_smfc0":1 -&gt; "ipu1_ic_prpvf":0[1]'
-+   media-ctl -l '"ipu1_ic_prpvf":1 -&gt; "camif0":0[1]'
-+   media-ctl -l '"camif0":1 -&gt; "camif0 devnode":0[1]'
-+   # Configure pads
-+   # pad field types for below pads must be an interlaced type
-+   # such as "ALTERNATE"
-</pre>
       </blockquote>
-      <pre wrap="">I think alternate should only extend as far as the CSI, since the CSI
-can only capture NTSC/PAL fields in a fixed order.</pre>
+      <pre wrap="">Given all the above are only used in a big table which basically says what
+the are, I wonder in this particular case if there is any real benefit to
+using the defines?  Might actually be clearer just to have the numbers
+inline.  What do you think?  I'm not fussed either way.</pre>
     </blockquote>
     <br>
-    Agreed, I'm doing the translation from alternate to seq_bt/seq_tb
-    depending<br>
-    on sensor std in imx-vdic.c, but it should move upstream. Will fix.<br>
+    As you're suggesting it, I'll send an updated version without all
+    these definitions.<br>
     <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
       <pre wrap="">
 </pre>
       <blockquote type="cite">
-        <pre wrap="">+   media-ctl -V "\"adv7180 3-0021\":0 [fmt:UYVY2X8/720x480]"
-+   media-ctl -V "\"ipu1_csi0_mux\":1 [fmt:UYVY2X8/720x480]"
-</pre>
-      </blockquote>
-      <pre wrap="">From here the interlaced field type should be sequential in the correct
-order depending on NTSC/PAL.
-</pre>
-    </blockquote>
-    <br>
-    right.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <blockquote type="cite">
-        <pre wrap="">+
-+Frame Interval Monitor
-+----------------------
-+
-+The adv718x decoders can occasionally send corrupt fields during
-+NTSC/PAL signal re-sync (too little or too many video lines). When
-+this happens, the IPU triggers a mechanism to re-establish vertical
-+sync by adding 1 dummy line every frame, which causes a rolling effect
-+from image to image, and can last a long time before a stable image is
-+recovered. Or sometimes the mechanism doesn't work at all, causing a
-+permanent split image (one frame contains lines from two consecutive
-+captured images).
-</pre>
-      </blockquote>
-      <pre wrap="">Is it only SabreAuto on which the FIM mechanism can be used due to the
-pad routing?</pre>
-    </blockquote>
-    <br>
-    No, FIM can be used on any target, the fim child node of ipu_csi
-    just<br>
-    needs to be enabled via status property.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-[...]
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+/*
-+ * DMA buffer ring handling
-+ */
-+struct imx_media_dma_buf_ring {
-+	struct imx_media_dev *imxmd;
-+
-+	/* the ring */
-+	struct imx_media_dma_buf buf[IMX_MEDIA_MAX_RING_BUFS];
-+	/* the scratch buffer for underruns */
-+	struct imx_media_dma_buf scratch;
-+
-+	/* buffer generator */
-+	struct media_entity *src;
-+	/* buffer receiver */
-+	struct media_entity *sink;
-+
-+	spinlock_t lock;
-+
-+	int num_bufs;
-+	unsigned long last_seq;
+        <pre wrap="">+#define STM32_ADC_MAX_SQ		16	/* SQ1..SQ16 */
+ #define STM32_ADC_TIMEOUT_US		100000
+ #define STM32_ADC_TIMEOUT	(msecs_to_jiffies(STM32_ADC_TIMEOUT_US / 1000))
+ 
++/* External trigger enable */
++enum stm32_adc_exten {
++	STM32_EXTEN_SWTRIG,
++	STM32_EXTEN_HWTRIG_RISING_EDGE,
++	STM32_EXTEN_HWTRIG_FALLING_EDGE,
++	STM32_EXTEN_HWTRIG_BOTH_EDGES,
 +};
++
++
+ /**
+  * struct stm32_adc - private data of each ADC IIO instance
+  * @common:		reference to ADC block common data
+@@ -82,6 +132,8 @@
+  * @clk:		clock for this adc instance
+  * @irq:		interrupt for this adc instance
+  * @lock:		spinlock
++ * @bufi:		data buffer index
++ * @num_conv:		expected number of scan conversions
+  */
+ struct stm32_adc {
+ 	struct stm32_adc_common	*common;
+@@ -91,6 +143,8 @@ struct stm32_adc {
+ 	struct clk		*clk;
+ 	int			irq;
+ 	spinlock_t		lock;		/* interrupt lock */
++	int			bufi;
++	int			num_conv;
+ };
+ 
+ /**
+@@ -105,6 +159,18 @@ struct stm32_adc_chan_spec {
+ 	const char		*name;
+ };
+ 
++/**
++ * stm32_adc_regs - stm32 ADC misc registers &amp; bitfield desc
++ * @reg:		register offset
++ * @mask:		bitfield mask
++ * @shift:		left shift
++ */
++struct stm32_adc_regs {
++	int reg;
++	int mask;
++	int shift;
 </pre>
       </blockquote>
-      <pre wrap="">I don't think this belongs in the capture driver at all.
-Memory-to-memory transfers should be handled at the videobuf2 level.</pre>
+      <pre wrap="">You could use the FIELD_PREP macro to avoid having to store both the mask
+and shift.  Up to you though as definitely a matter for personal taste!</pre>
     </blockquote>
     <br>
-    see below.<br>
+    Thanks for pointing this out. I haven't noticed these macros before
+    that.<br>
+    But this applies only to compile-time constant. This cannot be used
+    with bellow<br>
+    array.<br>
     <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
-      <pre wrap="">
-[...]
-</pre>
       <blockquote type="cite">
-        <pre wrap="">+static struct imx_media_dma_buf *
-+__dma_buf_queue(struct imx_media_dma_buf_ring *ring, int index)
+        <pre wrap="">+};
++
+ /* Input definitions common for all STM32F4 instances */
+ static const struct stm32_adc_chan_spec stm32f4_adc123_channels[] = {
+ 	{ IIO_VOLTAGE, 0, "in0" },
+@@ -126,6 +192,33 @@ struct stm32_adc_chan_spec {
+ };
+ 
+ /**
++ * stm32f4_sqr_regs - describe regular sequence registers
++ * - L: sequence len (register &amp; bit field)
++ * - SQ1..SQ16: sequence entries (register &amp; bit field)
++ */
++static const struct stm32_adc_regs stm32f4_sqr_regs[STM32_ADC_MAX_SQ + 1] = {
++	/* L: len bit field description to be kept as first element */
++	{ STM32F4_ADC_SQR1, STM32F4_L_MASK, STM32F4_L_SHIFT },
++	/* SQ1..SQ16 registers &amp; bit fields */
++	{ STM32F4_ADC_SQR3, STM32F4_SQ1_MASK, STM32F4_SQ1_SHIFT },
++	{ STM32F4_ADC_SQR3, STM32F4_SQ2_MASK, STM32F4_SQ2_SHIFT },
++	{ STM32F4_ADC_SQR3, STM32F4_SQ3_MASK, STM32F4_SQ3_SHIFT },
++	{ STM32F4_ADC_SQR3, STM32F4_SQ4_MASK, STM32F4_SQ4_SHIFT },
++	{ STM32F4_ADC_SQR3, STM32F4_SQ5_MASK, STM32F4_SQ5_SHIFT },
++	{ STM32F4_ADC_SQR3, STM32F4_SQ6_MASK, STM32F4_SQ6_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ7_MASK, STM32F4_SQ7_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ8_MASK, STM32F4_SQ8_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ9_MASK, STM32F4_SQ9_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ10_MASK, STM32F4_SQ10_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ11_MASK, STM32F4_SQ11_SHIFT },
++	{ STM32F4_ADC_SQR2, STM32F4_SQ12_MASK, STM32F4_SQ12_SHIFT },
++	{ STM32F4_ADC_SQR1, STM32F4_SQ13_MASK, STM32F4_SQ13_SHIFT },
++	{ STM32F4_ADC_SQR1, STM32F4_SQ14_MASK, STM32F4_SQ14_SHIFT },
++	{ STM32F4_ADC_SQR1, STM32F4_SQ15_MASK, STM32F4_SQ15_SHIFT },
++	{ STM32F4_ADC_SQR1, STM32F4_SQ16_MASK, STM32F4_SQ16_SHIFT },
++};
++
++/**
+  * STM32 ADC registers access routines
+  * @adc: stm32 adc instance
+  * @reg: reg offset in adc instance
+@@ -211,6 +304,106 @@ static void stm32_adc_stop_conv(struct stm32_adc *adc)
+ }
+ 
+ /**
++ * stm32_adc_conf_scan_seq() - Build regular channels scan sequence
++ * @indio_dev: IIO device
++ * @scan_mask: channels to be converted
++ *
++ * Conversion sequence :
++ * Configure ADC scan sequence based on selected channels in scan_mask.
++ * Add channels to SQR registers, from scan_mask LSB to MSB, then
++ * program sequence len.
++ */
++static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
++				   const unsigned long *scan_mask)
 +{
-+	struct imx_media_dma_buf *buf;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	const struct iio_chan_spec *chan;
++	u32 val, bit;
++	int i = 0;
 +
-+	if (index &gt;= ring-&gt;num_bufs)
-+		return ERR_PTR(-EINVAL);
++	for_each_set_bit(bit, scan_mask, indio_dev-&gt;masklength) {
++		chan = indio_dev-&gt;channels + bit;
++		/*
++		 * Assign one channel per SQ entry in regular
++		 * sequence, starting with SQ1.
++		 */
++		i++;
++		if (i &gt; STM32_ADC_MAX_SQ)
++			return -EINVAL;
 +
-+	buf = &amp;ring-&gt;buf[index];
-+	if (WARN_ON(buf-&gt;state != IMX_MEDIA_BUF_STATUS_PREPARED))
-+		return ERR_PTR(-EINVAL);
++		dev_dbg(&amp;indio_dev-&gt;dev, "%s chan %d to SQ%d\n",
++			__func__, chan-&gt;channel, i);
 +
-+	buf-&gt;state = IMX_MEDIA_BUF_STATUS_QUEUED;
-+	buf-&gt;seq = ring-&gt;last_seq++;
-+
-+	return buf;
-+}
-</pre>
-      </blockquote>
-      <pre wrap="">Is this a whole software buffer queue implementation? I thought the
-whole point of putting the custom mem2mem framework into the capture
-driver was to use the hardware FSU channel linking?</pre>
-    </blockquote>
-    <br>
-     see below.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">What is the purpose of this if the sink should be triggered by the FSU?</pre>
-    </blockquote>
-    <br>
-    Ok, here is where I need to make an admission.<br>
-    <br>
-    The only FSU links I have attempted (and which currently have
-    entries<br>
-    in the fsu_link_info[] table), are the enc/vf/pp --&gt; IRT links
-    for rotation.<br>
-    <br>
-    There does not appear to be support in the FSU for linking a write
-    channel<br>
-    to the VDIC read channels (8, 9, 10) according to VDI_SRC_SEL field.
-    There<br>
-    is support for the direct link from CSI (which I am using), but
-    that's not an<br>
-    IDMAC channel link.<br>
-    <br>
-    There is a PRP_SRC_SEL field, with linking from IDMAC (SMFC)
-    channels<br>
-    0..2 (and 3? it's not clear, and not clear whether this includes
-    channel 1).<br>
-    But I think this links to channel 12, and not to channels 8,9,10 to
-    the VDIC.<br>
-    Or will it? It's worth experimenting. It would have helped if FSL
-    listed which<br>
-    IDMAC channels these FSU links correspond to, instead of making us
-    guess<br>
-    at it.<br>
-    <br>
-    In any event, the docs are not clear enough to implement a real FSU<br>
-    link to the VDIC read channels, if it's even possible. And trying to
-    get<br>
-    programming help from FSL can be difficult, and no coding examples<br>
-    for this link AFAIK.<br>
-    <br>
-    So I ended resorted to linking to VDIC channels 8,9,10 with a
-    software<br>
-    approach, instead of attempting a hardware FSU link.<br>
-    <br>
-    The EOF interrupt handler for the SMFC channels informs the VDIC<br>
-    entity via a v4l2_subdev_ioctl() call that a buffer is available.
-    The<br>
-    VDIC then manually kicks off its read channels to bring that buffer<br>
-    (and a previous buffer for F(n-1) field) into the VDIC.<br>
-    <br>
-    There is a small amount of extra overhead going this route compared<br>
-    to a FSU hardware link: there is the EOF irq latency (a few usec),
-    and<br>
-    the CPU overhead for the VDIC to manually start the read channels,<br>
-    which is also a few usec at most (see prepare_vdi_in_buffers() in<br>
-    imx-vdic.c). So in total at most ~10 usec of extra overhead (CPU<br>
-    use plus irq latency) under normal system load.<br>
-    <br>
-    Of course, in order to implement this software link, I had to
-    implement<br>
-    a straightforward FIFO dma buffer ring. The sink (VDIC) allocates
-    the ring<br>
-    at stream on, and the source requests a pointer to this ring in its
-    own<br>
-    stream on. Passing buffers from source to sink then follows a
-    straightforward<br>
-    FIFO queue/done/dequeue/queue model: sink queues buffers to src, src<br>
-    grabs queued buffers and makes them active, src signals completed<br>
-    buffers to sink, sink dequeues buffers in response, and sink queues<br>
-    buffers back when it is finished with them.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-[...]
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+/*
-+ * The subdevs have to be powered on/off, and streaming
-+ * enabled/disabled, in a specific sequence.
-+ */
-+static const u32 stream_on_seq[] = {
-+	IMX_MEDIA_GRP_ID_IC_PP,
-+	IMX_MEDIA_GRP_ID_IC_PRPVF,
-+	IMX_MEDIA_GRP_ID_IC_PRPENC,
-+	IMX_MEDIA_GRP_ID_SMFC,
-+	IMX_MEDIA_GRP_ID_SENSOR,
-+	IMX_MEDIA_GRP_ID_CSI2,
-+	IMX_MEDIA_GRP_ID_VIDMUX,
-+	IMX_MEDIA_GRP_ID_CSI,
-+};
-+
-+static const u32 stream_off_seq[] = {
-+	IMX_MEDIA_GRP_ID_IC_PP,
-+	IMX_MEDIA_GRP_ID_IC_PRPVF,
-+	IMX_MEDIA_GRP_ID_IC_PRPENC,
-+	IMX_MEDIA_GRP_ID_SMFC,
-+	IMX_MEDIA_GRP_ID_CSI,
-+	IMX_MEDIA_GRP_ID_VIDMUX,
-+	IMX_MEDIA_GRP_ID_CSI2,
-+	IMX_MEDIA_GRP_ID_SENSOR,
-+};
-+
-+#define NUM_STREAM_ENTITIES ARRAY_SIZE(stream_on_seq)
-+
-+static const u32 power_on_seq[] = {
-+	IMX_MEDIA_GRP_ID_CSI2,
-+	IMX_MEDIA_GRP_ID_SENSOR,
-+	IMX_MEDIA_GRP_ID_VIDMUX,
-+	IMX_MEDIA_GRP_ID_CSI,
-+	IMX_MEDIA_GRP_ID_SMFC,
-+	IMX_MEDIA_GRP_ID_IC_PRPENC,
-+	IMX_MEDIA_GRP_ID_IC_PRPVF,
-+	IMX_MEDIA_GRP_ID_IC_PP,
-+};
-+
-+static const u32 power_off_seq[] = {
-+	IMX_MEDIA_GRP_ID_IC_PP,
-+	IMX_MEDIA_GRP_ID_IC_PRPVF,
-+	IMX_MEDIA_GRP_ID_IC_PRPENC,
-+	IMX_MEDIA_GRP_ID_SMFC,
-+	IMX_MEDIA_GRP_ID_CSI,
-+	IMX_MEDIA_GRP_ID_VIDMUX,
-+	IMX_MEDIA_GRP_ID_SENSOR,
-+	IMX_MEDIA_GRP_ID_CSI2,
-+};
-</pre>
-      </blockquote>
-      <pre wrap="">This seems somewhat arbitrary. Why is a power sequence needed?</pre>
-    </blockquote>
-    <br>
-    The CSI-2 receiver must be powered up before the sensor, that's the<br>
-    only requirement IIRC. The others have no s_power requirement. So I<br>
-    can probably change this to power up in the frontend -&gt; backend
-    order<br>
-    (IC_PP to sensor). And vice-versa for power off.<br>
-    <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <pre wrap="">
-[...]
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">+/*
-+ * Turn current pipeline power on/off starting from start_entity.
-+ * Must be called with mdev-&gt;graph_mutex held.
-+ */
-+int imx_media_pipeline_set_power(struct imx_media_dev *imxmd,
-+				 struct media_entity_graph *graph,
-+				 struct media_entity *start_entity, bool on)
-+{
-+	struct media_entity *entity;
-+	struct v4l2_subdev *sd;
-+	int i, ret = 0;
-+	u32 id;
-+
-+	for (i = 0; i &lt; NUM_POWER_ENTITIES; i++) {
-+		id = on ? power_on_seq[i] : power_off_seq[i];
-+		entity = find_pipeline_entity(imxmd, graph, start_entity, id);
-+		if (!entity)
-+			continue;
-+
-+		sd = media_entity_to_v4l2_subdev(entity);
-+
-+		ret = v4l2_subdev_call(sd, core, s_power, on);
-+		if (ret &amp;&amp; ret != -ENOIOCTLCMD)
-+			break;
++		val = stm32_adc_readl(adc, stm32f4_sqr_regs[i].reg);
++		val &amp;= ~stm32f4_sqr_regs[i].mask;
++		val |= chan-&gt;channel &lt;&lt; stm32f4_sqr_regs[i].shift;
++		stm32_adc_writel(adc, stm32f4_sqr_regs[i].reg, val);
 +	}
 +
-+	return (ret &amp;&amp; ret != -ENOIOCTLCMD) ? ret : 0;
++	if (!i)
++		return -EINVAL;
++
++	/* Sequence len */
++	val = stm32_adc_readl(adc, stm32f4_sqr_regs[0].reg);
++	val &amp;= ~stm32f4_sqr_regs[0].mask;
++	val |= ((i - 1) &lt;&lt; stm32f4_sqr_regs[0].shift);
++	stm32_adc_writel(adc, stm32f4_sqr_regs[0].reg, val);
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_pipeline_set_power);
++
++/**
++ * stm32_adc_get_trig_extsel() - Get external trigger selection
++ * @indio_dev: IIO device
++ * @trig: trigger
++ *
++ * Returns trigger extsel value, if trig matches, -EINVAL otherwise.
++ */
++static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
++				     struct iio_trigger *trig)
++{
++	return -EINVAL;
 </pre>
       </blockquote>
-      <pre wrap="">This should really be handled by v4l2_pipeline_pm_use.</pre>
+      <pre wrap="">?????</pre>
     </blockquote>
     <br>
-    I thought about this earlier, but v4l2_pipeline_pm_use() seems to be<br>
-    doing some other stuff that bothered me, at least that's what I
-    remember.<br>
-    I will revisit this.<br>
+    Sorry about that... I've split into separate patches to ease the
+    review.<br>
+    I agree this is miss-leading on first sight.<br>
+    Would you like me to squash patch 2 into this ?<br>
+    Or I can put a temporary comment here, removed then in patch 2...<br>
+    Or keep it as it is... please let me know if this matters.<br>
     <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
-      <pre wrap="">
-</pre>
       <blockquote type="cite">
-        <pre wrap="">+/*
-+ * Inherit the v4l2 controls from all entities in a pipeline
-+ * to the given video device.
-+ * Must be called with mdev-&gt;graph_mutex held.
+        <pre wrap="">+}
++
++/**
++ * stm32_adc_set_trig() - Set a regular trigger
++ * @indio_dev: IIO device
++ * @trig: IIO trigger
++ *
++ * Set trigger source/polarity (e.g. SW, or HW with polarity) :
++ * - if HW trigger disabled (e.g. trig == NULL, conversion launched by sw)
++ * - if HW trigger enabled, set source &amp; polarity
 + */
-+int imx_media_inherit_controls(struct imx_media_dev *imxmd,
-+			       struct video_device *vfd,
-+			       struct media_entity *start_entity)
++static int stm32_adc_set_trig(struct iio_dev *indio_dev,
++			      struct iio_trigger *trig)
 +{
-+	struct media_entity_graph graph;
-+	struct media_entity *entity;
-+	struct v4l2_subdev *sd;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	u32 val, extsel = 0, exten = STM32_EXTEN_SWTRIG;
++	unsigned long flags;
 +	int ret;
 +
-+	ret = media_entity_graph_walk_init(&amp;graph, &amp;imxmd-&gt;md);
++	if (trig) {
++		ret = stm32_adc_get_trig_extsel(indio_dev, trig);
++		if (ret &lt; 0)
++			return ret;
++
++		/* set trigger source, default to rising edge */
+</pre>
+      </blockquote>
+      <pre wrap="">Interesting.  The complexity of this device kicks in again.
+
+If we are talking true exposed hardware pin (which I think it can be?) then
+this ought to come from DT.  For the case of trigging on either edge of the
+pwm style signals, we probably want to figure some way of allowing userspace
+to control this.  For now in either case this is fine though! Got to start
+somewhere.</pre>
+    </blockquote>
+    <br>
+    You're completely right. I haven't included support for "exti"
+    trigger (e.g. exti gpio)<br>
+    in this patchset (only pwm/timers).<br>
+    But this would make sense to set polarity in dt in this case. I'll
+    think about this.<br>
+    I'm opened to suggestion, but if you're okay, i'll keep this for
+    now.<br>
+    <br>
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+		extsel = ret;
++		exten = STM32_EXTEN_HWTRIG_RISING_EDGE;
++	}
++
++	spin_lock_irqsave(&amp;adc-&gt;lock, flags);
++	val = stm32_adc_readl(adc, STM32F4_ADC_CR2);
++	val &amp;= ~(STM32F4_EXTEN_MASK | STM32F4_EXTSEL_MASK);
++	val |= exten &lt;&lt; STM32F4_EXTEN_SHIFT;
++	val |= extsel &lt;&lt; STM32F4_EXTSEL_SHIFT;
++	stm32_adc_writel(adc, STM32F4_ADC_CR2, val);
++	spin_unlock_irqrestore(&amp;adc-&gt;lock, flags);
++
++	return 0;
++}
++
++/**
+  * stm32_adc_single_conv() - Performs a single conversion
+  * @indio_dev: IIO device
+  * @chan: IIO channel
+@@ -234,6 +427,7 @@ static int stm32_adc_single_conv(struct iio_dev *indio_dev,
+ 	reinit_completion(&amp;adc-&gt;completion);
+ 
+ 	adc-&gt;buffer = &amp;result;
++	adc-&gt;bufi = 0;
+ 
+ 	/* Program chan number in regular sequence */
+ 	val = stm32_adc_readl(adc, STM32F4_ADC_SQR3);
+@@ -301,17 +495,58 @@ static int stm32_adc_read_raw(struct iio_dev *indio_dev,
+ static irqreturn_t stm32_adc_isr(int irq, void *data)
+ {
+ 	struct stm32_adc *adc = data;
++	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+ 	u32 status = stm32_adc_readl(adc, STM32F4_ADC_SR);
+ 
+ 	if (status &amp; STM32F4_EOC) {
+-		*adc-&gt;buffer = stm32_adc_readw(adc, STM32F4_ADC_DR);
+-		complete(&amp;adc-&gt;completion);
+</pre>
+      </blockquote>
+      <pre wrap="">Normally I'd have put the separation between trigger and device a bit
+earlier and had the actual reads in the function called by iio_trigger_poll
+(and here after the wait for completion for the sysfs reads).
+
+I think it will make little practical difference, but it will conform better
+to the data flow model (that kicks around in my head and has been in various
+presentations others have done) of the trigger indicating either:
+1. Data ready
+2. Data should be ready - i.e. grab it now if on demand.
+
+The device side is responsible for then actually doing the read.
+
+Code wise I think this means moving a few lines but I may have missed some
+details.</pre>
+    </blockquote>
+    <br>
+    1 - yes, for sysfs read, as ADC is converting a single value, Data
+    Register<br>
+    (DR) read can be moved after the wait for completion. I haven't
+    thought about it<br>
+    in the original patchset.<br>
+    Then, only slight change would be to mask EOC interrupt here, or
+    clear EOC flag,<br>
+    because reading DR from ISR plays a dual role:<br>
+    - actual data read<br>
+    - clear EOC status flag.<br>
+    I'll add a comment to mention this.<br>
+    <br>
+    I don't see improvement in doing this, but I can update this for
+    single (raw) conversion.<br>
+    <br>
+    2 - But, regarding buffer mode, when converting sequence of two or
+    more channels,<br>
+    I'm not sure this is achievable: there is no internal fifo in ADC
+    hardware IP.<br>
+    Then it needs one interrupt per channel (or use DMA).<br>
+    Once channel group has been converted, iio_trigger_poll() can be
+    called.<br>
+    So I need to fill buffer from the ISR (actual read), for each
+    channel.<br>
+    <br>
+    In the end, it's advised to use DMA, especially when converting at
+    'high' rates<br>
+    or with two or more channels, to free up some CPU load, and avoid
+    possible<br>
+    overun.<br>
+    <br>
+    Shall I add comment to describe this here ?<br>
+    Do you agree to keep this part of ISR as it is now ?<br>
+    <br>
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+		adc-&gt;buffer[adc-&gt;bufi] = stm32_adc_readw(adc, STM32F4_ADC_DR);
++		if (iio_buffer_enabled(indio_dev)) {
++			adc-&gt;bufi++;
++			if (adc-&gt;bufi &gt;= adc-&gt;num_conv) {
++				stm32_adc_conv_irq_disable(adc);
++				iio_trigger_poll(indio_dev-&gt;trig);
++			}
++		} else {
++			complete(&amp;adc-&gt;completion);
++		}
+ 		return IRQ_HANDLED;
+ 	}
+ 
+ 	return IRQ_NONE;
+ }
+ 
++/**
++ * stm32_adc_validate_trigger() - validate trigger for stm32 adc
++ * @indio_dev: IIO device
++ * @trig: new trigger
++ *
++ * Returns: 0 if trig matches one of the triggers registered by stm32 adc
++ * driver, -EINVAL otherwise.
++ */
++static int stm32_adc_validate_trigger(struct iio_dev *indio_dev,
++				      struct iio_trigger *trig)
++{
++	return stm32_adc_get_trig_extsel(indio_dev, trig) &lt; 0 ? -EINVAL : 0;
++}
++
++static int stm32_adc_update_scan_mode(struct iio_dev *indio_dev,
++				      const unsigned long *scan_mask)
++{
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int ret;
++	u32 bit;
++
++	adc-&gt;num_conv = 0;
++	for_each_set_bit(bit, scan_mask, indio_dev-&gt;masklength)
++		adc-&gt;num_conv++;
+</pre>
+      </blockquote>
+      <pre wrap="">Isn't there a count bits function? bitmap_weight I think which using the
+hamming weight.</pre>
+    </blockquote>
+    I'll fix this.<br>
+    <br>
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
+      type="cite">
+      <blockquote type="cite">
+        <pre wrap="">+
++	ret = stm32_adc_conf_scan_seq(indio_dev, scan_mask);
 +	if (ret)
 +		return ret;
 +
-+	media_entity_graph_walk_start(&amp;graph, start_entity);
-+
-+	while ((entity = media_entity_graph_walk_next(&amp;graph))) {
-+		if (is_media_entity_v4l2_video_device(entity))
-+			continue;
-+
-+		sd = media_entity_to_v4l2_subdev(entity);
-+
-+		dev_dbg(imxmd-&gt;dev, "%s: adding controls from %s\n",
-+			__func__, sd-&gt;name);
-+
-+		ret = v4l2_ctrl_add_handler(vfd-&gt;ctrl_handler,
-+					    sd-&gt;ctrl_handler,
-+					    NULL);
-+		if (ret)
-+			break;
-+	}
-+
-+	media_entity_graph_walk_cleanup(&amp;graph);
-+	return ret;
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(imx_media_inherit_controls);
 +
-+MODULE_DESCRIPTION("i.MX5/6 v4l2 media controller driver");
-+MODULE_AUTHOR("Steve Longerbeam <a class="moz-txt-link-rfc2396E" href="mailto:steve_longerbeam@mentor.com">&lt;steve_longerbeam@mentor.com&gt;</a>");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
-new file mode 100644
-index 0000000..357654d
---- /dev/null
-+++ b/drivers/staging/media/imx/imx-media-dev.c
+ static int stm32_adc_of_xlate(struct iio_dev *indio_dev,
+ 			      const struct of_phandle_args *iiospec)
+ {
+@@ -350,11 +585,106 @@ static int stm32_adc_debugfs_reg_access(struct iio_dev *indio_dev,
+ 
+ static const struct iio_info stm32_adc_iio_info = {
+ 	.read_raw = stm32_adc_read_raw,
++	.validate_trigger = stm32_adc_validate_trigger,
++	.update_scan_mode = stm32_adc_update_scan_mode,
+ 	.debugfs_reg_access = stm32_adc_debugfs_reg_access,
+ 	.of_xlate = stm32_adc_of_xlate,
+ 	.driver_module = THIS_MODULE,
+ };
+ 
++static int stm32_adc_buffer_preenable(struct iio_dev *indio_dev)
++{
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
++	/* Reset adc buffer index */
++	adc-&gt;bufi = 0;
++
++	/* Allocate adc buffer */
++	adc-&gt;buffer = kzalloc(indio_dev-&gt;scan_bytes, GFP_KERNEL);
 </pre>
       </blockquote>
-      <pre wrap="">This file is full of code that should live in the v4l2 core.</pre>
+      <pre wrap="">Is this big enough to justify a separate allocation?  I'd be tempted to
+just allocate the maximum possible size as part of the stm32_adc structure..</pre>
     </blockquote>
     <br>
-    Agreed. Stuff like imx_media_inherit_controls() really should be
-    widely<br>
-    available.<br>
+    So, you advise probe-time allocation for this buffer, why not ? :-)<br>
+    This would allow to simplify handling here, possibly remove
+    preenable/postdisable<br>
+    routines.<br>
+    I'll do this in next patchset.<br>
     <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
       <pre wrap="">
 </pre>
       <blockquote type="cite">
-        <pre wrap="">+int imx_media_add_internal_subdevs(struct imx_media_dev *imxmd,
-+				   struct imx_media_subdev *csi[4])
+        <pre wrap="">+	if (!adc-&gt;buffer)
++		return -ENOMEM;
++
++	return 0;
++}
++
++static int stm32_adc_buffer_postenable(struct iio_dev *indio_dev)
 +{
++	struct stm32_adc *adc = iio_priv(indio_dev);
 +	int ret;
 +
-+	/* there must be at least one CSI in first IPU */
-</pre>
-      </blockquote>
-      <pre wrap="">Why?
-</pre>
-    </blockquote>
-    <br>
-    Well yeah, imx-media doesn't necessarily need a CSI if things<br>
-    like the VDIC or post-processor are being used by an output<br>
-    overlay pipeline, for example. I'll fix this.<br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
-      type="cite">
-      <blockquote type="cite">
-        <pre wrap="">+
-+/* parse inputs property from a sensor node */
-+static void of_parse_sensor_inputs(struct imx_media_dev *imxmd,
-+				   struct imx_media_subdev *sensor,
-+				   struct device_node *sensor_np)
-+{
-+	struct imx_media_sensor_input *sinput = &amp;sensor-&gt;input;
-+	int ret, i;
-+
-+	for (i = 0; i &lt; IMX_MEDIA_MAX_SENSOR_INPUTS; i++) {
-+		const char *input_name;
-+		u32 val;
-+
-+		ret = of_property_read_u32_index(sensor_np, "inputs", i, &amp;val);
-+		if (ret)
-+			break;
-+
-+		sinput-&gt;value[i] = val;
-+
-+		ret = of_property_read_string_index(sensor_np, "input-names",
-+						    i, &amp;input_name);
-+		/*
-+		 * if input-names not provided, they will be set using
-+		 * the subdev name once the sensor is known during
-+		 * async bind
-+		 */
-+		if (!ret)
-+			strncpy(sinput-&gt;name[i], input_name,
-+				sizeof(sinput-&gt;name[i]));
++	ret = stm32_adc_set_trig(indio_dev, indio_dev-&gt;trig);
++	if (ret) {
++		dev_err(&amp;indio_dev-&gt;dev, "Can't set trigger\n");
++		return ret;
 +	}
 +
-+	sinput-&gt;num = i;
-+
-+	/* if no inputs provided just assume a single input */
-+	if (sinput-&gt;num == 0)
-+		sinput-&gt;num = 1;
-+}
++	ret = iio_triggered_buffer_postenable(indio_dev);
++	if (ret &lt; 0)
 </pre>
       </blockquote>
-      <pre wrap="">This should be parsed by the sensor driver, not imx-media.</pre>
+      <pre wrap="">Handle unwinding of previous calls if this fails.</pre>
     </blockquote>
+    I'll fix this.<br>
     <br>
-    you're probably right. I'll submit a patch for adv7180.c.<br>
+    Thanks again, Regards,<br>
+    Fabrice<br>
     <br>
-    <br>
-    <blockquote cite="mid:1484320822.31475.96.camel@pengutronix.de"
+    <blockquote
+      cite="mid:82ca097a-4d22-cc21-4604-ddecf593be5e@kernel.org"
       type="cite">
-      <pre wrap="">
-</pre>
       <blockquote type="cite">
-        <pre wrap="">+static void of_parse_sensor(struct imx_media_dev *imxmd,
-+			    struct imx_media_subdev *sensor,
-+			    struct device_node *sensor_np)
+        <pre wrap="">+		return ret;
++
++	stm32_adc_conv_irq_enable(adc);
++	stm32_adc_start_conv(adc);
++
++	return 0;
++}
++
++static int stm32_adc_buffer_predisable(struct iio_dev *indio_dev)
 +{
-+	struct device_node *endpoint;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++	int ret;
 +
-+	of_parse_sensor_inputs(imxmd, sensor, sensor_np);
++	stm32_adc_stop_conv(adc);
++	stm32_adc_conv_irq_disable(adc);
 +
-+	endpoint = of_graph_get_next_endpoint(sensor_np, NULL);
-+	if (endpoint) {
-+		v4l2_of_parse_endpoint(endpoint, &amp;sensor-&gt;sensor_ep);
-+		of_node_put(endpoint);
++	ret = iio_triggered_buffer_predisable(indio_dev);
++	if (ret &lt; 0)
++		return ret;
++
++	ret = stm32_adc_set_trig(indio_dev, NULL);
++	if (ret)
++		dev_err(&amp;indio_dev-&gt;dev, "Can't clear trigger\n");
++
++	return ret;
++}
++
++static int stm32_adc_buffer_postdisable(struct iio_dev *indio_dev)
++{
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
++	kfree(adc-&gt;buffer);
++	adc-&gt;buffer = NULL;
++
++	return 0;
++}
++
++static const struct iio_buffer_setup_ops stm32_adc_buffer_setup_ops = {
++	.preenable = &amp;stm32_adc_buffer_preenable,
++	.postenable = &amp;stm32_adc_buffer_postenable,
++	.predisable = &amp;stm32_adc_buffer_predisable,
++	.postdisable = &amp;stm32_adc_buffer_postdisable,
++};
++
++static irqreturn_t stm32_adc_trigger_handler(int irq, void *p)
++{
++	struct iio_poll_func *pf = p;
++	struct iio_dev *indio_dev = pf-&gt;indio_dev;
++	struct stm32_adc *adc = iio_priv(indio_dev);
++
++	dev_dbg(&amp;indio_dev-&gt;dev, "%s bufi=%d\n", __func__, adc-&gt;bufi);
++
++	/* reset buffer index */
++	adc-&gt;bufi = 0;
++	iio_push_to_buffers_with_timestamp(indio_dev, adc-&gt;buffer,
++					   pf-&gt;timestamp);
++
++	iio_trigger_notify_done(indio_dev-&gt;trig);
++
++	/* re-enable eoc irq */
++	stm32_adc_conv_irq_enable(adc);
++
++	return IRQ_HANDLED;
++}
++
+ static void stm32_adc_chan_init_one(struct iio_dev *indio_dev,
+ 				    struct iio_chan_spec *chan,
+ 				    const struct stm32_adc_chan_spec *channel,
+@@ -471,14 +801,26 @@ static int stm32_adc_probe(struct platform_device *pdev)
+ 	if (ret &lt; 0)
+ 		goto err_clk_disable;
+ 
++	ret = iio_triggered_buffer_setup(indio_dev,
++					 &amp;iio_pollfunc_store_time,
++					 &amp;stm32_adc_trigger_handler,
++					 &amp;stm32_adc_buffer_setup_ops);
++	if (ret) {
++		dev_err(&amp;pdev-&gt;dev, "buffer setup failed\n");
++		goto err_clk_disable;
 +	}
-+}
 +
-+static int of_get_port_count(const struct device_node *np)
-+{
-+	struct device_node *child;
-+	int num = 0;
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret) {
+ 		dev_err(&amp;pdev-&gt;dev, "iio dev register failed\n");
+-		goto err_clk_disable;
++		goto err_buffer_cleanup;
+ 	}
+ 
+ 	return 0;
+ 
++err_buffer_cleanup:
++	iio_triggered_buffer_cleanup(indio_dev);
 +
-+	/* if this node is itself a port, return 1 */
-+	if (of_node_cmp(np-&gt;name, "port") == 0)
-+		return 1;
-+
-+	for_each_child_of_node(np, child)
-+		if (of_node_cmp(child-&gt;name, "port") == 0)
-+			num++;
-+
-+	return num;
-+}
+ err_clk_disable:
+ 	clk_disable_unprepare(adc-&gt;clk);
+ 
+@@ -491,6 +833,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
+ 	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
+ 
+ 	iio_device_unregister(indio_dev);
++	iio_triggered_buffer_cleanup(indio_dev);
+ 	clk_disable_unprepare(adc-&gt;clk);
+ 
+ 	return 0;
+
 </pre>
       </blockquote>
-      <pre wrap="">If this is extended to handle the ports subnode properly, it could be
-moved into drivers/of/base.c.
-</pre>
     </blockquote>
-    <br>
-    More that eventually needs exporting, agreed.<br>
-    <br>
-    <br>
-    Steve<br>
     <br>
   </body>
 </html>
 
---------------71EDDE909EB2426C3885C669--
+--------------7638252C2B8812C8396BE4B7--
