@@ -1,74 +1,80 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Tue, 24 Jan 2017 08:22:49 +0000
-Message-ID: <20170124082249.GR16020@dell>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 7/13] mmc: sunxi: Add more debug messages
+Date: Tue, 24 Jan 2017 09:22:24 +0100
+Message-ID: <CAPDyKFqE7hMdwweE4zX4TcH5qCThb2_NQh5PNA_4coJQUrCwfg@mail.gmail.com>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+ <102ea884b296dae38ab28369ce14aa7a7998dc80.1484585798.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485189145-29576-3-git-send-email-arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <102ea884b296dae38ab28369ce14aa7a7998dc80.1484585798.git-series.maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
-
-> DFSDM hardware IP can be used at the same time for ADC sigma delta
-
-Same time as what?
-
-> conversion and audio PDM microphone.
-> MFD driver is in charge of configuring IP registers and managing IP clocks.
-> For this it exports an API to handles filters and channels resources.
-
-This looks like an ADC driver?  What is it that makes it an MFD?
-
-> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+On 16 January 2017 at 17:56, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Add a bit more debug messages that can be helpful when debugging the clock
+> setup.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > ---
->  drivers/mfd/Kconfig             |   11 +
->  drivers/mfd/Makefile            |    2 +
->  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
->  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
->  5 files changed, 1601 insertions(+)
->  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
->  create mode 100644 drivers/mfd/stm32-dfsdm.c
->  create mode 100644 include/linux/mfd/stm32-dfsdm.h
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index c6df644..4bb660b 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->  	  in various ST Microelectronics and ST-Ericsson embedded
->  	  Nomadik series.
->  
-> +config MFD_STM32_DFSDM
-> +	tristate "ST Microelectronics STM32 DFSDM"
-> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-> +	select MFD_CORE
-> +	select REGMAP
-> +	select REGMAP_MMIO
-> +	help
-> +	  Select this option to enable the STM32 Digital Filter
-> +	  for Sigma Delta Modulators (DFSDM) driver used
-> +	  in various STM32 series.
+>  drivers/mmc/host/sunxi-mmc.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> index f0f6922bca8a..40ed287ceb1c 100644
+> --- a/drivers/mmc/host/sunxi-mmc.c
+> +++ b/drivers/mmc/host/sunxi-mmc.c
+> @@ -661,6 +661,9 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
+>         unsigned long expire = jiffies + msecs_to_jiffies(750);
+>         u32 rval;
+>
+> +       dev_dbg(mmc_dev(host->mmc), "%sabling the clock\n",
+> +               oclk_en ? "en" : "dis");
 > +
->  menu "Multimedia Capabilities Port drivers"
->  	depends on ARCH_SA1100
+>         rval = mmc_readl(host, REG_CLKCR);
+>         rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON | SDXC_MASK_DATA0);
+>
+> @@ -737,6 +740,7 @@ static int sunxi_mmc_clk_set_phase(struct sunxi_mmc_host *host,
+>                         index = SDXC_CLK_50M_DDR;
+>                 }
+>         } else {
+> +               dev_dbg(mmc_dev(host->mmc), "Invalid clock... returning\n");
+>                 return -EINVAL;
+>         }
+>
+> @@ -753,6 +757,9 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+>         u32 rval, clock = ios->clock;
+>         int ret;
+>
+> +       dev_dbg(mmc_dev(host->mmc), "setting clk to %u (requested %u)\n",
+> +               clock, ios->clock);
+> +
+>
 
-[...]
+A better option is to update mmc->actual_clock. That value is
+available (and the requested value) though the debugFS nodes.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>         ret = sunxi_mmc_oclk_onoff(host, 0);
+>         if (ret)
+>                 return ret;
+> @@ -771,8 +778,7 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+>                         clock, rate);
+>                 return rate;
+>         }
+> -       dev_dbg(mmc_dev(host->mmc), "setting clk to %d, rounded %ld\n",
+> -               clock, rate);
+> +       dev_dbg(mmc_dev(host->mmc), "Rounded clk to %ld\n", rate);
+>
+
+Ditto.
+
+>         /* setting clock rate */
+>         ret = clk_set_rate(host->clk_mmc, rate);
+> --
+> git-series 0.8.11
+
+Kind regards
+Uffe
