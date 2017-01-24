@@ -1,89 +1,80 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
-Date: Tue, 24 Jan 2017 10:27:27 +0800
-Message-ID: <5886BB8F.6040707@rock-chips.com>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
- <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
- <20170123174841.GB25789@trickycodes.roam.corp.google.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 04/11] clk: sunxi-ng: Support separately grouped
+ PLL lock status register
+Date: Tue, 24 Jan 2017 10:32:23 +0800
+Message-ID: <20170124023230.3990-5-wens@csie.org>
+References: <20170124023230.3990-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170123174841.GB25789@trickycodes.roam.corp.google.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBQ7ZTLCAKGQEJDWKRXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170124023230.3990-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2VhbgoKT24gMDEvMjQvMjAxNyAwMTo0OCBBTSwgU2VhbiBQYXVsIHdyb3RlOgo+IE9uIEZy
-aSwgSmFuIDIwLCAyMDE3IGF0IDA2OjEwOjQ5UE0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+
-PiBUaGUgTUlQSSBEU0kgZG8gbm90IG5lZWQgY2hlY2sgdGhlIHZhbGlkaXR5IG9mIHJlc29sdXRp
-b24sIHRoZSBtYXgKPj4gcmVzb2x1dGlvbiBzaG91bGQgZGVwZW5kIFZPUC4gSGVuY2UsIHJlbW92
-ZSByazMyODhfbWlwaV9kc2lfbW9kZV92YWxpZAo+PiBoZXJlLgo+IERvZXMgdm9wIGFjdHVhbGx5
-IGVuZm9yY2UgdGhpcywgdGhvdWdoPyBJIHNlZSB0aGF0IG1vZGVfY29uZmlnLm1heF93aWR0aCBp
-cwo+IDQwOTYsIGJ1dCB0aGVyZSBpcyBubyBib3VuZHMgY2hlY2tpbmcgaW4gbW9kZV9maXh1cCgp
-Lgo+Cj4gVGhlIGNvbm5lY3RvciBpcyBjdXJyZW50bHkgcmVqZWN0aW5nIGV2ZXJ5dGhpbmcgZ3Jl
-YXRlciB0aGFuIDIwNDcuIFNvIEkgdGhpbmsKPiB5b3UncmUgZ29pbmcgdG8gcmVncmVzcyBiZWhh
-dmlvciBoZXJlLgo+Cj4gU2VhbgpUaGUgbWlwaSBjb250cm9sbGVyIGhhcyBub3QgdGhpcyB3aWR0
-aCBsaW1pdCwgaXQgZGVwZW5kIHRoZSBWT1AsIHN1Y2ggYXMgClJLMzM5OSwgVk9QX0xJVCBvbmx5
-IHN1cHBvcnQgMjU2MCwKYnV0IFZPUF9CSUcgc3VwcG9ydCA0Sy4gU28gdGhpcyBkcml2ZXIgc2hv
-dWxkIGNoZWNrIHRoZSB3aWR0aCBoZXJlLgoKPgo+Cj4+IFNpZ25lZC1vZmYtYnk6IENocmlzIFpo
-b25nIDx6eXdAcm9jay1jaGlwcy5jb20+Cj4+IC0tLQo+Pgo+PiBDaGFuZ2VzIGluIHYzOiBOb25l
-Cj4+Cj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgfCAzOSAtLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDM5IGRl
-bGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3
-LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+PiBp
-bmRleCBhOTNjZTk3Li42ZjBlMjUyIDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvZHctbWlwaS1kc2kuYwo+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHct
-bWlwaS1kc2kuYwo+PiBAQCAtMjc4LDggKzI3OCw2IEBAIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0
-X2RhdGEgewo+PiAgIAl1MzIgZ3JmX2RzaTBfbW9kZTsKPj4gICAJdTMyIGdyZl9kc2kwX21vZGVf
-cmVnOwo+PiAgIAl1bnNpZ25lZCBpbnQgbWF4X2RhdGFfbGFuZXM7Cj4+IC0JZW51bSBkcm1fbW9k
-ZV9zdGF0dXMgKCptb2RlX3ZhbGlkKShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+
-PiAtCQkJCQkgICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSk7Cj4+ICAgfTsKPj4gICAK
-Pj4gICBzdHJ1Y3QgZHdfbWlwaV9kc2kgewo+PiBAQCAtMTA4MSwyMyArMTA3OSw4IEBAIHN0YXRp
-YyBpbnQgZHdfbWlwaV9kc2lfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3Rv
-ciAqY29ubmVjdG9yKQo+PiAgIAlyZXR1cm4gZHJtX3BhbmVsX2dldF9tb2Rlcyhkc2ktPnBhbmVs
-KTsKPj4gICB9Cj4+ICAgCj4+IC1zdGF0aWMgZW51bSBkcm1fbW9kZV9zdGF0dXMgZHdfbWlwaV9k
-c2lfbW9kZV92YWxpZCgKPj4gLQkJCQkJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwK
-Pj4gLQkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4+IC17Cj4+IC0Jc3RydWN0
-IGR3X21pcGlfZHNpICpkc2kgPSBjb25fdG9fZHNpKGNvbm5lY3Rvcik7Cj4+IC0KPj4gLQllbnVt
-IGRybV9tb2RlX3N0YXR1cyBtb2RlX3N0YXR1cyA9IE1PREVfT0s7Cj4+IC0KPj4gLQlpZiAoZHNp
-LT5wZGF0YS0+bW9kZV92YWxpZCkKPj4gLQkJbW9kZV9zdGF0dXMgPSBkc2ktPnBkYXRhLT5tb2Rl
-X3ZhbGlkKGNvbm5lY3RvciwgbW9kZSk7Cj4+IC0KPj4gLQlyZXR1cm4gbW9kZV9zdGF0dXM7Cj4+
-IC19Cj4+IC0KPj4gICBzdGF0aWMgc3RydWN0IGRybV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzIGR3
-X21pcGlfZHNpX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgPSB7Cj4+ICAgCS5nZXRfbW9kZXMgPSBk
-d19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVzLAo+PiAtCS5tb2RlX3ZhbGlkID0gZHdfbWlw
-aV9kc2lfbW9kZV92YWxpZCwKPj4gICB9Owo+PiAgIAo+PiAgIHN0YXRpYyB2b2lkIGR3X21pcGlf
-ZHNpX2RybV9jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9y
-KQo+PiBAQCAtMTE2OCwzMyArMTE1MSwxMSBAQCBzdGF0aWMgaW50IHJvY2tjaGlwX21pcGlfcGFy
-c2VfZHQoc3RydWN0IGR3X21pcGlfZHNpICpkc2kpCj4+ICAgCXJldHVybiAwOwo+PiAgIH0KPj4g
-ICAKPj4gLXN0YXRpYyBlbnVtIGRybV9tb2RlX3N0YXR1cyByazMyODhfbWlwaV9kc2lfbW9kZV92
-YWxpZCgKPj4gLQkJCQkJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKPj4gLQkJCQkJ
-c3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCj4+IC17Cj4+IC0JLyoKPj4gLQkgKiBUaGUg
-VklEX1BLVF9TSVpFIGZpZWxkIGluIHRoZSBEU0lfVklEX1BLVF9DRkcKPj4gLQkgKiByZWdpc3Rl
-ciBpcyAxMS1iaXQuCj4+IC0JICovCj4+IC0JaWYgKG1vZGUtPmhkaXNwbGF5ID4gMHg3ZmYpCj4+
-IC0JCXJldHVybiBNT0RFX0JBRF9IVkFMVUU7Cj4+IC0KPj4gLQkvKgo+PiAtCSAqIFRoZSBWX0FD
-VElWRV9MSU5FUyBmaWVsZCBpbiB0aGUgRFNJX1ZUSU1JTkdfQ0ZHCj4+IC0JICogcmVnaXN0ZXIg
-aXMgMTEtYml0Lgo+PiAtCSAqLwo+PiAtCWlmIChtb2RlLT52ZGlzcGxheSA+IDB4N2ZmKQo+PiAt
-CQlyZXR1cm4gTU9ERV9CQURfVlZBTFVFOwo+PiAtCj4+IC0JcmV0dXJuIE1PREVfT0s7Cj4+IC19
-Cj4+IC0KPj4gICBzdGF0aWMgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSByazMyODhfbWlw
-aV9kc2lfZHJ2X2RhdGEgPSB7Cj4+ICAgCS5kc2kwX2VuX2JpdCA9IFJLMzI4OF9EU0kwX1NFTF9W
-T1BfTElULAo+PiAgIAkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJVCwKPj4g
-ICAJLmdyZl9zd2l0Y2hfcmVnID0gUkszMjg4X0dSRl9TT0NfQ09ONiwKPj4gICAJLm1heF9kYXRh
-X2xhbmVzID0gNCwKPj4gLQkubW9kZV92YWxpZCA9IHJrMzI4OF9taXBpX2RzaV9tb2RlX3ZhbGlk
-LAo+PiAgIH07Cj4+ICAgCj4+ICAgc3RhdGljIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEg
-cmszMzk5X21pcGlfZHNpX2Rydl9kYXRhID0gewo+PiAtLSAKPj4gMi42LjMKPj4KPj4gX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPj4gZHJpLWRldmVsIG1h
-aWxpbmcgbGlzdAo+PiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCj4+IGh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxp
-bmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On the Allwinner A80 SoC, the PLL lock status indicators are grouped
+together in a separate register, as opposed to being scattered in each
+PLL's configuration register.
+
+Add a flag to support this.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ drivers/clk/sunxi-ng/ccu_common.c | 8 ++++++--
+ drivers/clk/sunxi-ng/ccu_common.h | 2 ++
+ 2 files changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu_common.c
+index 51d4bac97ab3..3fd0c3331aff 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.c
++++ b/drivers/clk/sunxi-ng/ccu_common.c
+@@ -25,13 +25,17 @@ static DEFINE_SPINLOCK(ccu_lock);
+ 
+ void ccu_helper_wait_for_lock(struct ccu_common *common, u32 lock)
+ {
++	void __iomem *addr;
+ 	u32 reg;
+ 
+ 	if (!lock)
+ 		return;
+ 
+-	WARN_ON(readl_relaxed_poll_timeout(common->base + common->reg, reg,
+-					   reg & lock, 100, 70000));
++	addr = common->base + common->reg;
++	if (common->features & CCU_FEATURE_LOCK_REG)
++		addr = common->base + common->lock_reg;
++
++	WARN_ON(readl_relaxed_poll_timeout(addr, reg, reg & lock, 100, 70000));
+ }
+ 
+ int sunxi_ccu_probe(struct device_node *node, void __iomem *reg,
+diff --git a/drivers/clk/sunxi-ng/ccu_common.h b/drivers/clk/sunxi-ng/ccu_common.h
+index cdd69eb2e0b9..73d81dc58fc5 100644
+--- a/drivers/clk/sunxi-ng/ccu_common.h
++++ b/drivers/clk/sunxi-ng/ccu_common.h
+@@ -22,6 +22,7 @@
+ #define CCU_FEATURE_FIXED_PREDIV	BIT(2)
+ #define CCU_FEATURE_FIXED_POSTDIV	BIT(3)
+ #define CCU_FEATURE_ALL_PREDIV		BIT(4)
++#define CCU_FEATURE_LOCK_REG		BIT(5)
+ 
+ struct device_node;
+ 
+@@ -57,6 +58,7 @@ struct device_node;
+ struct ccu_common {
+ 	void __iomem	*base;
+ 	u16		reg;
++	u16		lock_reg;
+ 	u32		prediv;
+ 
+ 	unsigned long	features;
+-- 
+2.11.0
