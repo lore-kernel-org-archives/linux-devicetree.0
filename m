@@ -1,73 +1,174 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
-Date: Tue, 24 Jan 2017 17:39:43 +0100
-Message-ID: <129f7b91-67ee-624c-7b57-cd1ed1499270@gmail.com>
-References: <20170121144212.8858-1-marek.vasut@gmail.com>
- <20170123170827.tkatb2aizjhbfifo@rob-hp-laptop>
- <63b3660b-6ce0-134c-ef79-c06430c735c5@gmail.com>
- <CAMuHMdUVwQoqQbrsGtbvxK9PoHae3n=UuJYijTMToUsdc=8=mQ@mail.gmail.com>
- <d4fc63bf-c455-2ac4-15d2-6f240799d3e9@gmail.com>
- <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
+From: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Tue, 24 Jan 2017 22:10:07 +0530
+Message-ID: <CAFp+6iFM54tMBbpE8pDehx1s9+_tNdOxLLNc5AdP3RS-vgjoew@mail.gmail.com>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+ <587C88FE.2040900@ti.com> <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
+ <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
+ <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org> <20170119214258.GD7829@codeaurora.org>
+ <58871F6D.1090206@ti.com> <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
+ <5887619B.70108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWr_a6OUAAkS+HnUqUHgQ+H+2Q3WGrX2ou6W1R8X6YfQw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5887619B.70108-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2017 08:30 AM, Geert Uytterhoeven wrote:
-> Hi Marek,
-> 
-> On Tue, Jan 24, 2017 at 12:15 AM, Marek Vasut <marek.vasut@gmail.com> wrote:
->> On 01/23/2017 09:41 PM, Geert Uytterhoeven wrote:
->>> On Mon, Jan 23, 2017 at 8:56 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
->>>> On 01/23/2017 06:08 PM, Rob Herring wrote:
->>>>> On Sat, Jan 21, 2017 at 03:42:11PM +0100, Marek Vasut wrote:
->>>>>> new file mode 100644
->>>>>> index 000000000000..081947367135
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+Hi,
+
+
+On Tue, Jan 24, 2017 at 7:45 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Tuesday 24 January 2017 07:35 PM, Vivek Gautam wrote:
+>> On Tue, Jan 24, 2017 at 3:03 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>> Hi,
 >>>
->>>>>> +Required properties:
->>>>>> +- compatible:       Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
+>>> On Friday 20 January 2017 03:12 AM, Stephen Boyd wrote:
+>>>> On 01/19, Vivek Gautam wrote:
 >>>>>
->>>>> Need to enumerate <chip>.
+>>>>> On 01/19/2017 06:10 AM, Stephen Boyd wrote:
+>>>>>>>
+>>>>>> Didn't we already move away from subnodes for lanes in an earlier
+>>>>>> revision of these patches? I seem to recall we did that because
+>>>>>> lanes are not devices and the whole "phy as a bus" concept not
+>>>>>> making sense.
+>>>>>
+>>>>> Yea, we started out without having any sub-nodes and we
+>>>>> argued that we don't require them since the qmp device is
+>>>>> represented by the qmp node itself.
+>>>>> The lanes otoh are representative of gen_phys and related properties.
+>>>>>
+>>>>> In the driver -
+>>>>> "struct qmp_phy " represents the lanes and holds "struct phy",
+>>>>> "struct qcom_qmp" represents the qmp block as a whole and holds
+>>>>> "struct device"
+>>>>> Does this make lanes qualify to be childs of qmp ?
 >>>>
->>>> It's enumerated below , the only special-case we handle at this point is
->>>> the r8a7792 , which has extra interrupt block which we don't use anyway,
->>>> but the driver disables those interrupts.
+>>>> Hmm... maybe I was recalling the DSI phy binding. I think there
+>>>> are lanes there too but we decided to just have one node.
+>>>>
+>>>>>
+>>>>> "phy as a bus" (just trying to understand here) -
+>>>>> let's say a usb phy controller has one HSIC phy port and one USB2 phy port.
+>>>>> So, should this phy controller be a bus providing two ports (and so
+>>>>> we will have
+>>>>> couple of child nodes to the phy controller) ?
+>>>>>
+>>>>
+>>>> Typically in DT a subnode or collection of subnodes means there's
+>>>> some sort of bus involved. Usually each node corresponds to a
+>>>> struct device, and the parent node corresponds to the bus or
+>>>> controller for the logical bus.
+>>>>
+>>>> In this case (only PCIe though? not UFS or USB?) it seems like we
+>>>> have multiple phys that share a common register space, but
+>>>> otherwise they have their own register space and power
+>>>> management. Would you have each PCIe controller point to a
+>>>> different subnode for their associated phy? I'm trying to
+>>>> understand the benefit of the subnodes if they aren't treated as
+>>>> struct devices.
 >>>
->>> It is not enumerated below. You just give an example for r8a7791.
+>>> Yes, instead of having all the controller having a phandle to the same PHY and
+>>> then using other mechanisms to differentiate between the PHYs, each controller
+>>> can have a phandle to the exact port that it is connected to.
 >>>
->>> Please list all supported/tested compatible values, so checkpatch
->>> can validate compatible values in DTS patches adding GyroADC device
->>> nodes.
+>>> This also gives a better representation of the hardware and can avoid lot of
+>>> boilerplate code in the driver.
 >>
->> What about this ?
+>> Below is one binding that works for me.
+>> --------------------
+>>                phy@34000 {
+>>                         compatible = "qcom,msm8996-qmp-pcie-phy";
+>>                         reg = <0x034000 0x488>;
+>>                         #clock-cells = <1>;
+>>                         #address-cells = <1>;
+>>                         #size-cells = <1>;
+>>                         ranges;
 >>
->> - compatible:   Should be "renesas,<chip>-gyroadc", "renesas,rcar-gyroadc".
->>                 The <chip> can be either of:
->>                 r8a7791 - for the GyroADC block present in r8a7791 SoC
->>                 r8a7792 - for the GyroADC with interrupt block present
->>                           in r8a7792 SoC
-> 
-> No, we need the exact string in the document, cfr. all other Renesas bindings.
-> 
-> "renesas,r8a7791-gyroadc"
-> "renesas,r8a7792-gyroadc"
+>>                         clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
+>>                                 <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+>>                                 <&gcc GCC_PCIE_CLKREF_CLK>;
+>>                         clock-names = "aux", "cfg_ahb", "ref";
+>>
+>>                         vdda-phy-supply = <&pm8994_l28>;
+>>                         vdda-pll-supply = <&pm8994_l12>;
+>>
+>>                         resets = <&gcc GCC_PCIE_PHY_BCR>,
+>>                                 <&gcc GCC_PCIE_PHY_COM_BCR>,
+>>                                 <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
+>>                         reset-names = "phy", "common", "cfg";
+>>
+>>                         pciephy_p0: port@0 {
+>>                                 reg = <0x035000 0x130>,
+>>                                         <0x035200 0x200>,
+>>                                         <0x035400 0x1dc>;
+>>                                 #phy-cells = <0>;
+>>
+>>                                 clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+>>                                 clock-names = "pipe0";
+>>                                 resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+>>                                 reset-names = "lane0";
+>>                         };
+>>
+>>                       pciephy_p1: port@1 {
+>>                                 reg = <0x036000 0x130>,
+>>                                         <0x036200 0x200>,
+>>                                         <0x036400 0x1dc>;
+>>                                 #phy-cells = <0>;
+>>
+>>                                 clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
+>>                                 clock-names = "pipe1";
+>>                                 resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+>>                                 reset-names = "lane1";
+>>                         };
+>>
+>>                         pciephy_p2: port@2 {
+>>                                 reg = <0x037000 0x130>,
+>>                                         <0x037200 0x200>,
+>>                                         <0x037400 0x1dc>;
+>>                                 #phy-cells = <0>;
+>>
+>>                                 clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
+>>                                 clock-names = "pipe2";
+>>                                 resets = <&gcc GCC_PCIE_2_PHY_BCR>;
+>>                                 reset-names = "lane2";
+>>                         };
+>>                 };
+>> --------------------
+>>
+>> let me know if this looks okay.
+>
+> looks good to me.
 
-This ?
+Great.
 
-- compatible:   Should be "<soc-specific>", "renesas,rcar-gyroadc".
-                The <soc-specific> should be one of:
-                renesas,r8a7791-gyroadc - for the GyroADC block present
-                                          in r8a7791 SoC
-                renesas,r8a7792-gyroadc - for the GyroADC with interrupt
-                                          block present in r8a7792 SoC
+Rob, please let me know if above bindings look okay to you.
+I can re-spin the bindings patch then.
+
+Thanks
+
+Regards
+Vivek
+
+>
+> Thanks
+> Kishon
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
 
 -- 
-Best regards,
-Marek Vasut
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
