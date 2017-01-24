@@ -1,97 +1,51 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v1 2/2] arm: dts: mt2701: add nor flash node
-Date: Tue, 24 Jan 2017 11:38:41 +0100
-Message-ID: <3b86fcfd-9f8a-b324-e164-20582a0b2e40@phrozen.org>
-References: <d7b866ad-5b2f-62d3-3aa3-6fa42803d625@gmail.com>
- <b850b751-1d8d-0053-cf1f-d5314542e5c3@gmail.com>
- <20170113172825.75d545a3@bbrezillon>
- <86c997be-f500-eaa1-3ba5-d21cff6223b7@gmail.com>
- <20170113175628.1793f433@bbrezillon>
- <0fafcd8d-cf99-de6b-728f-5e3637810b68@gmail.com>
- <20170114092958.022f2fc8@bbrezillon>
- <e7fa1542-f0e2-0e45-23b3-25d6491ae40d@gmail.com>
- <20170116094032.6f471f11@bbrezillon>
- <20170117143650.5db87148@free-electrons.com>
- <20170118222010.ivc6jxpnrumemvdf@rob-hp-laptop>
- <20170119103829.524ce715@free-electrons.com>
- <CAL_Jsq+EyHtC7THLCJcwgtVtVESMOdmi3T3bBxgOqJt6BCtCHQ@mail.gmail.com>
- <20170119091428.598eb987@bbrezillon>
- <CAL_Jsq+S-FYy4SmjJ3fWzBugw2zCj5TQkkfUA8QVL7SLJW3E1g@mail.gmail.com>
- <1485052600.19995.10.camel@mhfsdcap03> <20170124113118.304a860c@bbrezillon>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [V3 3/3] dt-bindings: Add a support cpu type for cortex-a73
+Date: Tue, 24 Jan 2017 11:03:48 +0000
+Message-ID: <20170124110347.GC6277@leverpostej>
+References: <1485248249-117383-1-git-send-email-puck.chen@hisilicon.com>
+ <1485248249-117383-3-git-send-email-puck.chen@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124113118.304a860c@bbrezillon>
+Content-Disposition: inline
+In-Reply-To: <1485248249-117383-3-git-send-email-puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Cc: xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.zhao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, xuyiping-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lulu.luxiaobo-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, frong.fan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, saberlily.xia-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, oliver.fu-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 24/01/2017 11:31, Boris Brezillon wrote:
-> On Sun, 22 Jan 2017 10:36:40 +0800
-> Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+On Tue, Jan 24, 2017 at 04:57:29PM +0800, Chen Feng wrote:
+> Add arm cpu type cortex-a73
 > 
->> Hi,
->> On Thu, 2017-01-19 at 08:18 -0600, Rob Herring wrote:
->>> On Thu, Jan 19, 2017 at 2:14 AM, Boris Brezillon  
->>>> One last question and I'm done: is something like that acceptable?
->>>>
->>>>         compatible = "<vendor>,<old-soc>","<vendor>,<new-soc>";
->>>>
->>>> This can happen when someone adds support for an unsupported feature
->>>> on a brand new SoC, and then someone else use the same driver for an
->>>> older SoC embedding the same IP but still wants to add a new compatible
->>>> just in case these 2 IPs appear to be slightly different.  
->>>
->>> Yes, it's old and new compatible strings in this case and it's newest
->>> compatible string first.
->>>   
->>>> Here the order of compat strings is no longer following a clear rule
->>>> like 'most-specific compatible first' or 'newest IP/SoC version first',
->>>> it's completely dependent on the order these IPs were supported in the
->>>> OS (Linux). I'm perfectly fine with that BTW, just want to make sure
->>>> this is authorized.  
->>>
->>> I guess we should say "newest compatible for IP first" instead. There
->>> are some exceptions where we add fallbacks later on, but that falls
->>> under the most-specific part.
->>>
->>> It's order that the bindings are defined, not Linux support really,
->>> but in practice those are the same.
->>>
->>> Rob  
->>
->> Thanks for all your effort for code reviewing.
->> Our mt2701-nor's hardware is designed base on mt8713-nor,
->> even so, there would be some slight difference.
->> If I don't misunderstand your viewpoint in this discussion,
->> there's no need to drop mt2701-nor compatible.
-> 
-> No, just update the documentation as suggested by Rob.
-> 
->> And if not, is there any other suggestion?
-> 
-> Nope, and my apologies for being so insistent on something I obviously
-> misunderstood.
-> 
-> Regards,
-> 
-> Boris
+> Signed-off-by: Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-Hi,
+Mark.
 
-could you please add the mt7623 compat string to the documentation
-aswell while at it ? mt7623/mt2701 are essentially the same and it'll
-safe us time and effort and not cause merge order conflicts. otherwise i
-would need to wait till the mt2701 patch is merged before i can send the
-mt7623 one
-
-Thanks !
-	John
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index a1bcfee..d748774 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -158,6 +158,7 @@ nodes to be present and contain the properties described below.
+>  			    "arm,cortex-a53"
+>  			    "arm,cortex-a57"
+>  			    "arm,cortex-a72"
+> +			    "arm,cortex-a73"
+>  			    "arm,cortex-m0"
+>  			    "arm,cortex-m0+"
+>  			    "arm,cortex-m1"
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
