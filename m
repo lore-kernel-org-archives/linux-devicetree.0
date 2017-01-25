@@ -1,63 +1,162 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
-Date: Wed, 25 Jan 2017 09:37:00 +0100
-Message-ID: <CAMuHMdXHWtSP00nHXPmiPS0qjihizXEjoP_C+AMmQVJTKfiD6A@mail.gmail.com>
-References: <20170123135423.28780-1-chris.brandt@renesas.com>
- <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
- <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170124143222.GA2021@mai> <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
+Date: Wed, 25 Jan 2017 09:34:03 +0100
+Message-ID: <691f2c7b-dbef-9c01-9deb-a0f62944f91b@gmail.com>
+References: <20170124134809.23315-1-richard.genoud@gmail.com>
+ <20170124182237.kwixpqc3wkutxbsj@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170124182237.kwixpqc3wkutxbsj@kozik-lap>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 9:19 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Tuesday, January 24, 2017, Daniel Lezcano wrote:
->> > > > +early_platform_init("earlytimer", &ostm_timer);
->> > > > +subsys_initcall(ostm_init); module_exit(ostm_exit);
->> > > > +
->> > > > +MODULE_AUTHOR("Chris Brandt");
->> > > > +MODULE_DESCRIPTION("Renesas OSTM Timer Driver");
->> > > > +MODULE_LICENSE("GPL v2");
->> > >
->> > > Maybe you can try with builtin_platform ?
->> >
->> > Good idea. But, now I get a "Section mismatch" during link time so
->> > I'll have to figure out why that is.
->>
->> Mmh, I think it would be more consistent to convert this to:
->>
->> CLOCKSOURCE_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
->>
->> The only problem is to get the struct device associated to the of_node
->> passed as parameter to ostm_init in order to use the devm_* API.
->>
->> I think of_find_device_by_node should return the platform_device, then
->> pdev->dev. If that works the other drivers will benefit from that to
->> pdev->remove all
->> the rollback code everywhere.
->
-> It was a good idea....but it will not work.
->
-> While CLOCKSOURCE_OF_DECLARE is good at putting the driver at the
-> front of the line for loading, it's too early in boot to detect
-> a platform_device.
+On 24/01/2017 19:22, Krzysztof Kozlowski wrote:
+> On Tue, Jan 24, 2017 at 02:48:09PM +0100, Richard Genoud wrote:
+>> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
+>> the USB ports on odroid-XU4 don't work anymore.
+> 
+> Hi,
+> 
+> Thanks for the patch. Please:
+> 1. Use recent kernel to test it, which could be one of: mainline
+>    (Linus'), recent linux-next or my for-next branch. Why am I thinking
+>    that you did not test it on thse? Because you sent the patch to
+>    k.kozlowski-Sze3O3UU22LowKkBSvOlow@public.gmane.org The guy disappeared four months ago and
+>    recent kernel has all addresses updated (including mailmap).
+My bad, I took the email from the commit 6658356014cb ("ARM: dts: Add
+support Odroid XU4 board for exynos5422-odroidxu4") instead of taking it
+from get_maintainer (That was clearly a bad idea).
+I actually ran my tests on 4.4.44 / 4.8.5 / 4.9.5 4.10-rc4
+I'll also run them on -next
 
-That's correct. All those *_OF_DECLARE() style initializations start
-to break as soon as power and/or clock domains are involved.
-That's one reason why some subsystems (e.g. clock) are moving away from it.
+> 2. Fix the title to match subsystem (git log --oneline arch/arm/boot/dts/exynos*).
+Ok
 
-Gr{oetje,eeting}s,
+> 
+>>
+>> Inserting an usb key (USB2.0) on the USB3.0 port result in:
+>> [   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
+>> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
+>> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
+>> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
+>> [   74.606276] usb 3-1: USB disconnect, device number 2
+>> [   74.613565] usb 4-1: USB disconnect, device number 2
+>> [   74.621208] usb usb3-port1: couldn't allocate usb_device
+>> NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
+>> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
+> 
+> Odroid-XU3
+> s/realtek/Realtek/
+> However I do not think that Realtek matters here. The USB3 ports are
+> directly accessible on XU3. On XU4 on the other hand, the port USB3-0 is
+> connected to USB hub. I think the sentence about Realtek is then
+> misleading, so just mention the XU3.
+Ok
 
-                        Geert
+> 
+>>
+>> If the lines:
+>> 	if (dwc->revision > DWC3_REVISION_194A)
+>> 		reg |= DWC3_GUSB3PIPECTL_SUSPHY;
+>> are commented out, the USB3.0 start working.
+> 
+> s/start/starts/
+Ok
+
+>>
+>> For a full analyse: https://lkml.org/lkml/2017/1/18/678
+> 
+> Documentation/process/submitting-patches.rst
+> Instead of this above (lkml.org is highly discouraged) use proper
+> https://lkml.kernel.org/ in "Link:" put next to other tags (look at
+> recent commits), however I do not find this link as necessary.  Just
+> describe here what is wrong and how you are going to fix it.
+Ok
+
+>>
+>> Felipe suggested that suspend should be disabled temporarily while
+>> what's wrong with DCW3 is figured out.
+>>
+>> Tested on Odroid XU4
+>>
+>> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Being an author implies testing. Please remove the tag.
+Ok
+
+>> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
+> 
+> Malformed tag - missing <>.
+Ok
+
+>> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
+> 
+> No need for such long hash (2164a405762c).
+> 
+> I wonder about pointing the commit which introduced the issue. Usually
+> the fixes directly indicates how far we want the patch to be backported.
+> In this case this should be backported to kernel bringing XU4 DTS. The
+> commit which was not valid, was the commit adding DTS without this
+> property. 2164a476205c was innocent for XU4 because XU4 did not exist
+> that time.
+> 
+> Definitely something is wrong if Fixes tag does not match indicated
+> backport version.
+
+Yes, I see what you mean. We can't say that 2164a476205ccc ("usb: dwc3:
+set SUSPHY bit for all cores") broke XU4 because it predates it !
+I'll simply remove that.
+
+>> ---
+>>  arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>> index 2faf88627a48..f62dbd9b5ad3 100644
+>> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>> @@ -43,6 +43,15 @@
+>>  	status = "okay";
+>>  };
+>>  
+>> +&usbdrd_dwc3_0 {
+>> +	/*
+>> +	 * without that, usb devices are not recognized when
+>> +	 * they are plugged.
+> 
+> s/without/Without/
+> s/usb/USB.
+> 
+>> +	 * cf: https://lkml.org/lkml/2017/1/18/678
+> 
+> No external resources. You can extend a little bit the sentence above to
+> two sentences. Combined with "git log" this would be sufficient.
+
+Ok
+> Best regards,
+> Krzysztof
+
+Thanks !
+
+>> +	 */
+>> +	snps,dis_u3_susphy_quirk;
+>> +};
+>> +
+>>  &usbdrd_dwc3_1 {
+>>  	dr_mode = "host";
+>>  };
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
