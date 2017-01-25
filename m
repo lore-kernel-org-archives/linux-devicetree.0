@@ -1,136 +1,71 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Wed, 25 Jan 2017 16:17:08 +0200
-Message-ID: <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
- <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
- <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
- <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com> <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
+Date: Wed, 25 Jan 2017 16:11:29 +0100
+Message-ID: <20170125161129.41acaa9a@bbrezillon>
+References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
+        <20160701012743.GA16698@rob-hp-laptop>
+        <20160704151058.44b679bf@bbrezillon>
+        <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ef6c0d33-73d6-805e-aeab-86190e8b0aa0-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 3:48 PM, Marek Szyprowski
-<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Krzysztof,
->
-> On 2017-01-25 08:55, Krzysztof Kozlowski wrote:
->>
->> On Wed, Jan 25, 2017 at 7:51 AM, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>> On 24 January 2017 at 19:18, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> wrote:
->>>>
->>>> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
->>>> the USB ports on odroid-XU4 don't work anymore.
->>>>
->>>> Inserting an usb key (USB2.0) on the USB3.0 port result in:
->>>> [ 64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than
->>>> 20000 msec, port status = 0xc400fe3
->>>> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to
->>>> stop endpoint command.
->>>> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting
->>>> host.
->>>> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
->>>> [   74.606276] usb 3-1: USB disconnect, device number 2
->>>> [   74.613565] usb 4-1: USB disconnect, device number 2
->>>> [   74.621208] usb usb3-port1: couldn't allocate usb_device
->>>> NB: it's not related to USB2.0 devices, I get the same result with an
->>>> USB3.0 device (SATA to USB3 for instance).
->>>> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the
->>>> realtek RTL8153 chip.
->>>>
->>>> If the lines:
->>>>          if (dwc->revision > DWC3_REVISION_194A)
->>>>                  reg |= DWC3_GUSB3PIPECTL_SUSPHY;
->>>> are commented out, the USB3.0 start working.
->>>>
->>>> For a full analyse: https://lkml.org/lkml/2017/1/18/678
->>>>
->>>> Felipe suggested that suspend should be disabled temporarily while
->>>> what's wrong with DCW3 is figured out.
->>>>
->>>> Tested on Odroid XU4
->>>>
->>>> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
->>>> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
->>>> ---
->>>>   arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
->>>>   1 file changed, 9 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->>>> b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->>>> index 2faf88627a48..f62dbd9b5ad3 100644
->>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->>>> @@ -43,6 +43,15 @@
->>>>          status = "okay";
->>>>   };
->>>>
->>>> +&usbdrd_dwc3_0 {
->>>> +       /*
->>>> +        * without that, usb devices are not recognized when
->>>> +        * they are plugged.
->>>> +        * cf: https://lkml.org/lkml/2017/1/18/678
->>>> +        */
->>>> +       snps,dis_u3_susphy_quirk;
->>>> +};
->>>> +
->>>>   &usbdrd_dwc3_1 {
->>>>          dr_mode = "host";
->>>>   };
->>>> --
->>>
->>> Thanks for this patch.
->>> But could you consider moving this changes as below.
->>>
->>> https://lkml.org/lkml/2015/3/18/400
->>
->> The patch above (and other DTS patches from the set) was not even sent
->> to linux-samsung-soc nor to me... It is sad how easily one's work can
->> disappear. Also, it is really worthless to solve the same problem
->> twice.
->
->
-> Well, they were sent about 2 years ago... and you were also working on this
-> topic. ;)
+Hi Rob,
 
-Nope, I have never worked on this. That time I was in Korea so my
-tasks were completely different. Later when I got back, I took for a
-second U3 OTG which was not involving this thing.
+Sorry to revive this old discussion, but there's still one aspect I'm
+not sure about.
 
->> Cc Marek and Bartlomiej,
->> Guys, do you want to continue with Robert's patch (linked above by
->> Anand)? If yes, please take the ownership (Robert's address is not
->> valid anymore). If not, I will take Richard's patch after
->> resubmission.
->
->
-> Take Richard's patch because it has a bit more details describing why such
-> quirk
-> is needed.
->
-> Richard: in Roberts patch there is also a quirk for USB 2.0 mode
-> (snps,dis_u2_susphy_quirk). Could you check if it really needed?
->
-> Maybe it would make sense to set those quirks for both DWC3 controllers, as
-> this
-> issue with PHY suspend seems to be a Exynos specific thing.
+On Tue, 5 Jul 2016 10:40:22 -0500
+Rob Herring <robh@kernel.org> wrote:
 
-Okay,
-Richard, please continue with your patch.
+> >> > +   - compatible: Should be "atmel,tcb-free-running-timer"
+> >> > +   - reg: Should contain the TCB channels to be used. If the
+> >> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
+> >> > +     channels are needed. Else, only one channel will be used.
+> >> > +
+> >> > + * a clockevent device
+> >> > +   - compatible: Should be "atmel,tcb-programmable-timer"  
+> >>
+> >> This still looks like assigning usage in DT. As I'm willing to accept
+> >> that for PWM, either timer channels should be whatever channels are not
+> >> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
+> >> the kernel decide their usage.  
+> >
+> > I just reviewed Alexandre's new binding, and it makes the whole thing
+> > a lot more obscure: on older SoCs, we have to chain 2 channels to
+> > create an acceptable wraparound time (16 bits at 5MHz is generating too
+> > much interrupts to be acceptable).
+> >
+> > If we don't assign the mode from the DT, how should we know which
+> > channels should be chained to create the free-running timer? Note that
+> > not all channels can be chained together: they have to be part of the
+> > same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).  
+> 
+> The driver can have this knowledge if it is just picking 2 consecutive
+> timers. It should already know it has 16-bit timers based on the
+> compatible string. If it gets more complicated then the features or
+> limitations of the channels should be listed so the driver can make a
+> choice. OMAP is a good example of lots of timers with differing
+> features.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes it's possible to do that, but what about DT overlays then? Say you
+have some TCB channels you'd like to reserve because they are connected
+to pins that are exposed on your board. Those pins are not connected to
+any device yet, but extension boards can be added, and in this case you
+might want to expose new PWM devices by dynamically loading DT overlays.
+
+If your clksource/clkevent driver parsed the initial DT and picked X
+free channels randomly, it may conflicts with the one requested by the
+DT overlay.
+
+What's your solution for this case?
+
+Thanks,
+
+Boris
