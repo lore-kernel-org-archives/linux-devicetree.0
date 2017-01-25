@@ -1,89 +1,167 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH 1/3] mtd: name the mtd device with an optional label
- property
-Date: Wed, 25 Jan 2017 17:53:22 +0100
-Message-ID: <a20ac5a9-2097-c241-e280-9147926e70b6@kaod.org>
-References: <1484573225-19095-1-git-send-email-clg@kaod.org>
- <1484573225-19095-2-git-send-email-clg@kaod.org>
- <20170124151353.5bbffae0@bbrezillon>
- <7bdf47c3-d3b7-92a2-47c1-99e4bd6b4f44@kaod.org>
- <20170125175105.67c335e7@bbrezillon>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Wed, 25 Jan 2017 10:59:00 -0600
+Message-ID: <23936395-d653-56c8-13f9-6dfeb6e9257b@ti.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com>
+ <20170104205536.15963-3-d-gerlach@ti.com>
+ <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop>
+ <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
+ <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
+ <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
+ <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
+ <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com>
+ <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
+ <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com>
+ <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com> <m2ziip2puf.fsf@baylibre.com>
+ <CAL_Jsq+Vp8iYrAUmuSRzeeY_G6CUqFqG6XB6erDxo1RYo3g4=g@mail.gmail.com>
+ <CAPDyKFqzs59N5bc89X-96Fgy9b=_+s8zYmHHshQeDrJCnaqprA@mail.gmail.com>
+ <58821CA2.4050701@ti.com>
+ <CAPDyKFpTyn2isNahywmOOSWiZKov9xsudyWi_i-FejXjC+1AZw@mail.gmail.com>
+ <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com>
+ <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170125175105.67c335e7@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robh@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Kevin Hilman <khilman@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2017 05:51 PM, Boris Brezillon wrote:
-> On Wed, 25 Jan 2017 17:47:13 +0100
-> Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
-> 
->> On 01/24/2017 03:13 PM, Boris Brezillon wrote:
->>> Hi Cédric,
+On 01/24/2017 04:03 AM, Ulf Hansson wrote:
+> On 23 January 2017 at 21:11, Dave Gerlach <d-gerlach@ti.com> wrote:
+>> On 01/20/2017 10:52 AM, Ulf Hansson wrote:
 >>>
->>> On Mon, 16 Jan 2017 14:27:03 +0100
->>> Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
->>>   
->>>> This can be used to easily identify a specific chip on a system with
->>>> multiple chips.
+>>> [...]
+>>>
+>>>>>> Another option is create something new either common or TI SCI
+>>>>>> specific. It could be just a table of ids and phandles in the SCI
+>>>>>> node. I'm much more comfortable with an isolated property in one node
+>>>>>> than something scattered throughout the DT.
+>>>>>
+>>>>>
+>>>>> To me, this seems like the best possible solution.
+>>>>>
+>>>>> However, perhaps we should also consider the SCPI Generic power domain
+>>>>> (drivers/firmware/scpi_pm_domain.c), because I believe it's closely
+>>>>> related.
+>>>>> To change the power state of a device, this PM domain calls
+>>>>> scpi_device_set|get_power_state() (drivers/firmware/arm_scpi.c), which
+>>>>> also needs a device id as a parameter. Very similar to our case with
+>>>>> the TI SCI domain.
+>>>>>
+>>>>> Currently these SCPI device ids lacks corresponding DT bindings, so
+>>>>> the scpi_pm_domain tries to work around it by assigning ids
+>>>>> dynamically at genpd creation time.
+>>>>>
+>>>>> That makes me wonder, whether we should think of something
+>>>>> common/generic?
 >>>>
->>>> Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->>>> ---
->>>>  drivers/mtd/mtdcore.c | 7 +++++++
->>>>  1 file changed, 7 insertions(+)
 >>>>
->>>> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
->>>> index 052772f7caef..bf61557b599d 100644
->>>> --- a/drivers/mtd/mtdcore.c
->>>> +++ b/drivers/mtd/mtdcore.c
->>>> @@ -654,6 +654,13 @@ static int mtd_add_device_partitions(struct mtd_info *mtd,
->>>>   */
->>>>  static void mtd_set_dev_defaults(struct mtd_info *mtd)
->>>>  {
->>>> +	/*
->>>> +	 * If DT support is enabled and we have a valid of_node pointer, try to
->>>> +	 * extract the MTD name from the label property.
->>>> +	 */
->>>> +	if (IS_ENABLED(CONFIG_OF) && mtd->dev.of_node)
->>>> +		of_property_read_string(mtd->dev.of_node, "label", &mtd->name);
->>>> +  
+>>>> When you say something common/generic, do you mean a better binding for
+>>>> genpd,
+>>>> or something bigger than that like a new driver? Because I do think a
+>>>> phandle
+>>>> cell left open for the genpd provider to interpret solves both the scpi
+>>>> and
+>>>> ti-sci problem we are facing here in the best way. Using generic PM
+>>>> domains lets
+>>>> us do exactly what we want apart from interpreting the phandle cell with
+>>>> our
+>>>> driver, and I feel like anything else we try at this point is just going
+>>>> to be
+>>>> to work around that. Is bringing back genpd xlate something we can
+>>>> discuss?
 >>>
->>> I realize this kind of thing would be better placed in mtd_set_of_node()
->>> (see the patch below). Modifying the mtd->name pointer in the back of
->>> MTD drivers is not such a good idea (suppose the driver allocated the
->>> memory with a regular kmalloc() and tries to free mtd->name in the remove
->>> path).
 >>>
->>> If we move that to mtd_set_of_node(), drivers that wants to support this
->>> label property just have to check if mtd->name is NULL (after calling
->>> mtd_set_of_node() or nand_set_flash_node()) before assigning a default
->>> name.
->>> For unmodified drivers we keep the existing behavior: they'll just
->>> unconditionally override mtd->name with their own value (which might or
->>> might not be dynamically allocated).  
+>>> Bringing back xlate, how would that help? Wouldn't that just mean that
+>>> you will get one genpd per device? That's not an option, I think we
+>>> are all in agreement to that.
 >>
->> ok. So the expected behavior looks correct to me, but adding a call to 
->> of_property_read_string() in the inline below feels a little hacky. 
->> Doesn't it ? 
 >>
->> May be we need an extra check on IS_ENABLED(CONFIG_OF) also ? 
-> 
-> This is all safe, because the of.h header defines stubs if CONFIG_OF is
-> not set. That just means the name will be unchanged, but you shouldn't
-> have any problem (neither as compilation time nor at runtime).
-> 
+>> Sure, perhaps the custom xlate wouldn't be the right way to do it, as we
+>> wouldn't be able to associate a device directly to a phandle, at least with
+>> how it was implemented before, but I think we can skip that entirely. Does
+>> opening up the interpretation of the cells of the 'power-domains' phandle
+>> not solve all of these issues? Is that out of the question?
+>>
+>> genpd_xlate_simple currently just makes sure the args_count of the
+>> 'power-domains' phandle was zero and bails if it was not. Why couldn't we
+>> remove this check and let the driver interpret it while still using
+>> of_genpd_add_provider_simple to register the provider? It's still a 'simple'
+>> provider from the perspective of the genpd framework and the actual pm
+>> domain mapping will not change, but now the driver can parse the cells and
+>> do whatever it needs to, such as reading a device id.
+>>
+>> I think that's a bit more flexible and will avoid breaking anything that is
+>> there today.
+>
+> Would you mind providing an example? Perhaps also some code snippets
+> dealing with the parsing?
 
-ok. I will cook a v2 with your proposal then.
+So again the goal of this is to move the ti,sci-id value back to 
+power-domains phandle instead of having a separate property, so that 
+would be step one in the DT. Then in the power-domains node change 
+#power-domain-cells to one. And then from there, the only change to the 
+genpd framework is this:
 
-Thanks,
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index a5e1262b964b..b82e61f0bcfa 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -1603,8 +1603,6 @@ static struct generic_pm_domain genpd_xlate_simple
+                                       struct of_phandle_args *genpdspec,
+                                       void *data)
+  {
+-       if (genpdspec->args_count != 0)
+-               return ERR_PTR(-EINVAL);
+         return data;
+  }
 
-C.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+because genpd_xlate_simple only checks that the phandle is zero so that 
+it can fail if it is not, but there's no functional reason it needs to 
+do this. The genpd framework works as it did before no matter what the 
+cells are set to if using of_genpd_add_provider_simple. Then in the 
+attach_dev callback inside the ti_sci_pm_domains driver instead of doing
+
+	ret = of_property_read_u32(np, "ti,sci-id", &idx);
+
+to read the ti,sc-id for a device into idx we can now do:
+
+        ret = of_parse_phandle_with_args(np, "power-domains",
+                                    "#power-domain-cells", 0, &pd_args);
+        idx = pd_args.args[0];
+
+or even simpler from within our driver
+
+	ret = of_property_read_u32_index(np, "power-domains", 1, &idx);
+
+To read the value into idx.
+
+This requires minimal changes to the genpd framework and gives the 
+option for the driver to interpret the cell manually when using a simple 
+provider. The genpd framework still uses the phandle just to get the 
+power-domain device and the cells are left entirely up to the driver to 
+interpret, but if desired you could still use the genpd onecell driver 
+for a specific use of the phandle cell, or use it with zero cells.
+
+I can send out an updated series if there are no major objections, or 
+just to start discussion there.
+
+Regards,
+Dave
+
+>
+> Kind regards
+> Uffe
+>
