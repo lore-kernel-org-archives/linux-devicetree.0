@@ -1,79 +1,52 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 1/13] mmc: sunxi: Fix clock frequency change sequence
-Date: Wed, 25 Jan 2017 09:26:02 +0100
-Message-ID: <20170125082602.llunpuqwsimtzkds@lukather>
-References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
- <6f6b511bce9df86ee43486653ac55df0d135f198.1484585798.git-series.maxime.ripard@free-electrons.com>
- <CAPDyKFp735=MMm02PKEt2iZmN0Afyp52_g-8hKxpW71hw2RyiQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kwetivlh2i3v4f47"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFp735=MMm02PKEt2iZmN0Afyp52_g-8hKxpW71hw2RyiQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v6 2/5] powernv:stop: Rename pnv_arch300_idle_init to pnv_power9_idle_init
+Date: Wed, 25 Jan 2017 14:06:26 +0530
+Message-ID: <1485333389-5752-3-git-send-email-ego@linux.vnet.ibm.com>
+References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
---kwetivlh2i3v4f47
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Balbir pointed out that the name of the function pnv_arch300_idle_init
+was inconsistent with the names of the variables and functions
+pertaining to POWER9 features in book3s_idle.S.
 
-Hi Ulf,
+This patch renames pnv_arch300_idle_init to pnv_power9_idle_init.
 
-On Tue, Jan 24, 2017 at 09:12:07AM +0100, Ulf Hansson wrote:
-> On 16 January 2017 at 17:56, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > The MMC and SD specifications documents that the clock frequency should
-> > only be changed once gated.
->=20
-> Where?
->=20
-> >
-> > The current code first modifies the parent clock, gates it and then
-> > modifies the internal divider. This means that since the parent clock r=
-ate
-> > might be changed, the bus clock might be changed as well before it is
-> > gated, which breaks the specification.
-> >
-> > Move the gating before the parent rate modification.
->=20
-> This all makes perfect sense to me, however I am not sure you need to
-> refer to the spec to justify these changes.
+This patch does not change any behaviour.
 
-I can't find it anymore :/
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+ arch/powerpc/platforms/powernv/idle.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I'll resend that patch reworking the commit log.
+diff --git a/arch/powerpc/platforms/powernv/idle.c b/arch/powerpc/platforms/powernv/idle.c
+index 479c256..57bec03 100644
+--- a/arch/powerpc/platforms/powernv/idle.c
++++ b/arch/powerpc/platforms/powernv/idle.c
+@@ -298,7 +298,7 @@ static void power9_idle(void)
+  * @dt_idle_states: Number of idle state entries
+  * Returns 0 on success
+  */
+-static int __init pnv_arch300_idle_init(struct device_node *np, u32 *flags,
++static int __init pnv_power9_idle_init(struct device_node *np, u32 *flags,
+ 					int dt_idle_states)
+ {
+ 	u64 *psscr_val = NULL;
+@@ -373,7 +373,7 @@ static void __init pnv_probe_idle_states(void)
+ 	}
+ 
+ 	if (cpu_has_feature(CPU_FTR_ARCH_300)) {
+-		if (pnv_arch300_idle_init(np, flags, dt_idle_states))
++		if (pnv_power9_idle_init(np, flags, dt_idle_states))
+ 			goto out;
+ 	}
+ 
+-- 
+1.9.4
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---kwetivlh2i3v4f47
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYiGEWAAoJEBx+YmzsjxAgPMQQAK6Jv2hSrNnsIsGseMADAssc
-BY6CexdjRUlnJOJSE9vV8qNc6+rBtl8u1rgTvgJykS4nGV00W7OneeqeF4iSKmO3
-9Pr4HZKnpGRiuDLl13sZhs8QZDDHPItPvgguUr/2E01mJx5LOsUTomH7u0kVN3MO
-EXbqKR8juIdnloHc9UBxG2yBl6WT3ImMfFcz7RlurQu/QvOi2Il0J8bNCzddfdCG
-hBbt0PZ67DVOyIcQadPVXb2IjgEFYEXkz7KCs1ISykittD+gPwmZZqfbjRcpX9E4
-IEQBAaThdrBHrgvS1a1wwXEGSxCY+OCXb5J9aNwVsbqtm2oVBVEG/A9ppdJ9Fj8L
-0SZ1ryb9QclW/Uv2kloNvi2B3rETfpPB9SE9JpzX+o+eUqudJFiz9idE45lCWYxm
-6dNeg1X1UyfCr/9tf7lvi0L9sHYoWVJUVznqlxtDlGnODVtf2Nh98UTCvGXKn5xV
-/3xoZVTQHvBDSYb65mkvEEvWxB8OIALBoYTtGXrcqrsclFNNHcch6RXHYVajXZu/
-ZsuW+sO4KR7rmJNFAnf4c/PoVrgls1Gzks1Wez5cVYvVBvm1eMwXDBzOnKw28gts
-HtEve1SOWhssEeN0tlrfOEeQb3Bmc78sVU2zo7S/GNWIBGAxNRJn89V5YagyeAMS
-VZwceo3+u10oDUfEDpX/
-=nDkA
------END PGP SIGNATURE-----
-
---kwetivlh2i3v4f47--
