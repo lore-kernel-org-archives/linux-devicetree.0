@@ -1,65 +1,81 @@
-From: <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx53-qsb-common: fix FEC pinmux config
-Date: Wed, 25 Jan 2017 06:25:48 +0100
-Message-ID: <20170125052548.27402-1-linux-kernel-dev@beckhoff.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 08/16] arm: dts: add spi nodes to the mt7623.dtsi file
+Date: Wed, 25 Jan 2017 06:38:40 +0100
+Message-ID: <80e1c119-2989-9c82-8d54-551f677613e1@phrozen.org>
+References: <1485170975-51813-1-git-send-email-john@phrozen.org>
+ <1485170975-51813-9-git-send-email-john@phrozen.org>
+ <69d73342-d710-5f6d-567b-8e75a84fdb18@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <69d73342-d710-5f6d-567b-8e75a84fdb18-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, sbabic-ynQEQJNshbs@public.gmane.org, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
-
-The pinmux configuration in device tree was different from manual
-muxing in <u-boot>/board/freescale/mx53loco/mx53loco.c
-All pins were configured as NO_PAD_CTL(1 << 31), which was fine as the
-bootloader already did the correct pinmuxing for us.
-But recently u-boot is migrating to reuse device tree files from the
-kernel tree, so it seems to be better to have the correct pinmuxing in
-our files, too.
-
-Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/imx53-qsb-common.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-index c05e7cfd0cbc..40b3e31935d0 100644
---- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
-+++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
-@@ -215,16 +215,16 @@
- 
- 		pinctrl_fec: fecgrp {
- 			fsl,pins = <
--				MX53_PAD_FEC_MDC__FEC_MDC		0x80000000
--				MX53_PAD_FEC_MDIO__FEC_MDIO		0x80000000
--				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x80000000
--				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x80000000
--				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x80000000
--				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x80000000
--				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x80000000
--				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x80000000
--				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x80000000
--				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x80000000
-+				MX53_PAD_FEC_MDC__FEC_MDC		0x4
-+				MX53_PAD_FEC_MDIO__FEC_MDIO		0x1fc
-+				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x180
-+				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x180
-+				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x180
-+				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x180
-+				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x180
-+				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x4
-+				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x4
-+				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x4
- 			>;
- 		};
- 
--- 
-2.11.0
 
 
+On 24/01/2017 23:39, Matthias Brugger wrote:
+> 
+> 
+> On 01/23/2017 12:29 PM, John Crispin wrote:
+>> Add SPI nodes to the mt7623.dtsi file.
+>>
+>> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/mt7623.dtsi |   12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/mt7623.dtsi
+>> b/arch/arm/boot/dts/mt7623.dtsi
+>> index 8ac4569..c8f38e1 100644
+>> --- a/arch/arm/boot/dts/mt7623.dtsi
+>> +++ b/arch/arm/boot/dts/mt7623.dtsi
+>> @@ -15,6 +15,7 @@
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>>  #include <dt-bindings/clock/mt2701-clk.h>
+>> +#include <dt-bindings/phy/phy.h>
+> 
+> Why do you need this include here?
+> 
+> Regards,
+> Matthias
+> 
+
+should be part of the ubs patch. V2 coming up in a tad
+
+	John
+
+>>  #include <dt-bindings/pinctrl/mt7623-pinfunc.h>
+>>  #include <dt-bindings/power/mt2701-power.h>
+>>  #include <dt-bindings/reset/mt2701-resets.h>
+>> @@ -281,6 +282,17 @@
+>>          status = "disabled";
+>>      };
+>>
+>> +    spi: spi@1100a000 {
+>> +        compatible = "mediatek,mt7623-spi",
+>> +                 "mediatek,mt6589-spi";
+>> +        reg = <0 0x1100a000 0 0x1000>;
+>> +        interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_LOW>;
+>> +        clocks = <&pericfg CLK_PERI_SPI0>;
+>> +        clock-names = "main";
+>> +
+>> +        status = "disabled";
+>> +    };
+>> +
+>>      hifsys: syscon@1a000000 {
+>>          compatible = "mediatek,mt7623-hifsys",
+>>                   "mediatek,mt2701-hifsys",
+>>
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
