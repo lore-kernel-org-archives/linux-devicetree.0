@@ -1,169 +1,62 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Immutable branch between MFD, ARM, IIO and PWM due
- for the v4.10 merge window
-Date: Wed, 25 Jan 2017 11:55:11 +0100
-Message-ID: <20170125105511.GA9344@ulmo.ba.sec>
-References: <1484903709-11650-1-git-send-email-benjamin.gaignard@st.com>
- <20170123121222.GJ16020@dell>
- <CAOesGMhx6ZWekgW01-7GRcMiWtAohcfGdcu1FhkP=bTfsjBCmQ@mail.gmail.com>
- <20170124081244.GP16020@dell>
- <CAOesGMhauUd0mPuUsRZnEWrAfQZj3Di_YwvxtD1rXr7B9fgqdw@mail.gmail.com>
- <20170125100858.GA16202@dell>
+Subject: Re: [PATCH v2 1/6] ARM: tegra: nyan: Use proper IRQ type definitions
+Date: Wed, 25 Jan 2017 11:58:12 +0100
+Message-ID: <20170125105812.GB9344@ulmo.ba.sec>
+References: <20170122154753.31942-1-contact@paulk.fr>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="+g7M9IMkV8truYOl"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170125100858.GA16202@dell>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PWM List <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, gerald.baeza-qxv4g6HH51o@public.gmane.orgarn
+In-Reply-To: <20170122154753.31942-1-contact-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---pf9I7BMVVzbSWLtt
+--+g7M9IMkV8truYOl
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 25, 2017 at 10:08:58AM +0000, Lee Jones wrote:
-> Jonathan, Thierry,
+On Sun, Jan 22, 2017 at 04:47:48PM +0100, Paul Kocialkowski wrote:
+> This switches a few interrupt definitions that were using
+> GPIO_ACTIVE_HIGH as IRQ type, which is invalid.
 >=20
-> On Tue, 24 Jan 2017, Olof Johansson wrote:
-> > On Tue, Jan 24, 2017 at 12:12 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
-e:
-> > > On Mon, 23 Jan 2017, Olof Johansson wrote:
-> > >> On Mon, Jan 23, 2017 at 4:12 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wr=
-ote:
-> > >> > Arm, IIO and PWM Maintainers,
-> > >> >
-> > >> > Enjoy!
-> > >> >
-> > >> > The following changes since commit 7ce7d89f48834cefece7804d38fc5d8=
-5382edf77:
-> > >> >
-> > >> >   Linux 4.10-rc1 (2016-12-25 16:13:08 -0800)
-> > >> >
-> > >> > are available in the git repository at:
-> > >> >
-> > >> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd=
--arm-iio-pwm-v4.10
-> > >> >
-> > >> > for you to fetch changes up to 94df449273475980a39f1bf47f1e3d2b07c=
-e6577:
-> > >> >
-> > >> >   ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco (2017-=
-01-23 12:06:28 +0000)
-> > >> >
-> > >> > ----------------------------------------------------------------
-> > >> > Immutable branch between MFD, ARM, IIO and PWM due for the v4.10 m=
-erge window
-> > >> >
-> > >> > ----------------------------------------------------------------
-> > >> > Benjamin Gaignard (8):
-> > >> >       dt-bindings: mfd: Add bindings for STM32 Timers driver
-> > >> >       mfd: Add STM32 Timers driver
-> > >> >       dt-bindings: pwm: Add STM32 bindings
-> > >> >       pwm: Add driver for STM32 plaftorm
-> > >> >       iio: Add bindings for STM32 timer trigger driver
-> > >> >       iio: Add STM32 timer trigger driver
-> > >> >       ARM: dts: stm32: add Timers driver for stm32f429 MCU
-> > >> >       ARM: dts: stm32: Enable pwm1 and pwm3 for stm32f469-disco
-> > >> >
-> > >> >  .../ABI/testing/sysfs-bus-iio-timer-stm32          |  29 ++
-> > >> >  .../bindings/iio/timer/stm32-timer-trigger.txt     |  23 ++
-> > >> >  .../devicetree/bindings/mfd/stm32-timers.txt       |  46 +++
-> > >> >  .../devicetree/bindings/pwm/pwm-stm32.txt          |  35 ++
-> > >> >  arch/arm/boot/dts/stm32f429.dtsi                   | 275 ++++++++=
-++++++
-> > >> >  arch/arm/boot/dts/stm32f469-disco.dts              |  28 ++
-> > >> >  drivers/iio/trigger/Kconfig                        |   9 +
-> > >> >  drivers/iio/trigger/Makefile                       |   1 +
-> > >> >  drivers/iio/trigger/stm32-timer-trigger.c          | 342 ++++++++=
-++++++++++
-> > >> >  drivers/mfd/Kconfig                                |  11 +
-> > >> >  drivers/mfd/Makefile                               |   2 +
-> > >> >  drivers/mfd/stm32-timers.c                         |  80 +++++
-> > >> >  drivers/pwm/Kconfig                                |   9 +
-> > >> >  drivers/pwm/Makefile                               |   1 +
-> > >> >  drivers/pwm/pwm-stm32.c                            | 398 ++++++++=
-+++++++++++++
-> > >> >  include/linux/iio/timer/stm32-timer-trigger.h      |  62 ++++
-> > >> >  include/linux/mfd/stm32-timers.h                   |  71 ++++
-> > >> >  17 files changed, 1422 insertions(+)
-> > >> >  create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-timer-=
-stm32
-> > >> >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st=
-m32-timer-trigger.txt
-> > >> >  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-ti=
-mers.txt
-> > >> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-stm3=
-2.txt
-> > >> >  create mode 100644 drivers/iio/trigger/stm32-timer-trigger.c
-> > >> >  create mode 100644 drivers/mfd/stm32-timers.c
-> > >> >  create mode 100644 drivers/pwm/pwm-stm32.c
-> > >> >  create mode 100644 include/linux/iio/timer/stm32-timer-trigger.h
-> > >> >  create mode 100644 include/linux/mfd/stm32-timers.h
-> > >>
-> > >> May I ask why you're creating an immutable branch of all this conten=
-ts?
-> > >>
-> > >> We should get the dts/dtsi contents like usual from any maintainer;
-> > >> just the DT updates in a branch.
-> > >>
-> > >> Sometimes (but less and less due to us discouraging the use) we need
-> > >> an immutable branch that includes dt-include updates. But I don't see
-> > >> any of those in this contents.
-> > >>
-> > >> I.e. I guess I can see the need between mfd and downstream trees
-> > >> (iio/pwm), but not the DTS contents at this time. Or am I missing
-> > >> something here?
-> > >
-> > > I agree with you.  However, since one of the STM32 Maintainers Acked
-> > > the DTS patches, and the other one hasn't been heard from for months,
-> > > I took that to mean he wanted me to apply and take them through the
-> > > MFD tree.
-> > >
-> > > A misunderstanding or misaction perhaps, but this is the normal
-> > > assumption.
-> >=20
-> > It seems to be a misunderstanding in this case, since there are other
-> > additions in the stm32 tree this release cycle so we should only pick
-> > up DTS changes through our tree.
-> >=20
-> > By now, I think it should be pretty well known that we nearly never
-> > want DTS contents merged through any other tree. Ever.
-> >=20
-> > So, please revoke your branch and take those out. We'll take them
-> > through the normal flow. Thanks!
+> This is mostly a cosmetic change, that doesn't affect any driver.
 >=20
-> That okay with you?
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/tegra124-nyan.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Do you still want to carry the PWM patches in your tree? Or should they
-all just be picked up into the respective subsystem trees, then?
-
-Either way is fine with me.
+Applied, thanks.
 
 Thierry
 
---pf9I7BMVVzbSWLtt
+--+g7M9IMkV8truYOl
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliIhAwACgkQ3SOs138+
-s6HumQ/7BdR0pxa+yXkpvJKyy3LHi8DBw8rlObko9nRv2Pp2lvLy71QJjBpZRxfp
-cdp8KRi8Y4d2+oSkrpJgTgatIkKtw7OECBUuJhsydPgb7FQkeEFe/0Q0bOFv/xsS
-16g0wbM2k1ejktmN9SYTMSjWKWeHun3npea4oQ5tZYS05v9mh9yoI4dEY+oSHQid
-wTzfknYeP/3s/uwW3A0o8qb4U1Dwl2SF1eSvwX/HIUOrhu7vXpBEtF4PZU2MIEDp
-XtrVql1tqt4bNo6xW9d4pydtEWFrTAMbUZSpJEFcsj2ck8kcK+XKaKjAw9jTn3EC
-l1ok6ScIiUk+Hnj5OZ7NBgeWQkps921WjfrS5Gq7Co63LTbz3njdIqwOZ4mI/nFt
-vORUqVHRef6XL74nrCgzr9geXzWi0c2qbjuB6ImnJK7oc8iULEeahhQCq4Zc7Zer
-ZWgfjwHcbnlxWMUGs/146nx+Yw2GqSAihMEPnSwBsLOO9L8/EgH5O+d/wcUCYrUC
-CdoZitTwNJ4Djd4rw149+Bct3Wz79MJgwkAIXs9eW1v0VQ/XDwqAkdwxQk78EC5y
-az0QTuXY44yNG5TFSTFE3KaL8DbEs/+CDL6pd1n6eJOvAiWGAPojh73KbLhJkQ/S
-1OCnRTSKaOj2MRv2msATUt7uRAxe7sWHZ1J/sTnGd7sEEf16TxA=
-=ktDC
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliIhMMACgkQ3SOs138+
+s6EYww//Qxfao/weYy3A/uZPX/7Uqg2P3cM+X7OtJVUBJoAJGUgLGd7igM5RX/UC
+aQqPMgY2JWHpynJGzjUWNfK3dFH9RrFTvJxG5+phDVKJAEcprrejceOS0157FCeH
+C2W1iZlJQBU0AlujBf3jCtxdpOJ9DQ3T3GTnB3ri8ylQgpYNpkDyWu5o4uCunppM
+LPxXAD0mFf++1kOUNjfOjIe4yyHfCR3vfKpWyJQmk/H40jL7AVEOGxjR/v3MK2AA
+hgj8DgtkeQxpOTAnP0TNIYaeCzlnBXOkeEfsjmeMdPDUoQ2hobqwaW4u41C3nXH0
+swMT/fqPPxJVwPctmL24YlJmkHS9dRKKXn3XKsJIKgk+TFNyDoUjBrXM7/TCLwa/
+IgIvv8qpCpS3GOxjkmXllFaC3f5BNpWhpFNMzhM5c4kcNEkO+BkFipc4h3Lbhs7K
+M9Sibv7CXoP8PpqLZELrm/poeYoxYK7IcX4JzCrLODrfEPn2Yr9EaDIo+tmzt4pg
+SP3WxB8+HVdWo63olBqZcsvNPCpxXsafGh8INa2ZTt3BuYUH7JAV64t9t2hbr+eK
+49h7eYmZPfxCUmgvKhEYCkILSSwA1fX/Rsl4G+2iM/rjoroRH4hCHix/C/0PHAeV
+IIznXd0jqr/i32IYU33SIobyOcJ7tJHupNd7FH4pM7m90yS4+So=
+=2/Rc
 -----END PGP SIGNATURE-----
 
---pf9I7BMVVzbSWLtt--
+--+g7M9IMkV8truYOl--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
