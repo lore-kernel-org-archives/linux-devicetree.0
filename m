@@ -1,72 +1,42 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: [PULL] ARM: DTS: Fix broken GICv2 register maps
-Date: Wed, 25 Jan 2017 11:02:40 +0000
-Message-ID: <1485342160-23286-1-git-send-email-marc.zyngier@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v14 3/5] tee: add OP-TEE driver
+Date: Wed, 25 Jan 2017 12:03:37 +0100
+Message-ID: <CAK8P3a1OJV4tvE1zxCvpCmXTz8QuxbxivWjkfpPbMQpVikD=Kw@mail.gmail.com>
+References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
+ <8183743.bSJXZpMh95@wuerfel> <20170123090852.GB1910@jax> <5564439.UZohRc66aK@wuerfel>
+ <20170124125330.GA30998@jax> <20170125094744.GA7121@jax> <20170125100252.GA8889@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170125100252.GA8889-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Jens Wiklander <jens.wiklander-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Al Viro <viro-RmSDqhL/yNMiFSDQTTA3OLVCufUGDwFn@public.gmane.org>, valentin.manea-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, jean-michel.delorme-qxv4g6HH51o@public.gmane.org, emmanuel.michel-qxv4g6HH51o@public.gmane.org, javier-5MUHepqpBA1BDgjK7y7TUQ@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-ARM-soc folks,
+On Wed, Jan 25, 2017 at 11:02 AM, Greg Kroah-Hartman
+<gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
+> On Wed, Jan 25, 2017 at 10:47:45AM +0100, Jens Wiklander wrote:
+>> On Tue, Jan 24, 2017 at 01:53:30PM +0100, Jens Wiklander wrote:
+>> >
+>> > /sys/class/tee/ sounds good, I'll use that. It's more or less what we
+>> > also have today.
+>>
+>> I'm sorry, it seems a struct device has to be used in order to put stuff
+>> under /sys/class/tee/. Or am I missing something?
+>
+> Nope, that is correct.
 
-Please find below the pull request for a DT fix affecting a large
-number of 32bit platforms, which has been acked by a number of
-platform maintainers.
+But that's a different device: this device represents the "class" of
+device for the
+user space interface, nothing wrong with that. However, we don't need both
+the class device and a platform device that is made up by the optee driver
+for a firmware feature to represent the same entity that we have the
+class device
+for.
 
-The following changes since commit 49def1853334396f948dcb4cedb9347abb318df5:
-
-  Linux 4.10-rc4 (2017-01-15 16:21:59 -0800)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git irq/gic-v2-dt
-
-for you to fetch changes up to ed2799b62a323ea041e0475ac8bff8e023e224f1:
-
-  ARM: DTS: Fix register map for virt-capable GIC (2017-01-23 15:44:58 +0000)
-
-----------------------------------------------------------------
-Marc Zyngier (2):
-      dt-bindings: arm,gic: Fix binding example for a virt-capable GIC
-      ARM: DTS: Fix register map for virt-capable GIC
-
- Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt | 4 ++--
- arch/arm/boot/dts/alpine.dtsi                                      | 2 +-
- arch/arm/boot/dts/axm55xx.dtsi                                     | 2 +-
- arch/arm/boot/dts/dra7.dtsi                                        | 2 +-
- arch/arm/boot/dts/ecx-2000.dts                                     | 2 +-
- arch/arm/boot/dts/exynos3250.dtsi                                  | 2 +-
- arch/arm/boot/dts/exynos5.dtsi                                     | 4 ++--
- arch/arm/boot/dts/exynos5260.dtsi                                  | 2 +-
- arch/arm/boot/dts/exynos5440.dtsi                                  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi                                      | 4 ++--
- arch/arm/boot/dts/keystone-k2g.dtsi                                | 4 ++--
- arch/arm/boot/dts/keystone.dtsi                                    | 4 ++--
- arch/arm/boot/dts/ls1021a.dtsi                                     | 4 ++--
- arch/arm/boot/dts/mt2701.dtsi                                      | 2 +-
- arch/arm/boot/dts/mt6580.dtsi                                      | 2 +-
- arch/arm/boot/dts/mt6589.dtsi                                      | 2 +-
- arch/arm/boot/dts/mt7623.dtsi                                      | 2 +-
- arch/arm/boot/dts/mt8127.dtsi                                      | 2 +-
- arch/arm/boot/dts/mt8135.dtsi                                      | 2 +-
- arch/arm/boot/dts/omap5.dtsi                                       | 2 +-
- arch/arm/boot/dts/r8a73a4.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7743.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7745.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7790.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7791.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7792.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7793.dtsi                                     | 2 +-
- arch/arm/boot/dts/r8a7794.dtsi                                     | 2 +-
- arch/arm/boot/dts/rk1108.dtsi                                      | 2 +-
- arch/arm/boot/dts/rk3036.dtsi                                      | 2 +-
- arch/arm/boot/dts/rk322x.dtsi                                      | 2 +-
- arch/arm/boot/dts/rk3288.dtsi                                      | 2 +-
- arch/arm/boot/dts/sun6i-a31.dtsi                                   | 2 +-
- arch/arm/boot/dts/sun7i-a20.dtsi                                   | 4 ++--
- arch/arm/boot/dts/sun8i-a23-a33.dtsi                               | 2 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi                                  | 2 +-
- arch/arm/boot/dts/sun8i-h3.dtsi                                    | 2 +-
- arch/arm/boot/dts/sun9i-a80.dtsi                                   | 2 +-
- 38 files changed, 45 insertions(+), 45 deletions(-)
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
