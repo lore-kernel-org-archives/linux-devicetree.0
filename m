@@ -1,38 +1,61 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3] i2c: core: helper function to detect slave mode
-Date: Wed, 25 Jan 2017 23:29:39 +0200
-Message-ID: <CAHp75VfaG96BgwM2S6Mw3Uv=DcLrV1id7nyMzrk9xSreT_ZAEw@mail.gmail.com>
-References: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
- <20170125204537.i66nykln4fkxqryy@ninjato> <1485377409.2133.339.camel@linux.intel.com>
- <20170125210118.z5o6y6aurwic4zxc@ninjato>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] ARM: dts: r8a7791: link DU to VSPDs
+Date: Thu, 26 Jan 2017 00:42:17 +0300
+Message-ID: <2492577.tBEnW0tCHD@wasted.cogentembedded.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170125210118.z5o6y6aurwic4zxc@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, Ramiro.Oliveira@synopsys.com, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: horms@verge.net.au, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 11:01 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Wed, Jan 25, 2017 at 10:50:09PM +0200, Andy Shevchenko wrote:
->> On Wed, 2017-01-25 at 21:45 +0100, Wolfram Sang wrote:
->> > > + * i2c_slave_mode_detect - detect operation mode
->> >
->> > I'd rather name it 'i2c_detect_slave_mode'
->>
->> When I proposed that I kept in ming `git grep -n i2c_slave`.
->
-> "i2c.*slave"? :)
+Add the "vsps" property to the DU device node in order to link this node to
+the VSPD nodes.
 
-'i2c[a-z_]\+slave'
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> I think having the verb first makes function names more comprehensible.
-> i2c-core is not super consistent with that, but I'd say more follow this
-> than not.
+---
+Changes in version 2:
+- rebased the patch.
 
-I'm okay with either.
+This patch is against the 'renesas-devel-20170125-v4.10-rc5' of Simon Horman's
+'renesas.git' repo.  It's  only meaningful if the DRM driver patches I've just
+posted are applied.
 
--- 
-With Best Regards,
-Andy Shevchenko
+ arch/arm/boot/dts/r8a7791.dtsi |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -992,7 +992,7 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 	};
+ 
+-	vsp1@fe930000 {
++	vspd0: vsp1@fe930000 {
+ 		compatible = "renesas,vsp1";
+ 		reg = <0 0xfe930000 0 0x8000>;
+ 		interrupts = <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1000,7 +1000,7 @@
+ 		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+ 	};
+ 
+-	vsp1@fe938000 {
++	vspd1: vsp1@fe938000 {
+ 		compatible = "renesas,vsp1";
+ 		reg = <0 0xfe938000 0 0x8000>;
+ 		interrupts = <GIC_SPI 247 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1019,6 +1019,7 @@
+ 			 <&mstp7_clks R8A7791_CLK_DU1>,
+ 			 <&mstp7_clks R8A7791_CLK_LVDS0>;
+ 		clock-names = "du.0", "du.1", "lvds.0";
++		vsps = <&vspd0 &vspd1>;
+ 		status = "disabled";
+ 
+ 		ports {
