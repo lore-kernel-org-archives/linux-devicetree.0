@@ -1,81 +1,109 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 5/6] ARM: tegra: nyan-big: Proper pinmux for TPM i2c
-Date: Wed, 25 Jan 2017 12:16:29 +0100
-Message-ID: <20170125111629.GI9344@ulmo.ba.sec>
-References: <20170122154753.31942-1-contact@paulk.fr>
- <20170122154753.31942-5-contact@paulk.fr>
- <20170125110644.GF9344@ulmo.ba.sec>
- <2710b1a1-eab5-0a0d-657f-e6bc9b5cefaa@nvidia.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH 3/8] serial: st-asc: Read in all Pinctrl
+ states
+Date: Wed, 25 Jan 2017 11:21:42 +0000
+Message-ID: <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
+ <20170124134310.27512-4-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="1E1Oui4vdubnXi3o"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2710b1a1-eab5-0a0d-657f-e6bc9b5cefaa@nvidia.com>
+In-Reply-To: <20170124134310.27512-4-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Paul Kocialkowski <contact@paulk.fr>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Alexandre Courbot <gnurou@gmail.com>, Mikko Perttunen <cyndis@kapsi.fi>, Peter Rosin <peda@axentia.se>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---1E1Oui4vdubnXi3o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 24 Jan 2017, Lee Jones wrote:
 
-On Wed, Jan 25, 2017 at 11:10:56AM +0000, Jon Hunter wrote:
->=20
-> On 25/01/17 11:06, Thierry Reding wrote:
-> > * PGP Signed by an unknown key
-> >=20
-> > On Sun, Jan 22, 2017 at 04:47:52PM +0100, Paul Kocialkowski wrote:
-> >> This corrects the pinmux for accessing the TPM over the i2c line.
-> >> Thus, it allows correctly probing the module, that previously failed w=
-ith i2c
-> >> errors.
-> >>
-> >> Signed-off-by: Paul Kocialkowski <contact@paulk.fr>
-> >> ---
-> >>  arch/arm/boot/dts/tegra124-nyan-big.dts | 20 ++++++++++----------
-> >>  1 file changed, 10 insertions(+), 10 deletions(-)
-> >=20
-> > I've applied an s/i2c/I2C/ in the commit message and applied this. Can
-> > you also make sure that these changes go into the nyan-big configuration
-> > of the tegra-pinmux-scripts[0]? I know Stephen wants to keep those in
-> > sync with the DTS.
-> >=20
-> > Thanks,
-> > Thierry
-> >=20
-> > [0]: https://github.com/NVIDIA/tegra-pinmux-scripts
->=20
-> Looks like it has already been changed ...
->=20
-> https://github.com/NVIDIA/tegra-pinmux-scripts/commit/5049f75b3099515ffb7=
-f064dcf23568c17aecb01
+> There are now 2 possible separate/different Pinctrl states which can
+> be provided from platform data.  One which encompasses the lines
+> required for HW flow-control (CTS/RTS) and another which does not
+> specify these lines, such that they can be used via GPIO mechanisms
+> for manually toggling (i.e. from a request by `stty`).
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/tty/serial/st-asc.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+> 
+> diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+> index 397df50..03801ed 100644
+> --- a/drivers/tty/serial/st-asc.c
+> +++ b/drivers/tty/serial/st-asc.c
+> @@ -37,10 +37,16 @@
+>  #define ASC_FIFO_SIZE 16
+>  #define ASC_MAX_PORTS 8
+>  
+> +/* Pinctrl states */
+> +#define DEFAULT		0
+> +#define MANUAL_RTS	1
 
-Excellent, no need for any further action then.
+Nit: Would be better to have them aligned.
 
-Thierry
+> +
+>  struct asc_port {
+>  	struct uart_port port;
+>  	struct gpio_desc *rts;
+>  	struct clk *clk;
+> +	struct pinctrl *pinctrl;
+> +	struct pinctrl_state *states[2];
+>  	unsigned int hw_flow_control:1;
+>  	unsigned int force_m1:1;
+>  };
+> @@ -694,6 +700,7 @@ static int asc_init_port(struct asc_port *ascport,
+>  {
+>  	struct uart_port *port = &ascport->port;
+>  	struct resource *res;
+> +	int ret;
+>  
+>  	port->iotype	= UPIO_MEM;
+>  	port->flags	= UPF_BOOT_AUTOCONF;
+> @@ -720,6 +727,27 @@ static int asc_init_port(struct asc_port *ascport,
+>  	WARN_ON(ascport->port.uartclk == 0);
+>  	clk_disable_unprepare(ascport->clk);
+>  
+> +	ascport->pinctrl = devm_pinctrl_get(&pdev->dev);
+> +	if (IS_ERR(ascport->pinctrl)) {
+> +		ret = PTR_ERR(ascport->pinctrl);
+> +		dev_err(&pdev->dev, "Failed to get Pinctrl: %d\n", ret);
+> +	}
+> +
+> +	ascport->states[DEFAULT] =
+> +		pinctrl_lookup_state(ascport->pinctrl, "default");
+> +	if (IS_ERR(ascport->states[DEFAULT])) {
+> +		ret = PTR_ERR(ascport->states[DEFAULT]);
+> +		dev_err(&pdev->dev,
+> +			"Failed to look up Pinctrl state 'default': %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	/* "manual-rts" state is optional */
+> +	ascport->states[MANUAL_RTS] =
+> +		pinctrl_lookup_state(ascport->pinctrl, "manual-rts");
+> +	if (IS_ERR(ascport->states[MANUAL_RTS]))
+> +		ascport->states[MANUAL_RTS] = NULL;
+> +
 
---1E1Oui4vdubnXi3o
-Content-Type: application/pgp-signature; name="signature.asc"
+The different pinctrl states looks like a neat solution to the problem.
 
------BEGIN PGP SIGNATURE-----
+My only concern here is that 'default' state is implying a hw-flow-control
+pinmux config, and manual-rts is implying what is the current upstream
+'default' pinmux config.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliIiQ0ACgkQ3SOs138+
-s6FNSA//RprzIMg/gwIRZGTVR+R6ePF0gmlikWBVy1/H+R0FweZITFB3Z1Cr7AqN
-5RlbSrR+kSn8VgaENtj/VtYPSJI7VKs0663x5XNK+MSpirDG0gM+cWA+5LVYkxfE
-8qCbcRRxK6cPq0u0r2Z6r2JnQINI9FihjIXJGrDOXzo2pVLmNKqIlTrThPzeeKiG
-PTU03PsJqPlfIoWUrMIIYbDOECASQsvVEHHwvKIaGf2UU4mZn4WA/d5YGx2TjSGf
-RU/PFcDp62dDt8R0Goxe/mRDd2VXkRIvKCacQzhH3LWp66P67JOtgxkXZse6m59g
-xKfIxwr6qzM2J9zPRAM+gi9jVVENE0/PSymIGHNGjNcONCTg1ifkBqkoERDbW/Np
-+YzumnbrVfyUON7MbdhEKj3pOjI+SDuEjet7ZtVWcicEigV34nUYUuYXFcNMr+os
-MXp1vXcrL/SIEbnFkLzDPqgiZ9sqFvYJp8F2IVy/X0CI9dQC59lOPQvFB+c09QVe
-7/lcETyzKhgLPY1GtZJdMMj0ZEHoo7ERFH4mILYpjazPFQx0nc/S2v5eQJEBnZ+R
-fo6BTEC49K55U66AFtoNTlvbcH7gvxKKWt2Sr8nEQN2ldiwU/XoKxf5Hs0dNpTou
-VOeHZ53nx0wJ2tVJuXWOwbDYx9CyBkpV0EOnrwdBRT6BbizvM2k=
-=rIQz
------END PGP SIGNATURE-----
+Which maybe ok if you update all uarts, but currently only serial0
+is updated. So the other uarts current 'default' is actually the same as serial0
+'manual-rts' grouping, which conceptually is odd.
 
---1E1Oui4vdubnXi3o--
+Would it not be better to make 'manual-rts' the default state? As that aligns
+to what is currently already the default for the other UARTS? And then make
+hw-flow-control the optional state for serial0?
+
+That also has the advantage that 'default' has the same meaning with older DT's.
+
+regards,
+
+Peter.
