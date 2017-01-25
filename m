@@ -1,55 +1,28 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
-Date: Tue, 24 Jan 2017 19:17:10 -0800
-Message-ID: <588818B6.2070908@gmail.com>
-References: <1485190450-29153-1-git-send-email-festevam@gmail.com>
- <20170124132733.GY5662@dragon>
+From: Guochun Mao <guochun.mao@mediatek.com>
+Subject: [PATCH v2 0/2] addr nor flash node for mt2701
+Date: Wed, 25 Jan 2017 11:38:33 +0800
+Message-ID: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124132733.GY5662@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>, John Crispin <john@phrozen.org>
+Cc: David Woodhouse <dwmw2@infradead.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Russell King <linux@armlinux.org.uk>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree list.
+Update DT bindings, clarify compatible strings that mt2701-nor node should contain. 
+This patch series based on v4.10-rc2, include MT2701 spi nor node.
+Dependent on "Add clock and power domain DT nodes for Mediatek MT2701"
+[1] http://lists.infradead.org/pipermail/linux-mediatek/2016-December/007637.html
 
-On 01/24/17 05:27, Shawn Guo wrote:
-> On Mon, Jan 23, 2017 at 02:54:10PM -0200, Fabio Estevam wrote:
->> From: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
->>
->> Commit 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi") causes boot
->> issues when the bootloader does not create a 'chosen' node if such node
->> is not present in the dtb.
->>
->> The reason for the boot failure is well explained by Javier Martinez
->> Canillas: "the decompressor relies on a pre-existing chosen node to be
->> available to insert the command line and merge other ATAGS info."
->>
->> , so pass an empty 'chosen' node to fix the boot problem.
->>
->> This issue has been seen in the kernelci reports with Barebox as
->> bootloader.
->>
->> Also pass the 'memory' node in order to fix boot issues on the SolidRun
->> iMX6 platforms.
->>
->> Fixes: 7f107887d199 ("ARM: dts: imx: Remove skeleton.dtsi")
->> Reported-by: kernelci.org bot <bot-ssFOTAMYnuFg9hUCZPvPmw@public.gmane.org>
->> Reported-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
->> Signed-off-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-> 
-> Applied, thanks.
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Guochun Mao (2):
+  Documentation: mtk-quadspi: update DT bindings
+  arm: dts: mt2701: add nor flash node
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/mtd/mtk-quadspi.txt        |  8 ++++++-
+ arch/arm/boot/dts/mt2701-evb.dts                   | 25 ++++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi                      | 12 +++++++++++
+ 3 files changed, 44 insertions(+), 1 deletion(-)
+
+-- 
+1.8.1.1.dirty
