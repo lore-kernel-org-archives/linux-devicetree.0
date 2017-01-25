@@ -1,183 +1,63 @@
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v6 3/5] cpuidle:powernv: Add helper function to populate powernv idle states.
-Date: Wed, 25 Jan 2017 14:06:27 +0530
-Message-ID: <1485333389-5752-4-git-send-email-ego@linux.vnet.ibm.com>
-References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
+Date: Wed, 25 Jan 2017 09:37:00 +0100
+Message-ID: <CAMuHMdXHWtSP00nHXPmiPS0qjihizXEjoP_C+AMmQVJTKfiD6A@mail.gmail.com>
+References: <20170123135423.28780-1-chris.brandt@renesas.com>
+ <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
+ <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170124143222.GA2021@mai> <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+On Tue, Jan 24, 2017 at 9:19 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tuesday, January 24, 2017, Daniel Lezcano wrote:
+>> > > > +early_platform_init("earlytimer", &ostm_timer);
+>> > > > +subsys_initcall(ostm_init); module_exit(ostm_exit);
+>> > > > +
+>> > > > +MODULE_AUTHOR("Chris Brandt");
+>> > > > +MODULE_DESCRIPTION("Renesas OSTM Timer Driver");
+>> > > > +MODULE_LICENSE("GPL v2");
+>> > >
+>> > > Maybe you can try with builtin_platform ?
+>> >
+>> > Good idea. But, now I get a "Section mismatch" during link time so
+>> > I'll have to figure out why that is.
+>>
+>> Mmh, I think it would be more consistent to convert this to:
+>>
+>> CLOCKSOURCE_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
+>>
+>> The only problem is to get the struct device associated to the of_node
+>> passed as parameter to ostm_init in order to use the devm_* API.
+>>
+>> I think of_find_device_by_node should return the platform_device, then
+>> pdev->dev. If that works the other drivers will benefit from that to
+>> pdev->remove all
+>> the rollback code everywhere.
+>
+> It was a good idea....but it will not work.
+>
+> While CLOCKSOURCE_OF_DECLARE is good at putting the driver at the
+> front of the line for loading, it's too early in boot to detect
+> a platform_device.
 
-In the current code for powernv_add_idle_states, there is a lot of code
-duplication while initializing an idle state in powernv_states table.
+That's correct. All those *_OF_DECLARE() style initializations start
+to break as soon as power and/or clock domains are involved.
+That's one reason why some subsystems (e.g. clock) are moving away from it.
 
-Add an inline helper function to populate the powernv_states[] table
-for a given idle state. Invoke this for populating the "Nap",
-"Fastsleep" and the stop states in powernv_add_idle_states.
+Gr{oetje,eeting}s,
 
-Acked-by: Balbir Singh <bsingharora@gmail.com>
-Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
----
- drivers/cpuidle/cpuidle-powernv.c | 89 +++++++++++++++++++++++----------------
- include/linux/cpuidle.h           |  1 +
- 2 files changed, 54 insertions(+), 36 deletions(-)
+                        Geert
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index 0835a37..6871b7f 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -20,6 +20,10 @@
- #include <asm/opal.h>
- #include <asm/runlatch.h>
- 
-+/*
-+ * Expose only those Hardware idle states via the cpuidle framework
-+ * that have latency value below POWERNV_THRESHOLD_LATENCY_NS.
-+ */
- #define POWERNV_THRESHOLD_LATENCY_NS 200000
- 
- static struct cpuidle_driver powernv_idle_driver = {
-@@ -167,6 +171,24 @@ static int powernv_cpuidle_driver_init(void)
- 	return 0;
- }
- 
-+static inline void add_powernv_state(int index, const char *name,
-+				     unsigned int flags,
-+				     int (*idle_fn)(struct cpuidle_device *,
-+						    struct cpuidle_driver *,
-+						    int),
-+				     unsigned int target_residency,
-+				     unsigned int exit_latency,
-+				     u64 psscr_val)
-+{
-+	strlcpy(powernv_states[index].name, name, CPUIDLE_NAME_LEN);
-+	strlcpy(powernv_states[index].desc, name, CPUIDLE_NAME_LEN);
-+	powernv_states[index].flags = flags;
-+	powernv_states[index].target_residency = target_residency;
-+	powernv_states[index].exit_latency = exit_latency;
-+	powernv_states[index].enter = idle_fn;
-+	stop_psscr_table[index] = psscr_val;
-+}
-+
- static int powernv_add_idle_states(void)
- {
- 	struct device_node *power_mgt;
-@@ -236,6 +258,7 @@ static int powernv_add_idle_states(void)
- 		"ibm,cpu-idle-state-residency-ns", residency_ns, dt_idle_states);
- 
- 	for (i = 0; i < dt_idle_states; i++) {
-+		unsigned int exit_latency, target_residency;
- 		/*
- 		 * If an idle state has exit latency beyond
- 		 * POWERNV_THRESHOLD_LATENCY_NS then don't use it
-@@ -243,28 +266,33 @@ static int powernv_add_idle_states(void)
- 		 */
- 		if (latency_ns[i] > POWERNV_THRESHOLD_LATENCY_NS)
- 			continue;
-+		/*
-+		 * Firmware passes residency and latency values in ns.
-+		 * cpuidle expects it in us.
-+		 */
-+		exit_latency = latency_ns[i] / 1000;
-+		if (!rc)
-+			target_residency = residency_ns[i] / 1000;
-+		else
-+			target_residency = 0;
- 
- 		/*
--		 * Cpuidle accepts exit_latency and target_residency in us.
--		 * Use default target_residency values if f/w does not expose it.
-+		 * For nap and fastsleep, use default target_residency
-+		 * values if f/w does not expose it.
- 		 */
- 		if (flags[i] & OPAL_PM_NAP_ENABLED) {
-+			if (!rc)
-+				target_residency = 100;
- 			/* Add NAP state */
--			strcpy(powernv_states[nr_idle_states].name, "Nap");
--			strcpy(powernv_states[nr_idle_states].desc, "Nap");
--			powernv_states[nr_idle_states].flags = 0;
--			powernv_states[nr_idle_states].target_residency = 100;
--			powernv_states[nr_idle_states].enter = nap_loop;
-+			add_powernv_state(nr_idle_states, "Nap",
-+					  CPUIDLE_FLAG_NONE, nap_loop,
-+					  target_residency, exit_latency, 0);
- 		} else if ((flags[i] & OPAL_PM_STOP_INST_FAST) &&
- 				!(flags[i] & OPAL_PM_TIMEBASE_STOP)) {
--			strncpy(powernv_states[nr_idle_states].name,
--				names[i], CPUIDLE_NAME_LEN);
--			strncpy(powernv_states[nr_idle_states].desc,
--				names[i], CPUIDLE_NAME_LEN);
--			powernv_states[nr_idle_states].flags = 0;
--
--			powernv_states[nr_idle_states].enter = stop_loop;
--			stop_psscr_table[nr_idle_states] = psscr_val[i];
-+			add_powernv_state(nr_idle_states, names[i],
-+					  CPUIDLE_FLAG_NONE, stop_loop,
-+					  target_residency, exit_latency,
-+					  psscr_val[i]);
- 		}
- 
- 		/*
-@@ -274,32 +302,21 @@ static int powernv_add_idle_states(void)
- #ifdef CONFIG_TICK_ONESHOT
- 		if (flags[i] & OPAL_PM_SLEEP_ENABLED ||
- 			flags[i] & OPAL_PM_SLEEP_ENABLED_ER1) {
-+			if (!rc)
-+				target_residency = 300000;
- 			/* Add FASTSLEEP state */
--			strcpy(powernv_states[nr_idle_states].name, "FastSleep");
--			strcpy(powernv_states[nr_idle_states].desc, "FastSleep");
--			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIMER_STOP;
--			powernv_states[nr_idle_states].target_residency = 300000;
--			powernv_states[nr_idle_states].enter = fastsleep_loop;
-+			add_powernv_state(nr_idle_states, "FastSleep",
-+					  CPUIDLE_FLAG_TIMER_STOP,
-+					  fastsleep_loop,
-+					  target_residency, exit_latency, 0);
- 		} else if ((flags[i] & OPAL_PM_STOP_INST_DEEP) &&
- 				(flags[i] & OPAL_PM_TIMEBASE_STOP)) {
--			strncpy(powernv_states[nr_idle_states].name,
--				names[i], CPUIDLE_NAME_LEN);
--			strncpy(powernv_states[nr_idle_states].desc,
--				names[i], CPUIDLE_NAME_LEN);
--
--			powernv_states[nr_idle_states].flags = CPUIDLE_FLAG_TIMER_STOP;
--			powernv_states[nr_idle_states].enter = stop_loop;
--			stop_psscr_table[nr_idle_states] = psscr_val[i];
-+			add_powernv_state(nr_idle_states, names[i],
-+					  CPUIDLE_FLAG_TIMER_STOP, stop_loop,
-+					  target_residency, exit_latency,
-+					  psscr_val[i]);
- 		}
- #endif
--		powernv_states[nr_idle_states].exit_latency =
--				((unsigned int)latency_ns[i]) / 1000;
--
--		if (!rc) {
--			powernv_states[nr_idle_states].target_residency =
--				((unsigned int)residency_ns[i]) / 1000;
--		}
--
- 		nr_idle_states++;
- 	}
- out:
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index da346f2..fc1e5d7 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -62,6 +62,7 @@ struct cpuidle_state {
- };
- 
- /* Idle State Flags */
-+#define CPUIDLE_FLAG_NONE       (0x00)
- #define CPUIDLE_FLAG_COUPLED	(0x02) /* state applies to multiple cpus */
- #define CPUIDLE_FLAG_TIMER_STOP (0x04)  /* timer is stopped on this state */
- 
--- 
-1.9.4
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
