@@ -1,71 +1,38 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2] ARM: at91: Document new TCB bindings
-Date: Wed, 25 Jan 2017 16:11:29 +0100
-Message-ID: <20170125161129.41acaa9a@bbrezillon>
-References: <1467039901-11297-1-git-send-email-alexandre.belloni@free-electrons.com>
-        <20160701012743.GA16698@rob-hp-laptop>
-        <20160704151058.44b679bf@bbrezillon>
-        <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL2Kjtf-BuCjK8ZHcDdbgVDy-L-_AN+=4HmxVAwy3ucdA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 5/6] mmc: dt: Document binding for eMMC DDR 3.3V I/O voltage support
+Date: Wed, 25 Jan 2017 16:12:22 +0100
+Message-ID: <1485357143-23280-6-git-send-email-ulf.hansson@linaro.org>
+References: <1485357143-23280-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485357143-23280-1-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Glauber <jan.glauber-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mmc/mmc.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Sorry to revive this old discussion, but there's still one aspect I'm
-not sure about.
+diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+index 8a37782..c7f4a0e 100644
+--- a/Documentation/devicetree/bindings/mmc/mmc.txt
++++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+@@ -40,6 +40,7 @@ Optional properties:
+ - cap-mmc-hw-reset: eMMC hardware reset is supported
+ - cap-sdio-irq: enable SDIO IRQ signalling on this interface
+ - full-pwr-cycle: full power cycle of the card is supported
++- mmc-ddr-3_3v: eMMC high-speed DDR mode(3.3V I/O) is supported
+ - mmc-ddr-1_8v: eMMC high-speed DDR mode(1.8V I/O) is supported
+ - mmc-ddr-1_2v: eMMC high-speed DDR mode(1.2V I/O) is supported
+ - mmc-hs200-1_8v: eMMC HS200 mode(1.8V I/O) is supported
+-- 
+1.9.1
 
-On Tue, 5 Jul 2016 10:40:22 -0500
-Rob Herring <robh@kernel.org> wrote:
-
-> >> > +   - compatible: Should be "atmel,tcb-free-running-timer"
-> >> > +   - reg: Should contain the TCB channels to be used. If the
-> >> > +     counter width is 16 bits (at91rm9200-tcb), two consecutive
-> >> > +     channels are needed. Else, only one channel will be used.
-> >> > +
-> >> > + * a clockevent device
-> >> > +   - compatible: Should be "atmel,tcb-programmable-timer"  
-> >>
-> >> This still looks like assigning usage in DT. As I'm willing to accept
-> >> that for PWM, either timer channels should be whatever channels are not
-> >> assigned to PWM (i.e. not in DT) or they should just be "timer" and let
-> >> the kernel decide their usage.  
-> >
-> > I just reviewed Alexandre's new binding, and it makes the whole thing
-> > a lot more obscure: on older SoCs, we have to chain 2 channels to
-> > create an acceptable wraparound time (16 bits at 5MHz is generating too
-> > much interrupts to be acceptable).
-> >
-> > If we don't assign the mode from the DT, how should we know which
-> > channels should be chained to create the free-running timer? Note that
-> > not all channels can be chained together: they have to be part of the
-> > same timer counter block and have to be consecutive (0+1, 1+2 or 3+0).  
-> 
-> The driver can have this knowledge if it is just picking 2 consecutive
-> timers. It should already know it has 16-bit timers based on the
-> compatible string. If it gets more complicated then the features or
-> limitations of the channels should be listed so the driver can make a
-> choice. OMAP is a good example of lots of timers with differing
-> features.
-
-Yes it's possible to do that, but what about DT overlays then? Say you
-have some TCB channels you'd like to reserve because they are connected
-to pins that are exposed on your board. Those pins are not connected to
-any device yet, but extension boards can be added, and in this case you
-might want to expose new PWM devices by dynamically loading DT overlays.
-
-If your clksource/clkevent driver parsed the initial DT and picked X
-free channels randomly, it may conflicts with the one requested by the
-DT overlay.
-
-What's your solution for this case?
-
-Thanks,
-
-Boris
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
