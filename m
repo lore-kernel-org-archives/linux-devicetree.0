@@ -1,302 +1,160 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 2/3] phy: Add support for Qualcomm's USB HSIC phy
-Date: Wed, 25 Jan 2017 14:32:44 -0800
-Message-ID: <20170125223245.2688-3-stephen.boyd@linaro.org>
-References: <20170125223245.2688-1-stephen.boyd@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170125223245.2688-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
+Date: Wed, 25 Jan 2017 16:32:54 -0600
+Message-ID: <CAL_Jsq+9oEJJtHC4Gp_mWy_wJMLXsv2jgqKCMK8jm1MSWT-LRg@mail.gmail.com>
+References: <20170104205536.15963-1-d-gerlach@ti.com> <20170104205536.15963-3-d-gerlach@ti.com>
+ <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop> <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
+ <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
+ <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com> <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
+ <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com> <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
+ <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com> <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com>
+ <m2ziip2puf.fsf@baylibre.com> <CAL_Jsq+Vp8iYrAUmuSRzeeY_G6CUqFqG6XB6erDxo1RYo3g4=g@mail.gmail.com>
+ <CAPDyKFqzs59N5bc89X-96Fgy9b=_+s8zYmHHshQeDrJCnaqprA@mail.gmail.com>
+ <58821CA2.4050701@ti.com> <CAPDyKFpTyn2isNahywmOOSWiZKov9xsudyWi_i-FejXjC+1AZw@mail.gmail.com>
+ <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com> <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
+ <23936395-d653-56c8-13f9-6dfeb6e9257b@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <23936395-d653-56c8-13f9-6dfeb6e9257b@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Tero Kristo <t-kristo@ti.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The HSIC USB controller on qcom SoCs has an integrated all
-digital phy controlled via the ULPI viewport.
+On Wed, Jan 25, 2017 at 10:59 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> On 01/24/2017 04:03 AM, Ulf Hansson wrote:
+>>
+>> On 23 January 2017 at 21:11, Dave Gerlach <d-gerlach@ti.com> wrote:
+>>>
+>>> On 01/20/2017 10:52 AM, Ulf Hansson wrote:
+>>>>
+>>>>
+>>>> [...]
+>>>>
+>>>>>>> Another option is create something new either common or TI SCI
+>>>>>>> specific. It could be just a table of ids and phandles in the SCI
+>>>>>>> node. I'm much more comfortable with an isolated property in one node
+>>>>>>> than something scattered throughout the DT.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> To me, this seems like the best possible solution.
+>>>>>>
+>>>>>> However, perhaps we should also consider the SCPI Generic power domain
+>>>>>> (drivers/firmware/scpi_pm_domain.c), because I believe it's closely
+>>>>>> related.
+>>>>>> To change the power state of a device, this PM domain calls
+>>>>>> scpi_device_set|get_power_state() (drivers/firmware/arm_scpi.c), which
+>>>>>> also needs a device id as a parameter. Very similar to our case with
+>>>>>> the TI SCI domain.
+>>>>>>
+>>>>>> Currently these SCPI device ids lacks corresponding DT bindings, so
+>>>>>> the scpi_pm_domain tries to work around it by assigning ids
+>>>>>> dynamically at genpd creation time.
+>>>>>>
+>>>>>> That makes me wonder, whether we should think of something
+>>>>>> common/generic?
+>>>>>
+>>>>>
+>>>>>
+>>>>> When you say something common/generic, do you mean a better binding for
+>>>>> genpd,
+>>>>> or something bigger than that like a new driver? Because I do think a
+>>>>> phandle
+>>>>> cell left open for the genpd provider to interpret solves both the scpi
+>>>>> and
+>>>>> ti-sci problem we are facing here in the best way. Using generic PM
+>>>>> domains lets
+>>>>> us do exactly what we want apart from interpreting the phandle cell
+>>>>> with
+>>>>> our
+>>>>> driver, and I feel like anything else we try at this point is just
+>>>>> going
+>>>>> to be
+>>>>> to work around that. Is bringing back genpd xlate something we can
+>>>>> discuss?
+>>>>
+>>>>
+>>>>
+>>>> Bringing back xlate, how would that help? Wouldn't that just mean that
+>>>> you will get one genpd per device? That's not an option, I think we
+>>>> are all in agreement to that.
+>>>
+>>>
+>>>
+>>> Sure, perhaps the custom xlate wouldn't be the right way to do it, as we
+>>> wouldn't be able to associate a device directly to a phandle, at least
+>>> with
+>>> how it was implemented before, but I think we can skip that entirely.
+>>> Does
+>>> opening up the interpretation of the cells of the 'power-domains' phandle
+>>> not solve all of these issues? Is that out of the question?
+>>>
+>>> genpd_xlate_simple currently just makes sure the args_count of the
+>>> 'power-domains' phandle was zero and bails if it was not. Why couldn't we
+>>> remove this check and let the driver interpret it while still using
+>>> of_genpd_add_provider_simple to register the provider? It's still a
+>>> 'simple'
+>>> provider from the perspective of the genpd framework and the actual pm
+>>> domain mapping will not change, but now the driver can parse the cells
+>>> and
+>>> do whatever it needs to, such as reading a device id.
+>>>
+>>> I think that's a bit more flexible and will avoid breaking anything that
+>>> is
+>>> there today.
+>>
+>>
+>> Would you mind providing an example? Perhaps also some code snippets
+>> dealing with the parsing?
+>
+>
+> So again the goal of this is to move the ti,sci-id value back to
+> power-domains phandle instead of having a separate property, so that would
+> be step one in the DT. Then in the power-domains node change
+> #power-domain-cells to one. And then from there, the only change to the
+> genpd framework is this:
 
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++++++
- drivers/phy/Kconfig                                |   7 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-qcom-usb-hsic.c                    | 160 +++++++++++++++++++++
- 4 files changed, 233 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
- create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+I'd still like to understand how the ID is used in order to understand
+if as a power-domain cell is appropriate. I think the test is this: is
+the ID meaningful to (or defined by) the device or the power domain
+controller? The former should be a property in the device node. The
+latter should be phandle args.
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-new file mode 100644
-index 000000000000..3c7cb2be4b12
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-@@ -0,0 +1,65 @@
-+Qualcomm's USB HSIC PHY
-+
-+PROPERTIES
-+
-+- compatible:
-+    Usage: required
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-hsic-phy" and more specifically one of the
-+		following:
-+
-+			"qcom,usb-hsic-phy-mdm9615"
-+			"qcom,usb-hsic-phy-msm8974"
-+
-+- #phy-cells:
-+    Usage: required
-+    Value type: <u32>
-+    Definition: Should contain 0
-+
-+- clocks:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain clock specifier for phy, calibration and
-+                a calibration sleep clock
-+
-+- clock-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "phy, "cal" and "cal_sleep"
-+
-+- pinctrl-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "init" and "default" in that order
-+
-+- pinctrl-0:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to keep HSIC pins in a glitch
-+                free state
-+
-+- pinctrl-1:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to mux out the HSIC pins
-+
-+EXAMPLE
-+
-+usb-controller {
-+	ulpi {
-+		phy {
-+			compatible = "qcom,usb-hsic-phy-msm8974",
-+				     "qcom,usb-hsic-phy";
-+			#phy-cells = <0>;
-+			pinctrl-names = "init", "default";
-+			pinctrl-0 = <&hsic_sleep>;
-+			pinctrl-1 = <&hsic_default>;
-+			clocks = <&gcc GCC_USB_HSIC_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_SLEEP_CLK>;
-+			clock-names = "phy", "cal", "cal_sleep";
-+			assigned-clocks = <&gcc GCC_USB_HSIC_IO_CAL_CLK>;
-+			assigned-clock-rates = <960000>;
-+		};
-+	};
-+};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index e8eb7f225a88..a430a64981d5 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -437,6 +437,13 @@ config PHY_QCOM_UFS
- 	help
- 	  Support for UFS PHY on QCOM chipsets.
- 
-+config PHY_QCOM_USB_HSIC
-+	tristate "Qualcomm USB HSIC ULPI PHY module"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
-+
- config PHY_TUSB1210
- 	tristate "TI TUSB1210 ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 65eb2f436a41..c43c9df5d301 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-diff --git a/drivers/phy/phy-qcom-usb-hsic.c b/drivers/phy/phy-qcom-usb-hsic.c
-new file mode 100644
-index 000000000000..47690f9945b9
---- /dev/null
-+++ b/drivers/phy/phy-qcom-usb-hsic.c
-@@ -0,0 +1,160 @@
-+/**
-+ * Copyright (C) 2016 Linaro Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl-state.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+
-+#include "ulpi_phy.h"
-+
-+#define ULPI_HSIC_CFG		0x30
-+#define ULPI_HSIC_IO_CAL	0x33
-+
-+struct qcom_usb_hsic_phy {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct pinctrl *pctl;
-+	struct clk *phy_clk;
-+	struct clk *cal_clk;
-+	struct clk *cal_sleep_clk;
-+};
-+
-+static int qcom_usb_hsic_phy_power_on(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+	struct ulpi *ulpi = uphy->ulpi;
-+	struct pinctrl_state *pins_default;
-+	int ret;
-+
-+	ret = clk_prepare_enable(uphy->phy_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(uphy->cal_clk);
-+	if (ret)
-+		goto err_cal;
-+
-+	ret = clk_prepare_enable(uphy->cal_sleep_clk);
-+	if (ret)
-+		goto err_sleep;
-+
-+	/* Set periodic calibration interval to ~2.048sec in HSIC_IO_CAL_REG */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_IO_CAL, 0xff);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Enable periodic IO calibration in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_CFG, 0xa8);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Configure pins for HSIC functionality */
-+	pins_default = pinctrl_lookup_state(uphy->pctl, PINCTRL_STATE_DEFAULT);
-+	if (IS_ERR(pins_default))
-+		return PTR_ERR(pins_default);
-+
-+	ret = pinctrl_select_state(uphy->pctl, pins_default);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	 /* Enable HSIC mode in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_SET(ULPI_HSIC_CFG), 0x01);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Disable auto-resume */
-+	ret = ulpi_write(ulpi, ULPI_CLR(ULPI_IFC_CTRL),
-+			 ULPI_IFC_CTRL_AUTORESUME);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	return ret;
-+err_ulpi:
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(uphy->cal_clk);
-+err_cal:
-+	clk_disable_unprepare(uphy->phy_clk);
-+	return ret;
-+}
-+
-+static int qcom_usb_hsic_phy_power_off(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+	clk_disable_unprepare(uphy->cal_clk);
-+	clk_disable_unprepare(uphy->phy_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_usb_hsic_phy_ops = {
-+	.power_on = qcom_usb_hsic_phy_power_on,
-+	.power_off = qcom_usb_hsic_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
-+{
-+	struct qcom_usb_hsic_phy *uphy;
-+	struct phy_provider *p;
-+	struct clk *clk;
-+
-+	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-+	if (!uphy)
-+		return -ENOMEM;
-+	ulpi_set_drvdata(ulpi, uphy);
-+
-+	uphy->ulpi = ulpi;
-+	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
-+	if (IS_ERR(uphy->pctl))
-+		return PTR_ERR(uphy->pctl);
-+
-+	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-+				    &qcom_usb_hsic_phy_ops);
-+	if (IS_ERR(uphy->phy))
-+		return PTR_ERR(uphy->phy);
-+	phy_set_drvdata(uphy->phy, uphy);
-+
-+	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(p);
-+}
-+
-+static const struct of_device_id qcom_usb_hsic_phy_match[] = {
-+	{ .compatible = "qcom,usb-hsic-phy", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
-+
-+static struct ulpi_driver qcom_usb_hsic_phy_driver = {
-+	.probe = qcom_usb_hsic_phy_probe,
-+	.driver = {
-+		.name = "qcom_usb_hsic_phy",
-+		.of_match_table = qcom_usb_hsic_phy_match,
-+	},
-+};
-+module_ulpi_driver(qcom_usb_hsic_phy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
-+MODULE_LICENSE("GPL v2");
--- 
-2.10.0.297.gf6727b0
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index a5e1262b964b..b82e61f0bcfa 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -1603,8 +1603,6 @@ static struct generic_pm_domain genpd_xlate_simple
+>                                       struct of_phandle_args *genpdspec,
+>                                       void *data)
+>  {
+> -       if (genpdspec->args_count != 0)
+> -               return ERR_PTR(-EINVAL);
+>         return data;
+>  }
+>
+>
+> because genpd_xlate_simple only checks that the phandle is zero so that it
+> can fail if it is not, but there's no functional reason it needs to do this.
+> The genpd framework works as it did before no matter what the cells are set
+> to if using of_genpd_add_provider_simple. Then in the attach_dev callback
+> inside the ti_sci_pm_domains driver instead of doing
+>
+>         ret = of_property_read_u32(np, "ti,sci-id", &idx);
+>
+> to read the ti,sc-id for a device into idx we can now do:
+>
+>        ret = of_parse_phandle_with_args(np, "power-domains",
+>                                    "#power-domain-cells", 0, &pd_args);
+>        idx = pd_args.args[0];
+>
+> or even simpler from within our driver
+>
+>         ret = of_property_read_u32_index(np, "power-domains", 1, &idx);
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This you should not be doing. The client driver shouldn't care how
+many cells or what their values are.
+
+Rob
