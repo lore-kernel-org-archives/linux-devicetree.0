@@ -1,39 +1,40 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII
- mode
-Date: Wed, 25 Jan 2017 12:38:06 -0500 (EST)
-Message-ID: <20170125.123806.790914338952471404.davem@davemloft.net>
-References: <20170123142206.5390-1-jlu@pengutronix.de>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: [PATCH v2 0/2] Add a "label" property to the mtd device
+Date: Wed, 25 Jan 2017 19:17:33 +0100
+Message-ID: <1485368255-12038-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123142206.5390-1-jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Date: Mon, 23 Jan 2017 15:22:06 +0100
+Hello,
 
-> The Marvell MVNETA Ethernet controller supports a 2.5 Gbps SGMII mode
-> called DRSGMII.
-> 
-> This patch adds a corresponding phy-mode string 'drsgmii' and parses it
-> from DT. The MVNETA then configures the SERDES protocol value
-> accordingly.
-> 
-> It was successfully tested on a MV78460 connected to a FPGA.
-> 
-> Signed-off-by: Jan Luebbe <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Herer are a couple of patches adding a "label" property to the mtd
+device, which can be used to identify a specific chip on a system with
+multiple chips. This is common on the OpenPower boards, there can be
+four chips holding the firmware for the BMC and the firmware for the
+host, plus chips with golden images for recovery.
 
-I still haven't seen a sufficient explanation as to why this change
-works without any explicit MAC programming changes to this driver.
+Thanks,
 
-That really needs to be explained before I will apply this patch.
+C.
 
-Thanks.
+Cédric Le Goater (2):
+  mtd: name the mtd device with an optional label property
+  dt-bindings: mtd: add a common label property to all mtd devices
+
+ Documentation/devicetree/bindings/mtd/common.txt | 15 +++++++++++++++
+ include/linux/mtd/mtd.h                          |  2 ++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/common.txt
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
