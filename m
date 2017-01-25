@@ -1,90 +1,64 @@
-From: Dan Haab <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: BCM5301X: Add basic DT for Linksys EA9200
-Date: Wed, 25 Jan 2017 08:09:16 +0100
-Message-ID: <20170125070916.21107-1-dhaab@luxul.com>
+From: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Subject: [patch] {1620} net: hns3: add dcb cap flag in init sequence
+Date: Wed, 25 Jan 2017 15:26:40 +0800
+Message-ID: <1485329200-64453-1-git-send-email-yankejian@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+If enable DCB feature, we need to add the capacity, and the current
+procedure cannot setting the dcb because of no capacity flag and every
+ops interface will implement by the capicity flag is enable.
 
-It's tri-band wireless home router based on BCM4709A0 with 3 x BCM43602
-chipsets. LEDs will be hopefully added later to the DT.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Signed-off-by: Kejian Yan <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                   |  1 +
- arch/arm/boot/dts/bcm4709-linksys-ea9200.dts | 42 ++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+)
- create mode 100644 arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 6 ++++--
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c   | 5 +++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 8a403a26ae42..767608b9d806 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -87,6 +87,7 @@ dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm47081-luxul-xwr-1200.dtb \
- 	bcm4709-asus-rt-ac87u.dtb \
- 	bcm4709-buffalo-wxr-1900dhp.dtb \
-+	bcm4709-linksys-ea9200.dtb \
- 	bcm4709-netgear-r7000.dtb \
- 	bcm4709-netgear-r8000.dtb \
- 	bcm4709-tplink-archer-c9-v1.dtb \
-diff --git a/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts b/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
-new file mode 100644
-index 000000000000..3d1d9c2c4efc
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm4709-linksys-ea9200.dts
-@@ -0,0 +1,42 @@
-+/*
-+ * Copyright (C) 2017 Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-+ *
-+ * Licensed under the ISC license.
-+ */
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 26b9b46..fffe781 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -314,12 +314,14 @@ static int hclge_configure(struct hclge_dev *hdev)
+ 		hdev->tx_sch_mode = HCLGE_FLAG_TC_BASE_SCH_MODE;
+ #ifdef CONFIG_HNS3_DCB
+ 		hdev->dcbx_cap = DCB_CAP_DCBX_VER_CEE |
+-			DCB_CAP_DCBX_VER_IEEE;
++			DCB_CAP_DCBX_VER_IEEE | DCB_CAP_DCBX_HOST;
++		hdev->flag |= HCLGE_FLAG_DCB_CAPABLE;
+ #endif /* #ifdef CONFIG_HNS3_DCB */
+ 	} else {
+ 		hdev->tx_sch_mode = HCLGE_FLAG_VNET_BASE_SCH_MODE;
+ #ifdef CONFIG_HNS3_DCB
+-		hdev->dcbx_cap = DCB_CAP_DCBX_VER_IEEE;
++		hdev->dcbx_cap = DCB_CAP_DCBX_VER_IEEE | DCB_CAP_DCBX_HOST;
++		hdev->flag |= HCLGE_FLAG_DCB_CAPABLE;
+ #endif /* #ifdef CONFIG_HNS3_DCB */
+ 	}
+ 
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+index 903c413..6b00982 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_tm.c
+@@ -687,6 +687,11 @@ static void hclge_tm_tc_info_init(struct hclge_dev *hdev)
+ 	hdev->dcb_info_tmp.num_tc = hdev->dcb_info.num_tc;
+ 	memcpy(hdev->dcb_info_tmp.tc_info, hdev->dcb_info.tc_info,
+ 	       HNAE3_MAX_TC * sizeof(*hdev->dcb_info.tc_info));
 +
-+/dts-v1/;
-+
-+#include "bcm4709.dtsi"
-+#include "bcm5301x-nand-cs0-bch8.dtsi"
-+
-+/ {
-+	compatible = "linksys,ea9200", "brcm,bcm4709", "brcm,bcm4708";
-+	model = "Linksys EA9200";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200";
-+	};
-+
-+	memory {
-+		reg = <0x00000000 0x08000000
-+		       0x88000000 0x08000000>;
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		wps {
-+			label = "WPS";
-+			linux,code = <KEY_WPS_BUTTON>;
-+			gpios = <&chipcommon 3 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		restart {
-+			label = "Reset";
-+			linux,code = <KEY_RESTART>;
-+			gpios = <&chipcommon 17 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
++	if (hdev->dcb_info.num_tc > 1)
++		hdev->flag |= HCLGE_FLAG_DCB_ENABLE;
++	else
++		hdev->flag &= ~HCLGE_FLAG_DCB_ENABLE;
+ }
+ 
+ static void hclge_tm_pg_info_init(struct hclge_dev *hdev)
 -- 
-2.11.0
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
