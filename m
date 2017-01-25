@@ -1,89 +1,229 @@
-From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Wed, 25 Jan 2017 11:21:35 +0530
-Message-ID: <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v6 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
+ stores scenario in vdma
+Date: Wed, 25 Jan 2017 11:45:06 +0530
+Message-ID: <20170125061506.GA3573@localhost>
+References: <1484372155-19423-1-git-send-email-appanad@xilinx.com>
+ <1484372155-19423-3-git-send-email-appanad@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124134809.23315-1-richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, #@vger.kernel.org, 4.4+-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1484372155-19423-3-git-send-email-appanad@xilinx.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Cc: mark.rutland@arm.com, moritz.fischer@ettus.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, appanad@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On Sat, Jan 14, 2017 at 11:05:54AM +0530, Kedareswara rao Appana wrote:
+> When VDMA is configured for more than one frame in the h/w.
+> For example h/w is configured for n number of frames, user
+> Submits n number of frames and triggered the DMA using issue_pending API.
+> 
+> In the current driver flow we are submitting one frame at a time,
+> But we should submit all the n number of frames at one time
+> As the h/w is configured for n number of frames.
 
-On 24 January 2017 at 19:18, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
-> the USB ports on odroid-XU4 don't work anymore.
->
-> Inserting an usb key (USB2.0) on the USB3.0 port result in:
-> [   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
-> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
-> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
-> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
-> [   74.606276] usb 3-1: USB disconnect, device number 2
-> [   74.613565] usb 4-1: USB disconnect, device number 2
-> [   74.621208] usb usb3-port1: couldn't allocate usb_device
-> NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
-> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
->
-> If the lines:
->         if (dwc->revision > DWC3_REVISION_194A)
->                 reg |= DWC3_GUSB3PIPECTL_SUSPHY;
-> are commented out, the USB3.0 start working.
->
-> For a full analyse: https://lkml.org/lkml/2017/1/18/678
->
-> Felipe suggested that suspend should be disabled temporarily while
-> what's wrong with DCW3 is figured out.
->
-> Tested on Odroid XU4
->
-> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
-> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
+Is there a specific reason why you continue to start lines with Title cases, I
+have already told you to not do that last time!
+
+> 
+> This patch fixes this issue.
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Jose Abreu <joabreu@synopsys.com>
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 > ---
->  arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> index 2faf88627a48..f62dbd9b5ad3 100644
-> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
-> @@ -43,6 +43,15 @@
->         status = "okay";
->  };
->
-> +&usbdrd_dwc3_0 {
-> +       /*
-> +        * without that, usb devices are not recognized when
-> +        * they are plugged.
-> +        * cf: https://lkml.org/lkml/2017/1/18/678
-> +        */
-> +       snps,dis_u3_susphy_quirk;
-> +};
+> Changes for v6:
+> ---> Added Rob Acked-by
+> ---> Updated commit message as suggested by Vinod.
+> Changes for v5:
+> ---> Updated xlnx,fstore-config property to xlnx,fstore-enable
+>      and updated description as suggested by Rob.
+> Changes for v4:
+> ---> Add Check for framestore configuration on Transmit case as well
+>      as suggested by Jose Abreu.
+> ---> Modified the dev_dbg checks to dev_warn checks as suggested
+>      by Jose Abreu.
+> Changes for v3:
+> ---> Added Checks for frame store configuration. If frame store
+>      Configuration is not present at the h/w level and user
+>      Submits less frames added debug prints in the driver as relevant.
+> Changes for v2:
+> ---> Fixed race conditions in the driver as suggested by Jose Abreu
+> ---> Fixed unnecessray if else checks in the vdma_start_transfer
+>      as suggested by Laurent Pinchart.
+> 
+>  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
+>  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
+>  2 files changed, 57 insertions(+), 23 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> index a2b8bfa..e951c09 100644
+> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
+> @@ -66,6 +66,8 @@ Optional child node properties:
+>  Optional child node properties for VDMA:
+>  - xlnx,genlock-mode: Tells Genlock synchronization is
+>  	enabled/disabled in hardware.
+> +- xlnx,fstore-enable: boolean; if defined, it indicates that controller
+> +	supports frame store configuration.
+>  Optional child node properties for AXI DMA:
+>  -dma-channels: Number of dma channels in child node.
+>  
+> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
+> index 5eeea57..edb5b71 100644
+> --- a/drivers/dma/xilinx/xilinx_dma.c
+> +++ b/drivers/dma/xilinx/xilinx_dma.c
+> @@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
+>   * @genlock: Support genlock mode
+>   * @err: Channel has errors
+>   * @idle: Check for channel idle
+> + * @has_fstoreen: Check for frame store configuration
+>   * @tasklet: Cleanup work after irq
+>   * @config: Device configuration info
+>   * @flush_on_fsync: Flush on Frame sync
+> @@ -353,6 +354,7 @@ struct xilinx_dma_chan {
+>  	bool genlock;
+>  	bool err;
+>  	bool idle;
+> +	bool has_fstoreen;
+>  	struct tasklet_struct tasklet;
+>  	struct xilinx_vdma_config config;
+>  	bool flush_on_fsync;
+> @@ -990,6 +992,27 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (list_empty(&chan->pending_list))
+>  		return;
+>  
+> +	/*
+> +	 * Note: When VDMA is built with default h/w configuration
+> +	 * User should submit frames upto H/W configured.
+> +	 * If users submits less than h/w configured
+> +	 * VDMA engine tries to write to a invalid location
+> +	 * Results undefined behaviour/memory corruption.
+> +	 *
+> +	 * If user would like to submit frames less than h/w capable
+> +	 * On S2MM side please enable debug info 13 at the h/w level
+> +	 * On MM2S side please enable debug info 6 at the h/w level
+> +	 * It will allows the frame buffers numbers to be modified at runtime.
+> +	 */
+> +	if (!chan->has_fstoreen &&
+> +	     chan->desc_pendingcount < chan->num_frms) {
+> +		dev_warn(chan->dev, "Frame Store Configuration is not enabled at the\n");
+> +		dev_warn(chan->dev, "H/w level enable Debug info 13 or 6 at the h/w level\n");
+> +		dev_warn(chan->dev, "OR Submit the frames upto h/w Capable\n\r");
 > +
->  &usbdrd_dwc3_1 {
->         dr_mode = "host";
->  };
-> --
+> +		return;
+> +	}
+> +
+>  	desc = list_first_entry(&chan->pending_list,
+>  				struct xilinx_dma_tx_descriptor, node);
+>  	tail_desc = list_last_entry(&chan->pending_list,
+> @@ -1052,25 +1075,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  	if (chan->has_sg) {
+>  		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
+>  				tail_segment->phys);
+> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> +		chan->desc_pendingcount = 0;
+>  	} else {
+>  		struct xilinx_vdma_tx_segment *segment, *last = NULL;
+> -		int i = 0;
+> +		int i = 0, j = 0;
+>  
+>  		if (chan->desc_submitcount < chan->num_frms)
+>  			i = chan->desc_submitcount;
+>  
+> -		list_for_each_entry(segment, &desc->segments, node) {
+> -			if (chan->ext_addr)
+> -				vdma_desc_write_64(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> -					segment->hw.buf_addr,
+> -					segment->hw.buf_addr_msb);
+> -			else
+> -				vdma_desc_write(chan,
+> -					XILINX_VDMA_REG_START_ADDRESS(i++),
+> -					segment->hw.buf_addr);
+> -
+> -			last = segment;
+> +		for (j = 0; j < chan->num_frms; ) {
+> +			list_for_each_entry(segment, &desc->segments, node) {
+> +				if (chan->ext_addr)
+> +					vdma_desc_write_64(chan,
+> +					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
+> +					  segment->hw.buf_addr,
+> +					  segment->hw.buf_addr_msb);
+> +				else
+> +					vdma_desc_write(chan,
+> +					    XILINX_VDMA_REG_START_ADDRESS(i++),
+> +					    segment->hw.buf_addr);
+> +
+> +				last = segment;
+> +			}
+> +			list_del(&desc->node);
+> +			list_add_tail(&desc->node, &chan->active_list);
+> +			j++;
+> +			if (list_empty(&chan->pending_list) ||
+> +			    (i == chan->num_frms))
+> +				break;
+> +			desc = list_first_entry(&chan->pending_list,
+> +						struct xilinx_dma_tx_descriptor,
+> +						node);
+>  		}
+>  
+>  		if (!last)
+> @@ -1081,20 +1117,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
+>  		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
+>  				last->hw.stride);
+>  		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
+> -	}
+>  
+> -	chan->idle = false;
+> -	if (!chan->has_sg) {
+> -		list_del(&desc->node);
+> -		list_add_tail(&desc->node, &chan->active_list);
+> -		chan->desc_submitcount++;
+> -		chan->desc_pendingcount--;
+> +		chan->desc_submitcount += j;
+> +		chan->desc_pendingcount -= j;
+>  		if (chan->desc_submitcount == chan->num_frms)
+>  			chan->desc_submitcount = 0;
+> -	} else {
+> -		list_splice_tail_init(&chan->pending_list, &chan->active_list);
+> -		chan->desc_pendingcount = 0;
+>  	}
+> +
+> +	chan->idle = false;
+>  }
+>  
+>  /**
+> @@ -1342,6 +1372,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
+>  
+>  	chan->err = false;
+>  	chan->idle = true;
+> +	chan->desc_submitcount = 0;
+>  
+>  	return err;
+>  }
+> @@ -2320,6 +2351,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
+>  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
+>  
+>  	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
+> +	chan->has_fstoreen = of_property_read_bool(node, "xlnx,fstore-enable");
+>  
+>  	err = of_property_read_u32(node, "xlnx,datawidth", &value);
+>  	if (err) {
+> -- 
+> 2.1.2
+> 
 
-Thanks for this patch.
-But could you consider moving this changes as below.
-
-https://lkml.org/lkml/2015/3/18/400
-
-Best Regards
--Anand
-
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
