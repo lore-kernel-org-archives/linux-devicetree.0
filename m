@@ -1,62 +1,53 @@
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] checks: Add bus checks for PCI buses
-Date: Wed, 25 Jan 2017 14:37:28 -0800
-Message-ID: <148538384894.3179.13621971850704403546@sboyd-linaro>
-References: <20170124174534.3865-1-robh@kernel.org>
- <20170124174534.3865-6-robh@kernel.org>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv4] mfd: cpcap: Add minimal support
+Date: Wed, 25 Jan 2017 14:41:16 -0800
+Message-ID: <20170125224114.GK7403@atomide.com>
+References: <20170106004439.12249-1-tony@atomide.com>
+ <20170124093534.GU16020@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124174534.3865-6-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170124093534.GU16020@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2017-01-24 09:45:34)
-> @@ -587,7 +592,88 @@ static void fixup_path_references(struct check *c, s=
-truct dt_info *dti,
->  }
->  ERROR(path_references, fixup_path_references, NULL, &duplicate_node_name=
-s);
->  =
+* Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [170124 01:32]:
+> On Thu, 05 Jan 2017, Tony Lindgren wrote:
+> > +
+> > +	bit = irq % cpcap->regmap_conf->val_bits;
+> > +	mask = (1 << bit);
+> 
+> Nit: BIT()
+...
+> > + * Copyright (C) 2016 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> 
+> Nit: 2017
+...
+> > +/*
+> > + * Helpers for child devices to check the revision and vendor.
+> > + *
+> > + * REVISIT: No documentation for the bits below, please update
+> > + * to use proper names for defines when available.
+> > + */
+> 
+> Yes, please do that.
+> 
+> But you can do all of the above with subsequent patches.
 
-> +static bool is_pci_bridge(struct node *node)
-> +{
-> +       struct property *prop;
-> +
-> +       prop =3D get_property(node, "device_type");
-> +       if (!prop)
-> +               return false;
-> +
-> +       if (strcmp(prop->val.val, "pci") =3D=3D 0)
-> +               return true;
-> +
-> +       return false;
+OK I'll send you a BIT() follow-up patch.
 
-This could be simplified?
+> Applied, thanks.
 
-	return strcmp(prop->val.val, "pci") =3D=3D 0;
+Thanks, not seeing it in next or mfd git tree yet though, forgot
+to push out?
 
-> +}
-> +
-[...]
-> +
-> +struct bus_type pci_bus_type =3D {
+Regards,
 
-static? const?
-
-> +        .bridge_is_type =3D is_pci_bridge,
-> +        .check_bridge =3D pci_check_bridge,
-> +        .check_device =3D pci_check_device,
-> +};
-> +
->  struct bus_type *bus_types[] =3D {
-
-static? const?
-
-> +       &pci_bus_type,
->         NULL
->  };
-> =20
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
