@@ -1,62 +1,52 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 19/24] media: imx: Add IC subdev drivers
-Date: Tue, 24 Jan 2017 18:39:30 -0800
-Message-ID: <aa230b31-39f0-524d-3ce5-05827360ea95@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-20-git-send-email-steve_longerbeam@mentor.com>
- <07f4bc9e-22ef-a925-f4ee-c14df65e4f0d@xs4all.nl>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Tue, 24 Jan 2017 18:43:21 -0800
+Message-ID: <74bfcbb3-a9ce-8228-77d3-db4defa79df5@roeck-us.net>
+References: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
+ <1485248322-24299-3-git-send-email-baoyou.xie@linaro.org>
+ <35dcd00f-a4bd-a313-0d6f-932a3f5888f0@roeck-us.net>
+ <CA+DQWky4---=gRipAR=NqajvwYV2QQQWbztTpPJS5oaL4D6QaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <07f4bc9e-22ef-a925-f4ee-c14df65e4f0d-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+DQWky4---=gRipAR=NqajvwYV2QQQWbztTpPJS5oaL4D6QaQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: Jun Nie <jun.nie@linaro.org>, wim@iguana.be, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/20/2017 06:29 AM, Hans Verkuil wrote:
-> On 01/07/2017 03:11 AM, Steve Longerbeam wrote:
->> +
->> +static const struct v4l2_ctrl_config prpenc_std_ctrl[] = {
->> +	{
->> +		.id = V4L2_CID_HFLIP,
->> +		.name = "Horizontal Flip",
->> +		.type = V4L2_CTRL_TYPE_BOOLEAN,
->> +		.def =  0,
->> +		.min =  0,
->> +		.max =  1,
->> +		.step = 1,
->> +	}, {
->> +		.id = V4L2_CID_VFLIP,
->> +		.name = "Vertical Flip",
->> +		.type = V4L2_CTRL_TYPE_BOOLEAN,
->> +		.def =  0,
->> +		.min =  0,
->> +		.max =  1,
->> +		.step = 1,
->> +	}, {
->> +		.id = V4L2_CID_ROTATE,
->> +		.name = "Rotation",
->> +		.type = V4L2_CTRL_TYPE_INTEGER,
->> +		.def =   0,
->> +		.min =   0,
->> +		.max = 270,
->> +		.step = 90,
->> +	},
->> +};
-> Use v4l2_ctrl_new_std() instead of this array: this avoids duplicating information
-> like the name and type.
+On 01/24/2017 06:16 PM, Baoyou Xie wrote:
 >
-> If this is also done elsewhere, then it should be changed there as well.
+[ ... ]
+>         +
+>         +       ret = of_parse_phandle_with_fixed_args(dev->of_node,
+>         +                       "zte,wdt-reset-sysctrl", 3, 0, &out_args);
+>         +       if (ret)
+>         +               return;
+>         +
+>         +       offset = out_args.args[0];
+>         +       config = out_args.args[1];
+>         +       mask = out_args.args[2];
+>         +
+>         +       regmap = syscon_node_to_regmap(out_args.np <http://out_args.np>);
+>         +       if (IS_ERR(regmap))
+>         +               return;
+>         +
+>         +       regmap_update_bits(regmap, offset, mask, config);
+>
+>
+>     Another comment suggested adding
+>             of_node_put(out_args.np <http://out_args.np>);
+>     here.
+>
+>
+> is it really? most of the driver that call this function don't call of_node_put. but it seems harmless to call of_node_put.
+>
+>
+Even if everyone else is doing things wrong, that doesn't mean
+that you should do the same, nor is it a good idea to use it
+as argument.
 
-done.
-
-Steve
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guenter
