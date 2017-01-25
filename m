@@ -1,43 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to mmcif
-Date: Wed, 25 Jan 2017 11:31:35 +0100
-Message-ID: <20170125103134.GC14751@verge.net.au>
-References: <20170123141349.29844-1-chris.brandt@renesas.com>
- <CAMuHMdULpxoNaTUX2Dc7R=d+FUb_V45H9=XXfsW3RKBTowE4Uw@mail.gmail.com>
- <20170124123304.GC20529@verge.net.au>
- <SG2PR06MB1165BD8C33491336E74AFE5A8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: change the mediatek
+ ethernet compatible string
+Date: Wed, 25 Jan 2017 11:43:16 +0100
+Message-ID: <95bbd455-fb78-b41c-ef09-6d35671e68c3@gmail.com>
+References: <1485332455-34743-1-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <SG2PR06MB1165BD8C33491336E74AFE5A8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485332455-34743-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 04:32:30PM +0000, Chris Brandt wrote:
-> On Tuesday, January 24, 2017, Simon Horman wrote:
-> > On Mon, Jan 23, 2017 at 04:12:16PM +0100, Geert Uytterhoeven wrote:
-> > > On Mon, Jan 23, 2017 at 3:13 PM, Chris Brandt <chris.brandt@renesas.com>
-> > wrote:
-> > > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> > >
-> > > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > 
-> > Should this be queued up as a fix for v4.10 with the following tag?
-> > 
-> > Fixes: 887862227ba3 ("ARM: dts: r7s72100: add mmcif to device tree")
-> 
-> I assume it can. I'm not sure how it effect the driver one way good or bad
-> (that's a question for Geert I think).
-> SDHI for r7s72100 needs it too, I just didn't send that yet because my other
-> fix will cause a merge conflict because it is modifying the same line. But, 
-> that patch is taking longer than I expected.
-> 
-> My guess is that power-domains is for runtime power management...which seems
-> to be a sore subject for r7s72100 at this point.
 
-Geert tells me that this should not have a runtime effect.
-Accordingly, I will queued it up for v4.11.
+
+On 01/25/2017 09:20 AM, John Crispin wrote:
+> When the binding was defined, I was not aware that mt2701 was an earlier
+> version of the SoC. For sake of consistency, the ethernet driver should
+> use mt2701 inside the compat string as this is the earliest SoC with the
+> ethernet core.
+>
+> The ethernet driver is currently of no real use until we finish and
+> upstream the DSA driver. There are no users of this binding yet. It should
+> be safe to fix this now before it is too late and we need to provide
+> backward compatibility for the mt7623-eth compat string.
+>
+> Reported-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+> ---
+
+sounds reasonable to me:
+Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+>  Documentation/devicetree/bindings/net/mediatek-net.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> index c010faf..c7194e8 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
+> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> @@ -7,7 +7,7 @@ have dual GMAC each represented by a child node..
+>  * Ethernet controller node
+>
+>  Required properties:
+> -- compatible: Should be "mediatek,mt7623-eth"
+> +- compatible: Should be "mediatek,mt2701-eth"
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain the three frame engines interrupts in numeric
+>  	order. These are fe_int0, fe_int1 and fe_int2.
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
