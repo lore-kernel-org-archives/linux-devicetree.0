@@ -1,43 +1,67 @@
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH 2/2] net-next: ethernet: mediatek: change the compatible string
-Date: Wed, 25 Jan 2017 09:20:55 +0100
-Message-ID: <1485332455-34743-2-git-send-email-john@phrozen.org>
-References: <1485332455-34743-1-git-send-email-john@phrozen.org>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1485332455-34743-1-git-send-email-john@phrozen.org>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "David S. Miller" <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, John Crispin <john@phrozen.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 5/13] mmc: sunxi: Mask DATA0 when updating the clock
+Date: Wed, 25 Jan 2017 10:16:13 +0100
+Message-ID: <20170125091613.hmlqoeh6hlqh57wh@lukather>
+References: <cover.a06ce1672d7a72ee7f9bbca46fdd223edd6b2313.1484585798.git-series.maxime.ripard@free-electrons.com>
+ <c36c2e2289ff3268d4a57b265f23725d882a23ed.1484585798.git-series.maxime.ripard@free-electrons.com>
+ <CAPDyKFpX14Ojse_0gZZtQiUtSP_w9tN+Wu5OBx2Uv42FLSY5OA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ml3hgkidtpfvanxm"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFpX14Ojse_0gZZtQiUtSP_w9tN+Wu5OBx2Uv42FLSY5OA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-When the binding was defined, I was not aware that mt2701 was an earlier
-version of the SoC. For sake of consistency, the ethernet driver should
-use mt2701 inside the compat string as this is the earliest SoC with the
-ethernet core.
 
-The ethernet driver is currently of no real use until we finish and
-upstream the DSA driver. There are no users of this binding yet. It should
-be safe to fix this now before it is too late and we need to provide
-backward compatibility for the mt7623-eth compat string.
+--ml3hgkidtpfvanxm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Reported-by: Sean Wang <sean.wang@mediatek.com>
-Signed-off-by: John Crispin <john@phrozen.org>
----
- drivers/net/ethernet/mediatek/mtk_eth_soc.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Tue, Jan 24, 2017 at 09:18:46AM +0100, Ulf Hansson wrote:
+> On 16 January 2017 at 17:56, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > The A64 MMC controllers need DATA0 to be masked while updating the cloc=
+k,
+> > otherwise any subsequent command will result in a timeout.
+>=20
+> Could you elaborate on what mask DATA0 really means? I don't follow.
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 25ae0c5..9e75768 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2515,7 +2515,7 @@ static int mtk_remove(struct platform_device *pdev)
- }
- 
- const struct of_device_id of_mtk_match[] = {
--	{ .compatible = "mediatek,mt7623-eth" },
-+	{ .compatible = "mediatek,mt2701-eth" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, of_mtk_match);
--- 
-1.7.10.4
+To be honest, I don't really know :)
+
+This is how it's called both in the vendor tree and the datasheet. I
+*think* it might be the first data line on the bus, but I'm not sure
+exactly why that would cause any issue when updating the clock.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ml3hgkidtpfvanxm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYiGzYAAoJEBx+YmzsjxAgdUcQAIbpWuWV6VAdA7mYR+XY6OIO
+/3nnh2721twIj2KFwwfqtqVTY4qMslOI4lefqdRcUOrC+BwPiOJqj+cyCWXsbxMA
+AxuBJdELagdPMnhgVn3rgsd4DHGvMMi1uoe9bo9JOzgRdvFohAvReTDIQOH8GRdH
+4e4ncZpSZAmCE49zN636bxVsGtnpPGUYePuq1sN3el05rm/po6qL2XmezskjjuuS
+V3SATQb4fe+mpZb2+BFKAlEfpliK4HHHs4wjc/eh1jRkfux8X45R2sX14dbjRllu
+/PtJXRfbGCHsIC0VcoqRaV/ctEVCEJUGKlm3H4LYmu22BMWL7+v3x5Fj1/omAJhy
+LHjV6J8cLfXDvVSkAuy1puTmZzYkhOplWE+ANTwX0ZU193ONuW29zTOHtMxCIkcN
+lvkU+VlwyW5nPhurl17PWQ2bX1sLOM8JxVFyUgXCbGrHDDokRiSEt+jUpaDodnkx
+S9Ar9bHLOTb7Iw1aeYxuX42FObQxN2aZJe2fd5eEHU44TqrOUuMsDVK1kpmteiv1
+zLPFgCkwZWx/7/vizACno21kBqKhRRQBK47mxzcI+AnD8befA9vZxNKC69px/rsp
+Vn5FP8KdVHrV27nkOjkXtOmEMH+DV3EaSjHb8TWs4cZ0P2LmXCZ3tW9r976nPVae
+woY2Q4E2qX8ApoMt1/Ym
+=7Khm
+-----END PGP SIGNATURE-----
+
+--ml3hgkidtpfvanxm--
