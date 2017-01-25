@@ -1,39 +1,136 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
-Date: Wed, 25 Jan 2017 14:02:49 +0000
-Message-ID: <SG2PR06MB1165831212DE76097BDB8DB78A740@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170123135423.28780-1-chris.brandt@renesas.com>
- <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
- <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170124143222.GA2021@mai>
- <SG2PR06MB1165F79A1675FAC9ABEF12998A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <20170125095603.GE2021@mai>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
+Date: Wed, 25 Jan 2017 16:17:08 +0200
+Message-ID: <CAJKOXPd+CnmVG282NEVCFqS_3YEURCWx41udyQKpL21keGJOWg@mail.gmail.com>
+References: <20170124134809.23315-1-richard.genoud@gmail.com>
+ <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
+ <CGME20170125075556epcas1p4b916a6d6acda28f8fc1959a1227520fa@epcas1p4.samsung.com>
+ <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com> <ef6c0d33-73d6-805e-aeab-86190e8b0aa0@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170125095603.GE2021@mai>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ef6c0d33-73d6-805e-aeab-86190e8b0aa0-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBXZWRuZXNkYXksIEphbnVhcnkgMjUsIDIwMTcsIERhbmllbCBMZXpj
-YW5vIHdyb3RlOg0KPiA+IFRoZW4gdGhpbmdzIHdvcmssIGJ1dCBJJ20gYmFjayB0byBtYW5hZ2lu
-ZyB0aGUgcm9sbGJhY2sgY29kZSBtYW51YWxseS4NCj4gPg0KPiA+DQo+ID4gQW55IG90aGVyIGlk
-ZWFzIG9uIGhvdyB0byBnZXQgdGhlIGNvcnJlc3BvbmRpbmcgcGxhdGZvcm1fZGV2aWNlIGZvciBh
-DQo+ID4gRFQgbm9kZT8NCj4gDQo+IE5vIDovDQo+IA0KPiBTbyB1cCB0byB5b3UuDQo+IAktIENM
-T0NLU09VUkNFX09GX0RFQ0xBUkUgY29uc2lzdGVudCBidXQgbmVlZCByb2xsYmFjaw0KPiAJb3IN
-Cj4gCS0gcGxhdGZvcm1fZGV2aWNlIGJ1dCB3aXRoIGFub3RoZXIgdGltZXIgYXZhaWxhYmxlIGF0
-IGVhcmx5IHRpbWUNCg0KQXMgZmFyIGFzIEkgY2FuIHRlbGwsIHRoZSByb2xsYmFjayBmdW5jdGlv
-bnMgZG9uJ3QgbWluZCBpZiBJIHBhc3MgTlVMTA0KcG9pbnRlcnMgdG8gdGhlbS4gU28gd2l0aCBD
-TE9DS1NPVVJDRV9PRl9ERUNMQVJFLCBteSBlcnJvciByb2xsYmFjayBhdA0KdGhlIGVuZCBvZiBv
-c3RtX2luaXQgaXMgYmFzaWNhbGx5Og0KDQoNCmVycjoNCglpZiAocmV0KSB7DQoJCWNsa19kaXNh
-YmxlX3VucHJlcGFyZShvc3RtX2Nsayk7DQoJCWlvdW5tYXAob3N0bS0+YmFzZSk7DQoJCWtmcmVl
-KG9zdG0pOw0KCQlyZXR1cm4gcmV0Ow0KCX0NCg0KCXJldHVybiAwOw0KfQ0KDQoNCg0KSWYgSSBn
-byB3aXRoIENMT0NLU09VUkNFX09GX0RFQ0xBUkUsIEkgY2FuIGF0IGxlYXN0IGdldCByaWQgb2Yg
-dGhlIGVhcmx5IGJvb3QgbWVzc2FnZQ0KImNsb2Nrc291cmNlX3Byb2JlOiBubyBtYXRjaGluZyBj
-bG9ja3NvdXJjZXMgZm91bmQiDQoNCkknbGwgZ28gYWhlYWQgYW5kIHNlbmQgYSB2NCB0b2RheSB3
-aXRoIGFsbCB0aGUgY2hhbmdlcyB5b3Ugc3VnZ2VzdGVkLg0KDQpUaGFuayB5b3UgZm9yIHlvdXIg
-aGVscC4NCg0KUmVnYXJkcywNCkNocmlzDQoNCg==
+On Wed, Jan 25, 2017 at 3:48 PM, Marek Szyprowski
+<m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Krzysztof,
+>
+> On 2017-01-25 08:55, Krzysztof Kozlowski wrote:
+>>
+>> On Wed, Jan 25, 2017 at 7:51 AM, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>> On 24 January 2017 at 19:18, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
+>>>> the USB ports on odroid-XU4 don't work anymore.
+>>>>
+>>>> Inserting an usb key (USB2.0) on the USB3.0 port result in:
+>>>> [ 64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than
+>>>> 20000 msec, port status = 0xc400fe3
+>>>> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to
+>>>> stop endpoint command.
+>>>> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting
+>>>> host.
+>>>> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
+>>>> [   74.606276] usb 3-1: USB disconnect, device number 2
+>>>> [   74.613565] usb 4-1: USB disconnect, device number 2
+>>>> [   74.621208] usb usb3-port1: couldn't allocate usb_device
+>>>> NB: it's not related to USB2.0 devices, I get the same result with an
+>>>> USB3.0 device (SATA to USB3 for instance).
+>>>> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the
+>>>> realtek RTL8153 chip.
+>>>>
+>>>> If the lines:
+>>>>          if (dwc->revision > DWC3_REVISION_194A)
+>>>>                  reg |= DWC3_GUSB3PIPECTL_SUSPHY;
+>>>> are commented out, the USB3.0 start working.
+>>>>
+>>>> For a full analyse: https://lkml.org/lkml/2017/1/18/678
+>>>>
+>>>> Felipe suggested that suspend should be disabled temporarily while
+>>>> what's wrong with DCW3 is figured out.
+>>>>
+>>>> Tested on Odroid XU4
+>>>>
+>>>> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
+>>>> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
+>>>> ---
+>>>>   arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
+>>>>   1 file changed, 9 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>>>> b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>>>> index 2faf88627a48..f62dbd9b5ad3 100644
+>>>> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>>>> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
+>>>> @@ -43,6 +43,15 @@
+>>>>          status = "okay";
+>>>>   };
+>>>>
+>>>> +&usbdrd_dwc3_0 {
+>>>> +       /*
+>>>> +        * without that, usb devices are not recognized when
+>>>> +        * they are plugged.
+>>>> +        * cf: https://lkml.org/lkml/2017/1/18/678
+>>>> +        */
+>>>> +       snps,dis_u3_susphy_quirk;
+>>>> +};
+>>>> +
+>>>>   &usbdrd_dwc3_1 {
+>>>>          dr_mode = "host";
+>>>>   };
+>>>> --
+>>>
+>>> Thanks for this patch.
+>>> But could you consider moving this changes as below.
+>>>
+>>> https://lkml.org/lkml/2015/3/18/400
+>>
+>> The patch above (and other DTS patches from the set) was not even sent
+>> to linux-samsung-soc nor to me... It is sad how easily one's work can
+>> disappear. Also, it is really worthless to solve the same problem
+>> twice.
+>
+>
+> Well, they were sent about 2 years ago... and you were also working on this
+> topic. ;)
+
+Nope, I have never worked on this. That time I was in Korea so my
+tasks were completely different. Later when I got back, I took for a
+second U3 OTG which was not involving this thing.
+
+>> Cc Marek and Bartlomiej,
+>> Guys, do you want to continue with Robert's patch (linked above by
+>> Anand)? If yes, please take the ownership (Robert's address is not
+>> valid anymore). If not, I will take Richard's patch after
+>> resubmission.
+>
+>
+> Take Richard's patch because it has a bit more details describing why such
+> quirk
+> is needed.
+>
+> Richard: in Roberts patch there is also a quirk for USB 2.0 mode
+> (snps,dis_u2_susphy_quirk). Could you check if it really needed?
+>
+> Maybe it would make sense to set those quirks for both DWC3 controllers, as
+> this
+> issue with PHY suspend seems to be a Exynos specific thing.
+
+Okay,
+Richard, please continue with your patch.
+
+Best regards,
+Krzysztof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
