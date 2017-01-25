@@ -1,49 +1,43 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon erratum
- 161010801
-Date: Wed, 25 Jan 2017 10:30:00 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA8174ACF59@lhreml504-mbs>
-References: <5886262C.6070108@huawei.com> <58875B0D.4080303@huawei.com>
- <20170124141505.GD7572@leverpostej>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add power-domains to mmcif
+Date: Wed, 25 Jan 2017 11:31:35 +0100
+Message-ID: <20170125103134.GC14751@verge.net.au>
+References: <20170123141349.29844-1-chris.brandt@renesas.com>
+ <CAMuHMdULpxoNaTUX2Dc7R=d+FUb_V45H9=XXfsW3RKBTowE4Uw@mail.gmail.com>
+ <20170124123304.GC20529@verge.net.au>
+ <SG2PR06MB1165BD8C33491336E74AFE5A8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170124141505.GD7572@leverpostej>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "marc.zyngier@arm.com" <marc.zyngier@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linuxarm <linuxarm@huawei.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Garry <john.garry@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <SG2PR06MB1165BD8C33491336E74AFE5A8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Mark Rutland [mailto:mark.rutland@arm.com]
-> Sent: Tuesday, January 24, 2017 2:15 PM
-> To: Shameerali Kolothum Thodi
-> Cc: marc.zyngier@arm.com; will.deacon@arm.com; linux-arm-
-> kernel@lists.infradead.org; Linuxarm; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; John Garry; Guohanjun (Hanjun Guo);
-> robin.murphy@arm.com
-> Subject: Re: [RFC 2/4] irqchip, gicv3-its:Workaround for HiSilicon
-> erratum 161010801
-sounds like this will have severe implications for virtualization.
+On Tue, Jan 24, 2017 at 04:32:30PM +0000, Chris Brandt wrote:
+> On Tuesday, January 24, 2017, Simon Horman wrote:
+> > On Mon, Jan 23, 2017 at 04:12:16PM +0100, Geert Uytterhoeven wrote:
+> > > On Mon, Jan 23, 2017 at 3:13 PM, Chris Brandt <chris.brandt@renesas.com>
+> > wrote:
+> > > > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> > >
+> > > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Should this be queued up as a fix for v4.10 with the following tag?
+> > 
+> > Fixes: 887862227ba3 ("ARM: dts: r7s72100: add mmcif to device tree")
 > 
-> > Also these platforms doesn't have a proper IIDR
-> > register to use the existing IIDR based quirk mechanism.
+> I assume it can. I'm not sure how it effect the driver one way good or bad
+> (that's a question for Geert I think).
+> SDHI for r7s72100 needs it too, I just didn't send that yet because my other
+> fix will cause a merge conflict because it is modifying the same line. But, 
+> that patch is taking longer than I expected.
 > 
-> What exactly is wrong with the IIDR on these platforms? That sounds
-> like
-> an erratum as of itself.
-> 
-> What precise value do reads of the IIDR return? Or do reads result in
-> other erroneous behaviour?
+> My guess is that power-domains is for runtime power management...which seems
+> to be a sore subject for r7s72100 at this point.
 
-As far as I know, there is no erroneous behavior while reading.  But the
-IIDR JEP106 identity code is 0 on these platforms, hence not much of use.
-
-This will be corrected in next revision of hw.
-
-Thanks,
-Shameer
+Geert tells me that this should not have a runtime effect.
+Accordingly, I will queued it up for v4.11.
