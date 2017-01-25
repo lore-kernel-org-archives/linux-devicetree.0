@@ -1,79 +1,65 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] mtd: name the mtd device with an optional label
- property
-Date: Wed, 25 Jan 2017 21:31:19 +0100
-Message-ID: <20170125213119.6409083e@bbrezillon>
-References: <1485368255-12038-1-git-send-email-clg@kaod.org>
-        <1485368255-12038-2-git-send-email-clg@kaod.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3] i2c: core: helper function to detect slave mode
+Date: Wed, 25 Jan 2017 21:45:37 +0100
+Message-ID: <20170125204537.i66nykln4fkxqryy@ninjato>
+References: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485368255-12038-2-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg-Bxea+6Xhats@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ljn6hsreszyycawd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vz@mleia.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jan 2017 19:17:34 +0100
-Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
 
-> This can be used to easily identify a specific chip on a system with
-> multiple chips.
-> 
-> Drivers wanting to support this new label property will benefit from
-> it without a change. They might want to check in the future that
-> mtd->name is NULL before assigning a default name to the mtd device.
-> Other drivers will keep the current behavior, which is to override
-> mtd->name with their own value.
-> 
-> Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+--ljn6hsreszyycawd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Brian, can you have a look at this patch, and if you're okay with it,
-queue it for 4.11. I'll soon post the atmel NAND controller driver
-rework which will depend on this patch, and that'd be great to have
-this dependency already applied.
+> + * i2c_slave_mode_detect - detect operation mode
+
+I'd rather name it 'i2c_detect_slave_mode'
+
+> + * @dev:  The device owning the bus
+> + *
+> + * This checks the device nodes for an I2C slave by checking the address
+> + * used.
+> + *
+> + * Returns true if an I2C slave is detected, otherwise returns false.
+
+Both paragraphs could be a little more explicit. It is not about
+"slaves" or "clients" in general, but about those entries which make the
+current master act as a slave, too.
+
+The code looks good to me, so we are close to go!
 
 Thanks,
 
-Boris
+   Wolfram
 
-> ---
-> 
->  Changes since v1:
-> 
->  - moved the use of the "label" property from mtd_set_dev_defaults()
->    to mtd_set_of_node() to let drivers keep control on how mtd->name
->    is set and allocated.
-> 
->  include/linux/mtd/mtd.h | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> index 13f8052b9ff9..f4fe15517295 100644
-> --- a/include/linux/mtd/mtd.h
-> +++ b/include/linux/mtd/mtd.h
-> @@ -24,6 +24,7 @@
->  #include <linux/uio.h>
->  #include <linux/notifier.h>
->  #include <linux/device.h>
-> +#include <linux/of.h>
->  
->  #include <mtd/mtd-abi.h>
->  
-> @@ -385,6 +386,7 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
->  				   struct device_node *np)
->  {
->  	mtd->dev.of_node = np;
-> +	of_property_read_string(np, "label", &mtd->name);
->  }
->  
->  static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ljn6hsreszyycawd
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAliJDnEACgkQFA3kzBSg
+KbbB4w//at6Xu2thB4Tg2Nmn5+Hlc1v7sQu3m0yuB1znGafMvqRc5OirW1HSDTsI
+/X7aH0gmFkp2MPV8MIztCThaD7Ej8TVSQlNT3qm3wkUlGoR9LH6U6A/68HjAeEuY
+6AYQ9o9Bt0up13NJiTJmzyjzGtjo1F3yXsOeRpQhT/M5LUdvXz2q+/HhFZg61WaZ
+qcneahmce3wLjqKGqk1lAweQHxubwSFt5Hc3LWZJFo0dnbEi/V5+Jy8q9LXNF4RE
+A7IX+OF+mSmoqj3YNCW6PZSfm1gO9CRudF1mZ3nTUg284a3PCbDwazFKoK5Xg3jo
+v4I/OLgHCeYteXs9acSRVTc4gacH6LMDhFNwsdF/kDqA2DFoDet4Vy5TqLNmqhuD
+0H7WFCugP7x+5vu1q/ODqUjxzt5xjYDa3zyTAgGSEDCsJYj2wdYGV0cPwKxEfdc3
+TXxPBUAEZc0J42Gimu6w1skTQ/EpeOASnj3czZ9w+ecPc1rcW4Snn6n9EQnenO7C
+IFlUEaIEAoR6GuQiPWcuGstw+JARBhu9x4XsCPgnVxfRu8tyfjVX3qP2m58hcPFl
+ZngpkdWwrbK3FnhwISLZLn0ATiSGXWtYASUcZ9cIvjhJJUWLSK6xjQOhiuNmEppP
+JSdPyuOt/mOe2vJ4l2YxNgGsvPB3WaRGInJQMKgogP04F0hHigQ=
+=qpJp
+-----END PGP SIGNATURE-----
+
+--ljn6hsreszyycawd--
