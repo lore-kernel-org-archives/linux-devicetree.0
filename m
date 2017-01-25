@@ -1,162 +1,137 @@
-From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Wed, 25 Jan 2017 09:34:03 +0100
-Message-ID: <691f2c7b-dbef-9c01-9deb-a0f62944f91b@gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com>
- <20170124182237.kwixpqc3wkutxbsj@kozik-lap>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170124182237.kwixpqc3wkutxbsj@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Subject: [PATCH v6 1/5] powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
+Date: Wed, 25 Jan 2017 14:06:25 +0530
+Message-ID: <1485333389-5752-2-git-send-email-ego@linux.vnet.ibm.com>
+References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/2017 19:22, Krzysztof Kozlowski wrote:
-> On Tue, Jan 24, 2017 at 02:48:09PM +0100, Richard Genoud wrote:
->> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
->> the USB ports on odroid-XU4 don't work anymore.
-> 
-> Hi,
-> 
-> Thanks for the patch. Please:
-> 1. Use recent kernel to test it, which could be one of: mainline
->    (Linus'), recent linux-next or my for-next branch. Why am I thinking
->    that you did not test it on thse? Because you sent the patch to
->    k.kozlowski-Sze3O3UU22LowKkBSvOlow@public.gmane.org The guy disappeared four months ago and
->    recent kernel has all addresses updated (including mailmap).
-My bad, I took the email from the commit 6658356014cb ("ARM: dts: Add
-support Odroid XU4 board for exynos5422-odroidxu4") instead of taking it
-from get_maintainer (That was clearly a bad idea).
-I actually ran my tests on 4.4.44 / 4.8.5 / 4.9.5 4.10-rc4
-I'll also run them on -next
+From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
 
-> 2. Fix the title to match subsystem (git log --oneline arch/arm/boot/dts/exynos*).
-Ok
+Currently all the low-power idle states are expected to wake up
+at reset vector 0x100. Which is why the macro IDLE_STATE_ENTER_SEQ
+that puts the CPU to an idle state and never returns.
 
-> 
->>
->> Inserting an usb key (USB2.0) on the USB3.0 port result in:
->> [   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
->> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
->> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
->> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
->> [   74.606276] usb 3-1: USB disconnect, device number 2
->> [   74.613565] usb 4-1: USB disconnect, device number 2
->> [   74.621208] usb usb3-port1: couldn't allocate usb_device
->> NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
->> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
-> 
-> Odroid-XU3
-> s/realtek/Realtek/
-> However I do not think that Realtek matters here. The USB3 ports are
-> directly accessible on XU3. On XU4 on the other hand, the port USB3-0 is
-> connected to USB hub. I think the sentence about Realtek is then
-> misleading, so just mention the XU3.
-Ok
+On ISA v3.0, when the ESL and EC bits in the PSSCR are zero, the CPU
+is expected to wake up at the next instruction of the idle
+instruction.
 
-> 
->>
->> If the lines:
->> 	if (dwc->revision > DWC3_REVISION_194A)
->> 		reg |= DWC3_GUSB3PIPECTL_SUSPHY;
->> are commented out, the USB3.0 start working.
-> 
-> s/start/starts/
-Ok
+This patch adds a new macro named IDLE_STATE_ENTER_SEQ_NORET for the
+no-return variant and reuses the name IDLE_STATE_ENTER_SEQ
+for a variant that allows resuming operation at the instruction next
+to the idle-instruction.
 
->>
->> For a full analyse: https://lkml.org/lkml/2017/1/18/678
-> 
-> Documentation/process/submitting-patches.rst
-> Instead of this above (lkml.org is highly discouraged) use proper
-> https://lkml.kernel.org/ in "Link:" put next to other tags (look at
-> recent commits), however I do not find this link as necessary.  Just
-> describe here what is wrong and how you are going to fix it.
-Ok
+Acked-by: Balbir Singh <bsingharora@gmail.com>
+Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+---
+ arch/powerpc/include/asm/cpuidle.h   |  5 ++++-
+ arch/powerpc/kernel/exceptions-64s.S |  6 +++---
+ arch/powerpc/kernel/idle_book3s.S    | 10 +++++-----
+ 3 files changed, 12 insertions(+), 9 deletions(-)
 
->>
->> Felipe suggested that suspend should be disabled temporarily while
->> what's wrong with DCW3 is figured out.
->>
->> Tested on Odroid XU4
->>
->> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Being an author implies testing. Please remove the tag.
-Ok
-
->> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
-> 
-> Malformed tag - missing <>.
-Ok
-
->> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
-> 
-> No need for such long hash (2164a405762c).
-> 
-> I wonder about pointing the commit which introduced the issue. Usually
-> the fixes directly indicates how far we want the patch to be backported.
-> In this case this should be backported to kernel bringing XU4 DTS. The
-> commit which was not valid, was the commit adding DTS without this
-> property. 2164a476205c was innocent for XU4 because XU4 did not exist
-> that time.
-> 
-> Definitely something is wrong if Fixes tag does not match indicated
-> backport version.
-
-Yes, I see what you mean. We can't say that 2164a476205ccc ("usb: dwc3:
-set SUSPHY bit for all cores") broke XU4 because it predates it !
-I'll simply remove that.
-
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> index 2faf88627a48..f62dbd9b5ad3 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> @@ -43,6 +43,15 @@
->>  	status = "okay";
->>  };
->>  
->> +&usbdrd_dwc3_0 {
->> +	/*
->> +	 * without that, usb devices are not recognized when
->> +	 * they are plugged.
-> 
-> s/without/Without/
-> s/usb/USB.
-> 
->> +	 * cf: https://lkml.org/lkml/2017/1/18/678
-> 
-> No external resources. You can extend a little bit the sentence above to
-> two sentences. Combined with "git log" this would be sufficient.
-
-Ok
-> Best regards,
-> Krzysztof
-
-Thanks !
-
->> +	 */
->> +	snps,dis_u3_susphy_quirk;
->> +};
->> +
->>  &usbdrd_dwc3_1 {
->>  	dr_mode = "host";
->>  };
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/powerpc/include/asm/cpuidle.h b/arch/powerpc/include/asm/cpuidle.h
+index 3919332..0a3255b 100644
+--- a/arch/powerpc/include/asm/cpuidle.h
++++ b/arch/powerpc/include/asm/cpuidle.h
+@@ -21,7 +21,7 @@
+ 
+ /* Idle state entry routines */
+ #ifdef	CONFIG_PPC_P7_NAP
+-#define	IDLE_STATE_ENTER_SEQ(IDLE_INST)				\
++#define IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
+ 	/* Magic NAP/SLEEP/WINKLE mode enter sequence */	\
+ 	std	r0,0(r1);					\
+ 	ptesync;						\
+@@ -29,6 +29,9 @@
+ 1:	cmpd	cr0,r0,r0;					\
+ 	bne	1b;						\
+ 	IDLE_INST;						\
++
++#define	IDLE_STATE_ENTER_SEQ_NORET(IDLE_INST)			\
++	IDLE_STATE_ENTER_SEQ(IDLE_INST)                         \
+ 	b	.
+ #endif /* CONFIG_PPC_P7_NAP */
+ 
+diff --git a/arch/powerpc/kernel/exceptions-64s.S b/arch/powerpc/kernel/exceptions-64s.S
+index d39d611..069aac8 100644
+--- a/arch/powerpc/kernel/exceptions-64s.S
++++ b/arch/powerpc/kernel/exceptions-64s.S
+@@ -381,12 +381,12 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
+ 	lbz	r3,PACA_THREAD_IDLE_STATE(r13)
+ 	cmpwi	r3,PNV_THREAD_NAP
+ 	bgt	10f
+-	IDLE_STATE_ENTER_SEQ(PPC_NAP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_NAP)
+ 	/* No return */
+ 10:
+ 	cmpwi	r3,PNV_THREAD_SLEEP
+ 	bgt	2f
+-	IDLE_STATE_ENTER_SEQ(PPC_SLEEP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_SLEEP)
+ 	/* No return */
+ 
+ 2:
+@@ -400,7 +400,7 @@ EXC_COMMON_BEGIN(machine_check_handle_early)
+ 	 */
+ 	ori	r13,r13,1
+ 	SET_PACA(r13)
+-	IDLE_STATE_ENTER_SEQ(PPC_WINKLE)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_WINKLE)
+ 	/* No return */
+ 4:
+ #endif
+diff --git a/arch/powerpc/kernel/idle_book3s.S b/arch/powerpc/kernel/idle_book3s.S
+index 72dac0b..be90e2f 100644
+--- a/arch/powerpc/kernel/idle_book3s.S
++++ b/arch/powerpc/kernel/idle_book3s.S
+@@ -205,7 +205,7 @@ pnv_enter_arch207_idle_mode:
+ 	stb	r3,PACA_THREAD_IDLE_STATE(r13)
+ 	cmpwi	cr3,r3,PNV_THREAD_SLEEP
+ 	bge	cr3,2f
+-	IDLE_STATE_ENTER_SEQ(PPC_NAP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_NAP)
+ 	/* No return */
+ 2:
+ 	/* Sleep or winkle */
+@@ -239,7 +239,7 @@ pnv_fastsleep_workaround_at_entry:
+ 
+ common_enter: /* common code for all the threads entering sleep or winkle */
+ 	bgt	cr3,enter_winkle
+-	IDLE_STATE_ENTER_SEQ(PPC_SLEEP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_SLEEP)
+ 
+ fastsleep_workaround_at_entry:
+ 	ori	r15,r15,PNV_CORE_IDLE_LOCK_BIT
+@@ -261,7 +261,7 @@ fastsleep_workaround_at_entry:
+ enter_winkle:
+ 	bl	save_sprs_to_stack
+ 
+-	IDLE_STATE_ENTER_SEQ(PPC_WINKLE)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_WINKLE)
+ 
+ /*
+  * r3 - requested stop state
+@@ -280,7 +280,7 @@ power_enter_stop:
+ 	ld	r4,ADDROFF(pnv_first_deep_stop_state)(r5)
+ 	cmpd	r3,r4
+ 	bge	2f
+-	IDLE_STATE_ENTER_SEQ(PPC_STOP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_STOP)
+ 2:
+ /*
+  * Entering deep idle state.
+@@ -302,7 +302,7 @@ lwarx_loop_stop:
+ 
+ 	bl	save_sprs_to_stack
+ 
+-	IDLE_STATE_ENTER_SEQ(PPC_STOP)
++	IDLE_STATE_ENTER_SEQ_NORET(PPC_STOP)
+ 
+ _GLOBAL(power7_idle)
+ 	/* Now check if user or arch enabled NAP mode */
+-- 
+1.9.4
