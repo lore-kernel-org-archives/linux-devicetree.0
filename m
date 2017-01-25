@@ -1,153 +1,66 @@
-From: Danielle Costantino <danielle.costantino@gmail.com>
-Subject: Re: [PATCH v5 5/5] i2c: mux: pca954x: Add irq-mask-enable to delay
- enabling irqs
-Date: Tue, 24 Jan 2017 19:50:33 -0800
-Message-ID: <CAAVjN7eGNsQOPiy0HuDq26MPNrD0xk7uxiN2+UO=hyuCSBa5nw@mail.gmail.com>
-References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
- <1484640029-22870-6-git-send-email-preid@electromag.com.au>
- <312e32e9-a828-d692-895b-4042729e5417@axentia.se> <61c38233-abf2-df31-6f7c-c4214f4103aa@electromag.com.au>
- <71f756e1-4677-8b59-81a2-2b12fbf12621@axentia.se> <35c35708-3bbc-88d1-1d60-4faf68ca5af9@electromag.com.au>
+From: <linux-kernel-dev-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx53-qsb-common: fix FEC pinmux config
+Date: Wed, 25 Jan 2017 06:25:48 +0100
+Message-ID: <20170125052548.27402-1-linux-kernel-dev@beckhoff.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <35c35708-3bbc-88d1-1d60-4faf68ca5af9@electromag.com.au>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>
-Cc: Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c <linux-i2c@vger.kernel.org>, Linux device trees <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: fabio.estevam-3arQi8VN3Tc@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org, sbabic-ynQEQJNshbs@public.gmane.org, Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 1:02 AM, Phil Reid <preid@electromag.com.au> wrote:
->
-> On 20/01/2017 06:56, Peter Rosin wrote:
->>
->> On 2017-01-19 08:48, Phil Reid wrote:
->>>
->>> On 18/01/2017 20:19, Peter Rosin wrote:
->>>>
->>>> On 2017-01-17 09:00, Phil Reid wrote:
->
->
-> [snip]
->
->
->>>> Hmm, this whole thing is fiddly and while it solves your problem it doesn't
->>>> allow for solving the more general problem when there are "problematic"
->>>> devices mixed with other devices. At least, I don't see it. And the
->>>> limitations we are walking into with tracking number of enables etc suggests
->>>> that we are attacking this at the wrong level. Maybe you should try to work
->>>> around the hw limitations not in the pca954x driver, but in the irq core?
->>>
->>>
->>> I'm looking at the option of getting the hardware changed to not route
->>> the irq for my chips thru the i2c mux. Fortunately the hardware is going thru a
->>> revision for some other changes. Messing with the irq core sounds dangerous
->>> with my level of knowledge.
->>
->>
->> Yeah, but I bet you'd get some attention from people with more irq
->> experience. That can't be bad :-)
->>
->>> The other way I think I can tackle it after reading the datasheet for the ltc1760 is that
->>> it'll deassert it's irq (smbalert) line when the host sends a ARA request on the bus segment.
->>> There's a driver in the kernel for this already, but it's not DT enable and doesn't
->>> handle multiple bus segments. I'll have a look at that as well.
->>> Pretty sure it would need the mux to become an irq parent as per patch 1-3 of this series.
->>> This would be so the system can figure out which segment to do the poll on.
->>
->>
->> Yeah sounds neater. It has the slight drawback that it may not work
->> for pure i2c buses since it an SMB thing??
+From: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
 
-If you need to send SMBus commands like ARA, you should be using an
-SMBus 2.0+ compatible bus multiplexer. muxes like the pca954x do not
-automatically select the bus segment that the ARA is destined for. It
-usually is more efficient to only request the data you need from each
-device, rather than checking every segment on each interrupt for the
-cause, one could implement a delayed worker to schedule
-checking+clearing the interrupt at a time when the bus is selected for
-use by another slave device on that segment when possible. This will
-reduce the number of bus setup operations per transfer to slaves on
-deeper busses, reducing your i2c latency.
+The pinmux configuration in device tree was different from manual
+muxing in <u-boot>/board/freescale/mx53loco/mx53loco.c
+All pins were configured as NO_PAD_CTL(1 << 31), which was fine as the
+bootloader already did the correct pinmuxing for us.
+But recently u-boot is migrating to reuse device tree files from the
+kernel tree, so it seems to be better to have the correct pinmuxing in
+our files, too.
 
->>
->> BTW, why do you need special treatment for multiple segments? Will it not
->> simply have an ARA appear on whatever i2c bus the device sits on? And if
->> something requests to send an ARA message on a bus that happens to be a
->> muxed segment, my mental picture is that the mux will be operated as usual
->> so that the ARA appears on the muxed segment. Maybe I'm missing something?
->
->
-> My think was the following.
-> When the SMBALERT is asserted a ARA needs to be sent by the master.
-> If the device sending the SMBALERT is behind a mux when need to know which segment of the bus to enable.
-> Using shared interrupts should work I think, but you have to iterate thru each bus segment.
-> If the alert device is nested behind a couple of muxes this could get expensive.
-> But yeah otherwise I think the correct mux segment will get enabled automatically.
-> The current SMBALERT driver only seems to attached to the root i2c adapter.
+Signed-off-by: Patrick Bruenn <p.bruenn-QonKdJ6Bx35Wk0Htik3J/w@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53-qsb-common.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-Using ARA in a multi mux environment is very expensive, setting up
-each mux segment and then sending ARA will consume more time than it
-would take if the mux structure was optimized to service devices on
-similar busses, reducing the setup operation count. ARA was only
-implemented on the root bus due to the design of the arbiter and mux
-cannot guarantee that you are the only owner of the bus when you are
-disconnected. You would also need to handle the cases where segments
-lock up and must be released using the bus reset mechanism, this
-resets the IRQs as well. The added cost of a I2C read to coincide the
-write operation to the mux when the irq pin is asserted is
-unacceptable for low latency applications.
-
->>
->>
->>> But p4-5 could be dropped which is where we're stuck I think.
->>
->>
->> Yes, I dislike to add a workaround for a specific case that might get
->> in the way for anybody wishing to fix a bigger, more generic, problem...
->>
->>> Looking at this approach it shouldn't matter if the ltc1760 driver has registered yet or not.
->>> This approach possibly has a lot more generic appeal I think.
->>>
->>> Thoughts on just submitting p1-3 for now while I figure out the SMB alert approach?
->>
->>
->> Yes, looks like a plan. Thanks in advance!
->
->
-> Thanks, I'll do a new version with just p1-3.
->
->
->>>>>
->>>>> -       if (!data->irq_mask)
->>>>> -               enable_irq(data->client->irq);
->>>>>         data->irq_mask |= BIT(pos);
->>>>> +       if (!data->irq_enabled
->>>>> +           && (data->irq_mask & mask_enable) == mask_enable) {
->>>>
->>>>
->>>> I think the coding standard says that the && should be at the end of the
->>>> first line. Didn't checkpatch complain?
->>>
->>>
->>> No it didn't complain. and I wasn't sure which way to do this.
->>
->>
->> Ah, you need the --strict option for that to show up...
->>
-> Haven't come across that option, I'll give it a try in future.
->
-> --
-> Regards
-> Phil Reid
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-i2c" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
-
+diff --git a/arch/arm/boot/dts/imx53-qsb-common.dtsi b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+index c05e7cfd0cbc..40b3e31935d0 100644
+--- a/arch/arm/boot/dts/imx53-qsb-common.dtsi
++++ b/arch/arm/boot/dts/imx53-qsb-common.dtsi
+@@ -215,16 +215,16 @@
+ 
+ 		pinctrl_fec: fecgrp {
+ 			fsl,pins = <
+-				MX53_PAD_FEC_MDC__FEC_MDC		0x80000000
+-				MX53_PAD_FEC_MDIO__FEC_MDIO		0x80000000
+-				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x80000000
+-				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x80000000
+-				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x80000000
+-				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x80000000
+-				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x80000000
+-				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x80000000
+-				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x80000000
+-				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x80000000
++				MX53_PAD_FEC_MDC__FEC_MDC		0x4
++				MX53_PAD_FEC_MDIO__FEC_MDIO		0x1fc
++				MX53_PAD_FEC_REF_CLK__FEC_TX_CLK	0x180
++				MX53_PAD_FEC_RX_ER__FEC_RX_ER		0x180
++				MX53_PAD_FEC_CRS_DV__FEC_RX_DV		0x180
++				MX53_PAD_FEC_RXD1__FEC_RDATA_1		0x180
++				MX53_PAD_FEC_RXD0__FEC_RDATA_0		0x180
++				MX53_PAD_FEC_TX_EN__FEC_TX_EN		0x4
++				MX53_PAD_FEC_TXD1__FEC_TDATA_1		0x4
++				MX53_PAD_FEC_TXD0__FEC_TDATA_0		0x4
+ 			>;
+ 		};
+ 
 -- 
-- Danielle Costantino
+2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
