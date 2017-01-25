@@ -1,78 +1,77 @@
 From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [1/6] apalis-tk1: remove spurious new lines
-Date: Wed, 25 Jan 2017 07:44:25 +0100
-Message-ID: <20170125064425.GA12626@ulmo.ba.sec>
-References: <1479773647-14726-2-git-send-email-marcel.ziswiler@toradex.com>
+Subject: Re: [RESEND PATCH 0/6] apalis-tk1: updates for v1.1 hw
+Date: Wed, 25 Jan 2017 07:56:27 +0100
+Message-ID: <20170125065627.GA13025@ulmo.ba.sec>
+References: <20161124010456.24604-1-marcel@ziswiler.com>
+ <1483449646.2745.1.camel@toradex.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="IJpNTDwzlM2Ie8A6"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1479773647-14726-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1483449646.2745.1.camel-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---CE+1k2dSO48ffgeK
-Content-Type: text/plain; charset=us-ascii
+--IJpNTDwzlM2Ie8A6
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 22, 2016 at 01:14:02AM +0100, Marcel Ziswiler wrote:
-> Remove some spurious new lines.
->=20
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
-> ---
+On Tue, Jan 03, 2017 at 01:20:48PM +0000, Marcel Ziswiler wrote:
+> On Thu, 2016-11-24 at 02:04 +0100, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org wrote:
+> > From: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> >=20
+> > This series updates the device tree for the upcoming V1.1 HW samples.
+> > All changes are purely opportunistic meaning they fix stuff which on
+> > older HW was anyway broken so there should be no backwards
+> > compatibility issues.
+> >=20
+> >=20
+> > Marcel Ziswiler (6):
+> > =C2=A0 apalis-tk1: remove spurious new lines
+> > =C2=A0 apalis-tk1: temp alert pull-up
+> > =C2=A0 apalis-tk1: optional displayport hot-plug detect
+> > =C2=A0 apalis-tk1: adjust pin muxing for v1.1 hw
+> > =C2=A0 apalis-tk1: working sd card detect on v1.1 hw
+> > =C2=A0 apalis-tk1: update compatibility comment
+> >=20
+> > =C2=A0arch/arm/boot/dts/tegra124-apalis-eval.dts | 11 +----
+> > =C2=A0arch/arm/boot/dts/tegra124-apalis.dtsi=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0| 73 +++++++++++---------
+> > ----------
+> > =C2=A02 files changed, 29 insertions(+), 55 deletions(-)
 
-For some reason I can't find any trace of this series in my inbox. It's
-not even been classified as spam, it's just not there. So I had to pull
-this from patchwork in order to reply.
-
->  arch/arm/boot/dts/tegra124-apalis-eval.dts |  1 -
->  arch/arm/boot/dts/tegra124-apalis.dtsi     | 12 ------------
->  2 files changed, 13 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/d=
-ts/tegra124-apalis-eval.dts
-> index 653044a..2b5a0f3 100644
-> --- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> +++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
-> @@ -232,7 +232,6 @@
-> =20
->  	backlight: backlight {
->  		compatible =3D "pwm-backlight";
-> -
->  		/* BKL1_PWM */
->  		pwms =3D <&pwm 3 5000000>;
->  		brightness-levels =3D <255 231 223 207 191 159 127 0>;
-
-These newlines were introduced to separate standard properties from the
-not so standard properties for readability, I'd prefer to keep them.
-
-Same for the ones below.
+Applied all but the first, thanks.
 
 Thierry
 
---CE+1k2dSO48ffgeK
+--IJpNTDwzlM2Ie8A6
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliISUMACgkQ3SOs138+
-s6GnyQ/+LwqijgDEvfYqX7lGd9u9c40HYwM31piF9TpQMhFlBZ4+gKiPqF+KTx3L
-JvwpkZopIhWG/o9lbPv95JJGNBa5nf4XSxMiOrkcc9h0XCKyaoRGd8RkfNNujv+l
-7TCleyu3bEpK4hxaoR+1DmLWQ+jPFk/UIuZ3QwwNRSNFXmzSGoS9f5bZ0+6aDOEV
-96hPHOUPx0q+/jG1+VS+Dy22ieiZVV8FOsU4xN9QgY0E0tSAUwtnwdvHvwAEvv1T
-PP2cutlnqLX00FzRLbPsVogHvxCEMaFVMr7H9vIgsf1cRc3B+uFf8DoUqfrRuNNU
-NQuBKivCNJwBogokaPOS2urlgZ616e19X6lxEj1J89odcXHEfQio9fsVL6pDx2oe
-/s709gjj6obYY3FbTMVElisfjUvs7FWIvxxuEo/u4+q9kX4cdhHWGEvBLnz0cQCj
-wwXcSAJrNzyd9wAy9RnQpKXoCMa/t1+ToyyeqGHbmiMwqT4U8YRu7XYrfbJSonyl
-knIlFezThkj9KuWHdyUl8h1PKFqWn+0JhlUyq9x1QDmUihDhFmTx93IOXZljD/SW
-4pustyuObCuONFSytRlkx6wCSCT0eBheQjQy70E2Fh5om/PaNB+1uyNnDhySCsnR
-YgbyT+YxnA8VyfZYt4xjwEGjq46TiRX143gOUaO7iDcIWaMj/n4=
-=5xuY
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliITBoACgkQ3SOs138+
+s6FKOxAApf++5tonKTnc/tvharVFMtxMUtLsgXNRbL9Yj+IalOuakiLwyZmxx+4p
+YbWkMXDtguRQV1S9wwyv9ozyd8Lrc2QwcobpXl5BlLmKnPNkH+nIIHMdmFQQJVds
+OmCihaT/QPCN9BYLYsZeDDyl+hHs3gWowpujV5SLuRV7XGcNneCPIK2ZvHKJlcX3
+QjueoIPsrhmXAi/teo57JAbSkLyvMhSl1POMcbua9Asg1xGX4sWcCtbzIooQA0a1
+wkgOiU90I1rwZr4nP8LNpb91Ytwhfly+3j1o8A4j/9WWqXlpuseP2j1vm4upES48
+vbUhK3BDxaeUSmvc90gbf2A7fb5YlwNQs5Barrxwf1e/p9r12QYuEyPYKISl4fkq
+RfLIg2fMYIY5iFANHliA7eyWtiitZTe+FGFq3tPUb5TyMSgLB0hZo89Emn3uUATv
+0fcvJx79b2it6/q0lG7EWHm8IpCMEUW3u2UFUpYOS86w3u6e5hIOoSqpgkpKAqNr
+Uw/EmQMdkBwGtZks45/82FpY1EzNhHgRGLQcwm/B5wEp7BwoSPFko0GSKmb9NS8w
+cd7bAz11CqmVHEXsTiEh9uGnczdEqJv7LdewSZIjK04NtAcP8SNuBINnVJpJY6If
+Ms8wNtsct4fMsNmKFcLjiFwuc4qZxuHX0fnfz2dLxOJE+d/t970=
+=R1HQ
 -----END PGP SIGNATURE-----
 
---CE+1k2dSO48ffgeK--
+--IJpNTDwzlM2Ie8A6--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
