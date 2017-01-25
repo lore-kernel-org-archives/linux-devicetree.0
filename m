@@ -1,44 +1,106 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4] net: ethernet: faraday: To support device tree usage.
-Date: Wed, 25 Jan 2017 22:09:20 +0100
-Message-ID: <CAK8P3a2Zr6=4x8JRa313DQ2ND0V=8eL0yKkrd93wbdxkiOtmSw@mail.gmail.com>
-References: <20170124084606.GA11764@app09> <20170125.123448.742815192519658537.davem@davemloft.net>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
+Date: Wed, 25 Jan 2017 13:13:23 -0800
+Message-ID: <588914F3.7050909@gmail.com>
+References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
+ <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
+ <CAOMZO5AdgM9eFnerLRdYxwE7gsOE5OvkWs6rCR4zta1XmXHj1A@mail.gmail.com>
+ <20170119144641.jxj2bqg5uqjol23x@pengutronix.de>
+ <20170119145642.GC27312@n2100.armlinux.org.uk>
+ <20170119161441.jcctgig7np4v7sam@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170125.123448.742815192519658537.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+In-Reply-To: <20170119161441.jcctgig7np4v7sam-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 6:34 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Tue, 24 Jan 2017 16:46:14 +0800
->> We also use the same binding document to describe the same faraday ethernet
->> controller and add faraday to vendor-prefixes.txt.
->
-> Why are you renaming the MOXA binding file instead of adding a completely new one
-> for faraday?  The MOXA one should stick around, I don't see a justification for
-> removing it.
+On 01/19/17 08:14, Uwe Kleine-König wrote:
+> On Thu, Jan 19, 2017 at 02:56:42PM +0000, Russell King - ARM Linux wrote:
+>> On Thu, Jan 19, 2017 at 03:46:41PM +0100, Uwe Kleine-König wrote:
+>>> On Thu, Jan 19, 2017 at 12:35:40PM -0200, Fabio Estevam wrote:
+>>>> Hi Uwe,
+>>>>
+>>>> On Thu, Jan 19, 2017 at 12:13 PM, Uwe Kleine-König
+>>>> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>>>>
+>>>>> Would it be nice to add a comment about why this was added? Something to
+>>>>> prevent a cleanup like "remove empty nodes and invalid memory
+>>>>> configurations".
+>>>>
+>>>> Do you mean something like this?
+>>>>
+>>>> /* "chosen" and "memory" nodes are mandatory */
+>>>> chosen {};
+>>>> memory { device_type = "memory"; reg = <0 0>; };
+>>>
+>>> Not very helpful comment. Something like:
+>>>
+>>> 	/*
+>>> 	 * The decompressor relies on a pre-existing chosen node to be
+>>> 	 * available to insert the command line and merge other ATAGS
+>>> 	 * info.
+>>> 	 */
+>>>
+>>> Is it difficult to fix the decompressor?
+>>
+>> ... and that comment would be wrong.  Yes, the decompressor relies on it,
+>> as do some uboot versions.
+> 
+> Good that we talked about this, otherwise I would have removed that once
+> the decompressor is fixed. So the comment must be
+> 
+> 	/*
+> 	 * The decompressor and also some versions of U-Boot rely on a
+> 	 * pre-existing /chosen node to be available to insert the
+> 	 * command line and merge other ATAGS info.
+> 	 * Also for U-Boot there must be a pre-existing /memory node.
+> 	 */
+>  
+>>> I didn't understood the breakage regarding the memory node good enough
+>>> to suggest a comment for that.
+>>
+>> A missing memory node appears to prevent some uboot versions supplying
+>> any kind of memory layout to the kernel, which then causes the kernel to
+>> crash very early during boot.
+>>
+>> Again, this is not using appended DTB - this is using a separately loaded
+>> DTB in uboot.  uboot fails to update the dtb if these nodes are missing.
+>>
+>> Frankly, I think the original change (removing the skeleton.dtsi include)
+>> was misguided and needs to be reverted - the change is imho built upon an
+>> incorrect assumption that nothing in skeleton.dtsi is required.  That's
+>> clearly false.
+> 
+> I tend to agree as I assume it's not only U-Boot on i.MX but on all ARM
+> platforms.
+> 
+> Best regards
+> Uwe
+> 
 
-This was my suggestion, basically fixing the name of the existing
-binding, which was
-accidentally named after one of the users rather than the company that did the
-hardware.
+Adding back the chosen nodes is a bandaid that papers over the actual bug
+in the decompressor.
 
-We can't change the compatible string, but I'd much prefer having only
-one binding
-file for this device rather than two separate ones that could possibly become
-incompatible in case we add new properties to them. If there is only
-one of them,
-naming it according to the hardware design is the general policy.
+A comment about Fabio's attempt to fix the decompressor noted a possible
+issue with the method taken to fix the problem, but then the discussion
+of fixing the decompressor was dropped and v3 of the patch to add chosen
+into a bunch of .dtsi files was applied by Shawn.
 
-Note that we currently have two separate device drivers, but that is more a
-historic artifact, and if we ever get around to merging them into one driver,
-that should not impact the binding.
+Can someone please help Fabio to create a correct patch to fix the
+decompressor?
 
-    Arnd
+Note that the ePAPR v1.1 does require at least one memory node in
+section 3.1, so the portion of v3 of the patch that adds a memory
+node is valid in terms of following the standard, not just a U-boot
+requirement.
+
+Thanks,
+
+Frank
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
