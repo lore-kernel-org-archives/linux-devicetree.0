@@ -1,229 +1,78 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v6 2/3] dmaeninge: xilinx_dma: Fix bug in multiple frame
- stores scenario in vdma
-Date: Wed, 25 Jan 2017 11:45:06 +0530
-Message-ID: <20170125061506.GA3573@localhost>
-References: <1484372155-19423-1-git-send-email-appanad@xilinx.com>
- <1484372155-19423-3-git-send-email-appanad@xilinx.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [1/6] apalis-tk1: remove spurious new lines
+Date: Wed, 25 Jan 2017 07:44:25 +0100
+Message-ID: <20170125064425.GA12626@ulmo.ba.sec>
+References: <1479773647-14726-2-git-send-email-marcel.ziswiler@toradex.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="CE+1k2dSO48ffgeK"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484372155-19423-3-git-send-email-appanad@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Cc: mark.rutland@arm.com, moritz.fischer@ettus.com, Jose.Abreu@synopsys.com, devicetree@vger.kernel.org, michal.simek@xilinx.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, luis@debethencourt.com, dmaengine@vger.kernel.org, dan.j.williams@intel.com, appanad@xilinx.com, soren.brinkmann@xilinx.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1479773647-14726-2-git-send-email-marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 14, 2017 at 11:05:54AM +0530, Kedareswara rao Appana wrote:
-> When VDMA is configured for more than one frame in the h/w.
-> For example h/w is configured for n number of frames, user
-> Submits n number of frames and triggered the DMA using issue_pending API.
-> 
-> In the current driver flow we are submitting one frame at a time,
-> But we should submit all the n number of frames at one time
-> As the h/w is configured for n number of frames.
 
-Is there a specific reason why you continue to start lines with Title cases, I
-have already told you to not do that last time!
+--CE+1k2dSO48ffgeK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> This patch fixes this issue.
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Jose Abreu <joabreu@synopsys.com>
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+On Tue, Nov 22, 2016 at 01:14:02AM +0100, Marcel Ziswiler wrote:
+> Remove some spurious new lines.
+>=20
+> Signed-off-by: Marcel Ziswiler <marcel.ziswiler-2KBjVHiyJgBBDgjK7y7TUQ@public.gmane.org>
 > ---
-> Changes for v6:
-> ---> Added Rob Acked-by
-> ---> Updated commit message as suggested by Vinod.
-> Changes for v5:
-> ---> Updated xlnx,fstore-config property to xlnx,fstore-enable
->      and updated description as suggested by Rob.
-> Changes for v4:
-> ---> Add Check for framestore configuration on Transmit case as well
->      as suggested by Jose Abreu.
-> ---> Modified the dev_dbg checks to dev_warn checks as suggested
->      by Jose Abreu.
-> Changes for v3:
-> ---> Added Checks for frame store configuration. If frame store
->      Configuration is not present at the h/w level and user
->      Submits less frames added debug prints in the driver as relevant.
-> Changes for v2:
-> ---> Fixed race conditions in the driver as suggested by Jose Abreu
-> ---> Fixed unnecessray if else checks in the vdma_start_transfer
->      as suggested by Laurent Pinchart.
-> 
->  .../devicetree/bindings/dma/xilinx/xilinx_dma.txt  |  2 +
->  drivers/dma/xilinx/xilinx_dma.c                    | 78 +++++++++++++++-------
->  2 files changed, 57 insertions(+), 23 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> index a2b8bfa..e951c09 100644
-> --- a/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_dma.txt
-> @@ -66,6 +66,8 @@ Optional child node properties:
->  Optional child node properties for VDMA:
->  - xlnx,genlock-mode: Tells Genlock synchronization is
->  	enabled/disabled in hardware.
-> +- xlnx,fstore-enable: boolean; if defined, it indicates that controller
-> +	supports frame store configuration.
->  Optional child node properties for AXI DMA:
->  -dma-channels: Number of dma channels in child node.
->  
-> diff --git a/drivers/dma/xilinx/xilinx_dma.c b/drivers/dma/xilinx/xilinx_dma.c
-> index 5eeea57..edb5b71 100644
-> --- a/drivers/dma/xilinx/xilinx_dma.c
-> +++ b/drivers/dma/xilinx/xilinx_dma.c
-> @@ -322,6 +322,7 @@ struct xilinx_dma_tx_descriptor {
->   * @genlock: Support genlock mode
->   * @err: Channel has errors
->   * @idle: Check for channel idle
-> + * @has_fstoreen: Check for frame store configuration
->   * @tasklet: Cleanup work after irq
->   * @config: Device configuration info
->   * @flush_on_fsync: Flush on Frame sync
-> @@ -353,6 +354,7 @@ struct xilinx_dma_chan {
->  	bool genlock;
->  	bool err;
->  	bool idle;
-> +	bool has_fstoreen;
->  	struct tasklet_struct tasklet;
->  	struct xilinx_vdma_config config;
->  	bool flush_on_fsync;
-> @@ -990,6 +992,27 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  	if (list_empty(&chan->pending_list))
->  		return;
->  
-> +	/*
-> +	 * Note: When VDMA is built with default h/w configuration
-> +	 * User should submit frames upto H/W configured.
-> +	 * If users submits less than h/w configured
-> +	 * VDMA engine tries to write to a invalid location
-> +	 * Results undefined behaviour/memory corruption.
-> +	 *
-> +	 * If user would like to submit frames less than h/w capable
-> +	 * On S2MM side please enable debug info 13 at the h/w level
-> +	 * On MM2S side please enable debug info 6 at the h/w level
-> +	 * It will allows the frame buffers numbers to be modified at runtime.
-> +	 */
-> +	if (!chan->has_fstoreen &&
-> +	     chan->desc_pendingcount < chan->num_frms) {
-> +		dev_warn(chan->dev, "Frame Store Configuration is not enabled at the\n");
-> +		dev_warn(chan->dev, "H/w level enable Debug info 13 or 6 at the h/w level\n");
-> +		dev_warn(chan->dev, "OR Submit the frames upto h/w Capable\n\r");
-> +
-> +		return;
-> +	}
-> +
->  	desc = list_first_entry(&chan->pending_list,
->  				struct xilinx_dma_tx_descriptor, node);
->  	tail_desc = list_last_entry(&chan->pending_list,
-> @@ -1052,25 +1075,38 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  	if (chan->has_sg) {
->  		dma_ctrl_write(chan, XILINX_DMA_REG_TAILDESC,
->  				tail_segment->phys);
-> +		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> +		chan->desc_pendingcount = 0;
->  	} else {
->  		struct xilinx_vdma_tx_segment *segment, *last = NULL;
-> -		int i = 0;
-> +		int i = 0, j = 0;
->  
->  		if (chan->desc_submitcount < chan->num_frms)
->  			i = chan->desc_submitcount;
->  
-> -		list_for_each_entry(segment, &desc->segments, node) {
-> -			if (chan->ext_addr)
-> -				vdma_desc_write_64(chan,
-> -					XILINX_VDMA_REG_START_ADDRESS_64(i++),
-> -					segment->hw.buf_addr,
-> -					segment->hw.buf_addr_msb);
-> -			else
-> -				vdma_desc_write(chan,
-> -					XILINX_VDMA_REG_START_ADDRESS(i++),
-> -					segment->hw.buf_addr);
-> -
-> -			last = segment;
-> +		for (j = 0; j < chan->num_frms; ) {
-> +			list_for_each_entry(segment, &desc->segments, node) {
-> +				if (chan->ext_addr)
-> +					vdma_desc_write_64(chan,
-> +					  XILINX_VDMA_REG_START_ADDRESS_64(i++),
-> +					  segment->hw.buf_addr,
-> +					  segment->hw.buf_addr_msb);
-> +				else
-> +					vdma_desc_write(chan,
-> +					    XILINX_VDMA_REG_START_ADDRESS(i++),
-> +					    segment->hw.buf_addr);
-> +
-> +				last = segment;
-> +			}
-> +			list_del(&desc->node);
-> +			list_add_tail(&desc->node, &chan->active_list);
-> +			j++;
-> +			if (list_empty(&chan->pending_list) ||
-> +			    (i == chan->num_frms))
-> +				break;
-> +			desc = list_first_entry(&chan->pending_list,
-> +						struct xilinx_dma_tx_descriptor,
-> +						node);
->  		}
->  
->  		if (!last)
-> @@ -1081,20 +1117,14 @@ static void xilinx_vdma_start_transfer(struct xilinx_dma_chan *chan)
->  		vdma_desc_write(chan, XILINX_DMA_REG_FRMDLY_STRIDE,
->  				last->hw.stride);
->  		vdma_desc_write(chan, XILINX_DMA_REG_VSIZE, last->hw.vsize);
-> -	}
->  
-> -	chan->idle = false;
-> -	if (!chan->has_sg) {
-> -		list_del(&desc->node);
-> -		list_add_tail(&desc->node, &chan->active_list);
-> -		chan->desc_submitcount++;
-> -		chan->desc_pendingcount--;
-> +		chan->desc_submitcount += j;
-> +		chan->desc_pendingcount -= j;
->  		if (chan->desc_submitcount == chan->num_frms)
->  			chan->desc_submitcount = 0;
-> -	} else {
-> -		list_splice_tail_init(&chan->pending_list, &chan->active_list);
-> -		chan->desc_pendingcount = 0;
->  	}
-> +
-> +	chan->idle = false;
->  }
->  
->  /**
-> @@ -1342,6 +1372,7 @@ static int xilinx_dma_reset(struct xilinx_dma_chan *chan)
->  
->  	chan->err = false;
->  	chan->idle = true;
-> +	chan->desc_submitcount = 0;
->  
->  	return err;
->  }
-> @@ -2320,6 +2351,7 @@ static int xilinx_dma_chan_probe(struct xilinx_dma_device *xdev,
->  	has_dre = of_property_read_bool(node, "xlnx,include-dre");
->  
->  	chan->genlock = of_property_read_bool(node, "xlnx,genlock-mode");
-> +	chan->has_fstoreen = of_property_read_bool(node, "xlnx,fstore-enable");
->  
->  	err = of_property_read_u32(node, "xlnx,datawidth", &value);
->  	if (err) {
-> -- 
-> 2.1.2
-> 
 
--- 
-~Vinod
+For some reason I can't find any trace of this series in my inbox. It's
+not even been classified as spam, it's just not there. So I had to pull
+this from patchwork in order to reply.
+
+>  arch/arm/boot/dts/tegra124-apalis-eval.dts |  1 -
+>  arch/arm/boot/dts/tegra124-apalis.dtsi     | 12 ------------
+>  2 files changed, 13 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/d=
+ts/tegra124-apalis-eval.dts
+> index 653044a..2b5a0f3 100644
+> --- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> +++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+> @@ -232,7 +232,6 @@
+> =20
+>  	backlight: backlight {
+>  		compatible =3D "pwm-backlight";
+> -
+>  		/* BKL1_PWM */
+>  		pwms =3D <&pwm 3 5000000>;
+>  		brightness-levels =3D <255 231 223 207 191 159 127 0>;
+
+These newlines were introduced to separate standard properties from the
+not so standard properties for readability, I'd prefer to keep them.
+
+Same for the ones below.
+
+Thierry
+
+--CE+1k2dSO48ffgeK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliISUMACgkQ3SOs138+
+s6GnyQ/+LwqijgDEvfYqX7lGd9u9c40HYwM31piF9TpQMhFlBZ4+gKiPqF+KTx3L
+JvwpkZopIhWG/o9lbPv95JJGNBa5nf4XSxMiOrkcc9h0XCKyaoRGd8RkfNNujv+l
+7TCleyu3bEpK4hxaoR+1DmLWQ+jPFk/UIuZ3QwwNRSNFXmzSGoS9f5bZ0+6aDOEV
+96hPHOUPx0q+/jG1+VS+Dy22ieiZVV8FOsU4xN9QgY0E0tSAUwtnwdvHvwAEvv1T
+PP2cutlnqLX00FzRLbPsVogHvxCEMaFVMr7H9vIgsf1cRc3B+uFf8DoUqfrRuNNU
+NQuBKivCNJwBogokaPOS2urlgZ616e19X6lxEj1J89odcXHEfQio9fsVL6pDx2oe
+/s709gjj6obYY3FbTMVElisfjUvs7FWIvxxuEo/u4+q9kX4cdhHWGEvBLnz0cQCj
+wwXcSAJrNzyd9wAy9RnQpKXoCMa/t1+ToyyeqGHbmiMwqT4U8YRu7XYrfbJSonyl
+knIlFezThkj9KuWHdyUl8h1PKFqWn+0JhlUyq9x1QDmUihDhFmTx93IOXZljD/SW
+4pustyuObCuONFSytRlkx6wCSCT0eBheQjQy70E2Fh5om/PaNB+1uyNnDhySCsnR
+YgbyT+YxnA8VyfZYt4xjwEGjq46TiRX143gOUaO7iDcIWaMj/n4=
+=5xuY
+-----END PGP SIGNATURE-----
+
+--CE+1k2dSO48ffgeK--
