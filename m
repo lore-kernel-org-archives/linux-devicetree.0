@@ -1,113 +1,63 @@
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
-Subject: [PATCH v6 0/5] powernv:stop: Use psscr_val,mask provided by firmware
-Date: Wed, 25 Jan 2017 14:06:24 +0530
-Message-ID: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 2/2] clocksource: Add renesas-ostm timer driver
+Date: Wed, 25 Jan 2017 09:35:22 +0100
+Message-ID: <CAMuHMdXHqDrmvaCBCXy5gHJ9h0_6S7g8R0ji=Sb5TSoH2s57Gw@mail.gmail.com>
+References: <20170123135423.28780-1-chris.brandt@renesas.com>
+ <20170123135423.28780-3-chris.brandt@renesas.com> <20170123175210.GH2166@mai>
+ <SG2PR06MB11657AE9653A4B66B1EA02718A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <20170124143222.GA2021@mai> <SG2PR06MB11652097D0BFA1A058F9CFBC8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB11652097D0BFA1A058F9CFBC8A750@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Hi Chris,
 
-This is the sixth iteration of the patchset to use the psscr_val and
-psscr_mask provided by the firmware for each of the stop states.
+On Tue, Jan 24, 2017 at 3:43 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+> On Tuesday, January 24, 2017, Daniel Lezcano wrote:
+>> > > > +early_platform_init("earlytimer", &ostm_timer);
+>> > > > +subsys_initcall(ostm_init); module_exit(ostm_exit);
+>> > > > +
+>> > > > +MODULE_AUTHOR("Chris Brandt");
+>> > > > +MODULE_DESCRIPTION("Renesas OSTM Timer Driver");
+>> > > > +MODULE_LICENSE("GPL v2");
+>> > >
+>> > > Maybe you can try with builtin_platform ?
+>> >
+>> > Good idea. But, now I get a "Section mismatch" during link time so
+>> > I'll have to figure out why that is.
+>>
+>> Mmh, I think it would be more consistent to convert this to:
+>>
+>> CLOCKSOURCE_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
+>>
+>> The only problem is to get the struct device associated to the of_node
+>> passed as parameter to ostm_init in order to use the devm_* API.
+>>
+>> I think of_find_device_by_node should return the platform_device, then
+>> pdev->dev. If that works the other drivers will benefit from that to
+>> pdev->remove all
+>> the rollback code everywhere.
+>
+> So I realized that in order to use builtin_platform, I can't have any of the
+> functions in __init because the build system has no idea that I never plan
+> on removing or probing again after boot. But, even if I take out all the
+> __init from my code, I'm still calling clocksource_mmio_init which is __init
+> so I can never escape the "Section mismatch".
 
-The previous versions can be found here:
-[v5]: https://lkml.org/lkml/2017/1/10/147
-[v4]: https://lkml.org/lkml/2016/12/9/288
-[v3]: https://lkml.org/lkml/2016/11/10/37
-[v2]: https://lkml.org/lkml/2016/10/27/143
-[v1]: https://lkml.org/lkml/2016/9/29/45
+For single-probe drivers, you can use builtin_platform_driver_probe().
 
-This version addresses the feedback provided by Balbir and Rob Herring to
-v5. The key changes are:
+Gr{oetje,eeting}s,
 
-- [PATCH 2] Rename pnv_arch300_idle_init to pnv_power9_idle_init to be consistent
-  with the nomenclature of variables and functions in idle_book3s.S.
+                        Geert
 
-- [PATCH 5] Updated the introduction to Idle-state properties in the
-  devicetree bindings documentation in order to clarify when the
-  "name" and "flags" properties are required. Also fixed the typos in
-  the Documentation for the device-tree bindings
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-Synopsis
-==========
-In the current implementation, the code for ISA
-v3.0 stop implementation has a couple of shortcomings.
-
-a) The code hand-codes the values for ESL, EC, TR, MTL bits of PSSCR
-   and uses only the RL field from the firmware. While this is not
-   incorrect, since the hand-coded values are legitimate, it is not a
-   very flexible design since the firmware has the capability to
-   communicate these values via the "ibm,cpu-idle-state-psscr" and
-   "ibm,cpu-idle-state-psscr-mask" properties. In case where the
-   firmware provides values for these fields that is different from
-   the hand-coded values, the current code will not work as intended.
-
-b) Due to issue a), the current code assumes that ESL=EC=1 for all the
-   stop states and hence the wakeup from the stop instruction will
-   happen at 0x100, the system-reset vector. However, the ISA v3.0
-   allows the ESL=EC=0 behaviour where the corresponding stop-state
-   loses no state and wakes up from the subsequent instruction. The
-   current code doesn't handle this case.
-   
-This patch series addresses these issues.
-
-The first patch in the series renames the existing
-IDLE_STATE_ENTER_SEQ macro to IDLE_STATE_ENTER_SEQ_NORET. It reuses
-the name IDLE_STATE_ENTER_SEQ for entering into stop-states which wake
-up at the subsequent instruction.
-
-The second patch in the series renames pnv_arch300_idle_init()
-to pnv_power9_idle_init.
-
-The third patch adds a helper function in cpuidle-powernv.c for
-initializing entries of the powernv_states[] table that is passed to
-the cpu-idle core. This eliminates some of the code duplication in the
-function that discovers and initializes the stop states.
-
-The fourth patch in the series fixes issues a) and b) by ensuring that
-the psscr-value and the psscr-mask provided by the firmware are what
-will be used to set a particular stop state. It also adds support for
-handling wake-up from stop states which were entered with ESL=EC=0.
-It validates hat the psscr values exposed by the firmware maintains
-the invariants mentioned in the ISA.
-
-The fourth patch also handles the older firmware which sets only the
-Requested Level (RL) field in the psscr and psscr-mask exposed in the
-device tree. In the presence of such older firmware, this patch will
-set the default sane values for for remaining PSSCR fields (i.e PSLL,
-MTL, ESL, EC, and TR).
-
-The fifth patch provides the documentation for the device-tree
-bindings describing the idle state properties under the @power-mgt
-node in the device-tree.
-
-The skiboot patch populates all the relevant fields in the PSSCR
-values and the mask for all the stop states can be found here:
-https://lists.ozlabs.org/pipermail/skiboot/2016-September/004869.html
-
-Gautham R. Shenoy (5):
-  powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
-  powernv:stop: Rename pnv_arch300_idle_init to pnv_power9_idle_init
-  cpuidle:powernv: Add helper function to populate powernv idle states.
-  powernv: Pass PSSCR value and mask to power9_idle_stop
-  Documentation:powerpc: Add device-tree bindings for power-mgt
-
- .../devicetree/bindings/powerpc/opal/power-mgt.txt | 118 +++++++++++++++++
- arch/powerpc/include/asm/cpuidle.h                 |  49 ++++++-
- arch/powerpc/include/asm/processor.h               |   3 +-
- arch/powerpc/kernel/exceptions-64s.S               |   6 +-
- arch/powerpc/kernel/idle_book3s.S                  |  40 +++---
- arch/powerpc/platforms/powernv/idle.c              | 142 ++++++++++++++++++---
- arch/powerpc/platforms/powernv/powernv.h           |   3 +-
- arch/powerpc/platforms/powernv/smp.c               |  14 +-
- drivers/cpuidle/cpuidle-powernv.c                  | 129 +++++++++++++------
- include/linux/cpuidle.h                            |   1 +
- 10 files changed, 421 insertions(+), 84 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
-
--- 
-1.9.4
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
