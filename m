@@ -1,39 +1,45 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v10 2/5] i2c: Add STM32F4 I2C driver
-Date: Wed, 25 Jan 2017 22:03:32 +0100
-Message-ID: <20170125210332.nnou2yavyztulual@pengutronix.de>
-References: <1484832316-5594-1-git-send-email-cedric.madianga@gmail.com>
- <1484832316-5594-3-git-send-email-cedric.madianga@gmail.com>
- <20170125202505.4acldm2wla3sqfsp@ninjato>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v4] net: ethernet: faraday: To support device tree usage.
+Date: Wed, 25 Jan 2017 22:09:20 +0100
+Message-ID: <CAK8P3a2Zr6=4x8JRa313DQ2ND0V=8eL0yKkrd93wbdxkiOtmSw@mail.gmail.com>
+References: <20170124084606.GA11764@app09> <20170125.123448.742815192519658537.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170125202505.4acldm2wla3sqfsp@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: M'boumba Cedric Madianga <cedric.madianga@gmail.com>, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, linus.walleij@linaro.org, patrice.chotard@st.com, linux@armlinux.org.uk, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170125.123448.742815192519658537.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Wolfram,
+On Wed, Jan 25, 2017 at 6:34 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Tue, 24 Jan 2017 16:46:14 +0800
+>> We also use the same binding document to describe the same faraday ethernet
+>> controller and add faraday to vendor-prefixes.txt.
+>
+> Why are you renaming the MOXA binding file instead of adding a completely new one
+> for faraday?  The MOXA one should stick around, I don't see a justification for
+> removing it.
 
-On Wed, Jan 25, 2017 at 09:25:05PM +0100, Wolfram Sang wrote:
-> On Thu, Jan 19, 2017 at 02:25:13PM +0100, M'boumba Cedric Madianga wrote:
-> > This patch adds support for the STM32F4 I2C controller.
-> > 
-> > Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-> 
-> Applied to for-next with Uwe's ack (which looked more like a review to
-> me, but well...), thanks to all involved for keeping at it!
+This was my suggestion, basically fixing the name of the existing
+binding, which was
+accidentally named after one of the users rather than the company that did the
+hardware.
 
-I thought about calling it a review, but as I didn't look in detail over
-the last version, I degraded it to an ack on purpose.
+We can't change the compatible string, but I'd much prefer having only
+one binding
+file for this device rather than two separate ones that could possibly become
+incompatible in case we add new properties to them. If there is only
+one of them,
+naming it according to the hardware design is the general policy.
 
-Best regards
-Uwe
+Note that we currently have two separate device drivers, but that is more a
+historic artifact, and if we ever get around to merging them into one driver,
+that should not impact the binding.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+    Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
