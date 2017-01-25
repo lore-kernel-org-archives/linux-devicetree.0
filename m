@@ -1,75 +1,56 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/4] clk: renesas: cpg-mssr: Rename cpg_mssr_priv.mstp_lock
-Date: Wed, 25 Jan 2017 10:15:02 +0100
-Message-ID: <1485335703-27184-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 1/4] dt-bindings: clock: renesas: cpg-mssr: Document reset control support
+Date: Wed, 25 Jan 2017 10:15:00 +0100
+Message-ID: <1485335703-27184-2-git-send-email-geert+renesas@glider.be>
 References: <1485335703-27184-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1485335703-27184-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Philipp Zabel <p.zabel@pengutronix.de>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-The spinlock is used to protect Read-Modify-Write register accesses,
-which won't be limited to SMSTPCR register accesses.
+Document properties needed to use the Reset Control feature of the
+Renesas Clock Pulse Generator / Module Standby and Software Reset
+module.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
 ---
 v2:
-  - Add Acked-by.
+  - Change oneline summary to refer to dt-bindings.
 ---
- drivers/clk/renesas/renesas-cpg-mssr.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
-index eb8534e5ebf3007d..f1161a585c57e433 100644
---- a/drivers/clk/renesas/renesas-cpg-mssr.c
-+++ b/drivers/clk/renesas/renesas-cpg-mssr.c
-@@ -98,7 +98,7 @@
-  *
-  * @dev: CPG/MSSR device
-  * @base: CPG/MSSR register block base address
-- * @mstp_lock: protects writes to SMSTPCR
-+ * @rmw_lock: protects RMW register accesses
-  * @clks: Array containing all Core and Module Clocks
-  * @num_core_clks: Number of Core Clocks in clks[]
-  * @num_mod_clks: Number of Module Clocks in clks[]
-@@ -107,7 +107,7 @@
- struct cpg_mssr_priv {
- 	struct device *dev;
- 	void __iomem *base;
--	spinlock_t mstp_lock;
-+	spinlock_t rmw_lock;
+diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+index c469194129536332..f4f944d813081857 100644
+--- a/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
++++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mssr.txt
+@@ -42,6 +42,10 @@ Required Properties:
+ 	Domain bindings in
+ 	Documentation/devicetree/bindings/power/power_domain.txt.
  
- 	struct clk **clks;
- 	unsigned int num_core_clks;
-@@ -144,7 +144,7 @@ static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
++  - #reset-cells: Must be 1
++      - The single reset specifier cell must be the module number, as defined
++	in the datasheet.
++
  
- 	dev_dbg(dev, "MSTP %u%02u/%pC %s\n", reg, bit, hw->clk,
- 		enable ? "ON" : "OFF");
--	spin_lock_irqsave(&priv->mstp_lock, flags);
-+	spin_lock_irqsave(&priv->rmw_lock, flags);
+ Examples
+ --------
+@@ -55,6 +59,7 @@ Examples
+ 		clock-names = "extal", "extalr";
+ 		#clock-cells = <2>;
+ 		#power-domain-cells = <0>;
++		#reset-cells = <1>;
+ 	};
  
- 	value = readl(priv->base + SMSTPCR(reg));
- 	if (enable)
-@@ -153,7 +153,7 @@ static int cpg_mstp_clock_endisable(struct clk_hw *hw, bool enable)
- 		value |= bitmask;
- 	writel(value, priv->base + SMSTPCR(reg));
  
--	spin_unlock_irqrestore(&priv->mstp_lock, flags);
-+	spin_unlock_irqrestore(&priv->rmw_lock, flags);
- 
- 	if (!enable)
- 		return 0;
-@@ -550,7 +550,7 @@ static int __init cpg_mssr_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	priv->dev = dev;
--	spin_lock_init(&priv->mstp_lock);
-+	spin_lock_init(&priv->rmw_lock);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	priv->base = devm_ioremap_resource(dev, res);
+@@ -69,5 +74,6 @@ Examples
+ 		dmas = <&dmac1 0x13>, <&dmac1 0x12>;
+ 		dma-names = "tx", "rx";
+ 		power-domains = <&cpg>;
++		resets = <&cpg 310>;
+ 		status = "disabled";
+ 	};
 -- 
 1.9.1
