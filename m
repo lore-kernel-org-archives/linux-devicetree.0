@@ -1,207 +1,358 @@
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 2/2] ASoc: Add devictree bindings for CS35L35 CODEC
-Date: Wed, 25 Jan 2017 10:13:18 -0600
-Message-ID: <c3224f63-e5d1-4874-8317-c5df53d0207d@EX3.ad.cirrus.com>
-References: <1485360798-15523-1-git-send-email-brian.austin@cirrus.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH v6 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Wed, 25 Jan 2017 09:23:46 -0700
+Message-ID: <20170125162346.GA591@linaro.org>
+References: <1485312289-18354-1-git-send-email-baoyou.xie@linaro.org>
+ <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485360798-15523-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings documentatin for
-Cirrus Logic CS35L35 Boosted Amplifier
+On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wrote:
+> This patch adds watchdog controller driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  drivers/watchdog/Kconfig      |  10 ++
+>  drivers/watchdog/Makefile     |   1 +
+>  drivers/watchdog/zx2967_wdt.c | 276 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 287 insertions(+)
+>  create mode 100644 drivers/watchdog/zx2967_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index acb00b5..05093a2 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called aspeed_wdt.
+>  
+> +config ZX2967_WATCHDOG
+> +	tristate "ZTE zx2967 SoCs watchdog support"
+> +	depends on ARCH_ZX
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  in ZTE zx2967 SoCs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called zx2967_wdt.
+> +
+>  # AVR32 Architecture
+>  
+>  config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0c3d35e..bf2d296 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+>  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+> +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+>  
+>  # AVR32 Architecture
+>  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
+> new file mode 100644
+> index 0000000..8278471
+> --- /dev/null
+> +++ b/drivers/watchdog/zx2967_wdt.c
+> @@ -0,0 +1,276 @@
+> +/*
+> + * watchdog driver for ZTE's zx2967 family
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define ZX2967_WDT_CFG_REG			0x4
+> +#define ZX2967_WDT_LOAD_REG			0x8
+> +#define ZX2967_WDT_REFRESH_REG			0x18
+> +#define ZX2967_WDT_START_REG			0x1c
+> +
+> +#define ZX2967_WDT_REFRESH_MASK			0x3f
+> +
+> +#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
+> +#define ZX2967_WDT_START_EN			0x1
+> +
+> +#define ZX2967_WDT_WRITEKEY			0x12340000
+> +
+> +#define ZX2967_WDT_DIV_DEFAULT			16
+> +#define ZX2967_WDT_DEFAULT_TIMEOUT		32
+> +#define ZX2967_WDT_MIN_TIMEOUT			1
+> +#define ZX2967_WDT_MAX_TIMEOUT			524
+> +#define ZX2967_WDT_MAX_COUNT			0xffff
+> +
+> +#define ZX2967_WDT_CLK_FREQ			0x8000
+> +
+> +#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
+> +
+> +struct zx2967_wdt {
+> +	struct watchdog_device	wdt_device;
+> +	void __iomem		*reg_base;
+> +	struct clk		*clock;
+> +};
+> +
+> +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+> +{
+> +	return readl_relaxed(wdt->reg_base + reg);
+> +}
+> +
+> +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
+> +{
+> +	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+> +}
+> +
+> +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
+> +	val ^= ZX2967_WDT_REFRESH_MASK;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
+> +}
+> +
+> +static int
+> +zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
+> +	unsigned int count;
+> +
+> +	count = timeout * ZX2967_WDT_CLK_FREQ;
+> +	if (count > divisor * ZX2967_WDT_MAX_COUNT)
+> +		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
+> +	count = DIV_ROUND_UP(count, divisor);
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
+> +	zx2967_wdt_refresh(wdt);
+> +	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val |= ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
+> +}
+> +
+> +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val &= ~ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
+> +}
+> +
+> +static int zx2967_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_set_timeout(wdd, wdd->timeout);
+> +	__zx2967_wdt_start(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	__zx2967_wdt_stop(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_refresh(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +#define ZX2967_WDT_OPTIONS \
+> +	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
+> +static const struct watchdog_info zx2967_wdt_ident = {
+> +	.options          =     ZX2967_WDT_OPTIONS,
+> +	.identity         =	"zx2967 watchdog",
+> +};
+> +
+> +static struct watchdog_ops zx2967_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = zx2967_wdt_start,
+> +	.stop = zx2967_wdt_stop,
+> +	.ping = zx2967_wdt_keepalive,
+> +	.set_timeout = zx2967_wdt_set_timeout,
+> +};
+> +
+> +static void zx2967_wdt_reset_sysctrl(struct device *dev)
+> +{
+> +	int ret;
+> +	void __iomem *regmap;
+> +	unsigned int offset, mask, config;
+> +	struct of_phandle_args out_args;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(dev->of_node,
+> +			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
+> +	if (ret)
+> +		return;
+> +
+> +	offset = out_args.args[0];
+> +	config = out_args.args[1];
+> +	mask = out_args.args[2];
+> +
+> +	regmap = syscon_node_to_regmap(out_args.np);
+> +	if (IS_ERR(regmap)) {
+> +		of_node_put(out_args.np);
+> +		return;
+> +	}
+> +
+> +	regmap_update_bits(regmap, offset, mask, config);
+> +	of_node_put(out_args.np);
+> +}
+> +
+> +static int zx2967_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct zx2967_wdt *wdt;
+> +	struct resource *base;
+> +	int ret;
+> +	struct reset_control *rstc;
+> +
+> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +
+> +	wdt->wdt_device.info = &zx2967_wdt_ident;
+> +	wdt->wdt_device.ops = &zx2967_wdt_ops;
+> +	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
+> +	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
+> +	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
+> +	wdt->wdt_device.parent = &pdev->dev;
+> +
+> +	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->reg_base = devm_ioremap_resource(dev, base);
+> +	if (IS_ERR(wdt->reg_base)) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		return PTR_ERR(wdt->reg_base);
+> +	}
+> +
+> +	zx2967_wdt_reset_sysctrl(dev);
+> +
+> +	wdt->clock = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(wdt->clock)) {
+> +		dev_err(dev, "failed to find watchdog clock source\n");
+> +		return PTR_ERR(wdt->clock);
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
+> +
+> +	rstc = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(rstc)) {
+> +		dev_err(dev, "failed to get rstc");
+> +		ret = PTR_ERR(rstc);
+> +		goto err;
+> +	}
+> +
+> +	reset_control_assert(rstc);
+> +	usleep_range(500, 20000);
 
-Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
----
- .../devicetree/bindings/sound/cs35l35.txt          | 171 +++++++++++++++++++++
- 1 file changed, 171 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs35l35.txt
+Alright, I'm officially confused.
 
-diff --git a/Documentation/devicetree/bindings/sound/cs35l35.txt b/Documentation/devicetree/bindings/sound/cs35l35.txt
-new file mode 100644
-index 0000000..8a93b1b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs35l35.txt
-@@ -0,0 +1,171 @@
-+CS35L35 Speaker Amplifier
-+
-+Required properties:
-+
-+  - compatible : "cirrus,cs35l35"
-+
-+  - reg : the I2C address of the device for I2C
-+
-+  - VA-supply, VP-supply : power supplies for the device,
-+    as covered in
-+    Documentation/devicetree/bindings/regulator/regulator.txt.
-+
-+  - interrupt-parent : Specifies the phandle of the interrupt controller to
-+    which the IRQs from CS35L35 are delivered to.
-+  - interrupts : IRQ line info CS35L35.
-+    (See Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+    for further information relating to interrupt properties)
-+
-+Optional properties:
-+  - reset-gpios : gpio used to reset the amplifier
-+
-+  - cirrus,stereo-config : Boolean to determine if there are 2 AMPs for a
-+  Stereo configuration
-+
-+  - cirrus,audio-channel : Set Location of Audio Signal on Serial Port
-+  0 = Data Packet received on Left I2S Channel
-+  1 = Data Packet received on Right I2S Channel
-+
-+  - cirrus,advisory-channel : Set Location of Advisory Signal on Serial Port
-+  0 = Data Packet received on Left I2S Channel
-+  1 = Data Packet received on Right I2S Channel
-+
-+  - cirrus,shared-boost : Boolean to enable ClassH tracking of Advisory Signal
-+  if 2 Devices share Boost BST_CTL
-+
-+  - cirrus,sp-drv-strength : Value for setting the Serial Port drive strength
-+  Table 3-10 of the datasheet lists drive-strength specifications
-+  0 = 1x (Default)
-+  1 = .5x
-+
-+  - cirrus,bst-pdn-fet-on : Boolean to determine if the Boost PDN control
-+  powers down with a rectification FET On or Off. If VSPK is supplied
-+  externally then FET is off.
-+
-+  - cirrus,boost-ctl : Boost Converter control word.
-+  Step Size: 100
-+  0x00 = (Default) VP
-+  Range is 0x01...0x41
-+
-+  - cirrus,boost-ipk : Boost-converter peak current limit.
-+  Configures the peak current by monitoring the current through the boost FET.
-+  Step size: 112
-+  0x07 = (Default) 2.46 Amps
-+  Range is 0x00...0x19
-+
-+  - cirrus,amp-gain-zc : Boolean to determine if to use Amplifier gain-change
-+  zero-cross
-+
-+Optional H/G Algorithm sub-node:
-+
-+  The cs35l35 node can have a single "cirrus,classh-internal-algo" sub-node
-+  that will disable automatic control of the internal H/G Algorithm.
-+
-+  It is strongly recommended that the Datasheet be referenced when adjusting
-+  or using these Class H Algorithm controls over the internal Algorithm.
-+  Serious damage can occur to the Device and surrounding components.
-+
-+  - cirrus,classh-internal-algo : Sub-node for the Internal Class H Algorithm
-+  See Section 4.3 Internal Class H Algorithm in the Datasheet.
-+  If not used, the device manages the ClassH Algorithm internally.
-+
-+Optional properties for the "cirrus,classh-internal-algo" Sub-node
-+
-+  Section 7.29 Class H Control
-+  - cirrus,classh-bst-overide : Boolean
-+  - cirrus,classh-bst-max-limit
-+  - cirrus,classh-mem-depth
-+
-+  Section 7.30 Class H Headroom Control
-+  - cirrus,classh-headroom
-+
-+  Section 7.31 Class H Release Rate
-+  - cirrus,classh-release-rate
-+
-+  Section 7.32 Class H Weak FET Drive Control
-+  - cirrus,classh-wk-fet-disable
-+  - cirrus,classh-wk-fet-delay
-+  - cirrus,classh-wk-fet-thld
-+
-+  Section 7.34 Class H VP Control
-+  - cirrus,classh-vpch-auto
-+  - cirrus,classh-vpch-rate
-+  - cirrus,classh-vpch-man
-+
-+Optional Monitor Signal Format sub-node:
-+
-+  The cs35l35 node can have a single "cirrus,monitor-signal-format" sub-node
-+  for adjusting the Depth, Location and Frame of the Monitoring Signals
-+  for Algorithms.
-+
-+  See Sections 4.8.2 through 4.8.4 Serial-Port Control in the Datasheet
-+
-+  -cirrus,monitor-signal-format : Sub-node for the Monitor Signaling Formating
-+  on the I2S Port. Each of the 3 8 bit values in the array contain the settings
-+  for depth, location, and frame.
-+
-+  If not used, the defaults for the 6 monitor signals is used.
-+
-+  Sections 7.44 - 7.53 lists values for the depth, location, and frame
-+  for each monitoring signal.
-+
-+  - cirrus,imon : 3 8 bit values to set the depth, location, and frame
-+  of the IMON monitor signal.
-+
-+  - cirrus,vmon : 3 8 bit values to set the depth, location, and frame
-+  of the VMON monitor signal.
-+
-+  - cirrus,vpmon : 3 8 bit values to set the depth, location, and frame
-+  of the VPMON monitor signal.
-+
-+  - cirrus,vbstmon : 3 8 bit values to set the depth, location, and frame
-+  of the VBSTMON monitor signal
-+
-+  - cirrus,vpbrstat : 3 8 bit values to set the depth, location, and frame
-+  of the VPBRSTAT monitor signal
-+
-+  - cirrus,zerofill : 3 8 bit values to set the depth, location, and frame\
-+  of the ZEROFILL packet in the monitor signal
-+
-+Example:
-+
-+cs35l35: cs35l35@20 {
-+	compatible = "cirrus,cs35l35";
-+	reg = <0x20>;
-+	VA-supply = <&dummy_vreg>;
-+	VP-supply = <&dummy_vreg>;
-+	reset-gpios = <&axi_gpio 54 0>;
-+	interrupt-parent = <&gpio8>;
-+	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-+	cirrus,boost-ctl = <0x41>;
-+
-+	cirrus,stereo-config;
-+	cirrus,audio-channel = <0x00>;
-+	cirrus,advisory-channel = <0x01>;
-+	cirrus,shared-boost;
-+
-+	cirrus,classh-internal-algo {
-+		cirrus,classh-bst-overide;
-+		cirrus,classh-bst-max-limit = <0x01>;
-+		cirrus,classh-mem-depth = <0x01>;
-+		cirrus,classh-release-rate = <0x08>;
-+		cirrus,classh-headroom-millivolt = <0x0B>;
-+		cirrus,classh-wk-fet-disable = <0x01>;
-+		cirrus,classh-wk-fet-delay = <0x04>;
-+		cirrus,classh-wk-fet-thld = <0x01>;
-+		cirrus,classh-vpch-auto = <0x01>;
-+		cirrus,classh-vpch-rate = <0x02>;
-+		cirrus,classh-vpch-man = <0x05>;
-+	};
-+
-+	/* Depth, Location, Frame */
-+	cirrus,monitor-signal-format {
-+		cirrus,imon = /bits/ 8 <0x03 0x00 0x01>;
-+		cirrus,vmon = /bits/ 8 <0x03 0x00 0x00>;
-+		cirrus,vpmon = /bits/ 8 <0x03 0x04 0x00>;
-+		cirrus,vbstmon = /bits/ 8 <0x03 0x04 0x01>;
-+		cirrus,vpbrstat = /bits/ 8 <0x00 0x04 0x00>;
-+		cirrus,zerofill = /bits/ 8 <0x00 0x00 0x00>;
-+	};
-+
-+};
--- 
-1.9.1
+First and foremost you still haven't provided an explanation as to why this is
+required.  Second, in your previous submission you had:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+        mdelay(10);
+
+That is a busy loop of 10ms.  In this post using usleep_range() is a step in the
+right direction but the min and max values to wait for don't make sense.  Here
+you have 500 and 20000, which is 0.5ms and 20ms.
+
+> +	reset_control_deassert(rstc);
+> +
+> +	watchdog_set_drvdata(&wdt->wdt_device, wdt);
+> +	watchdog_init_timeout(&wdt->wdt_device,
+> +			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
+> +	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
+> +
+> +	ret = watchdog_register_device(&wdt->wdt_device);
+> +	if (ret)
+> +		goto err;
+> +
+> +	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
+> +		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
+> +
+> +	return 0;
+> +
+> +err:
+> +	clk_disable_unprepare(wdt->clock);
+> +	return ret;
+> +}
+> +
+> +static int zx2967_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdt_device);
+> +	clk_disable_unprepare(wdt->clock);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_wdt_match[] = {
+> +	{ .compatible = "zte,zx296718-wdt", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
+> +
+> +static struct platform_driver zx2967_wdt_driver = {
+> +	.probe		= zx2967_wdt_probe,
+> +	.remove		= zx2967_wdt_remove,
+> +	.driver		= {
+> +		.name	= "zx2967-wdt",
+> +		.of_match_table	= of_match_ptr(zx2967_wdt_match),
+> +	},
+> +};
+> +module_platform_driver(zx2967_wdt_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
