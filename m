@@ -1,167 +1,156 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Wed, 25 Jan 2017 10:59:00 -0600
-Message-ID: <23936395-d653-56c8-13f9-6dfeb6e9257b@ti.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <20170104205536.15963-3-d-gerlach@ti.com>
- <20170109175012.sg7eze7llqq7qevd@rob-hp-laptop>
- <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
- <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
- <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
- <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
- <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com>
- <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
- <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com>
- <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com> <m2ziip2puf.fsf@baylibre.com>
- <CAL_Jsq+Vp8iYrAUmuSRzeeY_G6CUqFqG6XB6erDxo1RYo3g4=g@mail.gmail.com>
- <CAPDyKFqzs59N5bc89X-96Fgy9b=_+s8zYmHHshQeDrJCnaqprA@mail.gmail.com>
- <58821CA2.4050701@ti.com>
- <CAPDyKFpTyn2isNahywmOOSWiZKov9xsudyWi_i-FejXjC+1AZw@mail.gmail.com>
- <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com>
- <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 2/2] dmaengine: Add DW AXI DMAC driver
+Date: Wed, 25 Jan 2017 19:25:06 +0200
+Message-ID: <1485365106.2133.331.camel@linux.intel.com>
+References: <1485358457-22957-1-git-send-email-Eugeniy.Paltsev@synopsys.com>
+ <1485358457-22957-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robh@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>, Kevin Hilman <khilman@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485358457-22957-3-git-send-email-Eugeniy.Paltsev@synopsys.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
+List-Post: <mailto:linux-snps-arc@lists.infradead.org>
+List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
+ <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
+Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
+To: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>, dmaengine@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-snps-arc@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2017 04:03 AM, Ulf Hansson wrote:
-> On 23 January 2017 at 21:11, Dave Gerlach <d-gerlach@ti.com> wrote:
->> On 01/20/2017 10:52 AM, Ulf Hansson wrote:
->>>
->>> [...]
->>>
->>>>>> Another option is create something new either common or TI SCI
->>>>>> specific. It could be just a table of ids and phandles in the SCI
->>>>>> node. I'm much more comfortable with an isolated property in one node
->>>>>> than something scattered throughout the DT.
->>>>>
->>>>>
->>>>> To me, this seems like the best possible solution.
->>>>>
->>>>> However, perhaps we should also consider the SCPI Generic power domain
->>>>> (drivers/firmware/scpi_pm_domain.c), because I believe it's closely
->>>>> related.
->>>>> To change the power state of a device, this PM domain calls
->>>>> scpi_device_set|get_power_state() (drivers/firmware/arm_scpi.c), which
->>>>> also needs a device id as a parameter. Very similar to our case with
->>>>> the TI SCI domain.
->>>>>
->>>>> Currently these SCPI device ids lacks corresponding DT bindings, so
->>>>> the scpi_pm_domain tries to work around it by assigning ids
->>>>> dynamically at genpd creation time.
->>>>>
->>>>> That makes me wonder, whether we should think of something
->>>>> common/generic?
->>>>
->>>>
->>>> When you say something common/generic, do you mean a better binding for
->>>> genpd,
->>>> or something bigger than that like a new driver? Because I do think a
->>>> phandle
->>>> cell left open for the genpd provider to interpret solves both the scpi
->>>> and
->>>> ti-sci problem we are facing here in the best way. Using generic PM
->>>> domains lets
->>>> us do exactly what we want apart from interpreting the phandle cell with
->>>> our
->>>> driver, and I feel like anything else we try at this point is just going
->>>> to be
->>>> to work around that. Is bringing back genpd xlate something we can
->>>> discuss?
->>>
->>>
->>> Bringing back xlate, how would that help? Wouldn't that just mean that
->>> you will get one genpd per device? That's not an option, I think we
->>> are all in agreement to that.
->>
->>
->> Sure, perhaps the custom xlate wouldn't be the right way to do it, as we
->> wouldn't be able to associate a device directly to a phandle, at least with
->> how it was implemented before, but I think we can skip that entirely. Does
->> opening up the interpretation of the cells of the 'power-domains' phandle
->> not solve all of these issues? Is that out of the question?
->>
->> genpd_xlate_simple currently just makes sure the args_count of the
->> 'power-domains' phandle was zero and bails if it was not. Why couldn't we
->> remove this check and let the driver interpret it while still using
->> of_genpd_add_provider_simple to register the provider? It's still a 'simple'
->> provider from the perspective of the genpd framework and the actual pm
->> domain mapping will not change, but now the driver can parse the cells and
->> do whatever it needs to, such as reading a device id.
->>
->> I think that's a bit more flexible and will avoid breaking anything that is
->> there today.
->
-> Would you mind providing an example? Perhaps also some code snippets
-> dealing with the parsing?
-
-So again the goal of this is to move the ti,sci-id value back to 
-power-domains phandle instead of having a separate property, so that 
-would be step one in the DT. Then in the power-domains node change 
-#power-domain-cells to one. And then from there, the only change to the 
-genpd framework is this:
-
-diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-index a5e1262b964b..b82e61f0bcfa 100644
---- a/drivers/base/power/domain.c
-+++ b/drivers/base/power/domain.c
-@@ -1603,8 +1603,6 @@ static struct generic_pm_domain genpd_xlate_simple
-                                       struct of_phandle_args *genpdspec,
-                                       void *data)
-  {
--       if (genpdspec->args_count != 0)
--               return ERR_PTR(-EINVAL);
-         return data;
-  }
-
-
-because genpd_xlate_simple only checks that the phandle is zero so that 
-it can fail if it is not, but there's no functional reason it needs to 
-do this. The genpd framework works as it did before no matter what the 
-cells are set to if using of_genpd_add_provider_simple. Then in the 
-attach_dev callback inside the ti_sci_pm_domains driver instead of doing
-
-	ret = of_property_read_u32(np, "ti,sci-id", &idx);
-
-to read the ti,sc-id for a device into idx we can now do:
-
-        ret = of_parse_phandle_with_args(np, "power-domains",
-                                    "#power-domain-cells", 0, &pd_args);
-        idx = pd_args.args[0];
-
-or even simpler from within our driver
-
-	ret = of_property_read_u32_index(np, "power-domains", 1, &idx);
-
-To read the value into idx.
-
-This requires minimal changes to the genpd framework and gives the 
-option for the driver to interpret the cell manually when using a simple 
-provider. The genpd framework still uses the phandle just to get the 
-power-domain device and the cells are left entirely up to the driver to 
-interpret, but if desired you could still use the genpd onecell driver 
-for a specific use of the phandle cell, or use it with zero cells.
-
-I can send out an updated series if there are no major objections, or 
-just to start discussion there.
-
-Regards,
-Dave
-
->
-> Kind regards
-> Uffe
->
+T24gV2VkLCAyMDE3LTAxLTI1IGF0IDE4OjM0ICswMzAwLCBFdWdlbml5IFBhbHRzZXYgd3JvdGU6
+Cj4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9yIHRoZSBEVyBBWEkgRE1BQyBjb250cm9sbGVy
+Lgo+IAo+IERXIEFYSSBETUFDIGlzIGEgcGFydCBvZiB1cGNvbWluZyBkZXZlbG9wbWVudCBib2Fy
+ZCBmcm9tIFN5bm9wc3lzLgo+IAo+IEluIHRoaXMgZHJpdmVyIGltcGxlbWVudGF0aW9uIG9ubHkg
+RE1BX01FTUNQWSBhbmQgRE1BX1NHIHRyYW5zZmVycwo+IGFyZSBzdXBwb3J0ZWQuCj4gCgpGZXcg
+bW9yZSBjb21tZW50cyBvbiB0b3Agb2Ygbm90IGFkZHJlc3NlZC9hbnN3ZXJlZCB5ZXQuCgo+ICtz
+dGF0aWMgaW5saW5lIHZvaWQgYXhpX2NoYW5fZGlzYWJsZShzdHJ1Y3QgYXhpX2RtYV9jaGFuICpj
+aGFuKQo+ICt7Cj4gKwl1MzIgdmFsOwo+ICsKPiArCXZhbCA9IGF4aV9kbWFfaW9yZWFkMzIoY2hh
+bi0+Y2hpcCwgRE1BQ19DSEVOKTsKPiArCXZhbCAmPSB+KEJJVChjaGFuLT5pZCkgPDwgRE1BQ19D
+SEFOX0VOX1NISUZUKTsKPiArCXZhbCB8PcKgwqAoQklUKGNoYW4tPmlkKSA8PCBETUFDX0NIQU5f
+RU5fV0VfU0hJRlQpOwo+ICsJYXhpX2RtYV9pb3dyaXRlMzIoY2hhbi0+Y2hpcCwgRE1BQ19DSEVO
+LCB2YWwpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHZvaWQgYXhpX2NoYW5fZW5hYmxlKHN0
+cnVjdCBheGlfZG1hX2NoYW4gKmNoYW4pCj4gK3sKPiArCXUzMiB2YWw7Cj4gKwo+ICsJdmFsID0g
+YXhpX2RtYV9pb3JlYWQzMihjaGFuLT5jaGlwLCBETUFDX0NIRU4pOwoKPiArCXZhbCB8PSAoQklU
+KGNoYW4tPmlkKSA8PCBETUFDX0NIQU5fRU5fU0hJRlQgfAo+ICsJCUJJVChjaGFuLT5pZCkgPDwg
+RE1BQ19DSEFOX0VOX1dFX1NISUZUKTsKPiAKClJlZHVuZGFudCBwYXJlbnMuCgo+ICsJYXhpX2Rt
+YV9pb3dyaXRlMzIoY2hhbi0+Y2hpcCwgRE1BQ19DSEVOLCB2YWwpOwo+ICt9CgoKPiArc3RhdGlj
+IHZvaWQgYXhpX2Rlc2NfcHV0KHN0cnVjdCBheGlfZG1hX2Rlc2MgKmRlc2MpCj4gK3sKPiArCXN0
+cnVjdCBheGlfZG1hX2NoYW4gKmNoYW4gPSBkZXNjLT5jaGFuOwo+ICsJc3RydWN0IGR3X2F4aV9k
+bWEgKmR3ID0gY2hhbi0+Y2hpcC0+ZHc7Cj4gKwlzdHJ1Y3QgYXhpX2RtYV9kZXNjICpjaGlsZCwg
+Kl9uZXh0Owo+ICsJdW5zaWduZWQgaW50IGRlc2NzX3B1dCA9IDA7Cj4gKwoKPiArCWlmICh1bmxp
+a2VseSghZGVzYykpCj4gKwkJcmV0dXJuOwoKV291bGQgaXQgYmUgdGhlIGNhc2U/Cgo+ICtzdGF0
+aWMgdm9pZCBkbWFfY2hhbl9pc3N1ZV9wZW5kaW5nKHN0cnVjdCBkbWFfY2hhbiAqZGNoYW4pCj4g
+K3sKPiArCXN0cnVjdCBheGlfZG1hX2NoYW4gKmNoYW4gPSBkY2hhbl90b19heGlfZG1hX2NoYW4o
+ZGNoYW4pOwo+ICsJdW5zaWduZWQgbG9uZyBmbGFnczsKPiArCgo+ICsJZGV2X2RiZyhkY2hhbjJk
+ZXYoZGNoYW4pLCAiJXM6ICVzXG4iLCBfX2Z1bmNfXywKPiBheGlfY2hhbl9uYW1lKGNoYW4pKTsK
+Ck1lc3NhZ2VzIGxpa2UgdGhpcyBraW5kYSByZWR1bmRhbnQuCkVpdGhlciB5b3UgdXNlIGZ1bmN0
+aW9uIHRyYWNlciBhbmQgc2VlIHRoZW0gYW55d2F5LCBvciB5b3UgYXJlIHVzaW5nCkR5bmFtaWMg
+RGVidWcsIHdoaWNoIG1heSBpbmNsdWRlIGZ1bmN0aW9uIG5hbWUuCgpCYXNpY2FsbHkgeW91IHdy
+b3RlIGFuIGVxdWl2YWxlbnQgdG8gc29tZXRoaW5nIGxpa2UKCmRldl9kYmcoZGV2LCAiJXNcbiIs
+IGNoYW5uYW1lKTsKCj4gKwo+ICsJc3Bpbl9sb2NrX2lycXNhdmUoJmNoYW4tPnZjLmxvY2ssIGZs
+YWdzKTsKPiArCWlmICh2Y2hhbl9pc3N1ZV9wZW5kaW5nKCZjaGFuLT52YykpCj4gKwkJYXhpX2No
+YW5fc3RhcnRfZmlyc3RfcXVldWVkKGNoYW4pOwo+ICsJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgm
+Y2hhbi0+dmMubG9jaywgZmxhZ3MpOwoKLi4uYW5kIHRha2luZyBpbnRvIGFjY291bnQgdGhlIGZ1
+bmN0aW9uIGl0c2VsZiBvbmUgbWlnaHQgZXhwZWN0CnNvbWV0aGluZyB1c2VmdWwgcHJpbnRlZCBp
+biBfc3RhcnRfZmlyc3RfcXVldWVkKCkuCgpGb3Igc29tZSBjYXNlcyB0aGVyZSBpcyBhbHNvIGRl
+dl92ZGJnKCkuCgo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGRtYV9jaGFuX2FsbG9jX2NoYW5fcmVz
+b3VyY2VzKHN0cnVjdCBkbWFfY2hhbiAqZGNoYW4pCj4gK3sKPiArCXN0cnVjdCBheGlfZG1hX2No
+YW4gKmNoYW4gPSBkY2hhbl90b19heGlfZG1hX2NoYW4oZGNoYW4pOwo+ICsKPiArCS8qIEFTU0VS
+VDogY2hhbm5lbCBpcyBpZGxlICovCj4gKwlpZiAoYXhpX2NoYW5faXNfaHdfZW5hYmxlKGNoYW4p
+KSB7Cj4gKwkJZGV2X2VycihjaGFuMmRldihjaGFuKSwgIiVzIGlzIG5vbi1pZGxlIVxuIiwKPiAr
+CQkJYXhpX2NoYW5fbmFtZShjaGFuKSk7Cj4gKwkJcmV0dXJuIC1FQlVTWTsKPiArCX0KPiArCgo+
+ICsJZGV2X2RiZyhkY2hhbjJkZXYoZGNoYW4pLCAiJXM6IGFsbG9jYXRpbmdcbiIsCj4gYXhpX2No
+YW5fbmFtZShjaGFuKSk7CgpDYW4geW91IHRyeSB0byBlbmFibGUgRE1BREVWSUNFU19ERUJVRyBh
+bmQgVkRFQlVHIGFuZCBzZWUgd2hhdCBpcyB1c2VmdWwKYW5kIHdoYXQgaXMgbm90PwoKR2l2ZSBh
+IGNoYW5jZSB0byBmdW5jdGlvbiB0cmFjZXIgYXMgd2VsbC4KCj4gK3N0YXRpYyB2b2lkIGRtYV9j
+aGFuX2ZyZWVfY2hhbl9yZXNvdXJjZXMoc3RydWN0IGRtYV9jaGFuICpkY2hhbikKPiArewo+ICsJ
+c3RydWN0IGF4aV9kbWFfY2hhbiAqY2hhbiA9IGRjaGFuX3RvX2F4aV9kbWFfY2hhbihkY2hhbik7
+Cj4gKwo+IAoKPiArCS8qIEFTU0VSVDogY2hhbm5lbCBpcyBpZGxlICovCj4gKwlpZiAoYXhpX2No
+YW5faXNfaHdfZW5hYmxlKGNoYW4pKQo+ICsJCWRldl9lcnIoZGNoYW4yZGV2KGRjaGFuKSwgIiVz
+IGlzIG5vbi1pZGxlIVxuIiwKPiArCQkJYXhpX2NoYW5fbmFtZShjaGFuKSk7CgpZZWFoLCBhcyBJ
+IHNhaWQsIGR3X2RtYWMgaXMgbm90IGEgZ29vZCBleGFtcGxlLiBBbmQgdGhpcyBvbmUgY2FuIGJl
+Cm1hbmFnZWQgYnkgcnVudGltZSBQTSBJIHN1cHBvc2UuCgo+ICsKPiArLyogVE9ETzogUkVWSVNJ
+VDogaG93IHdlIHNob3VsZCBjaG9vc2UgQVhJIG1hc3RlciBmb3IgbWVtLXRvLW1lbQo+IHRyYW5z
+ZmVyPyAqLwoKUmVhZCBkYXRhc2hlZXQgZm9yIGEgU29DL3BsYXRmb3JtPyBGb3IgZHdfZG1hYyBp
+cyBjaG9zZW4gd2l0aCBhY2NvcmRhbmNlCnRvIGhhcmR3YXJlIHRvcG9sb2d5LgoKPiArCXdoaWxl
+ICh0cnVlKSB7CgpVc3VhbGx5IGl0IG1ha2VzIHJlYWRhYmlsaXR5IGhhcmRlciBhbmQgcmlzZXMg
+YSByZWQgZmxhZyB0byB0aGUgY29kZS4KCj4gCQkvKiBNYW5hZ2UgdHJhbnNmZXIgbGlzdCAoeGZl
+cl9saXN0KSAqLwo+ICsJCWlmICghZmlyc3QpIHsKPiArCQkJZmlyc3QgPSBkZXNjOwo+ICsJCX0g
+ZWxzZSB7Cj4gKwkJCWxpc3RfYWRkX3RhaWwoJmRlc2MtPnhmZXJfbGlzdCwgJmZpcnN0LQo+ID54
+ZmVyX2xpc3QpOwo+ICsJCQl3cml0ZV9kZXNjX2xscChwcmV2LCBkZXNjLT52ZC50eC5waHlzIHwg
+bG1zKTsKPiArCQl9Cj4gKwkJcHJldiA9IGRlc2M7Cj4gKwo+ICsJCS8qIHVwZGF0ZSB0aGUgbGVu
+Z3RocyBhbmQgYWRkcmVzc2VzIGZvciB0aGUgbmV4dCBsb29wCj4gY3ljbGUgKi8KPiArCQlkc3Rf
+bGVuIC09IHhmZXJfbGVuOwo+ICsJCXNyY19sZW4gLT0geGZlcl9sZW47Cj4gKwkJZHN0X2FkciAr
+PSB4ZmVyX2xlbjsKPiArCQlzcmNfYWRyICs9IHhmZXJfbGVuOwo+ICsKPiArCQl0b3RhbF9sZW4g
+Kz0geGZlcl9sZW47CgpJIHdvdWxkIHN1Z2dlc3QgdG8gbGVhdmUgdGhpcyBvbiBjYWxsZXIuIEF0
+IHNvbWUgcG9pbnQsIGlmIG5vIG9uZSBlbHNlCmRvIHRoaXMgZmFzdGVyIHRoYW4gbWUsIEkgd291
+bGQgbGlrZSB0byBpbnRyb2R1Y2Ugc29tZXRoaW5nIGxpa2Ugc3RydWN0CmRtYV9wYXJtcyBwZXIg
+RE1BIGNoYW5uZWwgdG8gYWxsb3cgY2FsbGVyIHByZXBhcmUgU0cgbGlzdCBzdWl0YWJsZSBmb3IK
+dGhlIERNQSBkZXZpY2UuCgo+ICsKPiArc3RhdGljIHN0cnVjdCBkbWFfYXN5bmNfdHhfZGVzY3Jp
+cHRvciAqCj4gK2RtYV9jaGFuX3ByZXBfZG1hX21lbWNweShzdHJ1Y3QgZG1hX2NoYW4gKmRjaGFu
+LCBkbWFfYWRkcl90IGRlc3QsCj4gKwkJCcKgZG1hX2FkZHJfdCBzcmMsIHNpemVfdCBsZW4sIHVu
+c2lnbmVkIGxvbmcKPiBmbGFncykKPiArewoKRG8geW91IGluZGVlZCBoYXZlIGEgdXNlIGNhc2Ug
+Zm9yIHRoaXMgZXhjZXB0IGRlYnVnZ2luZyBhbmQgdGVzdGluZz8KCj4gKwl1bnNpZ25lZCBpbnQg
+bmVudHMgPSAxOwo+ICsJc3RydWN0IHNjYXR0ZXJsaXN0IGRzdF9zZzsKPiArCXN0cnVjdCBzY2F0
+dGVybGlzdCBzcmNfc2c7Cj4gKwo+ICsJc2dfaW5pdF90YWJsZSgmZHN0X3NnLCBuZW50cyk7Cj4g
+KwlzZ19pbml0X3RhYmxlKCZzcmNfc2csIG5lbnRzKTsKPiArCj4gKwlzZ19kbWFfYWRkcmVzcygm
+ZHN0X3NnKSA9IGRlc3Q7Cj4gKwlzZ19kbWFfYWRkcmVzcygmc3JjX3NnKSA9IHNyYzsKPiArCj4g
+KwlzZ19kbWFfbGVuKCZkc3Rfc2cpID0gbGVuOwo+ICsJc2dfZG1hX2xlbigmc3JjX3NnKSA9IGxl
+bjsKPiArCj4gKwkvKiBJbXBsZW1lbnQgbWVtY3B5IHRyYW5zZmVyIGFzIHNnIHRyYW5zZmVyIHdp
+dGggc2luZ2xlIGxpc3QKPiAqLwoKPiArCXJldHVybiBkbWFfY2hhbl9wcmVwX2RtYV9zZyhkY2hh
+biwgJmRzdF9zZywgbmVudHMsCj4gKwkJCQnCoMKgwqDCoCZzcmNfc2csIG5lbnRzLCBmbGFncyk7
+CgpPbmUgbGluZT8KCj4gK30KCj4gKwo+ICtzdGF0aWMgdm9pZCBheGlfY2hhbl9kdW1wX2xsaShz
+dHJ1Y3QgYXhpX2RtYV9jaGFuICpjaGFuLAo+ICsJCQnCoMKgwqDCoMKgwqBzdHJ1Y3QgYXhpX2Rt
+YV9kZXNjICpkZXNjKQo+ICt7Cj4gKwlkZXZfZXJyKGRjaGFuMmRldigmY2hhbi0+dmMuY2hhbiks
+Cj4gKwkJIlNBUjogMHgleCBEQVI6IDB4JXggTExQOiAweCV4IEJUUyAweCV4IENUTDoKPiAweCV4
+OiUwOHgiLAo+ICsJCWxlMzJfdG9fY3B1KGRlc2MtPmxsaS5zYXJfbG8pLAo+ICsJCWxlMzJfdG9f
+Y3B1KGRlc2MtPmxsaS5kYXJfbG8pLAo+ICsJCWxlMzJfdG9fY3B1KGRlc2MtPmxsaS5sbHBfbG8p
+LAo+ICsJCWxlMzJfdG9fY3B1KGRlc2MtPmxsaS5ibG9ja190c19sbyksCj4gKwkJbGUzMl90b19j
+cHUoZGVzYy0+bGxpLmN0bF9oaSksCj4gKwkJbGUzMl90b19jcHUoZGVzYy0+bGxpLmN0bF9sbykp
+OwoKSSBob3BlIGF0IHNvbWUgcG9pbnQgQVJDIChhbmQgb3RoZXIgYXJjaGl0ZWN0dXJlcyB3aGlj
+aCB3aWxsIHVzZSB0aGlzCklQKSBjYW4gaW1wbGVtZW50IE1NSU8gdHJhY2VyLgoKPiArfQoKPiAr
+CQlheGlfY2hhbl9kdW1wX2xsaShjaGFuLCBkZXNjKTsKPiArfQo+ICsKPiArCgpFeHRyYSBsaW5l
+LgoKPiArc3RhdGljIHZvaWQgYXhpX2NoYW5faGFuZGxlX2VycihzdHJ1Y3QgYXhpX2RtYV9jaGFu
+ICpjaGFuLCB1MzIKPiBzdGF0dXMpCj4gK3sKCj4gKwo+ICtzdGF0aWMgaW50IGRtYV9jaGFuX3Bh
+dXNlKHN0cnVjdCBkbWFfY2hhbiAqZGNoYW4pCj4gK3sKPiArCXN0cnVjdCBheGlfZG1hX2NoYW4g
+KmNoYW4gPSBkY2hhbl90b19heGlfZG1hX2NoYW4oZGNoYW4pOwo+ICsJdW5zaWduZWQgbG9uZyBm
+bGFnczsKPiArCXVuc2lnbmVkIGludCB0aW1lb3V0ID0gMjA7IC8qIHRpbWVvdXQgaXRlcmF0aW9u
+cyAqLwo+ICsJaW50IHJldCA9IC1FQUdBSU47Cj4gKwl1MzIgdmFsOwo+ICsKPiArCXNwaW5fbG9j
+a19pcnFzYXZlKCZjaGFuLT52Yy5sb2NrLCBmbGFncyk7Cj4gKwo+ICsJdmFsID0gYXhpX2RtYV9p
+b3JlYWQzMihjaGFuLT5jaGlwLCBETUFDX0NIRU4pOwo+ICsJdmFsIHw9IChCSVQoY2hhbi0+aWQp
+IDw8IERNQUNfQ0hBTl9TVVNQX1NISUZUIHwKPiArCQlCSVQoY2hhbi0+aWQpIDw8IERNQUNfQ0hB
+Tl9TVVNQX1dFX1NISUZUKTsKClJlZHVuZGFudCBwYXJlbnMuCgo+ICsJYXhpX2RtYV9pb3dyaXRl
+MzIoY2hhbi0+Y2hpcCwgRE1BQ19DSEVOLCB2YWwpOwo+ICsKPiArCXdoaWxlICh0aW1lb3V0LS0p
+IHsKCj4gKwkJaWYgKGF4aV9jaGFuX2lycV9yZWFkKGNoYW4pICYKPiBEV0FYSURNQUNfSVJRX1NV
+U1BFTkRFRCkgewoKPiArCQkJYXhpX2NoYW5faXJxX2NsZWFyKGNoYW4sCj4gRFdBWElETUFDX0lS
+UV9TVVNQRU5ERUQpOwoKWW91IG1heSBtb3ZlIHRoaXMgaW52YXJpYW50IG91dCBmcm9tIHRoZSBs
+b29wLiBNYWtlcyBjb2RlIGNsZWFuZXIuCgo+ICsJCQlyZXQgPSAwOwo+ICsJCQlicmVhazsKPiAr
+CQl9Cgo+ICsJCXVkZWxheSgyKTsKCgo+ICsJfQo+ICsKPiArCWNoYW4tPmlzX3BhdXNlZCA9IHRy
+dWU7CgpUaGlzIGlzIGluZGVlZCBwcm9wZXJ0eSBvZiBjaGFubmVsLgpUaGF0IHNhaWQsIHlvdSBt
+YXkgZG8gYSB0cmljayBhbmQgdXNlIGRlc2NyaXB0b3Igc3RhdHVzIGZvciBpdC4KWW91IGNoYW5u
+ZWwgYW5kIGRyaXZlciwgSSdtIHN1cmUsIGNhbid0IHNlcnZlIGluIGludGVybGVhdmVkIG1vZGUg
+d2l0aApkZXNjcmlwdG9ycy4gU28sIHRoYXQgbWFrZXMgY2hhbm5lbChwYXVzZWQpID09IGFjdGl2
+ZQpkZXNjcmlwdG9yKHBhdXNlZCkuCgpUaGUgdHJpY2sgYWxsb3dzIHRvIG1ha2UgY29kZSBjbGVh
+bmVyLgoKPiArCXJldCA9IGRldmljZV9wcm9wZXJ0eV9yZWFkX3UzMl9hcnJheShkZXYsICJwcmlv
+cml0eSIsIGNhcnIsCgpJJ20gbm90IHN1cmUgeW91IHdpbGwgaGF2ZSBhIHVzZSBjYXNlIGZvciB0
+aGF0LiBIYXZlIHlvdT8KCj4gKwlyZXQgPSBkZXZtX3JlcXVlc3RfaXJxKGNoaXAtPmRldiwgY2hp
+cC0+aXJxLAo+IGR3X2F4aV9kbWFfaW50cmV0dXB0LAo+ICsJCQnCoMKgwqDCoMKgwqDCoElSUUZf
+U0hBUkVELCBEUlZfTkFNRSwgY2hpcCk7Cj4gKwlpZiAocmV0KQo+ICsJCXJldHVybiByZXQ7CgpZ
+b3UgY2FuJ3QgZG8gdGhpcyB1bmxlc3MgeW91IGFyZSB1c2luZyB0aHJlYWRlZCBJUlEgaGFuZGxl
+ciB3aXRob3V0IGFueQp0YXNrbGV0cyBpbnZvbHZlZC4KClRoZXJlIHdhcyBhIG5pY2UgbWFpbCBi
+eSBUaG9tYXMgd2hvIGV4cGxhaW5lZCB3aGF0IHRoZSBwcm9ibGVtIHlvdSBoYXZlCnRoZXJlLgoK
+SXQncyBhIGJ1ZyBpbiB5b3VyIGNvZGUuCgo+ICtzdGF0aWMgaW50IF9faW5pdCBkd19pbml0KHZv
+aWQpCj4gK3sKPiArCXJldHVybiBwbGF0Zm9ybV9kcml2ZXJfcmVnaXN0ZXIoJmR3X2RyaXZlcik7
+Cj4gK30KPiArc3Vic3lzX2luaXRjYWxsKGR3X2luaXQpOwoKSG1tLi4uIFdoeSBpdCBjYW4ndCBi
+ZSBqdXN0IGEgcGxhdGZvcm0gZHJpdmVyPyBZb3UgZGVzY3JpYmUgdGhlCmRlcGVuZGVuY3kgaW4g
+RGV2aWNlIFRyZWUsIGlmIHlvdSBoYXZlIHNvbWV0aGluZyBoYXBwZW5lZCwgeW91IG1heQp1dGls
+aXplIC1FUFJPQkVfREVGRVIuCgotLSAKQW5keSBTaGV2Y2hlbmtvIDxhbmRyaXkuc2hldmNoZW5r
+b0BsaW51eC5pbnRlbC5jb20+CkludGVsIEZpbmxhbmQgT3kKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LXNucHMtYXJjIG1haWxpbmcgbGlzdAps
+aW51eC1zbnBzLWFyY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtc25wcy1hcmM=
