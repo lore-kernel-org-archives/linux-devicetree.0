@@ -1,66 +1,60 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] ARM: tegra: nyan: Use external control for
- bq24735 charger
-Date: Wed, 25 Jan 2017 11:59:40 +0100
-Message-ID: <20170125105940.GC9344@ulmo.ba.sec>
-References: <20170122154753.31942-1-contact@paulk.fr>
- <20170122154753.31942-2-contact@paulk.fr>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH 6/8] ARM: dts: STiH407-pinctrl: Add
+ Pinctrl group for HW flow-control
+Date: Wed, 25 Jan 2017 11:01:12 +0000
+Message-ID: <20170125110112.GB5680@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
+ <20170124134310.27512-7-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2/5bycvrmDh4d1IB"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170122154753.31942-2-contact-W9ppeneeCTY@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+In-Reply-To: <20170124134310.27512-7-lee.jones@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Lee,
 
---2/5bycvrmDh4d1IB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 24 Jan 2017, Lee Jones wrote:
 
-On Sun, Jan 22, 2017 at 04:47:49PM +0100, Paul Kocialkowski wrote:
-> Nyan boards come with an embedded controller that controls when to
-> enable and disable the charge. Thus, it should not be left up to the
-> kernel to handle that.
->=20
-> Using the ti,external-control property allows specifying this use-case.
->=20
-> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+> Each serial port which supports HW flow-control should have 2 Pinctrl
+> groups.  Once for when HW flow-control is in progress, where the IP
+
+Nit: Once?
+
+> will take over controlling the lines and another group which enables
+> the lines to be toggled using GPIO mechanisms.
+> 
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+
+Acked-by: Peter Griffin <peter.griffin@linaro.org>
+
 > ---
->  arch/arm/boot/dts/tegra124-nyan.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-
-Is the ti,ac-detect-gpios property still useful in that case? I guess it
-would still allow to monitor whether or not a charger is connected, even
-if the EC determines that it shouldn't charge.
-
-Anyway, I've applied this.
-
-Thanks,
-Thierry
-
---2/5bycvrmDh4d1IB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliIhRsACgkQ3SOs138+
-s6H40g//TS7s0qZArrh9kb1Jh1DSD6XQZynhMZyjWY938JvYwT5WdObY1/gPVxYd
-2Jv192eM1OCpQ9PCR7TIvuqavC780BgVifypVfH83vrGq9ASUXlmOFfOm1Tc1Jjr
-V0laBZUqTfVXaEvQc94ScJAAJKugySdgVSBEYrvmGH05Qkc3+VkuBDqztbxqW2pl
-pBIKG5sFaCb0g8+HZbbfWO/aRDoY/i6iIrCXpGX5ELOM2HLjZtmp9DX5+yMXPOZ4
-ehzBaNGjheqy2E0BOryQYyym3HzToZnPFFvWfrJUjdwREYLeOf8QApX8NMPRTeo8
-I/i71Ps54uvucPHZm/3edWBvCoKZRMPfE1JeWnJl+zX4UYSYNNL7ErrNUVznKCW0
-EV1FPRA4NpuBTGoMwFJx5AfvrF+iE6MW/X+N5tmleIwHIowI5NXAegAzSd+9GW37
-338RWHa7vQCj1soaijt1aNBZfYfI6sdhMKWAkM1U6/D0yOvHWaSIMPy+QMi/Kx8T
-DDNn65eS2hRBUK24fEfPeN+XI9Ahg+n0lEbkc8KASC4Og9cVkjgwdR0bts0nA9iv
-Txvt0JNNhnQ6AYHUjwRapyZJzctHoHdEoevtI/mKqUC68Jk3kgT7fGbGsQRkYpLk
-15MyecBBjFSkBjC3q/Ng78T/NryqhziDfJhO/6c8pIZrODlkt2o=
-=XGiH
------END PGP SIGNATURE-----
-
---2/5bycvrmDh4d1IB--
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stih407-pinctrl.dtsi b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> index daab16b..fbb7f86 100644
+> --- a/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> +++ b/arch/arm/boot/dts/stih407-pinctrl.dtsi
+> @@ -465,8 +465,16 @@
+>  			serial0 {
+>  				pinctrl_serial0: serial0-0 {
+>  					st,pins {
+> -						tx = <&pio17 0 ALT1 OUT>;
+> -						rx = <&pio17 1 ALT1 IN>;
+> +						tx =  <&pio17 0 ALT1 OUT>;
+> +						rx =  <&pio17 1 ALT1 IN>;
+> +					};
+> +				};
+> +				pinctrl_serial0_flowctrl: serial0-0_flowctrl {
+> +					st,pins {
+> +						tx =  <&pio17 0 ALT1 OUT>;
+> +						rx =  <&pio17 1 ALT1 IN>;
+> +						cts = <&pio17 2 ALT1 IN>;
+> +						rts = <&pio17 3 ALT1 OUT>;
+>  					};
+>  				};
+>  			};
