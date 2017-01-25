@@ -1,72 +1,89 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
+From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 Subject: Re: [PATCH 1/3] mtd: name the mtd device with an optional label
  property
-Date: Wed, 25 Jan 2017 17:51:05 +0100
-Message-ID: <20170125175105.67c335e7@bbrezillon>
+Date: Wed, 25 Jan 2017 17:53:22 +0100
+Message-ID: <a20ac5a9-2097-c241-e280-9147926e70b6@kaod.org>
 References: <1484573225-19095-1-git-send-email-clg@kaod.org>
  <1484573225-19095-2-git-send-email-clg@kaod.org>
  <20170124151353.5bbffae0@bbrezillon>
  <7bdf47c3-d3b7-92a2-47c1-99e4bd6b4f44@kaod.org>
+ <20170125175105.67c335e7@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <7bdf47c3-d3b7-92a2-47c1-99e4bd6b4f44@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?B?Q8OpZHJpYw==?= Le Goater <clg@kaod.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170125175105.67c335e7@bbrezillon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyNSBKYW4gMjAxNyAxNzo0NzoxMyArMDEwMApDw6lkcmljIExlIEdvYXRlciA8Y2xn
-QGthb2Qub3JnPiB3cm90ZToKCj4gT24gMDEvMjQvMjAxNyAwMzoxMyBQTSwgQm9yaXMgQnJlemls
-bG9uIHdyb3RlOgo+ID4gSGkgQ8OpZHJpYywKPiA+IAo+ID4gT24gTW9uLCAxNiBKYW4gMjAxNyAx
-NDoyNzowMyArMDEwMAo+ID4gQ8OpZHJpYyBMZSBHb2F0ZXIgPGNsZ0BrYW9kLm9yZz4gd3JvdGU6
-Cj4gPiAgIAo+ID4+IFRoaXMgY2FuIGJlIHVzZWQgdG8gZWFzaWx5IGlkZW50aWZ5IGEgc3BlY2lm
-aWMgY2hpcCBvbiBhIHN5c3RlbSB3aXRoCj4gPj4gbXVsdGlwbGUgY2hpcHMuCj4gPj4KPiA+PiBT
-dWdnZXN0ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZyZWUtZWxlY3Ry
-b25zLmNvbT4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdvYXRlciA8Y2xnQGthb2Qu
-b3JnPgo+ID4+IC0tLQo+ID4+ICBkcml2ZXJzL210ZC9tdGRjb3JlLmMgfCA3ICsrKysrKysKPiA+
-PiAgMSBmaWxlIGNoYW5nZWQsIDcgaW5zZXJ0aW9ucygrKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbXRkL210ZGNvcmUuYyBiL2RyaXZlcnMvbXRkL210ZGNvcmUuYwo+ID4+IGluZGV4
-IDA1Mjc3MmY3Y2FlZi4uYmY2MTU1N2I1OTlkIDEwMDY0NAo+ID4+IC0tLSBhL2RyaXZlcnMvbXRk
-L210ZGNvcmUuYwo+ID4+ICsrKyBiL2RyaXZlcnMvbXRkL210ZGNvcmUuYwo+ID4+IEBAIC02NTQs
-NiArNjU0LDEzIEBAIHN0YXRpYyBpbnQgbXRkX2FkZF9kZXZpY2VfcGFydGl0aW9ucyhzdHJ1Y3Qg
-bXRkX2luZm8gKm10ZCwKPiA+PiAgICovCj4gPj4gIHN0YXRpYyB2b2lkIG10ZF9zZXRfZGV2X2Rl
-ZmF1bHRzKHN0cnVjdCBtdGRfaW5mbyAqbXRkKQo+ID4+ICB7Cj4gPj4gKwkvKgo+ID4+ICsJICog
-SWYgRFQgc3VwcG9ydCBpcyBlbmFibGVkIGFuZCB3ZSBoYXZlIGEgdmFsaWQgb2Zfbm9kZSBwb2lu
-dGVyLCB0cnkgdG8KPiA+PiArCSAqIGV4dHJhY3QgdGhlIE1URCBuYW1lIGZyb20gdGhlIGxhYmVs
-IHByb3BlcnR5Lgo+ID4+ICsJICovCj4gPj4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfT0YpICYm
-IG10ZC0+ZGV2Lm9mX25vZGUpCj4gPj4gKwkJb2ZfcHJvcGVydHlfcmVhZF9zdHJpbmcobXRkLT5k
-ZXYub2Zfbm9kZSwgImxhYmVsIiwgJm10ZC0+bmFtZSk7Cj4gPj4gKyAgCj4gPiAKPiA+IEkgcmVh
-bGl6ZSB0aGlzIGtpbmQgb2YgdGhpbmcgd291bGQgYmUgYmV0dGVyIHBsYWNlZCBpbiBtdGRfc2V0
-X29mX25vZGUoKQo+ID4gKHNlZSB0aGUgcGF0Y2ggYmVsb3cpLiBNb2RpZnlpbmcgdGhlIG10ZC0+
-bmFtZSBwb2ludGVyIGluIHRoZSBiYWNrIG9mCj4gPiBNVEQgZHJpdmVycyBpcyBub3Qgc3VjaCBh
-IGdvb2QgaWRlYSAoc3VwcG9zZSB0aGUgZHJpdmVyIGFsbG9jYXRlZCB0aGUKPiA+IG1lbW9yeSB3
-aXRoIGEgcmVndWxhciBrbWFsbG9jKCkgYW5kIHRyaWVzIHRvIGZyZWUgbXRkLT5uYW1lIGluIHRo
-ZSByZW1vdmUKPiA+IHBhdGgpLgo+ID4gCj4gPiBJZiB3ZSBtb3ZlIHRoYXQgdG8gbXRkX3NldF9v
-Zl9ub2RlKCksIGRyaXZlcnMgdGhhdCB3YW50cyB0byBzdXBwb3J0IHRoaXMKPiA+IGxhYmVsIHBy
-b3BlcnR5IGp1c3QgaGF2ZSB0byBjaGVjayBpZiBtdGQtPm5hbWUgaXMgTlVMTCAoYWZ0ZXIgY2Fs
-bGluZwo+ID4gbXRkX3NldF9vZl9ub2RlKCkgb3IgbmFuZF9zZXRfZmxhc2hfbm9kZSgpKSBiZWZv
-cmUgYXNzaWduaW5nIGEgZGVmYXVsdAo+ID4gbmFtZS4KPiA+IEZvciB1bm1vZGlmaWVkIGRyaXZl
-cnMgd2Uga2VlcCB0aGUgZXhpc3RpbmcgYmVoYXZpb3I6IHRoZXknbGwganVzdAo+ID4gdW5jb25k
-aXRpb25hbGx5IG92ZXJyaWRlIG10ZC0+bmFtZSB3aXRoIHRoZWlyIG93biB2YWx1ZSAod2hpY2gg
-bWlnaHQgb3IKPiA+IG1pZ2h0IG5vdCBiZSBkeW5hbWljYWxseSBhbGxvY2F0ZWQpLiAgCj4gCj4g
-b2suIFNvIHRoZSBleHBlY3RlZCBiZWhhdmlvciBsb29rcyBjb3JyZWN0IHRvIG1lLCBidXQgYWRk
-aW5nIGEgY2FsbCB0byAKPiBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZygpIGluIHRoZSBpbmxpbmUg
-YmVsb3cgZmVlbHMgYSBsaXR0bGUgaGFja3kuIAo+IERvZXNuJ3QgaXQgPyAKPiAKPiBNYXkgYmUg
-d2UgbmVlZCBhbiBleHRyYSBjaGVjayBvbiBJU19FTkFCTEVEKENPTkZJR19PRikgYWxzbyA/IAoK
-VGhpcyBpcyBhbGwgc2FmZSwgYmVjYXVzZSB0aGUgb2YuaCBoZWFkZXIgZGVmaW5lcyBzdHVicyBp
-ZiBDT05GSUdfT0YgaXMKbm90IHNldC4gVGhhdCBqdXN0IG1lYW5zIHRoZSBuYW1lIHdpbGwgYmUg
-dW5jaGFuZ2VkLCBidXQgeW91IHNob3VsZG4ndApoYXZlIGFueSBwcm9ibGVtIChuZWl0aGVyIGFz
-IGNvbXBpbGF0aW9uIHRpbWUgbm9yIGF0IHJ1bnRpbWUpLgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4IE1URCBkaXNjdXNzaW9uIG1h
-aWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
-bnV4LW10ZC8K
+On 01/25/2017 05:51 PM, Boris Brezillon wrote:
+> On Wed, 25 Jan 2017 17:47:13 +0100
+> Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
+> 
+>> On 01/24/2017 03:13 PM, Boris Brezillon wrote:
+>>> Hi Cédric,
+>>>
+>>> On Mon, 16 Jan 2017 14:27:03 +0100
+>>> Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org> wrote:
+>>>   
+>>>> This can be used to easily identify a specific chip on a system with
+>>>> multiple chips.
+>>>>
+>>>> Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+>>>> ---
+>>>>  drivers/mtd/mtdcore.c | 7 +++++++
+>>>>  1 file changed, 7 insertions(+)
+>>>>
+>>>> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+>>>> index 052772f7caef..bf61557b599d 100644
+>>>> --- a/drivers/mtd/mtdcore.c
+>>>> +++ b/drivers/mtd/mtdcore.c
+>>>> @@ -654,6 +654,13 @@ static int mtd_add_device_partitions(struct mtd_info *mtd,
+>>>>   */
+>>>>  static void mtd_set_dev_defaults(struct mtd_info *mtd)
+>>>>  {
+>>>> +	/*
+>>>> +	 * If DT support is enabled and we have a valid of_node pointer, try to
+>>>> +	 * extract the MTD name from the label property.
+>>>> +	 */
+>>>> +	if (IS_ENABLED(CONFIG_OF) && mtd->dev.of_node)
+>>>> +		of_property_read_string(mtd->dev.of_node, "label", &mtd->name);
+>>>> +  
+>>>
+>>> I realize this kind of thing would be better placed in mtd_set_of_node()
+>>> (see the patch below). Modifying the mtd->name pointer in the back of
+>>> MTD drivers is not such a good idea (suppose the driver allocated the
+>>> memory with a regular kmalloc() and tries to free mtd->name in the remove
+>>> path).
+>>>
+>>> If we move that to mtd_set_of_node(), drivers that wants to support this
+>>> label property just have to check if mtd->name is NULL (after calling
+>>> mtd_set_of_node() or nand_set_flash_node()) before assigning a default
+>>> name.
+>>> For unmodified drivers we keep the existing behavior: they'll just
+>>> unconditionally override mtd->name with their own value (which might or
+>>> might not be dynamically allocated).  
+>>
+>> ok. So the expected behavior looks correct to me, but adding a call to 
+>> of_property_read_string() in the inline below feels a little hacky. 
+>> Doesn't it ? 
+>>
+>> May be we need an extra check on IS_ENABLED(CONFIG_OF) also ? 
+> 
+> This is all safe, because the of.h header defines stubs if CONFIG_OF is
+> not set. That just means the name will be unchanged, but you shouldn't
+> have any problem (neither as compilation time nor at runtime).
+> 
+
+ok. I will cook a v2 with your proposal then.
+
+Thanks,
+
+C.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
