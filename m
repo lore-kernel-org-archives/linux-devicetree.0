@@ -1,97 +1,141 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Odroid XU4: fix USB3.0 ports
-Date: Wed, 25 Jan 2017 09:55:34 +0200
-Message-ID: <CAJKOXPesCuYsK23466=6W9PPX7DtztdymZLBfNz0Dmjzwp4qBA@mail.gmail.com>
-References: <20170124134809.23315-1-richard.genoud@gmail.com> <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v5 5/5] i2c: mux: pca954x: Add irq-mask-enable to delay
+ enabling irqs
+Date: Wed, 25 Jan 2017 09:15:15 +0100
+Message-ID: <f203f28f-51c8-a7a0-6e82-16d587310be9@axentia.se>
+References: <1484640029-22870-1-git-send-email-preid@electromag.com.au>
+ <1484640029-22870-6-git-send-email-preid@electromag.com.au>
+ <312e32e9-a828-d692-895b-4042729e5417@axentia.se>
+ <61c38233-abf2-df31-6f7c-c4214f4103aa@electromag.com.au>
+ <71f756e1-4677-8b59-81a2-2b12fbf12621@axentia.se>
+ <35c35708-3bbc-88d1-1d60-4faf68ca5af9@electromag.com.au>
+ <CAAVjN7eGNsQOPiy0HuDq26MPNrD0xk7uxiN2+UO=hyuCSBa5nw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANAwSgRAT0-XETx=yVRgM4GfukFLLEw-hqHjYGEWs0tqAx8g2g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Huang Rui <ray.huang-5C7GfCeVMHo@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAAVjN7eGNsQOPiy0HuDq26MPNrD0xk7uxiN2+UO=hyuCSBa5nw@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Danielle Costantino <danielle.costantino@gmail.com>, Phil Reid <preid@electromag.com.au>
+Cc: Wolfram Sang <wsa@the-dreams.de>, robh+dt@kernel.org, mark.rutland@arm.com, linux-i2c <linux-i2c@vger.kernel.org>, Linux device trees <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 7:51 AM, Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Richard,
->
-> On 24 January 2017 at 19:18, Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Since commit 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores"),
->> the USB ports on odroid-XU4 don't work anymore.
+On 2017-01-25 04:50, Danielle Costantino wrote:
+> On Mon, Jan 23, 2017 at 1:02 AM, Phil Reid <preid@electromag.com.au> wrote:
 >>
->> Inserting an usb key (USB2.0) on the USB3.0 port result in:
->> [   64.488264] xhci-hcd xhci-hcd.2.auto: Port resume took longer than 20000 msec, port status = 0xc400fe3
->> [   74.568156] xhci-hcd xhci-hcd.2.auto: xHCI host not responding to stop endpoint command.
->> [   74.574806] xhci-hcd xhci-hcd.2.auto: Assuming host is dying, halting host.
->> [   74.601970] xhci-hcd xhci-hcd.2.auto: HC died; cleaning up
->> [   74.606276] usb 3-1: USB disconnect, device number 2
->> [   74.613565] usb 4-1: USB disconnect, device number 2
->> [   74.621208] usb usb3-port1: couldn't allocate usb_device
->> NB: it's not related to USB2.0 devices, I get the same result with an USB3.0 device (SATA to USB3 for instance).
->> NB2: it doesn't happen on an odriod-XU3 board, that doesn't have the realtek RTL8153 chip.
+>> On 20/01/2017 06:56, Peter Rosin wrote:
+>>>
+>>> On 2017-01-19 08:48, Phil Reid wrote:
+>>>>
+>>>> On 18/01/2017 20:19, Peter Rosin wrote:
+>>>>>
+>>>>> On 2017-01-17 09:00, Phil Reid wrote:
 >>
->> If the lines:
->>         if (dwc->revision > DWC3_REVISION_194A)
->>                 reg |= DWC3_GUSB3PIPECTL_SUSPHY;
->> are commented out, the USB3.0 start working.
 >>
->> For a full analyse: https://lkml.org/lkml/2017/1/18/678
+>> [snip]
 >>
->> Felipe suggested that suspend should be disabled temporarily while
->> what's wrong with DCW3 is figured out.
 >>
->> Tested on Odroid XU4
->>
->> Suggested-by: Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->> Tested-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org # 4.4+
->> Fixes: 2164a476205ccc ("usb: dwc3: set SUSPHY bit for all cores")
->> ---
->>  arch/arm/boot/dts/exynos5422-odroidxu4.dts | 9 +++++++++
->>  1 file changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5422-odroidxu4.dts b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> index 2faf88627a48..f62dbd9b5ad3 100644
->> --- a/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> +++ b/arch/arm/boot/dts/exynos5422-odroidxu4.dts
->> @@ -43,6 +43,15 @@
->>         status = "okay";
->>  };
->>
->> +&usbdrd_dwc3_0 {
->> +       /*
->> +        * without that, usb devices are not recognized when
->> +        * they are plugged.
->> +        * cf: https://lkml.org/lkml/2017/1/18/678
->> +        */
->> +       snps,dis_u3_susphy_quirk;
->> +};
->> +
->>  &usbdrd_dwc3_1 {
->>         dr_mode = "host";
->>  };
->> --
->
-> Thanks for this patch.
-> But could you consider moving this changes as below.
->
-> https://lkml.org/lkml/2015/3/18/400
+>>>>> Hmm, this whole thing is fiddly and while it solves your problem it doesn't
+>>>>> allow for solving the more general problem when there are "problematic"
+>>>>> devices mixed with other devices. At least, I don't see it. And the
+>>>>> limitations we are walking into with tracking number of enables etc suggests
+>>>>> that we are attacking this at the wrong level. Maybe you should try to work
+>>>>> around the hw limitations not in the pca954x driver, but in the irq core?
+>>>>
+>>>>
+>>>> I'm looking at the option of getting the hardware changed to not route
+>>>> the irq for my chips thru the i2c mux. Fortunately the hardware is going thru a
+>>>> revision for some other changes. Messing with the irq core sounds dangerous
+>>>> with my level of knowledge.
+>>>
+>>>
+>>> Yeah, but I bet you'd get some attention from people with more irq
+>>> experience. That can't be bad :-)
+>>>
+>>>> The other way I think I can tackle it after reading the datasheet for the ltc1760 is that
+>>>> it'll deassert it's irq (smbalert) line when the host sends a ARA request on the bus segment.
+>>>> There's a driver in the kernel for this already, but it's not DT enable and doesn't
+>>>> handle multiple bus segments. I'll have a look at that as well.
+>>>> Pretty sure it would need the mux to become an irq parent as per patch 1-3 of this series.
+>>>> This would be so the system can figure out which segment to do the poll on.
+>>>
+>>>
+>>> Yeah sounds neater. It has the slight drawback that it may not work
+>>> for pure i2c buses since it an SMB thing??
+> 
+> If you need to send SMBus commands like ARA, you should be using an
+> SMBus 2.0+ compatible bus multiplexer. muxes like the pca954x do not
+> automatically select the bus segment that the ARA is destined for. It
+> usually is more efficient to only request the data you need from each
+> device, rather than checking every segment on each interrupt for the
 
-The patch above (and other DTS patches from the set) was not even sent
-to linux-samsung-soc nor to me... It is sad how easily one's work can
-disappear. Also, it is really worthless to solve the same problem
-twice.
+We are not talking about checking every segment on every interrupt, we
+are talking about checking the segments indicated by the INTx bits in
+the control register.
 
-Cc Marek and Bartlomiej,
-Guys, do you want to continue with Robert's patch (linked above by
-Anand)? If yes, please take the ownership (Robert's address is not
-valid anymore). If not, I will take Richard's patch after
-resubmission.
+> cause, one could implement a delayed worker to schedule
+> checking+clearing the interrupt at a time when the bus is selected for
+> use by another slave device on that segment when possible. This will
+> reduce the number of bus setup operations per transfer to slaves on
+> deeper busses, reducing your i2c latency.
 
-Best regards,
-Krzysztof
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+i2c traffic scheduling does not exist in linux to the best of my knowledge,
+it's all handled with a simple mutex AFAIK. So, while traffic scheduling
+is an interesting problem, I think it is out of scope at this time.
+
+If you happen to have a pca954x mux (with irq support) and happen to
+have devices behind it that needs ARA support, I just don't see how any
+of the above is relevant. Yes, it could be more efficient to have the
+hardware done differently, but that is in many cases not a possibility.
+You have to make do with what you have, and if that costs latency, then
+there is little to do about that. You only have to make the new stuff
+optional so that old working setups don't suffer.
+
+>>>
+>>> BTW, why do you need special treatment for multiple segments? Will it not
+>>> simply have an ARA appear on whatever i2c bus the device sits on? And if
+>>> something requests to send an ARA message on a bus that happens to be a
+>>> muxed segment, my mental picture is that the mux will be operated as usual
+>>> so that the ARA appears on the muxed segment. Maybe I'm missing something?
+>>
+>>
+>> My think was the following.
+>> When the SMBALERT is asserted a ARA needs to be sent by the master.
+>> If the device sending the SMBALERT is behind a mux when need to know which segment of the bus to enable.
+>> Using shared interrupts should work I think, but you have to iterate thru each bus segment.
+>> If the alert device is nested behind a couple of muxes this could get expensive.
+>> But yeah otherwise I think the correct mux segment will get enabled automatically.
+>> The current SMBALERT driver only seems to attached to the root i2c adapter.
+> 
+> Using ARA in a multi mux environment is very expensive, setting up
+> each mux segment and then sending ARA will consume more time than it
+> would take if the mux structure was optimized to service devices on
+> similar busses, reducing the setup operation count. ARA was only
+> implemented on the root bus due to the design of the arbiter and mux
+> cannot guarantee that you are the only owner of the bus when you are
+> disconnected.
+
+ARA handling should take the irq register of the pca95x into account and
+only send ARAs to indicated mux segments. If more than one segment needs
+servicing, then of course one ARA for each segment needs to be sent. If
+someone builds hardware like this and then expect no latency, that someone
+will hopefully at least learn something.
+
+I do not know how this fits with the existing ARA handling (it probably
+doesn't), but what needs to happen is fairly easy to picture.
+
+>    You would also need to handle the cases where segments
+> lock up and must be released using the bus reset mechanism, this
+> resets the IRQs as well. The added cost of a I2C read to coincide the
+> write operation to the mux when the irq pin is asserted is
+> unacceptable for low latency applications.
+
+I bet there are a lot of corner cases, and yes, this added cost has to be
+optional. Perhaps with each mux child segment opting in for ARA support?
+If a mux then has a way to determine that an ARA isn't needed for some of
+its child segments (by reading some status register), then linux is free
+to not send ARAs there. And more importantly, if no mux child segment opts
+in for ARA support, it should be possible to preserve current behavior...
+
+Cheers,
+peda
