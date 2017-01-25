@@ -1,314 +1,142 @@
-Return-Path: <SRS0=vuOa=ZJ=a0393678ub.kernel.org=kishon@kernel.org>
-Date: Fri, 27 Jan 2017 13:06:45 +0530
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: patch "phy: Add support for Qualcomm's USB HSIC phy" added to
- linux-phy tree
-Message-ID: <20170127073645.GA25882@a0393678ub>
+Return-Path: <SRS0=Jybw=ZH=linaro.org=baoyou.xie@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-To: stephen.boyd@linaro.org, devicetree@vger.kernel.org, kishon@ti.com, robh@kernel.org
+In-Reply-To: <74bfcbb3-a9ce-8228-77d3-db4defa79df5@roeck-us.net>
+References: <1485248322-24299-1-git-send-email-baoyou.xie@linaro.org>
+ <1485248322-24299-3-git-send-email-baoyou.xie@linaro.org> <35dcd00f-a4bd-a313-0d6f-932a3f5888f0@roeck-us.net>
+ <CA+DQWky4---=gRipAR=NqajvwYV2QQQWbztTpPJS5oaL4D6QaQ@mail.gmail.com> <74bfcbb3-a9ce-8228-77d3-db4defa79df5@roeck-us.net>
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Date: Wed, 25 Jan 2017 10:47:26 +0800
+Message-ID: <CA+DQWkytLtmEzCrxLh=R1GntqKC6doM1O7ekEn8_tNVQb8BPkQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Content-Type: multipart/alternative; boundary=001a1140b0fac6481f0546e240e2
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jun Nie <jun.nie@linaro.org>, wim@iguana.be, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-ID: <devicetree@vger.kernel.org>
 
+--001a1140b0fac6481f0546e240e2
+Content-Type: text/plain; charset=UTF-8
 
-This is a note to let you know that I've just added the patch titled
+On 25 January 2017 at 10:43, Guenter Roeck <linux@roeck-us.net> wrote:
 
-    phy: Add support for Qualcomm's USB HSIC phy
+> On 01/24/2017 06:16 PM, Baoyou Xie wrote:
+>
+>>
+>> [ ... ]
+>
+>>         +
+>>         +       ret = of_parse_phandle_with_fixed_args(dev->of_node,
+>>         +                       "zte,wdt-reset-sysctrl", 3, 0, &out_args);
+>>         +       if (ret)
+>>         +               return;
+>>         +
+>>         +       offset = out_args.args[0];
+>>         +       config = out_args.args[1];
+>>         +       mask = out_args.args[2];
+>>         +
+>>         +       regmap = syscon_node_to_regmap(out_args.np <
+>> http://out_args.np>);
+>>         +       if (IS_ERR(regmap))
+>>         +               return;
+>>         +
+>>         +       regmap_update_bits(regmap, offset, mask, config);
+>>
+>>
+>>     Another comment suggested adding
+>>             of_node_put(out_args.np <http://out_args.np>);
+>>     here.
+>>
+>>
+>> is it really? most of the driver that call this function don't call
+>> of_node_put. but it seems harmless to call of_node_put.
+>>
+>>
+>> Even if everyone else is doing things wrong, that doesn't mean
+> that you should do the same, nor is it a good idea to use it
+> as argument.
+>
+> en, yes.
+I have read the comment of of_parse_phandle_with_fixed_args. in v6 version,
+I have fixed it.
+thanks.
 
-to my linux-phy git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git
-in the 'next' branch.
 
-Let me know if you find any problems with this patch.
+> Guenter
+>
+>
 
->From 15938013c6ebf3625d2eb6cdf63e6f97471bdbf9 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd@linaro.org>
-Date: Wed, 25 Jan 2017 14:32:44 -0800
-Subject: phy: Add support for Qualcomm's USB HSIC phy
+--001a1140b0fac6481f0546e240e2
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-The HSIC USB controller on qcom SoCs has an integrated all
-digital phy controlled via the ULPI viewport.
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">On 25 January 2017 at 10:43, Guenter Roeck <span dir=3D"ltr">&lt;<a hre=
+f=3D"mailto:linux@roeck-us.net" target=3D"_blank">linux@roeck-us.net</a>&gt=
+;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margin:0px 0p=
+x 0px 0.8ex;border-left:1px solid rgb(204,204,204);padding-left:1ex">On 01/=
+24/2017 06:16 PM, Baoyou Xie wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex">
+<br>
+</blockquote>
+[ ... ]<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-=
+left:1px solid rgb(204,204,204);padding-left:1ex"><span class=3D"gmail-">
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D of_parse_ph=
+andle_with_fixed_ar<wbr>gs(dev-&gt;of_node,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0&quot;zte,wdt-reset-sysctrl&quot;, 3,=
+ 0, &amp;out_args);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (ret)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0return;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0offset =3D out_args=
+.args[0];<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0config =3D out_args=
+.args[1];<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0mask =3D out_args.a=
+rgs[2];<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +<br></span>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap =3D syscon_n=
+ode_to_regmap(<a href=3D"http://out_args.np" rel=3D"noreferrer" target=3D"_=
+blank">out_args<wbr>.np</a> &lt;<a href=3D"http://out_args.np" rel=3D"noref=
+errer" target=3D"_blank">http://out_args.np</a>&gt;);<span class=3D"gmail-"=
+><br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0if (IS_ERR(regmap))=
+<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0return;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 +=C2=A0 =C2=A0 =C2=A0 =C2=A0regmap_update_bits(=
+regmap, offset, mask, config);<br>
+<br>
+<br>
+=C2=A0 =C2=A0 Another comment suggested adding<br></span>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 of_node_put(<a href=3D"http://out=
+_args.np" rel=3D"noreferrer" target=3D"_blank">out_args.np</a> &lt;<a href=
+=3D"http://out_args.np" rel=3D"noreferrer" target=3D"_blank">http://out_arg=
+s.np</a>&gt;);<span class=3D"gmail-"><br>
+=C2=A0 =C2=A0 here.<br>
+<br>
+<br>
+is it really? most of the driver that call this function don&#39;t call of_=
+node_put. but it seems harmless to call of_node_put.<br>
+<br>
+<br>
+</span></blockquote>
+Even if everyone else is doing things wrong, that doesn&#39;t mean<br>
+that you should do the same, nor is it a good idea to use it<br>
+as argument.<span class=3D"gmail-HOEnZb"><font color=3D"#888888"><br>
+<br></font></span></blockquote><div>en, yes.<br></div><div>I have read the =
+comment of <span class=3D"gmail-">of_parse_phandle_with_fixed_ar<wbr>gs. in=
+ v6 version, I have fixed it.<br></span></div><div><span class=3D"gmail-">t=
+hanks.<br></span></div><div>=C2=A0</div><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204);pad=
+ding-left:1ex"><span class=3D"gmail-HOEnZb"><font color=3D"#888888">
+Guenter<br>
+<br>
+</font></span></blockquote></div><br></div></div>
 
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <stephen.boyd@linaro.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |   65 ++++++++
- drivers/phy/Kconfig                                |    7 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-qcom-usb-hsic.c                    |  160 ++++++++++++++++++++
- 4 files changed, 233 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
- create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-new file mode 100644
-index 0000000..3c7cb2b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
-@@ -0,0 +1,65 @@
-+Qualcomm's USB HSIC PHY
-+
-+PROPERTIES
-+
-+- compatible:
-+    Usage: required
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-hsic-phy" and more specifically one of the
-+		following:
-+
-+			"qcom,usb-hsic-phy-mdm9615"
-+			"qcom,usb-hsic-phy-msm8974"
-+
-+- #phy-cells:
-+    Usage: required
-+    Value type: <u32>
-+    Definition: Should contain 0
-+
-+- clocks:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain clock specifier for phy, calibration and
-+                a calibration sleep clock
-+
-+- clock-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "phy, "cal" and "cal_sleep"
-+
-+- pinctrl-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "init" and "default" in that order
-+
-+- pinctrl-0:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to keep HSIC pins in a glitch
-+                free state
-+
-+- pinctrl-1:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: List of pinctrl settings to apply to mux out the HSIC pins
-+
-+EXAMPLE
-+
-+usb-controller {
-+	ulpi {
-+		phy {
-+			compatible = "qcom,usb-hsic-phy-msm8974",
-+				     "qcom,usb-hsic-phy";
-+			#phy-cells = <0>;
-+			pinctrl-names = "init", "default";
-+			pinctrl-0 = <&hsic_sleep>;
-+			pinctrl-1 = <&hsic_default>;
-+			clocks = <&gcc GCC_USB_HSIC_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_CLK>,
-+				 <&gcc GCC_USB_HSIC_IO_CAL_SLEEP_CLK>;
-+			clock-names = "phy", "cal", "cal_sleep";
-+			assigned-clocks = <&gcc GCC_USB_HSIC_IO_CAL_CLK>;
-+			assigned-clock-rates = <960000>;
-+		};
-+	};
-+};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index e8eb7f2..a430a64 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -437,6 +437,13 @@ config PHY_QCOM_UFS
- 	help
- 	  Support for UFS PHY on QCOM chipsets.
- 
-+config PHY_QCOM_USB_HSIC
-+	tristate "Qualcomm USB HSIC ULPI PHY module"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
-+
- config PHY_TUSB1210
- 	tristate "TI TUSB1210 ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 65eb2f4..c43c9df 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-diff --git a/drivers/phy/phy-qcom-usb-hsic.c b/drivers/phy/phy-qcom-usb-hsic.c
-new file mode 100644
-index 0000000..47690f9
---- /dev/null
-+++ b/drivers/phy/phy-qcom-usb-hsic.c
-@@ -0,0 +1,160 @@
-+/**
-+ * Copyright (C) 2016 Linaro Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/pinctrl/consumer.h>
-+#include <linux/pinctrl/pinctrl-state.h>
-+#include <linux/delay.h>
-+#include <linux/clk.h>
-+
-+#include "ulpi_phy.h"
-+
-+#define ULPI_HSIC_CFG		0x30
-+#define ULPI_HSIC_IO_CAL	0x33
-+
-+struct qcom_usb_hsic_phy {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct pinctrl *pctl;
-+	struct clk *phy_clk;
-+	struct clk *cal_clk;
-+	struct clk *cal_sleep_clk;
-+};
-+
-+static int qcom_usb_hsic_phy_power_on(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+	struct ulpi *ulpi = uphy->ulpi;
-+	struct pinctrl_state *pins_default;
-+	int ret;
-+
-+	ret = clk_prepare_enable(uphy->phy_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(uphy->cal_clk);
-+	if (ret)
-+		goto err_cal;
-+
-+	ret = clk_prepare_enable(uphy->cal_sleep_clk);
-+	if (ret)
-+		goto err_sleep;
-+
-+	/* Set periodic calibration interval to ~2.048sec in HSIC_IO_CAL_REG */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_IO_CAL, 0xff);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Enable periodic IO calibration in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_HSIC_CFG, 0xa8);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Configure pins for HSIC functionality */
-+	pins_default = pinctrl_lookup_state(uphy->pctl, PINCTRL_STATE_DEFAULT);
-+	if (IS_ERR(pins_default))
-+		return PTR_ERR(pins_default);
-+
-+	ret = pinctrl_select_state(uphy->pctl, pins_default);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	 /* Enable HSIC mode in HSIC_CFG register */
-+	ret = ulpi_write(ulpi, ULPI_SET(ULPI_HSIC_CFG), 0x01);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	/* Disable auto-resume */
-+	ret = ulpi_write(ulpi, ULPI_CLR(ULPI_IFC_CTRL),
-+			 ULPI_IFC_CTRL_AUTORESUME);
-+	if (ret)
-+		goto err_ulpi;
-+
-+	return ret;
-+err_ulpi:
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(uphy->cal_clk);
-+err_cal:
-+	clk_disable_unprepare(uphy->phy_clk);
-+	return ret;
-+}
-+
-+static int qcom_usb_hsic_phy_power_off(struct phy *phy)
-+{
-+	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
-+
-+	clk_disable_unprepare(uphy->cal_sleep_clk);
-+	clk_disable_unprepare(uphy->cal_clk);
-+	clk_disable_unprepare(uphy->phy_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_usb_hsic_phy_ops = {
-+	.power_on = qcom_usb_hsic_phy_power_on,
-+	.power_off = qcom_usb_hsic_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
-+{
-+	struct qcom_usb_hsic_phy *uphy;
-+	struct phy_provider *p;
-+	struct clk *clk;
-+
-+	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-+	if (!uphy)
-+		return -ENOMEM;
-+	ulpi_set_drvdata(ulpi, uphy);
-+
-+	uphy->ulpi = ulpi;
-+	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
-+	if (IS_ERR(uphy->pctl))
-+		return PTR_ERR(uphy->pctl);
-+
-+	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-+				    &qcom_usb_hsic_phy_ops);
-+	if (IS_ERR(uphy->phy))
-+		return PTR_ERR(uphy->phy);
-+	phy_set_drvdata(uphy->phy, uphy);
-+
-+	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(p);
-+}
-+
-+static const struct of_device_id qcom_usb_hsic_phy_match[] = {
-+	{ .compatible = "qcom,usb-hsic-phy", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
-+
-+static struct ulpi_driver qcom_usb_hsic_phy_driver = {
-+	.probe = qcom_usb_hsic_phy_probe,
-+	.driver = {
-+		.name = "qcom_usb_hsic_phy",
-+		.of_match_table = qcom_usb_hsic_phy_match,
-+	},
-+};
-+module_ulpi_driver(qcom_usb_hsic_phy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
+--001a1140b0fac6481f0546e240e2--
