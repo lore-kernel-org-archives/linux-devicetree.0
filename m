@@ -1,87 +1,89 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v3 02/14] Documentation: dt/bindings: Document pinctrl-gpio
-Date: Wed, 25 Jan 2017 19:51:55 +0100
-Message-ID: <20170125185207.23902-3-paul@crapouillou.net>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170125185207.23902-1-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com, Paul Cercueil <paul@crapouillou.net>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: [PATCH v4 0/3] iio: distance: srf08: add IIO driver for us ranger
+Date: Wed, 25 Jan 2017 20:06:09 +0100
+Message-ID: <20170125190609.GA9246@andreas>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ktsai-GubuWUlQtMwciDkP5Hr2oA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds documentation for the devicetree bidings of the
-pinctrl-gpio driver, which handles GPIOs of the Ingenic SoCs
-currently supported by the Linux kernel.
+This patch series adds IIO driver support for srf08 ultrasonic ranger
+devices.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- .../devicetree/bindings/gpio/ingenic,gpio.txt      | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+The first patch add a trivial device tree binding for the device together
+with a new vendor devantech.
 
-v2: New patch
-v3: No changes
+The second patch is the IIO driver which in turn is using I2C to talk to
+the device.
 
-diff --git a/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
-new file mode 100644
-index 000000000000..b2eb20494365
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
-@@ -0,0 +1,45 @@
-+Ingenic jz47xx GPIO controller
-+
-+Required properties:
-+  - compatible:
-+    - "ingenic,jz4740-gpio" for the JZ4740 SoC
-+    - "ingenic,jz4780-gpio" for the JZ4780 SoC
-+
-+  - reg: Base address and length of each memory resource used by the GPIO
-+    controller hardware module.
-+
-+  - gpio-controller: Marks the device node as a GPIO controller.
-+  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
-+    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
-+    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-+  - gpio-ranges: Range of pins managed by the GPIO controller.
-+
-+Optional properties:
-+  - base: The GPIO number to use as the base for this driver.
-+  - interrupt-controller: Marks the device node as an interrupt controller.
-+  - interrupts: Interrupt specifier for the controllers interrupt.
-+    Required if 'interrupt-controller' is specified.
-+
-+Please refer to gpio.txt in this directory for details of gpio-ranges property
-+and the common GPIO bindings used by client devices.
-+
-+The GPIO controller also acts as an interrupt controller. It uses the default
-+two cells specifier as described in Documentation/devicetree/bindings/
-+interrupt-controller/interrupts.txt.
-+
-+Example:
-+
-+gpa: gpio-controller@10010000 {
-+	compatible = "ingenic,jz4740-gpio";
-+	reg = <0x10010000 0x100>;
-+
-+	gpio-controller;
-+	gpio-ranges = <&pinctrl 0 0 32>;
-+	#gpio-cells = <2>;
-+
-+	interrupt-controller;
-+	#interrupt-cells = <2>;
-+
-+	interrupt-parent = <&intc>;
-+	interrupts = <28>;
-+};
+The third patch documents the added userspace ABI
+
+Documentation about the sensor can be found here:
+
+http://www.robot-electronics.co.uk/htm/srf08tech.html
+
+Changes in v4:
+Jonathan suggested to use the same units for the max_range attribute as
+used for the distance raw value which is now changed in the driver. Thanks
+for the review and detailed suggestions.
+
+* Patch 2: "iio: distance: srf08: add IIO driver for us ranger"
+  - changed units of max_range attribute to meter
+  - changed max_range_available to print out min-, step- and max-value
+    instead of each single value
+
+* Patch 3: "iio: distance: srf08: add driver ABI documentation"
+  - removed standard elements from documentation
+  - changed documentation of max_range_available attribute
+
+Changes in v3:
+Thanks to the reviews of Jonathan, Rob and Lars.
+Some changes to the driver were made:
+
+* Patch 2: "iio: distance: srf08: add IIO driver for us ranger"
+  - defaults values for sensitivity (gain) and max. range are set in
+    probe()
+  - while waiting for ultrasonic echo first wait as long as the physically
+    measurement need as a function of the max. range and then wait in 
+    smaller steps until the response can be read.
+  - attributes are now called sensor_sensitivity instead of gain and
+    sensor_max_range instead of range_mm
+  - device-name is now "srf08"
+  - config menu is now calles "Proximity and distance sensors" instead of a
+    separate menu
+
+* Patch 3: "iio: distance: srf08: add driver ABI documentation"
+  - newly created to document the driver specific interfaces
+
+Changes in v2:
+Lots of updates thanks to Peters really fast review within 30 minutes 
+after first submission of the driver.
+
+* Patch 2: "iio: distance: srf08: add IIO driver for us ranger"
+  - alphabetic order in Makefile
+  - use of u8 while accessing registers 
+  - avoid endianness problems with 16 bit values
+  - missing return value checks
+  - some explaining documentation added
+
+Andreas Klinger (3):
+  iio: distance: srf08: add trivial DT binding
+  iio: distance: srf08: add IIO driver for us ranger
+  iio: distance: srf08: add driver ABI documentation
+
+ .../ABI/testing/sysfs-bus-iio-distance-srf08       |  22 ++
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ drivers/iio/proximity/Kconfig                      |  13 +-
+ drivers/iio/proximity/Makefile                     |   1 +
+ drivers/iio/proximity/srf08.c                      | 398 +++++++++++++++++++++
+ 6 files changed, 435 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
+ create mode 100644 drivers/iio/proximity/srf08.c
+
 -- 
-2.11.0
+2.1.4
