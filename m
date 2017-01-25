@@ -1,94 +1,68 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 2/8] serial: st-asc: Provide RTS
- functionality
-Date: Wed, 25 Jan 2017 11:03:57 +0000
-Message-ID: <20170125110357.GD5680@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
- <20170124134310.27512-3-lee.jones@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: tegra: nyan-blaze: Include compatible
+ revisions for proper detection
+Date: Wed, 25 Jan 2017 12:04:13 +0100
+Message-ID: <20170125110413.GE9344@ulmo.ba.sec>
+References: <20170122154753.31942-1-contact@paulk.fr>
+ <20170122154753.31942-4-contact@paulk.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FN+gV9K+162wdwwF"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170124134310.27512-3-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+In-Reply-To: <20170122154753.31942-4-contact-W9ppeneeCTY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 24 Jan 2017, Lee Jones wrote:
 
-> Until this point, it has not been possible for userland serial
-> applications (e.g. stty) to toggle the UART RTS line.  This can
-> be useful with certain configurations. For example, when using
-> a Mezzanine on a Linaro 96board, RTS line is used to take the
-> on-board microcontroller in and out of reset.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+--FN+gV9K+162wdwwF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-
+On Sun, Jan 22, 2017 at 04:47:51PM +0100, Paul Kocialkowski wrote:
+> Depthcharge (the payload used with cros devices) will attempt to detect
+> boards using their revision. This includes all the known revisions for
+> the nyan-blaze board so that the dtb can be selected preferably.
+>=20
+> Defining compatibly revisions allows depthcharge to select the kernel
+> via the revision it detects instead of using the default kernel. This
+> allows having a FIT image with multiple kernels for multiple devices.
+>=20
+> Signed-off-by: Paul Kocialkowski <contact-W9ppeneeCTY@public.gmane.org>
 > ---
->  drivers/tty/serial/st-asc.c | 27 +++++++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-> index 69e6232..397df50 100644
-> --- a/drivers/tty/serial/st-asc.c
-> +++ b/drivers/tty/serial/st-asc.c
-> @@ -30,6 +30,7 @@
->  #include <linux/of_platform.h>
->  #include <linux/serial_core.h>
->  #include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
->  
->  #define DRIVER_NAME "st-asc"
->  #define ASC_SERIAL_NAME "ttyAS"
-> @@ -38,6 +39,7 @@
->  
->  struct asc_port {
->  	struct uart_port port;
-> +	struct gpio_desc *rts;
->  	struct clk *clk;
->  	unsigned int hw_flow_control:1;
->  	unsigned int force_m1:1;
-> @@ -391,12 +393,27 @@ static unsigned int asc_tx_empty(struct uart_port *port)
->  
->  static void asc_set_mctrl(struct uart_port *port, unsigned int mctrl)
->  {
-> +	struct asc_port *ascport = to_asc_port(port);
-> +
->  	/*
-> -	 * This routine is used for seting signals of: DTR, DCD, CTS/RTS
-> -	 * We use ASC's hardware for CTS/RTS, so don't need any for that.
-> -	 * Some boards have DTR and DCD implemented using PIO pins,
-> -	 * code to do this should be hooked in here.
-> +	 * This routine is used for seting signals of: DTR, DCD, CTS and RTS.
-> +	 * We use ASC's hardware for CTS/RTS when hardware flow-control is
-> +	 * enabled, however if the RTS line is required for another purpose,
-> +	 * commonly controlled using HUP from userspace, then we need to toggle
-> +	 * it manually, using GPIO.
-> +	 *
-> +	 * Some boards also have DTR and DCD implemented using PIO pins, code to
-> +	 * do this should be hooked in here.
->  	 */
-> +
-> +	if (!ascport->rts)
-> +		return;
-> +
-> +	/* If HW flow-control is enabled, we can't fiddle with the RTS line */
-> +	if (asc_in(port, ASC_CTL) & ASC_CTL_CTSENABLE)
-> +		return;
-> +
-> +	gpiod_set_value(ascport->rts, mctrl & TIOCM_RTS);
->  }
->  
->  static unsigned int asc_get_mctrl(struct uart_port *port)
-> @@ -726,6 +743,8 @@ static struct asc_port *asc_of_get_asc_port(struct platform_device *pdev)
->  							"st,hw-flow-control");
->  	asc_ports[id].force_m1 =  of_property_read_bool(np, "st,force_m1");
->  	asc_ports[id].port.line = id;
-> +	asc_ports[id].rts = NULL;
-> +
->  	return &asc_ports[id];
->  }
->  
+>  arch/arm/boot/dts/tegra124-nyan-blaze.dts | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+
+Applied, with the same padding adjustments as 3/6.
+
+Thanks,
+Thierry
+
+--FN+gV9K+162wdwwF
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliIhi0ACgkQ3SOs138+
+s6Ey3w/+L3MYoX8i+6sbo6Akm53AAzfq2XuEKyMU4Bpq2vJKc1cuN9LC7Yo1/kch
+7uteRcgF/wHvY5VlpKnZXbKgXp2rupWLXhuyC0cKVn6FWBjRmq2X3PENkyA2rLaK
+zxv58kTdpOiqLIP6zGnlt+RrVbUOrrN/gMB3T3wGl/kA5EbxIOJQLKNVvh+wI892
+dR9wTxA9r7OOtLUeO02EB8B6qwRVirX3bD77+lAap6JGLqdX+c0nXq76zxj0xn+T
+irdVCHg0XMdqlg0oYRIYlJtzeRcm+ZhLq3D29Ygg00QBN1bvW1s5obg3H+LU9v9K
+OY1Dm5z27RjKSXP1plIINnrYq40U07gvHHTCN3kNAJ2YHMi+Fkot4R2VB41+3VqK
+G5EKMYT6Pyfc10M6ORPpuz34JIfaXO/ZyIJTEnxFkkUeWuW3dkGmNWxBrfUQ++CH
+P0kQZRV3pvC/5FJWSwAO8XUzjT9HMGq5ZyUgiz8xVEJlUFNkx2eK16S9Df1J5ekJ
+dQv1RQe+4uzORTEICubArWU8+6pf2dR0Nrtz+jF/APZcgTyqOyZx+P1KX0fQdSPm
+yjuU7OdzxF1TGzCK4XC7pSF3X3zIMbxTigwKLStXjpZcEW6vq9D7GvM5JsCRNL/h
+5jHM4MY1OtNgmWrI2DoSuPpP4Cw1flWQqbkdpxXMWiqVKHBhZQY=
+=23vW
+-----END PGP SIGNATURE-----
+
+--FN+gV9K+162wdwwF--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
