@@ -1,73 +1,45 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v14 3/5] tee: add OP-TEE driver
-Date: Wed, 25 Jan 2017 11:02:53 +0100
-Message-ID: <20170125100252.GA8889@kroah.com>
-References: <1484744296-30003-1-git-send-email-jens.wiklander@linaro.org>
- <8183743.bSJXZpMh95@wuerfel>
- <20170123090852.GB1910@jax>
- <5564439.UZohRc66aK@wuerfel>
- <20170124125330.GA30998@jax>
- <20170125094744.GA7121@jax>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 0/8] serial: st-asc: Allow handling of RTS line
+Date: Wed, 25 Jan 2017 11:07:22 +0100
+Message-ID: <20170125100722.GB17954@kroah.com>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170125094744.GA7121@jax>
+In-Reply-To: <20170124134310.27512-1-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>, Wei Xu <xuwei5@hisilicon.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>, valentin.manea@huawei.com, jean-michel.delorme@st.com, emmanuel.michel@st.com, javier@javigon.com, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Nishanth Menon <nm@ti.com>, "Andrew F . Davis" <afd@ti.com>, broonie@kernel.org, scott.branden@broadcom.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: jslaby@suse.com, linux-serial@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 10:47:45AM +0100, Jens Wiklander wrote:
-> On Tue, Jan 24, 2017 at 01:53:30PM +0100, Jens Wiklander wrote:
-> > On Mon, Jan 23, 2017 at 05:16:15PM +0100, Arnd Bergmann wrote:
-> > > On Monday, January 23, 2017 10:08:53 AM CET Jens Wiklander wrote:
-> > > > On Fri, Jan 20, 2017 at 05:57:51PM +0100, Arnd Bergmann wrote:
-> > > > > On Thursday, January 19, 2017 3:56:23 PM CET Jens Wiklander wrote:
-> > > > > > On Wed, Jan 18, 2017 at 05:28:17PM +0100, Arnd Bergmann wrote:
-> > > 
-> > > > > > Does the platform devices really need cleaning? I mean
-> > > > > > of_platform_default_populate_init() creates a bunch of platform devices
-> > > > > > which are just left there even if unused. Here we're doing the same
-> > > > > > thing except that we're doing it for a specific node in the DT.
-> > > > > 
-> > > > > I think it will work if you don't clean them up, but it feels wrong
-> > > > > to have a loadable module that creates devices when loaded but doesn't
-> > > > > remove them when unloaded.
-> > > > > 
-> > > > > This could be done differently by having the device creation done in
-> > > > > one driver and the the user of that device in another driver, but I
-> > > > > think just killing off the device achieves the same in a simpler way.
-> > > > 
-> > > > I see your point. My final concern here is that with device we got
-> > > > entries in sysfs and uevents that could be used to automatically start
-> > > > the correct supplicant. Different drivers are likely to require
-> > > > different supplicants. Starting the correct supplicant based on uevents
-> > > > is a quite elegant solution which I'm not sure how to support when
-> > > > skipping devices. Perhaps I could create an object below
-> > > > <sysfs>/firmware/tee ?
-> > > 
-> > > Putting the objects somewhere other than /sys/devices sounds good, yes.
-> > > This would also help with TEE implementations that might get probed
-> > > differently.
-> > > 
-> > > I think the natural place would be /sys/class/tee/, as we normally
-> > > require something in /sys/class anyway to support the character
-> > > device.
-> > > 
-> > > /sys/firmware/tee/ sounds less fitting, as there other TEE implementations
-> > > are not necessarily firmware based, as you point out. 
-> > > /sys/firmware/op-tee certainly makes sense for anything that is specific
-> > > to OP-TEE in particular, while /sys/class/tee would be for anything
-> > > that uses the ioctl interface. This part is particularly important to
-> > > get right from the start, just like the ioctls themselves we can't make
-> > > incompatible changes here later once there are users relying on the
-> > > upstream kernel interfaces.
-> > 
-> > /sys/class/tee/ sounds good, I'll use that. It's more or less what we
-> > also have today.
+On Tue, Jan 24, 2017 at 01:43:02PM +0000, Lee Jones wrote:
+> When hardware flow-control is disabled, manual toggling of the UART's
+> reset line (RTS) using userland applications (e.g. stty) is not
+> possible, since the ASC IP does not provide this functionality in the
+> same was as some other IPs do.  Thus, we have to do this manually.
 > 
-> I'm sorry, it seems a struct device has to be used in order to put stuff
-> under /sys/class/tee/. Or am I missing something?
+> This set ensures the correct Pinctrl groups are configured and
+> obtained for both manual toggling of the RTS line and for the IP to
+> take over the lines when HW flow-control is requested by the user.
+> 
+> Lee Jones (8):
+>   serial: st-asc: Ignore the parity error bit if 8-bit mode is enabled
+>   serial: st-asc: Provide RTS functionality
+>   serial: st-asc: Read in all Pinctrl states
+>   serial: st-asc: (De)Register GPIOD and swap Pinctrl profiles
+>   ARM: dts: STiH410-b2260: Identify the UART RTS line
+>   ARM: dts: STiH407-pinctrl: Add Pinctrl group for HW flow-control
+>   ARM: dts: STiH407-family: Use new Pinctrl groups
+>   ARM: dts: STiH407-family: Enable HW flow-control
+> 
+>  arch/arm/boot/dts/stih407-family.dtsi  |  7 +--
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi | 12 ++++-
+>  arch/arm/boot/dts/stih410-b2260.dts    |  1 +
+>  drivers/tty/serial/st-asc.c            | 98 +++++++++++++++++++++++++++++++---
+>  4 files changed, 105 insertions(+), 13 deletions(-)
+> 
+> -- 
+> 2.10.2
 
-Nope, that is correct.
+I'll ignore this series due to the kbuild problems :(
