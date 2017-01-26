@@ -1,60 +1,69 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 0/2] clocksource: Add renesas-ostm timer driver
-Date: Wed, 25 Jan 2017 21:07:05 -0500
-Message-ID: <20170126020707.4376-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 1/2] dt-bindings: document renesas-ostm timer
+Date: Wed, 25 Jan 2017 21:07:06 -0500
+Message-ID: <20170126020707.4376-2-chris.brandt@renesas.com>
+References: <20170126020707.4376-1-chris.brandt@renesas.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170126020707.4376-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
-
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
-
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
-
-v4:
-* Added more details to commit log
-* Kconfig: SYS_SUPPORTS_RENESAS_OSTM to just RENESAS_OSTM
-* removed all MODULE code (this driver is builtin only)
-* removed items from 'struct ostm_device'
-* changed ioread8 to readb
-* explain endless while loop
-* removed un-needed vars like 'ret'
-* removed WARN_ON(!clockevent_state_oneshot(ced));
-* removed "failed to allocate memory" message
-* remove pm_runtime calls
-* remove "earlytimer" register (only for sh, not arm)
-* convert from platform driver to CLOCKSOURCE_OF_DECLARE
-* ostm_probe code is now in ostm_init
-
+Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
 v3:
-* Changed ostm@fcfec000 to timer@fcfec000
-* Added power-domains to nodes
-
+* changed ostm@fcfec000 to timer@fcfec000 in example
+* added power-domains in example
 v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
-
-
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  30 +++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |   7 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 262 +++++++++++++++++++++
- 5 files changed, 301 insertions(+)
+* remove sw implementation specific portions
+---
+ .../devicetree/bindings/timer/renesas,ostm.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
 
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+new file mode 100644
+index 0000000..be3ae0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+@@ -0,0 +1,30 @@
++* Renesas OS Timer (OSTM)
++
++The OSTM is a multi-channel 32-bit timer/counter with fixed clock
++source that can operate in either interval count down timer or free-running
++compare match mode.
++
++Channels are independent from each other.
++
++Required Properties:
++
++  - compatible: must be one or more of the following:
++    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
++    - "renesas,ostm" for any OSTM
++		This is a fallback for the above renesas,*-ostm entries
++
++  - reg: base address and length of the register block for a timer channel.
++
++  - interrupts: interrupt specifier for the timer channel.
++
++  - clocks: clock specifier for the timer channel.
++
++Example: R7S72100 (RZ/A1H) OSTM node
++
++	ostm0: timer@fcfec000 {
++		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
++		reg = <0xfcfec000 0x30>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
++		power-domains = <&cpg_clocks>;
++	};
 -- 
 2.10.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
