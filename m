@@ -1,77 +1,140 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 7/7] ARM: dts: stm32: Enable pwm1 and pwm3 on
- stm32f429i-eval
-Date: Thu, 26 Jan 2017 15:28:35 +0100
-Message-ID: <1485440915-30119-8-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH v2 2/7] iio: adc: stm32: Enable use of stm32 timer triggers
+Date: Thu, 26 Jan 2017 15:28:30 +0100
+Message-ID: <1485440915-30119-3-git-send-email-fabrice.gasnier@st.com>
 References: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1485440915-30119-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
+Cc: linux-iio@vger.kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, lars@metafoo.de, knaack.h@gmx.de, pmeerw@pmeerw.net, fabrice.gasnier@st.com, benjamin.gaignard@linaro.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Define and enable pwm1 and pwm3, timers1 & 3 trigger outputs on
-on stm32f429i-eval board.
+STM32 ADC has external timer trigger sources. Use stm32 timer triggers
+API (e.g. is_stm32_timer_trigger()) with local ADC lookup table to
+validate a trigger can be used.
+This also provides correct trigger selection value (e.g. extsel).
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
 Changes in v2:
-- Fix typo
-- Sort phandles
+- Add comment on dual check to validate trigger (and get extsel)
 ---
- arch/arm/boot/dts/stm32429i-eval.dts | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/iio/adc/Kconfig     |  2 ++
+ drivers/iio/adc/stm32-adc.c | 65 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 67 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index 2181220..507ee9d 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -157,6 +157,34 @@
- 	};
+diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+index 33341f4..9a7b090 100644
+--- a/drivers/iio/adc/Kconfig
++++ b/drivers/iio/adc/Kconfig
+@@ -447,6 +447,8 @@ config STM32_ADC_CORE
+ 	depends on OF
+ 	depends on REGULATOR
+ 	select IIO_BUFFER
++	select MFD_STM32_TIMERS
++	select IIO_STM32_TIMER_TRIGGER
+ 	select IIO_TRIGGERED_BUFFER
+ 	help
+ 	  Select this option to enable the core driver for STMicroelectronics
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index 1e382b6..87d984b 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -23,6 +23,7 @@
+ #include <linux/delay.h>
+ #include <linux/iio/iio.h>
+ #include <linux/iio/buffer.h>
++#include <linux/iio/timer/stm32-timer-trigger.h>
+ #include <linux/iio/trigger.h>
+ #include <linux/iio/trigger_consumer.h>
+ #include <linux/iio/triggered_buffer.h>
+@@ -81,6 +82,36 @@ enum stm32_adc_exten {
+ 	STM32_EXTEN_HWTRIG_BOTH_EDGES,
  };
  
-+&timers1 {
-+	status = "okay";
-+
-+	pwm {
-+		pinctrl-0 = <&pwm1_pins>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
-+
-+	timer@0 {
-+		status = "okay";
-+	};
++/* extsel - trigger mux selection value */
++enum stm32_adc_extsel {
++	STM32_EXT0,
++	STM32_EXT1,
++	STM32_EXT2,
++	STM32_EXT3,
++	STM32_EXT4,
++	STM32_EXT5,
++	STM32_EXT6,
++	STM32_EXT7,
++	STM32_EXT8,
++	STM32_EXT9,
++	STM32_EXT10,
++	STM32_EXT11,
++	STM32_EXT12,
++	STM32_EXT13,
++	STM32_EXT14,
++	STM32_EXT15,
 +};
 +
-+&timers3 {
-+	status = "okay";
-+
-+	pwm {
-+		pinctrl-0 = <&pwm3_pins>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
-+
-+	timer@2 {
-+		status = "okay";
-+	};
++/**
++ * struct stm32_adc_trig_info - ADC trigger info
++ * @name:		name of the trigger, corresponding to its source
++ * @extsel:		trigger selection
++ */
++struct stm32_adc_trig_info {
++	const char *name;
++	enum stm32_adc_extsel extsel;
 +};
 +
- &usart1 {
- 	pinctrl-0 = <&usart1_pins_a>;
- 	pinctrl-names = "default";
+ /**
+  * stm32_adc_regs - stm32 ADC misc registers & bitfield desc
+  * @reg:		register offset
+@@ -176,6 +207,26 @@ struct stm32_adc_chan_spec {
+ 	{ STM32F4_ADC_SQR1, GENMASK(19, 15), 15 },
+ };
+ 
++/* STM32F4 external trigger sources for all instances */
++static struct stm32_adc_trig_info stm32f4_adc_trigs[] = {
++	{ TIM1_CH1, STM32_EXT0 },
++	{ TIM1_CH2, STM32_EXT1 },
++	{ TIM1_CH3, STM32_EXT2 },
++	{ TIM2_CH2, STM32_EXT3 },
++	{ TIM2_CH3, STM32_EXT4 },
++	{ TIM2_CH4, STM32_EXT5 },
++	{ TIM2_TRGO, STM32_EXT6 },
++	{ TIM3_CH1, STM32_EXT7 },
++	{ TIM3_TRGO, STM32_EXT8 },
++	{ TIM4_CH4, STM32_EXT9 },
++	{ TIM5_CH1, STM32_EXT10 },
++	{ TIM5_CH2, STM32_EXT11 },
++	{ TIM5_CH3, STM32_EXT12 },
++	{ TIM8_CH1, STM32_EXT13 },
++	{ TIM8_TRGO, STM32_EXT14 },
++	{}, /* sentinel */
++};
++
+ /**
+  * STM32 ADC registers access routines
+  * @adc: stm32 adc instance
+@@ -318,6 +369,20 @@ static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
+  */
+ static int stm32_adc_get_trig_extsel(struct iio_trigger *trig)
+ {
++	int i;
++
++	/* lookup triggers registered by stm32 timer trigger driver */
++	for (i = 0; stm32f4_adc_trigs[i].name; i++) {
++		/**
++		 * Checking both stm32 timer trigger type and trig name
++		 * should be safe against arbitrary trigger names.
++		 */
++		if (is_stm32_timer_trigger(trig) &&
++		    !strcmp(stm32f4_adc_trigs[i].name, trig->name)) {
++			return stm32f4_adc_trigs[i].extsel;
++		}
++	}
++
+ 	return -EINVAL;
+ }
+ 
 -- 
 1.9.1
