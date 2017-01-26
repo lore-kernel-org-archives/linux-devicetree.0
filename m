@@ -1,60 +1,51 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: Re: [PATCH v2 0/8] Pad retentions support for Exynos5433
-Date: Thu, 26 Jan 2017 11:37:29 +0100
-Message-ID: <31715f20-2dca-498c-f7bd-1947cfe9ac70@samsung.com>
-References: <CGME20170126083401eucas1p20b4794fe46ccf2189bf734f0d8e3c536@eucas1p2.samsung.com>
- <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
- <CACRpkdawiAp3xqVd7J5ZAd2dQ=X09DGybyw0EVp=07w8-ccKfA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 08/11] ARM: dts: sun8i-a23-q8-tablet: Drop
+ pinmux setting for codec PA gpio
+Date: Thu, 26 Jan 2017 11:38:13 +0100
+Message-ID: <20170126103813.6k6zqnjvguiphs5s@lukather>
+References: <20170124023230.3990-1-wens@csie.org>
+ <20170124023230.3990-9-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-reply-to: <CACRpkdawiAp3xqVd7J5ZAd2dQ=X09DGybyw0EVp=07w8-ccKfA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hsn76sg75gdelhb2"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFVDU7CAKGQERN7O6HQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170124023230.3990-9-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-On 2017-01-26 10:50, Linus Walleij wrote:
-> On Thu, Jan 26, 2017 at 9:33 AM, Marek Szyprowski
-> <m.szyprowski@samsung.com> wrote:
->> Patches in this patchset depends on each other. They are order in such a
->> way to make the changes bisectable.
->>
->> Patch #3 has runtime dependency on #1.
->> Patch #5 has runtime dependency on #3.
->> Patch #6 has runtime dependency on #4.
->>
->> This patchset also directly depends on the "Move pad retention control to
->> Exynos pin controller driver" patchset:
->> https://www.spinics.net/lists/arm-kernel/msg556074.html
-> Do we *have* to merge it runtime-bisectably?
->
-> I'm asking because we need a huge immutable branch
-> (I guess in the MFD subsystem) to deal with that.
->
-> It'd be great if I could just apply the pinctrl patches in
-> isolation, then Lee applies the MFD patches in isolation,
-> everything compiles in isolation but maye just work once both
-> pinctrl and MFD are merged upstream, as in linux-next
-> or Torvalds' tree.
+--hsn76sg75gdelhb2
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I always thought that it is good to prepare patches in such a way that they
-don't break runtime bisectability, especially if this is just a matter of
-applying a few patches via the other tree. In this case it will work fine
-if MFD patches gets applied with Lee Jones ack via pinctrl tree (I remember
-that MFD changes were often applied via the other trees in the past).
+On Tue, Jan 24, 2017 at 10:32:27AM +0800, Chen-Yu Tsai wrote:
+> We are moving towards handling GPIO pinmux settings that don't require
+> extra bias or drive strength settings to use the GPIO bindings only.
+> 
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun8i-a23-q8-tablet.dts | 10 ----------
+>  drivers/clk/sunxi-ng/ccu-sun9i-a80.c      | 24 ++++++++++++------------
 
-> That is one of the reasons why using a system-agnostic
-> syscon regmap lookup is so good, BTW.
+That diff looks suspicious :)
 
-I've just explained my rationale about the regmap lookup in the separate
-mail.
+(and the patch for which you wrote a commit log for
+doesn't have anything to do in this serie)
 
-Best regards
+Maxime
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--hsn76sg75gdelhb2--
