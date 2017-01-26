@@ -1,53 +1,74 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using
- rockchip timer
-Date: Thu, 26 Jan 2017 14:19:53 +0100
-Message-ID: <20170126131953.GI2021@mai>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com>
- <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com>
- <20170123144744.GE2166@mai>
- <1793912.WfGyM7qEjy@diego>
- <58B283B0-02F6-4342-A6D2-7E082E04863E@gmail.com>
- <20170123175740.GI2166@mai>
- <F4C90577-1F45-47A0-A532-7AC581825279@gmail.com>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v6 0/3] Add support for es8388 and hdmi audio
+	on the rock2
+Date: Thu, 26 Jan 2017 14:23:12 +0100
+Message-ID: <20170126132315.17955-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <F4C90577-1F45-47A0-A532-7AC581825279@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, LKML <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2017 at 02:08:45PM +0300, Alexander Kochetkov wrote:
-> Hello Daniel!
-> 
-> Sorry for bothering you. Just let you know that I sent v5 here:
-> http://lists.infradead.org/pipermail/linux-rockchip/2017-January/thread.html#13812
-> 
-> Because previous series was somehow missed in your inbox.
-> 
-> Heiko don’t want to add  "Reviewed-by» to my patches. Could you please
-> apply the patches without the tag.
-> 
-> Let me know is all ok with series now? Or may be I have to do something else?
+This set of patches adds a machine driver for rk3288-based boards that have
+the built-in HDMI audio and a generic analog output. It also adds slave mode
+to the es8328 driver that currently only supported the master mode. Then, it
+adds the required DT definitions to link rockchip-i2s to the es8388 analog
+output and to hdmi audio.
 
-Alexander,
+This work is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.co.uk> with some improvements, changes and more
+commits.
 
-I think you misinterpreted Heiko's comment. He just want to take the time to
-review the driver in details and add himself the reviewed-by tag which is
-usually the procedure. I have to review the driver also.
+Changes in v6:
+ - Fixed bad error handling for gpio in rk3288_analog_hdmi.c
+ - Removed message duplication in rk_hw_params(), in rk3288_analog_hdmi.c
+ - Removed patch 1/4 (from the previous series), as it has been merged
+Changes in v5:
+ - Fixed coding style issue in patch 2/4 (the switch case).
+ - Moved the code for the master mode and the slave mode into the switch case for patch 2/4
+ - Fixed error handling for patch 3/4
+Changes in v4:
+ - Add support for multi codecs in the asoc machine driver, so the driver
+   matches the hw architecture (analog and hdmi audio are connected on
+   the same i2s line)
+ - Renamed the driver to rk3288-hdmi-analog.c and changed its
+   documentation
+ - Add built-in support for hdmi audio in this driver
+ - Add support for the property 'rockchip,routing'
 
-Meanwile you can have a look at https://lkml.org/lkml/2017/1/25/236
+Changes in v3:
+ - Cosmetic changes in rockchip_es8388.c
+ - Added missing email to MODULE_AUTHOR in rockchip_es8388.c
+Changes in v2:
+ - Fixed wrong use of the data structure i2c_device_id
+ - Fixed wrong dependencies for SND_SOC_ROCKCHIP_ES8388
 
+Romain Perier (3):
+  ASoC: es8328: Add support for slave mode
+  ASoC: rockchip: Add machine driver for RK3288 boards that use
+    analog/HDMI
+  arm: dts: Add support for ES8388 to the Radxa Rock 2
 
+ .../bindings/sound/rockchip,rk3288-hdmi-analog.txt |  36 +++
+ arch/arm/boot/dts/rk3288-rock2-square.dts          |  39 +++
+ sound/soc/codecs/es8328.c                          |  20 +-
+ sound/soc/rockchip/Kconfig                         |  10 +
+ sound/soc/rockchip/Makefile                        |   2 +
+ sound/soc/rockchip/rk3288_hdmi_analog.c            | 299 +++++++++++++++++++++
+ 6 files changed, 400 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip,rk3288-hdmi-analog.txt
+ create mode 100644 sound/soc/rockchip/rk3288_hdmi_analog.c
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.9.3
