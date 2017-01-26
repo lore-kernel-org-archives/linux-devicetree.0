@@ -1,61 +1,179 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH v6 05/14] ARM: davinci: da850: add con_id for the SATA
- clock
-Date: Thu, 26 Jan 2017 10:56:34 -0600
-Message-ID: <93a3bbb3-2d9f-bc38-c7b4-5eb3325d985d@ti.com>
-References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
- <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
+From: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
+Date: Thu, 26 Jan 2017 18:15:57 +0100
+Message-ID: <b1c43bca-39bc-8b81-1a90-b7081a7d74ea@free.fr>
+References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
+ <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
-Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
+Content-Language: 
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Reitan <John.Reitan-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thibaud
 List-Id: devicetree@vger.kernel.org
 
+On 19/01/2017 20:24, John Stultz wrote:
 
-
-On 01/23/2017 11:00 AM, Bartosz Golaszewski wrote:
-> The ahci-da850 SATA driver is now capable of retrieving clocks by
-> con_id. Add the connection id for the sysclk2-derived SATA clock.
+> On Mon, Jan 16, 2017 at 5:24 AM, Maxime Ripard wrote:
+>
+>> The ARM Mali Utgard GPU family is embedded into a number of SoCs from
+>> Allwinner, Amlogic, Mediatek or Rockchip.
+>>
+>> Add a binding for the GPU of that family.
+>>
+>> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
+>>  1 file changed, 76 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> new file mode 100644
+>> index 000000000000..df05ba0ec357
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> @@ -0,0 +1,76 @@
+>> +ARM Mali Utgard GPU
+>> +===================
+>> +
+>> +Required properties:
+>> +  - compatible:
+>> +    * "arm,mali-utgard" and one of the following:
+>> +      + "arm,mali-300"
+>> +      + "arm,mali-400"
+>> +      + "arm,mali-450"
+>> +
+>> +  - reg: Physical base address and length of the GPU registers
+>> +
+>> +  - interrupts: an entry for each entry in interrupt-names.
+>> +    See ../interrupt-controller/interrupts.txt for details.
+>> +
+>> +  - interrupt-names:
+>> +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
+>> +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
+>> +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
+>> +    * gp: Geometry Processor interrupt
+>> +    * gpmmu: Geometry Processor MMU interrupt
+>> +
+>> +
+>> +Optional properties:
+>> +  - interrupt-names:
+>> +    * pmu: Power Management Unit interrupt, if implemented in hardware
+>> +
+>> +Vendor-specific bindings
+>> +------------------------
+>> +
+>> +The Mali GPU is integrated very differently from one SoC to
+>> +another. In order to accommodate those differences, you have the option
+>> +to specify one more vendor-specific compatible, among:
+>> +
+>> +  - allwinner,sun4i-a10-mali
+>> +    Required properties:
+>> +      * clocks: an entry for each entry in clock-names
+>> +      * clock-names:
+>> +        + bus: bus clock for the GPU
+>> +        + core: clock driving the GPU itself
+>> +      * resets: phandle to the reset line for the GPU
+>> +
+>> +  - allwinner,sun7i-a20-mali
+>> +    Required properties:
+>> +      * clocks: an entry for each entry in clock-names
+>> +      * clock-names:
+>> +        + bus: bus clock for the GPU
+>> +        + core: clock driving the GPU itself
+>> +      * resets: phandle to the reset line for the GPU
+>> +
+>> +Example:
+>> +
+>> +mali: gpu@01c40000 {
+>> +       compatible = "allwinner,sun7i-a20-mali", "arm,mali-400",
+>> +                    "arm,mali-utgard";
+>> +       reg = <0x01c40000 0x10000>;
+>> +       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+>> +                    <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+>> +       interrupt-names = "gp",
+>> +                         "gpmmu",
+>> +                         "pp0",
+>> +                         "ppmmu0",
+>> +                         "pp1",
+>> +                         "ppmmu1",
+>> +                         "pmu";
+>> +       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+>> +       clock-names = "bus", "core";
+>> +       resets = <&ccu RST_BUS_GPU>;
+>> +};
+>> +
+>> +
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/mach-davinci/da850.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-> index 1d873d1..dbf1daa 100644
-> --- a/arch/arm/mach-davinci/da850.c
-> +++ b/arch/arm/mach-davinci/da850.c
-> @@ -571,7 +571,7 @@ static struct clk_lookup da850_clks[] = {
->  	CLK("spi_davinci.0",	NULL,		&spi0_clk),
->  	CLK("spi_davinci.1",	NULL,		&spi1_clk),
->  	CLK("vpif",		NULL,		&vpif_clk),
-> -	CLK("ahci_da850",		NULL,		&sata_clk),
-> +	CLK("ahci_da850",	"sata",		&sata_clk),
-
-I'm worry a bit - wouldn't this cause future problems with PM runtime
- (if it will be the case)?
-
-If this is functional clock - shouldn't it be "fck" to 
-follow PM domain con_id list for davinci?  (arch/arm/mach-davinci/pm_domain.c) 
-
->  	CLK("davinci-rproc.0",	NULL,		&dsp_clk),
->  	CLK(NULL,		NULL,		&ehrpwm_clk),
->  	CLK("ehrpwm.0",		"fck",		&ehrpwm0_clk),
+> Having a mali utgard binding upstream would be great. However I'm a
+> little worried that the mali driver I've used sort of only half way
+> uses DT, and still requires a custom built in platform driver to setup
+> numerous other things.  Curious if you have a pointer to the kernel
+> driver you've been using with the vendor specific bindings above?  I'd
+> like to try to adapt what we have to your method to validate the above
+> as generic.
 > 
+> And, just for context, here's the node we've been using with hikey:
+> 
+>                 mali:mali@f4080000 {
+>                         compatible = "arm,mali-450", "arm,mali-utgard";
+>                         reg = <0x0 0x3f100000 0x0 0x00708000>;
+>                         clocks = <&media_ctrl HI6220_G3D_CLK>,
+>                                  <&media_ctrl HI6220_G3D_PCLK>;
+>                         clock-names = "clk_g3d", "pclk_g3d";
+>                         mali_def_freq = <500>;
+>                         pclk_freq = <144>;
+>                         dfs_steps = <2>;
+>                         dfs_lockprf = <1>;
+>                         dfs_limit_max_prf = <1>;
+>                         dfs_profile_num = <2>;
+>                         dfs_profiles = <250 3 0>, <500 1 0>;
+>                         mali_type = <2>;
+> 
+>                         interrupt-parent = <&gic>;
+>                         interrupts =    <1 126 4>, /*gp*/
+>                                         <1 126 4>, /*gp mmu*/
+>                                         <1 126 4>, /*pp bc*/
+>                                         <1 126 4>, /*pmu*/
+>                                         <1 126 4>, /*pp0*/
+>                                         <1 126 4>,
+>                                         <1 126 4>, /*pp1*/
+>                                         <1 126 4>,
+>                                         <1 126 4>, /*pp2*/
+>                                         <1 126 4>,
+>                                         <1 126 4>, /*pp4*/
+>                                         <1 126 4>,
+>                                         <1 126 4>, /*pp5*/
+>                                         <1 126 4>,
+>                                         <1 126 4>, /*pp6*/
+>                                         <1 126 4>;
+>                         interrupt-names = "IRQGP", "IRQGPMMU", "IRQPP", "IRQPMU",
+>                                         "IRQPP0", "IRQPPMMU0", "IRQPP1", "IRQPPMMU1",
+>                                         "IRQPP2", "IRQPPMMU2", "IRQPP4", "IRQPPMMU4",
+>                                         "IRQPP5", "IRQPPMMU5", "IRQPP6", "IRQPPMMU6";
+>                 };
 
--- 
-regards,
--grygorii
+Interesting. Thanks for sharing.
+
+The SoC I work on (tango4 smp8758) also embeds a Mali-400 MP4.
+(IIUC, MP4 means 4 shader cores?)
+
+I have seen
+	https://github.com/mripard/sunxi-mali/blob/r6p2/driver/src/devicedrv/mali/platform/sunxi/sunxi.c
+in the past, but I suppose it's time to take a much closer look.
+
+Regards.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
