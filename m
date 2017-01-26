@@ -1,40 +1,129 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 2/3] mmc: sh_mobile_sdhi: explain clock bindings
-Date: Thu, 26 Jan 2017 15:20:31 +0000
-Message-ID: <SG2PR06MB116507C6DC4A8F13A5B913BF8A770@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170121030604.7672-1-chris.brandt@renesas.com>
- <20170121030604.7672-3-chris.brandt@renesas.com>
- <20170123165523.fnavkx263ifvss4p@rob-hp-laptop>
- <SG2PR06MB1165F465C5802912ED62820C8A720@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAL_Jsq+uit6rVcqsJjxmbtYfYdCvyRLCgDbp9RZd-B8SJo0+yg@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v8 0/3] Support qcom's HSIC USB and rewrite USB2 HS
+ support
+Date: Thu, 26 Jan 2017 20:54:12 +0530
+Message-ID: <588A149C.6020207@ti.com>
+References: <20170125223245.2688-1-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+uit6rVcqsJjxmbtYfYdCvyRLCgDbp9RZd-B8SJo0+yg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170125223245.2688-1-stephen.boyd@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>, Peter Chen <peter.chen@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Neil Armstrong <narmstrong@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Felipe Balbi <balbi@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1cnNkYXksIEphbnVhcnkgMjYsIDIwMTcsIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+PiA+
-ICsNCj4gPj4gPiArRXhhbXBsZSBzaG93aW5nIDIgY2xvY2tzOg0KPiA+PiA+ICsgICBzZGhpMDog
-c2RAZTgwNGUwMDAgew0KPiA+Pg0KPiA+PiBtbWNALi4uDQo+ID4NCj4gPiBJJ20gY29uZnVzZWQu
-IEkgc2VlIHRoYXQgZm9yIGFsbCBTREhJIGNvbnRyb2xsZXJzLCBpdCBlaXRoZXIgInNkQCIgb3IN
-Cj4gInNkaGNpQCIuDQo+ID4NCj4gPiAkIGdyZXAgc2RoaSAkKGZpbmQgYXJjaC9hcm0vYm9vdC9k
-dHMgLW5hbWUgIiouZHRzaSIpDQo+ID4NCj4gPiAkIGdyZXAgc2RoY2kgJChmaW5kIGFyY2gvYXJt
-L2Jvb3QvZHRzIC1uYW1lICIqLmR0c2kiKQ0KPiANCj4gWWVzLCB0aGVyZSdzIGxvdHMgb2YgdmFy
-aWF0aW9uLiBOb2RlIG5hbWVzIGFyZSBzdXBwb3NlZCB0byBiZSBnZW5lcmljIGZvcg0KPiB0aGVp
-ciBjbGFzcyBvZiBkZXZpY2UgKGUuZy4gZXRoZXJuZXQsIHBjaSwgdXNiLCBpbnRlcnJ1cHQtY29u
-dHJvbGxlciwNCj4gZXRjLikuIEknZCBiZSBmaW5lIHdpdGggInNkIiwgYnV0IHRoaW5rICJtbWMi
-IGlzIG1vcmUgY29tbW9uLiBFaXRoZXIgd2F5LA0KPiB3ZSBzaG91bGQgcGljayBvbmUgbW92aW5n
-IGZvcndhcmQuICJzZGhjaSINCj4gc2hvdWxkIG5vdCBiZSB1c2VkIGFzIHRoYXQncyBhIHNwZWNp
-ZmljIGltcGxlbWVudGF0aW9uLg0KPiANCj4gUm9iDQoNCkZvciBub3csIEkgdG9vayB0aGUgZXhh
-bXBsZSBiYWNrIG91dCBvZiB0bWlvX21tYy50eHQgc2luY2UgSSBmaWd1cmVkDQpwZW9wbGUgY2Fu
-IHJlZmVyIGJhY2sgdG8gbW1jLnR4dCBmb3Igd2hhdCB0aGUgbmFtaW5nIHNob3VsZCBiZSAoc2lu
-Y2UNCnRoZSBkaXJlY3RvcnkgbmFtZSBpcyBtbWMsIHlvdSB3b3VsZCB0aGluayB0aGUgZ29sZGVu
-IHJ1bGVzIHdlcmUgaW4NCm1tYy50eHQpDQoNCg0KPiBJJ2QgYmUgZmluZSB3aXRoICJzZCIsIGJ1
-dCB0aGluayAibW1jIiBpcyBtb3JlIGNvbW1vbi4NCg0KTk9URTogbW1jLnR4dCBjdXJyZW50bHkg
-aGFzIDIgZXhhbXBsZXM6DQoNCglzZGhjaUBhYjAwMDAwMCB7DQoNCgltbWMzOiBtbWNAMDFjMTIw
-MDAgew0KDQpDaHJpcw0KDQo=
+
+
+On Thursday 26 January 2017 04:02 AM, Stephen Boyd wrote:
+> This patch series continues the usb chipidea rewrite for 
+> Qualcommm platforms. I've dropped the patches that were applied
+> to Peter's tree for chipidea. Now the phy drivers are left,
+> along with the patch to call phy_set_mode() at the right place.
+> 
+> I've left the HSIC phy driver here, because it wasn't merged in
+> the last round. Nothing has changed in that driver, so I believe
+> it is ready to be merged now. The chipidea patch is independent and
+> can be merged without causing any dependency with the phy tree.
+
+merged the phy patches. Please send a patch updating the MAINTAINERS for the
+phy driver.
+
+Thanks
+Kishon
+> 
+> Patches based on v4.10-rc1 + first 22 patches from v5. Full
+> branch is here[1].
+> 
+> Changes from v7:
+>  * Dropped set_vbus() callback (Kishon)
+>  * Made phy_set_mode() generic and moved into ci_platform_configure() (Peter)
+> 
+> Changes from v6:
+>  * Dropped first 22 applied patches
+>  * Rewrote phy_set_mode() patch to be msm specific
+>  * New set_vbus() callback in phy framework
+>  * Updated HS phy driver for set_vbus() callback
+> 
+> Changes from v5:
+>  * Replaced "Emulate OTGSC interrupt enable path" patch with a patch
+>    from Peter
+>  * Updated HS phy driver to support set_mode callback to handle pullup
+>  * New patch to set the mode to device or host in chipidea udc pullup
+>    function to toggle the pullup for HS mode
+>  * New patch to drop lock around event_notify callback to avoid lockdep
+>    issues
+>  * Removal of extcon usage from HS phy driver
+>  * Picked up acks from Heikki and Peter on ULPI core patch
+> 
+> Changes from v4:
+>  * Picked up Acks from Rob
+>  * Updated HS phy init sequence DT property to restrict it to offsets
+> 
+> Changes from v3:
+>  * Picked up Acks from Peter
+>  * Updated extcon consolidation patch per Peter's comments
+>  * Folded in simplification from Heikki for ULPI DT matching
+> 
+> Changes from v2:
+>  * Added SoC specific compatibles in phy bindings
+>  * Dropped AVVIS patch for OTG statemachine
+>  * New patch to consolidate extcon handlers
+>  * Picked up Acks from Peter
+>  * Rebased onto v4.8-rc1
+>  * Reworked ULPI OF code to look at vid == 0 instead of pid == 0
+>  * Dropped ULPI bindings for vid and pid overrides
+> 
+> Changes from v1:
+>  * Reworked ULPI device probing to keep using vendor/product ids that
+>    come from DT if needed and falls back to OF style match when product id
+>    is 0
+>  * PHY init later patch was rejected so that moved to a quirk flag and
+>    the msm wrapper started managing the phy on/off
+>  * Updated clk requirements for HSIC phy in binding doc
+>  * Added optional clk in wrapper for "housekeeping" found on older qcom
+>    platforms
+>  * Bug fix to OTGSC polling function
+>  * Changed runtime PM patch to set as active instead of get/put
+> 
+> TODO:
+>  * DMA fails on arm64 so we need something like [2] to make it work.
+>  * The db410c needs a driver to toggle the onboard switch to connect
+>    the usb hub instead of micro port when the usb cable is disconnected.
+>    I've sent a patch set for this[3], which needs some further
+>    discussion/development. The current plan is to reintroduce the usb
+>    mux framework.
+>  * apq8064 platforms need a vbus regulator to really use otg and I haven't
+>    tried out the RPM based regulators yet
+>  * The HSIC phy on the apq8074 dragonboard is connected to a usb4604
+>    device which requires the i2c driver to probe and send an i2c
+>    sequence before the HSIC controller enumerates or HSIC doesn't work.
+>    Right now I have a hack to force the controller to probe defer
+>    once so that usb4604 probes first. This needs a more proper solution
+>    like having the DT describe a linkage between the controller and
+>    the usb device so we can enforce probe ordering. My current plan
+>    is to use DT graphs/endpoints for this.
+> 
+> [1] https://git.linaro.org/people/stephen.boyd/linux.git/log/?h=usb-hsic-8074
+> [2] https://patchwork.kernel.org/patch/9319527/
+> [3] https://lkml.kernel.org/r/20160914014246.31847-1-stephen.boyd@linaro.org
+> 
+> Stephen Boyd (3):
+>   usb: chipidea: Configure phy for appropriate mode
+>   phy: Add support for Qualcomm's USB HSIC phy
+>   phy: Add support for Qualcomm's USB HS phy
+> 
+>  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  84 ++++++
+>  .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++
+>  drivers/phy/Kconfig                                |  15 ++
+>  drivers/phy/Makefile                               |   2 +
+>  drivers/phy/phy-qcom-usb-hs.c                      | 296 +++++++++++++++++++++
+>  drivers/phy/phy-qcom-usb-hsic.c                    | 160 +++++++++++
+>  drivers/usb/chipidea/core.c                        |  20 +-
+>  7 files changed, 636 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+>  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
+>  create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+> 
