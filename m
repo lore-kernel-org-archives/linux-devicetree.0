@@ -1,90 +1,75 @@
-From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4] i2c: core: helper function to detect slave mode
-Date: Thu, 26 Jan 2017 17:45:32 +0000
-Message-ID: <c63cd48f7ae24747187f593b27b1b86ae361c436.1485452304.git.lolivei@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org
-Cc: Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 2/4] phy: qcom-qusb2: New driver for QUSB2 PHY on Qcom
+ chips
+Date: Thu, 26 Jan 2017 10:15:27 -0800
+Message-ID: <20170126181527.GB10531@minitux>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-3-git-send-email-vivek.gautam@codeaurora.org>
+ <587C880E.90803@ti.com>
+ <73a2f6ce-69d6-8d15-b28d-891bdf16672c@codeaurora.org>
+ <20170118180347.GO10531@minitux>
+ <CAFp+6iG3KxX=G64EyJFgGn9ZffzjCtEeR4HUPdOK-uhE8A=PwA@mail.gmail.com>
+ <58871C39.50403@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <58871C39.50403@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Vivek Gautam <vivek.gautam@codeaurora.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This function has the purpose of mode detection by checking the
-device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-Currently only checks using OF functions (ACPI slave not supported yet).
+On Tue 24 Jan 01:19 PST 2017, Kishon Vijay Abraham I wrote:
+> On Monday 23 January 2017 03:43 PM, Vivek Gautam wrote:
+> > On Wed, Jan 18, 2017 at 11:33 PM, Bjorn Andersson
+[..]
+> > 
+> > Yes, that's correct. The QMP and QUSB2 phy init sequences are a bunch
+> > of static values for a particular IP version. These values hardly give a
+> > meaningful data to put few phy bindings that could be referenced
+> > to configure the phy further.
+> 
+> Not really. You can have clearly defined phy binding to give meaningful data.
+> Every driver doing the same configuration bloats the driver and these
+> configuration values are just magic values which hardly can be reviewed by anyone.
+> > 
+> >>
+> >> Further more moving this blob to devicetree will not allow us to treat
+> >> the various QMP configurations as one HW block, as there are other
+> >> differences as well.
+> >>
+> >> Like many other drivers it's possible to create a generic version that
+> >> has every bit of logic driven by configuration from devicetree, but like
+> >> most of those cases this is not the way we split things.
+> >>
+> >> And this has the side effect of keeping the dts files human readable,
+> >> human understandable and human maintainable.
+> 
+> right. That's why I recommend having clearly defined bindings.
+> 	phy,tx-<param1> = <val, offset, mask>
+> 	phy,tx-<param2> = <val, offset, mask>
+> 	phy,tx-<param3> = <val, offset, mask>
 
-Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Suggested-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes V3->V4: (@Wolfram)
-- Rename of the function
-- Reword of the function description
+There's no doubt that this table needs to be encoded somewhere, so the
+question is should we hard code this in a C file or in a DTSI file.
 
- drivers/i2c/i2c-core.c | 33 +++++++++++++++++++++++++++++++++
- include/linux/i2c.h    |  1 +
- 2 files changed, 34 insertions(+)
+Skimming through [1] I see examples of things that differs based on how
+the specific component is integrated in a SoC or on a particular board -
+properties that are relevant to a "system integrator".
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 583e95042a21..408de741fec5 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -3690,6 +3690,39 @@ int i2c_slave_unregister(struct i2c_client *client)
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(i2c_slave_unregister);
-+
-+/**
-+ * i2c_detect_slave_mode - detect operation mode
-+ * @dev: The device owning the bus
-+ *
-+ * This checks the device nodes for an I2C slave by checking the address
-+ * used in the reg property. If the address match the I2C_OWN_SLAVE_ADDRESS
-+ * flag this means the device is configured to act as a I2C slave and it will
-+ * be listening at that address.
-+ *
-+ * Returns true if an I2C own slave address is detected, otherwise returns
-+ * false.
-+ */
-+bool i2c_detect_slave_mode(struct device *dev)
-+{
-+	if (IS_BUILTIN(CONFIG_OF) && dev->of_node) {
-+		struct device_node *child;
-+		u32 reg;
-+
-+		for_each_child_of_node(dev->of_node, child) {
-+			of_property_read_u32(child, "reg", &reg);
-+			if (reg & I2C_OWN_SLAVE_ADDRESS) {
-+				of_node_put(child);
-+				return true;
-+			}
-+		}
-+	} else if (IS_BUILTIN(CONFIG_ACPI) && ACPI_HANDLE(dev)) {
-+		dev_dbg(dev, "ACPI slave is not supported yet\n");
-+	}
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(i2c_detect_slave_mode);
-+
- #endif
- 
- MODULE_AUTHOR("Simon G. Vogl <simon-nD9nYVNVf00W+b/DJNNodF6hYfS7NtTn@public.gmane.org>");
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 4b45ec46161f..f0ba4bac7452 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -282,6 +282,7 @@ enum i2c_slave_event {
- 
- extern int i2c_slave_register(struct i2c_client *client, i2c_slave_cb_t slave_cb);
- extern int i2c_slave_unregister(struct i2c_client *client);
-+extern bool i2c_detect_slave_mode(struct device *dev);
- 
- static inline int i2c_slave_event(struct i2c_client *client,
- 				  enum i2c_slave_event event, u8 *val)
--- 
-2.11.0
+As far as I can tell this blob will, if ever, only be changed by a
+driver developer and as such it's not carry information about how this
+component relates to the rest of the system and should as such not be
+part of the device tree.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If there are properties of the hardware that is affected by how the
+component is integrated in the system I really would like for those to
+be exposed as human-readable properties that I can understand and alter
+without deep knowledge about the register map of the hardware block.
+
+> [1] -> https://www.linuxplumbersconf.org/2016/ocw/proposals/4047
+
+Regards,
+Bjorn
