@@ -1,69 +1,61 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 1/2] dt-bindings: document renesas-ostm timer
-Date: Thu, 26 Jan 2017 11:44:30 -0500
-Message-ID: <20170126164431.11995-2-chris.brandt@renesas.com>
-References: <20170126164431.11995-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170126164431.11995-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v6 05/14] ARM: davinci: da850: add con_id for the SATA
+ clock
+Date: Thu, 26 Jan 2017 10:56:34 -0600
+Message-ID: <93a3bbb3-2d9f-bc38-c7b4-5eb3325d985d@ti.com>
+References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+ <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
-v3:
-* changed ostm@fcfec000 to timer@fcfec000 in example
-* added power-domains in example
-v2:
-* remove sw implementation specific portions
----
- .../devicetree/bindings/timer/renesas,ostm.txt     | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-new file mode 100644
-index 0000000..be3ae0f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
-@@ -0,0 +1,30 @@
-+* Renesas OS Timer (OSTM)
-+
-+The OSTM is a multi-channel 32-bit timer/counter with fixed clock
-+source that can operate in either interval count down timer or free-running
-+compare match mode.
-+
-+Channels are independent from each other.
-+
-+Required Properties:
-+
-+  - compatible: must be one or more of the following:
-+    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
-+    - "renesas,ostm" for any OSTM
-+		This is a fallback for the above renesas,*-ostm entries
-+
-+  - reg: base address and length of the register block for a timer channel.
-+
-+  - interrupts: interrupt specifier for the timer channel.
-+
-+  - clocks: clock specifier for the timer channel.
-+
-+Example: R7S72100 (RZ/A1H) OSTM node
-+
-+	ostm0: timer@fcfec000 {
-+		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
-+		reg = <0xfcfec000 0x30>;
-+		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
-+		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
-+		power-domains = <&cpg_clocks>;
-+	};
+
+On 01/23/2017 11:00 AM, Bartosz Golaszewski wrote:
+> The ahci-da850 SATA driver is now capable of retrieving clocks by
+> con_id. Add the connection id for the sysclk2-derived SATA clock.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> ---
+>  arch/arm/mach-davinci/da850.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+> index 1d873d1..dbf1daa 100644
+> --- a/arch/arm/mach-davinci/da850.c
+> +++ b/arch/arm/mach-davinci/da850.c
+> @@ -571,7 +571,7 @@ static struct clk_lookup da850_clks[] = {
+>  	CLK("spi_davinci.0",	NULL,		&spi0_clk),
+>  	CLK("spi_davinci.1",	NULL,		&spi1_clk),
+>  	CLK("vpif",		NULL,		&vpif_clk),
+> -	CLK("ahci_da850",		NULL,		&sata_clk),
+> +	CLK("ahci_da850",	"sata",		&sata_clk),
+
+I'm worry a bit - wouldn't this cause future problems with PM runtime
+ (if it will be the case)?
+
+If this is functional clock - shouldn't it be "fck" to 
+follow PM domain con_id list for davinci?  (arch/arm/mach-davinci/pm_domain.c) 
+
+>  	CLK("davinci-rproc.0",	NULL,		&dsp_clk),
+>  	CLK(NULL,		NULL,		&ehrpwm_clk),
+>  	CLK("ehrpwm.0",		"fck",		&ehrpwm0_clk),
+> 
+
 -- 
-2.10.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards,
+-grygorii
