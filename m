@@ -1,47 +1,47 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: sun8i: enable SID on Allwinner H3 SoC
-Date: Thu, 26 Jan 2017 19:33:45 +0800
-Message-ID: <20170126113345.33686-2-icenowy@aosc.xyz>
-References: <20170126113345.33686-1-icenowy@aosc.xyz>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: Re: [PATCH v3] i2c: core: helper function to detect slave mode
+Date: Thu, 26 Jan 2017 11:49:59 +0000
+Message-ID: <5c2049cc-05aa-1f5b-65af-4df1147ed56a@synopsys.com>
+References: <58edd25a0fbe50b6d5abef14b7e46c63a1e06830.1484663257.git.lolivei@synopsys.com>
+ <20170125204537.i66nykln4fkxqryy@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBVN5U7CAKGQE7LR5GJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170126113345.33686-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170125204537.i66nykln4fkxqryy@ninjato>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>, Luis Oliveira <Luis.Oliveira@synopsys.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vz@mleia.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-As we have already made sunxi_sid driver support the SID controller on
-H3, enable it.
+On 25-Jan-17 20:45, Wolfram Sang wrote:
+> 
+>> + * i2c_slave_mode_detect - detect operation mode
+> 
+> I'd rather name it 'i2c_detect_slave_mode'
 
-Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+I will do a V4 with this change.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3.dtsi b/arch/arm/boot/dts/sun8i-h3.dtsi
-index 08fd0860bb6b..cefebbe8ff19 100644
---- a/arch/arm/boot/dts/sun8i-h3.dtsi
-+++ b/arch/arm/boot/dts/sun8i-h3.dtsi
-@@ -206,6 +206,11 @@
- 			#size-cells = <0>;
- 		};
- 
-+		sid: eeprom@01c14000 {
-+			compatible = "allwinner,sun8i-h3-sid";
-+			reg = <0x01c14000 0x300>;
-+		};
-+
- 		usbphy: phy@01c19400 {
- 			compatible = "allwinner,sun8i-h3-usb-phy";
- 			reg = <0x01c19400 0x2c>,
--- 
-2.11.0
+> 
+>> + * @dev:  The device owning the bus
+>> + *
+>> + * This checks the device nodes for an I2C slave by checking the address
+>> + * used.
+>> + *
+>> + * Returns true if an I2C slave is detected, otherwise returns false.
+> 
+> Both paragraphs could be a little more explicit. It is not about
+> "slaves" or "clients" in general, but about those entries which make the
+> current master act as a slave, too.
+> 
+
+Ok, I see your point of view. I will reword it also.
+
+> The code looks good to me, so we are close to go!
+> 
+> Thanks,
+> 
+>    Wolfram
+> 
+
+Great! Thanks
