@@ -1,127 +1,72 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 26 Jan 2017 16:37:13 +0800
-Message-ID: <1485419833.990.1.camel@mtksdaap41>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
-         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
-         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Jo
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v4 0/13] arm64: allwinner: a64: Enable MMC support
+Date: Thu, 26 Jan 2017 10:05:53 +0100
+Message-ID: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard@free-electrons.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi,
 
-On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
-> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao@mediatek.com> wrote:
-> 
-> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> > new file mode 100644
-> > index 0000000..747bcd3
-> > --- /dev/null
-> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> 
-> ...
-> 
-> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
-> > +{
-> > +       struct cmdq *cmdq;
-> > +       struct cmdq_task *task;
-> > +       unsigned long curr_pa, end_pa;
-> > +
-> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
-> > +
-> > +       /* Client should not flush new tasks if suspended. */
-> > +       WARN_ON(cmdq->suspended);
-> > +
-> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
-> > +       task->cmdq = cmdq;
-> > +       INIT_LIST_HEAD(&task->list_entry);
-> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
-> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
-> >
-> You seem to parse the requests and responses, that should ideally be
-> done in client driver.
-> Also, we are here in atomic context, can you move it in client driver
-> (before the spin_lock)?
-> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+Here is a new attempt at getting the MMC controllers running, following the
+work done by Andre.
 
-will do
+This has been tested on a board with one SDIO device (a Marvell WiFi chip)
+and a Kingston eMMC with 1.8V IOs.
 
-> ....
-> > +
-> > +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
-> > +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
-> > +       cmdq->mbox.of_xlate = cmdq_xlate;
-> > +
-> > +       /* make use of TXDONE_BY_ACK */
-> > +       cmdq->mbox.txdone_irq = false;
-> > +       cmdq->mbox.txdone_poll = false;
-> > +
-> > +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
-> >
-> You mean  i < CMDQ_THR_MAX_COUNT
+For SDIO, the HS DDR mode works just fine. That serie also enables the
+SDR104 mode to work on the devices that are capable of this.
 
-will do
+For the eMMC, HS200 with the voltage switch works. HS400 doesn't at the
+moment, but since it's significantly more complex, and at the same time
+Allwinner recommends to limit its frequency to 100MHz, this doesn't have
+any benefits. If there's any at some point, this can be added later.
 
-> > +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
-> > +                               CMDQ_THR_SIZE * i;
-> > +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
-> >
-> You seem the queue mailbox requests in this controller driver? why not
-> use the mailbox api for that?
-> 
-> > +               init_timer(&cmdq->thread[i].timeout);
-> > +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
-> > +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
-> >
-> Here again... you seem to ignore the polling mechanism provided by the
-> mailbox api, and implement your own.
+Let me know what you think,
+Maxime
 
-The queue is used to record the tasks which are flushed into CMDQ
-hardware (GCE). We are handling time critical tasks, so we have to
-queue them in GCE rather than a software queue (e.g. mailbox buffer).
-Let me use display as an example. Many display tasks are flushed into
-CMDQ to wait next vsync event. When vsync event is triggered by display
-hardware, GCE needs to process all flushed tasks "within vblank" to
-prevent garbage on screen. This is all done by GCE (without CPU)
-to fulfill time critical requirement. After GCE finish its work,
-it will generate interrupts, and then CMDQ driver will let clients know
-which tasks are done.
+Changes from v3:
+  - Reordered the MMC nodes
+  - Added the specification section the first commit log
+  - Supported mmc->actual_rate
+  - Clarified a bit what we (don't) know about DATA0
 
-We have discussed the similar thing before.
-Please take a look at the following link,
-especially from 2016/10/5 to.2016/10/11 about tx_done.
-https://patchwork.kernel.org/patch/9312953/
+Changes from v2:
+  - Enabled SDR104, limited the frequency to 150MHz. 200MHz was too high.
+  - Added more fixes to the gating and frequency rate change sequence
+  - Added one more patch to mask DATA0 when updating the clock that was
+    needed to get SDR104 to run
+  - Added the patches to enable it on a few boards done by Andre
+  - Amended the comments as suggested by Andre.
+  - Added some tags
 
-> > diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> > new file mode 100644
-> > index 0000000..3433c64
-> > --- /dev/null
-> > +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
-> ....
-> > +
-> > +struct cmdq_pkt {
-> > +       void                    *va_base;
-> >
-> maybe add 'pa_base' here so you don't have to do dma_map_single() in send_data
+Andre Przywara (4):
+  arm64: allwinner: a64: Add MMC nodes
+  arm64: allwinner: pine64: add MMC support
+  arm64: allwinner: a64: add UART1 pin nodes
+  arm64: allwinner: add BananaPi-M64 support
 
-will do
+Maxime Ripard (9):
+  mmc: sunxi: Fix clock frequency change sequence
+  mmc: sunxi: Gate the clock when rate is 0
+  mmc: sunxi: Always set signal delay to 0 for A64
+  mmc: sunxi: Enable the new timings for the A64 MMC controllers
+  mmc: sunxi: Mask DATA0 when updating the clock
+  mmc: sunxi: Add EMMC (MMC2) controller compatible
+  mmc: sunxi: Add more debug informations
+  arm64: allwinner: a64: Add MMC pinctrl nodes
+  arm64: allwinner: a64: Increase the MMC max frequency
 
-> > +       size_t                  cmd_buf_size; /* command occupied size */
-> > +       size_t                  buf_size; /* real buffer size */
-> > +       struct cmdq_task_cb     cb;
-> > +};
-> > +
-> > +#endif /* __MTK_CMDQ_MAILBOX_H__ */
-> > --
-> > 1.9.1
-> >
+ arch/arm64/boot/dts/allwinner/Makefile                    |   1 +-
+ arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 120 +++++++-
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts       |  20 +-
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi             |  77 ++++-
+ drivers/mmc/host/sunxi-mmc.c                              | 114 ++++---
+ 5 files changed, 289 insertions(+), 43 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
 
-Thanks,
-HS
+base-commit: bc34c1af0a280e27eafe3f86b9ad87fe0c9ea715
+-- 
+git-series 0.8.11
