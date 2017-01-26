@@ -1,14 +1,16 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/4] USB support for Broadcom NSP SoC
-Date: Thu, 26 Jan 2017 09:27:00 -0800
-Message-ID: <241009ca-4b34-b160-2de1-4752d3ff114b@gmail.com>
-References: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
- <588A16FA.50507@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v6 05/14] ARM: davinci: da850: add con_id for the SATA
+ clock
+Date: Thu, 26 Jan 2017 23:10:49 +0530
+Message-ID: <645778dd-6727-abd0-3dd9-a7e0d5aa4983@ti.com>
+References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
+ <1485190856-4711-6-git-send-email-bgolaszewski@baylibre.com>
+ <93a3bbb3-2d9f-bc38-c7b4-5eb3325d985d@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <588A16FA.50507@ti.com>
+In-Reply-To: <93a3bbb3-2d9f-bc38-c7b4-5eb3325d985d@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,63 +20,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Kevin Hilman <khilman@kernel.org>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>
+Cc: linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/26/2017 07:34 AM, Kishon Vijay Abraham I wrote:
+On Thursday 26 January 2017 10:26 PM, Grygorii Strashko wrote:
 > 
 > 
-> On Tuesday 17 January 2017 09:44 PM, Yendapally Reddy Dhananjaya Reddy wrote:
->> This patch set contains the usb support for Broadcom NSP SoC. The
->> usb3 phy is internal to the SoC and is accessed through mdio interface.
->> The mdio interface can be used to access either internal usb3 phy or
->> external ethernet phy using a multiplexer.
+> On 01/23/2017 11:00 AM, Bartosz Golaszewski wrote:
+>> The ahci-da850 SATA driver is now capable of retrieving clocks by
+>> con_id. Add the connection id for the sysclk2-derived SATA clock.
 >>
->> The first patch provides the documentation details for usb3 phy. The
->> second patch provides the changes to the mdio bus driver. The third
->> patch provides the phy driver and fourth patch provides the enable
->> method for usb.
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> ---
+>>  arch/arm/mach-davinci/da850.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+>> index 1d873d1..dbf1daa 100644
+>> --- a/arch/arm/mach-davinci/da850.c
+>> +++ b/arch/arm/mach-davinci/da850.c
+>> @@ -571,7 +571,7 @@ static struct clk_lookup da850_clks[] = {
+>>  	CLK("spi_davinci.0",	NULL,		&spi0_clk),
+>>  	CLK("spi_davinci.1",	NULL,		&spi1_clk),
+>>  	CLK("vpif",		NULL,		&vpif_clk),
+>> -	CLK("ahci_da850",		NULL,		&sata_clk),
+>> +	CLK("ahci_da850",	"sata",		&sata_clk),
 > 
-> merged the 1st and 4th patch to linux-phy.
-
-You mean 1st and 3rd here, right? 4th is a Device Tree change that I
-should take, and Patch 2 should be merged by David.
-
-What branch in your tree should we be looking at?
-
+> I'm worry a bit - wouldn't this cause future problems with PM runtime
+>  (if it will be the case)?
 > 
-> Thanks
-> Kishon
-> 
->>
->> This patch series has been tested on NSP bcm958625HR board.
->> This patch series is based on v4.10.0-rc3 and is available from
->> github-repo: https://github.com/Broadcom/cygnus-linux.git
->> branch:nsp-usb-v2
->>
->> Changes in v2:
->> * Remove separate nsp mux driver as suggested by Andrew Lunn
->> * Addressed comments from Scott and Rob
->>
->> Yendapally Reddy Dhananjaya Reddy (4):
->>   dt-bindings: phy: Add documentation for NSP USB3 PHY
->>   net: phy: Initialize mdio clock at probe function
->>   phy: Add USB3 PHY support for Broadcom NSP SoC
->>   arm: dts: nsp: Add USB nodes to device tree
->>
->>  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  |  39 +++++
->>  arch/arm/boot/dts/bcm-nsp.dtsi                     |  56 +++++++
->>  arch/arm/boot/dts/bcm958625k.dts                   |  16 ++
->>  drivers/net/phy/mdio-bcm-iproc.c                   |   6 +-
->>  drivers/phy/Kconfig                                |   8 +
->>  drivers/phy/Makefile                               |   1 +
->>  drivers/phy/phy-bcm-nsp-usb3.c                     | 176 +++++++++++++++++++++
->>  7 files changed, 298 insertions(+), 4 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
->>  create mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
->>
+> If this is functional clock - shouldn't it be "fck" to 
+> follow PM domain con_id list for davinci?  (arch/arm/mach-davinci/pm_domain.c) 
 
+I agree with Grygorii. Calling this clock "fck" will make it easy to
+convert the DA850 AHCI driver to use pm_runtime at a future date (no
+mach-davinci changes should be needed).
 
--- 
-Florian
+Sorry about not spotting this earlier.
+
+Thanks,
+Sekhar
