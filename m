@@ -1,85 +1,91 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 01/11] clk: sunxi-ng: mux: Fix
- determine_rate for mux clocks with pre-dividers
-Date: Thu, 26 Jan 2017 10:55:23 +0100
-Message-ID: <20170126095523.rat5wqbj73fkxy6z@lukather>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 04/11] clk: sunxi-ng: Support separately grouped PLL lock
+ status register
+Date: Thu, 26 Jan 2017 10:57:33 +0100
+Message-ID: <20170126095733.azlzxmz63vxajlen@lukather>
 References: <20170124023230.3990-1-wens@csie.org>
- <20170124023230.3990-2-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+ <20170124023230.3990-5-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fqlb7rnfodlsakqe"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBDEPU7CAKGQE4STO3WQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="3psekbt6p5pgqzqx"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170124023230.3990-2-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170124023230.3990-5-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---fqlb7rnfodlsakqe
-Content-Type: text/plain; charset=UTF-8
+--3psekbt6p5pgqzqx
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hi Chen-Yu,
+Hi,
 
-On Tue, Jan 24, 2017 at 10:32:20AM +0800, Chen-Yu Tsai wrote:
-> The determine_rate helper used ccu_mux_helper_adjust_parent_for_prediv()
-> to adjust the parent_rate to account for pre-dividers, but then passed
-> the pristine parent clock rate from clk_hw_get_rate() to the round()
-> callback, thereby ignoring the pre-divider adjustment. In addition,
-> it was saving the adjusted parent rate back into struct
-> clk_rate_request.
-> 
-> This patch fixes this by saving the pristine parent clock rate, and
-> adding a copy that is adjusted and passed to the round() callback.
-> The pristine copy, if it is the best solution, would be saved back
-> to struct clk_rate_request.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Tue, Jan 24, 2017 at 10:32:23AM +0800, Chen-Yu Tsai wrote:
+> On the Allwinner A80 SoC, the PLL lock status indicators are grouped
+> together in a separate register, as opposed to being scattered in each
+> PLL's configuration register.
+>=20
+> Add a flag to support this.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  drivers/clk/sunxi-ng/ccu_mux.c | 7 ++++---
->  1 file changed, 4 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
-> index 858a48621631..3445041894e7 100644
-> --- a/drivers/clk/sunxi-ng/ccu_mux.c
-> +++ b/drivers/clk/sunxi-ng/ccu_mux.c
-> @@ -71,7 +71,7 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
->  	unsigned int i;
->  
->  	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-> -		unsigned long tmp_rate, parent_rate;
-> +		unsigned long tmp_rate, parent_rate, adj_parent_rate;
->  		struct clk_hw *parent;
->  
->  		parent = clk_hw_get_parent_by_index(hw, i);
-> @@ -79,10 +79,11 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
->  			continue;
->  
->  		parent_rate = clk_hw_get_rate(parent);
-> +		adj_parent_rate = parent_rate;
->  		ccu_mux_helper_adjust_parent_for_prediv(common, cm, i,
-> -							&parent_rate);
-> +							&adj_parent_rate);
->  
-> -		tmp_rate = round(cm, clk_hw_get_rate(parent), req->rate, data);
-> +		tmp_rate = round(cm, parent_rate, req->rate, data);
+>  drivers/clk/sunxi-ng/ccu_common.c | 8 ++++++--
+>  drivers/clk/sunxi-ng/ccu_common.h | 2 ++
+>  2 files changed, 8 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/clk/sunxi-ng/ccu_common.c b/drivers/clk/sunxi-ng/ccu=
+_common.c
+> index 51d4bac97ab3..3fd0c3331aff 100644
+> --- a/drivers/clk/sunxi-ng/ccu_common.c
+> +++ b/drivers/clk/sunxi-ng/ccu_common.c
+> @@ -25,13 +25,17 @@ static DEFINE_SPINLOCK(ccu_lock);
+> =20
+>  void ccu_helper_wait_for_lock(struct ccu_common *common, u32 lock)
+>  {
+> +	void __iomem *addr;
+>  	u32 reg;
+> =20
+>  	if (!lock)
+>  		return;
+> =20
+> -	WARN_ON(readl_relaxed_poll_timeout(common->base + common->reg, reg,
+> -					   reg & lock, 100, 70000));
+> +	addr =3D common->base + common->reg;
+> +	if (common->features & CCU_FEATURE_LOCK_REG)
+> +		addr =3D common->base + common->lock_reg;
 
-Shouldn't you use the adjusted rate here too?
+I'd rather have an else here (but it's really just a nitpick).
 
 Thanks,
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---fqlb7rnfodlsakqe--
+
+--3psekbt6p5pgqzqx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYicgNAAoJEBx+YmzsjxAgP10P/jCWBqzRG2wZ4YYJSzysmrEz
+3ay9nJ1k9AZBW3JpqdQ6qWhPnedlNbBxkV1lvneihpiwrapSoHGkCyrccwLpYXSp
+SiqBylPObXTkbQ6nLuI3S2ql7ubus9rY3eODkJIpoi/sDx/sIzAFQiNx80UrpDEA
+lOseucMvRekn++YLrnl+nf0h4Hx8tXsplUNHrV0DnDlZNenyI83AzdGZN8RN98Yp
+vrjvhSTqLnQ1fNSsaYR99c6qutZJZbu6dsEKjmM+/sgnmkxYueMcztISaSdZj0lV
+/L+HjUIfT2ziv/6vo4S68r0Mp3qia3mabkiiES1a+JJC6fbQBjas+yMS7Her00zS
+vBe1+SYq9Hif4kH6uoqeRplURozoe2RC9ZUUhXZ8oK9dGH0RV5QqO9mj9+/IVrS0
++XtHqpafxOpBRlm848WL1n7tpsauYihkcuGQrBl2VUjXMRjE31ettegtcCEWia6L
+ehcgbBAUaS8HUpx6tRQHukdIntA3x4aezvfiGrD4AHEGfbLQYemRARqioLBc93Ek
+/141HPccvaQX8mxM9IwLarXfy5RGBaUH3u/0q3pt3YclKxSPlHTHZuZSBNX5xnfk
+Q+FRm9FlHvj3IyMgQ79Drwh7ybZta8oKF3DMzw/r8d38hAEOeE4KQd9UvQPDZoKN
+TK+QvifTfEcRthsnfgMJ
+=Vznr
+-----END PGP SIGNATURE-----
+
+--3psekbt6p5pgqzqx--
