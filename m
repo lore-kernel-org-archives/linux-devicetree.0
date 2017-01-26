@@ -1,68 +1,122 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 0/9] Implement clocksource for rockchip SoC using rockchip timer
-Date: Thu, 26 Jan 2017 14:08:45 +0300
-Message-ID: <F4C90577-1F45-47A0-A532-7AC581825279@gmail.com>
-References: <1480343486-25539-1-git-send-email-al.kochet@gmail.com> <E6DD9335-0D2D-47CB-8098-5F96C2E08139@gmail.com> <20170123144744.GE2166@mai> <1793912.WfGyM7qEjy@diego> <58B283B0-02F6-4342-A6D2-7E082E04863E@gmail.com> <20170123175740.GI2166@mai>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170123175740.GI2166@mai>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?utf-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] Re: [PATCH 06/11] clk: sunxi-ng: Add A80 USB CCU
+Date: Thu, 26 Jan 2017 19:12:44 +0800
+Message-ID: <CAGb2v66R+NtOQ_J-kQeawppvPUUxBd1n0BXD7p8H5JA6pwYDJQ@mail.gmail.com>
+References: <20170124023230.3990-1-wens@csie.org> <20170124023230.3990-7-wens@csie.org>
+ <20170126101405.npxzp2bmto5oeyex@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170126101405.npxzp2bmto5oeyex@lukather>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Daniel!
+On Thu, Jan 26, 2017 at 6:14 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> Hi,
+>
+> On Tue, Jan 24, 2017 at 10:32:25AM +0800, Chen-Yu Tsai wrote:
+>> Add support for the USB clock controls found on the A80.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  .../devicetree/bindings/clock/sun9i-usb.txt        |  24 ++++
+>>  drivers/clk/sunxi-ng/Makefile                      |   1 +
+>>  drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c           | 144 +++++++++++++++++++++
+>>  drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.h           |  25 ++++
+>>  include/dt-bindings/clock/sun9i-a80-usb.h          |  59 +++++++++
+>>  include/dt-bindings/reset/sun9i-a80-usb.h          |  56 ++++++++
+>>  6 files changed, 309 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/clock/sun9i-usb.txt
+>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+>>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.h
+>>  create mode 100644 include/dt-bindings/clock/sun9i-a80-usb.h
+>>  create mode 100644 include/dt-bindings/reset/sun9i-a80-usb.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/sun9i-usb.txt b/Documentation/devicetree/bindings/clock/sun9i-usb.txt
+>> new file mode 100644
+>> index 000000000000..c2d38626eaaa
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/sun9i-usb.txt
+>> @@ -0,0 +1,24 @@
+>> +Allwinner A80 USB Clock Control Binding
+>> +------------------------------------
+>> +
+>> +Required properties :
+>> +- compatible: must contain one of the following compatibles:
+>> +             - "allwinner,sun9i-a80-usb-clocks"
+>> +
+>> +- reg: Must contain the registers base address and length
+>> +- clocks: phandle to the clocks feeding the USB subsystem. Two are needed:
+>> +  - "bus": the bus clock for the whole USB subsystem
+>> +  - "hosc": the high frequency oscillator (usually at 24MHz)
+>> +- clock-names: Must contain the clock names described just above
+>> +- #clock-cells : must contain 1
+>> +- #reset-cells : must contain 1
+>> +
+>> +Example:
+>> +usb_clocks: clock@00a08000 {
+>> +     compatible = "allwinner,sun9i-a80-usb-clks";
+>> +     reg = <0x00a08000 0x8>;
+>> +     clocks = <&ccu CLK_BUS_USB>, <&osc24M>;
+>> +     clock-names = "bus", "hosc";
+>> +     #clock-cells = <1>;
+>> +     #reset-cells = <1>;
+>> +};
+>> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+>> index 126bb7c1c3f7..8f37ef7fb67d 100644
+>> --- a/drivers/clk/sunxi-ng/Makefile
+>> +++ b/drivers/clk/sunxi-ng/Makefile
+>> @@ -26,3 +26,4 @@ obj-$(CONFIG_SUN8I_A33_CCU) += ccu-sun8i-a33.o
+>>  obj-$(CONFIG_SUN8I_H3_CCU)   += ccu-sun8i-h3.o
+>>  obj-$(CONFIG_SUN8I_V3S_CCU)  += ccu-sun8i-v3s.o
+>>  obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80.o
+>> +obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80-usb.o
+>> diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+>> new file mode 100644
+>> index 000000000000..1d76f24f7df3
+>> --- /dev/null
+>> +++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+>> @@ -0,0 +1,144 @@
+>> +/*
+>> + * Copyright (c) 2016 Chen-Yu Tsai. All rights reserved.
+>> + *
+>> + * This software is licensed under the terms of the GNU General Public
+>> + * License version 2, as published by the Free Software Foundation, and
+>> + * may be copied, distributed, and modified under those terms.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#include "ccu_common.h"
+>> +#include "ccu_gate.h"
+>> +#include "ccu_reset.h"
+>> +
+>> +#include "ccu-sun9i-a80-usb.h"
+>> +
+>> +static SUNXI_CCU_GATE(bus_hci0_clk, "bus-hci0", "bus-usb", 0x0, BIT(1), 0);
+>> +static SUNXI_CCU_GATE(usb_ohci0_clk, "usb-ohci0", "osc24M", 0x0, BIT(2), 0);
+>> +static SUNXI_CCU_GATE(bus_hci1_clk, "bus-hci1", "bus-usb", 0x0, BIT(3), 0);
+>> +static SUNXI_CCU_GATE(bus_hci2_clk, "bus-hci2", "bus-usb", 0x0, BIT(5), 0);
+>> +static SUNXI_CCU_GATE(usb_ohci2_clk, "usb-ohci2", "osc24M", 0x0, BIT(6), 0);
+>
+> In the current !sunxi-ng driver, there's a clock at offset 4, did you
+> forget it?
 
-Sorry for bothering you. Just let you know that I sent v5 here:
-=
-http://lists.infradead.org/pipermail/linux-rockchip/2017-January/thread.ht=
-ml#13812
+It supposedly is for ohci1, but since the second USB host is HSIC
+only, and Allwinner does not even list ohci1 in its documents, it
+probably isn't there. IIRC the gate itself can be toggled. But
+there probably isn't anything connected. The old driver having
+a gate for it would be my mistake.
 
-Because previous series was somehow missed in your inbox.
-
-Heiko don=E2=80=99t want to add  "Reviewed-by=C2=BB to my patches. Could =
-you please
-apply the patches without the tag.
-
-Let me know is all ok with series now? Or may be I have to do something =
-else?
-
-Regards,
-Alexander.
-
-
-> 23 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 20:57, Daniel Lezcano =
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=
-=B0):
->=20
-> On Mon, Jan 23, 2017 at 08:24:47PM +0300, Alexander Kochetkov wrote:
->> Heiko, Daniel, thanks a lot for review!
->> I=E2=80=99ll send v5 series this week.
->>=20
->> Heiko, Daniel, may I add 'Reviewed-by:=E2=80=99 to patch series?
->>=20
->> Reviewed-by: Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> ?
->> Reviewed-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> ?
->>=20
->=20
-> I will answer with the corresponding tag myself when you send the v5.
->=20
-> Thanks.
->=20
->  -- Daniel
->=20
-> --=20
->=20
-> <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for =
-ARM SoCs
->=20
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ChenYu
