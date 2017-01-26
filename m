@@ -1,39 +1,77 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] net: ethernet: mvneta: add support for 2.5G DRSGMII mode
-Date: Thu, 26 Jan 2017 09:17:11 +0100
-Message-ID: <1485418631.5508.146.camel@pengutronix.de>
-References: <20170123142206.5390-1-jlu@pengutronix.de>
-         <20170125.123806.790914338952471404.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170125.123806.790914338952471404.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v2 0/8] Pad retentions support for Exynos5433
+Date: Thu, 26 Jan 2017 09:33:46 +0100
+Message-ID: <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
+References: <CGME20170126083401eucas1p20b4794fe46ccf2189bf734f0d8e3c536@eucas1p2.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mi, 2017-01-25 at 12:38 -0500, David Miller wrote:
-> I still haven't seen a sufficient explanation as to why this change
-> works without any explicit MAC programming changes to this driver.
-> 
-> That really needs to be explained before I will apply this patch.
+Hello,
 
-I'll need to recheck this with the documentation and will also check
-what/if changes need to be done for ethtool and adjust_link as Andrew
-Lunn mentioned. So in any case there will be a v2 as soon as I figure
-out those details.
+This patchset is a first step to add support for all power domains on
+Exynos5433 SoCs. This patchset contains patches for Exynos pin control
+driver and Exynos LPASS MFD driver, which are needed to make the
+platform ready for adding power domains support.
 
-Thanks,
-Jan
+Patches in this patchset depends on each other. They are order in such a
+way to make the changes bisectable.
+
+Patch #3 has runtime dependency on #1.
+Patch #5 has runtime dependency on #3.
+Patch #6 has runtime dependency on #4.
+
+This patchset also directly depends on the "Move pad retention control to
+Exynos pin controller driver" patchset:
+https://www.spinics.net/lists/arm-kernel/msg556074.html
+
+Patches have been generated on top of linux-next from 25th January 2017.
+
+This is a part of a larger task, which goal is to add support for power
+domains on Exynos5433 SoCs / TM2 boards. All patches needed to get it
+working have been pushed to the following git repo:
+https://git.linaro.org/people/marek.szyprowski/linux-srpol.git v4.10-next-tm2-pd
+
+Best regards
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+
+Changelog:
+v2:
+- fixed issues pointed by Krzysztof Kozlowski:
+  1. added more checks to Exynos PMU driver for NULL drvdata
+  2. reused EXYNOS_WAKEUP_FROM_LOWPWR in retention data for Exynos5433
+  3. converted lpass driver to devm_clk_get
+  4. added missing ->remove callback to lpass driver
+
+v1: https://lkml.org/lkml/2017/1/25/214
+- initial version
+
+
+Patch summary:
+
+Marek Szyprowski (8):
+  soc: samsung: pmu: Add dummy support for Exynos5433 SoC
+  pinctrl: samsung: Ensure that pad retention is disabled on driver init
+  pinctrl: samsung: Add support for pad retention control for Exynos5433
+    SoCs
+  arm64: dts: exynos: Add clocks to Exynos5433 LPASS module
+  mfd: exynos-lpass: Remove pad retention control
+  mfd: exynos-lpass: Add support for clocks
+  mfd: exynos-lpass: Add missing remove() function
+  mfd: exynos-lpass: Add runtime PM support
+
+ .../bindings/mfd/samsung,exynos5433-lpass.txt      |  8 ++-
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi         |  2 +
+ drivers/mfd/exynos-lpass.c                         | 48 ++++++++++-------
+ drivers/pinctrl/samsung/pinctrl-exynos.c           | 63 ++++++++++++++++++++++
+ drivers/soc/samsung/exynos-pmu.c                   |  6 ++-
+ include/linux/mfd/syscon/exynos5-pmu.h             |  3 --
+ include/linux/soc/samsung/exynos-regs-pmu.h        | 16 ++++++
+ 7 files changed, 121 insertions(+), 25 deletions(-)
+
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
