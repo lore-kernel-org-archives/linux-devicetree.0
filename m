@@ -1,60 +1,66 @@
 From: Rask Ingemann Lambertsen <rask@formelder.dk>
-Subject: [PATCH 4/5] regulator: axp20x: Add support for the AXP808 PMIC
-Date: Thu, 26 Jan 2017 22:18:11 +0100 (CET)
-Message-ID: <8c2849be991beef08db2b6560938d16e9cd7758d.1485456006.git.rask@formelder.dk>
-References: <cover.1485456003.git.rask@formelder.dk>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1485456003.git.rask@formelder.dk>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 0/5] arm: sun9i: Support AXP808 PMIC and Sunchip CX-A99 board
+Date: Thu, 26 Jan 2017 22:22:42 +0100 (CET)
+Message-ID: <cover.1485456003.git.rask@formelder.dk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.orglinux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The regulators are the same as on the AXP806.
+This patch series add support for the Sunchip CX-A99 board, which is used in
+a few media players, making it the third device with an Allwinner A80 SoC
+to be supported. The board uses the X-Powers AXP808 PMIC which this patch
+series also adds support for.
 
-Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
----
- drivers/regulator/axp20x-regulator.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Patch 1 adds a documentation line which was forgotten when device tree
+bindings for the axp20x family were updated for the AXP806 PMIC. A line
+immediately below the missing line will be inserted by patch 2, so I'm
+including patch 1 in this series to avoid conflicts between patches.
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index a3ade9e..034dce8 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -370,6 +370,7 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 		step = 75;
- 		break;
- 	case AXP806_ID:
-+	case AXP808_ID:
- 		/*
- 		 * AXP806 DCDC work frequency setting has the same range and
- 		 * step as AXP22X, but at a different register.
-@@ -459,6 +460,7 @@ static int axp20x_set_dcdc_workmode(struct regulator_dev *rdev, int id, u32 work
- 		break;
- 
- 	case AXP806_ID:
-+	case AXP808_ID:
- 		reg = AXP806_DCDC_MODE_CTRL2;
- 		/*
- 		 * AXP806 DCDC regulator IDs have the same range as AXP22X.
-@@ -492,8 +494,8 @@ static bool axp20x_is_polyphase_slave(struct axp20x_dev *axp20x, int id)
- {
- 	u32 reg = 0;
- 
--	/* Only AXP806 has poly-phase outputs */
--	if (axp20x->variant != AXP806_ID)
-+	/* Only AXP806 and AXP808 have poly-phase outputs */
-+	if (axp20x->variant != AXP806_ID && axp20x->variant != AXP808_ID)
- 		return false;
- 
- 	regmap_read(axp20x->regmap, AXP806_DCDC_MODE_CTRL2, &reg);
-@@ -541,6 +543,7 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 						  "x-powers,drive-vbus-en");
- 		break;
- 	case AXP806_ID:
-+	case AXP808_ID:
- 		regulators = axp806_regulators;
- 		nregulators = AXP806_REG_ID_MAX;
- 		break;
+Patch 2 adds the AXP808 to the axp20x device tree bindings.
+
+Patch 3 adds support for the AXP808 to the axp20x MFD driver.
+
+Patch 4 adds support for the AXP808 to the axp20x regulator driver.
+
+Patch 5 add the device tree for the Sunchip CX-A99 board. This patch is v5 of
+the only remaining patch from v4 of the patch series posted back in August.
+Support for the AXP808 has made major improvements possible, notably Wifi.
+
+Before trying out this patch series, you must also apply the patch
+"regulator: axp20x: AXP806: Fix dcdcb being set instead of dcdce" [1]
+to avoid damage to the DRAM chips through over-voltage.
+
+[1] https://patchwork.kernel.org/patch/9530319/
+
+Rask Ingemann Lambertsen (5):
+  DT: mfd: axp20x: Add AXP806 to list of current AXP20x family members
+  DT: mfd: axp20x: Add binding for the AXP808
+  mfd: axp20x: Add support for the AXP808 PMIC
+  regulator: axp20x: Add support for the AXP808 PMIC
+  ARM: dts: sun9i: Initial support for the Sunchip CX-A99 board
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |   8 +-
+ arch/arm/boot/dts/Makefile                       |   3 +-
+ arch/arm/boot/dts/sun9i-a80-cx-a99.dts           | 413 +++++++++++++++++++++++
+ drivers/mfd/axp20x-rsb.c                         |   1 +
+ drivers/mfd/axp20x.c                             |  28 ++
+ drivers/regulator/axp20x-regulator.c             |   7 +-
+ include/linux/mfd/axp20x.h                       |   1 +
+ 7 files changed, 455 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sun9i-a80-cx-a99.dts
+
 -- 
 2.10.2
