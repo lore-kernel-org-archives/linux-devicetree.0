@@ -1,36 +1,97 @@
-From: "Yankejian (Hackim Yim)" <yankejian-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [patch] {1620} net: hns3: add dcb cap flag in init sequence
-Date: Thu, 26 Jan 2017 11:28:25 +0800
-Message-ID: <58896CD9.1040507@huawei.com>
-References: <1485329200-64453-1-git-send-email-yankejian@huawei.com>
- <20170125.112405.328301369395157183.davem@davemloft.net>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Thu, 26 Jan 2017 10:08:21 +0530
+Message-ID: <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com> <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170125.112405.328301369395157183.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: liguozhu-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, yisen.zhuang-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, huangdaode-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, lipeng321-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: HS Liao <hs.liao@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2017/1/26 0:24, David Miller wrote:
-> Networking patches must be sent to netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao@mediatek.com> wrote:
+
+> diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> new file mode 100644
+> index 0000000..747bcd3
+> --- /dev/null
+> +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+
+...
+
+> +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+> +{
+> +       struct cmdq *cmdq;
+> +       struct cmdq_task *task;
+> +       unsigned long curr_pa, end_pa;
+> +
+> +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+> +
+> +       /* Client should not flush new tasks if suspended. */
+> +       WARN_ON(cmdq->suspended);
+> +
+> +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> +       task->cmdq = cmdq;
+> +       INIT_LIST_HEAD(&task->list_entry);
+> +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+> +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
 >
-> Thank you.
+You seem to parse the requests and responses, that should ideally be
+done in client driver.
+Also, we are here in atomic context, can you move it in client driver
+(before the spin_lock)?
+Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+
+....
+> +
+> +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
+> +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
+> +       cmdq->mbox.of_xlate = cmdq_xlate;
+> +
+> +       /* make use of TXDONE_BY_ACK */
+> +       cmdq->mbox.txdone_irq = false;
+> +       cmdq->mbox.txdone_poll = false;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
 >
-> .
+You mean  i < CMDQ_THR_MAX_COUNT
+
+> +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
+> +                               CMDQ_THR_SIZE * i;
+> +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
 >
+You seem the queue mailbox requests in this controller driver? why not
+use the mailbox api for that?
 
-it is misoperation, please ignore. sorry to interrupt you!
+> +               init_timer(&cmdq->thread[i].timeout);
+> +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
+> +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
+>
+Here again... you seem to ignore the polling mechanism provided by the
+mailbox api, and implement your own.
 
 
--- 
-MBR,
-Yankejian (Hackim Yim)
+> diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> new file mode 100644
+> index 0000000..3433c64
+> --- /dev/null
+> +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+....
+> +
+> +struct cmdq_pkt {
+> +       void                    *va_base;
+>
+maybe add 'pa_base' here so you don't have to do dma_map_single() in send_data
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +       size_t                  cmd_buf_size; /* command occupied size */
+> +       size_t                  buf_size; /* real buffer size */
+> +       struct cmdq_task_cb     cb;
+> +};
+> +
+> +#endif /* __MTK_CMDQ_MAILBOX_H__ */
+> --
+> 1.9.1
+>
