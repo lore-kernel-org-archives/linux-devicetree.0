@@ -1,52 +1,38 @@
-From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/3] Add support for Broadcom iProc mailbox controller
-Date: Thu, 26 Jan 2017 12:37:59 -0800
-Message-ID: <1485463082-27067-1-git-send-email-jonathan.richardson@broadcom.com>
+From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Subject: [PATCH 1/5] DT: mfd: axp20x: Add AXP806 to list of current AXP20x
+ family members
+Date: Thu, 26 Jan 2017 22:15:14 +0100 (CET)
+Message-ID: <abdfbac9a5f363ab6d338dd66d8fb138741f71c7.1485456005.git.rask@formelder.dk>
+References: <cover.1485456003.git.rask@formelder.dk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1485456003.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set contains mailbox support for Broadcom iProc based SoC's. The
-mailbox controller handles all communication with a Cortex-M0 MCU processor that
-provides support for power, clock, and reset management. The mailbox controller
-for Cygnus is enabled in DT.
+An entry for the AXP806 was forgotten, so add one.
 
-Changes from v3:
- - DT changes merged into one commit.
+Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
+Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
+---
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes from v2:
- - Fixed binding to remove leading 0 (Rob's comment). Also added more detail as
-   suggested by Jassi.
- - Added changelog to dt binding and enable dts commits.
- - Changed year in copyright in bcm_iproc_mailbox.h.
- - Changes to bcm-cygnus.dtsi were prematurely merged into the mainline after
-   Rob acked the DT changes but Jassi suggested changes to the mailbox driver.
-   The result was that the mailbox controller node and changes to the crmu gpio
-   driver to enable interrupt handling were incorrectly added to the dtsi. A
-   commit is included in this patchset to revert those changes. Enabling
-   interrupt handling in the the crmu gpio driver will be introduced when the
-   interrupt controller driver is added to provide mailbox interrupt support.
-
-Jonathan Richardson (3):
-  dt-bindings: Document Broadcom iProc mailbox controller driver
-  mailbox: Add iProc mailbox controller driver
-  ARM: dts: Enable Broadcom iProc mailbox controller
-
- .../bindings/mailbox/brcm,iproc-mailbox.txt        |  18 ++
- arch/arm/boot/dts/bcm-cygnus.dtsi                  |   8 +-
- drivers/mailbox/Kconfig                            |  10 ++
- drivers/mailbox/Makefile                           |   2 +
- drivers/mailbox/bcm-iproc-mailbox.c                | 199 +++++++++++++++++++++
- include/linux/mailbox/bcm_iproc_mailbox.h          |  32 ++++
- 6 files changed, 262 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
- create mode 100644 drivers/mailbox/bcm-iproc-mailbox.c
- create mode 100644 include/linux/mailbox/bcm_iproc_mailbox.h
-
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 8f3ad9a..86ae540 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -6,6 +6,7 @@ axp202 (X-Powers)
+ axp209 (X-Powers)
+ axp221 (X-Powers)
+ axp223 (X-Powers)
++axp806 (X-Powers)
+ axp809 (X-Powers)
+ 
+ Required properties:
 -- 
-1.9.1
+2.10.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
