@@ -1,80 +1,42 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 11/13] arm64: allwinner: pine64: add MMC support
-Date: Thu, 26 Jan 2017 10:06:04 +0100
-Message-ID: <b11557dbfbfa706605359ba334ffd13ba48946d8.1485421557.git-series.maxime.ripard@free-electrons.com>
-References: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v4 2/2] clocksource: Add renesas-ostm timer driver
+Date: Thu, 26 Jan 2017 10:24:46 +0100
+Message-ID: <20170126092446.GF2021@mai>
+References: <20170126020707.4376-1-chris.brandt@renesas.com>
+ <20170126020707.4376-3-chris.brandt@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170126020707.4376-3-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+On Wed, Jan 25, 2017 at 09:07:07PM -0500, Chris Brandt wrote:
+> This patch adds a OSTM driver for the Renesas architecture.
+> The OS Timer (OSTM) has independent channels that can be
+> used as a freerun or interval times.
+> This driver uses the first probed device as a clocksource
+> and then any additional devices as clock events.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> ---
+> v3:
+> * Added more details to commit log
+> * Kconfig: SYS_SUPPORTS_RENESAS_OSTM to just RENESAS_OSTM
+> * removed all MODULE code (this driver is builtin only)
+> * removed items from 'struct ostm_device'
+> * changed ioread8 to readb
 
-All Pine64 boards connect an micro-SD card slot to the first MMC
-controller.
-Enable the respective DT node and specify the (always-on) regulator
-and card-detect pin.
-As a micro-SD slot does not feature a write-protect switch, we disable
-this feature.
+The iowrite* conversion is missing.
 
-Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 20 ++++++++++++++-
- 1 file changed, 20 insertions(+), 0 deletions(-)
+s/iowrite8/writeb/
+s/iowrite32/writel/
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-index cf9105179bcb..c680ed385da3 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
-@@ -44,6 +44,8 @@
- 
- #include "sun50i-a64.dtsi"
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	model = "Pine64";
- 	compatible = "pine64,pine64", "allwinner,sun50i-a64";
-@@ -55,6 +57,13 @@
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
- };
- 
- &ehci1 {
-@@ -71,6 +80,17 @@
- 	bias-pull-up;
- };
- 
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
- &ohci1 {
- 	status = "okay";
- };
--- 
-git-series 0.8.11
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Other than that the driver looks good to me.
+
+Thanks.
+
+  -- Daniel
