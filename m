@@ -1,119 +1,48 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
-Date: Wed, 25 Jan 2017 16:30:43 -0800
-Message-ID: <58894333.6040905@gmail.com>
-References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
- <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
- <CAOMZO5AdgM9eFnerLRdYxwE7gsOE5OvkWs6rCR4zta1XmXHj1A@mail.gmail.com>
- <20170119144641.jxj2bqg5uqjol23x@pengutronix.de>
- <20170119145642.GC27312@n2100.armlinux.org.uk>
- <20170119161441.jcctgig7np4v7sam@pengutronix.de> <588914F3.7050909@gmail.com>
- <CAL_JsqL4+OZo0JTU8gnTEHxqNgNoBRnuHr1i99n72BKG30V9Eg@mail.gmail.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Wed, 25 Jan 2017 17:22:34 -0800
+Message-ID: <05f38c1c-bf6a-3be0-9aa9-c23a4ca24cdd@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
+ <CABxcv=n1z7OwOctm_qmT8oBWSGK4tyvKBY6fWUOSZHfW1x=QUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL4+OZo0JTU8gnTEHxqNgNoBRnuHr1i99n72BKG30V9Eg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CABxcv=n1z7OwOctm_qmT8oBWSGK4tyvKBY6fWUOSZHfW1x=QUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, Markus Heiser <markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Benoit Parrot <bparrot-l0cyMroinI0@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Jean-Christophe Trotin <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas@ragnatec
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/17 14:46, Rob Herring wrote:
-> On Wed, Jan 25, 2017 at 3:13 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 01/19/17 08:14, Uwe Kleine-König wrote:
->>> On Thu, Jan 19, 2017 at 02:56:42PM +0000, Russell King - ARM Linux wrote:
->>>> On Thu, Jan 19, 2017 at 03:46:41PM +0100, Uwe Kleine-König wrote:
->>>>> On Thu, Jan 19, 2017 at 12:35:40PM -0200, Fabio Estevam wrote:
->>>>>> Hi Uwe,
->>>>>>
->>>>>> On Thu, Jan 19, 2017 at 12:13 PM, Uwe Kleine-König
->>>>>> <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>>>>>
->>>>>>> Would it be nice to add a comment about why this was added? Something to
->>>>>>> prevent a cleanup like "remove empty nodes and invalid memory
->>>>>>> configurations".
->>>>>>
->>>>>> Do you mean something like this?
->>>>>>
->>>>>> /* "chosen" and "memory" nodes are mandatory */
->>>>>> chosen {};
->>>>>> memory { device_type = "memory"; reg = <0 0>; };
->>>>>
->>>>> Not very helpful comment. Something like:
->>>>>
->>>>>     /*
->>>>>      * The decompressor relies on a pre-existing chosen node to be
->>>>>      * available to insert the command line and merge other ATAGS
->>>>>      * info.
->>>>>      */
->>>>>
->>>>> Is it difficult to fix the decompressor?
->>>>
->>>> ... and that comment would be wrong.  Yes, the decompressor relies on it,
->>>> as do some uboot versions.
->>>
->>> Good that we talked about this, otherwise I would have removed that once
->>> the decompressor is fixed. So the comment must be
->>>
->>>       /*
->>>        * The decompressor and also some versions of U-Boot rely on a
->>>        * pre-existing /chosen node to be available to insert the
->>>        * command line and merge other ATAGS info.
->>>        * Also for U-Boot there must be a pre-existing /memory node.
->>>        */
->>>
->>>>> I didn't understood the breakage regarding the memory node good enough
->>>>> to suggest a comment for that.
->>>>
->>>> A missing memory node appears to prevent some uboot versions supplying
->>>> any kind of memory layout to the kernel, which then causes the kernel to
->>>> crash very early during boot.
->>>>
->>>> Again, this is not using appended DTB - this is using a separately loaded
->>>> DTB in uboot.  uboot fails to update the dtb if these nodes are missing.
->>>>
->>>> Frankly, I think the original change (removing the skeleton.dtsi include)
->>>> was misguided and needs to be reverted - the change is imho built upon an
->>>> incorrect assumption that nothing in skeleton.dtsi is required.  That's
->>>> clearly false.
->>>
->>> I tend to agree as I assume it's not only U-Boot on i.MX but on all ARM
->>> platforms.
->>>
->>> Best regards
->>> Uwe
->>>
->>
->> Adding back the chosen nodes is a bandaid that papers over the actual bug
->> in the decompressor.
->>
->> A comment about Fabio's attempt to fix the decompressor noted a possible
->> issue with the method taken to fix the problem, but then the discussion
->> of fixing the decompressor was dropped and v3 of the patch to add chosen
->> into a bunch of .dtsi files was applied by Shawn.
->>
->> Can someone please help Fabio to create a correct patch to fix the
->> decompressor?
->>
->> Note that the ePAPR v1.1 does require at least one memory node in
-> 
-> We have a DT spec now, let's stop pointing people to ePAPR.
-> 
->> section 3.1, so the portion of v3 of the patch that adds a memory
->> node is valid in terms of following the standard, not just a U-boot
->> requirement.
-> 
-> I'd have no issue making chosen be required. Any platform with a
-> serial console should be setting stdout-path anyway. Just add it to
-> the spec. :) We should also add a dtc check as well if we do that.
-> 
-> Rob
-> 
 
-Sounds good to me.
 
--Frank
+On 01/24/2017 04:44 AM, Javier Martinez Canillas wrote:
+> Hello Steve,
+>
+> On Fri, Jan 6, 2017 at 11:11 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> [snip]
+>
+>> +config VIDEO_MULTIPLEXER
+>> +       tristate "Video Multiplexer"
+>> +       depends on VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER
+> The driver can be build as a module...
+>
+>> +
+>> +static const struct of_device_id vidsw_dt_ids[] = {
+>> +       { .compatible = "video-multiplexer", },
+>> +       { /* sentinel */ }
+>> +};
+>> +
+> ... so you need a MODULE_DEVICE_TABLE(of, vidsw_dt_ids) here or
+> otherwise module autoloading won't work.
+
+Hi Javier, thanks for catching, done.
+
+Steve
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
