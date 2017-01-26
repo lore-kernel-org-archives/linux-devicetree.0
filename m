@@ -1,50 +1,62 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 09/11] ARM: dts: sunxi: Remove no longer
- used pinctrl/sun4i-a10.h header
-Date: Thu, 26 Jan 2017 11:21:45 +0100
-Message-ID: <20170126102145.35dfx6q6lpxdt72c@lukather>
-References: <20170124023230.3990-1-wens@csie.org>
- <20170124023230.3990-10-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v6 0/3] mmc: sh_mobile_sdhi: fix missing r7s72100 clocks
+Date: Thu, 26 Jan 2017 11:30:13 +0100
+Message-ID: <20170126103013.GB27721@verge.net.au>
+References: <20170125202810.16876-1-chris.brandt@renesas.com>
+ <CAPDyKFq=K4ZwyMnM2twVHW6K43U+rADBX3KFyc5o0UzR2kb10w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lb7h7x2njnhqcnef"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOU3U7CAKGQE5RNUBGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170124023230.3990-10-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAPDyKFq=K4ZwyMnM2twVHW6K43U+rADBX3KFyc5o0UzR2kb10w@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
---lb7h7x2njnhqcnef
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-On Tue, Jan 24, 2017 at 10:32:28AM +0800, Chen-Yu Tsai wrote:
-> All dts files for the sunxi platform have been switched to the generic
-> pinconf bindings. As a result, the sunxi specific pinctrl macros are
-> no longer used.
+On Thu, Jan 26, 2017 at 09:07:45AM +0100, Ulf Hansson wrote:
+> On 25 January 2017 at 21:28, Chris Brandt <chris.brandt@renesas.com> wrote:
+> > At first this started out as a simple typo fix, until I realized
+> > that the SDHI in the RZ/A1 has 2 clocks per channel and both need
+> > to be turned on/off.
+> >
+> > This patch series adds the ability to specify 2 clocks instead of
+> > just 1, and does so for the RZ/A1 r7s72100.
+> >
+> > This patch has been tested on an RZ/A1 RSK board. Card detect works
+> > fine as well as bind/unbind.
+> >
+> > v6:
+> > * more detailed descritpion in tmio_mmc.txt
+> >
+> > v5:
+> > * Take implementation details out of DT documentation and put into
+> >   the driver code.
+> >
+> > v4:
+> > * No code changes, only text udpates to explain why there are 2 clocks
+> >   and why we need to treat them as 1 clock.
+> >
+> > Chris Brandt (3):
+> >   mmc: sh_mobile_sdhi: add support for 2 clocks
+> >   mmc: sh_mobile_sdhi: explain clock bindings
+> >   ARM: dts: r7s72100: update sdhi clock bindings
+> >
+> >  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 13 ++++++++++++
+> >  arch/arm/boot/dts/r7s72100.dtsi                    | 17 +++++++++++-----
+> >  drivers/mmc/host/sh_mobile_sdhi.c                  | 23 ++++++++++++++++++++++
+> >  include/dt-bindings/clock/r7s72100-clock.h         |  6 ++++--
+> >  4 files changed, 52 insertions(+), 7 deletions(-)
+> >
+> > --
+> > 2.10.1
+> >
+> >
 > 
-> Remove the #include entry with the following command:
-> 
->     sed -i -e '/pinctrl\/sun4i-a10.h/D' arch/arm/boot/dts/sun?i*.*
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Thanks, applied patch1 and patch2 for next. Patch3 is for Simon, I
+> guess!? (And I can add Rob's ack afterwards).
 
-Applied, thanks
+Thanks, I will take care of the 3rd patch.
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lb7h7x2njnhqcnef--
+Chris, is it safe to apply the 3rd patch without the first 2 patches
+present?
