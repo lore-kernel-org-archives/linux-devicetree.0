@@ -1,145 +1,84 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: Re: [PATCH 08/22] power: supply: add AC power supply driver for
- AXP20X and AXP22X PMICs
-Date: Thu, 26 Jan 2017 14:32:21 +0100
-Message-ID: <6a3edb64-8ea9-cb14-b826-d6e8e2c4c4b7@free-electrons.com>
-References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
- <20170102163723.7939-9-quentin.schulz@free-electrons.com>
- <20170117030013.g5xhlmrxpthyfewa@earth>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v6 1/3] ASoC: es8328: Add support for slave mode
+Date: Thu, 26 Jan 2017 14:23:13 +0100
+Message-ID: <20170126132315.17955-2-romain.perier@collabora.com>
+References: <20170126132315.17955-1-romain.perier@collabora.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170117030013.g5xhlmrxpthyfewa@earth>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, pmeerw@pmeerw.net, knaack.h@gmx.de, maxime.ripard@free-electrons.com, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, jic23@kernel.org, icenowy@aosc.xyz
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170126132315.17955-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Currently, the function that changes the DAI format only supports master
+mode. Trying to use a slave mode exits the function with -EINVAL and
+leave the codec misconfigured. This commits adds support for enabling
+the slave mode.
 
-On 17/01/2017 04:00, Sebastian Reichel wrote:
-> Hi Quentin,
-> 
-> The driver looks mostly fine. I do have a two comments, though.
-> 
-> On Mon, Jan 02, 2017 at 05:37:08PM +0100, Quentin Schulz wrote:
->> [...]
->>
->> +static int axp20x_ac_power_probe(struct platform_device *pdev)
->> +{
->> +	static const char * const axp20x_irq_names[] = { "ACIN_PLUGIN",
->> +		"ACIN_REMOVAL", NULL };
->>
->> +	static const char * const *irq_names;
->> +	const struct power_supply_desc *ac_power_desc;
->> +	int i, irq, ret;
->> +
->> +	if (!of_device_is_available(pdev->dev.of_node))
->> +		return -ENODEV;
->> +
->> +	if (!axp20x) {
->> +		dev_err(&pdev->dev, "Parent drvdata not set\n");
->> +		return -EINVAL;
->> +	}
-> 
-> axp20x will no longer be needed after implementing below
-> comments.
-> 
->> [...]
->> +	irq_names = axp20x_irq_names;
-> 
-> Just rename axp20x_irq_names into irq_names, since its only used
-> here.
-> 
->> [...]
->>
->> +	power->np = pdev->dev.of_node;
-> 
-> This can be dropped, it's not used at all.
-> 
->> +	power->regmap = axp20x->regmap;
-> 
-> power->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-> 
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-ACK on everything above.
+Changes in v6: None
+Changes in v5:
+ - Fixed coding style issue for the switch case
+ - Moved the code for master mode and slave mode to the switch case
 
->> [...]
->> +	/* Request irqs after registering, as irqs may trigger immediately */
->> +	for (i = 0; irq_names[i]; i++) {
->> +		irq = platform_get_irq_byname(pdev, irq_names[i]);
->> +		if (irq < 0) {
->> +			dev_warn(&pdev->dev, "No IRQ for %s: %d\n",
->> +				 irq_names[i], irq);
->> +			continue;
->> +		}
->> +		irq = regmap_irq_get_virq(axp20x->regmap_irqc, irq);
-> 
-> The mapping should actually happen in the mfd driver, so that
-> the platform resource contains a valid irq.
-> 
+Changes in v4: None
+Changes in v3: None
+Changes in v2: None
 
-I've come with this solution:
+ sound/soc/codecs/es8328.c | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
-------------------------------------------------------------------------
-diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-index 012c064..117eacb 100644
---- a/drivers/mfd/axp20x.c
-+++ b/drivers/mfd/axp20x.c
-@@ -882,7 +882,7 @@ EXPORT_SYMBOL(axp20x_match_device);
-
- int axp20x_device_probe(struct axp20x_dev *axp20x)
- {
--	int ret;
-+	int ret, irq_base;
-
- 	ret = regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
- 				  IRQF_ONESHOT | IRQF_SHARED, -1,
-@@ -893,8 +893,9 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
- 		return ret;
- 	}
-
-+	irq_base = regmap_irq_chip_get_base(axp20x->regmap_irqc);
- 	ret = mfd_add_devices(axp20x->dev, -1, axp20x->cells,
--			      axp20x->nr_cells, NULL, 0, NULL);
-+			      axp20x->nr_cells, NULL, irq_base, NULL);
-
- 	if (ret) {
- 		dev_err(axp20x->dev, "failed to add MFD devices: %d\n", ret);
-------------------------------------------------------------------------
-
-However, this implies that all cells added by the mfd driver which are
-requesting irqs will need to be changed in the same commit to remove the
-regmap_irq_get_virq calls. If we don't modify the drivers, they will
-purely fail to request the irqs.
-
-The impacted drivers are the following:
-
- - drivers/extcon/extcon-axp288.c
- - drivers/input/misc/axp20x-pek.c
- - drivers/power/supply/axp20x_usb_power.c
- - drivers/power/supply/axp288_charger.c
- - drivers/power/supply/axp288_fuel_gauge.c
-
-Is it really worth to do such a cleanup? I'm assuming that impacting
-four different subsystems at the same time might require a bit of time
-to make the patch into the kernel. I don't see also another way than
-doing one single patch for all changes since the changes in the mfd
-driver will break all aforementioned drivers.
-
-Thanks,
-Quentin
-
+diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
+index 37722194..3f84fbd 100644
+--- a/sound/soc/codecs/es8328.c
++++ b/sound/soc/codecs/es8328.c
+@@ -589,9 +589,21 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	u8 dac_mode = 0;
+ 	u8 adc_mode = 0;
+ 
+-	/* set master/slave audio interface */
+-	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
++	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
++	case SND_SOC_DAIFMT_CBM_CFM:
++		/* Master serial port mode, with BCLK generated automatically */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC,
++				    ES8328_MASTERMODE_MSC);
++		break;
++	case SND_SOC_DAIFMT_CBS_CFS:
++		/* Slave serial port mode */
++		snd_soc_update_bits(codec, ES8328_MASTERMODE,
++				    ES8328_MASTERMODE_MSC, 0);
++		break;
++	default:
+ 		return -EINVAL;
++	}
+ 
+ 	/* interface format */
+ 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
+@@ -620,10 +632,6 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
+ 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
+ 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
+ 
+-	/* Master serial port mode, with BCLK generated automatically */
+-	snd_soc_update_bits(codec, ES8328_MASTERMODE,
+-			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
+-
+ 	return 0;
+ }
+ 
 -- 
-Quentin Schulz, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.9.3
