@@ -1,361 +1,201 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/2] clocksource: Add renesas-ostm timer driver
-Date: Wed, 25 Jan 2017 21:07:07 -0500
-Message-ID: <20170126020707.4376-3-chris.brandt@renesas.com>
-References: <20170126020707.4376-1-chris.brandt@renesas.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] drm: zte: add interlace mode support
+Date: Thu, 26 Jan 2017 11:14:31 +0800
+Message-ID: <20170126031429.GC5662@dragon>
+References: <1484843100-16284-1-git-send-email-shawnguo@kernel.org>
+ <1484843100-16284-2-git-send-email-shawnguo@kernel.org>
+ <20170123151901.GA19505@trickycodes.roam.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170126020707.4376-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170123151901.GA19505-6JpoNmjd1+aEBhuJAZrboHoUN1GumTyQ7j82oEJ37pA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>, Baoyou Xie <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a OSTM driver for the Renesas architecture.
-The OS Timer (OSTM) has independent channels that can be
-used as a freerun or interval times.
-This driver uses the first probed device as a clocksource
-and then any additional devices as clock events.
+Hi Sean,
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
-v3:
-* Added more details to commit log
-* Kconfig: SYS_SUPPORTS_RENESAS_OSTM to just RENESAS_OSTM
-* removed all MODULE code (this driver is builtin only)
-* removed items from 'struct ostm_device'
-* changed ioread8 to readb
-* explain endless while loop
-* removed un-needed vars like 'ret'
-* removed WARN_ON(!clockevent_state_oneshot(ced));
-* removed "failed to allocate memory" message
-* remove pm_runtime calls
-* remove "earlytimer" register (only for sh, not arm)
-* convert from platform driver to CLOCKSOURCE_OF_DECLARE
-* ostm_probe code is now in ostm_init
-v2:
-* changed implementation to be independent channel nodes
----
- arch/arm/mach-shmobile/Kconfig     |   1 +
- drivers/clocksource/Kconfig        |   7 +
- drivers/clocksource/Makefile       |   1 +
- drivers/clocksource/renesas-ostm.c | 262 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 271 insertions(+)
- create mode 100644 drivers/clocksource/renesas-ostm.c
+Thanks for reviewing the patches.
 
-diff --git a/arch/arm/mach-shmobile/Kconfig b/arch/arm/mach-shmobile/Kconfig
-index 2bb4b09..ad7d604 100644
---- a/arch/arm/mach-shmobile/Kconfig
-+++ b/arch/arm/mach-shmobile/Kconfig
-@@ -57,6 +57,7 @@ config ARCH_R7S72100
- 	select PM
- 	select PM_GENERIC_DOMAINS
- 	select SYS_SUPPORTS_SH_MTU2
-+	select RENESAS_OSTM
- 
- config ARCH_R8A73A4
- 	bool "R-Mobile APE6 (R8A73A40)"
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 4866f7a..a0786a6 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -467,6 +467,13 @@ config SH_TIMER_MTU2
- 	  Timer Pulse Unit 2 (MTU2) hardware available on SoCs from Renesas.
- 	  This hardware comes with 16 bit-timer registers.
- 
-+config RENESAS_OSTM
-+	bool "Renesas OSTM timer driver" if COMPILE_TEST
-+	depends on GENERIC_CLOCKEVENTS
-+	select CLKSRC_MMIO
-+	help
-+	  Enables the support for the Renesas OSTM.
-+
- config SH_TIMER_TMU
- 	bool "Renesas TMU timer driver" if COMPILE_TEST
- 	depends on GENERIC_CLOCKEVENTS
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index a14111e..bbd163b 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_CS5535_CLOCK_EVENT_SRC)	+= cs5535-clockevt.o
- obj-$(CONFIG_CLKSRC_JCORE_PIT)		+= jcore-pit.o
- obj-$(CONFIG_SH_TIMER_CMT)	+= sh_cmt.o
- obj-$(CONFIG_SH_TIMER_MTU2)	+= sh_mtu2.o
-+obj-$(CONFIG_RENESAS_OSTM)	+= renesas-ostm.o
- obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
- obj-$(CONFIG_EM_TIMER_STI)	+= em_sti.o
- obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
-diff --git a/drivers/clocksource/renesas-ostm.c b/drivers/clocksource/renesas-ostm.c
-new file mode 100644
-index 0000000..757bd71
---- /dev/null
-+++ b/drivers/clocksource/renesas-ostm.c
-@@ -0,0 +1,262 @@
-+/*
-+ * Renesas Timer Support - OSTM
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ */
-+
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/interrupt.h>
-+#include <linux/sched_clock.h>
-+#include <linux/slab.h>
-+
-+/*
-+ * The OSTM contains independent channels.
-+ * The first OSTM channel probed will be set up as a free running
-+ * clocksource. Additionally we will use this clocksource for the system
-+ * schedule timer sched_clock().
-+ *
-+ * The second (or more) channel probed will be set up as an interrupt
-+ * driven clock event.
-+ */
-+
-+struct ostm_device {
-+	void __iomem *base;
-+	unsigned long ticks_per_jiffy;
-+	struct clock_event_device ced;
-+};
-+
-+static void __iomem *system_clock;	/* For sched_clock() */
-+
-+/* OSTM REGISTERS */
-+#define	OSTM_CMP		0x000	/* RW,32 */
-+#define	OSTM_CNT		0x004	/* R,32 */
-+#define	OSTM_TE			0x010	/* R,8 */
-+#define	OSTM_TS			0x014	/* W,8 */
-+#define	OSTM_TT			0x018	/* W,8 */
-+#define	OSTM_CTL		0x020	/* RW,8 */
-+
-+#define	TE			0x01
-+#define	TS			0x01
-+#define	TT			0x01
-+#define	CTL_PERIODIC		0x00
-+#define	CTL_ONESHOT		0x02
-+#define	CTL_FREERUN		0x02
-+
-+static struct ostm_device *ced_to_ostm(struct clock_event_device *ced)
-+{
-+	return container_of(ced, struct ostm_device, ced);
-+}
-+
-+static void ostm_timer_stop(struct ostm_device *ostm)
-+{
-+	if (readb(ostm->base + OSTM_TE) & TE) {
-+		iowrite8(TT, ostm->base + OSTM_TT);
-+
-+		/*
-+		 * Read back the register simply to confirm the write operation
-+		 * has completed since I/O writes can sometimes get queued by
-+		 * the bus architecture.
-+		 */
-+		while (readb(ostm->base + OSTM_TE) & TE)
-+			;
-+	}
-+}
-+
-+static int __init ostm_init_clksrc(struct ostm_device *ostm, unsigned long rate)
-+{
-+	/*
-+	 * irq not used (clock sources don't use interrupts)
-+	 */
-+
-+	ostm_timer_stop(ostm);
-+
-+	iowrite32(0, ostm->base + OSTM_CMP);
-+	iowrite8(CTL_FREERUN, ostm->base + OSTM_CTL);
-+	iowrite8(TS, ostm->base + OSTM_TS);
-+
-+	return clocksource_mmio_init(ostm->base + OSTM_CNT,
-+			"ostm", rate,
-+			300, 32, clocksource_mmio_readl_up);
-+}
-+
-+static u64 notrace ostm_read_sched_clock(void)
-+{
-+	return readl(system_clock);
-+}
-+
-+static void __init ostm_init_sched_clock(struct ostm_device *ostm,
-+			unsigned long rate)
-+{
-+	system_clock = ostm->base + OSTM_CNT;
-+	sched_clock_register(ostm_read_sched_clock, 32, rate);
-+}
-+
-+static int ostm_clock_event_next(unsigned long delta,
-+				     struct clock_event_device *ced)
-+{
-+	struct ostm_device *ostm = ced_to_ostm(ced);
-+
-+	ostm_timer_stop(ostm);
-+
-+	iowrite32(delta, ostm->base + OSTM_CMP);
-+	iowrite8(CTL_ONESHOT, ostm->base + OSTM_CTL);
-+	iowrite8(TS, ostm->base + OSTM_TS);
-+
-+	return 0;
-+}
-+
-+static int ostm_shutdown(struct clock_event_device *ced)
-+{
-+	struct ostm_device *ostm = ced_to_ostm(ced);
-+
-+	ostm_timer_stop(ostm);
-+
-+	return 0;
-+}
-+static int ostm_set_periodic(struct clock_event_device *ced)
-+{
-+	struct ostm_device *ostm = ced_to_ostm(ced);
-+
-+	if (clockevent_state_oneshot(ced) || clockevent_state_periodic(ced))
-+		ostm_timer_stop(ostm);
-+
-+	iowrite32(ostm->ticks_per_jiffy - 1, ostm->base + OSTM_CMP);
-+	iowrite8(CTL_PERIODIC, ostm->base + OSTM_CTL);
-+	iowrite8(TS, ostm->base + OSTM_TS);
-+
-+	return 0;
-+}
-+
-+static int ostm_set_oneshot(struct clock_event_device *ced)
-+{
-+	struct ostm_device *ostm = ced_to_ostm(ced);
-+
-+	ostm_timer_stop(ostm);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t ostm_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct ostm_device *ostm = dev_id;
-+
-+	if (clockevent_state_oneshot(&ostm->ced))
-+		ostm_timer_stop(ostm);
-+
-+	/* notify clockevent layer */
-+	if (ostm->ced.event_handler)
-+		ostm->ced.event_handler(&ostm->ced);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int __init ostm_init_clkevt(struct ostm_device *ostm, int irq,
-+			unsigned long rate)
-+{
-+	struct clock_event_device *ced = &ostm->ced;
-+	int ret = -ENXIO;
-+
-+	ret = request_irq(irq, ostm_timer_interrupt,
-+			  IRQF_TIMER | IRQF_IRQPOLL,
-+			  "ostm", ostm);
-+	if (ret) {
-+		pr_err("ostm: failed to request irq\n");
-+		return ret;
-+	}
-+
-+	ced->name = "ostm";
-+	ced->features = CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_PERIODIC;
-+	ced->set_state_shutdown = ostm_shutdown;
-+	ced->set_state_periodic = ostm_set_periodic;
-+	ced->set_state_oneshot = ostm_set_oneshot;
-+	ced->set_next_event = ostm_clock_event_next;
-+	ced->shift = 32;
-+	ced->rating = 300;
-+	ced->cpumask = cpumask_of(0);
-+	clockevents_config_and_register(ced, rate, 0xf, 0xffffffff);
-+
-+	return 0;
-+}
-+
-+static int __init ostm_init(struct device_node *np)
-+{
-+	struct ostm_device *ostm;
-+	int ret = -EFAULT;
-+	struct clk *ostm_clk;
-+	int irq;
-+	unsigned long rate;
-+
-+	ostm = kzalloc(sizeof(*ostm), GFP_KERNEL);
-+	if (!ostm)
-+		return -ENOMEM;
-+
-+	ostm->base = of_iomap(np, 0);
-+	if (!ostm->base) {
-+		pr_err("ostm: failed to remap I/O memory\n");
-+		goto err;
-+	}
-+
-+	irq = irq_of_parse_and_map(np, 0);
-+	if (irq < 0) {
-+		pr_err("ostm: Failed to get irq\n");
-+		goto err;
-+	}
-+
-+	ostm_clk = of_clk_get(np, 0);
-+	if (IS_ERR(ostm_clk)) {
-+		pr_err("ostm: Failed to get clock\n");
-+		ostm_clk = NULL;
-+		goto err;
-+	}
-+
-+	ret = clk_prepare_enable(ostm_clk);
-+	if (ret) {
-+		pr_err("ostm: Failed to enable clock\n");
-+		goto err;
-+	}
-+
-+	rate = clk_get_rate(ostm_clk);
-+	ostm->ticks_per_jiffy = (rate + HZ / 2) / HZ;
-+
-+	/*
-+	 * First probed device will be used as system clocksource. Any
-+	 * additional devices will be used as clock events.
-+	 */
-+	if (!system_clock) {
-+		ret = ostm_init_clksrc(ostm, rate);
-+
-+		if (!ret) {
-+			ostm_init_sched_clock(ostm, rate);
-+			pr_info("ostm: used for clocksource\n");
-+		}
-+
-+	} else {
-+		ret = ostm_init_clkevt(ostm, irq, rate);
-+
-+		if (!ret)
-+			pr_info("ostm: used for clock events\n");
-+	}
-+
-+err:
-+	if (ret) {
-+		clk_disable_unprepare(ostm_clk);
-+		iounmap(ostm->base);
-+		kfree(ostm);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+CLOCKSOURCE_OF_DECLARE(ostm, "renesas,ostm", ostm_init);
--- 
-2.10.1
+On Mon, Jan 23, 2017 at 10:19:01AM -0500, Sean Paul wrote:
+> On Fri, Jan 20, 2017 at 12:24:56AM +0800, Shawn Guo wrote:
+> > From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > 
+> > It adds interlace mode support in VOU TIMING_CTRL and channel control
+> > block, so that VOU driver gets ready to support output device in
+> > interlace mode like TV Encoder.
+> > 
+> > Signed-off-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/zte/zx_vou.c      | 53 +++++++++++++++++++++++++++++++++++++--
+> >  drivers/gpu/drm/zte/zx_vou_regs.h | 15 +++++++++++
+> >  2 files changed, 66 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/zte/zx_vou.c b/drivers/gpu/drm/zte/zx_vou.c
+> > index 3056b41df518..8c4f0e2885f3 100644
+> > --- a/drivers/gpu/drm/zte/zx_vou.c
+> > +++ b/drivers/gpu/drm/zte/zx_vou.c
+> 
+> <snip>
+> 
+> > @@ -196,19 +211,26 @@ static inline void vou_chn_set_update(struct zx_crtc *zcrtc)
+> >  static void zx_crtc_enable(struct drm_crtc *crtc)
+> >  {
+> >  	struct drm_display_mode *mode = &crtc->state->adjusted_mode;
+> > +	bool interlaced = mode->flags & DRM_MODE_FLAG_INTERLACE;
+> >  	struct zx_crtc *zcrtc = to_zx_crtc(crtc);
+> >  	struct zx_vou_hw *vou = zcrtc->vou;
+> >  	const struct zx_crtc_regs *regs = zcrtc->regs;
+> >  	const struct zx_crtc_bits *bits = zcrtc->bits;
+> >  	struct videomode vm;
+> > +	u32 vactive;
+> >  	u32 pol = 0;
+> >  	u32 val;
+> > +	u32 mask;
+> >  	int ret;
+> >  
+> >  	drm_display_mode_to_videomode(mode, &vm);
+> >  
+> >  	/* Set up timing parameters */
+> > -	val = V_ACTIVE(vm.vactive - 1);
+> > +	vactive = vm.vactive;
+> > +	if (interlaced)
+> > +		vactive /= 2;
+> > +
+> > +	val = V_ACTIVE(vactive - 1);
+> 
+> Instead of introducing a new var, I think you can get away with:
+> 
+> if (interlaced)
+>         val = V_ACTIVE(vm.vactive / 2);
+> else
+>         val = V_ACTIVE(vm.vactive - 1);
 
+The variable is used by SEC_V_ACTIVE register setup below as well.  But
+yeah, I admit this additional variable makes the code even harder for
+readers.  I will kill it by having interlaced case check where
+necessary.
 
+> 
+> 
+> >  	val |= H_ACTIVE(vm.hactive - 1);
+> >  	zx_writel(vou->timing + regs->fir_active, val);
+> >  
+> > @@ -222,6 +244,22 @@ static void zx_crtc_enable(struct drm_crtc *crtc)
+> >  	val |= FRONT_PORCH(vm.vfront_porch - 1);
+> >  	zx_writel(vou->timing + regs->fir_vtiming, val);
+> >  
+> > +	if (interlaced) {
+> > +		u32 shift = bits->sec_vactive_shift;
+> > +		u32 mask = bits->sec_vactive_mask;
+> 
+> mask is already defined at the function scope
+
+Right.  I will rename the one in function scope to avoid the confusion.
+
+> 
+> > +
+> > +		val = zx_readl(vou->timing + SEC_V_ACTIVE);
+> > +		val &= ~mask;
+> > +		val |= ((vactive - 1) << shift) & mask;
+> > +		zx_writel(vou->timing + SEC_V_ACTIVE, val);
+> > +
+> > +		val = SYNC_WIDE(vm.vsync_len - 1);
+> > +		/* sec_vbp = fir_vbp + 1 */
+> 
+> Looks like leftover kruft here.
+
+It's actually a comment which seems to be only understandable by
+myself :)  I will write up some proper text for it.
+
+> 
+> > +		val |= BACK_PORCH(vm.vback_porch);
+> > +		val |= FRONT_PORCH(vm.vfront_porch - 1);
+> > +		zx_writel(vou->timing + regs->sec_vtiming, val);
+> > +	}
+> > +
+> >  	/* Set up polarities */
+> >  	if (vm.flags & DISPLAY_FLAGS_VSYNC_LOW)
+> >  		pol |= 1 << POL_VSYNC_SHIFT;
+> > @@ -232,9 +270,16 @@ static void zx_crtc_enable(struct drm_crtc *crtc)
+> >  		       pol << bits->polarity_shift);
+> >  
+> >  	/* Setup SHIFT register by following what ZTE BSP does */
+> > -	zx_writel(vou->timing + regs->timing_shift, H_SHIFT_VAL);
+> > +	val = H_SHIFT_VAL;
+> > +	if (interlaced)
+> > +		val |= V_SHIFT_VAL << 16;
+> > +	zx_writel(vou->timing + regs->timing_shift, val);
+> >  	zx_writel(vou->timing + regs->timing_pi_shift, H_PI_SHIFT_VAL);
+> >  
+> > +	/* Progressive or interlace scan select */
+> > +	mask = bits->interlace_select | bits->pi_enable;
+> > +	zx_writel_mask(vou->timing + SCAN_CTRL, mask, interlaced ? mask : 0);
+> > +
+> >  	/* Enable TIMING_CTRL */
+> >  	zx_writel_mask(vou->timing + TIMING_TC_ENABLE, bits->tc_enable,
+> >  		       bits->tc_enable);
+> > @@ -245,6 +290,10 @@ static void zx_crtc_enable(struct drm_crtc *crtc)
+> >  	zx_writel_mask(zcrtc->chnreg + CHN_CTRL1, CHN_SCREEN_H_MASK,
+> >  		       vm.vactive << CHN_SCREEN_H_SHIFT);
+> >  
+> > +	/* Configure channel interlace buffer control */
+> > +	zx_writel_mask(zcrtc->chnreg + CHN_INTERLACE_BUF_CTRL, CHN_INTERLACE_EN,
+> > +		       interlaced ? CHN_INTERLACE_EN : 0);
+> > +
+> >  	/* Update channel */
+> >  	vou_chn_set_update(zcrtc);
+> >  
+> > diff --git a/drivers/gpu/drm/zte/zx_vou_regs.h b/drivers/gpu/drm/zte/zx_vou_regs.h
+> > index 193c1ce01fe7..e6ed844e068a 100644
+> > --- a/drivers/gpu/drm/zte/zx_vou_regs.h
+> > +++ b/drivers/gpu/drm/zte/zx_vou_regs.h
+> > @@ -75,6 +75,8 @@
+> >  #define CHN_SCREEN_H_SHIFT		5
+> >  #define CHN_SCREEN_H_MASK		(0x1fff << CHN_SCREEN_H_SHIFT)
+> >  #define CHN_UPDATE			0x08
+> > +#define CHN_INTERLACE_BUF_CTRL		0x24
+> 
+> Maybe it's my email reader, but it seems like there's an alignment issue here.
+
+It's indeed your email reader.
+
+Shawn
+
+> 
+> > +#define CHN_INTERLACE_EN		BIT(2)
+> >  
+> >  /* TIMING_CTRL registers */
+> >  #define TIMING_TC_ENABLE		0x04
+> > @@ -117,6 +119,19 @@
+> >  #define TIMING_MAIN_SHIFT		0x2c
+> >  #define TIMING_AUX_SHIFT		0x30
+> >  #define H_SHIFT_VAL			0x0048
+> > +#define V_SHIFT_VAL			0x0001
+> > +#define SCAN_CTRL			0x34
+> > +#define AUX_PI_EN			BIT(19)
+> > +#define MAIN_PI_EN			BIT(18)
+> > +#define AUX_INTERLACE_SEL		BIT(1)
+> > +#define MAIN_INTERLACE_SEL		BIT(0)
+> > +#define SEC_V_ACTIVE			0x38
+> > +#define SEC_VACT_MAIN_SHIFT		0
+> > +#define SEC_VACT_MAIN_MASK		(0xffff << SEC_VACT_MAIN_SHIFT)
+> > +#define SEC_VACT_AUX_SHIFT		16
+> > +#define SEC_VACT_AUX_MASK		(0xffff << SEC_VACT_AUX_SHIFT)
+> > +#define SEC_MAIN_V_TIMING		0x3c
+> > +#define SEC_AUX_V_TIMING		0x40
+> >  #define TIMING_MAIN_PI_SHIFT		0x68
+> >  #define TIMING_AUX_PI_SHIFT		0x6c
+> >  #define H_PI_SHIFT_VAL			0x000f
+> > -- 
+> > 1.9.1
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
