@@ -1,7 +1,7 @@
 From: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 1/4] dt-bindings: Document Broadcom iProc mailbox controller driver
-Date: Wed, 25 Jan 2017 16:26:59 -0800
-Message-ID: <1485390422-3984-2-git-send-email-jonathan.richardson@broadcom.com>
+Subject: [PATCH v3 4/4] ARM: dts: Enable Broadcom iProc mailbox controller
+Date: Wed, 25 Jan 2017 16:27:02 -0800
+Message-ID: <1485390422-3984-5-git-send-email-jonathan.richardson@broadcom.com>
 References: <1485390422-3984-1-git-send-email-jonathan.richardson@broadcom.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1485390422-3984-1-git-send-email-jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
@@ -10,44 +10,36 @@ To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for brcm,iproc-mailbox.
+Add node for iProc mailbox controller and enable.
 
 Reviewed-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Tested-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Reviewed-by: Vikram Prakash <vikram.prakash-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Shreesha Rajashekar <shreesha.rajashekar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Jonathan Richardson <jonathan.richardson-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/mailbox/brcm,iproc-mailbox.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
+ arch/arm/boot/dts/bcm-cygnus.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-new file mode 100644
-index 0000000..a832feb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/brcm,iproc-mailbox.txt
-@@ -0,0 +1,18 @@
-+* Broadcom's iProc Mailbox Controller
+diff --git a/arch/arm/boot/dts/bcm-cygnus.dtsi b/arch/arm/boot/dts/bcm-cygnus.dtsi
+index cf02271..606e11a 100644
+--- a/arch/arm/boot/dts/bcm-cygnus.dtsi
++++ b/arch/arm/boot/dts/bcm-cygnus.dtsi
+@@ -121,6 +121,12 @@
+ 			      <0x0301d24c 0x2c>;
+ 		};
+ 
++		mailbox: mailbox@03024024 {
++			compatible = "brcm,iproc-mailbox";
++			reg = <0x03024024 0x8>;
++			#mbox-cells = <1>;
++		};
 +
-+Broadcom iProc architected SoC's have an always on Cortex-M0 MCU processor that
-+handles support for power, clock, and reset management. The iProc mailbox
-+controller handles all communication with this processor.
-+
-+Required properties:
-+- compatible: Must be "brcm,iproc-mailbox"
-+- reg: Defines the base address of the mailbox controller.
-+- #mbox-cells: Must be 1.
-+
-+Example:
-+
-+	mailbox: mailbox@3024024 {
-+		compatible = "brcm,iproc-mailbox";
-+		reg = <0x03024024 0x8>;
-+		#mbox-cells = <1>;
-+	};
+ 		gpio_crmu: gpio@03024800 {
+ 			compatible = "brcm,cygnus-crmu-gpio";
+ 			reg = <0x03024800 0x50>,
 -- 
 1.9.1
 
