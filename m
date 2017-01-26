@@ -1,192 +1,127 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v2 3/8] pinctrl: samsung: Add support for pad retention control
- for Exynos5433 SoCs
-Date: Thu, 26 Jan 2017 09:33:49 +0100
-Message-ID: <1485419634-28331-4-git-send-email-m.szyprowski@samsung.com>
-References: <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
- <CGME20170126083402eucas1p187d3d31f62544fc46fae99fc5f74dbfe@eucas1p1.samsung.com>
+From: Horng-Shyang Liao <hs.liao@mediatek.com>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Thu, 26 Jan 2017 16:37:13 +0800
+Message-ID: <1485419833.990.1.camel@mtksdaap41>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+         <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
+         <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
+In-Reply-To: <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To: Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Sascha Hauer <s.hauer@pengutronix.de>, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, Sascha Hauer <kernel@pengutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, Nicolas Boichat <drinkcat@chromium.org>, CK HU <ck.hu@mediatek.com>, cawa cheng <cawa.cheng@mediatek.com>, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Jo
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for retention control for Exynos5433 SoCs. Three
-groups of pins has been defined for retention control: common shared group
-for ALIVE, CPIF, eSE, FINGER, IMEM, NFC, PERIC, TOUCH pin banks and
-separate control for FSYS and AUD pin banks, for which PMU retention
-registers match whole banks.
+Hi Jassi,
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c    | 58 +++++++++++++++++++++++++++++
- include/linux/soc/samsung/exynos-regs-pmu.h | 16 ++++++++
- 2 files changed, 74 insertions(+)
+On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
+> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao@mediatek.com> wrote:
+> 
+> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+> > new file mode 100644
+> > index 0000000..747bcd3
+> > --- /dev/null
+> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+> 
+> ...
+> 
+> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+> > +{
+> > +       struct cmdq *cmdq;
+> > +       struct cmdq_task *task;
+> > +       unsigned long curr_pa, end_pa;
+> > +
+> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+> > +
+> > +       /* Client should not flush new tasks if suspended. */
+> > +       WARN_ON(cmdq->suspended);
+> > +
+> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+> > +       task->cmdq = cmdq;
+> > +       INIT_LIST_HEAD(&task->list_entry);
+> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
+> >
+> You seem to parse the requests and responses, that should ideally be
+> done in client driver.
+> Also, we are here in atomic context, can you move it in client driver
+> (before the spin_lock)?
+> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index fa3802970570..7b0e6cc35e04 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -1551,6 +1551,54 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 	EXYNOS5433_PIN_BANK_EINTG(3, 0x000, "gpj1", 0x00),
- };
- 
-+/* PMU pin retention groups registers for Exynos5433 (without audio & fsys) */
-+static const u32 exynos5433_retention_regs[] = {
-+	EXYNOS5433_PAD_RETENTION_TOP_OPTION,
-+	EXYNOS5433_PAD_RETENTION_UART_OPTION,
-+	EXYNOS5433_PAD_RETENTION_EBIA_OPTION,
-+	EXYNOS5433_PAD_RETENTION_EBIB_OPTION,
-+	EXYNOS5433_PAD_RETENTION_SPI_OPTION,
-+	EXYNOS5433_PAD_RETENTION_MIF_OPTION,
-+	EXYNOS5433_PAD_RETENTION_USBXTI_OPTION,
-+	EXYNOS5433_PAD_RETENTION_BOOTLDO_OPTION,
-+	EXYNOS5433_PAD_RETENTION_UFS_OPTION,
-+	EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION,
-+};
-+
-+static const struct samsung_retention_data exynos5433_retention_data __initconst = {
-+	.regs	 = exynos5433_retention_regs,
-+	.nr_regs = ARRAY_SIZE(exynos5433_retention_regs),
-+	.value	 = EXYNOS_WAKEUP_FROM_LOWPWR,
-+	.refcnt	 = &exynos_shared_retention_refcnt,
-+	.init	 = exynos_retention_init,
-+};
-+
-+/* PMU retention control for audio pins can be tied to audio pin bank */
-+static const u32 exynos5433_audio_retention_regs[] = {
-+	EXYNOS5433_PAD_RETENTION_AUD_OPTION,
-+};
-+
-+static const struct samsung_retention_data exynos5433_audio_retention_data __initconst = {
-+	.regs	 = exynos5433_audio_retention_regs,
-+	.nr_regs = ARRAY_SIZE(exynos5433_audio_retention_regs),
-+	.value	 = EXYNOS_WAKEUP_FROM_LOWPWR,
-+	.init	 = exynos_retention_init,
-+};
-+
-+/* PMU retention control for mmc pins can be tied to fsys pin bank */
-+static const u32 exynos5433_fsys_retention_regs[] = {
-+	EXYNOS5433_PAD_RETENTION_MMC0_OPTION,
-+	EXYNOS5433_PAD_RETENTION_MMC1_OPTION,
-+	EXYNOS5433_PAD_RETENTION_MMC2_OPTION,
-+};
-+
-+static const struct samsung_retention_data exynos5433_fsys_retention_data __initconst = {
-+	.regs	 = exynos5433_fsys_retention_regs,
-+	.nr_regs = ARRAY_SIZE(exynos5433_fsys_retention_regs),
-+	.value	 = EXYNOS_WAKEUP_FROM_LOWPWR,
-+	.init	 = exynos_retention_init,
-+};
-+
- /*
-  * Samsung pinctrl driver data for Exynos5433 SoC. Exynos5433 SoC includes
-  * ten gpio/pin-mux/pinconfig controllers.
-@@ -1564,6 +1612,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
- 		.nr_ext_resources = 1,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 1 data */
- 		.pin_banks	= exynos5433_pin_banks1,
-@@ -1571,6 +1620,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_audio_retention_data,
- 	}, {
- 		/* pin-controller instance 2 data */
- 		.pin_banks	= exynos5433_pin_banks2,
-@@ -1578,6 +1628,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 3 data */
- 		.pin_banks	= exynos5433_pin_banks3,
-@@ -1585,6 +1636,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 4 data */
- 		.pin_banks	= exynos5433_pin_banks4,
-@@ -1592,6 +1644,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 5 data */
- 		.pin_banks	= exynos5433_pin_banks5,
-@@ -1599,6 +1652,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_fsys_retention_data,
- 	}, {
- 		/* pin-controller instance 6 data */
- 		.pin_banks	= exynos5433_pin_banks6,
-@@ -1606,6 +1660,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 7 data */
- 		.pin_banks	= exynos5433_pin_banks7,
-@@ -1613,6 +1668,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 8 data */
- 		.pin_banks	= exynos5433_pin_banks8,
-@@ -1620,6 +1676,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	}, {
- 		/* pin-controller instance 9 data */
- 		.pin_banks	= exynos5433_pin_banks9,
-@@ -1627,6 +1684,7 @@ static void exynos_retention_disable(struct samsung_pinctrl_drv_data *drvdata)
- 		.eint_gpio_init = exynos_eint_gpio_init,
- 		.suspend	= exynos_pinctrl_suspend,
- 		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynos5433_retention_data,
- 	},
- };
- 
-diff --git a/include/linux/soc/samsung/exynos-regs-pmu.h b/include/linux/soc/samsung/exynos-regs-pmu.h
-index d30186e2b609..86f24b633e11 100644
---- a/include/linux/soc/samsung/exynos-regs-pmu.h
-+++ b/include/linux/soc/samsung/exynos-regs-pmu.h
-@@ -690,4 +690,20 @@
- 					 | EXYNOS5420_KFC_USE_STANDBY_WFI2  \
- 					 | EXYNOS5420_KFC_USE_STANDBY_WFI3)
- 
-+/* For EXYNOS5433 */
-+#define EXYNOS5433_PAD_RETENTION_AUD_OPTION			(0x3028)
-+#define EXYNOS5433_PAD_RETENTION_MMC2_OPTION			(0x30C8)
-+#define EXYNOS5433_PAD_RETENTION_TOP_OPTION			(0x3108)
-+#define EXYNOS5433_PAD_RETENTION_UART_OPTION			(0x3128)
-+#define EXYNOS5433_PAD_RETENTION_MMC0_OPTION			(0x3148)
-+#define EXYNOS5433_PAD_RETENTION_MMC1_OPTION			(0x3168)
-+#define EXYNOS5433_PAD_RETENTION_EBIA_OPTION			(0x3188)
-+#define EXYNOS5433_PAD_RETENTION_EBIB_OPTION			(0x31A8)
-+#define EXYNOS5433_PAD_RETENTION_SPI_OPTION			(0x31C8)
-+#define EXYNOS5433_PAD_RETENTION_MIF_OPTION			(0x31E8)
-+#define EXYNOS5433_PAD_RETENTION_USBXTI_OPTION			(0x3228)
-+#define EXYNOS5433_PAD_RETENTION_BOOTLDO_OPTION			(0x3248)
-+#define EXYNOS5433_PAD_RETENTION_UFS_OPTION			(0x3268)
-+#define EXYNOS5433_PAD_RETENTION_FSYSGENIO_OPTION		(0x32A8)
-+
- #endif /* __LINUX_SOC_EXYNOS_REGS_PMU_H */
--- 
-1.9.1
+will do
+
+> ....
+> > +
+> > +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
+> > +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
+> > +       cmdq->mbox.of_xlate = cmdq_xlate;
+> > +
+> > +       /* make use of TXDONE_BY_ACK */
+> > +       cmdq->mbox.txdone_irq = false;
+> > +       cmdq->mbox.txdone_poll = false;
+> > +
+> > +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
+> >
+> You mean  i < CMDQ_THR_MAX_COUNT
+
+will do
+
+> > +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
+> > +                               CMDQ_THR_SIZE * i;
+> > +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
+> >
+> You seem the queue mailbox requests in this controller driver? why not
+> use the mailbox api for that?
+> 
+> > +               init_timer(&cmdq->thread[i].timeout);
+> > +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
+> > +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
+> >
+> Here again... you seem to ignore the polling mechanism provided by the
+> mailbox api, and implement your own.
+
+The queue is used to record the tasks which are flushed into CMDQ
+hardware (GCE). We are handling time critical tasks, so we have to
+queue them in GCE rather than a software queue (e.g. mailbox buffer).
+Let me use display as an example. Many display tasks are flushed into
+CMDQ to wait next vsync event. When vsync event is triggered by display
+hardware, GCE needs to process all flushed tasks "within vblank" to
+prevent garbage on screen. This is all done by GCE (without CPU)
+to fulfill time critical requirement. After GCE finish its work,
+it will generate interrupts, and then CMDQ driver will let clients know
+which tasks are done.
+
+We have discussed the similar thing before.
+Please take a look at the following link,
+especially from 2016/10/5 to.2016/10/11 about tx_done.
+https://patchwork.kernel.org/patch/9312953/
+
+> > diff --git a/include/linux/mailbox/mtk-cmdq-mailbox.h b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> > new file mode 100644
+> > index 0000000..3433c64
+> > --- /dev/null
+> > +++ b/include/linux/mailbox/mtk-cmdq-mailbox.h
+> ....
+> > +
+> > +struct cmdq_pkt {
+> > +       void                    *va_base;
+> >
+> maybe add 'pa_base' here so you don't have to do dma_map_single() in send_data
+
+will do
+
+> > +       size_t                  cmd_buf_size; /* command occupied size */
+> > +       size_t                  buf_size; /* real buffer size */
+> > +       struct cmdq_task_cb     cb;
+> > +};
+> > +
+> > +#endif /* __MTK_CMDQ_MAILBOX_H__ */
+> > --
+> > 1.9.1
+> >
+
+Thanks,
+HS
