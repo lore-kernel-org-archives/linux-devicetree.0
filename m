@@ -1,179 +1,80 @@
-From: Mason <slash.tmp-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Thu, 26 Jan 2017 18:15:57 +0100
-Message-ID: <b1c43bca-39bc-8b81-1a90-b7081a7d74ea@free.fr>
-References: <20170116132424.7038-1-maxime.ripard@free-electrons.com>
- <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/4] USB support for Broadcom NSP SoC
+Date: Thu, 26 Jan 2017 09:27:00 -0800
+Message-ID: <241009ca-4b34-b160-2de1-4752d3ff114b@gmail.com>
+References: <1484669670-4201-1-git-send-email-yendapally.reddy@broadcom.com>
+ <588A16FA.50507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALAqxLV=5ZCu8=rDUFHS9148DxzrqeTipsueA7F4i3t-mcWr=A@mail.gmail.com>
-Content-Language: 
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, John Reitan <John.Reitan-5wv7dgnIgG8@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, DT <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thibaud
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <588A16FA.50507@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/01/2017 20:24, John Stultz wrote:
-
-> On Mon, Jan 16, 2017 at 5:24 AM, Maxime Ripard wrote:
->
->> The ARM Mali Utgard GPU family is embedded into a number of SoCs from
->> Allwinner, Amlogic, Mediatek or Rockchip.
+On 01/26/2017 07:34 AM, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On Tuesday 17 January 2017 09:44 PM, Yendapally Reddy Dhananjaya Reddy wrote:
+>> This patch set contains the usb support for Broadcom NSP SoC. The
+>> usb3 phy is internal to the SoC and is accessed through mdio interface.
+>> The mdio interface can be used to access either internal usb3 phy or
+>> external ethernet phy using a multiplexer.
 >>
->> Add a binding for the GPU of that family.
+>> The first patch provides the documentation details for usb3 phy. The
+>> second patch provides the changes to the mdio bus driver. The third
+>> patch provides the phy driver and fourth patch provides the enable
+>> method for usb.
+> 
+> merged the 1st and 4th patch to linux-phy.
+
+You mean 1st and 3rd here, right? 4th is a Device Tree change that I
+should take, and Patch 2 should be merged by David.
+
+What branch in your tree should we be looking at?
+
+> 
+> Thanks
+> Kishon
+> 
 >>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  .../devicetree/bindings/gpu/arm,mali-utgard.txt    | 76 ++++++++++++++++++++++
->>  1 file changed, 76 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+>> This patch series has been tested on NSP bcm958625HR board.
+>> This patch series is based on v4.10.0-rc3 and is available from
+>> github-repo: https://github.com/Broadcom/cygnus-linux.git
+>> branch:nsp-usb-v2
 >>
->> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->> new file mode 100644
->> index 000000000000..df05ba0ec357
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
->> @@ -0,0 +1,76 @@
->> +ARM Mali Utgard GPU
->> +===================
->> +
->> +Required properties:
->> +  - compatible:
->> +    * "arm,mali-utgard" and one of the following:
->> +      + "arm,mali-300"
->> +      + "arm,mali-400"
->> +      + "arm,mali-450"
->> +
->> +  - reg: Physical base address and length of the GPU registers
->> +
->> +  - interrupts: an entry for each entry in interrupt-names.
->> +    See ../interrupt-controller/interrupts.txt for details.
->> +
->> +  - interrupt-names:
->> +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
->> +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
->> +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
->> +    * gp: Geometry Processor interrupt
->> +    * gpmmu: Geometry Processor MMU interrupt
->> +
->> +
->> +Optional properties:
->> +  - interrupt-names:
->> +    * pmu: Power Management Unit interrupt, if implemented in hardware
->> +
->> +Vendor-specific bindings
->> +------------------------
->> +
->> +The Mali GPU is integrated very differently from one SoC to
->> +another. In order to accommodate those differences, you have the option
->> +to specify one more vendor-specific compatible, among:
->> +
->> +  - allwinner,sun4i-a10-mali
->> +    Required properties:
->> +      * clocks: an entry for each entry in clock-names
->> +      * clock-names:
->> +        + bus: bus clock for the GPU
->> +        + core: clock driving the GPU itself
->> +      * resets: phandle to the reset line for the GPU
->> +
->> +  - allwinner,sun7i-a20-mali
->> +    Required properties:
->> +      * clocks: an entry for each entry in clock-names
->> +      * clock-names:
->> +        + bus: bus clock for the GPU
->> +        + core: clock driving the GPU itself
->> +      * resets: phandle to the reset line for the GPU
->> +
->> +Example:
->> +
->> +mali: gpu@01c40000 {
->> +       compatible = "allwinner,sun7i-a20-mali", "arm,mali-400",
->> +                    "arm,mali-utgard";
->> +       reg = <0x01c40000 0x10000>;
->> +       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
->> +                    <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
->> +       interrupt-names = "gp",
->> +                         "gpmmu",
->> +                         "pp0",
->> +                         "ppmmu0",
->> +                         "pp1",
->> +                         "ppmmu1",
->> +                         "pmu";
->> +       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
->> +       clock-names = "bus", "core";
->> +       resets = <&ccu RST_BUS_GPU>;
->> +};
->> +
->> +
-> 
-> 
-> Having a mali utgard binding upstream would be great. However I'm a
-> little worried that the mali driver I've used sort of only half way
-> uses DT, and still requires a custom built in platform driver to setup
-> numerous other things.  Curious if you have a pointer to the kernel
-> driver you've been using with the vendor specific bindings above?  I'd
-> like to try to adapt what we have to your method to validate the above
-> as generic.
-> 
-> And, just for context, here's the node we've been using with hikey:
-> 
->                 mali:mali@f4080000 {
->                         compatible = "arm,mali-450", "arm,mali-utgard";
->                         reg = <0x0 0x3f100000 0x0 0x00708000>;
->                         clocks = <&media_ctrl HI6220_G3D_CLK>,
->                                  <&media_ctrl HI6220_G3D_PCLK>;
->                         clock-names = "clk_g3d", "pclk_g3d";
->                         mali_def_freq = <500>;
->                         pclk_freq = <144>;
->                         dfs_steps = <2>;
->                         dfs_lockprf = <1>;
->                         dfs_limit_max_prf = <1>;
->                         dfs_profile_num = <2>;
->                         dfs_profiles = <250 3 0>, <500 1 0>;
->                         mali_type = <2>;
-> 
->                         interrupt-parent = <&gic>;
->                         interrupts =    <1 126 4>, /*gp*/
->                                         <1 126 4>, /*gp mmu*/
->                                         <1 126 4>, /*pp bc*/
->                                         <1 126 4>, /*pmu*/
->                                         <1 126 4>, /*pp0*/
->                                         <1 126 4>,
->                                         <1 126 4>, /*pp1*/
->                                         <1 126 4>,
->                                         <1 126 4>, /*pp2*/
->                                         <1 126 4>,
->                                         <1 126 4>, /*pp4*/
->                                         <1 126 4>,
->                                         <1 126 4>, /*pp5*/
->                                         <1 126 4>,
->                                         <1 126 4>, /*pp6*/
->                                         <1 126 4>;
->                         interrupt-names = "IRQGP", "IRQGPMMU", "IRQPP", "IRQPMU",
->                                         "IRQPP0", "IRQPPMMU0", "IRQPP1", "IRQPPMMU1",
->                                         "IRQPP2", "IRQPPMMU2", "IRQPP4", "IRQPPMMU4",
->                                         "IRQPP5", "IRQPPMMU5", "IRQPP6", "IRQPPMMU6";
->                 };
+>> Changes in v2:
+>> * Remove separate nsp mux driver as suggested by Andrew Lunn
+>> * Addressed comments from Scott and Rob
+>>
+>> Yendapally Reddy Dhananjaya Reddy (4):
+>>   dt-bindings: phy: Add documentation for NSP USB3 PHY
+>>   net: phy: Initialize mdio clock at probe function
+>>   phy: Add USB3 PHY support for Broadcom NSP SoC
+>>   arm: dts: nsp: Add USB nodes to device tree
+>>
+>>  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  |  39 +++++
+>>  arch/arm/boot/dts/bcm-nsp.dtsi                     |  56 +++++++
+>>  arch/arm/boot/dts/bcm958625k.dts                   |  16 ++
+>>  drivers/net/phy/mdio-bcm-iproc.c                   |   6 +-
+>>  drivers/phy/Kconfig                                |   8 +
+>>  drivers/phy/Makefile                               |   1 +
+>>  drivers/phy/phy-bcm-nsp-usb3.c                     | 176 +++++++++++++++++++++
+>>  7 files changed, 298 insertions(+), 4 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
+>>  create mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
+>>
 
-Interesting. Thanks for sharing.
 
-The SoC I work on (tango4 smp8758) also embeds a Mali-400 MP4.
-(IIUC, MP4 means 4 shader cores?)
-
-I have seen
-	https://github.com/mripard/sunxi-mali/blob/r6p2/driver/src/devicedrv/mali/platform/sunxi/sunxi.c
-in the past, but I suppose it's time to take a much closer look.
-
-Regards.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Florian
