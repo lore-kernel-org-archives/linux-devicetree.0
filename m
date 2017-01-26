@@ -1,35 +1,116 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Thu, 26 Jan 2017 15:11:14 +0100
-Message-ID: <CACRpkdZ2M4g+wFMADsvx_yBV6ZjsZz33VLH4vspO-sd9hZ6Qhw@mail.gmail.com>
-References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
- <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz> <20170119100244.GX27312@n2100.armlinux.org.uk>
- <c873040cba1a4d5aa15dbaf3c5cc44e0@svr-chch-ex1.atlnz.lc> <6eb30a9ec3cf4fc9971f33742f334980@svr-chch-ex1.atlnz.lc>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: [PATCH v6 3/3] arm: dts: Add support for ES8388 to the
+	Radxa Rock 2
+Date: Thu, 26 Jan 2017 14:23:15 +0100
+Message-ID: <20170126132315.17955-4-romain.perier@collabora.com>
+References: <20170126132315.17955-1-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <6eb30a9ec3cf4fc9971f33742f334980@svr-chch-ex1.atlnz.lc>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170126132315.17955-1-romain.perier@collabora.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 9:18 AM, Chris Packham
-<Chris.Packham@alliedtelesis.co.nz> wrote:
+This commit adds the DT definition of the es8388 i2c device
+found at address 0x10. It also adds the definition for connecting
+the Rockchip I2S to the es8388 analog output.
 
-> I noticed the mvebu pinctrl series isn't in Linus's (Torvalds) tree. Is
-> this on the cards for v4.10 or is it waiting for the next merge window?
+This commit is based on the initial work that was done by Sjoerd Simons
+<sjoerd.simons@collabora.com> with some improvements.
 
-Next merge window.
+Signed-off-by: Romain Perier <romain.perier@collabora.com>
+---
 
-> In other words should I send v5 or my series now or wait for this to be
-> merged so I can rebase on top of it?
+Changes in v6: None
+Changes in v5: None
+Changes in v4:
+ - Updated to the new DT binding
+ - Added the property 'rockchip,routing'
+ - Renamed the node sound_es8388 to sound_i2s
+Changes in v3: None
+Changes in v2: None
 
-Rebase it on my devel branch in the pin control tree:
-git clone git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-cd linux-pinctrl
-git checkout -b devel origin/devel
-[git am .. / git pull old-branch]
+ arch/arm/boot/dts/rk3288-rock2-square.dts | 39 +++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
+index dd3ad2e..6b176b8 100644
+--- a/arch/arm/boot/dts/rk3288-rock2-square.dts
++++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
+@@ -86,6 +86,19 @@
+ 		#sound-dai-cells = <0>;
+ 	};
+ 
++	sound_i2s {
++		compatible = "rockchip,rk3288-hdmi-analog";
++		rockchip,model = "I2S";
++		rockchip,i2s-controller = <&i2s>;
++		rockchip,audio-codec = <&es8388>;
++		rockchip,routing = "Analog", "LOUT2",
++				   "Analog", "ROUT2";
++		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
++		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&headphone>;
++	};
++
+ 	sdio_pwrseq: sdio-pwrseq {
+ 		compatible = "mmc-pwrseq-simple";
+ 		clocks = <&hym8563>;
+@@ -173,10 +186,29 @@
+ 	};
+ };
+ 
++&i2c2 {
++	status = "okay";
++
++	es8388: es8388@10 {
++		compatible = "everest,es8388", "everest,es8328";
++		reg = <0x10>;
++		AVDD-supply = <&vcca_codec>;
++		DVDD-supply = <&vcca_codec>;
++		HPVDD-supply = <&vcca_codec>;
++		PVDD-supply = <&vcca_codec>;
++		clocks = <&cru SCLK_I2S0_OUT>;
++		clock-names = "i2s_clk_out";
++	};
++};
++
+ &i2c5 {
+ 	status = "okay";
+ };
+ 
++&i2s {
++	status = "okay";
++};
++
+ &pinctrl {
+ 	ir {
+ 		ir_int: ir-int {
+@@ -190,6 +222,13 @@
+ 		};
+ 	};
+ 
++	sound {
++		headphone: headphone {
++			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>,
++					<7 7 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
++
+ 	usb {
+ 		host_vbus_drv: host-vbus-drv {
+ 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+2.9.3
