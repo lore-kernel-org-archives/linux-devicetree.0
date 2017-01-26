@@ -1,394 +1,104 @@
-From: eajames.ibm@gmail.com
-Subject: [PATCH linux v4 6/6] hwmon: occ: Add callbacks for parsing P9 OCC datastructures
-Date: Thu, 26 Jan 2017 17:19:18 -0600
-Message-ID: <1485472758-11003-7-git-send-email-eajames.ibm@gmail.com>
-References: <1485472758-11003-1-git-send-email-eajames.ibm@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Thu, 26 Jan 2017 15:43:55 -0800
+Message-ID: <20170126234355.GF8801@codeaurora.org>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+ <587C88FE.2040900@ti.com>
+ <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
+ <20170118182223.GP10531@minitux>
+ <20170119004028.GA4857@codeaurora.org>
+ <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
+ <20170119214258.GD7829@codeaurora.org>
+ <58871F6D.1090206@ti.com>
+ <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485472758-11003-1-git-send-email-eajames.ibm@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, =wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+On 01/24, Vivek Gautam wrote:
+> 
+> Below is one binding that works for me.
+> --------------------
+>                phy@34000 {
+>                         compatible = "qcom,msm8996-qmp-pcie-phy";
+>                         reg = <0x034000 0x488>;
+>                         #clock-cells = <1>;
+>                         #address-cells = <1>;
+>                         #size-cells = <1>;
+>                         ranges;
+> 
+>                         clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
+>                                 <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+>                                 <&gcc GCC_PCIE_CLKREF_CLK>;
+>                         clock-names = "aux", "cfg_ahb", "ref";
+> 
+>                         vdda-phy-supply = <&pm8994_l28>;
+>                         vdda-pll-supply = <&pm8994_l12>;
+> 
+>                         resets = <&gcc GCC_PCIE_PHY_BCR>,
+>                                 <&gcc GCC_PCIE_PHY_COM_BCR>,
+>                                 <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
+>                         reset-names = "phy", "common", "cfg";
+> 
+>                         pciephy_p0: port@0 {
 
-Add functions to parse the data structures that are specific to the OCC on
-the POWER9 processor. These are the sensor data structures, including
-temperature, frequency, power, and "caps."
+The unit address '@0' should be replaced with something from the
+reg properties. 
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- Documentation/hwmon/occ    |   3 +
- drivers/hwmon/occ/occ_p9.c | 308 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ_p9.h |  30 +++++
- 3 files changed, 341 insertions(+)
- create mode 100644 drivers/hwmon/occ/occ_p9.c
- create mode 100644 drivers/hwmon/occ/occ_p9.h
+Also 'port' and 'ports' are almost keywords in DT now with the
+graph binding so we need to be careful when using them.
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-index 143951e..6cea853 100644
---- a/Documentation/hwmon/occ
-+++ b/Documentation/hwmon/occ
-@@ -34,6 +34,9 @@ number of data structures, such as command format, response headers, and the
- like, are also defined in this specification, and are common to both POWER8 and
- POWER9 OCCs.
- 
-+There is currently no public P9 OCC specification, and the data structures
-+defined in the POWER9 OCC driver are subject to change.
-+
- sysfs Entries
- -------------
- 
-diff --git a/drivers/hwmon/occ/occ_p9.c b/drivers/hwmon/occ/occ_p9.c
-new file mode 100644
-index 0000000..d99a026
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_p9.c
-@@ -0,0 +1,308 @@
-+/*
-+ * occ_p9.c - OCC hwmon driver
-+ *
-+ * This file contains the Power9-specific methods and data structures for
-+ * the OCC hwmon driver.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/init.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include "occ.h"
-+#include "occ_p9.h"
-+
-+/* P9 OCC sensor data format */
-+struct p9_temp_sensor {
-+	u32 sensor_id;
-+	u8 fru_type;
-+	u8 value;
-+};
-+
-+struct p9_freq_sensor {
-+	u32 sensor_id;
-+	u16 value;
-+};
-+
-+struct p9_power_sensor {
-+	u32 sensor_id;
-+	u8 function_id;
-+	u8 apss_channel;
-+	u16 reserved;
-+	u32 update_tag;
-+	u64 accumulator;
-+	u16 value;
-+};
-+
-+struct p9_caps_sensor {
-+	u16 curr_powercap;
-+	u16 curr_powerreading;
-+	u16 norm_powercap;
-+	u16 max_powercap;
-+	u16 min_powercap;
-+	u16 user_powerlimit;
-+	u8 user_powerlimit_source;
-+};
-+
-+static const u32 p9_sensor_hwmon_configs[MAX_OCC_SENSOR_TYPE] = {
-+	HWMON_I_INPUT | HWMON_I_LABEL,	/* freq: value | label */
-+	/* temp: value | label | fru_type */
-+	HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_TYPE,
-+	/* power: value | label | accum[0] | accum[1] | update_tag |
-+	 *	 (function_id | (apss_channel << 8))
-+	 */
-+	HWMON_P_INPUT | HWMON_P_LABEL | HWMON_P_AVERAGE_MIN |
-+		HWMON_P_AVERAGE_MAX | HWMON_P_AVERAGE_INTERVAL |
-+		HWMON_P_RESET_HISTORY,
-+	/* caps: curr | max | min | norm | user | source */
-+	HWMON_P_CAP | HWMON_P_CAP_MAX | HWMON_P_CAP_MIN | HWMON_P_MAX |
-+		HWMON_P_ALARM | HWMON_P_CAP_ALARM,
-+};
-+
-+void p9_parse_sensor(u8 *data, void *sensor, int sensor_type, int off,
-+		     int snum)
-+{
-+	switch (sensor_type) {
-+	case FREQ:
-+	{
-+		struct p9_freq_sensor *fs =
-+			&(((struct p9_freq_sensor *)sensor)[snum]);
-+
-+		fs->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
-+		fs->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 4]));
-+	}
-+		break;
-+	case TEMP:
-+	{
-+		struct p9_temp_sensor *ts =
-+			&(((struct p9_temp_sensor *)sensor)[snum]);
-+
-+		ts->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
-+		fs->fru_type = data[off + 4];
-+		fs->value = data[off + 5];
-+	}
-+		break;
-+	case POWER:
-+	{
-+		struct p9_power_sensor *ps =
-+			&(((struct p9_power_sensor *)sensor)[snum]);
-+
-+		ps->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
-+		ps->function_id = data[off + 4];
-+		ps->apss_channel = data[off + 5];
-+		ps->update_tag =
-+			be32_to_cpu(get_unaligned((u32 *)&data[off + 8]));
-+		ps->accumulator =
-+			be64_to_cpu(get_unaligned((u64 *)&data[off + 12]));
-+		ps->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 20]));
-+	}
-+		break;
-+	case CAPS:
-+	{
-+		struct p9_caps_sensor *cs =
-+			&(((struct p9_caps_sensor *)sensor)[snum]);
-+
-+		cs->curr_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off]));
-+		cs->curr_powerreading =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 2]));
-+		cs->norm_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 4]));
-+		cs->max_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 6]));
-+		cs->min_powercap =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 8]));
-+		cs->user_powerlimit =
-+			be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
-+		cs->user_powerlimit_source = data[off + 12];
-+	}
-+		break;
-+	};
-+}
-+
-+void *p9_alloc_sensor(int sensor_type, int num_sensors)
-+{
-+	switch (sensor_type) {
-+	case FREQ:
-+		return kcalloc(num_sensors, sizeof(struct p9_freq_sensor),
-+			       GFP_KERNEL);
-+	case TEMP:
-+		return kcalloc(num_sensors, sizeof(struct p9_temp_sensor),
-+			       GFP_KERNEL);
-+	case POWER:
-+		return kcalloc(num_sensors, sizeof(struct p9_power_sensor),
-+			       GFP_KERNEL);
-+	case CAPS:
-+		return kcalloc(num_sensors, sizeof(struct p9_caps_sensor),
-+			       GFP_KERNEL);
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+int p9_get_sensor(struct occ *driver, int sensor_type, int sensor_num,
-+		  u32 hwmon, long *val)
-+{
-+	int rc = 0;
-+	void *sensor;
-+
-+	if (sensor_type == POWER) {
-+		if (hwmon == hwmon_power_cap || hwmon == hwmon_power_cap_max ||
-+		    hwmon == hwmon_power_cap_min || hwmon == hwmon_power_max ||
-+		    hwmon == hwmon_power_alarm ||
-+		    hwmon == hwmon_power_cap_alarm)
-+			sensor_type = CAPS;
-+	}
-+
-+	sensor = occ_get_sensor(driver, sensor_type);
-+	if (!sensor)
-+		return -ENODEV;
-+
-+	switch (sensor_type) {
-+	case FREQ:
-+	{
-+		struct p9_freq_sensor *fs =
-+			&(((struct p9_freq_sensor *)sensor)[snum]);
-+
-+		switch (hwmon) {
-+		case hwmon_in_input:
-+			*val = fs->value;
-+			break;
-+		case hwmon_in_label:
-+			*val = fs->sensor_id;
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	case TEMP:
-+	{
-+		struct p9_temp_sensor *ts =
-+			&(((struct p9_temp_sensor *)sensor)[snum]);
-+
-+		switch (hwmon) {
-+		case hwmon_temp_input:
-+			*val = ts->value;
-+			break;
-+		case hwmon_temp_type:
-+			*val = ts->fru_type;
-+			break;
-+		case hwmon_temp_label:
-+			*val = ts->sensor_id;
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	case POWER:
-+	{
-+		struct p9_power_sensor *ps =
-+			&(((struct p9_power_sensor *)sensor)[snum]);
-+
-+		switch (hwmon) {
-+		case hwmon_power_input:
-+			*val = ps->value;
-+			break;
-+		case hwmon_power_label:
-+			*val = ps->sensor_id;
-+			break;
-+		case hwmon_power_average_min:
-+			*val = ((u32 *)(&ps->accumulator))[0];
-+			break;
-+		case hwmon_power_average_max:
-+			*val = ((u32 *)(&ps->accumulator))[1];
-+			break;
-+		case hwmon_power_average_interval:
-+			*val = ps->update_tag;
-+			break;
-+		case hwmon_power_reset_history:
-+			*val = ps->function_id | (ps->apss_channel << 8);
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	case CAPS:
-+	{
-+		struct p9_caps_sensor *cs =
-+			&(((struct p9_caps_sensor *)sensor)[snum]);
-+
-+		switch (hwmon) {
-+		case hwmon_power_cap:
-+			*val = cs->curr_powercap;
-+			break;
-+		case hwmon_power_cap_max:
-+			*val = cs->max_powercap;
-+			break;
-+		case hwmon_power_cap_min:
-+			*val = cs->min_powercap;
-+			break;
-+		case hwmon_power_max:
-+			*val = cs->norm_powercap;
-+			break;
-+		case hwmon_power_alarm:
-+			*val = cs->user_powerlimit;
-+			break;
-+		case hwmon_power_cap_alarm:
-+			*val = cs->user_powerlimit_source;
-+			break;
-+		default:
-+			rc = -EOPNOTSUPP;
-+		}
-+	}
-+		break;
-+	default:
-+		rc = -EINVAL;
-+	}
-+
-+	return rc;
-+}
-+
-+static const struct occ_ops p9_ops = {
-+	.parse_sensor = p9_parse_sensor,
-+	.alloc_sensor = p9_alloc_sensor,
-+	.get_sensor = p9_get_sensor,
-+};
-+
-+static const struct occ_config p9_config = {
-+	.command_addr = 0xFFFBE000,
-+	.response_addr = 0xFFFBF000,
-+};
-+
-+const u32 *p9_get_sensor_hwmon_configs()
-+{
-+	return p9_sensor_hwmon_configs;
-+}
-+EXPORT_SYMBOL(p9_get_sensor_hwmon_configs);
-+
-+struct occ *p9_occ_start(struct device *dev, void *bus,
-+			 struct occ_bus_ops *bus_ops)
-+{
-+	return occ_start(dev, bus, bus_ops, &p9_ops, &p9_config);
-+}
-+EXPORT_SYMBOL(p9_occ_start);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("P9 OCC sensors");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ_p9.h b/drivers/hwmon/occ/occ_p9.h
-new file mode 100644
-index 0000000..18ca16a
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_p9.h
-@@ -0,0 +1,30 @@
-+/*
-+ * occ_p9.h - OCC hwmon driver
-+ *
-+ * This file contains Power9-specific function prototypes
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __OCC_P9_H__
-+#define __OCC_P9_H__
-+
-+#include "scom.h"
-+
-+struct device;
-+
-+const u32 *p9_get_sensor_hwmon_configs(void);
-+struct occ *p9_occ_start(struct device *dev, void *bus,
-+			 struct occ_bus_ops *bus_ops);
-+
-+#endif /* __OCC_P9_H__ */
+>                                 reg = <0x035000 0x130>,
+>                                         <0x035200 0x200>,
+>                                         <0x035400 0x1dc>;
+>                                 #phy-cells = <0>;
+> 
+>                                 clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+>                                 clock-names = "pipe0";
+>                                 resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+>                                 reset-names = "lane0";
+>                         };
+> 
+>                       pciephy_p1: port@1 {
+>                                 reg = <0x036000 0x130>,
+>                                         <0x036200 0x200>,
+>                                         <0x036400 0x1dc>;
+>                                 #phy-cells = <0>;
+> 
+>                                 clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
+>                                 clock-names = "pipe1";
+>                                 resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+>                                 reset-names = "lane1";
+>                         };
+> 
+>                         pciephy_p2: port@2 {
+>                                 reg = <0x037000 0x130>,
+>                                         <0x037200 0x200>,
+>                                         <0x037400 0x1dc>;
+>                                 #phy-cells = <0>;
+> 
+>                                 clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
+>                                 clock-names = "pipe2";
+>                                 resets = <&gcc GCC_PCIE_2_PHY_BCR>;
+>                                 reset-names = "lane2";
+>                         };
+>                 };
+> --------------------
+> 
+> let me know if this looks okay.
+> 
+> 
+
+What's the plan for non-pcie qmp phy binding? In that case we
+don't have ports, so it gets folded into one node?
+
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
