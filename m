@@ -1,75 +1,34 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Roger Shimizu <rogershimizu@gmail.com>
 Subject: Re: [PATCH v4 1/2] power: reset: add linkstation-reset driver
-Date: Thu, 26 Jan 2017 16:28:11 +0100
-Message-ID: <8760l1zvqs.fsf@free-electrons.com>
+Date: Fri, 27 Jan 2017 00:33:07 +0900
+Message-ID: <CAEQ9gE=+_OMV=J81mCddKsfbSWT3OtAojeg4oBebKg4YjXda=g@mail.gmail.com>
 References: <20161227070611.14852-1-rogershimizu@gmail.com>
-        <20170107150451.17912-1-rogershimizu@gmail.com>
-        <20170107150451.17912-2-rogershimizu@gmail.com>
-        <CAEQ9gEkoKc0Yv+kLYGWgHZZW92u0tW8E9U0eT7ZhAx79yKxzLQ@mail.gmail.com>
-        <20170119044327.j3d2rlpn5va3iw37@earth>
+ <20170107150451.17912-1-rogershimizu@gmail.com> <20170107150451.17912-2-rogershimizu@gmail.com>
+ <CAEQ9gEkoKc0Yv+kLYGWgHZZW92u0tW8E9U0eT7ZhAx79yKxzLQ@mail.gmail.com>
+ <20170119044327.j3d2rlpn5va3iw37@earth> <8760l1zvqs.fsf@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170119044327.j3d2rlpn5va3iw37@earth> (Sebastian Reichel's
-        message of "Thu, 19 Jan 2017 05:43:28 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ryan Tandy <ryan-pRYBVO4bdZ33fQ9qLvQP4Q@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Herbert Valerio Riedel <hvr-mXXj517/zsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Michlmayr <tbm-R+vWnYXSFMfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sylver Bruneau <sylver.bruneau-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <8760l1zvqs.fsf@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Rob Herring <robh@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Ryan Tandy <ryan@nardis.ca>, linux-pm@vger.kernel.org, Herbert Valerio Riedel <hvr@gnu.org>, devicetree@vger.kernel.org, Martin Michlmayr <tbm@cyrius.com>, linux-arm-kernel@lists.infradead.org, Sylver Bruneau <sylver.bruneau@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
- 
- On jeu., janv. 19 2017, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+Dear Gregory,
 
-> Hi Roger,
+Thanks for contacting!
+
+On Fri, Jan 27, 2017 at 12:28 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
 >
-> On Wed, Jan 18, 2017 at 09:08:13PM +0900, Roger Shimizu wrote:
->> On Sun, Jan 8, 2017 at 12:04 AM, Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Buffalo Linkstation / KuroBox and their variants need magic command
->> > sending to UART1 to power-off.
->> >
->> > Power driver linkstation-reset implements the magic command and I/O
->> > routine, which come from files listed below:
->> >   - arch/arm/mach-orion5x/kurobox_pro-setup.c
->> >   - arch/arm/mach-orion5x/terastation_pro2-setup.c
->> 
->> I think there's not much concern regarding to this series.
->> Could you kindly help to apply this patch?
+> What is te status for your series?
 >
-> Well you dropped the DT binding, but still introduce new DT
-> properties. Since they are not documented without the binding
-> I won't merge this. DT binding documentation is not optional.
-> In other words: NAK on the binding effectively means NAK on
-> the driver in its current state.
->
-> If you want to see this merged rebase it to Rob's generic
-> serial bindings [0] and help to support him getting everything
-> into mainline ASAP. Currently the feedback seems to be quite
-> positive, so I hope to see it merged for 4.11.
->
-> [0] https://lwn.net/Articles/711794/ (current proposal from 2 days
-> ago)
+> Do you plan sending a new version soon?
 
-What is te status for your series?
+I'm still trying/working on it, but seems won't finish it very soon.
 
-Do you plan sending a new version soon?
-
-Gregory
-
-
->
-> -- Sebastian
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
+Cheers,
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Roger Shimizu, GMT +9 Tokyo
+PGP/GPG: 4096R/6C6ACD6417B3ACB1
