@@ -1,32 +1,35 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 05/12] Document: dt: binding: imx: update pinctrl doc
- for imx6sll
-Date: Thu, 26 Jan 2017 15:05:20 +0100
-Message-ID: <CACRpkdY_dvUDytrwwPv9CXNu1wXEKFHKyjQQKR-Acu6=WAHZnA@mail.gmail.com>
-References: <1482832070-22668-1-git-send-email-ping.bai@nxp.com>
- <1482832070-22668-6-git-send-email-ping.bai@nxp.com> <CACRpkdYUME8K+JusA0ORRKqxyBuhDdyei8eg7UZbHidKw9=bQw@mail.gmail.com>
- <AM3PR04MB5304992095753B761E66A9A87640@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdYTpEHyzBY-mA4YUsj=xt46Pibka3-4VHwUXosfgbgp1Q@mail.gmail.com>
- <AM3PR04MB530A88C5C0E7C6AD2C59B9E87790@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkda1a4+yOrzBnKs6J84PS0StwQ68gHxDub_u7i5ofU9s7w@mail.gmail.com>
- <AM3PR04MB530F532D867C08824DADDC9877C0@AM3PR04MB530.eurprd04.prod.outlook.com>
- <CACRpkdaxvf6eHujfvKuOsRb69aL8+4jTE-aR3a6ywhytTEu6Hw@mail.gmail.com>
- <20170123060454.GD5662@dragon> <AM3PR04MB530E214A598B06ECFFE551487720@AM3PR04MB530.eurprd04.prod.outlook.com>
+Subject: Re: [PATCHv4 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
+Date: Thu, 26 Jan 2017 15:11:14 +0100
+Message-ID: <CACRpkdZ2M4g+wFMADsvx_yBV6ZjsZz33VLH4vspO-sd9hZ6Qhw@mail.gmail.com>
+References: <20170113091222.7132-1-chris.packham@alliedtelesis.co.nz>
+ <20170113091222.7132-4-chris.packham@alliedtelesis.co.nz> <20170119100244.GX27312@n2100.armlinux.org.uk>
+ <c873040cba1a4d5aa15dbaf3c5cc44e0@svr-chch-ex1.atlnz.lc> <6eb30a9ec3cf4fc9971f33742f334980@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <AM3PR04MB530E214A598B06ECFFE551487720@AM3PR04MB530.eurprd04.prod.outlook.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jacky Bai <ping.bai@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jacky.baip@gmail.com" <jacky.baip@gmail.com>, Anson Huang <anson.huang@nxp.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <6eb30a9ec3cf4fc9971f33742f334980@svr-chch-ex1.atlnz.lc>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 8:17 AM, Jacky Bai <ping.bai@nxp.com> wrote:
+On Mon, Jan 23, 2017 at 9:18 AM, Chris Packham
+<Chris.Packham@alliedtelesis.co.nz> wrote:
 
-> i.MX8 kernel support is in development stage. The code has not been finalized.
-> For now, i.MX8 shares most of the pinctrl code with i.MX6 and use the same pinconfig method.
+> I noticed the mvebu pinctrl series isn't in Linus's (Torvalds) tree. Is
+> this on the cards for v4.10 or is it waiting for the next merge window?
 
-Please switch to generic bindings already.
+Next merge window.
+
+> In other words should I send v5 or my series now or wait for this to be
+> merged so I can rebase on top of it?
+
+Rebase it on my devel branch in the pin control tree:
+git clone git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+cd linux-pinctrl
+git checkout -b devel origin/devel
+[git am .. / git pull old-branch]
 
 Yours,
 Linus Walleij
