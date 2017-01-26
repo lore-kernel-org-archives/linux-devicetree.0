@@ -1,41 +1,142 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 10/11] arm64: dts: allwinner: Remove no longer used
- pinctrl/sun4i-a10.h header
-Date: Thu, 26 Jan 2017 19:23:25 +0800
-Message-ID: <CAGb2v66cQoPQzd6W1D8bZ5hSURfGP3icJjeoo1mNk2ccG9B2vw@mail.gmail.com>
-References: <20170124023230.3990-1-wens@csie.org> <20170124023230.3990-11-wens@csie.org>
- <20170126101529.j3fuku4hyy3pbge3@lukather>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 07/12] mmc: sdhci-xenon: Add support to PHYs of Marvell
+ Xenon SDHC.
+Date: Thu, 26 Jan 2017 12:29:33 +0100
+Message-ID: <CAPDyKFpx23wio-QmDrx277+YO2Jt2S0ZrokZ2E4K+oVURSR1Hg@mail.gmail.com>
+References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
+ <130ccd5a0fe4f822b954e0256c9dccec0b6ca523.1484154449.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170126101529.j3fuku4hyy3pbge3@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <130ccd5a0fe4f822b954e0256c9dccec0b6ca523.1484154449.git-series.gregory.clement@free-electrons.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ziji Hu <huziji@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ryan
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2017 at 6:15 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Jan 24, 2017 at 10:32:29AM +0800, Chen-Yu Tsai wrote:
->> All dts files for the sunxi platform have been switched to the generic
->> pinconf bindings. As a result, the sunxi specific pinctrl macros are
->> no longer used.
->>
->> Remove the #include entry with the following command:
->>
->>     sed -i -e '/pinctrl\/sun4i-a10.h/D' \
->>       arch/arm64/boot/dts/allwinner/*.dts?
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->
-> Applied, thanks!
->
-> Maybe we should also remove the header entirely?
+[...]
 
-I don't know. What do we do about deprecated bindings?
+> +
+> +static inline bool temp_stage_hs200_to_hs400(struct sdhci_host *host,
+> +                                            struct sdhci_xenon_priv *priv)
+> +{
+> +       /*
+> +        * Tmep stages from HS200 to HS400
+> +        * from HS200 to HS in 200MHz
+> +        * from 200MHz to 52MHz
+> +        */
+> +       if (((priv->timing == MMC_TIMING_MMC_HS200) &&
+> +            (host->timing == MMC_TIMING_MMC_HS)) ||
+> +           ((host->timing == MMC_TIMING_MMC_HS) &&
+> +            (priv->clock > host->clock)))
+> +               return true;
+> +
+> +       return false;
+> +}
+> +
+> +static inline bool temp_stage_hs400_to_h200(struct sdhci_host *host,
+> +                                           struct sdhci_xenon_priv *priv)
+> +{
+> +       /*
+> +        * Temp stages from HS400 t0 HS200:
+> +        * from 200MHz to 52MHz in HS400
+> +        * from HS400 to HS DDR in 52MHz
+> +        * from HS DDR to HS in 52MHz
+> +        * from HS to HS200 in 52MHz
+> +        */
+> +       if (((priv->timing == MMC_TIMING_MMC_HS400) &&
+> +            ((host->clock == MMC_HIGH_52_MAX_DTR) ||
+> +             (host->timing == MMC_TIMING_MMC_DDR52))) ||
+> +           ((priv->timing == MMC_TIMING_MMC_DDR52) &&
+> +            (host->timing == MMC_TIMING_MMC_HS)) ||
+> +           ((host->timing == MMC_TIMING_MMC_HS200) &&
+> +            (host->clock == MMC_HIGH_52_MAX_DTR)))
+> +               return true;
+> +
+> +       return false;
+> +}
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Both the above functions seems to be really fragile to use. If
+anything changes in the core layer related to these sequences, you may
+end up getting a wrong validated expression.
+
+Perhaps an option would be to add one or two new mmc host ops, which
+could be called during the related hs200/400 sequences that could make
+this less fragile for you? What do you think?
+
+> +
+> +/*
+> + * If eMMC PHY Slow Mode is required in lower speed mode in SDR mode
+> + * (SDLCK < 55MHz), enable Slow Mode to bypass eMMC PHY.
+> + * SDIO slower SDR mode also requires Slow Mode.
+> + *
+> + * If Slow Mode is enabled, return true.
+> + * Otherwise, return false.
+> + */
+> +static bool emmc_phy_slow_mode(struct sdhci_host *host,
+> +                              unsigned char timing)
+> +{
+> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> +       struct sdhci_xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+> +       struct emmc_phy_params *params = priv->phy_params;
+> +       struct xenon_emmc_phy_regs *phy_regs = priv->emmc_phy_regs;
+> +       u32 reg;
+> +
+> +       /* Skip temp stages from HS200 to HS400 */
+> +       if (temp_stage_hs200_to_hs400(host, priv))
+> +               return false;
+> +
+> +       /* Skip temp stages from HS400 t0 HS200 */
+> +       if (temp_stage_hs400_to_h200(host, priv))
+> +               return false;
+> +
+> +       reg = sdhci_readl(host, phy_regs->timing_adj);
+> +       /* Enable Slow Mode for SDIO in slower SDR mode */
+> +       if ((priv->init_card_type == MMC_TYPE_SDIO) &&
+
+Ah, noticed that there is some specific things going on here for SDIO
+here as well. So perhaps you do need to implement the ->init_card()
+ops anyway. Which I suggested not to, for patch6. :-)
+
+Although, there is one problem with using ->init_card(). That is
+particularly for removable cards, as mmc_rescan() doesn't invoke
+->init_card() when it removes a card, which means, you may use old and
+thus wrong information about what kind of card in the next card
+detection attempt. So perhaps ->init_card() needs to be called from
+the core before it even figured out what kind of card it is trying to
+detect, as to allow the callbacks to reset some data.
+
+Or perhaps you can think of another clever way!?
+
+
+> +           ((timing == MMC_TIMING_UHS_SDR25) ||
+> +            (timing == MMC_TIMING_UHS_SDR12) ||
+> +            (timing == MMC_TIMING_SD_HS) ||
+> +            (timing == MMC_TIMING_LEGACY))) {
+> +               reg |= XENON_TIMING_ADJUST_SLOW_MODE;
+> +               sdhci_writel(host, reg, phy_regs->timing_adj);
+> +               return true;
+> +       }
+> +
+> +       /* Check if Slow Mode is required in lower speed mode in SDR mode */
+> +       if (((timing == MMC_TIMING_UHS_SDR50) ||
+> +            (timing == MMC_TIMING_UHS_SDR25) ||
+> +            (timing == MMC_TIMING_UHS_SDR12) ||
+> +            (timing == MMC_TIMING_SD_HS) ||
+> +            (timing == MMC_TIMING_MMC_HS) ||
+> +            (timing == MMC_TIMING_LEGACY)) && params->slow_mode) {
+> +               reg |= XENON_TIMING_ADJUST_SLOW_MODE;
+> +               sdhci_writel(host, reg, phy_regs->timing_adj);
+> +               return true;
+> +       }
+> +
+> +       reg &= ~XENON_TIMING_ADJUST_SLOW_MODE;
+> +       sdhci_writel(host, reg, phy_regs->timing_adj);
+> +       return false;
+> +}
+> +
+
+[...]
+
+Kind regards
+Uffe
