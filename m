@@ -1,64 +1,41 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCHv3 4/5] arm: mvebu: Add device tree for 98DX3236 SoCs
-Date: Thu, 26 Jan 2017 20:07:47 +0000
-Message-ID: <3493169361fe445ba971951b40360301@svr-chch-ex1.atlnz.lc>
-References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz>
- <20170106041517.9589-5-chris.packham@alliedtelesis.co.nz>
- <87inp1zwlg.fsf@free-electrons.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v2 6/8] mfd: exynos-lpass: Add support for clocks
+Date: Thu, 26 Jan 2017 22:09:53 +0200
+Message-ID: <20170126200953.sfyd64qk34th4suh@kozik-lap>
+References: <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
+ <CGME20170126083404eucas1p132ce7a0792505367f6a001f21e9d1632@eucas1p1.samsung.com>
+ <1485419634-28331-7-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485419634-28331-7-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/17 04:10, Gregory CLEMENT wrote:
-> Hi Chris,
->
->  On ven., janv. 06 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
->
->> The Marvell 98DX3236, 98DX3336, 98DX4521 and variants are switch ASICs
->> with integrated CPUs. They are similar to the Armada XP SoCs but have
->> different I/O interfaces.
->
-> Before sending a new version I have a few remarks:
->
+On Thu, Jan 26, 2017 at 09:33:52AM +0100, Marek Szyprowski wrote:
+> Exynos LPASS requires some clocks to be enabled to make any access to its
+> registers. This patch adds code for handling such clocks. For current set
+> of registers it is enough to keep sfr0_ctrl clock enabled. Till now it
+> worked only because those clocks were enabled by bootloader and driver
+> probe() happened before they were disabled by clock core because of lack
+> of users. Handling those clocks is also needed to make it possible to
+> enable support for audio power domain.
+> 
+> This patch requires adding sfr0_ctrl clock to device tree.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  .../devicetree/bindings/mfd/samsung,exynos5433-lpass.txt       |  6 ++++++
+>  drivers/mfd/exynos-lpass.c                                     | 10 ++++++++++
+>  2 files changed, 16 insertions(+)
 >
 
-[snip]
+Thanks for changes. Looks good now.
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-I'll update the dtsi files to use the node labels and correct the 
-commends as requested
+Best regards,
+Krzysztof
 
->
-> Why the following node is not part of the dtsi?
->
-> Gregory
->
->> +			resume@20980 {
->> +				compatible = "marvell,98dx3336-resume-ctrl";
->> +				reg = <0x20980 0x10>;
->> +			};
->> +		};
->> +	};
-
-The 98DX9236 has a single ARMv7 core. As such this resume control isn't 
-present on it. The 98DX3336 and 98DX4521 have dual ARMv7 cores and this 
-is used to boot the second core (SMP support is a little different 
-compared to Armada-XP).
-
-In other words {98DX3336, 98DX4521} = 98DX9236 + an additional core. At 
-the switch packet processor level there are more differences but as far 
-as the kernel is concerned the only real difference is the number of cores.
