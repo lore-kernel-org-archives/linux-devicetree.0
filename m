@@ -1,184 +1,390 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH v3 2/4] dt-bindings: Add TI SCI PM Domains
-Date: Thu, 26 Jan 2017 09:09:35 -0600
-Message-ID: <fec2e1b2-df90-e9ba-4925-ecdc12d696b9@ti.com>
-References: <20170104205536.15963-1-d-gerlach@ti.com>
- <7bd282d9-df6f-f4c6-1f7f-c8ed81c78af3@ti.com>
- <CAL_JsqKxU4c=KSn0=xX9kmbk498fhqpiXMeGjcoe8Ah48FAzUg@mail.gmail.com>
- <3bb89649-fd2a-acc6-6968-e54a00842ce2@ti.com>
- <CAL_JsqL+L1oHAOv7tLevzbtRFSKRs9J01SgF=HR_vNNqNV+4+Q@mail.gmail.com>
- <84d7d49b-933b-8b26-f18a-3a5054738cb1@ti.com>
- <CAL_JsqJ9RitNC7ihC8ckJgV+49kaHk=W9tgdNBSjEfydhQS46A@mail.gmail.com>
- <0eaa9914-83f1-7716-cf04-1e3dd44df647@ti.com>
- <4cb25cf9-216f-2e18-f45d-ef7e48fa6c5e@ti.com> <m2ziip2puf.fsf@baylibre.com>
- <CAL_Jsq+Vp8iYrAUmuSRzeeY_G6CUqFqG6XB6erDxo1RYo3g4=g@mail.gmail.com>
- <CAPDyKFqzs59N5bc89X-96Fgy9b=_+s8zYmHHshQeDrJCnaqprA@mail.gmail.com>
- <58821CA2.4050701@ti.com>
- <CAPDyKFpTyn2isNahywmOOSWiZKov9xsudyWi_i-FejXjC+1AZw@mail.gmail.com>
- <ec2f1697-4c60-fd88-6593-2a69ca7f5c83@ti.com>
- <CAPDyKFq3zjyubxf3wc1V+F2W3rbnjj4ObFnHFvda+wCs4rBtnw@mail.gmail.com>
- <23936395-d653-56c8-13f9-6dfeb6e9257b@ti.com>
- <CAL_Jsq+9oEJJtHC4Gp_mWy_wJMLXsv2jgqKCMK8jm1MSWT-LRg@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3 5/5] arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
+Date: Thu, 26 Jan 2017 16:12:49 +0100
+Message-ID: <87efzpzwge.fsf@free-electrons.com>
+References: <20170105033641.6212-1-chris.packham@alliedtelesis.co.nz>
+        <20170106041517.9589-1-chris.packham@alliedtelesis.co.nz>
+        <20170106041517.9589-6-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+9oEJJtHC4Gp_mWy_wJMLXsv2jgqKCMK8jm1MSWT-LRg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Tero Kristo <t-kristo@ti.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Keerthy <j-keerthy@ti.com>, Russell King <rmk+kernel@armlinux.org.uk>, Sudeep Holla <sudeep.holla@arm.com>, Santosh Shilimkar <ssantosh@kernel.org>, Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170106041517.9589-6-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> (Chris
+        Packham's message of "Fri, 6 Jan 2017 17:15:02 +1300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2017 04:32 PM, Rob Herring wrote:
-> On Wed, Jan 25, 2017 at 10:59 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
->> On 01/24/2017 04:03 AM, Ulf Hansson wrote:
->>>
->>> On 23 January 2017 at 21:11, Dave Gerlach <d-gerlach@ti.com> wrote:
->>>>
->>>> On 01/20/2017 10:52 AM, Ulf Hansson wrote:
->>>>>
->>>>>
->>>>> [...]
->>>>>
->>>>>>>> Another option is create something new either common or TI SCI
->>>>>>>> specific. It could be just a table of ids and phandles in the SCI
->>>>>>>> node. I'm much more comfortable with an isolated property in one node
->>>>>>>> than something scattered throughout the DT.
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> To me, this seems like the best possible solution.
->>>>>>>
->>>>>>> However, perhaps we should also consider the SCPI Generic power domain
->>>>>>> (drivers/firmware/scpi_pm_domain.c), because I believe it's closely
->>>>>>> related.
->>>>>>> To change the power state of a device, this PM domain calls
->>>>>>> scpi_device_set|get_power_state() (drivers/firmware/arm_scpi.c), which
->>>>>>> also needs a device id as a parameter. Very similar to our case with
->>>>>>> the TI SCI domain.
->>>>>>>
->>>>>>> Currently these SCPI device ids lacks corresponding DT bindings, so
->>>>>>> the scpi_pm_domain tries to work around it by assigning ids
->>>>>>> dynamically at genpd creation time.
->>>>>>>
->>>>>>> That makes me wonder, whether we should think of something
->>>>>>> common/generic?
->>>>>>
->>>>>>
->>>>>>
->>>>>> When you say something common/generic, do you mean a better binding for
->>>>>> genpd,
->>>>>> or something bigger than that like a new driver? Because I do think a
->>>>>> phandle
->>>>>> cell left open for the genpd provider to interpret solves both the scpi
->>>>>> and
->>>>>> ti-sci problem we are facing here in the best way. Using generic PM
->>>>>> domains lets
->>>>>> us do exactly what we want apart from interpreting the phandle cell
->>>>>> with
->>>>>> our
->>>>>> driver, and I feel like anything else we try at this point is just
->>>>>> going
->>>>>> to be
->>>>>> to work around that. Is bringing back genpd xlate something we can
->>>>>> discuss?
->>>>>
->>>>>
->>>>>
->>>>> Bringing back xlate, how would that help? Wouldn't that just mean that
->>>>> you will get one genpd per device? That's not an option, I think we
->>>>> are all in agreement to that.
->>>>
->>>>
->>>>
->>>> Sure, perhaps the custom xlate wouldn't be the right way to do it, as we
->>>> wouldn't be able to associate a device directly to a phandle, at least
->>>> with
->>>> how it was implemented before, but I think we can skip that entirely.
->>>> Does
->>>> opening up the interpretation of the cells of the 'power-domains' phandle
->>>> not solve all of these issues? Is that out of the question?
->>>>
->>>> genpd_xlate_simple currently just makes sure the args_count of the
->>>> 'power-domains' phandle was zero and bails if it was not. Why couldn't we
->>>> remove this check and let the driver interpret it while still using
->>>> of_genpd_add_provider_simple to register the provider? It's still a
->>>> 'simple'
->>>> provider from the perspective of the genpd framework and the actual pm
->>>> domain mapping will not change, but now the driver can parse the cells
->>>> and
->>>> do whatever it needs to, such as reading a device id.
->>>>
->>>> I think that's a bit more flexible and will avoid breaking anything that
->>>> is
->>>> there today.
->>>
->>>
->>> Would you mind providing an example? Perhaps also some code snippets
->>> dealing with the parsing?
->>
->>
->> So again the goal of this is to move the ti,sci-id value back to
->> power-domains phandle instead of having a separate property, so that would
->> be step one in the DT. Then in the power-domains node change
->> #power-domain-cells to one. And then from there, the only change to the
->> genpd framework is this:
->
-> I'd still like to understand how the ID is used in order to understand
-> if as a power-domain cell is appropriate. I think the test is this: is
-> the ID meaningful to (or defined by) the device or the power domain
-> controller? The former should be a property in the device node. The
-> latter should be phandle args.
+Hi Chris,
+ 
+ On ven., janv. 06 2017, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> wrote:
 
-The device itself doesn't care about the ID or ever need to know what it is. The 
-power domain controller is the only user of the ID. The power domain controller 
-needs the ID for a specific device to be able to turn it on, so during probe of 
-each device the power-domain controller makes this association which is why I 
-included it in each device node, so I think it fits as a phandle arg based on 
-your test.
-
+> These boards are Marvell's evaluation boards for the 98DX4251 and
+> 98DX3336 SoCs.
 >
->> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
->> index a5e1262b964b..b82e61f0bcfa 100644
->> --- a/drivers/base/power/domain.c
->> +++ b/drivers/base/power/domain.c
->> @@ -1603,8 +1603,6 @@ static struct generic_pm_domain genpd_xlate_simple
->>                                       struct of_phandle_args *genpdspec,
->>                                       void *data)
->>  {
->> -       if (genpdspec->args_count != 0)
->> -               return ERR_PTR(-EINVAL);
->>         return data;
->>  }
->>
->>
->> because genpd_xlate_simple only checks that the phandle is zero so that it
->> can fail if it is not, but there's no functional reason it needs to do this.
->> The genpd framework works as it did before no matter what the cells are set
->> to if using of_genpd_add_provider_simple. Then in the attach_dev callback
->> inside the ti_sci_pm_domains driver instead of doing
->>
->>         ret = of_property_read_u32(np, "ti,sci-id", &idx);
->>
->> to read the ti,sc-id for a device into idx we can now do:
->>
->>        ret = of_parse_phandle_with_args(np, "power-domains",
->>                                    "#power-domain-cells", 0, &pd_args);
->>        idx = pd_args.args[0];
->>
->> or even simpler from within our driver
->>
->>         ret = of_property_read_u32_index(np, "power-domains", 1, &idx);
+> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+> ---
+>     Change in v2/v3:
+>     - None
 >
-> This you should not be doing. The client driver shouldn't care how
-> many cells or what their values are.
-
-Client drivers in other places use xlate functions, like in the drivers/reset 
-framework, to interpret the cells. Is doing it this way really that different?
-
-Regards,
-Dave
-
+>  arch/arm/boot/dts/db-dxbc2.dts      | 159 ++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/db-xc3-24g4xg.dts | 155 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 314 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/db-dxbc2.dts
+>  create mode 100644 arch/arm/boot/dts/db-xc3-24g4xg.dts
 >
-> Rob
+> diff --git a/arch/arm/boot/dts/db-dxbc2.dts b/arch/arm/boot/dts/db-dxbc2.dts
+> new file mode 100644
+> index 000000000000..f56786cea5f8
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/db-dxbc2.dts
+> @@ -0,0 +1,159 @@
+> +/*
+> + * Device Tree file for DB-DXBC2 board
+> + *
+> + * Copyright (C) 2016 Allied Telesis Labs
+> + *
+> + * Based on armada-xp-db.dts
+
+Since the date you base on  armada-xp-db.dts, the file has changed
+especially due to this series:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2016-November/468585.html
+
+and the fix adding the missing characters in the license.
+
+Could you update it?
+
+Thanks
+
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + *
+> + * Note: this Device Tree assumes that the bootloader has remapped the
+> + * internal registers to 0xf1000000 (instead of the default
+> + * 0xd0000000). The 0xf1000000 is the default used by the recent,
+> + * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
+> + * boards were delivered with an older version of the bootloader that
+> + * left internal registers mapped at 0xd0000000. If you are in this
+> + * situation, you should either update your bootloader (preferred
+> + * solution) or the below Device Tree should be adjusted.
+> + */
+> +
+> +/dts-v1/;
+> +#include "armada-xp-98dx4251.dtsi"
+> +
+> +/ {
+> +	model = "Marvell Bobcat2 Evaluation Board";
+> +	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+> +			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
+> +			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
+> +
+> +		devbus-bootcs {
+> +			status = "okay";
+> +
+> +			/* Device Bus parameters are required */
+> +
+> +			/* Read parameters */
+> +			devbus,bus-width    = <16>;
+> +			devbus,turn-off-ps  = <60000>;
+> +			devbus,badr-skew-ps = <0>;
+> +			devbus,acc-first-ps = <124000>;
+> +			devbus,acc-next-ps  = <248000>;
+> +			devbus,rd-setup-ps  = <0>;
+> +			devbus,rd-hold-ps   = <0>;
+> +
+> +			/* Write parameters */
+> +			devbus,sync-enable = <0>;
+> +			devbus,wr-high-ps  = <60000>;
+> +			devbus,wr-low-ps   = <60000>;
+> +			devbus,ale-wr-ps   = <60000>;
+> +		};
+> +
+> +		internal-regs {
+> +			serial@12000 {
+> +				status = "okay";
+> +			};
+> +			serial@12100 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				clock-frequency = <100000>;
+> +				status = "okay";
+> +			};
+> +
+> +			mvsdio@d4000 {
+> +				pinctrl-0 = <&sdio_pins>;
+> +				pinctrl-names = "default";
+> +				status = "okay";
+> +				/* No CD or WP GPIOs */
+> +				broken-cd;
+> +			};
+> +
+> +			nand@d0000 {
+> +				status = "okay";
+> +				num-cs = <1>;
+> +				marvell,nand-keep-config;
+> +				marvell,nand-enable-arbiter;
+> +				nand-on-flash-bbt;
+> +				nand-ecc-strength = <4>;
+> +				nand-ecc-step-size = <512>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +
+> +	spi-flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "m25p64";
+> +		reg = <0>; /* Chip select 0 */
+> +		spi-max-frequency = <20000000>;
+> +		m25p,fast-read;
+> +
+> +		partition@u-boot {
+> +			reg = <0x00000000 0x00100000>;
+> +			label = "u-boot";
+> +		};
+> +		partition@u-boot-env {
+> +			reg = <0x00100000 0x00040000>;
+> +			label = "u-boot-env";
+> +		};
+> +		partition@unused {
+> +			reg = <0x00140000 0x00ec0000>;
+> +			label = "unused";
+> +		};
+> +
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/db-xc3-24g4xg.dts b/arch/arm/boot/dts/db-xc3-24g4xg.dts
+> new file mode 100644
+> index 000000000000..5eb89ffb9a7d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/db-xc3-24g4xg.dts
+> @@ -0,0 +1,155 @@
+> +/*
+> + * Device Tree file for DB-XC3-24G4XG board
+> + *
+> + * Copyright (C) 2016 Allied Telesis Labs
+> + *
+> + * Based on armada-xp-db.dts
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + *
+> + * Note: this Device Tree assumes that the bootloader has remapped the
+> + * internal registers to 0xf1000000 (instead of the default
+> + * 0xd0000000). The 0xf1000000 is the default used by the recent,
+> + * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
+> + * boards were delivered with an older version of the bootloader that
+> + * left internal registers mapped at 0xd0000000. If you are in this
+> + * situation, you should either update your bootloader (preferred
+> + * solution) or the below Device Tree should be adjusted.
+> + */
+> +
+> +/dts-v1/;
+> +#include "armada-xp-98dx3336.dtsi"
+> +
+> +/ {
+> +	model = "DB-XC3-24G4XG";
+> +	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200 earlyprintk";
+> +	};
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0 0x00000000 0 0x40000000>; /* 1 GB */
+> +	};
+> +
+> +	soc {
+> +		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+> +			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+> +			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+> +			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
+> +			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
+> +
+> +		devbus-bootcs {
+> +			status = "okay";
+> +
+> +			/* Device Bus parameters are required */
+> +
+> +			/* Read parameters */
+> +			devbus,bus-width    = <16>;
+> +			devbus,turn-off-ps  = <60000>;
+> +			devbus,badr-skew-ps = <0>;
+> +			devbus,acc-first-ps = <124000>;
+> +			devbus,acc-next-ps  = <248000>;
+> +			devbus,rd-setup-ps  = <0>;
+> +			devbus,rd-hold-ps   = <0>;
+> +
+> +			/* Write parameters */
+> +			devbus,sync-enable = <0>;
+> +			devbus,wr-high-ps  = <60000>;
+> +			devbus,wr-low-ps   = <60000>;
+> +			devbus,ale-wr-ps   = <60000>;
+> +		};
+> +
+> +		internal-regs {
+> +			serial@12000 {
+> +				status = "okay";
+> +			};
+> +			serial@12100 {
+> +				status = "okay";
+> +			};
+> +
+> +			i2c@11000 {
+> +				clock-frequency = <100000>;
+> +				status = "okay";
+> +			};
+> +
+> +			mvsdio@d4000 {
+> +				status = "disabled";
+> +			};
+> +
+> +			nand@d0000 {
+> +				status = "okay";
+> +				num-cs = <1>;
+> +				marvell,nand-keep-config;
+> +				marvell,nand-enable-arbiter;
+> +				nand-on-flash-bbt;
+> +				nand-ecc-strength = <4>;
+> +				nand-ecc-step-size = <512>;
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&spi0 {
+> +	status = "okay";
+> +
+> +	spi-flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "m25p64";
+> +		reg = <0>; /* Chip select 0 */
+> +		spi-max-frequency = <20000000>;
+> +		m25p,fast-read;
+> +
+> +		partition@u-boot {
+> +			reg = <0x00000000 0x00100000>;
+> +			label = "u-boot";
+> +		};
+> +		partition@u-boot-env {
+> +			reg = <0x00100000 0x00040000>;
+> +			label = "u-boot-env";
+> +		};
+> +		partition@unused {
+> +			reg = <0x00140000 0x00ec0000>;
+> +			label = "unused";
+> +		};
+> +
+> +	};
+> +};
+> -- 
+> 2.11.0.24.ge6920cf
 >
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
