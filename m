@@ -1,59 +1,70 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 2/4] mmc: bcm2835: Add new driver for the internal SD
- controller.
-Date: Fri, 27 Jan 2017 17:04:33 +0100
-Message-ID: <ec09cd58-6613-82d7-60a9-7a7c2d9ae673@i2se.com>
-References: <1485516989-1072-1-git-send-email-kraxel@redhat.com>
- <1485516989-1072-3-git-send-email-kraxel@redhat.com>
- <CAPDyKFoWyZaRLhuBnFfJupxRnUvq-JWczS7ObjAGat056MCEyw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFoWyZaRLhuBnFfJupxRnUvq-JWczS7ObjAGat056MCEyw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Gerd Hoffmann <kraxel@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Lee Jones <lee@kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux@armlinux.org.uk, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH 00/15] ACPI graph support
+Date: Fri, 27 Jan 2017 18:02:55 +0200
+Message-ID: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Am 27.01.2017 um 16:27 schrieb Ulf Hansson:
-> On 27 January 2017 at 12:36, Gerd Hoffmann <kraxel@redhat.com> wrote:
->> From: Eric Anholt <eric@anholt.net>
->>
->> The 2835 has two SD controllers:  The Arasan SDHCI controller (supported
->> by the iproc driver) and a custom SD controller.  This patch adds a
->> driver for the custom SD controller.
->>
->> The custom controller runs faster, and driving the sdcard with the
->> custom controller also allows to drive the rpi3 wifi with the iproc
->> driver.
->>
-> I don't understand this relationship. Is this somewhat configurable in runtime?
+Hello everyone, 
 
-The configuration is done by devicetree via pin muxing. AFAIK both SD
-controller are available on the same pins (2 pin groups = pin 22 to 27 +
-pin 48 to 53). So it's possible to use both SD controllers at the same
-time with different pin groups. This is necessary to use Wifi via SDIO
-on the RPi 3 while the other controller handles SD card with the rootfs.
+I posted a previous RFC labelled set of ACPI graph support a while ago:
 
->
-> Is the WIFI module a removable SDIO card?
+<URL:http://www.spinics.net/lists/linux-acpi/msg69547.html>
 
-No
+Since then, the matter of how the properties should be used as in ACPI
+_DSD was discussed in Ksummit and LPC, and a document detailing the rules
+was written [1].
 
->  So you can decide which
-> controller that is best suited to use?
+This set contains patches written by Mika Westerberg and by myself. The
+patchset brings support for graphs to ACPI. The functionality achieved by
+these patches is very similar to what the Device tree provides: the port
+and the endpoint concept are being employed. The patches make use of the
+_DSD property and data extensions to achieve this. The fwnode interface is
+extended by graph functionality; this way graph information originating
+from both OF and ACPI may be accessed using the same interface, without
+being aware of the underlying firmware interface.
 
-Yes, but it requires also both drivers.
+The last patch of the set contains ASL documentation including an example.
 
->
-> Kind regards
-> Uffe
+The entire set may also be found here (on mediatree.git master, but it
+also applies cleanly on linux-next):
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=acpi-graph>
+
+The resulting fwnode graph interface has been tested using V4L2 async with
+fwnode matching and smiapp and omap3isp drivers, with appropriate changes 
+to make use of the fwnode interface in drivers.
+
+The V4L2 patches can be found here. The fwnode graph interface is used by
+the newly added V4L2 fwnode framework which replaces the V4L2 OF
+framework, with equivalent functionality.
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
+
+
+changes since RFC v1:
+
+- Rebased the set --- there were a few conflicts.
+
+- Fixed a bug in ACPI graph parsing. (Thanks to Mika!)
+
+- Remove one layer (the "ports" node) of the _DSD hierarchical data
+  structure. Change the documentation accordingly. Instead, rely on the
+  presence of "port" and "endpoint" properties to identify port and
+  endpoint nodes.
+
+- Add a reference the DSD property rule document [1].
+
+
+Feedback is welcome.
+
+
+[1] Documentation/acpi/DSD-properties-rules.txt
+
+-- 
+Kind regards,
+Sakari
+
