@@ -1,83 +1,30 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v5 2/4] ASoC: es8328: Add support for slave mode
-Date: Tue, 24 Jan 2017 11:08:33 +0100
-Message-ID: <20170124100835.9540-3-romain.perier@collabora.com>
-References: <20170124100835.9540-1-romain.perier@collabora.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/3 v2] clk: ux500: Add device tree bindings for ABx500
+ clocks
+Date: Thu, 26 Jan 2017 16:11:39 -0800
+Message-ID: <20170127001139.GP8801@codeaurora.org>
+References: <20170120132539.3013-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170124100835.9540-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170120132539.3013-1-linus.walleij@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the function that changes the DAI format only supports master
-mode. Trying to use a slave mode exits the function with -EINVAL and
-leave the codec misconfigured. This commits adds support for enabling
-the slave mode.
+On 01/20, Linus Walleij wrote:
+> This adds device tree bindings for the ABx500 clocks on the
+> ST-Ericsson platforms.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Ulf Hansson <ulf.hansson@linaro.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
+Applied to clk-ux500 and merged into clk-next
 
-Changes in v5:
- - Fixed coding style issue for the switch case
- - Moved the code for master mode and slave mode to the switch case
-
-Changes in v4: None
-Changes in v3: None
-Changes in v2: None
-
- sound/soc/codecs/es8328.c | 20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
-
-diff --git a/sound/soc/codecs/es8328.c b/sound/soc/codecs/es8328.c
-index 37722194..3f84fbd 100644
---- a/sound/soc/codecs/es8328.c
-+++ b/sound/soc/codecs/es8328.c
-@@ -589,9 +589,21 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	u8 dac_mode = 0;
- 	u8 adc_mode = 0;
- 
--	/* set master/slave audio interface */
--	if ((fmt & SND_SOC_DAIFMT_MASTER_MASK) != SND_SOC_DAIFMT_CBM_CFM)
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		/* Master serial port mode, with BCLK generated automatically */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC,
-+				    ES8328_MASTERMODE_MSC);
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		/* Slave serial port mode */
-+		snd_soc_update_bits(codec, ES8328_MASTERMODE,
-+				    ES8328_MASTERMODE_MSC, 0);
-+		break;
-+	default:
- 		return -EINVAL;
-+	}
- 
- 	/* interface format */
- 	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-@@ -620,10 +632,6 @@ static int es8328_set_dai_fmt(struct snd_soc_dai *codec_dai,
- 	snd_soc_update_bits(codec, ES8328_ADCCONTROL4,
- 			ES8328_ADCCONTROL4_ADCFORMAT_MASK, adc_mode);
- 
--	/* Master serial port mode, with BCLK generated automatically */
--	snd_soc_update_bits(codec, ES8328_MASTERMODE,
--			ES8328_MASTERMODE_MSC, ES8328_MASTERMODE_MSC);
--
- 	return 0;
- }
- 
 -- 
-2.9.3
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
