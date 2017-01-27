@@ -1,168 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2, 6/6] dt-bindings: phy-mt65xx-usb: add support for new
- version phy
-Date: Fri, 27 Jan 2017 14:07:02 -0600
-Message-ID: <20170127200702.biyvgzgoq3yxx7yx@rob-hp-laptop>
-References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
- <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Matthias Brugger <matthias.bgg@gmail.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v7 1/2] dt-bindings: document renesas-ostm timer
+Date: Fri, 27 Jan 2017 15:02:14 -0500
+Message-ID: <20170127200215.4894-2-chris.brandt@renesas.com>
+References: <20170127200215.4894-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170127200215.4894-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 20, 2017 at 04:18:41PM +0800, Chunfeng Yun wrote:
-> add a new compatible string for "mt2712", and move reference clock
-> into each port node;
-> 
-> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> ---
->  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   91 +++++++++++++++++---
->  1 file changed, 77 insertions(+), 14 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> index 33a2b1e..1d06604 100644
-> --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> @@ -6,21 +6,27 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
->  Required properties (controller (parent) node):
->   - compatible	: should be one of
->  		  "mediatek,mt2701-u3phy"
-> +		  "mediatek,mt2712-u3phy"
->  		  "mediatek,mt8173-u3phy"
-> - - reg		: offset and length of register for phy, exclude port's
-> -		  register.
-> - - clocks	: a list of phandle + clock-specifier pairs, one for each
-> -		  entry in clock-names
-> - - clock-names	: must contain
-> -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
->  
->  Required nodes	: a sub-node is required for each port the controller
->  		  provides. Address range information including the usual
->  		  'reg' property is used inside these nodes to describe
->  		  the controller's topology.
->  
-> +Optional properties (controller (parent) node):
-> + - reg		: offset and length of register shared by multiple ports,
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v3:
+* changed ostm@fcfec000 to timer@fcfec000 in example
+* added power-domains in example
+v2:
+* remove sw implementation specific portions
+---
+ .../devicetree/bindings/timer/renesas,ostm.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
 
-How is this optional?
-
-> +		  exclude port's private register. It is needed on mt2701
-> +		  and mt8173, but not on mt2712.
-> +
->  Required properties (port (child) node):
->  - reg		: address and length of the register set for the port.
-> +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> +		  entry in clock-names
-> +- clock-names	: must contain
-> +		  "ref_clk": 48M reference clock for HighSpeed analog phy; and
-
-_clk is redundant. Just "ref"
-
-> +			26M reference clock for SuperSpeed analog phy, sometimes is
-> +			24M, 25M or 27M, depended on platform.
->  - #phy-cells	: should be 1 (See second example)
->  		  cell after port phandle is phy type from:
->  			- PHY_TYPE_USB2
-> @@ -31,21 +37,31 @@ Example:
->  u3phy: usb-phy@11290000 {
->  	compatible = "mediatek,mt8173-u3phy";
->  	reg = <0 0x11290000 0 0x800>;
-> -	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> -	clock-names = "u3phya_ref";
->  	#address-cells = <2>;
->  	#size-cells = <2>;
->  	ranges;
->  	status = "okay";
->  
-> -	phy_port0: port@11290800 {
-> -		reg = <0 0x11290800 0 0x800>;
-> +	u2port0: port@11290800 {
-> +		reg = <0 0x11290800 0 0x100>;
-> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +		clock-names = "ref_clk";
->  		#phy-cells = <1>;
->  		status = "okay";
->  	};
->  
-> -	phy_port1: port@11291000 {
-> -		reg = <0 0x11291000 0 0x800>;
-> +	u3port0: port@11290900 {
-> +		reg = <0 0x11290800 0 0x700>;
-> +		clocks = <&clk26m>;
-> +		clock-names = "ref_clk";
-> +		#phy-cells = <1>;
-> +		status = "okay";
-> +	};
-> +
-> +	u2port1: port@11291000 {
-> +		reg = <0 0x11291000 0 0x100>;
-> +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> +		clock-names = "ref_clk";
->  		#phy-cells = <1>;
->  		status = "okay";
->  	};
-> @@ -64,7 +80,54 @@ Example:
->  
->  usb30: usb@11270000 {
->  	...
-> -	phys = <&phy_port0 PHY_TYPE_USB3>;
-> -	phy-names = "usb3-0";
-> +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
-> +	phy-names = "usb2-0", "usb3-0";
->  	...
->  };
-> +
-> +
-> +Layout differences of banks between mt8173/mt2701 and mt2712
-> +-------------------------------------------------------------
-> +mt8173 and mt2701:
-> +port        offset    bank
-> +shared      0x0000    SPLLC
-> +            0x0100    FMREG
-> +u2 port0    0x0800    U2PHY_COM
-> +u3 port0    0x0900    U3PHYD
-> +            0x0a00    U3PHYD_BANK2
-> +            0x0b00    U3PHYA
-> +            0x0c00    U3PHYA_DA
-> +u2 port1    0x1000    U2PHY_COM
-> +u3 port1    0x1100    U3PHYD
-> +            0x1200    U3PHYD_BANK2
-> +            0x1300    U3PHYA
-> +            0x1400    U3PHYA_DA
-> +u2 port2    0x1800    U2PHY_COM
-> +            ...
-> +
-> +mt2712:
-> +port        offset    bank
-> +u2 port0    0x0000    MISC
-> +            0x0100    FMREG
-> +            0x0300    U2PHY_COM
-> +u3 port0    0x0700    SPLLC
-> +            0x0800    CHIP
-> +            0x0900    U3PHYD
-> +            0x0a00    U3PHYD_BANK2
-> +            0x0b00    U3PHYA
-> +            0x0c00    U3PHYA_DA
-> +u2 port1    0x1000    MISC
-> +            0x1100    FMREG
-> +            0x1300    U2PHY_COM
-> +u3 port1    0x1700    SPLLC
-> +            0x1800    CHIP
-> +            0x1900    U3PHYD
-> +            0x1a00    U3PHYD_BANK2
-> +            0x1b00    U3PHYA
-> +            0x1c00    U3PHYA_DA
-> +u2 port2    0x2000    MISC
-> +            ...
-> +
-> +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
-> +mt8173/mt2701 are put back into each port; a new bank MISC for
-> +u2 ports and CHIP for u3 ports are added on mt2712.
-> -- 
-> 1.7.9.5
-> 
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+new file mode 100644
+index 0000000..be3ae0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+@@ -0,0 +1,30 @@
++* Renesas OS Timer (OSTM)
++
++The OSTM is a multi-channel 32-bit timer/counter with fixed clock
++source that can operate in either interval count down timer or free-running
++compare match mode.
++
++Channels are independent from each other.
++
++Required Properties:
++
++  - compatible: must be one or more of the following:
++    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
++    - "renesas,ostm" for any OSTM
++		This is a fallback for the above renesas,*-ostm entries
++
++  - reg: base address and length of the register block for a timer channel.
++
++  - interrupts: interrupt specifier for the timer channel.
++
++  - clocks: clock specifier for the timer channel.
++
++Example: R7S72100 (RZ/A1H) OSTM node
++
++	ostm0: timer@fcfec000 {
++		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
++		reg = <0xfcfec000 0x30>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
++		power-domains = <&cpg_clocks>;
++	};
+-- 
+2.10.1
