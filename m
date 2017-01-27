@@ -1,60 +1,38 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v2 22/25] ARM: dtsi: axp209: add battery power supply subnode
-Date: Fri, 27 Jan 2017 09:54:55 +0100
-Message-ID: <20170127085458.18270-23-quentin.schulz@free-electrons.com>
-References: <20170127085458.18270-1-quentin.schulz@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127085458.18270-1-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, bonbons@linux-vserver.org, icenowy@aosc.xyz, linux-arm-kernel@lists.infradead.org
+From: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V4 2/6] dt-bindings: qcom: clk: Add missing binding for SDCHI enablement on Nexus 5X/6P
+Date: Fri, 27 Jan 2017 01:10:01 -0800
+Message-ID: <1485508205-1904-3-git-send-email-jeremymc@redhat.com>
+References: <1485508205-1904-1-git-send-email-jeremymc@redhat.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485508205-1904-1-git-send-email-jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, riteshh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, git-LJ92rlH3Dns@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP209 PMIC exposes battery supply various data such as
-the battery status (charging, discharging, full, dead), current max
-limit, current current, battery capacity (in percentage), voltage max
-and min limits, current voltage, and battery capacity (in Ah).
+AHB clock branch is needed in order to enable SDHCI
+on msm899(2/4).
 
-This adds the battery power supply subnode for AXP20X PMIC.
-
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
+Signed-off-by: Jeremy McNicoll <jeremymc-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
+ include/dt-bindings/clock/qcom,gcc-msm8994.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-v2:
- - changed DT node name from battery_power_supply to
- battery-power-supply,
- - removed io-channels and io-channel-names from DT (the IIO mapping is
- done in the IIO ADC driver now),
-
- arch/arm/boot/dts/axp209.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/axp209.dtsi b/arch/arm/boot/dts/axp209.dtsi
-index 8675c696..51810aa 100644
---- a/arch/arm/boot/dts/axp209.dtsi
-+++ b/arch/arm/boot/dts/axp209.dtsi
-@@ -68,6 +68,11 @@
- 		#gpio-cells = <2>;
- 	};
+diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+index 8fa535b..df47da0 100644
+--- a/include/dt-bindings/clock/qcom,gcc-msm8994.h
++++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+@@ -133,5 +133,6 @@
+ #define GCC_USB30_MOCK_UTMI_CLK			115
+ #define GCC_USB3_PHY_AUX_CLK			116
+ #define GCC_USB_HS_SYSTEM_CLK			117
++#define GCC_SDCC1_AHB_CLK			118
  
-+	battery_power_supply: battery-power-supply {
-+		compatible = "x-powers,axp209-battery-power-supply";
-+		status = "disabled";
-+	};
-+
- 	regulators {
- 		/* Default work frequency for buck regulators */
- 		x-powers,dcdc-freq = <1500>;
+ #endif
 -- 
-2.9.3
+2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
