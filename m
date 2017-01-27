@@ -1,33 +1,127 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 1/5] DT: mfd: axp20x: Add AXP806 to list of current AXP20x
- family members
-Date: Fri, 27 Jan 2017 12:38:48 +0800
-Message-ID: <CAGb2v66ObTmjS38mce_qQLdQ3WkpwABOPivO96hKi1S4F8f10Q@mail.gmail.com>
-References: <cover.1485456003.git.rask@formelder.dk>
- <abdfbac9a5f363ab6d338dd66d8fb138741f71c7.1485456005.git.rask@formelder.dk>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
+Date: Fri, 27 Jan 2017 10:46:07 +0530
+Message-ID: <fa09ef66-9d0d-7817-b6f5-8f958344fbf3@codeaurora.org>
+References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
+ <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
+ <587C88FE.2040900@ti.com>
+ <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
+ <20170118182223.GP10531@minitux> <20170119004028.GA4857@codeaurora.org>
+ <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
+ <20170119214258.GD7829@codeaurora.org> <58871F6D.1090206@ti.com>
+ <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
+ <20170126234355.GF8801@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <abdfbac9a5f363ab6d338dd66d8fb138741f71c7.1485456005.git.rask@formelder.dk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rask Ingemann Lambertsen <rask@formelder.dk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170126234355.GF8801@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 5:23 AM, Rask Ingemann Lambertsen
-<rask@formelder.dk> wrote:
-> An entry for the AXP806 was forgotten, so add one.
->
-> Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
-> Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+
+On 01/27/2017 05:13 AM, Stephen Boyd wrote:
+> On 01/24, Vivek Gautam wrote:
+>> Below is one binding that works for me.
+>> --------------------
+>>                 phy@34000 {
+>>                          compatible = "qcom,msm8996-qmp-pcie-phy";
+>>                          reg = <0x034000 0x488>;
+>>                          #clock-cells = <1>;
+>>                          #address-cells = <1>;
+>>                          #size-cells = <1>;
+>>                          ranges;
+>>
+>>                          clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
+>>                                  <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
+>>                                  <&gcc GCC_PCIE_CLKREF_CLK>;
+>>                          clock-names = "aux", "cfg_ahb", "ref";
+>>
+>>                          vdda-phy-supply = <&pm8994_l28>;
+>>                          vdda-pll-supply = <&pm8994_l12>;
+>>
+>>                          resets = <&gcc GCC_PCIE_PHY_BCR>,
+>>                                  <&gcc GCC_PCIE_PHY_COM_BCR>,
+>>                                  <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
+>>                          reset-names = "phy", "common", "cfg";
+>>
+>>                          pciephy_p0: port@0 {
+> The unit address '@0' should be replaced with something from the
+> reg properties.
+
+Sure, will take care of this.
+
+>   
+>
+> Also 'port' and 'ports' are almost keywords in DT now with the
+> graph binding so we need to be careful when using them.
+
+ From "./Documentation/devicetree/bindings/graph.txt" -
+"The device tree graph bindings described herein abstract more complex
+devices that can have multiple specifiable ports, each of which can be
+linked to one or more ports of other devices."
+
+So, this means we use 'port', 'ports' and 'endpoint' for devices whose one
+or more ports is connected to other device's one or more ports.
+
+I can use 'lane' for the node name here.
+
+>
+>>                                  reg = <0x035000 0x130>,
+>>                                          <0x035200 0x200>,
+>>                                          <0x035400 0x1dc>;
+>>                                  #phy-cells = <0>;
+>>
+>>                                  clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
+>>                                  clock-names = "pipe0";
+>>                                  resets = <&gcc GCC_PCIE_0_PHY_BCR>;
+>>                                  reset-names = "lane0";
+>>                          };
+>>
+>>                        pciephy_p1: port@1 {
+>>                                  reg = <0x036000 0x130>,
+>>                                          <0x036200 0x200>,
+>>                                          <0x036400 0x1dc>;
+>>                                  #phy-cells = <0>;
+>>
+>>                                  clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
+>>                                  clock-names = "pipe1";
+>>                                  resets = <&gcc GCC_PCIE_1_PHY_BCR>;
+>>                                  reset-names = "lane1";
+>>                          };
+>>
+>>                          pciephy_p2: port@2 {
+>>                                  reg = <0x037000 0x130>,
+>>                                          <0x037200 0x200>,
+>>                                          <0x037400 0x1dc>;
+>>                                  #phy-cells = <0>;
+>>
+>>                                  clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
+>>                                  clock-names = "pipe2";
+>>                                  resets = <&gcc GCC_PCIE_2_PHY_BCR>;
+>>                                  reset-names = "lane2";
+>>                          };
+>>                  };
+>> --------------------
+>>
+>> let me know if this looks okay.
+>>
+>>
+> What's the plan for non-pcie qmp phy binding? In that case we
+> don't have ports, so it gets folded into one node?
+>
+The non-pcie qmp phys still have one lane, that provides tx/rx.
+
+I am of the opinion that we don't have two different ways to create
+phys in the driver, and keep one port/lane for such phys in dt.
+
+
+Regards
+Vivek
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
