@@ -1,119 +1,69 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 10/13] mtd: nand: jz4740: Let the pinctrl driver
- configure the pins
-Date: Fri, 27 Jan 2017 18:33:11 +0100
-Message-ID: <20170127183311.132b5661@bbrezillon>
-References: <20170117231421.16310-1-paul@crapouillou.net>
-        <20170117231421.16310-11-paul@crapouillou.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 12/12] mux: support simplified bindings for
+ single-user gpio mux
+Date: Fri, 27 Jan 2017 09:52:02 -0600
+Message-ID: <20170127155202.z2ufbq5bdtclk5oo@rob-hp-laptop>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-13-git-send-email-peda@axentia.se>
+ <33b29f7e-3e48-b85d-ccf9-93b1d67ac634@kernel.org>
+ <d32f335f-56f2-38c1-e4d9-4629926dbe21@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170117231421.16310-11-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d32f335f-56f2-38c1-e4d9-4629926dbe21@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jan 2017 00:14:18 +0100
-Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Before, this NAND driver would set itself the configuration of the
-> chip-select pins for the various NAND banks.
+On Mon, Jan 23, 2017 at 11:24:18AM +0100, Peter Rosin wrote:
+> On 2017-01-22 14:30, Jonathan Cameron wrote:
+> > On 18/01/17 15:57, Peter Rosin wrote:
+> >> Allow bindings for a GPIO controlled mux to be specified in the
+> >> mux consumer node.
+> >>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>
+> > Code is good as far as I am concerned. Only question is whether this
 > 
-> Now that the JZ4740 and similar SoCs have a pinctrl driver, we rely on
-> the pins being properly configured before the driver probes.
+> Hmmm, now that I think some more about it, the code supporting the
+> simplified binding (patch 12/12) is a bit fishy in one respect.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Acked-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-
-> ---
->  drivers/mtd/nand/jz4740_nand.c | 23 +----------------------
->  1 file changed, 1 insertion(+), 22 deletions(-)
+> A driver that calls mux_control_get and gets a mux_control that happens
+> to be backed by an implicit mux chip (i.e. using the simplified binding)
+> will not be able to reverse the resource allocation with less than a
+> complete destruction of itself. Now, this is likely not a problem in
+> most cases, but I bet it will creep up at the most inopportune time. And
+> your remark that I'm the one that has to maintain this makes me dislike
+> this concept...
 > 
-> diff --git a/drivers/mtd/nand/jz4740_nand.c b/drivers/mtd/nand/jz4740_nand.c
-> index 5551c36adbdf..0d06a1f07d82 100644
-> --- a/drivers/mtd/nand/jz4740_nand.c
-> +++ b/drivers/mtd/nand/jz4740_nand.c
-> @@ -25,7 +25,6 @@
->  
->  #include <linux/gpio.h>
->  
-> -#include <asm/mach-jz4740/gpio.h>
->  #include <asm/mach-jz4740/jz4740_nand.h>
->  
->  #define JZ_REG_NAND_CTRL	0x50
-> @@ -310,34 +309,20 @@ static int jz_nand_detect_bank(struct platform_device *pdev,
->  			       uint8_t *nand_dev_id)
->  {
->  	int ret;
-> -	int gpio;
-> -	char gpio_name[9];
->  	char res_name[6];
->  	uint32_t ctrl;
->  	struct nand_chip *chip = &nand->chip;
->  	struct mtd_info *mtd = nand_to_mtd(chip);
->  
-> -	/* Request GPIO port. */
-> -	gpio = JZ_GPIO_MEM_CS0 + bank - 1;
-> -	sprintf(gpio_name, "NAND CS%d", bank);
-> -	ret = gpio_request(gpio, gpio_name);
-> -	if (ret) {
-> -		dev_warn(&pdev->dev,
-> -			"Failed to request %s gpio %d: %d\n",
-> -			gpio_name, gpio, ret);
-> -		goto notfound_gpio;
-> -	}
-> -
->  	/* Request I/O resource. */
->  	sprintf(res_name, "bank%d", bank);
->  	ret = jz_nand_ioremap_resource(pdev, res_name,
->  					&nand->bank_mem[bank - 1],
->  					&nand->bank_base[bank - 1]);
->  	if (ret)
-> -		goto notfound_resource;
-> +		return ret;
->  
->  	/* Enable chip in bank. */
-> -	jz_gpio_set_function(gpio, JZ_GPIO_FUNC_MEM_CS0);
->  	ctrl = readl(nand->base + JZ_REG_NAND_CTRL);
->  	ctrl |= JZ_NAND_CTRL_ENABLE_CHIP(bank - 1);
->  	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
-> @@ -377,12 +362,8 @@ static int jz_nand_detect_bank(struct platform_device *pdev,
->  	dev_info(&pdev->dev, "No chip found on bank %i\n", bank);
->  	ctrl &= ~(JZ_NAND_CTRL_ENABLE_CHIP(bank - 1));
->  	writel(ctrl, nand->base + JZ_REG_NAND_CTRL);
-> -	jz_gpio_set_function(gpio, JZ_GPIO_FUNC_NONE);
->  	jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
->  				 nand->bank_base[bank - 1]);
-> -notfound_resource:
-> -	gpio_free(gpio);
-> -notfound_gpio:
->  	return ret;
->  }
->  
-> @@ -503,7 +484,6 @@ static int jz_nand_probe(struct platform_device *pdev)
->  err_unclaim_banks:
->  	while (chipnr--) {
->  		unsigned char bank = nand->banks[chipnr];
-> -		gpio_free(JZ_GPIO_MEM_CS0 + bank - 1);
->  		jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
->  					 nand->bank_base[bank - 1]);
->  	}
-> @@ -530,7 +510,6 @@ static int jz_nand_remove(struct platform_device *pdev)
->  		if (bank != 0) {
->  			jz_nand_iounmap_resource(nand->bank_mem[bank - 1],
->  						 nand->bank_base[bank - 1]);
-> -			gpio_free(JZ_GPIO_MEM_CS0 + bank - 1);
->  		}
->  	}
->  
+> I.e. mux_control_put *should* reverse mux_control_get, but this simply
+> does not happen for the implicit mux chips, as implicit mux chips are
+> not put away until the owning device is put away.
+
+I think this is because you aren't creating a device in this case. Nodes 
+in DT are not the only way to create devices. Drivers can create a child 
+device when they find mux-gpios property.
+
+> Every time I have tried to come up with a way to implement the simplified
+> bindings I seem to hit one of these subtleties.
+> 
+> > is worth the hassle given the normal bindings don't give that high
+> > a burden in complexity!
+
+I was going to change my mind here, but we already have "mux-gpios" as a 
+binding at least for i2c-gpio-mux. So really the question is do we want 
+to support that here?
+
+> I am missing an ack from Rob though.
+> 
+> > I don't really care either way:)
+> 
+> But Rob seems to care, this series just has to find a way to get out of
+> his too-much-churn-will-look-at-it-later list. I sadly don't know how to
+> pull that trick...
+
+By complaining that I'm putting it off... :) I guess I'm okay with this 
+series in general. I will reply on the specific patches today.
+
+Rob
