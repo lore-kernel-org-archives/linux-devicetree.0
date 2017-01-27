@@ -1,186 +1,96 @@
-From: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH 06/15] device property: Add support for remote endpoints
-Date: Fri, 27 Jan 2017 18:03:01 +0200
-Message-ID: <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
-References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3/8] Documentation: dt: Add bindings for STM32 pinctrl
+Date: Fri, 27 Jan 2017 17:15:16 +0100
+Message-ID: <1485533721-9019-4-git-send-email-alexandre.torgue@st.com>
+References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485532990-8431-1-git-send-email-sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+In-Reply-To: <1485533721-9019-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Adds "ngpios" and "gpio-ranges" bindings definition.
 
-This follows DT implementation of of_graph_* APIs but we call them
-fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
-will be used. For ACPI we use the new ACPI graph implementation instead.
+Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 
-This commit includes code from Sakari Ailus.
-
-Signed-off-by: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/property.h |   9 ++++
- 2 files changed, 131 insertions(+)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index c0011cf..cf602c3 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -15,6 +15,7 @@
- #include <linux/kernel.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
-+#include <linux/of_graph.h>
- #include <linux/property.h>
- #include <linux/etherdevice.h>
- #include <linux/phy.h>
-@@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
- 	return device_get_mac_addr(dev, "address", addr, alen);
- }
- EXPORT_SYMBOL(device_get_mac_address);
-+
-+/**
-+ * device_graph_get_next_endpoint - Get next endpoint firmware node
-+ * @fwnode: Pointer to the parent firmware node
-+ * @prev: Previous endpoint node or %NULL to get the first
-+ *
-+ * Returns an endpoint firmware node pointer or %NULL if no more endpoints
-+ * are available.
-+ */
-+struct fwnode_handle *
-+fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
-+			       struct fwnode_handle *prev)
-+{
-+	struct fwnode_handle *endpoint = NULL;
-+
-+	if (is_of_node(fwnode)) {
-+		struct device_node *node;
-+
-+		node = of_graph_get_next_endpoint(to_of_node(fwnode),
-+						  to_of_node(prev));
-+
-+		if (node)
-+			endpoint = &node->fwnode;
-+	} else if (is_acpi_node(fwnode)) {
-+		endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
-+		if (IS_ERR(endpoint))
-+			endpoint = NULL;
-+	}
-+
-+	return endpoint;
-+
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_next_endpoint);
-+
-+/**
-+ * fwnode_graph_get_remote_port_parent - Return fwnode of a remote device
-+ * @fwnode: Endpoint firmware node pointing to the remote endpoint
-+ *
-+ * Extracts firmware node of a remote device the @fwnode points to.
-+ */
-+struct fwnode_handle *
-+fwnode_graph_get_remote_port_parent(struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *parent = NULL;
-+
-+	if (is_of_node(fwnode)) {
-+		struct device_node *node;
-+
-+		node = of_graph_get_remote_port_parent(to_of_node(fwnode));
-+		if (node)
-+			parent = &node->fwnode;
-+	} else if (is_acpi_node(fwnode)) {
-+		int ret;
-+
-+		ret = acpi_graph_get_remote_endpoint(fwnode, &parent, NULL,
-+						     NULL);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	return parent;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port_parent);
-+
-+/**
-+ * fwnode_graph_get_remote_port - Return fwnode of a remote port
-+ * @fwnode: Endpoint firmware node pointing to the remote endpoint
-+ *
-+ * Extracts firmware node of a remote port the @fwnode points to.
-+ */
-+struct fwnode_handle *fwnode_graph_get_remote_port(struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *port = NULL;
-+
-+	if (is_of_node(fwnode)) {
-+		struct device_node *node;
-+
-+		node = of_graph_get_remote_port(to_of_node(fwnode));
-+		if (node)
-+			port = &node->fwnode;
-+	} else if (is_acpi_node(fwnode)) {
-+		int ret;
-+
-+		ret = acpi_graph_get_remote_endpoint(fwnode, NULL, &port, NULL);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	return port;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port);
-+
-+/**
-+ * fwnode_graph_get_remote_endpoint - Return fwnode of a remote endpoint
-+ * @fwnode: Endpoint firmware node pointing to the remote endpoint
-+ *
-+ * Extracts firmware node of a remote endpoint the @fwnode points to.
-+ */
-+struct fwnode_handle *
-+fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
-+{
-+	struct fwnode_handle *endpoint = NULL;
-+
-+	if (is_of_node(fwnode)) {
-+		struct device_node *node;
-+
-+		node = of_parse_phandle(to_of_node(fwnode), "remote-endpoint", 0);
-+		if (node)
-+			endpoint = &node->fwnode;
-+	} else if (is_acpi_node(fwnode)) {
-+		int ret;
-+
-+		ret = acpi_graph_get_remote_endpoint(fwnode, NULL, NULL,
-+						     &endpoint);
-+		if (ret)
-+			return NULL;
-+	}
-+
-+	return endpoint;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 66530c3..86c47ad 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -263,4 +263,13 @@ int device_get_phy_mode(struct device *dev);
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index b24583a..25d9809 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -37,8 +37,23 @@ Optional properties:
+  - st,syscfg: Should be phandle/offset pair. The phandle to the syscon node
+    which includes IRQ mux selection register, and the offset of the IRQ mux
+    selection register.
++ - ngpios: Number of gpios in a bank (to use if bank gpio numbers is less
++   than 16).
++ - gpio-ranges: Define a dedicated mapping between a pin-controller and
++   a gpio controller. Format is <&phandle a b c> with:
++	-(phandle): phandle of pin-controller.
++	-(a): gpio base offset in range.
++	-(b): pin base offset in range.
++	-(c): gpio count in range
++   This entry has to be used either if there are holes inside a bank:
++	GPIOB0/B1/B2/B14/B15 (see example 2)
++   or if banks are not contiguous:
++	GPIOA/B/C/E...
++   NOTE: If "gpio-ranges" is used for a gpio controller, all gpio-controller
++   have to use a "gpio-ranges" entry.
++   More details in Documentation/devicetree/bindings/gpio/gpio.txt.
  
- void *device_get_mac_address(struct device *dev, char *addr, int alen);
+-Example:
++Example 1:
+ #include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
+ ...
  
-+struct fwnode_handle *fwnode_graph_get_next_endpoint(
-+	struct fwnode_handle *fwnode, struct fwnode_handle *prev);
-+struct fwnode_handle *fwnode_graph_get_remote_port_parent(
-+	struct fwnode_handle *fwnode);
-+struct fwnode_handle *fwnode_graph_get_remote_port(
-+	struct fwnode_handle *fwnode);
-+struct fwnode_handle *fwnode_graph_get_remote_endpoint(
-+	struct fwnode_handle *fwnode);
+@@ -60,6 +75,43 @@ Example:
+ 		pin-functions nodes follow...
+ 	};
+ 
++Example 2:
++#include <dt-bindings/pinctrl/stm32f429-pinfunc.h>
++...
 +
- #endif /* _LINUX_PROPERTY_H_ */
++	pinctrl: pin-controller {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "st,stm32f429-pinctrl";
++		ranges = <0 0x40020000 0x3000>;
++		pins-are-numbered;
++
++		gpioa: gpio@40020000 {
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x0 0x400>;
++			resets = <&reset_ahb1 0>;
++			st,bank-name = "GPIOA";
++			gpio-ranges = <&pinctrl 0 0 16>;
++		};
++
++		gpiob: gpio@40020400 {
++			gpio-controller;
++			#gpio-cells = <2>;
++			reg = <0x0 0x400>;
++			resets = <&reset_ahb1 0>;
++			st,bank-name = "GPIOB";
++			ngpios = 4;
++			gpio-ranges = <&pinctrl 0 16 3>,
++				      <&pinctrl 14 30 2>;
++		};
++
++
++		...
++		pin-functions nodes follow...
++	};
++
++
+ Contents of function subnode node:
+ ----------------------------------
+ Subnode format
 -- 
-2.7.4
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
