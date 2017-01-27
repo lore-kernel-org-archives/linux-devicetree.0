@@ -1,36 +1,29 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] Documentation: dt: misc: Add Aspeed ast2400/2500
- LPC Control bindings
-Date: Fri, 27 Jan 2017 15:23:55 -0600
-Message-ID: <20170127212355.e35q5gvxk2ds4c5z@rob-hp-laptop>
-References: <20170124040533.9144-1-cyrilbur@gmail.com>
- <20170124040533.9144-2-cyrilbur@gmail.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH V4 2/6] dt-bindings: qcom: clk: Add missing binding for
+ SDCHI enablement on Nexus 5X/6P
+Date: Fri, 27 Jan 2017 13:33:53 -0800
+Message-ID: <20170127213353.GJ8801@codeaurora.org>
+References: <1485508205-1904-1-git-send-email-jeremymc@redhat.com>
+ <1485508205-1904-3-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170124040533.9144-2-cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org
+In-Reply-To: <1485508205-1904-3-git-send-email-jeremymc@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, andy.gross@linaro.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 03:05:33PM +1100, Cyril Bur wrote:
-> Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> V2:
-> 	s/ASpeed/Aspeed/
-> 	Removed incorrect compatible property from the example
-> 	Dropped: "This does not have to be the case, provided the reg
-> 	  property can give the full address of the mbox registers."
-> 	  from the "Device Node" section
+On 01/27, Jeremy McNicoll wrote:
+> AHB clock branch is needed in order to enable SDHCI
+> on msm899(2/4).
 > 
->  .../devicetree/bindings/misc/aspeed-lpc-ctrl.txt   | 76 ++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-lpc-ctrl.txt
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied to clk-next
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
