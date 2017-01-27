@@ -1,67 +1,78 @@
-From: Olimpiu Dejeu <olimpiu@arcticsand.com>
-Subject: [PATCH v4 2/2] backlight arcxcnn devicetree bindings for ArcticSand
-Date: Fri, 27 Jan 2017 10:19:38 -0500
-Message-ID: <1485530378-6217-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: lee.jones@linaro.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, medasaro@arcticsand.com, Olimpiu Dejeu <olimpiu@arcticsand.com>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 05/12] dt: bindings: Add bindings for Marvell Xenon SD
+ Host Controller
+Date: Fri, 27 Jan 2017 16:36:36 +0100
+Message-ID: <CAPDyKFo-hpLd3W0zWykdg0swuciBeL=Cy9cur_0RoG8jApOh3w@mail.gmail.com>
+References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
+ <89c95d0084da6ad7132caa54ca66eb619d8a5090.1484154449.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFrCxk37uVZ4wM-=iwX3-Cn9j+uh1KneJoopVzia2nKTVA@mail.gmail.com> <87fuk4yg1i.fsf@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87fuk4yg1i.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Adrian Hunter <adrian.hunter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ziji Hu <huziji-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ryan
 List-Id: devicetree@vger.kernel.org
 
-backlight: Add devicetree bindings for the Arctic Sand backlight driver
-This patch provides devicetree bindings for the Arctic Sand
-    driver submitted in the previous patch
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
----
+>
+> OK, but maybe we could keep the part about the mmcard for the eMMC to
+> emphasize that we need to setup this option for the controller.
 
-v3 => v4:
-- Added spaces for increased readability per Lee Jones
-v2 => v3:
-- Version updated to match other patch in set. No other changes.
-v1 => v2:
-- Version updated to match other patch in set. No other changes.
+Right!
 
- .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+>
+>>> +
+>>> +- no-1-8-v:
+>>> +  Select this property when 1.8V signaling voltage supply is unavailable.
+>>> +  When this property is enabled, both mmc-ddr-1_8v and mmc-hs400-1_8v should be
+>>> +  cleared.
+>>
+>> Please don't use this sdhci property, unless really needed.
+>
+> Actually this is a mmc property, at least it is described in this the
+> mmc binding:
+> Documentation/devicetree/bindings/mmc/mmc.txt
 
-diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-new file mode 100644
-index 0000000..ecb7731
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
-@@ -0,0 +1,31 @@
-+Binding for ArcticSand arc2c0608 LED driver
-+
-+Required properties:
-+- compatible:		should be "arc,arc2c0608"
-+- reg:			slave address
-+
-+Optional properties:
-+- default-brightness:	brightness value on boot, value from: 0-4095
-+- label:		The name of the backlight device
-+			See Documentation/devicetree/bindings/leds/common.txt
-+- led-sources:		List of enabled channels from 0 to 5.
-+			See Documentation/devicetree/bindings/leds/common.txt
-+
-+- arc,led-config-0:	setting for register ILED_CONFIG_0
-+- arc,led-config-1:	setting for register ILED_CONFIG_1
-+- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
-+- arc,comp-config:	setting for register CONFIG_COMP
-+- arc,filter-config:	setting for register FILTER_CONFIG
-+- arc,trim-config:	setting for register IMAXTUNE
-+
-+Example:
-+
-+arc2c0608@30 {
-+	compatible = "arc,arc2c0608";
-+	reg = <0x30>;
-+	default-brightness = <500>;
-+	label = "lcd-backlight";
-+	linux,default-trigger = "backlight";
-+	led-sources = <0 1 2 5>;
-+};
-+
--- 
-2.7.4
+Yes, the documentation is wrong. It should we be moved into the docs for sdhci.
+
+I will send a patch updating it. Apologize for the misleading information.
+
+>
+> The description of this optional property is:
+> "no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+>   this system, even if the controller claims it is."
+>
+> So as it is also part of the mmc binding we can remove it from our
+> bindings as we are going to do it for the other mmc property.
+
+Nope.
+
+>
+> But I am curious to know why do you think we could use it without any
+> need. Are you aware of some abuse of this property?
+
+Yes.
+
+>
+>>
+>> Perhaps you can elaborate exactly why it makes sense for your case. Or
+>> perhaps we already discussed this, in either case, please re-fresh my
+>> mind.
+>
+> For instance we need it now on the 7040DB board which does not have the
+> 1.8V signal voltage available.
+
+It it's better to describe what the controller/board support, instead
+of what it doesn't.
+
+I think you should be able to use other existing mmc DT bindings
+(perhaps also you need the brand new "mmc-ddr-3_3v"), instead of the
+"no-1-8-v".
+
+Kind regards
+Uffe
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
