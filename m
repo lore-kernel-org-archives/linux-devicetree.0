@@ -1,266 +1,209 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
-Date: Fri, 27 Jan 2017 13:51:26 +0000
-Message-ID: <HK2PR06MB054552024200BB86B161A983C3760@HK2PR06MB0545.apcprd06.prod.outlook.com>
-References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
- <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
- <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl> <4506041.7mPt4W6j0m@avalon>
- <HK2PR06MB0545BF36C3DD2D4D1B951C3FC3670@HK2PR06MB0545.apcprd06.prod.outlook.com>
- <e96cb1cd-cd4a-60f2-cf46-dc837638d115@xs4all.nl>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCHv5 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Fri, 27 Jan 2017 15:06:32 +0100
+Message-ID: <871svoy4uv.fsf@free-electrons.com>
+References: <20170127032546.14657-1-chris.packham@alliedtelesis.co.nz>
+ <20170127032546.14657-3-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e96cb1cd-cd4a-60f2-cf46-dc837638d115-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170127032546.14657-3-chris.packham@alliedtelesis.co.nz> (Chris
+ Packham's message of "Fri, 27 Jan 2017 16:25:43 +1300")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi Chris,
+ 
+ On ven., janv. 27 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
 
-Many thanks for the response & comments.
+> Compared to the armada-xp the 98DX3336 uses different registers to set
+> the boot address for the secondary CPU so a new enable-method is needed.
+> This will only work if the machine definition doesn't define an overall
+> smp_ops because there is not currently a way of overriding this from the
+> device tree if it is set in the machine definition.
+>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>
+> Notes:
+>     Changes in v2:
+>     - Document new enable-method value
+>     - Correct some references from 98DX4521 to 98DX3236
+>     Changes in v3:
+>     - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
+>     Changes in v4:
+>     - integrate changes into platsmp.c instead of new init call
+>     - avoid duplicated code.
+>     - fix error return
+>     - Collect ack from Rob
+>     Changes in v5:
+>     - Remove useless casts (thanks to Stephen Boyd)
+>
+>  Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+>  .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  | 16 ++++
+>  arch/arm/mach-mvebu/platsmp.c                      | 86 ++++++++++++++++++++++
+>  3 files changed, 103 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index a1bcfeed5f24..3c2fd72d0bf9 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -202,6 +202,7 @@ nodes to be present and contain the properties described below.
+>  			    "marvell,armada-380-smp"
+>  			    "marvell,armada-390-smp"
+>  			    "marvell,armada-xp-smp"
+> +			    "marvell,98dx3236-smp"
+>  			    "mediatek,mt6589-smp"
+>  			    "mediatek,mt81xx-tz-smp"
+>  			    "qcom,gcc-msm8660"
+> diff --git a/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+> new file mode 100644
+> index 000000000000..26eb9d3aa630
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+> @@ -0,0 +1,16 @@
+> +Resume Control
+> +--------------
+> +Available on Marvell SOCs: 98DX3336 and 98DX4251
+> +
+> +Required properties:
+> +
+> +- compatible: must be "marvell,98dx3336-resume-ctrl"
+> +
+> +- reg: Should contain resume control registers location and length
+> +
+> +Example:
+> +
+> +resume@20980 {
+> +	compatible = "marvell,98dx3336-resume-ctrl";
+> +	reg = <0x20980 0x10>;
+> +};
+> diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+> index 46c742d3bd41..a5b464497e1a 100644
+> --- a/arch/arm/mach-mvebu/platsmp.c
+> +++ b/arch/arm/mach-mvebu/platsmp.c
+> @@ -184,3 +184,89 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
+>  
+>  CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
+>  		      &armada_xp_smp_ops);
+> +
+> +struct resume_controller {
+> +	u32 resume_control;
+> +	u32 resume_boot_addr;
+> +};
+> +
+> +static const struct resume_controller mv98dx3336_resume_controller = {
+> +	.resume_control = 0x08,
+> +	.resume_boot_addr = 0x04,
+> +};
+> +
+> +static const struct of_device_id of_mv98dx3236_resume_table[] = {
+> +	{
+> +		.compatible = "marvell,98dx3336-resume-ctrl",
+> +		.data = &mv98dx3336_resume_controller,
+> +	},
+> +	{ /* end of list */ },
+> +};
 
-> Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF
-> binding
->=20
-> On 01/10/2017 10:31 AM, Ramesh Shanmugasundaram wrote:
-> > Hi Laurent,
-> >
-> >>>>>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
-> >>>>>>> Add binding documentation for Renesas R-Car Digital Radio
-> >>>>>>> Interface
-> >>>>>>> (DRIF) controller.
-> >>>>>>>
-> >>>>>>> Signed-off-by: Ramesh Shanmugasundaram
-> >>>>>>> <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
-> >>>>>>>
-> >>>>>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202
-> >> +++++++++++++
-> >>>>>>>  1 file changed, 202 insertions(+)  create mode 100644
-> >>>>>>>
-> >>>>>>> Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>>>>>
-> >>>>>>> diff --git
-> >>>>>>> a/Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>>>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new
-> >>>>>>> file mode 100644 index 0000000..1f3feaf
-> >>>>>>> --- /dev/null
-> >>>>>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-> >>>>>>>
-> >>>>>>> +Optional properties of an internal channel when:
-> >>>>>>> +     - It is the only enabled channel of the bond (or)
-> >>>>>>> +     - If it acts as primary among enabled bonds
-> >>>>>>> +--------------------------------------------------------
-> >>>>>>> +- renesas,syncmd       : sync mode
-> >>>>>>> +                      0 (Frame start sync pulse mode. 1-bit
-> >>>>>>> +width
-> >>>>>>> pulse
-> >>>>>>> +                         indicates start of a frame)
-> >>>>>>> +                      1 (L/R sync or I2S mode) (default)
-> >>>>>>> +- renesas,lsb-first    : empty property indicates lsb bit is
-> >> received
-> >>>>>>> first.
-> >>>>>>> +                      When not defined msb bit is received
-> >>>>>>> +first
-> >>>>>>> +(default)
-> >>>>>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1
-> >>>>>>> +for
-> >>>>>>> low/high
-> >>>
-> >>> Shouldn't this be 'renesas,sync-active' instead of syncac-active?
-> >>>
-> >>> I'm not sure if syncac is intended or if it is a typo.
-> >>>
-> >>>>>>> +                      respectively. The default is 1 (active
-> high)
-> >>>>>>> +- renesas,dtdl         : delay between sync signal and start of
-> >>>>>>> reception.
-> >>>>>>> +                      The possible values are represented in
-> >>>>>>> + 0.5
-> >> clock
-> >>>>>>> +                      cycle units and the range is 0 to 4. The
-> >> default
-> >>>>>>> +                      value is 2 (i.e.) 1 clock cycle delay.
-> >>>>>>> +- renesas,syncdl       : delay between end of reception and sync
-> >>>>>>> signal edge.
-> >>>>>>> +                      The possible values are represented in
-> >>>>>>> + 0.5
-> >> clock
-> >>>>>>> +                      cycle units and the range is 0 to 4 & 6.
-> >>>>>>> + The
-> >>>>>>> default
-> >>>>>>> +                      value is 0 (i.e.) no delay.
->=20
-> Are these properties actually going to be used by anyone? Just curious.
+Do you expect to have other SoC which use the same logical but with
+register at a different place?
 
-Yes. Each of this property should be set appropriately based on the master =
-device it interfaces with.=20
+Else you can just remove the resume_controller struct and use the address
+(using define) directly in the mv98dx3236_resume_set_cpu_boot_addr
+function.
 
->=20
-> >>>>>>
-> >>>>>> Most of these properties are pretty similar to the video bus
-> >>>>>> properties defined at the endpoint level in
-> >>>>>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
-> >>>>>> believe it would make sense to use OF graph and try to
-> >>>>>> standardize these properties similarly.
-> >>>
-> >>> Other than sync-active, is there really anything else that is similar=
-?
-> >>> And even the sync-active isn't a good fit since here there is only
-> >>> one sync signal instead of two for video (h and vsync).
-> >>
-> >> That's why I said similar, not identical :-) My point is that, if we
-> >> consider that we could connect multiple sources to the DRIF, using OF
-> >> graph would make sense, and the above properties should then be
-> >> defined per endpoint.
-> >
-> > Thanks for the clarifications. I have some questions.
-> >
-> > - Assuming two devices are interfaced with DRIF and they are represente=
-d
-> using two endpoints, the control signal related properties of DRIF might
-> still need to be same for both endpoints? For e.g. syncac-active cannot b=
-e
-> different in both endpoints?
->=20
-> Usually that's the case, but HW designers are weird :-)
->=20
-> >
-> > - I suppose "lsb-first", "dtdl" & "syncdl" may be defined per endpoint.
-> However, h/w manual says same register values needs to be programmed for
-> both the internal channels of a channel. Same with "syncmd" property.
-> >
-> > We could still define them as per endpoint property with a note that
-> they need to be same. But I am not sure if that is what you intended?
-> >
-> >  If we define them per endpoint we should then also try
-> >> standardize the ones that are not really Renesas-specific (that's at
-> >> least syncac-active).
-> >
-> > OK. I will call it "sync-active".
->=20
-> That's better, yes.
+> +
+> +static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
+> +{
+> +	const struct of_device_id *match;
+> +	struct device_node *np;
+> +	void __iomem *base;
+> +	const struct resume_controller *rc;
+> +
+> +	WARN_ON(hw_cpu != 1);
+> +
+> +	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
+> +					     &match);
+> +	if (!np)
+> +		return -ENODEV;
+> +
+> +	base = of_io_request_and_map(np, 0, of_node_full_name(np));
+> +	rc = match->data;
+> +	of_node_put(np);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	writel(0, base + rc->resume_control);
+> +	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
+> +
 
-Thanks.
+you should use iounmap() on base here, to free it.
 
->=20
-> >
-> >  For the syncmd and lsb-first properties, it could also
-> >> make sense to query them from the connected subdev at runtime, as
-> >> they're similar in purpose to formats and media bus configuration
-> >> (struct v4l2_mbus_config).
->=20
-> I consider this unlikely. I wouldn't spend time on that as this can alway=
-s
-> be done later.
->=20
-> > May I know in bit more detail about what you had in mind? Please
-> > correct me if my understanding is wrong here but when I looked at the
-> > code
-> >
-> > 1) mbus_config is part of subdev_video_ops only. I assume we don't want
-> to support this as part of tuner subdev. The next closest is pad_ops with
-> "struct v4l2_mbus_framefmt" but it is fully video specific config unless =
-I
-> come up with new MEDIA_BUS_FMT_xxxx in media-bus-format.h and use the cod=
-e
-> field? For e.g.
-> >
-> > #define MEDIA_BUS_FMT_SDR_I2S_PADHI_BE       0x7001
-> > #define MEDIA_BUS_FMT_SDR_I2S_PADHI_LE       0x7002
-> >
-> > 2) The framework does not seem to mandate pad ops for all subdev. As th=
-e
-> tuner can be any third party subdev, is it fair to assume that these
-> properties can be queried from subdev?
-> >
-> > 3) Assuming pad ops is not available on the subdev shouldn't we still
-> need a way to define these properties on DRIF DT?
-> >
-> >>
-> >> I'm not an SDR expert, so I'd like to have your opinion on this.
->=20
-> Neither am I :-)
->=20
-> I think using the endpoint idea does make sense since this helps in
-> describing the routing.=20
+Gregory
 
-OK.
+> +	return 0;
+> +}
+> +
+> +static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
+> +{
+> +	int ret, hw_cpu;
+> +
+> +	hw_cpu = cpu_logical_map(cpu);
+> +	set_secondary_cpu_clock(hw_cpu);
+> +	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
+> +					    armada_xp_secondary_startup);
+> +
+> +	/*
+> +	 * This is needed to wake up CPUs in the offline state after
+> +	 * using CPU hotplug.
+> +	 */
+> +	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+> +
+> +	/*
+> +	 * This is needed to take secondary CPUs out of reset on the
+> +	 * initial boot.
+> +	 */
+> +	ret = mvebu_cpu_reset_deassert(hw_cpu);
+> +	if (ret) {
+> +		pr_warn("unable to boot CPU: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct smp_operations mv98dx3236_smp_ops __initconst = {
+> +	.smp_init_cpus		= armada_xp_smp_init_cpus,
+> +	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
+> +	.smp_boot_secondary	= mv98dx3236_boot_secondary,
+> +	.smp_secondary_init     = armada_xp_secondary_init,
+> +#ifdef CONFIG_HOTPLUG_CPU
+> +	.cpu_die		= armada_xp_cpu_die,
+> +	.cpu_kill               = armada_xp_cpu_kill,
+> +#endif
+> +};
+> +
+> +CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
+> +		      &mv98dx3236_smp_ops);
+> -- 
+> 2.11.0.24.ge6920cf
+>
 
-I am not sure what properties to put in there,
-> though.
->=20
-> Can you describe a bit more which properties belong to which syncmd mode?
-> That will help me make a decision.
-
-OK. The documentation for this control is not accurate in many places of th=
-e h/w manual. My observations are based on tests with MAX2175 tuner master =
-device using I2S mode.
-
-Applicable parameters for both Frame Start Sync pulse & I2S modes
- - sync-active
- - lsb/msb first
- - dtdl
-=20
-For I2S mode, syncdl property should be set to value zero only.=20
-
-Below are timing diagram examples.
-
-Frame start sync pulse mode:
------------------------------
-
-   <------------ 1 frame ------------------>
-   .---.   .---.   .---.   .---.   .---.   .---.   .---.
-___|   |___|   |___|   |___|   |___|   |___|   |___|   |___    SCK
-
-   .-------.                               .-------.
-___|       |_______________________________|       |_______    SYNC/SS
-
-   |                                       |
-   |-No data delay          No sync delay  |
-__  ______  ______  ______  ______  ______  ______  ______
-  \/      \/      \/      \/      \/      \/      \/           Rx Data
-__/\______/\______/\______/\______/\______/\______/\______
-
-   |-1 bit delay            No sync delay  |
-__________  ______  ______  ______  ______  ______  ______
-          \/      \/      \/      \/      \/      \/           Rx Data
-__________/\______/\______/\______/\______/\______/\______
-
-1 bit delay =3D> DTDL =3D 1 (i.e.) 1 clock cycle delay
-No Sync delay =3D> SYNCDL =3D 0
-
-I2S mode:
-----------
-
-   <------------ 1 frame -------------------------->
-   .---.   .---.   .---.   .---.   .---.   .---.   .---.
-___|   |___|   |___|   |___|   |___|   |___|   |___|   |___    SCK
-
-
-___                         _______________________
-   |                       |                       |          SYNC/SS
-   +-----------------------+                       +-------
-
-
-   |                                               |
-   |-No data delay                   No sync delay |
-__  ______  ______  ______  ______  ______  ______  ______
-  \/      \/      \/      \/      \/      \/      \/           Rx Data
-__/\______/\______/\______/\______/\______/\______/\______
-
-   |-1 bit delay                   No sync delay  |
-__________  ______  ______  ______  ______  ______  ______
-          \/      \/      \/      \/      \/      \/           Rx Data
-__________/\______/\______/\______/\______/\______/\______
-
-Please share your thoughts.
-
-Thanks,
-Ramesh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
