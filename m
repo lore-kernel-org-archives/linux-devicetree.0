@@ -1,146 +1,57 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v8 09/12] dt-bindings: mux-adg792a: document devicetree
- bindings for ADG792A/G mux
-Date: Fri, 27 Jan 2017 23:09:53 +0100
-Message-ID: <383638ef-1bb2-224f-0fd0-4818395a2306@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-10-git-send-email-peda@axentia.se>
- <20170127195054.wupmfkiw6kaoc7jx@rob-hp-laptop>
+From: Scott Wood <oss@buserror.net>
+Subject: Re: [PATCH 1/3] dt-bindings: qoriq-clock: Add coreclk
+Date: Fri, 27 Jan 2017 17:51:42 -0600
+Message-ID: <1485561102.9266.8.camel@buserror.net>
+References: <1485332363-8434-1-git-send-email-oss@buserror.net>
+ <20170127223819.mzovhnnpths5t5w2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170127195054.wupmfkiw6kaoc7jx@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170127223819.mzovhnnpths5t5w2@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, "Z.Q. Hou" <zhiqiang.hou@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "Y.T. Tang" <yuantian.tang@nxp.com>, "Y.B. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-27 20:50, Rob Herring wrote:
-> On Wed, Jan 18, 2017 at 04:57:12PM +0100, Peter Rosin wrote:
->> Analog Devices ADG792A/G is a triple 4:1 mux.
->>
->> Acked-by: Jonathan Cameron <jic23@kernel.org>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  .../devicetree/bindings/mux/mux-adg792a.txt        | 79 ++++++++++++++++++++++
->>  1 file changed, 79 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mux/mux-adg792a.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mux/mux-adg792a.txt b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
->> new file mode 100644
->> index 000000000000..0b26dd11f070
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
->> @@ -0,0 +1,79 @@
->> +Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
->> +
->> +Required properties:
->> +- compatible : "adi,adg792a" or "adi,adg792g"
->> +- #mux-control-cells : <0> if parallel, or <1> if not.
->> +* Standard mux-controller bindings as decribed in mux-controller.txt
->> +
->> +Optional properties for ADG792G:
->> +- gpio-controller : if present, #gpio-cells below is required.
->> +- #gpio-cells : should be <2>
->> +			  - First cell is the GPO line number, i.e. 0 or 1
->> +			  - Second cell is used to specify active high (0)
->> +			    or active low (1)
->> +
->> +Optional properties:
->> +- adi,parallel : if present, the three muxes are bound together with a single
->> +  mux controller, controlling all three muxes in parallel.
-> 
-> Can't this be implied by #mux-control-cells == 0?
-
-Right, good point! I'll drop adi,parallel.
-
->> +- adi,idle-state : if present, array of 2-tuples with mux controller number
->> +  and state that mux controllers will have when idle. States 0 through 3
->> +  correspond to signals A through D in the datasheet.
->> +- adi,idle-high-impedance : if present, array of mux controller numbers that
->> +  should be in the disconnected high-impedance state when idle.
-> 
-> Perhaps combine these 2 to a common idle-state with the index being the 
-> mux controller number and a value of -1 (or 4) being hi-Z.
-
-At one point [1] I had a straight array for the mux controllers with state 4
-being hi-Z and state 5 being the default "leave mux as-is on release", but
-Jonathan didn't like magic numbers. Can you please read the follow-ups to the
-referenced mail for some background, and then pick out the most suitable color
-for me to paint with? :-)
-
-[1] https://lkml.org/lkml/2016/11/30/110
-
->> +
->> +Mux controller states 0 through 3 correspond to signals A through D in the
->> +datasheet. If a mux controller is mentioned in neither adi,idle-state nor
->> +adi,idle-high-impedance it is left in its previously selected state when idle.
->> +
->> +Example:
->> +
->> +	/*
->> +	 * Three independent mux controllers (of which one is used).
->> +	 * Mux 0 is disconnected when idle, mux 1 idles with signal C
->> +	 * and mux 2 idles with signal A.
->> +	 */
->> +	&i2c0 {
->> +		mux: adg792a@50 {
-> 
-> mux-controller@50
-
-Yep. Hmm, where have I seen that before? :-)
-
-Cheers,
-peda
-
->> +			compatible = "adi,adg792a";
->> +			reg = <0x50>;
->> +			#mux-control-cells = <1>;
->> +
->> +			adi,idle-high-impedance = <0>;
->> +			adi,idle-state = <1 2>, <2 0>;
->> +		};
->> +	};
->> +
->> +	adc-mux {
->> +		compatible = "io-channel-mux";
->> +		io-channels = <&adc 0>;
->> +		io-channel-names = "parent";
->> +
->> +		mux-controls = <&mux 1>;
->> +
->> +		channels = "sync-1", "", "out";
->> +	};
->> +
->> +
->> +	/*
->> +	 * Three parallel muxes with one mux controller, useful e.g. if
->> +	 * the adc is differential, thus needing two signals to be muxed
->> +	 * simultaneously for correct operation.
->> +	 */
->> +	&i2c0 {
->> +		pmux: adg792a@50 {
->> +			compatible = "adi,adg792a";
->> +			reg = <0x50>;
->> +			#mux-control-cells = <0>;
->> +			adi,parallel;
->> +		};
->> +	};
->> +
->> +	diff-adc-mux {
->> +		compatible = "io-channel-mux";
->> +		io-channels = <&adc 0>;
->> +		io-channel-names = "parent";
->> +
->> +		mux-controls = <&pmux>;
->> +
->> +		channels = "sync-1", "", "out";
->> +	};
->> -- 
->> 2.1.4
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE3LTAxLTI3IGF0IDE2OjM4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
+biBXZWQsIEphbiAyNSwgMjAxNyBhdCAwMjoxOToyMUFNIC0wNjAwLCBTY290dCBXb29kIHdyb3Rl
+Ogo+ID4gCj4gPiBsczEwMTJhIGhhcyBzZXBhcmF0ZSBpbnB1dCByb290IGNsb2NrcyBmb3IgY29y
+ZSBQTExzIHZlcnN1cyB0aGUgcGxhdGZvcm0KPiA+IFBMTCwgd2l0aCB0aGUgbGF0dGVyIGRlc2Ny
+aWJlZCBhcyBzeXNjbGsgaW4gdGhlIGh3IGRvY3MuCj4gPiAKPiA+IFVwZGF0ZSB0aGUgcW9yaXEt
+Y2xvY2sgYmluZGluZyB0byBhbGxvdyBhIHNlY29uZCBpbnB1dCBjbG9jaywgbmFtZWQKPiA+ICJj
+b3JlY2xrIi7CoMKgSWYgcHJlc2VudCwgdGhpcyBjbG9jayB3aWxsIGJlIHVzZWQgZm9yIHRoZSBj
+b3JlIFBMTHMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJv
+ci5uZXQ+Cj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+IC0tLQo+ID4gwqBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0IHwg
+NiArKysrKysKPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
+LWNsb2NrLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
+cW9yaXEtY2xvY2sudHh0Cj4gPiBpbmRleCBkZjljYjVhLi45N2E5NjY2IDEwMDY0NAo+ID4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4
+dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
+LWNsb2NrLnR4dAo+ID4gQEAgLTU1LDYgKzU1LDExIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
+PiDCoC0gY2xvY2tzOiBJZiBjbG9jay1mcmVxdWVuY3kgaXMgbm90IHNwZWNpZmllZCwgc3lzY2xr
+IG1heSBiZSBwcm92aWRlZAo+ID4gwqAJYXMgYW4gaW5wdXQgY2xvY2suwqDCoEVpdGhlciBjbG9j
+ay1mcmVxdWVuY3kgb3IgY2xvY2tzIG11c3QgYmUKPiA+IMKgCXByb3ZpZGVkLgo+ID4gKwlBIHNl
+Y29uZCBpbnB1dCBjbG9jaywgY2FsbGVkICJjb3JlY2xrIiwgbWF5IGJlIHByb3ZpZGVkIGlmCj4g
+PiArCWNvcmUgUExMcyBhcmUgYmFzZWQgb24gYSBkaWZmZXJlbnQgaW5wdXQgY2xvY2sgZnJvbSB0
+aGUKPiA+ICsJcGxhdGZvcm0gUExMLgo+ID4gKy0gY2xvY2stbmFtZXM6IFJlcXVpcmVkIGlmIGEg
+Y29yZWNsayBpcyBwcmVzZW50LsKgwqBWYWxpZCBuYW1lcyBhcmUKPiA+ICsJInN5c2NsayIgYW5k
+ICJjb3JlY2xrIi4KPiAnY2xrJyBwYXJ0IGlzIHJlZHVuZGFudC4KCiJzeXNjbGsiIGlzIGEgdGVy
+bSB1c2VkIGJ5IHRoZSBoYXJkd2FyZSBkb2N1bWVudGF0aW9uIGFuZCBJJ2QgcmF0aGVyIGxlYXZl
+IGl0CmludGFjdC4gwqAiY29yZWNsayIgaXNuJ3QgbmFtZWQgKG9ubHkgZGVzY3JpYmVkKSBieSB0
+aGUgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbgpidXQgaXQgaXMgYSBzcGVjaWFsIHZhcmlhbnQgb2Yg
+c3lzY2xrIGFuZCBoYXZpbmcgc2ltaWxhciBuYW1pbmcgaGVscHMgbWFrZQp0aGF0IGNsZWFyLgoK
+LVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
+dXgtYXJtLWtlcm5lbAo=
