@@ -1,40 +1,47 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V4 4/6] arm64: dts: smem enablement for msm8992
-Date: Fri, 27 Jan 2017 11:58:31 -0800
-Message-ID: <20170127195831.GH8801@codeaurora.org>
-References: <1485508205-1904-1-git-send-email-jeremymc@redhat.com>
- <1485508205-1904-5-git-send-email-jeremymc@redhat.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ASoC: sunxi: allow the analog codec
+ driver to be built on ARM64
+Date: Fri, 27 Jan 2017 21:05:32 +0100
+Message-ID: <20170127200532.pemk36hwyzkun3i5@lukather>
+References: <20170126154859.55855-1-icenowy@aosc.xyz>
+ <20170126154859.55855-9-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xfdin3uw722yn6qj"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFOQV3CAKGQERTXHKAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <1485508205-1904-5-git-send-email-jeremymc@redhat.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jeremy McNicoll <jeremymc@redhat.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, andy.gross@linaro.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
+In-Reply-To: <20170126154859.55855-9-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/27, Jeremy McNicoll wrote:
-> diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-> index 13fb6f7..2c05ec7 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
-> +
-> +		sfpb_mutex: hwmutex {
-> +			compatible = "qcom,sfpb-mutex";
-> +			syscon = <&sfpb_mutex_regs 0x0 0x100>;
-> +			#hwlock-cells = <1>;
-> +		};
-> +
-> +		smem {
-> +			compatible = "qcom,smem";
-> +			memory-region = <&smem_region>;
-> +			qcom,rpm-msg-ram = <&rpm_msg_ram>;
-> +			hwlocks = <&sfpb_mutex 3>;
-> +		};
 
-Move these nodes outside soc node please.
+--xfdin3uw722yn6qj
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Thu, Jan 26, 2017 at 11:48:58PM +0800, Icenowy Zheng wrote:
+> As the 64-bit Allwinner H5 SoC has the same analog codec part (also the
+> same digital part) as H3, enable the driver to be built on ARM64
+> Allwinner platform, so that it can be used on H5.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks,
+Maxime
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--xfdin3uw722yn6qj--
