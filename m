@@ -1,50 +1,49 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/3] Enable SPDIF on the Beelink X2
-Date: Fri, 27 Jan 2017 21:10:30 +0100
-Message-ID: <20170127201030.mal5c34ctgpwtd6v@lukather>
-References: <20170127154808.19229-1-codekipper@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Javier Martinez Canillas <javier@osg.samsung.com>
+Subject: [PATCH] ARM: dts: exynos: Increase MFC left reserved memory region
+ size
+Date: Fri, 27 Jan 2017 17:10:46 -0300
+Message-ID: <1485547846-12778-1-git-send-email-javier@osg.samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mqpmjz7zwrw4546x"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQOSV3CAKGQEYLOU6SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170127154808.19229-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, linux-samsung-soc@vger.kernel.org, Thibault Saunier <thibault.saunier@osg.samsung.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Shuah Khan <shuahkh@osg.samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Russell King <linux@armlinux.org.uk>, Inki Dae <inki.dae@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+The sizes of the MFC reserved memory regions for CMA are 16 MiB for the
+left bank and 8 MiB for the right bank. But this isn't enough to decode
+high resolution videos so increase the size for the left bank to 36 MiB
+which is enough for 1080p (1920x1080).
 
---mqpmjz7zwrw4546x
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Javier Martinez Canillas <javier@osg.samsung.com>
 
-On Fri, Jan 27, 2017 at 04:48:05PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> Hi All,
-> 
-> here is the patchset required to get SPDIF working on the Beelink X2
-> which is a H3 based STB.
-> 
-> BR,
-> CK
+---
 
-Merged all three, but this could have been in your earlier patch for
-that board.
+ arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Maxime
-
+diff --git a/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+index f78c14c82e17..25186ac4188d 100644
+--- a/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
++++ b/arch/arm/boot/dts/exynos-mfc-reserved-memory.dtsi
+@@ -17,7 +17,7 @@
+ 		mfc_left: region_mfc_left {
+ 			compatible = "shared-dma-pool";
+ 			no-map;
+-			size = <0x1000000>;
++			size = <0x2400000>;
+ 			alignment = <0x100000>;
+ 		};
+ 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---mqpmjz7zwrw4546x--
+2.7.4
