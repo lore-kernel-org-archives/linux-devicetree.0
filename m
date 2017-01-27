@@ -1,156 +1,37 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V8 1/2] iio: adc: Add Renesas GyroADC bindings
-Date: Fri, 27 Jan 2017 16:26:21 -0600
-Message-ID: <20170127222621.vzay3mat37f7v5tm@rob-hp-laptop>
-References: <20170124182642.29396-1-marek.vasut@gmail.com>
+Subject: Re: [PATCH v9 1/3] doc: dt: add cyclone-ps-spi binding document
+Date: Fri, 27 Jan 2017 16:28:44 -0600
+Message-ID: <20170127222844.5nwc2druyneuuxjm@rob-hp-laptop>
+References: <cover.1485295905.git.stillcompiling@gmail.com>
+ <910cf70128e0303d3642d6ff527a069ad6e18bf7.1485295905.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170124182642.29396-1-marek.vasut@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org
+In-Reply-To: <910cf70128e0303d3642d6ff527a069ad6e18bf7.1485295905.git.stillcompiling@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joshua Clayton <stillcompiling@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Moritz Fischer <moritz.fischer@ettus.com>, devicetree@vger.kernel.org, Alan Tull <atull@opensource.altera.com>, linux-fpga@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Anatolij Gustschin <agust@denx.de>, Shawn Guo <shawnguo@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 07:26:41PM +0100, Marek Vasut wrote:
-> Add DT bindings for the Renesas RCar GyroADC block. This block is
-> a simple 4/8-channel ADC which samples 12/15/24 bits of data every
-> cycle from all channels.
+On Tue, Jan 24, 2017 at 02:19:32PM -0800, Joshua Clayton wrote:
+> Describe a cyclone-ps-spi devicetree entry, required features
 > 
-> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
-> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Simon Horman <horms+renesas@verge.net.au>
-> Cc: Jonathan Cameron <jic23@kernel.org>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: Wolfram Sang <wsa@the-dreams.de>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
 > ---
-> V8: - Sync the version with the 2/2 driver patch
->     - Drop status prop from example
->     - Add GyroADC block description
->     - Enumerate the compatible string values
->     - Make subnodes mandatory
-> ---
->  .../bindings/iio/adc/renesas,gyroadc.txt           | 99 ++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-> new file mode 100644
-> index 000000000000..7f9b3bd120a9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-> @@ -0,0 +1,99 @@
-> +* Renesas RCar GyroADC device driver
-> +
-> +The GyroADC block is a reduced SPI block with up to 8 chipselect lines,
-> +which supports the SPI protocol of a selected few SPI ADCs. The SPI ADCs
-> +are sampled by the GyroADC block in a round-robin fashion and the result
-> +presented in the GyroADC registers.
-> +
-> +Required properties:
-> +- compatible:	Should be "<soc-specific>", "renesas,rcar-gyroadc".
-> +                The <soc-specific> should be one of:
-> +		renesas,r8a7791-gyroadc - for the GyroADC block present
-> +					  in r8a7791 SoC
-> +		renesas,r8a7792-gyroadc - for the GyroADC with interrupt
-> +					  block present in r8a7792 SoC
-> +- reg:		Address and length of the register set for the device
-> +- clocks:	References to all the clocks specified in the clock-names
-> +		property as specified in
-> +		Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> +- clock-names:	Shall contain "fck" and "if". The "fck" is the GyroADC block
-> +		clock, the "if" is the interface clock.
-> +- power-domains: Must contain a reference to the PM domain, if available.
-> +- #address-cells: Should be <1> (setting for the subnodes) for all ADCs
-> +		except for "fujitsu,mb88101a". Should be <0> (setting for
-> +		only subnode) for "fujitsu,mb88101a".
-> +- #size-cells:	Should be <0> (setting for the subnodes)
-> +
-> +Sub-nodes:
-> +You must define subnode(s) which select the connected ADC type and reference
-> +voltage for the GyroADC channels.
-> +
-> +Required properties for subnodes:
-> +- compatible:	Should be either of:
-> +		"fujitsu,mb88101a"
-> +			- Fujitsu MB88101A compatible mode,
-> +			  12bit sampling, up to 4 channels can be sampled in
-> +			  round-robin fashion. One Fujitsu chip supplies four
-> +			  GyroADC channels with data as it contains four ADCs
-> +			  on the chip and thus for 4-channel operation, single
-> +			  MB88101A is required. The Cx chipselect lines of the
-> +			  MB88101A connect directly to two CHS lines of the
-> +			  GyroADC, no demuxer is required. The data out line
-> +			  of each MB88101A connects to a shared input pin of
-> +			  the GyroADC.
-> +		"ti,adcs7476" or "ti,adc121" or "adi,ad7476"
-> +			- TI ADCS7476 / TI ADC121 / ADI AD7476 compatible mode,
-> +			  15bit sampling, up to 8 channels can be sampled in
-> +			  round-robin fashion. One TI/ADI chip supplies single
-> +			  ADC channel with data, thus for 8-channel operation,
-> +			  8 chips are required. A 3:8 chipselect demuxer is
-> +			  required to connect the nCS line of the TI/ADI chips
-> +			  to the GyroADC, while MISO line of each TI/ADI ADC
-> +			  connects to a shared input pin of the GyroADC.
-> +		"maxim,max1162" or "maxim,max11100"
-> +			- Maxim MAX1162 / Maxim MAX11100 compatible mode,
-> +			  16bit sampling, up to 8 channels can be sampled in
-> +			  round-robin fashion. One Maxim chip supplies single
-> +			  ADC channel with data, thus for 8-channel operation,
-> +			  8 chips are required. A 3:8 chipselect demuxer is
-> +			  required to connect the nCS line of the MAX chips
-> +			  to the GyroADC, while MISO line of each Maxim ADC
-> +			  connects to a shared input pin of the GyroADC.
-> +- reg:		Should be the number of the analog input. Should be present
-> +		for all ADCs except "fujitsu,mb88101a".
-> +- vref-supply:	Reference to the channel reference voltage regulator.
-> +
-> +Example:
-> +	vref_max1162: regulator-vref-max1162 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "MAX1162 Vref";
-> +		regulator-min-microvolt = <4096000>;
-> +		regulator-max-microvolt = <4096000>;
-> +	};
-> +
-> +	&adc {
+>  .../bindings/fpga/altera-passive-serial.txt        | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
 
-This wouldn't actually work unless you include something that defines 
-'&adc'. Make this adc@e6e54000.
-
-With that,
+This is a minor change, you could have kept my ack.
 
 Acked-by: Rob Herring <robh@kernel.org>
-
-
-> +		compatible = "renesas,r8a7791-gyroadc", "renesas,rcar-gyroadc";
-> +		reg = <0 0xe6e54000 0 64>;
-> +		clocks = <&mstp9_clks R8A7791_CLK_GYROADC>, <&clk_65m>;
-> +		clock-names = "fck", "if";
-> +		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
-> +
-> +		pinctrl-0 = <&adc_pins>;
-> +		pinctrl-names = "default";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		adc@0 {
-> +			reg = <0>;
-> +			compatible = "maxim,max1162";
-> +			vref-supply = <&vref_max1162>;
-> +		};
-> +
-> +		adc@1 {
-> +			reg = <1>;
-> +			compatible = "maxim,max1162";
-> +			vref-supply = <&vref_max1162>;
-> +		};
-> +	};
-> -- 
-> 2.11.0
-> 
