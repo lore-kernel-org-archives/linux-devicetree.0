@@ -1,199 +1,185 @@
-From: Ziji Hu <huziji@marvell.com>
-Subject: Re: [PATCH v5 07/12] mmc: sdhci-xenon: Add support to PHYs of Marvell
- Xenon SDHC.
-Date: Sat, 28 Jan 2017 01:10:54 +0800
-Message-ID: <1f174462-7644-1d02-9216-01c1fa3b402b@marvell.com>
-References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
- <130ccd5a0fe4f822b954e0256c9dccec0b6ca523.1484154449.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFpx23wio-QmDrx277+YO2Jt2S0ZrokZ2E4K+oVURSR1Hg@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Fri, 27 Jan 2017 17:17:46 +0000
+Message-ID: <20170127171746.lf2nbpsaqs3dmy44@dell>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell>
+ <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+ <20170124113658.GW16020@dell>
+ <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+ <20170127101545.g53uah57vgfu55o5@dell>
+ <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFpx23wio-QmDrx277+YO2Jt2S0ZrokZ2E4K+oVURSR1Hg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <7b3eb38d-4fd1-2006-7423-94f2a7b38b27-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On 2017/1/26 19:29, Ulf Hansson wrote:
-> [...]
+On Fri, 27 Jan 2017, Arnaud Pouliquen wrote:
+> On 01/27/2017 11:15 AM, Lee Jones wrote:
+> > On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
+> >> On 01/24/2017 12:36 PM, Lee Jones wrote:
+> >>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
+> >>>> On 01/24/2017 09:22 AM, Lee Jones wrote:
+> >>>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
+> >>>>>
+> >>>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
+> >>>>>
+> >>>>> Same time as what?
+> >>>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
+> >>>> capture (through ASOC).
+> >>>>>
+> >>>>>> conversion and audio PDM microphone.
+> >>>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
+> >>>>>> For this it exports an API to handles filters and channels resources.
+> >>>>>
+> >>>>> This looks like an ADC driver?  What is it that makes it an MFD?
+> >>>> Yes it a kind of ADC but that supports 2 features audio and iio.
+> >>>> So it has to support 2 features based on 2 separate Frameworks.
+> >>>
+> >>> I'm still unsure why it needs to live in MFD.
+> >>>
+> >>> By the looks of it, this driver needs to move into IIO and you need to
+> >>> call into it from ASoC.
+> >>>
+> >>
+> >> I think i introduce confusion by speaking about ADC for audio...
+> >>
+> >> 1) IIO handles sigma delta ADCs that can be used as example for motor
+> >> controls. the aim is to get value based on an application request or
+> >> using some triggers.
+> >> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
+> >>
+> >> 2) For audio part, we speak about Digital mems microphones that generate
+> >> PDM format stream. PDM is a continuous real time stream dedicated to
+> >> audio record and must be handled in ASOC ( codec Dmic part driver is
+> >> /sound/soc/codec/dmic.c).
+> >> DMIC example:
+> >> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
+> >>
+> >> Form my point of view it very strange to handle DMICs in IIO, as it is
+> >> not designed to support audio streams.it is two separate features that
+> >> are not compatible.
+> >>
+> >> Now, from software point of view
+> >> That would means that IIO declares ADCs that it can not expose, because
+> >> DMIC is not IIO standard. But IIO inkern API needs that device is
+> >> declared
+> > 
+> >> So i should define a specific API in IIO for ASOC driver.
+> > 
+> > Yes, this is what I think you should do.
+> > 
+> > MFD is not a dumping ground for devices that do not fit anywhere else.
 > 
->> +
->> +static inline bool temp_stage_hs200_to_hs400(struct sdhci_host *host,
->> +                                            struct sdhci_xenon_priv *priv)
->> +{
->> +       /*
->> +        * Tmep stages from HS200 to HS400
->> +        * from HS200 to HS in 200MHz
->> +        * from 200MHz to 52MHz
->> +        */
->> +       if (((priv->timing == MMC_TIMING_MMC_HS200) &&
->> +            (host->timing == MMC_TIMING_MMC_HS)) ||
->> +           ((host->timing == MMC_TIMING_MMC_HS) &&
->> +            (priv->clock > host->clock)))
->> +               return true;
->> +
->> +       return false;
->> +}
->> +
->> +static inline bool temp_stage_hs400_to_h200(struct sdhci_host *host,
->> +                                           struct sdhci_xenon_priv *priv)
->> +{
->> +       /*
->> +        * Temp stages from HS400 t0 HS200:
->> +        * from 200MHz to 52MHz in HS400
->> +        * from HS400 to HS DDR in 52MHz
->> +        * from HS DDR to HS in 52MHz
->> +        * from HS to HS200 in 52MHz
->> +        */
->> +       if (((priv->timing == MMC_TIMING_MMC_HS400) &&
->> +            ((host->clock == MMC_HIGH_52_MAX_DTR) ||
->> +             (host->timing == MMC_TIMING_MMC_DDR52))) ||
->> +           ((priv->timing == MMC_TIMING_MMC_DDR52) &&
->> +            (host->timing == MMC_TIMING_MMC_HS)) ||
->> +           ((host->timing == MMC_TIMING_MMC_HS200) &&
->> +            (host->clock == MMC_HIGH_52_MAX_DTR)))
->> +               return true;
->> +
->> +       return false;
->> +}
+> I fully understand that you don't want to create unnecessary MFD devices.
+> But In case of DFSDM ,it is really a device that supports 2 features.
+> The main evidence is that "ADC acquisition" and "digital microphone"
+> features are handled by two separate frameworks.
+> So this corresponds to two features that share the same device resources
+> (registers, IRQs, clocks).
+> Seems that this match with MFD definition.
 > 
-> Both the above functions seems to be really fragile to use. If
-> anything changes in the core layer related to these sequences, you may
-> end up getting a wrong validated expression.
+> Now, if IIO and ASOC maintainers are aligned with you proposal, i will
+> move MFD part in IIO.
+> But in this case, i can not see another way to do it, except a MFD
+> driver hidden in IIO?
 > 
-> Perhaps an option would be to add one or two new mmc host ops, which
-> could be called during the related hs200/400 sequences that could make
-> this less fragile for you? What do you think?
+> Here is my analysis of a design in IIO:
 > 
-
-    Yes, they both look fragile to use.
-    In my own opinion, hs200->hs400 sequence might be safe since it has been
-    defined and fixed by eMMC spec. I personally think it is unlikely to be
-    adjusted again. Please correct me if I am wrong.
-    However, as you said, hs400->hs200 sequence will have issue if it is
-    changed in core layer, since such a sequence is not from eMMC spec.
-
-    But, in my opinion, adding additional mmc host ops might not be helpful.
-    The above two functions are part of Xenon PHY adjustment. Those two
-    functions help save some PHY setting steps in hs200->hs400/hs400->hs200
-    sequence. But other PHY settings are still necessary,
-    which should be executed each time when mmc core layer set ios.
-    Neither of them can be extracted out and put into another mmc host ops.
-
-    Instead, it will helps us improve the above two if we can add a flag to
-    indicate that eMMC is in a temporary status in hs200->hs400 or hs400->hs200
-    sequence.
-
->> +
->> +/*
->> + * If eMMC PHY Slow Mode is required in lower speed mode in SDR mode
->> + * (SDLCK < 55MHz), enable Slow Mode to bypass eMMC PHY.
->> + * SDIO slower SDR mode also requires Slow Mode.
->> + *
->> + * If Slow Mode is enabled, return true.
->> + * Otherwise, return false.
->> + */
->> +static bool emmc_phy_slow_mode(struct sdhci_host *host,
->> +                              unsigned char timing)
->> +{
->> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +       struct sdhci_xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
->> +       struct emmc_phy_params *params = priv->phy_params;
->> +       struct xenon_emmc_phy_regs *phy_regs = priv->emmc_phy_regs;
->> +       u32 reg;
->> +
->> +       /* Skip temp stages from HS200 to HS400 */
->> +       if (temp_stage_hs200_to_hs400(host, priv))
->> +               return false;
->> +
->> +       /* Skip temp stages from HS400 t0 HS200 */
->> +       if (temp_stage_hs400_to_h200(host, priv))
->> +               return false;
->> +
->> +       reg = sdhci_readl(host, phy_regs->timing_adj);
->> +       /* Enable Slow Mode for SDIO in slower SDR mode */
->> +       if ((priv->init_card_type == MMC_TYPE_SDIO) &&
+> Natural way to do this is to consider that ASOC is a customer of IIO so
+> use the customer.h API.
+> 1) As Digital microphone can not be handled by IIO dev interface, i can
+> not expose them as an IIO channel, that would be visible by applications
+> in /sys/bus/iio/devices/iio
+> 2) ASOC needs to configure DFSDM filter to match to specific frequencies
+> and sample formats requested by users. Not standard IIO interface to do
+> this. (on IIO side this is done by attribute file)
+> 3) audio stream is a real time stream. So for audio quality best is to
+> minimize latencies and Xrun. That why transfer as done from HW to
+> application using LLI DMA transfers with a minimum of copy. This does
+> not match with the IIO inkern API.
+>  => So seems not possible to use IIO inkern API.
 > 
-> Ah, noticed that there is some specific things going on here for SDIO
-> here as well. So perhaps you do need to implement the ->init_card()
-> ops anyway. Which I suggested not to, for patch6. :-)
-> 
-> Although, there is one problem with using ->init_card(). That is
-> particularly for removable cards, as mmc_rescan() doesn't invoke
-> ->init_card() when it removes a card, which means, you may use old and
-> thus wrong information about what kind of card in the next card
-> detection attempt. So perhaps ->init_card() needs to be called from
-> the core before it even figured out what kind of card it is trying to
-> detect, as to allow the callbacks to reset some data.
-> 
-> Or perhaps you can think of another clever way!?
->
+> That's means that i would need to create a ST specific include file to
+> offer an API to ASoC to handle DFSDM resources linked to the DMIC.
+> and to probe ASOc device in IIO one.
+> So the solution would be to create something like a sub IIO driver That
+> probe and handle some IIO and ASOC devices.
+> Ultimately This would correspond to a MFD driver integrated in IIO...
 
-    It is a good question.
+The issue is not the creation of an MFD driver to create shared
+resources and probe the child devices.  That's what MFD *is* for.
+What I do take exception to is having lots of code in MFD which
+should clearly live in a different subsystem.
 
-    Our Xenon requires to set SDIO Mode and PHY Slow Mode for SDIO card.
-    Both of them are configed in function emmc_phy_set(). In emmc_phy_set(),
-    we will skip setting those two configs if current timing is
-    MMC_TIMING_LEGACY.
-    It seems that card structure can be updated before switching into
-    higher speed mode from MMC_TIMING_LEGACY. Thus I personally believe we
-    can get updated card type in ->init_card().
+Since this device only serves a couple of functions, I expect it to be
+a few hundred lines, maximum.  Everything else should be farmed out.
+MFD knows nothing of "channels" or "filters" so anything related to
+them (init, get, start, stop, release, etc) needs to find another
+home.  Whether that's in IIO is a separate discussion, but it
+certainly doesn't live in MFD.
 
-    Hope my above answer can satisfy you. If there is any issue, please kindly
-    let me know.
-    I will also ask my teammates to do more tests, to make sure no corner case.
-
-    Thank you.
-
-Best regards,
-Hu Ziji
-
+> Jonathan, Mark, Please could you share your opinion on this topic?
 > 
->> +           ((timing == MMC_TIMING_UHS_SDR25) ||
->> +            (timing == MMC_TIMING_UHS_SDR12) ||
->> +            (timing == MMC_TIMING_SD_HS) ||
->> +            (timing == MMC_TIMING_LEGACY))) {
->> +               reg |= XENON_TIMING_ADJUST_SLOW_MODE;
->> +               sdhci_writel(host, reg, phy_regs->timing_adj);
->> +               return true;
->> +       }
->> +
->> +       /* Check if Slow Mode is required in lower speed mode in SDR mode */
->> +       if (((timing == MMC_TIMING_UHS_SDR50) ||
->> +            (timing == MMC_TIMING_UHS_SDR25) ||
->> +            (timing == MMC_TIMING_UHS_SDR12) ||
->> +            (timing == MMC_TIMING_SD_HS) ||
->> +            (timing == MMC_TIMING_MMC_HS) ||
->> +            (timing == MMC_TIMING_LEGACY)) && params->slow_mode) {
->> +               reg |= XENON_TIMING_ADJUST_SLOW_MODE;
->> +               sdhci_writel(host, reg, phy_regs->timing_adj);
->> +               return true;
->> +       }
->> +
->> +       reg &= ~XENON_TIMING_ADJUST_SLOW_MODE;
->> +       sdhci_writel(host, reg, phy_regs->timing_adj);
->> +       return false;
->> +}
->> +
+> Regards
+> Arnaud
 > 
-> [...]
-> 
-> Kind regards
-> Uffe
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> > 
+> >>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+> >>>>>> ---
+> >>>>>>  drivers/mfd/Kconfig             |   11 +
+> >>>>>>  drivers/mfd/Makefile            |    2 +
+> >>>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
+> >>>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
+> >>>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
+> >>>>>>  5 files changed, 1601 insertions(+)
+> >>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
+> >>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
+> >>>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
+> >>>>>>
+> >>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> >>>>>> index c6df644..4bb660b 100644
+> >>>>>> --- a/drivers/mfd/Kconfig
+> >>>>>> +++ b/drivers/mfd/Kconfig
+> >>>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
+> >>>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
+> >>>>>>  	  Nomadik series.
+> >>>>>>  
+> >>>>>> +config MFD_STM32_DFSDM
+> >>>>>> +	tristate "ST Microelectronics STM32 DFSDM"
+> >>>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> >>>>>> +	select MFD_CORE
+> >>>>>> +	select REGMAP
+> >>>>>> +	select REGMAP_MMIO
+> >>>>>> +	help
+> >>>>>> +	  Select this option to enable the STM32 Digital Filter
+> >>>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
+> >>>>>> +	  in various STM32 series.
+> >>>>>> +
+> >>>>>>  menu "Multimedia Capabilities Port drivers"
+> >>>>>>  	depends on ARCH_SA1100
+> >>>>>
+> >>>>> [...]
+> >>>>>
+> >>>>
+> >>>> Regards
+> >>>> Arnaud
+> >>>
+> > 
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
