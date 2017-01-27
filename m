@@ -1,171 +1,266 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Fri, 27 Jan 2017 14:45:49 +0100
-Message-ID: <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
- <20170127101545.g53uah57vgfu55o5@dell>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF binding
+Date: Fri, 27 Jan 2017 13:51:26 +0000
+Message-ID: <HK2PR06MB054552024200BB86B161A983C3760@HK2PR06MB0545.apcprd06.prod.outlook.com>
+References: <1478706284-59134-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+ <HK2PR06MB05453E11C8931F881E106939C36E0@HK2PR06MB0545.apcprd06.prod.outlook.com>
+ <cca1ade8-01ef-8eab-f4b1-7dd7f204fdea@xs4all.nl> <4506041.7mPt4W6j0m@avalon>
+ <HK2PR06MB0545BF36C3DD2D4D1B951C3FC3670@HK2PR06MB0545.apcprd06.prod.outlook.com>
+ <e96cb1cd-cd4a-60f2-cf46-dc837638d115@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127101545.g53uah57vgfu55o5@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e96cb1cd-cd4a-60f2-cf46-dc837638d115-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Antti Palosaari <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Hans,
+
+Many thanks for the response & comments.
+
+> Subject: Re: [PATCH v2 6/7] dt-bindings: media: Add Renesas R-Car DRIF
+> binding
+>=20
+> On 01/10/2017 10:31 AM, Ramesh Shanmugasundaram wrote:
+> > Hi Laurent,
+> >
+> >>>>>> On Wednesday 21 Dec 2016 08:10:37 Ramesh Shanmugasundaram wrote:
+> >>>>>>> Add binding documentation for Renesas R-Car Digital Radio
+> >>>>>>> Interface
+> >>>>>>> (DRIF) controller.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Ramesh Shanmugasundaram
+> >>>>>>> <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> ---
+> >>>>>>>
+> >>>>>>>  .../devicetree/bindings/media/renesas,drif.txt     | 202
+> >> +++++++++++++
+> >>>>>>>  1 file changed, 202 insertions(+)  create mode 100644
+> >>>>>>>
+> >>>>>>> Documentation/devicetree/bindings/media/renesas,drif.txt
+> >>>>>>>
+> >>>>>>> diff --git
+> >>>>>>> a/Documentation/devicetree/bindings/media/renesas,drif.txt
+> >>>>>>> b/Documentation/devicetree/bindings/media/renesas,drif.txt new
+> >>>>>>> file mode 100644 index 0000000..1f3feaf
+> >>>>>>> --- /dev/null
+> >>>>>>> +++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
+> >>>>>>>
+> >>>>>>> +Optional properties of an internal channel when:
+> >>>>>>> +     - It is the only enabled channel of the bond (or)
+> >>>>>>> +     - If it acts as primary among enabled bonds
+> >>>>>>> +--------------------------------------------------------
+> >>>>>>> +- renesas,syncmd       : sync mode
+> >>>>>>> +                      0 (Frame start sync pulse mode. 1-bit
+> >>>>>>> +width
+> >>>>>>> pulse
+> >>>>>>> +                         indicates start of a frame)
+> >>>>>>> +                      1 (L/R sync or I2S mode) (default)
+> >>>>>>> +- renesas,lsb-first    : empty property indicates lsb bit is
+> >> received
+> >>>>>>> first.
+> >>>>>>> +                      When not defined msb bit is received
+> >>>>>>> +first
+> >>>>>>> +(default)
+> >>>>>>> +- renesas,syncac-active: Indicates sync signal polarity, 0/1
+> >>>>>>> +for
+> >>>>>>> low/high
+> >>>
+> >>> Shouldn't this be 'renesas,sync-active' instead of syncac-active?
+> >>>
+> >>> I'm not sure if syncac is intended or if it is a typo.
+> >>>
+> >>>>>>> +                      respectively. The default is 1 (active
+> high)
+> >>>>>>> +- renesas,dtdl         : delay between sync signal and start of
+> >>>>>>> reception.
+> >>>>>>> +                      The possible values are represented in
+> >>>>>>> + 0.5
+> >> clock
+> >>>>>>> +                      cycle units and the range is 0 to 4. The
+> >> default
+> >>>>>>> +                      value is 2 (i.e.) 1 clock cycle delay.
+> >>>>>>> +- renesas,syncdl       : delay between end of reception and sync
+> >>>>>>> signal edge.
+> >>>>>>> +                      The possible values are represented in
+> >>>>>>> + 0.5
+> >> clock
+> >>>>>>> +                      cycle units and the range is 0 to 4 & 6.
+> >>>>>>> + The
+> >>>>>>> default
+> >>>>>>> +                      value is 0 (i.e.) no delay.
+>=20
+> Are these properties actually going to be used by anyone? Just curious.
+
+Yes. Each of this property should be set appropriately based on the master =
+device it interfaces with.=20
+
+>=20
+> >>>>>>
+> >>>>>> Most of these properties are pretty similar to the video bus
+> >>>>>> properties defined at the endpoint level in
+> >>>>>> Documentation/devicetree/bindings/media/video-interfaces.txt. I
+> >>>>>> believe it would make sense to use OF graph and try to
+> >>>>>> standardize these properties similarly.
+> >>>
+> >>> Other than sync-active, is there really anything else that is similar=
+?
+> >>> And even the sync-active isn't a good fit since here there is only
+> >>> one sync signal instead of two for video (h and vsync).
+> >>
+> >> That's why I said similar, not identical :-) My point is that, if we
+> >> consider that we could connect multiple sources to the DRIF, using OF
+> >> graph would make sense, and the above properties should then be
+> >> defined per endpoint.
+> >
+> > Thanks for the clarifications. I have some questions.
+> >
+> > - Assuming two devices are interfaced with DRIF and they are represente=
+d
+> using two endpoints, the control signal related properties of DRIF might
+> still need to be same for both endpoints? For e.g. syncac-active cannot b=
+e
+> different in both endpoints?
+>=20
+> Usually that's the case, but HW designers are weird :-)
+>=20
+> >
+> > - I suppose "lsb-first", "dtdl" & "syncdl" may be defined per endpoint.
+> However, h/w manual says same register values needs to be programmed for
+> both the internal channels of a channel. Same with "syncmd" property.
+> >
+> > We could still define them as per endpoint property with a note that
+> they need to be same. But I am not sure if that is what you intended?
+> >
+> >  If we define them per endpoint we should then also try
+> >> standardize the ones that are not really Renesas-specific (that's at
+> >> least syncac-active).
+> >
+> > OK. I will call it "sync-active".
+>=20
+> That's better, yes.
+
+Thanks.
+
+>=20
+> >
+> >  For the syncmd and lsb-first properties, it could also
+> >> make sense to query them from the connected subdev at runtime, as
+> >> they're similar in purpose to formats and media bus configuration
+> >> (struct v4l2_mbus_config).
+>=20
+> I consider this unlikely. I wouldn't spend time on that as this can alway=
+s
+> be done later.
+>=20
+> > May I know in bit more detail about what you had in mind? Please
+> > correct me if my understanding is wrong here but when I looked at the
+> > code
+> >
+> > 1) mbus_config is part of subdev_video_ops only. I assume we don't want
+> to support this as part of tuner subdev. The next closest is pad_ops with
+> "struct v4l2_mbus_framefmt" but it is fully video specific config unless =
+I
+> come up with new MEDIA_BUS_FMT_xxxx in media-bus-format.h and use the cod=
+e
+> field? For e.g.
+> >
+> > #define MEDIA_BUS_FMT_SDR_I2S_PADHI_BE       0x7001
+> > #define MEDIA_BUS_FMT_SDR_I2S_PADHI_LE       0x7002
+> >
+> > 2) The framework does not seem to mandate pad ops for all subdev. As th=
+e
+> tuner can be any third party subdev, is it fair to assume that these
+> properties can be queried from subdev?
+> >
+> > 3) Assuming pad ops is not available on the subdev shouldn't we still
+> need a way to define these properties on DRIF DT?
+> >
+> >>
+> >> I'm not an SDR expert, so I'd like to have your opinion on this.
+>=20
+> Neither am I :-)
+>=20
+> I think using the endpoint idea does make sense since this helps in
+> describing the routing.=20
+
+OK.
+
+I am not sure what properties to put in there,
+> though.
+>=20
+> Can you describe a bit more which properties belong to which syncmd mode?
+> That will help me make a decision.
+
+OK. The documentation for this control is not accurate in many places of th=
+e h/w manual. My observations are based on tests with MAX2175 tuner master =
+device using I2S mode.
+
+Applicable parameters for both Frame Start Sync pulse & I2S modes
+ - sync-active
+ - lsb/msb first
+ - dtdl
+=20
+For I2S mode, syncdl property should be set to value zero only.=20
+
+Below are timing diagram examples.
+
+Frame start sync pulse mode:
+-----------------------------
+
+   <------------ 1 frame ------------------>
+   .---.   .---.   .---.   .---.   .---.   .---.   .---.
+___|   |___|   |___|   |___|   |___|   |___|   |___|   |___    SCK
+
+   .-------.                               .-------.
+___|       |_______________________________|       |_______    SYNC/SS
+
+   |                                       |
+   |-No data delay          No sync delay  |
+__  ______  ______  ______  ______  ______  ______  ______
+  \/      \/      \/      \/      \/      \/      \/           Rx Data
+__/\______/\______/\______/\______/\______/\______/\______
+
+   |-1 bit delay            No sync delay  |
+__________  ______  ______  ______  ______  ______  ______
+          \/      \/      \/      \/      \/      \/           Rx Data
+__________/\______/\______/\______/\______/\______/\______
+
+1 bit delay =3D> DTDL =3D 1 (i.e.) 1 clock cycle delay
+No Sync delay =3D> SYNCDL =3D 0
+
+I2S mode:
+----------
+
+   <------------ 1 frame -------------------------->
+   .---.   .---.   .---.   .---.   .---.   .---.   .---.
+___|   |___|   |___|   |___|   |___|   |___|   |___|   |___    SCK
 
 
-On 01/27/2017 11:15 AM, Lee Jones wrote:
-> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
-> 
->>
->>
->> On 01/24/2017 12:36 PM, Lee Jones wrote:
->>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
->>>> On 01/24/2017 09:22 AM, Lee Jones wrote:
->>>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
->>>>>
->>>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
->>>>>
->>>>> Same time as what?
->>>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
->>>> capture (through ASOC).
->>>>>
->>>>>> conversion and audio PDM microphone.
->>>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
->>>>>> For this it exports an API to handles filters and channels resources.
->>>>>
->>>>> This looks like an ADC driver?  What is it that makes it an MFD?
->>>> Yes it a kind of ADC but that supports 2 features audio and iio.
->>>> So it has to support 2 features based on 2 separate Frameworks.
->>>
->>> I'm still unsure why it needs to live in MFD.
->>>
->>> By the looks of it, this driver needs to move into IIO and you need to
->>> call into it from ASoC.
->>>
->>
->> I think i introduce confusion by speaking about ADC for audio...
->>
->> 1) IIO handles sigma delta ADCs that can be used as example for motor
->> controls. the aim is to get value based on an application request or
->> using some triggers.
->> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
->>
->> 2) For audio part, we speak about Digital mems microphones that generate
->> PDM format stream. PDM is a continuous real time stream dedicated to
->> audio record and must be handled in ASOC ( codec Dmic part driver is
->> /sound/soc/codec/dmic.c).
->> DMIC example:
->> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
->>
->> Form my point of view it very strange to handle DMICs in IIO, as it is
->> not designed to support audio streams.it is two separate features that
->> are not compatible.
->>
->> Now, from software point of view
->> That would means that IIO declares ADCs that it can not expose, because
->> DMIC is not IIO standard. But IIO inkern API needs that device is
->> declared
-> 
->> So i should define a specific API in IIO for ASOC driver.
-> 
-> Yes, this is what I think you should do.
-> 
-> MFD is not a dumping ground for devices that do not fit anywhere else.
+___                         _______________________
+   |                       |                       |          SYNC/SS
+   +-----------------------+                       +-------
 
-I fully understand that you don't want to create unnecessary MFD devices.
-But In case of DFSDM ,it is really a device that supports 2 features.
-The main evidence is that "ADC acquisition" and "digital microphone"
-features are handled by two separate frameworks.
-So this corresponds to two features that share the same device resources
-(registers, IRQs, clocks).
-Seems that this match with MFD definition.
 
-Now, if IIO and ASOC maintainers are aligned with you proposal, i will
-move MFD part in IIO.
-But in this case, i can not see another way to do it, except a MFD
-driver hidden in IIO?
+   |                                               |
+   |-No data delay                   No sync delay |
+__  ______  ______  ______  ______  ______  ______  ______
+  \/      \/      \/      \/      \/      \/      \/           Rx Data
+__/\______/\______/\______/\______/\______/\______/\______
 
-Here is my analysis of a design in IIO:
+   |-1 bit delay                   No sync delay  |
+__________  ______  ______  ______  ______  ______  ______
+          \/      \/      \/      \/      \/      \/           Rx Data
+__________/\______/\______/\______/\______/\______/\______
 
-Natural way to do this is to consider that ASOC is a customer of IIO so
-use the customer.h API.
-1) As Digital microphone can not be handled by IIO dev interface, i can
-not expose them as an IIO channel, that would be visible by applications
-in /sys/bus/iio/devices/iio
-2) ASOC needs to configure DFSDM filter to match to specific frequencies
-and sample formats requested by users. Not standard IIO interface to do
-this. (on IIO side this is done by attribute file)
-3) audio stream is a real time stream. So for audio quality best is to
-minimize latencies and Xrun. That why transfer as done from HW to
-application using LLI DMA transfers with a minimum of copy. This does
-not match with the IIO inkern API.
- => So seems not possible to use IIO inkern API.
+Please share your thoughts.
 
-That's means that i would need to create a ST specific include file to
-offer an API to ASoC to handle DFSDM resources linked to the DMIC.
-and to probe ASOc device in IIO one.
-So the solution would be to create something like a sub IIO driver That
-probe and handle some IIO and ASOC devices.
-Ultimately This would correspond to a MFD driver integrated in IIO...
-
-Jonathan, Mark, Please could you share your opinion on this topic?
-
-Regards
-Arnaud
-
-> 
->>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>>>> ---
->>>>>>  drivers/mfd/Kconfig             |   11 +
->>>>>>  drivers/mfd/Makefile            |    2 +
->>>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
->>>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
->>>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
->>>>>>  5 files changed, 1601 insertions(+)
->>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
->>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
->>>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
->>>>>>
->>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>>>> index c6df644..4bb660b 100644
->>>>>> --- a/drivers/mfd/Kconfig
->>>>>> +++ b/drivers/mfd/Kconfig
->>>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->>>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
->>>>>>  	  Nomadik series.
->>>>>>  
->>>>>> +config MFD_STM32_DFSDM
->>>>>> +	tristate "ST Microelectronics STM32 DFSDM"
->>>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
->>>>>> +	select MFD_CORE
->>>>>> +	select REGMAP
->>>>>> +	select REGMAP_MMIO
->>>>>> +	help
->>>>>> +	  Select this option to enable the STM32 Digital Filter
->>>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
->>>>>> +	  in various STM32 series.
->>>>>> +
->>>>>>  menu "Multimedia Capabilities Port drivers"
->>>>>>  	depends on ARCH_SA1100
->>>>>
->>>>> [...]
->>>>>
->>>>
->>>> Regards
->>>> Arnaud
->>>
-> 
+Thanks,
+Ramesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
