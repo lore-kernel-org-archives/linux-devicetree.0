@@ -1,81 +1,30 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/3] meson-gx: add pwm_AO_ab
-Date: Fri, 27 Jan 2017 11:02:15 -0800
-Message-ID: <m27f5guy14.fsf@baylibre.com>
-References: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 05/12] dt-bindings: iio: io-channel-mux: document
+ io-channel-mux bindings
+Date: Fri, 27 Jan 2017 13:12:09 -0600
+Message-ID: <20170127191209.tamt34jy5fyx3mnm@rob-hp-laptop>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-6-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170122210528.892-1-martin.blumenstingl@googlemail.com> (Martin
- Blumenstingl's message of "Sun, 22 Jan 2017 22:05:25 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484755035-25927-6-git-send-email-peda@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Wed, Jan 18, 2017 at 04:57:08PM +0100, Peter Rosin wrote:
+> Describe how a multiplexer can be used to select which signal is fed to
+> an io-channel.
+> 
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
+> ---
+>  .../bindings/iio/multiplexer/io-channel-mux.txt    | 39 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  6 ++++
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/multiplexer/io-channel-mux.txt
 
-> This adds support for the PWM controller in the AO domain.
-
-Patches 1,3 applied to Amlogic v4.11/dt64 branch.
-
-Kevin
-
-> pinctrl support for GXBB already exists (in both, pinctrl-meson-gxbb.c
-> and meson-gxbb.dtsi). This patch adds at least the pwm_ao_b pin for
-> GXL and GXM - these are not documented in Amlogic's kernel, so I had
-> to borrow the magic numbers from the Khadas VIM kernel (released under
-> the GPL): [0]
->
-> The bits for pwm_AO_a_pins are unknown at the time of writing, but these
-> can still be added later.
->
-> I have successfully tested this on my GXL S905X based Khadas VIM board
-> with the following .dts snippets (the PWM LED can simply be dimmed
-> through sysfs):
-> 	&pwm_AO_ab {
-> 		status = "okay";
-> 		pinctrl-0 = <&pwm_ao_b_pins>;
-> 		pinctrl-names = "default";
-> 		clocks = <&clkc CLKID_FCLK_DIV4>;
-> 		clock-names = "clkin0";
-> 	};
->
-> 	pwmleds {
-> 		compatible = "pwm-leds";
->
-> 		power {
-> 			label = "vim:red:power";
-> 			pwms = <&pwm_AO_ab 1 7812500 0>;
-> 			max-brightness = <255>;
-> 		};
-> 	};
->
-> (if anyone is interested in more of my Khadas VIM patches - these are
-> still work-in-progress, which is why I have not sent them yet - can
-> take a look at this: [1])
->
-> NOTE: The .dts changes from this series are based on top of my SAR ADC
-> patches.
->
-> [0] https://github.com/khadas/linux/blob/94602ef5562978a8d8b5c7770c113074a714dbdb/drivers/amlogic/led/led_trigger_breathe.c#L75
-> [1] https://github.com/xdarklight/linux/commits/meson-gx-integration-4.11-20170122
->
-> Martin Blumenstingl (3):
->   ARM64: dts: meson-gx: add the missing pwm_AO_ab node
->   pinctrl: meson: meson-gxl: add the pwm_ao_b pin
->   ARM64: dts: meson-gxl: add the pwm_ao_b pin
->
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 7 +++++++
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 7 +++++++
->  drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 8 ++++++++
->  3 files changed, 22 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
