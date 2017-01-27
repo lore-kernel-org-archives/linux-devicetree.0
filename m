@@ -1,678 +1,229 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH v2 04/25] iio: adc: add support for X-Powers AXP20X and AXP22X
- PMICs ADCs
-Date: Fri, 27 Jan 2017 09:54:37 +0100
-Message-ID: <20170127085458.18270-5-quentin.schulz@free-electrons.com>
-References: <20170127085458.18270-1-quentin.schulz@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 07/11] clk: sunxi-ng: Add A80 Display Engine CCU
+Date: Fri, 27 Jan 2017 09:58:25 +0100
+Message-ID: <20170127085825.b4mzk47gpczj3dcu@lukather>
+References: <20170124023230.3990-1-wens@csie.org>
+ <20170124023230.3990-8-wens@csie.org>
+ <20170126103928.3kmvymoafsz5jfjm@lukather>
+ <CAGb2v65QLAD4C27NoRHALO=2WzW=DC6OxwCCMhes-N+kWO3_kg@mail.gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127085458.18270-1-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, sre@kernel.org, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, lee.jones@linaro.org
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, bonbons@linux-vserver.org, icenowy@aosc.xyz, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="gxblxunwgpqmuoek"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMUXVTCAKGQE4CHZKDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65QLAD4C27NoRHALO=2WzW=DC6OxwCCMhes-N+kWO3_kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The X-Powers AXP20X and AXP22X PMICs have multiple ADCs. They expose the
-battery voltage, battery charge and discharge currents, AC-in and VBUS
-voltages and currents, 2 GPIOs muxable in ADC mode and PMIC temperature.
 
-This adds support for most of AXP20X and AXP22X ADCs.
+--gxblxunwgpqmuoek
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
----
+On Thu, Jan 26, 2017 at 07:20:22PM +0800, Chen-Yu Tsai wrote:
+> On Thu, Jan 26, 2017 at 6:39 PM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Tue, Jan 24, 2017 at 10:32:26AM +0800, Chen-Yu Tsai wrote:
+> >> Add support for the display engine clock controls found on the A80.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/clock/sun9i-de.txt         |  28 ++
+> >>  drivers/clk/sunxi-ng/Makefile                      |   1 +
+> >>  drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c            | 283 +++++++++++++++++++++
+> >>  drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h            |  33 +++
+> >>  include/dt-bindings/clock/sun9i-a80-de.h           |  80 ++++++
+> >>  include/dt-bindings/reset/sun9i-a80-de.h           |  58 +++++
+> >>  6 files changed, 483 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/clock/sun9i-de.txt
+> >>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+> >>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h
+> >>  create mode 100644 include/dt-bindings/clock/sun9i-a80-de.h
+> >>  create mode 100644 include/dt-bindings/reset/sun9i-a80-de.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/sun9i-de.txt b/Documentation/devicetree/bindings/clock/sun9i-de.txt
+> >> new file mode 100644
+> >> index 000000000000..3a5e6df70677
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/clock/sun9i-de.txt
+> >> @@ -0,0 +1,28 @@
+> >> +Allwinner A80 Display Engine Clock Control Binding
+> >> +------------------------------------
+> >> +
+> >> +Required properties :
+> >> +- compatible: must contain one of the following compatibles:
+> >> +             - "allwinner,sun9i-a80-de-clocks"
+> >> +
+> >> +- reg: Must contain the registers base address and length
+> >> +- clocks: phandle to the clocks feeding the display engine subsystem.
+> >> +       Three are needed:
+> >> +  - "mod": the display engine module clock
+> >> +  - "dram": the DRAM bus clock for the system
+> >> +  - "bus": the bus clock for the whole display engine subsystem
+> >> +- clock-names: Must contain the clock names described just above
+> >> +- resets: phandle to the reset control for the display engine subsystem.
+> >> +- #clock-cells : must contain 1
+> >> +- #reset-cells : must contain 1
+> >> +
+> >> +Example:
+> >> +de_clocks: clock@03000000 {
+> >> +     compatible = "allwinner,sun9i-a80-de-clks";
+> >> +     reg = <0x03000000 0x30>;
+> >> +     clocks = <&ccu CLK_DE>, <&ccu CLK_SDRAM>, <&ccu CLK_BUS_DE>;
+> >> +     clock-names = "mod", "dram", "bus";
+> >> +     resets = <&ccu RST_BUS_DE>;
+> >> +     #clock-cells = <1>;
+> >> +     #reset-cells = <1>;
+> >> +};
+> >> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
+> >> index 8f37ef7fb67d..6feaac0c5600 100644
+> >> --- a/drivers/clk/sunxi-ng/Makefile
+> >> +++ b/drivers/clk/sunxi-ng/Makefile
+> >> @@ -26,4 +26,5 @@ obj-$(CONFIG_SUN8I_A33_CCU) += ccu-sun8i-a33.o
+> >>  obj-$(CONFIG_SUN8I_H3_CCU)   += ccu-sun8i-h3.o
+> >>  obj-$(CONFIG_SUN8I_V3S_CCU)  += ccu-sun8i-v3s.o
+> >>  obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80.o
+> >> +obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80-de.o
+> >>  obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80-usb.o
+> >> diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+> >> new file mode 100644
+> >> index 000000000000..3fc27db0a49a
+> >> --- /dev/null
+> >> +++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+> >> @@ -0,0 +1,283 @@
+> >> +/*
+> >> + * Copyright (c) 2016 Chen-Yu Tsai. All rights reserved.
+> >> + *
+> >> + * This software is licensed under the terms of the GNU General Public
+> >> + * License version 2, as published by the Free Software Foundation, and
+> >> + * may be copied, distributed, and modified under those terms.
+> >> + *
+> >> + * This program is distributed in the hope that it will be useful,
+> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> >> + * GNU General Public License for more details.
+> >> + */
+> >> +
+> >> +#include <linux/clk.h>
+> >> +#include <linux/clk-provider.h>
+> >> +#include <linux/of_address.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/reset.h>
+> >> +
+> >> +#include "ccu_common.h"
+> >> +#include "ccu_div.h"
+> >> +#include "ccu_gate.h"
+> >> +#include "ccu_reset.h"
+> >> +
+> >> +#include "ccu-sun9i-a80-de.h"
+> >> +
+> >> +static SUNXI_CCU_GATE(fe0_clk,               "fe0",          "fe0-div",
+> >> +                   0x00, BIT(0), 0);
+> >> +static SUNXI_CCU_GATE(fe1_clk,               "fe1",          "fe1-div",
+> >> +                   0x00, BIT(1), 0);
+> >> +static SUNXI_CCU_GATE(fe2_clk,               "fe2",          "fe2-div",
+> >> +                   0x00, BIT(2), 0);
+> >> +static SUNXI_CCU_GATE(iep_deu0_clk,  "iep-deu0",     "de",
+> >> +                   0x00, BIT(4), 0);
+> >> +static SUNXI_CCU_GATE(iep_deu1_clk,  "iep-deu1",     "de",
+> >> +                   0x00, BIT(5), 0);
+> >> +static SUNXI_CCU_GATE(be0_clk,               "be0",          "be0-div",
+> >> +                   0x00, BIT(8), 0);
+> >> +static SUNXI_CCU_GATE(be1_clk,               "be1",          "be1-div",
+> >> +                   0x00, BIT(9), 0);
+> >> +static SUNXI_CCU_GATE(be2_clk,               "be2",          "be2-div",
+> >> +                   0x00, BIT(10), 0);
+> >> +static SUNXI_CCU_GATE(iep_drc0_clk,  "iep-drc0",     "de",
+> >> +                   0x00, BIT(12), 0);
+> >> +static SUNXI_CCU_GATE(iep_drc1_clk,  "iep-drc1",     "de",
+> >> +                   0x00, BIT(13), 0);
+> >> +static SUNXI_CCU_GATE(merge_clk,     "merge",        "de",
+> >> +                   0x00, BIT(20), 0);
+> >> +
+> >> +static SUNXI_CCU_GATE(dram_fe0_clk,  "dram-fe0",     "sdram",
+> >> +                   0x04, BIT(0), 0);
+> >> +static SUNXI_CCU_GATE(dram_fe1_clk,  "dram-fe1",     "sdram",
+> >> +                   0x04, BIT(1), 0);
+> >> +static SUNXI_CCU_GATE(dram_fe2_clk,  "dram-fe2",     "sdram",
+> >> +                   0x04, BIT(2), 0);
+> >> +static SUNXI_CCU_GATE(dram_deu0_clk, "dram-deu0",    "sdram",
+> >> +                   0x04, BIT(4), 0);
+> >> +static SUNXI_CCU_GATE(dram_deu1_clk, "dram-deu1",    "sdram",
+> >> +                   0x04, BIT(5), 0);
+> >> +static SUNXI_CCU_GATE(dram_be0_clk,  "dram-be0",     "sdram",
+> >> +                   0x04, BIT(8), 0);
+> >> +static SUNXI_CCU_GATE(dram_be1_clk,  "dram-be1",     "sdram",
+> >> +                   0x04, BIT(9), 0);
+> >> +static SUNXI_CCU_GATE(dram_be2_clk,  "dram-be2",     "sdram",
+> >> +                   0x04, BIT(10), 0);
+> >> +static SUNXI_CCU_GATE(dram_drc0_clk, "dram-drc0",    "sdram",
+> >> +                   0x04, BIT(12), 0);
+> >> +static SUNXI_CCU_GATE(dram_drc1_clk, "dram-drc1",    "sdram",
+> >> +                   0x04, BIT(13), 0);
+> >> +
+> >> +static SUNXI_CCU_GATE(bus_fe0_clk,   "bus-fe0",      "bus-de",
+> >> +                   0x08, BIT(0), 0);
+> >> +static SUNXI_CCU_GATE(bus_fe1_clk,   "bus-fe1",      "bus-de",
+> >> +                   0x08, BIT(1), 0);
+> >> +static SUNXI_CCU_GATE(bus_fe2_clk,   "bus-fe2",      "bus-de",
+> >> +                   0x08, BIT(2), 0);
+> >> +static SUNXI_CCU_GATE(bus_deu0_clk,  "bus-deu0",     "bus-de",
+> >> +                   0x08, BIT(4), 0);
+> >> +static SUNXI_CCU_GATE(bus_deu1_clk,  "bus-deu1",     "bus-de",
+> >> +                   0x08, BIT(5), 0);
+> >> +static SUNXI_CCU_GATE(bus_be0_clk,   "bus-be0",      "bus-de",
+> >> +                   0x08, BIT(8), 0);
+> >> +static SUNXI_CCU_GATE(bus_be1_clk,   "bus-be1",      "bus-de",
+> >> +                   0x08, BIT(9), 0);
+> >> +static SUNXI_CCU_GATE(bus_be2_clk,   "bus-be2",      "bus-de",
+> >> +                   0x08, BIT(10), 0);
+> >> +static SUNXI_CCU_GATE(bus_drc0_clk,  "bus-drc0",     "bus-de",
+> >> +                   0x08, BIT(12), 0);
+> >> +static SUNXI_CCU_GATE(bus_drc1_clk,  "bus-drc1",     "bus-de",
+> >> +                   0x08, BIT(13), 0);
+> >> +
+> >> +static SUNXI_CCU_M(fe0_div_clk, "fe0-div", "de", 0x20, 0, 4, 0);
+> >> +static SUNXI_CCU_M(fe1_div_clk, "fe1-div", "de", 0x20, 4, 4, 0);
+> >> +static SUNXI_CCU_M(fe2_div_clk, "fe2-div", "de", 0x20, 8, 4, 0);
+> >> +static SUNXI_CCU_M(be0_div_clk, "be0-div", "de", 0x20, 16, 4, 0);
+> >> +static SUNXI_CCU_M(be1_div_clk, "be1-div", "de", 0x20, 20, 4, 0);
+> >> +static SUNXI_CCU_M(be2_div_clk, "be2-div", "de", 0x20, 24, 4, 0);
+> >
+> > I couldn't find any documentation for this CCU.
+> 
+> I dug this up in the released Allwinner kernel.
+> 
+> > What are those clocks for, and how the display engine should be using
+> > (ie, which one is it expecting to drive / ungate / etc.)
+> 
+> Allwinner basically put all DE-related clock controls into a
+> separate module. In here, as the names above suggest, we have
+> bus gates, dram gates, and module clocks for each part of the
+> display pipeline. As with older SoCs that have DE 1.0, each
+> module should ungate and use the clocks related to them.
+> 
+> I'll put something like the above in the commit message.
 
-v2:
- - removed unused defines,
- - changed BIT(x) to 1 << x when describing bits purpose for which 2 <<
- x or 3 << x exists, to be consistent,
- - changed ADC rate defines to macro formulas,
- - reordered IIO channels, now different measures (current/voltage) of
- the same part of the PMIC (e.g. battery), have the same IIO channel in
- their respective IIO type. When a part of the PMIC have only one
- measure, a number is jumped,
- - left IIO channel mapping in DT to use iio_map structure,
- - removed indexing of ADC internal temperature,
- - removed unused iio_dev structure in axp20x_adc_iio,
- - added a structure for data specific to AXP20X or AXP22X PMICs instead
- of using an ID and an if condition when needing to separate the
- behaviour of both,
- - added a comment on batt_chrg_i really being on 12bits rather than
- what the Chinese datasheets say (13 bits),
- - corrected the offset for AXP22X PMIC temperature,
- - set the ADC rate to a value (100Hz) shared by the AXP20X and AXP22X,
- - created macro formulas to compute the ADC rate for each,
- - added a condition on presence of ADC_EN2 reg before setting/resetting
- it,
- - switched from devm_iio_device_unregister to the non-devm function
- because of the need for a remove function,
- - removed some dead code,
+So the module clocks are a combination of a divider and a clock?
 
- drivers/iio/adc/Kconfig      |  10 +
- drivers/iio/adc/Makefile     |   1 +
- drivers/iio/adc/axp20x_adc.c | 572 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 583 insertions(+)
- create mode 100644 drivers/iio/adc/axp20x_adc.c
+And I'm guessing the reason you separated them is because they belong
+in a different register.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 9c8b558..ed17fe1 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -154,6 +154,16 @@ config AT91_SAMA5D2_ADC
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called at91-sama5d2_adc.
- 
-+config AXP20X_ADC
-+	tristate "X-Powers AXP20X and AXP22X ADC driver"
-+	depends on MFD_AXP20X
-+	help
-+	  Say yes here to have support for X-Powers power management IC (PMIC)
-+	  AXP20X and AXP22X ADC devices.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called axp20x_adc.
-+
- config AXP288_ADC
- 	tristate "X-Powers AXP288 ADC driver"
- 	depends on MFD_AXP20X
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index d36c4be..f5c28a5 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -16,6 +16,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
- obj-$(CONFIG_AD799X) += ad799x.o
- obj-$(CONFIG_AT91_ADC) += at91_adc.o
- obj-$(CONFIG_AT91_SAMA5D2_ADC) += at91-sama5d2_adc.o
-+obj-$(CONFIG_AXP20X_ADC) += axp20x_adc.o
- obj-$(CONFIG_AXP288_ADC) += axp288_adc.o
- obj-$(CONFIG_BCM_IPROC_ADC) += bcm_iproc_adc.o
- obj-$(CONFIG_BERLIN2_ADC) += berlin2-adc.o
-diff --git a/drivers/iio/adc/axp20x_adc.c b/drivers/iio/adc/axp20x_adc.c
-new file mode 100644
-index 0000000..bacde92
---- /dev/null
-+++ b/drivers/iio/adc/axp20x_adc.c
-@@ -0,0 +1,572 @@
-+/* ADC driver for AXP20X and AXP22X PMICs
-+ *
-+ * Copyright (c) 2016 Free Electrons NextThing Co.
-+ *	Quentin Schulz <quentin.schulz@free-electrons.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify it under
-+ * the terms of the GNU General Public License version 2 as published by the
-+ * Free Software Foundation.
-+ */
-+
-+#include <linux/completion.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/regmap.h>
-+#include <linux/thermal.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/driver.h>
-+#include <linux/iio/machine.h>
-+#include <linux/mfd/axp20x.h>
-+
-+#define AXP20X_ADC_EN1_MASK			GENMASK(7, 0)
-+
-+#define AXP20X_ADC_EN2_MASK			(GENMASK(3, 2) | BIT(7))
-+#define AXP22X_ADC_EN1_MASK			(GENMASK(7, 5) | BIT(0))
-+
-+#define AXP20X_GPIO10_IN_RANGE_GPIO0		BIT(0)
-+#define AXP20X_GPIO10_IN_RANGE_GPIO1		BIT(1)
-+#define AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(x)	((x) & BIT(0))
-+#define AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(x)	(((x) & BIT(0)) << 1)
-+
-+#define AXP20X_ADC_RATE_MASK			GENMASK(7, 6)
-+#define AXP20X_ADC_RATE_HZ(x)			((ilog2((x) / 25) << 6) & AXP20X_ADC_RATE_MASK)
-+#define AXP22X_ADC_RATE_HZ(x)			((ilog2((x) / 100) << 6) & AXP20X_ADC_RATE_MASK)
-+
-+#define AXP20X_ADC_CHANNEL(_channel, _name, _type, _reg)	\
-+	{							\
-+		.type = _type,					\
-+		.indexed = 1,					\
-+		.channel = _channel,				\
-+		.address = _reg,				\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
-+				      BIT(IIO_CHAN_INFO_SCALE),	\
-+		.datasheet_name = _name,			\
-+	}
-+
-+#define AXP20X_ADC_CHANNEL_OFFSET(_channel, _name, _type, _reg) \
-+	{							\
-+		.type = _type,					\
-+		.indexed = 1,					\
-+		.channel = _channel,				\
-+		.address = _reg,				\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |	\
-+				      BIT(IIO_CHAN_INFO_SCALE) |\
-+				      BIT(IIO_CHAN_INFO_OFFSET),\
-+		.datasheet_name = _name,			\
-+	}
-+
-+struct axp_data;
-+
-+struct axp20x_adc_iio {
-+	struct regmap		*regmap;
-+	struct axp_data		*data;
-+};
-+
-+enum axp20x_adc_channel_v {
-+	AXP20X_ACIN_V = 0,
-+	AXP20X_VBUS_V,
-+	AXP20X_TS_IN,
-+	AXP20X_GPIO0_V,
-+	AXP20X_GPIO1_V,
-+	AXP20X_IPSOUT_V,
-+	AXP20X_BATT_V,
-+};
-+
-+enum axp20x_adc_channel_i {
-+	AXP20X_ACIN_I = 0,
-+	AXP20X_VBUS_I,
-+	AXP20X_BATT_CHRG_I,
-+	AXP20X_BATT_DISCHRG_I,
-+};
-+
-+enum axp22x_adc_channel_v {
-+	AXP22X_TS_IN = 0,
-+	AXP22X_BATT_V,
-+};
-+
-+enum axp22x_adc_channel_i {
-+	AXP22X_BATT_CHRG_I = 1,
-+	AXP22X_BATT_DISCHRG_I,
-+};
-+
-+static struct iio_map axp20x_maps[] = {
-+	{
-+		.consumer_dev_name = "axp20x-usb-power-supply",
-+		.consumer_channel = "vbus_v",
-+		.adc_channel_label = "vbus_v",
-+	}, {
-+		.consumer_dev_name = "axp20x-usb-power-supply",
-+		.consumer_channel = "vbus_i",
-+		.adc_channel_label = "vbus_i",
-+	}, { /* sentinel */ }
-+};
-+
-+/*
-+ * Channels are mapped by physical system. Their channels share the same index.
-+ * i.e. acin_i is in_current0_raw and acin_v is in_voltage0_raw.
-+ * The only exception is for the battery. batt_v will be in_voltage6_raw and
-+ * charge current in_current6_raw and discharge current will be in_current7_raw.
-+ */
-+static const struct iio_chan_spec axp20x_adc_channels[] = {
-+	AXP20X_ADC_CHANNEL(AXP20X_ACIN_V, "acin_v", IIO_VOLTAGE,
-+			   AXP20X_ACIN_V_ADC_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_ACIN_I, "acin_i", IIO_CURRENT,
-+			   AXP20X_ACIN_I_ADC_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_VBUS_V, "vbus_v", IIO_VOLTAGE,
-+			   AXP20X_VBUS_V_ADC_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_VBUS_I, "vbus_i", IIO_CURRENT,
-+			   AXP20X_VBUS_I_ADC_H),
-+	{
-+		.type = IIO_TEMP,
-+		.address = AXP20X_TEMP_ADC_H,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_OFFSET),
-+		.datasheet_name = "pmic_temp",
-+	},
-+	AXP20X_ADC_CHANNEL_OFFSET(AXP20X_GPIO0_V, "gpio0_v", IIO_VOLTAGE,
-+				  AXP20X_GPIO0_V_ADC_H),
-+	AXP20X_ADC_CHANNEL_OFFSET(AXP20X_GPIO1_V, "gpio1_v", IIO_VOLTAGE,
-+				  AXP20X_GPIO1_V_ADC_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_IPSOUT_V, "ipsout_v", IIO_VOLTAGE,
-+			   AXP20X_IPSOUT_V_HIGH_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_BATT_V, "batt_v", IIO_VOLTAGE,
-+			   AXP20X_BATT_V_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_BATT_CHRG_I, "batt_chrg_i", IIO_CURRENT,
-+			   AXP20X_BATT_CHRG_I_H),
-+	AXP20X_ADC_CHANNEL(AXP20X_BATT_DISCHRG_I, "batt_dischrg_i", IIO_CURRENT,
-+			   AXP20X_BATT_DISCHRG_I_H),
-+};
-+
-+static const struct iio_chan_spec axp22x_adc_channels[] = {
-+	{
-+		.type = IIO_TEMP,
-+		.address = AXP22X_PMIC_TEMP_H,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE) |
-+				      BIT(IIO_CHAN_INFO_OFFSET),
-+		.datasheet_name = "pmic_temp",
-+	},
-+	AXP20X_ADC_CHANNEL(AXP22X_BATT_V, "batt_v", IIO_VOLTAGE,
-+			   AXP20X_BATT_V_H),
-+	AXP20X_ADC_CHANNEL(AXP22X_BATT_CHRG_I, "batt_chrg_i", IIO_CURRENT,
-+			   AXP20X_BATT_CHRG_I_H),
-+	AXP20X_ADC_CHANNEL(AXP22X_BATT_DISCHRG_I, "batt_dischrg_i", IIO_CURRENT,
-+			   AXP20X_BATT_DISCHRG_I_H),
-+};
-+
-+static int axp20x_adc_raw(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan, int *val)
-+{
-+	struct axp20x_adc_iio *info = iio_priv(indio_dev);
-+	int size = 12;
-+
-+	switch (chan->type) {
-+	case IIO_CURRENT:
-+		/*
-+		 * Unlike the Chinese datasheets tell, the charging current is
-+		 * stored on 12 bits, not 13 bits.
-+		 */
-+		if (chan->channel == AXP20X_BATT_DISCHRG_I)
-+			size = 13;
-+	case IIO_VOLTAGE:
-+	case IIO_TEMP:
-+		*val = axp20x_read_variable_width(info->regmap, chan->address,
-+						  size);
-+		if (*val < 0)
-+			return *val;
-+
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp22x_adc_raw(struct iio_dev *indio_dev,
-+			  struct iio_chan_spec const *chan, int *val)
-+{
-+	struct axp20x_adc_iio *info = iio_priv(indio_dev);
-+	int size = 12;
-+
-+	switch (chan->type) {
-+	case IIO_CURRENT:
-+		/*
-+		 * Unlike the Chinese datasheets tell, the charging current is
-+		 * stored on 12 bits, not 13 bits.
-+		 */
-+		if (chan->channel == AXP22X_BATT_DISCHRG_I)
-+			size = 13;
-+	case IIO_VOLTAGE:
-+	case IIO_TEMP:
-+		*val = axp20x_read_variable_width(info->regmap, chan->address,
-+						  size);
-+		if (*val < 0)
-+			return *val;
-+
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_adc_scale_voltage(int channel, int *val, int *val2)
-+{
-+	switch (channel) {
-+	case AXP20X_ACIN_V:
-+	case AXP20X_VBUS_V:
-+		*val = 1;
-+		*val2 = 700000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case AXP20X_GPIO0_V:
-+	case AXP20X_GPIO1_V:
-+		*val = 0;
-+		*val2 = 500000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case AXP20X_BATT_V:
-+		*val = 1;
-+		*val2 = 100000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case AXP20X_IPSOUT_V:
-+		*val = 1;
-+		*val2 = 400000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_adc_scale_current(int channel, int *val, int *val2)
-+{
-+	switch (channel) {
-+	case AXP20X_ACIN_I:
-+		*val = 0;
-+		*val2 = 625000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case AXP20X_VBUS_I:
-+		*val = 0;
-+		*val2 = 375000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case AXP20X_BATT_DISCHRG_I:
-+	case AXP20X_BATT_CHRG_I:
-+		*val = 0;
-+		*val2 = 500000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_adc_scale(struct iio_chan_spec const *chan, int *val,
-+			    int *val2)
-+{
-+	switch (chan->type) {
-+	case IIO_VOLTAGE:
-+		return axp20x_adc_scale_voltage(chan->channel, val, val2);
-+
-+	case IIO_CURRENT:
-+		return axp20x_adc_scale_current(chan->channel, val, val2);
-+
-+	case IIO_TEMP:
-+		*val = 100;
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp22x_adc_scale(struct iio_chan_spec const *chan, int *val,
-+			    int *val2)
-+{
-+	switch (chan->type) {
-+	case IIO_VOLTAGE:
-+		if (chan->channel != AXP22X_BATT_V)
-+			return -EINVAL;
-+
-+		*val = 1;
-+		*val2 = 100000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case IIO_CURRENT:
-+		*val = 0;
-+		*val2 = 500000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+
-+	case IIO_TEMP:
-+		*val = 100;
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_adc_offset_voltage(struct iio_dev *indio_dev, int channel,
-+				     int *val)
-+{
-+	struct axp20x_adc_iio *info = iio_priv(indio_dev);
-+	int ret, reg;
-+
-+	if (channel != AXP20X_GPIO0_V && channel != AXP20X_GPIO1_V)
-+		return -EINVAL;
-+
-+	ret = regmap_read(info->regmap, AXP20X_GPIO10_IN_RANGE, &reg);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (channel == AXP20X_GPIO0_V)
-+		*val = reg & AXP20X_GPIO10_IN_RANGE_GPIO0;
-+	else
-+		*val = reg & AXP20X_GPIO10_IN_RANGE_GPIO1;
-+
-+	*val = !!(*val) * 700000;
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int axp20x_adc_offset(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val)
-+{
-+	switch (chan->type) {
-+	case IIO_VOLTAGE:
-+		return axp20x_adc_offset_voltage(indio_dev, chan->channel, val);
-+
-+	case IIO_TEMP:
-+		*val = -1447;
-+		return IIO_VAL_INT;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan, int *val,
-+			   int *val2, long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_OFFSET:
-+		return axp20x_adc_offset(indio_dev, chan, val);
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		return axp20x_adc_scale(chan, val, val2);
-+
-+	case IIO_CHAN_INFO_RAW:
-+		return axp20x_adc_raw(indio_dev, chan, val);
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp22x_read_raw(struct iio_dev *indio_dev,
-+			   struct iio_chan_spec const *chan, int *val,
-+			   int *val2, long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_OFFSET:
-+		*val = -2677;
-+		return IIO_VAL_INT;
-+
-+	case IIO_CHAN_INFO_SCALE:
-+		return axp22x_adc_scale(chan, val, val2);
-+
-+	case IIO_CHAN_INFO_RAW:
-+		return axp22x_adc_raw(indio_dev, chan, val);
-+
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int axp20x_write_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan, int val, int val2,
-+			    long mask)
-+{
-+	struct axp20x_adc_iio *info = iio_priv(indio_dev);
-+
-+	/*
-+	 * The AXP20X PMIC allows the user to choose between 0V and 0.7V offsets
-+	 * for (independently) GPIO0 and GPIO1 when in ADC mode.
-+	 */
-+	if (mask != IIO_CHAN_INFO_OFFSET)
-+		return -EINVAL;
-+
-+	if (chan->channel != AXP20X_GPIO0_V && chan->channel != AXP20X_GPIO1_V)
-+		return -EINVAL;
-+
-+	if (val != 0 && val != 700000)
-+		return -EINVAL;
-+
-+	if (chan->channel == AXP20X_GPIO0_V)
-+		return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE,
-+					  AXP20X_GPIO10_IN_RANGE_GPIO0,
-+					  AXP20X_GPIO10_IN_RANGE_GPIO0_VAL(!!val));
-+
-+	return regmap_update_bits(info->regmap, AXP20X_GPIO10_IN_RANGE,
-+				  AXP20X_GPIO10_IN_RANGE_GPIO1,
-+				  AXP20X_GPIO10_IN_RANGE_GPIO1_VAL(!!val));
-+}
-+
-+static const struct iio_info axp20x_adc_iio_info = {
-+	.read_raw = axp20x_read_raw,
-+	.write_raw = axp20x_write_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static const struct iio_info axp22x_adc_iio_info = {
-+	.read_raw = axp22x_read_raw,
-+	.driver_module = THIS_MODULE,
-+};
-+
-+static int axp20x_adc_rate(int rate)
-+{
-+	return AXP20X_ADC_RATE_HZ(rate);
-+}
-+
-+static int axp22x_adc_rate(int rate)
-+{
-+	return AXP22X_ADC_RATE_HZ(rate);
-+}
-+
-+struct axp_data {
-+	const struct iio_info		*iio_info;
-+	int				num_channels;
-+	struct iio_chan_spec const	*channels;
-+	unsigned long			adc_en1_mask;
-+	int				(*adc_rate)(int rate);
-+	bool				adc_en2;
-+	struct iio_map			*maps;
-+};
-+
-+static const struct axp_data axp20x_data = {
-+	.iio_info = &axp20x_adc_iio_info,
-+	.num_channels = ARRAY_SIZE(axp20x_adc_channels),
-+	.channels = axp20x_adc_channels,
-+	.adc_en1_mask = AXP20X_ADC_EN1_MASK,
-+	.adc_rate = axp20x_adc_rate,
-+	.adc_en2 = true,
-+	.maps = axp20x_maps,
-+};
-+
-+static const struct axp_data axp22x_data = {
-+	.iio_info = &axp22x_adc_iio_info,
-+	.num_channels = ARRAY_SIZE(axp22x_adc_channels),
-+	.channels = axp22x_adc_channels,
-+	.adc_en1_mask = AXP22X_ADC_EN1_MASK,
-+	.adc_rate = axp22x_adc_rate,
-+	.adc_en2 = false,
-+};
-+
-+static const struct of_device_id axp20x_adc_of_match[] = {
-+	{ .compatible = "x-powers,axp209-adc", .data = (void *)&axp20x_data, },
-+	{ .compatible = "x-powers,axp221-adc", .data = (void *)&axp22x_data, },
-+	{ /* sentinel */ },
-+};
-+
-+static int axp20x_probe(struct platform_device *pdev)
-+{
-+	struct axp20x_adc_iio *info;
-+	struct iio_dev *indio_dev;
-+	struct axp20x_dev *axp20x_dev;
-+	int ret;
-+
-+	axp20x_dev = dev_get_drvdata(pdev->dev.parent);
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+
-+	info = iio_priv(indio_dev);
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	info->regmap = axp20x_dev->regmap;
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->dev.of_node = pdev->dev.of_node;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+
-+	info->data = (struct axp_data *)of_device_get_match_data(&pdev->dev);
-+
-+	indio_dev->info = info->data->iio_info;
-+	indio_dev->num_channels = info->data->num_channels;
-+	indio_dev->channels = info->data->channels;
-+
-+	/* Enable the ADCs on IP */
-+	regmap_write(info->regmap, AXP20X_ADC_EN1, info->data->adc_en1_mask);
-+
-+	if (info->data->adc_en2)
-+		/* Enable GPIO0/1 and internal temperature ADCs */
-+		regmap_update_bits(info->regmap, AXP20X_ADC_EN2,
-+				   AXP20X_ADC_EN2_MASK, AXP20X_ADC_EN2_MASK);
-+
-+	/* Configure ADCs rate */
-+	regmap_update_bits(info->regmap, AXP20X_ADC_RATE, AXP20X_ADC_RATE_MASK,
-+			   info->data->adc_rate(100));
-+
-+	ret = iio_map_array_register(indio_dev, info->data->maps);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "failed to register IIO maps: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "could not register the device\n");
-+		regmap_write(info->regmap, AXP20X_ADC_EN1, 0);
-+
-+		if (info->data->adc_en2)
-+			regmap_write(info->regmap, AXP20X_ADC_EN2, 0);
-+
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int axp20x_remove(struct platform_device *pdev)
-+{
-+	struct axp20x_adc_iio *info;
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+
-+	info = iio_priv(indio_dev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	regmap_write(info->regmap, AXP20X_ADC_EN1, 0);
-+
-+	if (info->data->adc_en2)
-+		regmap_write(info->regmap, AXP20X_ADC_EN2, 0);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver axp20x_adc_driver = {
-+	.driver = {
-+		.name = "axp20x-adc",
-+		.of_match_table = axp20x_adc_of_match,
-+	},
-+	.probe = axp20x_probe,
-+	.remove = axp20x_remove,
-+};
-+
-+module_platform_driver(axp20x_adc_driver);
-+
-+MODULE_DESCRIPTION("ADC driver for AXP20X and AXP22X PMICs");
-+MODULE_AUTHOR("Quentin Schulz <quentin.schulz@free-electrons.com>");
-+MODULE_LICENSE("GPL");
+Maxime
+
 -- 
-2.9.3
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--gxblxunwgpqmuoek--
