@@ -1,75 +1,40 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v5 05/12] dt: bindings: Add bindings for Marvell Xenon SD
- Host Controller
-Date: Fri, 27 Jan 2017 18:25:56 +0100
-Message-ID: <87bmuswh23.fsf@free-electrons.com>
-References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
- <89c95d0084da6ad7132caa54ca66eb619d8a5090.1484154449.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFrCxk37uVZ4wM-=iwX3-Cn9j+uh1KneJoopVzia2nKTVA@mail.gmail.com>
- <87fuk4yg1i.fsf@free-electrons.com>
- <CAPDyKFo-hpLd3W0zWykdg0swuciBeL=Cy9cur_0RoG8jApOh3w@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFo-hpLd3W0zWykdg0swuciBeL=Cy9cur_0RoG8jApOh3w@mail.gmail.com>
- (Ulf Hansson's message of "Fri, 27 Jan 2017 16:36:36 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Ma rcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@li>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v2 00/10] serial: st-asc: Allow handling of RTS line
+Date: Fri, 27 Jan 2017 17:27:54 +0000
+Message-ID: <20170127172804.23881-1-lee.jones@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, dt@kernel.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
- 
- On ven., janv. 27 2017, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+When hardware flow-control is disabled, manual toggling of the UART's
+reset line (RTS) using userland applications (e.g. stty) is not
+possible, since the ASC IP does not provide this functionality in the
+same was as some other IPs do.  Thus, we have to do this manually.
 
->>
->> But I am curious to know why do you think we could use it without any
->> need. Are you aware of some abuse of this property?
->
-> Yes.
->
+This set ensures the correct Pinctrl groups are configured and
+obtained for both manual toggling of the RTS line and for the IP to
+take over the lines when HW flow-control is requested by the user. 
 
-Actually I was hopping that you point some examples :)
+Lee Jones (10):
+  serial: st-asc: Ignore the parity error bit if 8-bit mode is enabled
+  serial: st-asc: Provide RTS functionality
+  serial: st-asc: Read in all Pinctrl states
+  serial: st-asc: (De)Register GPIOD and swap Pinctrl profiles
+  serial: st-asc: Use generic DT binding for announcing RTS/CTS lines
+  dt-bindings: serial: Update 'uart-has-rtscts' description
+  ARM: dts: STiH410-b2260: Identify the UART RTS line
+  ARM: dts: STiH407-pinctrl: Add Pinctrl group for HW flow-control
+  ARM: dts: STiH407-family: Use new Pinctrl groups
+  ARM: dts: STiH410-b2260: Enable HW flow-control
 
-But as you point mmc-ddr-3_3v I found my answers here:
-http://www.spinics.net/lists/linux-mmc/msg38602.html
-
->>
->>>
->>> Perhaps you can elaborate exactly why it makes sense for your case. Or
->>> perhaps we already discussed this, in either case, please re-fresh my
->>> mind.
->>
->> For instance we need it now on the 7040DB board which does not have the
->> 1.8V signal voltage available.
->
-> It it's better to describe what the controller/board support, instead
-> of what it doesn't.
->
-> I think you should be able to use other existing mmc DT bindings
-> (perhaps also you need the brand new "mmc-ddr-3_3v"), instead of the
-> "no-1-8-v".
-
-OK I will try with this one. And if it works, I wonder if it worth
-mentioning it as it is also part of the mmc binding.
-
-Gregory
-
->
-> Kind regards
-> Uffe
+ .../devicetree/bindings/serial/serial.txt          |   3 +-
+ arch/arm/boot/dts/stih407-family.dtsi              |   3 +-
+ arch/arm/boot/dts/stih407-pinctrl.dtsi             |  12 ++-
+ arch/arm/boot/dts/stih410-b2260.dts                |   5 +
+ drivers/tty/serial/st-asc.c                        | 101 +++++++++++++++++++--
+ 5 files changed, 110 insertions(+), 14 deletions(-)
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.9.3
