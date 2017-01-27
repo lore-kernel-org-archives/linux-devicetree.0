@@ -1,19 +1,15 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Fri, 27 Jan 2017 10:15:45 +0000
-Message-ID: <20170127101545.g53uah57vgfu55o5@dell>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell>
- <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell>
- <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+From: Florian Vaussard <florian.vaussard@heig-vd.ch>
+Subject: Re: [PATCH v4 10/13] arm64: allwinner: a64: Increase the MMC max
+ frequency
+Date: Fri, 27 Jan 2017 11:29:53 +0100
+Message-ID: <6c6bf169-4b2e-6b55-54db-d21da73a8f6e@heig-vd.ch>
+References: <cover.8d42a39b7bd5143e709979dc42cc47862ebe3728.1485421557.git-series.maxime.ripard@free-electrons.com>
+ <dee0dc8e1d98698231738b10fbe79cdf6d5e4c36.1485421557.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+In-Reply-To: <dee0dc8e1d98698231738b10fbe79cdf6d5e4c36.1485421557.git-series.maxime.ripard@free-electrons.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,79 +19,71 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, Andre Przywara <andre.przywara@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCAyNCBKYW4gMjAxNywgQXJuYXVkIFBvdWxpcXVlbiB3cm90ZToKCj4gCj4gCj4gT24g
-MDEvMjQvMjAxNyAxMjozNiBQTSwgTGVlIEpvbmVzIHdyb3RlOgo+ID4gT24gVHVlLCAyNCBKYW4g
-MjAxNywgQXJuYXVkIFBvdWxpcXVlbiB3cm90ZToKPiA+PiBPbiAwMS8yNC8yMDE3IDA5OjIyIEFN
-LCBMZWUgSm9uZXMgd3JvdGU6Cj4gPj4+IE9uIE1vbiwgMjMgSmFuIDIwMTcsIEFybmF1ZCBQb3Vs
-aXF1ZW4gd3JvdGU6Cj4gPj4+Cj4gPj4+PiBERlNETSBoYXJkd2FyZSBJUCBjYW4gYmUgdXNlZCBh
-dCB0aGUgc2FtZSB0aW1lIGZvciBBREMgc2lnbWEgZGVsdGEKPiA+Pj4KPiA+Pj4gU2FtZSB0aW1l
-IGFzIHdoYXQ/Cj4gPj4gREZTRE0gaXMgdXNlZCBmb3IgQURDIGFjcXVpc2l0aW9uICh0aHJvdWdo
-IElJTykgYnV0IGFsc28gUERNIG1pY3JvcGhvbmUKPiA+PiBjYXB0dXJlICh0aHJvdWdoIEFTT0Mp
-Lgo+ID4+Pgo+ID4+Pj4gY29udmVyc2lvbiBhbmQgYXVkaW8gUERNIG1pY3JvcGhvbmUuCj4gPj4+
-PiBNRkQgZHJpdmVyIGlzIGluIGNoYXJnZSBvZiBjb25maWd1cmluZyBJUCByZWdpc3RlcnMgYW5k
-IG1hbmFnaW5nIElQIGNsb2Nrcy4KPiA+Pj4+IEZvciB0aGlzIGl0IGV4cG9ydHMgYW4gQVBJIHRv
-IGhhbmRsZXMgZmlsdGVycyBhbmQgY2hhbm5lbHMgcmVzb3VyY2VzLgo+ID4+Pgo+ID4+PiBUaGlz
-IGxvb2tzIGxpa2UgYW4gQURDIGRyaXZlcj8gIFdoYXQgaXMgaXQgdGhhdCBtYWtlcyBpdCBhbiBN
-RkQ/Cj4gPj4gWWVzIGl0IGEga2luZCBvZiBBREMgYnV0IHRoYXQgc3VwcG9ydHMgMiBmZWF0dXJl
-cyBhdWRpbyBhbmQgaWlvLgo+ID4+IFNvIGl0IGhhcyB0byBzdXBwb3J0IDIgZmVhdHVyZXMgYmFz
-ZWQgb24gMiBzZXBhcmF0ZSBGcmFtZXdvcmtzLgo+ID4gCj4gPiBJJ20gc3RpbGwgdW5zdXJlIHdo
-eSBpdCBuZWVkcyB0byBsaXZlIGluIE1GRC4KPiA+IAo+ID4gQnkgdGhlIGxvb2tzIG9mIGl0LCB0
-aGlzIGRyaXZlciBuZWVkcyB0byBtb3ZlIGludG8gSUlPIGFuZCB5b3UgbmVlZCB0bwo+ID4gY2Fs
-bCBpbnRvIGl0IGZyb20gQVNvQy4KPiA+IAo+IAo+IEkgdGhpbmsgaSBpbnRyb2R1Y2UgY29uZnVz
-aW9uIGJ5IHNwZWFraW5nIGFib3V0IEFEQyBmb3IgYXVkaW8uLi4KPiAKPiAxKSBJSU8gaGFuZGxl
-cyBzaWdtYSBkZWx0YSBBRENzIHRoYXQgY2FuIGJlIHVzZWQgYXMgZXhhbXBsZSBmb3IgbW90b3IK
-PiBjb250cm9scy4gdGhlIGFpbSBpcyB0byBnZXQgdmFsdWUgYmFzZWQgb24gYW4gYXBwbGljYXRp
-b24gcmVxdWVzdCBvcgo+IHVzaW5nIHNvbWUgdHJpZ2dlcnMuCj4gZXhhbXBsZTogaHR0cDovL3d3
-dy50aS5jb20vbGl0L2RzL3N5bWxpbmsvYWRzMTIwMi5wZGYKPiAKPiAyKSBGb3IgYXVkaW8gcGFy
-dCwgd2Ugc3BlYWsgYWJvdXQgRGlnaXRhbCBtZW1zIG1pY3JvcGhvbmVzIHRoYXQgZ2VuZXJhdGUK
-PiBQRE0gZm9ybWF0IHN0cmVhbS4gUERNIGlzIGEgY29udGludW91cyByZWFsIHRpbWUgc3RyZWFt
-IGRlZGljYXRlZCB0bwo+IGF1ZGlvIHJlY29yZCBhbmQgbXVzdCBiZSBoYW5kbGVkIGluIEFTT0Mg
-KCBjb2RlYyBEbWljIHBhcnQgZHJpdmVyIGlzCj4gL3NvdW5kL3NvYy9jb2RlYy9kbWljLmMpLgo+
-IERNSUMgZXhhbXBsZToKPiBodHRwOi8vd3d3LnN0LmNvbS9jb250ZW50L2NjYy9yZXNvdXJjZS90
-ZWNobmljYWwvZG9jdW1lbnQvZGF0YXNoZWV0LzQ3L2JkL2QyLzEzLzhkL2ZkLzQ4LzI2L0RNMDAx
-MjE4MTUucGRmL2ZpbGVzL0RNMDAxMjE4MTUucGRmL2pjcjpjb250ZW50L3RyYW5zbGF0aW9ucy9l
-bi5ETTAwMTIxODE1LnBkZgo+IAo+IEZvcm0gbXkgcG9pbnQgb2YgdmlldyBpdCB2ZXJ5IHN0cmFu
-Z2UgdG8gaGFuZGxlIERNSUNzIGluIElJTywgYXMgaXQgaXMKPiBub3QgZGVzaWduZWQgdG8gc3Vw
-cG9ydCBhdWRpbyBzdHJlYW1zLml0IGlzIHR3byBzZXBhcmF0ZSBmZWF0dXJlcyB0aGF0Cj4gYXJl
-IG5vdCBjb21wYXRpYmxlLgo+IAo+IE5vdywgZnJvbSBzb2Z0d2FyZSBwb2ludCBvZiB2aWV3Cj4g
-VGhhdCB3b3VsZCBtZWFucyB0aGF0IElJTyBkZWNsYXJlcyBBRENzIHRoYXQgaXQgY2FuIG5vdCBl
-eHBvc2UsIGJlY2F1c2UKPiBETUlDIGlzIG5vdCBJSU8gc3RhbmRhcmQuIEJ1dCBJSU8gaW5rZXJu
-IEFQSSBuZWVkcyB0aGF0IGRldmljZSBpcwo+IGRlY2xhcmVkCgo+IFNvIGkgc2hvdWxkIGRlZmlu
-ZSBhIHNwZWNpZmljIEFQSSBpbiBJSU8gZm9yIEFTT0MgZHJpdmVyLgoKWWVzLCB0aGlzIGlzIHdo
-YXQgSSB0aGluayB5b3Ugc2hvdWxkIGRvLgoKTUZEIGlzIG5vdCBhIGR1bXBpbmcgZ3JvdW5kIGZv
-ciBkZXZpY2VzIHRoYXQgZG8gbm90IGZpdCBhbnl3aGVyZSBlbHNlLgoKPiA+Pj4+IFNpZ25lZC1v
-ZmYtYnk6IEFybmF1ZCBQb3VsaXF1ZW4gPGFybmF1ZC5wb3VsaXF1ZW5Ac3QuY29tPgo+ID4+Pj4g
-LS0tCj4gPj4+PiAgZHJpdmVycy9tZmQvS2NvbmZpZyAgICAgICAgICAgICB8ICAgMTEgKwo+ID4+
-Pj4gIGRyaXZlcnMvbWZkL01ha2VmaWxlICAgICAgICAgICAgfCAgICAyICsKPiA+Pj4+ICBkcml2
-ZXJzL21mZC9zdG0zMi1kZnNkbS1yZWcuaCAgIHwgIDIyMCArKysrKysrKysKPiA+Pj4+ICBkcml2
-ZXJzL21mZC9zdG0zMi1kZnNkbS5jICAgICAgIHwgMTA0NCArKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysKPiA+Pj4+ICBpbmNsdWRlL2xpbnV4L21mZC9zdG0zMi1kZnNkbS5o
-IHwgIDMyNCArKysrKysrKysrKysKPiA+Pj4+ICA1IGZpbGVzIGNoYW5nZWQsIDE2MDEgaW5zZXJ0
-aW9ucygrKQo+ID4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21mZC9zdG0zMi1kZnNk
-bS1yZWcuaAo+ID4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL21mZC9zdG0zMi1kZnNk
-bS5jCj4gPj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvbGludXgvbWZkL3N0bTMyLWRm
-c2RtLmgKPiA+Pj4+Cj4gPj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZmQvS2NvbmZpZyBiL2Ry
-aXZlcnMvbWZkL0tjb25maWcKPiA+Pj4+IGluZGV4IGM2ZGY2NDQuLjRiYjY2MGIgMTAwNjQ0Cj4g
-Pj4+PiAtLS0gYS9kcml2ZXJzL21mZC9LY29uZmlnCj4gPj4+PiArKysgYi9kcml2ZXJzL21mZC9L
-Y29uZmlnCj4gPj4+PiBAQCAtMTYwNyw2ICsxNjA3LDE3IEBAIGNvbmZpZyBNRkRfU1RXNDgxWAo+
-ID4+Pj4gIAkgIGluIHZhcmlvdXMgU1QgTWljcm9lbGVjdHJvbmljcyBhbmQgU1QtRXJpY3Nzb24g
-ZW1iZWRkZWQKPiA+Pj4+ICAJICBOb21hZGlrIHNlcmllcy4KPiA+Pj4+ICAKPiA+Pj4+ICtjb25m
-aWcgTUZEX1NUTTMyX0RGU0RNCj4gPj4+PiArCXRyaXN0YXRlICJTVCBNaWNyb2VsZWN0cm9uaWNz
-IFNUTTMyIERGU0RNIgo+ID4+Pj4gKwlkZXBlbmRzIG9uIChBUkNIX1NUTTMyICYmIE9GKSB8fCBD
-T01QSUxFX1RFU1QKPiA+Pj4+ICsJc2VsZWN0IE1GRF9DT1JFCj4gPj4+PiArCXNlbGVjdCBSRUdN
-QVAKPiA+Pj4+ICsJc2VsZWN0IFJFR01BUF9NTUlPCj4gPj4+PiArCWhlbHAKPiA+Pj4+ICsJICBT
-ZWxlY3QgdGhpcyBvcHRpb24gdG8gZW5hYmxlIHRoZSBTVE0zMiBEaWdpdGFsIEZpbHRlcgo+ID4+
-Pj4gKwkgIGZvciBTaWdtYSBEZWx0YSBNb2R1bGF0b3JzIChERlNETSkgZHJpdmVyIHVzZWQKPiA+
-Pj4+ICsJICBpbiB2YXJpb3VzIFNUTTMyIHNlcmllcy4KPiA+Pj4+ICsKPiA+Pj4+ICBtZW51ICJN
-dWx0aW1lZGlhIENhcGFiaWxpdGllcyBQb3J0IGRyaXZlcnMiCj4gPj4+PiAgCWRlcGVuZHMgb24g
-QVJDSF9TQTExMDAKPiA+Pj4KPiA+Pj4gWy4uLl0KPiA+Pj4KPiA+Pgo+ID4+IFJlZ2FyZHMKPiA+
-PiBBcm5hdWQKPiA+IAoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9uaWNzIExh
-bmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBB
-Uk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Maxime,
+
+On 01/26/2017 10:06 AM, Maxime Ripard wrote:
+> The eMMC controller seem to have a maximum frequency of 200MHz, while the
+> regular MMC controllers are capped at 150MHz.
+> 
+> Since older SoCs cannot go that high, we cannot change the default maximum
+> frequency, but fortunately for us we have a property for that in the DT.
+> 
+> This also has the side effect of allowing to use the MMC HS200 and SD
+> SDR104 modes for the boards that support it (with either 1.2v or 1.8v IOs).
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> 
+> arm64: allwinner: a64: Limit MMC0 and MMC1 rates to 150MHz
+> 
+> Trying to set the bus to 200MHz on MMC1 when doing SDIO is failing.
+> Allwinner sets the maximum for this bus to 150MHz, so enforce that limit.
+> 
+> This hasn't been tested with MMC0, but the documented limit is the same,
+> and I expect the behaviour to be the same.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+
+I suspect that you are trying to increase your number of Signed-off-by tags by
+using unfair means :) Otherwise the squashed commit message is probably worth
+some cleaning.
+
+Best,
+Florian
+
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 3 +++
+>  1 file changed, 3 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 7b79c319ad3c..cb3e0cf2191a 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -130,6 +130,7 @@
+>  			resets = <&ccu RST_BUS_MMC0>;
+>  			reset-names = "ahb";
+>  			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+>  			status = "disabled";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> @@ -143,6 +144,7 @@
+>  			resets = <&ccu RST_BUS_MMC1>;
+>  			reset-names = "ahb";
+>  			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <150000000>;
+>  			status = "disabled";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> @@ -156,6 +158,7 @@
+>  			resets = <&ccu RST_BUS_MMC2>;
+>  			reset-names = "ahb";
+>  			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +			max-frequency = <200000000>;
+>  			status = "disabled";
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> 
