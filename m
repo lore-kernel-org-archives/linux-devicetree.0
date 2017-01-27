@@ -1,107 +1,156 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI
- 4.1 DMA controller
-Date: Fri, 27 Jan 2017 16:23:10 -0600
-Message-ID: <20170127222310.glqcdqdtnw6pppxa@rob-hp-laptop>
-References: <20170124095848.14593-1-abailon@baylibre.com>
- <20170124095848.14593-2-abailon@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V8 1/2] iio: adc: Add Renesas GyroADC bindings
+Date: Fri, 27 Jan 2017 16:26:21 -0600
+Message-ID: <20170127222621.vzay3mat37f7v5tm@rob-hp-laptop>
+References: <20170124182642.29396-1-marek.vasut@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170124095848.14593-2-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170124182642.29396-1-marek.vasut@gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: linux-iio@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms+renesas@verge.net.au>, Jonathan Cameron <jic23@kernel.org>, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 10:58:46AM +0100, Alexandre Bailon wrote:
-> DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx CPPI 4.1 DMA controller.
+On Tue, Jan 24, 2017 at 07:26:41PM +0100, Marek Vasut wrote:
+> Add DT bindings for the Renesas RCar GyroADC block. This block is
+> a simple 4/8-channel ADC which samples 12/15/24 bits of data every
+> cycle from all channels.
 > 
-> Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Marek Vasut <marek.vasut@gmail.com>
+> Cc: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Simon Horman <horms+renesas@verge.net.au>
+> Cc: Jonathan Cameron <jic23@kernel.org>
+> Cc: linux-renesas-soc@vger.kernel.org
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
 > ---
->  .../devicetree/bindings/usb/da8xx-usb.txt          | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
+> V8: - Sync the version with the 2/2 driver patch
+>     - Drop status prop from example
+>     - Add GyroADC block description
+>     - Enumerate the compatible string values
+>     - Make subnodes mandatory
+> ---
+>  .../bindings/iio/adc/renesas,gyroadc.txt           | 99 ++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> index ccb844a..c3944a6 100644
-> --- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
-> @@ -18,10 +18,26 @@ Required properties:
->  
->   - phy-names: Should be "usb-phy"
->  
-> + - dmas: specifies the dma channels
+> diff --git a/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+> new file mode 100644
+> index 000000000000..7f9b3bd120a9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
+> @@ -0,0 +1,99 @@
+> +* Renesas RCar GyroADC device driver
 > +
-> + - dma-names: specifies the names of the channels. Use "rxN" for receive
-> +   and "txN" for transmit endpoints. N specifies the endpoint number.
+> +The GyroADC block is a reduced SPI block with up to 8 chipselect lines,
+> +which supports the SPI protocol of a selected few SPI ADCs. The SPI ADCs
+> +are sampled by the GyroADC block in a round-robin fashion and the result
+> +presented in the GyroADC registers.
 > +
->  Optional properties:
->  ~~~~~~~~~~~~~~~~~~~~
->   - vbus-supply: Phandle to a regulator providing the USB bus power.
->  
-> +DMA
-> +~~~
-> +- compatible: ti,da830-cppi41
-> +- reg: offset and length of the following register spaces: CPPI DMA Controller,
-> +  CPPI DMA Scheduler, Queue Manager
-> +- reg-names: "controller", "scheduler", "queuemgr"
-> +- #dma-cells: should be set to 2. The first number represents the
-> +  channel number (0 … 3 for endpoints 1 … 4).
-> +  The second number is 0 for RX and 1 for TX transfers.
-> +- #dma-channels: should be set to 4 representing the 4 endpoints.
+> +Required properties:
+> +- compatible:	Should be "<soc-specific>", "renesas,rcar-gyroadc".
+> +                The <soc-specific> should be one of:
+> +		renesas,r8a7791-gyroadc - for the GyroADC block present
+> +					  in r8a7791 SoC
+> +		renesas,r8a7792-gyroadc - for the GyroADC with interrupt
+> +					  block present in r8a7792 SoC
+> +- reg:		Address and length of the register set for the device
+> +- clocks:	References to all the clocks specified in the clock-names
+> +		property as specified in
+> +		Documentation/devicetree/bindings/clock/clock-bindings.txt.
+> +- clock-names:	Shall contain "fck" and "if". The "fck" is the GyroADC block
+> +		clock, the "if" is the interface clock.
+> +- power-domains: Must contain a reference to the PM domain, if available.
+> +- #address-cells: Should be <1> (setting for the subnodes) for all ADCs
+> +		except for "fujitsu,mb88101a". Should be <0> (setting for
+> +		only subnode) for "fujitsu,mb88101a".
+> +- #size-cells:	Should be <0> (setting for the subnodes)
 > +
->  Example:
->  	usb_phy: usb-phy {
->  		compatible = "ti,da830-usb-phy";
-> @@ -31,6 +47,9 @@ Example:
->  	usb0: usb@200000 {
->  		compatible = "ti,da830-musb";
->  		reg =   <0x00200000 0x10000>;
-> +		ranges;
+> +Sub-nodes:
+> +You must define subnode(s) which select the connected ADC type and reference
+> +voltage for the GyroADC channels.
+> +
+> +Required properties for subnodes:
+> +- compatible:	Should be either of:
+> +		"fujitsu,mb88101a"
+> +			- Fujitsu MB88101A compatible mode,
+> +			  12bit sampling, up to 4 channels can be sampled in
+> +			  round-robin fashion. One Fujitsu chip supplies four
+> +			  GyroADC channels with data as it contains four ADCs
+> +			  on the chip and thus for 4-channel operation, single
+> +			  MB88101A is required. The Cx chipselect lines of the
+> +			  MB88101A connect directly to two CHS lines of the
+> +			  GyroADC, no demuxer is required. The data out line
+> +			  of each MB88101A connects to a shared input pin of
+> +			  the GyroADC.
+> +		"ti,adcs7476" or "ti,adc121" or "adi,ad7476"
+> +			- TI ADCS7476 / TI ADC121 / ADI AD7476 compatible mode,
+> +			  15bit sampling, up to 8 channels can be sampled in
+> +			  round-robin fashion. One TI/ADI chip supplies single
+> +			  ADC channel with data, thus for 8-channel operation,
+> +			  8 chips are required. A 3:8 chipselect demuxer is
+> +			  required to connect the nCS line of the TI/ADI chips
+> +			  to the GyroADC, while MISO line of each TI/ADI ADC
+> +			  connects to a shared input pin of the GyroADC.
+> +		"maxim,max1162" or "maxim,max11100"
+> +			- Maxim MAX1162 / Maxim MAX11100 compatible mode,
+> +			  16bit sampling, up to 8 channels can be sampled in
+> +			  round-robin fashion. One Maxim chip supplies single
+> +			  ADC channel with data, thus for 8-channel operation,
+> +			  8 chips are required. A 3:8 chipselect demuxer is
+> +			  required to connect the nCS line of the MAX chips
+> +			  to the GyroADC, while MISO line of each Maxim ADC
+> +			  connects to a shared input pin of the GyroADC.
+> +- reg:		Should be the number of the analog input. Should be present
+> +		for all ADCs except "fujitsu,mb88101a".
+> +- vref-supply:	Reference to the channel reference voltage regulator.
+> +
+> +Example:
+> +	vref_max1162: regulator-vref-max1162 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "MAX1162 Vref";
+> +		regulator-min-microvolt = <4096000>;
+> +		regulator-max-microvolt = <4096000>;
+> +	};
+> +
+> +	&adc {
+
+This wouldn't actually work unless you include something that defines 
+'&adc'. Make this adc@e6e54000.
+
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+
+> +		compatible = "renesas,r8a7791-gyroadc", "renesas,rcar-gyroadc";
+> +		reg = <0 0xe6e54000 0 64>;
+> +		clocks = <&mstp9_clks R8A7791_CLK_GYROADC>, <&clk_65m>;
+> +		clock-names = "fck", "if";
+> +		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
+> +
+> +		pinctrl-0 = <&adc_pins>;
+> +		pinctrl-names = "default";
+> +
 > +		#address-cells = <1>;
-> +		#size-cells = <1>;
->  		interrupts = <58>;
->  		interrupt-names = "mc";
->  
-> @@ -39,5 +58,25 @@ Example:
->  		phys = <&usb_phy 0>;
->  		phy-names = "usb-phy";
->  
-> +		dmas = <&cppi41dma 0 0 &cppi41dma 1 0
-> +			&cppi41dma 2 0 &cppi41dma 3 0
-> +			&cppi41dma 0 1 &cppi41dma 1 1
-> +			&cppi41dma 2 1 &cppi41dma 3 1>;
-> +		dma-names =
-> +			"rx1", "rx2", "rx3", "rx4",
-> +			"tx1", "tx2", "tx3", "tx4";
+> +		#size-cells = <0>;
 > +
->  		status = "okay";
-> +
-> +		cppi41dma: dma-controller@201000 {
-> +			compatible = "ti,da830-cppi41";
-> +			reg =  <0x201000 0x1000
-> +				0x202000 0x1000
-> +				0x204000 0x4000>;
-
-This is creating overlapping addresses which we want to avoid. The 
-parent's ranges should be filled in and reg set to only those addresses 
-the parent will touch (0x200000-0x201000?). With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +			reg-names = "controller", "scheduler", "queuemgr";
-> +			interrupts = <58>;
-> +			#dma-cells = <2>;
-> +			#dma-channels = <4>;
+> +		adc@0 {
+> +			reg = <0>;
+> +			compatible = "maxim,max1162";
+> +			vref-supply = <&vref_max1162>;
 > +		};
 > +
->  	};
+> +		adc@1 {
+> +			reg = <1>;
+> +			compatible = "maxim,max1162";
+> +			vref-supply = <&vref_max1162>;
+> +		};
+> +	};
 > -- 
-> 2.10.2
+> 2.11.0
 > 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
