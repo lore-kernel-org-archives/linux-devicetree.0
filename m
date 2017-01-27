@@ -1,70 +1,50 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v7 0/2] clocksource: Add renesas-ostm timer driver
-Date: Fri, 27 Jan 2017 15:02:13 -0500
-Message-ID: <20170127200215.4894-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] Enable SPDIF on the Beelink X2
+Date: Fri, 27 Jan 2017 21:10:30 +0100
+Message-ID: <20170127201030.mal5c34ctgpwtd6v@lukather>
+References: <20170127154808.19229-1-codekipper@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mqpmjz7zwrw4546x"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQOSV3CAKGQEYLOU6SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170127154808.19229-1-codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
 
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
+--mqpmjz7zwrw4546x
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
+On Fri, Jan 27, 2017 at 04:48:05PM +0100, codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Marcus Cooper <codekipper-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Hi All,
+> 
+> here is the patchset required to get SPDIF working on the Beelink X2
+> which is a H3 based STB.
+> 
+> BR,
+> CK
 
-v7:
-* initialize *ostm_clk=NULL to remove 'may be used uninitialized'
-  warning. Reported by "kbuild test robot"
+Merged all three, but this could have been in your earlier patch for
+that board.
 
-v6:
-* add Copyright
-
-v5:
-* changed iowrite8/32 to writeb/l
-
-v4:
-* Added more details to commit log
-* Kconfig: SYS_SUPPORTS_RENESAS_OSTM to just RENESAS_OSTM
-* removed all MODULE code (this driver is builtin only)
-* removed items from 'struct ostm_device'
-* changed ioread8 to readb
-* explain endless while loop
-* removed un-needed vars like 'ret'
-* removed WARN_ON(!clockevent_state_oneshot(ced));
-* removed "failed to allocate memory" message
-* remove pm_runtime calls
-* remove "earlytimer" register (only for sh, not arm)
-* convert from platform driver to CLOCKSOURCE_OF_DECLARE
-* ostm_probe code is now in ostm_init
-
-v3:
-* Changed ostm@fcfec000 to timer@fcfec000
-* Added power-domains to nodes
-
-v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
-
-
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  30 +++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |   7 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 265 +++++++++++++++++++++
- 5 files changed, 304 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
+Thanks,
+Maxime
 
 -- 
-2.10.1
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--mqpmjz7zwrw4546x--
