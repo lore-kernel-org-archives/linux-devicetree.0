@@ -1,218 +1,310 @@
-From: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Subject: [PATCH linux v2 1/2] Documentation: dt-bindings: Document bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device driver
-Date: Fri, 27 Jan 2017 01:33:59 -0800
-Message-ID: <20170127093400.28904-2-jaghu@google.com>
-References: <20170127093400.28904-1-jaghu@google.com>
+From: Jaghathiswari Rankappagounder Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH linux v1 1/2] Documentation: dt-bindings: Document
+ bindings for ASPEED AST2400/AST2500 pwm and fan tach controller device driver
+Date: Fri, 27 Jan 2017 01:35:51 -0800
+Message-ID: <CANsWYUW3w+gH=ioDmbz0RX2nxPb84dGB6jiV529G-i+hsfpiAA@mail.gmail.com>
+References: <20170109215935.30067-1-jaghu@google.com> <20170109215935.30067-2-jaghu@google.com>
+ <20170113162106.k63lmnaizhrnrety@rob-hp-laptop> <CANsWYUXFzUewaM21cfk8k1CFP=oVyWHC06vZLqkV-ZrFmbwVtQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170127093400.28904-1-jaghu@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: openbmc@lists.ozlabs.org, linux@roeck-us.net, joel@jms.id.au, jdelvare@suse.com, linux-hwmon@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANsWYUXFzUewaM21cfk8k1CFP=oVyWHC06vZLqkV-ZrFmbwVtQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This binding provides interface for adding values related to ASPEED
-AST2400/2500 PWM and Fan tach controller support.
-The PWM controller can support upto 8 PWM output ports.
-The Fan tach controller can support upto 16 tachometer inputs.
-Types M, N and 0 are three types just to have three independent
-PWM/Fan Tach related settings.
-
-Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
----
-v2:
-- Removed '_' in node or property names
-- Gave some explanation for the properties used.
-
- .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 178 +++++++++++++++++++++
- 1 file changed, 178 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-
-diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-new file mode 100644
-index 000000000000..290122bfe170
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-@@ -0,0 +1,178 @@
-+ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
-+
-+The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
-+controller can support upto 16 tachometer inputs.
-+
-+There are three different types M, N, O. These three types are just to have
-+different PWM and Fan Tach settings. Each type can have the following settings:
-+	PWM related:
-+		1) PWM period
-+		2) PWM clock division high
-+		3) PWM clock division low
-+	Fan Tach related:
-+		1) Fan Tach type enable
-+		2) Fan Tach clock division
-+		3) Fan Tach mode selection
-+		4) Fan Tach period
-+
-+Each PWM port should be assigned a type which can be type M, N or O.
-+
-+Each Fan Tach channel should be assigned a PWM source, which can be PWM port A
-+through H. The Fan Tach channel implicitly gets the type (M, N or O), from the
-+type assigned to its PWM source.
-+
-+Required properties for pwm-tacho node:
-+- #address-cells : should be 1.
-+
-+- #size-cells : should be 1.
-+
-+- reg : address and length of the register set for the device.
-+
-+- pinctrl-names : a pinctrl state named "default" must be defined.
-+
-+- pinctrl-0 : phandle referencing pin configuration of the AST2400/AST2500 PWM
-+	      ports.
-+
-+- compatible : should be "aspeed,aspeed2400-pwm-tacho" for AST2400 or
-+	       "aspeed,aspeed2500-pwm-tacho" for AST2500.
-+
-+- clocks : a fixed clock providing input clock frequency(PWM
-+	   and Fan Tach clock)
-+
-+type-values subnode format:
-+===========================
-+Under type-values subnode there can be upto 3 child nodes indicating type M/N/O
-+values. Atleast one child node is required.
-+
-+Required properties for the child node(type M/N/O):
-+- type : indicates type M/N/O. integer value in the range 0 to 2 with 0
-+	 indicating type M, 1 indicating type N  and 2 indicating type O.
-+
-+- pwm-period : indicates type M/N/O PWM period, as per the AST2400/AST2500
-+	       datasheet. integer value in the range 0 to 255.
-+
-+- pwm-clock-division-l : indicates type M/N/O PWM clock division L value,
-+			 as per the AST2400/AST2500 datasheet.
-+			 integer value in the range 0 to 15.
-+			 0 here indicates divide 1, 1 indicates divide 2,
-+			 2 indicates divide 4, 3 indicates divide 6, and so on
-+			 till 15 indicates divide 30.
-+
-+- pwm-clock-division-h : indicates type M/N/O PWM clock division H value,
-+			 as per the AST2400/AST2500 datasheet.
-+			 integer value in the range 0 to 15.
-+			 0 here indicates divide 1, 1 indicates divide 2,
-+			 2 indicates divide 4, 3 indicates divide 8, and so on
-+			 till 15 indicates divide 32768.
-+
-+- fan-tach-type-enable : indicates fan tach enable of type M/N/O as per the
-+		         AST2400/AST2500 datasheet. boolean value.
-+
-+- fan-tach-clock-division : indicates fan tach clock division as per the
-+			    AST2400/AST2500 datasheet.
-+			    integer value in the range 0 to 7.
-+			    0 indicates divide 4, 1 indicates divide 16,
-+			    2 indicates divide 64, 3 indicates divide 256
-+			    and so on till 7 indicates divide 65536.
-+
-+- fan-tach-mode-selection : indicates fan tach mode mode selection as per the
-+			    AST2400/AST2500 datasheet. integer value in the
-+			    range 0 to 2. 0 indicates falling edge, 1 indicates
-+			    rising edge and 2 indicates both edges.
-+
-+- fan-tach-period : indicates fan tach period as per the AST2400/AST2500
-+		    datasheet. integer value (can be upto 16 bits long).
-+
-+pwm-port subnode format:
-+========================
-+Under pwm-port subnode there can upto 8 child nodes each indicating values
-+for one of the 8 PWM output ports.
-+
-+Required properties for each child node(starting from PWM A through PWM H):
-+- pwm-port : should specify PWM #X port , X ranges from A through H.
-+	     integer value in the range 0 to 7 with 0 indicating PWM port
-+	     A and 7 indicating PWM port H.
-+
-+- type : indicates type selection value of PWM port. integer value in the
-+	 range 0 to 2; 0 indicates type M, 1 indicates type N, 2 indicates
-+	 type O.
-+
-+- fan-ctrl : set the PWM duty cycle initial value. integer value between
-+	     0(off) and 255(full speed).
-+
-+fan-tach-channel subnode format:
-+================================
-+Under fan-tach-channel subnode there can be upto 16 child nodes each indicating
-+values for one of the 16 fan tach channels.
-+
-+Required properties for each child node(starting from fan tach #0 through
-+fan tach #15):
-+- fan-ctrl-gpios : should specify the tachometer input GPIO pin on the hardware.
-+		   Fan Tachometer function can only work when GPIO is in
-+		   ”input mode”
-+
-+- fan-tach : should specify the fan tach channel #X, X ranges from 0 through
-+	     15. integer value in the range 0 through 15.
-+
-+- pwm-source : indicates PWM source of the fan tach channel. integer value in
-+	       the range 0 to 7. 0 indicates PWM port A, 1 indicates PWM
-+	       port B and so on till 7 indicates PWM port H.
-+
-+Examples:
-+
-+pwm-tacho-fixed-clk: fixedclk {
-+	compatible = "fixed-clock";
-+	#clock-cells = <0>;
-+	clock-frequency = <24000000>;
-+}
-+
-+pwm-tacho: pwm-tacho-controller@1e786000 {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	reg = <0x1E786000 0x1000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm0_default &pinctrl_pwm1_default>;
-+	compatible = "aspeed,aspeed2500-pwm-tacho";
-+	clocks = <&pwm-tacho-fixed-clk>;
-+	type-values {
-+		typem {
-+			type = /bits/ 8 <0x00>;
-+			pwm-period = /bits/ 8 <0x5F>;
-+			pwm-clock-division-h = /bits/ 8 <0x00>;
-+			pwm-clock-division-l = /bits/ 8 <0x05>;
-+			fan-tach-type-enable;
-+			fan-tach-clock-division = /bits/ 8 <0x00>;
-+			fan-tach-mode-selection = /bits/ 8 <0x00>;
-+			fan-tach-period = /bits/ 16 <0x1000>;
-+		};
-+	};
-+
-+	pwm-port {
-+		pwm-port0 {
-+			pwm-port = /bits/ 8 <0x00>;
-+			type = /bits/ 8 <0x00>;
-+			fan-ctrl = /bits/ 8 <0xFF>;
-+		};
-+
-+		pwm-port1 {
-+			pwm-port = /bits/ 8 <0x01>;
-+			type = /bits/ 8 <0x00>;
-+			fan-ctrl = /bits/ 8 <0xFF>;
-+		};
-+        };
-+
-+	fan-tach-channel {
-+		fan-tach0 {
-+			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 0) GPIO_ACTIVE_HIGH>;
-+			fan-tach = /bits/ 8 <0x00>;
-+			pwm-source = /bits/ 8 <0x00>;
-+		};
-+
-+		fan-tach1 {
-+			fan-ctrl-gpios = <&gpio ASPEED_GPIO(O, 1) GPIO_ACTIVE_HIGH>;
-+			fan-tach = /bits/ 8 <0x01>;
-+			pwm-source = /bits/ 8 <0x01>;
-+		};
-+
-+	};
-+};
+On Fri, Jan 27, 2017 at 1:32 AM, Jaghathiswari Rankappagounder
+Natarajan <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+>
+>
+> On Fri, Jan 13, 2017 at 8:21 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>>
+>> On Mon, Jan 09, 2017 at 01:59:34PM -0800, Jaghathiswari Rankappagounder
+>> Natarajan wrote:
+>> > This binding provides interface for adding values related to ASPEED
+>> > AST2400/2500 PWM and Fan tach controller support.
+>> > The PWM controller can support upto 8 PWM output ports.
+>> > The Fan tach controller can support upto 16 tachometer inputs.
+>> > PWM clock types M, N and 0 are three types just to have three
+>> > independent
+>> > PWM sources.
+>> >
+>> > Signed-off-by: Jaghathiswari Rankappagounder Natarajan
+>> > <jaghu-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+>> > ---
+>> >  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 153
+>> > +++++++++++++++++++++
+>>
+>> Perhaps bindings/pwm/... even though this is more than just PWM.
+>
+> The corresponding hwmon driver is present in /drivers/hwmon/. So would it
+> make more
+>
+> sense to include the devicetree document for that driver in
+> /devicetree/bindings/hwmon/.
+>
+> In future if there any more hwmon related functionalities are added to th=
+is
+> driver then /devicetree/bindings/hwmon/ would be more relevant.
+>
+>
+>>
+>>
+>> >  1 file changed, 153 insertions(+)
+>> >  create mode 100644
+>> > Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+>> >
+>> > diff --git
+>> > a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+>> > b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+>> > new file mode 100644
+>> > index 000000000000..8f346409ee8c
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
+>> > @@ -0,0 +1,153 @@
+>> > +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
+>> > +
+>> > +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED
+>> > Fan Tacho
+>> > +controller can support upto 16 tachometer inputs. The PWM controller
+>> > supports
+>> > +3 types of frequency mode PWM for fan speed control. PWM clock types =
+M,
+>> > N and 0
+>> > +are 3 types of frequency mode PWM just to have 3 independent PWM
+>> > sources.
+>> > +
+>> > +Required properties for pwm_tacho node:
+>> > +- #address-cells : should be 1.
+>> > +
+>> > +- #size-cells : should be 1.
+>> > +
+>> > +- reg : address and length of the register set for the device.
+>> > +
+>> > +- pinctrl-names : a pinctrl state named "default" must be defined.
+>> > +
+>> > +- pinctrl-0 : phandle referencing pin configuration of the
+>> > AST2400/AST2500 PWM
+>> > +           ports.
+>> > +
+>> > +- compatible : should be "aspeed,aspeed2400-pwm-tacho" for AST2400 or
+>> > +            "aspeed,aspeed2500-pwm-tacho" for AST2500.
+>> > +
+>> > +- clocks : a fixed clock providing input clock frequency(PWM
+>> > +        and Fan Tach clock)
+>> > +
+>> > +type_values subnode format:
+>>
+>> Don't use '_' in node or property names.
+>
+> Done.
+>>
+>>
+>> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D
+>> > +Under type_values subnode there can be upto 3 child nodes indicating
+>> > type M/N/O
+>> > +values. Atleast one child node is required.
+>> > +
+>> > +Required properties for the child node(type M/N/O):
+>> > +- pwm_period : indicates type M/N/O PWM period, as per the
+>> > AST2400/AST2500
+>> > +            datasheet. integer value in the range 0 to 255.
+>>
+>>
+>> > +
+>> > +- pwm_clock_division_l : indicates type M/N/O PWM clock division L
+>> > value,
+>> > +                      as per the AST2400/AST2500 datasheet.
+>> > +                      integer value in the range 0 to 15.
+>> > +                      0 here indicates divide 1, 1 indicates divide 2=
+,
+>> > +                      2 indicates divide 4, 3 indicates divide 6, and
+>> > so on
+>> > +                      till 15 indicates divide 30.
+>> > +
+>> > +- pwm_clock_division_h : indicates type M/N/O PWM clock division H
+>> > value,
+>> > +                      as per the AST2400/AST2500 datasheet.
+>> > +                      integer value in the range 0 to 15.
+>> > +                      0 here indicates divide 1, 1 indicates divide 2=
+,
+>> > +                      2 indicates divide 4, 3 indicates divide 8, and
+>> > so on
+>> > +                      till 15 indicates divide 32768.
+>>
+>> Can't you have a single divider value and driver convert to register
+>> values? Really, you should specify the PWM period in ns/us and calculate
+>> the divider based on the input clock freq. (i.e. use the clock binding).
+>> There's already PWM binding to specify the period.
+>>
+>> I think you should have a node for the fan using the PWM binding and
+>> perhaps moving some of these properties to the fan node.
+>
+>
+> There are three different types M, N, O. These three types are just to ha=
+ve
+>
+> different PWM/Fan Tach settings. Each type can have the following setting=
+s:
+>
+> PWM related:
+>
+>               1) PWM period
+>
+>               2) PWM clock division high
+>
+>               3) PWM clock division low
+>
+> Fan Tach related:
+>
+>               1) Fan Tach type enable
+>
+>               2) Fan Tach clock division
+>
+>               3) Fan Tach mode selection
+>
+>               4) Fan Tach period
+>
+>
+>
+> Each PWM port should be assigned a type which can be type M, N or O.
+>
+>
+>
+> Each Fan Tach channel should be assigned a PWM source, which can be PWM p=
+ort
+> A
+>
+> through H. The Fan Tach channel implicitly gets the type (M, N or O), fro=
+m
+> the type assigned to its PWM source.
+>
+> If the clock type is type M then :
+> The PWM frequency =3D 24MHz / (type M clock division L value * type M clo=
+ck
+> division H value *
+>
+> (type M PWM period value + 1))
+>
+> Because of this formula, I thought I could use properties to specify type
+> clock division High and Low and
+>
+>  type period values so that the desired PWM frequency be achieved.
+>>
+>>
+>> > +
+>> > +- fan_tach_enable : indicates fan tach enable of type M/N/O as per th=
+e
+>> > +                 AST2400/AST2500 datasheet. boolean value.
+>> > +
+>> > +- fan_tach_clock_division : indicates fan tach clock division as per
+>> > the
+>> > +                         AST2400/AST2500 datasheet.
+>> > +                         integer value in the range 0 to 7.
+>> > +                         0 indicates divide 4, 1 indicates divide 16,
+>> > +                         2 indicates divide 64, 3 indicates divide 25=
+6
+>> > +                         and so on till 7 indicates divide 65536.
+>> > +
+>> > +- fan_tach_mode_selection : indicates fan tach mode mode selection as
+>> > per the
+>> > +                         AST2400/AST2500 datasheet. integer value in
+>> > the
+>> > +                         range 0 to 2. 0 indicates falling edge, 1
+>> > indicates
+>> > +                         rising edge and 2 indicates both edges.
+>> > +
+>> > +- fan_tach_period : indicates fan tach period as per the
+>> > AST2400/AST2500
+>> > +                 datasheet. integer value (can be upto 16 bits long).
+>> > +
+>> > +pwm_port subnode format:
+>> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+>> > +Under pwm_port subnode there can upto 8 child nodes each indicating
+>> > values
+>> > +for one of the 8 PWM output ports.
+>> > +
+>> > +Required properties for each child node(starting from PWM A through P=
+WM
+>> > H):
+>> > +- enable : enable PWM #X port, X ranges from A through H. boolean
+>> > value.
+>>
+>> A connection in the PWM binding would imply this.
+>
+> Had to change this property to indicate PWM port number.
+>
+>
+>>
+>>
+>> > +
+>> > +- type : indicates type selection value of PWM #X port, X ranges from=
+ A
+>> > +      through H. integer value in the range 0 to 2;
+>> > +      0 indicates type M, 1 indicates type N, 2 indicates type O.
+>>
+>> This is meaningless to me.
+>
+>
+> Each PWM port should be assigned a type which can be type M, N or O.
+>
+>
+>>
+>>
+>> > +- fan_ctrl : set the PWM fan control initial value. integer value
+>> > between
+>> > +          0(off) and 255(full speed).
+>> > +
+>> > +fan_tach_channel subnode format:
+>> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> > +Under fan_tach_channel subnode there can be upto 16 child nodes each
+>> > indicating
+>> > +values for one of the 16 fan tach channels.
+>> > +
+>> > +Required properties for each child node(starting from fan tach #0
+>> > through
+>> > +fan tach #16):
+>> > +- fan-ctrl-gpios : should specify the tachometer input pin on the
+>> > hardware.
+>>
+>> I don't understand the connection here. You have a tach block with 16
+>> inputs on the SoC, so why the GPIOs? If the GPIOs go to the fan, then a
+>> fan node should have the GPIO properties.
+>
+> This property specifies the tachometer input GPIO pin on the hardware. Fa=
+n
+> Tachometer function
+>
+>  can only work when GPIO is in =E2=80=9Dinput mode=E2=80=9D .
+>>
+>>
+>> > +
+>> > +- enable : enable fan tach #X, X ranges from 0 through 16. boolean
+>> > value.
+>>
+>> 'status' property is the standard way to enable a node or not. Not sure
+>> if that makes sense here though.
+>
+> Had to change this property to indicate Fan tach channel number.
+>
+>
+>>
+>>
+>> > +
+>> > +- pwm_source : indicates PWM source of fan tach #X, X ranges from 0
+>> > through 16.
+>> > +            integer value in the range 0 to 7. 0 indicates PWM port A=
+,
+>> > +            1 indicates PWM port B and so on till 7 indicates PWM por=
+t
+>> > H.
+>
+>
 --
-2.11.0.483.g087da7b7c-goog
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
