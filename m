@@ -1,142 +1,75 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Fri, 27 Jan 2017 14:19:13 -0600
-Message-ID: <20170127201913.jjhdw57jmxifqpxa@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: sun8i: dt: Add mali node
+Date: Fri, 27 Jan 2017 14:21:19 -0600
+Message-ID: <20170127202119.cnnuuojtjor6rleg@rob-hp-laptop>
 References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
+ <681511dd6370b9146ae8e3f8009eba1e15d36cc0.1485180017.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, Javier Martinez Canillas <javier@osg.samsung.com>, Kevin Hilman <khilman@baylibre.com>, Linus Walleij <linus.walleij@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Carlo Caione <carlo@caione.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <681511dd6370b9146ae8e3f8009eba1e15d36cc0.1485180017.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 03:00:45PM +0100, Maxime Ripard wrote:
-> The ARM Mali Utgard GPU family is embedded into a number of SoCs from
-> Allwinner, Amlogic, Mediatek or Rockchip.
+On Mon, Jan 23, 2017 at 03:00:46PM +0100, Maxime Ripard wrote:
+> The A23 and A33 have an ARM Mali 400 GPU. Now that we have a binding, add
+> it to our DT.
 > 
-> Add a binding for the GPU of that family.
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> 
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
+>  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+), 0 deletions(-)
 > 
-> Changes from v1:
->   - Dropped the arm,mali-utgard compatible
->   - Made the clocks mandatory
->   - Added Linus Walleij Reviewed-by, and the ST compatible for the Mali
-> ---
->  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 79 ++++++++-
->  1 file changed, 79 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> new file mode 100644
-> index 000000000000..ba0edcdd1b00
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -0,0 +1,79 @@
-> +ARM Mali Utgard GPU
-> +===================
-> +
-> +Required properties:
-> +  - compatible
-> +    * Must be one of the following:
-> +      + "arm,mali-300"
-> +      + "arm,mali-400"
-> +      + "arm,mali-450"
-> +    * And, optionally, one of the vendor specific compatible:
-> +      + allwinner,sun4i-a10-mali
-> +      + allwinner,sun7i-a20-mali
+> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+> index e4991a78ad73..982705719ef2 100644
+> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+> @@ -486,6 +486,32 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> +		mali: gpu@01c40000 {
 
-And stericsson,db8500-mali?
+Drop leading 0.
 
-> +
-> +  - reg: Physical base address and length of the GPU registers
-> +
-> +  - interrupts: an entry for each entry in interrupt-names.
-> +    See ../interrupt-controller/interrupts.txt for details.
-> +
-> +  - interrupt-names:
-> +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
-> +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
-> +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
-> +    * gp: Geometry Processor interrupt
-> +    * gpmmu: Geometry Processor MMU interrupt
-> +
-> +  - clocks: an entry for each entry in clock-names
-> +  - clock-names:
-> +    * bus: bus clock for the GPU
-> +    * core: clock driving the GPU itself
+> +			compatible = "allwinner,sun8i-a23-mali",
+> +				     "allwinner,sun7i-a20-mali", "arm,mali-400";
+> +			reg = <0x01c40000 0x10000>;
 
-assigned-clocks?
+Does this really use 64K or that's just the register spacing? Set it to 
+what's used.
 
+> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names = "gp",
+> +					  "gpmmu",
+> +					  "pp0",
+> +					  "ppmmu0",
+> +					  "pp1",
+> +					  "ppmmu1",
+> +					  "pmu";
+> +			clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
+> +			clock-names = "bus", "core";
+> +			resets = <&ccu RST_BUS_GPU>;
 > +
-> +Optional properties:
-> +  - interrupt-names and interrupts:
-> +    * pmu: Power Management Unit interrupt, if implemented in hardware
+> +			assigned-clocks = <&ccu CLK_GPU>;
+> +			assigned-clock-rates = <408000000>;
+> +		};
 > +
-> +Vendor-specific bindings
-> +------------------------
-> +
-> +The Mali GPU is integrated very differently from one SoC to
-> +another. In order to accomodate those differences, you have the option
-> +to specify one more vendor-specific compatible, among:
-> +
-> +  - allwinner,sun4i-a10-mali
-> +    Required properties:
-> +      * resets: phandle to the reset line for the GPU
-> +
-> +  - allwinner,sun7i-a20-mali
-> +    Required properties:
-> +      * resets: phandle to the reset line for the GPU
-> +
-> +  - stericsson,db8500-mali
-> +    Required properties:
-> +      * interrupt-names and interrupts:
-> +        + combined: combined interrupt of all of the above lines
-> +
-> +Example:
-> +
-> +mali: gpu@01c40000 {
-
-Drop the leading 0.
-
-> +	compatible = "allwinner,sun7i-a20-mali", "arm,mali-400";
-> +	reg = <0x01c40000 0x10000>;
-> +	interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +		     <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +	interrupt-names = "gp",
-> +			  "gpmmu",
-> +			  "pp0",
-> +			  "ppmmu0",
-> +			  "pp1",
-> +			  "ppmmu1",
-> +			  "pmu";
-> +	clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-> +	clock-names = "bus", "core";
-> +	resets = <&ccu RST_BUS_GPU>;
-> +};
-> +
-> +
-> 
-> base-commit: 49def1853334396f948dcb4cedb9347abb318df5
+>  		gic: interrupt-controller@01c81000 {
+>  			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+>  			reg = <0x01c81000 0x1000>,
 > -- 
 > git-series 0.8.11
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
