@@ -1,85 +1,58 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: marvell: add generic-ahci compatibles for CP110 ahci
-Date: Fri, 27 Jan 2017 11:49:32 +0100
-Message-ID: <878tpwydz7.fsf@free-electrons.com>
-References: <E1cS72h-0004nc-Rr@rmk-PC.armlinux.org.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH 7/8] ARM: dts: STiH407-family: Use new
+ Pinctrl groups
+Date: Fri, 27 Jan 2017 11:03:04 +0000
+Message-ID: <20170127110304.qitnkupjqe42tby7@dell>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
+ <20170124134310.27512-8-lee.jones@linaro.org>
+ <20170125115426.GH5680@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1cS72h-0004nc-Rr-eh5Bv4kxaXIk46pC+1QYvQNdhmdF6hFW@public.gmane.org> (Russell King's
-        message of "Fri, 13 Jan 2017 18:57:39 +0000")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170125115426.GH5680@griffinp-ThinkPad-X1-Carbon-2nd>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
- 
- On ven., janv. 13 2017, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
-
-> Testing with an Armada 8040 board shows that adding the generic-ahci
-> compatible to the CP110 AHCI nodes gets us working AHCI on the board.
-> A previous patch series posted by Thomas Petazzoni was retracted when
-> it was realised that the IP was supposed to be, and is, compatible
-> with the standard register layout.
->
-> Add this compatible.
-
-
-Applied on mvebu/dt64
-
-(not that it didn't apply cleanly on the mainline because in mainline we
-don't use yet the ICU for the interrupt)
-
-Thanks,
-
-Gregory
-
->
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 3 ++-
->  arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 3 ++-
->  2 files changed, 4 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> index 464b491c7291..65ad781d7910 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> @@ -128,7 +128,8 @@
->  			};
->  
->  			cpm_sata0: sata@540000 {
-> -				compatible = "marvell,armada-8k-ahci";
-> +				compatible = "marvell,armada-8k-ahci",
-> +					     "generic-ahci";
->  				reg = <0x540000 0x30000>;
->  				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 15>;
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> index b10f4781d8fb..168d667d50a3 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> @@ -128,7 +128,8 @@
->  			};
->  
->  			cps_sata0: sata@540000 {
-> -				compatible = "marvell,armada-8k-ahci";
-> +				compatible = "marvell,armada-8k-ahci",
-> +					     "generic-ahci";
->  				reg = <0x540000 0x30000>;
->  				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 15>;
-> -- 
-> 2.7.4
->
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gV2VkLCAyNSBKYW4gMjAxNywgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gSGkgTGVlLAo+IAo+
+IE9uIFR1ZSwgMjQgSmFuIDIwMTcsIExlZSBKb25lcyB3cm90ZToKPiAKPiA+IEhhdmluZyBqdXN0
+IGRlZmluZWQgc29tZSBuZXcgUGluY3RybCBncm91cHMgZm9yIHdoZW4gd2hlbiBIVyBmbG93LQo+
+ID4gY29udHJvbCBpcyB7ZW4sZGlzfWFibGVkLCBsZXQncyByZWZlcmVuY2UgdGhlbSBmb3IgdXNl
+IHdpdGhpbiB0aGUKPiA+IGRyaXZlci4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVz
+IDxsZWUuam9uZXNAbGluYXJvLm9yZz4KPiAKPiBTYW1lIGFzIHByZXZpb3VzIGNvbW1lbnQsIHlv
+dXIgZW5hYmxpbmcgaHcgZmxvdyBjb250cm9sIGZvciBhbGwKPiBzdGloNDA3IGZhbWlseSBib2Fy
+ZHMuIEkndmUgbm90IGNoZWNrZWQgdGhlIHNjaGVtYXRpY3MgZm9yIHRoZW0KPiBidXQgYXMgaHcg
+ZmxvdyBjb250cm9sIGlzIGRlcGVuZGVudCBvbiBib2FyZCB3aXJpbmcsIElNTyB0aGlzCj4gc2hv
+dWxkIGJlIGFkZGVkIGluIGJvYXJkIHNwZWNpZmljIGZpbGUuCgpGYWlyIHNob3V0LgoKT24gdGhl
+IEIyMTIwIFVBUlQwIGlzIGhvb2tlZCB1cCB0byB0aGUgU21hcnQgQ2FyZCBSZWFkZXIuCgpXaWxs
+IGZpeC4KCj4gPiAtLS0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNp
+IHwgNSArKystLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
+b25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZh
+bWlseS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQo+ID4gaW5k
+ZXggYzhiMjk0NC4uOTc4OTk3OCAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
+aWg0MDctZmFtaWx5LmR0c2kKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFt
+aWx5LmR0c2kKPiA+IEBAIC0yMjIsOCArMjIyLDkgQEAKPiA+ICAJCQljb21wYXRpYmxlID0gInN0
+LGFzYyI7Cj4gPiAgCQkJcmVnID0gPDB4OTgzMDAwMCAweDJjPjsKPiA+ICAJCQlpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgMTIyIElSUV9UWVBFX05PTkU+Owo+ID4gLQkJCXBpbmN0cmwtbmFtZXMgPSAi
+ZGVmYXVsdCI7Cj4gPiAtCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX3NlcmlhbDA+Owo+ID4gKwkJ
+CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJtYW51YWwtcnRzIjsKPiA+ICsJCQlwaW5jdHJs
+LTAgPSA8JnBpbmN0cmxfc2VyaWFsMF9mbG93Y3RybD47Cj4gPiArCQkJcGluY3RybC0xID0gPCZw
+aW5jdHJsX3NlcmlhbDA+Owo+ID4gIAkJCWNsb2NrcyA9IDwmY2xrX3NfYzBfZmxleGdlbiBDTEtf
+RVhUMkZfQTk+Owo+ID4gIAo+ID4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CgotLSAKTGVlIEpv
+bmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9y
+ZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZh
+Y2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
+ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
