@@ -1,178 +1,89 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v5 13/13] arm64: allwinner: add BananaPi-M64 support
-Date: Fri, 27 Jan 2017 22:38:45 +0100
-Message-ID: <9f33d1668f7552bc1e0c8fde92110648eba80659.1485553113.git-series.maxime.ripard@free-electrons.com>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 06/15] device property: Add support for remote endpoints
+Date: Fri, 27 Jan 2017 15:45:04 -0600
+Message-ID: <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
+References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com> <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+On Fri, Jan 27, 2017 at 10:03 AM, Sakari Ailus
+<sakari.ailus@linux.intel.com> wrote:
+> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+>
+> This follows DT implementation of of_graph_* APIs but we call them
+> fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
+> will be used. For ACPI we use the new ACPI graph implementation instead.
+>
+> This commit includes code from Sakari Ailus.
 
-The Banana Pi M64 board is a typical single board computer based on the
-Allwinner A64 SoC. Aside from the usual peripherals it features eMMC
-storage, which is connected to the 8-bit capable SDHC2 controller.
-Also it has a soldered WiFi/Bluetooth chip, so we enable UART1 and SDHC1
-as those two interfaces are connected to it.
+Then it should have your S-o-b. Actually, either way it should have it.
 
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm64/boot/dts/allwinner/Makefile                    |   1 +-
- arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts | 120 +++++++-
- 2 files changed, 121 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
+Whether or not copying DT graphs is a good idea or not, I'll let
+someone else chime in on that...
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 1e29a5ae8282..bc6f342be59f 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -1,3 +1,4 @@
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-new file mode 100644
-index 000000000000..6872135d7f84
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -0,0 +1,120 @@
-+/*
-+ * Copyright (c) 2016 ARM Ltd.
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a64.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "BananaPi-M64";
-+	compatible = "sinovoip,bananapi-m64", "allwinner,sun50i-a64";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+};
-+
-+&i2c1_pins {
-+	bias-pull-up;
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+};
--- 
-git-series 0.8.11
+> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> ---
+>  drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/property.h |   9 ++++
+>  2 files changed, 131 insertions(+)
+>
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index c0011cf..cf602c3 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_graph.h>
+>  #include <linux/property.h>
+>  #include <linux/etherdevice.h>
+>  #include <linux/phy.h>
+> @@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
+>         return device_get_mac_addr(dev, "address", addr, alen);
+>  }
+>  EXPORT_SYMBOL(device_get_mac_address);
+> +
+> +/**
+> + * device_graph_get_next_endpoint - Get next endpoint firmware node
+> + * @fwnode: Pointer to the parent firmware node
+> + * @prev: Previous endpoint node or %NULL to get the first
+> + *
+> + * Returns an endpoint firmware node pointer or %NULL if no more endpoints
+> + * are available.
+> + */
+> +struct fwnode_handle *
+> +fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
+> +                              struct fwnode_handle *prev)
+> +{
+> +       struct fwnode_handle *endpoint = NULL;
+> +
+> +       if (is_of_node(fwnode)) {
+> +               struct device_node *node;
+> +
+> +               node = of_graph_get_next_endpoint(to_of_node(fwnode),
+> +                                                 to_of_node(prev));
+> +
+> +               if (node)
+> +                       endpoint = &node->fwnode;
+> +       } else if (is_acpi_node(fwnode)) {
+> +               endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
+> +               if (IS_ERR(endpoint))
+> +                       endpoint = NULL;
+> +       }
+
+This is an ugly pattern IMO. Why not define an ops struct and set it
+to OF or ACPI rather than check on every function call with
+is_{of,acpi}_node()?
+
+The of_graph_* functions need some better helpers too, so duplicating
+them 2 more times is not ideal. Basically, drivers are left to do too
+much of the walking of nodes themselves.
+
+Rob
