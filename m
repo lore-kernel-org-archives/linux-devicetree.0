@@ -1,16 +1,14 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 07/11] clk: sunxi-ng: Add A80 Display Engine CCU
-Date: Fri, 27 Jan 2017 17:26:53 +0800
-Message-ID: <CAGb2v671951p7-QNJh_JHXqCPJMHso8EjER-mBt1sn8j+U+uHg@mail.gmail.com>
-References: <20170124023230.3990-1-wens@csie.org> <20170124023230.3990-8-wens@csie.org>
- <20170126103928.3kmvymoafsz5jfjm@lukather> <CAGb2v65QLAD4C27NoRHALO=2WzW=DC6OxwCCMhes-N+kWO3_kg@mail.gmail.com>
- <20170127085825.b4mzk47gpczj3dcu@lukather>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: Re: [PATCH 1/2] nvmem: sunxi-sid: add support for H3
+ and A64's SID controller
+Date: Fri, 27 Jan 2017 17:26:59 +0800
+Message-ID: <20170127122705.R0b4EAKp@smtp3o.mail.yandex.net>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB5VEVTCAKGQEGYJZOAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBB4VEVTCAKGQE2M3NLCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170127085825.b4mzk47gpczj3dcu@lukather>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -18,217 +16,263 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 4:58 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Jan 26, 2017 at 07:20:22PM +0800, Chen-Yu Tsai wrote:
->> On Thu, Jan 26, 2017 at 6:39 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > Hi,
->> >
->> > On Tue, Jan 24, 2017 at 10:32:26AM +0800, Chen-Yu Tsai wrote:
->> >> Add support for the display engine clock controls found on the A80.
->> >>
->> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> >> ---
->> >>  .../devicetree/bindings/clock/sun9i-de.txt         |  28 ++
->> >>  drivers/clk/sunxi-ng/Makefile                      |   1 +
->> >>  drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c            | 283 +++++++++++++++++++++
->> >>  drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h            |  33 +++
->> >>  include/dt-bindings/clock/sun9i-a80-de.h           |  80 ++++++
->> >>  include/dt-bindings/reset/sun9i-a80-de.h           |  58 +++++
->> >>  6 files changed, 483 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/clock/sun9i-de.txt
->> >>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
->> >>  create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h
->> >>  create mode 100644 include/dt-bindings/clock/sun9i-a80-de.h
->> >>  create mode 100644 include/dt-bindings/reset/sun9i-a80-de.h
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/clock/sun9i-de.txt b/Documentation/devicetree/bindings/clock/sun9i-de.txt
->> >> new file mode 100644
->> >> index 000000000000..3a5e6df70677
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/clock/sun9i-de.txt
->> >> @@ -0,0 +1,28 @@
->> >> +Allwinner A80 Display Engine Clock Control Binding
->> >> +------------------------------------
->> >> +
->> >> +Required properties :
->> >> +- compatible: must contain one of the following compatibles:
->> >> +             - "allwinner,sun9i-a80-de-clocks"
->> >> +
->> >> +- reg: Must contain the registers base address and length
->> >> +- clocks: phandle to the clocks feeding the display engine subsystem.
->> >> +       Three are needed:
->> >> +  - "mod": the display engine module clock
->> >> +  - "dram": the DRAM bus clock for the system
->> >> +  - "bus": the bus clock for the whole display engine subsystem
->> >> +- clock-names: Must contain the clock names described just above
->> >> +- resets: phandle to the reset control for the display engine subsystem.
->> >> +- #clock-cells : must contain 1
->> >> +- #reset-cells : must contain 1
->> >> +
->> >> +Example:
->> >> +de_clocks: clock@03000000 {
->> >> +     compatible = "allwinner,sun9i-a80-de-clks";
->> >> +     reg = <0x03000000 0x30>;
->> >> +     clocks = <&ccu CLK_DE>, <&ccu CLK_SDRAM>, <&ccu CLK_BUS_DE>;
->> >> +     clock-names = "mod", "dram", "bus";
->> >> +     resets = <&ccu RST_BUS_DE>;
->> >> +     #clock-cells = <1>;
->> >> +     #reset-cells = <1>;
->> >> +};
->> >> diff --git a/drivers/clk/sunxi-ng/Makefile b/drivers/clk/sunxi-ng/Makefile
->> >> index 8f37ef7fb67d..6feaac0c5600 100644
->> >> --- a/drivers/clk/sunxi-ng/Makefile
->> >> +++ b/drivers/clk/sunxi-ng/Makefile
->> >> @@ -26,4 +26,5 @@ obj-$(CONFIG_SUN8I_A33_CCU) += ccu-sun8i-a33.o
->> >>  obj-$(CONFIG_SUN8I_H3_CCU)   += ccu-sun8i-h3.o
->> >>  obj-$(CONFIG_SUN8I_V3S_CCU)  += ccu-sun8i-v3s.o
->> >>  obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80.o
->> >> +obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80-de.o
->> >>  obj-$(CONFIG_SUN9I_A80_CCU)  += ccu-sun9i-a80-usb.o
->> >> diff --git a/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
->> >> new file mode 100644
->> >> index 000000000000..3fc27db0a49a
->> >> --- /dev/null
->> >> +++ b/drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
->> >> @@ -0,0 +1,283 @@
->> >> +/*
->> >> + * Copyright (c) 2016 Chen-Yu Tsai. All rights reserved.
->> >> + *
->> >> + * This software is licensed under the terms of the GNU General Public
->> >> + * License version 2, as published by the Free Software Foundation, and
->> >> + * may be copied, distributed, and modified under those terms.
->> >> + *
->> >> + * This program is distributed in the hope that it will be useful,
->> >> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> >> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> >> + * GNU General Public License for more details.
->> >> + */
->> >> +
->> >> +#include <linux/clk.h>
->> >> +#include <linux/clk-provider.h>
->> >> +#include <linux/of_address.h>
->> >> +#include <linux/platform_device.h>
->> >> +#include <linux/reset.h>
->> >> +
->> >> +#include "ccu_common.h"
->> >> +#include "ccu_div.h"
->> >> +#include "ccu_gate.h"
->> >> +#include "ccu_reset.h"
->> >> +
->> >> +#include "ccu-sun9i-a80-de.h"
->> >> +
->> >> +static SUNXI_CCU_GATE(fe0_clk,               "fe0",          "fe0-div",
->> >> +                   0x00, BIT(0), 0);
->> >> +static SUNXI_CCU_GATE(fe1_clk,               "fe1",          "fe1-div",
->> >> +                   0x00, BIT(1), 0);
->> >> +static SUNXI_CCU_GATE(fe2_clk,               "fe2",          "fe2-div",
->> >> +                   0x00, BIT(2), 0);
->> >> +static SUNXI_CCU_GATE(iep_deu0_clk,  "iep-deu0",     "de",
->> >> +                   0x00, BIT(4), 0);
->> >> +static SUNXI_CCU_GATE(iep_deu1_clk,  "iep-deu1",     "de",
->> >> +                   0x00, BIT(5), 0);
->> >> +static SUNXI_CCU_GATE(be0_clk,               "be0",          "be0-div",
->> >> +                   0x00, BIT(8), 0);
->> >> +static SUNXI_CCU_GATE(be1_clk,               "be1",          "be1-div",
->> >> +                   0x00, BIT(9), 0);
->> >> +static SUNXI_CCU_GATE(be2_clk,               "be2",          "be2-div",
->> >> +                   0x00, BIT(10), 0);
->> >> +static SUNXI_CCU_GATE(iep_drc0_clk,  "iep-drc0",     "de",
->> >> +                   0x00, BIT(12), 0);
->> >> +static SUNXI_CCU_GATE(iep_drc1_clk,  "iep-drc1",     "de",
->> >> +                   0x00, BIT(13), 0);
->> >> +static SUNXI_CCU_GATE(merge_clk,     "merge",        "de",
->> >> +                   0x00, BIT(20), 0);
->> >> +
->> >> +static SUNXI_CCU_GATE(dram_fe0_clk,  "dram-fe0",     "sdram",
->> >> +                   0x04, BIT(0), 0);
->> >> +static SUNXI_CCU_GATE(dram_fe1_clk,  "dram-fe1",     "sdram",
->> >> +                   0x04, BIT(1), 0);
->> >> +static SUNXI_CCU_GATE(dram_fe2_clk,  "dram-fe2",     "sdram",
->> >> +                   0x04, BIT(2), 0);
->> >> +static SUNXI_CCU_GATE(dram_deu0_clk, "dram-deu0",    "sdram",
->> >> +                   0x04, BIT(4), 0);
->> >> +static SUNXI_CCU_GATE(dram_deu1_clk, "dram-deu1",    "sdram",
->> >> +                   0x04, BIT(5), 0);
->> >> +static SUNXI_CCU_GATE(dram_be0_clk,  "dram-be0",     "sdram",
->> >> +                   0x04, BIT(8), 0);
->> >> +static SUNXI_CCU_GATE(dram_be1_clk,  "dram-be1",     "sdram",
->> >> +                   0x04, BIT(9), 0);
->> >> +static SUNXI_CCU_GATE(dram_be2_clk,  "dram-be2",     "sdram",
->> >> +                   0x04, BIT(10), 0);
->> >> +static SUNXI_CCU_GATE(dram_drc0_clk, "dram-drc0",    "sdram",
->> >> +                   0x04, BIT(12), 0);
->> >> +static SUNXI_CCU_GATE(dram_drc1_clk, "dram-drc1",    "sdram",
->> >> +                   0x04, BIT(13), 0);
->> >> +
->> >> +static SUNXI_CCU_GATE(bus_fe0_clk,   "bus-fe0",      "bus-de",
->> >> +                   0x08, BIT(0), 0);
->> >> +static SUNXI_CCU_GATE(bus_fe1_clk,   "bus-fe1",      "bus-de",
->> >> +                   0x08, BIT(1), 0);
->> >> +static SUNXI_CCU_GATE(bus_fe2_clk,   "bus-fe2",      "bus-de",
->> >> +                   0x08, BIT(2), 0);
->> >> +static SUNXI_CCU_GATE(bus_deu0_clk,  "bus-deu0",     "bus-de",
->> >> +                   0x08, BIT(4), 0);
->> >> +static SUNXI_CCU_GATE(bus_deu1_clk,  "bus-deu1",     "bus-de",
->> >> +                   0x08, BIT(5), 0);
->> >> +static SUNXI_CCU_GATE(bus_be0_clk,   "bus-be0",      "bus-de",
->> >> +                   0x08, BIT(8), 0);
->> >> +static SUNXI_CCU_GATE(bus_be1_clk,   "bus-be1",      "bus-de",
->> >> +                   0x08, BIT(9), 0);
->> >> +static SUNXI_CCU_GATE(bus_be2_clk,   "bus-be2",      "bus-de",
->> >> +                   0x08, BIT(10), 0);
->> >> +static SUNXI_CCU_GATE(bus_drc0_clk,  "bus-drc0",     "bus-de",
->> >> +                   0x08, BIT(12), 0);
->> >> +static SUNXI_CCU_GATE(bus_drc1_clk,  "bus-drc1",     "bus-de",
->> >> +                   0x08, BIT(13), 0);
->> >> +
->> >> +static SUNXI_CCU_M(fe0_div_clk, "fe0-div", "de", 0x20, 0, 4, 0);
->> >> +static SUNXI_CCU_M(fe1_div_clk, "fe1-div", "de", 0x20, 4, 4, 0);
->> >> +static SUNXI_CCU_M(fe2_div_clk, "fe2-div", "de", 0x20, 8, 4, 0);
->> >> +static SUNXI_CCU_M(be0_div_clk, "be0-div", "de", 0x20, 16, 4, 0);
->> >> +static SUNXI_CCU_M(be1_div_clk, "be1-div", "de", 0x20, 20, 4, 0);
->> >> +static SUNXI_CCU_M(be2_div_clk, "be2-div", "de", 0x20, 24, 4, 0);
->> >
->> > I couldn't find any documentation for this CCU.
->>
->> I dug this up in the released Allwinner kernel.
->>
->> > What are those clocks for, and how the display engine should be using
->> > (ie, which one is it expecting to drive / ungate / etc.)
->>
->> Allwinner basically put all DE-related clock controls into a
->> separate module. In here, as the names above suggest, we have
->> bus gates, dram gates, and module clocks for each part of the
->> display pipeline. As with older SoCs that have DE 1.0, each
->> module should ungate and use the clocks related to them.
->>
->> I'll put something like the above in the commit message.
+
+2017=E5=B9=B41=E6=9C=8827=E6=97=A5 16:17=E4=BA=8E Maxime Ripard <maxime.rip=
+ard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>=E5=86=99=E9=81=93=EF=BC=9A
 >
-> So the module clocks are a combination of a divider and a clock?
-
-Correct. Some have dividers, some don't.
-
-> And I'm guessing the reason you separated them is because they belong
-> in a different register.
-
-Correct. Trying to support them within one clock would be a big
-deviation from what sunxi-ng currently supports. I left the
-divider clocks at the end of the list, and aren't exported to
-dt either. So if we really want to get rid of those intermediate
-divider clocks, we can do so later without affecting the exposed
-interface.
-
-Regards
-ChenYu
-
-> Maxime
+> Hi,=20
 >
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> On Thu, Jan 26, 2017 at 07:33:44PM +0800, Icenowy Zheng wrote:=20
+> > H3 and A64 SoCs have a bigger SID controller, which has its direct read=
+=20
+> > address at 0x200 position in the SID block, not 0x0.=20
+> >=20
+> > Also, H3 SID controller has some silicon bug that makes the direct read=
+=20
+> > value wrong at first, add code to workaround the bug. (This bug has=20
+> > already been fixed on A64 and later SoCs)=20
+> >=20
+> > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>=20
+> > ---=20
+> >=C2=A0 .../bindings/nvmem/allwinner,sunxi-sid.txt=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 22 +++-=20
+> >=C2=A0 drivers/nvmem/sunxi_sid.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 112 +++++++++++++++++++--=20
+> >=C2=A0 2 files changed, 123 insertions(+), 11 deletions(-)=20
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-si=
+d.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt=20
+> > index d543ed3f5363..d7400c415338 100644=20
+> > --- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt=
+=20
+> > +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt=
+=20
+> > @@ -1,8 +1,16 @@=20
+> >=C2=A0 Allwinner sunxi-sid=20
+> >=C2=A0=20
+> >=C2=A0 Required properties:=20
+> > -- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"=
+=20
+> > -- reg: Should contain registers location and length=20
+> > +- compatible: Should be one of the following (depending on your SoC):=
+=20
+> > +=C2=A0 "allwinner,sun4i-a10-sid"=20
+> > +=C2=A0 "allwinner,sun7i-a20-sid"=20
+> > +=C2=A0 "allwinner,sun8i-h3-sid"=20
+> > +=C2=A0 "allwinner,sun50i-a64-sid"=20
+> > +=20
+> > +- reg: Should contain registers location and registers length, for A10=
+ and A20=20
+> > +=C2=A0 SoCs the length is directly the length of SID; for H3, A64 and =
+newer SoCs=20
+> > +=C2=A0 the length should be the sum of the length of SID and the offse=
+t of the value=20
+> > +=C2=A0 (0x200).=20
+> >=C2=A0=20
+> >=C2=A0 =3D Data cells =3D=20
+> >=C2=A0 Are child nodes of qfprom, bindings of which as described in=20
+> > @@ -19,3 +27,13 @@ Example for sun7i:=20
+> >=C2=A0 compatible =3D "allwinner,sun7i-a20-sid";=20
+> >=C2=A0 reg =3D <0x01c23800 0x200>=20
+> >=C2=A0 };=20
+> > +=20
+> > +Example for sun8i-h3:=20
+> > + sid@01c14000 {=20
+> > + compatible =3D "allwinner,sun8i-h3-sid";=20
+> > + /*=20
+> > + * The length of SID on H3 is 0x100 bytes, add the value offset=20
+> > + * 0x200, so the total length should be 0x300.=20
+> > + */=20
+> > + reg =3D <0x01c14000 0x300>;=20
+>
+> No, it should be the size of the memory region used and documented for=20
+> that device, ie 1kB (0x400) in the H3 case, just like any other reg=20
+> property.=20
+
+So bind the SID size with compatible?
+
+>
+> > + };=20
+> > diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c=20
+> > index 1567ccca8de3..2e327a66a938 100644=20
+> > --- a/drivers/nvmem/sunxi_sid.c=20
+> > +++ b/drivers/nvmem/sunxi_sid.c=20
+> > @@ -20,10 +20,28 @@=20
+> >=C2=A0 #include <linux/module.h>=20
+> >=C2=A0 #include <linux/nvmem-provider.h>=20
+> >=C2=A0 #include <linux/of.h>=20
+> > +#include <linux/of_device.h>=20
+> >=C2=A0 #include <linux/platform_device.h>=20
+> >=C2=A0 #include <linux/slab.h>=20
+> >=C2=A0 #include <linux/random.h>=20
+> >=C2=A0=20
+> > +/* Registers and special values for doing register-based SID readout o=
+n H3 */=20
+> > +#define SUN8I_SID_PRCTL 0x40=20
+> > +#define SUN8I_SID_RDKEY 0x60=20
+> > +=20
+> > +#define SUN8I_SID_OP_LOCK 0xAC=20
+> > +#define SUN8I_SID_OFFSET_MASK 0x1FF=20
+> > +#define SUN8I_SID_OFFSET_SHIFT 16=20
+> > +#define SUN8I_SID_LOCK_SHIFT 8=20
+> > +#define SUN8I_SID_READ BIT(1)=20
+> > +=20
+> > +/*=20
+> > + * For newer SoCs with a larger eFUSE, the bytes beyond the first 16 b=
+ytes are=20
+> > + * sparse, which makes it not suitable for adding randomness; legacy S=
+oCs' SID=20
+> > + * have only 16 bytes, so we choose to use at most 16 bytes to add ran=
+domness.=20
+> > + */=20
+> > +#define SUNXI_SID_MAX_RANDOMNESS_SIZE 16=20
+> > +=20
+> >=C2=A0 static struct nvmem_config econfig =3D {=20
+> >=C2=A0 .name =3D "sunxi-sid",=20
+> >=C2=A0 .read_only =3D true,=20
+> > @@ -32,8 +50,14 @@ static struct nvmem_config econfig =3D {=20
+> >=C2=A0 .owner =3D THIS_MODULE,=20
+> >=C2=A0 };=20
+> >=C2=A0=20
+> > +struct sunxi_sid_cfg {=20
+> > + u32 value_offset;=20
+> > + bool need_register_readout;=20
+> > +};=20
+> > +=20
+> >=C2=A0 struct sunxi_sid {=20
+> >=C2=A0 void __iomem *base;=20
+> > + u32 value_offset;=20
+> >=C2=A0 };=20
+> >=C2=A0=20
+> >=C2=A0 /* We read the entire key, due to a 32 bit read alignment require=
+ment. Since we=20
+> > @@ -46,7 +70,8 @@ static u8 sunxi_sid_read_byte(const struct sunxi_sid =
+*sid,=20
+> >=C2=A0 {=20
+> >=C2=A0 u32 sid_key;=20
+> >=C2=A0=20
+> > - sid_key =3D ioread32be(sid->base + round_down(offset, 4));=20
+> > + sid_key =3D ioread32be(sid->base + sid->value_offset +=20
+> > + =C2=A0=C2=A0=C2=A0=C2=A0 round_down(offset, 4));=20
+> >=C2=A0 sid_key >>=3D (offset % 4) * 8;=20
+> >=C2=A0=20
+> >=C2=A0 return sid_key; /* Only return the last byte */=20
+> > @@ -64,26 +89,77 @@ static int sunxi_sid_read(void *context, unsigned i=
+nt offset,=20
+> >=C2=A0 return 0;=20
+> >=C2=A0 }=20
+> >=C2=A0=20
+> > +static int sun8i_sid_register_readout(const struct sunxi_sid *sid,=20
+> > + =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const unsigned int word,=20
+> > + =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 *out)=20
+> > +{=20
+> > + u32 reg_val;=20
+> > + unsigned long expire =3D jiffies + msecs_to_jiffies(250);=20
+> > +=20
+> > + /* Set word, lock access, and set read command */=20
+> > + reg_val =3D (word & SUN8I_SID_OFFSET_MASK)=20
+> > + =C2=A0 << SUN8I_SID_OFFSET_SHIFT;=20
+> > + reg_val |=3D SUN8I_SID_OP_LOCK << SUN8I_SID_LOCK_SHIFT;=20
+> > + reg_val |=3D SUN8I_SID_READ;=20
+> > + writel(reg_val, sid->base + SUN8I_SID_PRCTL);=20
+> > +=20
+> > + do {=20
+> > + reg_val =3D readl(sid->base + SUN8I_SID_PRCTL);=20
+> > + } while (time_before(jiffies, expire) && (reg_val & SUN8I_SID_READ));=
+=20
+> > +=20
+> > + if (reg_val & SUN8I_SID_READ)=20
+> > + return -EIO;=20
+> > +=20
+> > + if (out)=20
+> > + *out =3D readl(sid->base + SUN8I_SID_RDKEY);=20
+> > + writel(0, sid->base + SUN8I_SID_PRCTL);=20
+> > + return 0;=20
+> > +}=20
+> > +=20
+> >=C2=A0 static int sunxi_sid_probe(struct platform_device *pdev)=20
+> >=C2=A0 {=20
+> >=C2=A0 struct device *dev =3D &pdev->dev;=20
+> >=C2=A0 struct resource *res;=20
+> >=C2=A0 struct nvmem_device *nvmem;=20
+> >=C2=A0 struct sunxi_sid *sid;=20
+> > - int ret, i, size;=20
+> > + int ret, i, size, randomness_size;=20
+> >=C2=A0 char *randomness;=20
+> > + const struct sunxi_sid_cfg *cfg;=20
+> >=C2=A0=20
+> >=C2=A0 sid =3D devm_kzalloc(dev, sizeof(*sid), GFP_KERNEL);=20
+> >=C2=A0 if (!sid)=20
+> >=C2=A0 return -ENOMEM;=20
+> >=C2=A0=20
+> > + cfg =3D of_device_get_match_data(dev);=20
+> > + if (!cfg)=20
+> > + return -EINVAL;=20
+> > + sid->value_offset =3D cfg->value_offset;=20
+> > +=20
+> >=C2=A0 res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);=20
+> >=C2=A0 sid->base =3D devm_ioremap_resource(dev, res);=20
+> >=C2=A0 if (IS_ERR(sid->base))=20
+> >=C2=A0 return PTR_ERR(sid->base);=20
+> >=C2=A0=20
+> > - size =3D resource_size(res) - 1;=20
+> > - econfig.size =3D resource_size(res);=20
+> > + size =3D resource_size(res) - cfg->value_offset;=20
+> > +=20
+> > + if (cfg->need_register_readout) {=20
+> > + /*=20
+> > + * H3's SID controller have a bug that the value at 0x200=20
+> > + * offset is not the correct value when the hardware is reset.=20
+> > + * However, after doing a register-based read operation, the=20
+> > + * value become right.=20
+> > + * Do a full read operation here, but ignore its value=20
+> > + * (as it's more fast to read by direct MMIO value than=20
+> > + * with registers)=20
+> > + */=20
+> > + for (i =3D 0; i < (size >> 2); i++) {=20
+> > + ret =3D sun8i_sid_register_readout(sid, i, NULL);=20
+> > + if (ret)=20
+> > + return ret;=20
+> > + }=20
+> > + }=20
+> > +=20
+> > + econfig.size =3D size;=20
+> >=C2=A0 econfig.dev =3D dev;=20
+> >=C2=A0 econfig.reg_read =3D sunxi_sid_read;=20
+> >=C2=A0 econfig.priv =3D sid;=20
+> > @@ -91,16 +167,17 @@ static int sunxi_sid_probe(struct platform_device =
+*pdev)=20
+> >=C2=A0 if (IS_ERR(nvmem))=20
+> >=C2=A0 return PTR_ERR(nvmem);=20
+> >=C2=A0=20
+> > - randomness =3D kzalloc(sizeof(u8) * (size), GFP_KERNEL);=20
+> > + randomness_size =3D max(size, SUNXI_SID_MAX_RANDOMNESS_SIZE);=20
+> > + randomness =3D kzalloc(sizeof(u8) * (randomness_size), GFP_KERNEL);=
+=20
+>
+> Why is that change needed?=20
+
+On my H3/H2+ only 2 words after the first 4 words is not zero.
+
+I don't feel like add so many 0s to randomness.
+
+>
+> Thanks,=20
+> Maxime=20
+>
+>
+> --=20
+> Maxime Ripard, Free Electrons=20
+> Embedded Linux and Kernel engineering=20
+> http://free-electrons.com=20
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
