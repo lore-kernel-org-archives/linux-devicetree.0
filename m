@@ -1,185 +1,75 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Fri, 27 Jan 2017 17:17:46 +0000
-Message-ID: <20170127171746.lf2nbpsaqs3dmy44@dell>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell>
- <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell>
- <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
- <20170127101545.g53uah57vgfu55o5@dell>
- <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v5 05/12] dt: bindings: Add bindings for Marvell Xenon SD
+ Host Controller
+Date: Fri, 27 Jan 2017 18:25:56 +0100
+Message-ID: <87bmuswh23.fsf@free-electrons.com>
+References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
+ <89c95d0084da6ad7132caa54ca66eb619d8a5090.1484154449.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFrCxk37uVZ4wM-=iwX3-Cn9j+uh1KneJoopVzia2nKTVA@mail.gmail.com>
+ <87fuk4yg1i.fsf@free-electrons.com>
+ <CAPDyKFo-hpLd3W0zWykdg0swuciBeL=Cy9cur_0RoG8jApOh3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7b3eb38d-4fd1-2006-7423-94f2a7b38b27-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFo-hpLd3W0zWykdg0swuciBeL=Cy9cur_0RoG8jApOh3w@mail.gmail.com>
+ (Ulf Hansson's message of "Fri, 27 Jan 2017 16:36:36 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Ma rcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@li>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Jan 2017, Arnaud Pouliquen wrote:
-> On 01/27/2017 11:15 AM, Lee Jones wrote:
-> > On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
-> >> On 01/24/2017 12:36 PM, Lee Jones wrote:
-> >>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
-> >>>> On 01/24/2017 09:22 AM, Lee Jones wrote:
-> >>>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
-> >>>>>
-> >>>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
-> >>>>>
-> >>>>> Same time as what?
-> >>>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
-> >>>> capture (through ASOC).
-> >>>>>
-> >>>>>> conversion and audio PDM microphone.
-> >>>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
-> >>>>>> For this it exports an API to handles filters and channels resources.
-> >>>>>
-> >>>>> This looks like an ADC driver?  What is it that makes it an MFD?
-> >>>> Yes it a kind of ADC but that supports 2 features audio and iio.
-> >>>> So it has to support 2 features based on 2 separate Frameworks.
-> >>>
-> >>> I'm still unsure why it needs to live in MFD.
-> >>>
-> >>> By the looks of it, this driver needs to move into IIO and you need to
-> >>> call into it from ASoC.
-> >>>
-> >>
-> >> I think i introduce confusion by speaking about ADC for audio...
-> >>
-> >> 1) IIO handles sigma delta ADCs that can be used as example for motor
-> >> controls. the aim is to get value based on an application request or
-> >> using some triggers.
-> >> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
-> >>
-> >> 2) For audio part, we speak about Digital mems microphones that generate
-> >> PDM format stream. PDM is a continuous real time stream dedicated to
-> >> audio record and must be handled in ASOC ( codec Dmic part driver is
-> >> /sound/soc/codec/dmic.c).
-> >> DMIC example:
-> >> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
-> >>
-> >> Form my point of view it very strange to handle DMICs in IIO, as it is
-> >> not designed to support audio streams.it is two separate features that
-> >> are not compatible.
-> >>
-> >> Now, from software point of view
-> >> That would means that IIO declares ADCs that it can not expose, because
-> >> DMIC is not IIO standard. But IIO inkern API needs that device is
-> >> declared
-> > 
-> >> So i should define a specific API in IIO for ASOC driver.
-> > 
-> > Yes, this is what I think you should do.
-> > 
-> > MFD is not a dumping ground for devices that do not fit anywhere else.
-> 
-> I fully understand that you don't want to create unnecessary MFD devices.
-> But In case of DFSDM ,it is really a device that supports 2 features.
-> The main evidence is that "ADC acquisition" and "digital microphone"
-> features are handled by two separate frameworks.
-> So this corresponds to two features that share the same device resources
-> (registers, IRQs, clocks).
-> Seems that this match with MFD definition.
-> 
-> Now, if IIO and ASOC maintainers are aligned with you proposal, i will
-> move MFD part in IIO.
-> But in this case, i can not see another way to do it, except a MFD
-> driver hidden in IIO?
-> 
-> Here is my analysis of a design in IIO:
-> 
-> Natural way to do this is to consider that ASOC is a customer of IIO so
-> use the customer.h API.
-> 1) As Digital microphone can not be handled by IIO dev interface, i can
-> not expose them as an IIO channel, that would be visible by applications
-> in /sys/bus/iio/devices/iio
-> 2) ASOC needs to configure DFSDM filter to match to specific frequencies
-> and sample formats requested by users. Not standard IIO interface to do
-> this. (on IIO side this is done by attribute file)
-> 3) audio stream is a real time stream. So for audio quality best is to
-> minimize latencies and Xrun. That why transfer as done from HW to
-> application using LLI DMA transfers with a minimum of copy. This does
-> not match with the IIO inkern API.
->  => So seems not possible to use IIO inkern API.
-> 
-> That's means that i would need to create a ST specific include file to
-> offer an API to ASoC to handle DFSDM resources linked to the DMIC.
-> and to probe ASOc device in IIO one.
-> So the solution would be to create something like a sub IIO driver That
-> probe and handle some IIO and ASOC devices.
-> Ultimately This would correspond to a MFD driver integrated in IIO...
+Hi Ulf,
+ 
+ On ven., janv. 27 2017, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-The issue is not the creation of an MFD driver to create shared
-resources and probe the child devices.  That's what MFD *is* for.
-What I do take exception to is having lots of code in MFD which
-should clearly live in a different subsystem.
+>>
+>> But I am curious to know why do you think we could use it without any
+>> need. Are you aware of some abuse of this property?
+>
+> Yes.
+>
 
-Since this device only serves a couple of functions, I expect it to be
-a few hundred lines, maximum.  Everything else should be farmed out.
-MFD knows nothing of "channels" or "filters" so anything related to
-them (init, get, start, stop, release, etc) needs to find another
-home.  Whether that's in IIO is a separate discussion, but it
-certainly doesn't live in MFD.
+Actually I was hopping that you point some examples :)
 
-> Jonathan, Mark, Please could you share your opinion on this topic?
-> 
-> Regards
-> Arnaud
-> 
-> > 
-> >>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
-> >>>>>> ---
-> >>>>>>  drivers/mfd/Kconfig             |   11 +
-> >>>>>>  drivers/mfd/Makefile            |    2 +
-> >>>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
-> >>>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
-> >>>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
-> >>>>>>  5 files changed, 1601 insertions(+)
-> >>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
-> >>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
-> >>>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
-> >>>>>>
-> >>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> >>>>>> index c6df644..4bb660b 100644
-> >>>>>> --- a/drivers/mfd/Kconfig
-> >>>>>> +++ b/drivers/mfd/Kconfig
-> >>>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
-> >>>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
-> >>>>>>  	  Nomadik series.
-> >>>>>>  
-> >>>>>> +config MFD_STM32_DFSDM
-> >>>>>> +	tristate "ST Microelectronics STM32 DFSDM"
-> >>>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-> >>>>>> +	select MFD_CORE
-> >>>>>> +	select REGMAP
-> >>>>>> +	select REGMAP_MMIO
-> >>>>>> +	help
-> >>>>>> +	  Select this option to enable the STM32 Digital Filter
-> >>>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
-> >>>>>> +	  in various STM32 series.
-> >>>>>> +
-> >>>>>>  menu "Multimedia Capabilities Port drivers"
-> >>>>>>  	depends on ARCH_SA1100
-> >>>>>
-> >>>>> [...]
-> >>>>>
-> >>>>
-> >>>> Regards
-> >>>> Arnaud
-> >>>
-> > 
+But as you point mmc-ddr-3_3v I found my answers here:
+http://www.spinics.net/lists/linux-mmc/msg38602.html
+
+>>
+>>>
+>>> Perhaps you can elaborate exactly why it makes sense for your case. Or
+>>> perhaps we already discussed this, in either case, please re-fresh my
+>>> mind.
+>>
+>> For instance we need it now on the 7040DB board which does not have the
+>> 1.8V signal voltage available.
+>
+> It it's better to describe what the controller/board support, instead
+> of what it doesn't.
+>
+> I think you should be able to use other existing mmc DT bindings
+> (perhaps also you need the brand new "mmc-ddr-3_3v"), instead of the
+> "no-1-8-v".
+
+OK I will try with this one. And if it works, I wonder if it worth
+mentioning it as it is also part of the mmc binding.
+
+Gregory
+
+>
+> Kind regards
+> Uffe
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
