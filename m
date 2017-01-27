@@ -1,58 +1,66 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 7/8] ARM: dts: STiH407-family: Use new
- Pinctrl groups
-Date: Fri, 27 Jan 2017 11:03:04 +0000
-Message-ID: <20170127110304.qitnkupjqe42tby7@dell>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
- <20170124134310.27512-8-lee.jones@linaro.org>
- <20170125115426.GH5680@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 01/14] Documentation: dt/bindings: Document pinctrl-ingenic
+Date: Fri, 27 Jan 2017 12:18:39 +0100
+Message-ID: <CACRpkdZFRH84c4x7HBwgmY3fH+=Qq4q167c9oPhvrJ70MQkjaA@mail.gmail.com>
+References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
+ <20170122144947.16158-1-paul@crapouillou.net> <20170122144947.16158-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170125115426.GH5680@griffinp-ThinkPad-X1-Carbon-2nd>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <20170122144947.16158-2-paul@crapouillou.net>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, linux-p
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyNSBKYW4gMjAxNywgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gSGkgTGVlLAo+IAo+
-IE9uIFR1ZSwgMjQgSmFuIDIwMTcsIExlZSBKb25lcyB3cm90ZToKPiAKPiA+IEhhdmluZyBqdXN0
-IGRlZmluZWQgc29tZSBuZXcgUGluY3RybCBncm91cHMgZm9yIHdoZW4gd2hlbiBIVyBmbG93LQo+
-ID4gY29udHJvbCBpcyB7ZW4sZGlzfWFibGVkLCBsZXQncyByZWZlcmVuY2UgdGhlbSBmb3IgdXNl
-IHdpdGhpbiB0aGUKPiA+IGRyaXZlci4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTGVlIEpvbmVz
-IDxsZWUuam9uZXNAbGluYXJvLm9yZz4KPiAKPiBTYW1lIGFzIHByZXZpb3VzIGNvbW1lbnQsIHlv
-dXIgZW5hYmxpbmcgaHcgZmxvdyBjb250cm9sIGZvciBhbGwKPiBzdGloNDA3IGZhbWlseSBib2Fy
-ZHMuIEkndmUgbm90IGNoZWNrZWQgdGhlIHNjaGVtYXRpY3MgZm9yIHRoZW0KPiBidXQgYXMgaHcg
-ZmxvdyBjb250cm9sIGlzIGRlcGVuZGVudCBvbiBib2FyZCB3aXJpbmcsIElNTyB0aGlzCj4gc2hv
-dWxkIGJlIGFkZGVkIGluIGJvYXJkIHNwZWNpZmljIGZpbGUuCgpGYWlyIHNob3V0LgoKT24gdGhl
-IEIyMTIwIFVBUlQwIGlzIGhvb2tlZCB1cCB0byB0aGUgU21hcnQgQ2FyZCBSZWFkZXIuCgpXaWxs
-IGZpeC4KCj4gPiAtLS0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZhbWlseS5kdHNp
-IHwgNSArKystLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDIgZGVsZXRp
-b25zKC0pCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9zdGloNDA3LWZh
-bWlseS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQwNy1mYW1pbHkuZHRzaQo+ID4gaW5k
-ZXggYzhiMjk0NC4uOTc4OTk3OCAxMDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3N0
-aWg0MDctZmFtaWx5LmR0c2kKPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctZmFt
-aWx5LmR0c2kKPiA+IEBAIC0yMjIsOCArMjIyLDkgQEAKPiA+ICAJCQljb21wYXRpYmxlID0gInN0
-LGFzYyI7Cj4gPiAgCQkJcmVnID0gPDB4OTgzMDAwMCAweDJjPjsKPiA+ICAJCQlpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgMTIyIElSUV9UWVBFX05PTkU+Owo+ID4gLQkJCXBpbmN0cmwtbmFtZXMgPSAi
-ZGVmYXVsdCI7Cj4gPiAtCQkJcGluY3RybC0wID0gPCZwaW5jdHJsX3NlcmlhbDA+Owo+ID4gKwkJ
-CXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCIsICJtYW51YWwtcnRzIjsKPiA+ICsJCQlwaW5jdHJs
-LTAgPSA8JnBpbmN0cmxfc2VyaWFsMF9mbG93Y3RybD47Cj4gPiArCQkJcGluY3RybC0xID0gPCZw
-aW5jdHJsX3NlcmlhbDA+Owo+ID4gIAkJCWNsb2NrcyA9IDwmY2xrX3NfYzBfZmxleGdlbiBDTEtf
-RVhUMkZfQTk+Owo+ID4gIAo+ID4gIAkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CgotLSAKTGVlIEpv
-bmVzCkxpbmFybyBTVE1pY3JvZWxlY3Ryb25pY3MgTGFuZGluZyBUZWFtIExlYWQKTGluYXJvLm9y
-ZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZvbGxvdyBMaW5hcm86IEZh
-Y2Vib29rIHwgVHdpdHRlciB8IEJsb2cKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1r
-ZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Sun, Jan 22, 2017 at 3:49 PM, Paul Cercueil <paul@crapouillou.net> wrote:
+
+
+> +Required properties:
+> +- compatible: One of:
+> +  - "ingenic,jz4740-pinctrl"
+> +  - "ingenic,jz4780-pinctrl"
+> +
+> +Optional properties:
+> +- ingenic,pull-ups: A list of 32-bit bit fields, where each bit set tells the
+> +  driver that a pull-up resistor is available for this pin.
+> +  By default, the driver considers that all pins feature a pull-up resistor.
+> +- ingenic,pull-downs: A list of 32-bit bit fields, where each bit set tells
+> +  the driver that a pull-down resistor is available for this pin.
+> +  By default, the driver considers that all pins feature a pull-down
+> +  resistor.
+
+So I still don't understand these properties.
+
+Does this mean that there is a pull-up *inside* the SoC or *outside*
+on the board where it is mounted?
+
+If it is *outside* the SoC, on the board, the pulls should be set on
+the consumers, not on the controller.
+
+In the former case, if this pertains to the *inside* of the SoC:
+is it just different between jz4740 and jz4780?
+In that case, just code this into the driver as .data to the .compatible
+in the DT match. No special DT properties needed.
+
+If it is different between e.g. different versions of jz4740, why not
+make different compatible-properties? If there are different versions
+of the circuit, with different hard-wired hardware configuration, they
+are different devices and should have different compatible strings.
+
+> +                               /* CLK, CMD, D0 */
+> +                               ingenic,pins = <0x69 0 0x68 0 0x6a 0>;
+
+Standard bindings use just "pins". Why the custom ingenic,
+prefix?
+
+Yours,
+Linus Walleij
