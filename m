@@ -1,135 +1,72 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [STLinux Kernel] [PATCH 3/8] serial: st-asc: Read in all Pinctrl
- states
-Date: Fri, 27 Jan 2017 11:54:58 +0000
-Message-ID: <20170127115458.k4edg42nnna3bv4v@dell>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
- <20170124134310.27512-4-lee.jones@linaro.org>
- <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/3] pinctrl: dt-bindings: samsung: Add Exynos7 specific
+ pinctrl macro definitions
+Date: Fri, 27 Jan 2017 13:25:42 +0100
+Message-ID: <7a0d543f-37e8-98e9-15b4-7d3f808f8516@samsung.com>
+References: <1484718141-28785-1-git-send-email-pankaj.dubey@samsung.com>
+ <CGME20170118054002epcas5p3b08e2f419976e17a3c584d64776810fd@epcas5p3.samsung.com>
+ <1484718141-28785-3-git-send-email-pankaj.dubey@samsung.com>
+ <20170118141935.eu7wmki7jnjdarkw@kozik-lap>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <20170118141935.eu7wmki7jnjdarkw@kozik-lap>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pankaj Dubey <pankaj.dubey@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, javier@osg.samsung.com, robh+dt@kernel.org, kgene@kernel.org, alim.akhtar@samsung.com, sanath@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jan 2017, Peter Griffin wrote:
+On 01/18/2017 03:19 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jan 18, 2017 at 11:12:20AM +0530, Pankaj Dubey wrote:
+>> Exynos7 SoC pinctrl configurations are similar to existing Exynos4/5 except
+>> for FSYS1 pinctrl drive strengths. So adding Exynos7 specific FSYS1 blocks
+>> pinctrl driver strength related macros which will be used in Exynos7
+>> DTSi files.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> ---
+>>  include/dt-bindings/pinctrl/samsung.h | 8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+> 
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> I will need this header, so Sylwester if it is okay with you, could you
+> provide a tag with it (or ack it)?
 
-> Hi Lee,
-> 
-> On Tue, 24 Jan 2017, Lee Jones wrote:
-> 
-> > There are now 2 possible separate/different Pinctrl states which can
-> > be provided from platform data.  One which encompasses the lines
-> > required for HW flow-control (CTS/RTS) and another which does not
-> > specify these lines, such that they can be used via GPIO mechanisms
-> > for manually toggling (i.e. from a request by `stty`).
-> > 
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/tty/serial/st-asc.c | 28 ++++++++++++++++++++++++++++
-> >  1 file changed, 28 insertions(+)
-> > 
-> > diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-> > index 397df50..03801ed 100644
-> > --- a/drivers/tty/serial/st-asc.c
-> > +++ b/drivers/tty/serial/st-asc.c
-> > @@ -37,10 +37,16 @@
-> >  #define ASC_FIFO_SIZE 16
-> >  #define ASC_MAX_PORTS 8
-> >  
-> > +/* Pinctrl states */
-> > +#define DEFAULT		0
-> > +#define MANUAL_RTS	1
-> 
-> Nit: Would be better to have them aligned.
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
 
-These are aligned in code.  The patch format throws things out.
-
-Look, same lines with the "> > +" removed:
-
-/* Pinctrl states */
-#define DEFAULT		0
-#define MANUAL_RTS	1
-
-Try it.
-
-> > +
-> >  struct asc_port {
-> >  	struct uart_port port;
-> >  	struct gpio_desc *rts;
-> >  	struct clk *clk;
-> > +	struct pinctrl *pinctrl;
-> > +	struct pinctrl_state *states[2];
-> >  	unsigned int hw_flow_control:1;
-> >  	unsigned int force_m1:1;
-> >  };
-> > @@ -694,6 +700,7 @@ static int asc_init_port(struct asc_port *ascport,
-> >  {
-> >  	struct uart_port *port = &ascport->port;
-> >  	struct resource *res;
-> > +	int ret;
-> >  
-> >  	port->iotype	= UPIO_MEM;
-> >  	port->flags	= UPF_BOOT_AUTOCONF;
-> > @@ -720,6 +727,27 @@ static int asc_init_port(struct asc_port *ascport,
-> >  	WARN_ON(ascport->port.uartclk == 0);
-> >  	clk_disable_unprepare(ascport->clk);
-> >  
-> > +	ascport->pinctrl = devm_pinctrl_get(&pdev->dev);
-> > +	if (IS_ERR(ascport->pinctrl)) {
-> > +		ret = PTR_ERR(ascport->pinctrl);
-> > +		dev_err(&pdev->dev, "Failed to get Pinctrl: %d\n", ret);
-> > +	}
-> > +
-> > +	ascport->states[DEFAULT] =
-> > +		pinctrl_lookup_state(ascport->pinctrl, "default");
-> > +	if (IS_ERR(ascport->states[DEFAULT])) {
-> > +		ret = PTR_ERR(ascport->states[DEFAULT]);
-> > +		dev_err(&pdev->dev,
-> > +			"Failed to look up Pinctrl state 'default': %d\n", ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	/* "manual-rts" state is optional */
-> > +	ascport->states[MANUAL_RTS] =
-> > +		pinctrl_lookup_state(ascport->pinctrl, "manual-rts");
-> > +	if (IS_ERR(ascport->states[MANUAL_RTS]))
-> > +		ascport->states[MANUAL_RTS] = NULL;
-> > +
-> 
-> The different pinctrl states looks like a neat solution to the problem.
-> 
-> My only concern here is that 'default' state is implying a hw-flow-control
-> pinmux config, and manual-rts is implying what is the current upstream
-> 'default' pinmux config.
-> 
-> Which maybe ok if you update all uarts, but currently only serial0
-> is updated. So the other uarts current 'default' is actually the same as serial0
-> 'manual-rts' grouping, which conceptually is odd.
-> 
-> Would it not be better to make 'manual-rts' the default state? As that aligns
-> to what is currently already the default for the other UARTS? And then make
-> hw-flow-control the optional state for serial0?
-> 
-> That also has the advantage that 'default' has the same meaning with older DT's.
-
-The reason it was done is this was because none of the other UARTs
-require 2 separate Pinctrl configurations, only this one.  Moreover,
-if they support RTS/CTS then I believe that the lines should be
-defined in Pinctrl.  Thus, it was my plan to update all UART's default
-Pinctrl configs to include the RTS/CTS lines.
+I don't have pinctrl/samsung git tree, Linus applies patches directly.
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
+
+> diff --git a/include/dt-bindings/pinctrl/samsung.h
+b/include/dt-bindings/pinctrl/samsung.h
+> index 6276eb7..3f1d583 100644
+> --- a/include/dt-bindings/pinctrl/samsung.h
+> +++ b/include/dt-bindings/pinctrl/samsung.h
+> @@ -54,4 +54,12 @@
+>  #define EXYNOS_PIN_FUNC_6		6
+>  #define EXYNOS_PIN_FUNC_F		0xf
+>
+> +/* Drive strengths for Exynos7 FSYS1 block */
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV1	0
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV2	4
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV3	2
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV4	6
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV5	1
+> +#define EXYNOS7_FSYS1_PIN_DRV_LV6	5
+> +
+>  #endif /* __DT_BINDINGS_PINCTRL_SAMSUNG_H__ */
+> -- 2.7.4
