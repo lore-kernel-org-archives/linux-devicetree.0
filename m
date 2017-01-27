@@ -1,62 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: qoriq-clock: Add coreclk
-Date: Fri, 27 Jan 2017 16:38:19 -0600
-Message-ID: <20170127223819.mzovhnnpths5t5w2@rob-hp-laptop>
-References: <1485332363-8434-1-git-send-email-oss@buserror.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: change the mediatek
+ ethernet compatible string
+Date: Fri, 27 Jan 2017 16:41:05 -0600
+Message-ID: <20170127224105.e6di34pd3dwgn2hr@rob-hp-laptop>
+References: <1485332455-34743-1-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1485332363-8434-1-git-send-email-oss@buserror.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, "Y.B. Lu" <yangbo.lu@nxp.com>, "Z.Q. Hou" <zhiqiang.hou@nxp.com>, "Y.T. Tang" <yuantian.tang@nxp.com>, devicetree@vger.kernel.org
+In-Reply-To: <1485332455-34743-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 02:19:21AM -0600, Scott Wood wrote:
-> ls1012a has separate input root clocks for core PLLs versus the platform
-> PLL, with the latter described as sysclk in the hw docs.
+On Wed, Jan 25, 2017 at 09:20:54AM +0100, John Crispin wrote:
+> When the binding was defined, I was not aware that mt2701 was an earlier
+> version of the SoC. For sake of consistency, the ethernet driver should
+> use mt2701 inside the compat string as this is the earliest SoC with the
+> ethernet core.
 > 
-> Update the qoriq-clock binding to allow a second input clock, named
-> "coreclk".  If present, this clock will be used for the core PLLs.
-> 
-> Signed-off-by: Scott Wood <oss@buserror.net>
-> Cc: devicetree@vger.kernel.org
+> The ethernet driver is currently of no real use until we finish and
+> upstream the DSA driver. There are no users of this binding yet. It should
+> be safe to fix this now before it is too late and we need to provide
+> backward compatibility for the mt7623-eth compat string.
+
+Thanks for the explanation.
+
+> Reported-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/net/mediatek-net.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> index df9cb5a..97a9666 100644
-> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
-> @@ -55,6 +55,11 @@ Optional properties:
->  - clocks: If clock-frequency is not specified, sysclk may be provided
->  	as an input clock.  Either clock-frequency or clocks must be
->  	provided.
-> +	A second input clock, called "coreclk", may be provided if
-> +	core PLLs are based on a different input clock from the
-> +	platform PLL.
-> +- clock-names: Required if a coreclk is present.  Valid names are
-> +	"sysclk" and "coreclk".
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> index c010faf..c7194e8 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
+> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> @@ -7,7 +7,7 @@ have dual GMAC each represented by a child node..
+>  * Ethernet controller node
+>  
+>  Required properties:
+> -- compatible: Should be "mediatek,mt7623-eth"
+> +- compatible: Should be "mediatek,mt2701-eth"
 
-'clk' part is redundant.
+You should have both strings with 2701 being last. That way if you ever 
+find a difference in the 7623, you don't need a DT update to fix it.
 
->  
->  2. Clock Provider
->  
-> @@ -71,6 +76,7 @@ second cell is the clock index for the specified type.
->  	2	hwaccel		index (n in CLKCGnHWACSR)
->  	3	fman		0 for fm1, 1 for fm2
->  	4	platform pll	0=pll, 1=pll/2, 2=pll/3, 3=pll/4
-> +	5	coreclk		must be 0
->  
->  3. Example
->  
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain the three frame engines interrupts in numeric
+>  	order. These are fe_int0, fe_int1 and fe_int2.
 > -- 
-> 2.7.4
+> 1.7.10.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
