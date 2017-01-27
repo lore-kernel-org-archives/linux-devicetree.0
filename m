@@ -1,245 +1,39 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] nvmem: sunxi-sid: add support for H3
- and A64's SID controller
-Date: Fri, 27 Jan 2017 09:17:12 +0100
-Message-ID: <20170127081712.x2hprtpo2aolungc@lukather>
-References: <20170126113345.33686-1-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] arm64: dts: h3ulcb: enable HS200 for eMMC
+Date: Fri, 27 Jan 2017 09:29:35 +0100
+Message-ID: <20170127082935.GH21195@verge.net.au>
+References: <1485443606-22566-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1485443640-22651-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="saqtkn6gx2s3ehzf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBCMEVTCAKGQEA4ZCRFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170126113345.33686-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1485443640-22651-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+[CC Wolfram, linux-mmc]
 
---saqtkn6gx2s3ehzf
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-
-Hi,
-
-On Thu, Jan 26, 2017 at 07:33:44PM +0800, Icenowy Zheng wrote:
-> H3 and A64 SoCs have a bigger SID controller, which has its direct read
-> address at 0x200 position in the SID block, not 0x0.
+On Thu, Jan 26, 2017 at 06:14:00PM +0300, Vladimir Barinov wrote:
+> From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 > 
-> Also, H3 SID controller has some silicon bug that makes the direct read
-> value wrong at first, add code to workaround the bug. (This bug has
-> already been fixed on A64 and later SoCs)
+> This supports HS200 mode for eMMC on H3ULCB board
 > 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> ---
->  .../bindings/nvmem/allwinner,sunxi-sid.txt         |  22 +++-
->  drivers/nvmem/sunxi_sid.c                          | 112 +++++++++++++++++++--
->  2 files changed, 123 insertions(+), 11 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-> index d543ed3f5363..d7400c415338 100644
-> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-> @@ -1,8 +1,16 @@
->  Allwinner sunxi-sid
->  
->  Required properties:
-> -- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"
-> -- reg: Should contain registers location and length
-> +- compatible: Should be one of the following (depending on your SoC):
-> +  "allwinner,sun4i-a10-sid"
-> +  "allwinner,sun7i-a20-sid"
-> +  "allwinner,sun8i-h3-sid"
-> +  "allwinner,sun50i-a64-sid"
-> +
-> +- reg: Should contain registers location and registers length, for A10 and A20
-> +  SoCs the length is directly the length of SID; for H3, A64 and newer SoCs
-> +  the length should be the sum of the length of SID and the offset of the value
-> +  (0x200).
->  
->  = Data cells =
->  Are child nodes of qfprom, bindings of which as described in
-> @@ -19,3 +27,13 @@ Example for sun7i:
->  		compatible = "allwinner,sun7i-a20-sid";
->  		reg = <0x01c23800 0x200>
->  	};
-> +
-> +Example for sun8i-h3:
-> +	sid@01c14000 {
-> +		compatible = "allwinner,sun8i-h3-sid";
-> +		/*
-> +		 * The length of SID on H3 is 0x100 bytes, add the value offset
-> +		 * 0x200, so the total length should be 0x300.
-> +		 */
-> +		reg = <0x01c14000 0x300>;
+> Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
-No, it should be the size of the memory region used and documented for
-that device, ie 1kB (0x400) in the H3 case, just like any other reg
-property.
+Hi Vladimir,
 
-> +	};
-> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
-> index 1567ccca8de3..2e327a66a938 100644
-> --- a/drivers/nvmem/sunxi_sid.c
-> +++ b/drivers/nvmem/sunxi_sid.c
-> @@ -20,10 +20,28 @@
->  #include <linux/module.h>
->  #include <linux/nvmem-provider.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/random.h>
->  
-> +/* Registers and special values for doing register-based SID readout on H3 */
-> +#define SUN8I_SID_PRCTL		0x40
-> +#define SUN8I_SID_RDKEY		0x60
-> +
-> +#define SUN8I_SID_OP_LOCK	0xAC
-> +#define SUN8I_SID_OFFSET_MASK	0x1FF
-> +#define SUN8I_SID_OFFSET_SHIFT	16
-> +#define SUN8I_SID_LOCK_SHIFT	8
-> +#define SUN8I_SID_READ		BIT(1)
-> +
-> +/*
-> + * For newer SoCs with a larger eFUSE, the bytes beyond the first 16 bytes are
-> + * sparse, which makes it not suitable for adding randomness; legacy SoCs' SID
-> + * have only 16 bytes, so we choose to use at most 16 bytes to add randomness.
-> + */
-> +#define SUNXI_SID_MAX_RANDOMNESS_SIZE	16
-> +
->  static struct nvmem_config econfig = {
->  	.name = "sunxi-sid",
->  	.read_only = true,
-> @@ -32,8 +50,14 @@ static struct nvmem_config econfig = {
->  	.owner = THIS_MODULE,
->  };
->  
-> +struct sunxi_sid_cfg {
-> +	u32	value_offset;
-> +	bool	need_register_readout;
-> +};
-> +
->  struct sunxi_sid {
->  	void __iomem		*base;
-> +	u32			value_offset;
->  };
->  
->  /* We read the entire key, due to a 32 bit read alignment requirement. Since we
-> @@ -46,7 +70,8 @@ static u8 sunxi_sid_read_byte(const struct sunxi_sid *sid,
->  {
->  	u32 sid_key;
->  
-> -	sid_key = ioread32be(sid->base + round_down(offset, 4));
-> +	sid_key = ioread32be(sid->base + sid->value_offset +
-> +			     round_down(offset, 4));
->  	sid_key >>= (offset % 4) * 8;
->  
->  	return sid_key; /* Only return the last byte */
-> @@ -64,26 +89,77 @@ static int sunxi_sid_read(void *context, unsigned int offset,
->  	return 0;
->  }
->  
-> +static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
-> +				      const unsigned int word,
-> +				      u32 *out)
-> +{
-> +	u32 reg_val;
-> +	unsigned long expire = jiffies + msecs_to_jiffies(250);
-> +
-> +	/* Set word, lock access, and set read command */
-> +	reg_val = (word & SUN8I_SID_OFFSET_MASK)
-> +		  << SUN8I_SID_OFFSET_SHIFT;
-> +	reg_val |= SUN8I_SID_OP_LOCK << SUN8I_SID_LOCK_SHIFT;
-> +	reg_val |= SUN8I_SID_READ;
-> +	writel(reg_val, sid->base + SUN8I_SID_PRCTL);
-> +
-> +	do {
-> +		reg_val = readl(sid->base + SUN8I_SID_PRCTL);
-> +	} while (time_before(jiffies, expire) && (reg_val & SUN8I_SID_READ));
-> +
-> +	if (reg_val & SUN8I_SID_READ)
-> +		return -EIO;
-> +
-> +	if (out)
-> +		*out = readl(sid->base + SUN8I_SID_RDKEY);
-> +	writel(0, sid->base + SUN8I_SID_PRCTL);
-> +	return 0;
-> +}
-> +
->  static int sunxi_sid_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
->  	struct resource *res;
->  	struct nvmem_device *nvmem;
->  	struct sunxi_sid *sid;
-> -	int ret, i, size;
-> +	int ret, i, size, randomness_size;
->  	char *randomness;
-> +	const struct sunxi_sid_cfg *cfg;
->  
->  	sid = devm_kzalloc(dev, sizeof(*sid), GFP_KERNEL);
->  	if (!sid)
->  		return -ENOMEM;
->  
-> +	cfg = of_device_get_match_data(dev);
-> +	if (!cfg)
-> +		return -EINVAL;
-> +	sid->value_offset = cfg->value_offset;
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	sid->base = devm_ioremap_resource(dev, res);
->  	if (IS_ERR(sid->base))
->  		return PTR_ERR(sid->base);
->  
-> -	size = resource_size(res) - 1;
-> -	econfig.size = resource_size(res);
-> +	size = resource_size(res) - cfg->value_offset;
-> +
-> +	if (cfg->need_register_readout) {
-> +		/*
-> +		 * H3's SID controller have a bug that the value at 0x200
-> +		 * offset is not the correct value when the hardware is reset.
-> +		 * However, after doing a register-based read operation, the
-> +		 * value become right.
-> +		 * Do a full read operation here, but ignore its value
-> +		 * (as it's more fast to read by direct MMIO value than
-> +		 * with registers)
-> +		 */
-> +		for (i = 0; i < (size >> 2); i++) {
-> +			ret = sun8i_sid_register_readout(sid, i, NULL);
-> +			if (ret)
-> +				return ret;
-> +		}
-> +	}
-> +
-> +	econfig.size = size;
->  	econfig.dev = dev;
->  	econfig.reg_read = sunxi_sid_read;
->  	econfig.priv = sid;
-> @@ -91,16 +167,17 @@ static int sunxi_sid_probe(struct platform_device *pdev)
->  	if (IS_ERR(nvmem))
->  		return PTR_ERR(nvmem);
->  
-> -	randomness = kzalloc(sizeof(u8) * (size), GFP_KERNEL);
-> +	randomness_size = max(size, SUNXI_SID_MAX_RANDOMNESS_SIZE);
-> +	randomness = kzalloc(sizeof(u8) * (randomness_size), GFP_KERNEL);
+Please resend this change once the relevant driver changes hit an rc
+release.
 
-Why is that change needed?
+I believe that means the following changes which are present in mmc/next.
 
-Thanks,
-Maxime
-
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---saqtkn6gx2s3ehzf--
+8c81459fa8ad mmc: sh_mobile_sdhi: enable HS200
+60f215caef3f mmc: sh_mobile_sdhi: remove superfluous check in SCC error check
+f7c68068fb27 mmc: sh_mobile_sdhi: remove superfluous check in init_tuning
+4cf3ecd2e097 mmc: sh_mobile_sdhi: remove superfluous check in hw_reset
+bdba200138a9 mmc: sh_mobile_sdhi: improve prerequisites for tuning
+a7f2c661cca9 mmc: sh_mobile_sdhi: improve prerequisite for hw_reset
+59c21074b582 mmc: sh_mobile_sdhi: simplify accessing DT data
