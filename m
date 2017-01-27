@@ -1,27 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 01/14] devicetree: bindings: add bindings for
- ahci-da850
-Date: Fri, 27 Jan 2017 14:58:54 -0600
-Message-ID: <20170127205853.nzyznc7xu5eaqd7w@rob-hp-laptop>
-References: <1485190856-4711-1-git-send-email-bgolaszewski@baylibre.com>
- <1485190856-4711-2-git-send-email-bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: Add MediaTek PWM bindings
+Date: Fri, 27 Jan 2017 14:59:57 -0600
+Message-ID: <20170127205957.esvtrbok47xmrkra@rob-hp-laptop>
+References: <1485196477-669-1-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1485190856-4711-2-git-send-email-bgolaszewski@baylibre.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Tejun Heo <tj@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, David Lechner <david@lechnology.com>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1485196477-669-1-git-send-email-john@phrozen.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: John Crispin <john@phrozen.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, Sean Wang =?utf-8?B?KOeOi+W/l+S6mCk=?= <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 23, 2017 at 06:00:43PM +0100, Bartosz Golaszewski wrote:
-> Add DT bindings for the TI DA850 AHCI SATA controller.
+On Mon, Jan 23, 2017 at 07:34:36PM +0100, John Crispin wrote:
+> Document the device-tree binding of MediaTek PWM. The PWM has 5 channels.
+> This has been tested on MT7623 only but should work on all the other MTK
+> SoCs that contain this core.
 > 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: John Crispin <john@phrozen.org>
 > ---
->  Documentation/devicetree/bindings/ata/ahci-da850.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ata/ahci-da850.txt
+>  .../devicetree/bindings/pwm/pwm-mediatek.txt       |   34 ++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
