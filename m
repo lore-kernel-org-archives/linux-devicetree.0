@@ -1,59 +1,61 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: change the mediatek
- ethernet compatible string
-Date: Fri, 27 Jan 2017 16:41:05 -0600
-Message-ID: <20170127224105.e6di34pd3dwgn2hr@rob-hp-laptop>
-References: <1485332455-34743-1-git-send-email-john@phrozen.org>
+Subject: Re: [PATCH 5/5] checks: Add bus checks for PCI buses
+Date: Fri, 27 Jan 2017 16:54:46 -0600
+Message-ID: <CAL_Jsq+wavm6VBOotR7wVo_e5MuzEUhGxeCnqMLphGHP9tKOwQ@mail.gmail.com>
+References: <20170124174534.3865-1-robh@kernel.org> <20170124174534.3865-6-robh@kernel.org>
+ <148538384894.3179.13621971850704403546@sboyd-linaro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485332455-34743-1-git-send-email-john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <148538384894.3179.13621971850704403546@sboyd-linaro>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 09:20:54AM +0100, John Crispin wrote:
-> When the binding was defined, I was not aware that mt2701 was an earlier
-> version of the SoC. For sake of consistency, the ethernet driver should
-> use mt2701 inside the compat string as this is the earliest SoC with the
-> ethernet core.
-> 
-> The ethernet driver is currently of no real use until we finish and
-> upstream the DSA driver. There are no users of this binding yet. It should
-> be safe to fix this now before it is too late and we need to provide
-> backward compatibility for the mt7623-eth compat string.
+On Wed, Jan 25, 2017 at 4:37 PM, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Quoting Rob Herring (2017-01-24 09:45:34)
+>> @@ -587,7 +592,88 @@ static void fixup_path_references(struct check *c, struct dt_info *dti,
+>>  }
+>>  ERROR(path_references, fixup_path_references, NULL, &duplicate_node_names);
+>>
+>> +static bool is_pci_bridge(struct node *node)
+>> +{
+>> +       struct property *prop;
+>> +
+>> +       prop = get_property(node, "device_type");
+>> +       if (!prop)
+>> +               return false;
+>> +
+>> +       if (strcmp(prop->val.val, "pci") == 0)
+>> +               return true;
+>> +
+>> +       return false;
+>
+> This could be simplified?
+>
+>         return strcmp(prop->val.val, "pci") == 0;
 
-Thanks for the explanation.
+Duh, OC!
 
-> Reported-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/mediatek-net.txt |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-> index c010faf..c7194e8 100644
-> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-> @@ -7,7 +7,7 @@ have dual GMAC each represented by a child node..
->  * Ethernet controller node
->  
->  Required properties:
-> -- compatible: Should be "mediatek,mt7623-eth"
-> +- compatible: Should be "mediatek,mt2701-eth"
+>
+>> +}
+>> +
+> [...]
+>> +
+>> +struct bus_type pci_bus_type = {
+>
+> static? const?
+>
+>> +        .bridge_is_type = is_pci_bridge,
+>> +        .check_bridge = pci_check_bridge,
+>> +        .check_device = pci_check_device,
+>> +};
+>> +
+>>  struct bus_type *bus_types[] = {
+>
+> static? const?
 
-You should have both strings with 2701 being last. That way if you ever 
-find a difference in the 7623, you don't need a DT update to fix it.
+Yes. Fixed these 2 and everywhere else.
 
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain the three frame engines interrupts in numeric
->  	order. These are fe_int0, fe_int1 and fe_int2.
-> -- 
-> 1.7.10.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
