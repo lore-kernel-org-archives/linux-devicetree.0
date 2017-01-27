@@ -1,38 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] Documentation: mtk-quadspi: update DT bindings
-Date: Fri, 27 Jan 2017 16:29:36 -0600
-Message-ID: <20170127222936.d342eloplti27p4s@rob-hp-laptop>
-References: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
- <1485315515-29942-2-git-send-email-guochun.mao@mediatek.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the VC4 DSI module nodes.
+Date: Fri, 27 Jan 2017 16:34:18 -0600
+Message-ID: <CAL_JsqJ=VQSUO5MeHJSCB=_SnmOnA7G1=GhmWYKhjm-47kYV-w@mail.gmail.com>
+References: <20170124003853.16418-1-eric@anholt.net>
+ <20170124003853.16418-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1485315515-29942-2-git-send-email-guochun.mao@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Guochun Mao <guochun.mao@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-mtd@lists.infradead.org, John Crispin <john@phrozen.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170124003853.16418-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Michael Turquette <mturquette@baylibre.com>, Lee Jones <lee@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, linux-rpi-kernel@lists.infradead.org, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 11:38:34AM +0800, Guochun Mao wrote:
-> Add "mediatek,mt2701-nor" for nor flash node's compatible.
-> 
-> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
-> ---
->  .../devicetree/bindings/mtd/mtk-quadspi.txt        |    8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+TmVlZCB0byBjYyBEVCBsaXN0IGlmIHlvdSB3YW50IGl0IGluIG15IHF1ZXVlLgoKT24gTW9uLCBK
+YW4gMjMsIDIwMTcgYXQgNjozOCBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4gd3Jv
+dGU6Cj4gVGhlc2UgYXJlIHBhcnQgb2YgdGhlIHZjNCBkaXNwbGF5IHBpcGVsaW5lLgo+Cj4gU2ln
+bmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KPiAtLS0KPiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNtLGJjbS12YzQudHh0ICAgfCAzNSArKysrKysr
+KysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAzNSBpbnNlcnRpb25zKCspCj4KPiBk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJj
+bSxiY20tdmM0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
+L2JyY20sYmNtLXZjNC50eHQKPiBpbmRleCBlMjc2ODcwM2FjMmIuLjM0YzdmZGRjZWEzOSAxMDA2
+NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmNt
+LGJjbS12YzQudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJjbSxiY20tdmM0LnR4dAo+IEBAIC01Niw2ICs1NiwxOCBAQCBSZXF1aXJlZCBwcm9w
+ZXJ0aWVzIGZvciBWM0Q6Cj4gIC0gaW50ZXJydXB0czogIFRoZSBpbnRlcnJ1cHQgbnVtYmVyCj4g
+ICAgICAgICAgICAgICAgICAgU2VlIGJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2JyY20s
+YmNtMjgzNS1hcm1jdHJsLWljLnR4dAo+Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIERTSToK
+PiArLSBjb21wYXRpYmxlOiAgU2hvdWxkIGJlICJicmNtLGJjbTI4MzUtZHNpMCIgb3IgImJyY20s
+YmNtMjgzNS1kc2kxIgoKQXJlIHRoZSBibG9ja3MgZGlmZmVyZW50PwoKPiArLSByZWc6ICAgICAg
+ICAgUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERTSSBibG9jaydzIHJl
+Z2lzdGVycwo+ICstIGludGVycnVwdHM6ICBUaGUgaW50ZXJydXB0IG51bWJlcgo+ICsgICAgICAg
+ICAgICAgICAgIFNlZSBiaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9icmNtLGJjbTI4MzUt
+YXJtY3RybC1pYy50eHQKPiArLSBjbG9ja3M6ICAgICAgYSkgcGh5OiBUaGUgRFNJIFBMTCBjbG9j
+ayBmZWVkaW5nIHRoZSBEU0kgYW5hbG9nIFBIWQo+ICsgICAgICAgICAgICAgICBiKSBlc2NhcGU6
+IFRoZSBEU0kgRVNDIGNsb2NrIGZyb20gQ1BSTUFOCj4gKyAgICAgICAgICAgICAgIGMpIHBpeGVs
+OiBUaGUgRFNJIHBpeGVsIGNsb2NrIGZyb20gQ1BSTUFOCj4gKy0gY2xvY2stb3V0cHV0LW5hbWVz
+Ogo+ICsgICAgICAgICAgICAgICBUaGUgMyBjbG9ja3Mgb3V0cHV0IGZyb20gdGhlIERTSSBhbmFs
+b2cgUEhZOiBkc2lbMDFdX2J5dGUsCj4gKyAgICAgICAgICAgICAgIGRzaVswMV1fZGRyMiwgYW5k
+IGRzaVswMV1fZGRyCj4gKwo+ICBbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4KPiAgRXhhbXBsZToKPiBAQCAtOTksNiArMTEx
+LDI5IEBAIGRwaTogZHBpQDdlMjA4MDAwIHsKPiAgICAgICAgIH07Cj4gIH07Cj4KPiArZHNpMTog
+ZHNpQDdlNzAwMDAwIHsKPiArICAgICAgIGNvbXBhdGlibGUgPSAiYnJjbSxiY20yODM1LWRzaTEi
+Owo+ICsgICAgICAgcmVnID0gPDB4N2U3MDAwMDAgMHg4Yz47Cj4gKyAgICAgICBpbnRlcnJ1cHRz
+ID0gPDIgMTI+Owo+ICsgICAgICAgI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKyAgICAgICAjc2l6
+ZS1jZWxscyA9IDwwPjsKPiArICAgICAgICNjbG9jay1jZWxscyA9IDwxPjsKPiArCj4gKyAgICAg
+ICBjbG9ja3MgPSA8JmNsb2NrcyBCQ00yODM1X1BMTERfRFNJMT4sCj4gKyAgICAgICAgICAgICAg
+ICA8JmNsb2NrcyBCQ00yODM1X0NMT0NLX0RTSTFFPiwKPiArICAgICAgICAgICAgICAgIDwmY2xv
+Y2tzIEJDTTI4MzVfQ0xPQ0tfRFNJMVA+Owo+ICsgICAgICAgY2xvY2stbmFtZXMgPSAicGh5Iiwg
+ImVzY2FwZSIsICJwaXhlbCI7Cj4gKwo+ICsgICAgICAgY2xvY2stb3V0cHV0LW5hbWVzID0gImRz
+aTFfYnl0ZSIsICJkc2kxX2RkcjIiLCAiZHNpMV9kZHIiOwo+ICsKPiArICAgICAgIHBpdG91Y2hz
+Y3JlZW46IHBhbmVsQDAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJhc3BiZXJy
+eXBpLHRvdWNoc2NyZWVuIjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDA+Owo+ICsKPiArICAg
+ICAgICAgICAgICAgPC4uLj4KPiArICAgICAgIH07Cj4gK307Cj4gKwo+ICB2ZWM6IHZlY0A3ZTgw
+NjAwMCB7Cj4gICAgICAgICBjb21wYXRpYmxlID0gImJyY20sYmNtMjgzNS12ZWMiOwo+ICAgICAg
+ICAgcmVnID0gPDB4N2U4MDYwMDAgMHgxMDAwPjsKPiAtLQo+IDIuMTEuMAo+Cl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
