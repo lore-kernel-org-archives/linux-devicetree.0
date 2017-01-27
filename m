@@ -1,72 +1,172 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v6 0/2] clocksource: Add renesas-ostm timer driver
-Date: Thu, 26 Jan 2017 21:23:30 -0500
-Message-ID: <20170127022332.15906-1-chris.brandt@renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCHv5 2/5] arm: mvebu: support for SMP on 98DX3336 SoC
+Date: Fri, 27 Jan 2017 16:25:43 +1300
+Message-ID: <20170127032546.14657-3-chris.packham@alliedtelesis.co.nz>
+References: <20170127032546.14657-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170127032546.14657-1-chris.packham@alliedtelesis.co.nz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds a new clocksource driver that uses the OS Timer
-(OSTM) that exists in the R7S72100 (RZ/A1) SoC.
+Compared to the armada-xp the 98DX3336 uses different registers to set
+the boot address for the secondary CPU so a new enable-method is needed.
+This will only work if the machine definition doesn't define an overall
+smp_ops because there is not currently a way of overriding this from the
+device tree if it is set in the machine definition.
 
-The operation of the driver was tested with a simple user application
-that does multiple calls to nanosleep() and gettimeofday().
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Acked-by: Rob Herring <robh@kernel.org>
+---
 
-The purpose of adding this driver is to get better time keeping
-accuracy over the default MTU2 clocksource timer.
+Notes:
+    Changes in v2:
+    - Document new enable-method value
+    - Correct some references from 98DX4521 to 98DX3236
+    Changes in v3:
+    - Simplify mv98dx3236_resume_init by using of_io_request_and_map()
+    Changes in v4:
+    - integrate changes into platsmp.c instead of new init call
+    - avoid duplicated code.
+    - fix error return
+    - Collect ack from Rob
+    Changes in v5:
+    - Remove useless casts (thanks to Stephen Boyd)
 
-v6:
-* add Copyright
+ Documentation/devicetree/bindings/arm/cpus.txt     |  1 +
+ .../bindings/arm/marvell/98dx3236-resume-ctrl.txt  | 16 ++++
+ arch/arm/mach-mvebu/platsmp.c                      | 86 ++++++++++++++++++++++
+ 3 files changed, 103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
 
-v5:
-* changed iowrite8/32 to writeb/l
-
-v4:
-* Added more details to commit log
-* Kconfig: SYS_SUPPORTS_RENESAS_OSTM to just RENESAS_OSTM
-* removed all MODULE code (this driver is builtin only)
-* removed items from 'struct ostm_device'
-* changed ioread8 to readb
-* explain endless while loop
-* removed un-needed vars like 'ret'
-* removed WARN_ON(!clockevent_state_oneshot(ced));
-* removed "failed to allocate memory" message
-* remove pm_runtime calls
-* remove "earlytimer" register (only for sh, not arm)
-* convert from platform driver to CLOCKSOURCE_OF_DECLARE
-* ostm_probe code is now in ostm_init
-
-v3:
-* Changed ostm@fcfec000 to timer@fcfec000
-* Added power-domains to nodes
-
-v2:
-* The biggest change was now the channels are independent of each
-  other and have separate nodes in the DT. The first probed will
-  be set up as a clock source, and any additional channels probed
-  will become a clock event.
-
-
-Chris Brandt (2):
-  dt-bindings: document renesas-ostm timer
-  clocksource: Add renesas-ostm timer driver
-
- .../devicetree/bindings/timer/renesas,ostm.txt     |  30 +++
- arch/arm/mach-shmobile/Kconfig                     |   1 +
- drivers/clocksource/Kconfig                        |   7 +
- drivers/clocksource/Makefile                       |   1 +
- drivers/clocksource/renesas-ostm.c                 | 265 +++++++++++++++++++++
- 5 files changed, 304 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
- create mode 100644 drivers/clocksource/renesas-ostm.c
-
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a1bcfeed5f24..3c2fd72d0bf9 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -202,6 +202,7 @@ nodes to be present and contain the properties described below.
+ 			    "marvell,armada-380-smp"
+ 			    "marvell,armada-390-smp"
+ 			    "marvell,armada-xp-smp"
++			    "marvell,98dx3236-smp"
+ 			    "mediatek,mt6589-smp"
+ 			    "mediatek,mt81xx-tz-smp"
+ 			    "qcom,gcc-msm8660"
+diff --git a/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+new file mode 100644
+index 000000000000..26eb9d3aa630
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/marvell/98dx3236-resume-ctrl.txt
+@@ -0,0 +1,16 @@
++Resume Control
++--------------
++Available on Marvell SOCs: 98DX3336 and 98DX4251
++
++Required properties:
++
++- compatible: must be "marvell,98dx3336-resume-ctrl"
++
++- reg: Should contain resume control registers location and length
++
++Example:
++
++resume@20980 {
++	compatible = "marvell,98dx3336-resume-ctrl";
++	reg = <0x20980 0x10>;
++};
+diff --git a/arch/arm/mach-mvebu/platsmp.c b/arch/arm/mach-mvebu/platsmp.c
+index 46c742d3bd41..a5b464497e1a 100644
+--- a/arch/arm/mach-mvebu/platsmp.c
++++ b/arch/arm/mach-mvebu/platsmp.c
+@@ -184,3 +184,89 @@ const struct smp_operations armada_xp_smp_ops __initconst = {
+ 
+ CPU_METHOD_OF_DECLARE(armada_xp_smp, "marvell,armada-xp-smp",
+ 		      &armada_xp_smp_ops);
++
++struct resume_controller {
++	u32 resume_control;
++	u32 resume_boot_addr;
++};
++
++static const struct resume_controller mv98dx3336_resume_controller = {
++	.resume_control = 0x08,
++	.resume_boot_addr = 0x04,
++};
++
++static const struct of_device_id of_mv98dx3236_resume_table[] = {
++	{
++		.compatible = "marvell,98dx3336-resume-ctrl",
++		.data = &mv98dx3336_resume_controller,
++	},
++	{ /* end of list */ },
++};
++
++static int mv98dx3236_resume_set_cpu_boot_addr(int hw_cpu, void *boot_addr)
++{
++	const struct of_device_id *match;
++	struct device_node *np;
++	void __iomem *base;
++	const struct resume_controller *rc;
++
++	WARN_ON(hw_cpu != 1);
++
++	np = of_find_matching_node_and_match(NULL, of_mv98dx3236_resume_table,
++					     &match);
++	if (!np)
++		return -ENODEV;
++
++	base = of_io_request_and_map(np, 0, of_node_full_name(np));
++	rc = match->data;
++	of_node_put(np);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	writel(0, base + rc->resume_control);
++	writel(virt_to_phys(boot_addr), base + rc->resume_boot_addr);
++
++	return 0;
++}
++
++static int mv98dx3236_boot_secondary(unsigned int cpu, struct task_struct *idle)
++{
++	int ret, hw_cpu;
++
++	hw_cpu = cpu_logical_map(cpu);
++	set_secondary_cpu_clock(hw_cpu);
++	mv98dx3236_resume_set_cpu_boot_addr(hw_cpu,
++					    armada_xp_secondary_startup);
++
++	/*
++	 * This is needed to wake up CPUs in the offline state after
++	 * using CPU hotplug.
++	 */
++	arch_send_wakeup_ipi_mask(cpumask_of(cpu));
++
++	/*
++	 * This is needed to take secondary CPUs out of reset on the
++	 * initial boot.
++	 */
++	ret = mvebu_cpu_reset_deassert(hw_cpu);
++	if (ret) {
++		pr_warn("unable to boot CPU: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
++static const struct smp_operations mv98dx3236_smp_ops __initconst = {
++	.smp_init_cpus		= armada_xp_smp_init_cpus,
++	.smp_prepare_cpus	= armada_xp_smp_prepare_cpus,
++	.smp_boot_secondary	= mv98dx3236_boot_secondary,
++	.smp_secondary_init     = armada_xp_secondary_init,
++#ifdef CONFIG_HOTPLUG_CPU
++	.cpu_die		= armada_xp_cpu_die,
++	.cpu_kill               = armada_xp_cpu_kill,
++#endif
++};
++
++CPU_METHOD_OF_DECLARE(mv98dx3236_smp, "marvell,98dx3236-smp",
++		      &mv98dx3236_smp_ops);
 -- 
-2.10.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0.24.ge6920cf
