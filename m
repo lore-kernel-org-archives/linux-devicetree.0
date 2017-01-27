@@ -1,57 +1,53 @@
-From: Scott Wood <oss@buserror.net>
-Subject: Re: [PATCH 1/3] dt-bindings: qoriq-clock: Add coreclk
-Date: Fri, 27 Jan 2017 17:51:42 -0600
-Message-ID: <1485561102.9266.8.camel@buserror.net>
-References: <1485332363-8434-1-git-send-email-oss@buserror.net>
- <20170127223819.mzovhnnpths5t5w2@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] net: ethernet: faraday: To support device tree usage.
+Date: Fri, 27 Jan 2017 16:17:33 -0600
+Message-ID: <20170127221733.tcoudehkp5b5jnfw@rob-hp-laptop>
+References: <20170124084606.GA11764@app09>
+ <20170125.123448.742815192519658537.davem@davemloft.net>
+ <CAK8P3a2Zr6=4x8JRa313DQ2ND0V=8eL0yKkrd93wbdxkiOtmSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127223819.mzovhnnpths5t5w2@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "Z.Q. Hou" <zhiqiang.hou@nxp.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "Y.T. Tang" <yuantian.tang@nxp.com>, "Y.B. Lu" <yangbo.lu@nxp.com>, Shawn Guo <shawnguo@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2Zr6=4x8JRa313DQ2ND0V=8eL0yKkrd93wbdxkiOtmSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Networking <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, jiri-rHqAuBHg3fBzbRFIqnYvSA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE3LTAxLTI3IGF0IDE2OjM4IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiBP
-biBXZWQsIEphbiAyNSwgMjAxNyBhdCAwMjoxOToyMUFNIC0wNjAwLCBTY290dCBXb29kIHdyb3Rl
-Ogo+ID4gCj4gPiBsczEwMTJhIGhhcyBzZXBhcmF0ZSBpbnB1dCByb290IGNsb2NrcyBmb3IgY29y
-ZSBQTExzIHZlcnN1cyB0aGUgcGxhdGZvcm0KPiA+IFBMTCwgd2l0aCB0aGUgbGF0dGVyIGRlc2Ny
-aWJlZCBhcyBzeXNjbGsgaW4gdGhlIGh3IGRvY3MuCj4gPiAKPiA+IFVwZGF0ZSB0aGUgcW9yaXEt
-Y2xvY2sgYmluZGluZyB0byBhbGxvdyBhIHNlY29uZCBpbnB1dCBjbG9jaywgbmFtZWQKPiA+ICJj
-b3JlY2xrIi7CoMKgSWYgcHJlc2VudCwgdGhpcyBjbG9jayB3aWxsIGJlIHVzZWQgZm9yIHRoZSBj
-b3JlIFBMTHMuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IFNjb3R0IFdvb2QgPG9zc0BidXNlcnJv
-ci5uZXQ+Cj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiA+IC0tLQo+ID4gwqBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svcW9yaXEtY2xvY2sudHh0IHwg
-NiArKysrKysKPiA+IMKgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
-LWNsb2NrLnR4dAo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
-cW9yaXEtY2xvY2sudHh0Cj4gPiBpbmRleCBkZjljYjVhLi45N2E5NjY2IDEwMDY0NAo+ID4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3FvcmlxLWNsb2NrLnR4
-dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL3Fvcmlx
-LWNsb2NrLnR4dAo+ID4gQEAgLTU1LDYgKzU1LDExIEBAIE9wdGlvbmFsIHByb3BlcnRpZXM6Cj4g
-PiDCoC0gY2xvY2tzOiBJZiBjbG9jay1mcmVxdWVuY3kgaXMgbm90IHNwZWNpZmllZCwgc3lzY2xr
-IG1heSBiZSBwcm92aWRlZAo+ID4gwqAJYXMgYW4gaW5wdXQgY2xvY2suwqDCoEVpdGhlciBjbG9j
-ay1mcmVxdWVuY3kgb3IgY2xvY2tzIG11c3QgYmUKPiA+IMKgCXByb3ZpZGVkLgo+ID4gKwlBIHNl
-Y29uZCBpbnB1dCBjbG9jaywgY2FsbGVkICJjb3JlY2xrIiwgbWF5IGJlIHByb3ZpZGVkIGlmCj4g
-PiArCWNvcmUgUExMcyBhcmUgYmFzZWQgb24gYSBkaWZmZXJlbnQgaW5wdXQgY2xvY2sgZnJvbSB0
-aGUKPiA+ICsJcGxhdGZvcm0gUExMLgo+ID4gKy0gY2xvY2stbmFtZXM6IFJlcXVpcmVkIGlmIGEg
-Y29yZWNsayBpcyBwcmVzZW50LsKgwqBWYWxpZCBuYW1lcyBhcmUKPiA+ICsJInN5c2NsayIgYW5k
-ICJjb3JlY2xrIi4KPiAnY2xrJyBwYXJ0IGlzIHJlZHVuZGFudC4KCiJzeXNjbGsiIGlzIGEgdGVy
-bSB1c2VkIGJ5IHRoZSBoYXJkd2FyZSBkb2N1bWVudGF0aW9uIGFuZCBJJ2QgcmF0aGVyIGxlYXZl
-IGl0CmludGFjdC4gwqAiY29yZWNsayIgaXNuJ3QgbmFtZWQgKG9ubHkgZGVzY3JpYmVkKSBieSB0
-aGUgaGFyZHdhcmUgZG9jdW1lbnRhdGlvbgpidXQgaXQgaXMgYSBzcGVjaWFsIHZhcmlhbnQgb2Yg
-c3lzY2xrIGFuZCBoYXZpbmcgc2ltaWxhciBuYW1pbmcgaGVscHMgbWFrZQp0aGF0IGNsZWFyLgoK
-LVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+On Wed, Jan 25, 2017 at 10:09:20PM +0100, Arnd Bergmann wrote:
+> On Wed, Jan 25, 2017 at 6:34 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
+> > From: Greentime Hu <green.hu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Date: Tue, 24 Jan 2017 16:46:14 +0800
+> >> We also use the same binding document to describe the same faraday ethernet
+> >> controller and add faraday to vendor-prefixes.txt.
+> >
+> > Why are you renaming the MOXA binding file instead of adding a completely new one
+> > for faraday?  The MOXA one should stick around, I don't see a justification for
+> > removing it.
+> 
+> This was my suggestion, basically fixing the name of the existing
+> binding, which was
+> accidentally named after one of the users rather than the company that did the
+> hardware.
+> 
+> We can't change the compatible string, but I'd much prefer having only
+> one binding
+> file for this device rather than two separate ones that could possibly become
+> incompatible in case we add new properties to them. If there is only
+> one of them,
+> naming it according to the hardware design is the general policy.
+> 
+> Note that we currently have two separate device drivers, but that is more a
+> historic artifact, and if we ever get around to merging them into one driver,
+> that should not impact the binding.
+
+The change is fine with me, but the subject and commit message need some 
+work. I'm guessing faraday licensed this to MOXA or something? Why is 
+the new name preferred or better?
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
