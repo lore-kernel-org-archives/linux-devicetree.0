@@ -1,89 +1,72 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 06/15] device property: Add support for remote endpoints
-Date: Fri, 27 Jan 2017 15:45:04 -0600
-Message-ID: <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
-References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com> <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH v5 4/13] mmc: sunxi: Enable the new timings for the A64 MMC
+ controllers
+Date: Fri, 27 Jan 2017 22:38:36 +0100
+Message-ID: <4a2be38120cebd8bed2358b19addb0985fe28a61.1485553113.git-series.maxime.ripard@free-electrons.com>
+References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 10:03 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> From: Mika Westerberg <mika.westerberg@linux.intel.com>
->
-> This follows DT implementation of of_graph_* APIs but we call them
-> fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
-> will be used. For ACPI we use the new ACPI graph implementation instead.
->
-> This commit includes code from Sakari Ailus.
+The A64 MMC controllers need to set a "new timings" bit when a new rate is
+set.
 
-Then it should have your S-o-b. Actually, either way it should have it.
+The actual meaning of that bit is not clear yet, but not setting it leads
+to some corner-case issues, like the CMD53 failing, which is used to
+implement SDIO packet aggregation.
 
-Whether or not copying DT graphs is a good idea or not, I'll let
-someone else chime in on that...
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Tested-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+---
+ drivers/mmc/host/sunxi-mmc.c | 6 ++++++
+ 1 file changed, 6 insertions(+), 0 deletions(-)
 
-> Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/property.h |   9 ++++
->  2 files changed, 131 insertions(+)
->
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index c0011cf..cf602c3 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -15,6 +15,7 @@
->  #include <linux/kernel.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_graph.h>
->  #include <linux/property.h>
->  #include <linux/etherdevice.h>
->  #include <linux/phy.h>
-> @@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
->         return device_get_mac_addr(dev, "address", addr, alen);
->  }
->  EXPORT_SYMBOL(device_get_mac_address);
-> +
-> +/**
-> + * device_graph_get_next_endpoint - Get next endpoint firmware node
-> + * @fwnode: Pointer to the parent firmware node
-> + * @prev: Previous endpoint node or %NULL to get the first
-> + *
-> + * Returns an endpoint firmware node pointer or %NULL if no more endpoints
-> + * are available.
-> + */
-> +struct fwnode_handle *
-> +fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
-> +                              struct fwnode_handle *prev)
-> +{
-> +       struct fwnode_handle *endpoint = NULL;
-> +
-> +       if (is_of_node(fwnode)) {
-> +               struct device_node *node;
-> +
-> +               node = of_graph_get_next_endpoint(to_of_node(fwnode),
-> +                                                 to_of_node(prev));
-> +
-> +               if (node)
-> +                       endpoint = &node->fwnode;
-> +       } else if (is_acpi_node(fwnode)) {
-> +               endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
-> +               if (IS_ERR(endpoint))
-> +                       endpoint = NULL;
-> +       }
-
-This is an ugly pattern IMO. Why not define an ops struct and set it
-to OF or ACPI rather than check on every function call with
-is_{of,acpi}_node()?
-
-The of_graph_* functions need some better helpers too, so duplicating
-them 2 more times is not ideal. Basically, drivers are left to do too
-much of the walking of nodes themselves.
-
-Rob
+diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+index b9c8a62bc212..51d6388a194e 100644
+--- a/drivers/mmc/host/sunxi-mmc.c
++++ b/drivers/mmc/host/sunxi-mmc.c
+@@ -253,6 +253,8 @@ struct sunxi_mmc_cfg {
+ 
+ 	/* does the IP block support autocalibration? */
+ 	bool can_calibrate;
++
++	bool needs_new_timings;
+ };
+ 
+ struct sunxi_mmc_host {
+@@ -779,6 +781,9 @@ static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
+ 	}
+ 	mmc_writel(host, REG_CLKCR, rval);
+ 
++	if (host->cfg->needs_new_timings)
++		mmc_writel(host, REG_SD_NTSR, SDXC_2X_TIMING_MODE);
++
+ 	ret = sunxi_mmc_clk_set_phase(host, ios, rate);
+ 	if (ret)
+ 		return ret;
+@@ -1076,6 +1081,7 @@ static const struct sunxi_mmc_cfg sun50i_a64_cfg = {
+ 	.idma_des_size_bits = 16,
+ 	.clk_delays = NULL,
+ 	.can_calibrate = true,
++	.needs_new_timings = true,
+ };
+ 
+ static const struct of_device_id sunxi_mmc_of_match[] = {
+-- 
+git-series 0.8.11
