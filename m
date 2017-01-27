@@ -1,85 +1,44 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH v5 5/13] mmc: sunxi: Mask DATA0 when updating the clock
-Date: Fri, 27 Jan 2017 22:38:37 +0100
-Message-ID: <a6930bfcfcd651247b1b9d6a3b6175f4c220bb59.1485553113.git-series.maxime.ripard@free-electrons.com>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V6 3/5] OF: Add missing I/O range exception for
+ indirect-IO  devices
+Date: Fri, 27 Jan 2017 16:03:57 -0600
+Message-ID: <20170127220357.3lpavvyeymlhvlfg@rob-hp-laptop>
+References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1485241525-201782-4-git-send-email-yuanzhichang@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <1485241525-201782-4-git-send-email-yuanzhichang@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Cc: catalin.marinas@arm.com, will.deacon@arm.com, frowand.list@gmail.com, bhelgaas@google.com, rafael@kernel.org, mark.rutland@arm.com, brian.starkey@arm.com, olof@lixom.net, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, lorenzo.pieralisi@arm.com, benh@kernel.crashing.org, linux-kernel@vger.kernel.org, linuxarm@huawei.com, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-serial@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zourongrong@gmail.com, john.garry@huawei.com, gabriele.paoloni@huawei.com, zhichang.yuan02@gmail.com, kantyzc@163.com, xuwei5@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-The A64 MMC controllers need DATA0 to be masked while updating the clock,
-otherwise any subsequent command will result in a timeout.
+On Tue, Jan 24, 2017 at 03:05:23PM +0800, zhichang.yuan wrote:
+> There are some special ISA/LPC devices that work on a specific I/O range where
+> it is not correct to specify a 'ranges' property in DTS parent node as cpu
+> addresses translated from DTS node are only for memory space on some
+> architectures, such as Arm64. Without the parent 'ranges' property, current
+> of_translate_address() return an error.
+> Here we add special handlings for this case.
+> During the OF address translation, some checkings will be perfromed to
+> identify whether the device node is registered as indirect-IO. If yes, the I/O
+> translation will be done in a different way from that one of PCI MMIO.
+> In this way, the I/O 'reg' property of the special ISA/LPC devices will be
+> parsed correctly.
+> 
+> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-It's not really clear at this point what DATA0 is exactly, but this
-behaviour is present in Allwinner's tree, and has been suggested by
-Allwinner engineers as fixes for the timeout.
+Shouldn't this be Reviewed-by?
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-Tested-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
----
- drivers/mmc/host/sunxi-mmc.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+Otherwise, looks fine to me.
 
-diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
-index 51d6388a194e..6bbe61397b7c 100644
---- a/drivers/mmc/host/sunxi-mmc.c
-+++ b/drivers/mmc/host/sunxi-mmc.c
-@@ -101,6 +101,7 @@
- 	(SDXC_SOFT_RESET | SDXC_FIFO_RESET | SDXC_DMA_RESET)
- 
- /* clock control bits */
-+#define SDXC_MASK_DATA0			BIT(31)
- #define SDXC_CARD_CLOCK_ON		BIT(16)
- #define SDXC_LOW_POWER_ON		BIT(17)
- 
-@@ -254,6 +255,9 @@ struct sunxi_mmc_cfg {
- 	/* does the IP block support autocalibration? */
- 	bool can_calibrate;
- 
-+	/* Does DATA0 needs to be masked while the clock is updated */
-+	bool mask_data0;
-+
- 	bool needs_new_timings;
- };
- 
-@@ -657,10 +661,12 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
- 	u32 rval;
- 
- 	rval = mmc_readl(host, REG_CLKCR);
--	rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON);
-+	rval &= ~(SDXC_CARD_CLOCK_ON | SDXC_LOW_POWER_ON | SDXC_MASK_DATA0);
- 
- 	if (oclk_en)
- 		rval |= SDXC_CARD_CLOCK_ON;
-+	if (host->cfg->mask_data0)
-+		rval |= SDXC_MASK_DATA0;
- 
- 	mmc_writel(host, REG_CLKCR, rval);
- 
-@@ -680,6 +686,11 @@ static int sunxi_mmc_oclk_onoff(struct sunxi_mmc_host *host, u32 oclk_en)
- 		return -EIO;
- 	}
- 
-+	if (host->cfg->mask_data0) {
-+		rval = mmc_readl(host, REG_CLKCR);
-+		mmc_writel(host, REG_CLKCR, rval & ~SDXC_MASK_DATA0);
-+	}
-+
- 	return 0;
- }
- 
-@@ -1081,6 +1092,7 @@ static const struct sunxi_mmc_cfg sun50i_a64_cfg = {
- 	.idma_des_size_bits = 16,
- 	.clk_delays = NULL,
- 	.can_calibrate = true,
-+	.mask_data0 = true,
- 	.needs_new_timings = true,
- };
- 
--- 
-git-series 0.8.11
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+>  drivers/of/address.c | 87 ++++++++++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 71 insertions(+), 16 deletions(-)
+> 
