@@ -1,103 +1,45 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v4 3/4] dt-bindings: phy: Add support for QMP phy
-Date: Thu, 26 Jan 2017 15:43:55 -0800
-Message-ID: <20170126234355.GF8801@codeaurora.org>
-References: <1484045519-19030-1-git-send-email-vivek.gautam@codeaurora.org>
- <1484045519-19030-4-git-send-email-vivek.gautam@codeaurora.org>
- <587C88FE.2040900@ti.com>
- <50612693-5345-55da-8207-8c5e721fb68a@codeaurora.org>
- <20170118182223.GP10531@minitux>
- <20170119004028.GA4857@codeaurora.org>
- <5cee25c5-434b-6e73-301e-3942dedd16fa@codeaurora.org>
- <20170119214258.GD7829@codeaurora.org>
- <58871F6D.1090206@ti.com>
- <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
+Subject: Re: [PATCH V3 1/6] dt-bindings: qcom: clk: Add missing binding for
+ SDCHI enablement on Nexus 5X/6P
+Date: Thu, 26 Jan 2017 16:24:48 -0800
+Message-ID: <20170127002448.GB8801@codeaurora.org>
+References: <1485250588-24698-1-git-send-email-jeremymc@redhat.com>
+ <1485250588-24698-2-git-send-email-jeremymc@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iGBzUEFM-MjqerhoVWjFF8wahgwC_rnB6GMd2VsMuDm6g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-arm-msm@vger.kernel.org
+In-Reply-To: <1485250588-24698-2-git-send-email-jeremymc@redhat.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jeremy McNicoll <jeremymc@redhat.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, andy.gross@linaro.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/24, Vivek Gautam wrote:
+On 01/24, Jeremy McNicoll wrote:
+> AHB clock branch is needed in order to enable SDHCI
+> on msm899(2/4).
 > 
-> Below is one binding that works for me.
-> --------------------
->                phy@34000 {
->                         compatible = "qcom,msm8996-qmp-pcie-phy";
->                         reg = <0x034000 0x488>;
->                         #clock-cells = <1>;
->                         #address-cells = <1>;
->                         #size-cells = <1>;
->                         ranges;
-> 
->                         clocks = <&gcc GCC_PCIE_PHY_AUX_CLK>,
->                                 <&gcc GCC_PCIE_PHY_CFG_AHB_CLK>,
->                                 <&gcc GCC_PCIE_CLKREF_CLK>;
->                         clock-names = "aux", "cfg_ahb", "ref";
-> 
->                         vdda-phy-supply = <&pm8994_l28>;
->                         vdda-pll-supply = <&pm8994_l12>;
-> 
->                         resets = <&gcc GCC_PCIE_PHY_BCR>,
->                                 <&gcc GCC_PCIE_PHY_COM_BCR>,
->                                 <&gcc GCC_PCIE_PHY_COM_NOCSR_BCR>;
->                         reset-names = "phy", "common", "cfg";
-> 
->                         pciephy_p0: port@0 {
+> Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+> ---
 
-The unit address '@0' should be replaced with something from the
-reg properties. 
+Please cc linux-clk on clk patches (it helps my filters).
 
-Also 'port' and 'ports' are almost keywords in DT now with the
-graph binding so we need to be careful when using them.
 
->                                 reg = <0x035000 0x130>,
->                                         <0x035200 0x200>,
->                                         <0x035400 0x1dc>;
->                                 #phy-cells = <0>;
+>  include/dt-bindings/clock/qcom,gcc-msm8994.h | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->                                 clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
->                                 clock-names = "pipe0";
->                                 resets = <&gcc GCC_PCIE_0_PHY_BCR>;
->                                 reset-names = "lane0";
->                         };
-> 
->                       pciephy_p1: port@1 {
->                                 reg = <0x036000 0x130>,
->                                         <0x036200 0x200>,
->                                         <0x036400 0x1dc>;
->                                 #phy-cells = <0>;
-> 
->                                 clocks = <&gcc GCC_PCIE_1_PIPE_CLK>;
->                                 clock-names = "pipe1";
->                                 resets = <&gcc GCC_PCIE_1_PHY_BCR>;
->                                 reset-names = "lane1";
->                         };
-> 
->                         pciephy_p2: port@2 {
->                                 reg = <0x037000 0x130>,
->                                         <0x037200 0x200>,
->                                         <0x037400 0x1dc>;
->                                 #phy-cells = <0>;
-> 
->                                 clocks = <&gcc GCC_PCIE_2_PIPE_CLK>;
->                                 clock-names = "pipe2";
->                                 resets = <&gcc GCC_PCIE_2_PHY_BCR>;
->                                 reset-names = "lane2";
->                         };
->                 };
-> --------------------
-> 
-> let me know if this looks okay.
-> 
-> 
+> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8994.h b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+> index 8fa535b..df47da0 100644
+> --- a/include/dt-bindings/clock/qcom,gcc-msm8994.h
+> +++ b/include/dt-bindings/clock/qcom,gcc-msm8994.h
+> @@ -133,5 +133,6 @@
+>  #define GCC_USB30_MOCK_UTMI_CLK			115
+>  #define GCC_USB3_PHY_AUX_CLK			116
+>  #define GCC_USB_HS_SYSTEM_CLK			117
+> +#define GCC_SDCC1_AHB_CLK			118
+>  
 
-What's the plan for non-pcie qmp phy binding? In that case we
-don't have ports, so it gets folded into one node?
+Is there a driver patch too? Or just the #define addition.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
