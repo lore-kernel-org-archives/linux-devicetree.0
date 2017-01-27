@@ -1,75 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 8/8] ARM: dts: STiH407-family: Enable HW
- flow-control
-Date: Fri, 27 Jan 2017 11:33:52 +0000
-Message-ID: <20170127113352.paie6vzo23ax7nxt@dell>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
- <20170124134310.27512-9-lee.jones@linaro.org>
- <20170125105912.GA5680@griffinp-ThinkPad-X1-Carbon-2nd>
- <20170125114002.GG5680@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Gerd Hoffmann <kraxel@redhat.com>
+Subject: [PATCH 4/4] ARM: dts: bcm283x: switch from &sdhci to &sdhost
+Date: Fri, 27 Jan 2017 12:36:29 +0100
+Message-ID: <1485516989-1072-5-git-send-email-kraxel@redhat.com>
+References: <1485516989-1072-1-git-send-email-kraxel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170125114002.GG5680@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485516989-1072-1-git-send-email-kraxel@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-rpi-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, linux-mmc@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 25 Jan 2017, Peter Griffin wrote:
-> On Wed, 25 Jan 2017, Peter Griffin wrote:
-> > On Tue, 24 Jan 2017, Lee Jones wrote:
-> > 
-> > > Hardware flow-control capability must be specified at a platform
-> > > level in order to inform the ASC driver that the platform is capable
-> > > (i.e. are the lines wired up, etc).  STiH4{07,10} devices are indeed
-> > > capable, so let's provide the property.
-> > > 
-> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > > ---
-> > >  arch/arm/boot/dts/stih407-family.dtsi | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> > > index 9789978..7ada8ea 100644
-> > > --- a/arch/arm/boot/dts/stih407-family.dtsi
-> > > +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> > > @@ -226,7 +226,7 @@
-> > >  			pinctrl-0 = <&pinctrl_serial0_flowctrl>;
-> > >  			pinctrl-1 = <&pinctrl_serial0>;
-> > >  			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-> > > -
-> > > +			st,hw-flow-control;
-> > 
-> > There is a generic serial binding for this already. As this ST property
-> > hasn't been used upstream, it seems like it would be worth dropping it
-> > and switching to the generic uart-has-rtscts one.
-> > 
-> > See Documentation/devicetree/bindings/serial/serial.txt
-> > 
-> >   - uart-has-rtscts: The presence of this property indicates that the
-> >     UART has dedicated lines for RTS/CTS hardware flow control, and that
-> >     they are available for use (wired and enabled by pinmux configuration).
-> >     This depends on both the UART hardware and the board wiring.
-> >     Note that this property is mutually-exclusive with "cts-gpios" and
-> >     "rts-gpios" above.
-> 
-> Thinking some more this generic binding definition is a bit restrictive,
-> particularly the "Note that this property is mutually-exclusive with "cts-gpios"
-> and "rts-gpios"" part.
-> 
-> As with this series we will have dynamic on-the-fly changing from hw flow
-> control to gpio control for other configs which the HW IP doesn't support.
-> 
-> IMO the uart-has-rtscts definition should be updated to reflect that they can
-> be used together in certain circumstances.
+This flips the switch from (iproc-driven) sdhci controller to the custom
+sdhost controller.
 
-Ah, you noticed that too.  Yes, will update the doc.
+Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+---
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index 7d89af2..e6beecb 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -65,13 +65,13 @@
+ &sdhci {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&emmc_gpio48>;
+-	status = "okay";
+ 	bus-width = <4>;
+ };
+ 
+ &sdhost {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
+ 	bus-width = <4>;
+ };
+ 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+1.8.3.1
