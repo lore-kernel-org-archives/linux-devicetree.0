@@ -1,218 +1,81 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v8 02/12] dt-bindings: document devicetree bindings for
- mux-controllers and mux-gpio
-Date: Fri, 27 Jan 2017 19:57:20 +0100
-Message-ID: <14d9b8c9-849d-07bc-1b4d-a337a8c6db70@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-3-git-send-email-peda@axentia.se>
- <20170127174919.b7yliip6e7zofrbn@rob-hp-laptop>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 0/3] meson-gx: add pwm_AO_ab
+Date: Fri, 27 Jan 2017 11:02:15 -0800
+Message-ID: <m27f5guy14.fsf@baylibre.com>
+References: <20170122210528.892-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170127174919.b7yliip6e7zofrbn@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170122210528.892-1-martin.blumenstingl@googlemail.com> (Martin
+ Blumenstingl's message of "Sun, 22 Jan 2017 22:05:25 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, linus.walleij@linaro.org, will.deacon@arm.com, linux-gpio@vger.kernel.org, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-27 18:49, Rob Herring wrote:
-> On Wed, Jan 18, 2017 at 04:57:05PM +0100, Peter Rosin wrote:
->> Allow specifying that a single multiplexer controller can be used to control
->> several parallel multiplexers, thus enabling sharing of the multiplexer
->> controller by different consumers.
->>
->> Add a binding for a first mux controller in the form of a GPIO based mux
->> controlled.
->>
->> Acked-by: Jonathan Cameron <jic23@kernel.org>
->> Signed-off-by: Peter Rosin <peda@axentia.se>
->> ---
->>  .../devicetree/bindings/mux/mux-controller.txt     | 127 +++++++++++++++++++++
->>  Documentation/devicetree/bindings/mux/mux-gpio.txt |  68 +++++++++++
->>  MAINTAINERS                                        |   5 +
->>  3 files changed, 200 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mux/mux-controller.txt
->>  create mode 100644 Documentation/devicetree/bindings/mux/mux-gpio.txt
-> 
-> A few nits. With those fixed:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
->>
->> diff --git a/Documentation/devicetree/bindings/mux/mux-controller.txt b/Documentation/devicetree/bindings/mux/mux-controller.txt
->> new file mode 100644
->> index 000000000000..42b2177e5ae1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mux/mux-controller.txt
->> @@ -0,0 +1,127 @@
->> +Common multiplexer controller bindings
->> +======================================
->> +
->> +A multiplexer (or mux) controller will have one, or several, consumer devices
->> +that uses the mux controller. Thus, a mux controller can possibly control
->> +several parallel multiplexers. Presumably there will be at least one
->> +multiplexer needed by each consumer, but a single mux controller can of course
->> +control several multiplexers for a single consumer.
->> +
->> +A mux controller provides a number of states to its consumers, and the state
->> +space is a simple zero-based enumeration. I.e. 0-1 for a 2-way multiplexer,
->> +0-7 for an 8-way multiplexer, etc.
->> +
->> +
->> +Consumers
->> +---------
->> +
->> +Mux controller consumers should specify a list of mux controllers that they
->> +want to use with a property containing a 'mux-ctrl-list':
->> +
->> +	mux-ctrl-list ::= <single-mux-ctrl> [mux-ctrl-list]
->> +	single-mux-ctrl ::= <mux-ctrl-phandle> [mux-ctrl-specifier]
->> +	mux-ctrl-phandle : phandle to mux controller node
->> +	mux-ctrl-specifier : array of #mux-control-cells specifying the
->> +			     given mux controller (controller specific)
->> +
->> +Mux controller properties should be named "mux-controls". The exact meaning of
->> +each mux controller property must be documented in the device tree binding for
->> +each consumer. An optional property "mux-control-names" may contain a list of
->> +strings to label each of the mux controllers listed in the "mux-controls"
->> +property.
->> +
->> +Drivers for devices that use more than a single mux controller can use the
->> +"mux-control-names" property to map the name of the requested mux controller
->> +to an index into the list given by the "mux-controls" property.
->> +
->> +mux-ctrl-specifier typically encodes the chip-relative mux controller number.
->> +If the mux controller chip only provides a single mux controller, the
->> +mux-ctrl-specifier can typically be left out.
->> +
->> +Example:
->> +
->> +	/* One consumer of a 2-way mux controller (one GPIO-line) */
->> +	mux: mux-controller {
->> +		compatible = "mux-gpio";
->> +		#mux-control-cells = <0>;
->> +
->> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	adc-mux {
->> +		compatible = "io-channel-mux";
->> +		io-channels = <&adc 0>;
->> +		io-channel-names = "parent";
->> +		mux-controls = <&mux>;
->> +		mux-control-names = "adc";
->> +
->> +		channels = "sync", "in";
->> +	};
->> +
->> +Note that in the example above, specifying the "mux-control-names" is redundant
->> +because there is only one mux controller in the list.
->> +
->> +	/*
->> +	 * Two consumers (one for an ADC line and one for an i2c bus) of
->> +	 * parallel 4-way multiplexers controlled by the same two GPIO-lines.
->> +	 */
->> +	mux: mux-controller {
->> +		compatible = "mux-gpio";
->> +		#mux-control-cells = <0>;
->> +
->> +		mux-gpios = <&pioA 0 GPIO_ACTIVE_HIGH>,
->> +			    <&pioA 1 GPIO_ACTIVE_HIGH>;
->> +	};
->> +
->> +	adc-mux {
->> +		compatible = "io-channel-mux";
->> +		io-channels = <&adc 0>;
->> +		io-channel-names = "parent";
->> +		mux-controls = <&mux>;
->> +
->> +		channels = "sync-1", "in", "out", "sync-2";
->> +	};
->> +
->> +	i2c-mux {
->> +		compatible = "i2c-mux-simple,mux-locked";
->> +		i2c-parent = <&i2c1>;
->> +		mux-controls = <&mux>;
->> +
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		i2c@0 {
->> +			reg = <0>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			ssd1307: oled@3c {
->> +				/* ... */
->> +			};
->> +		};
->> +
->> +		i2c@3 {
->> +			reg = <3>;
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			pca9555: pca9555@20 {
->> +				/* ... */
->> +			};
->> +		};
->> +	};
->> +
->> +
->> +Mux controller nodes
->> +--------------------
->> +
->> +Mux controller nodes must specify the number of cells used for the
->> +specifier using the '#mux-control-cells' property.
->> +
->> +An example mux controller might look like this:
->> +
->> +	mux: adg792a@50 {
-> 
-> mux-controller@50
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-Right, adding that to my queue.
+> This adds support for the PWM controller in the AO domain.
 
->> +		compatible = "adi,adg792a";
->> +		reg = <0x50>;
->> +		#mux-control-cells = <1>;
->> +	};
->> diff --git a/Documentation/devicetree/bindings/mux/mux-gpio.txt b/Documentation/devicetree/bindings/mux/mux-gpio.txt
->> new file mode 100644
->> index 000000000000..8f6bda6f9d78
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mux/mux-gpio.txt
->> @@ -0,0 +1,68 @@
->> +GPIO-based multiplexer controller bindings
->> +
->> +Define what GPIO pins are used to control a multiplexer. Or several
->> +multiplexers, if the same pins control more than one multiplexer.
->> +
->> +Required properties:
->> +- compatible : "mux-gpio"
-> 
-> Just to be consistent with other gpio compatibles: gpio-mux
+Patches 1,3 applied to Amlogic v4.11/dt64 branch.
 
-Sure, I'll also rename mux-gpio.txt to gpio-mux.txt and mux-adg792a.txt
-to adi,adg792a.txt so that the file names match the compatible string.
+Kevin
 
->> +- mux-gpios : list of gpios used to control the multiplexer, least
->> +	      significant bit first.
->> +- #mux-control-cells : <0>
->> +* Standard mux-controller bindings as decribed in mux-controller.txt
->> +
->> +Optional properties:
->> +- idle-state : if present, the state the mux will have when idle.
-> 
-> Why is this gpio specific. Can be a common controller property?
-
-The binding isn't appropriate for e.g. adg792a and it will not be
-appropriate for any mux chip with more than one mux controller. But
-sure, there could be a generic binding for all chips with a single
-mux controller...
-
-So, do you still think idle-state should be a generic binding?
-
-Cheers,
-peda
+> pinctrl support for GXBB already exists (in both, pinctrl-meson-gxbb.c
+> and meson-gxbb.dtsi). This patch adds at least the pwm_ao_b pin for
+> GXL and GXM - these are not documented in Amlogic's kernel, so I had
+> to borrow the magic numbers from the Khadas VIM kernel (released under
+> the GPL): [0]
+>
+> The bits for pwm_AO_a_pins are unknown at the time of writing, but these
+> can still be added later.
+>
+> I have successfully tested this on my GXL S905X based Khadas VIM board
+> with the following .dts snippets (the PWM LED can simply be dimmed
+> through sysfs):
+> 	&pwm_AO_ab {
+> 		status = "okay";
+> 		pinctrl-0 = <&pwm_ao_b_pins>;
+> 		pinctrl-names = "default";
+> 		clocks = <&clkc CLKID_FCLK_DIV4>;
+> 		clock-names = "clkin0";
+> 	};
+>
+> 	pwmleds {
+> 		compatible = "pwm-leds";
+>
+> 		power {
+> 			label = "vim:red:power";
+> 			pwms = <&pwm_AO_ab 1 7812500 0>;
+> 			max-brightness = <255>;
+> 		};
+> 	};
+>
+> (if anyone is interested in more of my Khadas VIM patches - these are
+> still work-in-progress, which is why I have not sent them yet - can
+> take a look at this: [1])
+>
+> NOTE: The .dts changes from this series are based on top of my SAR ADC
+> patches.
+>
+> [0] https://github.com/khadas/linux/blob/94602ef5562978a8d8b5c7770c113074a714dbdb/drivers/amlogic/led/led_trigger_breathe.c#L75
+> [1] https://github.com/xdarklight/linux/commits/meson-gx-integration-4.11-20170122
+>
+> Martin Blumenstingl (3):
+>   ARM64: dts: meson-gx: add the missing pwm_AO_ab node
+>   pinctrl: meson: meson-gxl: add the pwm_ao_b pin
+>   ARM64: dts: meson-gxl: add the pwm_ao_b pin
+>
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi  | 7 +++++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi | 7 +++++++
+>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 8 ++++++++
+>  3 files changed, 22 insertions(+)
