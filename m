@@ -1,14 +1,12 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 10/10] ARM: dts: sun9i: Switch to new clock bindings
-Date: Sat, 28 Jan 2017 20:22:39 +0800
-Message-ID: <20170128122239.4480-11-wens@csie.org>
-References: <20170128122239.4480-1-wens@csie.org>
+Subject: [PATCH v2 00/10] clk: sunxi-ng: Add support for A80 CCUs
+Date: Sat, 28 Jan 2017 20:22:29 +0800
+Message-ID: <20170128122239.4480-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBF42WLCAKGQEGSGNYDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBFM2WLCAKGQEITLTYII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170128122239.4480-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,626 +17,198 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Now that we have a full clock driver for sun9i, switch to it.
+Hi everyone,
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun9i-a80.dtsi | 404 +++++++++++----------------------------
- 1 file changed, 107 insertions(+), 297 deletions(-)
+This is v2 of my A80 CCU clk patches. Changes since v1:
 
-diff --git a/arch/arm/boot/dts/sun9i-a80.dtsi b/arch/arm/boot/dts/sun9i-a80.dtsi
-index 18b35fc23f46..b763c61cacba 100644
---- a/arch/arm/boot/dts/sun9i-a80.dtsi
-+++ b/arch/arm/boot/dts/sun9i-a80.dtsi
-@@ -46,6 +46,13 @@
- 
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
-+#include <dt-bindings/clock/sun9i-a80-ccu.h>
-+#include <dt-bindings/clock/sun9i-a80-de.h>
-+#include <dt-bindings/clock/sun9i-a80-usb.h>
-+#include <dt-bindings/reset/sun9i-a80-ccu.h>
-+#include <dt-bindings/reset/sun9i-a80-de.h>
-+#include <dt-bindings/reset/sun9i-a80-usb.h>
-+
- / {
- 	interrupt-parent = <&gic>;
- 
-@@ -157,228 +164,13 @@
- 			clock-output-names = "osc32k";
- 		};
- 
--		usb_mod_clk: clk@00a08000 {
--			#clock-cells = <1>;
--			#reset-cells = <1>;
--			compatible = "allwinner,sun9i-a80-usb-mod-clk";
--			reg = <0x00a08000 0x4>;
--			clocks = <&ahb1_gates 1>;
--			clock-output-names = "usb0_ahb", "usb_ohci0",
--					     "usb1_ahb", "usb_ohci1",
--					     "usb2_ahb", "usb_ohci2";
--		};
--
--		usb_phy_clk: clk@00a08004 {
--			#clock-cells = <1>;
--			#reset-cells = <1>;
--			compatible = "allwinner,sun9i-a80-usb-phy-clk";
--			reg = <0x00a08004 0x4>;
--			clocks = <&ahb1_gates 1>;
--			clock-output-names = "usb_phy0", "usb_hsic1_480M",
--					     "usb_phy1", "usb_hsic2_480M",
--					     "usb_phy2", "usb_hsic_12M";
--		};
--
--		pll3: clk@06000008 {
--			/* placeholder until implemented */
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-rate = <0>;
--			clock-output-names = "pll3";
--		};
--
--		pll4: clk@0600000c {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-pll4-clk";
--			reg = <0x0600000c 0x4>;
--			clocks = <&osc24M>;
--			clock-output-names = "pll4";
--		};
--
--		pll12: clk@0600002c {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-pll4-clk";
--			reg = <0x0600002c 0x4>;
--			clocks = <&osc24M>;
--			clock-output-names = "pll12";
--		};
--
--		gt_clk: clk@0600005c {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-gt-clk";
--			reg = <0x0600005c 0x4>;
--			clocks = <&osc24M>, <&pll4>, <&pll12>, <&pll12>;
--			clock-output-names = "gt";
--		};
--
--		ahb0: clk@06000060 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-ahb-clk";
--			reg = <0x06000060 0x4>;
--			clocks = <&gt_clk>, <&pll4>, <&pll12>, <&pll12>;
--			clock-output-names = "ahb0";
--		};
--
--		ahb1: clk@06000064 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-ahb-clk";
--			reg = <0x06000064 0x4>;
--			clocks = <&gt_clk>, <&pll4>, <&pll12>, <&pll12>;
--			clock-output-names = "ahb1";
--		};
--
--		ahb2: clk@06000068 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-ahb-clk";
--			reg = <0x06000068 0x4>;
--			clocks = <&gt_clk>, <&pll4>, <&pll12>, <&pll12>;
--			clock-output-names = "ahb2";
--		};
--
--		apb0: clk@06000070 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-apb0-clk";
--			reg = <0x06000070 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "apb0";
--		};
--
--		apb1: clk@06000074 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-apb1-clk";
--			reg = <0x06000074 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "apb1";
--		};
--
--		cci400_clk: clk@06000078 {
--			#clock-cells = <0>;
--			compatible = "allwinner,sun9i-a80-gt-clk";
--			reg = <0x06000078 0x4>;
--			clocks = <&osc24M>, <&pll4>, <&pll12>, <&pll12>;
--			clock-output-names = "cci400";
--		};
--
--		mmc0_clk: clk@06000410 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-mmc-clk";
--			reg = <0x06000410 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "mmc0", "mmc0_output",
--					     "mmc0_sample";
--		};
--
--		mmc1_clk: clk@06000414 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-mmc-clk";
--			reg = <0x06000414 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "mmc1", "mmc1_output",
--					     "mmc1_sample";
--		};
--
--		mmc2_clk: clk@06000418 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-mmc-clk";
--			reg = <0x06000418 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "mmc2", "mmc2_output",
--					     "mmc2_sample";
--		};
--
--		mmc3_clk: clk@0600041c {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-mmc-clk";
--			reg = <0x0600041c 0x4>;
--			clocks = <&osc24M>, <&pll4>;
--			clock-output-names = "mmc3", "mmc3_output",
--					     "mmc3_sample";
--		};
--
--		ahb0_gates: clk@06000580 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-ahb0-gates-clk";
--			reg = <0x06000580 0x4>;
--			clocks = <&ahb0>;
--			clock-indices = <0>, <1>, <3>,
--					<5>, <8>, <12>,
--					<13>, <14>,
--					<15>, <16>, <18>,
--					<20>, <21>, <22>,
--					<23>;
--			clock-output-names = "ahb0_fd", "ahb0_ve", "ahb0_gpu",
--					"ahb0_ss", "ahb0_sd", "ahb0_nand1",
--					"ahb0_nand0", "ahb0_sdram",
--					"ahb0_mipi_hsi", "ahb0_sata", "ahb0_ts",
--					"ahb0_spi0", "ahb0_spi1", "ahb0_spi2",
--					"ahb0_spi3";
--		};
--
--		ahb1_gates: clk@06000584 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-ahb1-gates-clk";
--			reg = <0x06000584 0x4>;
--			clocks = <&ahb1>;
--			clock-indices = <0>, <1>,
--					<17>, <21>,
--					<22>, <23>,
--					<24>;
--			clock-output-names = "ahb1_usbotg", "ahb1_usbhci",
--					"ahb1_gmac", "ahb1_msgbox",
--					"ahb1_spinlock", "ahb1_hstimer",
--					"ahb1_dma";
--		};
--
--		ahb2_gates: clk@06000588 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-ahb2-gates-clk";
--			reg = <0x06000588 0x4>;
--			clocks = <&ahb2>;
--			clock-indices = <0>, <1>,
--					<2>, <4>, <5>,
--					<7>, <8>, <11>;
--			clock-output-names = "ahb2_lcd0", "ahb2_lcd1",
--					"ahb2_edp", "ahb2_csi", "ahb2_hdmi",
--					"ahb2_de", "ahb2_mp", "ahb2_mipi_dsi";
--		};
--
--		apb0_gates: clk@06000590 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-apb0-gates-clk";
--			reg = <0x06000590 0x4>;
--			clocks = <&apb0>;
--			clock-indices = <1>, <5>,
--					<11>, <12>, <13>,
--					<15>, <17>, <18>,
--					<19>;
--			clock-output-names = "apb0_spdif", "apb0_pio",
--					"apb0_ac97", "apb0_i2s0", "apb0_i2s1",
--					"apb0_lradc", "apb0_gpadc", "apb0_twd",
--					"apb0_cirtx";
--		};
--
--		apb1_gates: clk@06000594 {
--			#clock-cells = <1>;
--			compatible = "allwinner,sun9i-a80-apb1-gates-clk";
--			reg = <0x06000594 0x4>;
--			clocks = <&apb1>;
--			clock-indices = <0>, <1>,
--					<2>, <3>, <4>,
--					<16>, <17>,
--					<18>, <19>,
--					<20>, <21>;
--			clock-output-names = "apb1_i2c0", "apb1_i2c1",
--					"apb1_i2c2", "apb1_i2c3", "apb1_i2c4",
--					"apb1_uart0", "apb1_uart1",
--					"apb1_uart2", "apb1_uart3",
--					"apb1_uart4", "apb1_uart5";
--		};
--
- 		cpus_clk: clk@08001410 {
- 			compatible = "allwinner,sun9i-a80-cpus-clk";
- 			reg = <0x08001410 0x4>;
- 			#clock-cells = <0>;
--			clocks = <&osc32k>, <&osc24M>, <&pll4>, <&pll3>;
-+			clocks = <&osc32k>, <&osc24M>,
-+				 <&ccu CLK_PLL_PERIPH0>,
-+				 <&ccu CLK_PLL_AUDIO>;
- 			clock-output-names = "cpus";
- 		};
- 
-@@ -451,8 +243,8 @@
- 			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
- 			reg = <0x00a00000 0x100>;
- 			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&usb_mod_clk 1>;
--			resets = <&usb_mod_clk 17>;
-+			clocks = <&usb_clocks CLK_BUS_HCI0>;
-+			resets = <&usb_clocks RST_USB0_HCI>;
- 			phys = <&usbphy1>;
- 			phy-names = "usb";
- 			status = "disabled";
-@@ -462,8 +254,9 @@
- 			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
- 			reg = <0x00a00400 0x100>;
- 			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&usb_mod_clk 1>, <&usb_mod_clk 2>;
--			resets = <&usb_mod_clk 17>;
-+			clocks = <&usb_clocks CLK_BUS_HCI0>,
-+				 <&usb_clocks CLK_USB_OHCI0>;
-+			resets = <&usb_clocks RST_USB0_HCI>;
- 			phys = <&usbphy1>;
- 			phy-names = "usb";
- 			status = "disabled";
-@@ -472,9 +265,9 @@
- 		usbphy1: phy@00a00800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a00800 0x4>;
--			clocks = <&usb_phy_clk 1>;
-+			clocks = <&usb_clocks CLK_USB0_PHY>;
- 			clock-names = "phy";
--			resets = <&usb_phy_clk 17>;
-+			resets = <&usb_clocks RST_USB0_PHY>;
- 			reset-names = "phy";
- 			status = "disabled";
- 			#phy-cells = <0>;
-@@ -484,8 +277,8 @@
- 			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
- 			reg = <0x00a01000 0x100>;
- 			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&usb_mod_clk 3>;
--			resets = <&usb_mod_clk 18>;
-+			clocks = <&usb_clocks CLK_BUS_HCI1>;
-+			resets = <&usb_clocks RST_USB1_HCI>;
- 			phys = <&usbphy2>;
- 			phy-names = "usb";
- 			status = "disabled";
-@@ -494,11 +287,16 @@
- 		usbphy2: phy@00a01800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a01800 0x4>;
--			clocks = <&usb_phy_clk 2>, <&usb_phy_clk 10>,
--				 <&usb_phy_clk 3>;
--			clock-names = "hsic_480M", "hsic_12M", "phy";
--			resets = <&usb_phy_clk 18>, <&usb_phy_clk 19>;
--			reset-names = "hsic", "phy";
-+			clocks = <&usb_clocks CLK_USB1_HSIC>,
-+				 <&usb_clocks CLK_USB_HSIC>,
-+				 <&usb_clocks CLK_USB1_PHY>;
-+			clock-names = "hsic_480M",
-+				      "hsic_12M",
-+				      "phy";
-+			resets = <&usb_clocks RST_USB1_HSIC>,
-+				 <&usb_clocks RST_USB1_PHY>;
-+			reset-names = "hsic",
-+				      "phy";
- 			status = "disabled";
- 			#phy-cells = <0>;
- 			/* usb1 is always used with HSIC */
-@@ -509,8 +307,8 @@
- 			compatible = "allwinner,sun9i-a80-ehci", "generic-ehci";
- 			reg = <0x00a02000 0x100>;
- 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&usb_mod_clk 5>;
--			resets = <&usb_mod_clk 19>;
-+			clocks = <&usb_clocks CLK_BUS_HCI2>;
-+			resets = <&usb_clocks RST_USB2_HCI>;
- 			phys = <&usbphy3>;
- 			phy-names = "usb";
- 			status = "disabled";
-@@ -520,8 +318,9 @@
- 			compatible = "allwinner,sun9i-a80-ohci", "generic-ohci";
- 			reg = <0x00a02400 0x100>;
- 			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&usb_mod_clk 5>, <&usb_mod_clk 6>;
--			resets = <&usb_mod_clk 19>;
-+			clocks = <&usb_clocks CLK_BUS_HCI2>,
-+				 <&usb_clocks CLK_USB_OHCI2>;
-+			resets = <&usb_clocks RST_USB2_HCI>;
- 			phys = <&usbphy3>;
- 			phy-names = "usb";
- 			status = "disabled";
-@@ -530,20 +329,35 @@
- 		usbphy3: phy@00a02800 {
- 			compatible = "allwinner,sun9i-a80-usb-phy";
- 			reg = <0x00a02800 0x4>;
--			clocks = <&usb_phy_clk 4>, <&usb_phy_clk 10>,
--				 <&usb_phy_clk 5>;
--			clock-names = "hsic_480M", "hsic_12M", "phy";
--			resets = <&usb_phy_clk 20>, <&usb_phy_clk 21>;
--			reset-names = "hsic", "phy";
-+			clocks = <&usb_clocks CLK_USB2_HSIC>,
-+				 <&usb_clocks CLK_USB_HSIC>,
-+				 <&usb_clocks CLK_USB2_PHY>;
-+			clock-names = "hsic_480M",
-+				      "hsic_12M",
-+				      "phy";
-+			resets = <&usb_clocks RST_USB2_HSIC>,
-+				 <&usb_clocks RST_USB2_PHY>;
-+			reset-names = "hsic",
-+				      "phy";
- 			status = "disabled";
- 			#phy-cells = <0>;
- 		};
- 
-+		usb_clocks: clock@00a08000 {
-+			compatible = "allwinner,sun9i-a80-usb-clks";
-+			reg = <0x00a08000 0x8>;
-+			clocks = <&ccu CLK_BUS_USB>, <&osc24M>;
-+			clock-names = "bus", "hosc";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+		};
-+
- 		mmc0: mmc@01c0f000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c0f000 0x1000>;
--			clocks = <&mmc_config_clk 0>, <&mmc0_clk 0>,
--				 <&mmc0_clk 1>, <&mmc0_clk 2>;
-+			clocks = <&mmc_config_clk 0>, <&ccu CLK_MMC0>,
-+				 <&ccu CLK_MMC0_OUTPUT>,
-+				 <&ccu CLK_MMC0_SAMPLE>;
- 			clock-names = "ahb", "mmc", "output", "sample";
- 			resets = <&mmc_config_clk 0>;
- 			reset-names = "ahb";
-@@ -556,8 +370,9 @@
- 		mmc1: mmc@01c10000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c10000 0x1000>;
--			clocks = <&mmc_config_clk 1>, <&mmc1_clk 0>,
--				 <&mmc1_clk 1>, <&mmc1_clk 2>;
-+			clocks = <&mmc_config_clk 1>, <&ccu CLK_MMC1>,
-+				 <&ccu CLK_MMC1_OUTPUT>,
-+				 <&ccu CLK_MMC1_SAMPLE>;
- 			clock-names = "ahb", "mmc", "output", "sample";
- 			resets = <&mmc_config_clk 1>;
- 			reset-names = "ahb";
-@@ -570,8 +385,9 @@
- 		mmc2: mmc@01c11000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c11000 0x1000>;
--			clocks = <&mmc_config_clk 2>, <&mmc2_clk 0>,
--				 <&mmc2_clk 1>, <&mmc2_clk 2>;
-+			clocks = <&mmc_config_clk 2>, <&ccu CLK_MMC2>,
-+				 <&ccu CLK_MMC2_OUTPUT>,
-+				 <&ccu CLK_MMC2_SAMPLE>;
- 			clock-names = "ahb", "mmc", "output", "sample";
- 			resets = <&mmc_config_clk 2>;
- 			reset-names = "ahb";
-@@ -584,8 +400,9 @@
- 		mmc3: mmc@01c12000 {
- 			compatible = "allwinner,sun9i-a80-mmc";
- 			reg = <0x01c12000 0x1000>;
--			clocks = <&mmc_config_clk 3>, <&mmc3_clk 0>,
--				 <&mmc3_clk 1>, <&mmc3_clk 2>;
-+			clocks = <&mmc_config_clk 3>, <&ccu CLK_MMC3>,
-+				 <&ccu CLK_MMC3_OUTPUT>,
-+				 <&ccu CLK_MMC3_SAMPLE>;
- 			clock-names = "ahb", "mmc", "output", "sample";
- 			resets = <&mmc_config_clk 3>;
- 			reset-names = "ahb";
-@@ -598,9 +415,9 @@
- 		mmc_config_clk: clk@01c13000 {
- 			compatible = "allwinner,sun9i-a80-mmc-config-clk";
- 			reg = <0x01c13000 0x10>;
--			clocks = <&ahb0_gates 8>;
-+			clocks = <&ccu CLK_BUS_MMC>;
- 			clock-names = "ahb";
--			resets = <&ahb0_resets 8>;
-+			resets = <&ccu RST_BUS_MMC>;
- 			reset-names = "ahb";
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -619,34 +436,27 @@
- 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
- 		};
- 
--		ahb0_resets: reset@060005a0 {
--			#reset-cells = <1>;
--			compatible = "allwinner,sun6i-a31-clock-reset";
--			reg = <0x060005a0 0x4>;
--		};
--
--		ahb1_resets: reset@060005a4 {
--			#reset-cells = <1>;
--			compatible = "allwinner,sun6i-a31-clock-reset";
--			reg = <0x060005a4 0x4>;
--		};
--
--		ahb2_resets: reset@060005a8 {
--			#reset-cells = <1>;
--			compatible = "allwinner,sun6i-a31-clock-reset";
--			reg = <0x060005a8 0x4>;
--		};
--
--		apb0_resets: reset@060005b0 {
-+		de_clocks: clock@03000000 {
-+			compatible = "allwinner,sun9i-a80-de-clks";
-+			reg = <0x03000000 0x30>;
-+			clocks = <&ccu CLK_DE>,
-+				 <&ccu CLK_SDRAM>,
-+				 <&ccu CLK_BUS_DE>;
-+			clock-names = "mod",
-+				      "dram",
-+				      "bus";
-+			resets = <&ccu RST_BUS_DE>;
-+			#clock-cells = <1>;
- 			#reset-cells = <1>;
--			compatible = "allwinner,sun6i-a31-clock-reset";
--			reg = <0x060005b0 0x4>;
- 		};
- 
--		apb1_resets: reset@060005b4 {
-+		ccu: clock@06000000 {
-+			compatible = "allwinner,sun9i-a80-ccu";
-+			reg = <0x06000000 0x800>;
-+			clocks = <&osc24M>, <&osc32k>;
-+			clock-names = "hosc", "losc";
-+			#clock-cells = <1>;
- 			#reset-cells = <1>;
--			compatible = "allwinner,sun6i-a31-clock-reset";
--			reg = <0x060005b4 0x4>;
- 		};
- 
- 		timer@06000c00 {
-@@ -676,7 +486,7 @@
- 				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb0_gates 5>, <&osc24M>, <&osc32k>;
-+			clocks = <&ccu CLK_BUS_PIO>, <&osc24M>, <&osc32k>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			interrupt-controller;
-@@ -732,8 +542,8 @@
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 16>;
--			resets = <&apb1_resets 16>;
-+			clocks = <&ccu CLK_BUS_UART0>;
-+			resets = <&ccu RST_BUS_UART0>;
- 			status = "disabled";
- 		};
- 
-@@ -743,8 +553,8 @@
- 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 17>;
--			resets = <&apb1_resets 17>;
-+			clocks = <&ccu CLK_BUS_UART1>;
-+			resets = <&ccu RST_BUS_UART1>;
- 			status = "disabled";
- 		};
- 
-@@ -754,8 +564,8 @@
- 			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 18>;
--			resets = <&apb1_resets 18>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
- 			status = "disabled";
- 		};
- 
-@@ -765,8 +575,8 @@
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 19>;
--			resets = <&apb1_resets 19>;
-+			clocks = <&ccu CLK_BUS_UART3>;
-+			resets = <&ccu RST_BUS_UART3>;
- 			status = "disabled";
- 		};
- 
-@@ -776,8 +586,8 @@
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 20>;
--			resets = <&apb1_resets 20>;
-+			clocks = <&ccu CLK_BUS_UART4>;
-+			resets = <&ccu RST_BUS_UART4>;
- 			status = "disabled";
- 		};
- 
-@@ -787,8 +597,8 @@
- 			interrupts = <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&apb1_gates 21>;
--			resets = <&apb1_resets 21>;
-+			clocks = <&ccu CLK_BUS_UART5>;
-+			resets = <&ccu RST_BUS_UART5>;
- 			status = "disabled";
- 		};
- 
-@@ -796,8 +606,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x07002800 0x400>;
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb1_gates 0>;
--			resets = <&apb1_resets 0>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -807,8 +617,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x07002c00 0x400>;
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb1_gates 1>;
--			resets = <&apb1_resets 1>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -818,8 +628,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x07003000 0x400>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb1_gates 2>;
--			resets = <&apb1_resets 2>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -829,8 +639,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x07003400 0x400>;
- 			interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb1_gates 3>;
--			resets = <&apb1_resets 3>;
-+			clocks = <&ccu CLK_BUS_I2C3>;
-+			resets = <&ccu RST_BUS_I2C3>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -840,8 +650,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x07003800 0x400>;
- 			interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&apb1_gates 4>;
--			resets = <&apb1_resets 4>;
-+			clocks = <&ccu CLK_BUS_I2C4>;
-+			resets = <&ccu RST_BUS_I2C4>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
+  - Use pre-divider adjusted parent rate for rounding.
+
+  - Use else statement for the case where the PLL lock status bit is
+    in same register.
+
+  - Add a more detailed description of the main CCU and DE CCU to the
+    commit messages.
+
+  - Fix DE CCU compatible string in DT binding example.
+
+  - Fix incorrectly squashed patch hunk.
+
+  - Drop leading zeros from device tree node name in DT examples.
+
+  - Expanded commit message for "ARM: dts: sun8i-a23-q8-tablet: Drop
+    pinmux setting for codec PA gpio".
+
+This series adds new "sunxi-ng" style drivers for the CCUs found in the
+Allwinner A80 SoC. The A80 contains 1 main clock control unit, and some
+subsystem specific clock control units at separate addresses. These
+include the USB, display engine, and MMC.
+
+  - The MMC clocks can be supported by the old clock drivers,
+    hence here we do not add a new driver for it.
+
+  - The old USB clock driver is intertwined with other SoCs,
+    requires old style bindings with clock-output-names and
+    CLK_OF_DECLARE for its parents. It is easier to switch
+    to a new binding and driver.
+
+  - The display engine (DE) CCU was not supported in the past.
+
+The A80 CCU also has some quirks about its design. It has
+
+  - Separate registers for PLL lock status
+
+  - P1, P2 dividers, which are power-of-2 and only 1 bit wide
+
+The first 3 patches fix and extend the behavior of sunxi-ng's
+mux clock type, based on the behavior of the clk subsystem's
+basic mux clock.
+
+The fourth patch adds support for checking PLL lock status
+bits in separate registers, as opposed to within the PLL's
+config register.
+
+Patches 5 through 7 add drivers for the CCU blocks.
+
+Patch 8 and 9 do some cleanup of the sunxi/allwinner dts files
+prior to switching sun9i dts to the new sunxi-ng clock bindings.
+These are independent of the clk stuff, but touch the same lines
+for sun9i. Including them should make it easier to apply and test
+patches.
+
+Patch 10 has sun9i switch over to the new clock bindings.
+
+Please take a look and let me know what you think.
+
+I also have a series adding support for the first display pipeline
+of the A80 with RGB LCD panel output which I will send out later
+on.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (10):
+  clk: sunxi-ng: mux: Fix determine_rate for mux clocks with
+    pre-dividers
+  clk: sunxi-ng: mux: honor CLK_SET_RATE_NO_REPARENT flag
+  clk: sunxi-ng: mux: Get closest parent rate possible with
+    CLK_SET_RATE_PARENT
+  clk: sunxi-ng: Support separately grouped PLL lock status register
+  clk: sunxi-ng: Add A80 CCU
+  clk: sunxi-ng: Add A80 USB CCU
+  clk: sunxi-ng: Add A80 Display Engine CCU
+  ARM: dts: sun8i-a23-q8-tablet: Drop pinmux setting for codec PA gpio
+  ARM: dts: sunxi: Remove no longer used pinctrl/sun4i-a10.h header
+  ARM: dts: sun9i: Switch to new clock bindings
+
+ .../devicetree/bindings/clock/sun9i-de.txt         |   28 +
+ .../devicetree/bindings/clock/sun9i-usb.txt        |   24 +
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |    1 +
+ arch/arm/boot/dts/sun4i-a10-a1000.dts              |    1 -
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts         |    1 -
+ arch/arm/boot/dts/sun4i-a10-dserve-dsrv9703c.dts   |    1 -
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts          |    1 -
+ arch/arm/boot/dts/sun4i-a10-inet1.dts              |    1 -
+ arch/arm/boot/dts/sun4i-a10-inet9f-rev03.dts       |    1 -
+ arch/arm/boot/dts/sun4i-a10-jesurun-q5.dts         |    1 -
+ arch/arm/boot/dts/sun4i-a10-marsboard.dts          |    1 -
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts         |    1 -
+ arch/arm/boot/dts/sun4i-a10-mk802.dts              |    1 -
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts     |    1 -
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts            |    1 -
+ arch/arm/boot/dts/sun4i-a10-pov-protab2-ips9.dts   |    1 -
+ arch/arm/boot/dts/sun4i-a10.dtsi                   |    1 -
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t003.dts       |    1 -
+ arch/arm/boot/dts/sun5i-a10s-auxtek-t004.dts       |    1 -
+ arch/arm/boot/dts/sun5i-a10s-olinuxino-micro.dts   |    1 -
+ arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts      |    1 -
+ arch/arm/boot/dts/sun5i-a10s-wobo-i5.dts           |    1 -
+ arch/arm/boot/dts/sun5i-a10s.dtsi                  |    1 -
+ .../boot/dts/sun5i-a13-empire-electronix-d709.dts  |    1 -
+ arch/arm/boot/dts/sun5i-a13-hsg-h702.dts           |    1 -
+ arch/arm/boot/dts/sun5i-a13-olinuxino-micro.dts    |    1 -
+ arch/arm/boot/dts/sun5i-a13-olinuxino.dts          |    1 -
+ arch/arm/boot/dts/sun5i-a13.dtsi                   |    1 -
+ arch/arm/boot/dts/sun5i-gr8.dtsi                   |    1 -
+ arch/arm/boot/dts/sun5i.dtsi                       |    1 -
+ arch/arm/boot/dts/sun6i-a31-app4-evb1.dts          |    1 -
+ arch/arm/boot/dts/sun6i-a31-colombus.dts           |    1 -
+ arch/arm/boot/dts/sun6i-a31-hummingbird.dts        |    1 -
+ arch/arm/boot/dts/sun6i-a31-i7.dts                 |    1 -
+ arch/arm/boot/dts/sun6i-a31-m9.dts                 |    1 -
+ arch/arm/boot/dts/sun6i-a31-mele-a1000g-quad.dts   |    1 -
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |    1 -
+ arch/arm/boot/dts/sun6i-a31s-cs908.dts             |    2 -
+ arch/arm/boot/dts/sun6i-a31s-primo81.dts           |    1 -
+ arch/arm/boot/dts/sun6i-a31s-sina31s-core.dtsi     |    1 -
+ .../dts/sun6i-a31s-yones-toptech-bs1078-v2.dts     |    1 -
+ .../boot/dts/sun6i-reference-design-tablet.dtsi    |    1 -
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts           |    1 -
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |    1 -
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |    1 -
+ arch/arm/boot/dts/sun7i-a20-hummingbird.dts        |    1 -
+ arch/arm/boot/dts/sun7i-a20-i12-tvbox.dts          |    1 -
+ arch/arm/boot/dts/sun7i-a20-icnova-swac.dts        |    1 -
+ arch/arm/boot/dts/sun7i-a20-lamobo-r1.dts          |    1 -
+ arch/arm/boot/dts/sun7i-a20-m3.dts                 |    1 -
+ arch/arm/boot/dts/sun7i-a20-mk808c.dts             |    1 -
+ arch/arm/boot/dts/sun7i-a20-olimex-som-evb.dts     |    1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime.dts     |    1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-lime2.dts    |    1 -
+ arch/arm/boot/dts/sun7i-a20-olinuxino-micro.dts    |    1 -
+ arch/arm/boot/dts/sun7i-a20-orangepi-mini.dts      |    1 -
+ arch/arm/boot/dts/sun7i-a20-orangepi.dts           |    1 -
+ arch/arm/boot/dts/sun7i-a20-pcduino3.dts           |    1 -
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |    1 -
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi               |    1 -
+ arch/arm/boot/dts/sun8i-a23-evb.dts                |    1 -
+ arch/arm/boot/dts/sun8i-a23-q8-tablet.dts          |   10 -
+ arch/arm/boot/dts/sun8i-a33-sinlinx-sina33.dts     |    1 -
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |    2 -
+ arch/arm/boot/dts/sun8i-h3-bananapi-m2-plus.dts    |    1 -
+ arch/arm/boot/dts/sun8i-h3-nanopi.dtsi             |    1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-2.dts          |    1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-lite.dts       |    1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-one.dts        |    1 -
+ arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |    1 -
+ arch/arm/boot/dts/sun8i-h3.dtsi                    |    1 -
+ arch/arm/boot/dts/sun9i-a80-cubieboard4.dts        |    1 -
+ arch/arm/boot/dts/sun9i-a80-optimus.dts            |    1 -
+ arch/arm/boot/dts/sun9i-a80.dtsi                   |  404 ++-----
+ arch/arm/boot/dts/sunxi-common-regulators.dtsi     |    1 -
+ .../boot/dts/sunxi-reference-design-tablet.dtsi    |    1 -
+ drivers/clk/sunxi-ng/Kconfig                       |   10 +
+ drivers/clk/sunxi-ng/Makefile                      |    3 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c            |  283 +++++
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h            |   33 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c           |  144 +++
+ drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.h           |   25 +
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.c               | 1223 ++++++++++++++++++++
+ drivers/clk/sunxi-ng/ccu-sun9i-a80.h               |   57 +
+ drivers/clk/sunxi-ng/ccu_common.c                  |    9 +-
+ drivers/clk/sunxi-ng/ccu_common.h                  |    2 +
+ drivers/clk/sunxi-ng/ccu_mux.c                     |   35 +-
+ include/dt-bindings/clock/sun9i-a80-ccu.h          |  162 +++
+ .../dt-bindings/clock/sun9i-a80-de.h               |   73 +-
+ .../dt-bindings/clock/sun9i-a80-usb.h              |   44 +-
+ .../dt-bindings/reset/sun9i-a80-ccu.h              |   91 +-
+ .../dt-bindings/reset/sun9i-a80-de.h               |   45 +-
+ .../dt-bindings/reset/sun9i-a80-usb.h              |   41 +-
+ 93 files changed, 2271 insertions(+), 549 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/sun9i-de.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/sun9i-usb.txt
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-de.h
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.h
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80.c
+ create mode 100644 drivers/clk/sunxi-ng/ccu-sun9i-a80.h
+ create mode 100644 include/dt-bindings/clock/sun9i-a80-ccu.h
+ copy arch/arm/boot/dts/sunxi-reference-design-tablet.dtsi => include/dt-bindings/clock/sun9i-a80-de.h (67%)
+ copy arch/arm/boot/dts/sun8i-a23-q8-tablet.dts => include/dt-bindings/clock/sun9i-a80-usb.h (73%)
+ copy arch/arm/boot/dts/sunxi-reference-design-tablet.dtsi => include/dt-bindings/reset/sun9i-a80-ccu.h (56%)
+ copy arch/arm/boot/dts/sun8i-a23-q8-tablet.dts => include/dt-bindings/reset/sun9i-a80-de.h (73%)
+ copy arch/arm/boot/dts/sun8i-a23-q8-tablet.dts => include/dt-bindings/reset/sun9i-a80-usb.h (73%)
+
 -- 
 2.11.0
