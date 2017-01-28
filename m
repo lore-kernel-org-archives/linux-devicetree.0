@@ -1,85 +1,59 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v15 1/5] dt/bindings: add bindings for optee
-Date: Sat, 28 Jan 2017 13:19:40 +0100
-Message-ID: <1485605984-30064-2-git-send-email-jens.wiklander@linaro.org>
-References: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 02/10] clk: sunxi-ng: mux: honor
+ CLK_SET_RATE_NO_REPARENT flag
+Date: Sat, 28 Jan 2017 20:22:31 +0800
+Message-ID: <20170128122239.4480-3-wens@csie.org>
+References: <20170128122239.4480-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, javier@javigon.com, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, scott.branden@broadcom.com, jean-michel.delorme@st.com, broonie@kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Etienne CARRIERE <etienne.carriere@st.com>, emmanuel.michel@st.com, Eric FINCO <eric.finco@st.com>, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Jens Wiklander <jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBFM2WLCAKGQEITLTYII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170128122239.4480-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introduces linaro prefix and adds bindings for ARM TrustZone based OP-TEE
-implementation.
+This patch adds support for the CLK_SET_RATE_NO_REPARENT flag to the
+mux determine_rate helper, based on examples from clk-composite and
+clk-mux.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- .../bindings/arm/firmware/linaro,optee-tz.txt      | 31 ++++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- 2 files changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
+ drivers/clk/sunxi-ng/ccu_mux.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-new file mode 100644
-index 000000000000..d38834c67dff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-@@ -0,0 +1,31 @@
-+OP-TEE Device Tree Bindings
+diff --git a/drivers/clk/sunxi-ng/ccu_mux.c b/drivers/clk/sunxi-ng/ccu_mux.c
+index eb66adb28807..d0d69c7eb516 100644
+--- a/drivers/clk/sunxi-ng/ccu_mux.c
++++ b/drivers/clk/sunxi-ng/ccu_mux.c
+@@ -70,6 +70,21 @@ int ccu_mux_helper_determine_rate(struct ccu_common *common,
+ 	struct clk_hw *best_parent, *hw = &common->hw;
+ 	unsigned int i;
+ 
++	if (clk_hw_get_flags(hw) & CLK_SET_RATE_NO_REPARENT) {
++		unsigned long adj_parent_rate;
 +
-+OP-TEE is a piece of software using hardware features to provide a Trusted
-+Execution Environment. The security can be provided with ARM TrustZone, but
-+also by virtualization or a separate chip.
++		best_parent = clk_hw_get_parent(hw);
++		best_parent_rate = clk_hw_get_rate(best_parent);
 +
-+We're using "linaro" as the first part of the compatible property for
-+the reference implementation maintained by Linaro.
++		adj_parent_rate = best_parent_rate;
++		ccu_mux_helper_adjust_parent_for_prediv(common, cm, -1,
++							&adj_parent_rate);
 +
-+* OP-TEE based on ARM TrustZone required properties:
++		best_rate = round(cm, adj_parent_rate, req->rate, data);
 +
-+- compatible     : should contain "linaro,optee-tz"
++		goto out;
++	}
 +
-+- method         : The method of calling the OP-TEE Trusted OS. Permitted
-+                   values are:
-+
-+                   "smc" : SMC #0, with the register assignments specified
-+		           in drivers/tee/optee/optee_smc.h
-+
-+                   "hvc" : HVC #0, with the register assignments specified
-+		           in drivers/tee/optee/optee_smc.h
-+
-+
-+
-+Example:
-+	firmware {
-+		optee {
-+			compatible = "linaro,optee-tz";
-+			method = "smc";
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e7f5d1..4b1192bb4224 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -161,6 +161,7 @@ lacie	LaCie
- lantiq	Lantiq Semiconductor
- lenovo	Lenovo Group Ltd.
- lg	LG Corporation
-+linaro	Linaro Limited
- linux	Linux-specific binding
- lltc	Linear Technology Corporation
- lsi	LSI Corp. (LSI Logic)
+ 	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
+ 		unsigned long tmp_rate, parent_rate, adj_parent_rate;
+ 		struct clk_hw *parent;
 -- 
-2.7.4
+2.11.0
