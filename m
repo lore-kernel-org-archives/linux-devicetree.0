@@ -1,183 +1,39 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: [PATCH v15 4/5] Documentation: tee subsystem and op-tee driver
-Date: Sat, 28 Jan 2017 13:19:43 +0100
-Message-ID: <1485605984-30064-5-git-send-email-jens.wiklander@linaro.org>
-References: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] Documentation: dt-bindings: add the Amlogic Meson
+ SAR ADC documentation
+Date: Sat, 28 Jan 2017 12:30:11 +0000
+Message-ID: <4611e3bf-8e25-9f7c-7c34-6eca85ffc3d6@kernel.org>
+References: <20170122181714.6259-1-martin.blumenstingl@googlemail.com>
+ <20170122181714.6259-2-martin.blumenstingl@googlemail.com>
+ <20170123204432.2lkh3zlgzmwye3hj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, javier@javigon.com, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, scott.branden@broadcom.com, jean-michel.delorme@st.com, broonie@kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Etienne CARRIERE <etienne.carriere@st.com>, emmanuel.michel@st.com, Eric FINCO <eric.finco@st.com>, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Jens Wiklander <jens.wiklander@linaro.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170123204432.2lkh3zlgzmwye3hj@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Andreas Dannenberg <dannenberg@ti.com>
-Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
----
- Documentation/00-INDEX |   2 +
- Documentation/tee.txt  | 118 +++++++++++++++++++++++++++++++++++++++++++++++++
- MAINTAINERS            |   1 +
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/tee.txt
+On 23/01/17 20:44, Rob Herring wrote:
+> On Sun, Jan 22, 2017 at 07:17:12PM +0100, Martin Blumenstingl wrote:
+>> This adds the devicetree binding documentation for the SAR ADC found in
+>> Amlogic Meson SoCs.
+>> Currently only the GXBB, GXL and GXM SoCs are supported.
+>>
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> Tested-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>> ---
+>>  .../bindings/iio/adc/amlogic,meson-saradc.txt      | 32 ++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/amlogic,meson-saradc.txt
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+Applied to the togreg branch of iio.git - initially pushed out as testing.
 
-diff --git a/Documentation/00-INDEX b/Documentation/00-INDEX
-index c8a8eb1a2b11..fc6a3cb83d97 100644
---- a/Documentation/00-INDEX
-+++ b/Documentation/00-INDEX
-@@ -412,6 +412,8 @@ sysctl/
- 	- directory with info on the /proc/sys/* files.
- target/
- 	- directory with info on generating TCM v4 fabric .ko modules
-+tee.txt
-+	- info on the TEE subsystem and drivers
- this_cpu_ops.txt
- 	- List rationale behind and the way to use this_cpu operations.
- thermal/
-diff --git a/Documentation/tee.txt b/Documentation/tee.txt
-new file mode 100644
-index 000000000000..718599357596
---- /dev/null
-+++ b/Documentation/tee.txt
-@@ -0,0 +1,118 @@
-+TEE subsystem
-+This document describes the TEE subsystem in Linux.
-+
-+A TEE (Trusted Execution Environment) is a trusted OS running in some
-+secure environment, for example, TrustZone on ARM CPUs, or a separate
-+secure co-processor etc. A TEE driver handles the details needed to
-+communicate with the TEE.
-+
-+This subsystem deals with:
-+
-+- Registration of TEE drivers
-+
-+- Managing shared memory between Linux and the TEE
-+
-+- Providing a generic API to the TEE
-+
-+The TEE interface
-+=================
-+
-+include/uapi/linux/tee.h defines the generic interface to a TEE.
-+
-+User space (the client) connects to the driver by opening /dev/tee[0-9]* or
-+/dev/teepriv[0-9]*.
-+
-+- TEE_IOC_SHM_ALLOC allocates shared memory and returns a file descriptor
-+  which user space can mmap. When user space doesn't need the file
-+  descriptor any more, it should be closed. When shared memory isn't needed
-+  any longer it should be unmapped with munmap() to allow the reuse of
-+  memory.
-+
-+- TEE_IOC_VERSION lets user space know which TEE this driver handles and
-+  the its capabilities.
-+
-+- TEE_IOC_OPEN_SESSION opens a new session to a Trusted Application.
-+
-+- TEE_IOC_INVOKE invokes a function in a Trusted Application.
-+
-+- TEE_IOC_CANCEL may cancel an ongoing TEE_IOC_OPEN_SESSION or TEE_IOC_INVOKE.
-+
-+- TEE_IOC_CLOSE_SESSION closes a session to a Trusted Application.
-+
-+There are two classes of clients, normal clients and supplicants. The latter is
-+a helper process for the TEE to access resources in Linux, for example file
-+system access. A normal client opens /dev/tee[0-9]* and a supplicant opens
-+/dev/teepriv[0-9].
-+
-+Much of the communication between clients and the TEE is opaque to the
-+driver. The main job for the driver is to receive requests from the
-+clients, forward them to the TEE and send back the results. In the case of
-+supplicants the communication goes in the other direction, the TEE sends
-+requests to the supplicant which then sends back the result.
-+
-+OP-TEE driver
-+=============
-+
-+The OP-TEE driver handles OP-TEE [1] based TEEs. Currently it is only the ARM
-+TrustZone based OP-TEE solution that is supported.
-+
-+Lowest level of communication with OP-TEE builds on ARM SMC Calling
-+Convention (SMCCC) [2], which is the foundation for OP-TEE's SMC interface
-+[3] used internally by the driver. Stacked on top of that is OP-TEE Message
-+Protocol [4].
-+
-+OP-TEE SMC interface provides the basic functions required by SMCCC and some
-+additional functions specific for OP-TEE. The most interesting functions are:
-+
-+- OPTEE_SMC_FUNCID_CALLS_UID (part of SMCCC) returns the version information
-+  which is then returned by TEE_IOC_VERSION
-+
-+- OPTEE_SMC_CALL_GET_OS_UUID returns the particular OP-TEE implementation, used
-+  to tell, for instance, a TrustZone OP-TEE apart from an OP-TEE running on a
-+  separate secure co-processor.
-+
-+- OPTEE_SMC_CALL_WITH_ARG drives the OP-TEE message protocol
-+
-+- OPTEE_SMC_GET_SHM_CONFIG lets the driver and OP-TEE agree on which memory
-+  range to used for shared memory between Linux and OP-TEE.
-+
-+The GlobalPlatform TEE Client API [5] is implemented on top of the generic
-+TEE API.
-+
-+Picture of the relationship between the different components in the
-+OP-TEE architecture.
-+
-+    User space                  Kernel                   Secure world
-+    ~~~~~~~~~~                  ~~~~~~                   ~~~~~~~~~~~~
-+ +--------+                                             +-------------+
-+ | Client |                                             | Trusted     |
-+ +--------+                                             | Application |
-+    /\                                                  +-------------+
-+    || +----------+                                           /\
-+    || |tee-      |                                           ||
-+    || |supplicant|                                           \/
-+    || +----------+                                     +-------------+
-+    \/      /\                                          | TEE Internal|
-+ +-------+  ||                                          | API         |
-+ + TEE   |  ||            +--------+--------+           +-------------+
-+ | Client|  ||            | TEE    | OP-TEE |           | OP-TEE      |
-+ | API   |  \/            | subsys | driver |           | Trusted OS  |
-+ +-------+----------------+----+-------+----+-----------+-------------+
-+ |      Generic TEE API        |       |     OP-TEE MSG               |
-+ |      IOCTL (TEE_IOC_*)      |       |     SMCCC (OPTEE_SMC_CALL_*) |
-+ +-----------------------------+       +------------------------------+
-+
-+RPC (Remote Procedure Call) are requests from secure world to kernel driver
-+or tee-supplicant. An RPC is identified by a special range of SMCCC return
-+values from OPTEE_SMC_CALL_WITH_ARG. RPC messages which are intended for the
-+kernel are handled by the kernel driver. Other RPC messages will be forwarded to
-+tee-supplicant without further involvement of the driver, except switching
-+shared memory buffer representation.
-+
-+References:
-+[1] https://github.com/OP-TEE/optee_os
-+[2] http://infocenter.arm.com/help/topic/com.arm.doc.den0028a/index.html
-+[3] drivers/tee/optee/optee_smc.h
-+[4] drivers/tee/optee/optee_msg.h
-+[5] http://www.globalplatform.org/specificationsdevice.asp look for
-+    "TEE Client API Specification v1.0" and click download.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc9c2086f19b..a55d5228b10f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10902,6 +10902,7 @@ S:	Maintained
- F:	include/linux/tee_drv.h
- F:	include/uapi/linux/tee.h
- F:	drivers/tee/
-+F:	Documentation/tee.txt
- 
- THUNDERBOLT DRIVER
- M:	Andreas Noever <andreas.noever@gmail.com>
--- 
-2.7.4
+Thanks,
+
+Jonathan
