@@ -1,79 +1,129 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 1/4] PCI: add DT bindings for Cortina Gemini
-	PCI Host Bridge
-Date: Sat, 28 Jan 2017 21:48:36 +0100
-Message-ID: <20170128204839.18330-1-linus.walleij@linaro.org>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] pcie: ti: Provide patch to force GEN1 PCIe operation
+Date: Sat, 28 Jan 2017 14:54:59 -0600
+Message-ID: <20170128205459.GD20550@bhelgaas-glaptop.roam.corp.google.com>
+References: <1484486354-4585-1-git-send-email-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484486354-4585-1-git-send-email-lukma@denx.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Lukasz Majewski <lukma@denx.de>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Joao Pinto <Joao.Pinto@synopsys.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgQ29ydGluYSBTeXN0ZW1zIEdl
-bWluaSBQQ0kKSG9zdCBCcmlkZ2UuCgpDYzogSmFub3MgTGF1YmUgPGphbm9zLmRldkBnbWFpbC5j
-b20+CkNjOiBQYXVsaXVzIFphbGVja2FzIDxwYXVsaXVzLnphbGVja2FzQGdtYWlsLmNvbT4KQ2M6
-IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9sbEBnb29nbGVtYWlsLmNvbT4KQ2M6IEZsb3JpYW4g
-RmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
-bC5vcmcKU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
-b3JnPgotLS0KVGhpcyBjYW4gYmUgbWVyZ2VkIHRvIHRoZSBQQ0kgdHJlZSB3aGVuZXZlciBpdCBp
-cyBjb25zaWRlcmVkCmZpbmUgZm9yIGluY2x1c2lvbi4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5k
-aW5ncy9wY2kvY29ydGluYSxnZW1pbmktcGNpLnR4dCB8IDY0ICsrKysrKysrKysrKysrKysrKysr
-KysKIDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9jb3J0aW5hLGdlbWluaS1wY2ku
-dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9j
-b3J0aW5hLGdlbWluaS1wY2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3BjaS9jb3J0aW5hLGdlbWluaS1wY2kudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
-MDAwMDAwMDAwMC4uZTMwOTBkOTk1ZTFlCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9jb3J0aW5hLGdlbWluaS1wY2kudHh0CkBAIC0wLDAg
-KzEsNjQgQEAKKyogQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBQQ0kgSG9zdCBCcmlkZ2UKKworTWFu
-ZGF0b3J5IHByb3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJjb3J0aW5hLGdl
-bWluaS1wY2kiCistIHJlZzogbWVtb3J5IGJhc2UgYW5kIHNpemUgZm9yIHRoZSBob3N0IGJyaWRn
-ZQorLSBpbnRlcnJ1cHRzOiB0aGUgZm91ciBQQ0kgaW50ZXJydXB0cworLSAjYWRkcmVzcy1jZWxs
-czogc2V0IHRvIDwzPgorLSAjc2l6ZS1jZWxsczogc2V0IHRvIDwyPgorLSAjaW50ZXJydXB0LWNl
-bGxzOiBzZXQgdG8gPDE+CistIGJ1cy1yYW5nZTogc2V0IHRvIDwweDAwIDB4MDA+IChvbmx5IHJv
-b3QgYnVzKQorLSBkZXZpY2VfdHlwZSwgc2V0IHRvICJwY2kiCistIHJhbmdlczogc2VlIHBjaS50
-eHQKKy0gaW50ZXJydXB0LW1hcC1tYXNrOiBzZWUgcGNpLnR4dAorLSBpbnRlcnJ1cHQtbWFwOiBz
-ZWUgcGNpLnR4dAorCitNYW5kYXRvcnkgc3Vibm9kZXM6CistIE9uZSBub2RlIHJlcHJlbnRpbmcg
-dGhlIGludGVycnVwdC1jb250cm9sbGVyIGluc2lkZSB0aGUgaG9zdCBicmlkZ2UKKyAgd2l0aCB0
-aGUgZm9sbG93aW5nIG1hbmRhdG9yeSBwcm9wZXJ0aWVzOgorICAtIGludGVycnVwdC1jb250cm9s
-bGVyOiBzZWUgaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQKKyAgLSAjYWRkcmVz
-cy1jZWxsczogc2V0IHRvIDwwPgorICAtICNpbnRlcnJ1cHQtY2VsbHM6IHNldCB0byA8MT4KKwor
-RXhhbXBsZToKKworcGNpQDUwMDAwMDAwIHsKKwljb21wYXRpYmxlID0gImNvcnRpbmEsZ2VtaW5p
-LXBjaSI7CisJcmVnID0gPDB4NTAwMDAwMDAgMHgxMDA+OworCWludGVycnVwdHMgPSA8OCBJUlFf
-VFlQRV9MRVZFTF9ISUdIPiwgLyogUENJIEEgKi8KKwkJCTwyNiBJUlFfVFlQRV9MRVZFTF9ISUdI
-PiwgLyogUENJIEIgKi8KKwkJCTwyNyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUENJIEMgKi8K
-KwkJCTwyOCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogUENJIEQgKi8KKwkjYWRkcmVzcy1jZWxs
-cyA9IDwzPjsKKwkjc2l6ZS1jZWxscyA9IDwyPjsKKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owor
-CisJYnVzLXJhbmdlID0gPDB4MDAgMHgwMD47IC8qIE9ubHkgcm9vdCBidXMgKi8KKwlyYW5nZXMg
-PSAvKiAxTWlCIEkvTyBzcGFjZSAweDUwMDAwMDAwLTB4NTAwZmZmZmYgKi8KKwkJIDwweDAxMDAw
-MDAwIDAgMCAgICAgICAgICAweDUwMDAwMDAwIDAgMHgwMDEwMDAwMD4sCisJCSAvKiAxMjhNaUIg
-bm9uLXByZWZldGNoYWJsZSBtZW1vcnkgMHg1ODAwMDAwMC0weDVmZmZmZmZmICovCisJCSA8MHgw
-MjAwMDAwMCAwIDB4NTgwMDAwMDAgMHg1ODAwMDAwMCAwIDB4MDgwMDAwMDA+OworCWludGVycnVw
-dC1tYXAtbWFzayA9IDwweGZmMDAgMCAwIDc+OworCWludGVycnVwdC1tYXAgPSA8MHg0ODAwIDAg
-MCAxICZwY2lfaW50YyAwPiwgLyogU2xvdCA5ICovCisJCQk8MHg0OTAwIDAgMCAyICZwY2lfaW50
-YyAxPiwKKwkJCTwweDRhMDAgMCAwIDMgJnBjaV9pbnRjIDI+LAorCQkJPDB4NGIwMCAwIDAgNCAm
-cGNpX2ludGMgMz4sCisJCQk8MHg1MDAwIDAgMCAxICZwY2lfaW50YyAwPiwgLyogU2xvdCAxMCAq
-LworCQkJPDB4NTEwMCAwIDAgMiAmcGNpX2ludGMgMT4sCisJCQk8MHg1MjAwIDAgMCAzICZwY2lf
-aW50YyAyPiwKKwkJCTwweDUzMDAgMCAwIDQgJnBjaV9pbnRjIDM+LAorCQkJPDB4NTgwMCAwIDAg
-MSAmcGNpX2ludGMgMD4sIC8qIFNsb3QgMTEgKi8KKwkJCTwweDU5MDAgMCAwIDIgJnBjaV9pbnRj
-IDE+LAorCQkJPDB4NWEwMCAwIDAgMyAmcGNpX2ludGMgMj4sCisJCQk8MHg1YjAwIDAgMCA0ICZw
-Y2lfaW50YyAzPiwKKwkJCTwweDYwMDAgMCAwIDEgJnBjaV9pbnRjIDA+LCAvKiBTbG90IDEyICov
-CisJCQk8MHg2MTAwIDAgMCAyICZwY2lfaW50YyAxPiwKKwkJCTwweDYyMDAgMCAwIDMgJnBjaV9p
-bnRjIDI+LAorCQkJPDB4NjMwMCAwIDAgNCAmcGNpX2ludGMgMz47CisJcGNpX2ludGM6IGludGVy
-cnVwdC1jb250cm9sbGVyIHsKKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJCSNhZGRyZXNzLWNl
-bGxzID0gPDA+OworCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCX07Cit9OwotLSAKMi45LjMK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kb3BlbndydC1k
-ZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZlbEBsaXN0cy5vcGVud3J0Lm9yZwpodHRwczov
-L2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9vcGVud3J0LWRldmVs
-Cg==
+On Sun, Jan 15, 2017 at 02:19:14PM +0100, Lukasz Majewski wrote:
+> Some devices (due to e.g. bad PCIe signal integrity) require to run
+> with forced GEN1 speed on PCIe bus.
+> 
+> This patch changes the speed explicitly on dra7 based devices when
+> proper device tree attribute is defined for the PCIe controller.
+> 
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+
+Hi Lukasz, there was a lot of discussion after this, so I'm going to
+drop this version and wait for a new one (if one is still needed).
+I think I saw a URL with more scenario details; please include that if
+appropriate (ideally the details would be in a permanent public place
+like the kernel.org bugzilla).
+
+> ---
+> 
+> Patch applies on newest origin/master
+> SHA1: f4d3935e4f4884ba80561db5549394afb8eef8f7
+> 
+> Tested at AM5728
+> 
+> ---
+>  Documentation/devicetree/bindings/pci/ti-pci.txt |  1 +
+>  drivers/pci/host/pci-dra7xx.c                    | 23 +++++++++++++++++++++++
+>  drivers/pci/host/pcie-designware.h               |  1 +
+>  3 files changed, 25 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> index 60e2516..9f97409 100644
+> --- a/Documentation/devicetree/bindings/pci/ti-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -25,6 +25,7 @@ PCIe Designware Controller
+>  
+>  Optional Property:
+>   - gpios : Should be added if a gpio line is required to drive PERST# line
+> + - to,pcie-is-gen1: Indicates that forced gen1 port operation is needed.
+>  
+>  Example:
+>  axi {
+> diff --git a/drivers/pci/host/pci-dra7xx.c b/drivers/pci/host/pci-dra7xx.c
+> index 9595fad..eec5fae 100644
+> --- a/drivers/pci/host/pci-dra7xx.c
+> +++ b/drivers/pci/host/pci-dra7xx.c
+> @@ -63,6 +63,13 @@
+>  #define	LINK_UP						BIT(16)
+>  #define	DRA7XX_CPU_TO_BUS_ADDR				0x0FFFFFFF
+>  
+> +#define         PCIECTRL_EP_DBICS_LNK_CAP                       0x007C
+> +#define         MAX_LINK_SPEEDS_MASK				GENMASK(3, 0)
+> +#define         MAX_LINK_SPEEDS_GEN1                            BIT(0)
+> +
+> +#define         PCIECTRL_PL_WIDTH_SPEED_CTL                     0x080C
+> +#define         CFG_DIRECTED_SPEED_CHANGE                       BIT(17)
+> +
+>  struct dra7xx_pcie {
+>  	struct pcie_port	pp;
+>  	void __iomem		*base;		/* DT ti_conf */
+> @@ -270,6 +277,7 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	struct pcie_port *pp = &dra7xx->pp;
+>  	struct device *dev = pp->dev;
+>  	struct resource *res;
+> +	u32 val;
+>  
+>  	pp->irq = platform_get_irq(pdev, 1);
+>  	if (pp->irq < 0) {
+> @@ -296,6 +304,18 @@ static int __init dra7xx_add_pcie_port(struct dra7xx_pcie *dra7xx,
+>  	if (!pp->dbi_base)
+>  		return -ENOMEM;
+>  
+> +	if (pp->is_gen1) {
+> +		dev_info(dev, "GEN1 forced\n");
+> +
+> +		val = readl(pp->dbi_base + PCIECTRL_EP_DBICS_LNK_CAP);
+> +		set_mask_bits(&val, MAX_LINK_SPEEDS_MASK, MAX_LINK_SPEEDS_GEN1);
+> +		writel(val, pp->dbi_base + PCIECTRL_EP_DBICS_LNK_CAP);
+> +
+> +		val = readl(pp->dbi_base + PCIECTRL_PL_WIDTH_SPEED_CTL);
+> +		val &= ~CFG_DIRECTED_SPEED_CHANGE;
+> +		writel(val, pp->dbi_base + PCIECTRL_PL_WIDTH_SPEED_CTL);
+> +	}
+> +
+>  	ret = dw_pcie_host_init(pp);
+>  	if (ret) {
+>  		dev_err(dev, "failed to initialize host\n");
+> @@ -404,6 +424,9 @@ static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+>  		goto err_gpio;
+>  	}
+>  
+> +	if (of_property_read_bool(np, "ti,pcie-is-gen1"))
+> +		pp->is_gen1 = true;
+> +
+>  	reg = dra7xx_pcie_readl(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
+>  	reg &= ~LTSSM_EN;
+>  	dra7xx_pcie_writel(dra7xx, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
+> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+> index a567ea2..2fb0b18 100644
+> --- a/drivers/pci/host/pcie-designware.h
+> +++ b/drivers/pci/host/pcie-designware.h
+> @@ -50,6 +50,7 @@ struct pcie_port {
+>  	struct irq_domain	*irq_domain;
+>  	unsigned long		msi_data;
+>  	u8			iatu_unroll_enabled;
+> +	u8                      is_gen1;
+>  	DECLARE_BITMAP(msi_irq_in_use, MAX_MSI_IRQS);
+>  };
+>  
+> -- 
+> 2.1.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
