@@ -1,154 +1,35 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] iio: adc: stm32: Enable use of stm32 timer triggers
-Date: Sat, 28 Jan 2017 12:46:14 +0000
-Message-ID: <15e2e122-3574-32c6-ec76-e7878f418630@kernel.org>
-References: <1484832854-6314-1-git-send-email-fabrice.gasnier@st.com>
- <1484832854-6314-3-git-send-email-fabrice.gasnier@st.com>
- <9826347e-d8e4-2386-cc7a-dd2c4909494b@kernel.org>
- <6e42a729-3513-5586-13dc-10cf5e90f6a3@st.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 8/9] ASoC: sunxi: allow the analog codec
+ driver to be built on ARM64
+Date: Sat, 28 Jan 2017 20:46:39 +0800
+Message-ID: <CAGb2v669B=uYO4HkdHJ=3LdoGEWJxO8y+kmA+X35LYnuDqWL1Q@mail.gmail.com>
+References: <20170126154859.55855-1-icenowy@aosc.xyz> <20170126154859.55855-9-icenowy@aosc.xyz>
+ <20170127200532.pemk36hwyzkun3i5@lukather>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6e42a729-3513-5586-13dc-10cf5e90f6a3-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBR5FWLCAKGQEFT5PCZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170127200532.pemk36hwyzkun3i5@lukather>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/17 14:37, Fabrice Gasnier wrote:
-> On 01/22/2017 01:55 PM, Jonathan Cameron wrote:
->> On 19/01/17 13:34, Fabrice Gasnier wrote:
->>> STM32 ADC has external timer trigger sources. Use stm32 timer triggers
->>> API (e.g. is_stm32_timer_trigger()) with local ADC lookup table to
->>> validate a trigger can be used.
->>> This also provides correct trigger selection value (e.g. extsel).
->>>
->>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
->> Looks good. Observations inline.
->>> ---
->>>  drivers/iio/adc/Kconfig     |  2 ++
->>>  drivers/iio/adc/stm32-adc.c | 60 +++++++++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 62 insertions(+)
->>>
->>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->>> index 33341f4..9a7b090 100644
->>> --- a/drivers/iio/adc/Kconfig
->>> +++ b/drivers/iio/adc/Kconfig
->>> @@ -447,6 +447,8 @@ config STM32_ADC_CORE
->>>      depends on OF
->>>      depends on REGULATOR
->>>      select IIO_BUFFER
->>> +    select MFD_STM32_TIMERS
->>> +    select IIO_STM32_TIMER_TRIGGER
->>>      select IIO_TRIGGERED_BUFFER
->>>      help
->>>        Select this option to enable the core driver for STMicroelectronics
->>> diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
->>> index 8d0b74b..30708bc 100644
->>> --- a/drivers/iio/adc/stm32-adc.c
->>> +++ b/drivers/iio/adc/stm32-adc.c
->>> @@ -23,6 +23,7 @@
->>>  #include <linux/delay.h>
->>>  #include <linux/iio/iio.h>
->>>  #include <linux/iio/buffer.h>
->>> +#include <linux/iio/timer/stm32-timer-trigger.h>
->>>  #include <linux/iio/trigger.h>
->>>  #include <linux/iio/trigger_consumer.h>
->>>  #include <linux/iio/triggered_buffer.h>
->>> @@ -122,6 +123,35 @@ enum stm32_adc_exten {
->>>      STM32_EXTEN_HWTRIG_BOTH_EDGES,
->>>  };
->>>
->>> +/* extsel - trigger mux selection value */
->>> +enum stm32_adc_extsel {
->>> +    STM32_EXT0,
->>> +    STM32_EXT1,
->>> +    STM32_EXT2,
->>> +    STM32_EXT3,
->>> +    STM32_EXT4,
->>> +    STM32_EXT5,
->>> +    STM32_EXT6,
->>> +    STM32_EXT7,
->>> +    STM32_EXT8,
->>> +    STM32_EXT9,
->>> +    STM32_EXT10,
->>> +    STM32_EXT11,
->>> +    STM32_EXT12,
->>> +    STM32_EXT13,
->>> +    STM32_EXT14,
->>> +    STM32_EXT15,
->>> +};
->>> +
->>> +/**
->>> + * struct stm32_adc_trig_info - ADC trigger info
->>> + * @name:        name of the trigger, corresponding to its source
->>> + * @extsel:        trigger selection
->>> + */
->>> +struct stm32_adc_trig_info {
->>> +    const char *name;
->>> +    enum stm32_adc_extsel extsel;
->>> +};
->>>
->>>  /**
->>>   * struct stm32_adc - private data of each ADC IIO instance
->>> @@ -218,6 +248,26 @@ struct stm32_adc_regs {
->>>      { STM32F4_ADC_SQR1, STM32F4_SQ16_MASK, STM32F4_SQ16_SHIFT },
->>>  };
->>>
->>> +/* STM32F4 external trigger sources for all instances */
->>> +static struct stm32_adc_trig_info stm32f4_adc_timer_trigs[] = {
->>> +    { TIM1_CH1, STM32_EXT0 },
->>> +    { TIM1_CH2, STM32_EXT1 },
->>> +    { TIM1_CH3, STM32_EXT2 },
->>> +    { TIM2_CH2, STM32_EXT3 },
->>> +    { TIM2_CH3, STM32_EXT4 },
->>> +    { TIM2_CH4, STM32_EXT5 },
->>> +    { TIM2_TRGO, STM32_EXT6 },
->>> +    { TIM3_CH1, STM32_EXT7 },
->>> +    { TIM3_TRGO, STM32_EXT8 },
->>> +    { TIM4_CH4, STM32_EXT9 },
->>> +    { TIM5_CH1, STM32_EXT10 },
->>> +    { TIM5_CH2, STM32_EXT11 },
->>> +    { TIM5_CH3, STM32_EXT12 },
->>> +    { TIM8_CH1, STM32_EXT13 },
->>> +    { TIM8_TRGO, STM32_EXT14 },
->>> +    {}, /* sentinel */
->>> +};
->>> +
->>>  /**
->>>   * STM32 ADC registers access routines
->>>   * @adc: stm32 adc instance
->>> @@ -362,6 +412,16 @@ static int stm32_adc_conf_scan_seq(struct iio_dev *indio_dev,
->>>  static int stm32_adc_get_trig_extsel(struct iio_dev *indio_dev,
->>>                       struct iio_trigger *trig)
->>>  {
->>> +    int i;
->> Ah. This makes more sense than patch 1 on it's own did.
->>> +
->>> +    /* lookup triggers registered by stm32 timer trigger driver */
->>> +    for (i = 0; stm32f4_adc_timer_trigs[i].name; i++) {
->>> +        if (is_stm32_timer_trigger(trig) &&
->>> +            !strcmp(stm32f4_adc_timer_trigs[i].name, trig->name)) {
->>> +            return stm32f4_adc_timer_trigs[i].extsel;
->> Good. The combination of the first check and the name match should make this safe
->> against those triggers that can be assigned arbitrary names.
-> 
-> Do you wish I add a comment about it ?
-Nope. I just thought it was nicely done ;)
-> 
-> Best Regards,
-> Fabrice
-> 
->>> +        }
->>> +    }
->>> +
->>>      return -EINVAL;
->>>  }
->>>
->>>
+On Sat, Jan 28, 2017 at 4:05 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jan 26, 2017 at 11:48:58PM +0800, Icenowy Zheng wrote:
+>> As the 64-bit Allwinner H5 SoC has the same analog codec part (also the
+>> same digital part) as H3, enable the driver to be built on ARM64
+>> Allwinner platform, so that it can be used on H5.
 >>
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
