@@ -1,60 +1,132 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 7/9] dmaengine: sun6i: allow build on
- ARM64 platforms (sun50i)
-Date: Sat, 28 Jan 2017 20:47:56 +0800
-Message-ID: <CAGb2v65TmeehtPJ=ewyCMfE42xJgzr7Ak9qxOaqeD7UXoLFpvg@mail.gmail.com>
-References: <20170126154859.55855-1-icenowy@aosc.xyz> <20170126154859.55855-8-icenowy@aosc.xyz>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] iio: imu: st_lsm6dsx: add possibility to select
+ drdy pin
+Date: Sat, 28 Jan 2017 12:42:23 +0000
+Message-ID: <c707bb8f-d6df-f752-e9f0-5ec8952eece5@kernel.org>
+References: <20170122183225.2539-1-lorenzo.bianconi@st.com>
+ <20170122183225.2539-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBFFGWLCAKGQEEFMENAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170126154859.55855-8-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170122183225.2539-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2017 at 11:48 PM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
-> As 64-bot Allwinner H5 SoC has the same DMA engine with H3, the DMA
+On 22/01/17 18:32, Lorenzo Bianconi wrote:
+> Add capability to route data ready signal on pin 1 or pin 2 of the package
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
-        ^^^ typo
+Thanks,
 
-Otherwise,
-
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-
-> driver should be allowed to be built for ARM64, in order to make it work on H5.
->
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Jonathan
 > ---
-> New patch in v2, as H3 codec support is added between v1 and v2.
->
->  drivers/dma/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 0d6a96ee9fc7..d01d59812cf3 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -157,7 +157,7 @@ config DMA_SUN4I
->
->  config DMA_SUN6I
->         tristate "Allwinner A31 SoCs DMA support"
-> -       depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
-> +       depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) || COMPILE_TEST
->         depends on RESET_CONTROLLER
->         select DMA_ENGINE
->         select DMA_VIRTUAL_CHANNELS
-> --
-> 2.11.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-> For more options, visit https://groups.google.com/d/optout.
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 59 +++++++++++++++++++++++++---
+>  1 file changed, 53 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index f869dfa..c92ddcc 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -37,11 +37,14 @@
+>  #include <linux/iio/iio.h>
+>  #include <linux/iio/sysfs.h>
+>  
+> +#include <linux/platform_data/st_sensors_pdata.h>
+> +
+>  #include "st_lsm6dsx.h"
+>  
+>  #define ST_LSM6DSX_REG_ACC_DEC_MASK		GENMASK(2, 0)
+>  #define ST_LSM6DSX_REG_GYRO_DEC_MASK		GENMASK(5, 3)
+>  #define ST_LSM6DSX_REG_INT1_ADDR		0x0d
+> +#define ST_LSM6DSX_REG_INT2_ADDR		0x0e
+>  #define ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK	BIT(3)
+>  #define ST_LSM6DSX_REG_WHOAMI_ADDR		0x0f
+>  #define ST_LSM6DSX_REG_RESET_ADDR		0x12
+> @@ -532,10 +535,56 @@ static const struct iio_info st_lsm6dsx_gyro_info = {
+>  
+>  static const unsigned long st_lsm6dsx_available_scan_masks[] = {0x7, 0x0};
+>  
+> +static int st_lsm6dsx_of_get_drdy_pin(struct st_lsm6dsx_hw *hw, int *drdy_pin)
+> +{
+> +	struct device_node *np = hw->dev->of_node;
+> +	int err;
+> +
+> +	if (!np)
+> +		return -EINVAL;
+> +
+> +	err = of_property_read_u32(np, "st,drdy-int-pin", drdy_pin);
+> +	if (err == -ENODATA) {
+> +		/* if the property has not been specified use default value */
+> +		*drdy_pin = 1;
+> +		err = 0;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+> +static int st_lsm6dsx_get_drdy_reg(struct st_lsm6dsx_hw *hw, u8 *drdy_reg)
+> +{
+> +	int err = 0, drdy_pin;
+> +
+> +	if (st_lsm6dsx_of_get_drdy_pin(hw, &drdy_pin) < 0) {
+> +		struct st_sensors_platform_data *pdata;
+> +		struct device *dev = hw->dev;
+> +
+> +		pdata = (struct st_sensors_platform_data *)dev->platform_data;
+> +		drdy_pin = pdata ? pdata->drdy_int_pin : 1;
+> +	}
+> +
+> +	switch (drdy_pin) {
+> +	case 1:
+> +		*drdy_reg = ST_LSM6DSX_REG_INT1_ADDR;
+> +		break;
+> +	case 2:
+> +		*drdy_reg = ST_LSM6DSX_REG_INT2_ADDR;
+> +		break;
+> +	default:
+> +		dev_err(hw->dev, "unsupported data ready pin\n");
+> +		err = -EINVAL;
+> +		break;
+> +	}
+> +
+> +	return err;
+> +}
+> +
+>  static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+>  {
+> +	u8 data, drdy_int_reg;
+>  	int err;
+> -	u8 data;
+>  
+>  	data = ST_LSM6DSX_REG_RESET_MASK;
+>  	err = hw->tf->write(hw->dev, ST_LSM6DSX_REG_RESET_ADDR, sizeof(data),
+> @@ -563,14 +612,12 @@ static int st_lsm6dsx_init_device(struct st_lsm6dsx_hw *hw)
+>  		return err;
+>  
+>  	/* enable FIFO watermak interrupt */
+> -	err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT1_ADDR,
+> -					 ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+> +	err = st_lsm6dsx_get_drdy_reg(hw, &drdy_int_reg);
+>  	if (err < 0)
+>  		return err;
+>  
+> -	/* redirect INT2 on INT1 */
+> -	return st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_INT2_ON_INT1_ADDR,
+> -					  ST_LSM6DSX_REG_INT2_ON_INT1_MASK, 1);
+> +	return st_lsm6dsx_write_with_mask(hw, drdy_int_reg,
+> +					  ST_LSM6DSX_REG_FIFO_FTH_IRQ_MASK, 1);
+>  }
+>  
+>  static struct iio_dev *st_lsm6dsx_alloc_iiodev(struct st_lsm6dsx_hw *hw,
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
