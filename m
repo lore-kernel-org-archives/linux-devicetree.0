@@ -1,77 +1,159 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH v5 06/12] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
- functionality
-Date: Sat, 28 Jan 2017 10:16:46 +0200
-Message-ID: <00e8d2dc-bc07-addc-a5d9-8604f143627f@intel.com>
-References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
- <3546f143091c121face8ecbcbf7f6a4c41d2cec7.1484154449.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFrwxix4zY4a1x9u6jh_gPfKTsaLnD8b8crum=pc5CN3AA@mail.gmail.com>
- <2e67332d-d8c3-fd24-1f81-72675a09927a@intel.com>
- <CAPDyKFqbjeKCHp40PALydquxdF-qBk156+iOS9TYYsquJ7fK7w@mail.gmail.com>
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v8 09/12] dt-bindings: mux-adg792a: document devicetree
+ bindings for ADG792A/G mux
+Date: Sat, 28 Jan 2017 11:34:51 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1701281132460.28051@pmeerw.net>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se> <1484755035-25927-10-git-send-email-peda@axentia.se> <20170127195054.wupmfkiw6kaoc7jx@rob-hp-laptop> <383638ef-1bb2-224f-0fd0-4818395a2306@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqbjeKCHp40PALydquxdF-qBk156+iOS9TYYsquJ7fK7w@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ziji Hu <huziji@marvell.com>, Jimmy Xu <zmxu@marvell.com>, Jisheng Zhang <jszhang@marvell.com>, Nadav Haklai <nadavh@marvel>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <383638ef-1bb2-224f-0fd0-4818395a2306-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/2017 5:12 p.m., Ulf Hansson wrote:
-> On 26 January 2017 at 13:39, Adrian Hunter <adrian.hunter@intel.com> wrote:
->> On 26/01/17 12:50, Ulf Hansson wrote:
->>> On 11 January 2017 at 18:19, Gregory CLEMENT
->>> <gregory.clement@free-electrons.com> wrote:
->>>> +                       priv->init_card_type = MMC_TYPE_MMC;
->>>> +                       mmc->caps |= MMC_CAP_NONREMOVABLE;
->>>> +
->>>> +                       /*
->>>> +                        * Force to clear BUS_TEST to
->>>> +                        * skip bus_test_pre and bus_test_post
->>>> +                        */
->>>> +                       mmc->caps &= ~MMC_CAP_BUS_WIDTH_TEST;
->>>> +                       mmc->caps2 |= MMC_CAP2_HC_ERASE_SZ |
->>>
->>> This cap is a bit strange. It was added several years ago by Adrian
->>> Hunter, but I am wondering about the reason to why it's needed.
->>>
->>
->> MMC_CAP2_HC_ERASE_SZ relates to EXT-CSD ERASE_GROUP_DEF.
->>
->> I think it was added to enable people to choose whether they wanted a large
->> or small erase granularity.  That probably doesn't matter if the card
->> supports TRIM.
->>
->
-> Huh, the erase/trim/discard code in the mmc core is really hairy. :-)
->
-> In mmc_calc_max_discard() the following code/comment exists:
->
-> /*
->  * Without erase_group_def set, MMC erase timeout depends on clock
->  * frequence which can change.  In that case, the best choice is
->  * just the preferred erase size.
->  */
-> if (mmc_card_mmc(card) && !(card->ext_csd.erase_group_def & 1))
->      return card->pref_erase;
->
->
-> This makes me wonder.
->
-> So, when we haven't enabled the high capacity erase groups in the
-> EXT_CSD register (ext_csd.erase_group_def), we will use the pref_erase
-> size.
->
-> In the other case, as when having MMC_CAP2_HC_ERASE_SZ set (which will
-> set ext_csd.erase_group_def),  we will instead  do some calculations
-> to find out the max discards.
->
-> Are you saying that these calculations doesn't matter much - or are
-> you saying that we always want to do them?
+On Fri, 27 Jan 2017, Peter Rosin wrote:
 
-No, I was saying that if you have TRIM then TRIM is preferred to ERASE so 
-the erase group size does not come into play when discarding, since ERASE 
-granularity is erase groups whereas TRIM granularity is sectors.
+comments below, picking on typos
 
-However ERASE_GROUP_DEF also affects the size of write protect groups.
+> On 2017-01-27 20:50, Rob Herring wrote:
+> > On Wed, Jan 18, 2017 at 04:57:12PM +0100, Peter Rosin wrote:
+> >> Analog Devices ADG792A/G is a triple 4:1 mux.
+> >>
+> >> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+> >> ---
+> >>  .../devicetree/bindings/mux/mux-adg792a.txt        | 79 ++++++++++++++++++++++
+> >>  1 file changed, 79 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mux/mux-adg792a.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mux/mux-adg792a.txt b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
+> >> new file mode 100644
+> >> index 000000000000..0b26dd11f070
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
+> >> @@ -0,0 +1,79 @@
+> >> +Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
+> >> +
+> >> +Required properties:
+> >> +- compatible : "adi,adg792a" or "adi,adg792g"
+> >> +- #mux-control-cells : <0> if parallel, or <1> if not.
+> >> +* Standard mux-controller bindings as decribed in mux-controller.txt
+
+described
+
+> >> +
+> >> +Optional properties for ADG792G:
+> >> +- gpio-controller : if present, #gpio-cells below is required.
+> >> +- #gpio-cells : should be <2>
+> >> +			  - First cell is the GPO line number, i.e. 0 or 1
+> >> +			  - Second cell is used to specify active high (0)
+> >> +			    or active low (1)
+> >> +
+> >> +Optional properties:
+> >> +- adi,parallel : if present, the three muxes are bound together with a single
+> >> +  mux controller, controlling all three muxes in parallel.
+> > 
+> > Can't this be implied by #mux-control-cells == 0?
+> 
+> Right, good point! I'll drop adi,parallel.
+> 
+> >> +- adi,idle-state : if present, array of 2-tuples with mux controller number
+> >> +  and state that mux controllers will have when idle. States 0 through 3
+> >> +  correspond to signals A through D in the datasheet.
+> >> +- adi,idle-high-impedance : if present, array of mux controller numbers that
+> >> +  should be in the disconnected high-impedance state when idle.
+> > 
+> > Perhaps combine these 2 to a common idle-state with the index being the 
+> > mux controller number and a value of -1 (or 4) being hi-Z.
+> 
+> At one point [1] I had a straight array for the mux controllers with state 4
+> being hi-Z and state 5 being the default "leave mux as-is on release", but
+> Jonathan didn't like magic numbers. Can you please read the follow-ups to the
+> referenced mail for some background, and then pick out the most suitable color
+> for me to paint with? :-)
+> 
+> [1] https://lkml.org/lkml/2016/11/30/110
+> 
+> >> +
+> >> +Mux controller states 0 through 3 correspond to signals A through D in the
+> >> +datasheet. If a mux controller is mentioned in neither adi,idle-state nor
+
+that is already being said under 'adi,idle-state'
+
+> >> +adi,idle-high-impedance it is left in its previously selected state when idle.
+> >> +
+> >> +Example:
+> >> +
+> >> +	/*
+> >> +	 * Three independent mux controllers (of which one is used).
+> >> +	 * Mux 0 is disconnected when idle, mux 1 idles with signal C
+> >> +	 * and mux 2 idles with signal A.
+> >> +	 */
+> >> +	&i2c0 {
+> >> +		mux: adg792a@50 {
+> > 
+> > mux-controller@50
+> 
+> Yep. Hmm, where have I seen that before? :-)
+> 
+> Cheers,
+> peda
+> 
+> >> +			compatible = "adi,adg792a";
+> >> +			reg = <0x50>;
+> >> +			#mux-control-cells = <1>;
+> >> +
+> >> +			adi,idle-high-impedance = <0>;
+> >> +			adi,idle-state = <1 2>, <2 0>;
+> >> +		};
+> >> +	};
+> >> +
+> >> +	adc-mux {
+> >> +		compatible = "io-channel-mux";
+> >> +		io-channels = <&adc 0>;
+> >> +		io-channel-names = "parent";
+> >> +
+> >> +		mux-controls = <&mux 1>;
+> >> +
+> >> +		channels = "sync-1", "", "out";
+> >> +	};
+> >> +
+> >> +
+> >> +	/*
+> >> +	 * Three parallel muxes with one mux controller, useful e.g. if
+> >> +	 * the adc is differential, thus needing two signals to be muxed
+> >> +	 * simultaneously for correct operation.
+> >> +	 */
+> >> +	&i2c0 {
+> >> +		pmux: adg792a@50 {
+> >> +			compatible = "adi,adg792a";
+> >> +			reg = <0x50>;
+> >> +			#mux-control-cells = <0>;
+> >> +			adi,parallel;
+> >> +		};
+> >> +	};
+> >> +
+> >> +	diff-adc-mux {
+> >> +		compatible = "io-channel-mux";
+> >> +		io-channels = <&adc 0>;
+> >> +		io-channel-names = "parent";
+> >> +
+> >> +		mux-controls = <&pmux>;
+> >> +
+> >> +		channels = "sync-1", "", "out";
+> >> +	};
+> >> -- 
+> >> 2.1.4
+> >>
+> >> --
+> >> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
