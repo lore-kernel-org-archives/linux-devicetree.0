@@ -1,372 +1,241 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4] iio: max5481: Add support for Maxim digital
- potentiometers
-Date: Sat, 28 Jan 2017 12:14:22 +0000
-Message-ID: <6d951edc-7bb6-496d-1f9c-f651fb3740e1@kernel.org>
-References: <20170126202615.GA13816@x220.localdomain>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: [PATCH v15 0/5] generic TEE subsystem
+Date: Sat, 28 Jan 2017 13:19:39 +0100
+Message-ID: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170126202615.GA13816-SwUeJysX96B82hYKe6nXyg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, javier@javigon.com, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, devicetree@vger.kernel.org, scott.branden@broadcom.com, jean-michel.delorme@st.com, broonie@kernel.org, Al Viro <viro@ZenIV.linux.org.uk>, linux-arm-kernel@lists.infradead.org, Etienne CARRIERE <etienne.carriere@st.com>, emmanuel.michel@st.com, Eric FINCO <eric.finco@st.com>, linux-kernel@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Jens Wiklander <jens.wiklander@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26/01/17 20:26, Slawomir Stepien wrote:
-> From: Matt Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
-> 
-> Add implementation for Maxim Integrated 5481, 5482, 5483,
-> and 5484 digital potentiometer devices.
-> 
-> Datasheet:
-> http://datasheets.maximintegrated.com/en/ds/MAX5481-MAX5484.pdf
-> 
-> Signed-off-by: Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Matthew Weber <matthew.weber-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>
-> Signed-off-by: Slawomir Stepien <sst-IjDXvh/HVVUAvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Looks good to me.
-
-Applied to the togreg branch of iio.git - initially pushed out as
-testing for the magic autobuilders to play with it.
-
-Thanks for picking this one up and running with it,
-
-Jonathan
-> ---
-> 
-> This is my resubmission of this patch after original authors decided not to
-> pursuit it inclusion into kernel.
-> 
-> Tested using signal analyzer.
-> 
-> Changes since v3:
-> * spi_writes are now using literals for size parameter 
-> * using of_match_device to get the of data pointer if matched
-> * Add Acked-by
-> 
-> Changes since v2:
-> * spi write buffer moved to struct max5481_data and ____cacheline_aligned.
-> * max5481_write_cmd now uses pointer to struct max5481_data as a first argument.
-> 
-> Changes since v1:
-> * removed not needed '``' and 'c' chars
-> * includes are now sorted
-> * added coma to last item in enum max5481_variant
-> * removed maxpos from struct max5481_cfg
-> * max5481_CHANNEL is no MAX5481_CHANNEL and it does not have 'ch' argument
-> * max5481_write_cmd is now based around switch
-> * removed not needed cast in max5481_write_cmd
-> * wpier state is saved after iio_device_unregister
-> * changed names in spi_device_id and acpi_device_id to be equal to names in
-> * of_device_id
-> 
-> ---
->  .../bindings/iio/potentiometer/max5481.txt         |  23 +++
->  drivers/iio/potentiometer/Kconfig                  |  11 +
->  drivers/iio/potentiometer/Makefile                 |   1 +
->  drivers/iio/potentiometer/max5481.c                | 223 +++++++++++++++++++++
->  4 files changed, 258 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
->  create mode 100644 drivers/iio/potentiometer/max5481.c
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt b/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
-> new file mode 100644
-> index 000000000000..6a91b106e076
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/potentiometer/max5481.txt
-> @@ -0,0 +1,23 @@
-> +* Maxim Linear-Taper Digital Potentiometer MAX5481-MAX5484
-> +
-> +The node for this driver must be a child node of a SPI controller, hence
-> +all mandatory properties described in
-> +
-> +        Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +must be specified.
-> +
-> +Required properties:
-> +	- compatible:  	Must be one of the following, depending on the
-> +			model:
-> +			"maxim,max5481"
-> +			"maxim,max5482"
-> +			"maxim,max5483"
-> +			"maxim,max5484"
-> +
-> +Example:
-> +max548x: max548x@0 {
-> +	compatible = "maxim,max5482";
-> +	spi-max-frequency = <7000000>;
-> +	reg = <0>; /* chip-select */
-> +};
-> diff --git a/drivers/iio/potentiometer/Kconfig b/drivers/iio/potentiometer/Kconfig
-> index 2e9da1cf3297..8bf282510be6 100644
-> --- a/drivers/iio/potentiometer/Kconfig
-> +++ b/drivers/iio/potentiometer/Kconfig
-> @@ -15,6 +15,17 @@ config DS1803
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called ds1803.
->  
-> +config MAX5481
-> +        tristate "Maxim MAX5481-MAX5484 Digital Potentiometer driver"
-> +        depends on SPI
-> +        help
-> +          Say yes here to build support for the Maxim
-> +          MAX5481, MAX5482, MAX5483, MAX5484 digital potentiometer
-> +          chips.
-> +
-> +          To compile this driver as a module, choose M here: the
-> +          module will be called max5481.
-> +
->  config MAX5487
->          tristate "Maxim MAX5487/MAX5488/MAX5489 Digital Potentiometer driver"
->          depends on SPI
-> diff --git a/drivers/iio/potentiometer/Makefile b/drivers/iio/potentiometer/Makefile
-> index 8adb58f38c0b..2260d40e0936 100644
-> --- a/drivers/iio/potentiometer/Makefile
-> +++ b/drivers/iio/potentiometer/Makefile
-> @@ -4,6 +4,7 @@
->  
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_DS1803) += ds1803.o
-> +obj-$(CONFIG_MAX5481) += max5481.o
->  obj-$(CONFIG_MAX5487) += max5487.o
->  obj-$(CONFIG_MCP4131) += mcp4131.o
->  obj-$(CONFIG_MCP4531) += mcp4531.o
-> diff --git a/drivers/iio/potentiometer/max5481.c b/drivers/iio/potentiometer/max5481.c
-> new file mode 100644
-> index 000000000000..926554991244
-> --- /dev/null
-> +++ b/drivers/iio/potentiometer/max5481.c
-> @@ -0,0 +1,223 @@
-> +/*
-> + * Maxim Integrated MAX5481-MAX5484 digital potentiometer driver
-> + * Copyright 2016 Rockwell Collins
-> + *
-> + * Datasheet:
-> + * http://datasheets.maximintegrated.com/en/ds/MAX5481-MAX5484.pdf
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the gnu general public license version 2 as
-> + * published by the free software foundation.
-> + *
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/spi/spi.h>
-> +
-> +/* write wiper reg */
-> +#define MAX5481_WRITE_WIPER (0 << 4)
-> +/* copy wiper reg to NV reg */
-> +#define MAX5481_COPY_AB_TO_NV (2 << 4)
-> +/* copy NV reg to wiper reg */
-> +#define MAX5481_COPY_NV_TO_AB (3 << 4)
-> +
-> +#define MAX5481_MAX_POS    1023
-> +
-> +enum max5481_variant {
-> +	max5481,
-> +	max5482,
-> +	max5483,
-> +	max5484,
-> +};
-> +
-> +struct max5481_cfg {
-> +	int kohms;
-> +};
-> +
-> +static const struct max5481_cfg max5481_cfg[] = {
-> +	[max5481] = { .kohms =  10, },
-> +	[max5482] = { .kohms =  50, },
-> +	[max5483] = { .kohms =  10, },
-> +	[max5484] = { .kohms =  50, },
-> +};
-> +
-> +struct max5481_data {
-> +	struct spi_device *spi;
-> +	const struct max5481_cfg *cfg;
-> +	u8 msg[3] ____cacheline_aligned;
-> +};
-> +
-> +#define MAX5481_CHANNEL {					\
-> +	.type = IIO_RESISTANCE,					\
-> +	.indexed = 1,						\
-> +	.output = 1,						\
-> +	.channel = 0,						\
-> +	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-> +	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-> +}
-> +
-> +static const struct iio_chan_spec max5481_channels[] = {
-> +	MAX5481_CHANNEL,
-> +};
-> +
-> +static int max5481_write_cmd(struct max5481_data *data, u8 cmd, u16 val)
-> +{
-> +	struct spi_device *spi = data->spi;
-> +
-> +	data->msg[0] = cmd;
-> +
-> +	switch (cmd) {
-> +	case MAX5481_WRITE_WIPER:
-> +		data->msg[1] = val >> 2;
-> +		data->msg[2] = (val & 0x3) << 6;
-> +		return spi_write(spi, data->msg, 3);
-> +
-> +	case MAX5481_COPY_AB_TO_NV:
-> +	case MAX5481_COPY_NV_TO_AB:
-> +		return spi_write(spi, data->msg, 1);
-> +
-> +	default:
-> +		return -EIO;
-> +	}
-> +}
-> +
-> +static int max5481_read_raw(struct iio_dev *indio_dev,
-> +		struct iio_chan_spec const *chan,
-> +		int *val, int *val2, long mask)
-> +{
-> +	struct max5481_data *data = iio_priv(indio_dev);
-> +
-> +	if (mask != IIO_CHAN_INFO_SCALE)
-> +		return -EINVAL;
-> +
-> +	*val = 1000 * data->cfg->kohms;
-> +	*val2 = MAX5481_MAX_POS;
-> +
-> +	return IIO_VAL_FRACTIONAL;
-> +}
-> +
-> +static int max5481_write_raw(struct iio_dev *indio_dev,
-> +		struct iio_chan_spec const *chan,
-> +		int val, int val2, long mask)
-> +{
-> +	struct max5481_data *data = iio_priv(indio_dev);
-> +
-> +	if (mask != IIO_CHAN_INFO_RAW)
-> +		return -EINVAL;
-> +
-> +	if (val < 0 || val > MAX5481_MAX_POS)
-> +		return -EINVAL;
-> +
-> +	return max5481_write_cmd(data, MAX5481_WRITE_WIPER, val);
-> +}
-> +
-> +static const struct iio_info max5481_info = {
-> +	.read_raw = max5481_read_raw,
-> +	.write_raw = max5481_write_raw,
-> +	.driver_module = THIS_MODULE,
-> +};
-> +
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id max5481_match[] = {
-> +	{ .compatible = "maxim,max5481", .data = &max5481_cfg[max5481] },
-> +	{ .compatible = "maxim,max5482", .data = &max5481_cfg[max5482] },
-> +	{ .compatible = "maxim,max5483", .data = &max5481_cfg[max5483] },
-> +	{ .compatible = "maxim,max5484", .data = &max5481_cfg[max5484] },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max5481_match);
-> +#endif
-> +
-> +static int max5481_probe(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev;
-> +	struct max5481_data *data;
-> +	const struct spi_device_id *id = spi_get_device_id(spi);
-> +	const struct of_device_id *match;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*data));
-> +	if (!indio_dev)
-> +		return -ENOMEM;
-> +
-> +	dev_set_drvdata(&spi->dev, indio_dev);
-> +	data = iio_priv(indio_dev);
-> +
-> +	data->spi = spi;
-> +
-> +	match = of_match_device(of_match_ptr(max5481_match), &spi->dev);
-> +	if (match)
-> +		data->cfg = of_device_get_match_data(&spi->dev);
-> +	else
-> +		data->cfg = &max5481_cfg[id->driver_data];
-> +
-> +	indio_dev->name = id->name;
-> +	indio_dev->dev.parent = &spi->dev;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +
-> +	/* variant specific configuration */
-> +	indio_dev->info = &max5481_info;
-> +	indio_dev->channels = max5481_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(max5481_channels);
-> +
-> +	/* restore wiper from NV */
-> +	ret = max5481_write_cmd(data, MAX5481_COPY_NV_TO_AB, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return iio_device_register(indio_dev);
-> +}
-> +
-> +static int max5481_remove(struct spi_device *spi)
-> +{
-> +	struct iio_dev *indio_dev = dev_get_drvdata(&spi->dev);
-> +	struct max5481_data *data = iio_priv(indio_dev);
-> +
-> +	iio_device_unregister(indio_dev);
-> +
-> +	/* save wiper reg to NV reg */
-> +	return max5481_write_cmd(data, MAX5481_COPY_AB_TO_NV, 0);
-> +}
-> +
-> +static const struct spi_device_id max5481_id_table[] = {
-> +	{ "max5481", max5481 },
-> +	{ "max5482", max5482 },
-> +	{ "max5483", max5483 },
-> +	{ "max5484", max5484 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(spi, max5481_id_table);
-> +
-> +#if defined(CONFIG_ACPI)
-> +static const struct acpi_device_id max5481_acpi_match[] = {
-> +	{ "max5481", max5481 },
-> +	{ "max5482", max5482 },
-> +	{ "max5483", max5483 },
-> +	{ "max5484", max5484 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(acpi, max5481_acpi_match);
-> +#endif
-> +
-> +static struct spi_driver max5481_driver = {
-> +	.driver = {
-> +		.name  = "max5481",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(max5481_match),
-> +		.acpi_match_table = ACPI_PTR(max5481_acpi_match),
-> +	},
-> +	.probe = max5481_probe,
-> +	.remove = max5481_remove,
-> +	.id_table = max5481_id_table,
-> +};
-> +
-> +module_spi_driver(max5481_driver);
-> +
-> +MODULE_AUTHOR("Maury Anderson <maury.anderson-lFk7bPDcGtkY5TsXZYaR1UEOCMrvLtNR@public.gmane.org>");
-> +MODULE_DESCRIPTION("max5481 SPI driver");
-> +MODULE_LICENSE("GPL v2");
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGksCgpUaGlzIHBhdGNoIHNldCBpbnRyb2R1Y2VzIGEgZ2VuZXJpYyBURUUgc3Vic3lzdGVtLiBU
+aGVzZSBwYXRjaGVzIGFyZSB1c2VkCm9uIEhpS2V5IGluIEFPU1AuIEl0J3MgY3VycmVudGx5IHN1
+cHBvcnRlZCBieSByb3VnaGx5IDIwIHBsYXRmb3JtcwooaHR0cHM6Ly9naXRodWIuY29tL09QLVRF
+RS9vcHRlZV9vcyMzLXBsYXRmb3Jtcy1zdXBwb3J0ZWQpLCB0byBuYW1lIGEgZmV3LApSZW5lc2Fz
+IFJDQVIgSDMsIFNlcXVpdHVyIExhYnMgQ29yZVRFRSwgV2luZCBSaXZlciBWeFdvcmtzIGV0Yy4K
+ClRoZSBURUUgc3Vic3lzdGVtIHdpbGwgY29udGFpbiBkcml2ZXJzIGZvciB2YXJpb3VzIFRFRSBp
+bXBsZW1lbnRhdGlvbnMuIEEKVEVFIChUcnVzdGVkIEV4ZWN1dGlvbiBFbnZpcm9ubWVudCkgaXMg
+YSB0cnVzdGVkIE9TIHJ1bm5pbmcgaW4gc29tZSBzZWN1cmUKZW52aXJvbm1lbnQsIGZvciBleGFt
+cGxlLCBUcnVzdFpvbmUgb24gQVJNIENQVXMsIG9yIGEgc2VwYXJhdGUgc2VjdXJlCmNvLXByb2Nl
+c3NvciBldGMuCgpSZWdhcmRpbmcgdXNlIGNhc2VzLCBUcnVzdFpvbmUgaGFzIHRyYWRpdGlvbmFs
+bHkgYmVlbiB1c2VkIGZvcgpvZmZsb2FkaW5nIHNlY3VyZSB0YXNrcyB0byB0aGUgc2VjdXJlIHdv
+cmxkLiBFeGFtcGxlcyBpbmNsdWRlOiAKLSBTZWN1cmUga2V5IGhhbmRsaW5nIHdoZXJlIHRoZSBP
+UyBtYXkgb3IgbWF5IG5vdCBoYXZlIGRpcmVjdCBhY2Nlc3MgdG8ga2V5CiAgbWF0ZXJpYWwuCi0g
+RS1jb21tZXJjZSBhbmQgcGF5bWVudCB0ZWNobm9sb2dpZXMuIENyZWRlbnRpYWxzLCBjcmVkaXQg
+Y2FyZCBudW1iZXJzIGV0YwogIGNvdWxkIGJlIHN0b3JlZCBpbiBhIG1vcmUgc2VjdXJlIGVudmly
+b25tZW50LgotIFRydXN0ZWQgVXNlciBJbnRlcmZhY2UgKFRVSSkgdG8gZW5zdXJlIHRoYXQgbm8t
+b25lIGNhbiBzbm9vcCBQSU4tY29kZXMKICBldGMuCi0gU2VjdXJlIGJvb3QgdG8gZW5zdXJlIHRo
+YXQgbG9hZGVkIGJpbmFyaWVzIGhhdmVu4oCZdCBiZWVuIHRhbXBlcmVkIHdpdGguCiAgSXTigJlz
+IG5vdCBzdHJpY3RseSBuZWVkZWQgZm9yIHNlY3VyZSBib290LCBidXQgeW91IGNvdWxkIGVuaGFu
+Y2Ugc2VjdXJpdHkKICBieSBsZXZlcmFnaW5nIGEgVEVFIGR1cmluZyBib290LgotIERpZ2l0YWwg
+UmlnaHRzIE1hbmFnZW1lbnQgKERSTSksIHRoZSBzdHVkaW9zIHByb3ZpZGVzIGNvbnRlbnQgd2l0
+aAogIGRpZmZlcmVudCByZXNvbHV0aW9uIGRlcGVuZGluZyBvbiB0aGUgc2VjdXJpdHkgb2YgdGhl
+IGRldmljZS4gSGlnaGVyCiAgc2VjdXJpdHkgbWVhbnMgaGlnaGVyIHJlc29sdXRpb24uCgpBIFRF
+RSBjb3VsZCBhbHNvIGJlIHVzZWQgaW4gZXhpc3RpbmcgYW5kIG5ldyB0ZWNobm9sb2dpZXMuIEZv
+ciBleGFtcGxlIElNQQooSW50ZWdyaXR5IE1lYXN1cmVtZW50IEFyY2hpdGVjdHVyZSkgd2hpY2gg
+aGFzIGJlZW4gaW4gdGhlIGtlcm5lbCBmb3IgcXVpdGUKYSB3aGlsZS4gVG9kYXkgeW91IGNhbiBl
+bmhhbmNlIHNlY3VyaXR5IGJ5IHVzaW5nIGEgVFBNLWNoaXAgdG8gc2lnbiB0aGUgSU1BCm1lYXN1
+cmVtZW50IGxpc3QuIFRoaXMgaXMgc29tZXRoaW5nIHRoYXQgYWxzbyBoYXMgYmVlbiBkb25lIGlu
+IHByYWN0aWNhbApzeXN0ZW1zIGJ5IGxldmVyYWdpbmcgYSBURUUuCgpBbm90aGVyIGV4YW1wbGUg
+Y291bGQgYmUgaW4gMi1mYWN0b3IgYXV0aGVudGljYXRpb24gd2hpY2ggaXMgYmVjb21pbmcKaW5j
+cmVhc2luZ2x5IG1vcmUgaW1wb3J0YW50LiBGSURPIChodHRwczovL2ZpZG9hbGxpYW5jZS5vcmcp
+IGZvciBleGFtcGxlCmFyZSB1c2luZyBwdWJsaWMga2V5IGNyeXB0b2dyYXBoeSBpbiB0aGVpciAy
+LWZhY3RvciBhdXRoZW50aWNhdGlvbiBzdGFuZGFyZAooVTJGKS4gV2l0aCBGSURPLCBhIHByaXZh
+dGUgYW5kIHB1YmxpYyBrZXkgcGFpciB3aWxsIGJlIGdlbmVyYXRlZCBmb3IgZXZlcnkKc2l0ZSB5
+b3UgdmlzaXQgYW5kIHRoZSBwcml2YXRlIGtleSBzaG91bGQgbmV2ZXIgbGVhdmUgdGhlIGxvY2Fs
+IGRldmljZS4KVGhpcyBpcyBhbiBleGFtcGxlIHdoZXJlIHlvdSBjb3VsZCB1c2Ugc2VjdXJlIHN0
+b3JhZ2UgaW4gYSBURUUgZm9yIHRoZQpwcml2YXRlIGtleS4KClRvZGF5IHlvdSB3aWxsIGZpbmQg
+YSBxdWl0ZSBhIGZldyBkaWZmZXJlbnQgb3V0IG9mIHRyZWUgaW1wbGVtZW50YXRpb25zIG9mClRF
+RSBkcml2ZXJzIHdoaWNoIHRlbmRzIHRvIGZyYWdtZW50IHRoZSBURUUgZWNvc3lzdGVtIGFuZCBk
+ZXZlbG9wbWVudC4gV2UKdGhpbmsgaXQgd291bGQgYmUgYSBnb29kIGlkZWEgdG8gaGF2ZSBhIGdl
+bmVyaWMgVEVFIGRyaXZlciBpbnRlZ3JhdGVkIGluCnRoZSBrZXJuZWwgd2hpY2ggd291bGQgc2Vy
+dmUgYXMgYSBiYXNlIGZvciBzZXZlcmFsIGRpZmZlcmVudCBURUUgc29sdXRpb25zLApubyBtYXR0
+ZXIgaWYgdGhleSBhcmUgb24tY2hpcCBsaWtlIFRydXN0Wm9uZSBvciBpZiB0aGV5IGFyZSBvbiBh
+IHNlcGFyYXRlCmNyeXB0byBjby1wcm9jZXNzb3IuCgpUbyBkZXZlbG9wIHRoaXMgVEVFIHN1YnN5
+c3RlbSB3ZSBoYXZlIGJlZW4gdXNpbmcgdGhlIG9wZW4gc291cmNlIFRFRSBjYWxsZWQKT1AtVEVF
+IChodHRwczovL3d3dy5vcC10ZWUub3JnLykgYW5kIHRoZXJlZm9yZSB0aGlzIHdvdWxkIGJlIHRo
+ZSBmaXJzdCBURUUKc29sdXRpb24gc3VwcG9ydGVkIGJ5IHRoaXMgbmV3IHN1YnN5c3RlbS4gT1At
+VEVFIGlzIGEgR2xvYmFsUGxhdGZvcm0KY29tcGxpYW50IFRFRSwgaG93ZXZlciB0aGlzIFRFRSBz
+dWJzeXN0ZW0gaXMgbm90IGxpbWl0ZWQgdG8gb25seQpHbG9iYWxQbGF0Zm9ybSBURUVzLCBpbnN0
+ZWFkIHdlIGhhdmUgdHJpZWQgdG8gZGVzaWduIGl0IHNvIHRoYXQgaXQgc2hvdWxkCndvcmsgd2l0
+aCBvdGhlciBURUUgc29sdXRpb25zIGFsc28uIFNpbmNlIHRoZSBmaXJzdCB2ZXJzaW9uICgyMDE1
+IEFwcmlsKSBvZgp0aGlzIHBhdGNoc2V0IHdl4oCZdmUgdGFsa2VkIGFib3V0IGl0IGF0IExpbmFy
+byBDb25uZWN0LCBHbG9iYWxQbGF0Zm9ybQphbm51YWwgVEVFIGNvbmZlcmVuY2UgYW5kIGxhc3Qg
+dGltZSBhdCBMaW51eCBQbHVtYmVycywgc28gd2UgdGhpbmsgdGhlcmUKaGFzIGJlZW4gYm90aCBl
+eHBvc3VyZSBhbmQgcGxlbnR5IG9mIHRpbWUgdG8gYmUgYWJsZSB0byBnZXQgaW52b2x2ZWQgaW4K
+dGhpcyB3b3JrLgoKInRlZTogZ2VuZXJpYyBURUUgc3Vic3lzdGVtIiBicmluZ3MgaW4gdGhlIGdl
+bmVyaWMgVEVFIHN1YnN5c3RlbSB3aGljaApoZWxwcyB3aGVuIHdyaXRpbmcgYSBkcml2ZXIgZm9y
+IGEgc3BlY2lmaWMgVEVFLCBmb3IgZXhhbXBsZSwgT1AtVEVFLgoKInRlZTogYWRkIE9QLVRFRSBk
+cml2ZXIiIGlzIGFuIE9QLVRFRSBkcml2ZXIgd2hpY2ggdXNlcyB0aGUgc3Vic3lzdGVtIHRvIGRv
+Cml0cyB3b3JrLgoKVGhpcyBwYXRjaCBzZXQgaGFzIGJlZW4gcHJlcGFyZWQgaW4gY29vcGVyYXRp
+b24gd2l0aCBKYXZpZXIgR29uesOhbGV6IHdobwpwcm9wb3NlZCAiR2VuZXJpYyBUcnVzdFpvbmUg
+RHJpdmVyIGluIExpbnV4IEtlcm5lbCIgcGF0Y2hlcyAyOCBOb3YgMjAxNCwKaHR0cHM6Ly9sd24u
+bmV0L0FydGljbGVzLzYyMzM4MC8gLiBXZSd2ZSBzaW5jZSB0aGVuIGNoYW5nZWQgdGhlIHNjb3Bl
+IHRvClRFRSBpbnN0ZWFkIG9mIFRydXN0Wm9uZS4KCldlIGhhdmUgZGlzY3Vzc2VkIHRoZSBkZXNp
+Z24gb24gdGVlLWRldkBsaXN0cy5saW5hcm8ub3JnIChhcmNoaXZlIGF0Cmh0dHBzOi8vbGlzdHMu
+bGluYXJvLm9yZy9waXBlcm1haWwvdGVlLWRldi8pIHdpdGggcGVvcGxlIGZyb20gb3RoZXIKY29t
+cGFuaWVzLCBpbmNsdWRpbmcgVmFsZW50aW4gTWFuZWEgPHZhbGVudGluLm1hbmVhQGh1YXdlaS5j
+b20+LApFbW1hbnVlbCBNSUNIRUwgPGVtbWFudWVsLm1pY2hlbEBzdC5jb20+LApKZWFuLW1pY2hl
+bCBERUxPUk1FIDxqZWFuLW1pY2hlbC5kZWxvcm1lQHN0LmNvbT4sCmFuZCBKb2FraW0gQmVjaCA8
+am9ha2ltLmJlY2hAbGluYXJvLm9yZz4uIE91ciBtYWluIGNvbmNlcm4gaGFzIGJlZW4gdG8KYWdy
+ZWUgb24gc29tZXRoaW5nIHRoYXQgaXMgZ2VuZXJpYyBlbm91Z2ggdG8gc3VwcG9ydCBtYW55IGRp
+ZmZlcmVudApURUVzIHdoaWxlIHN0aWxsIGtlZXBpbmcgdGhlIGludGVyZmFjZSB0b2dldGhlci4K
+CnYxNToKKiBSZWJhc2VkIG9uIHY0LjEwLXJjNQoqIEFkZHJlc3NlZCByZXZpZXcgY29tbWVudHMg
+ZnJvbSBBcm5kIEJlcmdtYW5uLCB3aXRoIHRoZXNlIGhpZ2h0bGlndHM6CiAgLSBSZW1vdmUgdGhl
+IHBsYXRmb3JtIGRldmljZSBpbiBPUC1URUUgZHJpdmVyCiAgLSBDb21tZW50IG9uIG9wdGVlIGNh
+bGwgcXVldWUgd2FpdCBmdW5jdGlvbnMgdG8gbWFrZSBpdCBlYXNpZXIgdG8gc2VlCiAgICB0aGUg
+cHVycG9zZQogIC0gUmVwbGFjZSBjYWxscyB0byBpb3JlbWFwX2NhY2hlKCkgd2l0aCBjYWxscyB0
+byBtZW1yZW1hcCgpCiAgLSBSZW1vdmUgT1BURUVfTVNHX09TX09QVEVFX1JFVklTSU9OXyosIHRo
+YXQgYXJlbid0IHVzZWQgb3Iga2VwdCB1cCB0byBkYXRlCiAgLSBFeHRlbmQgZGVzY3JpcHRpb24g
+b2YgT1BURUVfTVNHX1JQQ19DTURfV0FJVF9RVUVVRQogIC0gUmVtb3ZlIE9QVEVFX01TR19HRVRf
+UEFSQU1TIGluc3RlYWQgaGF2ZSBhIHN0cnVjdCBvcHRlZV9tc2dfcGFyYW0gcGFyYW1zW10KICAg
+IGF0IHRoZSBlbmQgb2Ygc3RydWN0IG9wdGVlX21zZ19hcmcKICAtIGdldCByaWQgb2YgdW5pb24g
+aW4gc3RydWN0IHRlZV9pb2N0bF9wYXJhbQogIC0gYWRkIHBhcmFtc1tdIHRvIHN0cnVjdCB0ZWVf
+aW9jdGxfb3Blbl9zZXNzaW9uX2FyZywgc3RydWN0CiAgICB0ZWVfaW9jbF9zdXBwX3JlY3ZfYXJn
+IGFuZCBzdHJ1Y3QgdGVlX2lvY2xfc3VwcF9zZW5kX2FyZwoqICJhcm02NDogZHQ6IGhpa2V5OiBB
+ZGQgb3B0ZWUgbm9kZSIKICBBY2tlZC1ieTogV2VpIFh1IDx4dXdlaTVAaGlzaWxpY29uLmNvbT4K
+KiBUZXN0ZWQtYnk6IFNjb3R0IEJyYW5kZW4gPHNjb3R0LmJyYW5kZW5AYnJvYWRjb20uY29tPgoK
+djE0OgoqIFJlYmFzZWQgb24gdjQuMTAtcmM0CiogRml4ZWQgY2hlY2twYXRjaCB3YXJuaW5nIGlu
+IE9QVEVFX1NNQ19SRVRVUk5fSVNfUlBDKCkgbWFjcm8KCnYxMzoKKiBSZWJhc2VkIG9uIHY0Ljkt
+cmM1CiogQWRkZWQgSGlrZXkgRFQgcGF0Y2gKKiBUZXN0ZWQtYnk6IEplcm9tZSBGb3Jpc3NpZXIg
+PGplcm9tZS5mb3Jpc3NpZXJAbGluYXJvLm9yZz4gKEhpS2V5KQoqIFRlc3RlZC1ieTogVm9sb2R5
+bXlyIEJhYmNodWsgPHZsYWQuYmFiY2h1a0BnbWFpbC5jb20+IChSQ0FSIEgzKQoqIFRlc3RlZC1i
+eTogQW5kcmV3IEYuIERhdmlzIDxhZmRAdGkuY29tPiAKCnYxMi1yZXNlbmQ6CiogUmViYXNlZCBv
+biB2NC45LXJjMgoKdjEyOgoqIFJlYmFzZWQgb24gdjQuOC1yYzUKKiBBZGRyZXNzZWQgcmV2aWV3
+IGNvbW1lbnRzIGZyb20gQW5kcmV3IEYuIERhdmlzCiogUmVtb3ZlZCBBY2tlZC1ieTogQW5kcmVh
+cyBEYW5uZW5iZXJnIDxkYW5uZW5iZXJnQHRpLmNvbT4gYXMgdGhlCiAgbWFpbCBib3VuY2VzCiog
+QnVnZml4IHBvc3NpYmxlIG51bGwgZGVyZWZlcmVuY2UgaW4gZXJyb3IgY2xlYW51cCBwYXRoIG9m
+CiAgb3B0ZWVfcHJvYmUoKS4KKiBCdWdmaXggb3B0ZWVfZnJvbV9tc2dfcGFyYW0oKSB3aGVuIGNh
+bGN1bGF0aW5nIG9mZnNldCBvZiBtZW1yZWYKICBpbnRvIGEgc2hhcmVkIG1lbW9yeSBvYmplY3QK
+CnYxMToKKiBSZWJhc2VkIG9uIHY0LjgtcmMzCiogQWRkcmVzc2VkIHJldmlldyBjb21tZW50cyBm
+cm9tIE5pc2hhbnRoIE1lbm9uCiogTWFkZSB0aGUgVEVFIGZyYW1ld29yayBhdmFpbGFibGUgYXMg
+YSBsb2FkYWJsZSBtb2R1bGUuCiogUmV2aWV3ZWQtYnk6IEphdmllciBHb256w6FsZXogPGphdmll
+ckBqYXZpZ29uLmNvbT4KKiBaZXJvZXMgc2hhcmVkIG1lbW9yeSBvbiBhbGxvY2F0aW9uIHRvIGF2
+b2lkIGluZm9ybWF0aW9uIGxlYWthZ2UKKiBMaW5rcyBzaGFyZWQgbWVtb3J5IG9iamVjdHMgdG8g
+Y29udGV4dCB0byBhdm9pZCBzdGVhbGluZyBvZiBzaGFyZWQgbWVtb3J5CiAgb2JqZWN0IGZyb20g
+YW4gdW5yZWxhdGVkIHByb2Nlc3MKKiBBbGxvdyBSUEMgaW50ZXJydXB0aW9uIGlmIHN1cHBsaWNh
+bnQgaXMgdW5hdmFpbGFibGUKCnYxMDoKKiBSZWJhc2VkIG9uIHY0LjctcmMxCiogQWRkcmVzc2Vk
+IHByaXZhdGUgcmV2aWV3IGNvbW1lbnRzIGZyb20gTmlzaGFudGggTWVub24KKiBPcHRlZSBkcml2
+ZXIgb25seSBhY2NlcHRzIG9uZSBzdXBwbGljYW50IHByb2Nlc3Mgb24gdGhlIHByaXZpbGVnZWQg
+ZGV2aWNlCiogT3B0ZWUgZHJpdmVyIGF2b2lkcyBsb25nIGRlbGF5ZWQgcmVsZWFzZXMgb2Ygc2ht
+IG9iamVjdHMKKiBBZGRlZCBtb3JlIGNvbW1lbnRzIG9uIGZ1bmN0aW9ucyBhbmQgc3RydWN0cwoK
+djk6CiogUmViYXNlZCBvbiB2NC42LXJjMQoqIEFja2VkLWJ5OiBBbmRyZWFzIERhbm5lbmJlcmcg
+PGRhbm5lbmJlcmdAdGkuY29tPgoqIEFkZHJlc3NlZCBjb21tZW50cyBmcm9tIEFsIFZpcm8gaG93
+IGZpbGUgZGVzY3JpcHRvcnMgYXJlIHBhc3NlZCB0bwogIHVzZXIgc3BhY2UKKiBBZGRyZXNzZWQg
+Y29tbWVudHMgZnJvbSBSYW5keSBEdW5sYXAgb24gZG9jdW1lbnRhdGlvbgoqIENoYW5nZWQgbGlj
+ZW5zZSBmb3IgaW5jbHVkZS91YXBpL2xpbnV4L3RlZS5oCgp2ODoKKiBSZWJhc2VkIG9uIHY0LjUt
+cmMzCiogZHQvYmluZGluZ3M6IGFkZCBiaW5kaW5ncyBmb3Igb3B0ZWUKICBBY2tlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KKiBGaXhlcyBidWlsZCBlcnJvciBmb3IgWDg2Ciog
+Rml4ZXMgc3BlbGwgZXJyb3IgaW4gImR0L2JpbmRpbmdzOiBhZGQgYmluZGluZ3MgZm9yIG9wdGVl
+IgoKdjc6CiogUmViYXNlZCBvbiB2NC41LXJjMgoqIE1vdmVkIHRoZSBBUk0gU01DIENhbGxpbmcg
+Q29udmVudGlvbiBzdXBwb3J0IGludG8gYSBzZXBhcmF0ZSBwYXRjaAogIHNldCwgd2hpY2ggaXMg
+bm93IG1lcmdlZAoKdjY6CiogUmViYXNlZCBvbiB2NC4zLXJjNwoqIENoYW5nZWQgc21jY2MgaW50
+ZXJmYWNlIHRvIGxldCB0aGUgY29tcGlsZXIgbWFyc2hhbCBtb3N0IG9mIHRoZQogIHBhcmFtZXRl
+cnMKKiBBZGRlZCBBUkNINjQgY2FwYWJpbGl0eSBmb3Igc21jY2MgaW50ZXJmYWNlCiogQ2hhbmdl
+ZCB0aGUgUFNDSSBmaXJtd2FyZSBjYWxscyAoYm90aCBhcm0gYW5kIGFybTY0KSB0byB1c2UgdGhl
+IG5ldwogIGdlbmVyaWMgc21jY2MgaW50ZXJmYWNlIGluc3RlYWQgaW5zdGVhZCBvZiBvd24gYXNz
+ZW1ibHkgZnVuY3Rpb25zLgoqIE1vdmUgb3B0ZWUgRFQgYmluZGluZ3MgdG8gYmVsb3cgYXJtL2Zp
+cm13YXJlCiogRGVmaW5lcyBtZXRob2QgZm9yIE9QLVRFRSBkcml2ZXIgdG8gY2FsbCBzZWN1cmUg
+d29ybGQgaW4gRFQsIHNtYyBvciBodmMKKiBFeHBvc2VzIGltcGxlbWVudGF0aW9uIGlkIG9mIGEg
+VEVFIGRyaXZlciBpbiBzeXNmcwogIHRvIGVhc2lseSBzcGF3biBjb3JyZXNwb25kaW5nIHRlZS1z
+dXBwbGljYW50IHdoZW4gZGV2aWNlIGlzIHJlYWR5CiogVXBkYXRlIE9QLVRFRSBNZXNzYWdlIFBy
+b3RvY29sIHRvIGJldHRlciBjb3BlIHdpdGggZnJhZ21lbnRlZCBwaHlzaWNhbAogIG1lbW9yeQoq
+IFJlYWQgdGltZSBkaXJlY3RseSBmcm9tIE9QLVRFRSBkcml2ZXIgaW5zdGVhZCBvZiBmb3J3YXJk
+aW5nIHRoZSBSUEMKICByZXF1ZXN0IHRvIHRlZS1zdXBwbGljYW50Cgp2NToKKiBSZXBsYWNlZCBr
+cmVmIHJlZmVyZW5jZSBjb3VudGluZyBmb3IgdGhlIGRldmljZSB3aXRoIGEgc2l6ZV90IGluc3Rl
+YWQgYXMKICB0aGUgY291bnRlciBpcyBhbHdheXMgcHJvdGVjdGVkIGJ5IGEgbXV0ZXgKCnY0Ogoq
+IFJlYmFzZWQgb24gNC4xCiogUmVkZXNpZ25lZCB0aGUgc3luY2hyb25pemF0aW9uIGFyb3VuZCBl
+bnRyeSBleGl0IG9mIG5vcm1hbCBTTUMKKiBSZXBsYWNlZCByd3NlbSBvbiB0aGUgZHJpdmVyIGlu
+c3RhbmNlIHdpdGgga3JlZiBhbmQgY29tcGxldGlvbiBzaW5jZQogIHJ3c2VtIHdhc24ndCBpbnRl
+bmRlZCB0byBiZSB1c2VkIGluIHRoaXMgd2F5CiogRXhwYW5kZWQgdGhlIFRFRV9JT0NUTF9QQVJB
+TV9BVFRSX1RZUEVfTUFTSyB0byBtYWtlIHJvb20gZm9yCiAgZnV0dXJlIGFkZGl0aW9uYWwgcGFy
+YW1ldGVyIHR5cGVzCiogRG9jdW1lbnRzIFRFRSBzdWJzeXN0ZW0gYW5kIE9QLVRFRSBkcml2ZXIK
+KiBSZXBsYWNlZCBURUVfSU9DX0NNRCB3aXRoIFRFRV9JT0NfT1BFTl9TRVNTSU9OLCBURUVfSU9D
+X0lOVk9LRSwKICBURUVfSU9DX0NBTkNFTCBhbmQgVEVFX0lPQ19DTE9TRV9TRVNTSU9OCiogRFQg
+YmluZGluZ3MgaW4gYSBzZXBhcmF0ZSBwYXRjaAoqIEFzc2VtYmx5IHBhcnRzIG1vdmVkIHRvIGFy
+Y2gvYXJtIGFuZCBhcmNoL2FybTY0IHJlc3BlY3RpdmVseSwgaW4gYQogIHNlcGFyYXRlIHBhdGNo
+CiogUmVkZWZpbmVkL2NsYXJpZmllZCB0aGUgbWVhbmluZyBvZiBPUFRFRV9TTUNfU0hNX0NBQ0hF
+RAoqIFJlbW92ZWQgQ01BIHVzYWdlIHRvIGxpbWl0IHRoZSBzY29wZSBvZiB0aGUgcGF0Y2ggc2V0
+Cgp2MzoKKiBSZWJhc2VkIG9uIDQuMS1yYzMgKGRtYV9idWZfZXhwb3J0KCkgQVBJIGNoYW5nZSkK
+KiBBIGNvdXBsZSBvZiBzbWFsbCBzcGFyc2UgZml4ZXMKKiBEb2N1bWVudHMgYmluZGluZ3MgZm9y
+IE9QLVRFRSBkcml2ZXIKKiBVcGRhdGVkIE1BSU5UQUlORVJTCgp2MjoKKiBSZXBsYWNlZCB0aGUg
+c3R1YmJlZCBPUC1URUUgZHJpdmVyIHdpdGggYSByZWFsIE9QLVRFRSBkcml2ZXIKKiBSZW1vdmVk
+IG1vc3QgQVBJcyBub3QgbmVlZGVkIGJ5IE9QLVRFRSBpbiBjdXJyZW50IHN0YXRlCiogVXBkYXRl
+IERvY3VtZW50YXRpb24vaW9jdGwvaW9jdGwtbnVtYmVyLnR4dCB3aXRoIGNvcnJlY3QgcGF0aCB0
+byB0ZWUuaAoqIFJlbmFtZSB0ZWVfc2htX3Bvb2xfYWxsb2NfY21hKCkgdG8gdGVlX3NobV9wb29s
+X2FsbG9jKCkKKiBNb3ZlZCB0ZWUuaCBpbnRvIGluY2x1ZGUvdWFwaS9saW51eC8KKiBSZWRlZmlu
+ZWQgdGVlLmggSU9DVEwgbWFjcm9zIHRvIGJlIGRpcmVjdGx5IGJhc2VkIG9uIF9JT1IgYW5kIGZy
+aWVuZHMKKiBSZW1vdmVkIHZlcnNpb24gaW5mbyBvbiB0aGUgQVBJIHRvIHVzZXIgc3BhY2UsIGEg
+ZGF0YSBibG9iIHdoaWNoCiAgY2FuIGNvbnRhaW4gYW4gVVVJRCBpcyBsZWZ0IGZvciB1c2VyIHNw
+YWNlIHRvIGJlIGFibGUgdG8gdGVsbCB3aGljaAogIHByb3RvY29sIHRvIHVzZSBpbiBURUVfSU9D
+X0NNRAoqIENoYW5nZWQgdXNlciBzcGFjZSBleHBvc2VkIHN0cnVjdHVyZXMgdG8gb25seSBoYXZl
+IHR5cGVzIHdpdGggX18gcHJlZml4CiogRHJvcHBlZCBUSElTX01PRFVMRSBmcm9tIHRlZV9mb3Bz
+CiogUmV3b3JrZWQgaG93IHRoZSBkcml2ZXIgaXMgcmVnaXN0ZXJlZCBhbmQgcmVmIGNvdW50ZWQ6
+CiAgLSBtb3ZlZCBmcm9tIHVzaW5nIGFuIGVtYmVkZGVkIHN0cnVjdCBtaXNjZGV2aWNlIHRvIGFu
+IGVtYmVkZGVkIHN0cnVjdAogICAgZGV2aWNlLgogIC0gdXNlcyBhbiBzdHJ1Y3Qgcndfc2VtYXBo
+b3JlIGFzIHN5bmNocm9uaXphdGlvbiBmb3IgZHJpdmVyIGRldGFjaG1lbnQKICAtIHVzZXMgYWxs
+b2MvcmVnaXN0ZXIgcGF0dGVybiBmcm9tIFRQTQoKVGhhbmtzLApKZW5zCgoKCkplbnMgV2lrbGFu
+ZGVyICg0KToKICBkdC9iaW5kaW5nczogYWRkIGJpbmRpbmdzIGZvciBvcHRlZQogIHRlZTogZ2Vu
+ZXJpYyBURUUgc3Vic3lzdGVtCiAgdGVlOiBhZGQgT1AtVEVFIGRyaXZlcgogIERvY3VtZW50YXRp
+b246IHRlZSBzdWJzeXN0ZW0gYW5kIG9wLXRlZSBkcml2ZXIKCkplcm9tZSBGb3Jpc3NpZXIgKDEp
+OgogIGFybTY0OiBkdDogaGlrZXk6IEFkZCBvcHRlZSBub2RlCgogRG9jdW1lbnRhdGlvbi8wMC1J
+TkRFWCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwogLi4uL2JpbmRpbmdzL2Fy
+bS9maXJtd2FyZS9saW5hcm8sb3B0ZWUtdHoudHh0ICAgICAgfCAgMzEgKwogLi4uL2RldmljZXRy
+ZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgIDEgKwogRG9jdW1lbnRh
+dGlvbi9pb2N0bC9pb2N0bC1udW1iZXIudHh0ICAgICAgICAgICAgICAgfCAgIDEgKwogRG9jdW1l
+bnRhdGlvbi90ZWUudHh0ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMTggKysrCiBN
+QUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAxMyAr
+CiBhcmNoL2FybTY0L2Jvb3QvZHRzL2hpc2lsaWNvbi9oaTYyMjAtaGlrZXkuZHRzICAgICB8ICAg
+NyArCiBkcml2ZXJzL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMiArCiBkcml2ZXJzL01ha2VmaWxlICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICAgMSArCiBkcml2ZXJzL3RlZS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICB8ICAxOCArCiBkcml2ZXJzL3RlZS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICB8ICAgNSArCiBkcml2ZXJzL3RlZS9vcHRlZS9LY29uZmlnICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8ICAgNyArCiBkcml2ZXJzL3RlZS9vcHRlZS9NYWtlZmlsZSAgICAgICAgICAg
+ICAgICAgICAgICAgICB8ICAgNSArCiBkcml2ZXJzL3RlZS9vcHRlZS9jYWxsLmMgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8IDQ0NCArKysrKysrKysrCiBkcml2ZXJzL3RlZS9vcHRlZS9jb3Jl
+LmMgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDYwMyArKysrKysrKysrKysrKwogZHJpdmVy
+cy90ZWUvb3B0ZWUvb3B0ZWVfbXNnLmggICAgICAgICAgICAgICAgICAgICAgfCA0MTggKysrKysr
+KysrKwogZHJpdmVycy90ZWUvb3B0ZWUvb3B0ZWVfcHJpdmF0ZS5oICAgICAgICAgICAgICAgICAg
+fCAxODMgKysrKysKIGRyaXZlcnMvdGVlL29wdGVlL29wdGVlX3NtYy5oICAgICAgICAgICAgICAg
+ICAgICAgIHwgNDUwICsrKysrKysrKysrCiBkcml2ZXJzL3RlZS9vcHRlZS9ycGMuYyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8IDM5NiArKysrKysrKysKIGRyaXZlcnMvdGVlL29wdGVlL3N1
+cHAuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjczICsrKysrKysKIGRyaXZlcnMvdGVl
+L3RlZV9jb3JlLmMgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgODkxICsrKysrKysrKysr
+KysrKysrKysrKwogZHJpdmVycy90ZWUvdGVlX3ByaXZhdGUuaCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfCAxMjkgKysrCiBkcml2ZXJzL3RlZS90ZWVfc2htLmMgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDM1NyArKysrKysrKysKIGRyaXZlcnMvdGVlL3RlZV9zaG1fcG9vbC5jICAg
+ICAgICAgICAgICAgICAgICAgICAgIHwgMTU2ICsrKysKIGluY2x1ZGUvbGludXgvdGVlX2Rydi5o
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMjc2ICsrKysrKysKIGluY2x1ZGUvdWFwaS9s
+aW51eC90ZWUuaCAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMzQ2ICsrKysrKysrCiAyNiBm
+aWxlcyBjaGFuZ2VkLCA1MTMzIGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2Zpcm13YXJlL2xpbmFybyxvcHRlZS10
+ei50eHQKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL3RlZS50eHQKIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9LY29uZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy90ZWUvTWFrZWZpbGUKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9LY29u
+ZmlnCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90ZWUvb3B0ZWUvTWFrZWZpbGUKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9jYWxsLmMKIGNyZWF0ZSBtb2RlIDEwMDY0
+NCBkcml2ZXJzL3RlZS9vcHRlZS9jb3JlLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3Rl
+ZS9vcHRlZS9vcHRlZV9tc2cuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdGVlL29wdGVl
+L29wdGVlX3ByaXZhdGUuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdGVlL29wdGVlL29w
+dGVlX3NtYy5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90ZWUvb3B0ZWUvcnBjLmMKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3RlZS9vcHRlZS9zdXBwLmMKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL3RlZS90ZWVfY29yZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy90
+ZWUvdGVlX3ByaXZhdGUuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdGVlL3RlZV9zaG0u
+YwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdGVlL3RlZV9zaG1fcG9vbC5jCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgaW5jbHVkZS9saW51eC90ZWVfZHJ2LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBp
+bmNsdWRlL3VhcGkvbGludXgvdGVlLmgKCi0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
