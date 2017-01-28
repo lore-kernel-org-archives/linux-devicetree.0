@@ -1,59 +1,61 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v4] i2c: core: helper function to detect slave mode
-Date: Sat, 28 Jan 2017 22:13:29 +0100
-Message-ID: <20170128211328.gxtq2yoyzdwtjn3m@ninjato>
-References: <c63cd48f7ae24747187f593b27b1b86ae361c436.1485452304.git.lolivei@synopsys.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 02/22 v2] irqchip: DT bindings for Cortina
+	Gemini irqchip
+Date: Sat, 28 Jan 2017 22:14:53 +0100
+Message-ID: <20170128211453.31436-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="chqqqxo4oax2vvas"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c63cd48f7ae24747187f593b27b1b86ae361c436.1485452304.git.lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org, Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-kernel@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---chqqqxo4oax2vvas
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 26, 2017 at 05:45:32PM +0000, Luis Oliveira wrote:
-> This function has the purpose of mode detection by checking the
-> device nodes for a reg matching with the I2C_OWN_SLAVE_ADDREESS flag.
-> Currently only checks using OF functions (ACPI slave not supported yet).
->=20
-> Signed-off-by: Luis Oliveira <lolivei-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Suggested-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Applied to for-next, thanks!
-
-
---chqqqxo4oax2vvas
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAliNCWkACgkQFA3kzBSg
-Kbb+rA//cV0/MRNViUK8g/8/Km5dEkFALJyVr6tDtJcEAymBodMiaWqk4luHAO+r
-tGdQ9BlCcFr+jfB75KvpKpKZwwpei9VYZAZXSYHT33lOI6Iv3eCRZGCgKvG84MLi
-JWYD7Y74RMoNn4Hseu3vQaJ0SdgF7TVgrb3PQnZxuq6Y9G7v20etgnxmdxLX9eOP
-9tjulO3nh9Yi6MGSfgiaeHmyn5NjYXQVuSE8j6iJ1A6rHhfBkS4R84EmLJerE47x
-6pvFR6cHxWXlVNHjxep02i31A++l5R3nw4J54p//z5EVw834SYoKBjXJyZgdSDwG
-zkDFqPSsn0a2FisFP/HKF6j5Pnv3zVjEiTf9JNSt55SNaGo6Xvvjcu/278TnJPi8
-Nt3K2/8aX59s3kOQ4JiRXuHUqGQvsHB2/wBu745tRMHNG3bcZQlf3+2pJk095xaf
-O+gmGd2EKUxWok4UEK868BCayNJPmsoTJqFZ7kQdIfe1DeDsDn2ItRKb5mhZenI4
-lsK/QjtYLm9iwmDzqSvoSoxerRS0W4AGRpUxT/l9Myu0avMqUn3VDAPpfNSLB6cC
-ZnW/kt7rTVIb+Mp997imdKEhufdgofrgQ/bkvSCr4sIG0HOiO8Gk4pl4Ys4Fm2hM
-D+viLo7YSzndHOl7NWv0Z2cepzgx0G66euQOs4WLZ1umi/LjfE8=
-=a5Ol
------END PGP SIGNATURE-----
-
---chqqqxo4oax2vvas--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgQ29ydGluYSBHZW1pbmkgaW50
+ZXJydXB0CmNvbnRyb2xsZXIuIFRoZXkgYXJlIHByZXR0eSBzdGFuZGFyZC4KCkNjOiBKYW5vcyBM
+YXViZSA8amFub3MuZGV2QGdtYWlsLmNvbT4KQ2M6IFBhdWxpdXMgWmFsZWNrYXMgPHBhdWxpdXMu
+emFsZWNrYXNAZ21haWwuY29tPgpDYzogSGFucyBVbGxpIEtyb2xsIDx1bGxpLmtyb2xsQGdvb2ds
+ZW1haWwuY29tPgpDYzogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5jb20+CkNj
+OiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
+a2VybmVsLm9yZz4KU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBs
+aW5hcm8ub3JnPgotLS0KQ2hhbmdlTG9nIHYxLT52MjoKLSBBZGRlZCBSb2IncyBBQ0sKCmlycWNo
+aXAgbWFpbnRhaW5lcnM6IHBsZWFzZSBqdXN0IGFwcGx5IHRoaXMgd2hlbiB5b3UgZmVlbCBwbGVh
+c2VkCndpdGggaXQuIFRoZXNlIHBvcnRpb25zIGFyZSBmdW5jdGlvbmFsbHkgb3J0aG9nb25hbCB0
+byB0aGUgc2VyaWVzLAppdCBpcyBqdXN0IGluIGEgc2VyaWVzIGZvciBjb250ZXh0LgotLS0KIC4u
+Li9jb3J0aW5hLGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxlci50eHQgICAgICAgIHwgMjIgKysr
+KysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJy
+dXB0LWNvbnRyb2xsZXIvY29ydGluYSxnZW1pbmktaW50ZXJydXB0LWNvbnRyb2xsZXIudHh0Cgpk
+aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVycnVwdC1j
+b250cm9sbGVyL2NvcnRpbmEsZ2VtaW5pLWludGVycnVwdC1jb250cm9sbGVyLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9jb3J0aW5h
+LGdlbWluaS1pbnRlcnJ1cHQtY29udHJvbGxlci50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5k
+ZXggMDAwMDAwMDAwMDAwLi45N2MxMTY3ZmE1MzMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvY29ydGluYSxn
+ZW1pbmktaW50ZXJydXB0LWNvbnRyb2xsZXIudHh0CkBAIC0wLDAgKzEsMjIgQEAKKyogQ29ydGlu
+YSBTeXN0ZW1zIEdlbWluaSBpbnRlcnJ1cHQgY29udHJvbGxlcgorCitUaGlzIGludGVycnVwdCBj
+b250cm9sbGVyIGlzIGZvdW5kIG9uIHRoZSBHZW1pbmkgU29Dcy4KKworUmVxdWlyZWQgcHJvcGVy
+dGllczoKKy0gY29tcGF0aWJsZTogbXVzdCBiZSAiY29ydGluYSxnZW1pbmktaW50ZXJydXB0LWNv
+bnRyb2xsZXIiCistIHJlZzogVGhlIHJlZ2lzdGVyIGJhbmsgZm9yIHRoZSBpbnRlcnJ1cHQgY29u
+dHJvbGxlci4KKy0gaW50ZXJydXB0LWNvbnRyb2xsZXI6IElkZW50aWZpZXMgdGhlIG5vZGUgYXMg
+YW4gaW50ZXJydXB0IGNvbnRyb2xsZXIKKy0gI2ludGVycnVwdC1jZWxsczogVGhlIG51bWJlciBv
+ZiBjZWxscyB0byBkZWZpbmUgdGhlIGludGVycnVwdHMuCisgIE11c3QgYmUgMiBhcyB0aGUgY29u
+dHJvbGxlciBjYW4gc3BlY2lmeSBsZXZlbCBvciByaXNpbmcgZWRnZQorICBJUlFzLiBUaGUgYmlu
+ZGluZ3MgZm9sbG93cyB0aGUgc3RhbmRhcmQgYmluZGluZyBmb3IgY29udHJvbGxlcnMKKyAgd2l0
+aCB0d28gY2VsbHMgc3BlY2lmaWVkIGluCisgIGludGVycnVwdC1jb250cm9sbGVyL2ludGVycnVw
+dHMudHh0CisKK0V4YW1wbGU6CisKK2ludGVycnVwdC1jb250cm9sbGVyQDQ4MDAwMDAwIHsKKwlj
+b21wYXRpYmxlID0gImNvcnRpbmEsZ2VtaW5pLWludGVycnVwdC1jb250cm9sbGVyIjsKKwlyZWcg
+PSA8MHg0ODAwMDAwMCAweDEwMDA+OworCWludGVycnVwdC1jb250cm9sbGVyOworCSNpbnRlcnJ1
+cHQtY2VsbHMgPSA8Mj47Cit9OwotLSAKMi45LjMKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Kb3BlbndydC1kZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1k
+ZXZlbEBsaXN0cy5vcGVud3J0Lm9yZwpodHRwczovL2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4v
+bWFpbG1hbi9saXN0aW5mby9vcGVud3J0LWRldmVsCg==
