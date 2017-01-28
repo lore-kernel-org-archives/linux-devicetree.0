@@ -1,156 +1,157 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: adc: Add Renesas GyroADC bindings
-Date: Sat, 28 Jan 2017 11:36:37 +0000
-Message-ID: <b1ee3630-bc07-6321-7eef-e16dc8a5d75a@kernel.org>
-References: <20170127230837.9322-1-marek.vasut@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v8 09/12] dt-bindings: mux-adg792a: document devicetree
+ bindings for ADG792A/G mux
+Date: Sat, 28 Jan 2017 11:40:46 +0000
+Message-ID: <e53a2157-9a9e-2a84-02af-d4f0a92e7bea@kernel.org>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-10-git-send-email-peda@axentia.se>
+ <20170127195054.wupmfkiw6kaoc7jx@rob-hp-laptop>
+ <383638ef-1bb2-224f-0fd0-4818395a2306@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170127230837.9322-1-marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <383638ef-1bb2-224f-0fd0-4818395a2306@axentia.se>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>, Rob Herring <robh@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/17 23:08, Marek Vasut wrote:
-> From: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 27/01/17 22:09, Peter Rosin wrote:
+> On 2017-01-27 20:50, Rob Herring wrote:
+>> On Wed, Jan 18, 2017 at 04:57:12PM +0100, Peter Rosin wrote:
+>>> Analog Devices ADG792A/G is a triple 4:1 mux.
+>>>
+>>> Acked-by: Jonathan Cameron <jic23@kernel.org>
+>>> Signed-off-by: Peter Rosin <peda@axentia.se>
+>>> ---
+>>>  .../devicetree/bindings/mux/mux-adg792a.txt        | 79 ++++++++++++++++++++++
+>>>  1 file changed, 79 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/mux/mux-adg792a.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mux/mux-adg792a.txt b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
+>>> new file mode 100644
+>>> index 000000000000..0b26dd11f070
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mux/mux-adg792a.txt
+>>> @@ -0,0 +1,79 @@
+>>> +Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
+>>> +
+>>> +Required properties:
+>>> +- compatible : "adi,adg792a" or "adi,adg792g"
+>>> +- #mux-control-cells : <0> if parallel, or <1> if not.
+>>> +* Standard mux-controller bindings as decribed in mux-controller.txt
+>>> +
+>>> +Optional properties for ADG792G:
+>>> +- gpio-controller : if present, #gpio-cells below is required.
+>>> +- #gpio-cells : should be <2>
+>>> +			  - First cell is the GPO line number, i.e. 0 or 1
+>>> +			  - Second cell is used to specify active high (0)
+>>> +			    or active low (1)
+>>> +
+>>> +Optional properties:
+>>> +- adi,parallel : if present, the three muxes are bound together with a single
+>>> +  mux controller, controlling all three muxes in parallel.
+>>
+>> Can't this be implied by #mux-control-cells == 0?
 > 
-> Add DT bindings for the Renesas RCar GyroADC block. This block is
-> a simple 4/8-channel ADC which samples 12/15/24 bits of data every
-> cycle from all channels.
+> Right, good point! I'll drop adi,parallel.
 > 
-> Signed-off-by: Marek Vasut <marek.vasut+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-> Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
+>>> +- adi,idle-state : if present, array of 2-tuples with mux controller number
+>>> +  and state that mux controllers will have when idle. States 0 through 3
+>>> +  correspond to signals A through D in the datasheet.
+>>> +- adi,idle-high-impedance : if present, array of mux controller numbers that
+>>> +  should be in the disconnected high-impedance state when idle.
+>>
+>> Perhaps combine these 2 to a common idle-state with the index being the 
+>> mux controller number and a value of -1 (or 4) being hi-Z.
+> 
+> At one point [1] I had a straight array for the mux controllers with state 4
+> being hi-Z and state 5 being the default "leave mux as-is on release", but
+> Jonathan didn't like magic numbers. Can you please read the follow-ups to the
+> referenced mail for some background, and then pick out the most suitable color
+> for me to paint with? :-)
+Hohum.  Given it can be cleanly represented as two properties rather than a single
+property with a single magic value alongside the obvious ones I asked Peter
+to split it.
 
-Thanks,
+Not all that fussed though as I don't have to maintain this ;)
+*ducks*
 
 Jonathan
-> ---
-> V8: - Sync the version with the 2/2 driver patch
->     - Drop status prop from example
->     - Add GyroADC block description
->     - Enumerate the compatible string values
->     - Make subnodes mandatory
-> V9: - Replace &adc with adc@e6e54000
->     - Add Rob's ACK
-> ---
->  .../bindings/iio/adc/renesas,gyroadc.txt           | 99 ++++++++++++++++++++++
->  1 file changed, 99 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-> new file mode 100644
-> index 000000000000..f5b0adae6010
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/renesas,gyroadc.txt
-> @@ -0,0 +1,99 @@
-> +* Renesas RCar GyroADC device driver
-> +
-> +The GyroADC block is a reduced SPI block with up to 8 chipselect lines,
-> +which supports the SPI protocol of a selected few SPI ADCs. The SPI ADCs
-> +are sampled by the GyroADC block in a round-robin fashion and the result
-> +presented in the GyroADC registers.
-> +
-> +Required properties:
-> +- compatible:	Should be "<soc-specific>", "renesas,rcar-gyroadc".
-> +                The <soc-specific> should be one of:
-> +		renesas,r8a7791-gyroadc - for the GyroADC block present
-> +					  in r8a7791 SoC
-> +		renesas,r8a7792-gyroadc - for the GyroADC with interrupt
-> +					  block present in r8a7792 SoC
-> +- reg:		Address and length of the register set for the device
-> +- clocks:	References to all the clocks specified in the clock-names
-> +		property as specified in
-> +		Documentation/devicetree/bindings/clock/clock-bindings.txt.
-> +- clock-names:	Shall contain "fck" and "if". The "fck" is the GyroADC block
-> +		clock, the "if" is the interface clock.
-> +- power-domains: Must contain a reference to the PM domain, if available.
-> +- #address-cells: Should be <1> (setting for the subnodes) for all ADCs
-> +		except for "fujitsu,mb88101a". Should be <0> (setting for
-> +		only subnode) for "fujitsu,mb88101a".
-> +- #size-cells:	Should be <0> (setting for the subnodes)
-> +
-> +Sub-nodes:
-> +You must define subnode(s) which select the connected ADC type and reference
-> +voltage for the GyroADC channels.
-> +
-> +Required properties for subnodes:
-> +- compatible:	Should be either of:
-> +		"fujitsu,mb88101a"
-> +			- Fujitsu MB88101A compatible mode,
-> +			  12bit sampling, up to 4 channels can be sampled in
-> +			  round-robin fashion. One Fujitsu chip supplies four
-> +			  GyroADC channels with data as it contains four ADCs
-> +			  on the chip and thus for 4-channel operation, single
-> +			  MB88101A is required. The Cx chipselect lines of the
-> +			  MB88101A connect directly to two CHS lines of the
-> +			  GyroADC, no demuxer is required. The data out line
-> +			  of each MB88101A connects to a shared input pin of
-> +			  the GyroADC.
-> +		"ti,adcs7476" or "ti,adc121" or "adi,ad7476"
-> +			- TI ADCS7476 / TI ADC121 / ADI AD7476 compatible mode,
-> +			  15bit sampling, up to 8 channels can be sampled in
-> +			  round-robin fashion. One TI/ADI chip supplies single
-> +			  ADC channel with data, thus for 8-channel operation,
-> +			  8 chips are required. A 3:8 chipselect demuxer is
-> +			  required to connect the nCS line of the TI/ADI chips
-> +			  to the GyroADC, while MISO line of each TI/ADI ADC
-> +			  connects to a shared input pin of the GyroADC.
-> +		"maxim,max1162" or "maxim,max11100"
-> +			- Maxim MAX1162 / Maxim MAX11100 compatible mode,
-> +			  16bit sampling, up to 8 channels can be sampled in
-> +			  round-robin fashion. One Maxim chip supplies single
-> +			  ADC channel with data, thus for 8-channel operation,
-> +			  8 chips are required. A 3:8 chipselect demuxer is
-> +			  required to connect the nCS line of the MAX chips
-> +			  to the GyroADC, while MISO line of each Maxim ADC
-> +			  connects to a shared input pin of the GyroADC.
-> +- reg:		Should be the number of the analog input. Should be present
-> +		for all ADCs except "fujitsu,mb88101a".
-> +- vref-supply:	Reference to the channel reference voltage regulator.
-> +
-> +Example:
-> +	vref_max1162: regulator-vref-max1162 {
-> +		compatible = "regulator-fixed";
-> +
-> +		regulator-name = "MAX1162 Vref";
-> +		regulator-min-microvolt = <4096000>;
-> +		regulator-max-microvolt = <4096000>;
-> +	};
-> +
-> +	adc@e6e54000 {
-> +		compatible = "renesas,r8a7791-gyroadc", "renesas,rcar-gyroadc";
-> +		reg = <0 0xe6e54000 0 64>;
-> +		clocks = <&mstp9_clks R8A7791_CLK_GYROADC>, <&clk_65m>;
-> +		clock-names = "fck", "if";
-> +		power-domains = <&sysc R8A7791_PD_ALWAYS_ON>;
-> +
-> +		pinctrl-0 = <&adc_pins>;
-> +		pinctrl-names = "default";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		adc@0 {
-> +			reg = <0>;
-> +			compatible = "maxim,max1162";
-> +			vref-supply = <&vref_max1162>;
-> +		};
-> +
-> +		adc@1 {
-> +			reg = <1>;
-> +			compatible = "maxim,max1162";
-> +			vref-supply = <&vref_max1162>;
-> +		};
-> +	};
+> [1] https://lkml.org/lkml/2016/11/30/110
+> 
+>>> +
+>>> +Mux controller states 0 through 3 correspond to signals A through D in the
+>>> +datasheet. If a mux controller is mentioned in neither adi,idle-state nor
+>>> +adi,idle-high-impedance it is left in its previously selected state when idle.
+>>> +
+>>> +Example:
+>>> +
+>>> +	/*
+>>> +	 * Three independent mux controllers (of which one is used).
+>>> +	 * Mux 0 is disconnected when idle, mux 1 idles with signal C
+>>> +	 * and mux 2 idles with signal A.
+>>> +	 */
+>>> +	&i2c0 {
+>>> +		mux: adg792a@50 {
+>>
+>> mux-controller@50
+> 
+> Yep. Hmm, where have I seen that before? :-)
+> 
+> Cheers,
+> peda
+> 
+>>> +			compatible = "adi,adg792a";
+>>> +			reg = <0x50>;
+>>> +			#mux-control-cells = <1>;
+>>> +
+>>> +			adi,idle-high-impedance = <0>;
+>>> +			adi,idle-state = <1 2>, <2 0>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	adc-mux {
+>>> +		compatible = "io-channel-mux";
+>>> +		io-channels = <&adc 0>;
+>>> +		io-channel-names = "parent";
+>>> +
+>>> +		mux-controls = <&mux 1>;
+>>> +
+>>> +		channels = "sync-1", "", "out";
+>>> +	};
+>>> +
+>>> +
+>>> +	/*
+>>> +	 * Three parallel muxes with one mux controller, useful e.g. if
+>>> +	 * the adc is differential, thus needing two signals to be muxed
+>>> +	 * simultaneously for correct operation.
+>>> +	 */
+>>> +	&i2c0 {
+>>> +		pmux: adg792a@50 {
+>>> +			compatible = "adi,adg792a";
+>>> +			reg = <0x50>;
+>>> +			#mux-control-cells = <0>;
+>>> +			adi,parallel;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	diff-adc-mux {
+>>> +		compatible = "io-channel-mux";
+>>> +		io-channels = <&adc 0>;
+>>> +		io-channel-names = "parent";
+>>> +
+>>> +		mux-controls = <&pmux>;
+>>> +
+>>> +		channels = "sync-1", "", "out";
+>>> +	};
+>>> -- 
+>>> 2.1.4
+>>>
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
