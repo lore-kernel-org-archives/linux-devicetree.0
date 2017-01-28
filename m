@@ -1,29 +1,79 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module
- table
-Date: Sat, 28 Jan 2017 11:35:58 -0800
-Message-ID: <20170128193558.GC38136@dtor-ws>
-References: <cover.1482936802.git.hns@goldelico.com>
- <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4] PCI: add DT bindings for Cortina Gemini
+	PCI Host Bridge
+Date: Sat, 28 Jan 2017 21:48:36 +0100
+Message-ID: <20170128204839.18330-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, Mika =?iso-8859-1?Q?Penttil=E4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Petr Cvek <petr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <openwrt-devel-bounces@lists.openwrt.org>
+List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
+List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
+List-Post: <mailto:openwrt-devel@lists.openwrt.org>
+List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
+List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
+ <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
+Errors-To: openwrt-devel-bounces@lists.openwrt.org
+Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
+To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-pci@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 28, 2016 at 03:53:21PM +0100, H. Nikolaus Schaller wrote:
-> Fix module table so that the driver is loaded if compiled
-> as module and requested by DT.
-> 
-
-I believe I already replied to a similar patch: we alreadyhave necessary
-aliases in this driver, we need to fix module loading to use it.
-
-Thanks.
-
--- 
-Dmitry
+VGhpcyBhZGRzIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUgQ29ydGluYSBTeXN0ZW1zIEdl
+bWluaSBQQ0kKSG9zdCBCcmlkZ2UuCgpDYzogSmFub3MgTGF1YmUgPGphbm9zLmRldkBnbWFpbC5j
+b20+CkNjOiBQYXVsaXVzIFphbGVja2FzIDxwYXVsaXVzLnphbGVja2FzQGdtYWlsLmNvbT4KQ2M6
+IEhhbnMgVWxsaSBLcm9sbCA8dWxsaS5rcm9sbEBnb29nbGVtYWlsLmNvbT4KQ2M6IEZsb3JpYW4g
+RmFpbmVsbGkgPGYuZmFpbmVsbGlAZ21haWwuY29tPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5l
+bC5vcmcKU2lnbmVkLW9mZi1ieTogTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8u
+b3JnPgotLS0KVGhpcyBjYW4gYmUgbWVyZ2VkIHRvIHRoZSBQQ0kgdHJlZSB3aGVuZXZlciBpdCBp
+cyBjb25zaWRlcmVkCmZpbmUgZm9yIGluY2x1c2lvbi4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9wY2kvY29ydGluYSxnZW1pbmktcGNpLnR4dCB8IDY0ICsrKysrKysrKysrKysrKysrKysr
+KysKIDEgZmlsZSBjaGFuZ2VkLCA2NCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9jb3J0aW5hLGdlbWluaS1wY2ku
+dHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9j
+b3J0aW5hLGdlbWluaS1wY2kudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3BjaS9jb3J0aW5hLGdlbWluaS1wY2kudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAw
+MDAwMDAwMDAwMC4uZTMwOTBkOTk1ZTFlCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BjaS9jb3J0aW5hLGdlbWluaS1wY2kudHh0CkBAIC0wLDAg
+KzEsNjQgQEAKKyogQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBQQ0kgSG9zdCBCcmlkZ2UKKworTWFu
+ZGF0b3J5IHByb3BlcnRpZXM6CisKKy0gY29tcGF0aWJsZTogc2hvdWxkIGJlICJjb3J0aW5hLGdl
+bWluaS1wY2kiCistIHJlZzogbWVtb3J5IGJhc2UgYW5kIHNpemUgZm9yIHRoZSBob3N0IGJyaWRn
+ZQorLSBpbnRlcnJ1cHRzOiB0aGUgZm91ciBQQ0kgaW50ZXJydXB0cworLSAjYWRkcmVzcy1jZWxs
+czogc2V0IHRvIDwzPgorLSAjc2l6ZS1jZWxsczogc2V0IHRvIDwyPgorLSAjaW50ZXJydXB0LWNl
+bGxzOiBzZXQgdG8gPDE+CistIGJ1cy1yYW5nZTogc2V0IHRvIDwweDAwIDB4MDA+IChvbmx5IHJv
+b3QgYnVzKQorLSBkZXZpY2VfdHlwZSwgc2V0IHRvICJwY2kiCistIHJhbmdlczogc2VlIHBjaS50
+eHQKKy0gaW50ZXJydXB0LW1hcC1tYXNrOiBzZWUgcGNpLnR4dAorLSBpbnRlcnJ1cHQtbWFwOiBz
+ZWUgcGNpLnR4dAorCitNYW5kYXRvcnkgc3Vibm9kZXM6CistIE9uZSBub2RlIHJlcHJlbnRpbmcg
+dGhlIGludGVycnVwdC1jb250cm9sbGVyIGluc2lkZSB0aGUgaG9zdCBicmlkZ2UKKyAgd2l0aCB0
+aGUgZm9sbG93aW5nIG1hbmRhdG9yeSBwcm9wZXJ0aWVzOgorICAtIGludGVycnVwdC1jb250cm9s
+bGVyOiBzZWUgaW50ZXJydXB0LWNvbnRyb2xsZXIvaW50ZXJydXB0cy50eHQKKyAgLSAjYWRkcmVz
+cy1jZWxsczogc2V0IHRvIDwwPgorICAtICNpbnRlcnJ1cHQtY2VsbHM6IHNldCB0byA8MT4KKwor
+RXhhbXBsZToKKworcGNpQDUwMDAwMDAwIHsKKwljb21wYXRpYmxlID0gImNvcnRpbmEsZ2VtaW5p
+LXBjaSI7CisJcmVnID0gPDB4NTAwMDAwMDAgMHgxMDA+OworCWludGVycnVwdHMgPSA8OCBJUlFf
+VFlQRV9MRVZFTF9ISUdIPiwgLyogUENJIEEgKi8KKwkJCTwyNiBJUlFfVFlQRV9MRVZFTF9ISUdI
+PiwgLyogUENJIEIgKi8KKwkJCTwyNyBJUlFfVFlQRV9MRVZFTF9ISUdIPiwgLyogUENJIEMgKi8K
+KwkJCTwyOCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsgLyogUENJIEQgKi8KKwkjYWRkcmVzcy1jZWxs
+cyA9IDwzPjsKKwkjc2l6ZS1jZWxscyA9IDwyPjsKKwkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owor
+CisJYnVzLXJhbmdlID0gPDB4MDAgMHgwMD47IC8qIE9ubHkgcm9vdCBidXMgKi8KKwlyYW5nZXMg
+PSAvKiAxTWlCIEkvTyBzcGFjZSAweDUwMDAwMDAwLTB4NTAwZmZmZmYgKi8KKwkJIDwweDAxMDAw
+MDAwIDAgMCAgICAgICAgICAweDUwMDAwMDAwIDAgMHgwMDEwMDAwMD4sCisJCSAvKiAxMjhNaUIg
+bm9uLXByZWZldGNoYWJsZSBtZW1vcnkgMHg1ODAwMDAwMC0weDVmZmZmZmZmICovCisJCSA8MHgw
+MjAwMDAwMCAwIDB4NTgwMDAwMDAgMHg1ODAwMDAwMCAwIDB4MDgwMDAwMDA+OworCWludGVycnVw
+dC1tYXAtbWFzayA9IDwweGZmMDAgMCAwIDc+OworCWludGVycnVwdC1tYXAgPSA8MHg0ODAwIDAg
+MCAxICZwY2lfaW50YyAwPiwgLyogU2xvdCA5ICovCisJCQk8MHg0OTAwIDAgMCAyICZwY2lfaW50
+YyAxPiwKKwkJCTwweDRhMDAgMCAwIDMgJnBjaV9pbnRjIDI+LAorCQkJPDB4NGIwMCAwIDAgNCAm
+cGNpX2ludGMgMz4sCisJCQk8MHg1MDAwIDAgMCAxICZwY2lfaW50YyAwPiwgLyogU2xvdCAxMCAq
+LworCQkJPDB4NTEwMCAwIDAgMiAmcGNpX2ludGMgMT4sCisJCQk8MHg1MjAwIDAgMCAzICZwY2lf
+aW50YyAyPiwKKwkJCTwweDUzMDAgMCAwIDQgJnBjaV9pbnRjIDM+LAorCQkJPDB4NTgwMCAwIDAg
+MSAmcGNpX2ludGMgMD4sIC8qIFNsb3QgMTEgKi8KKwkJCTwweDU5MDAgMCAwIDIgJnBjaV9pbnRj
+IDE+LAorCQkJPDB4NWEwMCAwIDAgMyAmcGNpX2ludGMgMj4sCisJCQk8MHg1YjAwIDAgMCA0ICZw
+Y2lfaW50YyAzPiwKKwkJCTwweDYwMDAgMCAwIDEgJnBjaV9pbnRjIDA+LCAvKiBTbG90IDEyICov
+CisJCQk8MHg2MTAwIDAgMCAyICZwY2lfaW50YyAxPiwKKwkJCTwweDYyMDAgMCAwIDMgJnBjaV9p
+bnRjIDI+LAorCQkJPDB4NjMwMCAwIDAgNCAmcGNpX2ludGMgMz47CisJcGNpX2ludGM6IGludGVy
+cnVwdC1jb250cm9sbGVyIHsKKwkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CisJCSNhZGRyZXNzLWNl
+bGxzID0gPDA+OworCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+OworCX07Cit9OwotLSAKMi45LjMK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Kb3BlbndydC1k
+ZXZlbCBtYWlsaW5nIGxpc3QKb3BlbndydC1kZXZlbEBsaXN0cy5vcGVud3J0Lm9yZwpodHRwczov
+L2xpc3RzLm9wZW53cnQub3JnL2NnaS1iaW4vbWFpbG1hbi9saXN0aW5mby9vcGVud3J0LWRldmVs
+Cg==
