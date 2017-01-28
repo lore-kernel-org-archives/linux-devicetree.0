@@ -1,113 +1,50 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
- i2c-mux-simple bindings
-Date: Sat, 28 Jan 2017 23:42:25 +0100
-Message-ID: <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-8-git-send-email-peda@axentia.se>
- <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
+From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Subject: [PATCH 0/2] iio: distance: devantech srf04 us ranger
+Date: Sun, 29 Jan 2017 00:57:48 +0100
+Message-ID: <20170128235748.GA4775@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
+Content-Disposition: inline
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shraddha.6596-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w@1wt.eu, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjenning-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-27 20:39, Rob Herring wrote:
-> On Wed, Jan 18, 2017 at 04:57:10PM +0100, Peter Rosin wrote:
->> Describe how a generic multiplexer controller is used to mux an i2c bus.
->>
->> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 81 ++++++++++++++++++++++
->>  1 file changed, 81 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>
->> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->> new file mode 100644
->> index 000000000000..253d5027843b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->> @@ -0,0 +1,81 @@
->> +Simple I2C Bus Mux
->> +
->> +This binding describes an I2C bus multiplexer that uses a mux controller
->> +from the mux subsystem to route the I2C signals.
->> +
->> +                                  .-----.  .-----.
->> +                                  | dev |  | dev |
->> +    .------------.                '-----'  '-----'
->> +    | SoC        |                   |        |
->> +    |            |          .--------+--------'
->> +    |   .------. |  .------+    child bus A, on MUX value set to 0
->> +    |   | I2C  |-|--| Mux  |
->> +    |   '------' |  '--+---+    child bus B, on MUX value set to 1
->> +    |   .------. |     |    '----------+--------+--------.
->> +    |   | MUX- | |     |               |        |        |
->> +    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
->> +    |   '------' |                  | dev |  | dev |  | dev |
->> +    '------------'                  '-----'  '-----'  '-----'
->> +
->> +Required properties:
->> +- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
-> 
-> Not a fan of using "simple" nor the ','. Perhaps lock type should be 
-> separate property.
+This patch series adds support for the devantech srf04 ultrasonic ranger as
+IIO device.
 
-How about just i2c-mux for the compatible? Because i2c-mux-mux (which
-follows the naming of previous i2c muxes) looks really stupid. Or
-perhaps i2c-mux-generic?
+The device is able to recognize objects in a range of 1 cm and 3 meters.
+The theoretical resolution is about 3 mm, practically more or less 1 cm.
 
-I'm also happy to have the lock type as a separate property. One lock
-type, e.g. parent-locked, could be the default and adding a 'mux-locked'
-property could change that. Would that be ok?
+Use cases for this device are level metering in tanks or distance measuring
+in robotics.
 
-Or should it be a requirement that one of 'mux-locked'/'parent-locked'
-is always present?
+This driver works by triggering the device and waiting for the echo, for
+which a GPIO is set when send out and reset when the echo is received. 
+The echo must be an interrupt and the time between rising and falling is
+measured.
 
-> I'm not sure I get the mux vs. parent locked fully. How do I determine 
-> what type I have? We already have bindings for several types of i2c 
-> muxes. How does the locking annotation fit into those?
+The returned distance is calculated with a ultrasonic speed of 343 m/s
+which is the correct value at 20 degrees celsius.
+For different temperatures one might want to compensate the temperature.
+Look at the source code for details.
 
-We have briefly discussed this before [1] in the context of i2c-mux-gpio
-and i2c-mux-pinctrl, when I added the mux-locked/parent-locked distinction
-to the i2c-mux infrastructure (it wasn't named mux-locked/parent-locked
-way back then though). There is more detail on what the difference is
-between the two in Documentation/i2c/i2c-topology.
+Documenation can be found at:
+http://www.robot-electronics.co.uk/htm/srf04tech.htm
 
-Side note regarding your remark "use an I2C controlled mux instead"; it
-appears that I'm not alone [2] with this kind of requirement...
+Andreas Klinger (2):
+  iio: distance: add dt binding for devantech-srf04
+  iio: distance: add devantech us ranger srf04
 
-[1] https://lkml.org/lkml/2016/1/6/437
-[2] http://marc.info/?t=147877959100002&r=1&w=2
+ .../bindings/iio/proximity/devantech-srf04.txt     |  17 ++
+ MAINTAINERS                                        |   6 +
+ drivers/iio/proximity/Kconfig                      |  11 +
+ drivers/iio/proximity/Makefile                     |   1 +
+ drivers/iio/proximity/srf04.c                      | 269 +++++++++++++++++++++
+ 5 files changed, 304 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+ create mode 100644 drivers/iio/proximity/srf04.c
 
-But, now that I have pondered on this for a year or so, I firmly
-believe it was a mistake to have the code in i2c-mux-gpio and
-i2c-mux-pinctrl automatically try to deduce if the mux should be
-mux-locked or parent-locked. It might be easy to make that call
-in some trivial cases, but it is not difficult to dream up
-scenarios where it would be extremely hard for the code to get
-this decision right. It's just fragile. But now we have code in
-those two muxes that has unwanted tentacles into the guts of the
-gpio and pinctrl subsystems. Hopefully those unwanted tentacles
-can be replaced with something based on device links? However, it
-is still not hard to come up with scenarios that will require
-manual intervention in order to select the right kind of i2c mux
-locking. So, I fear that we have inadequate code trying to make a
-decision automatically, and that we at some point down the line
-will have some impossible case needing a binding that trumps the
-heuristic. Why have a heuristic at all in that case? In short, it
-should have been a binding from the start, methinks.
-
-That was a long rant regarding i2c-mux-gpio and i2c-mux-pinctrl.
-I obviously think it is bad to have this new i2c mux go in the
-same direction as those two drivers. I.e. I think a binding that
-specifies the desired locking is preferable to any attempted
-heuristic.
-
-Cheers,
-peda
+-- 
+2.1.4
