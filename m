@@ -1,61 +1,102 @@
-From: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH 2/4] MAINTAINERS: Add entry for megachips-stdpxxxx-ge-b850v3-fw
-Date: Sat, 28 Jan 2017 15:21:31 +0100
-Message-ID: <b61e3ca48ac8c305bd401055caf363a005226f14.1485611969.git.peter.senna@collabora.com>
-References: <cover.1485611969.git.peter.senna@collabora.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1485611969.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-In-Reply-To: <cover.1485611969.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-References: <cover.1485611969.git.peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH] ARM: BCM5301X: Add missing Netgear R8000 LEDs and Keys
+Date: Sat, 28 Jan 2017 15:25:02 +0100
+Message-ID: <CACna6rwSs20asivXUsLQtmTtxppnpV4On1Kr8yNBdVYAH_csjg@mail.gmail.com>
+References: <20170128134345.5465-1-adityaxavier@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170128134345.5465-1-adityaxavier@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: AdityaXavier <adityaxavier@gmail.com>
+Cc: Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for the second video output of the GE B850v3:
-       STDP4028-ge-b850v3-fw bridges (LVDS-DP)
-       STDP2690-ge-b850v3-fw bridges (DP-DP++)
+Nice work, you're almost there!
 
-Cc: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
-Cc: Daniel Vetter <daniel.vetter-/w4YWyX8dFk@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-CC: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>
-CC: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-CC: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-CC: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Signed-off-by: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- MAINTAINERS | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Since quite recently ARM DTS patches have to use extra "dts: " prefix,
+I understand you could miss that. Please just change your subject from
+ARM: BCM5301X: Add missing Netgear R8000 LEDs and Keys
+to
+ARM: dts: BCM5301X: Add missing Netgear R8000 LEDs and Keys
+and it'll be great.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e1b346b..b9e9bd3 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8061,6 +8061,14 @@ L:	linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
- S:	Maintained
- F:	drivers/net/wireless/mediatek/mt7601u/
- 
-+MEGACHIPS STDPXXXX-GE-B850V3-FW LVDS/DP++ BRIDGES
-+M:	Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-+M:	Martin Donnelly <martin.donnelly-JJi787mZWgc@public.gmane.org>
-+M:	Martyn Welch <martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-+S:	Maintained
-+F:	drivers/gpu/drm/bridge/megachips-stdpxxxx-ge-b850v3-fw.c
-+F:	Documentation/devicetree/bindings/video/bridge/megachips-stdpxxxx-ge-b850v3-fw.txt
-+
- MEGARAID SCSI/SAS DRIVERS
- M:	Kashyap Desai <kashyap.desai-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
- M:	Sumit Saxena <sumit.saxena-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
--- 
-2.5.5
+When bumping patch version it's also nice to include version number in
+the tag, e.g.
+[PATCH V2]
+You can achieve this by e.g.
+git format-patch --subject-prefix=3D"PATCH V2" -1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On 28 January 2017 at 14:43, AdityaXavier <adityaxavier@gmail.com> wrote:
+> From: Aditya Xavier <adityaxavier@gmail.com>
+>
+> Added two WAN status LEDs and a GPIO Key for Brightness which were missin=
+g.
+>
+> Signed-off-by: Aditya Xavier <adityaxavier@gmail.com>
+> ---
+
+Ideally, in this place should go a changelog. E.g.:
+V2: Update subject and change LED names
+
+
+>  arch/arm/boot/dts/bcm4709-netgear-r8000.dts | 22 ++++++++++++++++++++--
+>  1 file changed, 20 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts b/arch/arm/boot/=
+dts/bcm4709-netgear-r8000.dts
+> index 92f8a72..90d4420 100644
+> --- a/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+> +++ b/arch/arm/boot/dts/bcm4709-netgear-r8000.dts
+> @@ -27,18 +27,30 @@
+>         leds {
+>                 compatible =3D "gpio-leds";
+>
+> -               power0 {
+> +               power-white {
+>                         label =3D "bcm53xx:white:power";
+>                         gpios =3D <&chipcommon 2 GPIO_ACTIVE_LOW>;
+>                         linux,default-trigger =3D "default-on";
+>                 };
+>
+> -               power1 {
+> +               power-amber {
+>                         label =3D "bcm53xx:amber:power";
+>                         gpios =3D <&chipcommon 3 GPIO_ACTIVE_LOW>;
+>                         linux,default-trigger =3D "default-off";
+>                 };
+>
+> +               wan-white {
+> +                       label =3D "bcm53xx:white:wan";
+> +                       gpios =3D <&chipcommon 8 GPIO_ACTIVE_LOW>;
+> +                       linux,default-trigger =3D "default-on";
+> +               };
+> +
+> +               wan-amber {
+> +                       label =3D "bcm53xx:amber:wan";
+> +                       gpios =3D <&chipcommon 9 GPIO_ACTIVE_HIGH>;
+> +                       linux,default-trigger =3D "default-off";
+> +               };
+> +
+>                 5ghz-1 {
+>                         label =3D "bcm53xx:white:5ghz-1";
+>                         gpios =3D <&chipcommon 12 GPIO_ACTIVE_LOW>;
+> @@ -104,6 +116,12 @@
+>                         linux,code =3D <KEY_RESTART>;
+>                         gpios =3D <&chipcommon 6 GPIO_ACTIVE_LOW>;
+>                 };
+> +
+> +               brightness {
+> +                       label =3D "Backlight";
+> +                       linux,code =3D <KEY_BRIGHTNESS_ZERO>;
+> +                       gpios =3D <&chipcommon 19 GPIO_ACTIVE_LOW>;
+> +               };
+>         };
+>  };
+
+Changes look OK, thanks!
+
+--=20
+Rafa=C5=82
