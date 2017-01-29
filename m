@@ -1,21 +1,18 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Sun, 29 Jan 2017 15:34:55 +0100
-Message-ID: <7a8c7674-5c02-a58c-de7b-bd9caf15cfb4@metafoo.de>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
- <20170127101545.g53uah57vgfu55o5@dell>
- <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
- <20170127171746.lf2nbpsaqs3dmy44@dell>
- <3810896b-c982-e9fd-b095-658921422855@kernel.org>
- <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 08/22] power: supply: add AC power supply driver for
+ AXP20X and AXP22X PMICs
+Date: Sun, 29 Jan 2017 16:16:11 +0100
+Message-ID: <20170129151611.bczd6dn7def3ceut@earth>
+References: <20170102163723.7939-1-quentin.schulz@free-electrons.com>
+ <20170102163723.7939-9-quentin.schulz@free-electrons.com>
+ <20170117030013.g5xhlmrxpthyfewa@earth>
+ <6a3edb64-8ea9-cb14-b826-d6e8e2c4c4b7@free-electrons.com>
+ <20170127082017.ffvybk237ku2n5hu@lukather>
+ <fcc8f597-e2db-998a-78be-29865f9764fa@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6434263598480531603=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
+In-Reply-To: <fcc8f597-e2db-998a-78be-29865f9764fa@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -25,101 +22,134 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>, Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lars@metafoo.de, linux-pm@vger.kernel.org, linux-iio@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, wens@csie.org, robh+dt@kernel.org, icenowy@aosc.xyz, pmeerw@pmeerw.net, knaack.h@gmx.de, Maxime Ripard <maxime.ripard@free-electrons.com>, bonbons@linux-vserver.org, lee.jones@linaro.org, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2017 03:19 PM, Lars-Peter Clausen wrote:
-> On 01/29/2017 01:28 PM, Jonathan Cameron wrote:
-> [...]
->>>> Jonathan, Mark, Please could you share your opinion on this topic?
->> Hmm - based on a fairly quick read through of the code (which is never
->> ideal!). I can see that the ideal would indeed be as Lee says, to
->> expand the IIO interfaces sufficiently to support what you need.
->>
->>
->> So, reading the code (fairly quickly I'm afraid as had a lot of reviews
->> to catch up on this weekend).
->> What we need:
->> 1) DMA support in the ADC driver.  This would be a good anyway!
->> 2) DMA consumer support - I defer to Lars for comments on this.
->> 3) Means of describing and controlling the sinc filters applied. 
->> 4) Appropriate channel support.  I'm not convinced that it doesn't make
->> sense to have IIO channels for the microphones - at least in a streaming
->> mode.  It's data - I don't really care what ;)
->> Coarsely it's a filtered pulse per period counter which is
->> a perfectly valid type to have a channel for.
->>
->> The big question to my mind is the DMA consumer support. How would
->> it work. It it wouldn't this is somewhat of a non starter.
->>
->> To bring up another slightly ugly MFD case where it is borderline
->> on whether an MFD makes sense (just as a reference point of something
->> we have discussed a few times before)
->>
->> ADCs with features directed at touchscreen support.
->> These are odd as the ADC bit is generic, but the specific output
->> and read sequences used for touchscreen reading don't correspond to
->> anything that makes any real sense for other applications.
->>
->> We have started to get hybrid drives that have an MFD underneath but
->> do the ADC reads through IIO consumer interfaces, and the timing
->> control from a touchscreen driver.  We haven't really gotten this
->> one right yet either.
->>
->> Here however, to my mind things are different - as I read it
->> (and feel free to point out what I'm missing), the sound usecase
->> is just a question of setting up sampling frequencies and filters
->> appropriate to the microphones and what ASoC expects?
->>
->> That's not to say the IIO dma stuff is flexible enough (yet) to
->> handle the data flows, but perhaps we can work towards that.
-> 
-> Yeah, so this is a bit different, but not unexpected. And I'm sure we'll see
-> more similar hardware in the future. I've talked about this before[1], the
-> cost structure of creating and manufacturing new hardware drives the design
-> in a certain direction so that we end up with general purpose hardware that
-> suddenly has applications in multiple frameworks that were previously fully
-> orthogonal.
-> 
-> This device is certainly not a multi-function-device. It only has one
-> function, it's a sigma-delta demodulator. It is rather a
-> multi-purpose-device. It can be used for sigma-delta demodulation in audio
-> applications as well as more specialized data capture applications.
-> 
-> It's comparable to something like a GPIO that can be used to control a reset
-> pin or turn on and off a LED. The GPIO chip is not considered
-> multi-function-device though, even though it can be used for many different
-> applications.
-> 
-> As for DMA we already have a lot of DMA infrastructure on the audio side and
-> we probably want to reuse that rather than inserting IIO as a middle layer
-> since audio buffer capture as different requirements from IIO buffer and
-> we'd have to go the route of the least common denominator and loose
-> expressibility in the process.
-> 
-> I've created a IIO buffer[2] that does not capture data to memory but is
-> only used to enable/disable the data capture process. We use this in setups
-> where the data is passed from the converter to a application specific
-> processing chain without ever going through system memory. This buffer could
-> probably also be used here on the audio side to control the converter state.
 
-I forgot to mention. I think the first thing we should do is work on
-terminology. This is not an ADC, this is a configurable low-pass-filter.
+--===============6434263598480531603==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="o2ewkvqxglvqaqth"
+Content-Disposition: inline
 
-It works in conjunction with a analog frontend (ADC) that produces a 1-bit
-pulse-density-modulated stream, takes that stream and converts it into N-bit
-PCM samples. The PCM samples are generated at a fraction of the PDM stream
-samplerate that corresponds to the decimation factor.
 
-This is not an unusual device. Many audio CODEC and audio controllers
-contain such a core as well as most SigmaDelta converters supported by IIO.
-What is special about this part is that it is a dedicated core that is not
-embedded in some other hardware component. This creates greater flexibility,
-but of course also greater complexity that is required to manage all that
-flexibility.
+--o2ewkvqxglvqaqth
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-We shouldn't codify anything about the kernel internal frameworks through
-which the device might be exposed into the devicetree. We should accurately
-describe the hardware (including the analog frontend) and then create a
-appropriate software structures to handle them.	
+Hi,
+
+On Sat, Jan 28, 2017 at 02:30:22PM +0000, Jonathan Cameron wrote:
+> On 27/01/17 08:20, Maxime Ripard wrote:
+> > On Thu, Jan 26, 2017 at 02:32:21PM +0100, Quentin Schulz wrote:
+> >> I've come with this solution:
+> >>
+> >> ----------------------------------------------------------------------=
+--
+> >> diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
+> >> index 012c064..117eacb 100644
+> >> --- a/drivers/mfd/axp20x.c
+> >> +++ b/drivers/mfd/axp20x.c
+> >> @@ -882,7 +882,7 @@ EXPORT_SYMBOL(axp20x_match_device);
+> >>
+> >>  int axp20x_device_probe(struct axp20x_dev *axp20x)
+> >>  {
+> >> -	int ret;
+> >> +	int ret, irq_base;
+> >>
+> >>  	ret =3D regmap_add_irq_chip(axp20x->regmap, axp20x->irq,
+> >>  				  IRQF_ONESHOT | IRQF_SHARED, -1,
+> >> @@ -893,8 +893,9 @@ int axp20x_device_probe(struct axp20x_dev *axp20x)
+> >>  		return ret;
+> >>  	}
+> >>
+> >> +	irq_base =3D regmap_irq_chip_get_base(axp20x->regmap_irqc);
+> >>  	ret =3D mfd_add_devices(axp20x->dev, -1, axp20x->cells,
+> >> -			      axp20x->nr_cells, NULL, 0, NULL);
+> >> +			      axp20x->nr_cells, NULL, irq_base, NULL);
+> >>
+> >>  	if (ret) {
+> >>  		dev_err(axp20x->dev, "failed to add MFD devices: %d\n", ret);
+> >> ----------------------------------------------------------------------=
+--
+> >>
+> >> However, this implies that all cells added by the mfd driver which are
+> >> requesting irqs will need to be changed in the same commit to remove t=
+he
+> >> regmap_irq_get_virq calls. If we don't modify the drivers, they will
+> >> purely fail to request the irqs.
+> >>
+> >> The impacted drivers are the following:
+> >>
+> >>  - drivers/extcon/extcon-axp288.c
+> >>  - drivers/input/misc/axp20x-pek.c
+> >>  - drivers/power/supply/axp20x_usb_power.c
+> >>  - drivers/power/supply/axp288_charger.c
+> >>  - drivers/power/supply/axp288_fuel_gauge.c
+
+So mostly power-supply, which is affected by this series anyways.
+Only input & extcon are added.
+
+> >> Is it really worth to do such a cleanup?
+> >=20
+> > Yes. The current behaviour goes against what everyone is expecting
+> > from the API.
+> >
+> >> I'm assuming that impacting four different subsystems at the same
+> >> time might require a bit of time to make the patch into the
+> >> kernel. I don't see also another way than doing one single patch for
+> >> all changes since the changes in the mfd driver will break all
+> >> aforementioned drivers.
+> >=20
+> > However, I think that can be fixed in a later, independant serie. This
+> > serie is quite big already and this has been long overdue, so I'd
+> > really like not to delay it once again because of a dependency on a
+> > cross-tree cleanup.
+>
+> It's not that cross tree really. Lining up this level of change to
+> go through an immutable branch pulled into each of the relevant trees
+> isn't too hard to arrange.
+
+I'm fine with doing this as a separate series, if it follows
+directly behind this one. Mainlined drivers tend to be used as
+template for new ones and this invalid IRQ resources are a bad
+example.
+
+-- Sebastian
+
+--o2ewkvqxglvqaqth
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAliOBy0ACgkQ2O7X88g7
++pqPPA//XM78NFjuy9y7ia233icGSmqJNDDwAxt9iX3wWczHVT4D7nCyPX6tVxEO
+qsYFXk+hs5mh1R7WCVjuKLsv/61QbdNsSkf6aemcIshhQoCvJ+9O4UII7QQalYPg
+40Wby5XuF+CDgUV/onecybLbMZTo9loSOwqOZZcdZZySeUnm1N2y5iroDRLCZayK
+VIzfCRxnBiDAKmtnHCp+I5G0F6hxhNyztAJM3k7z3qa9Um4ctfhDp0KQD8ZQNL17
+DoaG4KyCizopSFFtI5mNH6cgiCJL5S/T3oOkbwRbYk+9ihMOAxCkFXSNxgAtKdVP
+Q9yGG3eprr+Bg8Yc69+Vo8d1zbIFRGIONB/Z3jNiIqZDUaZkcuT2h3u60yjObsVw
+Q/tt5y99e3c+rLjapmwMXUR/Uq88Yx2I35EOYWiMIQf6r7O8jKhzx8Lllai1TH2g
+J+mgS8NJBcNdDScMxpoj5ukmHC4VHIyTdzXPXfLIeU/kkKL6XXY0Hw4IqURougQk
+VzsamV683I5kk8IbTOIeIBv7kBiSt53425qOEWvSbgBz3peyhMzvonDOS6jKRJCx
+fJMWIynLj8+m69VAxyUz2O6n0DLQt2oMmde2leYeeUzHoQdmAQ5ihFwIQuKr1B/C
+aqgGzw/IDl4ZgIhJK6WiN/d3gUWxxIXbScDVhQdNDsKTWHST8to=
+=KQP9
+-----END PGP SIGNATURE-----
+
+--o2ewkvqxglvqaqth--
+
+
+--===============6434263598480531603==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6434263598480531603==--
