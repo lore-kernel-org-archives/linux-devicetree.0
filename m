@@ -1,163 +1,140 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 4/5] iio: imu: st_lsm6dsx: add support to lsm6ds3h
-Date: Sun, 29 Jan 2017 11:49:27 +0100
-Message-ID: <20170129104928.15533-5-lorenzo.bianconi@st.com>
-References: <20170129104928.15533-1-lorenzo.bianconi@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170129104928.15533-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Sun, 29 Jan 2017 11:20:52 +0000
+Message-ID: <0bf34853-d0fa-8cb6-29fb-398d6951fdff@kernel.org>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+ <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support to STM LSM6DS3H 6-axis (acc + gyro) Mems sensor
+On 24/01/17 13:32, Arnaud Pouliquen wrote:
+> 
+> 
+> On 01/24/2017 12:36 PM, Lee Jones wrote:
+>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
+>>> On 01/24/2017 09:22 AM, Lee Jones wrote:
+>>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
+>>>>
+>>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
+>>>>
+>>>> Same time as what?
+>>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
+>>> capture (through ASOC).
+>>>>
+>>>>> conversion and audio PDM microphone.
+>>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
+>>>>> For this it exports an API to handles filters and channels resources.
+>>>>
+>>>> This looks like an ADC driver?  What is it that makes it an MFD?
+>>> Yes it a kind of ADC but that supports 2 features audio and iio.
+>>> So it has to support 2 features based on 2 separate Frameworks.
+>>
+>> I'm still unsure why it needs to live in MFD.
+>>
+>> By the looks of it, this driver needs to move into IIO and you need to
+>> call into it from ASoC.
+>>
+> 
+> I think i introduce confusion by speaking about ADC for audio...
+> 
+> 1) IIO handles sigma delta ADCs that can be used as example for motor
+> controls. the aim is to get value based on an application request or
+> using some triggers.
+> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
+> 
+> 2) For audio part, we speak about Digital mems microphones that generate
+> PDM format stream. PDM is a continuous real time stream dedicated to
+> audio record and must be handled in ASOC ( codec Dmic part driver is
+> /sound/soc/codec/dmic.c).
+> DMIC example:
+> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
+> 
+> Form my point of view it very strange to handle DMICs in IIO, as it is
+> not designed to support audio streams.it is two separate features that
+> are not compatible.
+> 
+> Now, from software point of view
+> That would means that IIO declares ADCs that it can not expose, because
+> DMIC is not IIO standard. But IIO inkern API needs that device is
+> declared... So i should define a specific API in IIO for ASOC driver.
+IIO isn't designed specifically to support audio streams, but it does
+have high bandwidth continuous sampling support via the dma buffer
+side of things.  Analog devices use this stuff for software defined
+radio applications.
 
-http://www.st.com/resource/en/datasheet/lsm6ds3h.pdf
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- drivers/iio/imu/st_lsm6dsx/Kconfig             | 2 +-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h        | 2 ++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 9 +++++----
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c   | 9 ++++++++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c    | 5 +++++
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c    | 5 +++++
- 6 files changed, 26 insertions(+), 6 deletions(-)
+What we don't currently have is an in kernel consumer interface for this.
+I'm not really sure how difficult it would be to do this, but it is
+certainly sounding like there is demand for it.
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-index d264783..e573371 100644
---- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-+++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-@@ -8,7 +8,7 @@ config IIO_ST_LSM6DSX
- 	select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
- 	help
- 	  Say yes here to build support for STMicroelectronics LSM6DSx imu
--	  sensor. Supported devices: lsm6ds3, lsm6dsl, lsm6dsm
-+	  sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm
- 
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called st_lsm6dsx.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index e0ece13..6a9849e 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -15,11 +15,13 @@
- #include <linux/device.h>
- 
- #define ST_LSM6DS3_DEV_NAME	"lsm6ds3"
-+#define ST_LSM6DS3H_DEV_NAME	"lsm6ds3h"
- #define ST_LSM6DSL_DEV_NAME	"lsm6dsl"
- #define ST_LSM6DSM_DEV_NAME	"lsm6dsm"
- 
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
-+	ST_LSM6DS3H_ID,
- 	ST_LSM6DSL_ID,
- 	ST_LSM6DSM_ID,
- 	ST_LSM6DSX_MAX_ID,
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-index 73a6492e..e71ecce 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
-@@ -1,9 +1,10 @@
- /*
-  * STMicroelectronics st_lsm6dsx FIFO buffer library driver
-  *
-- * LSM6DS3/LSM6DSL/LSM6DSM: The FIFO buffer can be configured to store data
-- * from gyroscope and accelerometer. Samples are queued without any tag
-- * according to a specific pattern based on 'FIFO data sets' (6 bytes each):
-+ * LSM6DS3/LSM6DS3H/LSM6DSL/LSM6DSM: The FIFO buffer can be configured
-+ * to store data from gyroscope and accelerometer. Samples are queued
-+ * without any tag according to a specific pattern based on 'FIFO data sets'
-+ * (6 bytes each):
-  *  - 1st data set is reserved for gyroscope data
-  *  - 2nd data set is reserved for accelerometer data
-  * The FIFO pattern changes depending on the ODRs and decimation factors
-@@ -206,7 +207,7 @@ int st_lsm6dsx_update_watermark(struct st_lsm6dsx_sensor *sensor, u16 watermark)
- }
- 
- /**
-- * st_lsm6dsx_read_fifo() - LSM6DS3-LSM6DSL-LSM6DSM read FIFO routine
-+ * st_lsm6dsx_read_fifo() - LSM6DS3-LSM6DS3H-LSM6DSL-LSM6DSM read FIFO routine
-  * @hw: Pointer to instance of struct st_lsm6dsx_hw.
-  *
-  * Read samples from the hw FIFO and push them to IIO buffers.
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index 5d8d5cd..c433223 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -17,7 +17,7 @@
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-  *   - FIFO size: 8KB
-  *
-- * - LSM6DSL/LSM6DSM:
-+ * - LSM6DS3H/LSM6DSL/LSM6DSM:
-  *   - Accelerometer/Gyroscope supported ODR [Hz]: 13, 26, 52, 104, 208, 416
-  *   - Accelerometer supported full-scale [g]: +-2/+-4/+-8/+-16
-  *   - Gyroscope supported full-scale [dps]: +-125/+-245/+-500/+-1000/+-2000
-@@ -165,6 +165,13 @@ static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 		},
- 	},
- 	{
-+		.wai = 0x69,
-+		.max_fifo_size = 4096,
-+		.id = {
-+			[0] = ST_LSM6DS3H_ID,
-+		},
-+	},
-+	{
- 		.wai = 0x6a,
- 		.max_fifo_size = 4096,
- 		.id = {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-index 60a3de0..2e4ed26 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i2c.c
-@@ -71,6 +71,10 @@ static const struct of_device_id st_lsm6dsx_i2c_of_match[] = {
- 		.data = (void *)ST_LSM6DS3_ID,
- 	},
- 	{
-+		.compatible = "st,lsm6ds3h",
-+		.data = (void *)ST_LSM6DS3H_ID,
-+	},
-+	{
- 		.compatible = "st,lsm6dsl",
- 		.data = (void *)ST_LSM6DSL_ID,
- 	},
-@@ -84,6 +88,7 @@ MODULE_DEVICE_TABLE(of, st_lsm6dsx_i2c_of_match);
- 
- static const struct i2c_device_id st_lsm6dsx_i2c_id_table[] = {
- 	{ ST_LSM6DS3_DEV_NAME, ST_LSM6DS3_ID },
-+	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
- 	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
- 	{},
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-index 39edb40..1bf4a58 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_spi.c
-@@ -88,6 +88,10 @@ static const struct of_device_id st_lsm6dsx_spi_of_match[] = {
- 		.data = (void *)ST_LSM6DS3_ID,
- 	},
- 	{
-+		.compatible = "st,lsm6ds3h",
-+		.data = (void *)ST_LSM6DS3H_ID,
-+	},
-+	{
- 		.compatible = "st,lsm6dsl",
- 		.data = (void *)ST_LSM6DSL_ID,
- 	},
-@@ -101,6 +105,7 @@ MODULE_DEVICE_TABLE(of, st_lsm6dsx_spi_of_match);
- 
- static const struct spi_device_id st_lsm6dsx_spi_id_table[] = {
- 	{ ST_LSM6DS3_DEV_NAME, ST_LSM6DS3_ID },
-+	{ ST_LSM6DS3H_DEV_NAME, ST_LSM6DS3H_ID },
- 	{ ST_LSM6DSL_DEV_NAME, ST_LSM6DSL_ID },
- 	{ ST_LSM6DSM_DEV_NAME, ST_LSM6DSM_ID },
- 	{},
--- 
-2.9.3
+Probably the best person to comment is Lars who wrote the dma stuff
+in the first place and also has a more than passing familiarity with
+ASOC.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I've sent Lars a PM to highlight this thread.
+
+Jonathan
+
+> 
+> 
+>>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>>>>> ---
+>>>>>  drivers/mfd/Kconfig             |   11 +
+>>>>>  drivers/mfd/Makefile            |    2 +
+>>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
+>>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
+>>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
+>>>>>  5 files changed, 1601 insertions(+)
+>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
+>>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
+>>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
+>>>>>
+>>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>>>>> index c6df644..4bb660b 100644
+>>>>> --- a/drivers/mfd/Kconfig
+>>>>> +++ b/drivers/mfd/Kconfig
+>>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
+>>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
+>>>>>  	  Nomadik series.
+>>>>>  
+>>>>> +config MFD_STM32_DFSDM
+>>>>> +	tristate "ST Microelectronics STM32 DFSDM"
+>>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
+>>>>> +	select MFD_CORE
+>>>>> +	select REGMAP
+>>>>> +	select REGMAP_MMIO
+>>>>> +	help
+>>>>> +	  Select this option to enable the STM32 Digital Filter
+>>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
+>>>>> +	  in various STM32 series.
+>>>>> +
+>>>>>  menu "Multimedia Capabilities Port drivers"
+>>>>>  	depends on ARCH_SA1100
+>>>>
+>>>> [...]
+>>>>
+>>>
+>>> Regards
+>>> Arnaud
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
