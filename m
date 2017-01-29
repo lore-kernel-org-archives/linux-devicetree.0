@@ -1,58 +1,71 @@
 From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 0/5] usb: dwc2: Add support for USB OTG on STM32F4x9
-Date: Sun, 29 Jan 2017 00:21:05 -0200
-Message-ID: <20170129022110.54032-1-bruherrera@gmail.com>
+Subject: [PATCH v4 2/5] ARM: dts: stm32: Add USB FS support for STM32F429 MCU
+Date: Sun, 29 Jan 2017 00:21:07 -0200
+Message-ID: <20170129022110.54032-3-bruherrera@gmail.com>
+References: <20170129022110.54032-1-bruherrera@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170129022110.54032-1-bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The STM32F4x9 MCU family has two DWC2 USB OTG cores on it. One core is
-USB OTG FS and other core is USB OTG HS. The USB FS core only works with
-its internal phy whilst the USF HS core can work in HS with external ulpi
-phy or in FS/LS speed with the embedded FS PHY.
+This patch adds the USB pins and nodes for USB FS core.
 
-The goal of this patch series is to enable the use of USB OTG FS/HS cores
-in FS mode using the internal phy.
+Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Changes since v4:
-- Rebase on top of repository https://github.com/synopsys-usb/linux
-- Changes var names from STM32F4xx to STM32F4x9
-
-Changes since v3:
-- Removed commented lines from patch (sent by mistake)
-- Split DTS patch by boards and SOC
-- Removed unnecessary pinctrl nodes from DTS files
-
-Changes since v2:
-- Rename driver variables to meet the driver standard
-- Add compatible string for HS core
-
-Changes since v1:
-- Add dwc2_core_params structure for stm32f4 otg fs
-- Add compatible string for FS core/mode
-- Use GGPIO register to deativate power down of the phy
-
-Bruno Herrera (5):
-  usb: dwc2: Add support for STM32F429/439/469 USB OTG HS/FS in FS mode
-    (internal PHY)
-  ARM: dts: stm32: Add USB FS support for STM32F429 MCU
-  ARM: dts: stm32: Enable USB FS on stm32f469-disco
-  ARM: dts: stm32: Enable USB HS in FS mode (embedded phy) on
-    stm32f429-disco
-  dt-bindings: Document the STM32 USB OTG DWC2 core binding
-
- Documentation/devicetree/bindings/usb/dwc2.txt |  4 ++++
- arch/arm/boot/dts/stm32f429-disco.dts          | 16 +++++++++++++
- arch/arm/boot/dts/stm32f429.dtsi               | 31 ++++++++++++++++++++++++++
- arch/arm/boot/dts/stm32f469-disco.dts          | 16 +++++++++++++
- drivers/usb/dwc2/core.h                        |  4 ++++
- drivers/usb/dwc2/hcd.c                         | 13 ++++++++++-
- drivers/usb/dwc2/hw.h                          |  2 ++
- drivers/usb/dwc2/params.c                      | 20 +++++++++++++++++
- 8 files changed, 105 insertions(+), 1 deletion(-)
-
+diff --git a/arch/arm/boot/dts/stm32f429.dtsi b/arch/arm/boot/dts/stm32f429.dtsi
+index e4dae0e..9afa455 100644
+--- a/arch/arm/boot/dts/stm32f429.dtsi
++++ b/arch/arm/boot/dts/stm32f429.dtsi
+@@ -316,6 +316,28 @@
+ 				};
+ 			};
+ 
++			usbotg_fs_pins_a: usbotg_fs@0 {
++				pins {
++					pinmux = <STM32F429_PA10_FUNC_OTG_FS_ID>,
++						 <STM32F429_PA11_FUNC_OTG_FS_DM>,
++						 <STM32F429_PA12_FUNC_OTG_FS_DP>;
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <2>;
++				};
++			};
++
++			usbotg_fs_pins_b: usbotg_fs@1 {
++				pins {
++					pinmux = <STM32F429_PB12_FUNC_OTG_HS_ID>,
++						 <STM32F429_PB14_FUNC_OTG_HS_DM>,
++						 <STM32F429_PB15_FUNC_OTG_HS_DP>;
++					bias-disable;
++					drive-push-pull;
++					slew-rate = <2>;
++				};
++			};
++
+ 			usbotg_hs_pins_a: usbotg_hs@0 {
+ 				pins {
+ 					pinmux = <STM32F429_PH4_FUNC_OTG_HS_ULPI_NXT>,
+@@ -420,6 +442,15 @@
+ 			status = "disabled";
+ 		};
+ 
++		usbotg_fs: usb@50000000 {
++			compatible = "st,stm32f4x9-fsotg";
++			reg = <0x50000000 0x40000>;
++			interrupts = <67>;
++			clocks = <&rcc 0 39>;
++			clock-names = "otg";
++			status = "disabled";
++		};
++
+ 		rng: rng@50060800 {
+ 			compatible = "st,stm32-rng";
+ 			reg = <0x50060800 0x400>;
 -- 
 2.10.1 (Apple Git-78)
 
