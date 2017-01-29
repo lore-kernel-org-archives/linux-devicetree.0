@@ -1,119 +1,65 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] devicetree: power: add battery state machine
- documentation
-Date: Sun, 29 Jan 2017 18:27:39 +0100
-Message-ID: <20170129172739.suyqlcit6hytc3rg@earth>
-References: <20170122071404.9654-3-matt@ranostay.consulting>
- <20170122222212.27086-1-liam@networkimprov.net>
- <CAKvHMgS9ZxE2qxDqeAVRJFzerjkJV=io58aQjtU51j=kFzbYtw@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 1/3 v2] watchdog: add DT bindings for Cortina Gemini
+Date: Sun, 29 Jan 2017 09:29:07 -0800
+Message-ID: <d91d6166-dfce-ff90-5ce7-26ba7d0dd4b7@roeck-us.net>
+References: <20170128225905.24549-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="eh5elnuadhhkd4k2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKvHMgS9ZxE2qxDqeAVRJFzerjkJV=io58aQjtU51j=kFzbYtw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170128225905.24549-1-linus.walleij@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, Wim Van Sebroeck <wim@iguana.be>
+Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 01/28/2017 02:59 PM, Linus Walleij wrote:
+> This adds DT bindings for the Cortina systems Gemini SoC
+> watchdog timer.
+>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
---eh5elnuadhhkd4k2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Hi,
-
-On Tue, Jan 24, 2017 at 11:56:33AM -0800, Liam Breck wrote:
-> On Sun, Jan 22, 2017 at 2:22 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrot=
-e:
-> > I think Matt meant the following :-)
-> >
-> > Note: nominal-microvolt is not the correct term for termination voltage.
-> > Changed to termination-microvolt
-> > ---
-> >
-> > Documentation on battery properties that can be defined for
-> > fine tuning fuel gauge state machines.
-> >
-> > From: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/power/supply/battery.txt   | 34 ++++++++++++++=
-++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/supply/batt=
-ery.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt=
- b/Documentation/devicetree/bindings/power/supply/battery.txt
-> > new file mode 100644
-> > index 000000000000..398b4d622883
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
-> > @@ -0,0 +1,34 @@
-> > +Battery Characteristics
-> > +
-> > +Required Properties:
-> > + - compatible: Must be "fixed-battery"
-> > +
-> > +Optional Properties:
-> > + - termination-microvolt: dead battery voltage
-> > + - design-microwatt-hours: battery design energy
-> > + - design-microamp-hours: battery design capacity
->=20
->=20
-> Two more battery characteristics should be included. Battery chargers
-> need them (for instance, BQ24190).
->=20
-> - precharge-microamps: maximum charge current during precharge
->   phase (typically 20% of battery capacity)
->=20
-> - termination-microamps: a charge cycle terminates when the
->   battery voltage is above recharge threshold, and the current is below
->   this setting (typically 10% of battery capacity)
-
-I guess quite a few battery characteristics could be added. Let's
-do this once we have a user for them.
-
-> Perhaps termination-microvolt should be called terminal-microvolt or
-> similar to avoid confusion.
->=20
-> Sebastian, did you want to include the other fields from your example?
-
-Let's add properties once we have users for them. I just
-used the stuff printed on my Nokia N900's battery as an
-example :) I guess chemistry-type may actually be useful
-already. I think at least some bq27xxx chips would also
-work with LiPo based batteries.
-
--- Sebastian
-
---eh5elnuadhhkd4k2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAliOJgsACgkQ2O7X88g7
-+pqyLhAAkp3IyuZ5f2le8BxiKGJ/Ih1sgxo1acmPQI+KFbEpA+R8ZcUAi1wwsarK
-CYbb/8biA5WS/q67Vxf9LcmFH4fWD5ViVZNVzRPJJgpVWnEnk9YHPt9ApJcb0osn
-GD1S4FO0p+Qhv8iknIut+aLh9vtDWeNcZPp4KJ45G+tbA5BR6s/hdrsXlOvZqBIc
-H+BjH1AWg8RgxA7Pb7NgP+sOQuHQOY9gfOaxdu8v0VrhlFr0xAI2qdOebJtX6rEC
-RKvWO+ByWqIdlqA/dX0Krj8PXhT3oJK0hjnejOQno+bPwCeawlMgk5C7kqYdQuGQ
-CST5v/wxXOgbZROm0CJWyDhjDHWWRLm5cH0bS+7yfC3i9OOiyyZWOejpq4bJLeP4
-jpVXf+91yt5hlSbD2shozVCEeL9AwDX9gxmK+GkKqVvWS/abTJSnH0wItuJr0CXs
-K3rH/Yfztg6Bml96kmUdikOKmyP7OM2S/AkV2xGUr88xOyeF/9iTiaGNWM8RhWtR
-7B1FdsKxtLUFabpCNqHaPCIXV+1fRErvf5/1yez4LninEfgUjOF40/0ZcpwZix5q
-y0FQIc0M354apadavjmDAVe1Zdu4emeLgwnX2ST0ZI4q5CIwRd7jPb556H4iniwL
-rTJoC5PXxi0eK3R9zpxajIHeZNjBD1LoEy8NKQDiOsJ0sJ9RFjI=
-=KT8t
------END PGP SIGNATURE-----
-
---eh5elnuadhhkd4k2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> ChangeLog v1->v2:
+> - Make the timeout an optional property
+> - Do not mention any Linux defaults if the property is not there
+> ---
+>  .../bindings/watchdog/cortina,gemin-watchdog.txt        | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+>
+> diff --git a/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt b/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+> new file mode 100644
+> index 000000000000..bc4b865d178b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/cortina,gemin-watchdog.txt
+> @@ -0,0 +1,17 @@
+> +Cortina Systems Gemini SoC Watchdog
+> +
+> +Required properties:
+> +- compatible : must be "cortina,gemini-watchdog"
+> +- reg : shall contain base register location and length
+> +- interrupts : shall contain the interrupt for the watchdog
+> +
+> +Optional properties:
+> +- timeout-sec : the default watchdog timeout in seconds.
+> +
+> +Example:
+> +
+> +watchdog@41000000 {
+> +	compatible = "cortina,gemini-watchdog";
+> +	reg = <0x41000000 0x1000>;
+> +	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>;
+> +};
+>
