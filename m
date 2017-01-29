@@ -1,38 +1,65 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH] ARM: dts: imx53-qsb-common: fix FEC pinmux config
-Date: Sun, 29 Jan 2017 10:05:56 +0800
-Message-ID: <20170129020554.GG5662@dragon>
-References: <20170125052548.27402-1-linux-kernel-dev@beckhoff.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] Documentation: DT: Add entry for FSL LS1012A RDB,
+ FRDM, QDS boards
+Date: Sun, 29 Jan 2017 10:10:40 +0800
+Message-ID: <20170129021039.GA11950@dragon>
+References: <1478714651-12679-1-git-send-email-harninder.rai@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170125052548.27402-1-linux-kernel-dev@beckhoff.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel-dev@beckhoff.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Patrick Bruenn <p.bruenn@beckhoff.com>, trini@konsulko.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, sbabic@denx.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1478714651-12679-1-git-send-email-harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 06:25:48AM +0100, linux-kernel-dev@beckhoff.com wrote:
-> From: Patrick Bruenn <p.bruenn@beckhoff.com>
-> 
-> The pinmux configuration in device tree was different from manual
-> muxing in <u-boot>/board/freescale/mx53loco/mx53loco.c
-> All pins were configured as NO_PAD_CTL(1 << 31), which was fine as the
-> bootloader already did the correct pinmuxing for us.
-> But recently u-boot is migrating to reuse device tree files from the
-> kernel tree, so it seems to be better to have the correct pinmuxing in
-> our files, too.
-> 
-> Signed-off-by: Patrick Bruenn <p.bruenn@beckhoff.com>
+On Wed, Nov 09, 2016 at 11:34:11PM +0530, Harninder Rai wrote:
+> Signed-off-by: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
+> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
 
-Applied, thanks.
+Applied all 3, thanks.
+
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.txt | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+> index d6ee9c6..3b01338 100644
+> --- a/Documentation/devicetree/bindings/arm/fsl.txt
+> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
+> @@ -139,6 +139,22 @@ Example:
+>  Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
+>  ----------------------------------------------------------------
+>  
+> +LS1012A SoC
+> +Required root node properties:
+> +    - compatible = "fsl,ls1012a";
+> +
+> +LS1012A ARMv8 based RDB Board
+> +Required root node properties:
+> +    - compatible = "fsl,ls1012a-rdb", "fsl,ls1012a";
+> +
+> +LS1012A ARMv8 based FRDM Board
+> +Required root node properties:
+> +    - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
+> +
+> +LS1012A ARMv8 based QDS Board
+> +Required root node properties:
+> +    - compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
+> +
+>  LS1043A SoC
+>  Required root node properties:
+>      - compatible = "fsl,ls1043a";
+> -- 
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
