@@ -1,7 +1,7 @@
 From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 5/5] dt-bindings: Document the STM32 USB OTG DWC2 core binding
-Date: Sun, 29 Jan 2017 00:21:10 -0200
-Message-ID: <20170129022110.54032-6-bruherrera@gmail.com>
+Subject: [PATCH v4 3/5] ARM: dts: stm32: Enable USB FS on stm32f469-disco
+Date: Sun, 29 Jan 2017 00:21:08 -0200
+Message-ID: <20170129022110.54032-4-bruherrera@gmail.com>
 References: <20170129022110.54032-1-bruherrera@gmail.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170129022110.54032-1-bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,29 +10,44 @@ To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@pu
 Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the documentation for STM32F4x9 USB OTG FS/HS compatible strings.
+This patch enables USB FS on stm32f469-disco with 5V VBUS enable.
 
 Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/stm32f469-disco.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index 6c7c2bce..00bea03 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -14,6 +14,10 @@ Required properties:
-   - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
-   - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
-   - snps,dwc2: A generic DWC2 USB controller with default parameters.
-+  - "st,stm32f4x9-fsotg": The DWC2 USB FS/HS controller instance in STM32F4x9 SoCs
-+  configured in FS mode;
-+  - "st,stm32f4x9-hsotg": The DWC2 USB HS controller instance in STM32F4x9 SoCs
-+  configured in HS mode;
- - reg : Should contain 1 register range (address and length)
- - interrupts : Should contain 1 interrupt
- - clocks: clock provider specifier
+diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
+index 8877c00..3e0a83e 100644
+--- a/arch/arm/boot/dts/stm32f469-disco.dts
++++ b/arch/arm/boot/dts/stm32f469-disco.dts
+@@ -68,6 +68,15 @@
+ 	soc {
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
++
++	/* This turns on vbus for otg for host mode (dwc2) */
++	vcc5v_otg: vcc5v-otg-regulator {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpiob 2 0>;
++		regulator-name = "vcc5_host1";
++		regulator-always-on;
++	};
+ };
+ 
+ &rcc {
+@@ -81,3 +90,10 @@
+ &usart3 {
+ 	status = "okay";
+ };
++
++&usbotg_fs {
++	dr_mode = "host";
++	pinctrl-0 = <&usbotg_fs_pins_a>;
++	pinctrl-names = "default";
++	status = "okay";
++};
 -- 
 2.10.1 (Apple Git-78)
 
