@@ -1,104 +1,36 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/5] iio: imu: st_lsm6dsx: add support to multiple devices with the same settings
-Date: Sun, 29 Jan 2017 11:49:24 +0100
-Message-ID: <20170129104928.15533-2-lorenzo.bianconi@st.com>
+Subject: [PATCH 3/5] Documentation: dt: iio: imu: st_lsm6dsx: add lsm6dsl sensor device binding
+Date: Sun, 29 Jan 2017 11:49:26 +0100
+Message-ID: <20170129104928.15533-4-lorenzo.bianconi@st.com>
 References: <20170129104928.15533-1-lorenzo.bianconi@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170129104928.15533-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add capability to support multiple devices with the same
-st_lsm6dsx_settings like LSM6DSM/LSM6DSL
-
 Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  3 ++-
- drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 30 +++++++++++++++-------------
- 2 files changed, 18 insertions(+), 15 deletions(-)
+ Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-index 69deafe..2c1bb9e 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
-@@ -20,6 +20,7 @@
- enum st_lsm6dsx_hw_id {
- 	ST_LSM6DS3_ID,
- 	ST_LSM6DSM_ID,
-+	ST_LSM6DSX_MAX_ID,
- };
- 
- #define ST_LSM6DSX_CHAN_SIZE		2
-@@ -50,7 +51,7 @@ struct st_lsm6dsx_reg {
- struct st_lsm6dsx_settings {
- 	u8 wai;
- 	u16 max_fifo_size;
--	enum st_lsm6dsx_hw_id id;
-+	enum st_lsm6dsx_hw_id id[ST_LSM6DSX_MAX_ID];
- };
- 
- enum st_lsm6dsx_sensor_id {
-diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-index c92ddcc..499e60a 100644
---- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-+++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
-@@ -74,12 +74,6 @@
- #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
- #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
- 
--#define ST_LSM6DS3_WHOAMI			0x69
--#define ST_LSM6DSM_WHOAMI			0x6a
--
--#define ST_LSM6DS3_MAX_FIFO_SIZE		8192
--#define ST_LSM6DSM_MAX_FIFO_SIZE		4096
--
- #define ST_LSM6DSX_ACC_FS_2G_GAIN		IIO_G_TO_M_S_2(61)
- #define ST_LSM6DSX_ACC_FS_4G_GAIN		IIO_G_TO_M_S_2(122)
- #define ST_LSM6DSX_ACC_FS_8G_GAIN		IIO_G_TO_M_S_2(244)
-@@ -164,14 +158,18 @@ static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
- 
- static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
- 	{
--		.wai = ST_LSM6DS3_WHOAMI,
--		.max_fifo_size = ST_LSM6DS3_MAX_FIFO_SIZE,
--		.id = ST_LSM6DS3_ID,
-+		.wai = 0x69,
-+		.max_fifo_size = 8192,
-+		.id = {
-+			[0] = ST_LSM6DS3_ID,
-+		},
- 	},
- 	{
--		.wai = ST_LSM6DSM_WHOAMI,
--		.max_fifo_size = ST_LSM6DSM_MAX_FIFO_SIZE,
--		.id = ST_LSM6DSM_ID,
-+		.wai = 0x6a,
-+		.max_fifo_size = 4096,
-+		.id = {
-+			[0] = ST_LSM6DSM_ID,
-+		},
- 	},
- };
- 
-@@ -241,11 +239,15 @@ int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
- 
- static int st_lsm6dsx_check_whoami(struct st_lsm6dsx_hw *hw, int id)
- {
--	int err, i;
-+	int err, i, j;
- 	u8 data;
- 
- 	for (i = 0; i < ARRAY_SIZE(st_lsm6dsx_sensor_settings); i++) {
--		if (id == st_lsm6dsx_sensor_settings[i].id)
-+		for (j = 0; j < ST_LSM6DSX_MAX_ID; j++) {
-+			if (id == st_lsm6dsx_sensor_settings[i].id[j])
-+				break;
-+		}
-+		if (j < ST_LSM6DSX_MAX_ID)
- 			break;
- 	}
+diff --git a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+index cf81afd..048eca7 100644
+--- a/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
++++ b/Documentation/devicetree/bindings/iio/imu/st_lsm6dsx.txt
+@@ -3,6 +3,7 @@
+ Required properties:
+ - compatible: must be one of:
+   "st,lsm6ds3"
++  "st,lsm6dsl"
+   "st,lsm6dsm"
+ - reg: i2c address of the sensor / spi cs line
  
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
