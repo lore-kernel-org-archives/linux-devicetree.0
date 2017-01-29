@@ -1,95 +1,104 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module table
-Date: Sun, 29 Jan 2017 19:25:43 +0100
-Message-ID: <A169CC1E-9EC9-43CA-887B-1382F1903CE1@goldelico.com>
-References: <cover.1482936802.git.hns@goldelico.com> <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com> <20170128193558.GC38136@dtor-ws> <F39E49DD-45AF-4491-A26E-F3A9D86F30F6@goldelico.com> <20170129180108.GA10743@dtor-ws>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170129180108.GA10743@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Michael Welling <mwelling@ieee.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Igor Grinberg <grinberg@compulab.co.il>, "Andrew F. Davis" <afd@ti.com>, Mark Brown <broonie@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexander Stein <alexander.stein@systec-electronic.com>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, Petr Cvek <petr.cve>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] power: power_supply: add battery info platform
+ data retrieval
+Date: Sun, 29 Jan 2017 19:28:17 +0100
+Message-ID: <20170129182817.7xw4a3a7l6caigjx@earth>
+References: <20170122071404.9654-1-matt@ranostay.consulting>
+ <20170122071404.9654-5-matt@ranostay.consulting>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ghvkl5hmfdw6c3q2"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170122071404.9654-5-matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
 
-> Am 29.01.2017 um 19:01 schrieb Dmitry Torokhov =
-<dmitry.torokhov@gmail.com>:
+--ghvkl5hmfdw6c3q2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Sat, Jan 21, 2017 at 11:14:00PM -0800, Matt Ranostay wrote:
+> Add power_supply_get_battery_info() to get battery platform data
 >=20
-> On Sun, Jan 29, 2017 at 09:39:39AM +0100, H. Nikolaus Schaller wrote:
->> Hi Dmitry,
->>=20
->>> Am 28.01.2017 um 20:35 schrieb Dmitry Torokhov =
-<dmitry.torokhov@gmail.com>:
->>>=20
->>> On Wed, Dec 28, 2016 at 03:53:21PM +0100, H. Nikolaus Schaller =
-wrote:
->>>> Fix module table so that the driver is loaded if compiled
->>>> as module and requested by DT.
->>>>=20
->>>=20
->>> I believe I already replied to a similar patch: we alreadyhave =
-necessary
->>> aliases in this driver, we need to fix module loading to use it.
->>=20
->> Yes, you did comment on [PATCH v6 7/8] (19 Nov 2016):
->>=20
->>>> We really need to fix it between spi/i23c core and module utils =
-instead
->>>> of keeping adding duplicate IDs all over drivers. We already have =
-OF
->>>> module device table containing the same data, we should be able to =
-use
->>>> it.
->>=20
->> And Javier Martinez Canillas replied (23 Nov 2016):
->>=20
->>> Agreed, unfortunately until the I2C and SPI core are changed to =
-properly
->>> report OF modaliases, we will have to keep adding these duplicated =
-IDs.
->>>=20
->>> And changing the I2C and SPI core isn't trivial since it could break =
-a
->>> lot of drivers that rely on a platform modalias being reported (i.e: =
-no
->>> OF device IDs present in the drivers even when are registered via =
-DT).
->>=20
->> Therefore I didn't see a need to change it.
+> Signed-off-by: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>
+> ---
+>  drivers/power/supply/power_supply_core.c | 41 ++++++++++++++++++++++++++=
+++++++
+>  include/linux/power_supply.h             |  4 ++++
+>  2 files changed, 45 insertions(+)
 >=20
-> I agree that changing I2C and SPI core is not trivial, however this is
-> no reason for piling up workarounds in all drivers. Are you seriously
-> advocating going though *every* driver and copying OF data into =
-I2C/SPI
-> instead of doing the right thing and fixing the root of the issue?
+> diff --git a/drivers/power/supply/power_supply_core.c b/drivers/power/sup=
+ply/power_supply_core.c
+> index 1e0960b646e8..21490b5e233f 100644
+> --- a/drivers/power/supply/power_supply_core.c
+> +++ b/drivers/power/supply/power_supply_core.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/device.h>
+>  #include <linux/notifier.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/thermal.h>
+>  #include "power_supply.h"
+> @@ -487,6 +488,46 @@ struct power_supply *devm_power_supply_get_by_phandl=
+e(struct device *dev,
+>  EXPORT_SYMBOL_GPL(devm_power_supply_get_by_phandle);
+>  #endif /* CONFIG_OF */
+> =20
+> +int power_supply_get_battery_info(struct power_supply *psy,
+> +				  struct power_supply_battery_info *info,
+> +				  const char *property)
+> +{
+> +	struct device_node *np =3D psy->of_node;
+> +	struct device_node *power_supply_battery_info_np;
+> +	struct property *p;
+> +	char *prefix =3D "fixed-battery";
+> +	int ret;
+> +
+> +	if (!np)
+> +		return -ENXIO;
 
-If you prefer to have this done (and I agree it would be a tiny =
-improvement),
-please do it for us all. But please after merging this workaround.
+I guess we can print a warning here, that fixed-battery is
+currently only supported for DT.
 
-I can't do it since I have no idea how to and as you say it is =
-non-trivial.
-I am just a poor driver developer who has to use what he finds in core =
-APIs
-but has the task to make the driver work and be accepted upstream.
+> +	power_supply_battery_info_np =3D of_parse_phandle(np, property, 0);
+> +	if (!power_supply_battery_info_np)
+> +		return -ENODEV;
 
-What I don't like is if core development tasks are piggybacked on top of =
-a
-driver patch series and used as argument against acceptance of the =
-driver
-patch. IMHO, the core developers should have the task to clean up such
-workarounds after developing a modification for core and it seems to be
-common practise in other subsystems if you follow what Linus is merging
-every week.
+Let's enforce the "monitored-battery" name and remove the property
+name as parameter. Iff we need another name, it could be added later.
 
-Anyways, it piles up only in code. If you do not CONFIG the driver it =
-does
-not even matter that there are 10 more source code lines. And they are
-factored out into a clean patch 6/8 that can easily be reverted.
+-- Sebastian
 
-BR and thanks,
-Nikolaus
+--ghvkl5hmfdw6c3q2
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAliONEEACgkQ2O7X88g7
++pq/jg/6A/lL/Nux6jYKmL3DM4G6LGH7FsLUSSXbv/VM25gS6QLJtK5VehI9/LHP
+ZiHft9s/I8kj3mucjRPksbCqgSn9BEr26OXQnDGw4V+OhGke7YPRbZ5kplOHEONs
+VkRzneWAZyAXCuHwuU9oXzxhBQq2OoVwV27+DQGvZZk5G1AwzSWFvPhIENLEASa5
+iweALNCpsLqLiiEXgXkohHhy41YKma7mzjLaxwFfaFuRIT8a7wRKMY6uCugcwVtg
+O42jHFv4nn7LJKm5JSUPbeiThMMllu6F8QZ/RK0tckTSjkAqfzYh61vdFUB8evV8
+SUoGIyRbTN6LvAVaQEx3tMG2P2TJhBNfEkMYLZIFW8lqu8YRoKJlh8STDNsVCiPn
+cGMNZrlLJuPihAjKt5hmCksvVe86c1K3gxwKzmjJKJqXUxQiYiFSR2nNc3IZC1X1
+u2VrESrv3Fh3HdZaDp95URKujVdo6YcEFSWzGShNhr0XgEnmuhF7z1HVJX4mvL3s
+0eQBtidtGLuFjMv6r0/1eZ0iki2h+bq68ZLKeAClEFJLZjb5a9Exw728o7p8hNHB
+LmBbbkXeytmP+L8CIYr+3aGcWKvm/xfs9DgNDYxDtcCesRcrsTumenCfFqqaJ+qD
+4Pi8fbIWmyKBh5U21Buold30+DMx/oV2PnB16MmcJMNb5RznGkY=
+=2R0C
+-----END PGP SIGNATURE-----
+
+--ghvkl5hmfdw6c3q2--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
