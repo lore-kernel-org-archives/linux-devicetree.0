@@ -1,47 +1,64 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module table
-Date: Sun, 29 Jan 2017 09:39:39 +0100
-Message-ID: <F39E49DD-45AF-4491-A26E-F3A9D86F30F6@goldelico.com>
-References: <cover.1482936802.git.hns@goldelico.com> <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com> <20170128193558.GC38136@dtor-ws>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+From: Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: distance: add dt binding for devantech-srf04
+Date: Sun, 29 Jan 2017 10:19:31 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1701291015510.20492@pmeerw.net>
+References: <20170128235814.GA4786@andreas>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170128193558.GC38136@dtor-ws>
+In-Reply-To: <20170128235814.GA4786@andreas>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Welling <mwelling-EkmVulN54Sk@public.gmane.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Petr Cvek <petr.cve>
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Sun, 29 Jan 2017, Andreas Klinger wrote:
 
-> Am 28.01.2017 um 20:35 schrieb Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> This patch adds dt binding for devantech ultrasonic ranger srf04.
+
+comments below
+ 
+> The vendor "devantech" was already added to the vendor list with 
+> 	"[PATCH v4 1/3] iio: distance: srf08: add trivial DT binding"
 > 
-> On Wed, Dec 28, 2016 at 03:53:21PM +0100, H. Nikolaus Schaller wrote:
->> Fix module table so that the driver is loaded if compiled
->> as module and requested by DT.
->> 
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> ---
+>  .../bindings/iio/proximity/devantech-srf04.txt          | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
 > 
-> I believe I already replied to a similar patch: we alreadyhave necessary
-> aliases in this driver, we need to fix module loading to use it.
+> diff --git a/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+> new file mode 100644
+> index 000000000000..4ea29ef3ff89
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+> @@ -0,0 +1,17 @@
+> +* Devantech SRF04 ultrasonic range finder
+> +  Bit-banging driver
+> +
+> +Required properties:
+> + - compatible:	Should be "devantech,srf04"
+> + - trig-gpios:	Definition of the GPIO for the triggering input
+> + - echo-gpios:	Definition of the GPIO for the echo
 
-Yes, you did comment on [PATCH v6 7/8] (19 Nov 2016):
+"for the echo"
+maybe some more explanation? it sounds somewhat incomplete to me
 
->> We really need to fix it between spi/i23c core and module utils instead
->> of keeping adding duplicate IDs all over drivers. We already have OF
->> module device table containing the same data, we should be able to use
->> it.
+in the driver you have "failed to get echo-gpiod", maybe it should be gpios there?
 
-And Javier Martinez Canillas replied (23 Nov 2016):
-
-> Agreed, unfortunately until the I2C and SPI core are changed to properly
-> report OF modaliases, we will have to keep adding these duplicated IDs.
+> +		needs to be an interrupt input
+> +		See Documentation/devicetree/bindings/gpio/gpio.txt
+> +
+> +Example:
+> +srf04@0 {
+> +	compatible = "devantech,srf04";
+> +	trig-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+> +	echo-gpios = <&gpio2  6 GPIO_ACTIVE_HIGH>;
+> +};
+> +
 > 
-> And changing the I2C and SPI core isn't trivial since it could break a
-> lot of drivers that rely on a platform modalias being reported (i.e: no
-> OF device IDs present in the drivers even when are registered via DT).
 
-Therefore I didn't see a need to change it.
+-- 
 
-BR,
-Nikolaus
+Peter Meerwald-Stadler
++43-664-2444418 (mobile)
