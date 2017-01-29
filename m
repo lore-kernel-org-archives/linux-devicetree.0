@@ -1,140 +1,238 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Sun, 29 Jan 2017 11:20:52 +0000
-Message-ID: <0bf34853-d0fa-8cb6-29fb-398d6951fdff@kernel.org>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH 2/2] iio: distance: add devantech us ranger srf04
+Date: Sun, 29 Jan 2017 12:43:46 +0100
+Message-ID: <89d921d4-df01-133e-cb5d-ecdeb4890d61@metafoo.de>
+References: <20170128235839.GA4797@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnaud Pouliquen <arnaud.pouliquen@st.com>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170128235839.GA4797@andreas>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shraddha.6596-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w@1wt.eu, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjenning-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 24/01/17 13:32, Arnaud Pouliquen wrote:
-> 
-> 
-> On 01/24/2017 12:36 PM, Lee Jones wrote:
->> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
->>> On 01/24/2017 09:22 AM, Lee Jones wrote:
->>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
->>>>
->>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
->>>>
->>>> Same time as what?
->>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
->>> capture (through ASOC).
->>>>
->>>>> conversion and audio PDM microphone.
->>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
->>>>> For this it exports an API to handles filters and channels resources.
->>>>
->>>> This looks like an ADC driver?  What is it that makes it an MFD?
->>> Yes it a kind of ADC but that supports 2 features audio and iio.
->>> So it has to support 2 features based on 2 separate Frameworks.
->>
->> I'm still unsure why it needs to live in MFD.
->>
->> By the looks of it, this driver needs to move into IIO and you need to
->> call into it from ASoC.
->>
-> 
-> I think i introduce confusion by speaking about ADC for audio...
-> 
-> 1) IIO handles sigma delta ADCs that can be used as example for motor
-> controls. the aim is to get value based on an application request or
-> using some triggers.
-> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
-> 
-> 2) For audio part, we speak about Digital mems microphones that generate
-> PDM format stream. PDM is a continuous real time stream dedicated to
-> audio record and must be handled in ASOC ( codec Dmic part driver is
-> /sound/soc/codec/dmic.c).
-> DMIC example:
-> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
-> 
-> Form my point of view it very strange to handle DMICs in IIO, as it is
-> not designed to support audio streams.it is two separate features that
-> are not compatible.
-> 
-> Now, from software point of view
-> That would means that IIO declares ADCs that it can not expose, because
-> DMIC is not IIO standard. But IIO inkern API needs that device is
-> declared... So i should define a specific API in IIO for ASOC driver.
-IIO isn't designed specifically to support audio streams, but it does
-have high bandwidth continuous sampling support via the dma buffer
-side of things.  Analog devices use this stuff for software defined
-radio applications.
+On 01/29/2017 12:58 AM, Andreas Klinger wrote:
+> This patch adds support for the ultrasonic ranger srf04 of devantech.
 
-What we don't currently have is an in kernel consumer interface for this.
-I'm not really sure how difficult it would be to do this, but it is
-certainly sounding like there is demand for it.
+Thanks for the patch. Looks mostly good, a few small comments inline.
 
-Probably the best person to comment is Lars who wrote the dma stuff
-in the first place and also has a more than passing familiarity with
-ASOC.
+> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
+> new file mode 100644
+> index 000000000000..f458c3d9084b
+> --- /dev/null
+> +++ b/drivers/iio/proximity/srf04.c
+> @@ -0,0 +1,269 @@
+[...]
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
 
-I've sent Lars a PM to highlight this thread.
+Your driver is only a GPIO consumer, so the above include should not be
+necessary.
 
-Jonathan
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/bitops.h>
 
-> 
-> 
->>>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->>>>> ---
->>>>>  drivers/mfd/Kconfig             |   11 +
->>>>>  drivers/mfd/Makefile            |    2 +
->>>>>  drivers/mfd/stm32-dfsdm-reg.h   |  220 +++++++++
->>>>>  drivers/mfd/stm32-dfsdm.c       | 1044 +++++++++++++++++++++++++++++++++++++++
->>>>>  include/linux/mfd/stm32-dfsdm.h |  324 ++++++++++++
->>>>>  5 files changed, 1601 insertions(+)
->>>>>  create mode 100644 drivers/mfd/stm32-dfsdm-reg.h
->>>>>  create mode 100644 drivers/mfd/stm32-dfsdm.c
->>>>>  create mode 100644 include/linux/mfd/stm32-dfsdm.h
->>>>>
->>>>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->>>>> index c6df644..4bb660b 100644
->>>>> --- a/drivers/mfd/Kconfig
->>>>> +++ b/drivers/mfd/Kconfig
->>>>> @@ -1607,6 +1607,17 @@ config MFD_STW481X
->>>>>  	  in various ST Microelectronics and ST-Ericsson embedded
->>>>>  	  Nomadik series.
->>>>>  
->>>>> +config MFD_STM32_DFSDM
->>>>> +	tristate "ST Microelectronics STM32 DFSDM"
->>>>> +	depends on (ARCH_STM32 && OF) || COMPILE_TEST
->>>>> +	select MFD_CORE
->>>>> +	select REGMAP
->>>>> +	select REGMAP_MMIO
->>>>> +	help
->>>>> +	  Select this option to enable the STM32 Digital Filter
->>>>> +	  for Sigma Delta Modulators (DFSDM) driver used
->>>>> +	  in various STM32 series.
->>>>> +
->>>>>  menu "Multimedia Capabilities Port drivers"
->>>>>  	depends on ARCH_SA1100
->>>>
->>>> [...]
->>>>
->>>
->>> Regards
->>> Arnaud
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+As far as I can see nothing from bitops.h is used in this driver.
+
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+> +#include <linux/sched.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/delay.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +
+[...]	
+> +static int srf04_read(struct srf04_data *data)
+> +{
+> +	int ret;
+> +	ktime_t ktime_dt;
+> +	u64 dt_ns;
+> +	u32 time_ns;
+> +	u32 distance_mm;
+> +
+> +	mutex_lock(&data->lock);
+
+Maybe a stupid question, but what does the lock protect?
+
+> +
+> +	reinit_completion(&data->rising);
+> +	reinit_completion(&data->falling);
+> +
+> +	gpiod_set_value(data->gpiod_trig, 1);
+> +	udelay(10);
+> +	gpiod_set_value(data->gpiod_trig, 0);
+> +
+> +	mutex_unlock(&data->lock);
+> +
+> +	/* it cannot take more than 20 ms */
+> +	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
+> +	if (ret < 0)
+
+In case of a timeout wait_for_... will return 0. In case of an interrupt
+(kill event) a negative value. In the later case we should typically
+propagate the error rather than replacing it.
+
+> +		return -ETIMEDOUT;
+> +
+> +	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
+> +	if (ret < 0)
+> +		return -ETIMEDOUT;
+> +
+> +	ktime_dt = ktime_sub(data->ts_falling, data->ts_rising);
+> +
+> +	dt_ns = ktime_to_ns(ktime_dt);
+> +	/*
+> +	 * measuring more than 3 meters is beyond the posibilities of
+> +	 * the sensor
+> +	 */
+> +	if (dt_ns > 8750000) {
+> +		return -EFAULT;
+
+EFAULT means that "An invalid user space address was specified for an
+argument". EIO is usually used to indicate that there was a communication
+issue with the device.
+
+> +	}
+> +	time_ns = dt_ns;
+> +
+> +	/*
+> +	 * the speed as function of the temperature is approximately:
+> +	 * speed = 331,5 + 0,6 * Temp
+> +	 *   with Temp in °C
+> +	 *   and speed in m/s
+> +	 *
+> +	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
+> +	 * temperature
+> +	 *
+> +	 * therefore:
+> +	 * distance = time / 10^6 * 343 / 2
+> +	 *   with time in ns
+> +	 *   and distance in mm (one way)
+> +	 *
+> +	 * because we limit to 3 meters the multiplication with 343 just
+> +	 * fits into 32 bit
+> +	 */
+> +	distance_mm = time_ns * 343 / 2000000;
+> +
+> +	dev_info (data->dev, "ns: %llu, dist: %d\n", dt_ns, distance_mm);
+
+dev_dbg probably.
+
+> +
+> +	return distance_mm;
+> +}
+> +
+> +static int srf04_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *channel, int *val,
+> +			    int *val2, long mask)
+
+I know lots of drivers use the name 'mask' here, but that is a relict from a
+long long time ago and the implementation was changed and the old name it is
+not really appropriate anymore. The recommendation is to use 'info' for new
+drivers.
+
+> +{
+[...]
+> +static int srf04_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct srf04_data *data = NULL;
+
+The NULL initialization is not really necessary. The variable is never used
+until it is initialized again a few lines below. The compiler will just
+remove this.
+
+> +	struct iio_dev *indio_dev;
+> +	int ret = 0;
+
+Same here.
+
+> +
+> +	indio_dev = devm_iio_device_alloc(dev, sizeof(struct srf04_data));
+> +	if (!indio_dev) {
+> +		dev_err(dev, "failed to allocate IIO device\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data = iio_priv(indio_dev);
+> +	data->dev = dev;
+> +
+> +	mutex_init(&data->lock);
+> +	init_completion(&data->rising);
+> +	init_completion(&data->falling);
+> +
+> +	data->gpiod_trig = devm_gpiod_get(dev, "trig", GPIOD_OUT_LOW);
+> +	if (IS_ERR(data->gpiod_trig)) {
+> +		dev_err(dev, "failed to get trig-gpiod: err=%ld\n",
+> +					PTR_ERR(data->gpiod_trig));
+> +		return PTR_ERR(data->gpiod_trig);
+> +	}
+> +
+> +	data->gpiod_echo = devm_gpiod_get(dev, "echo", GPIOD_IN);
+> +	if (IS_ERR(data->gpiod_echo)) {
+> +		dev_err(dev, "failed to get echo-gpiod: err=%ld\n",
+> +					PTR_ERR(data->gpiod_echo));
+> +		return PTR_ERR(data->gpiod_echo);
+> +	}
+> +
+> +	if (gpiod_cansleep(data->gpiod_echo)) {
+> +		dev_err(data->dev, "cansleep-GPIOs not supported\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	data->irqnr = gpiod_to_irq(data->gpiod_echo);
+> +	if (data->irqnr < 0) {
+> +		dev_err(data->dev, "gpiod_to_irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = request_irq(data->irqnr, srf04_handle_irq,
+> +			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
+> +			pdev->name, indio_dev);
+> +	if (ret < 0) {
+> +		dev_err(data->dev, "request_irq: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, indio_dev);
+> +
+> +	indio_dev->name = "srf04";
+> +	indio_dev->dev.parent = &pdev->dev;
+> +	indio_dev->info = &srf04_iio_info;
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->channels = srf04_chans_spec;
+> +	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
+> +
+> +	return devm_iio_device_register(dev, indio_dev);
+
+If this returns an error the interrupt needs to be freed.
+
+> +}
+> +
+> +static int srf04_remove(struct platform_device *pdev)
+> +{
+> +	struct srf04_data *data = NULL;
+> +	struct iio_dev *indio_dev;
+> +
+> +	indio_dev = platform_get_drvdata(pdev);
+> +	data = iio_priv(indio_dev);
+
+I'd write this as
+
+
+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+	struct srf04_data *data = iio_priv(indio_dev)
+
+Looks a bit cleaner in my opinion.
+
+> +
+> +	free_irq(data->irqnr, indio_dev);
+> +
+> +	return 0;
+> +}
+[...]
