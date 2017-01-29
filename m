@@ -1,65 +1,58 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] Documentation: DT: Add entry for FSL LS1012A RDB,
- FRDM, QDS boards
-Date: Sun, 29 Jan 2017 10:10:40 +0800
-Message-ID: <20170129021039.GA11950@dragon>
-References: <1478714651-12679-1-git-send-email-harninder.rai@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1478714651-12679-1-git-send-email-harninder.rai-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 4/5] ARM: dts: stm32: Enable USB HS in FS mode (embedded phy) on stm32f429-disco
+Date: Sun, 29 Jan 2017 00:21:09 -0200
+Message-ID: <20170129022110.54032-5-bruherrera@gmail.com>
+References: <20170129022110.54032-1-bruherrera@gmail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170129022110.54032-1-bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 09, 2016 at 11:34:11PM +0530, Harninder Rai wrote:
-> Signed-off-by: Harninder Rai <harninder.rai-3arQi8VN3Tc@public.gmane.org>
-> Signed-off-by: Bhaskar Upadhaya <Bhaskar.Upadhaya-3arQi8VN3Tc@public.gmane.org>
+This patch enables USB HS working in FS mode on stm32f429-disco
+with 5V VBUS enable.
 
-Applied all 3, thanks.
+Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/arm/boot/dts/stm32f429-disco.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-> ---
->  Documentation/devicetree/bindings/arm/fsl.txt | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
-> index d6ee9c6..3b01338 100644
-> --- a/Documentation/devicetree/bindings/arm/fsl.txt
-> +++ b/Documentation/devicetree/bindings/arm/fsl.txt
-> @@ -139,6 +139,22 @@ Example:
->  Freescale ARMv8 based Layerscape SoC family Device Tree Bindings
->  ----------------------------------------------------------------
->  
-> +LS1012A SoC
-> +Required root node properties:
-> +    - compatible = "fsl,ls1012a";
-> +
-> +LS1012A ARMv8 based RDB Board
-> +Required root node properties:
-> +    - compatible = "fsl,ls1012a-rdb", "fsl,ls1012a";
-> +
-> +LS1012A ARMv8 based FRDM Board
-> +Required root node properties:
-> +    - compatible = "fsl,ls1012a-frdm", "fsl,ls1012a";
-> +
-> +LS1012A ARMv8 based QDS Board
-> +Required root node properties:
-> +    - compatible = "fsl,ls1012a-qds", "fsl,ls1012a";
-> +
->  LS1043A SoC
->  Required root node properties:
->      - compatible = "fsl,ls1043a";
-> -- 
-> 2.7.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/arch/arm/boot/dts/stm32f429-disco.dts b/arch/arm/boot/dts/stm32f429-disco.dts
+index 7d0415e..216782f 100644
+--- a/arch/arm/boot/dts/stm32f429-disco.dts
++++ b/arch/arm/boot/dts/stm32f429-disco.dts
+@@ -88,6 +88,14 @@
+ 			gpios = <&gpioa 0 0>;
+ 		};
+ 	};
++
++	/* This turns on vbus for otg for host mode (dwc2) */
++	vcc5v_otg: vcc5v-otg-regulator {
++		compatible = "regulator-fixed";
++		gpio = <&gpioc 4 0>;
++		regulator-name = "vcc5_host1";
++		regulator-always-on;
++	};
+ };
+ 
+ &clk_hse {
+@@ -99,3 +107,11 @@
+ 	pinctrl-names = "default";
+ 	status = "okay";
+ };
++
++&usbotg_hs {
++	compatible = "st,stm32f4x9-fsotg";
++	dr_mode = "host";
++	pinctrl-0 = <&usbotg_fs_pins_b>;
++	pinctrl-names = "default";
++	status = "okay";
++};
+-- 
+2.10.1 (Apple Git-78)
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
