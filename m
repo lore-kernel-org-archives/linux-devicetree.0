@@ -1,57 +1,75 @@
-From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v4 3/5] ARM: dts: stm32: Enable USB FS on stm32f469-disco
-Date: Sun, 29 Jan 2017 00:21:08 -0200
-Message-ID: <20170129022110.54032-4-bruherrera@gmail.com>
-References: <20170129022110.54032-1-bruherrera@gmail.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170129022110.54032-1-bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH v3 00/10] Allwinner H5 and Orange Pi PC2 support
+Date: Sun, 29 Jan 2017 10:33:21 +0800
+Message-ID: <20170129023331.62106-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBKNJWXCAKGQEYHAZWVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables USB FS on stm32f469-disco with 5V VBUS enable.
+Allwinner H5 is a 64-bit SoC with a design like the 32-bit
+H3.
 
-Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/stm32f469-disco.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+This patchset adds support for it, along with the first available
+board -- Orange Pi PC2.
 
-diff --git a/arch/arm/boot/dts/stm32f469-disco.dts b/arch/arm/boot/dts/stm32f469-disco.dts
-index 8877c00..3e0a83e 100644
---- a/arch/arm/boot/dts/stm32f469-disco.dts
-+++ b/arch/arm/boot/dts/stm32f469-disco.dts
-@@ -68,6 +68,15 @@
- 	soc {
- 		dma-ranges = <0xc0000000 0x0 0x10000000>;
- 	};
-+
-+	/* This turns on vbus for otg for host mode (dwc2) */
-+	vcc5v_otg: vcc5v-otg-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpiob 2 0>;
-+		regulator-name = "vcc5_host1";
-+		regulator-always-on;
-+	};
- };
- 
- &rcc {
-@@ -81,3 +90,10 @@
- &usart3 {
- 	status = "okay";
- };
-+
-+&usbotg_fs {
-+	dr_mode = "host";
-+	pinctrl-0 = <&usbotg_fs_pins_a>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
+Some drivers are also enabled to be built on ARM64 ARCH_SUNXI
+platform, in order to make the internal audio codec work.
+
+Andre Przywara (3):
+  arm: dts: sun8i: split Allwinner H3 .dtsi
+  arm64: dts: allwinner: add Allwinner H5 .dtsi
+  arm64: dts: sunxi: add support for the Orange Pi PC 2 board
+
+Icenowy Zheng (7):
+  drivers: pinctrl: add driver for Allwinner H5 SoC
+  arm64: allwinner: Kconfig: add essential pinctrl driver for H5
+  clk: sunxi-ng: rename sun8i-h3 driver to sunxi-h3-h5
+  clk: sunxi-ng: add support for Allwinner H5 SoC
+  clk: sunxi-ng: remove transitional headers for dt-bindings
+  dmaengine: sun6i: allow build on ARM64 platforms (sun50i)
+  ASoC: sunxi: allow the analog codec driver to be built on ARM64
+
+ .../devicetree/bindings/clock/sunxi-ccu.txt        |   1 +
+ .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   1 +
+ arch/arm/boot/dts/sun8i-h3.dtsi                    | 571 ++-------------------
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi                 | 557 ++++++++++++++++++++
+ arch/arm64/Kconfig.platforms                       |   5 +-
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts  | 164 ++++++
+ arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi       | 139 +++++
+ arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi     |   1 +
+ drivers/clk/sunxi-ng/Kconfig                       |   6 +-
+ drivers/clk/sunxi-ng/Makefile                      |   2 +-
+ .../sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} | 179 ++++++-
+ .../sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} |  15 +-
+ drivers/dma/Kconfig                                |   2 +-
+ drivers/pinctrl/sunxi/Kconfig                      |   4 +
+ drivers/pinctrl/sunxi/Makefile                     |   1 +
+ drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c          | 558 ++++++++++++++++++++
+ .../clock/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h}    |  11 +-
+ .../reset/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h}    |  11 +-
+ sound/soc/sunxi/Kconfig                            |   2 +-
+ 20 files changed, 1662 insertions(+), 569 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sunxi-h3-h5.dtsi
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-pc2.dts
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi
+ create mode 120000 arch/arm64/boot/dts/allwinner/sunxi-h3-h5.dtsi
+ rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} (80%)
+ rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} (82%)
+ create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun50i-h5.c
+ rename include/dt-bindings/clock/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h} (95%)
+ rename include/dt-bindings/reset/{sun8i-h3-ccu.h => sunxi-h3-h5-ccu.h} (94%)
+
 -- 
-2.10.1 (Apple Git-78)
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
