@@ -1,81 +1,69 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 2/8] pinctrl: stm32: use gpio-ranges to declare bank range
-Date: Mon, 30 Jan 2017 17:29:55 +0100
-Message-ID: <2d0cd144-9a72-52d5-b2c9-c6c9e09ac494@st.com>
-References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
- <1485533721-9019-3-git-send-email-alexandre.torgue@st.com>
- <CACRpkdYtZCJVrZhXOPXd-MNMX0Ry_H1dLQopKwsj9HnO03BtKg@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: sun8i: dt: Add mali node
+Date: Mon, 30 Jan 2017 10:40:25 -0600
+Message-ID: <CAL_JsqLs8bMjx2AcLePeNSxXDs0UAaReLrfaGRZOEun3tVqwiw@mail.gmail.com>
+References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
+ <681511dd6370b9146ae8e3f8009eba1e15d36cc0.1485180017.git-series.maxime.ripard@free-electrons.com>
+ <20170127202119.cnnuuojtjor6rleg@rob-hp-laptop> <20170130140015.dopcfbula6spu2xo@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdYtZCJVrZhXOPXd-MNMX0Ry_H1dLQopKwsj9HnO03BtKg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Patrice Chotard <patrice.chotard@st.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130140015.dopcfbula6spu2xo@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
-
-On 01/30/2017 04:19 PM, Linus Walleij wrote:
-> On Fri, Jan 27, 2017 at 5:15 PM, Alexandre TORGUE
-> <alexandre.torgue@st.com> wrote:
+On Mon, Jan 30, 2017 at 8:00 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi Rob,
 >
->> Use device tree entries to declare gpio range. It will allow to use
->> no contiguous gpio bank and holes inside a bank.
+> On Fri, Jan 27, 2017 at 02:21:19PM -0600, Rob Herring wrote:
+>> On Mon, Jan 23, 2017 at 03:00:46PM +0100, Maxime Ripard wrote:
+>> > The A23 and A33 have an ARM Mali 400 GPU. Now that we have a binding, add
+>> > it to our DT.
+>> >
+>> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> > ---
+>> >  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 26 ++++++++++++++++++++++++++
+>> >  1 file changed, 26 insertions(+), 0 deletions(-)
+>> >
+>> > diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> > index e4991a78ad73..982705719ef2 100644
+>> > --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> > +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+>> > @@ -486,6 +486,32 @@
+>> >                     #size-cells = <0>;
+>> >             };
+>> >
+>> > +           mali: gpu@01c40000 {
 >>
->> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+>> Drop leading 0.
+>>
+>> > +                   compatible = "allwinner,sun8i-a23-mali",
+>> > +                                "allwinner,sun7i-a20-mali", "arm,mali-400";
+>> > +                   reg = <0x01c40000 0x10000>;
+>>
+>> Does this really use 64K or that's just the register spacing? Set it
+>> to what's used.
 >
-> (...)
->> +       of_property_read_string(np, "st,bank-name", &bank->gpio_chip.label);
->> +
->> +       if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &args))
->> +               bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
->> +       else {
->> +               range->name = bank->gpio_chip.label;
->> +               range->id = bank_nr;
->> +               range->pin_base = range->id * STM32_GPIO_PINS_PER_BANK;
->> +               range->base = range->id * STM32_GPIO_PINS_PER_BANK;
->> +               range->npins = npins;
->> +               range->gc = &bank->gpio_chip;
->> +               pinctrl_add_gpio_range(pctl->pctl_dev,
->> +                                      &pctl->banks[bank_nr].range);
->> +       }
-
-I Keep the old way to get range in order to keep compatibility with 
-older device tree (if no gpio ranges are defined).
-
+> The memory maps in our datasheet allocates 64k for that block. I
+> always thought that we had to put the size of the whole memory block
+> allocated to that device.
 >
-> Why are you doing this?
->
-> There is already code in drivers/gpio/gpiolib-of.c to pick ranges
-> from the device tree and add when you're adding the GPIO chips.
+> For now, the driver only uses space up to 0xe000 (so we wouldn't
+> "waste" a lot of space anyway), but what if at some point the driver
+> needs more than what we put in the DT?
 
-Yes, If I declare gpio-ranges inside DT node, the range is well handled 
-by the gpiolib. But in this condition I use gpio-ranges entry to get the 
-pin base offset for the bank we are registering. For example, if there 
-an hole between 2 banks (GPIOA, GPIOD, ...) I need to know at which pin 
-offset the bank D starts. It is the only way I found.
+Well, it should be what the h/w is, not what the driver needs.
 
-The "else" statement is here to get compatibility with older device tree 
-(which don't use gpio-ranges entry).
+I only asked because 64K spacing of peripherals is becoming common,
+but that wastes a bit of virtual address space on 32-bit if really the
+h/w registers are only <4KB. Given that it is 0xe000 in this case, it
+doesn't really matter here.
 
-Regards
-Alex
-
-
->
-> Please use that or figure out what is needed to make it work for
-> you instead of reimplementing it.
->
-> Yours,
-> Linus Walleij
->
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
