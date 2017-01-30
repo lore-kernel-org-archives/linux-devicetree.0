@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv2 13/16] ov2640: update bindings
-Date: Mon, 30 Jan 2017 15:06:25 +0100
-Message-ID: <20170130140628.18088-14-hverkuil@xs4all.nl>
+Subject: [PATCHv2 11/16] ov2640: allow use inside em28xx
+Date: Mon, 30 Jan 2017 15:06:23 +0100
+Message-ID: <20170130140628.18088-12-hverkuil@xs4all.nl>
 References: <20170130140628.18088-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
@@ -12,57 +12,50 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Update the bindings for this device based on a working DT example.
-
 Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/media/i2c/ov2640.txt       | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+ drivers/media/i2c/Kconfig  |  2 +-
+ drivers/media/i2c/ov2640.c | 14 +++++---------
+ 2 files changed, 6 insertions(+), 10 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-index c429b5b..5e6c445 100644
---- a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-@@ -1,8 +1,8 @@
- * Omnivision OV2640 CMOS sensor
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index 159ef64..1859783 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -522,7 +522,7 @@ config VIDEO_SMIAPP_PLL
  
--The Omnivision OV2640 sensor support multiple resolutions output, such as
--CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
--output format.
-+The Omnivision OV2640 sensor supports multiple resolutions output, such as
-+CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
-+output formats.
+ config VIDEO_OV2640
+ 	tristate "OmniVision OV2640 sensor support"
+-	depends on VIDEO_V4L2 && I2C
++	depends on GPIOLIB && VIDEO_V4L2 && I2C
+ 	depends on MEDIA_CAMERA_SUPPORT
+ 	help
+ 	  This is a Video4Linux2 sensor-level driver for the OmniVision
+diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
+index 565742b..bd96889 100644
+--- a/drivers/media/i2c/ov2640.c
++++ b/drivers/media/i2c/ov2640.c
+@@ -1031,15 +1031,11 @@ static int ov2640_probe(struct i2c_client *client,
+ 		return -ENOMEM;
+ 	}
  
- Required Properties:
- - compatible: should be "ovti,ov2640"
-@@ -20,20 +20,18 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
- Example:
+-	priv->clk = clk_get(&client->dev, "xvclk");
+-	if (IS_ERR(priv->clk))
+-		return -EPROBE_DEFER;
+-	clk_prepare_enable(priv->clk);
+-
+-	if (!client->dev.of_node) {
+-		dev_err(&client->dev, "Missing platform_data for driver\n");
+-		ret = -EINVAL;
+-		goto err_clk;
++	if (client->dev.of_node) {
++		priv->clk = clk_get(&client->dev, "xvclk");
++		if (IS_ERR(priv->clk))
++			return -EPROBE_DEFER;
++		clk_prepare_enable(priv->clk);
+ 	}
  
- 	i2c1: i2c@f0018000 {
-+		status = "okay";
-+
- 		ov2640: camera@0x30 {
- 			compatible = "ovti,ov2640";
- 			reg = <0x30>;
--
- 			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn &pinctrl_ov2640_resetb>;
--
--			resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
--			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
--
--			clocks = <&pck1>;
-+			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+			resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-+			pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-+			clocks = <&pck0>;
- 			clock-names = "xvclk";
--
--			assigned-clocks = <&pck1>;
-+			assigned-clocks = <&pck0>;
- 			assigned-clock-rates = <25000000>;
- 
- 			port {
+ 	ret = ov2640_init_gpio(client, priv);
 -- 
 2.10.2
 
