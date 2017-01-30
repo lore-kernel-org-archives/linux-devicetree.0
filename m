@@ -1,360 +1,44 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 5/5] arm: mvebu: Add device tree for db-dxbc2 and db-xc3-24g4xg boards
-Date: Mon, 30 Jan 2017 15:29:37 +0100
-Message-ID: <87vaswtycu.fsf@free-electrons.com>
-References: <20170129232035.25189-1-chris.packham@alliedtelesis.co.nz>
-        <20170129232035.25189-6-chris.packham@alliedtelesis.co.nz>
+From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 0/5] Add EXTI GPIO trigger support to STM32 ADC
+Date: Mon, 30 Jan 2017 15:33:55 +0100
+Message-ID: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170129232035.25189-6-chris.packham@alliedtelesis.co.nz> (Chris
-        Packham's message of "Mon, 30 Jan 2017 12:20:35 +1300")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On lun., janv. 30 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+STM32 ADC, can use GPIOs configured as EXTI line (external interrupt)
+as trigger source for conversions.
+This patchset is based on latest IIO testing branch, and adds support
+for EXTi GPIO triggers in IIO.
+It also adds a dt option to configure default trigger polarity in
+STM32 ADC driver.
 
-> These boards are Marvell's evaluation boards for the 98DX4251 and
-> 98DX3336 SoCs.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+Changes in V2:
+- Fixed Kconfig dependencies
 
-Applied on mvebu/dt
+Fabrice Gasnier (5):
+  Documentation: dt: iio: document stm32 adc trigger polarity
+  iio: adc: stm32: add dt option to set default trigger polarity
+  Documentation: dt: iio: document stm32 exti trigger
+  iio: trigger: add support for STM32 EXTI triggers
+  iio: adc: stm32: add exti gpio trigger source
 
-Thanks,
-
-Gregory
-
-> ---
->
-> Notes:
->     Changes in v5:
->     - update license text
->     - use node labels
->     Changes in v6:
->     - Rename dts files to include 'armada-xp-' prefix
->
->  arch/arm/boot/dts/armada-xp-db-dxbc2.dts      | 151 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts | 142 ++++++++++++++++++++++++
->  2 files changed, 293 insertions(+)
->  create mode 100644 arch/arm/boot/dts/armada-xp-db-dxbc2.dts
->  create mode 100644 arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
->
-> diff --git a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-> new file mode 100644
-> index 000000000000..a8130805074e
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
-> @@ -0,0 +1,151 @@
-> +/*
-> + * Device Tree file for DB-DXBC2 board
-> + *
-> + * Copyright (C) 2016 Allied Telesis Labs
-> + *
-> + * Based on armada-xp-db.dts
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + *
-> + * Note: this Device Tree assumes that the bootloader has remapped the
-> + * internal registers to 0xf1000000 (instead of the default
-> + * 0xd0000000). The 0xf1000000 is the default used by the recent,
-> + * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-> + * boards were delivered with an older version of the bootloader that
-> + * left internal registers mapped at 0xd0000000. If you are in this
-> + * situation, you should either update your bootloader (preferred
-> + * solution) or the below Device Tree should be adjusted.
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-xp-98dx4251.dtsi"
-> +
-> +/ {
-> +	model = "Marvell Bobcat2 Evaluation Board";
-> +	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0 0x00000000 0 0x20000000>; /* 512 MB */
-> +	};
-> +
-> +};
-> +
-> +&devbus_bootcs {
-> +	status = "okay";
-> +
-> +	/* Device Bus parameters are required */
-> +
-> +	/* Read parameters */
-> +	devbus,bus-width    = <16>;
-> +	devbus,turn-off-ps  = <60000>;
-> +	devbus,badr-skew-ps = <0>;
-> +	devbus,acc-first-ps = <124000>;
-> +	devbus,acc-next-ps  = <248000>;
-> +	devbus,rd-setup-ps  = <0>;
-> +	devbus,rd-hold-ps   = <0>;
-> +
-> +	/* Write parameters */
-> +	devbus,sync-enable = <0>;
-> +	devbus,wr-high-ps  = <60000>;
-> +	devbus,wr-low-ps   = <60000>;
-> +	devbus,ale-wr-ps   = <60000>;
-> +};
-> +
-> +&i2c0 {
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&nand {
-> +	status = "okay";
-> +	num-cs = <1>;
-> +	marvell,nand-keep-config;
-> +	marvell,nand-enable-arbiter;
-> +	nand-on-flash-bbt;
-> +	nand-ecc-strength = <4>;
-> +	nand-ecc-step-size = <512>;
-> +};
-> +
-> +&sdio {
-> +	pinctrl-0 = <&sdio_pins>;
-> +	pinctrl-names = "default";
-> +	status = "okay";
-> +	/* No CD or WP GPIOs */
-> +	broken-cd;
-> +};
-> +
-> +&spi0 {
-> +	status = "okay";
-> +
-> +	spi-flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "m25p64";
-> +		reg = <0>; /* Chip select 0 */
-> +		spi-max-frequency = <20000000>;
-> +		m25p,fast-read;
-> +
-> +		partition@u-boot {
-> +			reg = <0x00000000 0x00100000>;
-> +			label = "u-boot";
-> +		};
-> +		partition@u-boot-env {
-> +			reg = <0x00100000 0x00040000>;
-> +			label = "u-boot-env";
-> +		};
-> +		partition@unused {
-> +			reg = <0x00140000 0x00ec0000>;
-> +			label = "unused";
-> +		};
-> +
-> +	};
-> +};
-> diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-> new file mode 100644
-> index 000000000000..4e07cb6ed800
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
-> @@ -0,0 +1,142 @@
-> +/*
-> + * Device Tree file for DB-XC3-24G4XG board
-> + *
-> + * Copyright (C) 2016 Allied Telesis Labs
-> + *
-> + * Based on armada-xp-db.dts
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This file is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This file is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + * Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + *
-> + * Note: this Device Tree assumes that the bootloader has remapped the
-> + * internal registers to 0xf1000000 (instead of the default
-> + * 0xd0000000). The 0xf1000000 is the default used by the recent,
-> + * DT-capable, U-Boot bootloaders provided by Marvell. Some earlier
-> + * boards were delivered with an older version of the bootloader that
-> + * left internal registers mapped at 0xd0000000. If you are in this
-> + * situation, you should either update your bootloader (preferred
-> + * solution) or the below Device Tree should be adjusted.
-> + */
-> +
-> +/dts-v1/;
-> +#include "armada-xp-98dx3336.dtsi"
-> +
-> +/ {
-> +	model = "DB-XC3-24G4XG";
-> +	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
-> +
-> +	chosen {
-> +		bootargs = "console=ttyS0,115200 earlyprintk";
-> +	};
-> +
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0 0x00000000 0 0x40000000>; /* 1 GB */
-> +	};
-> +};
-> +
-> +&devbus_bootcs {
-> +	status = "okay";
-> +
-> +	/* Device Bus parameters are required */
-> +
-> +	/* Read parameters */
-> +	devbus,bus-width    = <16>;
-> +	devbus,turn-off-ps  = <60000>;
-> +	devbus,badr-skew-ps = <0>;
-> +	devbus,acc-first-ps = <124000>;
-> +	devbus,acc-next-ps  = <248000>;
-> +	devbus,rd-setup-ps  = <0>;
-> +	devbus,rd-hold-ps   = <0>;
-> +
-> +	/* Write parameters */
-> +	devbus,sync-enable = <0>;
-> +	devbus,wr-high-ps  = <60000>;
-> +	devbus,wr-low-ps   = <60000>;
-> +	devbus,ale-wr-ps   = <60000>;
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c0 {
-> +	clock-frequency = <100000>;
-> +	status = "okay";
-> +};
-> +
-> +&nand {
-> +	status = "okay";
-> +	num-cs = <1>;
-> +	marvell,nand-keep-config;
-> +	marvell,nand-enable-arbiter;
-> +	nand-on-flash-bbt;
-> +	nand-ecc-strength = <4>;
-> +	nand-ecc-step-size = <512>;
-> +};
-> +
-> +&spi0 {
-> +	status = "okay";
-> +
-> +	spi-flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "m25p64";
-> +		reg = <0>; /* Chip select 0 */
-> +		spi-max-frequency = <20000000>;
-> +		m25p,fast-read;
-> +
-> +		partition@u-boot {
-> +			reg = <0x00000000 0x00100000>;
-> +			label = "u-boot";
-> +		};
-> +		partition@u-boot-env {
-> +			reg = <0x00100000 0x00040000>;
-> +			label = "u-boot-env";
-> +		};
-> +		partition@unused {
-> +			reg = <0x00140000 0x00ec0000>;
-> +			label = "unused";
-> +		};
-> +
-> +	};
-> +};
-> -- 
-> 2.11.0.24.ge6920cf
->
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   3 +
+ .../bindings/iio/trigger/st,stm32-exti-trigger.txt |  17 +++
+ drivers/iio/adc/stm32-adc.c                        |  14 +++
+ drivers/iio/trigger/Kconfig                        |  11 ++
+ drivers/iio/trigger/Makefile                       |   1 +
+ drivers/iio/trigger/stm32-exti-trigger.c           | 124 +++++++++++++++++++++
+ include/linux/iio/trigger/stm32-exti-trigger.h     |  26 +++++
+ 7 files changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+ create mode 100644 drivers/iio/trigger/stm32-exti-trigger.c
+ create mode 100644 include/linux/iio/trigger/stm32-exti-trigger.h
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.9.1
