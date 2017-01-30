@@ -1,84 +1,44 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v5 0/13] arm64: allwinner: a64: Enable MMC support
-Date: Mon, 30 Jan 2017 11:42:18 +0100
-Message-ID: <20170130104218.34zftrdyr3m6422w@lukather>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
- <CAGb2v67stC=EaFMpTSrOirSqQL6r_jPDKsKQNishb=8g=278Gw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bnkpovf32onb7nkm"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v67stC=EaFMpTSrOirSqQL6r_jPDKsKQNishb=8g=278Gw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 1/3] dt-bindings: mfd: as3722: Drop reference to pm_power_off
+Date: Mon, 30 Jan 2017 11:51:20 +0100
+Message-ID: <20170130105122.6475-1-thierry.reding@gmail.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Guenter Roeck <linux@roeck-us.net>
 
---bnkpovf32onb7nkm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Devicetree bindings are supposed to be operating system independent and
+should thus not describe how a specific functionality is implemented in
+Linux.
 
-Hi,
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+ Documentation/devicetree/bindings/mfd/as3722.txt | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-On Sat, Jan 28, 2017 at 08:44:02PM +0800, Chen-Yu Tsai wrote:
-> On Sat, Jan 28, 2017 at 5:38 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > Hi,
-> >
-> > Here is a new attempt at getting the MMC controllers running, following=
- the
-> > work done by Andre.
-> >
-> > This has been tested on a board with one SDIO device (a Marvell WiFi ch=
-ip)
-> > and a Kingston eMMC with 1.8V IOs.
-> >
-> > For SDIO, the HS DDR mode works just fine. That serie also enables the
-> > SDR104 mode to work on the devices that are capable of this.
-> >
-> > For the eMMC, HS200 with the voltage switch works. HS400 doesn't at the
-> > moment, but since it's significantly more complex, and at the same time
-> > Allwinner recommends to limit its frequency to 100MHz, this doesn't have
-> > any benefits. If there's any at some point, this can be added later.
->=20
-> Whole series is
->=20
-> Acked-by: Chen-Yu Tsai <wens@csie.org>
->=20
-> Seems that we don't need to increase the signal drive strength for eMMC
-> on the A64? This is probably a good thing.
+diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Documentation/devicetree/bindings/mfd/as3722.txt
+index 4f64b2a73169..0b2a6099aa20 100644
+--- a/Documentation/devicetree/bindings/mfd/as3722.txt
++++ b/Documentation/devicetree/bindings/mfd/as3722.txt
+@@ -122,8 +122,7 @@ Following are properties of regulator subnode.
+ 
+ Power-off:
+ =========
+-AS3722 supports the system power off by turning off all its rail. This
+-is provided through pm_power_off.
++AS3722 supports the system power off by turning off all its rails.
+ The device node should have the following properties to enable this
+ functionality
+ ams,system-power-controller: Boolean, to enable the power off functionality
+-- 
+2.11.0
 
-=46rom what I've seen, Allwinner still recommends using a 30mA drive
-strength, so that doesn't seem needed.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---bnkpovf32onb7nkm
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYjxiGAAoJEBx+YmzsjxAgTuAP/jjm2VHtkP/VYLVgP/Vu2TvF
-fx1dxsUId1CNVOrzPEkYY2g/DJZNkj8HTEU7wKm5z7u6cEaBDhhtyFwyZvX51IbU
-FK0ECrJsaZbL0dCkhjxUnU4W0fqrXmVk302iTaxzIt68L13/P9ddWJvuwy9ZShTP
-Ai7eoKdlVG3V2wFlr2S3RaaPD9n6Nt/2XExdN1J2EhC989iRyTrIxoCFL0EgVkkj
-tDCpgTXebtx53NSLgQBykDuQWXr2tZ4V+hcUub0isFRdgXdKJGk1lH8ogf+HhocK
-Q1lA2mzRqh4neTbwEz5uESOaWRiUUdeFPojKkwwTEK37Ecphu232h92KFBb/W/gA
-euv+x0fjmDnG0cEHqmp91VgQFv//FyAvzeUmUURdhwh6JsrkBFd/lTDcDe4s0U73
-E3X2SegrlEZ1RBe10M32bNFjmtv40WJ/EQ1VDwHtw1M7ZPdXJ0liGBAzWyF/bt3P
-CUkVlEyldL4crxZ988Z8GSV2TeHh0ppndmPPYrCLnkfVwyphLrggfsRyAMmaD2q9
-rlfYF+4oP9iRYDPrrNlAmwu4O5r3PZvlwRnmafzzLLx3/ogcilog+JEQIrjpmFw6
-VxyzT+IPzkgM1ohe8nXVxCYMCAk4t693ORN4BA1Tr2XYPDpzO+9NBrtsWG1cERjs
-MFAVH/8s4Vb3zjIGJbuk
-=6ypb
------END PGP SIGNATURE-----
-
---bnkpovf32onb7nkm--
