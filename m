@@ -1,16 +1,21 @@
-From: Patrice CHOTARD <patrice.chotard@st.com>
-Subject: Re: [PATCH v2 09/10] ARM: dts: STiH407-family: Use new Pinctrl groups
-Date: Mon, 30 Jan 2017 10:10:39 +0000
-Message-ID: <ce65d79a-3697-40f8-edd5-026c68588489@st.com>
-References: <20170127172804.23881-1-lee.jones@linaro.org>
- <20170127172804.23881-10-lee.jones@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 06/12] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+ functionality
+Date: Mon, 30 Jan 2017 11:15:20 +0100
+Message-ID: <CAPDyKFrQ15bLCApOdf8BXUyyjcxQehqP=aW1hM=NKfwYmcCYOw@mail.gmail.com>
+References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
+ <3546f143091c121face8ecbcbf7f6a4c41d2cec7.1484154449.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFrwxix4zY4a1x9u6jh_gPfKTsaLnD8b8crum=pc5CN3AA@mail.gmail.com>
+ <2e67332d-d8c3-fd24-1f81-72675a09927a@intel.com>
+ <CAPDyKFqbjeKCHp40PALydquxdF-qBk156+iOS9TYYsquJ7fK7w@mail.gmail.com>
+ <00e8d2dc-bc07-addc-a5d9-8604f143627f@intel.com>
+ <CAPDyKFoF2QsTxKC7=PjHqOk106USQ-j9MtiyfC=Sqks8DnPDYQ@mail.gmail.com>
+ <1f0cc488-75f0-cff3-1386-070717aa7220@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127172804.23881-10-lee.jones@linaro.org>
-Content-Language: en-US
-Content-ID: <CD968295BC5BFB459938DF159DB06E1B@st.com>
+In-Reply-To: <1f0cc488-75f0-cff3-1386-070717aa7220@intel.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,56 +25,105 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.com" <jslaby@suse.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "dt@kernel.org" <dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+To: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infra>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee
+On 30 January 2017 at 10:40, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> On 30/01/17 11:10, Ulf Hansson wrote:
+>> On 28 January 2017 at 09:16, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>>> On 27/01/2017 5:12 p.m., Ulf Hansson wrote:
+>>>>
+>>>> On 26 January 2017 at 13:39, Adrian Hunter <adrian.hunter@intel.com>
+>>>> wrote:
+>>>>>
+>>>>> On 26/01/17 12:50, Ulf Hansson wrote:
+>>>>>>
+>>>>>> On 11 January 2017 at 18:19, Gregory CLEMENT
+>>>>>> <gregory.clement@free-electrons.com> wrote:
+>>>>>>>
+>>>>>>> +                       priv->init_card_type = MMC_TYPE_MMC;
+>>>>>>> +                       mmc->caps |= MMC_CAP_NONREMOVABLE;
+>>>>>>> +
+>>>>>>> +                       /*
+>>>>>>> +                        * Force to clear BUS_TEST to
+>>>>>>> +                        * skip bus_test_pre and bus_test_post
+>>>>>>> +                        */
+>>>>>>> +                       mmc->caps &= ~MMC_CAP_BUS_WIDTH_TEST;
+>>>>>>> +                       mmc->caps2 |= MMC_CAP2_HC_ERASE_SZ |
+>>>>>>
+>>>>>>
+>>>>>> This cap is a bit strange. It was added several years ago by Adrian
+>>>>>> Hunter, but I am wondering about the reason to why it's needed.
+>>>>>>
+>>>>>
+>>>>> MMC_CAP2_HC_ERASE_SZ relates to EXT-CSD ERASE_GROUP_DEF.
+>>>>>
+>>>>> I think it was added to enable people to choose whether they wanted a
+>>>>> large
+>>>>> or small erase granularity.  That probably doesn't matter if the card
+>>>>> supports TRIM.
+>>>>>
+>>>>
+>>>> Huh, the erase/trim/discard code in the mmc core is really hairy. :-)
+>>>>
+>>>> In mmc_calc_max_discard() the following code/comment exists:
+>>>>
+>>>> /*
+>>>>  * Without erase_group_def set, MMC erase timeout depends on clock
+>>>>  * frequence which can change.  In that case, the best choice is
+>>>>  * just the preferred erase size.
+>>>>  */
+>>>> if (mmc_card_mmc(card) && !(card->ext_csd.erase_group_def & 1))
+>>>>      return card->pref_erase;
+>>>>
+>>>>
+>>>> This makes me wonder.
+>>>>
+>>>> So, when we haven't enabled the high capacity erase groups in the
+>>>> EXT_CSD register (ext_csd.erase_group_def), we will use the pref_erase
+>>>> size.
+>>>>
+>>>> In the other case, as when having MMC_CAP2_HC_ERASE_SZ set (which will
+>>>> set ext_csd.erase_group_def),  we will instead  do some calculations
+>>>> to find out the max discards.
+>>>>
+>>>> Are you saying that these calculations doesn't matter much - or are
+>>>> you saying that we always want to do them?
+>>>
+>>>
+>>> No, I was saying that if you have TRIM then TRIM is preferred to ERASE so
+>>> the erase group size does not come into play when discarding, since ERASE
+>>> granularity is erase groups whereas TRIM granularity is sectors.
+>>
+>> Right. Thanks for clarifying.
+>>
+>>>
+>>> However ERASE_GROUP_DEF also affects the size of write protect groups.
+>>
+>> In either case.
+>>
+>> What do you think of removing MMC_CAP2_HC_ERASE_SZ? I don't like these
+>> kind of soft polices, it's better if we can decide on a common
+>> behaviour - whatever that is.
+>
+> Changing the value of ERASE_GROUP_DEF could be a problem, for example the
+> spec. says:
+>
+> "Similarly if the host set ERASE_GROUP_DEF bit for a device that the default
+> write protect was already set in some of the area in the previous power
+> cycle, then the device may show unknown behavior when host issue write
+> or erase commands to the device. In application, it is mandatory for host to
+> use same ERASE GROUP DEF value to the device all the time."
+>
+> Whether or not there is anyone that would actually be affected is hard to know.
 
-On 01/27/2017 06:28 PM, Lee Jones wrote:
-> Having just defined some new Pinctrl groups for when when HW flow-
+Okay. I am going to submit a patch that just removes the behaviour for
+MMC_CAP2_HC_ERASE_SZ and the cap itself.
 
-double "when"
+The cap isn't particular widely used anyway. Let's see what people think of it.
 
-> control is {en,dis}abled, let's reference them for use within the
-> driver.
->
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  arch/arm/boot/dts/stih407-family.dtsi | 3 +--
->  arch/arm/boot/dts/stih410-b2260.dts   | 5 ++++-
->  2 files changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stih407-family.dtsi b/arch/arm/boot/dts/stih407-family.dtsi
-> index c8b2944..e480e32 100644
-> --- a/arch/arm/boot/dts/stih407-family.dtsi
-> +++ b/arch/arm/boot/dts/stih407-family.dtsi
-> @@ -222,9 +222,8 @@
->  			compatible = "st,asc";
->  			reg = <0x9830000 0x2c>;
->  			interrupts = <GIC_SPI 122 IRQ_TYPE_NONE>;
-> -			pinctrl-names = "default";
-> -			pinctrl-0 = <&pinctrl_serial0>;
->  			clocks = <&clk_s_c0_flexgen CLK_EXT2F_A9>;
-> +			/* Pinctrl moved out to a per-board configuration */
->
->  			status = "disabled";
->  		};
-> diff --git a/arch/arm/boot/dts/stih410-b2260.dts b/arch/arm/boot/dts/stih410-b2260.dts
-> index fa16aba..8deecf6 100644
-> --- a/arch/arm/boot/dts/stih410-b2260.dts
-> +++ b/arch/arm/boot/dts/stih410-b2260.dts
-> @@ -62,8 +62,11 @@
->  		/* Low speed expansion connector */
->  		uart0: serial@9830000 {
->  			label = "LS-UART0";
-> -			status = "okay";
-> +			pinctrl-names = "default", "manual-rts";
-> +			pinctrl-0 = <&pinctrl_serial0_flowctrl>;
-> +			pinctrl-1 = <&pinctrl_serial0>;
->  			rts-gpios = <&pio17 3 GPIO_ACTIVE_LOW>;
-> +			status = "okay";
->  		};
->
->  		/* Low speed expansion connector */
->
+Thanks a lot for you input!
+
+Kind regards
+Uffe
