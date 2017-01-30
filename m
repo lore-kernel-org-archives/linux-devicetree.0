@@ -1,13 +1,13 @@
 From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
-Date: Mon, 30 Jan 2017 10:09:44 -0800
-Message-ID: <874m0gifmf.fsf@eliezer.anholt.net>
+Subject: Re: [PATCH 3/4] drm/msm: drop quirks binding
+Date: Mon, 30 Jan 2017 10:12:21 -0800
+Message-ID: <871svkifi2.fsf@eliezer.anholt.net>
 References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-3-robdclark@gmail.com>
+ <20170130164921.20744-4-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0504534425=="
+Content-Type: multipart/mixed; boundary="===============0649609282=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170130164921.20744-3-robdclark@gmail.com>
+In-Reply-To: <20170130164921.20744-4-robdclark@gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -21,7 +21,7 @@ To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org, devicetree
 Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
---===============0504534425==
+--===============0649609282==
 Content-Type: multipart/signed; boundary="=-=-=";
 	micalg=pgp-sha512; protocol="application/pgp-signature"
 
@@ -30,42 +30,45 @@ Content-Type: text/plain
 
 Rob Clark <robdclark@gmail.com> writes:
 
-> The original way we determined the gpu version was based on downstream
-> bindings from android kernel.  A cleaner way is to get the version from
-> the compatible string.
+> This was never documented or used in upstream dtb.  It is used by
+> downstream bindings from android device kernels.  But the quirks are
+> a property of the gpu revision, and as such are redundant to be listed
+> separately in dt.  Instead, move the quirks to the device table.
 >
-> Note that no upstream dtb uses these bindings.  But the code still
-> supports falling back to the legacy bindings (with a warning), so that
-> we are still compatible with the gpu dt node from android device
-> kernels.
+> Signed-off-by: Rob Clark <robdclark@gmail.com>
+> ---
+>  drivers/gpu/drm/msm/adreno/a5xx_gpu.c      |  4 ++--
+>  drivers/gpu/drm/msm/adreno/adreno_device.c | 18 ++++--------------
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c    |  1 -
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h    |  4 +---
+>  4 files changed, 7 insertions(+), 20 deletions(-)
 
-The gpulist[] seems pretty short, like you could just have 7 compatible
-strings in dt_match[] and point them directly at corresponding the
-gpulist[] entry.  Or are there lots of patch levels, with the same
-struct adreno_info values?
+Nice cleanup!
+
+Reviewed-by: Eric Anholt <eric@anholt.net>
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliPgWgACgkQtdYpNtH8
-nugDbQ/+MlPu93auoYu1xNNxF9aZ05R4M9y9+oqsD/pP+Exb6Ce1PaK43L0SMop5
-EacA6QScFz5+QzyWKEtqTkzvtUeB5zezuxaI8FhGsp6GpyAx6O3oe/gZVaQvuTIb
-Ye/bie3qxtPbMtAkdLup8e+QmSyohWTA0kviLl4i3nrEZbhPIxlM2zbVrOHrTEJW
-lBnjy1475ifgJvmewwIqNYF6VcUIVEyAhXrubPIW9KEyvab3Jj6+yhfUQC+jPtXp
-/0Ir6m9IvmM+601rD2YJEZWSZ9rBbaYX1PUE0KEXi9T2J+hT6hTBt5FOHgkhF5U0
-SeW/CMQjcNAvPK6OlqUckzdBugnv5rUTcHcWrbCSOy8g5H312llJfvyQ74PjxWQ2
-eI8ecGaoGJ56Vzk6rH4mtP2LUMVKTkjUs9JmkHSzR/78mW0tPzyR3Z4KUP5xZ638
-HVfmCp+kJsR/j65KLg0SmoK0GMeqx+niUweDyynQhYFC5Y1AKDwbr43aeAlZtBAU
-fdRlHiupoO1x/eb05oyquahoVMGj1U/FTAW6mveQnV/sqIqNsjNdk7YJlcR86fry
-B7quYAy/NxmNJlgSqa5OaWb6Xw1ukl4FcRlMG55J4t+kwQu9fm3jNOiE+K1/zqeK
-K+PCTJzORUNFkhqXz1SJ6qcr8nFDma1KxRJKWN+Tz2yXyGqfY9c=
-=zIjg
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliPggUACgkQtdYpNtH8
+nuhZmQ//ZdB0NJBm8Tkgc2OIZW76WxSQrV+78Rp8fzwNGz/vO/Y1mzJtNje3Qclo
+unVs+0Q1uYt5gmQGX+MlawNtvZVO/lDXho3druz/R2zO22Bkyi9tZxxkoFMeI29q
+Pi5jKS70oZkEV9vX6liHSnOcr1Zz3yarcq1ZHMkCnx3IyQeYEWy/CHmskvbbQ1gF
++t5fFHf/9Up+bG0V0xTpOXNcEQX2oXlHjKytSVIjqmnLAkld/pWSs+Zi3d0e/dnK
+P7og8SguI4W88eh7pFUz1TEvmFRtwwCDVopk3TNzM9SAlUXLhau/4N9WhY5wLj0B
+PBE0g0tn7MLS/BZK+OeIBshitWsHA0q6c/RlVrI6RalagFs8GsvGX7myEwqIncjo
+QxgoC3OaaxVzMyczcwABRzLIxzQOHeQeZZ+uEbo0b7jGyJzseeO6IGJs/ZcFVO2X
+3BeOYGXSqRALctZq5oPeKM++qeLYBevX3nxvJb2VcdTGTlerzbNZ2OwCKJjrsbOQ
+u1f1IxbclSqEHNIOS73tHPPTy5gLaK6BhFLscOmSN5rUzHtRmqZPMyNbMbPxI9Sy
+ay39ONH5xApgSUBXwF2zSiDOa9Y73Dgqfa1d2/JnJXODqomPfveXqvkHeQaK8nQK
+95xQul1p979SjEcm5ikon4oh9ALp7eiRVpXqQCG3uRBQhmebS8M=
+=DcRz
 -----END PGP SIGNATURE-----
 --=-=-=--
 
---===============0504534425==
+--===============0649609282==
 Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
@@ -75,4 +78,4 @@ X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
 IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
 dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
---===============0504534425==--
+--===============0649609282==--
