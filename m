@@ -1,488 +1,131 @@
-From: Alexander Graf <agraf-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH V6 1/5] LIB: Indirect ISA/LPC port IO introduced
-Date: Mon, 30 Jan 2017 18:12:21 +0100
-Message-ID: <5dc0dc9c-124e-398f-a3b2-40059268e859@suse.de>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-2-git-send-email-yuanzhichang@hisilicon.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
+ i2c-mux-simple bindings
+Date: Mon, 30 Jan 2017 11:20:34 -0600
+Message-ID: <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA@mail.gmail.com>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-8-git-send-email-peda@axentia.se> <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
+ <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485241525-201782-2-git-send-email-yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <835415bf-77af-6131-d018-d0bc7d8233b0-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "zhichang.yuan" <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, brian.starkey-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, minyard-HInyCGIudOg@public.gmane.org, liviu.dudau-5wv7dgnIgG8@public.gmane.org, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhichang.yuan02-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kantyzc-9Onoh4P/yGk@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2017 08:05 AM, zhichang.yuan wrote:
-> Low-pin-count interface is integrated into some SoCs. The accesses to those
-> peripherals under LPC make use of I/O ports rather than the memory mapped I/O.
+On Sat, Jan 28, 2017 at 4:42 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
+> On 2017-01-27 20:39, Rob Herring wrote:
+>> On Wed, Jan 18, 2017 at 04:57:10PM +0100, Peter Rosin wrote:
+>>> Describe how a generic multiplexer controller is used to mux an i2c bus.
+>>>
+>>> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 81 ++++++++++++++++++++++
+>>>  1 file changed, 81 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+>>> new file mode 100644
+>>> index 000000000000..253d5027843b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
+>>> @@ -0,0 +1,81 @@
+>>> +Simple I2C Bus Mux
+>>> +
+>>> +This binding describes an I2C bus multiplexer that uses a mux controller
+>>> +from the mux subsystem to route the I2C signals.
+>>> +
+>>> +                                  .-----.  .-----.
+>>> +                                  | dev |  | dev |
+>>> +    .------------.                '-----'  '-----'
+>>> +    | SoC        |                   |        |
+>>> +    |            |          .--------+--------'
+>>> +    |   .------. |  .------+    child bus A, on MUX value set to 0
+>>> +    |   | I2C  |-|--| Mux  |
+>>> +    |   '------' |  '--+---+    child bus B, on MUX value set to 1
+>>> +    |   .------. |     |    '----------+--------+--------.
+>>> +    |   | MUX- | |     |               |        |        |
+>>> +    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
+>>> +    |   '------' |                  | dev |  | dev |  | dev |
+>>> +    '------------'                  '-----'  '-----'  '-----'
+>>> +
+>>> +Required properties:
+>>> +- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
+>>
+>> Not a fan of using "simple" nor the ','. Perhaps lock type should be
+>> separate property.
 >
-> To drive these devices, this patch introduces a method named indirect-IO.
-> In this method the in/out() accessor in include/asm-generic/io.h will be
-> redefined. When upper layer drivers call in/out() with those known legacy port
-> addresses to access the peripherals, the I/O operations will be routed to the
-> right hooks which are registered specific to the host device, such as LPC.
-> Then the hardware relevant manupulations are finished by the corresponding
-> host.
+> How about just i2c-mux for the compatible? Because i2c-mux-mux (which
+> follows the naming of previous i2c muxes) looks really stupid. Or
+> perhaps i2c-mux-generic?
+
+I like "generic" only slightly more than "simple". :)
+
+If the mux is gpio controlled, then it should still be called
+i2c-gpio-mux. Let's not invent brand new bindings when current ones
+are easily extended. We already have pretty generic names here, let's
+not make them more generic.
+
 >
-> According to the comments on V5, this patch adds a common indirect-IO driver
-> which support this I/O indirection to the generic directory.
+> I'm also happy to have the lock type as a separate property. One lock
+> type, e.g. parent-locked, could be the default and adding a 'mux-locked'
+> property could change that. Would that be ok?
+
+I prefer this. Then existing bindings can use it.
+
+> Or should it be a requirement that one of 'mux-locked'/'parent-locked'
+> is always present?
+
+I would make it boolean and make not present be the more common case.
+Not present could also mean determined via other means as you have
+today with existing bindings. Maybe then you need both properties.
+
+>> I'm not sure I get the mux vs. parent locked fully. How do I determine
+>> what type I have? We already have bindings for several types of i2c
+>> muxes. How does the locking annotation fit into those?
 >
-> In the later pathches, some host-relevant drivers are implemented to support
-> the specific I/O hooks and register them.
-> Based on these, the upper layer drivers which depend on in/out() can work well
-> without any extra work or any changes.
+> We have briefly discussed this before [1] in the context of i2c-mux-gpio
+> and i2c-mux-pinctrl, when I added the mux-locked/parent-locked distinction
+> to the i2c-mux infrastructure (it wasn't named mux-locked/parent-locked
+> way back then though). There is more detail on what the difference is
+> between the two in Documentation/i2c/i2c-topology.
 >
-> Signed-off-by: zhichang.yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: John Garry <john.garry-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-
-I like the extio idea. That allows us to handle all PIO requests on 
-platforms that don't have native PIO support via different routes 
-depending on the region they're in. Unfortunately we now we have 2 
-frameworks for handling sparse PIO regions: One in extio, one in PCI.
-
-Why don't we just merge the two? Most of the code that has #ifdef 
-PCI_IOBASE throughout the code base sounds like an ideal candidate to 
-get migrated to extio instead. Then we only have a single framework to 
-worry about ...
-
-> ---
->   include/asm-generic/io.h |  50 ++++++++++++++++
->   include/linux/extio.h    |  85 +++++++++++++++++++++++++++
->   include/linux/io.h       |   1 +
->   lib/Kconfig              |   8 +++
->   lib/Makefile             |   2 +
->   lib/extio.c              | 147 +++++++++++++++++++++++++++++++++++++++++++++++
->   6 files changed, 293 insertions(+)
->   create mode 100644 include/linux/extio.h
->   create mode 100644 lib/extio.c
+> Side note regarding your remark "use an I2C controlled mux instead"; it
+> appears that I'm not alone [2] with this kind of requirement...
 >
-> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> index 7ef015e..c0d6db1 100644
-> --- a/include/asm-generic/io.h
-> +++ b/include/asm-generic/io.h
-> @@ -21,6 +21,8 @@
->   
->   #include <asm-generic/pci_iomap.h>
->   
-> +#include <linux/extio.h>
-> +
->   #ifndef mmiowb
->   #define mmiowb() do {} while (0)
->   #endif
-> @@ -358,51 +360,75 @@ static inline void writesq(volatile void __iomem *addr, const void *buffer,
->    */
->   
->   #ifndef inb
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define inb extio_inb
-> +#else
->   #define inb inb
->   static inline u8 inb(unsigned long addr)
->   {
->   	return readb(PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
+> [1] https://lkml.org/lkml/2016/1/6/437
+> [2] http://marc.info/?t=147877959100002&r=1&w=2
+>
+> But, now that I have pondered on this for a year or so, I firmly
+> believe it was a mistake to have the code in i2c-mux-gpio and
+> i2c-mux-pinctrl automatically try to deduce if the mux should be
+> mux-locked or parent-locked. It might be easy to make that call
+> in some trivial cases, but it is not difficult to dream up
+> scenarios where it would be extremely hard for the code to get
+> this decision right. It's just fragile. But now we have code in
+> those two muxes that has unwanted tentacles into the guts of the
+> gpio and pinctrl subsystems. Hopefully those unwanted tentacles
+> can be replaced with something based on device links? However, it
+> is still not hard to come up with scenarios that will require
+> manual intervention in order to select the right kind of i2c mux
+> locking. So, I fear that we have inadequate code trying to make a
+> decision automatically, and that we at some point down the line
+> will have some impossible case needing a binding that trumps the
+> heuristic. Why have a heuristic at all in that case? In short, it
+> should have been a binding from the start, methinks.
+>
+> That was a long rant regarding i2c-mux-gpio and i2c-mux-pinctrl.
+> I obviously think it is bad to have this new i2c mux go in the
+> same direction as those two drivers. I.e. I think a binding that
+> specifies the desired locking is preferable to any attempted
+> heuristic.
 
-... we would also get rid of all of these constructs. Instead, every 
-architecture that doesn't implement native PIO defines would end up in 
-extio and we would enable it unconditionally for them.
+Having a separate, common property(ies) for these would solve this then.
 
->   #endif
->   
->   #ifndef inw
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define inw extio_inw
-> +#else
->   #define inw inw
->   static inline u16 inw(unsigned long addr)
->   {
->   	return readw(PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef inl
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define inl extio_inl
-> +#else
->   #define inl inl
->   static inline u32 inl(unsigned long addr)
->   {
->   	return readl(PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outb
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outb extio_outb
-> +#else
->   #define outb outb
->   static inline void outb(u8 value, unsigned long addr)
->   {
->   	writeb(value, PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outw
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outw extio_outw
-> +#else
->   #define outw outw
->   static inline void outw(u16 value, unsigned long addr)
->   {
->   	writew(value, PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outl
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outl extio_outl
-> +#else
->   #define outl outl
->   static inline void outl(u32 value, unsigned long addr)
->   {
->   	writel(value, PCI_IOBASE + addr);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef inb_p
-> @@ -459,54 +485,78 @@ static inline void outl_p(u32 value, unsigned long addr)
->    */
->   
->   #ifndef insb
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define insb extio_insb
-> +#else
->   #define insb insb
->   static inline void insb(unsigned long addr, void *buffer, unsigned int count)
->   {
->   	readsb(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef insw
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define insw extio_insw
-> +#else
->   #define insw insw
->   static inline void insw(unsigned long addr, void *buffer, unsigned int count)
->   {
->   	readsw(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef insl
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define insl extio_insl
-> +#else
->   #define insl insl
->   static inline void insl(unsigned long addr, void *buffer, unsigned int count)
->   {
->   	readsl(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outsb
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outsb extio_outsb
-> +#else
->   #define outsb outsb
->   static inline void outsb(unsigned long addr, const void *buffer,
->   			 unsigned int count)
->   {
->   	writesb(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outsw
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outsw extio_outsw
-> +#else
->   #define outsw outsw
->   static inline void outsw(unsigned long addr, const void *buffer,
->   			 unsigned int count)
->   {
->   	writesw(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef outsl
-> +#ifdef CONFIG_INDIRECT_PIO
-> +#define outsl extio_outsl
-> +#else
->   #define outsl outsl
->   static inline void outsl(unsigned long addr, const void *buffer,
->   			 unsigned int count)
->   {
->   	writesl(PCI_IOBASE + addr, buffer, count);
->   }
-> +#endif /* CONFIG_INDIRECT_PIO */
->   #endif
->   
->   #ifndef insb_p
-> diff --git a/include/linux/extio.h b/include/linux/extio.h
-> new file mode 100644
-> index 0000000..2ca7eab
-> --- /dev/null
-> +++ b/include/linux/extio.h
-> @@ -0,0 +1,85 @@
-> +/*
-> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
-> + * Author: Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef __LINUX_EXTIO_H
-> +#define __LINUX_EXTIO_H
-> +
-> +#ifdef __KERNEL__
-> +
-> +#include <linux/fwnode.h>
-> +
-> +struct extio_ops {
-> +	u64 (*pfin)(void *devobj, unsigned long ptaddr,	size_t dlen);
-> +	void (*pfout)(void *devobj, unsigned long ptaddr, u32 outval,
-> +					size_t dlen);
-> +	u64 (*pfins)(void *devobj, unsigned long ptaddr, void *inbuf,
-> +				size_t dlen, unsigned int count);
-> +	void (*pfouts)(void *devobj, unsigned long ptaddr,
-> +				const void *outbuf, size_t dlen,
-> +				unsigned int count);
-> +};
-> +
-> +struct extio_node {
-> +	unsigned long bus_start;	/* bus start address */
-> +	unsigned long io_start;	/* io port token corresponding to bus_start */
-> +	size_t range_size;	/* size of the extio node operating range */
-> +	struct fwnode_handle *fwnode;
-> +	struct list_head list;
-> +	struct extio_ops *ops;	/* ops operating on this node */
-> +	void *devpara;	/* private parameter of the host device */
-> +};
-> +
-> +extern u8 extio_inb(unsigned long addr);
-> +extern void extio_outb(u8 value, unsigned long addr);
-> +extern void extio_outw(u16 value, unsigned long addr);
-> +extern void extio_outl(u32 value, unsigned long addr);
-> +extern u16 extio_inw(unsigned long addr);
-> +extern u32 extio_inl(unsigned long addr);
-> +extern void extio_outb(u8 value, unsigned long addr);
-> +extern void extio_outw(u16 value, unsigned long addr);
-> +extern void extio_outl(u32 value, unsigned long addr);
-> +extern void extio_insb(unsigned long addr, void *buffer, unsigned int count);
-> +extern void extio_insl(unsigned long addr, void *buffer, unsigned int count);
-> +extern void extio_insw(unsigned long addr, void *buffer, unsigned int count);
-> +extern void extio_outsb(unsigned long addr, const void *buffer,
-> +			unsigned int count);
-> +extern void extio_outsw(unsigned long addr, const void *buffer,
-> +			unsigned int count);
-> +extern void extio_outsl(unsigned long addr, const void *buffer,
-> +			unsigned int count);
-> +
-> +#ifdef CONFIG_INDIRECT_PIO
-> +extern struct extio_node *extio_find_node(struct fwnode_handle *node);
-> +
-> +extern unsigned long
-> +extio_translate(struct fwnode_handle *node, unsigned long bus_addr);
-> +#else
-> +static inline struct extio_node *extio_find_node(struct fwnode_handle *node)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline unsigned long
-> +extio_translate(struct fwnode_handle *node, unsigned long bus_addr)
-> +{
-> +	return -1;
-> +}
-> +#endif
-> +extern void register_extio(struct extio_node *node);
-> +
-> +#endif /* __KERNEL__ */
-> +#endif /* __LINUX_EXTIO_H */
-> diff --git a/include/linux/io.h b/include/linux/io.h
-> index 82ef36e..6c68478 100644
-> --- a/include/linux/io.h
-> +++ b/include/linux/io.h
-> @@ -24,6 +24,7 @@
->   #include <linux/err.h>
->   #include <asm/io.h>
->   #include <asm/page.h>
-> +#include <linux/extio.h>
->   
->   struct device;
->   struct resource;
-> diff --git a/lib/Kconfig b/lib/Kconfig
-> index 260a80e..1d27c44 100644
-> --- a/lib/Kconfig
-> +++ b/lib/Kconfig
-> @@ -59,6 +59,14 @@ config ARCH_USE_CMPXCHG_LOCKREF
->   config ARCH_HAS_FAST_MULTIPLIER
->   	bool
->   
-> +config INDIRECT_PIO
-> +	bool "access peripherals with legacy I/O port"
-> +	depends on PCI
-> +	help
-> +	  Support special accessors for ISA I/O devices. This is needed for
-> +	  SoCs that have not I/O space and do not support standard MMIO
-> +	  read/write for the ISA range.
-> +
->   config CRC_CCITT
->   	tristate "CRC-CCITT functions"
->   	help
-> diff --git a/lib/Makefile b/lib/Makefile
-> index bc4073a..bf03e05 100644
-> --- a/lib/Makefile
-> +++ b/lib/Makefile
-> @@ -70,6 +70,8 @@ obj-$(CONFIG_HAS_IOMEM) += iomap_copy.o devres.o
->   obj-$(CONFIG_CHECK_SIGNATURE) += check_signature.o
->   obj-$(CONFIG_DEBUG_LOCKING_API_SELFTESTS) += locking-selftest.o
->   
-> +obj-$(CONFIG_INDIRECT_PIO)	+= extio.o
-> +
->   obj-$(CONFIG_GENERIC_HWEIGHT) += hweight.o
->   
->   obj-$(CONFIG_BTREE) += btree.o
-> diff --git a/lib/extio.c b/lib/extio.c
-> new file mode 100644
-> index 0000000..46228de
-> --- /dev/null
-> +++ b/lib/extio.c
-> @@ -0,0 +1,147 @@
-> +/*
-> + * Copyright (C) 2016 Hisilicon Limited, All Rights Reserved.
-> + * Author: Zhichang Yuan <yuanzhichang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/spinlock.h>
-> +
-> +static LIST_HEAD(extio_dev_list);
-> +static DEFINE_RWLOCK(extio_list_lock);
-
-Why not just make the list an RCU list? Then you don't need read locks. 
-We also wouldn't create potential lock contention between devices that 
-could easily have parallel PIO operations (say a PCI device and an LPC 
-device).
-
-> +
-> +void register_extio(struct extio_node *node)
-> +{
-> +	write_lock(&extio_list_lock);
-> +	list_add_tail(&node->list, &extio_dev_list);
-> +	write_unlock(&extio_list_lock);
-> +}
-> +
-> +static struct extio_node *find_extio_token(unsigned long addr)
-> +{
-> +	struct extio_node *extio_entry;
-> +
-> +	read_lock(&extio_list_lock);
-> +	list_for_each_entry(extio_entry, &extio_dev_list, list) {
-> +		if ((addr < extio_entry->io_start + extio_entry->range_size) &&
-> +			(addr >= extio_entry->io_start))
-> +			break;
-> +	}
-> +	read_unlock(&extio_list_lock);
-> +	return (&extio_entry->list == &extio_dev_list) ? NULL : extio_entry;
-> +}
-> +
-> +struct extio_node *extio_find_node(struct fwnode_handle *node)
-> +{
-> +	struct extio_node *entry;
-> +
-> +	read_lock(&extio_list_lock);
-> +	list_for_each_entry(entry, &extio_dev_list, list) {
-> +		if (entry->fwnode == node)
-> +			break;
-> +	}
-> +	read_unlock(&extio_list_lock);
-> +
-> +	return (&entry->list == &extio_dev_list) ? NULL : entry;
-> +}
-> +
-> +unsigned long extio_translate(struct fwnode_handle *node,
-> +		unsigned long bus_addr)
-> +{
-> +	struct extio_node *entry;
-> +	unsigned long port_id = -1;
-> +
-> +	read_lock(&extio_list_lock);
-> +	list_for_each_entry(entry, &extio_dev_list, list) {
-> +		if (entry->fwnode == node &&
-> +			bus_addr >= entry->bus_start &&
-> +			bus_addr - entry->bus_start < entry->range_size)
-> +			port_id = entry->io_start + bus_addr -
-> +					entry->bus_start;
-> +	}
-> +	read_unlock(&extio_list_lock);
-> +
-> +	return port_id;
-> +}
-> +
-> +#ifdef PCI_IOBASE
-> +
-> +#define BUILD_EXTIO(bw, type)						\
-> +type extio_in##bw(unsigned long addr)					\
-> +{									\
-> +	struct extio_node *extio_entry = find_extio_token(addr);	\
-> +									\
-> +	if (!extio_entry)						\
-> +		return read##bw(PCI_IOBASE + addr);			\
-> +	return extio_entry->ops->pfin ?					\
-> +			extio_entry->ops->pfin(extio_entry->devpara,	\
-> +			addr, sizeof(type)) : -1;			\
-> +}									\
-> +									\
-> +void extio_out##bw(type value, unsigned long addr)			\
-> +{									\
-> +	struct extio_node *extio_entry = find_extio_token(addr);	\
-> +									\
-> +	if (!extio_entry)						\
-> +		write##bw(value, PCI_IOBASE + addr);			\
-
-All of the fallback code would also disappear as a nice side effect of 
-making pci pio handling a user of extio :).
-
-
-Alex
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
