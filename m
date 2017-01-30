@@ -1,65 +1,58 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv2 11/16] ov2640: allow use inside em28xx
-Date: Mon, 30 Jan 2017 15:06:23 +0100
-Message-ID: <20170130140628.18088-12-hverkuil@xs4all.nl>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 0/5] Add EXTI GPIO trigger support to STM32 ADC
+Date: Mon, 30 Jan 2017 15:09:54 +0100
+Message-ID: <0472f001-eee8-74a8-f078-2fb71904be58@st.com>
+References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Hi all,
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
----
- drivers/media/i2c/Kconfig  |  2 +-
- drivers/media/i2c/ov2640.c | 14 +++++---------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+Please discard this series. I'll send a V2.
+Sorry for the noise.
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 159ef64..1859783 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -522,7 +522,7 @@ config VIDEO_SMIAPP_PLL
- 
- config VIDEO_OV2640
- 	tristate "OmniVision OV2640 sensor support"
--	depends on VIDEO_V4L2 && I2C
-+	depends on GPIOLIB && VIDEO_V4L2 && I2C
- 	depends on MEDIA_CAMERA_SUPPORT
- 	help
- 	  This is a Video4Linux2 sensor-level driver for the OmniVision
-diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
-index 565742b..bd96889 100644
---- a/drivers/media/i2c/ov2640.c
-+++ b/drivers/media/i2c/ov2640.c
-@@ -1031,15 +1031,11 @@ static int ov2640_probe(struct i2c_client *client,
- 		return -ENOMEM;
- 	}
- 
--	priv->clk = clk_get(&client->dev, "xvclk");
--	if (IS_ERR(priv->clk))
--		return -EPROBE_DEFER;
--	clk_prepare_enable(priv->clk);
--
--	if (!client->dev.of_node) {
--		dev_err(&client->dev, "Missing platform_data for driver\n");
--		ret = -EINVAL;
--		goto err_clk;
-+	if (client->dev.of_node) {
-+		priv->clk = clk_get(&client->dev, "xvclk");
-+		if (IS_ERR(priv->clk))
-+			return -EPROBE_DEFER;
-+		clk_prepare_enable(priv->clk);
- 	}
- 
- 	ret = ov2640_init_gpio(client, priv);
--- 
-2.10.2
+Best regards,
+Fabrice
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/30/2017 02:57 PM, Fabrice Gasnier wrote:
+> STM32 ADC, can use GPIOs configured as EXTI line (external interrupt)
+> as trigger source for conversions.
+> This patchset is based on latest IIO testing branch, and adds support
+> for EXTi GPIO triggers in IIO.
+> It also adds a dt option to configure default trigger polarity in
+> STM32 ADC driver.
+>
+> Fabrice Gasnier (5):
+>    Documentation: dt: iio: document stm32 adc trigger polarity
+>    iio: adc: stm32: add dt option to set default trigger polarity
+>    Documentation: dt: iio: document stm32 exti trigger
+>    iio: trigger: add support for STM32 EXTI triggers
+>    iio: adc: stm32: add exti11 gpio trigger source
+>
+>   .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   3 +
+>   .../bindings/iio/trigger/st,stm32-exti-trigger.txt |  17 +++
+>   drivers/iio/adc/stm32-adc.c                        |  14 +++
+>   drivers/iio/trigger/Kconfig                        |  10 ++
+>   drivers/iio/trigger/Makefile                       |   1 +
+>   drivers/iio/trigger/stm32-exti-trigger.c           | 124 +++++++++++++++++++++
+>   include/linux/iio/trigger/stm32-exti-trigger.h     |  26 +++++
+>   7 files changed, 195 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>   create mode 100644 drivers/iio/trigger/stm32-exti-trigger.c
+>   create mode 100644 include/linux/iio/trigger/stm32-exti-trigger.h
+>
