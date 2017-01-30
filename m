@@ -1,8 +1,7 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/5] Documentation: dt: iio: document stm32 adc trigger
- polarity
-Date: Mon, 30 Jan 2017 14:57:39 +0100
-Message-ID: <1485784663-19505-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
+Date: Mon, 30 Jan 2017 14:57:41 +0100
+Message-ID: <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
 References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,34 +21,38 @@ To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kerne
 Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-STM32 ADC trigger polarity can be set to either rising, falling
-or both edges. Allow to configure it from dt.
+Add dt documentation for st,stm32-exti-trigger.
+EXTi gpio signal can be routed internally as trigger source for various
+IPs (e.g. for ADC or DAC conversions).
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-index 5dfc88e..6c6d968 100644
---- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
-@@ -57,6 +57,8 @@ Optional properties:
- - dmas: Phandle to dma channel for this ADC instance.
-   See ../../dma/dma.txt for details.
- - dma-names: Must be "rx" when dmas property is being used.
-+- st,trigger-polarity: Must be 0 (default), 1 or 2 to set default trigger
-+  polarity to respectively "rising-edge", "falling-edge" or "both-edges".
- 
- Example:
- 	adc: adc@40012000 {
-@@ -84,6 +86,7 @@ Example:
- 			st,adc-channels = <8>;
- 			dmas = <&dma2 0 0 0x400 0x0>;
- 			dma-names = "rx";
-+			st,trigger-polarity = <1>;
- 		};
- 		...
- 		other adc child nodes follow...
+diff --git a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+new file mode 100644
+index 0000000..ebf2645
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+@@ -0,0 +1,17 @@
++STMicroelectronics STM32 EXTI trigger bindings
++
++EXTi gpio signal can be routed internally as trigger source for various
++IPs (e.g. for ADC or DAC conversions).
++
++Contents of a stm32 exti trigger root node:
++-------------------------------------------
++Required properties:
++- compatible: Should be "st,stm32-exti-trigger"
++- extiN-gpio: optional gpio line that may be used as external trigger source
++  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on stm32f4).
++
++Example:
++	triggers {
++		compatible = "st,stm32-exti-trigger";
++		exti11-gpio=<&gpioa 11 0>;
++	};
 -- 
 1.9.1
