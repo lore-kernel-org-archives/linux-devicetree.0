@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv2 02/16] ov7670: fix g/s_parm
-Date: Mon, 30 Jan 2017 15:06:14 +0100
-Message-ID: <20170130140628.18088-3-hverkuil@xs4all.nl>
+Subject: [PATCHv2 03/16] ov7670: get xclk
+Date: Mon, 30 Jan 2017 15:06:15 +0100
+Message-ID: <20170130140628.18088-4-hverkuil@xs4all.nl>
 References: <20170130140628.18088-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
@@ -12,35 +12,55 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Drop unnecesary memset. Drop the unnecessary extendedmode check and
-set the V4L2_CAP_TIMEPERFRAME capability.
+Get the clock for this sensor.
 
 Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/media/i2c/ov7670.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/media/i2c/ov7670.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
 diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-index 9af8d3b..50e4466 100644
+index 50e4466..da08436 100644
 --- a/drivers/media/i2c/ov7670.c
 +++ b/drivers/media/i2c/ov7670.c
-@@ -1046,7 +1046,6 @@ static int ov7670_g_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
- 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
- 		return -EINVAL;
+@@ -10,6 +10,7 @@
+  * This file may be distributed under the terms of the GNU General
+  * Public License, version 2.
+  */
++#include <linux/clk.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
+@@ -227,6 +228,7 @@ struct ov7670_info {
+ 		struct v4l2_ctrl *hue;
+ 	};
+ 	struct ov7670_format_struct *fmt;  /* Current format */
++	struct clk *clk;
+ 	int min_width;			/* Filter out smaller sizes */
+ 	int min_height;			/* Filter out smaller sizes */
+ 	int clock_speed;		/* External clock speed (MHz) */
+@@ -1587,6 +1589,15 @@ static int ov7670_probe(struct i2c_client *client,
+ 			info->pclk_hb_disable = true;
+ 	}
  
--	memset(cp, 0, sizeof(struct v4l2_captureparm));
- 	cp->capability = V4L2_CAP_TIMEPERFRAME;
- 	info->devtype->get_framerate(sd, &cp->timeperframe);
++	info->clk = devm_clk_get(&client->dev, "xclk");
++	if (IS_ERR(info->clk))
++		return -EPROBE_DEFER;
++	clk_prepare_enable(info->clk);
++
++	info->clock_speed = clk_get_rate(info->clk) / 1000000;
++	if (info->clock_speed < 10 || info->clock_speed > 48)
++		return -EINVAL;
++
+ 	/* Make sure it's an ov7670 */
+ 	ret = ov7670_detect(sd);
+ 	if (ret) {
+@@ -1667,6 +1678,7 @@ static int ov7670_remove(struct i2c_client *client)
  
-@@ -1061,9 +1060,8 @@ static int ov7670_s_parm(struct v4l2_subdev *sd, struct v4l2_streamparm *parms)
- 
- 	if (parms->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
- 		return -EINVAL;
--	if (cp->extendedmode != 0)
--		return -EINVAL;
- 
-+	cp->capability = V4L2_CAP_TIMEPERFRAME;
- 	return info->devtype->set_framerate(sd, tpf);
+ 	v4l2_device_unregister_subdev(sd);
+ 	v4l2_ctrl_handler_free(&info->hdl);
++	clk_disable_unprepare(info->clk);
+ 	return 0;
  }
  
 -- 
