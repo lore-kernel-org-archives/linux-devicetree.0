@@ -1,85 +1,190 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 0/3] Add Broadcom SPU Crypto Driver
-Date: Mon, 30 Jan 2017 15:35:54 -0800
-Message-ID: <6fe4cad2-6fc9-bd69-f5ad-67957335fe55@gmail.com>
-References: <1485362689-11294-1-git-send-email-rob.rice@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485362689-11294-1-git-send-email-rob.rice@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Rice <rob.rice@broadcom.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
+From: eajames.ibm@gmail.com
+Subject: [PATCH linux v5 5/6] hwmon: occ: Add hwmon implementation for the P8 OCC
+Date: Mon, 30 Jan 2017 17:42:17 -0600
+Message-ID: <1485819738-957-6-git-send-email-eajames.ibm@gmail.com>
+References: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2017 08:44 AM, Rob Rice wrote:
-> Changes in v3:
-> - rebase to 4.10-rc3 in cryptodev-2.6 tree
-> - in bindings doc, list all valid compatibility strings
-> - rename DT nodes "crypto" rather than "spu-crypto"
-> - include a separate DT node for each SPU hardware block. Previously,
->  there was a single SPU node listing a register range for each
->  hw block.
-> - select hash algos in Kconfig. Driver HMAC implementation uses hash
->  sw algos for inner and outer hashes.
-> - Fix crash for AES CCM decrypt when AAD and data are both empty
-> 
-> Change in v2:
-> - select CRYPTO_DES in Kconfig
-> 
-> The Broadcom SPU crypto driver provides access to SPU hardware
-> for symmetric crypto offload. The driver supports ablkcipher,
-> ahash, and aead operations. The driver supports several
-> Broadcom SoCs with different revisions of the SPU hardware.
-> The driver supports SPU-M and SPU2 hardware revisions, and
-> a couple versions of each hw revision, each version with minor
-> differences.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-Herbert, can you take patches 1-2, and I will take patch 3 through my
-arm64-soc git pull requests? Thanks!!
+Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
+well as probe the entire driver from the I2C bus. I2C is the communication
+method between the BMC and the P8 OCC.
 
-> 
-> Rob Rice (3):
->   crypto: brcm: DT documentation for Broadcom SPU hardware
->   crypto: brcm: Add Broadcom SPU driver
->   arm64: dts: ns2: Add Broadcom SPU driver DT entry.
-> 
->  .../devicetree/bindings/crypto/brcm,spu-crypto.txt |   22 +
->  arch/arm64/boot/dts/broadcom/ns2.dtsi              |   24 +
->  drivers/crypto/Kconfig                             |   15 +
->  drivers/crypto/Makefile                            |    2 +
->  drivers/crypto/bcm/Makefile                        |   15 +
->  drivers/crypto/bcm/cipher.c                        | 4955 ++++++++++++++++++++
->  drivers/crypto/bcm/cipher.h                        |  475 ++
->  drivers/crypto/bcm/spu.c                           | 1252 +++++
->  drivers/crypto/bcm/spu.h                           |  288 ++
->  drivers/crypto/bcm/spu2.c                          | 1402 ++++++
->  drivers/crypto/bcm/spu2.h                          |  228 +
->  drivers/crypto/bcm/spum.h                          |  174 +
->  drivers/crypto/bcm/util.c                          |  581 +++
->  drivers/crypto/bcm/util.h                          |  116 +
->  14 files changed, 9549 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
->  create mode 100644 drivers/crypto/bcm/Makefile
->  create mode 100644 drivers/crypto/bcm/cipher.c
->  create mode 100644 drivers/crypto/bcm/cipher.h
->  create mode 100644 drivers/crypto/bcm/spu.c
->  create mode 100644 drivers/crypto/bcm/spu.h
->  create mode 100644 drivers/crypto/bcm/spu2.c
->  create mode 100644 drivers/crypto/bcm/spu2.h
->  create mode 100644 drivers/crypto/bcm/spum.h
->  create mode 100644 drivers/crypto/bcm/util.c
->  create mode 100644 drivers/crypto/bcm/util.h
-> 
+Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
+ drivers/hwmon/occ/Kconfig                       |  14 ++++
+ drivers/hwmon/occ/Makefile                      |   1 +
+ drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++++++++++++++++++++
+ 4 files changed, 132 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+ create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
 
-
+diff --git a/Documentation/devicetree/bindings/hwmon/occ.txt b/Documentation/devicetree/bindings/hwmon/occ.txt
+new file mode 100644
+index 0000000..b0d2b36
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/occ.txt
+@@ -0,0 +1,13 @@
++HWMON I2C driver for IBM POWER CPU OCC (On Chip Controller)
++
++Required properties:
++ - compatible: must be "ibm,p8-occ-i2c"
++ - reg: physical address
++
++Example:
++i2c3: i2c-bus@100 {
++	occ@50 {
++		compatible = "ibm,p8-occ-i2c";
++		reg = <0x50>;
++	};
++};
+diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
+index cdb64a7..3a5188f 100644
+--- a/drivers/hwmon/occ/Kconfig
++++ b/drivers/hwmon/occ/Kconfig
+@@ -13,3 +13,17 @@ menuconfig SENSORS_PPC_OCC
+ 
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called occ.
++
++if SENSORS_PPC_OCC
++
++config SENSORS_PPC_OCC_P8_I2C
++	tristate "POWER8 OCC hwmon support"
++	depends on I2C
++	help
++	 Provide a hwmon sysfs interface for the POWER8 On-Chip Controller,
++	 exposing temperature, frequency and power measurements.
++
++	 This driver can also be built as a module. If so, the module will be
++	 called p8-occ-i2c.
++
++endif
+diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
+index a6881f9..9294b58 100644
+--- a/drivers/hwmon/occ/Makefile
++++ b/drivers/hwmon/occ/Makefile
+@@ -1 +1,2 @@
+ obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o occ_sysfs.o
++obj-$(CONFIG_SENSORS_PPC_OCC_P8_I2C) += occ_scom_i2c.o occ_p8.o p8_occ_i2c.o
+diff --git a/drivers/hwmon/occ/p8_occ_i2c.c b/drivers/hwmon/occ/p8_occ_i2c.c
+new file mode 100644
+index 0000000..6273040
+--- /dev/null
++++ b/drivers/hwmon/occ/p8_occ_i2c.c
+@@ -0,0 +1,104 @@
++/*
++ * p8_occ_i2c.c - hwmon OCC driver
++ *
++ * This file contains the i2c layer for accessing the P8 OCC over i2c bus.
++ *
++ * Copyright 2016 IBM Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/slab.h>
++#include "occ_p8.h"
++#include "occ_scom_i2c.h"
++#include "occ_sysfs.h"
++#include "scom.h"
++
++#define P8_OCC_I2C_NAME	"p8-occ-i2c"
++
++int p8_i2c_getscom(void *bus, u32 address, u64 *data)
++{
++	/* P8 i2c slave requires address to be shifted by 1 */
++	address = address << 1;
++
++	return occ_i2c_getscom(bus, address, data);
++}
++
++int p8_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1)
++{
++	/* P8 i2c slave requires address to be shifted by 1 */
++	address = address << 1;
++
++	return occ_i2c_putscom(bus, address, data0, data1);
++}
++
++static struct occ_bus_ops p8_bus_ops = {
++	.getscom = p8_i2c_getscom,
++	.putscom = p8_i2c_putscom,
++};
++
++static int p8_occ_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct occ *occ;
++	struct occ_sysfs *hwmon;
++	const u32 *sensor_hwmon_configs = p8_get_sensor_hwmon_configs();
++
++	occ = p8_occ_start(&client->dev, client, &p8_bus_ops);
++	if (IS_ERR(occ))
++		return PTR_ERR(occ);
++
++	hwmon = occ_sysfs_start(&client->dev, occ, sensor_hwmon_configs,
++				P8_OCC_I2C_NAME);
++	if (IS_ERR(hwmon))
++		return PTR_ERR(hwmon);
++
++	i2c_set_clientdata(client, occ);
++
++	return 0;
++}
++
++/* used by old-style board info. */
++static const struct i2c_device_id occ_ids[] = {
++	{ P8_OCC_I2C_NAME, 0 },
++	{}
++};
++MODULE_DEVICE_TABLE(i2c, occ_ids);
++
++/* used by device table */
++static const struct of_device_id occ_of_match[] = {
++	{ .compatible = "ibm,p8-occ-i2c" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, occ_of_match);
++
++static struct i2c_driver p8_occ_driver = {
++	.class = I2C_CLASS_HWMON,
++	.driver = {
++		.name = P8_OCC_I2C_NAME,
++		.of_match_table = occ_of_match,
++	},
++	.probe = p8_occ_probe,
++	.id_table = occ_ids,
++};
++
++module_i2c_driver(p8_occ_driver);
++
++MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
++MODULE_DESCRIPTION("BMC P8 OCC hwmon driver");
++MODULE_LICENSE("GPL");
 -- 
-Florian
+1.8.3.1
+
