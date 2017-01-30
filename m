@@ -1,104 +1,72 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] watchdog: zx2967: add watchdog controller driver
- for ZTE's zx2967 family
-Date: Mon, 30 Jan 2017 08:53:59 -0800
-Message-ID: <20170130165359.GA20288@roeck-us.net>
-References: <1485312289-18354-1-git-send-email-baoyou.xie@linaro.org>
- <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org>
- <20170125162346.GA591@linaro.org>
- <CA+DQWkxpcHqVfDSGuUK-i4DOVXsYEYo60MG5y_oBDNp+ykEdLQ@mail.gmail.com>
- <20170126161729.GA1515@linaro.org>
- <CA+DQWkyPtndGEz-QYvmKaXoGNKQ69Zqu-aG7tCKnT-Mrmx5Wsw@mail.gmail.com>
+From: Jani Nikula <jani.nikula@linux.intel.com>
+Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++
+ Bridge
+Date: Mon, 30 Jan 2017 19:05:31 +0200
+Message-ID: <877f5ciilg.fsf@intel.com>
+References: <cover.1483301745.git.peter.senna@collabora.com>
+ <4232c88a99f44a24287d04d74b891e2eb139864c.1483301745.git.peter.senna@collabora.com>
+ <759f96e2-43da-45ba-cf8d-55bc1f6e8442@codeaurora.org>
+ <20170128141646.GA21291@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CA+DQWkyPtndGEz-QYvmKaXoGNKQ69Zqu-aG7tCKnT-Mrmx5Wsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170128141646.GA21291@collabora.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Senna Tschudin <peter.senna@collabora.com>, Archit Taneja <architt@codeaurora.org>
+Cc: mark.rutland@arm.com, martyn.welch@collabora.co.uk, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, ykk@rock-chips.com, jslaby@suse.cz, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, enric.balletbo@collabora.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, tiwai@suse.com, kernel@pengutronix.de, galak@codeaurora.org, Fabio Estevam <fabio.estevam@nxp.com>, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 10:40:09AM +0800, Baoyou Xie wrote:
-> On 27 January 2017 at 00:17, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> wrote:
-> 
-> > On Thu, Jan 26, 2017 at 09:32:56AM +0800, Baoyou Xie wrote:
-> > > On 26 January 2017 at 00:23, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-> > >
-> > > wrote:
-> > >
-> > > > On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wrote:
-> > > > > This patch adds watchdog controller driver for ZTE's zx2967 family.
-> > > > >
-> > > > > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > > > ---
-[ ... ]
-> > > > > +     reset_control_assert(rstc);
-> > > > > +     usleep_range(500, 20000);
-> > > >
-> > > > Alright, I'm officially confused.
-> > > >
-> > > > First and foremost you still haven't provided an explanation as to why
-> > > > this is
-> > > > required.  Second, in your previous submission you had:
-> > > >
-> > > >         mdelay(10);
-> > > >
-> > > > That is a busy loop of 10ms.  In this post using usleep_range() is a
-> > step
-> > > > in the
-> > > > right direction but the min and max values to wait for don't make
-> > sense.
-> > > > Here
-> > > > you have 500 and 20000, which is 0.5ms and 20ms.
-> > > >
-> > > > In fact, sleeping for 0.5ms is enough.
-> > > we extended the sleeping time to 20ms, the purpose is merging the timer
-> > > interrupts. of course, it's happy to replace it with usleep_range(500,
-> > > 1000).
-> >
-> > "merging the timer interrupts" - you mean trying to get the WD tick to be
-> > closer
-> > to other timers?  If so I really don't see why.  Timers are asynchronous by
-> > nature and there can be dozens of them enabled at any given time.
-> >
-> > Really?
-> Even if the system runs asynchronously, early process may trigger delayed
-> process, for example delayed work queue or timers, we can merge our
-> watchdog timer and those delayed work's timers.
-> 
-In the probe function ?
+On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna@collabora.com> wrote:
+> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
+> Hi Archit,
+>
+> Thank you for the comments!
+>
+> [...]
+>> > +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+>> > +	if (total_size > EDID_LENGTH) {
+>> > +		kfree(block);
+>> > +		block = kmalloc(total_size, GFP_KERNEL);
+>> > +		if (!block)
+>> > +			return NULL;
+>> > +
+>> > +		/* Yes, read the entire buffer, and do not skip the first
+>> > +		 * EDID_LENGTH bytes.
+>> > +		 */
+>> 
+>> Is this the reason why you aren't using drm_do_get_edid()?
+>
+> Yes, for some hw specific reason, it is necessary to read the entire
+> EDID buffer starting from 0, not block by block.
 
-> Furthermore, what happen if we build this driver as module?
-> 
-If every driver writer would use that line of argument, booting would
-take much longer than necessary, with every process sitting on unnecessary
-wait or sleep calls for perceived "optimization" purposes. Probe functions
-run exactly once, and should be time optimized. You should have an idea
-what the minimum reset hold time is, and follow it.
+Hrmh, I'm planning on moving the edid override and firmware edid
+mechanisms at the drm_do_get_edid() level to be able to truly and
+transparently use a different edid. Currently, they're only used for
+modes, really, and lead to some info retrieved from overrides, some from
+the real edid. This kind of hacks will bypass the override/firmware edid
+mechanisms then too. :(
 
-> But, as i said early, it's a trial optimization but can be instead with
-> usleep_range(500, 1000).
-> 
-> In some case, such optimization is helpful. I'd like to talk a story here,
-> about before ten years, I pressed a return key in console, you know, in
-> this case, a process be created and exited, so the cpu core that process
-> run at sent an IPI to other CPU, IPI interrupt resulted in the performance
-> decreased by 20%, so sad:)
-> 
-It appears to be somewhat unlikely that each keypress resulted in a driver
-being instantiated. If it did, a sleep in its probe function was the least
-of your problems.
+BR,
+Jani.
 
-> Unless there is a H/W constraint requiring a delay between the
-> > assert/deassert
-> > of the WD, I don't think adding a wait operation (of any kind) make sense.
 
-Correct.
+>
+> [...]
+>
+> I fixed all your other suggestions. Thank you!
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Guenter
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Jani Nikula, Intel Open Source Technology Center
