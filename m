@@ -1,102 +1,110 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: imx: Pass 'chosen' and 'memory' nodes
-Date: Mon, 30 Jan 2017 20:47:38 +0100
-Message-ID: <20170130194738.edzou2mgvcoegucx@pengutronix.de>
-References: <1484834566-19845-1-git-send-email-fabio.estevam@nxp.com>
- <20170119141335.kpbrbpbwaovnijjv@pengutronix.de>
- <CAOMZO5AdgM9eFnerLRdYxwE7gsOE5OvkWs6rCR4zta1XmXHj1A@mail.gmail.com>
- <20170119144641.jxj2bqg5uqjol23x@pengutronix.de>
- <20170119145642.GC27312@n2100.armlinux.org.uk>
- <20170119161441.jcctgig7np4v7sam@pengutronix.de>
- <588914F3.7050909@gmail.com>
- <20170130185444.GF27312@n2100.armlinux.org.uk>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
+Date: Mon, 30 Jan 2017 11:54:11 -0800
+Message-ID: <8737g0s4rg.fsf@eliezer.anholt.net>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-3-robdclark@gmail.com>
+ <874m0gifmf.fsf@eliezer.anholt.net>
+ <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170130185444.GF27312-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2051372683=="
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--===============2051372683==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-On Mon, Jan 30, 2017 at 06:54:44PM +0000, Russell King - ARM Linux wrote:
-> On Wed, Jan 25, 2017 at 01:13:23PM -0800, Frank Rowand wrote:
-> > Adding back the chosen nodes is a bandaid that papers over the actual bug
-> > in the decompressor.
-> > 
-> > A comment about Fabio's attempt to fix the decompressor noted a possible
-> > issue with the method taken to fix the problem, but then the discussion
-> > of fixing the decompressor was dropped and v3 of the patch to add chosen
-> > into a bunch of .dtsi files was applied by Shawn.
-> > 
-> > Can someone please help Fabio to create a correct patch to fix the
-> > decompressor?
-> 
-> I refuse to assist, see below.
-> 
-> The reason this has come up is that this problem has _nothing_ to do
-> with the decompressor - see recent context on the linux-arm-kernel
-> list.
+--=-=-=
+Content-Type: text/plain
 
-Several people reported problems with the patch that removes
-skeleton.dtsi. There are at least:
+Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
- - Russell, who saw U-Boot failing to specify the amount of RAM;
- - somebody (I forgot and I'm lazy so I didn't look up the name) who
-   noticed some i.MX6 boards fail in kernelci with barebox because
-   barebox assumed /chosen to be present; and
- - somebody else (...) who reported the ATAGS_DTB_COMPAT failure
-   (also wrongly called "decompressor failure" in this thread).
+> On Mon, Jan 30, 2017 at 1:09 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+>> Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>
+>>> The original way we determined the gpu version was based on downstream
+>>> bindings from android kernel.  A cleaner way is to get the version from
+>>> the compatible string.
+>>>
+>>> Note that no upstream dtb uses these bindings.  But the code still
+>>> supports falling back to the legacy bindings (with a warning), so that
+>>> we are still compatible with the gpu dt node from android device
+>>> kernels.
+>>
+>> The gpulist[] seems pretty short, like you could just have 7 compatible
+>> strings in dt_match[] and point them directly at corresponding the
+>> gpulist[] entry.  Or are there lots of patch levels, with the same
+>> struct adreno_info values?
+>
+> The list currently is rather incomplete (which may or may not matter,
+> I guess it comes down to how many different phones/tablets out there
+> people try to get an upstream kernel working on).  And it has those
+> ANY_ID wildcard entries.
+>
+> A full list of all the gpu's including all their patchlevels would be
+> quite long.
+>
+> We might end up wanting to split the quirks out differently, since
+> those tend to apply to specific patchlevel's.. I had to change the
+> existing entry for a530 from a530.* to a530.2 for this reason.  But
+> that won't effect the bindings so that is an implementation detail we
+> can worry about later.
 
-I agree that for each single of the above issues it is worth to readd
-the /chosen and /memory nodes for now. Still all three are IMHO worth to
-be fixed.
+I think that using the of_match_device() mechanism from the specific
+strings listed as the compatible would make more sense than this string
+parsing.  You have to write a gpulist[] entry anyway for the module to
+load.  So that means adding about 7 values today to the compatible
+string dt_match, and the code to use of_match_device() to get your
+struct adreno_info.  Then the current version number lookup loop would
+be just for the old DT compatibility and there's no string parsing.
 
-barebox is already fixed in v2017.01.0 (commit f49b415b9231 (of: base:
-add chosen node if it does not exist when adding initrd),
-https://git.pengutronix.de/cgit/barebox/commit/?id=f49b415b9231).
+However, it's your driver.  The code seems correct, and using specific
+compatible strings is an obviously good step.
 
-Looking at the ATAGS_DTB_COMPAT problem: The code in question is
-(if I understood correctly) merge_fdt_bootargs in
-arch/arm/boot/compressed/atags_to_fdt.c:
+Reviewed-by: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
 
-	setprop_string(fdt, "/chosen", "bootargs", cmdline);
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-looking further:
+-----BEGIN PGP SIGNATURE-----
 
-	static int node_offset(void *fdt, const char *node_path)
-	{       
-		int offset = fdt_path_offset(fdt, node_path);
-		if (offset == -FDT_ERR_NOTFOUND)
-			offset = fdt_add_subnode(fdt, 0, node_path);
-		return offset;
-	}
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliPmeQACgkQtdYpNtH8
+nuglGRAAo8NARAA/R7d+h5FV50e24MOJ87fDnwsMz2rYmbmCNiLP0tNivoZ7UBuO
+5di2cSvhp7BHcmR0ZA++ajl/zPVVg/Xr8SnKd6+3m09Bo+aD6nUEEFXGWoj6qjl1
+0cvzNpA+4edMBx6IElVzC7RSgRxYupCjQVtXTnJ/aUM7oTL9fRlSjUvXvCMjHO++
+URCvZc6ZbEEmbt/80b2KgoN2ihVSqCtY3U/y4Kr+UMDNrVNya4T+sN4km38ayrdW
+mSSp4Aw9ebX54+wQlEzHxpV9Zi5GSB9NcfXo/lXSdw9/tY1YSvee/7VW+pO/PKN3
+l2DNOI1mszLnhY3XFsrNfgDVHggAgdVCdd9/nRrxhys3nfuXDllS+9iuoaK1cap1
+1usBbY+ZidNdgBvuioDhO8GwaN37C5pXNeIXBws9UmUWXzoEVbGzr89NxUw11icW
+RPa4UTpFtXnvGS7nnEIXb8w1FRcFr/i9E6RbdkZHJNUHUpMLu3OuJzb7DcXEho9E
+GrnV2auxFu7790Oq5BzBmcEpEEEooxAU+J/R0VU/LJdo+wMJw6OlAzsg34ChnHDO
+fQHVptvBqQuZ8LwA4PO55xgch9ERG2gt51Ik02/VhQKhZjjERQtHYaDg1Ah/DWb5
++oEVOeG9xkkwajH2C/tb/7Ddzo8zN97djhyf9I1r7s44u2mrlN8=
+=168U
+-----END PGP SIGNATURE-----
+--=-=-=--
 
-	static int setprop_string(void *fdt, const char *node_path,
-				  const char *property, const char *string)
-	{
-		int offset = node_offset(fdt, node_path);
-		if (offset < 0)
-			return offset;
-		return fdt_setprop_string(fdt, offset, property, string);
-	}
+--===============2051372683==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-So it seems "/chosen" not being there should be handled. I don't have a
-reproducer for this problem, but it doesn't look that hard to fix with
-DEBUG_LL and a system that shows the problem.
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
 
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============2051372683==--
