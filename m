@@ -1,7 +1,7 @@
 From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv2 07/16] atmel-isi: move out of soc_camera to atmel
-Date: Mon, 30 Jan 2017 15:06:19 +0100
-Message-ID: <20170130140628.18088-8-hverkuil@xs4all.nl>
+Subject: [PATCHv2 15/16] sama5d3 dts: enable atmel-isi
+Date: Mon, 30 Jan 2017 15:06:27 +0100
+Message-ID: <20170130140628.18088-16-hverkuil@xs4all.nl>
 References: <20170130140628.18088-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
@@ -12,97 +12,147 @@ List-Id: devicetree@vger.kernel.org
 
 From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Move this out of the soc_camera directory into the atmel directory
-where it belongs.
+This illustrates the changes needed to the dts in order to hook up the
+ov7670. I don't plan on merging this.
 
 Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/media/platform/Makefile                          |  1 +
- drivers/media/platform/atmel/Kconfig                     | 11 ++++++++++-
- drivers/media/platform/atmel/Makefile                    |  1 +
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.c |  0
- drivers/media/platform/{soc_camera => atmel}/atmel-isi.h |  0
- drivers/media/platform/soc_camera/Kconfig                | 10 ----------
- drivers/media/platform/soc_camera/Makefile               |  1 -
- 7 files changed, 12 insertions(+), 12 deletions(-)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.c (100%)
- rename drivers/media/platform/{soc_camera => atmel}/atmel-isi.h (100%)
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts | 61 ++++++++++++++++++++++++++---
+ arch/arm/boot/dts/sama5d3.dtsi              |  4 +-
+ 2 files changed, 58 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 5b3cb27..15f4f69 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -61,6 +61,7 @@ obj-$(CONFIG_VIDEO_XILINX)		+= xilinx/
- obj-$(CONFIG_VIDEO_RCAR_VIN)		+= rcar-vin/
+diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+index c51fc65..2af24f7 100644
+--- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+@@ -65,18 +65,53 @@
+ 				status = "okay";
+ 			};
  
- obj-$(CONFIG_VIDEO_ATMEL_ISC)		+= atmel/
-+obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel/
- 
- ccflags-y += -I$(srctree)/drivers/media/i2c
- 
-diff --git a/drivers/media/platform/atmel/Kconfig b/drivers/media/platform/atmel/Kconfig
-index 867dca2..9bd0f19 100644
---- a/drivers/media/platform/atmel/Kconfig
-+++ b/drivers/media/platform/atmel/Kconfig
-@@ -6,4 +6,13 @@ config VIDEO_ATMEL_ISC
- 	select REGMAP_MMIO
- 	help
- 	   This module makes the ATMEL Image Sensor Controller available
--	   as a v4l2 device.
-\ No newline at end of file
-+	   as a v4l2 device.
++			isi0: isi@f0034000 {
++				status = "okay";
++				port {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					isi_0: endpoint {
++						reg = <0>;
++						remote-endpoint = <&ov7670_0>;
++						bus-width = <8>;
++						vsync-active = <1>;
++						hsync-active = <1>;
++					};
++				};
++			};
 +
-+config VIDEO_ATMEL_ISI
-+	tristate "ATMEL Image Sensor Interface (ISI) support"
-+	depends on VIDEO_V4L2 && OF && HAS_DMA
-+	depends on ARCH_AT91 || COMPILE_TEST
-+	select VIDEOBUF2_DMA_CONTIG
-+	---help---
-+	  This module makes the ATMEL Image Sensor Interface available
-+	  as a v4l2 device.
-diff --git a/drivers/media/platform/atmel/Makefile b/drivers/media/platform/atmel/Makefile
-index 9d7c999..27000d0 100644
---- a/drivers/media/platform/atmel/Makefile
-+++ b/drivers/media/platform/atmel/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_VIDEO_ATMEL_ISC) += atmel-isc.o
-+obj-$(CONFIG_VIDEO_ATMEL_ISI) += atmel-isi.o
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/atmel/atmel-isi.c
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.c
-rename to drivers/media/platform/atmel/atmel-isi.c
-diff --git a/drivers/media/platform/soc_camera/atmel-isi.h b/drivers/media/platform/atmel/atmel-isi.h
-similarity index 100%
-rename from drivers/media/platform/soc_camera/atmel-isi.h
-rename to drivers/media/platform/atmel/atmel-isi.h
-diff --git a/drivers/media/platform/soc_camera/Kconfig b/drivers/media/platform/soc_camera/Kconfig
-index a37ec91..0c581aa 100644
---- a/drivers/media/platform/soc_camera/Kconfig
-+++ b/drivers/media/platform/soc_camera/Kconfig
-@@ -26,13 +26,3 @@ config VIDEO_SH_MOBILE_CEU
- 	select SOC_CAMERA_SCALE_CROP
- 	---help---
- 	  This is a v4l2 driver for the SuperH Mobile CEU Interface
--
--config VIDEO_ATMEL_ISI
--	tristate "ATMEL Image Sensor Interface (ISI) support"
--	depends on VIDEO_V4L2 && OF && HAS_DMA
--	depends on ARCH_AT91 || COMPILE_TEST
--	select VIDEOBUF2_DMA_CONTIG
--	---help---
--	  This module makes the ATMEL Image Sensor Interface available
--	  as a v4l2 device.
--
-diff --git a/drivers/media/platform/soc_camera/Makefile b/drivers/media/platform/soc_camera/Makefile
-index 7633a0f..07a451e 100644
---- a/drivers/media/platform/soc_camera/Makefile
-+++ b/drivers/media/platform/soc_camera/Makefile
-@@ -6,5 +6,4 @@ obj-$(CONFIG_SOC_CAMERA_SCALE_CROP)	+= soc_scale_crop.o
- obj-$(CONFIG_SOC_CAMERA_PLATFORM)	+= soc_camera_platform.o
+ 			i2c0: i2c@f0014000 {
+ 				pinctrl-0 = <&pinctrl_i2c0_pu>;
+-				status = "okay";
++				status = "disabled";
+ 			};
  
- # soc-camera host drivers have to be linked after camera drivers
--obj-$(CONFIG_VIDEO_ATMEL_ISI)		+= atmel-isi.o
- obj-$(CONFIG_VIDEO_SH_MOBILE_CEU)	+= sh_mobile_ceu_camera.o
+ 			i2c1: i2c@f0018000 {
+ 				status = "okay";
+ 
++				ov7670: camera@0x21 {
++					compatible = "ovti,ov7670";
++					reg = <0x21>;
++					pinctrl-names = "default";
++					pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
++					resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
++					pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
++					clocks = <&pck0>;
++					clock-names = "xclk";
++					assigned-clocks = <&pck0>;
++					assigned-clock-rates = <25000000>;
++
++					port {
++						ov7670_0: endpoint {
++							remote-endpoint = <&isi_0>;
++							bus-width = <8>;
++						};
++					};
++				};
++
+ 				pmic: act8865@5b {
+ 					compatible = "active-semi,act8865";
+ 					reg = <0x5b>;
+-					status = "disabled";
++					status = "okay";
+ 
+ 					regulators {
+ 						vcc_1v8_reg: DCDC_REG1 {
+@@ -130,7 +165,7 @@
+ 			pwm0: pwm@f002c000 {
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&pinctrl_pwm0_pwmh0_0 &pinctrl_pwm0_pwmh1_0>;
+-				status = "okay";
++				status = "disabled";
+ 			};
+ 
+ 			usart0: serial@f001c000 {
+@@ -143,7 +178,7 @@
+ 			};
+ 
+ 			uart0: serial@f0024000 {
+-				status = "okay";
++				status = "disabled";
+ 			};
+ 
+ 			mmc1: mmc@f8000000 {
+@@ -181,7 +216,7 @@
+ 			i2c2: i2c@f801c000 {
+ 				dmas = <0>, <0>;	/* Do not use DMA for i2c2 */
+ 				pinctrl-0 = <&pinctrl_i2c2_pu>;
+-				status = "okay";
++				status = "disabled";
+ 			};
+ 
+ 			macb1: ethernet@f802c000 {
+@@ -200,6 +235,22 @@
+ 			};
+ 
+ 			pinctrl@fffff200 {
++				camera_sensor {
++					pinctrl_pck0_as_isi_mck: pck0_as_isi_mck-0 {
++						atmel,pins =
++							<AT91_PIOD 30 AT91_PERIPH_B AT91_PINCTRL_NONE>;	/* ISI_MCK */
++					};
++
++					pinctrl_sensor_power: sensor_power-0 {
++						atmel,pins =
++							<AT91_PIOE 13 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
++
++					pinctrl_sensor_reset: sensor_reset-0 {
++						atmel,pins =
++							<AT91_PIOE 11 AT91_PERIPH_GPIO AT91_PINCTRL_NONE>;
++					};
++				};
+ 				board {
+ 					pinctrl_i2c0_pu: i2c0_pu {
+ 						atmel,pins =
+diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+index b06448b..099570e 100644
+--- a/arch/arm/boot/dts/sama5d3.dtsi
++++ b/arch/arm/boot/dts/sama5d3.dtsi
+@@ -176,7 +176,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				clocks = <&twi1_clk>;
+-				status = "disabled";
++				status = "ok";
+ 			};
+ 
+ 			usart0: serial@f001c000 {
+@@ -235,7 +235,7 @@
+ 				pinctrl-0 = <&pinctrl_isi_data_0_7>;
+ 				clocks = <&isi_clk>;
+ 				clock-names = "isi_clk";
+-				status = "disabled";
++				status = "ok";
+ 				port {
+ 					#address-cells = <1>;
+ 					#size-cells = <0>;
 -- 
 2.10.2
 
