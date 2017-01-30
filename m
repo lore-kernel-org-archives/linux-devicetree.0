@@ -1,410 +1,98 @@
-From: Andreas Klinger <ak@it-klinger.de>
-Subject: [PATCH v2 2/2] iio: distance: add devantech us ranger srf04
-Date: Mon, 30 Jan 2017 13:51:17 +0100
-Message-ID: <20170130125117.GA9865@andreas>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Mon, 30 Jan 2017 13:06:57 +0000
+Message-ID: <20170130130657.GR27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+ <1484929911.2897.70.camel@pengutronix.de>
+ <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
+ <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
+ <1485169204.2874.57.camel@pengutronix.de>
+ <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
+ <1485257269.3600.96.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org, dledford@redhat.com, akpm@linux-foundation.org, shraddha.6596@gmail.com, w@1wt.eu, balbi@kernel.org, mtk.manpages@gmail.com, sjenning@redhat.com, ksenija.stanojevic@gmail.com, vilhelm.gray@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Cc: ak@it-klinger.de
+In-Reply-To: <1485257269.3600.96.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the ultrasonic ranger srf04 of devantech.
+> The central issue seems to be that I think media pad links / media bus
+> formats should describe physical links, such as parallel or serial
+> buses, and the formats of pixels flowing through them, whereas Steve
+> would like to extend them to describe software transports and in-memory
+> formats.
 
-This device is measuring the distance of objects in a range between 1 cm
-and 3 meters and a theoretical resolution of 3 mm.
+This probably isn't the right place to attach this comment in this
+thread, but... the issue of media bus formats matching physical buses
+is an argument that I think is already lost.
 
-There are two GPIOs used:
-  - trigger: set as output to the device when the measurement should start
-  - echo: set by the device when the ultrasonic wave is sent out and reset
-    when the echo is recognized; this needs to be an interrupt input
+For example, take the 10-bit bayer formats:
 
-The time between setting and resetting the echo pin is the time the
-waveform needed for one round trip. This time is recorded in the interrupt
-handler.
+#define MEDIA_BUS_FMT_SBGGR10_1X10              0x3007
+#define MEDIA_BUS_FMT_SGBRG10_1X10              0x300e
+#define MEDIA_BUS_FMT_SGRBG10_1X10              0x300a
+#define MEDIA_BUS_FMT_SRGGB10_1X10              0x300f
 
-The distance is calculated in the read function by using the ultrasonic
-speed at 20 degrees celsius which is about 343 m/s.
+These are commonly used on CSI serial buses (see the smiapp driver for
+example).  From the description at the top of the file, it says the
+1X10 means that one pixel is transferred as one 10-bit sample.
 
-Signed-off-by: Andreas Klinger <ak@it-klinger.de>
----
- MAINTAINERS                    |   6 +
- drivers/iio/proximity/Kconfig  |  11 ++
- drivers/iio/proximity/Makefile |   1 +
- drivers/iio/proximity/srf04.c  | 313 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 331 insertions(+)
- create mode 100644 drivers/iio/proximity/srf04.c
+However, the format on wire is somewhat different - four pixels are
+transmitted over five bytes:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa6af014fd72..ba979cc48fd8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3469,6 +3469,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git
- S:	Maintained
- F:	drivers/usb/dwc3/
- 
-+DEVANTECH SRF ULTRASONIC RANGER IIO DRIVER
-+M:	Andreas Klinger <ak@it-klinger.de>
-+L:	linux-iio@vger.kernel.org
-+S:	Maintained
-+F:	drivers/iio/proximity/srf*.c
-+
- DEVICE COREDUMP (DEV_COREDUMP)
- M:	Johannes Berg <johannes@sipsolutions.net>
- L:	linux-kernel@vger.kernel.org
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index ef4c73db5b53..0bcbc66eae6e 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -32,6 +32,17 @@ config LIDAR_LITE_V2
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pulsedlight-lite-v2
- 
-+config SRF04
-+	tristate "Devantech SRF04 ultrasonic ranger sensor"
-+	depends on GPIOLIB
-+	help
-+	  Say Y here to build a driver for Devantech SRF04 ultrasonic
-+	  ranger sensor. This driver can be used to measure the distance
-+	  of objects. It is using two GPIOs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called srf04.
-+
- config SX9500
- 	tristate "SX9500 Semtech proximity sensor"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 9aadd9a8ee99..97c046c1dfc5 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -5,4 +5,5 @@
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_AS3935)		+= as3935.o
- obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
-+obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-new file mode 100644
-index 000000000000..2cbb4dd6f175
---- /dev/null
-+++ b/drivers/iio/proximity/srf04.c
-@@ -0,0 +1,313 @@
-+/*
-+ * SRF04: ultrasonic sensor for distance measuring by using GPIOs
-+ *
-+ * Copyright (c) 2017 Andreas Klinger <ak@it-klinger.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * For details about the device see:
-+ * http://www.robot-electronics.co.uk/htm/srf04tech.htm
-+ *
-+ * the measurement cycle as timing diagram looks like:
-+ *
-+ *          +---+
-+ * GPIO     |   |
-+ * trig:  --+   +------------------------------------------------------
-+ *          ^   ^
-+ *          |<->|
-+ *         udelay(10)
-+ *
-+ * ultra           +-+ +-+ +-+
-+ * sonic           | | | | | |
-+ * burst: ---------+ +-+ +-+ +-----------------------------------------
-+ *                           .
-+ * ultra                     .              +-+ +-+ +-+
-+ * sonic                     .              | | | | | |
-+ * echo:  ----------------------------------+ +-+ +-+ +----------------
-+ *                           .                        .
-+ *                           +------------------------+
-+ * GPIO                      |                        |
-+ * echo:  -------------------+                        +---------------
-+ *                           ^                        ^
-+ *                           interrupt                interrupt
-+ *                           (ts_rising)              (ts_falling)
-+ *                           |<---------------------->|
-+ *                              pulse time measured
-+ *                              --> one round trip of ultra sonic waves
-+ */
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/sched.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+struct srf04_data {
-+	struct device		*dev;
-+	struct gpio_desc	*gpiod_trig;
-+	struct gpio_desc	*gpiod_echo;
-+	struct mutex		lock;
-+	int			irqnr;
-+	ktime_t			ts_rising;
-+	ktime_t			ts_falling;
-+	struct completion	rising;
-+	struct completion	falling;
-+};
-+
-+static irqreturn_t srf04_handle_irq(int irq, void *dev_id)
-+{
-+	struct iio_dev *indio_dev = dev_id;
-+	struct srf04_data *data = iio_priv(indio_dev);
-+
-+	if (gpiod_get_value(data->gpiod_echo)) {
-+		data->ts_rising = ktime_get();
-+		complete(&data->rising);
-+	} else {
-+		data->ts_falling = ktime_get();
-+		complete(&data->falling);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int srf04_read(struct srf04_data *data)
-+{
-+	int ret;
-+	ktime_t ktime_dt;
-+	u64 dt_ns;
-+	u32 time_ns, distance_mm;
-+
-+	/*
-+	 * just one read-echo-cycle can take place at a time
-+	 * ==> lock against concurrent reading calls
-+	 */
-+	mutex_lock(&data->lock);
-+
-+	reinit_completion(&data->rising);
-+	reinit_completion(&data->falling);
-+
-+	gpiod_set_value(data->gpiod_trig, 1);
-+	udelay(10);
-+	gpiod_set_value(data->gpiod_trig, 0);
-+
-+	/* it cannot take more than 20 ms */
-+	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
-+	if (ret < 0) {
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	} else if (ret == 0) {
-+		mutex_unlock(&data->lock);
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
-+	if (ret < 0) {
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	} else if (ret == 0) {
-+		mutex_unlock(&data->lock);
-+		return -ETIMEDOUT;
-+	}
-+
-+	ktime_dt = ktime_sub(data->ts_falling, data->ts_rising);
-+
-+	mutex_unlock(&data->lock);
-+
-+	dt_ns = ktime_to_ns(ktime_dt);
-+	/*
-+	 * measuring more than 3 meters is beyond the capabilities of
-+	 * the sensor
-+	 * ==> filter out invalid results for not measuring echos of
-+	 *     another us sensor
-+	 *
-+	 * formula:
-+	 *         distance       3 m
-+	 * time = ---------- = --------- = 9404389 ns
-+	 *          speed       319 m/s
-+	 *
-+	 * using a minimum speed at -20 °C of 319 m/s
-+	 */
-+	if (dt_ns > 9404389)
-+		return -EIO;
-+
-+	time_ns = dt_ns;
-+
-+	/*
-+	 * the speed as function of the temperature is approximately:
-+	 *
-+	 * speed = 331,5 + 0,6 * Temp
-+	 *   with Temp in °C
-+	 *   and speed in m/s
-+	 *
-+	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
-+	 * temperature
-+	 *
-+	 * therefore:
-+	 *             time     343
-+	 * distance = ------ * -----
-+	 *             10^6       2
-+	 *   with time in ns
-+	 *   and distance in mm (one way)
-+	 *
-+	 * because we limit to 3 meters the multiplication with 343 just
-+	 * fits into 32 bit
-+	 */
-+	distance_mm = time_ns * 343 / 2000000;
-+
-+	return distance_mm;
-+}
-+
-+static int srf04_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *channel, int *val,
-+			    int *val2, long info)
-+{
-+	struct srf04_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (channel->type != IIO_DISTANCE)
-+		return -EINVAL;
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = srf04_read(data);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		/*
-+		 * theoretical maximum resolution is 3 mm
-+		 * 1 LSB is 1 mm
-+		 */
-+		*val = 0;
-+		*val2 = 1000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info srf04_iio_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= srf04_read_raw,
-+};
-+
-+static const struct iio_chan_spec srf04_chan_spec[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate =
-+				BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int srf04_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct srf04_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(struct srf04_data));
-+	if (!indio_dev) {
-+		dev_err(dev, "failed to allocate IIO device\n");
-+		return -ENOMEM;
-+	}
-+
-+	data = iio_priv(indio_dev);
-+	data->dev = dev;
-+
-+	mutex_init(&data->lock);
-+	init_completion(&data->rising);
-+	init_completion(&data->falling);
-+
-+	data->gpiod_trig = devm_gpiod_get(dev, "trig", GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_trig)) {
-+		dev_err(dev, "failed to get trig-gpios: err=%ld\n",
-+					PTR_ERR(data->gpiod_trig));
-+		return PTR_ERR(data->gpiod_trig);
-+	}
-+
-+	data->gpiod_echo = devm_gpiod_get(dev, "echo", GPIOD_IN);
-+	if (IS_ERR(data->gpiod_echo)) {
-+		dev_err(dev, "failed to get echo-gpios: err=%ld\n",
-+					PTR_ERR(data->gpiod_echo));
-+		return PTR_ERR(data->gpiod_echo);
-+	}
-+
-+	if (gpiod_cansleep(data->gpiod_echo)) {
-+		dev_err(data->dev, "cansleep-GPIOs not supported\n");
-+		return -ENODEV;
-+	}
-+
-+	data->irqnr = gpiod_to_irq(data->gpiod_echo);
-+	if (data->irqnr < 0) {
-+		dev_err(data->dev, "gpiod_to_irq: %d\n", data->irqnr);
-+		return data->irqnr;
-+	}
-+
-+	ret = devm_request_irq(dev, data->irqnr, srf04_handle_irq,
-+			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+			pdev->name, indio_dev);
-+	if (ret < 0) {
-+		dev_err(data->dev, "request_irq: %d\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	indio_dev->name = "srf04";
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->info = &srf04_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = srf04_chan_spec;
-+	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
-+
-+	return iio_device_register(indio_dev);
-+}
-+
-+static int srf04_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+
-+	iio_device_unregister(indio_dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_srf04_match[] = {
-+	{ .compatible = "devantech,srf04", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_srf04_match);
-+
-+static struct platform_driver srf04_driver = {
-+	.probe		= srf04_probe,
-+	.remove		= srf04_remove,
-+	.driver		= {
-+		.name		= "srf04-gpio",
-+		.of_match_table	= of_srf04_match,
-+	},
-+};
-+
-+module_platform_driver(srf04_driver);
-+
-+MODULE_AUTHOR("Andreas Klinger <ak@it-klinger.de>");
-+MODULE_DESCRIPTION("SRF04 ultrasonic sensor for distance measuring using GPIOs");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:srf04");
+	P0	P1	P2	P3	P0	P1	P2	P3
+	8-bit	8-bit	8-bit	8-bit	2-bit	2-bit	2-bit	2-bit
+
+This gives two problems:
+1) it doesn't fit in any sensible kind of "one pixel transferred as
+   N M-bit samples" description because the pixel/sample values
+   (depending how you look at them) are broken up.
+
+2) changing this will probably be a user visible change, as things
+   like smiapp are already in use.
+
+So, I think what we actually have is the media bus formats describing
+the _logical_ bus format.  Yes, one pixel is transferred as one 10-bit
+sample in this case.
+
+To help illustrate my point, consider the difference between
+MEDIA_BUS_FMT_RGB565_1X16 and MEDIA_BUS_FMT_RGB565_2X8_BE or
+MEDIA_BUS_FMT_RGB565_2X8_LE.  RGB565_1X16 means 1 pixel over an effective
+16-bit wide bus (if it's not 16-bit, then it has to be broken up into
+separate "samples".)  RGB565_2X8 means 1 pixel as two 8-bit samples.
+
+So, the 10-bit bayer is 1 pixel as 1.25 bytes.  Or is it, over a serial
+bus.  Using the RGB565 case, 10-bit bayer over a 4 lane CSI bus becomes
+interesting:
+
+	first byte	2nd	3rd
+lane 1	P0 9:2		S0	P7 9:2
+lane 2	P1 9:2		P4 9:2	S1
+lane 3	P2 9:2		P5 9:2	P8 9:2
+lane 4	P3 9:2		P6 9:2	P9 9:2
+
+S0 = P0/P1/P2/P3 least significant two bits
+S1 = P4/P5/P6/P7 least significant two bits
+
+or 2 lane CSI:
+	first byte	2nd	3rd	4th	5th
+lane 1	P0 9:2		P2	S0	P5	P7
+lane 2	P1 9:2		P3	P4	P6	S1
+
+or 1 lane CSI:
+lane 1	P0 P1 P2 P3 S0 P4 P5 P6 P7 S1 P8 P9 ...
+
+etc.
+
 -- 
-2.1.4
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
