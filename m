@@ -1,86 +1,90 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: Re: [PATCH 0/7]  Fix issues and factorize arm/arm64 capacity
- information code
-Date: Mon, 30 Jan 2017 12:29:01 +0000
-Message-ID: <20170130122901.GA25681@e106622-lin>
-References: <20170119143757.14537-1-juri.lelli@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170119143757.14537-1-juri.lelli@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH v3 4/5] soc: samsung: pm_domains: Read domain name from the new
+ label property
+Date: Mon, 30 Jan 2017 13:18:59 +0100
+Message-ID: <1485778740-30337-5-git-send-email-m.szyprowski@samsung.com>
+References: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
+ <CGME20170130121915eucas1p23aa4f4be912bcd64f9521f6e6b51132f@eucas1p2.samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-reply-to: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Device tree nodes for each power domain should use generic "power-domain"
+name, so using it as a domain name doesn't give much benefits. This patch
+adds support for human readable names defined in 'label' property. Such
+names are visible to userspace and makes debugging much easier. When no
+'label' property is found, driver keeps using the name constructed from
+full node name.
 
-ping.
+Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ Documentation/devicetree/bindings/power/pd-samsung.txt |  4 ++++
+ drivers/soc/samsung/pm_domains.c                       | 12 ++++++++++--
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-I'd need more advice on this set, especially on how and if patch 6 could fly.
+diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
+index fb08c8d62733..549f7dee9b9d 100644
+--- a/Documentation/devicetree/bindings/power/pd-samsung.txt
++++ b/Documentation/devicetree/bindings/power/pd-samsung.txt
+@@ -13,6 +13,8 @@ Required Properties:
+     must be 0.
+ 
+ Optional Properties:
++- label: Human readable string with domain name. Will be visible in userspace
++	to let user to distinguish between multiple domains in SoC.
+ - clocks: List of clock handles. The parent clocks of the input clocks to the
+ 	devices in this power domain are set to oscclk before power gating
+ 	and restored back after powering on a domain. This is required for
+@@ -39,6 +41,7 @@ Example:
+ 		compatible = "samsung,exynos4210-pd";
+ 		reg = <0x10023C00 0x10>;
+ 		#power-domain-cells = <0>;
++		label = "LCD0";
+ 	};
+ 
+ 	mfc_pd: power-domain@10044060 {
+@@ -47,6 +50,7 @@ Example:
+ 		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
+ 		clock-names = "oscclk", "clk0";
+ 		#power-domain-cells = <0>;
++		label = "MFC";
+ 	};
+ 
+ See Documentation/devicetree/bindings/power/power_domain.txt for description
+diff --git a/drivers/soc/samsung/pm_domains.c b/drivers/soc/samsung/pm_domains.c
+index 5a0a46bcbe18..a6a5d807cc2b 100644
+--- a/drivers/soc/samsung/pm_domains.c
++++ b/drivers/soc/samsung/pm_domains.c
+@@ -142,6 +142,15 @@ static int exynos_pd_power_off(struct generic_pm_domain *domain)
+ 	{ },
+ };
+ 
++static __init const char *exynos_get_domain_name(struct device_node *node)
++{
++	const char *name;
++
++	if (of_property_read_string(node, "label", &name) < 0)
++		name = strrchr(node->full_name, '/') + 1;
++	return kstrdup_const(name, GFP_KERNEL);
++}
++
+ static __init int exynos4_pm_init_power_domain(void)
+ {
+ 	struct device_node *np;
+@@ -159,8 +168,7 @@ static __init int exynos4_pm_init_power_domain(void)
+ 			of_node_put(np);
+ 			return -ENOMEM;
+ 		}
+-		pd->pd.name = kstrdup_const(strrchr(np->full_name, '/') + 1,
+-					    GFP_KERNEL);
++		pd->pd.name = exynos_get_domain_name(np);
+ 		if (!pd->pd.name) {
+ 			kfree(pd);
+ 			of_node_put(np);
+-- 
+1.9.1
 
-Thanks,
-
-- Juri
-
-On 19/01/17 14:37, Juri Lelli wrote:
-> Hi,
-> 
-> arm and arm64 topology.c share a lot of code related to parsing of capacity
-> information. This set of patches proposes a solution (based on Will's,
-> Catalin's and Mark's off-line suggestions) to move such common code in a single
-> place: drivers/base/arch_topology.c (by creating such file and conditionally
-> compiling it for arm and arm64 only).
-> 
-> First 5 patches are actually fixes for the current code.
-> 
-> Patch 6 is the actual refactoring.
-> 
-> Last patch removes one of the extern symbols by changing a bit the now common
-> code. We still remain with some other externs, which are not nice. Moving them
-> in some header file solves the issue, should I just create a new include/
-> linux/arch_topology.h file and move them there?
-> 
-> The set is based on top of linux/master (4.10-rc4 fb1d8e0e2c50) and it is also
-> available from:
-> 
->  git://linux-arm.org/linux-jl.git upstream/default_caps_factorize
-> 
-> Best,
-> 
-> - Juri
-> 
-> Juri Lelli (7):
->   Documentation: arm: fix wrong reference number in DT definition
->   Documentation/ABI: add information about cpu_capacity
->   arm: fix return value of parse_cpu_capacity
->   arm: remove wrong CONFIG_PROC_SYSCTL ifdef
->   arm64: remove wrong CONFIG_PROC_SYSCTL ifdef
->   arm, arm64: factorize common cpu capacity default code
->   arm,arm64,drivers: reduce scope of cap_parsing_failed
-> 
->  Documentation/ABI/testing/sysfs-devices-system-cpu |   7 +
->  Documentation/devicetree/bindings/arm/cpus.txt     |   4 +-
->  arch/arm/Kconfig                                   |   1 +
->  arch/arm/kernel/topology.c                         | 216 +------------------
->  arch/arm64/Kconfig                                 |   1 +
->  arch/arm64/kernel/topology.c                       | 218 +------------------
->  drivers/base/Kconfig                               |   8 +
->  drivers/base/Makefile                              |   1 +
->  drivers/base/arch_topology.c                       | 240 +++++++++++++++++++++
->  9 files changed, 269 insertions(+), 427 deletions(-)
->  create mode 100644 drivers/base/arch_topology.c
-> 
-> -- 
-> 2.10.0
-> 
