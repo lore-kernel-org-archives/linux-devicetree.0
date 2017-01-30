@@ -1,53 +1,49 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 3/5] pinctrl: mvebu: pinctrl driver for 98DX3236 SoC
-Date: Mon, 30 Jan 2017 14:58:02 +0100
-Message-ID: <CACRpkdavkH21iuxde-KUQJeX9S03Z_9CaUQe6h9e9C7Cup_AEA@mail.gmail.com>
-References: <20170129232035.25189-1-chris.packham@alliedtelesis.co.nz> <20170129232035.25189-4-chris.packham@alliedtelesis.co.nz>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH 0/5] Add EXTI GPIO trigger support to STM32 ADC
+Date: Mon, 30 Jan 2017 14:57:38 +0100
+Message-ID: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170129232035.25189-4-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 12:20 AM, Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+STM32 ADC, can use GPIOs configured as EXTI line (external interrupt)
+as trigger source for conversions.
+This patchset is based on latest IIO testing branch, and adds support
+for EXTi GPIO triggers in IIO.
+It also adds a dt option to configure default trigger polarity in
+STM32 ADC driver.
 
-> From: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
->
-> This pinctrl driver supports the 98DX3236, 98DX3336 and 98DX4251 SoCs
-> from Marvell.
->
-> Signed-off-by: Kalyan Kinthada <kalyan.kinthada@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
->
-> Notes:
->     Changes in v2:
->     - include sdio support for the 98DX4251
->     Changes in v3:
->     - None
->     Changes in v4:
->     - Correct some discrepencies between binding and driver.
->     - Collect acks from Rob and Sebastian
->     Changes in v5:
->     - Update bindings to reflect "gpo" pins
->     - Use mvebu_mmio_mpp_ctrl instead of armada_xp_mpp_ctrl (note this is reliant
->       on changes queued in linux-pinctrl)
->     Changes in v6:
->     - None
+Fabrice Gasnier (5):
+  Documentation: dt: iio: document stm32 adc trigger polarity
+  iio: adc: stm32: add dt option to set default trigger polarity
+  Documentation: dt: iio: document stm32 exti trigger
+  iio: trigger: add support for STM32 EXTI triggers
+  iio: adc: stm32: add exti11 gpio trigger source
 
-This patch was applied to an immutable branch and then merged into the
-pinctrl devel tree. The immutable branch is here:
+ .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   3 +
+ .../bindings/iio/trigger/st,stm32-exti-trigger.txt |  17 +++
+ drivers/iio/adc/stm32-adc.c                        |  14 +++
+ drivers/iio/trigger/Kconfig                        |  10 ++
+ drivers/iio/trigger/Makefile                       |   1 +
+ drivers/iio/trigger/stm32-exti-trigger.c           | 124 +++++++++++++++++++++
+ include/linux/iio/trigger/stm32-exti-trigger.h     |  26 +++++
+ 7 files changed, 195 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+ create mode 100644 drivers/iio/trigger/stm32-exti-trigger.c
+ create mode 100644 include/linux/iio/trigger/stm32-exti-trigger.h
 
-https://git.kernel.org/cgit/linux/kernel/git/linusw/linux-pinctrl.git/log/?h=ib-mvebu-98dx3236
-
-Do as you please: if you want other trees (ARM SoC) to pull this in or
-not.
-
-Yours,
-Linus Walleij
+-- 
+1.9.1
