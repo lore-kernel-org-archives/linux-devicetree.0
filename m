@@ -1,36 +1,85 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 22/24] media: imx: Add MIPI CSI-2 OV5640 sensor subdev
- driver
-Date: Mon, 30 Jan 2017 23:29:55 +0000
-Message-ID: <20170130232955.GK27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-23-git-send-email-steve_longerbeam@mentor.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 0/3] Add Broadcom SPU Crypto Driver
+Date: Mon, 30 Jan 2017 15:35:54 -0800
+Message-ID: <6fe4cad2-6fc9-bd69-f5ad-67957335fe55@gmail.com>
+References: <1485362689-11294-1-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483755102-24785-23-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485362689-11294-1-git-send-email-rob.rice@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Rice <rob.rice@broadcom.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 06:11:40PM -0800, Steve Longerbeam wrote:
-> +config IMX_OV5640_MIPI
-> +       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
-> +       depends on GPIOLIB && VIDEO_IMX_CAMERA
-> +       select IMX_MIPI_CSI2
-> +       default y
+On 01/25/2017 08:44 AM, Rob Rice wrote:
+> Changes in v3:
+> - rebase to 4.10-rc3 in cryptodev-2.6 tree
+> - in bindings doc, list all valid compatibility strings
+> - rename DT nodes "crypto" rather than "spu-crypto"
+> - include a separate DT node for each SPU hardware block. Previously,
+>  there was a single SPU node listing a register range for each
+>  hw block.
+> - select hash algos in Kconfig. Driver HMAC implementation uses hash
+>  sw algos for inner and outer hashes.
+> - Fix crash for AES CCM decrypt when AAD and data are both empty
+> 
+> Change in v2:
+> - select CRYPTO_DES in Kconfig
+> 
+> The Broadcom SPU crypto driver provides access to SPU hardware
+> for symmetric crypto offload. The driver supports ablkcipher,
+> ahash, and aead operations. The driver supports several
+> Broadcom SoCs with different revisions of the SPU hardware.
+> The driver supports SPU-M and SPU2 hardware revisions, and
+> a couple versions of each hw revision, each version with minor
+> differences.
 
-Why is this defaulting to y?  New drivers should not default to enabled
-unless they are replacing some already pre-existing functionality.
-Ditto for the other camera driver.
+Herbert, can you take patches 1-2, and I will take patch 3 through my
+arm64-soc git pull requests? Thanks!!
+
+> 
+> Rob Rice (3):
+>   crypto: brcm: DT documentation for Broadcom SPU hardware
+>   crypto: brcm: Add Broadcom SPU driver
+>   arm64: dts: ns2: Add Broadcom SPU driver DT entry.
+> 
+>  .../devicetree/bindings/crypto/brcm,spu-crypto.txt |   22 +
+>  arch/arm64/boot/dts/broadcom/ns2.dtsi              |   24 +
+>  drivers/crypto/Kconfig                             |   15 +
+>  drivers/crypto/Makefile                            |    2 +
+>  drivers/crypto/bcm/Makefile                        |   15 +
+>  drivers/crypto/bcm/cipher.c                        | 4955 ++++++++++++++++++++
+>  drivers/crypto/bcm/cipher.h                        |  475 ++
+>  drivers/crypto/bcm/spu.c                           | 1252 +++++
+>  drivers/crypto/bcm/spu.h                           |  288 ++
+>  drivers/crypto/bcm/spu2.c                          | 1402 ++++++
+>  drivers/crypto/bcm/spu2.h                          |  228 +
+>  drivers/crypto/bcm/spum.h                          |  174 +
+>  drivers/crypto/bcm/util.c                          |  581 +++
+>  drivers/crypto/bcm/util.h                          |  116 +
+>  14 files changed, 9549 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
+>  create mode 100644 drivers/crypto/bcm/Makefile
+>  create mode 100644 drivers/crypto/bcm/cipher.c
+>  create mode 100644 drivers/crypto/bcm/cipher.h
+>  create mode 100644 drivers/crypto/bcm/spu.c
+>  create mode 100644 drivers/crypto/bcm/spu.h
+>  create mode 100644 drivers/crypto/bcm/spu2.c
+>  create mode 100644 drivers/crypto/bcm/spu2.h
+>  create mode 100644 drivers/crypto/bcm/spum.h
+>  create mode 100644 drivers/crypto/bcm/util.c
+>  create mode 100644 drivers/crypto/bcm/util.h
+> 
+
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
