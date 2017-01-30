@@ -1,54 +1,52 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] dmaengine: sun6i: allow build on
- ARM64 platforms (sun50i)
-Date: Mon, 30 Jan 2017 22:12:10 +0530
-Message-ID: <20170130164210.GD19244@localhost>
-References: <20170129023331.62106-1-icenowy@aosc.xyz>
- <20170129023331.62106-9-icenowy@aosc.xyz>
-Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: Lots of "Warning (unit_address_vs_reg): Node /blah/blah/blah has
+ a unit name, but no reg property"
+Date: Mon, 30 Jan 2017 10:46:41 -0600
+Message-ID: <CAL_JsqLzW=XUNmzscL6GXMrP_TinPtcpuzatwz-gkC8X9BUQUA@mail.gmail.com>
+References: <1485770101.2451.40.camel@hellion.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDLNNTP63EBBBTWZXXCAKGQEKS72OTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170129023331.62106-9-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485770101.2451.40.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 29, 2017 at 10:33:29AM +0800, Icenowy Zheng wrote:
-> As 64-bit Allwinner H5 SoC has the same DMA engine with H3, the DMA
-> driver should be allowed to be built for ARM64, in order to make it work on H5.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Patch introduced between v1 and v2, to satisfy the newly added H3/H5 audio
-> codec support.
-> 
->  drivers/dma/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> index 0d6a96ee9fc7..d01d59812cf3 100644
-> --- a/drivers/dma/Kconfig
-> +++ b/drivers/dma/Kconfig
-> @@ -157,7 +157,7 @@ config DMA_SUN4I
->  
->  config DMA_SUN6I
->  	tristate "Allwinner A31 SoCs DMA support"
-> -	depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
-> +	depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) || COMPILE_TEST
++dtc list
 
-Do we really need ARM64 here? also looking at others I wonder why isn't
-this MACH_SUNXI...?
+On Mon, Jan 30, 2017 at 3:55 AM, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
+> I recently updated the device-tree-compiler package on the system which
+> builds the split device tree repo[0] from 1.4.0+dfsg-2 to 1.4.2-1
+> (debian package versions) and now during the test build I see many
+> (over 1,000) of these:
+>
+>     Warning (unit_address_vs_reg): Node /soc@ff700000/ethernet@b0000 has a unit name, but no reg property
+>
+> Is this something which is known? Maybe Linux hasn't pulled in the
+> newer dtc yet so you aren't hitting it yet, or maybe you've done what I
+> did as a quick fix and added:
+>     DTC_FLAGS="-W no-unit_address_vs_reg"
+> ?
 
--- 
-~Vinod
+Linux has this, but the warnings are only enabled with "W=1" builds.
+I'm trying to not have to review the trivial crap.
+
+It's going to spew even more soon. I've posted some more dtc checks last week.
+
+> (a second issue is the lack of the offending filename in the
+> warning message, I'll figure out the right venue for that next)
+
+Yeah, I don't think the dtc checks infrastructure has the information
+as they run on the live tree after all the parsing is done.
+
+Rob
+
+>
+> Ian.
+>
+> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
