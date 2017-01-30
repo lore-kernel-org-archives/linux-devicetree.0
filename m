@@ -1,35 +1,37 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH RESEND 2/5] dmaengine: Provide a wrapper for memcpy
- operations
-Date: Mon, 30 Jan 2017 18:47:21 +0100
-Message-ID: <20170130184721.072c0de1@bbrezillon>
-References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
-        <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
-        <20170130165417.GF19244@localhost>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v6 5/5] Documentation:powerpc: Add device-tree bindings
+ for power-mgt
+Date: Mon, 30 Jan 2017 11:49:53 -0600
+Message-ID: <20170130174953.j3mcr2qlmh3fbznb@rob-hp-laptop>
+References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1485333389-5752-6-git-send-email-ego@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170130165417.GF19244@localhost>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485333389-5752-6-git-send-email-ego@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Wed, Jan 25, 2017 at 02:06:29PM +0530, Gautham R. Shenoy wrote:
+> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+> 
+> Document the device-tree bindings defining the the properties under
+> the @power-mgt node in the device tree that describe the idle states
+> for Linux running on baremetal POWER servers.
+> 
+> These bindings are documented separately instead of using the the
+> common idle state bindings since the idle-states on POWER servers
+> are exposed as property arrays where as the common idle state bindings
+> expect idle-states to be described as nodes.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
+> ---
+>  .../devicetree/bindings/powerpc/opal/power-mgt.txt | 118 +++++++++++++++++++++
+>  1 file changed, 118 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/opal/power-mgt.txt
 
-On Mon, 30 Jan 2017 22:24:17 +0530
-Vinod Koul <vinod.koul@intel.com> wrote:
-
-> On Fri, Jan 27, 2017 at 05:42:01PM +0100, Boris Brezillon wrote:
-> > Almost all ->device_prep_dma_xx() methods have a wrapper defined in
-> > dmaengine.h. Add one for  ->device_prep_dma_memcpy().  
-> 
-> Looks good to me.
-> 
-> Acked-by: Vinod Koul <vinod.koul@intel.com>
-> 
-> 
-
-Maybe you can take this patch directly (the NAND related bits are for
-4.12).
+Acked-by: Rob Herring <robh@kernel.org>
