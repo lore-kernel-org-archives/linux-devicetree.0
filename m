@@ -1,73 +1,156 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v5 0/13] arm64: allwinner: a64: Enable MMC support
-Date: Mon, 30 Jan 2017 12:06:29 +0100
-Message-ID: <20170130110629.i4q73p5svvd7nly2@lukather>
-References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Mon, 30 Jan 2017 12:13:26 +0100
+Message-ID: <2e6c07cb-f67b-64ff-530b-6bc2073272a9@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+ <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+ <20170127101545.g53uah57vgfu55o5@dell>
+ <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
+ <20170127171746.lf2nbpsaqs3dmy44@dell>
+ <3810896b-c982-e9fd-b095-658921422855@kernel.org>
+ <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
+ <7a8c7674-5c02-a58c-de7b-bd9caf15cfb4@metafoo.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="bi5wtywif5bmdxgc"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7a8c7674-5c02-a58c-de7b-bd9caf15cfb4@metafoo.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---bi5wtywif5bmdxgc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks everyone for you feedback!
+My comments below.
 
-On Fri, Jan 27, 2017 at 10:38:32PM +0100, Maxime Ripard wrote:
-> Hi,
->=20
-> Here is a new attempt at getting the MMC controllers running, following t=
-he
-> work done by Andre.
->=20
-> This has been tested on a board with one SDIO device (a Marvell WiFi chip)
-> and a Kingston eMMC with 1.8V IOs.
->=20
-> For SDIO, the HS DDR mode works just fine. That serie also enables the
-> SDR104 mode to work on the devices that are capable of this.
->=20
-> For the eMMC, HS200 with the voltage switch works. HS400 doesn't at the
-> moment, but since it's significantly more complex, and at the same time
-> Allwinner recommends to limit its frequency to 100MHz, this doesn't have
-> any benefits. If there's any at some point, this can be added later.
->=20
-> Let me know what you think,
-> Maxime
+On 01/29/2017 03:34 PM, Lars-Peter Clausen wrote:
+> On 01/29/2017 03:19 PM, Lars-Peter Clausen wrote:
+>> On 01/29/2017 01:28 PM, Jonathan Cameron wrote:
+>> [...]
+>>>>> Jonathan, Mark, Please could you share your opinion on this topic?
+>>> Hmm - based on a fairly quick read through of the code (which is never
+>>> ideal!). I can see that the ideal would indeed be as Lee says, to
+>>> expand the IIO interfaces sufficiently to support what you need.
+>>>
+>>>
+>>> So, reading the code (fairly quickly I'm afraid as had a lot of reviews
+>>> to catch up on this weekend).
+>>> What we need:
+>>> 1) DMA support in the ADC driver.  This would be a good anyway!
+>>> 2) DMA consumer support - I defer to Lars for comments on this.
+>>> 3) Means of describing and controlling the sinc filters applied. 
+>>> 4) Appropriate channel support.  I'm not convinced that it doesn't make
+>>> sense to have IIO channels for the microphones - at least in a streaming
+>>> mode.  It's data - I don't really care what ;)
+>>> Coarsely it's a filtered pulse per period counter which is
+>>> a perfectly valid type to have a channel for.
+>>>
+>>> The big question to my mind is the DMA consumer support. How would
+>>> it work. It it wouldn't this is somewhat of a non starter.
+>>>
+>>> To bring up another slightly ugly MFD case where it is borderline
+>>> on whether an MFD makes sense (just as a reference point of something
+>>> we have discussed a few times before)
+>>>
+>>> ADCs with features directed at touchscreen support.
+>>> These are odd as the ADC bit is generic, but the specific output
+>>> and read sequences used for touchscreen reading don't correspond to
+>>> anything that makes any real sense for other applications.
+>>>
+>>> We have started to get hybrid drives that have an MFD underneath but
+>>> do the ADC reads through IIO consumer interfaces, and the timing
+>>> control from a touchscreen driver.  We haven't really gotten this
+>>> one right yet either.
+>>>
+>>> Here however, to my mind things are different - as I read it
+>>> (and feel free to point out what I'm missing), the sound usecase
+>>> is just a question of setting up sampling frequencies and filters
+>>> appropriate to the microphones and what ASoC expects?
+>>>
+>>> That's not to say the IIO dma stuff is flexible enough (yet) to
+>>> handle the data flows, but perhaps we can work towards that.
+>>
+>> Yeah, so this is a bit different, but not unexpected. And I'm sure we'll see
+>> more similar hardware in the future. I've talked about this before[1], the
+>> cost structure of creating and manufacturing new hardware drives the design
+>> in a certain direction so that we end up with general purpose hardware that
+>> suddenly has applications in multiple frameworks that were previously fully
+>> orthogonal.
+>>
+>> This device is certainly not a multi-function-device. It only has one
+>> function, it's a sigma-delta demodulator. It is rather a
+>> multi-purpose-device. It can be used for sigma-delta demodulation in audio
+>> applications as well as more specialized data capture applications.
+>>
+>> It's comparable to something like a GPIO that can be used to control a reset
+>> pin or turn on and off a LED. The GPIO chip is not considered
+>> multi-function-device though, even though it can be used for many different
+>> applications.
+>>
+>> As for DMA we already have a lot of DMA infrastructure on the audio side and
+>> we probably want to reuse that rather than inserting IIO as a middle layer
+>> since audio buffer capture as different requirements from IIO buffer and
+>> we'd have to go the route of the least common denominator and loose
+>> expressibility in the process.
+>>
+>> I've created a IIO buffer[2] that does not capture data to memory but is
+>> only used to enable/disable the data capture process. We use this in setups
+>> where the data is passed from the converter to a application specific
+>> processing chain without ever going through system memory. This buffer could
+>> probably also be used here on the audio side to control the converter state.
+> 
+> I forgot to mention. I think the first thing we should do is work on
+> terminology. This is not an ADC, this is a configurable low-pass-filter.
+> 
+> It works in conjunction with a analog frontend (ADC) that produces a 1-bit
+> pulse-density-modulated stream, takes that stream and converts it into N-bit
+> PCM samples. The PCM samples are generated at a fraction of the PDM stream
+> samplerate that corresponds to the decimation factor.
+> 
+> This is not an unusual device. Many audio CODEC and audio controllers
+> contain such a core as well as most SigmaDelta converters supported by IIO.
+> What is special about this part is that it is a dedicated core that is not
+> embedded in some other hardware component. This creates greater flexibility,
+> but of course also greater complexity that is required to manage all that
+> flexibility.
+> 
+> We shouldn't codify anything about the kernel internal frameworks through
+> which the device might be exposed into the devicetree. We should accurately
+> describe the hardware (including the analog frontend) and then create a
+> appropriate software structures to handle them.	
+> 
 
-Applied the DT bits with Chen-Yu's Acked-by.
+So if everyone is aligned, i will abandon the MFD driver and try to bind
+an ASoC driver on IIO interface. The "challenge" is to
+define appropriate relation ship between ASoC and IIO...
 
-Maxime
+In a first step, a lot of question to answers and points to clarify... i
+will reply to associated mails.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Then I see two main topics to clarify:
+	- DFSDM integration in IIO in a generic way. Lars, if i well interpret,
+your proposal should be to introduce front-end and filter notions in
+IIO, to support this kind of hardware?
+	- DMA engine for audio purpose.
+I propose to come back with RFC for both subjects.
 
---bi5wtywif5bmdxgc
-Content-Type: application/pgp-signature; name="signature.asc"
+If you want to have more detail on DFSDM: DFSDM datasheet is included in
+STM32F413 datasheet available here:
+http://www.st.com/content/ccc/resource/technical/document/reference_manual/group0/81/ea/88/1f/97/9e/4a/d0/DM00305666/files/DM00305666.pdf/jcr:content/translations/en.DM00305666.pdf
 
------BEGIN PGP SIGNATURE-----
+DFSDM Block diagram p 384
 
-iQIcBAEBCAAGBQJYjx41AAoJEBx+YmzsjxAgQ6EP/RxQXfQC5HXfdQXN7aGpTTc1
-3rckLrjgL00SxHwjKw4jTTrBlWycGpmLO668z3xZ7dXkdPHkaR56161U78BqELop
-CYLGTjhPbZjvCvPugwZ/u7QlADiaTwVUhKwmkI5pxeU7ARtLRfhNYbyaUpZmyFXy
-rAPosMb1/D45dwvGC8pKxj1gHOB3O4c3gtr+1mpKkHFlKeJBa7VVsiUN6cBbNr3G
-rSWKzEHOD6+P7ICTvrv2Mxu6dgfE7TMX8fZH3dnYBAdFeN00XUCjVe6qZR+p7Ltf
-mr5Cf4WI/DKjOWubJnJaUSxkVqcc9TrndGpcHrXQfCzE+jpcuq3GuML9JTiKuZyD
-crjLG5i3X7p+Fcs+PZt63Ewca2K5/DggxCkYPBFIRalPlf/PidDTrCSFqFS5yere
-6Uo1QIVEDEITu1JLtfxMNaH6HWV/1T8NuALVGeKyJ3aVJGiGZocituYtPod6EkK8
-R8p1XxqPhvINHGJJ6eCdRcLa1Hzu3Y7DXHJnZFfkssQddutBM32uZsB1ePnrr4Iy
-VKh1iMCcHUVO/Nu4mmF9NrWXEdfm/W7eu2e5W8ldLj3rudFtxpXkdt+dgTfLwPxV
-CSx/011wP5XCELMCmPeUf10M2M/Oumiiy72D3DmulE5ekwasDQiduDbDFRaL/Srr
-NBDru2cOhgj7uYtTrGln
-=wzRI
------END PGP SIGNATURE-----
-
---bi5wtywif5bmdxgc--
+Regards
+Arnaud
