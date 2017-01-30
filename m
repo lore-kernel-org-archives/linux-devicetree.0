@@ -1,70 +1,76 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 06/24] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
- camera sensors
-Date: Mon, 30 Jan 2017 22:51:33 +0000
-Message-ID: <20170130225133.GF27898@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-7-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1483755102-24785-7-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: [PATCH v5 2/2] backlight arcxcnn devicetree bindings for ArcticSand
+Date: Mon, 30 Jan 2017 18:01:47 -0500
+Message-ID: <1485817307-9463-1-git-send-email-olimpiu@arcticsand.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, medasaro-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 06:11:24PM -0800, Steve Longerbeam wrote:
-> +	ov5640: camera@40 {
-> +		compatible = "ovti,ov5640";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_ov5640>;
-> +		clocks = <&mipi_xclk>;
-> +		clock-names = "xclk";
-> +		reg = <0x40>;
-> +		xclk = <22000000>;
-> +		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
-> +		pwdn-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			ov5640_to_mipi_csi: endpoint@1 {
-> +				reg = <1>;
-> +				remote-endpoint = <&mipi_csi_from_mipi_sensor>;
-> +				data-lanes = <0 1>;
-> +				clock-lanes = <2>;
+backlight: Add devicetree bindings for the Arctic Sand backlight driver
+This patch provides devicetree bindings for the Arctic Sand
+    driver submitted in the previous patch
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+---
 
-How do you envision a four-lane sensor being described?
+v4 => v5:
+- Added spaces for increased readability per Lee Jones
+v3 => v4:
+- Added spaces for increased readability per Lee Jones
+v2 => v3:
+- Version updated to match other patch in set. No other changes.
+v1 => v2:
+- Version updated to match other patch in set. No other changes.
 
-	data-lanes = <0 1 3 4>;
-	clock-lanes = <2>;
+ .../bindings/leds/backlight/arcxcnn_bl.txt         | 33 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
 
-?
-
-The binding document for video-interfaces.txt says:
-
-- clock-lanes: an array of physical clock lane indexes. Position of an entry
-  determines the logical lane number, while the value of an entry indicates
-  physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes = <0>;",
-  which places the clock lane on hardware lane 0. This property is valid for
-  serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus this
-  array contains only one entry.
-
-So I think you need to have a good reason to make the clock lane non-zero.
-
+diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+new file mode 100644
+index 0000000..ecb7731
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+@@ -0,0 +1,33 @@
++Binding for ArcticSand arc2c0608 LED driver
++
++Required properties:
++- compatible:		should be "arc,arc2c0608"
++- reg:			slave address
++
++Optional properties:
++- default-brightness:	brightness value on boot, value from: 0-4095
++- label:		The name of the backlight device
++			See Documentation/devicetree/bindings/leds/common.txt
++- led-sources:		List of enabled channels from 0 to 5.
++			See Documentation/devicetree/bindings/leds/common.txt
++
++- arc,led-config-0:	setting for register ILED_CONFIG_0
++- arc,led-config-1:	setting for register ILED_CONFIG_1
++- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
++- arc,comp-config:	setting for register CONFIG_COMP
++- arc,filter-config:	setting for register FILTER_CONFIG
++- arc,trim-config:	setting for register IMAXTUNE
++
++Note: Optional properties not specified will default to values in IC EPROM
++
++Example:
++
++arc2c0608@30 {
++	compatible = "arc,arc2c0608";
++	reg = <0x30>;
++	default-brightness = <500>;
++	label = "lcd-backlight";
++	linux,default-trigger = "backlight";
++	led-sources = <0 1 2 5>;
++};
++
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
