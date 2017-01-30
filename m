@@ -1,129 +1,81 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v5 06/12] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
- functionality
-Date: Mon, 30 Jan 2017 11:15:20 +0100
-Message-ID: <CAPDyKFrQ15bLCApOdf8BXUyyjcxQehqP=aW1hM=NKfwYmcCYOw@mail.gmail.com>
-References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
- <3546f143091c121face8ecbcbf7f6a4c41d2cec7.1484154449.git-series.gregory.clement@free-electrons.com>
- <CAPDyKFrwxix4zY4a1x9u6jh_gPfKTsaLnD8b8crum=pc5CN3AA@mail.gmail.com>
- <2e67332d-d8c3-fd24-1f81-72675a09927a@intel.com>
- <CAPDyKFqbjeKCHp40PALydquxdF-qBk156+iOS9TYYsquJ7fK7w@mail.gmail.com>
- <00e8d2dc-bc07-addc-a5d9-8604f143627f@intel.com>
- <CAPDyKFoF2QsTxKC7=PjHqOk106USQ-j9MtiyfC=Sqks8DnPDYQ@mail.gmail.com>
- <1f0cc488-75f0-cff3-1386-070717aa7220@intel.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 4/8] ARM: dts: rockchip: disable arm-global-timer for
+ rk3188
+Date: Mon, 30 Jan 2017 11:21:27 +0100
+Message-ID: <20170130102127.GB2206@mai>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+ <1485260203-14216-5-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1f0cc488-75f0-cff3-1386-070717aa7220@intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, Nadav Haklai <nadavh@marvell.com>, Ziji Hu <huziji@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infra>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485260203-14216-5-git-send-email-al.kochet@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30 January 2017 at 10:40, Adrian Hunter <adrian.hunter@intel.com> wrote:
-> On 30/01/17 11:10, Ulf Hansson wrote:
->> On 28 January 2017 at 09:16, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>> On 27/01/2017 5:12 p.m., Ulf Hansson wrote:
->>>>
->>>> On 26 January 2017 at 13:39, Adrian Hunter <adrian.hunter@intel.com>
->>>> wrote:
->>>>>
->>>>> On 26/01/17 12:50, Ulf Hansson wrote:
->>>>>>
->>>>>> On 11 January 2017 at 18:19, Gregory CLEMENT
->>>>>> <gregory.clement@free-electrons.com> wrote:
->>>>>>>
->>>>>>> +                       priv->init_card_type = MMC_TYPE_MMC;
->>>>>>> +                       mmc->caps |= MMC_CAP_NONREMOVABLE;
->>>>>>> +
->>>>>>> +                       /*
->>>>>>> +                        * Force to clear BUS_TEST to
->>>>>>> +                        * skip bus_test_pre and bus_test_post
->>>>>>> +                        */
->>>>>>> +                       mmc->caps &= ~MMC_CAP_BUS_WIDTH_TEST;
->>>>>>> +                       mmc->caps2 |= MMC_CAP2_HC_ERASE_SZ |
->>>>>>
->>>>>>
->>>>>> This cap is a bit strange. It was added several years ago by Adrian
->>>>>> Hunter, but I am wondering about the reason to why it's needed.
->>>>>>
->>>>>
->>>>> MMC_CAP2_HC_ERASE_SZ relates to EXT-CSD ERASE_GROUP_DEF.
->>>>>
->>>>> I think it was added to enable people to choose whether they wanted a
->>>>> large
->>>>> or small erase granularity.  That probably doesn't matter if the card
->>>>> supports TRIM.
->>>>>
->>>>
->>>> Huh, the erase/trim/discard code in the mmc core is really hairy. :-)
->>>>
->>>> In mmc_calc_max_discard() the following code/comment exists:
->>>>
->>>> /*
->>>>  * Without erase_group_def set, MMC erase timeout depends on clock
->>>>  * frequence which can change.  In that case, the best choice is
->>>>  * just the preferred erase size.
->>>>  */
->>>> if (mmc_card_mmc(card) && !(card->ext_csd.erase_group_def & 1))
->>>>      return card->pref_erase;
->>>>
->>>>
->>>> This makes me wonder.
->>>>
->>>> So, when we haven't enabled the high capacity erase groups in the
->>>> EXT_CSD register (ext_csd.erase_group_def), we will use the pref_erase
->>>> size.
->>>>
->>>> In the other case, as when having MMC_CAP2_HC_ERASE_SZ set (which will
->>>> set ext_csd.erase_group_def),  we will instead  do some calculations
->>>> to find out the max discards.
->>>>
->>>> Are you saying that these calculations doesn't matter much - or are
->>>> you saying that we always want to do them?
->>>
->>>
->>> No, I was saying that if you have TRIM then TRIM is preferred to ERASE so
->>> the erase group size does not come into play when discarding, since ERASE
->>> granularity is erase groups whereas TRIM granularity is sectors.
->>
->> Right. Thanks for clarifying.
->>
->>>
->>> However ERASE_GROUP_DEF also affects the size of write protect groups.
->>
->> In either case.
->>
->> What do you think of removing MMC_CAP2_HC_ERASE_SZ? I don't like these
->> kind of soft polices, it's better if we can decide on a common
->> behaviour - whatever that is.
->
-> Changing the value of ERASE_GROUP_DEF could be a problem, for example the
-> spec. says:
->
-> "Similarly if the host set ERASE_GROUP_DEF bit for a device that the default
-> write protect was already set in some of the area in the previous power
-> cycle, then the device may show unknown behavior when host issue write
-> or erase commands to the device. In application, it is mandatory for host to
-> use same ERASE GROUP DEF value to the device all the time."
->
-> Whether or not there is anyone that would actually be affected is hard to know.
+On Tue, Jan 24, 2017 at 03:16:39PM +0300, Alexander Kochetkov wrote:
+> clocksource and shed_clock provided by arm-global-timer is quite
+> unstable, because their rate depends on cpu frequency.
+> So disable arm-global-timer and use clocksource and sched_clock
+> from rockchip_timer.
+> It is impossible get stable clocksource having rockchip_timer and
+> arm-global-timer enabled at the same time. Because arm-global-timer
+> looks like a better candidate for the kernel: it has higher
+> frequency and rating.
+> 
+> Disabling arm-global-timer doesn't leave kernel without
+> clockevents as there is another clockevent provider (smp-twd).
 
-Okay. I am going to submit a patch that just removes the behaviour for
-MMC_CAP2_HC_ERASE_SZ and the cap itself.
+Hi Alexander,
 
-The cap isn't particular widely used anyway. Let's see what people think of it.
+sorry, I will rewrite the description because of the grammatical errors. I
+don't want to give you the feeling I'm lecturing you, my English is not perfect
+but it will be simpler to give the full descr with the typos fixed.
 
-Thanks a lot for you input!
+"
+The clocksource and the sched_clock provided by the arm_global_timer are quite
+unstable because their rates depend on the cpu frequency.
 
-Kind regards
-Uffe
+On the other side, the arm_global_timer has a higher rating than the
+rockchip_timer, it will be selected by default by the time framework while
+we want to use the stable rockchip clocksource.
+
+Let's disable the arm_global_timer in order to have the rockchip clocksource
+selected by default.
+"
+
+This patch should go at the end of the patchset when the clocksource is
+implemented in the rockchip_timer.
+
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> Reviwed-by: Heiko Stübner <heiko@sntech.de>
+> ---
+>  arch/arm/boot/dts/rk3188.dtsi |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+> index bcf8e03..f677130 100644
+> --- a/arch/arm/boot/dts/rk3188.dtsi
+> +++ b/arch/arm/boot/dts/rk3188.dtsi
+> @@ -546,6 +546,7 @@
+>  
+>  &global_timer {
+>  	interrupts = <GIC_PPI 11 0xf04>;
+> +	status = "disabled";
+>  };
+>  
+>  &local_timer {
+> -- 
+> 1.7.9.5
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
