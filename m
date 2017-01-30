@@ -1,75 +1,57 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] dmaengine: sun6i: allow build on
- ARM64 platforms (sun50i)
-Date: Tue, 31 Jan 2017 02:23:55 +0800
-Message-ID: <3729521485800635@web23g.yandex.ru>
-References: <20170129023331.62106-1-icenowy@aosc.xyz>
-	 <20170129023331.62106-9-icenowy@aosc.xyz> <20170130164210.GD19244@localhost>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] drm/msm: drop _clk suffix from clk names
+Date: Mon, 30 Jan 2017 13:26:21 -0500
+Message-ID: <CAF6AEGu5v1-uPmbvH93vGJ6OqXLT6qAQUb_PVzxh69cYwxFnbg@mail.gmail.com>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-5-robdclark@gmail.com>
+ <87y3xsh0st.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBPMJX3CAKGQEBKTZOOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170130164210.GD19244@localhost>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <87y3xsh0st.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-31.01.2017, 00:41, "Vinod Koul" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> On Sun, Jan 29, 2017 at 10:33:29AM +0800, Icenowy Zheng wrote:
->> =C2=A0As 64-bit Allwinner H5 SoC has the same DMA engine with H3, the DM=
-A
->> =C2=A0driver should be allowed to be built for ARM64, in order to make i=
-t work on H5.
->>
->> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> =C2=A0Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> =C2=A0Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> =C2=A0---
->> =C2=A0Patch introduced between v1 and v2, to satisfy the newly added H3/=
-H5 audio
->> =C2=A0codec support.
->>
->> =C2=A0=C2=A0drivers/dma/Kconfig | 2 +-
->> =C2=A0=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
->>
->> =C2=A0diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
->> =C2=A0index 0d6a96ee9fc7..d01d59812cf3 100644
->> =C2=A0--- a/drivers/dma/Kconfig
->> =C2=A0+++ b/drivers/dma/Kconfig
->> =C2=A0@@ -157,7 +157,7 @@ config DMA_SUN4I
->>
->> =C2=A0=C2=A0config DMA_SUN6I
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tristate "Al=
-lwinner A31 SoCs DMA support"
->> =C2=A0- depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
->> =C2=A0+ depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) || =
-COMPILE_TEST
->
-> Do we really need ARM64 here? also looking at others I wonder why isn't
-> this MACH_SUNXI...?
-
-You mean directly place "ARCH_SUNXI" here?
-
-SUN4I/SUN5I/SUN7I do not use DMA_SUN6I, they have different DMA
-controllers.
-
->
-> --
-> ~Vinod
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMToxNSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
+Pj4gU3VnZ2VzdGVkIGJ5IFJvYiBIZXJyaW5nLiAgV2Ugc3RpbGwgc3VwcG9ydCB0aGUgb2xkIG5h
+bWVzIGZvcgo+PiBjb21wYXRpYmlsaXR5IHdpdGggZG93bnN0cmVhbSBhbmRyb2lkIGR0IGZpbGVz
+Lgo+Pgo+PiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gU2lnbmVkLW9mZi1i
+eTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgo+Cj4gSHVoLCBJIGRvbid0IHRoaW5r
+IEkgd291bGQgaGF2ZSBjbGVhbmVkIHVwIERUIGJpbmRpbmdzIGluIGV4Y2hhbmdlIGZvcgo+IGFk
+ZGluZyBkcml2ZXIgY29kZSBsaWtlIHRoaXMuICBCdXQgdGhlIGNvZGUgc2VlbXMgY29ycmVjdCwg
+c28gb3RoZXIgdGhhbgo+IG9uZSBvcHRpb25hbCBzdWdnZXN0aW9uOgo+Cj4gUmV2aWV3ZWQtYnk6
+IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4KPj4gK3N0cnVjdCBjbGsgKm1zbV9jbGtf
+Z2V0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGNvbnN0IGNoYXIgKm5hbWUpCj4+ICt7
+Cj4+ICsgICAgIHN0cnVjdCBjbGsgKmNsazsKPj4gKyAgICAgY2hhciBuYW1lMlszMl07Cj4+ICsK
+Pj4gKyAgICAgY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIG5hbWUpOwo+PiArICAgICBp
+ZiAoIUlTX0VSUihjbGspIHx8IFBUUl9FUlIoY2xrKSA9PSAtRVBST0JFX0RFRkVSKQo+PiArICAg
+ICAgICAgICAgIHJldHVybiBjbGs7Cj4+ICsKPj4gKyAgICAgc25wcmludGYobmFtZTIsIHNpemVv
+ZihuYW1lMiksICIlc19jbGsiLCBuYW1lKTsKPj4gKwo+PiArICAgICBjbGsgPSBkZXZtX2Nsa19n
+ZXQoJnBkZXYtPmRldiwgbmFtZTIpOwo+PiArICAgICBpZiAoIUlTX0VSUihjbGspIHx8IFBUUl9F
+UlIoY2xrKSA9PSAtRVBST0JFX0RFRkVSKQo+PiArICAgICAgICAgICAgIGRldl93YXJuKCZwZGV2
+LT5kZXYsICJVc2luZyBsZWdhY3kgY2xrIG5hbWUgYmluZGluZy4gIFVzZSAiCj4+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICJcIiVzXCIgaW5zdGVhZCBvZiBcIiVzXCJcbiIsIG5hbWUs
+IG5hbWUyKTsKPgo+IERyb3AgdGhlIHNlY29uZCAifHwgUFRSX0VSUihjbGspIiBjYXNlLCBzbyB0
+aGF0IHlvdSBvbmx5IGdldCBvbmUgd2FybmluZwo+IHByaW50ZWQgYXQgYm9vdCBpZiBkZWZlcnJp
+bmcgaGFwcGVucz8KCm9oLCBnb29kIHBvaW50Li4gSSd2ZSBmaXhlZCB0aGF0IHVwIGxvY2FsbHku
+ICBJIGRvbid0IHRoaW5rIHdlJ2QKYWN0dWFsbHkgaGl0IHRoaXMgY2FzZSBjdXJyZW50bHkgZm9y
+IGdwdSBjbGtzLCBzaW5jZSBmb3IgZ3B1IHRoaXMKY29kZXBhdGggaGFwcGVucyBvbiBmaXJzdCBv
+cGVuKCkgb2YgdGhlIGRldmljZSBmaWxlLiAgQnV0IEkgc2hvdWxkCm1lbnRpb24gSSBoYXZlIGEg
+c2xpZ2hseSBzbmVha3kgdWx0ZXJpb3IgbW90aXZlLCB3aGljaCBpcyB0aGF0IHdlCmNvdWxkIHVz
+ZSB0aGUgc2FtZSBjbGVhbnVwIGZvciBkaXNwbGF5IHJlbGF0ZWQgY2xrcyAod2hpY2ggZG8KY3Vy
+cmVudGx5IHVwc3RyZWFtIHVzZSB0aGUgX2NsayBzdWZmaXgpLgoKQlIsCi1SCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
+c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
+dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
