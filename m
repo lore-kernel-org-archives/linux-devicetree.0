@@ -1,39 +1,83 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: [PATCHv5 0/5] Support for Marvell switches with integrated CPUs
-Date: Mon, 30 Jan 2017 20:27:58 +0000
-Message-ID: <3e0e797ad5bd4747b33f631fcecd3933@svr-chch-ex1.atlnz.lc>
-References: <20170127032546.14657-1-chris.packham@alliedtelesis.co.nz>
- <87wpdgwj72.fsf@free-electrons.com> <20170127184745.GD8801@codeaurora.org>
- <f8f6e8db585147d3adb025bed29694ab@svr-chch-ex1.atlnz.lc>
- <87o9yotxuo.fsf@free-electrons.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
+Date: Mon, 30 Jan 2017 15:28:35 -0500
+Message-ID: <CAF6AEGspNRsq5uabymB6UAq1cV6tuE35mZ4pmi2EYXz1driAdg@mail.gmail.com>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-3-robdclark@gmail.com>
+ <874m0gifmf.fsf@eliezer.anholt.net>
+ <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA@mail.gmail.com>
+ <8737g0s4rg.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org" <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Chris Brand <chris.brand-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Juri Lelli <juri.lelli-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni@fr>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8737g0s4rg.fsf@eliezer.anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, freedreno@lists.freedesktop.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 31/01/17 03:40, Gregory CLEMENT wrote:=0A=
-> Hi Chris,=0A=
->=0A=
-> The 5 patches should be available soon (if it is not already the case),=
-=0A=
-> in the linux-next branch.=0A=
->=0A=
-> The clk patch is already there, the 3 arm patch have been merged in my=0A=
-> mvebu/for-next branch, and the pinctrl patch is about to be merged in=0A=
-> the pinctrl/for-next branch.=0A=
->=0A=
-> Gregory=0A=
->=0A=
-=0A=
-Gregory, Stephen, Linus W, thanks for applying the patches. Numerous =0A=
-reviewers thanks for your feedback.=0A=
-=0A=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMjo1NCBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
+Pj4gT24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTowOSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5o
+b2x0Lm5ldD4gd3JvdGU6Cj4+PiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyaXRl
+czoKPj4+Cj4+Pj4gVGhlIG9yaWdpbmFsIHdheSB3ZSBkZXRlcm1pbmVkIHRoZSBncHUgdmVyc2lv
+biB3YXMgYmFzZWQgb24gZG93bnN0cmVhbQo+Pj4+IGJpbmRpbmdzIGZyb20gYW5kcm9pZCBrZXJu
+ZWwuICBBIGNsZWFuZXIgd2F5IGlzIHRvIGdldCB0aGUgdmVyc2lvbiBmcm9tCj4+Pj4gdGhlIGNv
+bXBhdGlibGUgc3RyaW5nLgo+Pj4+Cj4+Pj4gTm90ZSB0aGF0IG5vIHVwc3RyZWFtIGR0YiB1c2Vz
+IHRoZXNlIGJpbmRpbmdzLiAgQnV0IHRoZSBjb2RlIHN0aWxsCj4+Pj4gc3VwcG9ydHMgZmFsbGlu
+ZyBiYWNrIHRvIHRoZSBsZWdhY3kgYmluZGluZ3MgKHdpdGggYSB3YXJuaW5nKSwgc28gdGhhdAo+
+Pj4+IHdlIGFyZSBzdGlsbCBjb21wYXRpYmxlIHdpdGggdGhlIGdwdSBkdCBub2RlIGZyb20gYW5k
+cm9pZCBkZXZpY2UKPj4+PiBrZXJuZWxzLgo+Pj4KPj4+IFRoZSBncHVsaXN0W10gc2VlbXMgcHJl
+dHR5IHNob3J0LCBsaWtlIHlvdSBjb3VsZCBqdXN0IGhhdmUgNyBjb21wYXRpYmxlCj4+PiBzdHJp
+bmdzIGluIGR0X21hdGNoW10gYW5kIHBvaW50IHRoZW0gZGlyZWN0bHkgYXQgY29ycmVzcG9uZGlu
+ZyB0aGUKPj4+IGdwdWxpc3RbXSBlbnRyeS4gIE9yIGFyZSB0aGVyZSBsb3RzIG9mIHBhdGNoIGxl
+dmVscywgd2l0aCB0aGUgc2FtZQo+Pj4gc3RydWN0IGFkcmVub19pbmZvIHZhbHVlcz8KPj4KPj4g
+VGhlIGxpc3QgY3VycmVudGx5IGlzIHJhdGhlciBpbmNvbXBsZXRlICh3aGljaCBtYXkgb3IgbWF5
+IG5vdCBtYXR0ZXIsCj4+IEkgZ3Vlc3MgaXQgY29tZXMgZG93biB0byBob3cgbWFueSBkaWZmZXJl
+bnQgcGhvbmVzL3RhYmxldHMgb3V0IHRoZXJlCj4+IHBlb3BsZSB0cnkgdG8gZ2V0IGFuIHVwc3Ry
+ZWFtIGtlcm5lbCB3b3JraW5nIG9uKS4gIEFuZCBpdCBoYXMgdGhvc2UKPj4gQU5ZX0lEIHdpbGRj
+YXJkIGVudHJpZXMuCj4+Cj4+IEEgZnVsbCBsaXN0IG9mIGFsbCB0aGUgZ3B1J3MgaW5jbHVkaW5n
+IGFsbCB0aGVpciBwYXRjaGxldmVscyB3b3VsZCBiZQo+PiBxdWl0ZSBsb25nLgo+Pgo+PiBXZSBt
+aWdodCBlbmQgdXAgd2FudGluZyB0byBzcGxpdCB0aGUgcXVpcmtzIG91dCBkaWZmZXJlbnRseSwg
+c2luY2UKPj4gdGhvc2UgdGVuZCB0byBhcHBseSB0byBzcGVjaWZpYyBwYXRjaGxldmVsJ3MuLiBJ
+IGhhZCB0byBjaGFuZ2UgdGhlCj4+IGV4aXN0aW5nIGVudHJ5IGZvciBhNTMwIGZyb20gYTUzMC4q
+IHRvIGE1MzAuMiBmb3IgdGhpcyByZWFzb24uICBCdXQKPj4gdGhhdCB3b24ndCBlZmZlY3QgdGhl
+IGJpbmRpbmdzIHNvIHRoYXQgaXMgYW4gaW1wbGVtZW50YXRpb24gZGV0YWlsIHdlCj4+IGNhbiB3
+b3JyeSBhYm91dCBsYXRlci4KPgo+IEkgdGhpbmsgdGhhdCB1c2luZyB0aGUgb2ZfbWF0Y2hfZGV2
+aWNlKCkgbWVjaGFuaXNtIGZyb20gdGhlIHNwZWNpZmljCj4gc3RyaW5ncyBsaXN0ZWQgYXMgdGhl
+IGNvbXBhdGlibGUgd291bGQgbWFrZSBtb3JlIHNlbnNlIHRoYW4gdGhpcyBzdHJpbmcKPiBwYXJz
+aW5nLiAgWW91IGhhdmUgdG8gd3JpdGUgYSBncHVsaXN0W10gZW50cnkgYW55d2F5IGZvciB0aGUg
+bW9kdWxlIHRvCj4gbG9hZC4gIFNvIHRoYXQgbWVhbnMgYWRkaW5nIGFib3V0IDcgdmFsdWVzIHRv
+ZGF5IHRvIHRoZSBjb21wYXRpYmxlCj4gc3RyaW5nIGR0X21hdGNoLCBhbmQgdGhlIGNvZGUgdG8g
+dXNlIG9mX21hdGNoX2RldmljZSgpIHRvIGdldCB5b3VyCj4gc3RydWN0IGFkcmVub19pbmZvLiAg
+VGhlbiB0aGUgY3VycmVudCB2ZXJzaW9uIG51bWJlciBsb29rdXAgbG9vcCB3b3VsZAo+IGJlIGp1
+c3QgZm9yIHRoZSBvbGQgRFQgY29tcGF0aWJpbGl0eSBhbmQgdGhlcmUncyBubyBzdHJpbmcgcGFy
+c2luZy4KCndlbGwsIHRoZSBwcm9ibGVtIGlzIHN0aWxsIHRoYXQgd2Ugd291bGQgZW5kIHVwIG5l
+ZWRpbmcgZW50cmllcyBmb3IKZWFjaCBncHUgdmVyc2lvbiArIHBhdGNobGV2ZWwsIHdoaWNoIEkg
+d2FzIHRyeWluZyB0byBhdm9pZC4uIEkgdGhpbmsKb3RoZXJ3aXNlLCBpZiB3ZSBzdGFydGVkIGFk
+ZGluZyBtb3JlIGFkcmVubyB2YXJpYW50cyB0aGUgdGFibGUgd291bGQKZ2V0IHF1aXRlIGxhcmdl
+LiAgVGhlIEFOWV9JRCBlbnRyaWVzIGtlZXAgdGhlIHRhYmxlIHNpemUgZG93bgpjdXJyZW50bHku
+Cgo+IEhvd2V2ZXIsIGl0J3MgeW91ciBkcml2ZXIuICBUaGUgY29kZSBzZWVtcyBjb3JyZWN0LCBh
+bmQgdXNpbmcgc3BlY2lmaWMKPiBjb21wYXRpYmxlIHN0cmluZ3MgaXMgYW4gb2J2aW91c2x5IGdv
+b2Qgc3RlcC4KCkkgbWF5IHBvc3NpYmx5IHJlLXdvcmsgdGhpcyBpbiB0aGUgZnV0dXJlLCBidXQg
+d2FzIGxlYW5pbmcgbW9yZQp0b3dhcmRzIHBlcmhhcHMgaW50cm9kdWNpbmcgc29tZSBzb3J0IG9m
+IG9mX21hdGNoX2RldmljZV93aWxkY2FyZChpZCwKZGV2LCAuLi4pIHR5cGUgZnVuY3Rpb24sIGFu
+ZCBhbGxvd2luZyBhIGNvbXBhdCBzdHJpbmcgbWF0Y2ggbGlrZQoicWNvbSxhZHJlbm8tJTF1JTF1
+JTF1LiV1IgoKSSBndWVzcyBtYXliZSByZS1hcnJhbmdpbmcgdGhpcyBzbyBtdWx0aXBsZSBjb21w
+YXQgdGFibGUgZW50cmllcyBwb2ludApiYWNrIHRvIHRoZSBzYW1lICdzdHJ1Y3QgYWRyZW5vX2lu
+Zm8nIG1pZ2h0IGJlIHdvcmthYmxlLCBidXQgdGhhdCBsaXN0CmNvdWxkIHN0aWxsIGdyb3cgcXVp
+dGUgbG9uZy4gIEF0IGFueSByYXRlLCB0aGF0IGRvZXNuJ3QgY2hhbmdlIGhvdyB0aGUKYmluZGlu
+Z3MgbG9vayBzbyB0aGF0IGNhbiBjb21lIGxhdGVyLgoKPiBSZXZpZXdlZC1ieTogRXJpYyBBbmhv
+bHQgPGVyaWNAYW5ob2x0Lm5ldD4KCnRoYW5rcwoKQlIsCi1SCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
