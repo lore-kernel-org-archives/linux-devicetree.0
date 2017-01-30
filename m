@@ -1,17 +1,17 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: arm,gic: Fix binding example for a
- virt-capable GIC
-Date: Mon, 30 Jan 2017 08:41:08 +0000
-Message-ID: <ca89ec5c-2d49-5e76-7589-76a0257b6442@arm.com>
-References: <1485186974-13678-1-git-send-email-marc.zyngier@arm.com>
- <1485186974-13678-2-git-send-email-marc.zyngier@arm.com>
- <20170127203001.qvlgzzrh5hx2pykf@rob-hp-laptop>
- <20170129225129.GK3133@localhost>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v5 06/12] mmc: sdhci-xenon: Add Marvell Xenon SDHC core
+ functionality
+Date: Mon, 30 Jan 2017 09:41:28 +0100
+Message-ID: <CAPDyKFoERET6Fzc7qEGWJ95t6GZir=XJWfTEoRSEROjPgJ95hg@mail.gmail.com>
+References: <cover.8527229dae6c124f24c5e637430c2cdc86f80392.1484154449.git-series.gregory.clement@free-electrons.com>
+ <3546f143091c121face8ecbcbf7f6a4c41d2cec7.1484154449.git-series.gregory.clement@free-electrons.com>
+ <CAPDyKFrwxix4zY4a1x9u6jh_gPfKTsaLnD8b8crum=pc5CN3AA@mail.gmail.com>
+ <461fd409-81e8-2c3f-3674-ec593e1c7383@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170129225129.GK3133@localhost>
+In-Reply-To: <461fd409-81e8-2c3f-3674-ec593e1c7383@marvell.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,63 +21,101 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>, Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Tony Lindgren <tony@atomide.com>, arm@kernel.org, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Chen-Yu Tsai <wens@csie.org>, Kukjin Kim <kgene@kernel.org>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Simon Horman <horms@verge.net.au>, Santosh Shilimkar <ssantosh@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Beno?t Cousson <bcousson@baylibre.com>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@f>
+To: Ziji Hu <huziji@marvell.com>
+Cc: Jimmy Xu <zmxu@marvell.com>, Andrew Lunn <andrew@lunn.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Mike Turquette <mturquette@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Nadav Haklai <nadavh@marvell.com>, Victor Gu <xigu@marvell.com>, Doug Jones <dougj@marvell.com>, linux-clk <linux-clk@vger.kernel.org>, Jisheng Zhang <jszhang@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Kostya Porotchkin <kostap@marvell.com>, Hanna Hawa <hannah@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Ryan Gao <ygao@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "Wei(SOCP) Liu" <liuw@marvell.com>, linux-arm-kernel@lists.infradead.
 List-Id: devicetree@vger.kernel.org
 
-On 29/01/17 22:51, Olof Johansson wrote:
-> On Fri, Jan 27, 2017 at 02:30:01PM -0600, Rob Herring wrote:
->> On Mon, Jan 23, 2017 at 03:56:13PM +0000, Marc Zyngier wrote:
->>> The joys of copy/paste: the example of a virtualization capable GIC
->>> in the DT binding was wrong, and propagated to dozens of platforms.
->>> By having a GICC region that is only 4kB (instead of 8kB), we
->>> end-up not being able to access the GICC_DIR register which is on
->>> the second page.
->>>
->>> Oh well. Let's fix the source of the crap before tackling individual
->>> offenders. While we're at it, also fix the compatibility string to
->>> mention "arm,gic-400", which is the name of the actual implementation
->>> of the GICv2 spec.
->>
->> "While we're at it", code for should be in a separate patch. :) I 
->> wouldn't really care here, but you are not fixing anything...
->>
->>>
->>> Acked-by: Tony Lindgren <tony@atomide.com>
->>> Acked-by: Mark Rutland <mark.rutland@arm.com>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
->>> ---
->>>  Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->>> index 5393e2a..a3d51ed 100644
->>> --- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->>> +++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic.txt
->>> @@ -107,11 +107,11 @@ Required properties:
->>>  Example:
->>>  
->>>  	interrupt-controller@2c001000 {
->>> -		compatible = "arm,cortex-a15-gic";
->>> +		compatible = "arm,gic-400";
->>
->> Which one is correct really depends on the platform. The A15 can have an 
->> internal or external (gic-400) GIC. The former string is correct for an 
->> A15 with an internal GIC. One such platform is Calxeda midway.
->>
->> Arguably, we should not have arm,gic-400 by itself, but have an SoC 
->> specific compatible in case it was integrated in interesting ways.
-> 
-> Good point (and thanks for bringing it up).
-> 
-> Marc, based on this; want to back the above out so we can apply the rest for
-> now, while you battle on the compatible details? :)
+[...]
 
-Fair enough. I'll back that out, respin and resend.
+>>> + */
+>>> +static int xenon_child_node_of_parse(struct platform_device *pdev)
+>>> +{
+>>> +       struct device_node *np = pdev->dev.of_node;
+>>> +       struct sdhci_host *host = platform_get_drvdata(pdev);
+>>> +       struct mmc_host *mmc = host->mmc;
+>>> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>>> +       struct sdhci_xenon_priv *priv = sdhci_pltfm_priv(pltfm_host);
+>>> +       struct device_node *child;
+>>> +       int nr_child;
+>>> +
+>>> +       priv->init_card_type = XENON_CARD_TYPE_UNKNOWN;
+>>> +
+>>> +       nr_child = of_get_child_count(np);
+>>> +       if (!nr_child)
+>>> +               return 0;
+>>> +
+>>> +       for_each_child_of_node(np, child) {
+>>> +               if (of_device_is_compatible(child, "mmc-card")) {
+>>
+>> To avoid code from being duplicated, I would rather see the DT parsing
+>> of the child nodes for "mmc-card", to be done by the mmc core.
+>>
+>> As a matter of fact it is already being done, but perhaps we need to
+>> change that a bit as to fit your case.
+>>
+>> I suggest you have a look and see how to update this in the core,
+>> instead of doing it here in the host driver.
+>>
+>
+>     I understand your concern.
+>
+>     It seems that so far "mmc-card" is only used in our Xenon driver.
 
-Thanks,
+git grep "mmc-card" tells you more about where it's being parsed by
+the mmc core.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+>     Besides, we set Xenon specific parameters and attributions when
+>     parsing "mmc-card" property.
+
+I don't see any Xenon specific properties.
+
+Instead I think it would make sense to update the generic
+interpretation of the binding for mmc-card, as you have done here.
+
+>
+>     May I keep current implementation?
+
+Rather not. Let's try to make the parsing of the child node for
+mmc-card generic.
+
+>     In my very own opinion, moving it into core layer should be another
+>     independent patch.
+
+Absolutely an independent patch. Whether it can be done as a part of
+mmc_of_parse() or whether we need yet another new mmc_of* API, we can
+discuss.
+
+My point is that, I don't this to be specific for Xenon (unless there
+are specific reason, which I don't see here).
+
+>     And it will also cost some more time. To be honest, it is difficult
+>     for me to bring up a generic core layer implementation to parse
+>     "mmc-card", since I'm not clear about other vendor's requirement.
+
+Well, then you need to learn more about how the mmc core works. In
+this case, it shouldn't be too hard to implement.
+
+[...]
+
+>
+>>
+>>> +                                     MMC_CAP2_NO_SD |
+>>> +                                     MMC_CAP2_NO_SDIO;
+>>
+>> I think we need to update the DT documentation for mmc-card.
+>> Typically, we should explicitly state what kind of other existing mmc
+>> DT properties that will be automatically selected, when the mmc-card
+>> is specified.
+>>
+>> Can you please look into updating this DT doc as well.
+>>
+>
+>   Similar to above, may I keep it now and bring up another patch later
+>   to update mmc-card DT and parsing?
+
+Please, no.
+
+[...]
+
+Kind regards
+Uffe
