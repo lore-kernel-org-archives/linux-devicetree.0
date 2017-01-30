@@ -1,297 +1,50 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 8/8] clocksource/drivers/rockchip_timer: implement
- clocksource timer
-Date: Mon, 30 Jan 2017 14:54:45 +0100
-Message-ID: <20170130135445.GH2206@mai>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
- <1485260203-14216-9-git-send-email-al.kochet@gmail.com>
-Mime-Version: 1.0
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] clocksource/drivers/rockchip_timer: split bc_timer into rk_timer and rk_clock_event_device
+Date: Mon, 30 Jan 2017 16:55:33 +0300
+Message-ID: <0E7077EE-0D5A-4653-99EF-E8F2E8FD2FB0@gmail.com>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com> <1485260203-14216-6-git-send-email-al.kochet@gmail.com> <20170130131258.GF2206@mai>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485260203-14216-9-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170130131258.GF2206@mai>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 03:16:43PM +0300, Alexander Kochetkov wrote:
-> The clock supplying the arm-global-timer on the rk3188 is coming from the
-> the cpu clock itself and thus changes its rate everytime cpufreq adjusts
-> the cpu frequency making this timer unsuitable as a stable clocksource
-> and sched clock.
-> 
-> The rk3188, rk3288 and following socs share a separate timer block already
-> handled by the rockchip-timer driver. Therefore adapt this driver to also
-> be able to act as clocksource and sched clock on rk3188.
-> 
-> In order to test clocksource you can run following commands and check
-> how much time it take in real. On rk3188 it take about ~45 seconds.
-> 
->     cpufreq-set -f 1.6GHZ
->     date; sleep 60; date
-> 
-> In order to use the patch you need to declare two timers in the dts
-> file. The first timer will be initialized as clockevent provider
-> and the second one as clocksource. The clockevent must be from
-> alive subsystem as it used as backup for the local timers at sleep
-> time.
-> 
-> The patch does not break compatibility with older device tree files.
-> The older device tree files contain only one timer. The timer
-> will be initialized as clockevent, as expected.
-> 
-> rk3288 (and probably anything newer) is irrelevant to this patch,
-> as it has the arch timer interface. This patch may be usefull
-> for Cortex-A9/A5 based parts.
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  drivers/clocksource/rockchip_timer.c |  137 +++++++++++++++++++++++++++++-----
->  1 file changed, 117 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
-> index 61c3bb1..3ff533c 100644
-> --- a/drivers/clocksource/rockchip_timer.c
-> +++ b/drivers/clocksource/rockchip_timer.c
-> @@ -11,6 +11,7 @@
->  #include <linux/clockchips.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
-> +#include <linux/sched_clock.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
-> @@ -19,6 +20,8 @@
->  
->  #define TIMER_LOAD_COUNT0	0x00
->  #define TIMER_LOAD_COUNT1	0x04
-> +#define TIMER_CURRENT_VALUE0	0x08
-> +#define TIMER_CURRENT_VALUE1	0x0C
->  #define TIMER_CONTROL_REG3288	0x10
->  #define TIMER_CONTROL_REG3399	0x1c
->  #define TIMER_INT_STATUS	0x18
-> @@ -40,7 +43,19 @@ struct rk_clock_event_device {
->  	struct rk_timer timer;
->  };
->  
-> +struct rk_clocksource {
-> +	struct clocksource cs;
-> +	struct rk_timer timer;
-> +};
-> +
-> +enum {
-> +	ROCKCHIP_CLKSRC_CLOCKEVENT = 0,
-> +	ROCKCHIP_CLKSRC_CLOCKSOURCE = 1,
-> +};
-> +
 
-This is over-engineered.
+> 30 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 16:12, Daniel Lezcano =
+<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=
+=B0):
+>=20
+> I don't get the point of these changes. The patch does not explain why =
+they are
+> needed.
 
-Simply convert bc_timer and cs_timer to pointers (may be take the opportunity to
-change the name eg. bc_timer -> rk_clkevt and cs -> rk_clksrc).
+I=E2=80=99d like to extract timer API from current implementation.
+And to make code more readable I=E2=80=99d like to introduce 'struct =
+rk_timer=E2=80=99 what can be
+reused with current implementation and with my patch (8/8). And in order =
+keep patches
+simple and readable I split that into three patches: 5/8, 6/8, 7/8.
 
-Then in the init function check:
+Current implementation named rockchip timer as =E2=80=98struct =
+bc_timer=E2=80=99 (broadcast timer).
+I renamed it to more suitable to it role (may be bad choice).
 
-if (!rk_clkevt) {
-	init clkevt
-} else if (!rk_clksrc) {
-	init clksrc
-} else {
-	Toooo many timer definitions ...
-}
+Yes, the patch itself looks strange. You are right.
 
->  static struct rk_clock_event_device bc_timer;
-> +static struct rk_clocksource cs_timer;
-> +static int rk_next_clksrc = ROCKCHIP_CLKSRC_CLOCKEVENT;
->  
->  static inline struct rk_clock_event_device*
->  rk_clock_event_device(struct clock_event_device *ce)
-> @@ -63,11 +78,37 @@ static inline void rk_timer_enable(struct rk_timer *timer, u32 flags)
->  	writel_relaxed(TIMER_ENABLE | flags, timer->ctrl);
->  }
->  
-> -static void rk_timer_update_counter(unsigned long cycles,
-> -				    struct rk_timer *timer)
-> +static void rk_timer_update_counter(u64 cycles, struct rk_timer *timer)
-> +{
-> +	u32 lower = cycles & 0xFFFFFFFF;
-> +	u32 upper = (cycles >> 32) & 0xFFFFFFFF;
-> +
-> +	writel_relaxed(lower, timer->base + TIMER_LOAD_COUNT0);
-> +	writel_relaxed(upper, timer->base + TIMER_LOAD_COUNT1);
-> +}
-> +
-> +static u64 notrace _rk_timer_counter_read(struct rk_timer *timer)
->  {
-> -	writel_relaxed(cycles, timer->base + TIMER_LOAD_COUNT0);
-> -	writel_relaxed(0, timer->base + TIMER_LOAD_COUNT1);
-> +	u64 counter;
-> +	u32 lower;
-> +	u32 upper, old_upper;
-> +
-> +	upper = readl_relaxed(timer->base + TIMER_CURRENT_VALUE1);
-> +	do {
-> +		old_upper = upper;
-> +		lower = readl_relaxed(timer->base + TIMER_CURRENT_VALUE0);
-> +		upper = readl_relaxed(timer->base + TIMER_CURRENT_VALUE1);
-> +	} while (upper != old_upper);
-> +
-> +	counter = upper;
-> +	counter <<= 32;
-> +	counter |= lower;
-> +	return counter;
-> +}
-> +
+What do you think about that solution:
+- in the patch 6/8 i will Introduce 'struct rk_timer=E2=80=99 and =
+'struct rk_time_clkevt=E2=80=99 (renamed =E2=80=98struct bc_timer=E2=80=99=
+).
+- rk_timer_init() changes from 5/8 I will merge with 8/8
+- 8/8 introduce 'struct rk_time_clksrc'=20
+- 5/8 drop
 
-Do you really want to use the 64 bits version? It has a non negligeable impact on
-the performances and there is no deep idle state allowing a long and huge
-energy saving. IOW, we consume more energy and time by computing the 64bits
-clocksource for zero benefit. I recommend to convert to 32bits.
+Alexander.
 
-> +static u64 rk_timer_counter_read(struct rk_timer *timer)
-> +{
-> +	return _rk_timer_counter_read(timer);
->  }
->  
->  static void rk_timer_interrupt_clear(struct rk_timer *timer)
-> @@ -120,13 +161,46 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
->  	return IRQ_HANDLED;
->  }
->  
-> +static u64 rk_timer_clocksource_read(struct clocksource *cs)
-> +{
-> +	struct rk_clocksource *_cs =
-> +		container_of(cs, struct rk_clocksource, cs);
-> +
-> +	return ~rk_timer_counter_read(&_cs->timer);
-> +}
-> +
-> +static u64 notrace rk_timer_sched_clock_read(void)
-> +{
-> +	struct rk_clocksource *_cs = &cs_timer;
-> +
-> +	return ~_rk_timer_counter_read(&_cs->timer);
-> +}
-> +
-
-You should be able to replace all this code by:
-
-clocksource_mmio_init() with clocksource_mmio_readl_down().
-
->  static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
->  {
-> -	struct clock_event_device *ce = &bc_timer.ce;
-> -	struct rk_timer *timer = &bc_timer.timer;
-> +	struct clock_event_device *ce = NULL;
-> +	struct clocksource *cs = NULL;
-> +	struct rk_timer *timer = NULL;
->  	struct clk *timer_clk;
->  	struct clk *pclk;
->  	int ret = -EINVAL, irq;
-> +	int clksrc;
-> +
-> +	clksrc = rk_next_clksrc;
-> +	rk_next_clksrc++;
-> +
-> +	switch (clksrc) {
-> +	case ROCKCHIP_CLKSRC_CLOCKEVENT:
-> +		ce = &bc_timer.ce;
-> +		timer = &bc_timer.timer;
-> +		break;
-> +	case ROCKCHIP_CLKSRC_CLOCKSOURCE:
-> +		cs = &cs_timer.cs;
-> +		timer = &cs_timer.timer;
-> +		break;
-> +	default:
-> +		return -ENODEV;
-> +	}
->  
->  	timer->base = of_iomap(np, 0);
->  	if (!timer->base) {
-> @@ -170,26 +244,49 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
->  		goto out_irq;
->  	}
->  
-> -	ce->name = TIMER_NAME;
-> -	ce->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT |
-> -		       CLOCK_EVT_FEAT_DYNIRQ;
-> -	ce->set_next_event = rk_timer_set_next_event;
-> -	ce->set_state_shutdown = rk_timer_shutdown;
-> -	ce->set_state_periodic = rk_timer_set_periodic;
-> -	ce->irq = irq;
-> -	ce->cpumask = cpu_possible_mask;
-> -	ce->rating = 250;
-> +	if (ce) {
-> +		ce->name = TIMER_NAME;
-> +		ce->features = CLOCK_EVT_FEAT_PERIODIC |
-> +			       CLOCK_EVT_FEAT_ONESHOT |
-> +			       CLOCK_EVT_FEAT_DYNIRQ;
-> +		ce->set_next_event = rk_timer_set_next_event;
-> +		ce->set_state_shutdown = rk_timer_shutdown;
-> +		ce->set_state_periodic = rk_timer_set_periodic;
-> +		ce->irq = irq;
-> +		ce->cpumask = cpu_possible_mask;
-> +		ce->rating = 250;
-> +	}
-> +
-> +	if (cs) {
-> +		cs->name = TIMER_NAME;
-> +		cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
-> +		cs->mask = CLOCKSOURCE_MASK(64);
-> +		cs->read = rk_timer_clocksource_read;
-> +		cs->rating = 250;
-> +	}
->  
->  	rk_timer_interrupt_clear(timer);
->  	rk_timer_disable(timer);
->  
-> -	ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER, TIMER_NAME, ce);
-> -	if (ret) {
-> -		pr_err("Failed to initialize '%s': %d\n", TIMER_NAME, ret);
-> -		goto out_irq;
-> +	if (ce) {
-> +		ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER,
-> +				  TIMER_NAME, ce);
-> +		if (ret) {
-> +			pr_err("Failed to initialize '%s': %d\n",
-> +				TIMER_NAME, ret);
-> +			goto out_irq;
-> +		}
-> +
-> +		clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
->  	}
-
-'ce' blocks can be grouped together.
-
->  
-> -	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
-> +	if (cs) {
-> +		rk_timer_update_counter(U64_MAX, timer);
-> +		rk_timer_enable(timer, 0);
-> +		clocksource_register_hz(cs, timer->freq);
-> +		sched_clock_register(rk_timer_sched_clock_read, 64,
-> +				     timer->freq);
-
-	The 'cs' can be replaced by clocksource_mmio_init.
-
-> +	}
->  
->  	return 0;
->  
-> -- 
-> 1.7.9.5
-> 
-
--- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
