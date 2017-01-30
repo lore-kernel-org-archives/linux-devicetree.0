@@ -1,97 +1,51 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/8] Add STM32F469 pinctrl and fix issues in STM32 pinctrl
-Date: Mon, 30 Jan 2017 15:55:02 +0100
-Message-ID: <0df054a3-a0bf-7691-4546-4710bc8f32ce@st.com>
-References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 10/18] ARM64: dts: meson-gxbb: Reorder nodes
+Date: Mon, 30 Jan 2017 14:59:24 +0000
+Message-ID: <20170130145924.GX27312@n2100.armlinux.org.uk>
+References: <20170120222118.21476-1-afaerber@suse.de>
+ <20170120222118.21476-11-afaerber@suse.de>
+ <20170123165208.4ujwm6rjz2b3dom5@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, Patrice Chotard <patrice.chotard@st.com>, lee.jones@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170123165208.4ujwm6rjz2b3dom5@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Jan 23, 2017 at 10:52:08AM -0600, Rob Herring wrote:
+> On Fri, Jan 20, 2017 at 11:21:10PM +0100, Andreas Färber wrote:
+> > Sort nodes referenced by label alphabetically.
+> 
+> Seems to be pointless churn.
 
-On 01/27/2017 05:15 PM, Alexandre TORGUE wrote:
-> This series adds support of a dedicated driver for STM32F469 MCU pinctroller.
-> This add generates some changes inside STM32 pinctrl driver and inside STM32
-> device tree.
->
-> Changes in STM32 pinctrl driver:
-> -------------------------------
-> 	
-> 	- Add STM32F469 driver.
-> 	
-> 	- Change STM32 pinctrl core in order to use "gpio-ranges" devicetree definitions.
-> 	  Indeed, on STM32F469 there an hole in BANK J. We need to declare a gpio-ranges
-> 	  in gpioj controller node to handle this hole.
->
-> Changes in STM32 device tree:
-> ----------------------------
-> I propose a new architecture (a new file split) for pinmux definition:
-> 	
-> 	- Create a common stm32f4-pinctrl.dtsi for pinmuxing definitions
-> 	  which are common between STM32F429 and STM32F469 MCU.
-> 	
-> 	- Create dedicated stm32fxxx-pinctrl.dtsi file for each MCU
-> 	  (stm32f429-pinctrl.dtsi and stm32f469-pinctrl.dtsi) each one will
-> 	  include stm32f4-pinctrl.dtsi. All differences (pinmuxing or GPIO
-> 	  bank holes) will be put inside the dedicated files.
->
-> This series fix a locking issue when a gpio is used as IRQ.
->
-> Regards
-> Alex
->
-> Alexandre TORGUE (8):
->   pinctrl: stm32: fix bad location of gpiochip_lock_as_irq
->   pinctrl: stm32: use gpio-ranges to declare bank range
+Depends - if, as the author of a dts file, I order the nodes
+alphabetically, and then someone comes along and adds a new node
+non-alphabetically, meanwhile someone else also adds a node
+elsewhere in the file which conflicts, git will silently merge the
+changes without complaint.
 
-I just see typo issue in patch 1&2. I will send a V2 when more review 
-will be done.
+Having an alphabetical sorting order means that (a) conflicting
+changes are more likely to be highlighted, and (b) non-conflicting
+changes are less likely to cause merge issues.
 
-Regards
-Alex
+I've noticed exactly this with clearfog when merging my tree with
+arm-soc.  I have a version of the DSA patch, meanwhile the mvebu
+people merged the DSA patch.  Somehow, the order of nodes in my
+file are alphabetical, the order in their file has the pinctrl and
+mdio nodes swapped, which results in totally unnecessary merge
+conflicts when I try merging the two trees.
 
+It's more, unnecessary work.
 
->   Documentation: dt: Add bindings for STM32 pinctrl
->   includes: dt-bindings: Rename STM32F429 pinctrl DT bindings
->   pinctrl: stm32: Add STM32F469 MCU support
->   Documentation: dt: Add new compatible to STM32 pinctrl driver bindings
->   ARM: Kconfig: Introduce MACH_STM32F469 flag
->   ARM: dts: stm32: create dedicated files for pinctrl definitions
->
->  .../bindings/pinctrl/st,stm32-pinctrl.txt          |   57 +-
->  arch/arm/Kconfig                                   |    5 +
->  arch/arm/boot/dts/stm32429i-eval.dts               |    1 +
->  arch/arm/boot/dts/stm32f4-pinctrl.dtsi             |  196 +++
->  arch/arm/boot/dts/stm32f429-disco.dts              |    1 +
->  arch/arm/boot/dts/stm32f429-pinctrl.dtsi           |  106 ++
->  arch/arm/boot/dts/stm32f429.dtsi                   |  153 --
->  arch/arm/boot/dts/stm32f469-disco.dts              |    1 +
->  arch/arm/boot/dts/stm32f469-pinctrl.dtsi           |  107 ++
->  drivers/pinctrl/stm32/Kconfig                      |    6 +
->  drivers/pinctrl/stm32/Makefile                     |    1 +
->  drivers/pinctrl/stm32/pinctrl-stm32.c              |  129 +-
->  drivers/pinctrl/stm32/pinctrl-stm32f469.c          | 1574 ++++++++++++++++++++
->  include/dt-bindings/pinctrl/stm32f4-pinfunc.h      | 1302 ++++++++++++++++
->  include/dt-bindings/pinctrl/stm32f429-pinfunc.h    | 1239 ---------------
->  15 files changed, 3414 insertions(+), 1464 deletions(-)
->  create mode 100644 arch/arm/boot/dts/stm32f4-pinctrl.dtsi
->  create mode 100644 arch/arm/boot/dts/stm32f429-pinctrl.dtsi
->  create mode 100644 arch/arm/boot/dts/stm32f469-pinctrl.dtsi
->  create mode 100644 drivers/pinctrl/stm32/pinctrl-stm32f469.c
->  create mode 100644 include/dt-bindings/pinctrl/stm32f4-pinfunc.h
->  delete mode 100644 include/dt-bindings/pinctrl/stm32f429-pinfunc.h
->
+So, I'm going to be submitting a patch to fix the mis-ordered nodes
+in the clearfog dts file today to avoid having to resolve this each
+time I rebuild my nightly build tree.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
