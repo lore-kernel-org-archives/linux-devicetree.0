@@ -1,838 +1,848 @@
-Return-Path: <SRS0=B5S1=ZI=linaro.org=baoyou.xie@kernel.org>
+Return-Path: <SRS0=Y23/=ZM=us.ibm.com=eajames@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20170125162346.GA591@linaro.org>
-References: <1485312289-18354-1-git-send-email-baoyou.xie@linaro.org>
- <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org> <20170125162346.GA591@linaro.org>
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Date: Thu, 26 Jan 2017 09:32:56 +0800
-Message-ID: <CA+DQWkxpcHqVfDSGuUK-i4DOVXsYEYo60MG5y_oBDNp+ykEdLQ@mail.gmail.com>
-Subject: Re: [PATCH v6 3/3] watchdog: zx2967: add watchdog controller driver
- for ZTE's zx2967 family
-Content-Type: multipart/alternative; boundary=001a1144ca223760f40546f5544e
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Jun Nie <jun.nie@linaro.org>, wim@iguana.be, Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Shawn Guo <shawnguo@kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <c2dce65a-6e7a-0c5b-49e9-b50b4f4e91ea@roeck-us.net>
+Subject: Re: [PATCH linux v4 2/6] hwmon: occ: Add sysfs interface
+From: "Edward James" <eajames@us.ibm.com>
+Date: Mon, 30 Jan 2017 13:49:56 -0600
+References: <1485472758-11003-1-git-send-email-eajames.ibm@gmail.com>
+ <1485472758-11003-3-git-send-email-eajames.ibm@gmail.com>
+ <c2dce65a-6e7a-0c5b-49e9-b50b4f4e91ea@roeck-us.net>
+Content-type: multipart/alternative;
+	Boundary="0__=8FBB0A2BDFFF23608f9e8a93df938690918c8FBB0A2BDFFF2360"
+Content-Disposition: inline
+Message-Id: <OFA71A82F0.957F7772-ON002580B8.006CA5F0-862580B8.006CF128@notes.na.collabserv.com>
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: andrew@aj.id.au, benh@kernel.crashing.org, corbet@lwn.net, devicetree@vger.kernel.org, eajames.ibm@gmail.com, jdelvare@suse.com, joel@jms.id.au, linux-doc@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de
 List-ID: <devicetree@vger.kernel.org>
 
---001a1144ca223760f40546f5544e
-Content-Type: text/plain; charset=UTF-8
 
-On 26 January 2017 at 00:23, Mathieu Poirier <mathieu.poirier@linaro.org>
-wrote:
+--0__=8FBB0A2BDFFF23608f9e8a93df938690918c8FBB0A2BDFFF2360
+Content-Transfer-Encoding: quoted-printable
+Content-type: text/plain; charset=US-ASCII
 
-> On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wrote:
-> > This patch adds watchdog controller driver for ZTE's zx2967 family.
+
+
+Guenter Roeck <linux@roeck-us.net> wrote on 01/29/2017 01:50:55 PM:
+> On 01/26/2017 03:19 PM, eajames.ibm@gmail.com wrote:
+> > From: "Edward A. James" <eajames@us.ibm.com>
 > >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> > Add a generic mechanism to expose the sensors provided by the OCC in
+> > sysfs.
+> >
+> > Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 > > ---
-> >  drivers/watchdog/Kconfig      |  10 ++
-> >  drivers/watchdog/Makefile     |   1 +
-> >  drivers/watchdog/zx2967_wdt.c | 276 ++++++++++++++++++++++++++++++
-> ++++++++++++
-> >  3 files changed, 287 insertions(+)
-> >  create mode 100644 drivers/watchdog/zx2967_wdt.c
+> >  Documentation/hwmon/occ       |  62 ++++++++++
+> >  drivers/hwmon/occ/Makefile    |   2 +-
+> >  drivers/hwmon/occ/occ=5Fsysfs.c | 259 +++++++++++++++++++++++++++++
+> +++++++++++++
+> >  drivers/hwmon/occ/occ=5Fsysfs.h |  30 +++++
+> >  4 files changed, 352 insertions(+), 1 deletion(-)
+> >  create mode 100644 drivers/hwmon/occ/occ=5Fsysfs.c
+> >  create mode 100644 drivers/hwmon/occ/occ=5Fsysfs.h
 > >
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index acb00b5..05093a2 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
-> >         To compile this driver as a module, choose M here: the
-> >         module will be called aspeed_wdt.
+> > diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
+> > index 79d1642..d0bdf06 100644
+> > --- a/Documentation/hwmon/occ
+> > +++ b/Documentation/hwmon/occ
+> > @@ -25,6 +25,68 @@ Currently, all versions of the OCC support four
+> types of sensor data: power,
+> >  temperature, frequency, and "caps," which indicate limits and
+> thresholds used
+> >  internally on the OCC.
 > >
-> > +config ZX2967_WATCHDOG
-> > +     tristate "ZTE zx2967 SoCs watchdog support"
-> > +     depends on ARCH_ZX
-> > +     select WATCHDOG_CORE
-> > +     help
-> > +       Say Y here to include support for the watchdog timer
-> > +       in ZTE zx2967 SoCs.
-> > +       To compile this driver as a module, choose M here: the
-> > +       module will be called zx2967_wdt.
+> > +sysfs Entries
+> > +-------------
 > > +
-> >  # AVR32 Architecture
+> > +The OCC driver uses the hwmon sysfs framework to provide data to
+userspace.
+> > +
+> > +The driver exports a number of sysfs files for each type of sensor.
+The
+> > +sensor-specific files vary depending on the processor type,
+> though many of the
+> > +attributes are common for both the POWER8 and POWER9.
+> > +
+> > +The hwmon interface cannot define every type of sensor that may be
+used.
+> > +Therefore, the frequency sensor on the OCC uses the "input" type
+> sensor defined
+> > +by the hwmon interface, rather than defining a new type of custom
+sensor.
+> > +
+> > +Below are detailed the names and meaning of each sensor file for
+> both types of
+> > +processors. All sensors are read-only unless otherwise specified.
+> <x> indicates
+> > +the hwmon index. sensor id indicates the unique internal OCC
+> identifer. Please
+> > +see the POWER OCC specification for details on all these sensor
+values.
+> > +
+> > +frequency:
+> > +   all processors:
+> > +      in<x>=5Finput - frequency value
+> > +      in<x>=5Flabel - sensor id
+> > +temperature:
+> > +   POWER8:
+> > +      temp<x>=5Finput - temperature value
+> > +      temp<x>=5Flabel - sensor id
+> > +   POWER9 (in addition to above):
+> > +      temp<x>=5Ftype - FRU type
+> > +
+> > +power:
+> > +   POWER8:
+> > +      power<x>=5Finput - power value
+> > +      power<x>=5Flabel - sensor id
+> > +      power<x>=5Faverage - accumulator
+> > +      power<x>=5Faverage=5Finterval - update tag (number of samples in
+> > +         accumulator)
+> > +   POWER9:
+> > +      power<x>=5Finput - power value
+> > +      power<x>=5Flabel - sensor id
+> > +      power<x>=5Faverage=5Fmin - accumulator[0]
+> > +      power<x>=5Faverage=5Fmax - accumulator[1] (64 bits total)
+> > +      power<x>=5Faverage=5Finterval - update tag
+> > +      power<x>=5Freset=5Fhistory - (function=5Fid | (apss=5Fchannel <<=
+ 8)
+> > +
+> > +caps:
+> > +   POWER8:
+> > +      power<x>=5Fcap - current powercap
+> > +      power<x>=5Fcap=5Fmax - max powercap
+> > +      power<x>=5Fcap=5Fmin - min powercap
+> > +      power<x>=5Fmax - normal powercap
+> > +      power<x>=5Falarm - user powercap, r/w
+> > +   POWER9:
+> > +      power<x>=5Fcap=5Falarm - user powercap source
+> > +
+> > +The driver also provides two sysfs entries through hwmon to better
+> > +control the driver and monitor the master OCC. Though there may be
+multiple
+> > +OCCs present on the system, these two files are only present for
+> the "master"
+> > +OCC.
+> > +   name - read the name of the driver
+> > +   update=5Finterval - read or write the minimum interval for polling
+the
+> > +      OCC.
+> > +
+> >  BMC - Host Communications
+> >  -------------------------
 > >
-> >  config AT32AP700X_WDT
-> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > index 0c3d35e..bf2d296 100644
-> > --- a/drivers/watchdog/Makefile
-> > +++ b/drivers/watchdog/Makefile
-> > @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
-> >  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
-> >  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
-> >  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
-> > +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
-> >
-> >  # AVR32 Architecture
-> >  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-> > diff --git a/drivers/watchdog/zx2967_wdt.c
-> b/drivers/watchdog/zx2967_wdt.c
+> > diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
+> > index 93cb52f..a6881f9 100644
+> > --- a/drivers/hwmon/occ/Makefile
+> > +++ b/drivers/hwmon/occ/Makefile
+> > @@ -1 +1 @@
+> > -obj-$(CONFIG=5FSENSORS=5FPPC=5FOCC) +=3D occ.o
+> > +obj-$(CONFIG=5FSENSORS=5FPPC=5FOCC) +=3D occ.o occ=5Fsysfs.o
+> > diff --git a/drivers/hwmon/occ/occ=5Fsysfs.c
+b/drivers/hwmon/occ/occ=5Fsysfs.c
 > > new file mode 100644
-> > index 0000000..8278471
+> > index 0000000..ea2aa04
 > > --- /dev/null
-> > +++ b/drivers/watchdog/zx2967_wdt.c
-> > @@ -0,0 +1,276 @@
+> > +++ b/drivers/hwmon/occ/occ=5Fsysfs.c
+> > @@ -0,0 +1,259 @@
 > > +/*
-> > + * watchdog driver for ZTE's zx2967 family
+> > + * occ=5Fsysfs.c - OCC sysfs interface
 > > + *
-> > + * Copyright (C) 2017 ZTE Ltd.
+> > + * This file contains the methods and data structures for
+> implementing the OCC
+> > + * hwmon sysfs entries.
 > > + *
-> > + * Author: Baoyou Xie <baoyou.xie@linaro.org>
+> > + * Copyright 2016 IBM Corp.
 > > + *
-> > + * License terms: GNU General Public License (GPL) version 2
+> > + * This program is free software; you can redistribute it and/or
+modify
+> > + * it under the terms of the GNU General Public License as published
+by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > + * GNU General Public License for more details.
 > > + */
 > > +
-> > +#include <linux/clk.h>
 > > +#include <linux/delay.h>
-> > +#include <linux/io.h>
-> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/device.h>
+> > +#include <linux/err.h>
+> > +#include <linux/hwmon.h>
+> > +#include <linux/hwmon-sysfs.h>
+> > +#include <linux/init.h>
+> > +#include <linux/jiffies.h>
+> > +#include <linux/kernel.h>
 > > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/watchdog.h>
+> > +#include <linux/mutex.h>
+> > +#include <linux/slab.h>
+> > +#include "occ.h"
+> > +#include "occ=5Fsysfs.h"
 > > +
-> > +#define ZX2967_WDT_CFG_REG                   0x4
-> > +#define ZX2967_WDT_LOAD_REG                  0x8
-> > +#define ZX2967_WDT_REFRESH_REG                       0x18
-> > +#define ZX2967_WDT_START_REG                 0x1c
+> > +#define RESP=5FRETURN=5FCMD=5FINVAL   0x13
+> > +#define OCC=5FHWMON=5FNAME=5FLENGTH   32
 > > +
-> > +#define ZX2967_WDT_REFRESH_MASK                      0x3f
+> > +struct occ=5Fsysfs {
+> > +   struct device *dev;
+> > +   struct occ *occ;
 > > +
-> > +#define ZX2967_WDT_CFG_DIV(n)                        ((((n) & 0xff) -
-> 1) << 8)
-> > +#define ZX2967_WDT_START_EN                  0x1
-> > +
-> > +#define ZX2967_WDT_WRITEKEY                  0x12340000
-> > +
-> > +#define ZX2967_WDT_DIV_DEFAULT                       16
-> > +#define ZX2967_WDT_DEFAULT_TIMEOUT           32
-> > +#define ZX2967_WDT_MIN_TIMEOUT                       1
-> > +#define ZX2967_WDT_MAX_TIMEOUT                       524
-> > +#define ZX2967_WDT_MAX_COUNT                 0xffff
-> > +
-> > +#define ZX2967_WDT_CLK_FREQ                  0x8000
-> > +
-> > +#define ZX2967_WDT_FLAG_REBOOT_MON           BIT(0)
-> > +
-> > +struct zx2967_wdt {
-> > +     struct watchdog_device  wdt_device;
-> > +     void __iomem            *reg_base;
-> > +     struct clk              *clock;
+> > +   char hwmon=5Fname[OCC=5FHWMON=5FNAME=5FLENGTH + 1];
+> > +   const u32 *sensor=5Fhwmon=5Fconfigs;
+> > +   struct hwmon=5Fchannel=5Finfo **occ=5Fsensors;
+> > +   struct hwmon=5Fchip=5Finfo occ=5Finfo;
+> > +   u16 user=5Fpowercap;
 > > +};
 > > +
-> > +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+> > +static int occ=5Fhwmon=5Fread(struct device *dev, enum hwmon=5Fsensor=
+=5Ftypes
+type,
+> > +           u32 attr, int channel, long *val)
 > > +{
-> > +     return readl_relaxed(wdt->reg_base + reg);
+> > +   int rc;
+> > +   struct occ=5Fsysfs *driver =3D dev=5Fget=5Fdrvdata(dev);
+> > +   struct occ *occ =3D driver->occ;
+> > +
+> > +   switch (type) {
+> > +   case hwmon=5Fin:
+> > +      rc =3D occ=5Fget=5Fsensor=5Ffield(occ, FREQ, channel, attr, val);
+> > +      break;
+> > +   case hwmon=5Ftemp:
+> > +      rc =3D occ=5Fget=5Fsensor=5Ffield(occ, TEMP, channel, attr, val);
+> > +      break;
+> > +   case hwmon=5Fpower:
+> > +      rc =3D occ=5Fget=5Fsensor=5Ffield(occ, POWER, channel, attr, val=
+);
+> > +      break;
+> > +   default:
+> > +      rc =3D -EOPNOTSUPP;
+> > +   }
+> > +
+> > +   return rc;
 > > +}
 > > +
-> > +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg,
-> u32 val)
+> > +static int occ=5Fhwmon=5Fread=5Fstring(struct device *dev,
+> > +             enum hwmon=5Fsensor=5Ftypes type, u32 attr,
+> > +             int channel, char **str)
 > > +{
-> > +     writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+> > +   int rc;
+> > +   unsigned long val =3D 0;
+> > +
+> > +   if (!((type =3D=3D hwmon=5Fin && attr =3D=3D hwmon=5Fin=5Flabel) ||
+> > +       (type =3D=3D hwmon=5Ftemp && attr =3D=3D hwmon=5Ftemp=5Flabel) =
+||
+> > +       (type =3D=3D hwmon=5Fpower && attr =3D=3D hwmon=5Fpower=5Flabel=
+)))
+> > +      return -EOPNOTSUPP;
+> > +
+> > +   /* will fetch the "label", the sensor=5Fid */
+> > +   rc =3D occ=5Fhwmon=5Fread(dev, type, attr, channel, &val);
+> > +   if (rc < 0)
+> > +      return rc;
+> > +
+> > +   rc =3D snprintf(*str, PAGE=5FSIZE - 1, "%lu", val);
+> > +   if (rc > 0)
+> > +      rc =3D 0;
+> > +
+> > +   return rc;
 > > +}
 > > +
-> > +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
+> > +static int occ=5Fhwmon=5Fwrite(struct device *dev, enum
+> hwmon=5Fsensor=5Ftypes type,
+> > +            u32 attr, int channel, long val)
 > > +{
-> > +     u32 val;
+> > +   int rc =3D 0;
+>
+> Unnecessary initialization.
+>
+> > +   struct occ=5Fsysfs *driver =3D dev=5Fget=5Fdrvdata(dev);
 > > +
-> > +     val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
-> > +     val ^= ZX2967_WDT_REFRESH_MASK;
-> > +     zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
+> > +   if (type =3D=3D hwmon=5Fpower && attr =3D=3D hwmon=5Fpower=5Falarm)=
+ {
+> > +      rc =3D occ=5Fset=5Fuser=5Fpowercap(driver->occ, val);
+> > +      if (rc) {
+> > +         if (rc =3D=3D RESP=5FRETURN=5FCMD=5FINVAL) {
+>
+> Is the mix of private and public error codes necessary ? Any chance
+> the called code can just return -EINVAL ?
+>
+> > +            dev=5Ferr(dev,
+> > +               "set invalid powercap value: %ld\n",
+> > +               val);
+> > +            return -EINVAL;
+> > +         }
+> > +
+> > +         dev=5Ferr(dev, "set user powercap failed: 0x:%x\n", rc);
+> > +         return rc;
+> > +      }
+> > +
+> > +      driver->user=5Fpowercap =3D val;
+> > +
+> > +      return rc;
+> > +   }
+> > +
+> > +   return -EOPNOTSUPP;
 > > +}
 > > +
-> > +static int
-> > +zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int
-> timeout)
+> > +static umode=5Ft occ=5Fis=5Fvisible(const void *data, enum
+> hwmon=5Fsensor=5Ftypes type,
+> > +               u32 attr, int channel)
 > > +{
-> > +     struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-> > +     unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
-> > +     unsigned int count;
+> > +   const struct occ=5Fsysfs *driver =3D data;
 > > +
-> > +     count = timeout * ZX2967_WDT_CLK_FREQ;
-> > +     if (count > divisor * ZX2967_WDT_MAX_COUNT)
-> > +             divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
-> > +     count = DIV_ROUND_UP(count, divisor);
-> > +     zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG,
-> ZX2967_WDT_CFG_DIV(divisor));
-> > +     zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
-> > +     zx2967_wdt_refresh(wdt);
-> > +     wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
+> > +   switch (type) {
+> > +   case hwmon=5Fchip:
+> > +      if (attr =3D=3D hwmon=5Fchip=5Fupdate=5Finterval)
+> > +         return S=5FIRUGO | S=5FIWUSR;
+>
+> It might be better to just use octals directly to avoid the
+annoyingcheckpatch
+> warnings.
+>
+> > +      break;
+> > +   case hwmon=5Fin:
+> > +      if (BIT(attr) & driver->sensor=5Fhwmon=5Fconfigs[0])
+> > +         return S=5FIRUGO;
+> > +      break;
+> > +   case hwmon=5Ftemp:
+> > +      if (BIT(attr) & driver->sensor=5Fhwmon=5Fconfigs[1])
+> > +         return S=5FIRUGO;
+> > +      break;
+> > +   case hwmon=5Fpower:
+> > +      /* user power limit */
+> > +      if (attr =3D=3D hwmon=5Fpower=5Falarm)
+> > +         return S=5FIRUGO | S=5FIWUSR;
+> > +      else if ((BIT(attr) & driver->sensor=5Fhwmon=5Fconfigs[2]) ||
+> > +          (BIT(attr) & driver->sensor=5Fhwmon=5Fconfigs[3]))
+> > +         return S=5FIRUGO;
+> > +      break;
+> > +   default:
+> > +      return 0;
+> > +   }
 > > +
-> > +     return 0;
+> > +   return 0;
 > > +}
 > > +
-> > +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
-> > +{
-> > +     u32 val;
-> > +
-> > +     val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-> > +     val |= ZX2967_WDT_START_EN;
-> > +     zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-> > +}
-> > +
-> > +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
-> > +{
-> > +     u32 val;
-> > +
-> > +     val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-> > +     val &= ~ZX2967_WDT_START_EN;
-> > +     zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-> > +}
-> > +
-> > +static int zx2967_wdt_start(struct watchdog_device *wdd)
-> > +{
-> > +     struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-> > +
-> > +     zx2967_wdt_set_timeout(wdd, wdd->timeout);
-> > +     __zx2967_wdt_start(wdt);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int zx2967_wdt_stop(struct watchdog_device *wdd)
-> > +{
-> > +     struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-> > +
-> > +     __zx2967_wdt_stop(wdt);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
-> > +{
-> > +     struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-> > +
-> > +     zx2967_wdt_refresh(wdt);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +#define ZX2967_WDT_OPTIONS \
-> > +     (WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
-> > +static const struct watchdog_info zx2967_wdt_ident = {
-> > +     .options          =     ZX2967_WDT_OPTIONS,
-> > +     .identity         =     "zx2967 watchdog",
+> > +static const struct hwmon=5Fops occ=5Fhwmon=5Fops =3D {
+> > +   .is=5Fvisible =3D occ=5Fis=5Fvisible,
+> > +   .read =3D occ=5Fhwmon=5Fread,
+> > +   .read=5Fstring =3D occ=5Fhwmon=5Fread=5Fstring,
+> > +   .write =3D occ=5Fhwmon=5Fwrite,
 > > +};
 > > +
-> > +static struct watchdog_ops zx2967_wdt_ops = {
-> > +     .owner = THIS_MODULE,
-> > +     .start = zx2967_wdt_start,
-> > +     .stop = zx2967_wdt_stop,
-> > +     .ping = zx2967_wdt_keepalive,
-> > +     .set_timeout = zx2967_wdt_set_timeout,
-> > +};
-> > +
-> > +static void zx2967_wdt_reset_sysctrl(struct device *dev)
-> > +{
-> > +     int ret;
-> > +     void __iomem *regmap;
-> > +     unsigned int offset, mask, config;
-> > +     struct of_phandle_args out_args;
-> > +
-> > +     ret = of_parse_phandle_with_fixed_args(dev->of_node,
-> > +                     "zte,wdt-reset-sysctrl", 3, 0, &out_args);
-> > +     if (ret)
-> > +             return;
-> > +
-> > +     offset = out_args.args[0];
-> > +     config = out_args.args[1];
-> > +     mask = out_args.args[2];
-> > +
-> > +     regmap = syscon_node_to_regmap(out_args.np);
-> > +     if (IS_ERR(regmap)) {
-> > +             of_node_put(out_args.np);
-> > +             return;
-> > +     }
-> > +
-> > +     regmap_update_bits(regmap, offset, mask, config);
-> > +     of_node_put(out_args.np);
-> > +}
-> > +
-> > +static int zx2967_wdt_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct zx2967_wdt *wdt;
-> > +     struct resource *base;
-> > +     int ret;
-> > +     struct reset_control *rstc;
-> > +
-> > +     wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-> > +     if (!wdt)
-> > +             return -ENOMEM;
-> > +
-> > +     platform_set_drvdata(pdev, wdt);
-> > +
-> > +     wdt->wdt_device.info = &zx2967_wdt_ident;
-> > +     wdt->wdt_device.ops = &zx2967_wdt_ops;
-> > +     wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
-> > +     wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
-> > +     wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
-> > +     wdt->wdt_device.parent = &pdev->dev;
-> > +
-> > +     base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     wdt->reg_base = devm_ioremap_resource(dev, base);
-> > +     if (IS_ERR(wdt->reg_base)) {
-> > +             dev_err(dev, "ioremap failed\n");
-> > +             return PTR_ERR(wdt->reg_base);
-> > +     }
-> > +
-> > +     zx2967_wdt_reset_sysctrl(dev);
-> > +
-> > +     wdt->clock = devm_clk_get(dev, NULL);
-> > +     if (IS_ERR(wdt->clock)) {
-> > +             dev_err(dev, "failed to find watchdog clock source\n");
-> > +             return PTR_ERR(wdt->clock);
-> > +     }
-> > +
-> > +     ret = clk_prepare_enable(wdt->clock);
-> > +     if (ret < 0) {
-> > +             dev_err(dev, "failed to enable clock\n");
-> > +             return ret;
-> > +     }
-> > +     clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
-> > +
-> > +     rstc = devm_reset_control_get(dev, NULL);
-> > +     if (IS_ERR(rstc)) {
-> > +             dev_err(dev, "failed to get rstc");
-> > +             ret = PTR_ERR(rstc);
-> > +             goto err;
-> > +     }
-> > +
-> > +     reset_control_assert(rstc);
-> > +     usleep_range(500, 20000);
+> > +static const enum hwmon=5Fsensor=5Ftypes occ=5Fsensor=5Ftypes
+> [MAX=5FOCC=5FSENSOR=5FTYPE] =3D {
+> > +   hwmon=5Fin,
+> > +   hwmon=5Ftemp,
+> > +   hwmon=5Fpower,
+> > +   hwmon=5Fpower
 >
-> Alright, I'm officially confused.
+> So you have two sets of power sensors, meaning you'll end up with two
+sets
+> of hwmon=5Fchannel=5Finfo describing hwmon=5Fpower ? This kind of misuses=
+ the
+API.
+> I hope that doesn't create duplicate attributes; I think it might if
+> the actually supported attributes overlap. Also, this means that
+theattribute
+> index association gets lost. For example, if the alarm attributes
+> are in the second group, power1=5Falarm would not necessarily align with,
+> say, power1=5Fmax.
 >
-> First and foremost you still haven't provided an explanation as to why
-> this is
-> required.  Second, in your previous submission you had:
->
->         mdelay(10);
->
-> That is a busy loop of 10ms.  In this post using usleep_range() is a step
-> in the
-> right direction but the min and max values to wait for don't make sense.
-> Here
-> you have 500 and 20000, which is 0.5ms and 20ms.
->
-> In fact, sleeping for 0.5ms is enough.
-we extended the sleeping time to 20ms, the purpose is merging the timer
-interrupts. of course, it's happy to replace it with usleep_range(500,
-1000).
+> Is there any chance to avoid this ?
 
+They will overlap if we use the attributes incorrectly. Those are defined
+in
+occ=5Fp8.c or occ=5Fp9.c, as they specific to the OCC version. But the curr=
+ent
+definitions I have cannot overlap.
 
+The problem is both the "caps" sensor and the "power" sensor coming off the
+OCC
+are relevant to the power hwmon type, so I didn't want to use another type.
+The
+problem is that for each OCC, there may be any number of power sensors, but
+only
+one caps sensor. So I can't combine the two, as I believe that would create
+all
+the hwmon power attributes specified (for both "caps" and "power" sensors)
+for
+each power sensor. However, this does mean the indexing is not an issue, as
+the
+caps sensor doesn't need to correspond to the power sensors at all.
 
-> > +     reset_control_deassert(rstc);
+This current set up works pretty well for us, though I agree it is a little
+confusing. Not sure of any more ideal way to do it. Our sensors just don't
+line up
+well with the currently defined hwmon types.
+
+Thanks for the feedback,
+Eddie
+
+>
+> > +};
 > > +
-> > +     watchdog_set_drvdata(&wdt->wdt_device, wdt);
-> > +     watchdog_init_timeout(&wdt->wdt_device,
-> > +                     ZX2967_WDT_DEFAULT_TIMEOUT, dev);
-> > +     watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
-> > +
-> > +     ret = watchdog_register_device(&wdt->wdt_device);
-> > +     if (ret)
-> > +             goto err;
-> > +
-> > +     dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
-> > +              wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
-> > +
-> > +     return 0;
-> > +
-> > +err:
-> > +     clk_disable_unprepare(wdt->clock);
-> > +     return ret;
-> > +}
-> > +
-> > +static int zx2967_wdt_remove(struct platform_device *pdev)
+> > +struct occ=5Fsysfs *occ=5Fsysfs=5Fstart(struct device *dev, struct occ=
+ *occ,
+> > +              const u32 *sensor=5Fhwmon=5Fconfigs,
+> > +              const char *name)
 > > +{
-> > +     struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> > +   int rc, i, j, num=5Fsensors, index =3D 0, id;
+> > +   char *brk;
+> > +   struct occ=5Fblocks *resp =3D NULL;
+> > +   u32 *sensor=5Fconfig;
+> > +   struct occ=5Fsysfs *hwmon =3D devm=5Fkzalloc(dev, sizeof(struct
+occ=5Fsysfs),
+> > +                      GFP=5FKERNEL);
+> > +   if (!hwmon)
+> > +      return ERR=5FPTR(-ENOMEM);
 > > +
-> > +     watchdog_unregister_device(&wdt->wdt_device);
-> > +     clk_disable_unprepare(wdt->clock);
+> > +   /* need space for null-termination */
+> > +   hwmon->occ=5Fsensors =3D
+> > +      devm=5Fkzalloc(dev, sizeof(struct hwmon=5Fchannel=5Finfo *) *
+> > +              (MAX=5FOCC=5FSENSOR=5FTYPE + 1), GFP=5FKERNEL);
+> > +   if (!hwmon->occ=5Fsensors)
+> > +      return ERR=5FPTR(-ENOMEM);
 > > +
-> > +     return 0;
+> > +   hwmon->occ =3D occ;
+> > +   hwmon->sensor=5Fhwmon=5Fconfigs =3D sensor=5Fhwmon=5Fconfigs;
+> > +   hwmon->occ=5Finfo.ops =3D &occ=5Fhwmon=5Fops;
+> > +   hwmon->occ=5Finfo.info =3D
+> > +      (const struct hwmon=5Fchannel=5Finfo **)hwmon->occ=5Fsensors;
+> > +
+> > +   occ=5Fget=5Fresponse=5Fblocks(occ, &resp);
+> > +
+> > +   for (i =3D 0; i < MAX=5FOCC=5FSENSOR=5FTYPE; ++i)
+> > +      resp->sensor=5Fblock=5Fid[i] =3D -1;
+> > +
+> > +   /* read sensor data from occ */
+> > +   rc =3D occ=5Fupdate=5Fdevice(occ);
+> > +   if (rc)
+> > +      return ERR=5FPTR(rc);
+> > +
+> > +   for (i =3D 0; i < MAX=5FOCC=5FSENSOR=5FTYPE; i++) {
+> > +      id =3D resp->sensor=5Fblock=5Fid[i];
+> > +      if (id < 0)
+> > +         continue;
+> > +
+> > +      num=5Fsensors =3D resp->blocks[id].header.num=5Fsensors;
+> > +      /* need null-termination */
+> > +      sensor=5Fconfig =3D devm=5Fkzalloc(dev,
+> > +                    sizeof(u32) * (num=5Fsensors + 1),
+> > +                    GFP=5FKERNEL);
+> > +      if (!sensor=5Fconfig)
+> > +         return ERR=5FPTR(-ENOMEM);
+> > +
+> > +      for (j =3D 0; j < num=5Fsensors; j++)
+> > +         sensor=5Fconfig[j] =3D sensor=5Fhwmon=5Fconfigs[i];
+> > +
+> > +      hwmon->occ=5Fsensors[index] =3D
+> > +         devm=5Fkzalloc(dev, sizeof(struct hwmon=5Fchannel=5Finfo),
+> > +                 GFP=5FKERNEL);
+> > +      if (!hwmon->occ=5Fsensors[index])
+> > +         return ERR=5FPTR(-ENOMEM);
+> > +
+> > +      hwmon->occ=5Fsensors[index]->type =3D occ=5Fsensor=5Ftypes[i];
+> > +      hwmon->occ=5Fsensors[index]->config =3D sensor=5Fconfig;
+> > +      index++;
+> > +   }
+> > +
+> > +   /* search for bad chars */
+> > +   strncpy(hwmon->hwmon=5Fname, name, OCC=5FHWMON=5FNAME=5FLENGTH);
+> > +   brk =3D strpbrk(hwmon->hwmon=5Fname, "-* \t\n");
+> > +   while (brk) {
+> > +      *brk =3D '=5F';
+> > +      brk =3D strpbrk(brk,  "-* \t\n");
+> > +   }
+> > +
+> > +   hwmon->dev =3D devm=5Fhwmon=5Fdevice=5Fregister=5Fwith=5Finfo(dev,
+> > +                       hwmon->hwmon=5Fname,
+> > +                       hwmon,
+> > +                       &hwmon->occ=5Finfo,
+> > +                       NULL);
+> > +   if (IS=5FERR(hwmon->dev)) {
+> > +      dev=5Ferr(dev, "cannot register hwmon device %s: %ld\n",
+> > +         hwmon->hwmon=5Fname, PTR=5FERR(hwmon->dev));
+> > +      return ERR=5FCAST(hwmon->dev);
+> > +   }
+> > +
+> > +   return hwmon;
 > > +}
+> > +EXPORT=5FSYMBOL(occ=5Fsysfs=5Fstart);
 > > +
-> > +static const struct of_device_id zx2967_wdt_match[] = {
-> > +     { .compatible = "zte,zx296718-wdt", },
-> > +     {}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
+> > +MODULE=5FAUTHOR("Eddie James <eajames@us.ibm.com>");
+> > +MODULE=5FDESCRIPTION("OCC sysfs driver");
+> > +MODULE=5FLICENSE("GPL");
+> > diff --git a/drivers/hwmon/occ/occ=5Fsysfs.h
+b/drivers/hwmon/occ/occ=5Fsysfs.h
+> > new file mode 100644
+> > index 0000000..462f9d2
+> > --- /dev/null
+> > +++ b/drivers/hwmon/occ/occ=5Fsysfs.h
+> > @@ -0,0 +1,30 @@
+> > +/*
+> > + * occ=5Fsysfs.h - OCC sysfs interface
+> > + *
+> > + * This file contains the data structures and function prototypes
+> for the OCC
+> > + * hwmon sysfs entries.
+> > + *
+> > + * Copyright 2016 IBM Corp.
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+modify
+> > + * it under the terms of the GNU General Public License as published
+by
+> > + * the Free Software Foundation; either version 2 of the License, or
+> > + * (at your option) any later version.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> > + * GNU General Public License for more details.
+> > + */
 > > +
-> > +static struct platform_driver zx2967_wdt_driver = {
-> > +     .probe          = zx2967_wdt_probe,
-> > +     .remove         = zx2967_wdt_remove,
-> > +     .driver         = {
-> > +             .name   = "zx2967-wdt",
-> > +             .of_match_table = of_match_ptr(zx2967_wdt_match),
-> > +     },
-> > +};
-> > +module_platform_driver(zx2967_wdt_driver);
+> > +#ifndef =5F=5FOCC=5FSYSFS=5FH=5F=5F
+> > +#define =5F=5FOCC=5FSYSFS=5FH=5F=5F
 > > +
-> > +MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-> > +MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.7.4
+> > +struct occ;
+> > +struct device;
+> > +struct occ=5Fsysfs;
+> > +
+> > +struct occ=5Fsysfs *occ=5Fsysfs=5Fstart(struct device *dev, struct occ=
+ *occ,
+> > +              const u32 *sensor=5Fhwmon=5Fconfigs,
+> > +              const char *name);
+> > +#endif /* =5F=5FOCC=5FSYSFS=5FH=5F=5F */
 > >
 >
 
---001a1144ca223760f40546f5544e
-Content-Type: text/html; charset=UTF-8
+--0__=8FBB0A2BDFFF23608f9e8a93df938690918c8FBB0A2BDFFF2360
 Content-Transfer-Encoding: quoted-printable
+Content-type: text/html; charset=US-ASCII
+Content-Disposition: inline
 
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">On 26 January 2017 at 00:23, Mathieu Poirier <span dir=3D"ltr">&lt;<a h=
-ref=3D"mailto:mathieu.poirier@linaro.org" target=3D"_blank">mathieu.poirier=
-@linaro.org</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" styl=
-e=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex"><div cl=
-ass=3D"HOEnZb"><div class=3D"h5">On Wed, Jan 25, 2017 at 10:44:49AM +0800, =
-Baoyou Xie wrote:<br>
-&gt; This patch adds watchdog controller driver for ZTE&#39;s zx2967 family=
-.<br>
-&gt;<br>
-&gt; Signed-off-by: Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linaro.org"=
->baoyou.xie@linaro.org</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 drivers/watchdog/Kconfig=C2=A0 =C2=A0 =C2=A0 |=C2=A0 10 ++<br>
-&gt;=C2=A0 drivers/watchdog/Makefile=C2=A0 =C2=A0 =C2=A0|=C2=A0 =C2=A01 +<b=
-r>
-&gt;=C2=A0 drivers/watchdog/zx2967_wdt.c | 276 ++++++++++++++++++++++++++++=
-++<wbr>++++++++++++<br>
-&gt;=C2=A0 3 files changed, 287 insertions(+)<br>
-&gt;=C2=A0 create mode 100644 drivers/watchdog/zx2967_wdt.c<br>
-&gt;<br>
-&gt; diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig<br>
-&gt; index acb00b5..05093a2 100644<br>
-&gt; --- a/drivers/watchdog/Kconfig<br>
-&gt; +++ b/drivers/watchdog/Kconfig<br>
-&gt; @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0To compile this driver as a module, c=
-hoose M here: the<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0module will be called aspeed_wdt.<br>
-&gt;<br>
-&gt; +config ZX2967_WATCHDOG<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0tristate &quot;ZTE zx2967 SoCs watchdog support&q=
-uot;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0depends on ARCH_ZX<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0select WATCHDOG_CORE<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0help<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0Say Y here to include support for the watc=
-hdog timer<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0in ZTE zx2967 SoCs.<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0To compile this driver as a module, choose=
- M here: the<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0module will be called zx2967_wdt.<br>
-&gt; +<br>
-&gt;=C2=A0 # AVR32 Architecture<br>
-&gt;<br>
-&gt;=C2=A0 config AT32AP700X_WDT<br>
-&gt; diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile<br>
-&gt; index 0c3d35e..bf2d296 100644<br>
-&gt; --- a/drivers/watchdog/Makefile<br>
-&gt; +++ b/drivers/watchdog/Makefile<br>
-&gt; @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) +=3D bcm7038_wdt.o<br>
-&gt;=C2=A0 obj-$(CONFIG_ATLAS7_WATCHDOG) +=3D atlas7_wdt.o<br>
-&gt;=C2=A0 obj-$(CONFIG_RENESAS_WDT) +=3D renesas_wdt.o<br>
-&gt;=C2=A0 obj-$(CONFIG_ASPEED_WATCHDOG) +=3D aspeed_wdt.o<br>
-&gt; +obj-$(CONFIG_ZX2967_WATCHDOG) +=3D zx2967_wdt.o<br>
-&gt;<br>
-&gt;=C2=A0 # AVR32 Architecture<br>
-&gt;=C2=A0 obj-$(CONFIG_AT32AP700X_WDT) +=3D at32ap700x_wdt.o<br>
-&gt; diff --git a/drivers/watchdog/zx2967_wdt.<wbr>c b/drivers/watchdog/zx2=
-967_wdt.<wbr>c<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..8278471<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/drivers/watchdog/zx2967_wdt.<wbr>c<br>
-&gt; @@ -0,0 +1,276 @@<br>
-&gt; +/*<br>
-&gt; + * watchdog driver for ZTE&#39;s zx2967 family<br>
-&gt; + *<br>
-&gt; + * Copyright (C) 2017 ZTE Ltd.<br>
-&gt; + *<br>
-&gt; + * Author: Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linaro.org">ba=
-oyou.xie@linaro.org</a>&gt;<br>
-&gt; + *<br>
-&gt; + * License terms: GNU General Public License (GPL) version 2<br>
-&gt; + */<br>
-&gt; +<br>
-&gt; +#include &lt;linux/clk.h&gt;<br>
-&gt; +#include &lt;linux/delay.h&gt;<br>
-&gt; +#include &lt;linux/io.h&gt;<br>
-&gt; +#include &lt;linux/mfd/syscon.h&gt;<br>
-&gt; +#include &lt;linux/module.h&gt;<br>
-&gt; +#include &lt;linux/of_address.h&gt;<br>
-&gt; +#include &lt;linux/platform_device.h&gt;<br>
-&gt; +#include &lt;linux/regmap.h&gt;<br>
-&gt; +#include &lt;linux/reset.h&gt;<br>
-&gt; +#include &lt;linux/watchdog.h&gt;<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_CFG_REG=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 =C2=A00x4<br>
-&gt; +#define ZX2967_WDT_LOAD_REG=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 0x8<br>
-&gt; +#define ZX2967_WDT_REFRESH_REG=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A00x18<br>
-&gt; +#define ZX2967_WDT_START_REG=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A00x1c<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_REFRESH_MASK=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 0x3f<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_CFG_DIV(n)=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ((((n) &amp; 0xff) - 1) &lt;&=
-lt; 8)<br>
-&gt; +#define ZX2967_WDT_START_EN=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 0x1<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_WRITEKEY=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 0x12340000<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_DIV_DEFAULT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A016<br>
-&gt; +#define ZX2967_WDT_DEFAULT_TIMEOUT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A032<br>
-&gt; +#define ZX2967_WDT_MIN_TIMEOUT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A01<br>
-&gt; +#define ZX2967_WDT_MAX_TIMEOUT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0524<br>
-&gt; +#define ZX2967_WDT_MAX_COUNT=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 =C2=A00xffff<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_CLK_FREQ=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0 0x8000<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_FLAG_REBOOT_MON=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0BIT(0)<br>
-&gt; +<br>
-&gt; +struct zx2967_wdt {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct watchdog_device=C2=A0 wdt_device;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0void __iomem=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 *reg_base;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct clk=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 *clock;<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)<b=
-r>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return readl_relaxed(wdt-&gt;reg_base + reg);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg,=
- u32 val)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt-&gt=
-;reg_base + reg);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u32 val;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val =3D zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_=
-REG);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val ^=3D ZX2967_WDT_REFRESH_MASK;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, va=
-l);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int<br>
-&gt; +zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int time=
-out)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt =3D watchdog_get_drvdata(w=
-dd);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int divisor =3D ZX2967_WDT_DIV_DEFAULT;<=
-br>
-&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int count;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0count =3D timeout * ZX2967_WDT_CLK_FREQ;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (count &gt; divisor * ZX2967_WDT_MAX_COUNT)<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0divisor =3D DIV_ROUND=
-_UP(count, ZX2967_WDT_MAX_COUNT);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0count =3D DIV_ROUND_UP(count, divisor);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967=
-_WDT_CFG_DIV(divisor));<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count=
-);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_refresh(wdt);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdd-&gt;timeout =3D=C2=A0 (count * divisor) / ZX2=
-967_WDT_CLK_FREQ;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u32 val;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val =3D zx2967_wdt_readl(wdt, ZX2967_WDT_START_RE=
-G);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val |=3D ZX2967_WDT_START_EN;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val)=
-;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0u32 val;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val =3D zx2967_wdt_readl(wdt, ZX2967_WDT_START_RE=
-G);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0val &amp;=3D ~ZX2967_WDT_START_EN;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val)=
-;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int zx2967_wdt_start(struct watchdog_device *wdd)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt =3D watchdog_get_drvdata(w=
-dd);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_set_timeout(wdd, wdd-&gt;timeout);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0__zx2967_wdt_start(wdt);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int zx2967_wdt_stop(struct watchdog_device *wdd)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt =3D watchdog_get_drvdata(w=
-dd);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0__zx2967_wdt_stop(wdt);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt =3D watchdog_get_drvdata(w=
-dd);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_refresh(wdt);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +#define ZX2967_WDT_OPTIONS \<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_M=
-AGICCLOSE)<br>
-&gt; +static const struct watchdog_info zx2967_wdt_ident =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.options=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D=C2=
-=A0 =C2=A0 =C2=A0ZX2967_WDT_OPTIONS,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.identity=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D=C2=
-=A0 =C2=A0 =C2=A0&quot;zx2967 watchdog&quot;,<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +static struct watchdog_ops zx2967_wdt_ops =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.owner =3D THIS_MODULE,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.start =3D zx2967_wdt_start,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.stop =3D zx2967_wdt_stop,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.ping =3D zx2967_wdt_keepalive,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.set_timeout =3D zx2967_wdt_set_timeout,<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +static void zx2967_wdt_reset_sysctrl(<wbr>struct device *dev)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0int ret;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0void __iomem *regmap;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0unsigned int offset, mask, config;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct of_phandle_args out_args;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ret =3D of_parse_phandle_with_fixed_<wbr>args(dev=
--&gt;of_node,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0&quot;zte,wdt-reset-sysctrl&quot;, 3, 0, &amp;out_args);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (ret)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0offset =3D out_args.args[0];<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0config =3D out_args.args[1];<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0mask =3D out_args.args[2];<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0regmap =3D syscon_node_to_regmap(<a href=3D"http:=
-//out_args.np" rel=3D"noreferrer" target=3D"_blank">out_<wbr>args.np</a>);<=
-br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(regmap)) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0of_node_put(<a href=
-=3D"http://out_args.np" rel=3D"noreferrer" target=3D"_blank">out_args.np</a=
->);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0regmap_update_bits(regmap, offset, mask, config);=
-<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0of_node_put(<a href=3D"http://out_args.np" rel=3D=
-"noreferrer" target=3D"_blank">out_args.np</a>);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int zx2967_wdt_probe(struct platform_device *pdev)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct device *dev =3D &amp;pdev-&gt;dev;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct resource *base;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0int ret;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct reset_control *rstc;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt =3D devm_kzalloc(dev, sizeof(*wdt), GFP_KERNE=
-L);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (!wdt)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return -ENOMEM;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0platform_set_drvdata(pdev, wdt);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;<a href=3D"http://wdt_device.info" rel=3D=
-"noreferrer" target=3D"_blank">wdt_device.info</a> =3D &amp;zx2967_wdt_iden=
-t;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;wdt_device.ops =3D &amp;zx2967_wdt_ops;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;wdt_device.timeout =3D ZX2967_WDT_DEFAULT=
-_TIMEOUT;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;wdt_device.max_timeout =3D ZX2967_WDT_MAX=
-_TIMEOUT;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;wdt_device.min_timeout =3D ZX2967_WDT_MIN=
-_TIMEOUT;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;wdt_device.parent =3D &amp;pdev-&gt;dev;<=
-br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0base =3D platform_get_resource(pdev, IORESOURCE_M=
-EM, 0);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;reg_base =3D devm_ioremap_resource(dev, b=
-ase);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(wdt-&gt;reg_base)) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev, &quot;io=
-remap failed\n&quot;);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_ERR(wdt-&g=
-t;reg_base);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0zx2967_wdt_reset_sysctrl(dev);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0wdt-&gt;clock =3D devm_clk_get(dev, NULL);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(wdt-&gt;clock)) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev, &quot;fa=
-iled to find watchdog clock source\n&quot;);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return PTR_ERR(wdt-&g=
-t;clock);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ret =3D clk_prepare_enable(wdt-&gt;clock)<wbr>;<b=
-r>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (ret &lt; 0) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev, &quot;fa=
-iled to enable clock\n&quot;);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return ret;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0clk_set_rate(wdt-&gt;clock, ZX2967_WDT_CLK_FREQ);=
-<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0rstc =3D devm_reset_control_get(dev, NULL);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (IS_ERR(rstc)) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0dev_err(dev, &quot;fa=
-iled to get rstc&quot;);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0ret =3D PTR_ERR(rstc)=
-;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0reset_control_assert(rstc);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0usleep_range(500, 20000);<br>
-<br>
-</div></div>Alright, I&#39;m officially confused.<br>
-<br>
-First and foremost you still haven&#39;t provided an explanation as to why =
-this is<br>
-required.=C2=A0 Second, in your previous submission you had:<br>
-<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 mdelay(10);<br>
-<br>
-That is a busy loop of 10ms.=C2=A0 In this post using usleep_range() is a s=
-tep in the<br>
-right direction but the min and max values to wait for don&#39;t make sense=
-.=C2=A0 Here<br>
-you have 500 and 20000, which is 0.5ms and 20ms.<br>
-<div class=3D"HOEnZb"><div class=3D"h5"><br></div></div></blockquote><div>I=
-n fact, sleeping for 0.5ms is enough.<br></div><div>we extended the sleepin=
-g time to 20ms, the purpose is merging the timer interrupts. of course, it&=
-#39;s happy to replace it with usleep_range(500, 1000).<br><br></div><div>=
-=C2=A0</div><blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;bo=
-rder-left:1px #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=
-=3D"h5">
-&gt; +=C2=A0 =C2=A0 =C2=A0reset_control_deassert(rstc);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0watchdog_set_drvdata(&amp;wdt-&gt;<wbr>wdt_device=
-, wdt);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0watchdog_init_timeout(&amp;wdt-&gt;<wbr>wdt_devic=
-e,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0ZX2967_WDT_DEFAULT_TIMEOUT, dev);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0watchdog_set_nowayout(&amp;wdt-&gt;<wbr>wdt_devic=
-e, WATCHDOG_NOWAYOUT);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0ret =3D watchdog_register_device(&amp;wdt-<wbr>&g=
-t;wdt_device);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (ret)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0goto err;<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0dev_info(dev, &quot;watchdog enabled (timeout=3D%=
-d sec, nowayout=3D%d)&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 wdt-&gt;wdt_device.t=
-imeout, WATCHDOG_NOWAYOUT);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +<br>
-&gt; +err:<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(wdt-&gt;<wbr>clock);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return ret;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int zx2967_wdt_remove(struct platform_device *pdev)<br>
-&gt; +{<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0struct zx2967_wdt *wdt =3D platform_get_drvdata(p=
-dev);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0watchdog_unregister_device(&amp;<wbr>wdt-&gt;wdt_=
-device);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0clk_disable_unprepare(wdt-&gt;<wbr>clock);<br>
-&gt; +<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static const struct of_device_id zx2967_wdt_match[] =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0{ .compatible =3D &quot;zte,zx296718-wdt&quot;, }=
-,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0{}<br>
-&gt; +};<br>
-&gt; +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);<br>
-&gt; +<br>
-&gt; +static struct platform_driver zx2967_wdt_driver =3D {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.probe=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =3D zx29=
-67_wdt_probe,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.remove=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D zx29=
-67_wdt_remove,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0.driver=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=3D {<br=
->
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.name=C2=A0 =C2=A0=3D=
- &quot;zx2967-wdt&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0.of_match_table =3D o=
-f_match_ptr(zx2967_wdt_match)<wbr>,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0},<br>
-&gt; +};<br>
-&gt; +module_platform_driver(<wbr>zx2967_wdt_driver);<br>
-&gt; +<br>
-&gt; +MODULE_AUTHOR(&quot;Baoyou Xie &lt;<a href=3D"mailto:baoyou.xie@linar=
-o.org">baoyou.xie@linaro.org</a>&gt;&quot;);<br>
-&gt; +MODULE_DESCRIPTION(&quot;ZTE zx2967 Watchdog Device Driver&quot;);<br=
->
-&gt; +MODULE_LICENSE(&quot;GPL v2&quot;);<br>
-&gt; --<br>
-&gt; 2.7.4<br>
-&gt;<br>
-</div></div></blockquote></div><br></div></div>
+<html><body><p><tt>Guenter Roeck &lt;linux@roeck-us.net&gt; wrote on 01/29/=
+2017 01:50:55 PM:<br>&gt; On 01/26/2017 03:19 PM, eajames.ibm@gmail.com wro=
+te:<br>&gt; &gt; From: &quot;Edward A. James&quot; &lt;eajames@us.ibm.com&g=
+t;<br>&gt; &gt;<br>&gt; &gt; Add a generic mechanism to expose the sensors =
+provided by the OCC in<br>&gt; &gt; sysfs.<br>&gt; &gt;<br>&gt; &gt; Signed=
+-off-by: Edward A. James &lt;eajames@us.ibm.com&gt;<br>&gt; &gt; Signed-off=
+-by: Andrew Jeffery &lt;andrew@aj.id.au&gt;<br>&gt; &gt; ---<br>&gt; &gt; &=
+nbsp;Documentation/hwmon/occ &nbsp; &nbsp; &nbsp; | &nbsp;62 ++++++++++<br>=
+&gt; &gt; &nbsp;drivers/hwmon/occ/Makefile &nbsp; &nbsp;| &nbsp; 2 +-<br>&g=
+t; &gt; &nbsp;drivers/hwmon/occ/occ=5Fsysfs.c | 259 +++++++++++++++++++++++=
+++++++<br>&gt; +++++++++++++<br>&gt; &gt; &nbsp;drivers/hwmon/occ/occ=5Fsys=
+fs.h | &nbsp;30 +++++<br>&gt; &gt; &nbsp;4 files changed, 352 insertions(+)=
+, 1 deletion(-)<br>&gt; &gt; &nbsp;create mode 100644 drivers/hwmon/occ/occ=
+=5Fsysfs.c<br>&gt; &gt; &nbsp;create mode 100644 drivers/hwmon/occ/occ=5Fsy=
+sfs.h<br>&gt; &gt;<br>&gt; &gt; diff --git a/Documentation/hwmon/occ b/Docu=
+mentation/hwmon/occ<br>&gt; &gt; index 79d1642..d0bdf06 100644<br>&gt; &gt;=
+ --- a/Documentation/hwmon/occ<br>&gt; &gt; +++ b/Documentation/hwmon/occ<b=
+r>&gt; &gt; @@ -25,6 +25,68 @@ Currently, all versions of the OCC support f=
+our<br>&gt; types of sensor data: power,<br>&gt; &gt; &nbsp;temperature, fr=
+equency, and &quot;caps,&quot; which indicate limits and <br>&gt; threshold=
+s used<br>&gt; &gt; &nbsp;internally on the OCC.<br>&gt; &gt;<br>&gt; &gt; =
++sysfs Entries<br>&gt; &gt; +-------------<br>&gt; &gt; +<br>&gt; &gt; +The=
+ OCC driver uses the hwmon sysfs framework to provide data to userspace.<br=
+>&gt; &gt; +<br>&gt; &gt; +The driver exports a number of sysfs files for e=
+ach type of sensor. The<br>&gt; &gt; +sensor-specific files vary depending =
+on the processor type, <br>&gt; though many of the<br>&gt; &gt; +attributes=
+ are common for both the POWER8 and POWER9.<br>&gt; &gt; +<br>&gt; &gt; +Th=
+e hwmon interface cannot define every type of sensor that may be used.<br>&=
+gt; &gt; +Therefore, the frequency sensor on the OCC uses the &quot;input&q=
+uot; type <br>&gt; sensor defined<br>&gt; &gt; +by the hwmon interface, rat=
+her than defining a new type of custom sensor.<br>&gt; &gt; +<br>&gt; &gt; =
++Below are detailed the names and meaning of each sensor file for <br>&gt; =
+both types of<br>&gt; &gt; +processors. All sensors are read-only unless ot=
+herwise specified.<br>&gt; &lt;x&gt; indicates<br>&gt; &gt; +the hwmon inde=
+x. sensor id indicates the unique internal OCC <br>&gt; identifer. Please<b=
+r>&gt; &gt; +see the POWER OCC specification for details on all these senso=
+r values.<br>&gt; &gt; +<br>&gt; &gt; +frequency:<br>&gt; &gt; + &nbsp; all=
+ processors:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;in&lt;x&gt;=5Finput - frequ=
+ency value<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;in&lt;x&gt;=5Flabel - sensor =
+id<br>&gt; &gt; +temperature:<br>&gt; &gt; + &nbsp; POWER8:<br>&gt; &gt; + =
+&nbsp; &nbsp; &nbsp;temp&lt;x&gt;=5Finput - temperature value<br>&gt; &gt; =
++ &nbsp; &nbsp; &nbsp;temp&lt;x&gt;=5Flabel - sensor id<br>&gt; &gt; + &nbs=
+p; POWER9 (in addition to above):<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;temp&l=
+t;x&gt;=5Ftype - FRU type<br>&gt; &gt; +<br>&gt; &gt; +power:<br>&gt; &gt; =
++ &nbsp; POWER8:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Finput =
+- power value<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Flabel - s=
+ensor id<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Faverage - accu=
+mulator<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Faverage=5Finter=
+val - update tag (number of samples in<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; =
+&nbsp; accumulator)<br>&gt; &gt; + &nbsp; POWER9:<br>&gt; &gt; + &nbsp; &nb=
+sp; &nbsp;power&lt;x&gt;=5Finput - power value<br>&gt; &gt; + &nbsp; &nbsp;=
+ &nbsp;power&lt;x&gt;=5Flabel - sensor id<br>&gt; &gt; + &nbsp; &nbsp; &nbs=
+p;power&lt;x&gt;=5Faverage=5Fmin - accumulator[0]<br>&gt; &gt; + &nbsp; &nb=
+sp; &nbsp;power&lt;x&gt;=5Faverage=5Fmax - accumulator[1] (64 bits total)<b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Faverage=5Finterval - upd=
+ate tag<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Freset=5Fhistory=
+ - (function=5Fid | (apss=5Fchannel &lt;&lt; 8)<br>&gt; &gt; +<br>&gt; &gt;=
+ +caps:<br>&gt; &gt; + &nbsp; POWER8:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;po=
+wer&lt;x&gt;=5Fcap - current powercap<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;po=
+wer&lt;x&gt;=5Fcap=5Fmax - max powercap<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;=
+power&lt;x&gt;=5Fcap=5Fmin - min powercap<br>&gt; &gt; + &nbsp; &nbsp; &nbs=
+p;power&lt;x&gt;=5Fmax - normal powercap<br>&gt; &gt; + &nbsp; &nbsp; &nbsp=
+;power&lt;x&gt;=5Falarm - user powercap, r/w<br>&gt; &gt; + &nbsp; POWER9:<=
+br>&gt; &gt; + &nbsp; &nbsp; &nbsp;power&lt;x&gt;=5Fcap=5Falarm - user powe=
+rcap source<br>&gt; &gt; +<br>&gt; &gt; +The driver also provides two sysfs=
+ entries through hwmon to better<br>&gt; &gt; +control the driver and monit=
+or the master OCC. Though there may be multiple<br>&gt; &gt; +OCCs present =
+on the system, these two files are only present for <br>&gt; the &quot;mast=
+er&quot;<br>&gt; &gt; +OCC.<br>&gt; &gt; + &nbsp; name - read the name of t=
+he driver<br>&gt; &gt; + &nbsp; update=5Finterval - read or write the minim=
+um interval for polling the<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;OCC.<br>&gt;=
+ &gt; +<br>&gt; &gt; &nbsp;BMC - Host Communications<br>&gt; &gt; &nbsp;---=
+----------------------<br>&gt; &gt;<br>&gt; &gt; diff --git a/drivers/hwmon=
+/occ/Makefile b/drivers/hwmon/occ/Makefile<br>&gt; &gt; index 93cb52f..a688=
+1f9 100644<br>&gt; &gt; --- a/drivers/hwmon/occ/Makefile<br>&gt; &gt; +++ b=
+/drivers/hwmon/occ/Makefile<br>&gt; &gt; @@ -1 +1 @@<br>&gt; &gt; -obj-$(CO=
+NFIG=5FSENSORS=5FPPC=5FOCC) +=3D occ.o<br>&gt; &gt; +obj-$(CONFIG=5FSENSORS=
+=5FPPC=5FOCC) +=3D occ.o occ=5Fsysfs.o<br>&gt; &gt; diff --git a/drivers/hw=
+mon/occ/occ=5Fsysfs.c b/drivers/hwmon/occ/occ=5Fsysfs.c<br>&gt; &gt; new fi=
+le mode 100644<br>&gt; &gt; index 0000000..ea2aa04<br>&gt; &gt; --- /dev/nu=
+ll<br>&gt; &gt; +++ b/drivers/hwmon/occ/occ=5Fsysfs.c<br>&gt; &gt; @@ -0,0 =
++1,259 @@<br>&gt; &gt; +/*<br>&gt; &gt; + * occ=5Fsysfs.c - OCC sysfs inter=
+face<br>&gt; &gt; + *<br>&gt; &gt; + * This file contains the methods and d=
+ata structures for <br>&gt; implementing the OCC<br>&gt; &gt; + * hwmon sys=
+fs entries.<br>&gt; &gt; + *<br>&gt; &gt; + * Copyright 2016 IBM Corp.<br>&=
+gt; &gt; + *<br>&gt; &gt; + * This program is free software; you can redist=
+ribute it and/or modify<br>&gt; &gt; + * it under the terms of the GNU Gene=
+ral Public License as published by<br>&gt; &gt; + * the Free Software Found=
+ation; either version 2 of the License, or<br>&gt; &gt; + * (at your option=
+) any later version.<br>&gt; &gt; + *<br>&gt; &gt; + * This program is dist=
+ributed in the hope that it will be useful,<br>&gt; &gt; + * but WITHOUT AN=
+Y WARRANTY; without even the implied warranty of<br>&gt; &gt; + * MERCHANTA=
+BILITY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>&gt; &gt; + * GNU Ge=
+neral Public License for more details.<br>&gt; &gt; + */<br>&gt; &gt; +<br>=
+&gt; &gt; +#include &lt;linux/delay.h&gt;<br>&gt; &gt; +#include &lt;linux/=
+device.h&gt;<br>&gt; &gt; +#include &lt;linux/err.h&gt;<br>&gt; &gt; +#incl=
+ude &lt;linux/hwmon.h&gt;<br>&gt; &gt; +#include &lt;linux/hwmon-sysfs.h&gt=
+;<br>&gt; &gt; +#include &lt;linux/init.h&gt;<br>&gt; &gt; +#include &lt;li=
+nux/jiffies.h&gt;<br>&gt; &gt; +#include &lt;linux/kernel.h&gt;<br>&gt; &gt=
+; +#include &lt;linux/module.h&gt;<br>&gt; &gt; +#include &lt;linux/mutex.h=
+&gt;<br>&gt; &gt; +#include &lt;linux/slab.h&gt;<br>&gt; &gt; +#include &qu=
+ot;occ.h&quot;<br>&gt; &gt; +#include &quot;occ=5Fsysfs.h&quot;<br>&gt; &gt=
+; +<br>&gt; &gt; +#define RESP=5FRETURN=5FCMD=5FINVAL &nbsp; 0x13<br>&gt; &=
+gt; +#define OCC=5FHWMON=5FNAME=5FLENGTH &nbsp; 32<br>&gt; &gt; +<br>&gt; &=
+gt; +struct occ=5Fsysfs {<br>&gt; &gt; + &nbsp; struct device *dev;<br>&gt;=
+ &gt; + &nbsp; struct occ *occ;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; char h=
+wmon=5Fname[OCC=5FHWMON=5FNAME=5FLENGTH + 1];<br>&gt; &gt; + &nbsp; const u=
+32 *sensor=5Fhwmon=5Fconfigs;<br>&gt; &gt; + &nbsp; struct hwmon=5Fchannel=
+=5Finfo **occ=5Fsensors;<br>&gt; &gt; + &nbsp; struct hwmon=5Fchip=5Finfo o=
+cc=5Finfo;<br>&gt; &gt; + &nbsp; u16 user=5Fpowercap;<br>&gt; &gt; +};<br>&=
+gt; &gt; +<br>&gt; &gt; +static int occ=5Fhwmon=5Fread(struct device *dev, =
+enum hwmon=5Fsensor=5Ftypes type,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp=
+; &nbsp; u32 attr, int channel, long *val)<br>&gt; &gt; +{<br>&gt; &gt; + &=
+nbsp; int rc;<br>&gt; &gt; + &nbsp; struct occ=5Fsysfs *driver =3D dev=5Fge=
+t=5Fdrvdata(dev);<br>&gt; &gt; + &nbsp; struct occ *occ =3D driver-&gt;occ;=
+<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; switch (type) {<br>&gt; &gt; + &nbsp;=
+ case hwmon=5Fin:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;rc =3D occ=5Fget=5Fsen=
+sor=5Ffield(occ, FREQ, channel, attr, val);<br>&gt; &gt; + &nbsp; &nbsp; &n=
+bsp;break;<br>&gt; &gt; + &nbsp; case hwmon=5Ftemp:<br>&gt; &gt; + &nbsp; &=
+nbsp; &nbsp;rc =3D occ=5Fget=5Fsensor=5Ffield(occ, TEMP, channel, attr, val=
+);<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;break;<br>&gt; &gt; + &nbsp; case hwm=
+on=5Fpower:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;rc =3D occ=5Fget=5Fsensor=5F=
+field(occ, POWER, channel, attr, val);<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;b=
+reak;<br>&gt; &gt; + &nbsp; default:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;rc =
+=3D -EOPNOTSUPP;<br>&gt; &gt; + &nbsp; }<br>&gt; &gt; +<br>&gt; &gt; + &nbs=
+p; return rc;<br>&gt; &gt; +}<br>&gt; &gt; +<br>&gt; &gt; +static int occ=
+=5Fhwmon=5Fread=5Fstring(struct device *dev,<br>&gt; &gt; + &nbsp; &nbsp; &=
+nbsp; &nbsp; &nbsp; &nbsp; enum hwmon=5Fsensor=5Ftypes type, u32 attr,<br>&=
+gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; int channel, char **st=
+r)<br>&gt; &gt; +{<br>&gt; &gt; + &nbsp; int rc;<br>&gt; &gt; + &nbsp; unsi=
+gned long val =3D 0;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; if (!((type =3D=
+=3D hwmon=5Fin &amp;&amp; attr =3D=3D hwmon=5Fin=5Flabel) ||<br>&gt; &gt; +=
+ &nbsp; &nbsp; &nbsp; (type =3D=3D hwmon=5Ftemp &amp;&amp; attr =3D=3D hwmo=
+n=5Ftemp=5Flabel) ||<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; (type =3D=3D hwmon=
+=5Fpower &amp;&amp; attr =3D=3D hwmon=5Fpower=5Flabel)))<br>&gt; &gt; + &nb=
+sp; &nbsp; &nbsp;return -EOPNOTSUPP;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; /=
+* will fetch the &quot;label&quot;, the sensor=5Fid */<br>&gt; &gt; + &nbsp=
+; rc =3D occ=5Fhwmon=5Fread(dev, type, attr, channel, &amp;val);<br>&gt; &g=
+t; + &nbsp; if (rc &lt; 0)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;return rc;<br=
+>&gt; &gt; +<br>&gt; &gt; + &nbsp; rc =3D snprintf(*str, PAGE=5FSIZE - 1, &=
+quot;%lu&quot;, val);<br>&gt; &gt; + &nbsp; if (rc &gt; 0)<br>&gt; &gt; + &=
+nbsp; &nbsp; &nbsp;rc =3D 0;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; return rc=
+;<br>&gt; &gt; +}<br>&gt; &gt; +<br>&gt; &gt; +static int occ=5Fhwmon=5Fwri=
+te(struct device *dev, enum <br>&gt; hwmon=5Fsensor=5Ftypes type,<br>&gt; &=
+gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;u32 attr, int channel, long =
+val)<br>&gt; &gt; +{<br>&gt; &gt; + &nbsp; int rc =3D 0;<br>&gt; <br>&gt; U=
+nnecessary initialization.<br>&gt; <br>&gt; &gt; + &nbsp; struct occ=5Fsysf=
+s *driver =3D dev=5Fget=5Fdrvdata(dev);<br>&gt; &gt; +<br>&gt; &gt; + &nbsp=
+; if (type =3D=3D hwmon=5Fpower &amp;&amp; attr =3D=3D hwmon=5Fpower=5Falar=
+m) {<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;rc =3D occ=5Fset=5Fuser=5Fpowercap(=
+driver-&gt;occ, val);<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (rc) {<br>&gt; =
+&gt; + &nbsp; &nbsp; &nbsp; &nbsp; if (rc =3D=3D RESP=5FRETURN=5FCMD=5FINVA=
+L) {<br>&gt; <br>&gt; Is the mix of private and public error codes necessar=
+y ? Any chance<br>&gt; the called code can just return -EINVAL ?<br>&gt; <b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;dev=5Ferr(dev,<br>&g=
+t; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &quot;set invali=
+d powercap value: %ld\n&quot;,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &=
+nbsp; &nbsp; &nbsp; val);<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;=
+ &nbsp;return -EINVAL;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; }<br>&gt;=
+ &gt; +<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; dev=5Ferr(dev, &quot;set=
+ user powercap failed: 0x:%x\n&quot;, rc);<br>&gt; &gt; + &nbsp; &nbsp; &nb=
+sp; &nbsp; return rc;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;}<br>&gt; &gt; +<b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp;driver-&gt;user=5Fpowercap =3D val;<br>&g=
+t; &gt; +<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;return rc;<br>&gt; &gt; + &nbs=
+p; }<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; return -EOPNOTSUPP;<br>&gt; &gt; =
++}<br>&gt; &gt; +<br>&gt; &gt; +static umode=5Ft occ=5Fis=5Fvisible(const v=
+oid *data, enum <br>&gt; hwmon=5Fsensor=5Ftypes type,<br>&gt; &gt; + &nbsp;=
+ &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; u32 attr, int channel)<br>&gt; &=
+gt; +{<br>&gt; &gt; + &nbsp; const struct occ=5Fsysfs *driver =3D data;<br>=
+&gt; &gt; +<br>&gt; &gt; + &nbsp; switch (type) {<br>&gt; &gt; + &nbsp; cas=
+e hwmon=5Fchip:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (attr =3D=3D hwmon=5F=
+chip=5Fupdate=5Finterval)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; return=
+ S=5FIRUGO | S=5FIWUSR;<br>&gt; <br>&gt; It might be better to just use oct=
+als directly to avoid the annoyingcheckpatch<br>&gt; warnings.<br>&gt; <br>=
+&gt; &gt; + &nbsp; &nbsp; &nbsp;break;<br>&gt; &gt; + &nbsp; case hwmon=5Fi=
+n:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (BIT(attr) &amp; driver-&gt;sensor=
+=5Fhwmon=5Fconfigs[0])<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; return S=
+=5FIRUGO;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;break;<br>&gt; &gt; + &nbsp; c=
+ase hwmon=5Ftemp:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (BIT(attr) &amp; dr=
+iver-&gt;sensor=5Fhwmon=5Fconfigs[1])<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &=
+nbsp; return S=5FIRUGO;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;break;<br>&gt; &=
+gt; + &nbsp; case hwmon=5Fpower:<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;/* user=
+ power limit */<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (attr =3D=3D hwmon=5F=
+power=5Falarm)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; return S=5FIRUGO =
+| S=5FIWUSR;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;else if ((BIT(attr) &amp; d=
+river-&gt;sensor=5Fhwmon=5Fconfigs[2]) ||<br>&gt; &gt; + &nbsp; &nbsp; &nbs=
+p; &nbsp; &nbsp;(BIT(attr) &amp; driver-&gt;sensor=5Fhwmon=5Fconfigs[3]))<b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; return S=5FIRUGO;<br>&gt; &gt; + =
+&nbsp; &nbsp; &nbsp;break;<br>&gt; &gt; + &nbsp; default:<br>&gt; &gt; + &n=
+bsp; &nbsp; &nbsp;return 0;<br>&gt; &gt; + &nbsp; }<br>&gt; &gt; +<br>&gt; =
+&gt; + &nbsp; return 0;<br>&gt; &gt; +}<br>&gt; &gt; +<br>&gt; &gt; +static=
+ const struct hwmon=5Fops occ=5Fhwmon=5Fops =3D {<br>&gt; &gt; + &nbsp; .is=
+=5Fvisible =3D occ=5Fis=5Fvisible,<br>&gt; &gt; + &nbsp; .read =3D occ=5Fhw=
+mon=5Fread,<br>&gt; &gt; + &nbsp; .read=5Fstring =3D occ=5Fhwmon=5Fread=5Fs=
+tring,<br>&gt; &gt; + &nbsp; .write =3D occ=5Fhwmon=5Fwrite,<br>&gt; &gt; +=
+};<br>&gt; &gt; +<br>&gt; &gt; +static const enum hwmon=5Fsensor=5Ftypes oc=
+c=5Fsensor=5Ftypes<br>&gt; [MAX=5FOCC=5FSENSOR=5FTYPE] =3D {<br>&gt; &gt; +=
+ &nbsp; hwmon=5Fin,<br>&gt; &gt; + &nbsp; hwmon=5Ftemp,<br>&gt; &gt; + &nbs=
+p; hwmon=5Fpower,<br>&gt; &gt; + &nbsp; hwmon=5Fpower<br>&gt; <br>&gt; So y=
+ou have two sets of power sensors, meaning you'll end up with two sets<br>&=
+gt; of hwmon=5Fchannel=5Finfo describing hwmon=5Fpower ? This kind of misus=
+es the API.<br>&gt; I hope that doesn't create duplicate attributes; I thin=
+k it might if<br>&gt; the actually supported attributes overlap. Also, this=
+ means that theattribute<br>&gt; index association gets lost. For example, =
+if the alarm attributes<br>&gt; are in the second group, power1=5Falarm wou=
+ld not necessarily align with,<br>&gt; say, power1=5Fmax.<br>&gt; <br>&gt; =
+Is there any chance to avoid this ?</tt><br><br><tt>They will overlap if we=
+ use the attributes incorrectly. </tt><tt>Those are defined in</tt><br><tt>=
+occ=5Fp8.c or occ=5Fp9.c, as they specific to the OCC version. But the curr=
+ent</tt><br><tt>definitions I have cannot overlap.</tt><br><br><tt>The prob=
+lem is both the &quot;caps&quot; sensor and the &quot;power&quot; sensor co=
+ming off the OCC</tt><br><tt>are relevant to the power hwmon type, so I did=
+n't want to use another type. The</tt><br><tt>problem is that for each OCC,=
+ there may be any number of power sensors, but only</tt><br><tt>one caps se=
+nsor. So I can't combine the two, as I believe that would create all</tt><b=
+r><tt>the hwmon power attributes specified (for both &quot;caps&quot; and &=
+quot;power&quot; sensors) for</tt><br><tt>each power sensor. However, this =
+does mean the indexing is not an issue, as the</tt><br><tt>caps sensor does=
+n't need to correspond to the power sensors at all.</tt><br><br><tt>This cu=
+rrent set up works pretty well for us, though I agree it is a little</tt><b=
+r><tt>confusing. Not sure of any more ideal way to do it. Our sensors just =
+don't line up</tt><br><tt>well with the currently defined hwmon types.</tt>=
+<br><br><tt>Thanks for the feedback,</tt><br><tt>Eddie</tt><br><tt><br>&gt;=
+ <br>&gt; &gt; +};<br>&gt; &gt; +<br>&gt; &gt; +struct occ=5Fsysfs *occ=5Fs=
+ysfs=5Fstart(struct device *dev, struct occ *occ,<br>&gt; &gt; + &nbsp; &nb=
+sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;const u32 *sensor=5Fhwmon=5Fconfigs,<=
+br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;const char *=
+name)<br>&gt; &gt; +{<br>&gt; &gt; + &nbsp; int rc, i, j, num=5Fsensors, in=
+dex =3D 0, id;<br>&gt; &gt; + &nbsp; char *brk;<br>&gt; &gt; + &nbsp; struc=
+t occ=5Fblocks *resp =3D NULL;<br>&gt; &gt; + &nbsp; u32 *sensor=5Fconfig;<=
+br>&gt; &gt; + &nbsp; struct occ=5Fsysfs *hwmon =3D devm=5Fkzalloc(dev, siz=
+eof(struct occ=5Fsysfs),<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;GFP=5FKERNEL);<br>&gt; &gt; + &nbs=
+p; if (!hwmon)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;return ERR=5FPTR(-ENOMEM)=
+;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; /* need space for null-termination *=
+/<br>&gt; &gt; + &nbsp; hwmon-&gt;occ=5Fsensors =3D<br>&gt; &gt; + &nbsp; &=
+nbsp; &nbsp;devm=5Fkzalloc(dev, sizeof(struct hwmon=5Fchannel=5Finfo *) *<b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;(MAX=5FOCC=5F=
+SENSOR=5FTYPE + 1), GFP=5FKERNEL);<br>&gt; &gt; + &nbsp; if (!hwmon-&gt;occ=
+=5Fsensors)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;return ERR=5FPTR(-ENOMEM);<b=
+r>&gt; &gt; +<br>&gt; &gt; + &nbsp; hwmon-&gt;occ =3D occ;<br>&gt; &gt; + &=
+nbsp; hwmon-&gt;sensor=5Fhwmon=5Fconfigs =3D sensor=5Fhwmon=5Fconfigs;<br>&=
+gt; &gt; + &nbsp; hwmon-&gt;occ=5Finfo.ops =3D &amp;occ=5Fhwmon=5Fops;<br>&=
+gt; &gt; + &nbsp; hwmon-&gt;occ=5Finfo.info =3D<br>&gt; &gt; + &nbsp; &nbsp=
+; &nbsp;(const struct hwmon=5Fchannel=5Finfo **)hwmon-&gt;occ=5Fsensors;<br=
+>&gt; &gt; +<br>&gt; &gt; + &nbsp; occ=5Fget=5Fresponse=5Fblocks(occ, &amp;=
+resp);<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; for (i =3D 0; i &lt; MAX=5FOCC=
+=5FSENSOR=5FTYPE; ++i)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;resp-&gt;sensor=
+=5Fblock=5Fid[i] =3D -1;<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; /* read senso=
+r data from occ */<br>&gt; &gt; + &nbsp; rc =3D occ=5Fupdate=5Fdevice(occ);=
+<br>&gt; &gt; + &nbsp; if (rc)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;return ER=
+R=5FPTR(rc);<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; for (i =3D 0; i &lt; MAX=
+=5FOCC=5FSENSOR=5FTYPE; i++) {<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;id =3D re=
+sp-&gt;sensor=5Fblock=5Fid[i];<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (id &l=
+t; 0)<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; continue;<br>&gt; &gt; +<b=
+r>&gt; &gt; + &nbsp; &nbsp; &nbsp;num=5Fsensors =3D resp-&gt;blocks[id].hea=
+der.num=5Fsensors;<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;/* need null-terminat=
+ion */<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;sensor=5Fconfig =3D devm=5Fkzallo=
+c(dev,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbs=
+p; &nbsp; &nbsp;sizeof(u32) * (num=5Fsensors + 1),<br>&gt; &gt; + &nbsp; &n=
+bsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;GFP=5FKERNEL);<=
+br>&gt; &gt; + &nbsp; &nbsp; &nbsp;if (!sensor=5Fconfig)<br>&gt; &gt; + &nb=
+sp; &nbsp; &nbsp; &nbsp; return ERR=5FPTR(-ENOMEM);<br>&gt; &gt; +<br>&gt; =
+&gt; + &nbsp; &nbsp; &nbsp;for (j =3D 0; j &lt; num=5Fsensors; j++)<br>&gt;=
+ &gt; + &nbsp; &nbsp; &nbsp; &nbsp; sensor=5Fconfig[j] =3D sensor=5Fhwmon=
+=5Fconfigs[i];<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;hwmon-&gt;=
+occ=5Fsensors[index] =3D<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; devm=5F=
+kzalloc(dev, sizeof(struct hwmon=5Fchannel=5Finfo),<br>&gt; &gt; + &nbsp; &=
+nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; GFP=5FKERNEL);<br>&gt; &gt;=
+ + &nbsp; &nbsp; &nbsp;if (!hwmon-&gt;occ=5Fsensors[index])<br>&gt; &gt; + =
+&nbsp; &nbsp; &nbsp; &nbsp; return ERR=5FPTR(-ENOMEM);<br>&gt; &gt; +<br>&g=
+t; &gt; + &nbsp; &nbsp; &nbsp;hwmon-&gt;occ=5Fsensors[index]-&gt;type =3D o=
+cc=5Fsensor=5Ftypes[i];<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;hwmon-&gt;occ=5F=
+sensors[index]-&gt;config =3D sensor=5Fconfig;<br>&gt; &gt; + &nbsp; &nbsp;=
+ &nbsp;index++;<br>&gt; &gt; + &nbsp; }<br>&gt; &gt; +<br>&gt; &gt; + &nbsp=
+; /* search for bad chars */<br>&gt; &gt; + &nbsp; strncpy(hwmon-&gt;hwmon=
+=5Fname, name, OCC=5FHWMON=5FNAME=5FLENGTH);<br>&gt; &gt; + &nbsp; brk =3D =
+strpbrk(hwmon-&gt;hwmon=5Fname, &quot;-* \t\n&quot;);<br>&gt; &gt; + &nbsp;=
+ while (brk) {<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;*brk =3D '=5F';<br>&gt; &=
+gt; + &nbsp; &nbsp; &nbsp;brk =3D strpbrk(brk, &nbsp;&quot;-* \t\n&quot;);<=
+br>&gt; &gt; + &nbsp; }<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; hwmon-&gt;dev =
+=3D devm=5Fhwmon=5Fdevice=5Fregister=5Fwith=5Finfo(dev,<br>&gt; &gt; + &nbs=
+p; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hw=
+mon-&gt;hwmon=5Fname,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; hwmon,<br>&gt; &gt; + &nbsp; &nbsp; =
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &amp;hwmon-&=
+gt;occ=5Finfo,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp; &nbsp; &nbsp; &nbsp; NULL);<br>&gt; &gt; + &nbsp; if (IS=5FERR(h=
+wmon-&gt;dev)) {<br>&gt; &gt; + &nbsp; &nbsp; &nbsp;dev=5Ferr(dev, &quot;ca=
+nnot register hwmon device %s: %ld\n&quot;,<br>&gt; &gt; + &nbsp; &nbsp; &n=
+bsp; &nbsp; hwmon-&gt;hwmon=5Fname, PTR=5FERR(hwmon-&gt;dev));<br>&gt; &gt;=
+ + &nbsp; &nbsp; &nbsp;return ERR=5FCAST(hwmon-&gt;dev);<br>&gt; &gt; + &nb=
+sp; }<br>&gt; &gt; +<br>&gt; &gt; + &nbsp; return hwmon;<br>&gt; &gt; +}<br=
+>&gt; &gt; +EXPORT=5FSYMBOL(occ=5Fsysfs=5Fstart);<br>&gt; &gt; +<br>&gt; &g=
+t; +MODULE=5FAUTHOR(&quot;Eddie James &lt;eajames@us.ibm.com&gt;&quot;);<br=
+>&gt; &gt; +MODULE=5FDESCRIPTION(&quot;OCC sysfs driver&quot;);<br>&gt; &gt=
+; +MODULE=5FLICENSE(&quot;GPL&quot;);<br>&gt; &gt; diff --git a/drivers/hwm=
+on/occ/occ=5Fsysfs.h b/drivers/hwmon/occ/occ=5Fsysfs.h<br>&gt; &gt; new fil=
+e mode 100644<br>&gt; &gt; index 0000000..462f9d2<br>&gt; &gt; --- /dev/nul=
+l<br>&gt; &gt; +++ b/drivers/hwmon/occ/occ=5Fsysfs.h<br>&gt; &gt; @@ -0,0 +=
+1,30 @@<br>&gt; &gt; +/*<br>&gt; &gt; + * occ=5Fsysfs.h - OCC sysfs interfa=
+ce<br>&gt; &gt; + *<br>&gt; &gt; + * This file contains the data structures=
+ and function prototypes<br>&gt; for the OCC<br>&gt; &gt; + * hwmon sysfs e=
+ntries.<br>&gt; &gt; + *<br>&gt; &gt; + * Copyright 2016 IBM Corp.<br>&gt; =
+&gt; + *<br>&gt; &gt; + * This program is free software; you can redistribu=
+te it and/or modify<br>&gt; &gt; + * it under the terms of the GNU General =
+Public License as published by<br>&gt; &gt; + * the Free Software Foundatio=
+n; either version 2 of the License, or<br>&gt; &gt; + * (at your option) an=
+y later version.<br>&gt; &gt; + *<br>&gt; &gt; + * This program is distribu=
+ted in the hope that it will be useful,<br>&gt; &gt; + * but WITHOUT ANY WA=
+RRANTY; without even the implied warranty of<br>&gt; &gt; + * MERCHANTABILI=
+TY or FITNESS FOR A PARTICULAR PURPOSE. See the<br>&gt; &gt; + * GNU Genera=
+l Public License for more details.<br>&gt; &gt; + */<br>&gt; &gt; +<br>&gt;=
+ &gt; +#ifndef =5F=5FOCC=5FSYSFS=5FH=5F=5F<br>&gt; &gt; +#define =5F=5FOCC=
+=5FSYSFS=5FH=5F=5F<br>&gt; &gt; +<br>&gt; &gt; +struct occ;<br>&gt; &gt; +s=
+truct device;<br>&gt; &gt; +struct occ=5Fsysfs;<br>&gt; &gt; +<br>&gt; &gt;=
+ +struct occ=5Fsysfs *occ=5Fsysfs=5Fstart(struct device *dev, struct occ *o=
+cc,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;const u3=
+2 *sensor=5Fhwmon=5Fconfigs,<br>&gt; &gt; + &nbsp; &nbsp; &nbsp; &nbsp; &nb=
+sp; &nbsp; &nbsp;const char *name);<br>&gt; &gt; +#endif /* =5F=5FOCC=5FSYS=
+FS=5FH=5F=5F */<br>&gt; &gt;<br>&gt; <br></tt><BR>
+</body></html>
 
---001a1144ca223760f40546f5544e--
+--0__=8FBB0A2BDFFF23608f9e8a93df938690918c8FBB0A2BDFFF2360--
