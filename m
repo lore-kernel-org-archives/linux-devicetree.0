@@ -1,26 +1,99 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH 0/7]  Fix issues and factorize arm/arm64 capacity
- information code
-Date: Mon, 30 Jan 2017 17:51:38 +0000
-Message-ID: <20170130175138.GA26660@e104818-lin.cambridge.arm.com>
-References: <20170119143757.14537-1-juri.lelli@arm.com>
- <20170130122901.GA25681@e106622-lin>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 1/3] dt/bindings: da8xx-usb: Add binding for the CPPI 4.1 DMA controller
+Date: Mon, 30 Jan 2017 18:49:19 +0100
+Message-ID: <20170130174921.28231-2-abailon@baylibre.com>
+References: <20170130174921.28231-1-abailon@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170130122901.GA25681@e106622-lin>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Juri Lelli <juri.lelli@arm.com>
-Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 12:29:01PM +0000, Juri Lelli wrote:
-> I'd need more advice on this set, especially on how and if patch 6 could fly.
+DT binding for the TI DA8xx/OMAP-L1x/AM17xx/AM18xx CPPI 4.1 DMA controller.
 
-Since you got some comments and said that you are going to fix them in
-the next version, I guess people are waiting for you to post a new
-series.
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/usb/da8xx-usb.txt          | 41 +++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/devicetree/bindings/usb/da8xx-usb.txt b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+index ccb844a..717c5f6 100644
+--- a/Documentation/devicetree/bindings/usb/da8xx-usb.txt
++++ b/Documentation/devicetree/bindings/usb/da8xx-usb.txt
+@@ -18,10 +18,26 @@ Required properties:
+ 
+  - phy-names: Should be "usb-phy"
+ 
++ - dmas: specifies the dma channels
++
++ - dma-names: specifies the names of the channels. Use "rxN" for receive
++   and "txN" for transmit endpoints. N specifies the endpoint number.
++
+ Optional properties:
+ ~~~~~~~~~~~~~~~~~~~~
+  - vbus-supply: Phandle to a regulator providing the USB bus power.
+ 
++DMA
++~~~
++- compatible: ti,da830-cppi41
++- reg: offset and length of the following register spaces: CPPI DMA Controller,
++  CPPI DMA Scheduler, Queue Manager
++- reg-names: "controller", "scheduler", "queuemgr"
++- #dma-cells: should be set to 2. The first number represents the
++  channel number (0 … 3 for endpoints 1 … 4).
++  The second number is 0 for RX and 1 for TX transfers.
++- #dma-channels: should be set to 4 representing the 4 endpoints.
++
+ Example:
+ 	usb_phy: usb-phy {
+ 		compatible = "ti,da830-usb-phy";
+@@ -30,7 +46,10 @@ Example:
+ 	};
+ 	usb0: usb@200000 {
+ 		compatible = "ti,da830-musb";
+-		reg =   <0x00200000 0x10000>;
++		reg = <0x00200000 0x1000>;
++		ranges;
++		#address-cells = <1>;
++		#size-cells = <1>;
+ 		interrupts = <58>;
+ 		interrupt-names = "mc";
+ 
+@@ -39,5 +58,25 @@ Example:
+ 		phys = <&usb_phy 0>;
+ 		phy-names = "usb-phy";
+ 
++		dmas = <&cppi41dma 0 0 &cppi41dma 1 0
++			&cppi41dma 2 0 &cppi41dma 3 0
++			&cppi41dma 0 1 &cppi41dma 1 1
++			&cppi41dma 2 1 &cppi41dma 3 1>;
++		dma-names =
++			"rx1", "rx2", "rx3", "rx4",
++			"tx1", "tx2", "tx3", "tx4";
++
+ 		status = "okay";
++
++		cppi41dma: dma-controller@201000 {
++			compatible = "ti,da830-cppi41";
++			reg =  <0x201000 0x1000
++				0x202000 0x1000
++				0x204000 0x4000>;
++			reg-names = "controller", "scheduler", "queuemgr";
++			interrupts = <58>;
++			#dma-cells = <2>;
++			#dma-channels = <4>;
++		};
++
+ 	};
 -- 
-Catalin
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
