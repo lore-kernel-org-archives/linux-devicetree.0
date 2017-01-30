@@ -1,87 +1,64 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: [PATCHv2 05/16] ov7670: document device tree bindings
-Date: Mon, 30 Jan 2017 15:06:17 +0100
-Message-ID: <20170130140628.18088-6-hverkuil@xs4all.nl>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv2 14/16] em28xx: drop last soc_camera link
+Date: Mon, 30 Jan 2017 15:06:26 +0100
+Message-ID: <20170130140628.18088-15-hverkuil@xs4all.nl>
 References: <20170130140628.18088-1-hverkuil@xs4all.nl>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170130140628.18088-1-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Add binding documentation and add that file to the MAINTAINERS entry.
+The em28xx driver still used the soc_camera.h header for the ov2640
+driver. Since this driver no longer uses soc_camera, that include can
+be removed.
 
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/media/i2c/ov7670.txt       | 44 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
+ drivers/media/usb/em28xx/em28xx-camera.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-new file mode 100644
-index 0000000..a014694
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-@@ -0,0 +1,44 @@
-+* Omnivision OV7670 CMOS sensor
-+
-+The Omnivision OV7670 sensor supports multiple resolutions output, such as
-+CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
-+output formats.
-+
-+Required Properties:
-+- compatible: should be "ovti,ov7670"
-+- clocks: reference to the xclk input clock.
-+- clock-names: should be "xclk".
-+
-+Optional Properties:
-+- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
-+- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
-+
-+The device node must contain one 'port' child node for its digital output
-+video port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt.
-+
-+Example:
-+
-+	i2c1: i2c@f0018000 {
-+		status = "okay";
-+
-+		ov7670: camera@0x21 {
-+			compatible = "ovti,ov7670";
-+			reg = <0x21>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-+			resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-+			pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-+			clocks = <&pck0>;
-+			clock-names = "xclk";
-+			assigned-clocks = <&pck0>;
-+			assigned-clock-rates = <25000000>;
-+
-+			port {
-+				ov7670_0: endpoint {
-+					remote-endpoint = <&isi_0>;
-+					bus-width = <8>;
-+				};
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index cfff2c9..67df205 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9101,6 +9101,7 @@ L:	linux-media@vger.kernel.org
- T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov7670.c
-+F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
+diff --git a/drivers/media/usb/em28xx/em28xx-camera.c b/drivers/media/usb/em28xx/em28xx-camera.c
+index 89c890b..63aaa57 100644
+--- a/drivers/media/usb/em28xx/em28xx-camera.c
++++ b/drivers/media/usb/em28xx/em28xx-camera.c
+@@ -23,7 +23,6 @@
  
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
+ #include <linux/i2c.h>
+ #include <linux/usb.h>
+-#include <media/soc_camera.h>
+ #include <media/i2c/mt9v011.h>
+ #include <media/v4l2-clk.h>
+ #include <media/v4l2-common.h>
+@@ -43,13 +42,6 @@ static unsigned short omnivision_sensor_addrs[] = {
+ 	I2C_CLIENT_END
+ };
+ 
+-static struct soc_camera_link camlink = {
+-	.bus_id = 0,
+-	.flags = 0,
+-	.module_name = "em28xx",
+-	.unbalanced_power = true,
+-};
+-
+ /* FIXME: Should be replaced by a proper mt9m111 driver */
+ static int em28xx_initialize_mt9m111(struct em28xx *dev)
+ {
+@@ -421,7 +413,6 @@ int em28xx_init_camera(struct em28xx *dev)
+ 			.type = "ov2640",
+ 			.flags = I2C_CLIENT_SCCB,
+ 			.addr = client->addr,
+-			.platform_data = &camlink,
+ 		};
+ 		struct v4l2_subdev_format format = {
+ 			.which = V4L2_SUBDEV_FORMAT_ACTIVE,
 -- 
 2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
