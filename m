@@ -1,48 +1,44 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/8] pinctrl: stm32: use gpio-ranges to declare bank range
-Date: Mon, 30 Jan 2017 16:19:26 +0100
-Message-ID: <CACRpkdYtZCJVrZhXOPXd-MNMX0Ry_H1dLQopKwsj9HnO03BtKg@mail.gmail.com>
-References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com> <1485533721-9019-3-git-send-email-alexandre.torgue@st.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 01/10] drivers: pinctrl: add driver for
+ Allwinner H5 SoC
+Date: Mon, 30 Jan 2017 16:23:15 +0100
+Message-ID: <CACRpkdaj7tnd=anx2npYSKGm5EjmXtBCTvLeCbBk4nsCWrEZTA@mail.gmail.com>
+References: <20170129023331.62106-1-icenowy@aosc.xyz> <20170129023331.62106-2-icenowy@aosc.xyz>
+Reply-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485533721-9019-3-git-send-email-alexandre.torgue@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, Patrice Chotard <patrice.chotard@st.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARBZFUXXCAKGQEZ4GWSOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170129023331.62106-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 5:15 PM, Alexandre TORGUE
-<alexandre.torgue@st.com> wrote:
+On Sun, Jan 29, 2017 at 3:33 AM, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org> wrote:
 
-> Use device tree entries to declare gpio range. It will allow to use
-> no contiguous gpio bank and holes inside a bank.
+> Based on the Allwinner H5 datasheet and the pinctrl driver of the
+> backward-compatible H3 this introduces the pin multiplex assignments for
+> the H5 SoC.
 >
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+> H5 introduced some more pin functions (e.g. three more groups of TS
+> pins, and one more groups of SIM pins) than H3.
+>
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+> Changes in v3:
+> - Add Maxime's ACK.
+> Changes in v2:
+> - Fixed interrupt banks. (There's one more GPIO banks (PF) that can do
+>   interrupt handling on H5)
 
-(...)
-> +       of_property_read_string(np, "st,bank-name", &bank->gpio_chip.label);
-> +
-> +       if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &args))
-> +               bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
-> +       else {
-> +               range->name = bank->gpio_chip.label;
-> +               range->id = bank_nr;
-> +               range->pin_base = range->id * STM32_GPIO_PINS_PER_BANK;
-> +               range->base = range->id * STM32_GPIO_PINS_PER_BANK;
-> +               range->npins = npins;
-> +               range->gc = &bank->gpio_chip;
-> +               pinctrl_add_gpio_range(pctl->pctl_dev,
-> +                                      &pctl->banks[bank_nr].range);
-> +       }
-
-Why are you doing this?
-
-There is already code in drivers/gpio/gpiolib-of.c to pick ranges
-from the device tree and add when you're adding the GPIO chips.
-
-Please use that or figure out what is needed to make it work for
-you instead of reimplementing it.
+I already applied V2 with Maximes' ACK and all.
 
 Yours,
 Linus Walleij
