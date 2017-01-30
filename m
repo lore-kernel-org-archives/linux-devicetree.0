@@ -1,95 +1,78 @@
-From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] devicetree: power: add battery state machine documentation
-Date: Mon, 30 Jan 2017 13:40:38 -0800
-Message-ID: <CAKvHMgRp=duoWFzQPR58sHjuOE5R3p2tL3e0RNBUk7_f9mB6fg@mail.gmail.com>
-References: <20170122071404.9654-3-matt@ranostay.consulting>
- <20170122222212.27086-1-liam@networkimprov.net> <CAKvHMgRYqh_fksDXq2Jv1t6p9ckCOgR+O6gxRTdpd=9r8y__Bg@mail.gmail.com>
- <CAJ_EiSSPeWj+q+R5=HVVrsb39208-Gmj5_7T=ic6mYLxFuekNQ@mail.gmail.com>
- <20170129172006.jsjfxrehynfegpfr@earth> <CAKvHMgSYXYyW7AEHaa_wkh3UQyE6wJPYV66HAugBf3wHOeoSmg@mail.gmail.com>
- <20170130023012.b2vnye6vb4yoawcq@earth> <CAKvHMgQi1tRyUXh0504rP8VUVkFVPt_4NnYTOrBXeO4dde6KMg@mail.gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Mon, 30 Jan 2017 22:54:30 +0100
+Message-ID: <20170130215430.GJ2206@mai>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
+ <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
+ <20170124163551.GB2021@mai> <20170130155209.GC1160@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKvHMgQi1tRyUXh0504rP8VUVkFVPt_4NnYTOrBXeO4dde6KMg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matt Ranostay <matt-sk+viVC6FLCDq+mSdOJa79kegs52MxvZ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170130155209.GC1160@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 2:54 AM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
-> On Sun, Jan 29, 2017 at 6:30 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> Hi,
->>
->> On Sun, Jan 29, 2017 at 03:22:31PM -0800, Liam Breck wrote:
->>> On Sun, Jan 29, 2017 at 9:20 AM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>> > On Wed, Jan 25, 2017 at 11:02:03PM -0800, Matt Ranostay wrote:
->>> >> On Wed, Jan 25, 2017 at 10:19 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
->>> >> > On Sun, Jan 22, 2017 at 2:22 PM, Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org> wrote:
->>> >> >
->>> >> >> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> >> >> new file mode 100644
->>> >> >> index 000000000000..398b4d622883
->>> >> >> --- /dev/null
->>> >> >> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>> >> >> @@ -0,0 +1,34 @@
->>> >> >> +Battery Characteristics
->>> >> >> +
->>> >> >> +Required Properties:
->>> >> >> + - compatible: Must be "fixed-battery"
->>> >> >> +
->>> >> >> +Optional Properties:
->>> >> >> + - termination-microvolt: dead battery voltage
->>> >> >> + - design-microwatt-hours: battery design energy
->>> >> >> + - design-microamp-hours: battery design capacity
->>> >> >
->>> >> > Also I suspect the members of struct power_supply_battery_info should
->>> >> > use the same names as appear in dts:
->>> >>
->>> >> These are internal and we can't be thinking just device tree.. ACPI
->>> >> and platform data is also an option.
->>> >
->>> > well platform data just uses the struct. ACPI is probably not
->>> > relevant, since in ACPI world one usually has smart batteries.
->>> > But yes, the names can be different.
->>> >
->>> > The important part is, that the API is used correctly, so it
->>> > should be clear what each property is used for. For example
->>> > termination_microvolt is not clear: Is this charge termination
->>> > voltage or system shutdown voltage? Also we do not need to add
->>> > "micro", since the power-supply subsystem always uses micro
->>> > based units.
->>>
->>> It's the min battery voltage. So...
->>> drained_voltage, depleted_voltage, sapped_voltage, spent_voltage...
->>
->> This is often called EOD (end of discharge) voltage, so let's use
->> end_of_discharge_voltage.
->
-> ...
-
-Actually, let's use names from POWER_SUPPLY_PROP_*, as DT inputs may
-be visible in sysfs, e.g. *_CHARGE_FULL_DESIGN. This would require new
-enum elements in future for the BQ24190 properties I mentioned
-up-thread.
-
-That looks like:
-
-Optional Properties:
-   - voltage-min-design-microvolt: dead battery voltage
-   - energy-full-design-microwatt-hours: battery design energy
-   - charge-full-design-microamp-hours: battery design capacity
-
- struct power_supply_battery_info {
-    int voltage_min_design_uv;   /* microVolts */
-    int energy_full_design_uwh;  /* microWatt-hours */
-    int charge_full_design_uah;  /* microAmp-hours */
- };
-
-Default value for unset DT properties will be -EINVAL, since 0 is
-valid for *_full_design_* on the chips.
-
-~.~
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMDM6NTI6MDlQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdy
+b3RlOgo+IEhpIERhbmllbCwKPiAKPiBPbiBUdWUsIEphbiAyNCwgMjAxNyBhdCAwNTozNTo1MVBN
+ICswMTAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToKPiA+IFRoYXQgd2Fzbid0IG15IHBvaW50LiBU
+aGUgd2F5IHRoZSBlcnJhdGEgYXJlIGhhbmRsZWQgaW4gdGhpcyBwYXRjaHNldCBpcwo+ID4gZWxl
+Z2FudCBhbmQgSSBoYXZlIG5vdGhpbmcgYWdhaW5zdCBpdC4gSSdtIHdvcnJpZWQgYWJvdXQgdGhl
+IGFjY3VtdWxhdGlvbiBvZgo+ID4gZml4ZXMsIGhhY2tzLCB3b3JrYXJvdW5kcyBpbiB0aGlzIGRy
+aXZlci4gU28gbXkgbmFpdmUgcXVlc3Rpb24gaXMgYWJvdXQgbm90Cj4gPiB1c2luZyBhbiBpZGVu
+dGlmaWVkIGJvZ3VzIGNsb2Nrc291cmNlIGFuZCB1c2UgYW5vdGhlciBvbmUgYXZhaWxhYmxlIG9u
+IHRoZQo+ID4gYm9hcmQsIHdoaWNoIGlzIEkgYmVsaWV2ZSBvZnRlbiB0aGUgY2FzZSwgaW5zdGVh
+ZCBvZiB0cnlpbmcgdG8gZGVhbCB3aXRoIGJvZ3VzCj4gPiBoYXJkd2FyZS4gQXBwYXJlbnRseSwg
+dGhhdCBpcyBub3QgcG9zc2libGUgYmVjYXVzZSAxKSBvZiBLVk0sIDIpIG9mIGR1cGxpY2F0aW9u
+Cj4gPiBhbmQgMykgb2YgaW50ZWdyYXRpb24gd2l0aCB0aGUgQVJNNjQgY29kZS4KPiA+IAo+ID4g
+RG9lcyBpdCBtZWFuIGl0IGlzIG5vdCBwb3NzaWJsZSB0byB1c2UgYW5vdGhlciBjbG9ja3NvdXJj
+ZS9jbG9ja2V2ZW50IHRoYW4gdGhlCj4gPiBhcm12OC10aW1lciA/Cj4gPiAKPiA+IENhbiB5b3Ug
+ZWxhYm9yYXRlIHRoZXNlIHRocmVlIHBvaW50cyA/IAo+IAo+IFByYWN0aWNhbGx5IHNwZWFraW5n
+LCB0aGVzZSBwbGF0Zm9ybXMgaGF2ZSBubyBvdGhlciBjbG9ja3NvdXJjZSBvcgo+IGNsb2NrZXZl
+bnQgZGV2aWNlIHRoYXQgSSBhbSBhd2FyZSBvZiwgd2hpY2ggY2FuIGJlIGVudW1lcmF0ZWQgaW4g
+YQo+IHN0YW5kYXJkIG1hbm5lciB1c2luZyBBQ1BJLgo+IAo+IEZvciBwb2ludCAxLCBLVk0gaXMg
+aW50aW1hdGVseSBmYW1pbGlhciB3aXRoIHRoZSBhcmNoaXRlY3RlZCB0aW1lcgo+ICh3aGljaCBp
+cyBtYW5hZ2VkIGR1cmluZyBWTSBjb250ZXh0IHN3aXRjaCBpbiBoeXAgY29kZSwgZm9yIGV4YW1w
+bGUpLgo+IEtWTSBrbm93cyBub3RoaW5nIG9mIG90aGVyIGNsb2Nrc291cmNlIG9yIGNsb2NrZXZl
+bnQgZGV2aWNlcywgYW5kIGl0IGlzCj4gZmFyIGZyb20gdHJpdmlhbCB0byBwbHVtYiB0aGVzZSBp
+biBlaXRoZXIgd2F5LiBTaW5jZSB0aGUgYXJjaGl0ZWN0ZWQKPiB0aW1lciBpcyBhIG1hbmRhdG9y
+eSBwYXJ0IG9mIEFSTXY4LCBndWVzdHMgbWF5IGF0dGVtcHQgdG8gdXNlIGl0Cj4gcmVnYXJkbGVz
+cy4KPiAKPiBGb3IgcG9pbnQgMywgYXJtNjQgY3VycmVudGx5IHJlcXVpcmVzIHRoZSBhcmNoaXRl
+Y3RlZCB0aW1lciBhcyB0aGlzIGlzCj4gbWFuZGF0b3J5IHBlciB0aGUgQVJNdjggYXJjaGl0ZWN0
+dXJlLiBJdCBpcyBub24tdHJpdmlhbCB0byBhZGQgc3VwcG9ydAo+IGZvciBvdGhlciBkZXZpY2Vz
+IHRvIHRoZSB2RFNPLCB0aGUgZGVsYXkgbG9vcCwgZXRjLgoKT2ssIHRoYW5rcyBmb3IgdGhlc2Ug
+Y2xhcmlmaWNhdGlvbnMuCgo+IExvY2FsaXNpbmcgdGhlc2UgcXVpcmtzIHRvIHRoZSBhcmNoaXRl
+Y3RlZCB0aW1lciBkcml2ZXIgaXMgYnkgZmFyIHRoZQo+IGxlYXN0IHdvcnN0IG9wdGlvbiBhdmFp
+bGFibGUuIE1hcmMgYW5kIEkgYXJlIHBlcmZlY3RseSBoYXBweSB0byBtYW5hZ2UKPiB0aGF0LgoK
+SXQgaXMgdXAgdG8gbWUgdG8gZW5zdXJlIHRoZSBjbG9ja2V2ZW50L2Nsb2Nrc291cmNlIGRyaXZl
+cnMgaW4gZ2VuZXJhbCBhcmUKZm9sbG93aW5nIHRoZSByaWdodCBkaXJlY3Rpb24uIEFuZCB0aGlz
+IGRyaXZlciBsb29rcyBtb3JlIGFuZCBtb3JlIG9wYXF1ZS4gSQp3aWxsIHNwZW5kIHNvbWUgdGlt
+ZXMgdG8gZG8gYSByZXZpZXcgb2YgdGhlIGRyaXZlciBhcyBzb29uIGFzIEkgaGF2ZSB0aW1lLgoK
+U28gd2UgZmluaXNoIHRoZSByZXZpZXdzIG9mIHRoaXMgc2VyaWVzLCB5b3UgdGFrZSB0aGUgcGF0
+Y2hlcyB3aGVuIEkgYWNrIHRoZW0gdXAsCmJ1dCBmcm9tIHRoaXMgcG9pbnQsIGFueSBzdWJtaXNz
+aW9uIGZvciB0aGlzIGRyaXZlciB3aWxsIGhhdmUgdG8gc3RpY2sgdG8gdGhlCnN0YW5kYXJkIHN1
+Ym1pc3Npb24gcnVsZXMsIHRoYXQgaXMgdG8gc2F5OiBUaG9tYXMgR2xlaXhuZXIgYW5kIEkgaGF2
+ZSB0byBiZQpyZWNpcGllbnRzIG9mIHRoZSBwYXRjaGVzIGFuZCBnbyB0aHJvdWdoIG91ciB0cmVl
+LiBEZXBlbmRlbmN5IGlzc3VlcyB3aXRoCm90aGVyIHBhdGNoc2V0IG11c3QgYmUgc29sdmVkIGJl
+Zm9yZSBhcHBseWluZyB0aGVtIGluIGFub3RoZXIgdHJlZS4KClRoYW5rcy4KCiAgLS0gRGFuaWVs
+CgotLSAKCiA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3Vy
+Y2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFj
+ZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sgfAo8aHR0cDovL3R3aXR0ZXIuY29tLyMh
+L2xpbmFyb29yZz4gVHdpdHRlciB8CjxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cv
+PiBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
