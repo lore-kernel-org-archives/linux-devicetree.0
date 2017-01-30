@@ -1,52 +1,91 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
-Date: Mon, 30 Jan 2017 13:19:07 -0500
-Message-ID: <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA@mail.gmail.com>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-3-robdclark@gmail.com>
- <874m0gifmf.fsf@eliezer.anholt.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <874m0gifmf.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 2/3] dmaengine: cppi41: Add support of DA8xx to CPPI 4.1
+Date: Mon, 30 Jan 2017 18:49:20 +0100
+Message-ID: <20170130174921.28231-3-abailon@baylibre.com>
+References: <20170130174921.28231-1-abailon@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTowOSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
-Pj4gVGhlIG9yaWdpbmFsIHdheSB3ZSBkZXRlcm1pbmVkIHRoZSBncHUgdmVyc2lvbiB3YXMgYmFz
-ZWQgb24gZG93bnN0cmVhbQo+PiBiaW5kaW5ncyBmcm9tIGFuZHJvaWQga2VybmVsLiAgQSBjbGVh
-bmVyIHdheSBpcyB0byBnZXQgdGhlIHZlcnNpb24gZnJvbQo+PiB0aGUgY29tcGF0aWJsZSBzdHJp
-bmcuCj4+Cj4+IE5vdGUgdGhhdCBubyB1cHN0cmVhbSBkdGIgdXNlcyB0aGVzZSBiaW5kaW5ncy4g
-IEJ1dCB0aGUgY29kZSBzdGlsbAo+PiBzdXBwb3J0cyBmYWxsaW5nIGJhY2sgdG8gdGhlIGxlZ2Fj
-eSBiaW5kaW5ncyAod2l0aCBhIHdhcm5pbmcpLCBzbyB0aGF0Cj4+IHdlIGFyZSBzdGlsbCBjb21w
-YXRpYmxlIHdpdGggdGhlIGdwdSBkdCBub2RlIGZyb20gYW5kcm9pZCBkZXZpY2UKPj4ga2VybmVs
-cy4KPgo+IFRoZSBncHVsaXN0W10gc2VlbXMgcHJldHR5IHNob3J0LCBsaWtlIHlvdSBjb3VsZCBq
-dXN0IGhhdmUgNyBjb21wYXRpYmxlCj4gc3RyaW5ncyBpbiBkdF9tYXRjaFtdIGFuZCBwb2ludCB0
-aGVtIGRpcmVjdGx5IGF0IGNvcnJlc3BvbmRpbmcgdGhlCj4gZ3B1bGlzdFtdIGVudHJ5LiAgT3Ig
-YXJlIHRoZXJlIGxvdHMgb2YgcGF0Y2ggbGV2ZWxzLCB3aXRoIHRoZSBzYW1lCj4gc3RydWN0IGFk
-cmVub19pbmZvIHZhbHVlcz8KClRoZSBsaXN0IGN1cnJlbnRseSBpcyByYXRoZXIgaW5jb21wbGV0
-ZSAod2hpY2ggbWF5IG9yIG1heSBub3QgbWF0dGVyLApJIGd1ZXNzIGl0IGNvbWVzIGRvd24gdG8g
-aG93IG1hbnkgZGlmZmVyZW50IHBob25lcy90YWJsZXRzIG91dCB0aGVyZQpwZW9wbGUgdHJ5IHRv
-IGdldCBhbiB1cHN0cmVhbSBrZXJuZWwgd29ya2luZyBvbikuICBBbmQgaXQgaGFzIHRob3NlCkFO
-WV9JRCB3aWxkY2FyZCBlbnRyaWVzLgoKQSBmdWxsIGxpc3Qgb2YgYWxsIHRoZSBncHUncyBpbmNs
-dWRpbmcgYWxsIHRoZWlyIHBhdGNobGV2ZWxzIHdvdWxkIGJlCnF1aXRlIGxvbmcuCgpXZSBtaWdo
-dCBlbmQgdXAgd2FudGluZyB0byBzcGxpdCB0aGUgcXVpcmtzIG91dCBkaWZmZXJlbnRseSwgc2lu
-Y2UKdGhvc2UgdGVuZCB0byBhcHBseSB0byBzcGVjaWZpYyBwYXRjaGxldmVsJ3MuLiBJIGhhZCB0
-byBjaGFuZ2UgdGhlCmV4aXN0aW5nIGVudHJ5IGZvciBhNTMwIGZyb20gYTUzMC4qIHRvIGE1MzAu
-MiBmb3IgdGhpcyByZWFzb24uICBCdXQKdGhhdCB3b24ndCBlZmZlY3QgdGhlIGJpbmRpbmdzIHNv
-IHRoYXQgaXMgYW4gaW1wbGVtZW50YXRpb24gZGV0YWlsIHdlCmNhbiB3b3JyeSBhYm91dCBsYXRl
-ci4KCkJSLAotUgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+The DA8xx has a CPPI 4.1 DMA controller.
+This is add the glue layer required to make it work on DA8xx.
+
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ drivers/dma/Kconfig  |  6 +++---
+ drivers/dma/cppi41.c | 23 +++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+index 0d6a96e..2a31e1a 100644
+--- a/drivers/dma/Kconfig
++++ b/drivers/dma/Kconfig
+@@ -514,12 +514,12 @@ config TIMB_DMA
+ 	  Enable support for the Timberdale FPGA DMA engine.
+ 
+ config TI_CPPI41
+-	tristate "AM33xx CPPI41 DMA support"
+-	depends on ARCH_OMAP
++	tristate "CPPI 4.1 DMA support"
++	depends on (ARCH_OMAP || ARCH_DAVINCI_DA8XX)
+ 	select DMA_ENGINE
+ 	help
+ 	  The Communications Port Programming Interface (CPPI) 4.1 DMA engine
+-	  is currently used by the USB driver on AM335x platforms.
++	  is currently used by the USB driver on AM335x and DA8xx platforms.
+ 
+ config TI_DMA_CROSSBAR
+ 	bool
+diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+index 21a4f79..5c501da 100644
+--- a/drivers/dma/cppi41.c
++++ b/drivers/dma/cppi41.c
+@@ -221,6 +221,20 @@ static const struct chan_queues am335x_usb_queues_rx[] = {
+ 	[29] = { .submit = 30, .complete = 155},
+ };
+ 
++static const struct chan_queues da8xx_usb_queues_tx[] = {
++	[0] = { .submit =  16, .complete = 24},
++	[1] = { .submit =  18, .complete = 24},
++	[2] = { .submit =  20, .complete = 24},
++	[3] = { .submit =  22, .complete = 24},
++};
++
++static const struct chan_queues da8xx_usb_queues_rx[] = {
++	[0] = { .submit =  1, .complete = 26},
++	[1] = { .submit =  3, .complete = 26},
++	[2] = { .submit =  5, .complete = 26},
++	[3] = { .submit =  7, .complete = 26},
++};
++
+ struct cppi_glue_infos {
+ 	const struct chan_queues *queues_rx;
+ 	const struct chan_queues *queues_tx;
+@@ -949,8 +963,17 @@ static const struct cppi_glue_infos am335x_usb_infos = {
+ 	.qmgr_num_pend = 5,
+ };
+ 
++static const struct cppi_glue_infos da8xx_usb_infos = {
++	.queues_rx = da8xx_usb_queues_rx,
++	.queues_tx = da8xx_usb_queues_tx,
++	.td_queue = { .submit = 31, .complete = 0 },
++	.first_completion_queue = 24,
++	.qmgr_num_pend = 2,
++};
++
+ static const struct of_device_id cppi41_dma_ids[] = {
+ 	{ .compatible = "ti,am3359-cppi41", .data = &am335x_usb_infos},
++	{ .compatible = "ti,da830-cppi41", .data = &da8xx_usb_infos},
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, cppi41_dma_ids);
+-- 
+2.10.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
