@@ -1,143 +1,64 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Mon, 30 Jan 2017 12:23:09 +0100
-Message-ID: <9bcb9bab-9404-a91b-2a06-0530c284b9e3@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
- <20170127101545.g53uah57vgfu55o5@dell>
- <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
- <20170127171746.lf2nbpsaqs3dmy44@dell>
+From: Gautham R Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] cpuidle:powernv: Add helper function to populate
+ powernv idle states.
+Date: Mon, 30 Jan 2017 17:11:05 +0530
+Message-ID: <20170130114105.GA4290@in.ibm.com>
+References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
+ <1485333389-5752-4-git-send-email-ego@linux.vnet.ibm.com>
+ <871svlxl7w.fsf@concordia.ellerman.id.au>
+ <CAJZ5v0j_vzsaNeYNBmKs3oMnXyVHF_3chRjeTEwQA_k0TDc3Nw@mail.gmail.com>
+ <87efzkx0dd.fsf@concordia.ellerman.id.au>
+Reply-To: ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127171746.lf2nbpsaqs3dmy44@dell>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87efzkx0dd.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Neuling <mikey-/owAOxkjmzZAfugRpC6u6w@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Shreyas B. Prabhu" <shreyasbp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shilpasri G Bhat <shilpa.bhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29Tb/PtFMR13I2A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/27/2017 06:17 PM, Lee Jones wrote:
-> On Fri, 27 Jan 2017, Arnaud Pouliquen wrote:
->> On 01/27/2017 11:15 AM, Lee Jones wrote:
->>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
->>>> On 01/24/2017 12:36 PM, Lee Jones wrote:
->>>>> On Tue, 24 Jan 2017, Arnaud Pouliquen wrote:
->>>>>> On 01/24/2017 09:22 AM, Lee Jones wrote:
->>>>>>> On Mon, 23 Jan 2017, Arnaud Pouliquen wrote:
->>>>>>>
->>>>>>>> DFSDM hardware IP can be used at the same time for ADC sigma delta
->>>>>>>
->>>>>>> Same time as what?
->>>>>> DFSDM is used for ADC acquisition (through IIO) but also PDM microphone
->>>>>> capture (through ASOC).
->>>>>>>
->>>>>>>> conversion and audio PDM microphone.
->>>>>>>> MFD driver is in charge of configuring IP registers and managing IP clocks.
->>>>>>>> For this it exports an API to handles filters and channels resources.
->>>>>>>
->>>>>>> This looks like an ADC driver?  What is it that makes it an MFD?
->>>>>> Yes it a kind of ADC but that supports 2 features audio and iio.
->>>>>> So it has to support 2 features based on 2 separate Frameworks.
->>>>>
->>>>> I'm still unsure why it needs to live in MFD.
->>>>>
->>>>> By the looks of it, this driver needs to move into IIO and you need to
->>>>> call into it from ASoC.
->>>>>
->>>>
->>>> I think i introduce confusion by speaking about ADC for audio...
->>>>
->>>> 1) IIO handles sigma delta ADCs that can be used as example for motor
->>>> controls. the aim is to get value based on an application request or
->>>> using some triggers.
->>>> example: http://www.ti.com/lit/ds/symlink/ads1202.pdf
->>>>
->>>> 2) For audio part, we speak about Digital mems microphones that generate
->>>> PDM format stream. PDM is a continuous real time stream dedicated to
->>>> audio record and must be handled in ASOC ( codec Dmic part driver is
->>>> /sound/soc/codec/dmic.c).
->>>> DMIC example:
->>>> http://www.st.com/content/ccc/resource/technical/document/datasheet/47/bd/d2/13/8d/fd/48/26/DM00121815.pdf/files/DM00121815.pdf/jcr:content/translations/en.DM00121815.pdf
->>>>
->>>> Form my point of view it very strange to handle DMICs in IIO, as it is
->>>> not designed to support audio streams.it is two separate features that
->>>> are not compatible.
->>>>
->>>> Now, from software point of view
->>>> That would means that IIO declares ADCs that it can not expose, because
->>>> DMIC is not IIO standard. But IIO inkern API needs that device is
->>>> declared
->>>
->>>> So i should define a specific API in IIO for ASOC driver.
->>>
->>> Yes, this is what I think you should do.
->>>
->>> MFD is not a dumping ground for devices that do not fit anywhere else.
->>
->> I fully understand that you don't want to create unnecessary MFD devices.
->> But In case of DFSDM ,it is really a device that supports 2 features.
->> The main evidence is that "ADC acquisition" and "digital microphone"
->> features are handled by two separate frameworks.
->> So this corresponds to two features that share the same device resources
->> (registers, IRQs, clocks).
->> Seems that this match with MFD definition.
->>
->> Now, if IIO and ASOC maintainers are aligned with you proposal, i will
->> move MFD part in IIO.
->> But in this case, i can not see another way to do it, except a MFD
->> driver hidden in IIO?
->>
->> Here is my analysis of a design in IIO:
->>
->> Natural way to do this is to consider that ASOC is a customer of IIO so
->> use the customer.h API.
->> 1) As Digital microphone can not be handled by IIO dev interface, i can
->> not expose them as an IIO channel, that would be visible by applications
->> in /sys/bus/iio/devices/iio
->> 2) ASOC needs to configure DFSDM filter to match to specific frequencies
->> and sample formats requested by users. Not standard IIO interface to do
->> this. (on IIO side this is done by attribute file)
->> 3) audio stream is a real time stream. So for audio quality best is to
->> minimize latencies and Xrun. That why transfer as done from HW to
->> application using LLI DMA transfers with a minimum of copy. This does
->> not match with the IIO inkern API.
->>  => So seems not possible to use IIO inkern API.
->>
->> That's means that i would need to create a ST specific include file to
->> offer an API to ASoC to handle DFSDM resources linked to the DMIC.
->> and to probe ASOc device in IIO one.
->> So the solution would be to create something like a sub IIO driver That
->> probe and handle some IIO and ASOC devices.
->> Ultimately This would correspond to a MFD driver integrated in IIO...
+On Mon, Jan 30, 2017 at 10:17:50PM +1100, Michael Ellerman wrote:
+> "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 > 
-> The issue is not the creation of an MFD driver to create shared
-> resources and probe the child devices.  That's what MFD *is* for.
-> What I do take exception to is having lots of code in MFD which
-> should clearly live in a different subsystem.
+> > On Mon, Jan 30, 2017 at 4:47 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
+> >> "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> writes:
+> >>
+> >>> From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>>
+> >>> In the current code for powernv_add_idle_states, there is a lot of code
+> >>> duplication while initializing an idle state in powernv_states table.
+> >>>
+> >>> Add an inline helper function to populate the powernv_states[] table
+> >>> for a given idle state. Invoke this for populating the "Nap",
+> >>> "Fastsleep" and the stop states in powernv_add_idle_states.
+> >>>
+> >>> Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >>> Signed-off-by: Gautham R. Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>> ---
+> >>>  drivers/cpuidle/cpuidle-powernv.c | 89 +++++++++++++++++++++++----------------
+> >>>  include/linux/cpuidle.h           |  1 +
+> >>
+> >> I was going to merge this, but I see you've touched cpuidle.h, so I feel
+> >> like I should get an ACK from the cpuidle folks.
+> >>
+> >> It's a fairly uncontroversial change, but it's their API.
+> >
+> > OK, please add an ACK from me to it then.
 > 
-> Since this device only serves a couple of functions, I expect it to be
-> a few hundred lines, maximum.  Everything else should be farmed out.
-> MFD knows nothing of "channels" or "filters" so anything related to
-> them (init, get, start, stop, release, etc) needs to find another
-> home.  Whether that's in IIO is a separate discussion, but it
-> certainly doesn't live in MFD.
+> Thanks.
 
-Thanks for your time and explanations Lee.
-As you recommended, I will try to integrate it in IIO. And i notice for
-the next time that i can not expose such "high level" interface in MFD.
+Thanks Rafael and Michal.
 
-Regards
-Arnaud
+> 
+> cheers
+> 
+--
+Thanks and Regards
+gautham.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
