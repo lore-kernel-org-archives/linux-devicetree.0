@@ -1,81 +1,83 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: Re: [PATCH v4 2/8] devicetree: power: add battery state machine documentation
-Date: Mon, 30 Jan 2017 02:54:06 -0800
-Message-ID: <CAKvHMgQi1tRyUXh0504rP8VUVkFVPt_4NnYTOrBXeO4dde6KMg@mail.gmail.com>
-References: <20170122071404.9654-3-matt@ranostay.consulting>
- <20170122222212.27086-1-liam@networkimprov.net> <CAKvHMgRYqh_fksDXq2Jv1t6p9ckCOgR+O6gxRTdpd=9r8y__Bg@mail.gmail.com>
- <CAJ_EiSSPeWj+q+R5=HVVrsb39208-Gmj5_7T=ic6mYLxFuekNQ@mail.gmail.com>
- <20170129172006.jsjfxrehynfegpfr@earth> <CAKvHMgSYXYyW7AEHaa_wkh3UQyE6wJPYV66HAugBf3wHOeoSmg@mail.gmail.com>
- <20170130023012.b2vnye6vb4yoawcq@earth>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] ARM: dts: rockchip: add timer entries to rk3188
+ SoC
+Date: Mon, 30 Jan 2017 12:04:28 +0100
+Message-ID: <20170130110428.GC2206@mai>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+ <1485260203-14216-4-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170130023012.b2vnye6vb4yoawcq@earth>
-Sender: linux-pm-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Matt Ranostay <matt@ranostay.consulting>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1485260203-14216-4-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 29, 2017 at 6:30 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> Hi,
->
-> On Sun, Jan 29, 2017 at 03:22:31PM -0800, Liam Breck wrote:
->> On Sun, Jan 29, 2017 at 9:20 AM, Sebastian Reichel <sre@kernel.org> wrote:
->> > On Wed, Jan 25, 2017 at 11:02:03PM -0800, Matt Ranostay wrote:
->> >> On Wed, Jan 25, 2017 at 10:19 PM, Liam Breck <liam@networkimprov.net> wrote:
->> >> > On Sun, Jan 22, 2017 at 2:22 PM, Liam Breck <liam@networkimprov.net> wrote:
->> >> >
->> >> >> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->> >> >> new file mode 100644
->> >> >> index 000000000000..398b4d622883
->> >> >> --- /dev/null
->> >> >> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->> >> >> @@ -0,0 +1,34 @@
->> >> >> +Battery Characteristics
->> >> >> +
->> >> >> +Required Properties:
->> >> >> + - compatible: Must be "fixed-battery"
->> >> >> +
->> >> >> +Optional Properties:
->> >> >> + - termination-microvolt: dead battery voltage
->> >> >> + - design-microwatt-hours: battery design energy
->> >> >> + - design-microamp-hours: battery design capacity
->> >> >
->> >> > Also I suspect the members of struct power_supply_battery_info should
->> >> > use the same names as appear in dts:
->> >>
->> >> These are internal and we can't be thinking just device tree.. ACPI
->> >> and platform data is also an option.
->> >
->> > well platform data just uses the struct. ACPI is probably not
->> > relevant, since in ACPI world one usually has smart batteries.
->> > But yes, the names can be different.
->> >
->> > The important part is, that the API is used correctly, so it
->> > should be clear what each property is used for. For example
->> > termination_microvolt is not clear: Is this charge termination
->> > voltage or system shutdown voltage? Also we do not need to add
->> > "micro", since the power-supply subsystem always uses micro
->> > based units.
->>
->> It's the min battery voltage. So...
->> drained_voltage, depleted_voltage, sapped_voltage, spent_voltage...
->
-> This is often called EOD (end of discharge) voltage, so let's use
-> end_of_discharge_voltage.
+On Tue, Jan 24, 2017 at 03:16:38PM +0300, Alexander Kochetkov wrote:
+> The patch add two timers to all rk3188 based boards.
+> 
+> The first timer is from alive subsystem and it act as a backup
+> for the local timers at sleep time. It act the same as other
+> SoC rockchip timers already present in kernel.
 
-How's this?
+It is up to the RTC to wake up the system from suspend and there is no
+idle state stopping the local timers on these SoCs. So, the rockchip timers
+won't be ever used on the rk3188, right ?
+ 
+> The second timer is from CPU subsystem and act as replacement
+> for the arm-global-timer clocksource and sched clock. It run
+> at stable frequency 24MHz.
 
-Optional Properties:
-  - end-of-discharge-microvolt: dead battery voltage
-  - design-microwatt-hours: battery design energy
-  - design-microamp-hours: battery design capacity
+This patch should go after the rockchip timer patches.
 
-struct power_supply_battery_info {
-   int design_energy_uwh;  /* microWatt-hours */
-   int design_current_uah;  /* microAmp-hours */
-   int end_of_discharge_uv; /* microVolts */
-};
+> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+> index 869e189..bcf8e03 100644
+> --- a/arch/arm/boot/dts/rk3188.dtsi
+> +++ b/arch/arm/boot/dts/rk3188.dtsi
+> @@ -106,6 +106,22 @@
+>  		};
+>  	};
+>  
+> +	timer3: timer@2000e000 {
+> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
+> +		reg = <0x2000e000 0x20>;
+> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
+> +		clock-names = "timer", "pclk";
+> +	};
+> +
+> +	timer6: timer@200380a0 {
+> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
+> +		reg = <0x200380a0 0x20>;
+> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
+> +		clock-names = "timer", "pclk";
+> +	};
+> +
+>  	i2s0: i2s@1011a000 {
+>  		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
+>  		reg = <0x1011a000 0x2000>;
+> -- 
+> 1.7.9.5
+> 
 
-Default value for unset DT properties will be -EINVAL, since 0 is
-valid for design_* on the chips.
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
