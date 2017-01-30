@@ -1,231 +1,66 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 4/5] iio: trigger: add support for STM32 EXTI triggers
-Date: Mon, 30 Jan 2017 14:57:42 +0100
-Message-ID: <1485784663-19505-5-git-send-email-fabrice.gasnier@st.com>
-References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: [PATCHv2 16/16] at91-sama5d3_xplained.dts: select ov2640
+Date: Mon, 30 Jan 2017 15:06:28 +0100
+Message-ID: <20170130140628.18088-17-hverkuil@xs4all.nl>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485784663-19505-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170130140628.18088-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-EXTi[0..15] gpio signal can be routed internally as trigger source for
-ADC or DAC conversions. Configure them as interrupts to configure
-trigger path in HW.
+From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-Note: interrupt handler isn't required here, and corresponding interrupt
-can be kept masked at exti controller level.
+This patch replaces the ov7670 with the ov2640. This patch is not
+meant to be merged but is for demonstration purposes only.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 ---
- drivers/iio/trigger/Kconfig                    |  10 ++
- drivers/iio/trigger/Makefile                   |   1 +
- drivers/iio/trigger/stm32-exti-trigger.c       | 124 +++++++++++++++++++++++++
- include/linux/iio/trigger/stm32-exti-trigger.h |  26 ++++++
- 4 files changed, 161 insertions(+)
- create mode 100644 drivers/iio/trigger/stm32-exti-trigger.c
- create mode 100644 include/linux/iio/trigger/stm32-exti-trigger.h
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/iio/trigger/Kconfig b/drivers/iio/trigger/Kconfig
-index e4d4e63..b0c5104 100644
---- a/drivers/iio/trigger/Kconfig
-+++ b/drivers/iio/trigger/Kconfig
-@@ -24,6 +24,16 @@ config IIO_INTERRUPT_TRIGGER
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called iio-trig-interrupt.
+diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+index 2af24f7..d5f7e82 100644
+--- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+@@ -72,7 +72,7 @@
+ 					#size-cells = <0>;
+ 					isi_0: endpoint {
+ 						reg = <0>;
+-						remote-endpoint = <&ov7670_0>;
++						remote-endpoint = <&ov2640_0>;
+ 						bus-width = <8>;
+ 						vsync-active = <1>;
+ 						hsync-active = <1>;
+@@ -88,20 +88,20 @@
+ 			i2c1: i2c@f0018000 {
+ 				status = "okay";
  
-+config IIO_STM32_EXTI_TRIGGER
-+	tristate "STM32 EXTI Trigger"
-+	depends on (ARCH_STM32 && OF && MFD_STM32_TIMERS) || COMPILE_TEST
-+	help
-+	  Select this option to enable STM32 EXTI Triggers on GPIO. These
-+	  maybe used then on other STM32 IPs like ADC or DAC.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called stm32-exti-trigger.
-+
- config IIO_STM32_TIMER_TRIGGER
- 	tristate "STM32 Timer Trigger"
- 	depends on (ARCH_STM32 && OF && MFD_STM32_TIMERS) || COMPILE_TEST
-diff --git a/drivers/iio/trigger/Makefile b/drivers/iio/trigger/Makefile
-index 5c4ecd3..12d5d72 100644
---- a/drivers/iio/trigger/Makefile
-+++ b/drivers/iio/trigger/Makefile
-@@ -6,6 +6,7 @@
+-				ov7670: camera@0x21 {
+-					compatible = "ovti,ov7670";
+-					reg = <0x21>;
++				ov2640: camera@0x30 {
++					compatible = "ovti,ov2640";
++					reg = <0x30>;
+ 					pinctrl-names = "default";
+ 					pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+ 					resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+ 					pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+ 					clocks = <&pck0>;
+-					clock-names = "xclk";
++					clock-names = "xvclk";
+ 					assigned-clocks = <&pck0>;
+ 					assigned-clock-rates = <25000000>;
  
- obj-$(CONFIG_IIO_HRTIMER_TRIGGER) += iio-trig-hrtimer.o
- obj-$(CONFIG_IIO_INTERRUPT_TRIGGER) += iio-trig-interrupt.o
-+obj-$(CONFIG_IIO_STM32_EXTI_TRIGGER) += stm32-exti-trigger.o
- obj-$(CONFIG_IIO_STM32_TIMER_TRIGGER) += stm32-timer-trigger.o
- obj-$(CONFIG_IIO_SYSFS_TRIGGER) += iio-trig-sysfs.o
- obj-$(CONFIG_IIO_TIGHTLOOP_TRIGGER) += iio-trig-loop.o
-diff --git a/drivers/iio/trigger/stm32-exti-trigger.c b/drivers/iio/trigger/stm32-exti-trigger.c
-new file mode 100644
-index 0000000..2a3ec3c
---- /dev/null
-+++ b/drivers/iio/trigger/stm32-exti-trigger.c
-@@ -0,0 +1,124 @@
-+/*
-+ * Copyright (C) 2017, STMicroelectronics - All Rights Reserved
-+ * Author: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>.
-+ *
-+ * License type: GPLv2
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2 as published by
-+ * the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
-+ * or FITNESS FOR A PARTICULAR PURPOSE.
-+ * See the GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/gpio/consumer.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+/* STM32 has up to 16 EXTI triggers on GPIOs */
-+#define STM32_MAX_EXTI_TRIGGER	16
-+
-+static const struct iio_trigger_ops exti_trigger_ops = {
-+	.owner = THIS_MODULE,
-+};
-+
-+bool is_stm32_exti_trigger(struct iio_trigger *trig)
-+{
-+	return (trig->ops == &exti_trigger_ops);
-+}
-+EXPORT_SYMBOL(is_stm32_exti_trigger);
-+
-+static irqreturn_t stm32_exti_trigger_handler(int irq, void *data)
-+{
-+	/* Exti handler shouldn't be invoked, and isn't used */
-+	return IRQ_HANDLED;
-+}
-+
-+static int stm32_exti_trigger_probe(struct platform_device *pdev)
-+{
-+	int irq, ret;
-+	char name[8];
-+	struct gpio_desc *gpio;
-+	struct iio_trigger *trig;
-+	unsigned int i;
-+
-+	for (i = 0; i < STM32_MAX_EXTI_TRIGGER; i++) {
-+		snprintf(name, sizeof(name), "exti%d", i);
-+
-+		gpio = devm_gpiod_get_optional(&pdev->dev, name, GPIOD_IN);
-+		if (IS_ERR_OR_NULL(gpio)) {
-+			if (IS_ERR(gpio)) {
-+				dev_err(&pdev->dev, "gpio %s get error %ld\n",
-+					name, PTR_ERR(gpio));
-+				return PTR_ERR(gpio);
-+			}
-+			dev_dbg(&pdev->dev, "No %s gpio\n", name);
-+			continue;
-+		}
-+
-+		irq = gpiod_to_irq(gpio);
-+		if (irq < 0) {
-+			dev_err(&pdev->dev, "gpio %d to irq failed\n", i);
-+			return irq;
-+		}
-+
-+		ret = devm_request_irq(&pdev->dev, irq,
-+				       stm32_exti_trigger_handler,
-+				       0, dev_name(&pdev->dev), pdev);
-+		if (ret) {
-+			dev_err(&pdev->dev, "request IRQ %d failed\n", irq);
-+			return ret;
-+		}
-+
-+		/*
-+		 * gpios are configured as interrupts, so exti trigger path is
-+		 * configured in HW, and can now be used as external trigger
-+		 * source by other IPs. But getting interrupts when trigger
-+		 * occurs is unused here, so mask irq on exti controller by
-+		 * default.
-+		 */
-+		disable_irq(irq);
-+
-+		trig = devm_iio_trigger_alloc(&pdev->dev, "%s", name);
-+		if (!trig)
-+			return -ENOMEM;
-+
-+		trig->dev.parent = &pdev->dev;
-+		trig->ops = &exti_trigger_ops;
-+
-+		ret = devm_iio_trigger_register(&pdev->dev, trig);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_exti_trigger_of_match[] = {
-+	{ .compatible = "st,stm32-exti-trigger" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_exti_trigger_of_match);
-+
-+static struct platform_driver stm32_exti_trigger_driver = {
-+	.probe = stm32_exti_trigger_probe,
-+	.driver = {
-+		.name = "stm32-exti-trigger",
-+		.of_match_table = stm32_exti_trigger_of_match,
-+	},
-+};
-+module_platform_driver(stm32_exti_trigger_driver);
-+
-+MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 EXTI-GPIO IIO trigger driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:stm32-exti-trigger");
-diff --git a/include/linux/iio/trigger/stm32-exti-trigger.h b/include/linux/iio/trigger/stm32-exti-trigger.h
-new file mode 100644
-index 0000000..157ae58
---- /dev/null
-+++ b/include/linux/iio/trigger/stm32-exti-trigger.h
-@@ -0,0 +1,26 @@
-+/*
-+ * This file is part of STM32 EXTI Trigger driver
-+ *
-+ * Copyright (C) STMicroelectronics 2017
-+ * Author: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>.
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#ifndef _STM32_EXTI_TRIGGER_H_
-+#define _STM32_EXTI_TRIGGER_H_
-+
-+#include <linux/stddef.h>
-+
-+#define STM32_EXTI(n)		"exti"#n
-+
-+#if IS_ENABLED(CONFIG_IIO_STM32_EXTI_TRIGGER)
-+bool is_stm32_exti_trigger(struct iio_trigger *trig);
-+#else
-+static inline bool is_stm32_exti_trigger(struct iio_trigger *trig)
-+{
-+	return false;
-+}
-+#endif
-+
-+#endif
+ 					port {
+-						ov7670_0: endpoint {
++						ov2640_0: endpoint {
+ 							remote-endpoint = <&isi_0>;
+ 							bus-width = <8>;
+ 						};
 -- 
-1.9.1
+2.10.2
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
