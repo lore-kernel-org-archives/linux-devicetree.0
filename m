@@ -1,67 +1,74 @@
-From: John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH V6 3/5] OF: Add missing I/O range exception for
- indirect-IO devices
-Date: Mon, 30 Jan 2017 08:57:09 +0000
-Message-ID: <645d40d8-0db6-1737-88f4-fd839933b2ea@huawei.com>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-4-git-send-email-yuanzhichang@hisilicon.com>
- <20170127220357.3lpavvyeymlhvlfg@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 03/10] clk: sunxi-ng: rename sun8i-h3
+ driver to sunxi-h3-h5
+Date: Mon, 30 Jan 2017 10:03:07 +0100
+Message-ID: <20170130090307.mmeab5ybfxaeicq2@lukather>
+References: <20170129023331.62106-1-icenowy@aosc.xyz>
+ <20170129023331.62106-4-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127220357.3lpavvyeymlhvlfg@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, "zhichang.yuan" <yuanzhichang@hisilicon.com>
-Cc: mark.rutland@arm.com, benh@kernel.crashing.org, gabriele.paoloni@huawei.com, rafael@kernel.org, linux-pci@vger.kernel.org, will.deacon@arm.com, linuxarm@huawei.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, zhichang.yuan02@gmail.com, zourongrong@gmail.com, bhelgaas@google.com, kantyzc@163.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, brian.starkey@arm.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="oa6hxwnkli4wexjx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBTECXTCAKGQENKWIVJY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170129023331.62106-4-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/01/2017 22:03, Rob Herring wrote:
-> On Tue, Jan 24, 2017 at 03:05:23PM +0800, zhichang.yuan wrote:
->> There are some special ISA/LPC devices that work on a specific I/O range where
->> it is not correct to specify a 'ranges' property in DTS parent node as cpu
->> addresses translated from DTS node are only for memory space on some
->> architectures, such as Arm64. Without the parent 'ranges' property, current
->> of_translate_address() return an error.
->> Here we add special handlings for this case.
->> During the OF address translation, some checkings will be perfromed to
->> identify whether the device node is registered as indirect-IO. If yes, the I/O
->> translation will be done in a different way from that one of PCI MMIO.
->> In this way, the I/O 'reg' property of the special ISA/LPC devices will be
->> parsed correctly.
->>
->> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->
-> Shouldn't this be Reviewed-by?
->
 
-The background is that Zhichang is following a sketch of a re-worked 
-driver from Arnd, which Arnd gave Signed-off-by. But this patch does not 
-follow it verbatim.
+--oa6hxwnkli4wexjx
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-I think this patchset should be resent without Arnd's signature. Or Arnd 
-may kindly review and say it's ok.
+Hi,
 
-John
+On Sun, Jan 29, 2017 at 10:33:24AM +0800, Icenowy Zheng wrote:
+> As the CCU in the Allwinner H5 SoC is very similar to the one in H3,
+> rename the H3 driver to sunxi-h3-h5 so that it can be extended with H5
+> support.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+> The original PATCH v2 3/9 is splited into two patches in v3, this one renames
+> the H3 driver to h3-h5, and the next one finally add H5 support to it.
+> 
+>  drivers/clk/sunxi-ng/Kconfig                       |   4 +-
+>  drivers/clk/sunxi-ng/Makefile                      |   2 +-
+>  .../sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} |  42 +++---
+>  .../sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} |  10 +-
+>  include/dt-bindings/clock/sun8i-h3-ccu.h           | 146 +--------------------
+>  include/dt-bindings/clock/sunxi-h3-h5-ccu.h        | 145 ++++++++++++++++++++
+>  include/dt-bindings/reset/sun8i-h3-ccu.h           | 104 +--------------
+>  include/dt-bindings/reset/sunxi-h3-h5-ccu.h        | 103 +++++++++++++++
+>  8 files changed, 282 insertions(+), 274 deletions(-)
+>  rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.c => ccu-sunxi-h3-h5.c} (96%)
+>  rename drivers/clk/sunxi-ng/{ccu-sun8i-h3.h => ccu-sunxi-h3-h5.h} (88%)
+>  mode change 100644 => 120000 include/dt-bindings/clock/sun8i-h3-ccu.h
+>  create mode 100644 include/dt-bindings/clock/sunxi-h3-h5-ccu.h
+>  mode change 100644 => 120000 include/dt-bindings/reset/sun8i-h3-ccu.h
+>  create mode 100644 include/dt-bindings/reset/sunxi-h3-h5-ccu.h
 
-> Otherwise, looks fine to me.
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->> ---
->>  drivers/of/address.c | 87 ++++++++++++++++++++++++++++++++++++++++++----------
->>  1 file changed, 71 insertions(+), 16 deletions(-)
->>
->
-> .
->
+Please generate your patches with -M
+
+> -static void __init sun8i_h3_ccu_setup(struct device_node *node)
+> +static void __init sunxi_h3_h5_ccu_init(struct device_node *node,
+> +				  const struct sunxi_ccu_desc *desc)
+>  {
+
+The indentation should be on the opening parenthesis.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--oa6hxwnkli4wexjx--
