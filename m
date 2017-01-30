@@ -1,19 +1,18 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 3/8] serial: st-asc: Read in all Pinctrl
- states
-Date: Mon, 30 Jan 2017 15:32:11 +0000
-Message-ID: <20170130153211.j75qemvwsq3cwqve@dell>
-References: <20170124134310.27512-1-lee.jones@linaro.org>
- <20170124134310.27512-4-lee.jones@linaro.org>
- <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
- <20170127115458.k4edg42nnna3bv4v@dell>
- <20170130142356.GA18710@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
+ hisilicon-161010101 erratum
+Date: Mon, 30 Jan 2017 15:52:09 +0000
+Message-ID: <20170130155209.GC1160@leverpostej>
+References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
+ <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
+ <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
+ <20170124163551.GB2021@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170130142356.GA18710@griffinp-ThinkPad-X1-Carbon-2nd>
+In-Reply-To: <20170124163551.GB2021@mai>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,95 +22,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, linux-arm-kernel@lists.infradead.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAzMCBKYW4gMjAxNywgUGV0ZXIgR3JpZmZpbiB3cm90ZToKCj4gSGkgTGVlLAo+IAo+
-IE9uIEZyaSwgMjcgSmFuIDIwMTcsIExlZSBKb25lcyB3cm90ZToKPiAKPiA+IE9uIFdlZCwgMjUg
-SmFuIDIwMTcsIFBldGVyIEdyaWZmaW4gd3JvdGU6Cj4gPiAKPiA+ID4gSGkgTGVlLAo+ID4gPiAK
-PiA+ID4gT24gVHVlLCAyNCBKYW4gMjAxNywgTGVlIEpvbmVzIHdyb3RlOgo+ID4gPiAKPiA+ID4g
-PiBUaGVyZSBhcmUgbm93IDIgcG9zc2libGUgc2VwYXJhdGUvZGlmZmVyZW50IFBpbmN0cmwgc3Rh
-dGVzIHdoaWNoIGNhbgo+ID4gPiA+IGJlIHByb3ZpZGVkIGZyb20gcGxhdGZvcm0gZGF0YS4gIE9u
-ZSB3aGljaCBlbmNvbXBhc3NlcyB0aGUgbGluZXMKPiA+ID4gPiByZXF1aXJlZCBmb3IgSFcgZmxv
-dy1jb250cm9sIChDVFMvUlRTKSBhbmQgYW5vdGhlciB3aGljaCBkb2VzIG5vdAo+ID4gPiA+IHNw
-ZWNpZnkgdGhlc2UgbGluZXMsIHN1Y2ggdGhhdCB0aGV5IGNhbiBiZSB1c2VkIHZpYSBHUElPIG1l
-Y2hhbmlzbXMKPiA+ID4gPiBmb3IgbWFudWFsbHkgdG9nZ2xpbmcgKGkuZS4gZnJvbSBhIHJlcXVl
-c3QgYnkgYHN0dHlgKS4KPiA+ID4gPiAKPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMZWUgSm9uZXMg
-PGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gPiA+IC0tLQo+ID4gPiA+ICBkcml2ZXJzL3R0eS9z
-ZXJpYWwvc3QtYXNjLmMgfCAyOCArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gPiA+ID4g
-IDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRpb25zKCspCj4gPiA+ID4gCj4gPiA+ID4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC9zdC1hc2MuYyBiL2RyaXZlcnMvdHR5L3NlcmlhbC9z
-dC1hc2MuYwo+ID4gPiA+IGluZGV4IDM5N2RmNTAuLjAzODAxZWQgMTAwNjQ0Cj4gPiA+ID4gLS0t
-IGEvZHJpdmVycy90dHkvc2VyaWFsL3N0LWFzYy5jCj4gPiA+ID4gKysrIGIvZHJpdmVycy90dHkv
-c2VyaWFsL3N0LWFzYy5jCj4gPiA+ID4gQEAgLTM3LDEwICszNywxNiBAQAo+ID4gPiA+ICAjZGVm
-aW5lIEFTQ19GSUZPX1NJWkUgMTYKPiA+ID4gPiAgI2RlZmluZSBBU0NfTUFYX1BPUlRTIDgKPiA+
-ID4gPiAgCj4gPiA+ID4gKy8qIFBpbmN0cmwgc3RhdGVzICovCj4gPiA+ID4gKyNkZWZpbmUgREVG
-QVVMVAkJMAo+ID4gPiA+ICsjZGVmaW5lIE1BTlVBTF9SVFMJMQo+ID4gPiAKPiA+ID4gTml0OiBX
-b3VsZCBiZSBiZXR0ZXIgdG8gaGF2ZSB0aGVtIGFsaWduZWQuCj4gPiAKPiA+IFRoZXNlIGFyZSBh
-bGlnbmVkIGluIGNvZGUuICBUaGUgcGF0Y2ggZm9ybWF0IHRocm93cyB0aGluZ3Mgb3V0Lgo+ID4g
-Cj4gPiBMb29rLCBzYW1lIGxpbmVzIHdpdGggdGhlICI+ID4gKyIgcmVtb3ZlZDoKPiAKPiBBaCBP
-Sy4KPiAKPiA+IAo+ID4gLyogUGluY3RybCBzdGF0ZXMgKi8KPiA+ICNkZWZpbmUgREVGQVVMVAkJ
-MAo+ID4gI2RlZmluZSBNQU5VQUxfUlRTCTEKPiA+IAo+ID4gVHJ5IGl0Lgo+ID4gCj4gPiA+ID4g
-Kwo+ID4gPiA+ICBzdHJ1Y3QgYXNjX3BvcnQgewo+ID4gPiA+ICAJc3RydWN0IHVhcnRfcG9ydCBw
-b3J0Owo+ID4gPiA+ICAJc3RydWN0IGdwaW9fZGVzYyAqcnRzOwo+ID4gPiA+ICAJc3RydWN0IGNs
-ayAqY2xrOwo+ID4gPiA+ICsJc3RydWN0IHBpbmN0cmwgKnBpbmN0cmw7Cj4gPiA+ID4gKwlzdHJ1
-Y3QgcGluY3RybF9zdGF0ZSAqc3RhdGVzWzJdOwo+ID4gPiA+ICAJdW5zaWduZWQgaW50IGh3X2Zs
-b3dfY29udHJvbDoxOwo+ID4gPiA+ICAJdW5zaWduZWQgaW50IGZvcmNlX20xOjE7Cj4gPiA+ID4g
-IH07Cj4gPiA+ID4gQEAgLTY5NCw2ICs3MDAsNyBAQCBzdGF0aWMgaW50IGFzY19pbml0X3BvcnQo
-c3RydWN0IGFzY19wb3J0ICphc2Nwb3J0LAo+ID4gPiA+ICB7Cj4gPiA+ID4gIAlzdHJ1Y3QgdWFy
-dF9wb3J0ICpwb3J0ID0gJmFzY3BvcnQtPnBvcnQ7Cj4gPiA+ID4gIAlzdHJ1Y3QgcmVzb3VyY2Ug
-KnJlczsKPiA+ID4gPiArCWludCByZXQ7Cj4gPiA+ID4gIAo+ID4gPiA+ICAJcG9ydC0+aW90eXBl
-CT0gVVBJT19NRU07Cj4gPiA+ID4gIAlwb3J0LT5mbGFncwk9IFVQRl9CT09UX0FVVE9DT05GOwo+
-ID4gPiA+IEBAIC03MjAsNiArNzI3LDI3IEBAIHN0YXRpYyBpbnQgYXNjX2luaXRfcG9ydChzdHJ1
-Y3QgYXNjX3BvcnQgKmFzY3BvcnQsCj4gPiA+ID4gIAlXQVJOX09OKGFzY3BvcnQtPnBvcnQudWFy
-dGNsayA9PSAwKTsKPiA+ID4gPiAgCWNsa19kaXNhYmxlX3VucHJlcGFyZShhc2Nwb3J0LT5jbGsp
-Owo+ID4gPiA+ICAKPiA+ID4gPiArCWFzY3BvcnQtPnBpbmN0cmwgPSBkZXZtX3BpbmN0cmxfZ2V0
-KCZwZGV2LT5kZXYpOwo+ID4gPiA+ICsJaWYgKElTX0VSUihhc2Nwb3J0LT5waW5jdHJsKSkgewo+
-ID4gPiA+ICsJCXJldCA9IFBUUl9FUlIoYXNjcG9ydC0+cGluY3RybCk7Cj4gPiA+ID4gKwkJZGV2
-X2VycigmcGRldi0+ZGV2LCAiRmFpbGVkIHRvIGdldCBQaW5jdHJsOiAlZFxuIiwgcmV0KTsKPiA+
-ID4gPiArCX0KPiA+ID4gPiArCj4gPiA+ID4gKwlhc2Nwb3J0LT5zdGF0ZXNbREVGQVVMVF0gPQo+
-ID4gPiA+ICsJCXBpbmN0cmxfbG9va3VwX3N0YXRlKGFzY3BvcnQtPnBpbmN0cmwsICJkZWZhdWx0
-Iik7Cj4gPiA+ID4gKwlpZiAoSVNfRVJSKGFzY3BvcnQtPnN0YXRlc1tERUZBVUxUXSkpIHsKPiA+
-ID4gPiArCQlyZXQgPSBQVFJfRVJSKGFzY3BvcnQtPnN0YXRlc1tERUZBVUxUXSk7Cj4gPiA+ID4g
-KwkJZGV2X2VycigmcGRldi0+ZGV2LAo+ID4gPiA+ICsJCQkiRmFpbGVkIHRvIGxvb2sgdXAgUGlu
-Y3RybCBzdGF0ZSAnZGVmYXVsdCc6ICVkXG4iLCByZXQpOwo+ID4gPiA+ICsJCXJldHVybiByZXQ7
-Cj4gPiA+ID4gKwl9Cj4gPiA+ID4gKwo+ID4gPiA+ICsJLyogIm1hbnVhbC1ydHMiIHN0YXRlIGlz
-IG9wdGlvbmFsICovCj4gPiA+ID4gKwlhc2Nwb3J0LT5zdGF0ZXNbTUFOVUFMX1JUU10gPQo+ID4g
-PiA+ICsJCXBpbmN0cmxfbG9va3VwX3N0YXRlKGFzY3BvcnQtPnBpbmN0cmwsICJtYW51YWwtcnRz
-Iik7Cj4gPiA+ID4gKwlpZiAoSVNfRVJSKGFzY3BvcnQtPnN0YXRlc1tNQU5VQUxfUlRTXSkpCj4g
-PiA+ID4gKwkJYXNjcG9ydC0+c3RhdGVzW01BTlVBTF9SVFNdID0gTlVMTDsKPiA+ID4gPiArCj4g
-PiA+IAo+ID4gPiBUaGUgZGlmZmVyZW50IHBpbmN0cmwgc3RhdGVzIGxvb2tzIGxpa2UgYSBuZWF0
-IHNvbHV0aW9uIHRvIHRoZSBwcm9ibGVtLgo+ID4gPiAKPiA+ID4gTXkgb25seSBjb25jZXJuIGhl
-cmUgaXMgdGhhdCAnZGVmYXVsdCcgc3RhdGUgaXMgaW1wbHlpbmcgYSBody1mbG93LWNvbnRyb2wK
-PiA+ID4gcGlubXV4IGNvbmZpZywgYW5kIG1hbnVhbC1ydHMgaXMgaW1wbHlpbmcgd2hhdCBpcyB0
-aGUgY3VycmVudCB1cHN0cmVhbQo+ID4gPiAnZGVmYXVsdCcgcGlubXV4IGNvbmZpZy4KPiA+ID4g
-Cj4gPiA+IFdoaWNoIG1heWJlIG9rIGlmIHlvdSB1cGRhdGUgYWxsIHVhcnRzLCBidXQgY3VycmVu
-dGx5IG9ubHkgc2VyaWFsMAo+ID4gPiBpcyB1cGRhdGVkLiBTbyB0aGUgb3RoZXIgdWFydHMgY3Vy
-cmVudCAnZGVmYXVsdCcgaXMgYWN0dWFsbHkgdGhlIHNhbWUgYXMgc2VyaWFsMAo+ID4gPiAnbWFu
-dWFsLXJ0cycgZ3JvdXBpbmcsIHdoaWNoIGNvbmNlcHR1YWxseSBpcyBvZGQuCj4gPiA+IAo+ID4g
-PiBXb3VsZCBpdCBub3QgYmUgYmV0dGVyIHRvIG1ha2UgJ21hbnVhbC1ydHMnIHRoZSBkZWZhdWx0
-IHN0YXRlPyBBcyB0aGF0IGFsaWducwo+ID4gPiB0byB3aGF0IGlzIGN1cnJlbnRseSBhbHJlYWR5
-IHRoZSBkZWZhdWx0IGZvciB0aGUgb3RoZXIgVUFSVFM/IEFuZCB0aGVuIG1ha2UKPiA+ID4gaHct
-Zmxvdy1jb250cm9sIHRoZSBvcHRpb25hbCBzdGF0ZSBmb3Igc2VyaWFsMD8KPiA+ID4gCj4gPiA+
-IFRoYXQgYWxzbyBoYXMgdGhlIGFkdmFudGFnZSB0aGF0ICdkZWZhdWx0JyBoYXMgdGhlIHNhbWUg
-bWVhbmluZyB3aXRoIG9sZGVyIERUJ3MuCj4gPiAKPiA+IFRoZSByZWFzb24gaXQgd2FzIGRvbmUg
-aXMgdGhpcyB3YXMgYmVjYXVzZSBub25lIG9mIHRoZSBvdGhlciBVQVJUcwo+ID4gcmVxdWlyZSAy
-IHNlcGFyYXRlIFBpbmN0cmwgY29uZmlndXJhdGlvbnMsIG9ubHkgdGhpcyBvbmUuICBNb3Jlb3Zl
-ciwKPiA+IGlmIHRoZXkgc3VwcG9ydCBSVFMvQ1RTIHRoZW4gSSBiZWxpZXZlIHRoYXQgdGhlIGxp
-bmVzIHNob3VsZCBiZQo+ID4gZGVmaW5lZCBpbiBQaW5jdHJsLgo+IAo+IFllcyBJIGFncmVlIHdp
-dGggdGhhdC4KPiAKPiA+IFRodXMsIGl0IHdhcyBteSBwbGFuIHRvIHVwZGF0ZSBhbGwgVUFSVCdz
-IGRlZmF1bHQKPiA+IFBpbmN0cmwgY29uZmlncyB0byBpbmNsdWRlIHRoZSBSVFMvQ1RTIGxpbmVz
-Lgo+ID4gCj4gCj4gSSBzdGlsbCBkb24ndCBzZWUgdGhlIHBvaW50IGluIGNoYW5naW5nIHRoZSBt
-ZWFuaW5nIG9mICdkZWZhdWx0JyBncm91cCBhbmQgYnJlYWtpbmcKPiBBQkkgaWYgeW91IGRvbid0
-IG5lZWQgdG8/Cj4gCj4gQXMgZmFyIGFzIEkgY2FuIHRlbGwgaWYgeW91IHN3YXAgdGhlIG1lYW5p
-bmcgb2YgJ2RlZmF1bHQnIGFuZCAnbWF1bmFsLXJ0cycKPiBncm91cHMgeW91IGdldCBhbGwgdGhl
-IGJlbmVmaXRzIG9mIHRoaXMgc2VyaWVzIHdoaWxzdCBhbHNvIG1haW50YWluaW5nIGJhY2t3YXJk
-cwo+IGNvbXBhdGJpbGl0eSB3aXRoIG9sZGVyIERUJ3MuCgpXaGF0IG1ha2VzIHlvdSB0aGluayB0
-aGlzIHdpbGwgYnJlYWsgQUJJPwoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RNaWNyb2VsZWN0cm9u
-aWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJl
-IGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0t
-a2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcK
-aHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2Vy
-bmVsCg==
+Hi Daniel,
+
+On Tue, Jan 24, 2017 at 05:35:51PM +0100, Daniel Lezcano wrote:
+> That wasn't my point. The way the errata are handled in this patchset is
+> elegant and I have nothing against it. I'm worried about the accumulation of
+> fixes, hacks, workarounds in this driver. So my naive question is about not
+> using an identified bogus clocksource and use another one available on the
+> board, which is I believe often the case, instead of trying to deal with bogus
+> hardware. Apparently, that is not possible because 1) of KVM, 2) of duplication
+> and 3) of integration with the ARM64 code.
+> 
+> Does it mean it is not possible to use another clocksource/clockevent than the
+> armv8-timer ?
+> 
+> Can you elaborate these three points ? 
+
+Practically speaking, these platforms have no other clocksource or
+clockevent device that I am aware of, which can be enumerated in a
+standard manner using ACPI.
+
+For point 1, KVM is intimately familiar with the architected timer
+(which is managed during VM context switch in hyp code, for example).
+KVM knows nothing of other clocksource or clockevent devices, and it is
+far from trivial to plumb these in either way. Since the architected
+timer is a mandatory part of ARMv8, guests may attempt to use it
+regardless.
+
+For point 3, arm64 currently requires the architected timer as this is
+mandatory per the ARMv8 architecture. It is non-trivial to add support
+for other devices to the vDSO, the delay loop, etc.
+
+Localising these quirks to the architected timer driver is by far the
+least worst option available. Marc and I are perfectly happy to manage
+that.
+
+Thanks,
+Mark.
