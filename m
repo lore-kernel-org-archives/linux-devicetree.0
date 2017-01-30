@@ -1,78 +1,138 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Mon, 30 Jan 2017 22:54:30 +0100
-Message-ID: <20170130215430.GJ2206@mai>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 2/4] arm64: arch_timer: Introduce a generic erratum
+ handing mechanism for fsl-a008585
+Date: Mon, 30 Jan 2017 22:59:27 +0100
+Message-ID: <20170130215927.GK2206@mai>
 References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
- <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
- <20170124163551.GB2021@mai> <20170130155209.GC1160@leverpostej>
+ <1484832916-7248-3-git-send-email-dingtianhong@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170130155209.GC1160@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1484832916-7248-3-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMDM6NTI6MDlQTSArMDAwMCwgTWFyayBSdXRsYW5kIHdy
-b3RlOgo+IEhpIERhbmllbCwKPiAKPiBPbiBUdWUsIEphbiAyNCwgMjAxNyBhdCAwNTozNTo1MVBN
-ICswMTAwLCBEYW5pZWwgTGV6Y2FubyB3cm90ZToKPiA+IFRoYXQgd2Fzbid0IG15IHBvaW50LiBU
-aGUgd2F5IHRoZSBlcnJhdGEgYXJlIGhhbmRsZWQgaW4gdGhpcyBwYXRjaHNldCBpcwo+ID4gZWxl
-Z2FudCBhbmQgSSBoYXZlIG5vdGhpbmcgYWdhaW5zdCBpdC4gSSdtIHdvcnJpZWQgYWJvdXQgdGhl
-IGFjY3VtdWxhdGlvbiBvZgo+ID4gZml4ZXMsIGhhY2tzLCB3b3JrYXJvdW5kcyBpbiB0aGlzIGRy
-aXZlci4gU28gbXkgbmFpdmUgcXVlc3Rpb24gaXMgYWJvdXQgbm90Cj4gPiB1c2luZyBhbiBpZGVu
-dGlmaWVkIGJvZ3VzIGNsb2Nrc291cmNlIGFuZCB1c2UgYW5vdGhlciBvbmUgYXZhaWxhYmxlIG9u
-IHRoZQo+ID4gYm9hcmQsIHdoaWNoIGlzIEkgYmVsaWV2ZSBvZnRlbiB0aGUgY2FzZSwgaW5zdGVh
-ZCBvZiB0cnlpbmcgdG8gZGVhbCB3aXRoIGJvZ3VzCj4gPiBoYXJkd2FyZS4gQXBwYXJlbnRseSwg
-dGhhdCBpcyBub3QgcG9zc2libGUgYmVjYXVzZSAxKSBvZiBLVk0sIDIpIG9mIGR1cGxpY2F0aW9u
-Cj4gPiBhbmQgMykgb2YgaW50ZWdyYXRpb24gd2l0aCB0aGUgQVJNNjQgY29kZS4KPiA+IAo+ID4g
-RG9lcyBpdCBtZWFuIGl0IGlzIG5vdCBwb3NzaWJsZSB0byB1c2UgYW5vdGhlciBjbG9ja3NvdXJj
-ZS9jbG9ja2V2ZW50IHRoYW4gdGhlCj4gPiBhcm12OC10aW1lciA/Cj4gPiAKPiA+IENhbiB5b3Ug
-ZWxhYm9yYXRlIHRoZXNlIHRocmVlIHBvaW50cyA/IAo+IAo+IFByYWN0aWNhbGx5IHNwZWFraW5n
-LCB0aGVzZSBwbGF0Zm9ybXMgaGF2ZSBubyBvdGhlciBjbG9ja3NvdXJjZSBvcgo+IGNsb2NrZXZl
-bnQgZGV2aWNlIHRoYXQgSSBhbSBhd2FyZSBvZiwgd2hpY2ggY2FuIGJlIGVudW1lcmF0ZWQgaW4g
-YQo+IHN0YW5kYXJkIG1hbm5lciB1c2luZyBBQ1BJLgo+IAo+IEZvciBwb2ludCAxLCBLVk0gaXMg
-aW50aW1hdGVseSBmYW1pbGlhciB3aXRoIHRoZSBhcmNoaXRlY3RlZCB0aW1lcgo+ICh3aGljaCBp
-cyBtYW5hZ2VkIGR1cmluZyBWTSBjb250ZXh0IHN3aXRjaCBpbiBoeXAgY29kZSwgZm9yIGV4YW1w
-bGUpLgo+IEtWTSBrbm93cyBub3RoaW5nIG9mIG90aGVyIGNsb2Nrc291cmNlIG9yIGNsb2NrZXZl
-bnQgZGV2aWNlcywgYW5kIGl0IGlzCj4gZmFyIGZyb20gdHJpdmlhbCB0byBwbHVtYiB0aGVzZSBp
-biBlaXRoZXIgd2F5LiBTaW5jZSB0aGUgYXJjaGl0ZWN0ZWQKPiB0aW1lciBpcyBhIG1hbmRhdG9y
-eSBwYXJ0IG9mIEFSTXY4LCBndWVzdHMgbWF5IGF0dGVtcHQgdG8gdXNlIGl0Cj4gcmVnYXJkbGVz
-cy4KPiAKPiBGb3IgcG9pbnQgMywgYXJtNjQgY3VycmVudGx5IHJlcXVpcmVzIHRoZSBhcmNoaXRl
-Y3RlZCB0aW1lciBhcyB0aGlzIGlzCj4gbWFuZGF0b3J5IHBlciB0aGUgQVJNdjggYXJjaGl0ZWN0
-dXJlLiBJdCBpcyBub24tdHJpdmlhbCB0byBhZGQgc3VwcG9ydAo+IGZvciBvdGhlciBkZXZpY2Vz
-IHRvIHRoZSB2RFNPLCB0aGUgZGVsYXkgbG9vcCwgZXRjLgoKT2ssIHRoYW5rcyBmb3IgdGhlc2Ug
-Y2xhcmlmaWNhdGlvbnMuCgo+IExvY2FsaXNpbmcgdGhlc2UgcXVpcmtzIHRvIHRoZSBhcmNoaXRl
-Y3RlZCB0aW1lciBkcml2ZXIgaXMgYnkgZmFyIHRoZQo+IGxlYXN0IHdvcnN0IG9wdGlvbiBhdmFp
-bGFibGUuIE1hcmMgYW5kIEkgYXJlIHBlcmZlY3RseSBoYXBweSB0byBtYW5hZ2UKPiB0aGF0LgoK
-SXQgaXMgdXAgdG8gbWUgdG8gZW5zdXJlIHRoZSBjbG9ja2V2ZW50L2Nsb2Nrc291cmNlIGRyaXZl
-cnMgaW4gZ2VuZXJhbCBhcmUKZm9sbG93aW5nIHRoZSByaWdodCBkaXJlY3Rpb24uIEFuZCB0aGlz
-IGRyaXZlciBsb29rcyBtb3JlIGFuZCBtb3JlIG9wYXF1ZS4gSQp3aWxsIHNwZW5kIHNvbWUgdGlt
-ZXMgdG8gZG8gYSByZXZpZXcgb2YgdGhlIGRyaXZlciBhcyBzb29uIGFzIEkgaGF2ZSB0aW1lLgoK
-U28gd2UgZmluaXNoIHRoZSByZXZpZXdzIG9mIHRoaXMgc2VyaWVzLCB5b3UgdGFrZSB0aGUgcGF0
-Y2hlcyB3aGVuIEkgYWNrIHRoZW0gdXAsCmJ1dCBmcm9tIHRoaXMgcG9pbnQsIGFueSBzdWJtaXNz
-aW9uIGZvciB0aGlzIGRyaXZlciB3aWxsIGhhdmUgdG8gc3RpY2sgdG8gdGhlCnN0YW5kYXJkIHN1
-Ym1pc3Npb24gcnVsZXMsIHRoYXQgaXMgdG8gc2F5OiBUaG9tYXMgR2xlaXhuZXIgYW5kIEkgaGF2
-ZSB0byBiZQpyZWNpcGllbnRzIG9mIHRoZSBwYXRjaGVzIGFuZCBnbyB0aHJvdWdoIG91ciB0cmVl
-LiBEZXBlbmRlbmN5IGlzc3VlcyB3aXRoCm90aGVyIHBhdGNoc2V0IG11c3QgYmUgc29sdmVkIGJl
-Zm9yZSBhcHBseWluZyB0aGVtIGluIGFub3RoZXIgdHJlZS4KClRoYW5rcy4KCiAgLS0gRGFuaWVs
-CgotLSAKCiA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDilIIgT3BlbiBzb3Vy
-Y2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCgpGb2xsb3cgTGluYXJvOiAgPGh0dHA6Ly93d3cuZmFj
-ZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sgfAo8aHR0cDovL3R3aXR0ZXIuY29tLyMh
-L2xpbmFyb29yZz4gVHdpdHRlciB8CjxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cv
-PiBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Thu, Jan 19, 2017 at 09:35:14PM +0800, Ding Tianhong wrote:
+> The workaround for hisilicon,161010101 will check the return value of the system counter
+> by different way, in order to distinguish with the fsl-a008585 workaround, introduce
+
+s/way/ways/
+
+> a new generic erratum handing mechanism for fsl-a008585 and rename some functions.
+
+s/handing/handling/
+ 
+> After discussion with Marc and Will, a consensus decision was made to remove the commandline
+> parameter for enabling fsl,erratum-a008585 erratum.
+
+Lines are more than 78 char large.
+
+> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt |   9 --
+>  arch/arm64/include/asm/arch_timer.h             |  38 +++------
+>  drivers/clocksource/Kconfig                     |   8 ++
+>  drivers/clocksource/arm_arch_timer.c            | 105 ++++++++++++++----------
+>  4 files changed, 84 insertions(+), 76 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 21e2d88..76437ad 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -539,15 +539,6 @@
+>  			loops can be debugged more effectively on production
+>  			systems.
+>  
+> -	clocksource.arm_arch_timer.fsl-a008585=
+> -			[ARM64]
+> -			Format: <bool>
+> -			Enable/disable the workaround of Freescale/NXP
+> -			erratum A-008585.  This can be useful for KVM
+> -			guests, if the guest device tree doesn't show the
+> -			erratum.  If unspecified, the workaround is
+> -			enabled based on the device tree.
+> -
+>  	clearcpuid=BITNUM [X86]
+>  			Disable CPUID feature X for the kernel. See
+>  			arch/x86/include/asm/cpufeatures.h for the valid bit
+> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
+> index eaa5bbe..b4b3400 100644
+> --- a/arch/arm64/include/asm/arch_timer.h
+> +++ b/arch/arm64/include/asm/arch_timer.h
+> @@ -29,41 +29,29 @@
+>  
+>  #include <clocksource/arm_arch_timer.h>
+>  
+> -#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
+> +#if IS_ENABLED(CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND)
+>  extern struct static_key_false arch_timer_read_ool_enabled;
+> -#define needs_fsl_a008585_workaround() \
+> +#define needs_unstable_timer_counter_workaround() \
+>  	static_branch_unlikely(&arch_timer_read_ool_enabled)
+>  #else
+> -#define needs_fsl_a008585_workaround()  false
+> +#define needs_unstable_timer_counter_workaround()  false
+>  #endif
+>  
+> -u32 __fsl_a008585_read_cntp_tval_el0(void);
+> -u32 __fsl_a008585_read_cntv_tval_el0(void);
+> -u64 __fsl_a008585_read_cntvct_el0(void);
+>  
+> -/*
+> - * The number of retries is an arbitrary value well beyond the highest number
+> - * of iterations the loop has been observed to take.
+> - */
+> -#define __fsl_a008585_read_reg(reg) ({			\
+> -	u64 _old, _new;					\
+> -	int _retries = 200;				\
+> -							\
+> -	do {						\
+> -		_old = read_sysreg(reg);		\
+> -		_new = read_sysreg(reg);		\
+> -		_retries--;				\
+> -	} while (unlikely(_old != _new) && _retries);	\
+> -							\
+> -	WARN_ON_ONCE(!_retries);			\
+> -	_new;						\
+> -})
+> +struct arch_timer_erratum_workaround {
+> +	const char *id;		/* Indicate the Erratum ID */
+> +	u32 (*read_cntp_tval_el0)(void);
+> +	u32 (*read_cntv_tval_el0)(void);
+> +	u64 (*read_cntvct_el0)(void);
+> +};
+> +
+> +extern const struct arch_timer_erratum_workaround *timer_unstable_counter_workaround;
+>	  
+>  #define arch_timer_reg_read_stable(reg) 		\
+>  ({							\
+>  	u64 _val;					\
+> -	if (needs_fsl_a008585_workaround())		\
+> -		_val = __fsl_a008585_read_##reg();	\
+> +	if (needs_unstable_timer_counter_workaround())		\
+> +		_val = timer_unstable_counter_workaround->read_##reg();\
+>  	else						\
+>  		_val = read_sysreg(reg);		\
+>  	_val;						\
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 4866f7a..6693e07 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -325,10 +325,18 @@ config ARM_ARCH_TIMER_EVTSTREAM
+>  	  This must be disabled for hardware validation purposes to detect any
+>  	  hardware anomalies of missing events.
+>  
+> +config ARM_ARCH_TIMER_OOL_WORKAROUND
+> +	bool
+> +	depends on FSL_ERRATUM_A008585
+
+This dependency is not needed as well as the help text below because it is a
+silent option.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
