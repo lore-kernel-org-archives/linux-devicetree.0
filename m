@@ -1,49 +1,65 @@
-From: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 3/5] Documentation: dt: iio: document stm32 exti trigger
-Date: Mon, 30 Jan 2017 15:33:58 +0100
-Message-ID: <1485786840-4557-4-git-send-email-fabrice.gasnier@st.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 5/5] iio: adc: stm32: add exti gpio trigger source
+Date: Mon, 30 Jan 2017 15:34:00 +0100
+Message-ID: <1485786840-4557-6-git-send-email-fabrice.gasnier@st.com>
 References: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485786840-4557-1-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, fabrice.gasnier-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Add dt documentation for st,stm32-exti-trigger.
-EXTi gpio signal can be routed internally as trigger source for various
-IPs (e.g. for ADC or DAC conversions).
+STM32F4 ADC can use exti11 (gpio) signal as trigger source for
+conversions.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+ drivers/iio/adc/stm32-adc.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
-new file mode 100644
-index 0000000..ebf2645
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
-@@ -0,0 +1,17 @@
-+STMicroelectronics STM32 EXTI trigger bindings
+diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
+index be0e457..0118c9c 100644
+--- a/drivers/iio/adc/stm32-adc.c
++++ b/drivers/iio/adc/stm32-adc.c
+@@ -26,6 +26,7 @@
+ #include <linux/iio/iio.h>
+ #include <linux/iio/buffer.h>
+ #include <linux/iio/timer/stm32-timer-trigger.h>
++#include <linux/iio/trigger/stm32-exti-trigger.h>
+ #include <linux/iio/trigger.h>
+ #include <linux/iio/trigger_consumer.h>
+ #include <linux/iio/triggered_buffer.h>
+@@ -240,6 +241,7 @@ struct stm32_adc_chan_spec {
+ 	{ TIM5_CH3, STM32_EXT12 },
+ 	{ TIM8_CH1, STM32_EXT13 },
+ 	{ TIM8_TRGO, STM32_EXT14 },
++	{ STM32_EXTI(11), STM32_EXT15 },
+ 	{}, /* sentinel */
+ };
+ 
+@@ -409,6 +411,11 @@ static int stm32_adc_get_trig_extsel(struct iio_trigger *trig)
+ 		    !strcmp(stm32f4_adc_trigs[i].name, trig->name)) {
+ 			return stm32f4_adc_trigs[i].extsel;
+ 		}
 +
-+EXTi gpio signal can be routed internally as trigger source for various
-+IPs (e.g. for ADC or DAC conversions).
-+
-+Contents of a stm32 exti trigger root node:
-+-------------------------------------------
-+Required properties:
-+- compatible: Should be "st,stm32-exti-trigger"
-+- extiN-gpio: optional gpio line that may be used as external trigger source
-+  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on stm32f4).
-+
-+Example:
-+	triggers {
-+		compatible = "st,stm32-exti-trigger";
-+		exti11-gpio=<&gpioa 11 0>;
-+	};
++		if (is_stm32_exti_trigger(trig) &&
++		    !strcmp(stm32f4_adc_trigs[i].name, trig->name)) {
++			return stm32f4_adc_trigs[i].extsel;
++		}
+ 	}
+ 
+ 	return -EINVAL;
 -- 
 1.9.1
