@@ -1,90 +1,35 @@
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH v3 4/5] soc: samsung: pm_domains: Read domain name from the new
- label property
-Date: Mon, 30 Jan 2017 13:18:59 +0100
-Message-ID: <1485778740-30337-5-git-send-email-m.szyprowski@samsung.com>
-References: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
- <CGME20170130121915eucas1p23aa4f4be912bcd64f9521f6e6b51132f@eucas1p2.samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+From: Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: mtk-quadspi: update DT bindings
+Date: Mon, 30 Jan 2017 13:49:52 +0100
+Message-ID: <90bfb55c-eb01-af2f-d2f7-49f1f33da3b2@atmel.com>
+References: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
+ <1485315515-29942-2-git-send-email-guochun.mao@mediatek.com>
+ <20170127222936.d342eloplti27p4s@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170127222936.d342eloplti27p4s@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Device tree nodes for each power domain should use generic "power-domain"
-name, so using it as a domain name doesn't give much benefits. This patch
-adds support for human readable names defined in 'label' property. Such
-names are visible to userspace and makes debugging much easier. When no
-'label' property is found, driver keeps using the name constructed from
-full node name.
+Le 27/01/2017 à 23:29, Rob Herring a écrit :
+> On Wed, Jan 25, 2017 at 11:38:34AM +0800, Guochun Mao wrote:
+>> Add "mediatek,mt2701-nor" for nor flash node's compatible.
+>>
+>> Signed-off-by: Guochun Mao <guochun.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mtd/mtk-quadspi.txt        |    8 +++++++-
+>>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> 
+Applied to the github spi-nor tree.
 
-Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- Documentation/devicetree/bindings/power/pd-samsung.txt |  4 ++++
- drivers/soc/samsung/pm_domains.c                       | 12 ++++++++++--
- 2 files changed, 14 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/power/pd-samsung.txt b/Documentation/devicetree/bindings/power/pd-samsung.txt
-index fb08c8d62733..549f7dee9b9d 100644
---- a/Documentation/devicetree/bindings/power/pd-samsung.txt
-+++ b/Documentation/devicetree/bindings/power/pd-samsung.txt
-@@ -13,6 +13,8 @@ Required Properties:
-     must be 0.
- 
- Optional Properties:
-+- label: Human readable string with domain name. Will be visible in userspace
-+	to let user to distinguish between multiple domains in SoC.
- - clocks: List of clock handles. The parent clocks of the input clocks to the
- 	devices in this power domain are set to oscclk before power gating
- 	and restored back after powering on a domain. This is required for
-@@ -39,6 +41,7 @@ Example:
- 		compatible = "samsung,exynos4210-pd";
- 		reg = <0x10023C00 0x10>;
- 		#power-domain-cells = <0>;
-+		label = "LCD0";
- 	};
- 
- 	mfc_pd: power-domain@10044060 {
-@@ -47,6 +50,7 @@ Example:
- 		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_USER_ACLK333>;
- 		clock-names = "oscclk", "clk0";
- 		#power-domain-cells = <0>;
-+		label = "MFC";
- 	};
- 
- See Documentation/devicetree/bindings/power/power_domain.txt for description
-diff --git a/drivers/soc/samsung/pm_domains.c b/drivers/soc/samsung/pm_domains.c
-index 5a0a46bcbe18..a6a5d807cc2b 100644
---- a/drivers/soc/samsung/pm_domains.c
-+++ b/drivers/soc/samsung/pm_domains.c
-@@ -142,6 +142,15 @@ static int exynos_pd_power_off(struct generic_pm_domain *domain)
- 	{ },
- };
- 
-+static __init const char *exynos_get_domain_name(struct device_node *node)
-+{
-+	const char *name;
-+
-+	if (of_property_read_string(node, "label", &name) < 0)
-+		name = strrchr(node->full_name, '/') + 1;
-+	return kstrdup_const(name, GFP_KERNEL);
-+}
-+
- static __init int exynos4_pm_init_power_domain(void)
- {
- 	struct device_node *np;
-@@ -159,8 +168,7 @@ static __init int exynos4_pm_init_power_domain(void)
- 			of_node_put(np);
- 			return -ENOMEM;
- 		}
--		pd->pd.name = kstrdup_const(strrchr(np->full_name, '/') + 1,
--					    GFP_KERNEL);
-+		pd->pd.name = exynos_get_domain_name(np);
- 		if (!pd->pd.name) {
- 			kfree(pd);
- 			of_node_put(np);
--- 
-1.9.1
-
+Thanks!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
