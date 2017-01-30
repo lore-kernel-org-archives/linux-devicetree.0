@@ -1,64 +1,84 @@
-From: Gautham R Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v6 3/5] cpuidle:powernv: Add helper function to populate
- powernv idle states.
-Date: Mon, 30 Jan 2017 17:11:05 +0530
-Message-ID: <20170130114105.GA4290@in.ibm.com>
-References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com>
- <1485333389-5752-4-git-send-email-ego@linux.vnet.ibm.com>
- <871svlxl7w.fsf@concordia.ellerman.id.au>
- <CAJZ5v0j_vzsaNeYNBmKs3oMnXyVHF_3chRjeTEwQA_k0TDc3Nw@mail.gmail.com>
- <87efzkx0dd.fsf@concordia.ellerman.id.au>
-Reply-To: ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v5 3/8] ARM: dts: rockchip: add timer entries to rk3188
+ SoC
+Date: Mon, 30 Jan 2017 13:04:44 +0100
+Message-ID: <20170130120444.GE2206@mai>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+ <1485260203-14216-4-git-send-email-al.kochet@gmail.com>
+ <20170130110428.GC2206@mai>
+ <A5940770-B960-4409-8DA4-BE39EF9A6325@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <87efzkx0dd.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Neuling <mikey-/owAOxkjmzZAfugRpC6u6w@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Shreyas B. Prabhu" <shreyasbp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shilpasri G Bhat <shilpa.bhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29Tb/PtFMR13I2A@public.gmane.org
+In-Reply-To: <A5940770-B960-4409-8DA4-BE39EF9A6325@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 10:17:50PM +1100, Michael Ellerman wrote:
-> "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+On Mon, Jan 30, 2017 at 02:20:13PM +0300, Alexander Kochetkov wrote:
 > 
-> > On Mon, Jan 30, 2017 at 4:47 AM, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org> wrote:
-> >> "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org> writes:
-> >>
-> >>> From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >>>
-> >>> In the current code for powernv_add_idle_states, there is a lot of code
-> >>> duplication while initializing an idle state in powernv_states table.
-> >>>
-> >>> Add an inline helper function to populate the powernv_states[] table
-> >>> for a given idle state. Invoke this for populating the "Nap",
-> >>> "Fastsleep" and the stop states in powernv_add_idle_states.
-> >>>
-> >>> Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>> Signed-off-by: Gautham R. Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >>> ---
-> >>>  drivers/cpuidle/cpuidle-powernv.c | 89 +++++++++++++++++++++++----------------
-> >>>  include/linux/cpuidle.h           |  1 +
-> >>
-> >> I was going to merge this, but I see you've touched cpuidle.h, so I feel
-> >> like I should get an ACK from the cpuidle folks.
-> >>
-> >> It's a fairly uncontroversial change, but it's their API.
-> >
-> > OK, please add an ACK from me to it then.
+> > 30 янв. 2017 г., в 14:04, Daniel Lezcano <daniel.lezcano@linaro.org> написал(а):
+> > 
+> > t is up to the RTC to wake up the system from suspend and there is no
+> > idle state stopping the local timers on these SoCs. So, the rockchip timers
+> > won't be ever used on the rk3188, right ?
 > 
-> Thanks.
+> No rockchip timers where used on rk3188 before.
+> 
+> Actually, I don’t know how to test backup timer functionality. rk3228 backup timer is from alive
+> subsystem. It is unclear from TRM what this mean, 
 
-Thanks Rafael and Michal.
+It means it is on an always-on power domain, so it will be always powered even
+in suspend mode.
 
-> 
-> cheers
-> 
---
-Thanks and Regards
-gautham.
+There are different clockevents on the SoC, the local timers (smp_twd) and the
+rockchip timer. They are not used together, the local timers will be used as
+default because they are per cpu. So the rockchip timer is not used in this case.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then there is the situation when the cpu is powered down, the local timers,
+which belongs to the same power domain, will be powered down also. If there is a
+timer set for this CPU, an alternate, backup timer must be used, and that is the
+rockchip timer. However this situation happens:
+
+ - when a CPU is offlined. But the timers are moved to another CPU.
+ - when the CPU enters a deep idle state. But such state does not exist on rk3188
+ - when the system goes to suspend. But the timers are stopped in any case and
+   CPU0 is always on.
+
+There is no case when the rockchip timer is used for the clockevent.
+
+If I'm not wrong, you can check /proc/interrupts and see there is no interrupt
+on the rockchip timer.
+
+So the board is typically a case where we want to use a clocksource from one IP
+and the clockevents from another IP (just looping back with the clkevt macro
+patch I answered a few minutes ago).
+
+That does not call in question this patch as it describes the hardware.
+
+> I assume that somehow related to CLK
+> during suspend. So I pick the timer from alive subsystem on rk3188 also.
+> DT timer configuration where tested: interrupts and IO works.
+> 
+> > This patch should go after the rockchip timer patches
+> 
+> 
+> Ok, let me know, when I should send v6. Or may be you change the order of the patches
+> during merge.
+
+I have to review the last 3 patches of the series. I will let you know for a V6.
+
+Thanks.
+
+  -- Daniel
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
