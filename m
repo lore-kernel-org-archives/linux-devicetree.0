@@ -1,124 +1,170 @@
 From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 0/6] Platform driver support for 'amd5536udc' driver
-Date: Mon, 30 Jan 2017 13:26:07 +0530
-Message-ID: <1485762973-14586-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 3/6] UDC: make debug prints compatible with both pci and platform devices
+Date: Mon, 30 Jan 2017 13:26:10 +0530
+Message-ID: <1485762973-14586-4-git-send-email-raviteja.garimella@broadcom.com>
+References: <1485762973-14586-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485762973-14586-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The changes are being submitted as PATCH this time. Below are the
-details of main changes with respect to previous RFC versions.
+This patch adds a struct device member to UDC data structure and
+makes changes to the arguments of dev_err and dev_dbg calls so that
+the debug prints work for both pci and platform devices.
 
-Changes from RFC v2:
-===================
-Patch 1/6 now splits the driver into amd5536udc_pci_.c (which
-contains only the PCI device registration part), and amd5536udc.c
-will still be driver that does the rest of UDC driver functionality.
+Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+---
+ drivers/usb/gadget/udc/amd5536udc.h     |  4 +++-
+ drivers/usb/gadget/udc/amd5536udc_pci.c |  1 +
+ drivers/usb/gadget/udc/snps_udc_core.c  | 28 ++++++++++++++--------------
+ 3 files changed, 18 insertions(+), 15 deletions(-)
 
-Patch 2/6 renames amd5536udc.c to snps_udc_core.c.
-
-The DT compatibilty string is changed to "brcm,iproc-snps-udc"
-as per review comments for RFCv2. The driver and bindings
-documentation is modified to reflect this.
-
-<clip: as before>
-
-This is RFC for the changes made as per the review comments made for
-the previous version. I would like to know  if this approach (the way
-the driver is split and the naming and all)looks good to be submitted.
-
-
-Changes from RFC v1:
-===================
-1. Split the driver into platform/pci specific drivers with a core driver
-   file that handles the common driver routines that are exported.
-
-2. Split the driver into number of patches as suggested in previous
-   review comments.
-
-3. Added the devicetree bindings documentation for Synopsys platform
-   driver.
-
-Introduction from previous version:
-===================================
-This patch adds platform device support to the existing 'amd5536udc'
-driver.
-
-The UDC is based on Synopsys Designware core USB (2.0) Device controller
-IP.
-
-The driver so far supports UDCs that are a part of AMD southbridge
-and is connected through PCI bus.
-
-The same driver can be used with UDCs that are integrated into SoCs
-like Broadcom's Northstar2/Cygnus platforms by adding platform device
-suooprt.
-
-This patch contains all the changes that were required to get the driver
-functional on Broadcom's Northstar2 platform. 
-
-This is a request for comments from maintainers/others regarding approach
-on whether to have 2 different drivers (one each for AMD and Broadcom)
-with a common library (3 files in total), or have a single driver like
-it's done in this patch and have the driver filename changed to some
-common name based on ther underlying IP, like snps_udc.c.
-
-Below are the main changes done:
-
-1. Added OF based platform device registration -- so that the driver gets
-   probed based on the device tree entry. Like wise, remove routine and
-   platform PM ops are supported.
-
-2. Modified debug prints to be compatible with both pci and platform
-   devices.
-
-3. Added members to 'struct udc' in header file for extcon and phy support.
-   This is required if the UDC is connected to a Dual Role Device Phy
-   where the Phy can be configured to be in Device mode or Host mode based
-   on the type of external cable that is connected to the port.
+diff --git a/drivers/usb/gadget/udc/amd5536udc.h b/drivers/usb/gadget/udc/amd5536udc.h
+index bd2a18e..c252457 100644
+--- a/drivers/usb/gadget/udc/amd5536udc.h
++++ b/drivers/usb/gadget/udc/amd5536udc.h
+@@ -563,6 +563,8 @@ struct udc {
+ 	u16				cur_config;
+ 	u16				cur_intf;
+ 	u16				cur_alt;
++
++	struct device			*dev;
+ };
  
-4. Added checks in udc connect/disconnect routines so as to return if the
-   routine is already called.
-
-5. Modified the arguments passed to dma_pool_create routine -- which
-   expects struct device, whereas NULL is passed in the existing version.
+ #define to_amd5536_udc(g)	(container_of((g), struct udc, gadget))
+@@ -639,7 +641,7 @@ MODULE_PARM_DESC(use_fullspeed, "true for fullspeed only");
  
-6. Kconfig changes are done so that the driver now depends on either of
-   CONFIG_OF or CONFIG_PCI. More description about the Synopsys IP is
-   provided.
-
-Repo: https://github.com/Broadcom/arm64-linux.git
-Branch: snps_udc
-
-Raviteja Garimella (6):
-  UDC: Split the driver into amd (pci) and Synopsys core IP driver
-  UDC: Rename amd5536udc driver file based on IP
-  UDC: make debug prints compatible with both pci and platform devices
-  UDC: Provide correct arguments for 'dma_pool_create'
-  DT bindings documentation for Broadcom IPROC USB Device controller.
-  UDC: Add Synopsys UDC Platform driver
-
- .../bindings/usb/brcm,iproc-snps-udc.txt           |   24 +
- drivers/usb/gadget/udc/Kconfig                     |   32 +
- drivers/usb/gadget/udc/Makefile                    |    4 +-
- drivers/usb/gadget/udc/amd5536udc.c                | 3413 --------------------
- drivers/usb/gadget/udc/amd5536udc.h                |   54 +-
- drivers/usb/gadget/udc/amd5536udc_pci.c            |  218 ++
- drivers/usb/gadget/udc/snps_udc_core.c             | 3239 +++++++++++++++++++
- drivers/usb/gadget/udc/snps_udc_plat.c             |  342 ++
- 8 files changed, 3911 insertions(+), 3415 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/brcm,iproc-snps-udc.txt
- delete mode 100644 drivers/usb/gadget/udc/amd5536udc.c
- create mode 100644 drivers/usb/gadget/udc/amd5536udc_pci.c
- create mode 100644 drivers/usb/gadget/udc/snps_udc_core.c
- create mode 100644 drivers/usb/gadget/udc/snps_udc_plat.c
-
+ /* debug macros ------------------------------------------------------------*/
+ 
+-#define DBG(udc , args...)	dev_dbg(&(udc)->pdev->dev, args)
++#define DBG(udc , args...)	dev_dbg(udc->dev, args)
+ 
+ #ifdef UDC_VERBOSE
+ #define VDBG			DBG
+diff --git a/drivers/usb/gadget/udc/amd5536udc_pci.c b/drivers/usb/gadget/udc/amd5536udc_pci.c
+index 2a2d0a9..57a13f0 100644
+--- a/drivers/usb/gadget/udc/amd5536udc_pci.c
++++ b/drivers/usb/gadget/udc/amd5536udc_pci.c
+@@ -168,6 +168,7 @@ static int udc_pci_probe(
+ 	dev->phys_addr = resource;
+ 	dev->irq = pdev->irq;
+ 	dev->pdev = pdev;
++	dev->dev = &pdev->dev;
+ 
+ 	/* general probing */
+ 	if (udc_probe(dev)) {
+diff --git a/drivers/usb/gadget/udc/snps_udc_core.c b/drivers/usb/gadget/udc/snps_udc_core.c
+index 72f3c8f..c778d51 100644
+--- a/drivers/usb/gadget/udc/snps_udc_core.c
++++ b/drivers/usb/gadget/udc/snps_udc_core.c
+@@ -209,18 +209,18 @@ static void print_regs(struct udc *dev)
+ 	if (use_dma && use_dma_ppb && !use_dma_ppb_du) {
+ 		DBG(dev, "DMA mode       = PPBNDU (packet per buffer "
+ 			"WITHOUT desc. update)\n");
+-		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "PPBNDU");
++		dev_info(dev->dev, "DMA mode (%s)\n", "PPBNDU");
+ 	} else if (use_dma && use_dma_ppb && use_dma_ppb_du) {
+ 		DBG(dev, "DMA mode       = PPBDU (packet per buffer "
+ 			"WITH desc. update)\n");
+-		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "PPBDU");
++		dev_info(dev->dev, "DMA mode (%s)\n", "PPBDU");
+ 	}
+ 	if (use_dma && use_dma_bufferfill_mode) {
+ 		DBG(dev, "DMA mode       = BF (buffer fill mode)\n");
+-		dev_info(&dev->pdev->dev, "DMA mode (%s)\n", "BF");
++		dev_info(dev->dev, "DMA mode (%s)\n", "BF");
+ 	}
+ 	if (!use_dma)
+-		dev_info(&dev->pdev->dev, "FIFO mode\n");
++		dev_info(dev->dev, "FIFO mode\n");
+ 	DBG(dev, "-------------------------------------------------------\n");
+ }
+ 
+@@ -1628,7 +1628,7 @@ static void udc_setup_endpoints(struct udc *dev)
+ static void usb_connect(struct udc *dev)
+ {
+ 
+-	dev_info(&dev->pdev->dev, "USB Connect\n");
++	dev_info(dev->dev, "USB Connect\n");
+ 
+ 	dev->connected = 1;
+ 
+@@ -1646,7 +1646,7 @@ static void usb_connect(struct udc *dev)
+ static void usb_disconnect(struct udc *dev)
+ {
+ 
+-	dev_info(&dev->pdev->dev, "USB Disconnect\n");
++	dev_info(dev->dev, "USB Disconnect\n");
+ 
+ 	dev->connected = 0;
+ 
+@@ -2110,7 +2110,7 @@ static irqreturn_t udc_data_out_isr(struct udc *dev, int ep_ix)
+ 	}
+ 	/* HE event ? */
+ 	if (tmp & AMD_BIT(UDC_EPSTS_HE)) {
+-		dev_err(&dev->pdev->dev, "HE ep%dout occurred\n", ep->num);
++		dev_err(dev->dev, "HE ep%dout occurred\n", ep->num);
+ 
+ 		/* clear HE */
+ 		writel(tmp | AMD_BIT(UDC_EPSTS_HE), &ep->regs->sts);
+@@ -2309,7 +2309,7 @@ static irqreturn_t udc_data_in_isr(struct udc *dev, int ep_ix)
+ 	if (use_dma) {
+ 		/* BNA ? */
+ 		if (epsts & AMD_BIT(UDC_EPSTS_BNA)) {
+-			dev_err(&dev->pdev->dev,
++			dev_err(dev->dev,
+ 				"BNA ep%din occurred - DESPTR = %08lx\n",
+ 				ep->num,
+ 				(unsigned long) readl(&ep->regs->desptr));
+@@ -2322,7 +2322,7 @@ static irqreturn_t udc_data_in_isr(struct udc *dev, int ep_ix)
+ 	}
+ 	/* HE event ? */
+ 	if (epsts & AMD_BIT(UDC_EPSTS_HE)) {
+-		dev_err(&dev->pdev->dev,
++		dev_err(dev->dev,
+ 			"HE ep%dn occurred - DESPTR = %08lx\n",
+ 			ep->num, (unsigned long) readl(&ep->regs->desptr));
+ 
+@@ -2960,7 +2960,7 @@ __acquires(dev->lock)
+ 
+ 		/* link up all endpoints */
+ 		udc_setup_endpoints(dev);
+-		dev_info(&dev->pdev->dev, "Connect: %s\n",
++		dev_info(dev->dev, "Connect: %s\n",
+ 			 usb_speed_string(dev->gadget.speed));
+ 
+ 		/* init ep 0 */
+@@ -3172,20 +3172,20 @@ int udc_probe(struct udc *dev)
+ 	/* init registers, interrupts, ... */
+ 	startup_registers(dev);
+ 
+-	dev_info(&dev->pdev->dev, "%s\n", mod_desc);
++	dev_info(dev->dev, "%s\n", mod_desc);
+ 
+ 	snprintf(tmp, sizeof(tmp), "%d", dev->irq);
+-	dev_info(&dev->pdev->dev,
++	dev_info(dev->dev,
+ 		 "irq %s, pci mem %08lx, chip rev %02x(Geode5536 %s)\n",
+ 		 tmp, dev->phys_addr, dev->chiprev,
+ 		 (dev->chiprev == UDC_HSA0_REV) ? "A0" : "B1");
+ 	strcpy(tmp, UDC_DRIVER_VERSION_STRING);
+ 	if (dev->chiprev == UDC_HSA0_REV) {
+-		dev_err(&dev->pdev->dev, "chip revision is A0; too old\n");
++		dev_err(dev->dev, "chip revision is A0; too old\n");
+ 		retval = -ENODEV;
+ 		goto finished;
+ 	}
+-	dev_info(&dev->pdev->dev,
++	dev_info(dev->dev,
+ 		 "driver version: %s(for Geode5536 B1)\n", tmp);
+ 	udc = dev;
+ 
 -- 
 2.1.0
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
