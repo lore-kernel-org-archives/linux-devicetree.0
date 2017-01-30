@@ -1,78 +1,199 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] ARM: dts: rockchip: add timer entries to rk3188
- SoC
-Date: Mon, 30 Jan 2017 14:35:28 +0100
-Message-ID: <20170130133528.GG2206@mai>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
- <1485260203-14216-4-git-send-email-al.kochet@gmail.com>
- <20170130110428.GC2206@mai>
- <A5940770-B960-4409-8DA4-BE39EF9A6325@gmail.com>
- <20170130120444.GE2206@mai>
- <046978C2-808F-4EC3-9429-063BC1A7CE7B@gmail.com>
+From: Jens Wiklander <jens.wiklander@linaro.org>
+Subject: Re: [PATCH v15 2/5] tee: generic TEE subsystem
+Date: Mon, 30 Jan 2017 14:43:26 +0100
+Message-ID: <20170130134325.GA4888@jax>
+References: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
+ <1485605984-30064-3-git-send-email-jens.wiklander@linaro.org>
+ <324467e6-807e-34e1-e411-e4ef95c8c76c@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <046978C2-808F-4EC3-9429-063BC1A7CE7B-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <324467e6-807e-34e1-e411-e4ef95c8c76c@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, "javier@javigon.com" <javier@javigon.com>, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, Jean-michel DELORME <jean-michel.delorme@st.com>, "broonie@kernel.org" <broonie@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Etienne CARRIERE <etienne.carriere@st.com>, Emmanuel MICHEL <emmanuel.michel@st.com>, Gre
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 04:13:07PM +0300, Alexander Kochetkov wrote:
+On Mon, Jan 30, 2017 at 09:02:49AM +0000, Benjamin GAIGNARD wrote:
 > 
-> > 30 янв. 2017 г., в 15:04, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> написал(а):
-> > 
-> > There is no case when the rockchip timer is used for the clockevent.
-> The is already timer entry for rk3228 in the DT. And it act as clockevent. I guess it work as backup,
-> but I cannot test it also. In order to not break DT compatibility I had to provide one timer to be
-> initialized as clockevent. And implemented implicit rule the driver (first DT timer - clockevent,
-> second DT timer - clocksource) already exists for other timers.
 > 
-> > If I'm not wrong, you can check /proc/interrupts and see there is no interrupt
-> > on the rockchip timer.
-> 
-> Yes, you right here. I’ve temporary disable smp_twd to test rockchip timer interrupts.
-> There is no interrupt on the rockchip timer during normal work.
-> 
-> > - when the CPU enters a deep idle state. But such state does not exist on rk3188
-> ARM chip/revision specific?
+> On 01/28/2017 01:19 PM, Jens Wiklander wrote:
+[...]
+> > +/**
+> > + * tee_shm_alloc() - Allocate shared memory
+> > + * @ctx:	Context that allocates the shared memory
+> > + * @size:	Requested size of shared memory
+> > + * @flags:	Flags setting properties for the requested shared memory.
+> > + *
+> > + * Memory allocated as global shared memory is automatically freed when the
+> > + * TEE file pointer is closed. The @flags field uses the bits defined by
+> > + * TEE_SHM_* in <linux/tee_drv.h>. TEE_SHM_MAPPED must currently always be
+> > + * set. If TEE_SHM_DMA_BUF global shared memory will be allocated and
+> > + * associated with a dma-buf handle, else driver private memory.
+> > + */
+> > +struct tee_shm *tee_shm_alloc(struct tee_context *ctx, size_t size, u32 flags)
+> > +{
+> > +	struct tee_device *teedev = ctx->teedev;
+> > +	struct tee_shm_pool_mgr *poolm = NULL;
+> > +	struct tee_shm *shm;
+> > +	void *ret;
+> > +	int rc;
+> > +
+> > +	if (!(flags & TEE_SHM_MAPPED)) {
+> > +		dev_err(teedev->dev.parent,
+> > +			"only mapped allocations supported\n");
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	if ((flags & ~(TEE_SHM_MAPPED | TEE_SHM_DMA_BUF))) {
+> > +		dev_err(teedev->dev.parent, "invalid shm flags 0x%x", flags);
+> > +		return ERR_PTR(-EINVAL);
+> > +	}
+> > +
+> > +	if (!tee_device_get(teedev))
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	if (!teedev->pool) {
+> > +		/* teedev has been detached from driver */
+> > +		ret = ERR_PTR(-EINVAL);
+> > +		goto err_dev_put;
+> > +	}
+> > +
+> > +	shm = kzalloc(sizeof(*shm), GFP_KERNEL);
+> > +	if (!shm) {
+> > +		ret = ERR_PTR(-ENOMEM);
+> > +		goto err_dev_put;
+> > +	}
+> > +
+> > +	shm->flags = flags;
+> > +	shm->teedev = teedev;
+> > +	shm->ctx = ctx;
+> > +	if (flags & TEE_SHM_DMA_BUF)
+> > +		poolm = &teedev->pool->dma_buf_mgr;
+> > +	else
+> > +		poolm = &teedev->pool->private_mgr;
+> > +
+> > +	rc = poolm->ops->alloc(poolm, shm, size);
+> > +	if (rc) {
+> > +		ret = ERR_PTR(rc);
+> > +		goto err_kfree;
+> > +	}
+> > +
+> > +	mutex_lock(&teedev->mutex);
+> > +	shm->id = idr_alloc(&teedev->idr, shm, 1, 0, GFP_KERNEL);
+> > +	mutex_unlock(&teedev->mutex);
+> > +	if (shm->id < 0) {
+> > +		ret = ERR_PTR(shm->id);
+> > +		goto err_pool_free;
+> > +	}
+> > +
+> > +	if (flags & TEE_SHM_DMA_BUF) {
+> > +		DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
+> > +
+> > +		exp_info.ops = &tee_shm_dma_buf_ops;
+> > +		exp_info.size = shm->size;
+> > +		exp_info.flags = O_RDWR;
+> > +		exp_info.priv = shm;
+> > +
+> > +		shm->dmabuf = dma_buf_export(&exp_info);
+> > +		if (IS_ERR(shm->dmabuf)) {
+> > +			ret = ERR_CAST(shm->dmabuf);
+> > +			goto err_rem;
+> > +		}
+> > +	}
+> why not always use dmabuf ? with dma_buf_fd() you have a file descriptor
+> which is also an integer.
+> Like this you may can remove shm->id and TEE_SHM_DMA_BUF
 
-rk3188 specific. Applies also for rk3288 AFAICT. Without entering in the
-details, the SoC can't handle that.
+In the early patch sets (v8 and earlier) it was a bit like you propose
+(except that we only used dmabuf on the same object as today). Then I
+got https://lkml.org/lkml/2016/2/11/861 where Al Viro says (among other
+things) "struct containing descriptor *is* a bad ABI design". Al also
+mentioned the problem with cleaning up allocated file descriptors on
+errors. I choose the safe path to only allocate and return a file
+descriptor when no error cleanup is needed because the descriptor is in
+the return value.
 
-> > - when the system goes to suspend. But the timers are stopped in any case and
-> >   CPU0 is always on.
-> There is timer for rk3228 in the DT. I guess there are situations where it can be used.
-> May be the situations are also acceptable for rk3188? May be something like suspend to RAM or
-> suspend to HDD? I am not expert in that questions. I can do some tests if you give hint/link.
+Another reason is that there are shared memory objects which never are
+supposed to be mapped in user space. They are only a thing between the
+kernel and secure world, when carrying the struct optee_msg_arg for
+instance.
 
-Nope, rockchip clockevents won't be used, smp_twd will instead.
+> > +	mutex_lock(&teedev->mutex);
+> > +	list_add_tail(&shm->link, &ctx->list_shm);
+> > +	mutex_unlock(&teedev->mutex);
+> > +
+> > +	return shm;
+> > +err_rem:
+> > +	mutex_lock(&teedev->mutex);
+> > +	idr_remove(&teedev->idr, shm->id);
+> > +	mutex_unlock(&teedev->mutex);
+> > +err_pool_free:
+> > +	poolm->ops->free(poolm, shm);
+> > +err_kfree:
+> > +	kfree(shm);
+> > +err_dev_put:
+> > +	tee_device_put(teedev);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(tee_shm_alloc);
+[...]
 
-You can check by commenting the local-timer in the DT, and you should see the
-/proc/interrupts line for the rockchip incrementing while the 'twd' are zero.
+> > +/**
+> > + * tee_shm_get_from_id() - Find shared memory object and increase referece count
+> referece -> reference
 
-> So, as I understood you suggest to leave only one timer what can be used as clocksource
-> only. I can implement that, but there should be DT rule what allow to setup timer
-> as clocksource only. I cannot do more without timer framework support.
-> Looks, like I have to wait your patch to implement that.
+I'll fix.
 
-No, actually I meant the rockchip clockevents won't be used for both rk3188 and
-rk3288, they are not needed.
+> > + * @ctx:	Context owning the shared memory
+> > + * @id:		Id of shared memory object
+> > + * @returns a pointer to 'struct tee_shm' on success or an ERR_PTR on failure
+> > + */
+> > +struct tee_shm *tee_shm_get_from_id(struct tee_context *ctx, int id)
+> > +{
+> > +	struct tee_device *teedev;
+> > +	struct tee_shm *shm;
+> > +
+> > +	if (!ctx)
+> > +		return ERR_PTR(-EINVAL);
+> > +
+> > +	teedev = ctx->teedev;
+> > +	mutex_lock(&teedev->mutex);
+> > +	shm = idr_find(&teedev->idr, id);
+> > +	if (!shm || shm->ctx != ctx)
+> > +		shm = ERR_PTR(-EINVAL);
+> > +	else if (shm->flags & TEE_SHM_DMA_BUF)
+> > +		get_dma_buf(shm->dmabuf);
+> > +	mutex_unlock(&teedev->mutex);
+> > +	return shm;
+> > +}
+> > +EXPORT_SYMBOL_GPL(tee_shm_get_from_id);
 
-It is for information, this patch is ok.
+[...]
 
-  -- Daniel
+> > +/**
+> > + * tee_shm_get_from_id() - Find shared memory object and increase referece count
+> referece -> reference
 
--- 
+I'll fix.
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > + * @ctx:	Context owning the shared memory
+> > + * @id:		Id of shared memory object
+> > + * @returns a pointer to 'struct tee_shm' on success or an ERR_PTR on failure
+> > + */
+> > +struct tee_shm *tee_shm_get_from_id(struct tee_context *ctx, int id);
+> > +
+> > +#endif /*__TEE_DRV_H*/
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Jens
