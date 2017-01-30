@@ -1,53 +1,101 @@
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v6 3/5] cpuidle:powernv: Add helper function to populate powernv idle states.
-Date: Mon, 30 Jan 2017 14:47:31 +1100
-Message-ID: <871svlxl7w.fsf@concordia.ellerman.id.au>
-References: <1485333389-5752-1-git-send-email-ego@linux.vnet.ibm.com> <1485333389-5752-4-git-send-email-ego@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485333389-5752-4-git-send-email-ego@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, Michael Neuling <mikey@neuling.org>, Vaidyanathan Srinivasan <svaidy@linux.vnet.ibm.com>, "Shreyas B. Prabhu" <shreyasbp@gmail.com>, Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>, Stewart Smith <stewart@linux.vnet.ibm.com>, Balbir Singh <bsingharora@gmail.com>, Oliver O'Halloran <oohall@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
+From: Jeremy McNicoll <jeremymc@redhat.com>
+Subject: [PATCH V4 4/6] arm64: dts: smem enablement for msm8992
+Date: Sun, 29 Jan 2017 21:44:33 -0800
+Message-ID: <1485755073-6416-1-git-send-email-jeremymc@redhat.com>
+References: <20170127195831.GH8801@codeaurora.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170127195831.GH8801@codeaurora.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: sboyd@codeaurora.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-clk@vger.kernel.org, andy.gross@linaro.org, robh@kernel.org, arnd@arndb.de, bjorn.andersson@linaro.org, riteshh@codeaurora.org, git@kchr.de, ulf.hansson@linaro.org, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-"Gautham R. Shenoy" <ego@linux.vnet.ibm.com> writes:
+SMEM allows various subsystems/processors to share
+memory/data (heap format) in order to enable various
+peripherals.
 
-> From: "Gautham R. Shenoy" <ego@linux.vnet.ibm.com>
->
-> In the current code for powernv_add_idle_states, there is a lot of code
-> duplication while initializing an idle state in powernv_states table.
->
-> Add an inline helper function to populate the powernv_states[] table
-> for a given idle state. Invoke this for populating the "Nap",
-> "Fastsleep" and the stop states in powernv_add_idle_states.
->
-> Acked-by: Balbir Singh <bsingharora@gmail.com>
-> Signed-off-by: Gautham R. Shenoy <ego@linux.vnet.ibm.com>
-> ---
->  drivers/cpuidle/cpuidle-powernv.c | 89 +++++++++++++++++++++++----------------
->  include/linux/cpuidle.h           |  1 +
+Signed-off-by: Jeremy McNicoll <jeremymc@redhat.com>
+---
 
-I was going to merge this, but I see you've touched cpuidle.h, so I feel
-like I should get an ACK from the cpuidle folks.
+ [ Moved sfpb_mutex and smem outside sock as they didn't have
+  'reg' entries.  Everything else is exactly the same. ]
 
-It's a fairly uncontroversial change, but it's their API.
+ arch/arm64/boot/dts/qcom/msm8992.dtsi | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-cheers
+diff --git a/arch/arm64/boot/dts/qcom/msm8992.dtsi b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+index 13fb6f7..1715787 100644
+--- a/arch/arm64/boot/dts/qcom/msm8992.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8992.dtsi
+@@ -79,6 +79,19 @@
+ 		regulator-always-on;
+ 	};
+ 
++	sfpb_mutex: hwmutex {
++		compatible = "qcom,sfpb-mutex";
++		syscon = <&sfpb_mutex_regs 0x0 0x100>;
++		#hwlock-cells = <1>;
++	};
++
++	smem {
++		compatible = "qcom,smem";
++		memory-region = <&smem_region>;
++		qcom,rpm-msg-ram = <&rpm_msg_ram>;
++		hwlocks = <&sfpb_mutex 3>;
++	};
++
+ 	soc {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+@@ -93,6 +106,11 @@
+ 				<0xf9002000 0x1000>;
+ 		};
+ 
++		apcs: syscon@f900d000 {
++			compatible = "syscon";
++			reg = <0xf900d000 0x2000>;
++		};
++
+ 		timer@f9020000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+@@ -183,12 +201,36 @@
+ 			#power-domain-cells = <1>;
+ 			reg = <0xfc400000 0x2000>;
+ 		};
++
++		rpm_msg_ram: memory@fc428000 {
++			compatible = "qcom,rpm-msg-ram";
++			reg = <0xfc428000 0x4000>;
++		};
++
++		sfpb_mutex_regs: syscon@fd484000 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "syscon";
++			reg = <0xfd484000 0x400>;
++		};
+ 	};
+ 
+ 	memory {
+ 		device_type = "memory";
+ 		reg = <0 0 0 0>; // bootloader will update
+ 	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		smem_region: smem@6a00000 {
++			reg = <0x0 0x6a00000 0x0 0x200000>;
++			no-map;
++		};
++	};
++
+ };
+ 
+ 
+-- 
+2.6.1
 
-
-> diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-> index da346f2..fc1e5d7 100644
-> --- a/include/linux/cpuidle.h
-> +++ b/include/linux/cpuidle.h
-> @@ -62,6 +62,7 @@ struct cpuidle_state {
->  };
->  
->  /* Idle State Flags */
-> +#define CPUIDLE_FLAG_NONE       (0x00)
->  #define CPUIDLE_FLAG_COUPLED	(0x02) /* state applies to multiple cpus */
->  #define CPUIDLE_FLAG_TIMER_STOP (0x04)  /* timer is stopped on this state */
->  
-> -- 
-> 1.9.4
