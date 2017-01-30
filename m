@@ -1,83 +1,118 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/8] ARM: dts: rockchip: add timer entries to rk3188
- SoC
-Date: Mon, 30 Jan 2017 12:04:28 +0100
-Message-ID: <20170130110428.GC2206@mai>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
- <1485260203-14216-4-git-send-email-al.kochet@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v5 6/13] mmc: sunxi: Add EMMC (MMC2) controller compatible
+Date: Mon, 30 Jan 2017 12:05:46 +0100
+Message-ID: <20170130110546.6q5xb3p2uvncrrmf@lukather>
+References: <cover.6f3d82744628848e2182720c35f13e87e8b62258.1485553113.git-series.maxime.ripard@free-electrons.com>
+ <bcbeeb726c5638361590bd4c295279ef92d44209.1485553113.git-series.maxime.ripard@free-electrons.com>
+ <CAPDyKFr3cnFux4NRzZ9UAn93MOVb6RaQQ+PHDxGztciDHZSX9A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="oblaussuvw2woeht"
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1485260203-14216-4-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <CAPDyKFr3cnFux4NRzZ9UAn93MOVb6RaQQ+PHDxGztciDHZSX9A@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Andre Przywara <andre.przywara@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 03:16:38PM +0300, Alexander Kochetkov wrote:
-> The patch add two timers to all rk3188 based boards.
-> 
-> The first timer is from alive subsystem and it act as a backup
-> for the local timers at sleep time. It act the same as other
-> SoC rockchip timers already present in kernel.
 
-It is up to the RTC to wake up the system from suspend and there is no
-idle state stopping the local timers on these SoCs. So, the rockchip timers
-won't be ever used on the rk3188, right ?
- 
-> The second timer is from CPU subsystem and act as replacement
-> for the arm-global-timer clocksource and sched clock. It run
-> at stable frequency 24MHz.
+--oblaussuvw2woeht
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch should go after the rockchip timer patches.
+On Mon, Jan 30, 2017 at 11:06:05AM +0100, Ulf Hansson wrote:
+> On 27 January 2017 at 22:38, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > The MMC2 controller on the A64 is kind of a special beast.
+> >
+> > While the general controller design is the same than the other MMC
+> > controllers in the SoC, it also has a bunch of features and changes that
+> > prevent it to be driven in the same way.
+> >
+> > It has for example a different bus width limit, a different maximum
+> > frequency, and, for some reason, the maximum buffer size of a DMA
+> > descriptor.
+> >
+> > Add a new compatible specifically for this controller.
+> >
+> > Acked-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > Tested-by: Florian Vaussard <florian.vaussard@heig-vd.ch>
+> > ---
+> >  drivers/mmc/host/sunxi-mmc.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+), 0 deletions(-)
+> >
+> > diff --git a/drivers/mmc/host/sunxi-mmc.c b/drivers/mmc/host/sunxi-mmc.c
+> > index 6bbe61397b7c..f0f6922bca8a 100644
+> > --- a/drivers/mmc/host/sunxi-mmc.c
+> > +++ b/drivers/mmc/host/sunxi-mmc.c
+> > @@ -5,6 +5,7 @@
+> >   * (C) Copyright 2013-2014 O2S GmbH <www.o2s.ch>
+> >   * (C) Copyright 2013-2014 David Lanzend=EF=BF=BDrfer <david.lanzendoe=
+rfer@o2s.ch>
+> >   * (C) Copyright 2013-2014 Hans de Goede <hdegoede@redhat.com>
+> > + * (C) Copyright 2017 Sootech SA
+> >   *
+> >   * This program is free software; you can redistribute it and/or
+> >   * modify it under the terms of the GNU General Public License as
+> > @@ -1096,12 +1097,19 @@ static const struct sunxi_mmc_cfg sun50i_a64_cf=
+g =3D {
+> >         .needs_new_timings =3D true,
+> >  };
+> >
+> > +static const struct sunxi_mmc_cfg sun50i_a64_emmc_cfg =3D {
+> > +       .idma_des_size_bits =3D 13,
+> > +       .clk_delays =3D NULL,
+> > +       .can_calibrate =3D true,
+> > +};
+> > +
+> >  static const struct of_device_id sunxi_mmc_of_match[] =3D {
+> >         { .compatible =3D "allwinner,sun4i-a10-mmc", .data =3D &sun4i_a=
+10_cfg },
+> >         { .compatible =3D "allwinner,sun5i-a13-mmc", .data =3D &sun5i_a=
+13_cfg },
+> >         { .compatible =3D "allwinner,sun7i-a20-mmc", .data =3D &sun7i_a=
+20_cfg },
+> >         { .compatible =3D "allwinner,sun9i-a80-mmc", .data =3D &sun9i_a=
+80_cfg },
+> >         { .compatible =3D "allwinner,sun50i-a64-mmc", .data =3D &sun50i=
+_a64_cfg },
+> > +       { .compatible =3D "allwinner,sun50i-a64-emmc", .data =3D &sun50=
+i_a64_emmc_cfg },
+>=20
+> This should be documented in the DTS docs for sunxi as well. I expect
+> you to send a patch on top to take care of that.
 
-> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-> index 869e189..bcf8e03 100644
-> --- a/arch/arm/boot/dts/rk3188.dtsi
-> +++ b/arch/arm/boot/dts/rk3188.dtsi
-> @@ -106,6 +106,22 @@
->  		};
->  	};
->  
-> +	timer3: timer@2000e000 {
-> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-> +		reg = <0x2000e000 0x20>;
-> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
-> +		clock-names = "timer", "pclk";
-> +	};
-> +
-> +	timer6: timer@200380a0 {
-> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-> +		reg = <0x200380a0 0x20>;
-> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
-> +		clock-names = "timer", "pclk";
-> +	};
-> +
->  	i2s0: i2s@1011a000 {
->  		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
->  		reg = <0x1011a000 0x2000>;
-> -- 
-> 1.7.9.5
-> 
+You're right, I'll send a patch today.
 
--- 
+Thanks!
+Maxime
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--oblaussuvw2woeht
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYjx4FAAoJEBx+YmzsjxAgnrgQAL9WNqCgJS+ZEk/dtAw7w6du
+77+AhO2R9K4oovlZ5Fg3NcQDhahZ6ZUUg1rTI/P7YaTTuv/IjgNA8vIIzLRUnNo9
++gMSJ4VIrrzPCWs4QCMkgZnNJ/d0aNlFdu23ODNI00j6J4s6Ka/n6gUChGf+hBZ2
+MxG94H9BRqcDFCUU/2UhjUsvFbiMoAQv5MSoEFyctZuNlRSJn41QvO6Squz7uPiw
+zTnVe9NNVcLnAhAJozr2sQ2ez5+FfPQSsSkCSnZxcA3kd0QTqgYkbunx6aWBbzA9
+FhftkRxrSt24Sl2Vqn/Qk4PNfC4gv5JZtkYQN3mjJVydRFs9huKEHL1pVHQHl0Rc
+nmYDQ2tNlVJiENguROy56XtOQf/pqSnO5upIyHWT/IxKOx/6ZG925UTSlPufQVnT
+hu7o+JXjU2qb4L3yVBOHOGDDIX+7NZHPYNmHe9o8KKOR7Y441TADQ06BDMVFca1R
+qZGKo+dIPr/jm6l4kp4jInv7i1zQ5J+4d6kVKcx0bDlGZxwHkW+d7HmOk7qX4fUI
+7EpMlPjrMimNSLnw/Q1XLUdcZR3zYlBJBHK9U74aQ5i8UJkUR8frA+LtrUwol5RI
+oT7zJEYb0v0juiqcxgtTD59D2kAL3UX6/Zq+dV62LgDCXYT14a0P/5XNMhoc0c7a
+CkGZOpbUXyVX1CrwaNT7
+=3xFx
+-----END PGP SIGNATURE-----
+
+--oblaussuvw2woeht--
