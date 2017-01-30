@@ -1,61 +1,157 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 5/8] clocksource/drivers/rockchip_timer: split
- bc_timer into rk_timer and rk_clock_event_device
-Date: Mon, 30 Jan 2017 15:20:04 +0100
-Message-ID: <20170130142004.GI2206@mai>
-References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
- <1485260203-14216-6-git-send-email-al.kochet@gmail.com>
- <20170130131258.GF2206@mai>
- <0E7077EE-0D5A-4653-99EF-E8F2E8FD2FB0@gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH 3/8] serial: st-asc: Read in all Pinctrl
+ states
+Date: Mon, 30 Jan 2017 14:23:56 +0000
+Message-ID: <20170130142356.GA18710@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
+ <20170124134310.27512-4-lee.jones@linaro.org>
+ <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20170127115458.k4edg42nnna3bv4v@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <0E7077EE-0D5A-4653-99EF-E8F2E8FD2FB0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170127115458.k4edg42nnna3bv4v@dell>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 04:55:33PM +0300, Alexander Kochetkov wrote:
+Hi Lee,
+
+On Fri, 27 Jan 2017, Lee Jones wrote:
+
+> On Wed, 25 Jan 2017, Peter Griffin wrote:
 > 
-> > 30 янв. 2017 г., в 16:12, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> написал(а):
+> > Hi Lee,
 > > 
-> > I don't get the point of these changes. The patch does not explain why they are
-> > needed.
+> > On Tue, 24 Jan 2017, Lee Jones wrote:
+> > 
+> > > There are now 2 possible separate/different Pinctrl states which can
+> > > be provided from platform data.  One which encompasses the lines
+> > > required for HW flow-control (CTS/RTS) and another which does not
+> > > specify these lines, such that they can be used via GPIO mechanisms
+> > > for manually toggling (i.e. from a request by `stty`).
+> > > 
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/tty/serial/st-asc.c | 28 ++++++++++++++++++++++++++++
+> > >  1 file changed, 28 insertions(+)
+> > > 
+> > > diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+> > > index 397df50..03801ed 100644
+> > > --- a/drivers/tty/serial/st-asc.c
+> > > +++ b/drivers/tty/serial/st-asc.c
+> > > @@ -37,10 +37,16 @@
+> > >  #define ASC_FIFO_SIZE 16
+> > >  #define ASC_MAX_PORTS 8
+> > >  
+> > > +/* Pinctrl states */
+> > > +#define DEFAULT		0
+> > > +#define MANUAL_RTS	1
+> > 
+> > Nit: Would be better to have them aligned.
 > 
-> I’d like to extract timer API from current implementation.
-> And to make code more readable I’d like to introduce 'struct rk_timer’ what can be
-> reused with current implementation and with my patch (8/8). And in order keep patches
-> simple and readable I split that into three patches: 5/8, 6/8, 7/8.
+> These are aligned in code.  The patch format throws things out.
 > 
-> Current implementation named rockchip timer as ‘struct bc_timer’ (broadcast timer).
-> I renamed it to more suitable to it role (may be bad choice).
+> Look, same lines with the "> > +" removed:
+
+Ah OK.
+
 > 
-> Yes, the patch itself looks strange. You are right.
+> /* Pinctrl states */
+> #define DEFAULT		0
+> #define MANUAL_RTS	1
 > 
-> What do you think about that solution:
-> - in the patch 6/8 i will Introduce 'struct rk_timer’ and 'struct rk_time_clkevt’ (renamed ‘struct bc_timer’).
+> Try it.
+> 
+> > > +
+> > >  struct asc_port {
+> > >  	struct uart_port port;
+> > >  	struct gpio_desc *rts;
+> > >  	struct clk *clk;
+> > > +	struct pinctrl *pinctrl;
+> > > +	struct pinctrl_state *states[2];
+> > >  	unsigned int hw_flow_control:1;
+> > >  	unsigned int force_m1:1;
+> > >  };
+> > > @@ -694,6 +700,7 @@ static int asc_init_port(struct asc_port *ascport,
+> > >  {
+> > >  	struct uart_port *port = &ascport->port;
+> > >  	struct resource *res;
+> > > +	int ret;
+> > >  
+> > >  	port->iotype	= UPIO_MEM;
+> > >  	port->flags	= UPF_BOOT_AUTOCONF;
+> > > @@ -720,6 +727,27 @@ static int asc_init_port(struct asc_port *ascport,
+> > >  	WARN_ON(ascport->port.uartclk == 0);
+> > >  	clk_disable_unprepare(ascport->clk);
+> > >  
+> > > +	ascport->pinctrl = devm_pinctrl_get(&pdev->dev);
+> > > +	if (IS_ERR(ascport->pinctrl)) {
+> > > +		ret = PTR_ERR(ascport->pinctrl);
+> > > +		dev_err(&pdev->dev, "Failed to get Pinctrl: %d\n", ret);
+> > > +	}
+> > > +
+> > > +	ascport->states[DEFAULT] =
+> > > +		pinctrl_lookup_state(ascport->pinctrl, "default");
+> > > +	if (IS_ERR(ascport->states[DEFAULT])) {
+> > > +		ret = PTR_ERR(ascport->states[DEFAULT]);
+> > > +		dev_err(&pdev->dev,
+> > > +			"Failed to look up Pinctrl state 'default': %d\n", ret);
+> > > +		return ret;
+> > > +	}
+> > > +
+> > > +	/* "manual-rts" state is optional */
+> > > +	ascport->states[MANUAL_RTS] =
+> > > +		pinctrl_lookup_state(ascport->pinctrl, "manual-rts");
+> > > +	if (IS_ERR(ascport->states[MANUAL_RTS]))
+> > > +		ascport->states[MANUAL_RTS] = NULL;
+> > > +
+> > 
+> > The different pinctrl states looks like a neat solution to the problem.
+> > 
+> > My only concern here is that 'default' state is implying a hw-flow-control
+> > pinmux config, and manual-rts is implying what is the current upstream
+> > 'default' pinmux config.
+> > 
+> > Which maybe ok if you update all uarts, but currently only serial0
+> > is updated. So the other uarts current 'default' is actually the same as serial0
+> > 'manual-rts' grouping, which conceptually is odd.
+> > 
+> > Would it not be better to make 'manual-rts' the default state? As that aligns
+> > to what is currently already the default for the other UARTS? And then make
+> > hw-flow-control the optional state for serial0?
+> > 
+> > That also has the advantage that 'default' has the same meaning with older DT's.
+> 
+> The reason it was done is this was because none of the other UARTs
+> require 2 separate Pinctrl configurations, only this one.  Moreover,
+> if they support RTS/CTS then I believe that the lines should be
+> defined in Pinctrl.
 
-I prefer rk_clksrc and rk_clkevt.
+Yes I agree with that.
 
-> - rk_timer_init() changes from 5/8 I will merge with 8/8
-> - 8/8 introduce 'struct rk_time_clksrc' 
-> - 5/8 drop
+> Thus, it was my plan to update all UART's default
+> Pinctrl configs to include the RTS/CTS lines.
+> 
 
-Ok, let's see what that gives.
+I still don't see the point in changing the meaning of 'default' group and breaking
+ABI if you don't need to?
 
-  -- Daniel
+As far as I can tell if you swap the meaning of 'default' and 'maunal-rts'
+groups you get all the benefits of this series whilst also maintaining backwards
+compatbility with older DT's.
 
--- 
+regards,
 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter.
