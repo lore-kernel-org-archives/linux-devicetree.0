@@ -1,51 +1,54 @@
-From: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Subject: Re: [PATCH v2 1/2] nvmem: sunxi-sid: add support for H3
- and A64's SID controller
-Date: Mon, 30 Jan 2017 08:44:04 +0100
-Message-ID: <20170130074404.d7mi6h4kviornr5s@lukather>
-References: <20170129015641.54281-1-icenowy@aosc.xyz>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="leyuzbntcohtfq2k"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRG5XPCAKGQEIDNBPKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170129015641.54281-1-icenowy-ymACFijhrKM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Subject: [PATCH 5/6] DT bindings documentation for Broadcom IPROC USB Device controller.
+Date: Mon, 30 Jan 2017 13:26:12 +0530
+Message-ID: <1485762973-14586-6-git-send-email-raviteja.garimella@broadcom.com>
+References: <1485762973-14586-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485762973-14586-1-git-send-email-raviteja.garimella@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The device node is used for UDCs integrated into Broadcom's
+iProc family of SoCs'. The UDC is based on Synopsys Designware
+Cores AHB Subsystem USB Device Controller IP.
 
---leyuzbntcohtfq2k
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+---
+ .../bindings/usb/brcm,iproc-snps-udc.txt           | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/brcm,iproc-snps-udc.txt
 
-On Sun, Jan 29, 2017 at 09:56:40AM +0800, Icenowy Zheng wrote:
-> H3 and A64 SoCs have a bigger SID controller, which has its direct read
-> address at 0x200 position in the SID block, not 0x0.
-> 
-> Also, H3 SID controller has some silicon bug that makes the direct read
-> value wrong at first, add code to workaround the bug. (This bug has
-> already been fixed on A64 and later SoCs)
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-
-Please split that into several patches. One to allow to set the size
-through the structure, one to support the A64, and one to support the
-H3.
-
-Thanks,
-Maxime
-
+diff --git a/Documentation/devicetree/bindings/usb/brcm,iproc-snps-udc.txt b/Documentation/devicetree/bindings/usb/brcm,iproc-snps-udc.txt
+new file mode 100644
+index 0000000..537dd4d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/brcm,iproc-snps-udc.txt
+@@ -0,0 +1,24 @@
++Broadcom IPROC USB Device controller.
++
++The device node is used for UDCs integrated into Broadcom's
++iProc family of SoCs'. The UDC is based on Synopsys Designware
++Cores AHB Subsystem Device Controller.
++
++Required properties:
++ - compatible: should be "brcm,iproc-snps-udc"
++ - reg: Offset and length of UDC register set
++ - interrupts: description of interrupt line
++ - phys: phandle to phy node.
++ - extcon: phandle to the extcon device. This is optional and
++   not required for those that don't require extcon support.
++   Extcon support will be required if the UDC is connected to
++   a Dual Role Device Phy that supports both Host and Device
++   mode based on the external cable.
++
++Example:
++	udc_dwc: usb@664e0000 {
++		compatible = "brcm,iproc-snps-udc";
++		reg = <0x664e0000 0x2000>;
++		interrupts = <GIC_SPI 424 IRQ_TYPE_LEVEL_HIGH>;
++		phys = <&usbdrd_phy>;
++		extcon = <&usbdrd_phy>";
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---leyuzbntcohtfq2k--
+2.1.0
