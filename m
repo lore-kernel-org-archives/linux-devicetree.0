@@ -1,38 +1,39 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH] ARM64: meson-gxbb-p200: add ADC laddered keys
-Date: Mon, 30 Jan 2017 10:50:46 -0800
-Message-ID: <m2a8a8tm9l.fsf@baylibre.com>
-References: <1484562165-29449-1-git-send-email-narmstrong@baylibre.com>
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v9 1/3] doc: dt: add cyclone-ps-spi binding document
+Date: Mon, 30 Jan 2017 10:53:10 -0800
+Message-ID: <5d93c6da-2cbb-24b1-0246-caf2cd87fd6d@gmail.com>
+References: <cover.1485295905.git.stillcompiling@gmail.com>
+ <910cf70128e0303d3642d6ff527a069ad6e18bf7.1485295905.git.stillcompiling@gmail.com>
+ <20170127222844.5nwc2druyneuuxjm@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1484562165-29449-1-git-send-email-narmstrong@baylibre.com> (Neil
- Armstrong's message of "Mon, 16 Jan 2017 11:22:45 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: carlo@caione.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170127222844.5nwc2druyneuuxjm@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alan Tull <atull-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Thanks, Rob.
 
-> Add the 5 buttons connected to a resistor laddered matrix and sampled
-> by the SAR ADC channel 0.
+
+On 01/27/2017 02:28 PM, Rob Herring wrote:
+> On Tue, Jan 24, 2017 at 02:19:32PM -0800, Joshua Clayton wrote:
+>> Describe a cyclone-ps-spi devicetree entry, required features
+>>
+>> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../bindings/fpga/altera-passive-serial.txt        | 29 ++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fpga/altera-passive-serial.txt
+> This is a minor change, you could have kept my ack.
 >
-> Only the p200 board has these buttons, the P201 doesn't.
->
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I know you have a lot of these to wade through.
+I'll remember that going forward.
 
-Applied to v4.11/dt64.
-
-Note that I fixed up the subject prefix to be ARM64: dts:
-
-Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
