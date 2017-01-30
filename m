@@ -1,91 +1,44 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 2/3] dmaengine: cppi41: Add support of DA8xx to CPPI 4.1
-Date: Mon, 30 Jan 2017 18:49:20 +0100
-Message-ID: <20170130174921.28231-3-abailon@baylibre.com>
-References: <20170130174921.28231-1-abailon@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH 0/7]  Fix issues and factorize arm/arm64 capacity
+ information code
+Date: Mon, 30 Jan 2017 18:21:00 +0000
+Message-ID: <20170130182100.GE13332@e106622-lin>
+References: <20170119143757.14537-1-juri.lelli@arm.com>
+ <20170130122901.GA25681@e106622-lin>
+ <20170130175138.GA26660@e104818-lin.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170130175138.GA26660@e104818-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, linux-pm@vger.kernel.org, peterz@infradead.org, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The DA8xx has a CPPI 4.1 DMA controller.
-This is add the glue layer required to make it work on DA8xx.
+Hi Catalin,
 
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/dma/Kconfig  |  6 +++---
- drivers/dma/cppi41.c | 23 +++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 3 deletions(-)
+On 30/01/17 17:51, Catalin Marinas wrote:
+> On Mon, Jan 30, 2017 at 12:29:01PM +0000, Juri Lelli wrote:
+> > I'd need more advice on this set, especially on how and if patch 6 could fly.
+> 
+> Since you got some comments and said that you are going to fix them in
+> the next version, I guess people are waiting for you to post a new
+> series.
+> 
 
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index 0d6a96e..2a31e1a 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -514,12 +514,12 @@ config TIMB_DMA
- 	  Enable support for the Timberdale FPGA DMA engine.
- 
- config TI_CPPI41
--	tristate "AM33xx CPPI41 DMA support"
--	depends on ARCH_OMAP
-+	tristate "CPPI 4.1 DMA support"
-+	depends on (ARCH_OMAP || ARCH_DAVINCI_DA8XX)
- 	select DMA_ENGINE
- 	help
- 	  The Communications Port Programming Interface (CPPI) 4.1 DMA engine
--	  is currently used by the USB driver on AM335x platforms.
-+	  is currently used by the USB driver on AM335x and DA8xx platforms.
- 
- config TI_DMA_CROSSBAR
- 	bool
-diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-index 21a4f79..5c501da 100644
---- a/drivers/dma/cppi41.c
-+++ b/drivers/dma/cppi41.c
-@@ -221,6 +221,20 @@ static const struct chan_queues am335x_usb_queues_rx[] = {
- 	[29] = { .submit = 30, .complete = 155},
- };
- 
-+static const struct chan_queues da8xx_usb_queues_tx[] = {
-+	[0] = { .submit =  16, .complete = 24},
-+	[1] = { .submit =  18, .complete = 24},
-+	[2] = { .submit =  20, .complete = 24},
-+	[3] = { .submit =  22, .complete = 24},
-+};
-+
-+static const struct chan_queues da8xx_usb_queues_rx[] = {
-+	[0] = { .submit =  1, .complete = 26},
-+	[1] = { .submit =  3, .complete = 26},
-+	[2] = { .submit =  5, .complete = 26},
-+	[3] = { .submit =  7, .complete = 26},
-+};
-+
- struct cppi_glue_infos {
- 	const struct chan_queues *queues_rx;
- 	const struct chan_queues *queues_tx;
-@@ -949,8 +963,17 @@ static const struct cppi_glue_infos am335x_usb_infos = {
- 	.qmgr_num_pend = 5,
- };
- 
-+static const struct cppi_glue_infos da8xx_usb_infos = {
-+	.queues_rx = da8xx_usb_queues_rx,
-+	.queues_tx = da8xx_usb_queues_tx,
-+	.td_queue = { .submit = 31, .complete = 0 },
-+	.first_completion_queue = 24,
-+	.qmgr_num_pend = 2,
-+};
-+
- static const struct of_device_id cppi41_dma_ids[] = {
- 	{ .compatible = "ti,am3359-cppi41", .data = &am335x_usb_infos},
-+	{ .compatible = "ti,da830-cppi41", .data = &da8xx_usb_infos},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, cppi41_dma_ids);
--- 
-2.10.2
+While this is true for Dietmar's and part of Russell's comments, I was
+still waiting to understand where people think is better to move the
+externs (as Russell pointed out), though, and if the whole idea could
+fly.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I could certainly come up with a proposal on this point, but I didn't
+simply want to spam people's mailboxes with a v2 (addressing relatively
+minor points, IMHO) if v1 was already completely off. Apologies if that
+wasn't clear from my replies.
+
+Maybe you are saying that no comments are a good sign after all. :)
+
+Best,
+
+- Juri
