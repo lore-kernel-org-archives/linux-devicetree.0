@@ -1,57 +1,55 @@
 From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4] drm/msm: drop _clk suffix from clk names
-Date: Mon, 30 Jan 2017 13:26:21 -0500
-Message-ID: <CAF6AEGu5v1-uPmbvH93vGJ6OqXLT6qAQUb_PVzxh69cYwxFnbg@mail.gmail.com>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-5-robdclark@gmail.com>
- <87y3xsh0st.fsf@eliezer.anholt.net>
+Subject: Re: [PATCH 1/4] drm/msm: remove qcom,gpu-pwrlevels bindings
+Date: Mon, 30 Jan 2017 13:35:47 -0500
+Message-ID: <CAF6AEGt8mj8S+iv8aHVwyqm3f-5NhzmRv5Ajv5TmJXee5YLxVg@mail.gmail.com>
+References: <20170130164921.20744-1-robdclark@gmail.com> <20170130164921.20744-2-robdclark@gmail.com>
+ <87vaswh0i9.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <87y3xsh0st.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87vaswh0i9.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMToxNSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
-Pj4gU3VnZ2VzdGVkIGJ5IFJvYiBIZXJyaW5nLiAgV2Ugc3RpbGwgc3VwcG9ydCB0aGUgb2xkIG5h
-bWVzIGZvcgo+PiBjb21wYXRpYmlsaXR5IHdpdGggZG93bnN0cmVhbSBhbmRyb2lkIGR0IGZpbGVz
-Lgo+Pgo+PiBDYzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KPj4gU2lnbmVkLW9mZi1i
-eTogUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPgo+Cj4gSHVoLCBJIGRvbid0IHRoaW5r
-IEkgd291bGQgaGF2ZSBjbGVhbmVkIHVwIERUIGJpbmRpbmdzIGluIGV4Y2hhbmdlIGZvcgo+IGFk
-ZGluZyBkcml2ZXIgY29kZSBsaWtlIHRoaXMuICBCdXQgdGhlIGNvZGUgc2VlbXMgY29ycmVjdCwg
-c28gb3RoZXIgdGhhbgo+IG9uZSBvcHRpb25hbCBzdWdnZXN0aW9uOgo+Cj4gUmV2aWV3ZWQtYnk6
-IEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4KPj4gK3N0cnVjdCBjbGsgKm1zbV9jbGtf
-Z2V0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsIGNvbnN0IGNoYXIgKm5hbWUpCj4+ICt7
-Cj4+ICsgICAgIHN0cnVjdCBjbGsgKmNsazsKPj4gKyAgICAgY2hhciBuYW1lMlszMl07Cj4+ICsK
-Pj4gKyAgICAgY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsIG5hbWUpOwo+PiArICAgICBp
-ZiAoIUlTX0VSUihjbGspIHx8IFBUUl9FUlIoY2xrKSA9PSAtRVBST0JFX0RFRkVSKQo+PiArICAg
-ICAgICAgICAgIHJldHVybiBjbGs7Cj4+ICsKPj4gKyAgICAgc25wcmludGYobmFtZTIsIHNpemVv
-ZihuYW1lMiksICIlc19jbGsiLCBuYW1lKTsKPj4gKwo+PiArICAgICBjbGsgPSBkZXZtX2Nsa19n
-ZXQoJnBkZXYtPmRldiwgbmFtZTIpOwo+PiArICAgICBpZiAoIUlTX0VSUihjbGspIHx8IFBUUl9F
-UlIoY2xrKSA9PSAtRVBST0JFX0RFRkVSKQo+PiArICAgICAgICAgICAgIGRldl93YXJuKCZwZGV2
-LT5kZXYsICJVc2luZyBsZWdhY3kgY2xrIG5hbWUgYmluZGluZy4gIFVzZSAiCj4+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICJcIiVzXCIgaW5zdGVhZCBvZiBcIiVzXCJcbiIsIG5hbWUs
-IG5hbWUyKTsKPgo+IERyb3AgdGhlIHNlY29uZCAifHwgUFRSX0VSUihjbGspIiBjYXNlLCBzbyB0
-aGF0IHlvdSBvbmx5IGdldCBvbmUgd2FybmluZwo+IHByaW50ZWQgYXQgYm9vdCBpZiBkZWZlcnJp
-bmcgaGFwcGVucz8KCm9oLCBnb29kIHBvaW50Li4gSSd2ZSBmaXhlZCB0aGF0IHVwIGxvY2FsbHku
-ICBJIGRvbid0IHRoaW5rIHdlJ2QKYWN0dWFsbHkgaGl0IHRoaXMgY2FzZSBjdXJyZW50bHkgZm9y
-IGdwdSBjbGtzLCBzaW5jZSBmb3IgZ3B1IHRoaXMKY29kZXBhdGggaGFwcGVucyBvbiBmaXJzdCBv
-cGVuKCkgb2YgdGhlIGRldmljZSBmaWxlLiAgQnV0IEkgc2hvdWxkCm1lbnRpb24gSSBoYXZlIGEg
-c2xpZ2hseSBzbmVha3kgdWx0ZXJpb3IgbW90aXZlLCB3aGljaCBpcyB0aGF0IHdlCmNvdWxkIHVz
-ZSB0aGUgc2FtZSBjbGVhbnVwIGZvciBkaXNwbGF5IHJlbGF0ZWQgY2xrcyAod2hpY2ggZG8KY3Vy
-cmVudGx5IHVwc3RyZWFtIHVzZSB0aGUgX2NsayBzdWZmaXgpLgoKQlIsCi1SCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
-c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Mon, Jan 30, 2017 at 1:21 PM, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>
+>> The plan is to use the OPP bindings.  For now, remove the documentation
+>> for qcom,gpu-pwrlevels, and make the driver fall back to a safe low
+>> clock if the node is not present.
+>>
+>> Note that no upstream dtb use this node.  For now we keep compatibility
+>> with this node to avoid breaking compatibility with downstream android
+>> dt files.
+>>
+>> Signed-off-by: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>
+> Will we need the bus frequency knobs that I see in the old pwrlevels
+> node?  If so, what would the plan be for doing that within OPP?
+
+So, that I think is one of the open questions.  Jordan knows this
+stuff a lot better than I, but my understanding is that bus and clk
+scale *basically* independently, except that a given gpu clk we want a
+different minimum bus clk.
+
+(I'm not sure if that is a functional requirement, or just what qcom
+arrived at after performance tuning..)
+
+There is some work ongoing to get some sort of upstream bus scaling
+scaling, although I'm not really sure yet what the bindings for this
+would look like.
+
+So basically short answer is "I don't know.. there are too many open
+questions".  Maybe in the end we re-introduce qcom,gpu-pwrlevels.  But
+I think for now the approach of not documenting it and have safe/slow
+clk fallback in the driver is a reasonable way to move forward with
+getting some basic gpu nodes into upstream dts files.
+
+BR,
+-R
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
