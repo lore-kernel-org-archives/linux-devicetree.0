@@ -1,85 +1,61 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCHv5 0/5] Support for Marvell switches with integrated CPUs
-Date: Mon, 30 Jan 2017 15:40:31 +0100
-Message-ID: <87o9yotxuo.fsf@free-electrons.com>
-References: <20170127032546.14657-1-chris.packham@alliedtelesis.co.nz>
- <87wpdgwj72.fsf@free-electrons.com>
- <20170127184745.GD8801@codeaurora.org>
- <f8f6e8db585147d3adb025bed29694ab@svr-chch-ex1.atlnz.lc>
+From: Madalin Bucur <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH 0/2] dts: arm64: add DPAA 1 support for ARM based SoCs
+Date: Mon, 30 Jan 2017 16:43:05 +0200
+Message-ID: <1485787387-12410-1-git-send-email-madalin.bucur@nxp.com>
+Reply-To: <madalin.bucur-3arQi8VN3Tc@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <f8f6e8db585147d3adb025bed29694ab@svr-chch-ex1.atlnz.lc> (Chris
- Packham's message of "Sun, 29 Jan 2017 20:30:34 +0000")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Laxman Dewangan <ldewangan@nvidia.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Juri Lelli <juri.lelli@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Michael Turquette <mturquette@baylibre.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Kalyan Kinthada <Kalyan.Kinthada@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Chris Brand <chris.brand@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzo>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org
+Cc: stuart.yoder-3arQi8VN3Tc@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On dim., janv. 29 2017, Chris Packham <Chris.Packham@alliedtelesis.co.nz> wrote:
+Add DPAA 1 nodes for LS1043A/LS1046A and networking support for RDB
+and QDS boards with these SoCs.
 
-> On 28/01/17 07:47, Stephen Boyd wrote:
->> On 01/27, Gregory CLEMENT wrote:
->>> Hi all,
->>>
->>>  On ven., janv. 27 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
->>>
->>>> The 98DX3236, 98DX3336 and 98DX4251 are a set of switch ASICs with
->>>> integrated CPUs. They CPU block is common within these product lines and
->>>> (as far as I can tell/have been told) is based on the Armada XP. There
->>>> are a few differences due to the fact they have to squeeze the CPU into
->>>> the same package as the switch.
->>>>
->>>> I've rebased this series against linux-pinctrl/devel to get access to
->>>> mvebu_mmio_mpp_ctrl. Everything else still applies cleanly to
->>>> v4.10.0-rc5.
->>>
->>> Just to let you know that I plan to apply the 3 arm patch once Chris
->>> will have sent the new series with the minor fixes I asked on patch 3.
->>>
->>> I already applied them in the for-next branch to benefit of some build
->>> test coverage.
->>>
->>> Stephen,
->>>
->>> you gave your Acked-by on the first patch, but don't you plan to apply
->>> it on the clk branch?
->>
->> It must have not been clear if I should apply it, hence the ack.
->> I'll apply it now.
->>
->
-> Sorry my bad. I need all 5 together in one place to actually test the 
-> series.
+Madalin Bucur (2):
+  dts: arm64: add LS1043A DPAA support
+  dts: arm64: add LS1046A DPAA support
 
-The 5 patches should be available soon (if it is not already the case),
-in the linux-next branch.
-
-The clk patch is already there, the 3 arm patch have been merged in my
-mvebu/for-next branch, and the pinctrl patch is about to be merged in
-the pinctrl/for-next branch.
-
-Gregory
-
->
-> I wasn't sure whether the series should go through mvebu with Acks from 
-> clk and pinctrl or if things should go to the separate maintainers and 
-> come together when they hit the main linux repo. Up until the latest 
-> pinctrl change either approach would have worked.
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi |  33 +++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts  |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts  |  75 +++++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi     |  73 +++++++++++++-
+ arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi |  37 +++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts  |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts  |  62 ++++++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi     |  66 ++++++++++++-
+ .../boot/dts/freescale/qoriq-bman1-portals.dtsi    |  93 ++++++++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi    |  68 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi    |  68 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi     |  67 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi     |  67 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi     |  67 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi     |  67 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi     |  67 +++++++++++++
+ .../boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi     |  67 +++++++++++++
+ arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi   | 106 +++++++++++++++++++++
+ .../boot/dts/freescale/qoriq-qman1-portals.dtsi    | 102 ++++++++++++++++++++
+ 19 files changed, 1187 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1046-post.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-bman1-portals.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-fman3-0.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/qoriq-qman1-portals.dtsi
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
