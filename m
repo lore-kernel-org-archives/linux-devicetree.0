@@ -1,199 +1,130 @@
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Subject: Re: [PATCH v15 2/5] tee: generic TEE subsystem
-Date: Mon, 30 Jan 2017 14:43:26 +0100
-Message-ID: <20170130134325.GA4888@jax>
-References: <1485605984-30064-1-git-send-email-jens.wiklander@linaro.org>
- <1485605984-30064-3-git-send-email-jens.wiklander@linaro.org>
- <324467e6-807e-34e1-e411-e4ef95c8c76c@st.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: Add Mali Utgard bindings
+Date: Mon, 30 Jan 2017 14:48:24 +0100
+Message-ID: <20170130134824.u37svxphyy266tzz@lukather>
+References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
+ <20170127201913.jjhdw57jmxifqpxa@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="7vxpkbzz4ky4l7yn"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <324467e6-807e-34e1-e411-e4ef95c8c76c@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benjamin GAIGNARD <benjamin.gaignard@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nishanth Menon <nm@ti.com>, Will Deacon <will.deacon@arm.com>, Patrice CHOTARD <patrice.chotard@st.com>, Christophe PRIOUZEAU <christophe.priouzeau@st.com>, Franck ALBESA <franck.albesa@st.com>, "javier@javigon.com" <javier@javigon.com>, Loic PALLARDY <loic.pallardy@st.com>, Michal Simek <michal.simek@xilinx.com>, Wei Xu <xuwei5@hisilicon.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, "scott.branden@broadcom.com" <scott.branden@broadcom.com>, Jean-michel DELORME <jean-michel.delorme@st.com>, "broonie@kernel.org" <broonie@kernel.org>, Al Viro <viro@ZenIV.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Etienne CARRIERE <etienne.carriere@st.com>, Emmanuel MICHEL <emmanuel.michel@st.com>, Gre
+In-Reply-To: <20170127201913.jjhdw57jmxifqpxa@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 09:02:49AM +0000, Benjamin GAIGNARD wrote:
-> 
-> 
-> On 01/28/2017 01:19 PM, Jens Wiklander wrote:
-[...]
-> > +/**
-> > + * tee_shm_alloc() - Allocate shared memory
-> > + * @ctx:	Context that allocates the shared memory
-> > + * @size:	Requested size of shared memory
-> > + * @flags:	Flags setting properties for the requested shared memory.
-> > + *
-> > + * Memory allocated as global shared memory is automatically freed when the
-> > + * TEE file pointer is closed. The @flags field uses the bits defined by
-> > + * TEE_SHM_* in <linux/tee_drv.h>. TEE_SHM_MAPPED must currently always be
-> > + * set. If TEE_SHM_DMA_BUF global shared memory will be allocated and
-> > + * associated with a dma-buf handle, else driver private memory.
-> > + */
-> > +struct tee_shm *tee_shm_alloc(struct tee_context *ctx, size_t size, u32 flags)
-> > +{
-> > +	struct tee_device *teedev = ctx->teedev;
-> > +	struct tee_shm_pool_mgr *poolm = NULL;
-> > +	struct tee_shm *shm;
-> > +	void *ret;
-> > +	int rc;
-> > +
-> > +	if (!(flags & TEE_SHM_MAPPED)) {
-> > +		dev_err(teedev->dev.parent,
-> > +			"only mapped allocations supported\n");
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	if ((flags & ~(TEE_SHM_MAPPED | TEE_SHM_DMA_BUF))) {
-> > +		dev_err(teedev->dev.parent, "invalid shm flags 0x%x", flags);
-> > +		return ERR_PTR(-EINVAL);
-> > +	}
-> > +
-> > +	if (!tee_device_get(teedev))
-> > +		return ERR_PTR(-EINVAL);
-> > +
-> > +	if (!teedev->pool) {
-> > +		/* teedev has been detached from driver */
-> > +		ret = ERR_PTR(-EINVAL);
-> > +		goto err_dev_put;
-> > +	}
-> > +
-> > +	shm = kzalloc(sizeof(*shm), GFP_KERNEL);
-> > +	if (!shm) {
-> > +		ret = ERR_PTR(-ENOMEM);
-> > +		goto err_dev_put;
-> > +	}
-> > +
-> > +	shm->flags = flags;
-> > +	shm->teedev = teedev;
-> > +	shm->ctx = ctx;
-> > +	if (flags & TEE_SHM_DMA_BUF)
-> > +		poolm = &teedev->pool->dma_buf_mgr;
-> > +	else
-> > +		poolm = &teedev->pool->private_mgr;
-> > +
-> > +	rc = poolm->ops->alloc(poolm, shm, size);
-> > +	if (rc) {
-> > +		ret = ERR_PTR(rc);
-> > +		goto err_kfree;
-> > +	}
-> > +
-> > +	mutex_lock(&teedev->mutex);
-> > +	shm->id = idr_alloc(&teedev->idr, shm, 1, 0, GFP_KERNEL);
-> > +	mutex_unlock(&teedev->mutex);
-> > +	if (shm->id < 0) {
-> > +		ret = ERR_PTR(shm->id);
-> > +		goto err_pool_free;
-> > +	}
-> > +
-> > +	if (flags & TEE_SHM_DMA_BUF) {
-> > +		DEFINE_DMA_BUF_EXPORT_INFO(exp_info);
-> > +
-> > +		exp_info.ops = &tee_shm_dma_buf_ops;
-> > +		exp_info.size = shm->size;
-> > +		exp_info.flags = O_RDWR;
-> > +		exp_info.priv = shm;
-> > +
-> > +		shm->dmabuf = dma_buf_export(&exp_info);
-> > +		if (IS_ERR(shm->dmabuf)) {
-> > +			ret = ERR_CAST(shm->dmabuf);
-> > +			goto err_rem;
-> > +		}
-> > +	}
-> why not always use dmabuf ? with dma_buf_fd() you have a file descriptor
-> which is also an integer.
-> Like this you may can remove shm->id and TEE_SHM_DMA_BUF
 
-In the early patch sets (v8 and earlier) it was a bit like you propose
-(except that we only used dmabuf on the same object as today). Then I
-got https://lkml.org/lkml/2016/2/11/861 where Al Viro says (among other
-things) "struct containing descriptor *is* a bad ABI design". Al also
-mentioned the problem with cleaning up allocated file descriptors on
-errors. I choose the safe path to only allocate and return a file
-descriptor when no error cleanup is needed because the descriptor is in
-the return value.
+--7vxpkbzz4ky4l7yn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Another reason is that there are shared memory objects which never are
-supposed to be mapped in user space. They are only a thing between the
-kernel and secure world, when carrying the struct optee_msg_arg for
-instance.
+Hi Rob,
 
-> > +	mutex_lock(&teedev->mutex);
-> > +	list_add_tail(&shm->link, &ctx->list_shm);
-> > +	mutex_unlock(&teedev->mutex);
+On Fri, Jan 27, 2017 at 02:19:13PM -0600, Rob Herring wrote:
+> On Mon, Jan 23, 2017 at 03:00:45PM +0100, Maxime Ripard wrote:
+> > The ARM Mali Utgard GPU family is embedded into a number of SoCs from
+> > Allwinner, Amlogic, Mediatek or Rockchip.
+> >=20
+> > Add a binding for the GPU of that family.
+> >=20
+> > Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >=20
+> > ---
+> >=20
+> > Changes from v1:
+> >   - Dropped the arm,mali-utgard compatible
+> >   - Made the clocks mandatory
+> >   - Added Linus Walleij Reviewed-by, and the ST compatible for the Mali
+> > ---
+> >  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 79 +++++++=
++-
+> >  1 file changed, 79 insertions(+), 0 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utga=
+rd.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt =
+b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> > new file mode 100644
+> > index 000000000000..ba0edcdd1b00
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> > @@ -0,0 +1,79 @@
+> > +ARM Mali Utgard GPU
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > > +
-> > +	return shm;
-> > +err_rem:
-> > +	mutex_lock(&teedev->mutex);
-> > +	idr_remove(&teedev->idr, shm->id);
-> > +	mutex_unlock(&teedev->mutex);
-> > +err_pool_free:
-> > +	poolm->ops->free(poolm, shm);
-> > +err_kfree:
-> > +	kfree(shm);
-> > +err_dev_put:
-> > +	tee_device_put(teedev);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(tee_shm_alloc);
-[...]
+> > +Required properties:
+> > +  - compatible
+> > +    * Must be one of the following:
+> > +      + "arm,mali-300"
+> > +      + "arm,mali-400"
+> > +      + "arm,mali-450"
+> > +    * And, optionally, one of the vendor specific compatible:
+> > +      + allwinner,sun4i-a10-mali
+> > +      + allwinner,sun7i-a20-mali
+>=20
+> And stericsson,db8500-mali?
 
-> > +/**
-> > + * tee_shm_get_from_id() - Find shared memory object and increase referece count
-> referece -> reference
+Good catch, I'll add it.
 
-I'll fix.
-
-> > + * @ctx:	Context owning the shared memory
-> > + * @id:		Id of shared memory object
-> > + * @returns a pointer to 'struct tee_shm' on success or an ERR_PTR on failure
-> > + */
-> > +struct tee_shm *tee_shm_get_from_id(struct tee_context *ctx, int id)
-> > +{
-> > +	struct tee_device *teedev;
-> > +	struct tee_shm *shm;
 > > +
-> > +	if (!ctx)
-> > +		return ERR_PTR(-EINVAL);
+> > +  - reg: Physical base address and length of the GPU registers
 > > +
-> > +	teedev = ctx->teedev;
-> > +	mutex_lock(&teedev->mutex);
-> > +	shm = idr_find(&teedev->idr, id);
-> > +	if (!shm || shm->ctx != ctx)
-> > +		shm = ERR_PTR(-EINVAL);
-> > +	else if (shm->flags & TEE_SHM_DMA_BUF)
-> > +		get_dma_buf(shm->dmabuf);
-> > +	mutex_unlock(&teedev->mutex);
-> > +	return shm;
-> > +}
-> > +EXPORT_SYMBOL_GPL(tee_shm_get_from_id);
-
-[...]
-
-> > +/**
-> > + * tee_shm_get_from_id() - Find shared memory object and increase referece count
-> referece -> reference
-
-I'll fix.
-
-> > + * @ctx:	Context owning the shared memory
-> > + * @id:		Id of shared memory object
-> > + * @returns a pointer to 'struct tee_shm' on success or an ERR_PTR on failure
-> > + */
-> > +struct tee_shm *tee_shm_get_from_id(struct tee_context *ctx, int id);
+> > +  - interrupts: an entry for each entry in interrupt-names.
+> > +    See ../interrupt-controller/interrupts.txt for details.
 > > +
-> > +#endif /*__TEE_DRV_H*/
+> > +  - interrupt-names:
+> > +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
+> > +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
+> > +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
+> > +    * gp: Geometry Processor interrupt
+> > +    * gpmmu: Geometry Processor MMU interrupt
+> > +
+> > +  - clocks: an entry for each entry in clock-names
+> > +  - clock-names:
+> > +    * bus: bus clock for the GPU
+> > +    * core: clock driving the GPU itself
+>=20
+> assigned-clocks?
+
+I didn't put it in there because it's optional, and was looking
+orthogonal to me, since it depends on the clock frequency out of reset
+and out of the bootloader running (and it's documented already as part
+of the generic clock bindings).
 
 Thanks,
-Jens
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--7vxpkbzz4ky4l7yn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYj0QjAAoJEBx+YmzsjxAgneUP/jmPPsIbVy3M8TX5y90mIUth
+xJuYYJD7dGgX+QXa8f9ZO2oOsVoZnsJhKbiEREb7ibL8KsM83+zc0/MnarmNlkLV
+HrY+ruSNhoV6Xt3NCoAQbe+Ky91VuzNz5Ek9Gg33e5h53VYtf/BlzMmKuRPdyXLt
+pNa7r5NAoXcRyXMk8T2yrXzG1Bt6OT2CXLHl5bFkuoNkPhxyPcf3uISJEFPCxOIC
+jYhWPvfzAuCI5/IFYBCs8oTsZYb9tu8YA1dVnCL2+qPv4taJXjkn/zhDff7Ewz1I
+5t384jhjHUP6Egutm5Uh2efoHIbE8libWcIK5T2fk27quIHlH3SA6W5ozSAcaY8Q
+BUEDhpWJoIMAPFtMoffKM7ZnrpesOT0hjMTp8zwXs3VffQV2fPqdzeJ1N0m/yf97
+76OJS9LXAXof6WWRjsgVjb+IuzcENpMiK8vIeRQOPoF9hlZ/OrdiA18bSmMZfyGa
+kp6VwmSpJm7rnROfyIUrWQXvDavIRwBZ9ivYNKVchJRuSqxCD0rMO0l7Yg4nkPQN
+0zYBXMh7sUFXJeCZJJ35wnzW2XUgSe/oXGLm480d7JyEcwKrNGQ7/lx3Pai9Kkie
+xTOrO4ZaNzdgwRVILtpjwUAw8NOUp9CT8pk3HzX0q21grTYYF8gQF/Fwn3WJJrbF
+TMuhBvOCXHD6RMHpUATt
+=q/V3
+-----END PGP SIGNATURE-----
+
+--7vxpkbzz4ky4l7yn--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
