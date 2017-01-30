@@ -1,18 +1,15 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v9 0/4] arm64: arch_timer: Add workaround for
- hisilicon-161010101 erratum
-Date: Mon, 30 Jan 2017 15:52:09 +0000
-Message-ID: <20170130155209.GC1160@leverpostej>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <765699aa-cbc6-67eb-9108-cbf335338e4c@linaro.org>
- <35cf654f-3944-fc76-5120-25e33f71be4f@arm.com>
- <20170124163551.GB2021@mai>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 4/7] IIO: add STM32 DFSDM ADC support
+Date: Mon, 30 Jan 2017 17:02:44 +0100
+Message-ID: <7d3336e8-ad0b-a52c-5aa8-9b39a503d426@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-5-git-send-email-arnaud.pouliquen@st.com>
+ <14320aef-7956-74bf-e4c3-5f2354cc5493@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170124163551.GB2021@mai>
+In-Reply-To: <14320aef-7956-74bf-e4c3-5f2354cc5493@kernel.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,44 +19,34 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com, will.deacon@arm.com, stuart.yoder@nxp.com, linuxarm@huawei.com, oss@buserror.net, Ding Tianhong <dingtianhong@huawei.com>, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+Hello Jonathan,
 
-On Tue, Jan 24, 2017 at 05:35:51PM +0100, Daniel Lezcano wrote:
-> That wasn't my point. The way the errata are handled in this patchset is
-> elegant and I have nothing against it. I'm worried about the accumulation of
-> fixes, hacks, workarounds in this driver. So my naive question is about not
-> using an identified bogus clocksource and use another one available on the
-> board, which is I believe often the case, instead of trying to deal with bogus
-> hardware. Apparently, that is not possible because 1) of KVM, 2) of duplication
-> and 3) of integration with the ARM64 code.
+Thanks for the reviews, i will integrate your comment in next version.
+
+On 01/29/2017 01:15 PM, Jonathan Cameron wrote:
+> On 23/01/17 16:32, Arnaud Pouliquen wrote:
+>> Add driver to handle Sigma Delta ADC conversion for ADC
+>> connected to DFSDM IP.
+>>
+>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+> Various comments inline.  Again mostly reading this to grasp how the whole
+> lot fits together.
 > 
-> Does it mean it is not possible to use another clocksource/clockevent than the
-> armv8-timer ?
-> 
-> Can you elaborate these three points ? 
+> At the moment, other than some new ABI, this is a fairly simple sysfs or in
+> kernel polled ADC driver.  The hardware seems to support a whole lot more
+> but fair enough to present this as a starting point!
 
-Practically speaking, these platforms have no other clocksource or
-clockevent device that I am aware of, which can be enumerated in a
-standard manner using ACPI.
+Yes, from IIO point of view, should increase driver features in future
+to integrate buffer, scan mode, triggers...
+Or perhaps i will need to introduce some of these concepts to handle
+ASoC requirement in IIO...
 
-For point 1, KVM is intimately familiar with the architected timer
-(which is managed during VM context switch in hyp code, for example).
-KVM knows nothing of other clocksource or clockevent devices, and it is
-far from trivial to plumb these in either way. Since the architected
-timer is a mandatory part of ARMv8, guests may attempt to use it
-regardless.
+FYI, DFSDM also offers some features like Analog watchdog, short circuit
+and SPI/manchester bus clock absence detection detection...:)
 
-For point 3, arm64 currently requires the architected timer as this is
-mandatory per the ARMv8 architecture. It is non-trivial to add support
-for other devices to the vDSO, the delay loop, etc.
-
-Localising these quirks to the architected timer driver is by far the
-least worst option available. Marc and I are perfectly happy to manage
-that.
-
-Thanks,
-Mark.
+Regards
+Arnaud
