@@ -1,83 +1,103 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
-Date: Mon, 30 Jan 2017 15:28:35 -0500
-Message-ID: <CAF6AEGspNRsq5uabymB6UAq1cV6tuE35mZ4pmi2EYXz1driAdg@mail.gmail.com>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-3-robdclark@gmail.com>
- <874m0gifmf.fsf@eliezer.anholt.net>
- <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA@mail.gmail.com>
- <8737g0s4rg.fsf@eliezer.anholt.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 02/14] Documentation: dt/bindings: Document
+ pinctrl-gpio
+Date: Mon, 30 Jan 2017 14:33:12 -0600
+Message-ID: <20170130203312.xsvu6rk2sz66m43a@rob-hp-laptop>
+References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
+ <20170125185207.23902-1-paul@crapouillou.net>
+ <20170125185207.23902-3-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <8737g0s4rg.fsf@eliezer.anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eric Anholt <eric@anholt.net>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, freedreno@lists.freedesktop.org, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170125185207.23902-3-paul@crapouillou.net>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, james.hogan@imgtec.com
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMjo1NCBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
-Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
-Pj4gT24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTowOSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5o
-b2x0Lm5ldD4gd3JvdGU6Cj4+PiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+IHdyaXRl
-czoKPj4+Cj4+Pj4gVGhlIG9yaWdpbmFsIHdheSB3ZSBkZXRlcm1pbmVkIHRoZSBncHUgdmVyc2lv
-biB3YXMgYmFzZWQgb24gZG93bnN0cmVhbQo+Pj4+IGJpbmRpbmdzIGZyb20gYW5kcm9pZCBrZXJu
-ZWwuICBBIGNsZWFuZXIgd2F5IGlzIHRvIGdldCB0aGUgdmVyc2lvbiBmcm9tCj4+Pj4gdGhlIGNv
-bXBhdGlibGUgc3RyaW5nLgo+Pj4+Cj4+Pj4gTm90ZSB0aGF0IG5vIHVwc3RyZWFtIGR0YiB1c2Vz
-IHRoZXNlIGJpbmRpbmdzLiAgQnV0IHRoZSBjb2RlIHN0aWxsCj4+Pj4gc3VwcG9ydHMgZmFsbGlu
-ZyBiYWNrIHRvIHRoZSBsZWdhY3kgYmluZGluZ3MgKHdpdGggYSB3YXJuaW5nKSwgc28gdGhhdAo+
-Pj4+IHdlIGFyZSBzdGlsbCBjb21wYXRpYmxlIHdpdGggdGhlIGdwdSBkdCBub2RlIGZyb20gYW5k
-cm9pZCBkZXZpY2UKPj4+PiBrZXJuZWxzLgo+Pj4KPj4+IFRoZSBncHVsaXN0W10gc2VlbXMgcHJl
-dHR5IHNob3J0LCBsaWtlIHlvdSBjb3VsZCBqdXN0IGhhdmUgNyBjb21wYXRpYmxlCj4+PiBzdHJp
-bmdzIGluIGR0X21hdGNoW10gYW5kIHBvaW50IHRoZW0gZGlyZWN0bHkgYXQgY29ycmVzcG9uZGlu
-ZyB0aGUKPj4+IGdwdWxpc3RbXSBlbnRyeS4gIE9yIGFyZSB0aGVyZSBsb3RzIG9mIHBhdGNoIGxl
-dmVscywgd2l0aCB0aGUgc2FtZQo+Pj4gc3RydWN0IGFkcmVub19pbmZvIHZhbHVlcz8KPj4KPj4g
-VGhlIGxpc3QgY3VycmVudGx5IGlzIHJhdGhlciBpbmNvbXBsZXRlICh3aGljaCBtYXkgb3IgbWF5
-IG5vdCBtYXR0ZXIsCj4+IEkgZ3Vlc3MgaXQgY29tZXMgZG93biB0byBob3cgbWFueSBkaWZmZXJl
-bnQgcGhvbmVzL3RhYmxldHMgb3V0IHRoZXJlCj4+IHBlb3BsZSB0cnkgdG8gZ2V0IGFuIHVwc3Ry
-ZWFtIGtlcm5lbCB3b3JraW5nIG9uKS4gIEFuZCBpdCBoYXMgdGhvc2UKPj4gQU5ZX0lEIHdpbGRj
-YXJkIGVudHJpZXMuCj4+Cj4+IEEgZnVsbCBsaXN0IG9mIGFsbCB0aGUgZ3B1J3MgaW5jbHVkaW5n
-IGFsbCB0aGVpciBwYXRjaGxldmVscyB3b3VsZCBiZQo+PiBxdWl0ZSBsb25nLgo+Pgo+PiBXZSBt
-aWdodCBlbmQgdXAgd2FudGluZyB0byBzcGxpdCB0aGUgcXVpcmtzIG91dCBkaWZmZXJlbnRseSwg
-c2luY2UKPj4gdGhvc2UgdGVuZCB0byBhcHBseSB0byBzcGVjaWZpYyBwYXRjaGxldmVsJ3MuLiBJ
-IGhhZCB0byBjaGFuZ2UgdGhlCj4+IGV4aXN0aW5nIGVudHJ5IGZvciBhNTMwIGZyb20gYTUzMC4q
-IHRvIGE1MzAuMiBmb3IgdGhpcyByZWFzb24uICBCdXQKPj4gdGhhdCB3b24ndCBlZmZlY3QgdGhl
-IGJpbmRpbmdzIHNvIHRoYXQgaXMgYW4gaW1wbGVtZW50YXRpb24gZGV0YWlsIHdlCj4+IGNhbiB3
-b3JyeSBhYm91dCBsYXRlci4KPgo+IEkgdGhpbmsgdGhhdCB1c2luZyB0aGUgb2ZfbWF0Y2hfZGV2
-aWNlKCkgbWVjaGFuaXNtIGZyb20gdGhlIHNwZWNpZmljCj4gc3RyaW5ncyBsaXN0ZWQgYXMgdGhl
-IGNvbXBhdGlibGUgd291bGQgbWFrZSBtb3JlIHNlbnNlIHRoYW4gdGhpcyBzdHJpbmcKPiBwYXJz
-aW5nLiAgWW91IGhhdmUgdG8gd3JpdGUgYSBncHVsaXN0W10gZW50cnkgYW55d2F5IGZvciB0aGUg
-bW9kdWxlIHRvCj4gbG9hZC4gIFNvIHRoYXQgbWVhbnMgYWRkaW5nIGFib3V0IDcgdmFsdWVzIHRv
-ZGF5IHRvIHRoZSBjb21wYXRpYmxlCj4gc3RyaW5nIGR0X21hdGNoLCBhbmQgdGhlIGNvZGUgdG8g
-dXNlIG9mX21hdGNoX2RldmljZSgpIHRvIGdldCB5b3VyCj4gc3RydWN0IGFkcmVub19pbmZvLiAg
-VGhlbiB0aGUgY3VycmVudCB2ZXJzaW9uIG51bWJlciBsb29rdXAgbG9vcCB3b3VsZAo+IGJlIGp1
-c3QgZm9yIHRoZSBvbGQgRFQgY29tcGF0aWJpbGl0eSBhbmQgdGhlcmUncyBubyBzdHJpbmcgcGFy
-c2luZy4KCndlbGwsIHRoZSBwcm9ibGVtIGlzIHN0aWxsIHRoYXQgd2Ugd291bGQgZW5kIHVwIG5l
-ZWRpbmcgZW50cmllcyBmb3IKZWFjaCBncHUgdmVyc2lvbiArIHBhdGNobGV2ZWwsIHdoaWNoIEkg
-d2FzIHRyeWluZyB0byBhdm9pZC4uIEkgdGhpbmsKb3RoZXJ3aXNlLCBpZiB3ZSBzdGFydGVkIGFk
-ZGluZyBtb3JlIGFkcmVubyB2YXJpYW50cyB0aGUgdGFibGUgd291bGQKZ2V0IHF1aXRlIGxhcmdl
-LiAgVGhlIEFOWV9JRCBlbnRyaWVzIGtlZXAgdGhlIHRhYmxlIHNpemUgZG93bgpjdXJyZW50bHku
-Cgo+IEhvd2V2ZXIsIGl0J3MgeW91ciBkcml2ZXIuICBUaGUgY29kZSBzZWVtcyBjb3JyZWN0LCBh
-bmQgdXNpbmcgc3BlY2lmaWMKPiBjb21wYXRpYmxlIHN0cmluZ3MgaXMgYW4gb2J2aW91c2x5IGdv
-b2Qgc3RlcC4KCkkgbWF5IHBvc3NpYmx5IHJlLXdvcmsgdGhpcyBpbiB0aGUgZnV0dXJlLCBidXQg
-d2FzIGxlYW5pbmcgbW9yZQp0b3dhcmRzIHBlcmhhcHMgaW50cm9kdWNpbmcgc29tZSBzb3J0IG9m
-IG9mX21hdGNoX2RldmljZV93aWxkY2FyZChpZCwKZGV2LCAuLi4pIHR5cGUgZnVuY3Rpb24sIGFu
-ZCBhbGxvd2luZyBhIGNvbXBhdCBzdHJpbmcgbWF0Y2ggbGlrZQoicWNvbSxhZHJlbm8tJTF1JTF1
-JTF1LiV1IgoKSSBndWVzcyBtYXliZSByZS1hcnJhbmdpbmcgdGhpcyBzbyBtdWx0aXBsZSBjb21w
-YXQgdGFibGUgZW50cmllcyBwb2ludApiYWNrIHRvIHRoZSBzYW1lICdzdHJ1Y3QgYWRyZW5vX2lu
-Zm8nIG1pZ2h0IGJlIHdvcmthYmxlLCBidXQgdGhhdCBsaXN0CmNvdWxkIHN0aWxsIGdyb3cgcXVp
-dGUgbG9uZy4gIEF0IGFueSByYXRlLCB0aGF0IGRvZXNuJ3QgY2hhbmdlIGhvdyB0aGUKYmluZGlu
-Z3MgbG9vayBzbyB0aGF0IGNhbiBjb21lIGxhdGVyLgoKPiBSZXZpZXdlZC1ieTogRXJpYyBBbmhv
-bHQgPGVyaWNAYW5ob2x0Lm5ldD4KCnRoYW5rcwoKQlIsCi1SCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jan 25, 2017 at 07:51:55PM +0100, Paul Cercueil wrote:
+> This commit adds documentation for the devicetree bidings of the
+
+s/biding/bindings/
+
+> pinctrl-gpio driver, which handles GPIOs of the Ingenic SoCs
+> currently supported by the Linux kernel.
+
+The subject makes no reference that this binding is for Ingenic GPIO. 
+Also, drop the "Documentation: " part. It's redundant.
+
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  .../devicetree/bindings/gpio/ingenic,gpio.txt      | 45 ++++++++++++++++++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+> 
+> v2: New patch
+> v3: No changes
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+> new file mode 100644
+> index 000000000000..b2eb20494365
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/ingenic,gpio.txt
+> @@ -0,0 +1,45 @@
+> +Ingenic jz47xx GPIO controller
+> +
+> +Required properties:
+> +  - compatible:
+> +    - "ingenic,jz4740-gpio" for the JZ4740 SoC
+> +    - "ingenic,jz4780-gpio" for the JZ4780 SoC
+> +
+> +  - reg: Base address and length of each memory resource used by the GPIO
+> +    controller hardware module.
+> +
+> +  - gpio-controller: Marks the device node as a GPIO controller.
+> +  - #gpio-cells: Should be 2. The first cell is the GPIO number and the second
+> +    cell specifies GPIO flags, as defined in <dt-bindings/gpio/gpio.h>. Only the
+> +    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> +  - gpio-ranges: Range of pins managed by the GPIO controller.
+> +
+> +Optional properties:
+> +  - base: The GPIO number to use as the base for this driver.
+
+Drop this please. This is a Linuxism.
+
+> +  - interrupt-controller: Marks the device node as an interrupt controller.
+> +  - interrupts: Interrupt specifier for the controllers interrupt.
+> +    Required if 'interrupt-controller' is specified.
+
+Some h/w doesn't have interrupt capability? If not, this should not be 
+optional.
+
+> +
+> +Please refer to gpio.txt in this directory for details of gpio-ranges property
+> +and the common GPIO bindings used by client devices.
+> +
+> +The GPIO controller also acts as an interrupt controller. It uses the default
+> +two cells specifier as described in Documentation/devicetree/bindings/
+> +interrupt-controller/interrupts.txt.
+
+Just document #interrupt-cells and its value and drop this paragraph.
+
+> +
+> +Example:
+> +
+> +gpa: gpio-controller@10010000 {
+> +	compatible = "ingenic,jz4740-gpio";
+> +	reg = <0x10010000 0x100>;
+> +
+> +	gpio-controller;
+> +	gpio-ranges = <&pinctrl 0 0 32>;
+> +	#gpio-cells = <2>;
+> +
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +
+> +	interrupt-parent = <&intc>;
+> +	interrupts = <28>;
+> +};
+> -- 
+> 2.11.0
+> 
