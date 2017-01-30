@@ -1,86 +1,35 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: BCM5301X: Add missing Netgear R8000 LEDs and
- Keys
-Date: Mon, 30 Jan 2017 09:37:31 -0800
-Message-ID: <4f21b12f-b099-bf52-1fa2-0ef3d3ebf7e9@gmail.com>
-References: <20170128143749.5897-1-adityaxavier@gmail.com>
- <CACna6rzaEw+_tgMtG5ASRX+AZSbg-yA=pnpaD9uE1AK8ZGKJ1Q@mail.gmail.com>
- <A0233283-B547-42E5-BBBF-3B75E592D858@gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH RESEND 2/5] dmaengine: Provide a wrapper for memcpy
+ operations
+Date: Mon, 30 Jan 2017 18:47:21 +0100
+Message-ID: <20170130184721.072c0de1@bbrezillon>
+References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
+        <20170130165417.GF19244@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <A0233283-B547-42E5-BBBF-3B75E592D858@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aditya Xavier <adityaxavier@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170130165417.GF19244@localhost>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDEvMzAvMjAxNyAwMTowOCBBTSwgQWRpdHlhIFhhdmllciB3cm90ZToKPiBXb3VsZCB5b3Ug
-cmVxdWlyZSBtZSB0byBzZW5kIHRoZSByZXZpc2VkIFBhdGNoID8KPiAKPiBPciB3b3VsZCB0aGlz
-IGRvID8KCldpbGwgdGFrZSBjYXJlIG9mIGl0IHRoaXMgdGltZS4KCj4gCj4gQW5kIHRoYW5rcyBm
-b3IgZ3VpZGluZyBtZSB0aHJvdWdoIHRoaXMgcHJvY2VzcyA6KQo+IAo+IAo+PiBPbiAyOS1KYW4t
-MjAxNywgYXQgMjo0NSBBTSwgUmFmYcWCIE1pxYJlY2tpIDx6YWplYzVAZ21haWwuY29tPiB3cm90
-ZToKPj4KPj4gT24gMjggSmFudWFyeSAyMDE3IGF0IDE1OjM3LCBBZGl0eWFYYXZpZXIgPGFkaXR5
-YXhhdmllckBnbWFpbC5jb20+IHdyb3RlOgo+Pj4gRnJvbTogQWRpdHlhIFhhdmllciA8YWRpdHlh
-eGF2aWVyQGdtYWlsLmNvbT4KPj4+Cj4+PiBBZGRlZCB0d28gV0FOIHN0YXR1cyBMRURzIGFuZCBh
-IEdQSU8gS2V5IGZvciBCcmlnaHRuZXNzIHdoaWNoIHdlcmUgbWlzc2luZy4KPj4+IFYyOiBVcGRh
-dGVkIHN1YmplY3QsIFBvd2VyIExFRCBuYW1lcywgYW5kIFdBTiBsYWJlbHMuCj4+Cj4+IENoYW5n
-ZWxvZyAoVjIgLi4uIHBhcnQpIHNob3VsZCBnbyBpbnRvIHRoYXQgL2NvbW1lbnRzLyBzZWN0aW9u
-IChzZWUgYmVsb3cpLgo+PiBGbG9yaWFuOiBjYW4geW91IGRyb3AgdGhhdCBsaW5lIHdoZW4gYXBw
-bHlpbmcgdGhpcyBwYXRjaD8gT3RoZXJ3aXNlIGl0Cj4+IGxvb2tzIE9LIHRvIG1lLgo+Pgo+Pgo+
-Pj4gU2lnbmVkLW9mZi1ieTogQWRpdHlhIFhhdmllciA8YWRpdHlheGF2aWVyQGdtYWlsLmNvbT4K
-Pj4KPj4gQWNrZWQtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4KPj4g
-VGhhbmtzIGZvciB0aGUgcGF0Y2ghCj4+Cj4+Cj4+PiAtLS0KPj4KPj4gUmlnaHQgaGVyZSwgYmVs
-b3cgdGhlc2UgMyBkYXNoZXMgaXMgYSBwbGFjZSB3aGVyZSB5b3UgY2FuIGFkZCBleHRyYQo+PiBj
-b21tZW50cyAodGhleSB3b24ndCBnbyBpbnRvIGxvZyB3aGVuIGRvaW5nICJnaXQgYW0iKS4KPj4K
-Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktbmV0Z2Vhci1yODAwMC5kdHMgfCAyMiArKysr
-KysrKysrKysrKysrKysrKy0tCj4+PiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwg
-MiBkZWxldGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
-NDcwOS1uZXRnZWFyLXI4MDAwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktbmV0Z2Vh
-ci1yODAwMC5kdHMKPj4+IGluZGV4IDkyZjhhNzIuLjkwZDQ0MjAgMTAwNjQ0Cj4+PiAtLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9iY200NzA5LW5ldGdlYXItcjgwMDAuZHRzCj4+PiArKysgYi9hcmNo
-L2FybS9ib290L2R0cy9iY200NzA5LW5ldGdlYXItcjgwMDAuZHRzCj4+PiBAQCAtMjcsMTggKzI3
-LDMwIEBACj4+PiAgICAgICAgbGVkcyB7Cj4+PiAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
-ImdwaW8tbGVkcyI7Cj4+Pgo+Pj4gLSAgICAgICAgICAgICAgIHBvd2VyMCB7Cj4+PiArICAgICAg
-ICAgICAgICAgcG93ZXItd2hpdGUgewo+Pj4gICAgICAgICAgICAgICAgICAgICAgICBsYWJlbCA9
-ICJiY201M3h4OndoaXRlOnBvd2VyIjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3Mg
-PSA8JmNoaXBjb21tb24gMiBHUElPX0FDVElWRV9MT1c+Owo+Pj4gICAgICAgICAgICAgICAgICAg
-ICAgICBsaW51eCxkZWZhdWx0LXRyaWdnZXIgPSAiZGVmYXVsdC1vbiI7Cj4+PiAgICAgICAgICAg
-ICAgICB9Owo+Pj4KPj4+IC0gICAgICAgICAgICAgICBwb3dlcjEgewo+Pj4gKyAgICAgICAgICAg
-ICAgIHBvd2VyLWFtYmVyIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWwgPSAiYmNt
-NTN4eDphbWJlcjpwb3dlciI7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgIGdwaW9zID0gPCZj
-aGlwY29tbW9uIDMgR1BJT19BQ1RJVkVfTE9XPjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
-bGludXgsZGVmYXVsdC10cmlnZ2VyID0gImRlZmF1bHQtb2ZmIjsKPj4+ICAgICAgICAgICAgICAg
-IH07Cj4+Pgo+Pj4gKyAgICAgICAgICAgICAgIHdhbi13aGl0ZSB7Cj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICBsYWJlbCA9ICJiY201M3h4OndoaXRlOndhbiI7Cj4+PiArICAgICAgICAgICAg
-ICAgICAgICAgICBncGlvcyA9IDwmY2hpcGNvbW1vbiA4IEdQSU9fQUNUSVZFX0xPVz47Cj4+PiAr
-ICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxkZWZhdWx0LXRyaWdnZXIgPSAiZGVmYXVsdC1v
-biI7Cj4+PiArICAgICAgICAgICAgICAgfTsKPj4+ICsKPj4+ICsgICAgICAgICAgICAgICB3YW4t
-YW1iZXIgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGFiZWwgPSAiYmNtNTN4eDphbWJl
-cjp3YW4iOwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmNoaXBjb21tb24g
-OSBHUElPX0FDVElWRV9ISUdIPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGRl
-ZmF1bHQtdHJpZ2dlciA9ICJkZWZhdWx0LW9mZiI7Cj4+PiArICAgICAgICAgICAgICAgfTsKPj4+
-ICsKPj4+ICAgICAgICAgICAgICAgIDVnaHotMSB7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAg
-IGxhYmVsID0gImJjbTUzeHg6d2hpdGU6NWdoei0xIjsKPj4+ICAgICAgICAgICAgICAgICAgICAg
-ICAgZ3Bpb3MgPSA8JmNoaXBjb21tb24gMTIgR1BJT19BQ1RJVkVfTE9XPjsKPj4+IEBAIC0xMDQs
-NiArMTE2LDEyIEBACj4+PiAgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGNvZGUgPSA8S0VZ
-X1JFU1RBUlQ+Owo+Pj4gICAgICAgICAgICAgICAgICAgICAgICBncGlvcyA9IDwmY2hpcGNvbW1v
-biA2IEdQSU9fQUNUSVZFX0xPVz47Cj4+PiAgICAgICAgICAgICAgICB9Owo+Pj4gKwo+Pj4gKyAg
-ICAgICAgICAgICAgIGJyaWdodG5lc3Mgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGFi
-ZWwgPSAiQmFja2xpZ2h0IjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGNvZGUg
-PSA8S0VZX0JSSUdIVE5FU1NfWkVSTz47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBncGlv
-cyA9IDwmY2hpcGNvbW1vbiAxOSBHUElPX0FDVElWRV9MT1c+Owo+Pj4gKyAgICAgICAgICAgICAg
-IH07Cj4+PiAgICAgICAgfTsKPj4+IH07Cj4+Pgo+Pj4gLS0KPj4+IDIuOS4zCj4+Pgo+Pgo+Pgo+
-Pgo+PiAtLSAKPj4gUmFmYcWCCj4gCgoKLS0gCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Vinod,
+
+On Mon, 30 Jan 2017 22:24:17 +0530
+Vinod Koul <vinod.koul@intel.com> wrote:
+
+> On Fri, Jan 27, 2017 at 05:42:01PM +0100, Boris Brezillon wrote:
+> > Almost all ->device_prep_dma_xx() methods have a wrapper defined in
+> > dmaengine.h. Add one for  ->device_prep_dma_memcpy().  
+> 
+> Looks good to me.
+> 
+> Acked-by: Vinod Koul <vinod.koul@intel.com>
+> 
+> 
+
+Maybe you can take this patch directly (the NAND related bits are for
+4.12).
