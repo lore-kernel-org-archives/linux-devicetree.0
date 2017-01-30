@@ -1,95 +1,59 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 4/4] drm/msm: drop _clk suffix from clk names
-Date: Mon, 30 Jan 2017 10:15:14 -0800
-Message-ID: <87y3xsh0st.fsf@eliezer.anholt.net>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-5-robdclark@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1818631264=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170130164921.20744-5-robdclark@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org
+From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 3/3] dmaengine: cppi41: Fix teardown warnings
+Date: Mon, 30 Jan 2017 18:49:21 +0100
+Message-ID: <20170130174921.28231-4-abailon@baylibre.com>
+References: <20170130174921.28231-1-abailon@baylibre.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1818631264==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+During the teardown of a RX channel, because there is only one
+completion queue available for RX channel, descriptor of another
+channel may be popped which will cause 2 warnings:
+- the first one because we popped a wrong descriptor
+  (neither the channel's descriptor, nor the teardown descriptor).
+- the second one happen during the teardown of another channel,
+  because we can't find the channel descriptor
+  (that is, the one that caused the first warning).
+To avoid that, use one free queue instead of a transmit completion queue.
 
---=-=-=
-Content-Type: text/plain
+Note that fix doesn't fix all the teardown warnings:
+I still get some when I run some corner case.
 
-Rob Clark <robdclark@gmail.com> writes:
+Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+---
+ drivers/dma/cppi41.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Suggested by Rob Herring.  We still support the old names for
-> compatibility with downstream android dt files.
->
-> Cc: Rob Herring <robh@kernel.org>
-> Signed-off-by: Rob Clark <robdclark@gmail.com>
+diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
+index 5c501da..9fdd824 100644
+--- a/drivers/dma/cppi41.c
++++ b/drivers/dma/cppi41.c
+@@ -629,7 +629,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
+ 		if (!c->is_tx) {
+ 			reg |= GCR_STARV_RETRY;
+ 			reg |= GCR_DESC_TYPE_HOST;
+-			reg |= c->q_comp_num;
++			reg |= cdd->td_queue.complete;
+ 		}
+ 		reg |= GCR_TEARDOWN;
+ 		cppi_writel(reg, c->gcr_reg);
+@@ -640,7 +640,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
+ 	if (!c->td_seen || !c->td_desc_seen) {
+ 
+ 		desc_phys = cppi41_pop_desc(cdd, cdd->td_queue.complete);
+-		if (!desc_phys)
++		if (!desc_phys && c->is_tx)
+ 			desc_phys = cppi41_pop_desc(cdd, c->q_comp_num);
+ 
+ 		if (desc_phys == c->desc_phys) {
+-- 
+2.10.2
 
-Huh, I don't think I would have cleaned up DT bindings in exchange for
-adding driver code like this.  But the code seems correct, so other than
-one optional suggestion:
-
-Reviewed-by: Eric Anholt <eric@anholt.net>
-
-> +struct clk *msm_clk_get(struct platform_device *pdev, const char *name)
-> +{
-> +	struct clk *clk;
-> +	char name2[32];
-> +
-> +	clk = devm_clk_get(&pdev->dev, name);
-> +	if (!IS_ERR(clk) || PTR_ERR(clk) == -EPROBE_DEFER)
-> +		return clk;
-> +
-> +	snprintf(name2, sizeof(name2), "%s_clk", name);
-> +
-> +	clk = devm_clk_get(&pdev->dev, name2);
-> +	if (!IS_ERR(clk) || PTR_ERR(clk) == -EPROBE_DEFER)
-> +		dev_warn(&pdev->dev, "Using legacy clk name binding.  Use "
-> +				"\"%s\" instead of \"%s\"\n", name, name2);
-
-Drop the second "|| PTR_ERR(clk)" case, so that you only get one warning
-printed at boot if deferring happens?
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliPgrIACgkQtdYpNtH8
-nuh6AxAAjJIhJjbX0N4JtKCFmPORKMGhCTJkLk+9E4tsyaGVCWmzZDGQHb4n45+8
-HaCtGW8hpsni8O34UeioLHUNeWqK1tlip7n3CBwQpq2uzPM2lrMnvbj7oSVYNYbd
-QHWuhEi7UCAw3DHBDk0085gIdnvTrvUUUthI65SHqUXmWPnXbyRad4D10NY1n5Nk
-ECLjqyWnSHa8oz9fXlT/Kb9y6kd7LxET7GfK0ICNSGKrRaxFuDcLXONnKBy8+FKv
-/12mJTz4xMaAn6u/CdXBgFI2tBC4kRW+RlWF08VZM8+I9a66Zr7eHyVDjZIHj91R
-oCujkgh8CL2Mjusk9Ba16MK/mNz0rqyttCOva061VOpuPfWMAzLp+0ChoJPFfm4J
-7G1SJM5sRnc9aqefk6l80nVfdnWaFgeT0szu++qft3fR7VGdoPHNA2NH2loFbVfx
-IOY0P2p634+GiaLHYSUbM+VKu9Srfwa/ikPmry6e41VHfTbjxQgPJphewPUECN89
-q6pFXr9Y4b018mlsM6Bv1hmn6K26fyZkCQvMjHIf6JOHpkcyI+U1Mqwjt5Rpw9AH
-8itByDD2ysTZi99RnhYD//swP+x2LRolj6ZMvwpZ3OsbCdpLc6XroDkyNPcZBnHS
-25st6+6KVq8HmtOltgrVEdzYSvOvrY8QU+jc0r++K/RTpJrTHN8=
-=PB/z
------END PGP SIGNATURE-----
---=-=-=--
-
---===============1818631264==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1818631264==--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
