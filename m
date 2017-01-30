@@ -1,53 +1,48 @@
-From: Brian Austin <brian.austin@cirrus.com>
-Subject: Re: [PATCH v4 2/2] ASoc: Add devictree bindings for
-	CS35L35 CODEC
-Date: Mon, 30 Jan 2017 14:39:35 -0600
-Message-ID: <b4c5fd4d-cc0b-4e17-923e-87048f391cec@EX3.ad.cirrus.com>
-References: <1485360798-15523-1-git-send-email-brian.austin@cirrus.com>
- <c3224f63-e5d1-4874-8317-c5df53d0207d@EX3.ad.cirrus.com>
- <20170130201655.zuozjbg5jnhwrezy@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] mmc: sh_mobile_sdhi: explain clock bindings
+Date: Mon, 30 Jan 2017 14:37:09 -0600
+Message-ID: <20170130203709.atowu3liadamyrcp@rob-hp-laptop>
+References: <20170125202810.16876-1-chris.brandt@renesas.com>
+ <20170125202810.16876-3-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170130201655.zuozjbg5jnhwrezy@rob-hp-laptop>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Brian Austin <brian.austin@cirrus.com>, alsa-devel@alsa-project.org, lgirdwood@gmail.com, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170125202810.16876-3-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 30 Jan 2017, Rob Herring wrote:
-
-> On Wed, Jan 25, 2017 at 10:13:18AM -0600, Brian Austin wrote:
-> > Add devicetree bindings documentatin for
-> > Cirrus Logic CS35L35 Boosted Amplifier
-> > 
-> > Signed-off-by: Brian Austin <brian.austin@cirrus.com>
-> > ---
-> >  .../devicetree/bindings/sound/cs35l35.txt          | 171 +++++++++++++++++++++
-> >  1 file changed, 171 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/sound/cs35l35.txt
+On Wed, Jan 25, 2017 at 03:28:09PM -0500, Chris Brandt wrote:
+> In the case of a single clock source, you don't need names. However,
+> if the controller has 2 clock sources, you need to name them correctly
+> so the driver can find the 2nd one. The 2nd clock is for the internal
+> card detect logic.
 > 
-> This looks similar to the CS35L33. Please align the property names and 
-> perhaps combine into a single binding doc.
-> 
-> Rob
-> 
-I can make sure the names are consistent for some of them but most of it 
-would be messy to combine into a single doc IMO. I know it looks similar 
-for some of them like the algorithm nodes but they are very different in 
-parameters and operation.
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> ---
+> v5:
+> * add Reviewed-by: Geert Uytterhoeven
+> * list number of clocks for each SoC
+> * remove example because it already exists in mmc.txt
+> v4:
+> * just explain there might be 2 clocks, don't explain how
+>   we will use them in the driver
+> v3:
+> * add more clarification about why there are sometimes 2 clocks
+>   and what you should do with them.
+> * remove 'status = "disabled"' from example
+> v2:
+> * fix spelling and change wording
+> * changed clock name from "carddetect" to "cd"
+> ---
+>  Documentation/devicetree/bindings/mmc/tmio_mmc.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 
-Would it suffice to just make sure the properties that are the same be 
-reflected across both docs?
-
-Thanks
-Brian
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
