@@ -1,97 +1,63 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Mon, 30 Jan 2017 13:06:57 +0000
-Message-ID: <20170130130657.GR27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
- <1484929911.2897.70.camel@pengutronix.de>
- <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
- <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
- <1485169204.2874.57.camel@pengutronix.de>
- <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
- <1485257269.3600.96.camel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v5 3/8] ARM: dts: rockchip: add timer entries to rk3188 SoC
+Date: Mon, 30 Jan 2017 16:13:07 +0300
+Message-ID: <046978C2-808F-4EC3-9429-063BC1A7CE7B@gmail.com>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com> <1485260203-14216-4-git-send-email-al.kochet@gmail.com> <20170130110428.GC2206@mai> <A5940770-B960-4409-8DA4-BE39EF9A6325@gmail.com> <20170130120444.GE2206@mai>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485257269.3600.96.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170130120444.GE2206@mai>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> The central issue seems to be that I think media pad links / media bus
-> formats should describe physical links, such as parallel or serial
-> buses, and the formats of pixels flowing through them, whereas Steve
-> would like to extend them to describe software transports and in-memory
-> formats.
 
-This probably isn't the right place to attach this comment in this
-thread, but... the issue of media bus formats matching physical buses
-is an argument that I think is already lost.
+> 30 =D1=8F=D0=BD=D0=B2. 2017 =D0=B3., =D0=B2 15:04, Daniel Lezcano =
+<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=
+=B0):
+>=20
+> There is no case when the rockchip timer is used for the clockevent.
+The is already timer entry for rk3228 in the DT. And it act as =
+clockevent. I guess it work as backup,
+but I cannot test it also. In order to not break DT compatibility I had =
+to provide one timer to be
+initialized as clockevent. And implemented implicit rule the driver =
+(first DT timer - clockevent,
+second DT timer - clocksource) already exists for other timers.
 
-For example, take the 10-bit bayer formats:
+> If I'm not wrong, you can check /proc/interrupts and see there is no =
+interrupt
+> on the rockchip timer.
 
-#define MEDIA_BUS_FMT_SBGGR10_1X10              0x3007
-#define MEDIA_BUS_FMT_SGBRG10_1X10              0x300e
-#define MEDIA_BUS_FMT_SGRBG10_1X10              0x300a
-#define MEDIA_BUS_FMT_SRGGB10_1X10              0x300f
+Yes, you right here. I=E2=80=99ve temporary disable smp_twd to test =
+rockchip timer interrupts.
+There is no interrupt on the rockchip timer during normal work.
 
-These are commonly used on CSI serial buses (see the smiapp driver for
-example).  From the description at the top of the file, it says the
-1X10 means that one pixel is transferred as one 10-bit sample.
+> - when the CPU enters a deep idle state. But such state does not exist =
+on rk3188
+ARM chip/revision specific?
 
-However, the format on wire is somewhat different - four pixels are
-transmitted over five bytes:
+> - when the system goes to suspend. But the timers are stopped in any =
+case and
+>   CPU0 is always on.
+There is timer for rk3228 in the DT. I guess there are situations where =
+it can be used.
+May be the situations are also acceptable for rk3188? May be something =
+like suspend to RAM or
+suspend to HDD? I am not expert in that questions. I can do some tests =
+if you give hint/link.
 
-	P0	P1	P2	P3	P0	P1	P2	P3
-	8-bit	8-bit	8-bit	8-bit	2-bit	2-bit	2-bit	2-bit
+So, as I understood you suggest to leave only one timer what can be used =
+as clocksource
+only. I can implement that, but there should be DT rule what allow to =
+setup timer
+as clocksource only. I cannot do more without timer framework support.
+Looks, like I have to wait your patch to implement that.
 
-This gives two problems:
-1) it doesn't fit in any sensible kind of "one pixel transferred as
-   N M-bit samples" description because the pixel/sample values
-   (depending how you look at them) are broken up.
+Alexander.
 
-2) changing this will probably be a user visible change, as things
-   like smiapp are already in use.
-
-So, I think what we actually have is the media bus formats describing
-the _logical_ bus format.  Yes, one pixel is transferred as one 10-bit
-sample in this case.
-
-To help illustrate my point, consider the difference between
-MEDIA_BUS_FMT_RGB565_1X16 and MEDIA_BUS_FMT_RGB565_2X8_BE or
-MEDIA_BUS_FMT_RGB565_2X8_LE.  RGB565_1X16 means 1 pixel over an effective
-16-bit wide bus (if it's not 16-bit, then it has to be broken up into
-separate "samples".)  RGB565_2X8 means 1 pixel as two 8-bit samples.
-
-So, the 10-bit bayer is 1 pixel as 1.25 bytes.  Or is it, over a serial
-bus.  Using the RGB565 case, 10-bit bayer over a 4 lane CSI bus becomes
-interesting:
-
-	first byte	2nd	3rd
-lane 1	P0 9:2		S0	P7 9:2
-lane 2	P1 9:2		P4 9:2	S1
-lane 3	P2 9:2		P5 9:2	P8 9:2
-lane 4	P3 9:2		P6 9:2	P9 9:2
-
-S0 = P0/P1/P2/P3 least significant two bits
-S1 = P4/P5/P6/P7 least significant two bits
-
-or 2 lane CSI:
-	first byte	2nd	3rd	4th	5th
-lane 1	P0 9:2		P2	S0	P5	P7
-lane 2	P1 9:2		P3	P4	P6	S1
-
-or 1 lane CSI:
-lane 1	P0 P1 P2 P3 S0 P4 P5 P6 P7 S1 P8 P9 ...
-
-etc.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
