@@ -1,59 +1,52 @@
-From: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 3/3] dmaengine: cppi41: Fix teardown warnings
-Date: Mon, 30 Jan 2017 18:49:21 +0100
-Message-ID: <20170130174921.28231-4-abailon@baylibre.com>
-References: <20170130174921.28231-1-abailon@baylibre.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170130174921.28231-1-abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, b-liu-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
+Date: Mon, 30 Jan 2017 13:19:07 -0500
+Message-ID: <CAF6AEGuK9TCdRmyaj4tk3+uu5L5Xvf1T3Kz8gZynX331VqSMfA@mail.gmail.com>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-3-robdclark@gmail.com>
+ <874m0gifmf.fsf@eliezer.anholt.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <874m0gifmf.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-During the teardown of a RX channel, because there is only one
-completion queue available for RX channel, descriptor of another
-channel may be popped which will cause 2 warnings:
-- the first one because we popped a wrong descriptor
-  (neither the channel's descriptor, nor the teardown descriptor).
-- the second one happen during the teardown of another channel,
-  because we can't find the channel descriptor
-  (that is, the one that caused the first warning).
-To avoid that, use one free queue instead of a transmit completion queue.
-
-Note that fix doesn't fix all the teardown warnings:
-I still get some when I run some corner case.
-
-Signed-off-by: Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- drivers/dma/cppi41.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/dma/cppi41.c b/drivers/dma/cppi41.c
-index 5c501da..9fdd824 100644
---- a/drivers/dma/cppi41.c
-+++ b/drivers/dma/cppi41.c
-@@ -629,7 +629,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
- 		if (!c->is_tx) {
- 			reg |= GCR_STARV_RETRY;
- 			reg |= GCR_DESC_TYPE_HOST;
--			reg |= c->q_comp_num;
-+			reg |= cdd->td_queue.complete;
- 		}
- 		reg |= GCR_TEARDOWN;
- 		cppi_writel(reg, c->gcr_reg);
-@@ -640,7 +640,7 @@ static int cppi41_tear_down_chan(struct cppi41_channel *c)
- 	if (!c->td_seen || !c->td_desc_seen) {
- 
- 		desc_phys = cppi41_pop_desc(cdd, cdd->td_queue.complete);
--		if (!desc_phys)
-+		if (!desc_phys && c->is_tx)
- 			desc_phys = cppi41_pop_desc(cdd, c->q_comp_num);
- 
- 		if (desc_phys == c->desc_phys) {
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTowOSBQTSwgRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0
+Lm5ldD4gd3JvdGU6Cj4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0ZXM6Cj4K
+Pj4gVGhlIG9yaWdpbmFsIHdheSB3ZSBkZXRlcm1pbmVkIHRoZSBncHUgdmVyc2lvbiB3YXMgYmFz
+ZWQgb24gZG93bnN0cmVhbQo+PiBiaW5kaW5ncyBmcm9tIGFuZHJvaWQga2VybmVsLiAgQSBjbGVh
+bmVyIHdheSBpcyB0byBnZXQgdGhlIHZlcnNpb24gZnJvbQo+PiB0aGUgY29tcGF0aWJsZSBzdHJp
+bmcuCj4+Cj4+IE5vdGUgdGhhdCBubyB1cHN0cmVhbSBkdGIgdXNlcyB0aGVzZSBiaW5kaW5ncy4g
+IEJ1dCB0aGUgY29kZSBzdGlsbAo+PiBzdXBwb3J0cyBmYWxsaW5nIGJhY2sgdG8gdGhlIGxlZ2Fj
+eSBiaW5kaW5ncyAod2l0aCBhIHdhcm5pbmcpLCBzbyB0aGF0Cj4+IHdlIGFyZSBzdGlsbCBjb21w
+YXRpYmxlIHdpdGggdGhlIGdwdSBkdCBub2RlIGZyb20gYW5kcm9pZCBkZXZpY2UKPj4ga2VybmVs
+cy4KPgo+IFRoZSBncHVsaXN0W10gc2VlbXMgcHJldHR5IHNob3J0LCBsaWtlIHlvdSBjb3VsZCBq
+dXN0IGhhdmUgNyBjb21wYXRpYmxlCj4gc3RyaW5ncyBpbiBkdF9tYXRjaFtdIGFuZCBwb2ludCB0
+aGVtIGRpcmVjdGx5IGF0IGNvcnJlc3BvbmRpbmcgdGhlCj4gZ3B1bGlzdFtdIGVudHJ5LiAgT3Ig
+YXJlIHRoZXJlIGxvdHMgb2YgcGF0Y2ggbGV2ZWxzLCB3aXRoIHRoZSBzYW1lCj4gc3RydWN0IGFk
+cmVub19pbmZvIHZhbHVlcz8KClRoZSBsaXN0IGN1cnJlbnRseSBpcyByYXRoZXIgaW5jb21wbGV0
+ZSAod2hpY2ggbWF5IG9yIG1heSBub3QgbWF0dGVyLApJIGd1ZXNzIGl0IGNvbWVzIGRvd24gdG8g
+aG93IG1hbnkgZGlmZmVyZW50IHBob25lcy90YWJsZXRzIG91dCB0aGVyZQpwZW9wbGUgdHJ5IHRv
+IGdldCBhbiB1cHN0cmVhbSBrZXJuZWwgd29ya2luZyBvbikuICBBbmQgaXQgaGFzIHRob3NlCkFO
+WV9JRCB3aWxkY2FyZCBlbnRyaWVzLgoKQSBmdWxsIGxpc3Qgb2YgYWxsIHRoZSBncHUncyBpbmNs
+dWRpbmcgYWxsIHRoZWlyIHBhdGNobGV2ZWxzIHdvdWxkIGJlCnF1aXRlIGxvbmcuCgpXZSBtaWdo
+dCBlbmQgdXAgd2FudGluZyB0byBzcGxpdCB0aGUgcXVpcmtzIG91dCBkaWZmZXJlbnRseSwgc2lu
+Y2UKdGhvc2UgdGVuZCB0byBhcHBseSB0byBzcGVjaWZpYyBwYXRjaGxldmVsJ3MuLiBJIGhhZCB0
+byBjaGFuZ2UgdGhlCmV4aXN0aW5nIGVudHJ5IGZvciBhNTMwIGZyb20gYTUzMC4qIHRvIGE1MzAu
+MiBmb3IgdGhpcyByZWFzb24uICBCdXQKdGhhdCB3b24ndCBlZmZlY3QgdGhlIGJpbmRpbmdzIHNv
+IHRoYXQgaXMgYW4gaW1wbGVtZW50YXRpb24gZGV0YWlsIHdlCmNhbiB3b3JyeSBhYm91dCBsYXRl
+ci4KCkJSLAotUgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
