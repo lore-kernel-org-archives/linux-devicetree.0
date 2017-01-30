@@ -1,7 +1,8 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 5/5] iio: adc: stm32: add exti11 gpio trigger source
-Date: Mon, 30 Jan 2017 14:57:43 +0100
-Message-ID: <1485784663-19505-6-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 1/5] Documentation: dt: iio: document stm32 adc trigger
+ polarity
+Date: Mon, 30 Jan 2017 14:57:39 +0100
+Message-ID: <1485784663-19505-2-git-send-email-fabrice.gasnier@st.com>
 References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,45 +22,34 @@ To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kerne
 Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-STM32F4 ADC can use exti11 (gpio) signal as trigger source for
-conversions.
+STM32 ADC trigger polarity can be set to either rising, falling
+or both edges. Allow to configure it from dt.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/iio/adc/stm32-adc.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index be0e457..0118c9c 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -26,6 +26,7 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
- #include <linux/iio/timer/stm32-timer-trigger.h>
-+#include <linux/iio/trigger/stm32-exti-trigger.h>
- #include <linux/iio/trigger.h>
- #include <linux/iio/trigger_consumer.h>
- #include <linux/iio/triggered_buffer.h>
-@@ -240,6 +241,7 @@ struct stm32_adc_chan_spec {
- 	{ TIM5_CH3, STM32_EXT12 },
- 	{ TIM8_CH1, STM32_EXT13 },
- 	{ TIM8_TRGO, STM32_EXT14 },
-+	{ STM32_EXTI(11), STM32_EXT15 },
- 	{}, /* sentinel */
- };
+diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+index 5dfc88e..6c6d968 100644
+--- a/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
++++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-adc.txt
+@@ -57,6 +57,8 @@ Optional properties:
+ - dmas: Phandle to dma channel for this ADC instance.
+   See ../../dma/dma.txt for details.
+ - dma-names: Must be "rx" when dmas property is being used.
++- st,trigger-polarity: Must be 0 (default), 1 or 2 to set default trigger
++  polarity to respectively "rising-edge", "falling-edge" or "both-edges".
  
-@@ -409,6 +411,11 @@ static int stm32_adc_get_trig_extsel(struct iio_trigger *trig)
- 		    !strcmp(stm32f4_adc_trigs[i].name, trig->name)) {
- 			return stm32f4_adc_trigs[i].extsel;
- 		}
-+
-+		if (is_stm32_exti_trigger(trig) &&
-+		    !strcmp(stm32f4_adc_trigs[i].name, trig->name)) {
-+			return stm32f4_adc_trigs[i].extsel;
-+		}
- 	}
- 
- 	return -EINVAL;
+ Example:
+ 	adc: adc@40012000 {
+@@ -84,6 +86,7 @@ Example:
+ 			st,adc-channels = <8>;
+ 			dmas = <&dma2 0 0 0x400 0x0>;
+ 			dma-names = "rx";
++			st,trigger-polarity = <1>;
+ 		};
+ 		...
+ 		other adc child nodes follow...
 -- 
 1.9.1
