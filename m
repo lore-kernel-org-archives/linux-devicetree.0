@@ -1,629 +1,403 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] regulator: cpcap: Add basic regulator support
-Date: Mon, 30 Jan 2017 16:12:41 -0800
-Message-ID: <20170131001241.5926-1-tony@atomide.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: eajames.ibm@gmail.com
+Subject: [PATCH linux v5 2/6] hwmon: occ: Add sysfs interface
+Date: Mon, 30 Jan 2017 17:42:14 -0600
+Message-ID: <1485819738-957-3-git-send-email-eajames.ibm@gmail.com>
+References: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Many Motorola phones like droid 4 are using a custom PMIC called CPCAP
-or 6556002. This PMIC is used with several SoCs, I've noticed at least
-omap3, omap4 and Tegra2 based Motorola phones and tablets using it.
+From: "Edward A. James" <eajames@us.ibm.com>
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Add a generic mechanism to expose the sensors provided by the OCC in
+sysfs.
+
+Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
+ Documentation/hwmon/occ       |  62 +++++++++++
+ drivers/hwmon/occ/Makefile    |   2 +-
+ drivers/hwmon/occ/occ_sysfs.c | 251 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/occ/occ_sysfs.h |  30 +++++
+ 4 files changed, 344 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.h
 
-With the cpcap core MFD driver now in Linux next as commit
-3d66c8abc13e ("mfd: cpcap: Add minimal support"), here's a related
-regulator driver. This is needed to support more devices on droid 4,
-such as the LCD and touchscreen.
-
----
- .../bindings/regulator/cpcap-regulator.txt         |  34 ++
- drivers/regulator/Kconfig                          |   7 +
- drivers/regulator/Makefile                         |   1 +
- drivers/regulator/cpcap-regulator.c                | 517 +++++++++++++++++++++
- 4 files changed, 559 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
- create mode 100644 drivers/regulator/cpcap-regulator.c
-
-diff --git a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-new file mode 100644
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-@@ -0,0 +1,34 @@
-+Motorola CPCAP PMIC voltage regulators
-+------------------------------------
-+
-+Requires node properties:
-+- "compatible" value one of:
-+    "motorola,cpcap-regulator"
-+    "motorola,mapphone-cpcap-regulator"
-+
-+Required regulator properties:
-+- "regulator-name"
-+- "regulator-enable-ramp-delay"
-+- "regulator-min-microvolt"
-+- "regulator-max-microvolt"
-+
-+Optional regulator properties:
-+- "regulator-boot-on"
-+
-+See Documentation/devicetree/bindings/regulator/regulator.txt
-+for more details about the regulator properties.
-+
-+Example:
-+
-+cpcap_regulator: regulator@600 {
-+	compatible = "motorola,cpcap-regulator";
-+
-+	cpcap_regulators: regulators {
-+		sw5: SW5 {
-+			regulator-min-microvolt = <5050000>;
-+			regulator-max-microvolt = <5050000>;
-+			regulator-enable-ramp-delay = <50000>;
-+			regulator-boot-on;
-+		};
-+	};
-+};
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -163,6 +163,13 @@ config REGULATOR_BCM590XX
- 	  BCM590xx PMUs. This will enable support for the software
- 	  controllable LDO/Switching regulators.
+diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
+index 79d1642..d0bdf06 100644
+--- a/Documentation/hwmon/occ
++++ b/Documentation/hwmon/occ
+@@ -25,6 +25,68 @@ Currently, all versions of the OCC support four types of sensor data: power,
+ temperature, frequency, and "caps," which indicate limits and thresholds used
+ internally on the OCC.
  
-+config REGULATOR_CPCAP
-+	tristate "Motorola CPCAP regulator"
-+	depends on MFD_CPCAP
-+	help
-+	  Say y here for CPCAP regulator found on some Motorola phones
-+	  and tablets such as Droid 4.
++sysfs Entries
++-------------
 +
- config REGULATOR_DA903X
- 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
- 	depends on PMIC_DA903X
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
++The OCC driver uses the hwmon sysfs framework to provide data to userspace.
++
++The driver exports a number of sysfs files for each type of sensor. The
++sensor-specific files vary depending on the processor type, though many of the
++attributes are common for both the POWER8 and POWER9.
++
++The hwmon interface cannot define every type of sensor that may be used.
++Therefore, the frequency sensor on the OCC uses the "input" type sensor defined
++by the hwmon interface, rather than defining a new type of custom sensor.
++
++Below are detailed the names and meaning of each sensor file for both types of
++processors. All sensors are read-only unless otherwise specified. <x> indicates
++the hwmon index. sensor id indicates the unique internal OCC identifer. Please
++see the POWER OCC specification for details on all these sensor values.
++
++frequency:
++	all processors:
++		in<x>_input - frequency value
++		in<x>_label - sensor id
++temperature:
++	POWER8:
++		temp<x>_input - temperature value
++		temp<x>_label - sensor id
++	POWER9 (in addition to above):
++		temp<x>_type - FRU type
++
++power:
++	POWER8:
++		power<x>_input - power value
++		power<x>_label - sensor id
++		power<x>_average - accumulator
++		power<x>_average_interval - update tag (number of samples in
++			accumulator)
++	POWER9:
++		power<x>_input - power value
++		power<x>_label - sensor id
++		power<x>_average_min - accumulator[0]
++		power<x>_average_max - accumulator[1] (64 bits total)
++		power<x>_average_interval - update tag
++		power<x>_reset_history - (function_id | (apss_channel << 8)
++
++caps:
++	POWER8:
++		power<x>_cap - current powercap
++		power<x>_cap_max - max powercap
++		power<x>_cap_min - min powercap
++		power<x>_max - normal powercap
++		power<x>_alarm - user powercap, r/w
++	POWER9:
++		power<x>_cap_alarm - user powercap source
++
++The driver also provides two sysfs entries through hwmon to better
++control the driver and monitor the master OCC. Though there may be multiple
++OCCs present on the system, these two files are only present for the "master"
++OCC.
++	name - read the name of the driver
++	update_interval - read or write the minimum interval for polling the
++		OCC.
++
+ BMC - Host Communications
+ -------------------------
  
- obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
- obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
-+obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
- obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
- obj-$(CONFIG_REGULATOR_AB3100) += ab3100.o
- obj-$(CONFIG_REGULATOR_AB8500)	+= ab8500-ext.o ab8500.o
-diff --git a/drivers/regulator/cpcap-regulator.c b/drivers/regulator/cpcap-regulator.c
+diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
+index 93cb52f..a6881f9 100644
+--- a/drivers/hwmon/occ/Makefile
++++ b/drivers/hwmon/occ/Makefile
+@@ -1 +1 @@
+-obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o
++obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o occ_sysfs.o
+diff --git a/drivers/hwmon/occ/occ_sysfs.c b/drivers/hwmon/occ/occ_sysfs.c
 new file mode 100644
+index 0000000..9598f78
 --- /dev/null
-+++ b/drivers/regulator/cpcap-regulator.c
-@@ -0,0 +1,517 @@
++++ b/drivers/hwmon/occ/occ_sysfs.c
+@@ -0,0 +1,251 @@
 +/*
-+ * Motorola CPCAP PMIC regulator driver
++ * occ_sysfs.c - OCC sysfs interface
 + *
-+ * Based on cpcap-regulator.c from Motorola Linux kernel tree
-+ * Copyright (C) 2009-2011 Motorola, Inc.
++ * This file contains the methods and data structures for implementing the OCC
++ * hwmon sysfs entries.
 + *
-+ * Rewritten for mainline kernel to use device tree and regmap
-+ * Copyright (C) 2017 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
++ * Copyright 2016 IBM Corp.
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
 + *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 + * GNU General Public License for more details.
 + */
 +
++#include <linux/delay.h>
++#include <linux/device.h>
 +#include <linux/err.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/init.h>
++#include <linux/jiffies.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
-+#include <linux/mfd/motorola-cpcap.h>
++#include <linux/mutex.h>
++#include <linux/slab.h>
++#include "occ.h"
++#include "occ_sysfs.h"
 +
-+/*
-+ * Resource assignment register bits. These seem to control the state
-+ * idle modes adn are used at least for omap4.
-+ */
++#define OCC_HWMON_NAME_LENGTH	32
 +
-+/* CPCAP_REG_ASSIGN2 bits - Resource Assignment 2 */
-+#define CPCAP_BIT_VSDIO_SEL		BIT(15)
-+#define CPCAP_BIT_VDIG_SEL		BIT(14)
-+#define CPCAP_BIT_VCAM_SEL		BIT(13)
-+#define CPCAP_BIT_SW6_SEL		BIT(12)
-+#define CPCAP_BIT_SW5_SEL		BIT(11)
-+#define CPCAP_BIT_SW4_SEL		BIT(10)
-+#define CPCAP_BIT_SW3_SEL		BIT(9)
-+#define CPCAP_BIT_SW2_SEL		BIT(8)
-+#define CPCAP_BIT_SW1_SEL		BIT(7)
-+
-+/* CPCAP_REG_ASSIGN3 bits - Resource Assignment 3 */
-+#define CPCAP_BIT_VUSBINT2_SEL		BIT(15)
-+#define CPCAP_BIT_VUSBINT1_SEL		BIT(14)
-+#define CPCAP_BIT_VVIB_SEL		BIT(13)
-+#define CPCAP_BIT_VWLAN1_SEL		BIT(12)
-+#define CPCAP_BIT_VRF1_SEL		BIT(11)
-+#define CPCAP_BIT_VHVIO_SEL		BIT(10)
-+#define CPCAP_BIT_VDAC_SEL		BIT(9)
-+#define CPCAP_BIT_VUSB_SEL		BIT(8)
-+#define CPCAP_BIT_VSIM_SEL		BIT(7)
-+#define CPCAP_BIT_VRFREF_SEL		BIT(6)
-+#define CPCAP_BIT_VPLL_SEL		BIT(5)
-+#define CPCAP_BIT_VFUSE_SEL		BIT(4)
-+#define CPCAP_BIT_VCSI_SEL		BIT(3)
-+#define CPCAP_BIT_SPARE_14_2		BIT(2)
-+#define CPCAP_BIT_VWLAN2_SEL		BIT(1)
-+#define CPCAP_BIT_VRF2_SEL		BIT(0)
-+
-+/* CPCAP_REG_ASSIGN4 bits - Resource Assignment 4 */
-+#define CPCAP_BIT_VAUDIO_SEL		BIT(0)
-+
-+/*
-+ * Enable register bits. At least CPCAP_BIT_AUDIO_LOW_PWR is generic,
-+ * and not limited to audio regulator. Let's use the Motorola kernel
-+ * naming for now until we have a better understanding of the other
-+ * enable register bits. No idea why BIT(3) is not defined.
-+ */
-+#define CPCAP_BIT_AUDIO_LOW_PWR		BIT(6)
-+#define CPCAP_BIT_AUD_LOWPWR_SPEED	BIT(5)
-+#define CPCAP_BIT_VAUDIOPRISTBY		BIT(4)
-+#define CPCAP_BIT_VAUDIO_MODE1		BIT(2)
-+#define CPCAP_BIT_VAUDIO_MODE0		BIT(1)
-+#define CPCAP_BIT_V_AUDIO_EN		BIT(0)
-+
-+/*
-+ * Off mode configuration bit. Used currently only by SW5 on omap4. There's
-+ * the following comment in Motorola Linux kernel tree for it:
-+ *
-+ * When set in the regulator mode, the regulator assignment will be changed
-+ * to secondary when the regulator is disabled. The mode will be set back to
-+ * primary when the regulator is turned on.
-+ */
-+#define CPCAP_REG_OFF_MODE_SEC		BIT(15)
-+
-+/**
-+ * SoC specific configuraion for CPCAP regulator. There are at least three
-+ * different SoCs each with their own parameters: omap3, omap4 and tegra2.
-+ *
-+ * The assign_reg and assign_mask seem to allow toggling between primary
-+ * and secondary mode that at least omap4 uses for off mode.
-+ */
-+struct cpcap_regulator {
-+	struct regulator_desc rdesc;
-+	const u16 assign_reg;
-+	const u16 assign_mask;
-+	const u16 vsel_shift;
-+};
-+
-+#define CPCAP_REG(_ID, reg, assignment_reg, assignment_mask, val_tbl,	\
-+		mode_mask, volt_mask, volt_shft,			\
-+		mode_val, off_val, volt_trans_time) {			\
-+	.rdesc = {							\
-+		.name = #_ID,						\
-+		.of_match = of_match_ptr(#_ID),				\
-+		.ops = &cpcap_regulator_ops,				\
-+		.regulators_node = of_match_ptr("regulators"),		\
-+		.type = REGULATOR_VOLTAGE,				\
-+		.id = CPCAP_##_ID,					\
-+		.owner = THIS_MODULE,					\
-+		.n_voltages = ARRAY_SIZE(val_tbl),			\
-+		.volt_table = (val_tbl),				\
-+		.vsel_reg = (reg),					\
-+		.vsel_mask = (volt_mask),				\
-+		.enable_reg = (reg),					\
-+		.enable_mask = (mode_mask),				\
-+		.enable_val = (mode_val),				\
-+		.disable_val = (off_val),				\
-+		.ramp_delay = (volt_trans_time),			\
-+	},								\
-+	.assign_reg = (assignment_reg),					\
-+	.assign_mask = (assignment_mask),				\
-+	.vsel_shift = (volt_shft),					\
-+}
-+
-+struct cpcap_ddata {
-+	struct regmap *reg;
++struct occ_sysfs {
 +	struct device *dev;
-+	const struct cpcap_regulator *soc;
++	struct occ *occ;
++
++	char hwmon_name[OCC_HWMON_NAME_LENGTH + 1];
++	const u32 *sensor_hwmon_configs;
++	struct hwmon_channel_info **occ_sensors;
++	struct hwmon_chip_info occ_info;
++	u16 user_powercap;
 +};
 +
-+enum cpcap_regulator_id {
-+	CPCAP_SW1,
-+	CPCAP_SW2,
-+	CPCAP_SW3,
-+	CPCAP_SW4,
-+	CPCAP_SW5,
-+	CPCAP_SW6,
-+	CPCAP_VCAM,
-+	CPCAP_VCSI,
-+	CPCAP_VDAC,
-+	CPCAP_VDIG,
-+	CPCAP_VFUSE,
-+	CPCAP_VHVIO,
-+	CPCAP_VSDIO,
-+	CPCAP_VPLL,
-+	CPCAP_VRF1,
-+	CPCAP_VRF2,
-+	CPCAP_VRFREF,
-+	CPCAP_VWLAN1,
-+	CPCAP_VWLAN2,
-+	CPCAP_VSIM,
-+	CPCAP_VSIMCARD,
-+	CPCAP_VVIB,
-+	CPCAP_VUSB,
-+	CPCAP_VAUDIO,
-+	CPCAP_NR_REGULATORS,
-+};
-+
-+static int cpcap_regulator_is_enabled(struct regulator_dev *rdev)
++static int occ_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			  u32 attr, int channel, long *val)
 +{
-+	unsigned int value = 0;
++	int rc;
++	struct occ_sysfs *driver = dev_get_drvdata(dev);
++	struct occ *occ = driver->occ;
 +
-+	regmap_read(rdev->regmap, rdev->desc->enable_reg, &value);
-+
-+	return ((value & rdev->desc->enable_mask) == rdev->desc->enable_reg);
-+}
-+
-+static int cpcap_regulator_enable(struct regulator_dev *rdev)
-+{
-+	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
-+	int error;
-+
-+	error = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
-+				   rdev->desc->enable_mask,
-+				   rdev->desc->enable_val);
-+	if (error)
-+		return error;
-+
-+	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
-+		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
-+					   regulator->assign_mask,
-+					   regulator->assign_mask);
-+		if (error)
-+			return error;
-+	}
-+
-+	return error;
-+}
-+
-+static int cpcap_regulator_disable(struct regulator_dev *rdev)
-+{
-+	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
-+	int error;
-+
-+	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
-+		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
-+					   regulator->assign_mask,
-+					   0);
-+		if (error)
-+			return error;
-+	}
-+
-+	error = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
-+				   rdev->desc->enable_mask,
-+				   rdev->desc->disable_val);
-+
-+	return error;
-+}
-+
-+static int cpcap_regulator_get_voltage(struct regulator_dev *rdev)
-+{
-+	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
-+	unsigned int value = 0;
-+	int voltage;
-+
-+	regmap_read(rdev->regmap, rdev->desc->enable_reg, &value);
-+
-+	if (!(value & rdev->desc->enable_mask))
-+		return 0;
-+
-+	value &= rdev->desc->vsel_mask;
-+	voltage = rdev->desc->volt_table[value >> regulator->vsel_shift];
-+
-+	return voltage;
-+}
-+
-+static int cpcap_regulator_set_voltage(struct regulator_dev *rdev,
-+				       int min_uV, int max_uV,
-+				       unsigned int *selector)
-+{
-+	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
-+	int i;
-+
-+	if (rdev->desc->id >= CPCAP_NR_REGULATORS)
-+		return -EINVAL;
-+
-+	if (rdev->desc->id == CPCAP_VRF1) {
-+		if (min_uV > 2500000)
-+			i = 0;
-+		else
-+			i = 1;
-+	} else {
-+		for (i = 0; i < rdev->desc->n_voltages; i++) {
-+			if (rdev->desc->volt_table[i] >= min_uV)
-+				break;
-+		}
-+	}
-+
-+	*selector = i;
-+	i <<= regulator->vsel_shift;
-+
-+	return regmap_update_bits(rdev->regmap, rdev->desc->vsel_reg,
-+				  rdev->desc->vsel_mask, i);
-+}
-+
-+static unsigned int cpcap_regulator_get_mode(struct regulator_dev *rdev)
-+{
-+	int value;
-+
-+	regmap_read(rdev->regmap, rdev->desc->enable_reg, &value);
-+
-+	if (!(value & CPCAP_BIT_AUDIO_LOW_PWR))
-+		return REGULATOR_MODE_STANDBY;
-+
-+	return REGULATOR_MODE_NORMAL;
-+}
-+
-+static int cpcap_regulator_set_mode(struct regulator_dev *rdev,
-+				    unsigned int mode)
-+{
-+	int value;
-+
-+	switch (mode) {
-+	case REGULATOR_MODE_NORMAL:
-+		value = CPCAP_BIT_AUDIO_LOW_PWR;
++	switch (type) {
++	case hwmon_in:
++		rc = occ_get_sensor_field(occ, FREQ, channel, attr, val);
 +		break;
-+	case REGULATOR_MODE_IDLE:
-+	case REGULATOR_MODE_STANDBY:
-+		value = 0;
++	case hwmon_temp:
++		rc = occ_get_sensor_field(occ, TEMP, channel, attr, val);
++		break;
++	case hwmon_power:
++		rc = occ_get_sensor_field(occ, POWER, channel, attr, val);
 +		break;
 +	default:
-+		return -EINVAL;
++		rc = -EOPNOTSUPP;
 +	}
 +
-+	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
-+				  CPCAP_BIT_AUDIO_LOW_PWR, value);
++	return rc;
 +}
 +
-+static struct regulator_ops cpcap_regulator_ops = {
-+	.enable = cpcap_regulator_enable,
-+	.disable = cpcap_regulator_disable,
-+	.is_enabled = cpcap_regulator_is_enabled,
-+	.list_voltage = regulator_list_voltage_table,
-+	.get_voltage = cpcap_regulator_get_voltage,
-+	.set_voltage = cpcap_regulator_set_voltage,
-+	.get_mode = cpcap_regulator_get_mode,
-+	.set_mode = cpcap_regulator_set_mode,
-+};
-+
-+static const unsigned int unknown_val_tbl[] = { 0, };
-+static const unsigned int sw5_val_tbl[] = { 0, 5050000, };
-+static const unsigned int vcam_val_tbl[] = { 2600000, 2700000, 2800000,
-+					     2900000, };
-+static const unsigned int vcsi_val_tbl[] = { 1200000, 1800000, };
-+static const unsigned int vdac_val_tbl[] = { 1200000, 1500000, 1800000,
-+					     2500000,};
-+static const unsigned int vdig_val_tbl[] = { 1200000, 1350000, 1500000,
-+					     1875000, };
-+static const unsigned int vfuse_val_tbl[] = { 1500000, 1600000, 1700000,
-+					      1800000, 1900000, 2000000,
-+					      2100000, 2200000, 2300000,
-+					      2400000, 2500000, 2600000,
-+					      2700000, 3150000, };
-+static const unsigned int vhvio_val_tbl[] = { 2775000, };
-+static const unsigned int vsdio_val_tbl[] = { 1500000, 1600000, 1800000,
-+					      2600000, 2700000, 2800000,
-+					      2900000, 3000000, };
-+static const unsigned int vpll_val_tbl[] = { 1200000, 1300000, 1400000,
-+					     1800000, };
-+/* Quirk: 2775000 is before 2500000 for vrf1 regulator */
-+static const unsigned int vrf1_val_tbl[] = { 2775000, 2500000, };
-+static const unsigned int vrf2_val_tbl[] = { 0, 2775000, };
-+static const unsigned int vrfref_val_tbl[] = { 2500000, 2775000, };
-+static const unsigned int vwlan1_val_tbl[] = { 1800000, 1900000, };
-+static const unsigned int vwlan2_val_tbl[] = { 2775000, 3000000, 3300000,
-+					       3300000, };
-+static const unsigned int vsim_val_tbl[] = { 1800000, 2900000, };
-+static const unsigned int vsimcard_val_tbl[] = { 1800000, 2900000, };
-+static const unsigned int vvib_val_tbl[] = { 1300000, 1800000, 2000000,
-+					     3000000, };
-+static const unsigned int vusb_val_tbl[] = { 0, 3300000, };
-+static const unsigned int vaudio_val_tbl[] = { 0, 2775000, };
-+
-+/**
-+ * SoC specific configuration for omap4. The data below is comes from Motorola
-+ * Linux kernel tree. It's basically the values of cpcap_regltr_data,
-+ * cpcap_regulator_mode_values and cpcap_regulator_off_mode_values, see
-+ * CPCAP_REG macro above.
-+ *
-+ * SW1 to SW4 and SW6 seems to be unused for mapphone. Note that VSIM and
-+ * VSIMCARD have a shared resource assignment bit.
-+ */
-+static struct cpcap_regulator omap4_regulators[] = {
-+	CPCAP_REG(SW1, CPCAP_REG_S1C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW1_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW2, CPCAP_REG_S2C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW2_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW3, CPCAP_REG_S3C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW3_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW4, CPCAP_REG_S4C1, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW4_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(SW5, CPCAP_REG_S5C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW5_SEL, sw5_val_tbl,
-+		  0x28, 0, 0, 0x20 | CPCAP_REG_OFF_MODE_SEC, 0, 0),
-+	CPCAP_REG(SW6, CPCAP_REG_S6C, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_SW6_SEL, unknown_val_tbl,
-+		  0, 0, 0, 0, 0, 0),
-+	CPCAP_REG(VCAM, CPCAP_REG_VCAMC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VCAM_SEL, vcam_val_tbl,
-+		  0x87, 0x30, 4, 0x3, 0, 420),
-+	CPCAP_REG(VCSI, CPCAP_REG_VCSIC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VCSI_SEL, vcsi_val_tbl,
-+		  0x47, 0x10, 4, 0x43, 0x41, 350),
-+	CPCAP_REG(VDAC, CPCAP_REG_VDACC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VDAC_SEL, vdac_val_tbl,
-+		  0x87, 0x30, 4, 0x3, 0, 420),
-+	CPCAP_REG(VDIG, CPCAP_REG_VDIGC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VDIG_SEL, vdig_val_tbl,
-+		  0x87, 0x30, 4, 0x82, 0, 420),
-+	CPCAP_REG(VFUSE, CPCAP_REG_VFUSEC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VFUSE_SEL, vfuse_val_tbl,
-+		  0x80, 0xf, 0, 0x80, 0, 420),
-+	CPCAP_REG(VHVIO, CPCAP_REG_VHVIOC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VHVIO_SEL, vhvio_val_tbl,
-+		  0x17, 0, 0, 0, 0x12, 0),
-+	CPCAP_REG(VSDIO, CPCAP_REG_VSDIOC, CPCAP_REG_ASSIGN2,
-+		  CPCAP_BIT_VSDIO_SEL, vsdio_val_tbl,
-+		  0x87, 0x38, 3, 0x82, 0, 420),
-+	CPCAP_REG(VPLL, CPCAP_REG_VPLLC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VPLL_SEL, vpll_val_tbl,
-+		  0x43, 0x18, 3, 0x2, 0, 420),
-+	CPCAP_REG(VRF1, CPCAP_REG_VRF1C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRF1_SEL, vrf1_val_tbl,
-+		  0xac, 0x2, 1, 0x4, 0, 10),
-+	CPCAP_REG(VRF2, CPCAP_REG_VRF2C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRF2_SEL, vrf2_val_tbl,
-+		  0x23, 0x8, 3, 0, 0, 10),
-+	CPCAP_REG(VRFREF, CPCAP_REG_VRFREFC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VRFREF_SEL, vrfref_val_tbl,
-+		  0x23, 0x8, 3, 0, 0, 420),
-+	CPCAP_REG(VWLAN1, CPCAP_REG_VWLAN1C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VWLAN1_SEL, vwlan1_val_tbl,
-+		  0x47, 0x10, 4, 0, 0, 420),
-+	CPCAP_REG(VWLAN2, CPCAP_REG_VWLAN2C, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VWLAN2_SEL, vwlan2_val_tbl,
-+		  0x20c, 0xc0, 6, 0x20c, 0, 420),
-+	CPCAP_REG(VSIM, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
-+		  0xffff, vsim_val_tbl,
-+		  0x23, 0x8, 3, 0x3, 0, 420),
-+	CPCAP_REG(VSIMCARD, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
-+		  0xffff, vsimcard_val_tbl,
-+		  0x1e80, 0x8, 3, 0x1e00, 0, 420),
-+	CPCAP_REG(VVIB, CPCAP_REG_VVIBC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VVIB_SEL, vvib_val_tbl,
-+		  0x1, 0xc, 2, 0x1, 0, 500),
-+	CPCAP_REG(VUSB, CPCAP_REG_VUSBC, CPCAP_REG_ASSIGN3,
-+		  CPCAP_BIT_VUSB_SEL, vusb_val_tbl,
-+		  0x11c, 0x40, 6, 0xc, 0, 0),
-+	CPCAP_REG(VAUDIO, CPCAP_REG_VAUDIOC, CPCAP_REG_ASSIGN4,
-+		  CPCAP_BIT_VAUDIO_SEL, vaudio_val_tbl,
-+		  0x16, 0x1, 0, 0x4, 0, 0),
-+	{ /* sentinel */ },
-+};
-+
-+static const struct of_device_id cpcap_regulator_id_table[] = {
-+	{
-+		.compatible = "motorola,cpcap-regulator",
-+	},
-+	{
-+		.compatible = "motorola,mapphone-cpcap-regulator",
-+		.data = omap4_regulators,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cpcap_regulator_id_table);
-+
-+static int cpcap_regulator_probe(struct platform_device *pdev)
++static int occ_hwmon_read_string(struct device *dev,
++				 enum hwmon_sensor_types type, u32 attr,
++				 int channel, char **str)
 +{
-+	struct cpcap_ddata *ddata;
-+	const struct of_device_id *match;
-+	struct regulator_config config;
-+	struct regulator_init_data init_data;
-+	int i;
++	int rc;
++	unsigned long val = 0;
 +
-+	match = of_match_device(of_match_ptr(cpcap_regulator_id_table),
-+				&pdev->dev);
-+	if (!match)
-+		return -EINVAL;
++	if (!((type == hwmon_in && attr == hwmon_in_label) ||
++	    (type == hwmon_temp && attr == hwmon_temp_label) ||
++	    (type == hwmon_power && attr == hwmon_power_label)))
++		return -EOPNOTSUPP;
 +
-+	if (!match->data) {
-+		dev_err(&pdev->dev, "no configuration data found\n");
++	/* will fetch the "label", the sensor_id */
++	rc = occ_hwmon_read(dev, type, attr, channel, &val);
++	if (rc < 0)
++		return rc;
 +
-+		return -ENODEV;
++	rc = snprintf(*str, PAGE_SIZE - 1, "%lu", val);
++	if (rc > 0)
++		rc = 0;
++
++	return rc;
++}
++
++static int occ_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
++			   u32 attr, int channel, long val)
++{
++	int rc;
++	struct occ_sysfs *driver = dev_get_drvdata(dev);
++
++	if (type == hwmon_power && attr == hwmon_power_alarm) {
++		rc = occ_set_user_powercap(driver->occ, val);
++		if (rc) {
++			dev_err(dev, "set user powercap failed:%d\n", rc);
++			return rc;
++		}
++
++		driver->user_powercap = val;
++
++		return rc;
 +	}
 +
-+	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
++	return -EOPNOTSUPP;
++}
 +
-+	ddata->reg = dev_get_regmap(pdev->dev.parent, NULL);
-+	if (!ddata->reg)
-+		return -ENODEV;
++static umode_t occ_is_visible(const void *data, enum hwmon_sensor_types type,
++			      u32 attr, int channel)
++{
++	const struct occ_sysfs *driver = data;
 +
-+	ddata->dev = &pdev->dev;
-+	ddata->soc = match->data;
-+	platform_set_drvdata(pdev, ddata);
-+
-+	memset(&config, 0, sizeof(config));
-+	memset(&init_data, 0, sizeof(init_data));
-+	config.dev = &pdev->dev;
-+	config.regmap = ddata->reg;
-+	init_data.constraints.valid_modes_mask =
-+		REGULATOR_MODE_NORMAL | REGULATOR_MODE_STANDBY;
-+	init_data.constraints.valid_ops_mask =
-+		REGULATOR_CHANGE_MODE | REGULATOR_CHANGE_STATUS;
-+	config.init_data = &init_data;
-+
-+	for (i = 0; i < CPCAP_NR_REGULATORS; i++) {
-+		const struct cpcap_regulator *regulator = &ddata->soc[i];
-+		struct regulator_dev *rdev;
-+
-+		if (!regulator->rdesc.name)
-+			break;
-+
-+		if (regulator->rdesc.volt_table == unknown_val_tbl)
-+			continue;
-+
-+		dev_info(&pdev->dev, "registering regulator %s\n",
-+			 regulator->rdesc.name);
-+		config.driver_data = (void *)regulator;
-+		rdev = devm_regulator_register(&pdev->dev,
-+					       &regulator->rdesc,
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			dev_err(&pdev->dev, "failed to register regulator %s\n",
-+				regulator->rdesc.name);
-+
-+			return PTR_ERR(rdev);
-+		}
++	switch (type) {
++	case hwmon_chip:
++		if (attr == hwmon_chip_update_interval)
++			return 00644;
++		break;
++	case hwmon_in:
++		if (BIT(attr) & driver->sensor_hwmon_configs[0])
++			return 00444;
++		break;
++	case hwmon_temp:
++		if (BIT(attr) & driver->sensor_hwmon_configs[1])
++			return 00444;
++		break;
++	case hwmon_power:
++		/* user power limit */
++		if (attr == hwmon_power_alarm)
++			return 00644;
++		else if ((BIT(attr) & driver->sensor_hwmon_configs[2]) ||
++			 (BIT(attr) & driver->sensor_hwmon_configs[3]))
++			return 00444;
++		break;
++	default:
++		return 0;
 +	}
 +
 +	return 0;
 +}
 +
-+static struct platform_driver cpcap_regulator_driver = {
-+	.probe		= cpcap_regulator_probe,
-+	.driver		= {
-+		.name	= "cpcap-regulator",
-+		.of_match_table = of_match_ptr(cpcap_regulator_id_table),
-+	},
++static const struct hwmon_ops occ_hwmon_ops = {
++	.is_visible = occ_is_visible,
++	.read = occ_hwmon_read,
++	.read_string = occ_hwmon_read_string,
++	.write = occ_hwmon_write,
 +};
 +
-+module_platform_driver(cpcap_regulator_driver);
++static const enum hwmon_sensor_types occ_sensor_types[MAX_OCC_SENSOR_TYPE] = {
++	hwmon_in,
++	hwmon_temp,
++	hwmon_power,
++	hwmon_power
++};
 +
-+MODULE_ALIAS("platform:cpcap-regulator");
-+MODULE_AUTHOR("Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_DESCRIPTION("CPCAP regulator driver");
-+MODULE_LICENSE("GPL v2");
++struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
++				  const u32 *sensor_hwmon_configs,
++				  const char *name)
++{
++	int rc, i, j, num_sensors, index = 0, id;
++	char *brk;
++	struct occ_blocks *resp = NULL;
++	u32 *sensor_config;
++	struct occ_sysfs *hwmon = devm_kzalloc(dev, sizeof(struct occ_sysfs),
++					       GFP_KERNEL);
++	if (!hwmon)
++		return ERR_PTR(-ENOMEM);
++
++	/* need space for null-termination */
++	hwmon->occ_sensors =
++		devm_kzalloc(dev, sizeof(struct hwmon_channel_info *) *
++			     (MAX_OCC_SENSOR_TYPE + 1), GFP_KERNEL);
++	if (!hwmon->occ_sensors)
++		return ERR_PTR(-ENOMEM);
++
++	hwmon->occ = occ;
++	hwmon->sensor_hwmon_configs = sensor_hwmon_configs;
++	hwmon->occ_info.ops = &occ_hwmon_ops;
++	hwmon->occ_info.info =
++		(const struct hwmon_channel_info **)hwmon->occ_sensors;
++
++	occ_get_response_blocks(occ, &resp);
++
++	for (i = 0; i < MAX_OCC_SENSOR_TYPE; ++i)
++		resp->sensor_block_id[i] = -1;
++
++	/* read sensor data from occ */
++	rc = occ_update_device(occ);
++	if (rc)
++		return ERR_PTR(rc);
++
++	for (i = 0; i < MAX_OCC_SENSOR_TYPE; i++) {
++		id = resp->sensor_block_id[i];
++		if (id < 0)
++			continue;
++
++		num_sensors = resp->blocks[id].header.num_sensors;
++		/* need null-termination */
++		sensor_config = devm_kzalloc(dev,
++					     sizeof(u32) * (num_sensors + 1),
++					     GFP_KERNEL);
++		if (!sensor_config)
++			return ERR_PTR(-ENOMEM);
++
++		for (j = 0; j < num_sensors; j++)
++			sensor_config[j] = sensor_hwmon_configs[i];
++
++		hwmon->occ_sensors[index] =
++			devm_kzalloc(dev, sizeof(struct hwmon_channel_info),
++				     GFP_KERNEL);
++		if (!hwmon->occ_sensors[index])
++			return ERR_PTR(-ENOMEM);
++
++		hwmon->occ_sensors[index]->type = occ_sensor_types[i];
++		hwmon->occ_sensors[index]->config = sensor_config;
++		index++;
++	}
++
++	/* search for bad chars */
++	strncpy(hwmon->hwmon_name, name, OCC_HWMON_NAME_LENGTH);
++	brk = strpbrk(hwmon->hwmon_name, "-* \t\n");
++	while (brk) {
++		*brk = '_';
++		brk = strpbrk(brk,  "-* \t\n");
++	}
++
++	hwmon->dev = devm_hwmon_device_register_with_info(dev,
++							  hwmon->hwmon_name,
++							  hwmon,
++							  &hwmon->occ_info,
++							  NULL);
++	if (IS_ERR(hwmon->dev)) {
++		dev_err(dev, "cannot register hwmon device %s: %ld\n",
++			hwmon->hwmon_name, PTR_ERR(hwmon->dev));
++		return ERR_CAST(hwmon->dev);
++	}
++
++	return hwmon;
++}
++EXPORT_SYMBOL(occ_sysfs_start);
++
++MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
++MODULE_DESCRIPTION("OCC sysfs driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/occ/occ_sysfs.h b/drivers/hwmon/occ/occ_sysfs.h
+new file mode 100644
+index 0000000..462f9d2
+--- /dev/null
++++ b/drivers/hwmon/occ/occ_sysfs.h
+@@ -0,0 +1,30 @@
++/*
++ * occ_sysfs.h - OCC sysfs interface
++ *
++ * This file contains the data structures and function prototypes for the OCC
++ * hwmon sysfs entries.
++ *
++ * Copyright 2016 IBM Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __OCC_SYSFS_H__
++#define __OCC_SYSFS_H__
++
++struct occ;
++struct device;
++struct occ_sysfs;
++
++struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
++				  const u32 *sensor_hwmon_configs,
++				  const char *name);
++#endif /* __OCC_SYSFS_H__ */
 -- 
-2.11.0
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.1
