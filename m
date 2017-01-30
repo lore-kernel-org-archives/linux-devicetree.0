@@ -1,58 +1,61 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 0/5] Add EXTI GPIO trigger support to STM32 ADC
-Date: Mon, 30 Jan 2017 15:09:54 +0100
-Message-ID: <0472f001-eee8-74a8-f078-2fb71904be58@st.com>
-References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] clocksource/drivers/rockchip_timer: split
+ bc_timer into rk_timer and rk_clock_event_device
+Date: Mon, 30 Jan 2017 15:20:04 +0100
+Message-ID: <20170130142004.GI2206@mai>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+ <1485260203-14216-6-git-send-email-al.kochet@gmail.com>
+ <20170130131258.GF2206@mai>
+ <0E7077EE-0D5A-4653-99EF-E8F2E8FD2FB0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0E7077EE-0D5A-4653-99EF-E8F2E8FD2FB0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+On Mon, Jan 30, 2017 at 04:55:33PM +0300, Alexander Kochetkov wrote:
+> 
+> > 30 янв. 2017 г., в 16:12, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> написал(а):
+> > 
+> > I don't get the point of these changes. The patch does not explain why they are
+> > needed.
+> 
+> I’d like to extract timer API from current implementation.
+> And to make code more readable I’d like to introduce 'struct rk_timer’ what can be
+> reused with current implementation and with my patch (8/8). And in order keep patches
+> simple and readable I split that into three patches: 5/8, 6/8, 7/8.
+> 
+> Current implementation named rockchip timer as ‘struct bc_timer’ (broadcast timer).
+> I renamed it to more suitable to it role (may be bad choice).
+> 
+> Yes, the patch itself looks strange. You are right.
+> 
+> What do you think about that solution:
+> - in the patch 6/8 i will Introduce 'struct rk_timer’ and 'struct rk_time_clkevt’ (renamed ‘struct bc_timer’).
 
-Please discard this series. I'll send a V2.
-Sorry for the noise.
+I prefer rk_clksrc and rk_clkevt.
 
-Best regards,
-Fabrice
+> - rk_timer_init() changes from 5/8 I will merge with 8/8
+> - 8/8 introduce 'struct rk_time_clksrc' 
+> - 5/8 drop
 
-On 01/30/2017 02:57 PM, Fabrice Gasnier wrote:
-> STM32 ADC, can use GPIOs configured as EXTI line (external interrupt)
-> as trigger source for conversions.
-> This patchset is based on latest IIO testing branch, and adds support
-> for EXTi GPIO triggers in IIO.
-> It also adds a dt option to configure default trigger polarity in
-> STM32 ADC driver.
->
-> Fabrice Gasnier (5):
->    Documentation: dt: iio: document stm32 adc trigger polarity
->    iio: adc: stm32: add dt option to set default trigger polarity
->    Documentation: dt: iio: document stm32 exti trigger
->    iio: trigger: add support for STM32 EXTI triggers
->    iio: adc: stm32: add exti11 gpio trigger source
->
->   .../devicetree/bindings/iio/adc/st,stm32-adc.txt   |   3 +
->   .../bindings/iio/trigger/st,stm32-exti-trigger.txt |  17 +++
->   drivers/iio/adc/stm32-adc.c                        |  14 +++
->   drivers/iio/trigger/Kconfig                        |  10 ++
->   drivers/iio/trigger/Makefile                       |   1 +
->   drivers/iio/trigger/stm32-exti-trigger.c           | 124 +++++++++++++++++++++
->   include/linux/iio/trigger/stm32-exti-trigger.h     |  26 +++++
->   7 files changed, 195 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
->   create mode 100644 drivers/iio/trigger/stm32-exti-trigger.c
->   create mode 100644 include/linux/iio/trigger/stm32-exti-trigger.h
->
+Ok, let's see what that gives.
+
+  -- Daniel
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
