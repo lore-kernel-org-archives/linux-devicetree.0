@@ -1,137 +1,59 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 2/4] arm64: arch_timer: Introduce a generic erratum
- handing mechanism for fsl-a008585
-Date: Mon, 30 Jan 2017 22:59:27 +0100
-Message-ID: <20170130215927.GK2206@mai>
-References: <1484832916-7248-1-git-send-email-dingtianhong@huawei.com>
- <1484832916-7248-3-git-send-email-dingtianhong@huawei.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 06/24] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
+ camera sensors
+Date: Mon, 30 Jan 2017 22:28:51 +0000
+Message-ID: <20170130222851.GA27898@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-7-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1484832916-7248-3-git-send-email-dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1483755102-24785-7-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linuxarm-hv44wF8Li93QT0dZR+AlfA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 09:35:14PM +0800, Ding Tianhong wrote:
-> The workaround for hisilicon,161010101 will check the return value of the system counter
-> by different way, in order to distinguish with the fsl-a008585 workaround, introduce
-
-s/way/ways/
-
-> a new generic erratum handing mechanism for fsl-a008585 and rename some functions.
-
-s/handing/handling/
- 
-> After discussion with Marc and Will, a consensus decision was made to remove the commandline
-> parameter for enabling fsl,erratum-a008585 erratum.
-
-Lines are more than 78 char large.
-
-> Signed-off-by: Ding Tianhong <dingtianhong-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |   9 --
->  arch/arm64/include/asm/arch_timer.h             |  38 +++------
->  drivers/clocksource/Kconfig                     |   8 ++
->  drivers/clocksource/arm_arch_timer.c            | 105 ++++++++++++++----------
->  4 files changed, 84 insertions(+), 76 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 21e2d88..76437ad 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -539,15 +539,6 @@
->  			loops can be debugged more effectively on production
->  			systems.
->  
-> -	clocksource.arm_arch_timer.fsl-a008585=
-> -			[ARM64]
-> -			Format: <bool>
-> -			Enable/disable the workaround of Freescale/NXP
-> -			erratum A-008585.  This can be useful for KVM
-> -			guests, if the guest device tree doesn't show the
-> -			erratum.  If unspecified, the workaround is
-> -			enabled based on the device tree.
-> -
->  	clearcpuid=BITNUM [X86]
->  			Disable CPUID feature X for the kernel. See
->  			arch/x86/include/asm/cpufeatures.h for the valid bit
-> diff --git a/arch/arm64/include/asm/arch_timer.h b/arch/arm64/include/asm/arch_timer.h
-> index eaa5bbe..b4b3400 100644
-> --- a/arch/arm64/include/asm/arch_timer.h
-> +++ b/arch/arm64/include/asm/arch_timer.h
-> @@ -29,41 +29,29 @@
->  
->  #include <clocksource/arm_arch_timer.h>
->  
-> -#if IS_ENABLED(CONFIG_FSL_ERRATUM_A008585)
-> +#if IS_ENABLED(CONFIG_ARM_ARCH_TIMER_OOL_WORKAROUND)
->  extern struct static_key_false arch_timer_read_ool_enabled;
-> -#define needs_fsl_a008585_workaround() \
-> +#define needs_unstable_timer_counter_workaround() \
->  	static_branch_unlikely(&arch_timer_read_ool_enabled)
->  #else
-> -#define needs_fsl_a008585_workaround()  false
-> +#define needs_unstable_timer_counter_workaround()  false
->  #endif
->  
-> -u32 __fsl_a008585_read_cntp_tval_el0(void);
-> -u32 __fsl_a008585_read_cntv_tval_el0(void);
-> -u64 __fsl_a008585_read_cntvct_el0(void);
->  
-> -/*
-> - * The number of retries is an arbitrary value well beyond the highest number
-> - * of iterations the loop has been observed to take.
-> - */
-> -#define __fsl_a008585_read_reg(reg) ({			\
-> -	u64 _old, _new;					\
-> -	int _retries = 200;				\
-> -							\
-> -	do {						\
-> -		_old = read_sysreg(reg);		\
-> -		_new = read_sysreg(reg);		\
-> -		_retries--;				\
-> -	} while (unlikely(_old != _new) && _retries);	\
-> -							\
-> -	WARN_ON_ONCE(!_retries);			\
-> -	_new;						\
-> -})
-> +struct arch_timer_erratum_workaround {
-> +	const char *id;		/* Indicate the Erratum ID */
-> +	u32 (*read_cntp_tval_el0)(void);
-> +	u32 (*read_cntv_tval_el0)(void);
-> +	u64 (*read_cntvct_el0)(void);
+On Fri, Jan 06, 2017 at 06:11:24PM -0800, Steve Longerbeam wrote:
+> diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> index 66d10d8..9e2d26d 100644
+> --- a/arch/arm/boot/dts/imx6q-sabrelite.dts
+> +++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+> @@ -52,3 +52,9 @@
+>  &sata {
+>  	status = "okay";
+>  };
+> +
+> +&ipu1_csi1_from_mipi_vc1 {
+> +	data-lanes = <0 1>;
+> +	clock-lanes = <2>;
 > +};
 > +
-> +extern const struct arch_timer_erratum_workaround *timer_unstable_counter_workaround;
->	  
->  #define arch_timer_reg_read_stable(reg) 		\
->  ({							\
->  	u64 _val;					\
-> -	if (needs_fsl_a008585_workaround())		\
-> -		_val = __fsl_a008585_read_##reg();	\
-> +	if (needs_unstable_timer_counter_workaround())		\
-> +		_val = timer_unstable_counter_workaround->read_##reg();\
->  	else						\
->  		_val = read_sysreg(reg);		\
->  	_val;						\
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 4866f7a..6693e07 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -325,10 +325,18 @@ config ARM_ARCH_TIMER_EVTSTREAM
->  	  This must be disabled for hardware validation purposes to detect any
->  	  hardware anomalies of missing events.
->  
-> +config ARM_ARCH_TIMER_OOL_WORKAROUND
-> +	bool
-> +	depends on FSL_ERRATUM_A008585
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> index 795b5a5..bca9fed 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+...
+> +/* Incoming port from sensor */
+> +&mipi_csi_from_mipi_sensor {
+> +        remote-endpoint = <&ov5640_to_mipi_csi>;
+> +        data-lanes = <0 1>;
+> +        clock-lanes = <2>;
+> +};
+> +
 
-This dependency is not needed as well as the help text below because it is a
-silent option.
+Applying: ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+.git/rebase-apply/patch:33: new blank line at EOF.
++
+.git/rebase-apply/patch:201: new blank line at EOF.
++
+warning: 2 lines add whitespace errors.
 
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
