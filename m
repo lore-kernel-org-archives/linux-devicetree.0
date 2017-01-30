@@ -1,129 +1,297 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpu: Add Mali Utgard bindings
-Date: Mon, 30 Jan 2017 14:48:24 +0100
-Message-ID: <20170130134824.u37svxphyy266tzz@lukather>
-References: <a4d90de597cfcfab5fddeeb538505774a980818b.1485180017.git-series.maxime.ripard@free-electrons.com>
- <20170127201913.jjhdw57jmxifqpxa@rob-hp-laptop>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 8/8] clocksource/drivers/rockchip_timer: implement
+ clocksource timer
+Date: Mon, 30 Jan 2017 14:54:45 +0100
+Message-ID: <20170130135445.GH2206@mai>
+References: <1485260203-14216-1-git-send-email-al.kochet@gmail.com>
+ <1485260203-14216-9-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7vxpkbzz4ky4l7yn"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170127201913.jjhdw57jmxifqpxa@rob-hp-laptop>
+In-Reply-To: <1485260203-14216-9-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 24, 2017 at 03:16:43PM +0300, Alexander Kochetkov wrote:
+> The clock supplying the arm-global-timer on the rk3188 is coming from the
+> the cpu clock itself and thus changes its rate everytime cpufreq adjusts
+> the cpu frequency making this timer unsuitable as a stable clocksource
+> and sched clock.
+> 
+> The rk3188, rk3288 and following socs share a separate timer block already
+> handled by the rockchip-timer driver. Therefore adapt this driver to also
+> be able to act as clocksource and sched clock on rk3188.
+> 
+> In order to test clocksource you can run following commands and check
+> how much time it take in real. On rk3188 it take about ~45 seconds.
+> 
+>     cpufreq-set -f 1.6GHZ
+>     date; sleep 60; date
+> 
+> In order to use the patch you need to declare two timers in the dts
+> file. The first timer will be initialized as clockevent provider
+> and the second one as clocksource. The clockevent must be from
+> alive subsystem as it used as backup for the local timers at sleep
+> time.
+> 
+> The patch does not break compatibility with older device tree files.
+> The older device tree files contain only one timer. The timer
+> will be initialized as clockevent, as expected.
+> 
+> rk3288 (and probably anything newer) is irrelevant to this patch,
+> as it has the arch timer interface. This patch may be usefull
+> for Cortex-A9/A5 based parts.
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviwed-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> ---
+>  drivers/clocksource/rockchip_timer.c |  137 +++++++++++++++++++++++++++++-----
+>  1 file changed, 117 insertions(+), 20 deletions(-)
+> 
+> diff --git a/drivers/clocksource/rockchip_timer.c b/drivers/clocksource/rockchip_timer.c
+> index 61c3bb1..3ff533c 100644
+> --- a/drivers/clocksource/rockchip_timer.c
+> +++ b/drivers/clocksource/rockchip_timer.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/clockchips.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/sched_clock.h>
+>  #include <linux/of.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> @@ -19,6 +20,8 @@
+>  
+>  #define TIMER_LOAD_COUNT0	0x00
+>  #define TIMER_LOAD_COUNT1	0x04
+> +#define TIMER_CURRENT_VALUE0	0x08
+> +#define TIMER_CURRENT_VALUE1	0x0C
+>  #define TIMER_CONTROL_REG3288	0x10
+>  #define TIMER_CONTROL_REG3399	0x1c
+>  #define TIMER_INT_STATUS	0x18
+> @@ -40,7 +43,19 @@ struct rk_clock_event_device {
+>  	struct rk_timer timer;
+>  };
+>  
+> +struct rk_clocksource {
+> +	struct clocksource cs;
+> +	struct rk_timer timer;
+> +};
+> +
+> +enum {
+> +	ROCKCHIP_CLKSRC_CLOCKEVENT = 0,
+> +	ROCKCHIP_CLKSRC_CLOCKSOURCE = 1,
+> +};
+> +
 
---7vxpkbzz4ky4l7yn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is over-engineered.
 
-Hi Rob,
+Simply convert bc_timer and cs_timer to pointers (may be take the opportunity to
+change the name eg. bc_timer -> rk_clkevt and cs -> rk_clksrc).
 
-On Fri, Jan 27, 2017 at 02:19:13PM -0600, Rob Herring wrote:
-> On Mon, Jan 23, 2017 at 03:00:45PM +0100, Maxime Ripard wrote:
-> > The ARM Mali Utgard GPU family is embedded into a number of SoCs from
-> > Allwinner, Amlogic, Mediatek or Rockchip.
-> >=20
-> > Add a binding for the GPU of that family.
-> >=20
-> > Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >=20
-> > ---
-> >=20
-> > Changes from v1:
-> >   - Dropped the arm,mali-utgard compatible
-> >   - Made the clocks mandatory
-> >   - Added Linus Walleij Reviewed-by, and the ST compatible for the Mali
-> > ---
-> >  Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 79 +++++++=
-+-
-> >  1 file changed, 79 insertions(+), 0 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/gpu/arm,mali-utga=
-rd.txt
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt =
-b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > new file mode 100644
-> > index 000000000000..ba0edcdd1b00
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> > @@ -0,0 +1,79 @@
-> > +ARM Mali Utgard GPU
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Required properties:
-> > +  - compatible
-> > +    * Must be one of the following:
-> > +      + "arm,mali-300"
-> > +      + "arm,mali-400"
-> > +      + "arm,mali-450"
-> > +    * And, optionally, one of the vendor specific compatible:
-> > +      + allwinner,sun4i-a10-mali
-> > +      + allwinner,sun7i-a20-mali
->=20
-> And stericsson,db8500-mali?
+Then in the init function check:
 
-Good catch, I'll add it.
+if (!rk_clkevt) {
+	init clkevt
+} else if (!rk_clksrc) {
+	init clksrc
+} else {
+	Toooo many timer definitions ...
+}
 
-> > +
-> > +  - reg: Physical base address and length of the GPU registers
-> > +
-> > +  - interrupts: an entry for each entry in interrupt-names.
-> > +    See ../interrupt-controller/interrupts.txt for details.
-> > +
-> > +  - interrupt-names:
-> > +    * ppX: Pixel Processor X interrupt (X from 0 to 7)
-> > +    * ppmmuX: Pixel Processor X MMU interrupt (X from 0 to 7)
-> > +    * pp: Pixel Processor broadcast interrupt (mali-450 only)
-> > +    * gp: Geometry Processor interrupt
-> > +    * gpmmu: Geometry Processor MMU interrupt
-> > +
-> > +  - clocks: an entry for each entry in clock-names
-> > +  - clock-names:
-> > +    * bus: bus clock for the GPU
-> > +    * core: clock driving the GPU itself
->=20
-> assigned-clocks?
+>  static struct rk_clock_event_device bc_timer;
+> +static struct rk_clocksource cs_timer;
+> +static int rk_next_clksrc = ROCKCHIP_CLKSRC_CLOCKEVENT;
+>  
+>  static inline struct rk_clock_event_device*
+>  rk_clock_event_device(struct clock_event_device *ce)
+> @@ -63,11 +78,37 @@ static inline void rk_timer_enable(struct rk_timer *timer, u32 flags)
+>  	writel_relaxed(TIMER_ENABLE | flags, timer->ctrl);
+>  }
+>  
+> -static void rk_timer_update_counter(unsigned long cycles,
+> -				    struct rk_timer *timer)
+> +static void rk_timer_update_counter(u64 cycles, struct rk_timer *timer)
+> +{
+> +	u32 lower = cycles & 0xFFFFFFFF;
+> +	u32 upper = (cycles >> 32) & 0xFFFFFFFF;
+> +
+> +	writel_relaxed(lower, timer->base + TIMER_LOAD_COUNT0);
+> +	writel_relaxed(upper, timer->base + TIMER_LOAD_COUNT1);
+> +}
+> +
+> +static u64 notrace _rk_timer_counter_read(struct rk_timer *timer)
+>  {
+> -	writel_relaxed(cycles, timer->base + TIMER_LOAD_COUNT0);
+> -	writel_relaxed(0, timer->base + TIMER_LOAD_COUNT1);
+> +	u64 counter;
+> +	u32 lower;
+> +	u32 upper, old_upper;
+> +
+> +	upper = readl_relaxed(timer->base + TIMER_CURRENT_VALUE1);
+> +	do {
+> +		old_upper = upper;
+> +		lower = readl_relaxed(timer->base + TIMER_CURRENT_VALUE0);
+> +		upper = readl_relaxed(timer->base + TIMER_CURRENT_VALUE1);
+> +	} while (upper != old_upper);
+> +
+> +	counter = upper;
+> +	counter <<= 32;
+> +	counter |= lower;
+> +	return counter;
+> +}
+> +
 
-I didn't put it in there because it's optional, and was looking
-orthogonal to me, since it depends on the clock frequency out of reset
-and out of the bootloader running (and it's documented already as part
-of the generic clock bindings).
+Do you really want to use the 64 bits version? It has a non negligeable impact on
+the performances and there is no deep idle state allowing a long and huge
+energy saving. IOW, we consume more energy and time by computing the 64bits
+clocksource for zero benefit. I recommend to convert to 32bits.
 
-Thanks,
-Maxime
+> +static u64 rk_timer_counter_read(struct rk_timer *timer)
+> +{
+> +	return _rk_timer_counter_read(timer);
+>  }
+>  
+>  static void rk_timer_interrupt_clear(struct rk_timer *timer)
+> @@ -120,13 +161,46 @@ static irqreturn_t rk_timer_interrupt(int irq, void *dev_id)
+>  	return IRQ_HANDLED;
+>  }
+>  
+> +static u64 rk_timer_clocksource_read(struct clocksource *cs)
+> +{
+> +	struct rk_clocksource *_cs =
+> +		container_of(cs, struct rk_clocksource, cs);
+> +
+> +	return ~rk_timer_counter_read(&_cs->timer);
+> +}
+> +
+> +static u64 notrace rk_timer_sched_clock_read(void)
+> +{
+> +	struct rk_clocksource *_cs = &cs_timer;
+> +
+> +	return ~_rk_timer_counter_read(&_cs->timer);
+> +}
+> +
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+You should be able to replace all this code by:
 
---7vxpkbzz4ky4l7yn
-Content-Type: application/pgp-signature; name="signature.asc"
+clocksource_mmio_init() with clocksource_mmio_readl_down().
 
------BEGIN PGP SIGNATURE-----
+>  static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+>  {
+> -	struct clock_event_device *ce = &bc_timer.ce;
+> -	struct rk_timer *timer = &bc_timer.timer;
+> +	struct clock_event_device *ce = NULL;
+> +	struct clocksource *cs = NULL;
+> +	struct rk_timer *timer = NULL;
+>  	struct clk *timer_clk;
+>  	struct clk *pclk;
+>  	int ret = -EINVAL, irq;
+> +	int clksrc;
+> +
+> +	clksrc = rk_next_clksrc;
+> +	rk_next_clksrc++;
+> +
+> +	switch (clksrc) {
+> +	case ROCKCHIP_CLKSRC_CLOCKEVENT:
+> +		ce = &bc_timer.ce;
+> +		timer = &bc_timer.timer;
+> +		break;
+> +	case ROCKCHIP_CLKSRC_CLOCKSOURCE:
+> +		cs = &cs_timer.cs;
+> +		timer = &cs_timer.timer;
+> +		break;
+> +	default:
+> +		return -ENODEV;
+> +	}
+>  
+>  	timer->base = of_iomap(np, 0);
+>  	if (!timer->base) {
+> @@ -170,26 +244,49 @@ static int __init rk_timer_init(struct device_node *np, u32 ctrl_reg)
+>  		goto out_irq;
+>  	}
+>  
+> -	ce->name = TIMER_NAME;
+> -	ce->features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT |
+> -		       CLOCK_EVT_FEAT_DYNIRQ;
+> -	ce->set_next_event = rk_timer_set_next_event;
+> -	ce->set_state_shutdown = rk_timer_shutdown;
+> -	ce->set_state_periodic = rk_timer_set_periodic;
+> -	ce->irq = irq;
+> -	ce->cpumask = cpu_possible_mask;
+> -	ce->rating = 250;
+> +	if (ce) {
+> +		ce->name = TIMER_NAME;
+> +		ce->features = CLOCK_EVT_FEAT_PERIODIC |
+> +			       CLOCK_EVT_FEAT_ONESHOT |
+> +			       CLOCK_EVT_FEAT_DYNIRQ;
+> +		ce->set_next_event = rk_timer_set_next_event;
+> +		ce->set_state_shutdown = rk_timer_shutdown;
+> +		ce->set_state_periodic = rk_timer_set_periodic;
+> +		ce->irq = irq;
+> +		ce->cpumask = cpu_possible_mask;
+> +		ce->rating = 250;
+> +	}
+> +
+> +	if (cs) {
+> +		cs->name = TIMER_NAME;
+> +		cs->flags = CLOCK_SOURCE_IS_CONTINUOUS;
+> +		cs->mask = CLOCKSOURCE_MASK(64);
+> +		cs->read = rk_timer_clocksource_read;
+> +		cs->rating = 250;
+> +	}
+>  
+>  	rk_timer_interrupt_clear(timer);
+>  	rk_timer_disable(timer);
+>  
+> -	ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER, TIMER_NAME, ce);
+> -	if (ret) {
+> -		pr_err("Failed to initialize '%s': %d\n", TIMER_NAME, ret);
+> -		goto out_irq;
+> +	if (ce) {
+> +		ret = request_irq(irq, rk_timer_interrupt, IRQF_TIMER,
+> +				  TIMER_NAME, ce);
+> +		if (ret) {
+> +			pr_err("Failed to initialize '%s': %d\n",
+> +				TIMER_NAME, ret);
+> +			goto out_irq;
+> +		}
+> +
+> +		clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
+>  	}
 
-iQIcBAEBCAAGBQJYj0QjAAoJEBx+YmzsjxAgneUP/jmPPsIbVy3M8TX5y90mIUth
-xJuYYJD7dGgX+QXa8f9ZO2oOsVoZnsJhKbiEREb7ibL8KsM83+zc0/MnarmNlkLV
-HrY+ruSNhoV6Xt3NCoAQbe+Ky91VuzNz5Ek9Gg33e5h53VYtf/BlzMmKuRPdyXLt
-pNa7r5NAoXcRyXMk8T2yrXzG1Bt6OT2CXLHl5bFkuoNkPhxyPcf3uISJEFPCxOIC
-jYhWPvfzAuCI5/IFYBCs8oTsZYb9tu8YA1dVnCL2+qPv4taJXjkn/zhDff7Ewz1I
-5t384jhjHUP6Egutm5Uh2efoHIbE8libWcIK5T2fk27quIHlH3SA6W5ozSAcaY8Q
-BUEDhpWJoIMAPFtMoffKM7ZnrpesOT0hjMTp8zwXs3VffQV2fPqdzeJ1N0m/yf97
-76OJS9LXAXof6WWRjsgVjb+IuzcENpMiK8vIeRQOPoF9hlZ/OrdiA18bSmMZfyGa
-kp6VwmSpJm7rnROfyIUrWQXvDavIRwBZ9ivYNKVchJRuSqxCD0rMO0l7Yg4nkPQN
-0zYBXMh7sUFXJeCZJJ35wnzW2XUgSe/oXGLm480d7JyEcwKrNGQ7/lx3Pai9Kkie
-xTOrO4ZaNzdgwRVILtpjwUAw8NOUp9CT8pk3HzX0q21grTYYF8gQF/Fwn3WJJrbF
-TMuhBvOCXHD6RMHpUATt
-=q/V3
------END PGP SIGNATURE-----
+'ce' blocks can be grouped together.
 
---7vxpkbzz4ky4l7yn--
+>  
+> -	clockevents_config_and_register(ce, timer->freq, 1, UINT_MAX);
+> +	if (cs) {
+> +		rk_timer_update_counter(U64_MAX, timer);
+> +		rk_timer_enable(timer, 0);
+> +		clocksource_register_hz(cs, timer->freq);
+> +		sched_clock_register(rk_timer_sched_clock_read, 64,
+> +				     timer->freq);
+
+	The 'cs' can be replaced by clocksource_mmio_init.
+
+> +	}
+>  
+>  	return 0;
+>  
+> -- 
+> 1.7.9.5
+> 
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
