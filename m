@@ -1,181 +1,86 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 6/7] ASoC: add bindings for STM32 DFSDM
-	driver
-Date: Mon, 30 Jan 2017 18:32:16 +0100
-Message-ID: <71612ea0-c9d0-a85e-2d58-72609df57e35@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-7-git-send-email-arnaud.pouliquen@st.com>
- <f0f446ea-97a0-8fef-bec5-aefeed42a85a@kernel.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: BCM5301X: Add missing Netgear R8000 LEDs and
+ Keys
+Date: Mon, 30 Jan 2017 09:37:31 -0800
+Message-ID: <4f21b12f-b099-bf52-1fa2-0ef3d3ebf7e9@gmail.com>
+References: <20170128143749.5897-1-adityaxavier@gmail.com>
+ <CACna6rzaEw+_tgMtG5ASRX+AZSbg-yA=pnpaD9uE1AK8ZGKJ1Q@mail.gmail.com>
+ <A0233283-B547-42E5-BBBF-3B75E592D858@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <f0f446ea-97a0-8fef-bec5-aefeed42a85a@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <A0233283-B547-42E5-BBBF-3B75E592D858@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aditya Xavier <adityaxavier@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Russell King <linux@armlinux.org.uk>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Johan,
-
-Please find my comments in-line.
-
-Regards
-
-Arnaud
-
-On 01/29/2017 01:19 PM, Jonathan Cameron wrote:
-> On 23/01/17 16:32, Arnaud Pouliquen wrote:
->> This patch adds documentation of device tree bindings for the
->> STM32 DFSDM ASoC driver.
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
->> ---
->>  .../devicetree/bindings/sound/st,sm32-adfsdm.txt   | 84 ++++++++++++++++++++++
->>  1 file changed, 84 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
->> new file mode 100644
->> index 0000000..a1d27b8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
->> @@ -0,0 +1,84 @@
->> +STMicroelectronics STM32 ADFSDM ASoC DAI device driver.
->> +
->> +STM32 ADFSDM ASoC is a sigma delta audio interface for digital microphone.
->> +It has to be declared in device-tree as a subnode of the DFSDM mfd node.
->> +
->> +It offers possibility to record several mono microphones, with an option to
->> +synchronize all microphones on a main one (that must be piped to filter 0)
->> +Audio interface can be exposed through the generic ASoC simple card.
->> +
->> +2 Dmics can be connected on one SPI interface instance n.
->> +Convention is that the DMIC that strobes data on rising edge is connected to the
->> +corresponding DFSDM channel n; while the Dmic that strobes data on falling edge
->> +is connected to the channel n-1. Simple card property "bitclock-inversion = <1>"
->> +is used to specify that microphone strobes data on falling edge.
->> +
->> +SPI interface allows to be scheduled by an external SPI clock. To use it
->> +simple card properties "bitclock-master = <&codec>" and "system-clock-frequency"
->> +have to be defined in dai-link node.
->> +
->> +Required properties:
->> +- compatible: 	Must be "st,stm32-dfsdm-audio",
->> +- reg:		Specifies the DFSDM filter instance.
->> +- interrupts: 	DFSDM filter instance interrupt line.
->> +- dma:		DMA controller phandle and DMA request line associated to the
->> +		filter instance ( specified by the field "reg")
->> +- dma-names: 	must be "rx"
->> +
->> +- st,input-id:		Id of the SPI/Manchester interface used.
->> +- st,dai-filter-order:  SinC filter order from 0 to 5.
->> +			0: FastSinC
->> +			[1-5]: order 1 to 5.
->> +			For audio purpose it is recommended to use order 3 to 5.
-> Interesting for audio you consider it feature of the hardware, but for ADC you
-> consider that this should be userspace controlled.
-> Personally I'd like to see more detail on those filters but if this is convention
-> in Asoc then so be it.
-
-Configure filter and integrator is quite tricky. Updating filter and
-integrator parameters have impact on sample resolution and output sample
-rate.
-Sample resolution is the peak to peak data value and depends on
-oversampling parameters and filter order.
-
-Output sample rate depends on SPI input clock frequency oversampling
-parameters and filter order.
-
-High filter order gives a better resolution and a better filter response
-but allows less dynamic to find the good rate...
-
-So it is a compromise between resolution, rate and filtering.
-
-For ADC use case, filter orders 1 to 3 are recommended.
-For audio use case, orders 3 to 5 are recommended.
-
-On IIO side i proposed to expose tuning in ABI, to allows application
-fine tuning.
-Need to document it...
-
-For ASOC it is another story. Application requests a rate and a sample
-format. So filter parameters are computed based on SPI bus clock
-frequency, expected audio sample rate and audio sample format.
-This is done in stm32_adfsdm_get_best_osr in sound/soc/stm/stm32_adfsdm.c.
-
-Now your comment trig a good point. Perhaps a better option in IIO,
-could be to offer same kind of ABI than ASOC interface:
-- standard oversampling-ratio ABI. based on it filter and integrator
-oversampling ratios will be computed to maximize the resolution.
-- a read only resolution ABI:
-/sys/bus/iio/devices/iio:deviceX/in_adc_x_resolution. That give the
-computed resolution.
-
-In this case filter order will be part of the DT for IIO and ASoC.
-This would also match with a redesign of the DFSDM driver in IIO...
-
->> +
->> +Optional properties:
->> + - st,dai0-synchronized: Set to 1 to synchronize DAI with DFSDM instance 0.
->> +
->> +Exemple of a card with 2 Dmics synchronized and connected on SPI interface 1.
-> Example.
->> +
->> +	dfsdm: dfsdm@4400D000 {
->> +		dai_dfsdm0: dfsdm-audio@0 {
->> +			compatible = "st,stm32-dfsdm-audio";
->> +			#sound-dai-cells = <0>;
->> +			reg = <0>;
->> +			dmas = <&dmamux1 101 0x400 0x00>;
->> +			dma-names = "rx";
->> +			st,input-id = <0>;
->> +			st,dai-filter-order = <5>;
->> +		};
->> +		dai_dfsdm1: dfsdm-audio@1 {
->> +			compatible = "st,stm32-dfsdm-audio";
->> +			#sound-dai-cells = <0>;
->> +			reg = <0>;
->> +			dmas = <&dmamux1 102 0x400 0x00>;
->> +			dma-names = "rx";
->> +			st,input-id = <0>;
->> +			st,dai0-synchronized = <1>;
->> +			st,dai-filter-order = <5>;
->> +		};
->> +	};
->> +	sound_dfsdm_pdm {
->> +		compatible = "simple-audio-card";
->> +		simple-audio-card,name = "dfsdm_pdm";
->> +		status = "okay";
->> +
->> +		dfsdm0_mic0: simple-audio-card,dai-link@0 {
->> +			format = "pdm";
->> +			cpu {
->> +				sound-dai = <&dai_dfsdm0>;
->> +			};
->> +			dmic0_codec: codec {
->> +				sound-dai = <&dmic0>;
->> +			};
->> +		};
->> +		dfsdm0_mic1: simple-audio-card,dai-link@1 {
->> +			format = "pdm";
->> +			bitclock-inversion = <1>;
->> +			cpu {
->> +				sound-dai = <&dai_dfsdm1>;
->> +			};
->> +			codec {
->> +				sound-dai = <&dmic1>;
->> +			};
->> +		};
->> +	};
->>
-> Jonathan
-> 
+T24gMDEvMzAvMjAxNyAwMTowOCBBTSwgQWRpdHlhIFhhdmllciB3cm90ZToKPiBXb3VsZCB5b3Ug
+cmVxdWlyZSBtZSB0byBzZW5kIHRoZSByZXZpc2VkIFBhdGNoID8KPiAKPiBPciB3b3VsZCB0aGlz
+IGRvID8KCldpbGwgdGFrZSBjYXJlIG9mIGl0IHRoaXMgdGltZS4KCj4gCj4gQW5kIHRoYW5rcyBm
+b3IgZ3VpZGluZyBtZSB0aHJvdWdoIHRoaXMgcHJvY2VzcyA6KQo+IAo+IAo+PiBPbiAyOS1KYW4t
+MjAxNywgYXQgMjo0NSBBTSwgUmFmYcWCIE1pxYJlY2tpIDx6YWplYzVAZ21haWwuY29tPiB3cm90
+ZToKPj4KPj4gT24gMjggSmFudWFyeSAyMDE3IGF0IDE1OjM3LCBBZGl0eWFYYXZpZXIgPGFkaXR5
+YXhhdmllckBnbWFpbC5jb20+IHdyb3RlOgo+Pj4gRnJvbTogQWRpdHlhIFhhdmllciA8YWRpdHlh
+eGF2aWVyQGdtYWlsLmNvbT4KPj4+Cj4+PiBBZGRlZCB0d28gV0FOIHN0YXR1cyBMRURzIGFuZCBh
+IEdQSU8gS2V5IGZvciBCcmlnaHRuZXNzIHdoaWNoIHdlcmUgbWlzc2luZy4KPj4+IFYyOiBVcGRh
+dGVkIHN1YmplY3QsIFBvd2VyIExFRCBuYW1lcywgYW5kIFdBTiBsYWJlbHMuCj4+Cj4+IENoYW5n
+ZWxvZyAoVjIgLi4uIHBhcnQpIHNob3VsZCBnbyBpbnRvIHRoYXQgL2NvbW1lbnRzLyBzZWN0aW9u
+IChzZWUgYmVsb3cpLgo+PiBGbG9yaWFuOiBjYW4geW91IGRyb3AgdGhhdCBsaW5lIHdoZW4gYXBw
+bHlpbmcgdGhpcyBwYXRjaD8gT3RoZXJ3aXNlIGl0Cj4+IGxvb2tzIE9LIHRvIG1lLgo+Pgo+Pgo+
+Pj4gU2lnbmVkLW9mZi1ieTogQWRpdHlhIFhhdmllciA8YWRpdHlheGF2aWVyQGdtYWlsLmNvbT4K
+Pj4KPj4gQWNrZWQtYnk6IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4KPj4g
+VGhhbmtzIGZvciB0aGUgcGF0Y2ghCj4+Cj4+Cj4+PiAtLS0KPj4KPj4gUmlnaHQgaGVyZSwgYmVs
+b3cgdGhlc2UgMyBkYXNoZXMgaXMgYSBwbGFjZSB3aGVyZSB5b3UgY2FuIGFkZCBleHRyYQo+PiBj
+b21tZW50cyAodGhleSB3b24ndCBnbyBpbnRvIGxvZyB3aGVuIGRvaW5nICJnaXQgYW0iKS4KPj4K
+Pj4+IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktbmV0Z2Vhci1yODAwMC5kdHMgfCAyMiArKysr
+KysrKysrKysrKysrKysrKy0tCj4+PiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwg
+MiBkZWxldGlvbnMoLSkKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNt
+NDcwOS1uZXRnZWFyLXI4MDAwLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDktbmV0Z2Vh
+ci1yODAwMC5kdHMKPj4+IGluZGV4IDkyZjhhNzIuLjkwZDQ0MjAgMTAwNjQ0Cj4+PiAtLS0gYS9h
+cmNoL2FybS9ib290L2R0cy9iY200NzA5LW5ldGdlYXItcjgwMDAuZHRzCj4+PiArKysgYi9hcmNo
+L2FybS9ib290L2R0cy9iY200NzA5LW5ldGdlYXItcjgwMDAuZHRzCj4+PiBAQCAtMjcsMTggKzI3
+LDMwIEBACj4+PiAgICAgICAgbGVkcyB7Cj4+PiAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0g
+ImdwaW8tbGVkcyI7Cj4+Pgo+Pj4gLSAgICAgICAgICAgICAgIHBvd2VyMCB7Cj4+PiArICAgICAg
+ICAgICAgICAgcG93ZXItd2hpdGUgewo+Pj4gICAgICAgICAgICAgICAgICAgICAgICBsYWJlbCA9
+ICJiY201M3h4OndoaXRlOnBvd2VyIjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3Mg
+PSA8JmNoaXBjb21tb24gMiBHUElPX0FDVElWRV9MT1c+Owo+Pj4gICAgICAgICAgICAgICAgICAg
+ICAgICBsaW51eCxkZWZhdWx0LXRyaWdnZXIgPSAiZGVmYXVsdC1vbiI7Cj4+PiAgICAgICAgICAg
+ICAgICB9Owo+Pj4KPj4+IC0gICAgICAgICAgICAgICBwb3dlcjEgewo+Pj4gKyAgICAgICAgICAg
+ICAgIHBvd2VyLWFtYmVyIHsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWwgPSAiYmNt
+NTN4eDphbWJlcjpwb3dlciI7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAgIGdwaW9zID0gPCZj
+aGlwY29tbW9uIDMgR1BJT19BQ1RJVkVfTE9XPjsKPj4+ICAgICAgICAgICAgICAgICAgICAgICAg
+bGludXgsZGVmYXVsdC10cmlnZ2VyID0gImRlZmF1bHQtb2ZmIjsKPj4+ICAgICAgICAgICAgICAg
+IH07Cj4+Pgo+Pj4gKyAgICAgICAgICAgICAgIHdhbi13aGl0ZSB7Cj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICBsYWJlbCA9ICJiY201M3h4OndoaXRlOndhbiI7Cj4+PiArICAgICAgICAgICAg
+ICAgICAgICAgICBncGlvcyA9IDwmY2hpcGNvbW1vbiA4IEdQSU9fQUNUSVZFX0xPVz47Cj4+PiAr
+ICAgICAgICAgICAgICAgICAgICAgICBsaW51eCxkZWZhdWx0LXRyaWdnZXIgPSAiZGVmYXVsdC1v
+biI7Cj4+PiArICAgICAgICAgICAgICAgfTsKPj4+ICsKPj4+ICsgICAgICAgICAgICAgICB3YW4t
+YW1iZXIgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGFiZWwgPSAiYmNtNTN4eDphbWJl
+cjp3YW4iOwo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3Bpb3MgPSA8JmNoaXBjb21tb24g
+OSBHUElPX0FDVElWRV9ISUdIPjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGRl
+ZmF1bHQtdHJpZ2dlciA9ICJkZWZhdWx0LW9mZiI7Cj4+PiArICAgICAgICAgICAgICAgfTsKPj4+
+ICsKPj4+ICAgICAgICAgICAgICAgIDVnaHotMSB7Cj4+PiAgICAgICAgICAgICAgICAgICAgICAg
+IGxhYmVsID0gImJjbTUzeHg6d2hpdGU6NWdoei0xIjsKPj4+ICAgICAgICAgICAgICAgICAgICAg
+ICAgZ3Bpb3MgPSA8JmNoaXBjb21tb24gMTIgR1BJT19BQ1RJVkVfTE9XPjsKPj4+IEBAIC0xMDQs
+NiArMTE2LDEyIEBACj4+PiAgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGNvZGUgPSA8S0VZ
+X1JFU1RBUlQ+Owo+Pj4gICAgICAgICAgICAgICAgICAgICAgICBncGlvcyA9IDwmY2hpcGNvbW1v
+biA2IEdQSU9fQUNUSVZFX0xPVz47Cj4+PiAgICAgICAgICAgICAgICB9Owo+Pj4gKwo+Pj4gKyAg
+ICAgICAgICAgICAgIGJyaWdodG5lc3Mgewo+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgbGFi
+ZWwgPSAiQmFja2xpZ2h0IjsKPj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGxpbnV4LGNvZGUg
+PSA8S0VZX0JSSUdIVE5FU1NfWkVSTz47Cj4+PiArICAgICAgICAgICAgICAgICAgICAgICBncGlv
+cyA9IDwmY2hpcGNvbW1vbiAxOSBHUElPX0FDVElWRV9MT1c+Owo+Pj4gKyAgICAgICAgICAgICAg
+IH07Cj4+PiAgICAgICAgfTsKPj4+IH07Cj4+Pgo+Pj4gLS0KPj4+IDIuOS4zCj4+Pgo+Pgo+Pgo+
+Pgo+PiAtLSAKPj4gUmFmYcWCCj4gCgoKLS0gCkZsb3JpYW4KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
+CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
