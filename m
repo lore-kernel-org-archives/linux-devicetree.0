@@ -1,52 +1,173 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 4/7] IIO: add STM32 DFSDM ADC support
-Date: Mon, 30 Jan 2017 17:02:44 +0100
-Message-ID: <7d3336e8-ad0b-a52c-5aa8-9b39a503d426@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-5-git-send-email-arnaud.pouliquen@st.com>
- <14320aef-7956-74bf-e4c3-5f2354cc5493@kernel.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH 3/8] serial: st-asc: Read in all Pinctrl
+ states
+Date: Mon, 30 Jan 2017 16:10:41 +0000
+Message-ID: <20170130161041.GA21001@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <20170124134310.27512-1-lee.jones@linaro.org>
+ <20170124134310.27512-4-lee.jones@linaro.org>
+ <20170125112142.GE5680@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20170127115458.k4edg42nnna3bv4v@dell>
+ <20170130142356.GA18710@griffinp-ThinkPad-X1-Carbon-2nd>
+ <20170130153211.j75qemvwsq3cwqve@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <14320aef-7956-74bf-e4c3-5f2354cc5493@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170130153211.j75qemvwsq3cwqve@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Jonathan,
+Hi Lee,
 
-Thanks for the reviews, i will integrate your comment in next version.
+On Mon, 30 Jan 2017, Lee Jones wrote:
 
-On 01/29/2017 01:15 PM, Jonathan Cameron wrote:
-> On 23/01/17 16:32, Arnaud Pouliquen wrote:
->> Add driver to handle Sigma Delta ADC conversion for ADC
->> connected to DFSDM IP.
->>
->> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-> Various comments inline.  Again mostly reading this to grasp how the whole
-> lot fits together.
+> On Mon, 30 Jan 2017, Peter Griffin wrote:
 > 
-> At the moment, other than some new ABI, this is a fairly simple sysfs or in
-> kernel polled ADC driver.  The hardware seems to support a whole lot more
-> but fair enough to present this as a starting point!
+> > Hi Lee,
+> > 
+> > On Fri, 27 Jan 2017, Lee Jones wrote:
+> > 
+> > > On Wed, 25 Jan 2017, Peter Griffin wrote:
+> > > 
+> > > > Hi Lee,
+> > > > 
+> > > > On Tue, 24 Jan 2017, Lee Jones wrote:
+> > > > 
+> > > > > There are now 2 possible separate/different Pinctrl states which can
+> > > > > be provided from platform data.  One which encompasses the lines
+> > > > > required for HW flow-control (CTS/RTS) and another which does not
+> > > > > specify these lines, such that they can be used via GPIO mechanisms
+> > > > > for manually toggling (i.e. from a request by `stty`).
+> > > > > 
+> > > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > ---
+> > > > >  drivers/tty/serial/st-asc.c | 28 ++++++++++++++++++++++++++++
+> > > > >  1 file changed, 28 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+> > > > > index 397df50..03801ed 100644
+> > > > > --- a/drivers/tty/serial/st-asc.c
+> > > > > +++ b/drivers/tty/serial/st-asc.c
+> > > > > @@ -37,10 +37,16 @@
+> > > > >  #define ASC_FIFO_SIZE 16
+> > > > >  #define ASC_MAX_PORTS 8
+> > > > >  
+> > > > > +/* Pinctrl states */
+> > > > > +#define DEFAULT		0
+> > > > > +#define MANUAL_RTS	1
+> > > > 
+> > > > Nit: Would be better to have them aligned.
+> > > 
+> > > These are aligned in code.  The patch format throws things out.
+> > > 
+> > > Look, same lines with the "> > +" removed:
+> > 
+> > Ah OK.
+> > 
+> > > 
+> > > /* Pinctrl states */
+> > > #define DEFAULT		0
+> > > #define MANUAL_RTS	1
+> > > 
+> > > Try it.
+> > > 
+> > > > > +
+> > > > >  struct asc_port {
+> > > > >  	struct uart_port port;
+> > > > >  	struct gpio_desc *rts;
+> > > > >  	struct clk *clk;
+> > > > > +	struct pinctrl *pinctrl;
+> > > > > +	struct pinctrl_state *states[2];
+> > > > >  	unsigned int hw_flow_control:1;
+> > > > >  	unsigned int force_m1:1;
+> > > > >  };
+> > > > > @@ -694,6 +700,7 @@ static int asc_init_port(struct asc_port *ascport,
+> > > > >  {
+> > > > >  	struct uart_port *port = &ascport->port;
+> > > > >  	struct resource *res;
+> > > > > +	int ret;
+> > > > >  
+> > > > >  	port->iotype	= UPIO_MEM;
+> > > > >  	port->flags	= UPF_BOOT_AUTOCONF;
+> > > > > @@ -720,6 +727,27 @@ static int asc_init_port(struct asc_port *ascport,
+> > > > >  	WARN_ON(ascport->port.uartclk == 0);
+> > > > >  	clk_disable_unprepare(ascport->clk);
+> > > > >  
+> > > > > +	ascport->pinctrl = devm_pinctrl_get(&pdev->dev);
+> > > > > +	if (IS_ERR(ascport->pinctrl)) {
+> > > > > +		ret = PTR_ERR(ascport->pinctrl);
+> > > > > +		dev_err(&pdev->dev, "Failed to get Pinctrl: %d\n", ret);
+> > > > > +	}
+> > > > > +
+> > > > > +	ascport->states[DEFAULT] =
+> > > > > +		pinctrl_lookup_state(ascport->pinctrl, "default");
+> > > > > +	if (IS_ERR(ascport->states[DEFAULT])) {
+> > > > > +		ret = PTR_ERR(ascport->states[DEFAULT]);
+> > > > > +		dev_err(&pdev->dev,
+> > > > > +			"Failed to look up Pinctrl state 'default': %d\n", ret);
+> > > > > +		return ret;
+> > > > > +	}
+> > > > > +
+> > > > > +	/* "manual-rts" state is optional */
+> > > > > +	ascport->states[MANUAL_RTS] =
+> > > > > +		pinctrl_lookup_state(ascport->pinctrl, "manual-rts");
+> > > > > +	if (IS_ERR(ascport->states[MANUAL_RTS]))
+> > > > > +		ascport->states[MANUAL_RTS] = NULL;
+> > > > > +
+> > > > 
+> > > > The different pinctrl states looks like a neat solution to the problem.
+> > > > 
+> > > > My only concern here is that 'default' state is implying a hw-flow-control
+> > > > pinmux config, and manual-rts is implying what is the current upstream
+> > > > 'default' pinmux config.
+> > > > 
+> > > > Which maybe ok if you update all uarts, but currently only serial0
+> > > > is updated. So the other uarts current 'default' is actually the same as serial0
+> > > > 'manual-rts' grouping, which conceptually is odd.
+> > > > 
+> > > > Would it not be better to make 'manual-rts' the default state? As that aligns
+> > > > to what is currently already the default for the other UARTS? And then make
+> > > > hw-flow-control the optional state for serial0?
+> > > > 
+> > > > That also has the advantage that 'default' has the same meaning with older DT's.
+> > > 
+> > > The reason it was done is this was because none of the other UARTs
+> > > require 2 separate Pinctrl configurations, only this one.  Moreover,
+> > > if they support RTS/CTS then I believe that the lines should be
+> > > defined in Pinctrl.
+> > 
+> > Yes I agree with that.
+> > 
+> > > Thus, it was my plan to update all UART's default
+> > > Pinctrl configs to include the RTS/CTS lines.
+> > > 
+> > 
+> > I still don't see the point in changing the meaning of 'default' group and breaking
+> > ABI if you don't need to?
+> > 
+> > As far as I can tell if you swap the meaning of 'default' and 'maunal-rts'
+> > groups you get all the benefits of this series whilst also maintaining backwards
+> > compatbility with older DT's.
+> 
+> What makes you think this will break ABI?
+>
 
-Yes, from IIO point of view, should increase driver features in future
-to integrate buffer, scan mode, triggers...
-Or perhaps i will need to introduce some of these concepts to handle
-ASoC requirement in IIO...
+I've not tried it, but an older DT defines one group, 'default' which contains
+the same pin config as your new optional 'manual-rts' group.
 
-FYI, DFSDM also offers some features like Analog watchdog, short circuit
-and SPI/manchester bus clock absence detection detection...:)
+The driver now reads like the manual-rts pin config is optional and should be stored in
+ascport->states[MANUAL_RTS]. An older DT will pass that same pin config as the default
+group and it will be stored in ascport->states[DEFAULT].
 
-Regards
-Arnaud
+That seems wrong to me, and if it executes OK it wouldn't be what you
+expect by reading the code.
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
