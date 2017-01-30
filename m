@@ -1,52 +1,67 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: Lots of "Warning (unit_address_vs_reg): Node /blah/blah/blah has
- a unit name, but no reg property"
-Date: Mon, 30 Jan 2017 10:46:41 -0600
-Message-ID: <CAL_JsqLzW=XUNmzscL6GXMrP_TinPtcpuzatwz-gkC8X9BUQUA@mail.gmail.com>
-References: <1485770101.2451.40.camel@hellion.org.uk>
+From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 1/4] drm/msm: remove qcom, gpu-pwrlevels bindings
+Date: Mon, 30 Jan 2017 11:49:18 -0500
+Message-ID: <20170130164921.20744-2-robdclark@gmail.com>
+References: <20170130164921.20744-1-robdclark@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485770101.2451.40.camel-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20170130164921.20744-1-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-+dtc list
-
-On Mon, Jan 30, 2017 at 3:55 AM, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> wrote:
-> I recently updated the device-tree-compiler package on the system which
-> builds the split device tree repo[0] from 1.4.0+dfsg-2 to 1.4.2-1
-> (debian package versions) and now during the test build I see many
-> (over 1,000) of these:
->
->     Warning (unit_address_vs_reg): Node /soc@ff700000/ethernet@b0000 has a unit name, but no reg property
->
-> Is this something which is known? Maybe Linux hasn't pulled in the
-> newer dtc yet so you aren't hitting it yet, or maybe you've done what I
-> did as a quick fix and added:
->     DTC_FLAGS="-W no-unit_address_vs_reg"
-> ?
-
-Linux has this, but the warnings are only enabled with "W=1" builds.
-I'm trying to not have to review the trivial crap.
-
-It's going to spew even more soon. I've posted some more dtc checks last week.
-
-> (a second issue is the lack of the offending filename in the
-> warning message, I'll figure out the right venue for that next)
-
-Yeah, I don't think the dtc checks infrastructure has the information
-as they run on the live tree after all the parsing is done.
-
-Rob
-
->
-> Ian.
->
-> [0] https://git.kernel.org/cgit/linux/kernel/git/devicetree/devicetree-rebasing.git/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIHBsYW4gaXMgdG8gdXNlIHRoZSBPUFAgYmluZGluZ3MuICBGb3Igbm93LCByZW1vdmUgdGhl
+IGRvY3VtZW50YXRpb24KZm9yIHFjb20sZ3B1LXB3cmxldmVscywgYW5kIG1ha2UgdGhlIGRyaXZl
+ciBmYWxsIGJhY2sgdG8gYSBzYWZlIGxvdwpjbG9jayBpZiB0aGUgbm9kZSBpcyBub3QgcHJlc2Vu
+dC4KCk5vdGUgdGhhdCBubyB1cHN0cmVhbSBkdGIgdXNlIHRoaXMgbm9kZS4gIEZvciBub3cgd2Ug
+a2VlcCBjb21wYXRpYmlsaXR5CndpdGggdGhpcyBub2RlIHRvIGF2b2lkIGJyZWFraW5nIGNvbXBh
+dGliaWxpdHkgd2l0aCBkb3duc3RyZWFtIGFuZHJvaWQKZHQgZmlsZXMuCgpTaWduZWQtb2ZmLWJ5
+OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Ci0tLQogRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgfCAxNSAtLS0tLS0tLS0tLS0tLS0K
+IGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19kZXZpY2UuYyAgICAgICAgICAgIHwg
+IDYgKysrKy0tCiAyIGZpbGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMTcgZGVsZXRpb25z
+KC0pCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbXNtL2dwdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9tc20vZ3B1LnR4dAppbmRleCA2N2QwYTU4Li43NDdiOTg0IDEwMDY0NAotLS0gYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAorKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dApAQCAtMTIs
+MTIgKzEyLDYgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKICAgKiAibWVtX2lmYWNlX2NsayIKIC0g
+cWNvbSxjaGlwaWQ6IGdwdSBjaGlwLWlkLiAgTm90ZSB0aGlzIG1heSBiZWNvbWUgb3B0aW9uYWwg
+Zm9yIGZ1dHVyZQogICBkZXZpY2VzIGlmIHdlIGNhbiByZWxpYWJseSByZWFkIHRoZSBjaGlwaWQg
+ZnJvbSBodwotLSBxY29tLGdwdS1wd3JsZXZlbHM6IGxpc3Qgb2Ygb3BlcmF0aW5nIHBvaW50cwot
+ICAtIGNvbXBhdGlibGU6ICJxY29tLGdwdS1wd3JsZXZlbHMiCi0gIC0gZm9yIGVhY2ggcWNvbSxn
+cHUtcHdybGV2ZWw6Ci0gICAgLSBxY29tLGdwdS1mcmVxOiByZXF1ZXN0ZWQgZ3B1IGNsb2NrIHNw
+ZWVkCi0gICAgLSBOT1RFOiBkb3duc3RyZWFtIGFuZHJvaWQgZHJpdmVyIGRlZmluZXMgYWRkaXRp
+b25hbCBwYXJhbWV0ZXJzIHRvCi0gICAgICBjb25maWd1cmUgbWVtb3J5IGJhbmR3aWR0aCBzY2Fs
+aW5nIHBlciBPUFAuCiAKIEV4YW1wbGU6CiAKQEAgLTM5LDE0ICszMyw1IEBAIEV4YW1wbGU6CiAJ
+CSAgICA8Jm1tY2MgR0ZYM0RfQUhCX0NMSz4sCiAJCSAgICA8Jm1tY2MgTU1TU19JTUVNX0FIQl9D
+TEs+OwogCQlxY29tLGNoaXBpZCA9IDwweDAzMDIwMTAwPjsKLQkJcWNvbSxncHUtcHdybGV2ZWxz
+IHsKLQkJCWNvbXBhdGlibGUgPSAicWNvbSxncHUtcHdybGV2ZWxzIjsKLQkJCXFjb20sZ3B1LXB3
+cmxldmVsQDAgewotCQkJCXFjb20sZ3B1LWZyZXEgPSA8NDUwMDAwMDAwPjsKLQkJCX07Ci0JCQlx
+Y29tLGdwdS1wd3JsZXZlbEAxIHsKLQkJCQlxY29tLGdwdS1mcmVxID0gPDI3MDAwMDAwPjsKLQkJ
+CX07Ci0JCX07CiAJfTsKIH07CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVu
+by9hZHJlbm9fZGV2aWNlLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9fZGV2
+aWNlLmMKaW5kZXggZTEzMGI1ZS4uN2I5MTgxYjIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9tc20vYWRyZW5vL2FkcmVub19kZXZpY2UuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Fk
+cmVuby9hZHJlbm9fZGV2aWNlLmMKQEAgLTIyNCw4ICsyMjQsMTAgQEAgc3RhdGljIGludCBhZHJl
+bm9fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAq
+ZGF0YSkKIAl9CiAKIAlpZiAoIWNvbmZpZy5mYXN0X3JhdGUpIHsKLQkJZGV2X2VycihkZXYsICJj
+b3VsZCBub3QgZmluZCBjbGsgcmF0ZXNcbiIpOwotCQlyZXR1cm4gLUVOWElPOworCQlkZXZfd2Fy
+bihkZXYsICJjb3VsZCBub3QgZmluZCBjbGsgcmF0ZXNcbiIpOworCQkvKiBUaGlzIGlzIGEgc2Fm
+ZSBsb3cgc3BlZWQgZm9yIGFsbCBkZXZpY2VzOiAqLworCQljb25maWcuZmFzdF9yYXRlID0gMjAw
+MDAwMDAwOworCQljb25maWcuc2xvd19yYXRlID0gMjcwMDAwMDA7CiAJfQogCiAJZm9yIChpID0g
+MDsgaSA8IEFSUkFZX1NJWkUocXVpcmtzKTsgaSsrKQotLSAKMi45LjMKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
+RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
