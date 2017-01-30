@@ -1,40 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/2] ASoc: Add devictree bindings for
-	CS35L35 CODEC
-Date: Mon, 30 Jan 2017 14:16:55 -0600
-Message-ID: <20170130201655.zuozjbg5jnhwrezy@rob-hp-laptop>
-References: <1485360798-15523-1-git-send-email-brian.austin@cirrus.com>
- <c3224f63-e5d1-4874-8317-c5df53d0207d@EX3.ad.cirrus.com>
+Subject: Re: [PATCH v3 1/3] crypto: brcm: DT documentation for Broadcom SPU
+ hardware
+Date: Mon, 30 Jan 2017 14:18:17 -0600
+Message-ID: <20170130201817.hcawwnn2rapuguj4@rob-hp-laptop>
+References: <1485362689-11294-1-git-send-email-rob.rice@broadcom.com>
+ <1485362689-11294-2-git-send-email-rob.rice@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c3224f63-e5d1-4874-8317-c5df53d0207d@EX3.ad.cirrus.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Brian Austin <brian.austin@cirrus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, broonie@kernel.org, ckeepax@opensource.wolfsonmicro.com
+In-Reply-To: <1485362689-11294-2-git-send-email-rob.rice@broadcom.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Rice <rob.rice@broadcom.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-arm-kernel@lists.infradead.org, Steve Lin <steven.lin1@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 10:13:18AM -0600, Brian Austin wrote:
-> Add devicetree bindings documentatin for
-> Cirrus Logic CS35L35 Boosted Amplifier
+On Wed, Jan 25, 2017 at 11:44:47AM -0500, Rob Rice wrote:
+> Device tree documentation for Broadcom Secure Processing Unit
+> (SPU) crypto hardware.
 > 
-> Signed-off-by: Brian Austin <brian.austin@cirrus.com>
+> Signed-off-by: Steve Lin <steven.lin1@broadcom.com>
+> Signed-off-by: Rob Rice <rob.rice@broadcom.com>
 > ---
->  .../devicetree/bindings/sound/cs35l35.txt          | 171 +++++++++++++++++++++
->  1 file changed, 171 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/cs35l35.txt
+>  .../devicetree/bindings/crypto/brcm,spu-crypto.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/brcm,spu-crypto.txt
 
-This looks similar to the CS35L33. Please align the property names and 
-perhaps combine into a single binding doc.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
