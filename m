@@ -1,28 +1,104 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH RESEND 2/5] dmaengine: Provide a wrapper for memcpy
- operations
-Date: Mon, 30 Jan 2017 22:24:17 +0530
-Message-ID: <20170130165417.GF19244@localhost>
-References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
- <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Mon, 30 Jan 2017 08:53:59 -0800
+Message-ID: <20170130165359.GA20288@roeck-us.net>
+References: <1485312289-18354-1-git-send-email-baoyou.xie@linaro.org>
+ <1485312289-18354-3-git-send-email-baoyou.xie@linaro.org>
+ <20170125162346.GA591@linaro.org>
+ <CA+DQWkxpcHqVfDSGuUK-i4DOVXsYEYo60MG5y_oBDNp+ykEdLQ@mail.gmail.com>
+ <20170126161729.GA1515@linaro.org>
+ <CA+DQWkyPtndGEz-QYvmKaXoGNKQ69Zqu-aG7tCKnT-Mrmx5Wsw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Richard Weinberger <richard@nod.at>, linux-mtd@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, linux-gpio@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, linux-kernel@vger.kernel.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt>
+In-Reply-To: <CA+DQWkyPtndGEz-QYvmKaXoGNKQ69Zqu-aG7tCKnT-Mrmx5Wsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 05:42:01PM +0100, Boris Brezillon wrote:
-> Almost all ->device_prep_dma_xx() methods have a wrapper defined in
-> dmaengine.h. Add one for  ->device_prep_dma_memcpy().
+On Fri, Jan 27, 2017 at 10:40:09AM +0800, Baoyou Xie wrote:
+> On 27 January 2017 at 00:17, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> wrote:
+> 
+> > On Thu, Jan 26, 2017 at 09:32:56AM +0800, Baoyou Xie wrote:
+> > > On 26 January 2017 at 00:23, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+> > >
+> > > wrote:
+> > >
+> > > > On Wed, Jan 25, 2017 at 10:44:49AM +0800, Baoyou Xie wrote:
+> > > > > This patch adds watchdog controller driver for ZTE's zx2967 family.
+> > > > >
+> > > > > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > > ---
+[ ... ]
+> > > > > +     reset_control_assert(rstc);
+> > > > > +     usleep_range(500, 20000);
+> > > >
+> > > > Alright, I'm officially confused.
+> > > >
+> > > > First and foremost you still haven't provided an explanation as to why
+> > > > this is
+> > > > required.  Second, in your previous submission you had:
+> > > >
+> > > >         mdelay(10);
+> > > >
+> > > > That is a busy loop of 10ms.  In this post using usleep_range() is a
+> > step
+> > > > in the
+> > > > right direction but the min and max values to wait for don't make
+> > sense.
+> > > > Here
+> > > > you have 500 and 20000, which is 0.5ms and 20ms.
+> > > >
+> > > > In fact, sleeping for 0.5ms is enough.
+> > > we extended the sleeping time to 20ms, the purpose is merging the timer
+> > > interrupts. of course, it's happy to replace it with usleep_range(500,
+> > > 1000).
+> >
+> > "merging the timer interrupts" - you mean trying to get the WD tick to be
+> > closer
+> > to other timers?  If so I really don't see why.  Timers are asynchronous by
+> > nature and there can be dozens of them enabled at any given time.
+> >
+> > Really?
+> Even if the system runs asynchronously, early process may trigger delayed
+> process, for example delayed work queue or timers, we can merge our
+> watchdog timer and those delayed work's timers.
+> 
+In the probe function ?
 
-Looks good to me.
+> Furthermore, what happen if we build this driver as module?
+> 
+If every driver writer would use that line of argument, booting would
+take much longer than necessary, with every process sitting on unnecessary
+wait or sleep calls for perceived "optimization" purposes. Probe functions
+run exactly once, and should be time optimized. You should have an idea
+what the minimum reset hold time is, and follow it.
 
-Acked-by: Vinod Koul <vinod.koul@intel.com>
+> But, as i said early, it's a trial optimization but can be instead with
+> usleep_range(500, 1000).
+> 
+> In some case, such optimization is helpful. I'd like to talk a story here,
+> about before ten years, I pressed a return key in console, you know, in
+> this case, a process be created and exited, so the cpu core that process
+> run at sent an IPI to other CPU, IPI interrupt resulted in the performance
+> decreased by 20%, so sad:)
+> 
+It appears to be somewhat unlikely that each keypress resulted in a driver
+being instantiated. If it did, a sleep in its probe function was the least
+of your problems.
 
+> Unless there is a H/W constraint requiring a delay between the
+> > assert/deassert
+> > of the WD, I don't think adding a wait operation (of any kind) make sense.
 
--- 
-~Vinod
+Correct.
+
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
