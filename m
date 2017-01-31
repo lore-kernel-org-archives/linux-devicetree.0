@@ -1,136 +1,327 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 06/15] device property: Add support for remote endpoints
-Date: Tue, 31 Jan 2017 11:58:27 +0200
-Message-ID: <20170131095827.GS7139@valkosipuli.retiisi.org.uk>
-References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com>
- <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
- <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
+From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: patch "phy: Add support for Qualcomm's USB HSIC phy" added to usb-testing
+Date: Tue, 31 Jan 2017 10:52:34 +0100
+Message-ID: <148585635455229@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-Thank you for the review.
+This is a note to let you know that I've just added the patch titled
 
-On Fri, Jan 27, 2017 at 03:45:04PM -0600, Rob Herring wrote:
-> On Fri, Jan 27, 2017 at 10:03 AM, Sakari Ailus
-> <sakari.ailus@linux.intel.com> wrote:
-> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >
-> > This follows DT implementation of of_graph_* APIs but we call them
-> > fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
-> > will be used. For ACPI we use the new ACPI graph implementation instead.
-> >
-> > This commit includes code from Sakari Ailus.
-> 
-> Then it should have your S-o-b. Actually, either way it should have it.
+    phy: Add support for Qualcomm's USB HSIC phy
 
-I'll add that.
+to my usb git tree which can be found at
+    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
+in the usb-testing branch.
 
-> 
-> Whether or not copying DT graphs is a good idea or not, I'll let
-> someone else chime in on that...
-> 
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/property.h |   9 ++++
-> >  2 files changed, 131 insertions(+)
-> >
-> > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > index c0011cf..cf602c3 100644
-> > --- a/drivers/base/property.c
-> > +++ b/drivers/base/property.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/of.h>
-> >  #include <linux/of_address.h>
-> > +#include <linux/of_graph.h>
-> >  #include <linux/property.h>
-> >  #include <linux/etherdevice.h>
-> >  #include <linux/phy.h>
-> > @@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
-> >         return device_get_mac_addr(dev, "address", addr, alen);
-> >  }
-> >  EXPORT_SYMBOL(device_get_mac_address);
-> > +
-> > +/**
-> > + * device_graph_get_next_endpoint - Get next endpoint firmware node
-> > + * @fwnode: Pointer to the parent firmware node
-> > + * @prev: Previous endpoint node or %NULL to get the first
-> > + *
-> > + * Returns an endpoint firmware node pointer or %NULL if no more endpoints
-> > + * are available.
-> > + */
-> > +struct fwnode_handle *
-> > +fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
-> > +                              struct fwnode_handle *prev)
-> > +{
-> > +       struct fwnode_handle *endpoint = NULL;
-> > +
-> > +       if (is_of_node(fwnode)) {
-> > +               struct device_node *node;
-> > +
-> > +               node = of_graph_get_next_endpoint(to_of_node(fwnode),
-> > +                                                 to_of_node(prev));
-> > +
-> > +               if (node)
-> > +                       endpoint = &node->fwnode;
-> > +       } else if (is_acpi_node(fwnode)) {
-> > +               endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
-> > +               if (IS_ERR(endpoint))
-> > +                       endpoint = NULL;
-> > +       }
-> 
-> This is an ugly pattern IMO. Why not define an ops struct and set it
-> to OF or ACPI rather than check on every function call with
-> is_{of,acpi}_node()?
+The patch will show up in the next release of the linux-next tree
+(usually sometime within the next 24 hours during the week.)
 
-That appears to be an established practice in the implementation of the
-device / fwnode property API.
+The patch will be merged to the usb-next branch sometime soon,
+after it passes testing, and the merge window is open.
 
-One option could be to choose the relevant ops struct based on fwnode type
-in each function operating on the fwnode.
+If you have any questions about this process, please let me know.
 
-Alternatively it could be set at the time when the fwnode field is set. A
-large number of drivers are manipulating their OF nodes, some do that for
-fwnodes as well. Manually setting the ops struct pointer in those cases
-might not be robust enough: sometimes one could simply forget. Also, adding
-a pointer to struct fwnode_handle would increase the size of the struct
-significantly without much gain.
 
-The number of functions operating on fwnode_handle is rather limited. I
-wonder if it'd be simply better to keep it as-is.
+>From 605b8652f7f005452c89db1e6cef085479da2f16 Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Wed, 25 Jan 2017 14:32:44 -0800
+Subject: phy: Add support for Qualcomm's USB HSIC phy
 
-> 
-> The of_graph_* functions need some better helpers too, so duplicating
-> them 2 more times is not ideal. Basically, drivers are left to do too
-> much of the walking of nodes themselves.
+The HSIC USB controller on qcom SoCs has an integrated all
+digital phy controlled via the ULPI viewport.
 
-I have to admit my experience in using them is limited to V4L2, but I have
-to say they've been working pretty well for what they're used for. Actually
-the graph functionality was originally specific for V4L2, that could be the
-reason why the current API is a good fit for V4L2. :-)
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++++++
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-qcom-usb-hsic.c                    | 160 +++++++++++++++++++++
+ 4 files changed, 233 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+ create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
 
-The current use ACPI use case is related to V4L2 as well (I'll post a new
-version in the near future):
-
-<URL:http://www.spinics.net/lists/linux-media/msg106160.html>
-
-Are there any particular pain points that should be addressed?
-
-I noticed Kunimori Morimoto's patchset adding of_graph_get_remote_endpoint()
-which is just a new convenience function to the current API.
-
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+new file mode 100644
+index 000000000000..3c7cb2be4b12
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+@@ -0,0 +1,65 @@
++Qualcomm's USB HSIC PHY
++
++PROPERTIES
++
++- compatible:
++    Usage: required
++    Value type: <string>
++    Definition: Should contain "qcom,usb-hsic-phy" and more specifically one of the
++		following:
++
++			"qcom,usb-hsic-phy-mdm9615"
++			"qcom,usb-hsic-phy-msm8974"
++
++- #phy-cells:
++    Usage: required
++    Value type: <u32>
++    Definition: Should contain 0
++
++- clocks:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: Should contain clock specifier for phy, calibration and
++                a calibration sleep clock
++
++- clock-names:
++    Usage: required
++    Value type: <stringlist>
++    Definition: Should contain "phy, "cal" and "cal_sleep"
++
++- pinctrl-names:
++    Usage: required
++    Value type: <stringlist>
++    Definition: Should contain "init" and "default" in that order
++
++- pinctrl-0:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: List of pinctrl settings to apply to keep HSIC pins in a glitch
++                free state
++
++- pinctrl-1:
++    Usage: required
++    Value type: <prop-encoded-array>
++    Definition: List of pinctrl settings to apply to mux out the HSIC pins
++
++EXAMPLE
++
++usb-controller {
++	ulpi {
++		phy {
++			compatible = "qcom,usb-hsic-phy-msm8974",
++				     "qcom,usb-hsic-phy";
++			#phy-cells = <0>;
++			pinctrl-names = "init", "default";
++			pinctrl-0 = <&hsic_sleep>;
++			pinctrl-1 = <&hsic_default>;
++			clocks = <&gcc GCC_USB_HSIC_CLK>,
++				 <&gcc GCC_USB_HSIC_IO_CAL_CLK>,
++				 <&gcc GCC_USB_HSIC_IO_CAL_SLEEP_CLK>;
++			clock-names = "phy", "cal", "cal_sleep";
++			assigned-clocks = <&gcc GCC_USB_HSIC_IO_CAL_CLK>;
++			assigned-clock-rates = <960000>;
++		};
++	};
++};
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index e8eb7f225a88..a430a64981d5 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -437,6 +437,13 @@ config PHY_QCOM_UFS
+ 	help
+ 	  Support for UFS PHY on QCOM chipsets.
+ 
++config PHY_QCOM_USB_HSIC
++	tristate "Qualcomm USB HSIC ULPI PHY module"
++	depends on USB_ULPI_BUS
++	select GENERIC_PHY
++	help
++	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
++
+ config PHY_TUSB1210
+ 	tristate "TI TUSB1210 ULPI PHY module"
+ 	depends on USB_ULPI_BUS
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index 65eb2f436a41..c43c9df5d301 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
++obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
+ obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
+ obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
+ obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+diff --git a/drivers/phy/phy-qcom-usb-hsic.c b/drivers/phy/phy-qcom-usb-hsic.c
+new file mode 100644
+index 000000000000..47690f9945b9
+--- /dev/null
++++ b/drivers/phy/phy-qcom-usb-hsic.c
+@@ -0,0 +1,160 @@
++/**
++ * Copyright (C) 2016 Linaro Ltd
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++#include <linux/module.h>
++#include <linux/ulpi/driver.h>
++#include <linux/ulpi/regs.h>
++#include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/pinctrl-state.h>
++#include <linux/delay.h>
++#include <linux/clk.h>
++
++#include "ulpi_phy.h"
++
++#define ULPI_HSIC_CFG		0x30
++#define ULPI_HSIC_IO_CAL	0x33
++
++struct qcom_usb_hsic_phy {
++	struct ulpi *ulpi;
++	struct phy *phy;
++	struct pinctrl *pctl;
++	struct clk *phy_clk;
++	struct clk *cal_clk;
++	struct clk *cal_sleep_clk;
++};
++
++static int qcom_usb_hsic_phy_power_on(struct phy *phy)
++{
++	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
++	struct ulpi *ulpi = uphy->ulpi;
++	struct pinctrl_state *pins_default;
++	int ret;
++
++	ret = clk_prepare_enable(uphy->phy_clk);
++	if (ret)
++		return ret;
++
++	ret = clk_prepare_enable(uphy->cal_clk);
++	if (ret)
++		goto err_cal;
++
++	ret = clk_prepare_enable(uphy->cal_sleep_clk);
++	if (ret)
++		goto err_sleep;
++
++	/* Set periodic calibration interval to ~2.048sec in HSIC_IO_CAL_REG */
++	ret = ulpi_write(ulpi, ULPI_HSIC_IO_CAL, 0xff);
++	if (ret)
++		goto err_ulpi;
++
++	/* Enable periodic IO calibration in HSIC_CFG register */
++	ret = ulpi_write(ulpi, ULPI_HSIC_CFG, 0xa8);
++	if (ret)
++		goto err_ulpi;
++
++	/* Configure pins for HSIC functionality */
++	pins_default = pinctrl_lookup_state(uphy->pctl, PINCTRL_STATE_DEFAULT);
++	if (IS_ERR(pins_default))
++		return PTR_ERR(pins_default);
++
++	ret = pinctrl_select_state(uphy->pctl, pins_default);
++	if (ret)
++		goto err_ulpi;
++
++	 /* Enable HSIC mode in HSIC_CFG register */
++	ret = ulpi_write(ulpi, ULPI_SET(ULPI_HSIC_CFG), 0x01);
++	if (ret)
++		goto err_ulpi;
++
++	/* Disable auto-resume */
++	ret = ulpi_write(ulpi, ULPI_CLR(ULPI_IFC_CTRL),
++			 ULPI_IFC_CTRL_AUTORESUME);
++	if (ret)
++		goto err_ulpi;
++
++	return ret;
++err_ulpi:
++	clk_disable_unprepare(uphy->cal_sleep_clk);
++err_sleep:
++	clk_disable_unprepare(uphy->cal_clk);
++err_cal:
++	clk_disable_unprepare(uphy->phy_clk);
++	return ret;
++}
++
++static int qcom_usb_hsic_phy_power_off(struct phy *phy)
++{
++	struct qcom_usb_hsic_phy *uphy = phy_get_drvdata(phy);
++
++	clk_disable_unprepare(uphy->cal_sleep_clk);
++	clk_disable_unprepare(uphy->cal_clk);
++	clk_disable_unprepare(uphy->phy_clk);
++
++	return 0;
++}
++
++static const struct phy_ops qcom_usb_hsic_phy_ops = {
++	.power_on = qcom_usb_hsic_phy_power_on,
++	.power_off = qcom_usb_hsic_phy_power_off,
++	.owner = THIS_MODULE,
++};
++
++static int qcom_usb_hsic_phy_probe(struct ulpi *ulpi)
++{
++	struct qcom_usb_hsic_phy *uphy;
++	struct phy_provider *p;
++	struct clk *clk;
++
++	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
++	if (!uphy)
++		return -ENOMEM;
++	ulpi_set_drvdata(ulpi, uphy);
++
++	uphy->ulpi = ulpi;
++	uphy->pctl = devm_pinctrl_get(&ulpi->dev);
++	if (IS_ERR(uphy->pctl))
++		return PTR_ERR(uphy->pctl);
++
++	uphy->phy_clk = clk = devm_clk_get(&ulpi->dev, "phy");
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	uphy->cal_clk = clk = devm_clk_get(&ulpi->dev, "cal");
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	uphy->cal_sleep_clk = clk = devm_clk_get(&ulpi->dev, "cal_sleep");
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
++				    &qcom_usb_hsic_phy_ops);
++	if (IS_ERR(uphy->phy))
++		return PTR_ERR(uphy->phy);
++	phy_set_drvdata(uphy->phy, uphy);
++
++	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
++	return PTR_ERR_OR_ZERO(p);
++}
++
++static const struct of_device_id qcom_usb_hsic_phy_match[] = {
++	{ .compatible = "qcom,usb-hsic-phy", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, qcom_usb_hsic_phy_match);
++
++static struct ulpi_driver qcom_usb_hsic_phy_driver = {
++	.probe = qcom_usb_hsic_phy_probe,
++	.driver = {
++		.name = "qcom_usb_hsic_phy",
++		.of_match_table = qcom_usb_hsic_phy_match,
++	},
++};
++module_ulpi_driver(qcom_usb_hsic_phy_driver);
++
++MODULE_DESCRIPTION("Qualcomm USB HSIC phy");
++MODULE_LICENSE("GPL v2");
 -- 
-Kind regards,
+2.11.0
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
