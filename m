@@ -1,47 +1,66 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 1/7] drm: Add DRM support for tiny LCD displays
-Date: Tue, 31 Jan 2017 21:10:17 +0100
-Message-ID: <20170131201017.7gejvl3fffjaeyyd@phenom.ffwll.local>
-References: <20170131160319.9695-1-noralf@tronnes.org>
- <20170131160319.9695-2-noralf@tronnes.org>
- <20170131162341.ejr2b3bq7tghafzj@phenom.ffwll.local>
- <1d854076-841a-7af3-36d2-eaf97b148388@tronnes.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
+Date: Tue, 31 Jan 2017 20:33:40 +0000
+Message-ID: <20170131203340.GC27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
+ <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
+ <20170131134252.GX27312@n2100.armlinux.org.uk>
+ <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <1d854076-841a-7af3-36d2-eaf97b148388@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+In-Reply-To: <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDc6MDE6MTBQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
-IHdyb3RlOgo+IAo+IERlbiAzMS4wMS4yMDE3IDE3LjIzLCBza3JldiBEYW5pZWwgVmV0dGVyOgo+
-ID4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDU6MDM6MTNQTSArMDEwMCwgTm9yYWxmIFRyw7hu
-bmVzIHdyb3RlOgo+ID4gPiB0aW55ZHJtIHByb3ZpZGVzIGhlbHBlcnMgZm9yIHZlcnkgc2ltcGxl
-IGRpc3BsYXlzIHRoYXQgY2FuIHVzZQo+ID4gPiBDTUEgYmFja2VkIGZyYW1lYnVmZmVycyBhbmQg
-bmVlZCBmbHVzaGluZyBvbiBjaGFuZ2VzLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogTm9y
-YWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gPiA+IEFja2VkLWJ5OiBEYW5pZWwg
-VmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgo+ID4gSSBzcG90dGVkIGFub3RoZXIgdGlu
-eSBvbmUsIGJ1dCB5ZWFoIGxvb2tzIGFyZSBzdXByZW1lbHkgcmVhc29uYWJsZSwgYWNrCj4gPiBv
-biBhbGwgdGhlIGRybSBwYXJ0cy4gQW5kIHBsZWFzZSBzZW5kIGEgcHVsbCByZXF1ZXN0IGZvciBh
-bGwgb2YgaXQgYXMgc29vbgo+ID4gYXMgeW91IGhhdmUgdGhlIGR0IGFja3MuCj4gCj4gVGhlIGZp
-cnN0IERPQyBzZWN0aW9uIGlzIGp1c3QgYW4gb3ZlcnZpZXcgYW5kIHRoZSBzZWNvbmQgaXMgaG93
-IHRvIHVzZQo+IHRoZSBjb3JlIGZ1bmN0aW9uYWxpdHkuIFRoZXkgYXJlIHJlZmVyZW5jZWQgc2Vw
-YXJhdGVseSBpbiB0aW55ZHJtLnJzdC4KPiBBdCBsZWFzdCB0aGV5IHNob3cgdXAgd2hlbiBJIGJ1
-aWxkIGh0bWxkb2NzIDotKQoKSSB3YXMgYmxpbmQsIHllcyBpdCdzIGFsbCB0aGVyZSBvbiAybmQg
-bG9vayA6LSkKLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50
-ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
-ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
+> On 01/31/2017 05:42 AM, Russell King - ARM Linux wrote:
+> >On Fri, Jan 20, 2017 at 03:38:28PM +0100, Hans Verkuil wrote:
+> >>Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
+> >>should complain about this.
+> >... and more.
+> 
+> Right, in version 3 that you are working with, no v4l2-compliance fixes were
+> in yet. A lot of the compliance errors are fixed, please look in latest
+> branch
+> imx-media-staging-md-wip at git@github.com:slongerbeam/mediatree.git.
+
+Sorry, I'm not prepared to pull random trees from github as there's
+no easy way to see what's in the branch.
+
+I've always disliked github because its web interface makes it soo
+difficult to navigate around git trees hosted there.  You can see
+a commit, you can see a diff of the commit.  You can get a list of
+branches.  But there seems to be no way to get a list of commits
+similar to "git log" or even a one-line summary of each commit on
+a branch.  If there is, it's completely non-obvious (which I think is
+much of the problem with github, it's web interface is horrendous.)
+
+Or you can clone/pull the tree without knowing what you're fetching
+(eg, what the tree is based upon.)
+
+Or you can waste time clicking repeatedly on the "parent" commit link
+on each patch working your way back through the history...
+
+Well, it looks like it's bsaed on 4.10-rc1 with who-knows-what work
+from the linux-media tree (I didn't try and go back any further.)
+As I don't want to take a whole pile of other changes into my tree,
+I'm certainly not going to pull from your github tree.  Sorry.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
