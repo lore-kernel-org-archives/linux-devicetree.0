@@ -1,81 +1,82 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH] arm: mvebu: Fix whitespace in armada-xp-98dx3236.dtsi
-Date: Tue, 31 Jan 2017 12:12:44 +0100
-Message-ID: <8737fz1o0j.fsf@free-electrons.com>
-References: <20170131034209.3848-1-chris.packham@alliedtelesis.co.nz>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
+Date: Tue, 31 Jan 2017 11:20:01 +0000
+Message-ID: <20170131112001.GV27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170131034209.3848-1-chris.packham@alliedtelesis.co.nz> (Chris
- Packham's message of "Tue, 31 Jan 2017 16:42:09 +1300")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
- 
- On mar., janv. 31 2017, Chris Packham <chris.packham@alliedtelesis.co.nz> wrote:
+On Fri, Jan 06, 2017 at 06:11:35PM -0800, Steve Longerbeam wrote:
+> +static int csi_link_validate(struct v4l2_subdev *sd,
+> +			     struct media_link *link,
+> +			     struct v4l2_subdev_format *source_fmt,
+> +			     struct v4l2_subdev_format *sink_fmt)
+> +{
+> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+> +	bool is_csi2;
+> +	int ret;
+> +
+> +	ret = v4l2_subdev_link_validate_default(sd, link, source_fmt, sink_fmt);
+> +	if (ret)
+> +		return ret;
+> +
+> +	priv->sensor = __imx_media_find_sensor(priv->md, &priv->sd.entity);
+> +	if (IS_ERR(priv->sensor)) {
+> +		v4l2_err(&priv->sd, "no sensor attached\n");
+> +		ret = PTR_ERR(priv->sensor);
+> +		priv->sensor = NULL;
+> +		return ret;
+> +	}
+> +
+> +	ret = v4l2_subdev_call(priv->sensor->sd, video, g_mbus_config,
+> +			       &priv->sensor_mbus_cfg);
+> +	if (ret)
+> +		return ret;
+> +
+> +	is_csi2 = (priv->sensor_mbus_cfg.type == V4L2_MBUS_CSI2);
+> +
+> +	if (is_csi2) {
+> +		int vc_num = 0;
+> +		/*
+> +		 * NOTE! It seems the virtual channels from the mipi csi-2
+> +		 * receiver are used only for routing by the video mux's,
+> +		 * or for hard-wired routing to the CSI's. Once the stream
+> +		 * enters the CSI's however, they are treated internally
+> +		 * in the IPU as virtual channel 0.
+> +		 */
+> +#if 0
+> +		vc_num = imx_media_find_mipi_csi2_channel(priv->md,
+> +							  &priv->sd.entity);
+> +		if (vc_num < 0)
+> +			return vc_num;
+> +#endif
+> +		ipu_csi_set_mipi_datatype(priv->csi, vc_num,
+> +					  &priv->format_mbus[priv->input_pad]);
 
-> Change sequences of 8 spaces to hard-tabs.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+This seems (at least to me) to go against the spirit of the subdev
+negotiation.  Here, you seem to bypass the negotiation performed
+between the CSI and the attached device, wanting to grab the
+format from the CSI2 sensor directly.  That bypasses negotiation
+performed at the CSI2 subdev and video muxes.
 
-Here again I directly squashed this patch in "ARM: dts: mvebu: Add
-device tree for 98DX3236 SoCs". By the way I also fixed the topic, as
-for device tree files the topic must start by "ARM: dts: "
-
-Thanks,
-
-Gregory
-
-> ---
-> I think this crept in during review and I didn't notice. The file is new enough
-> that we shouldn't lose any useful history.
->
->  arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> index 9461128fae24..f6a03dcee5ef 100644
-> --- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> +++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-> @@ -201,13 +201,13 @@
->  			#size-cells = <1>;
->  			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
->  
-> -                        dfx_coredivclk: corediv-clock@f8268 {
-> -                                compatible = "marvell,mv98dx3236-corediv-clock";
-> -                                reg = <0xf8268 0xc>;
-> -                                #clock-cells = <1>;
-> -                                clocks = <&mainpll>;
-> -                                clock-output-names = "nand";
-> -                        };
-> +			dfx_coredivclk: corediv-clock@f8268 {
-> +				compatible = "marvell,mv98dx3236-corediv-clock";
-> +				reg = <0xf8268 0xc>;
-> +				#clock-cells = <1>;
-> +				clocks = <&mainpll>;
-> +				clock-output-names = "nand";
-> +			};
->  
->  			dfx: dfx@0 {
->  				compatible = "marvell,dfx-server";
-> -- 
-> 2.11.0.24.ge6920cf
->
+The same goes for the frame rate monitoring code - imho, the frame
+rate should be something that results from negotiation with the
+neighbouring element, not by poking at some entity that is several
+entities away.
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
