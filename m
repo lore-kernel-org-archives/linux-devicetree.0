@@ -1,147 +1,47 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
- OTG HS/FS in FS mode (internal PHY)
-Date: Tue, 31 Jan 2017 02:45:22 +0000
-Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B40F4F3@US01WEMBX2.internal.synopsys.com>
-References: <20170129022110.54032-1-bruherrera@gmail.com>
- <20170129022110.54032-2-bruherrera@gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 22/24] media: imx: Add MIPI CSI-2 OV5640 sensor subdev
+ driver
+Date: Mon, 30 Jan 2017 19:31:20 -0800
+Message-ID: <12fbe4d6-3e62-53b1-feef-011e1ad7affe@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-23-git-send-email-steve_longerbeam@mentor.com>
+ <20170130232955.GK27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20170130232955.GK27312@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 1/28/2017 6:21 PM, Bruno Herrera wrote:
-> This patch introduces a new parameter to activate USB OTG HS/FS core embedded
-> phy transceiver. The STM32F4x9 SoC uses the GGPIO register to enable the transceiver.
-> Also add the dwc2_core_params structure for stm32f4 otg fs.
->
-
-Could you fix the "checkpatch --strict" issues?
-
-Thanks,
-John
 
 
-> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core.h   |  4 ++++
->  drivers/usb/dwc2/hcd.c    | 13 ++++++++++++-
->  drivers/usb/dwc2/hw.h     |  2 ++
->  drivers/usb/dwc2/params.c | 20 ++++++++++++++++++++
->  4 files changed, 38 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index b9b62f1..ed8ce42 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -423,6 +423,9 @@ enum dwc2_ep0_state {
->   *			needed.
->   *			0 - No (default)
->   *			1 - Yes
-> + * @activate_transceiver: Activate internal transceiver using GGPIO register.
-> + *			0 - Deactivate the transceiver (default)
-> + *			1 - Activate the transceiver
->   * @g_dma:              Enables gadget dma usage (default: autodetect).
->   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
->   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-> @@ -477,6 +480,7 @@ struct dwc2_core_params {
->  	bool uframe_sched;
->  	bool external_id_pin_ctl;
->  	bool hibernation;
-> +	bool activate_transceiver;
->  	u16 max_packet_count;
->  	u32 max_transfer_size;
->  	u32 ahbcfg;
-> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-> index a73722e..190a441 100644
-> --- a/drivers/usb/dwc2/hcd.c
-> +++ b/drivers/usb/dwc2/hcd.c
-> @@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
->
->  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  {
-> -	u32 usbcfg, i2cctl;
-> +	u32 usbcfg, ggpio, i2cctl;
->  	int retval = 0;
->
->  	/*
-> @@ -145,6 +145,17 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  				return retval;
->  			}
->  		}
-> +
-> +		ggpio = dwc2_readl(hsotg->regs + GGPIO);
-> +		if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN) &&
-> +		    (hsotg->params.activate_transceiver > 0)) {
-> +			dev_dbg(hsotg->dev, "Activating transceiver\n");
-> +			/* STM32F4x9 uses the GGPIO register as general core
-> +			 * configuration register.
-> +			 */
-> +			ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
-> +			dwc2_writel(ggpio, hsotg->regs + GGPIO);
-> +		}
->  	}
->
->  	/*
-> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-> index bde7248..9b432c1 100644
-> --- a/drivers/usb/dwc2/hw.h
-> +++ b/drivers/usb/dwc2/hw.h
-> @@ -225,6 +225,8 @@
->
->  #define GPVNDCTL			HSOTG_REG(0x0034)
->  #define GGPIO				HSOTG_REG(0x0038)
-> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	(1 << 16)
-> +
->  #define GUID				HSOTG_REG(0x003c)
->  #define GSNPSID				HSOTG_REG(0x0040)
->  #define GHWCFG1				HSOTG_REG(0x0044)
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index 2990c34..a35abba 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -120,6 +120,23 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
->  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
->  }
->
-> +static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
-> +{
-> +	struct dwc2_core_params *p = &hsotg->params;
-> +
-> +	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
-> +	p->speed = DWC2_SPEED_PARAM_FULL;
-> +	p->host_rx_fifo_size = 128;
-> +	p->host_nperio_tx_fifo_size = 96;
-> +	p->host_perio_tx_fifo_size = 96;
-> +	p->max_packet_count = 256;
-> +	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
-> +	p->i2c_enable = false;
-> +	p->uframe_sched = false;
-> +	p->activate_transceiver = true;
-> +
-> +}
-> +
->  const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
->  	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
-> @@ -133,6 +150,9 @@ const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "amlogic,meson-gxbb-usb",
->  	  .data = dwc2_set_amlogic_params },
->  	{ .compatible = "amcc,dwc-otg", .data = dwc2_set_amcc_params },
-> +	{ .compatible = "st,stm32f4x9-fsotg",
-> +	  .data = dwc2_set_stm32f4x9_fsotg_params },
-> +	{ .compatible = "st,stm32f4x9-hsotg" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
->
+On 01/30/2017 03:29 PM, Russell King - ARM Linux wrote:
+> On Fri, Jan 06, 2017 at 06:11:40PM -0800, Steve Longerbeam wrote:
+>> +config IMX_OV5640_MIPI
+>> +       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
+>> +       depends on GPIOLIB && VIDEO_IMX_CAMERA
+>> +       select IMX_MIPI_CSI2
+>> +       default y
+> Why is this defaulting to y?  New drivers should not default to enabled
+> unless they are replacing some already pre-existing functionality.
+> Ditto for the other camera driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The ov564x sensors are required for the SabreSD and SabreLite/Nitrogen
+reference boards (if VIDEO_IMX_CAMERA is enabled that is). But they're not
+required for other platforms, so you're right I shouldn't have defaulted 
+these
+to yes. Fixed.
+
+
+Steve
