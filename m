@@ -1,18 +1,11 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH RESEND 2/5] dmaengine: Provide a wrapper for memcpy
- operations
-Date: Tue, 31 Jan 2017 09:04:14 +0530
-Message-ID: <20170131033414.GI19244@localhost>
-References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
- <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
- <20170130165417.GF19244@localhost>
- <20170130184721.072c0de1@bbrezillon>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH] arm: mvebu: Fix whitespace in armada-xp-98dx3236.dtsi
+Date: Tue, 31 Jan 2017 16:42:09 +1300
+Message-ID: <20170131034209.3848-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20170130184721.072c0de1@bbrezillon>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,30 +15,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Alexandre Courbot <gnurou@gmail.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, dmaengine@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Brian
+To: gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 06:47:21PM +0100, Boris Brezillon wrote:
-> Hi Vinod,
-> 
-> On Mon, 30 Jan 2017 22:24:17 +0530
-> Vinod Koul <vinod.koul@intel.com> wrote:
-> 
-> > On Fri, Jan 27, 2017 at 05:42:01PM +0100, Boris Brezillon wrote:
-> > > Almost all ->device_prep_dma_xx() methods have a wrapper defined in
-> > > dmaengine.h. Add one for  ->device_prep_dma_memcpy().  
-> > 
-> > Looks good to me.
-> > 
-> > Acked-by: Vinod Koul <vinod.koul@intel.com>
-> > 
-> > 
-> 
-> Maybe you can take this patch directly (the NAND related bits are for
-> 4.12).
+Change sequences of 8 spaces to hard-tabs.
 
-Good idea, applied now..
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+I think this crept in during review and I didn't notice. The file is new enough
+that we shouldn't lose any useful history.
 
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index 9461128fae24..f6a03dcee5ef 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -201,13 +201,13 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 
+-                        dfx_coredivclk: corediv-clock@f8268 {
+-                                compatible = "marvell,mv98dx3236-corediv-clock";
+-                                reg = <0xf8268 0xc>;
+-                                #clock-cells = <1>;
+-                                clocks = <&mainpll>;
+-                                clock-output-names = "nand";
+-                        };
++			dfx_coredivclk: corediv-clock@f8268 {
++				compatible = "marvell,mv98dx3236-corediv-clock";
++				reg = <0xf8268 0xc>;
++				#clock-cells = <1>;
++				clocks = <&mainpll>;
++				clock-output-names = "nand";
++			};
+ 
+ 			dfx: dfx@0 {
+ 				compatible = "marvell,dfx-server";
 -- 
-~Vinod
+2.11.0.24.ge6920cf
