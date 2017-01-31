@@ -1,38 +1,62 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v1.1 10/16] irqchip/gic: Add missing forward declaration for struct device
-Date: Tue, 31 Jan 2017 10:21:33 +0200
-Message-ID: <1485850893-19707-1-git-send-email-sakari.ailus@linux.intel.com>
-References: <1485532990-8431-11-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1485532990-8431-11-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
-Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
+From: Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Subject: Re: Lots of "Warning (unit_address_vs_reg): Node /blah/blah/blah
+ has a unit name, but no reg property"
+Date: Tue, 31 Jan 2017 08:28:28 +0000
+Message-ID: <1485851308.7612.34.camel@hellion.org.uk>
+References: <1485770101.2451.40.camel@hellion.org.uk>
+         <CAL_JsqLzW=XUNmzscL6GXMrP_TinPtcpuzatwz-gkC8X9BUQUA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLzW=XUNmzscL6GXMrP_TinPtcpuzatwz-gkC8X9BUQUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-A pointer to struct device is used in the header as a function argument
-but there's no declaration for it. Add one.
+On Mon, 2017-01-30 at 10:46 -0600, Rob Herring wrote:
+> +dtc list
+> 
+> On Mon, Jan 30, 2017 at 3:55 AM, Ian Campbell <ijc-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> wrote:
+> > I recently updated the device-tree-compiler package on the system
+> which
+> > builds the split device tree repo[0] from 1.4.0+dfsg-2 to 1.4.2-1
+> > (debian package versions) and now during the test build I see many
+> > (over 1,000) of these:
+> >
+> >     Warning (unit_address_vs_reg): Node /soc@ff700000/ethernet@b000
+> 0 has a unit name, but no reg property
+> >
+> > Is this something which is known? Maybe Linux hasn't pulled in the
+> > newer dtc yet so you aren't hitting it yet, or maybe you've done
+> what I
+> > did as a quick fix and added:
+> >     DTC_FLAGS="-W no-unit_address_vs_reg"
+> > ?
+> 
+> Linux has this, but the warnings are only enabled with "W=1" builds.
+> I'm trying to not have to review the trivial crap.
 
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
----
-This patch goes before "[PATCH 10/15] of: No need to include
-linux/property.h, linux/fwnode.h is sufficient".
+Specifically Linux adds the DTC_FLAGS="-W no-unit_address_vs_reg" only
+if W=0 (rather than enabling it if W=1).
 
- include/linux/irqchip/arm-gic.h | 1 +
- 1 file changed, 1 insertion(+)
+I'll disable that one in the split tree too then.
 
-diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
-index eafc965..b16afa1 100644
---- a/include/linux/irqchip/arm-gic.h
-+++ b/include/linux/irqchip/arm-gic.h
-@@ -100,6 +100,7 @@
- 
- #include <linux/irqdomain.h>
- 
-+struct device;
- struct device_node;
- struct gic_chip_data;
- 
--- 
-2.7.4
+> It's going to spew even more soon. I've posted some more dtc checks
+> last week.
 
+Fun!
+
+> > (a second issue is the lack of the offending filename in the
+> > warning message, I'll figure out the right venue for that next)
+> 
+> Yeah, I don't think the dtc checks infrastructure has the information
+> as they run on the live tree after all the parsing is done.
+
+I also started a thread on -compiler. I've replied there already (to
+whit: printing the output filename in the warning would be a useful
+improvement).
+
+Ian.
