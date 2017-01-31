@@ -1,776 +1,110 @@
-From: eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
-Subject: [PATCH linux v5 1/6] hwmon: Add core On-Chip Controller support for POWER CPUs
-Date: Tue, 31 Jan 2017 09:43:52 -0600
-Message-ID: <1485877437-13598-2-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485877437-13598-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
+ on TM2 board
+Date: Tue, 31 Jan 2017 10:49:51 -0500
+Message-ID: <20170131154951.GZ20076@art_vandelay>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
+ <20170131143853.GU20076@art_vandelay>
+ <20170131150226.GB4519@ulmo.ba.sec>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170131150226.GB4519@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-
-Add core support for polling the OCC for it's sensor data and parsing that
-data into sensor-specific information.
-
-Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
----
- Documentation/hwmon/occ    |  40 ++++
- MAINTAINERS                |   7 +
- drivers/hwmon/Kconfig      |   2 +
- drivers/hwmon/Makefile     |   1 +
- drivers/hwmon/occ/Kconfig  |  15 ++
- drivers/hwmon/occ/Makefile |   1 +
- drivers/hwmon/occ/occ.c    | 470 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ.h    |  80 ++++++++
- drivers/hwmon/occ/scom.h   |  47 +++++
- 9 files changed, 663 insertions(+)
- create mode 100644 Documentation/hwmon/occ
- create mode 100644 drivers/hwmon/occ/Kconfig
- create mode 100644 drivers/hwmon/occ/Makefile
- create mode 100644 drivers/hwmon/occ/occ.c
- create mode 100644 drivers/hwmon/occ/occ.h
- create mode 100644 drivers/hwmon/occ/scom.h
-
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-new file mode 100644
-index 0000000..79d1642
---- /dev/null
-+++ b/Documentation/hwmon/occ
-@@ -0,0 +1,40 @@
-+Kernel driver occ
-+=================
-+
-+Supported chips:
-+ * ASPEED AST2400
-+ * ASPEED AST2500
-+
-+Please note that the chip must be connected to a POWER8 or POWER9 processor
-+(see the BMC - Host Communications section).
-+
-+Author: Eddie James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-+
-+Description
-+-----------
-+
-+This driver implements support for the OCC (On-Chip Controller) on the IBM
-+POWER8 and POWER9 processors, from a BMC (Baseboard Management Controller). The
-+OCC is an embedded processor that provides real time power and thermal
-+monitoring.
-+
-+This driver provides an interface on a BMC to poll OCC sensor data, set user
-+power caps, and perform some basic OCC error handling.
-+
-+Currently, all versions of the OCC support four types of sensor data: power,
-+temperature, frequency, and "caps," which indicate limits and thresholds used
-+internally on the OCC.
-+
-+BMC - Host Communications
-+-------------------------
-+
-+For the POWER8 application, the BMC can communicate with the P8 over I2C bus.
-+However, to access the OCC register space, any data transfer must use a SCOM
-+operation. SCOM is a procedure to initiate a data transfer, typically of 8
-+bytes. SCOMs consist of writing a 32-bit command register and then
-+reading/writing two 32-bit data registers. This driver implements these
-+SCOM operations over I2C bus in order to communicate with the OCC.
-+
-+For the POWER9 application, the BMC can communicate with the P9 over FSI bus
-+and SBE engine. Once again, SCOM operations are required. This driver will
-+implement SCOM ops over FSI/SBE. This will require the FSI driver.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5f10c28..193a13b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9128,6 +9128,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov7670.c
- 
-+ON-CHIP CONTROLLER HWMON DRIVER
-+M:	Eddie James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-+L:	linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	Documentation/hwmon/occ
-+F:	drivers/hwmon/occ/
-+
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
- L:	linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 190d270..e80ca81 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1240,6 +1240,8 @@ config SENSORS_NSA320
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nsa320-hwmon.
- 
-+source drivers/hwmon/occ/Kconfig
-+
- config SENSORS_PCF8591
- 	tristate "Philips PCF8591 ADC/DAC"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index d2cb7e8..c7ec5d4 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -169,6 +169,7 @@ obj-$(CONFIG_SENSORS_WM831X)	+= wm831x-hwmon.o
- obj-$(CONFIG_SENSORS_WM8350)	+= wm8350-hwmon.o
- obj-$(CONFIG_SENSORS_XGENE)	+= xgene-hwmon.o
- 
-+obj-$(CONFIG_SENSORS_PPC_OCC)	+= occ/
- obj-$(CONFIG_PMBUS)		+= pmbus/
- 
- ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
-new file mode 100644
-index 0000000..cdb64a7
---- /dev/null
-+++ b/drivers/hwmon/occ/Kconfig
-@@ -0,0 +1,15 @@
-+#
-+# On Chip Controller configuration
-+#
-+
-+menuconfig SENSORS_PPC_OCC
-+	bool "PPC On-Chip Controller"
-+	help
-+	  If you say yes here you get support to monitor Power CPU
-+	  sensors via the On-Chip Controller (OCC).
-+
-+	  Generally this is used by management controllers such as a BMC
-+	  on an OpenPower system.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called occ.
-diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
-new file mode 100644
-index 0000000..93cb52f
---- /dev/null
-+++ b/drivers/hwmon/occ/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o
-diff --git a/drivers/hwmon/occ/occ.c b/drivers/hwmon/occ/occ.c
-new file mode 100644
-index 0000000..cb9f916
---- /dev/null
-+++ b/drivers/hwmon/occ/occ.c
-@@ -0,0 +1,470 @@
-+/*
-+ * occ.c - OCC hwmon driver
-+ *
-+ * This file contains the methods and data structures for the OCC hwmon driver.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include "occ.h"
-+
-+#define OCC_DATA_MAX		4096
-+#define OCC_DATA_MIN		40
-+#define OCC_BMC_TIMEOUT_MS	20000
-+
-+/* To generate attn to OCC */
-+#define ATTN_DATA		0x0006B035
-+
-+/* For BMC to read/write SRAM */
-+#define OCB_ADDRESS		0x0006B070
-+#define OCB_DATA		0x0006B075
-+#define OCB_STATUS_CONTROL_AND	0x0006B072
-+#define OCB_STATUS_CONTROL_OR	0x0006B073
-+
-+/* To init OCB */
-+#define OCB_AND_INIT0		0xFBFFFFFF
-+#define OCB_AND_INIT1		0xFFFFFFFF
-+#define OCB_OR_INIT0		0x08000000
-+#define OCB_OR_INIT1		0x00000000
-+
-+/* To generate attention on OCC */
-+#define ATTN0			0x01010000
-+#define ATTN1			0x00000000
-+
-+/* OCC return status */
-+#define RESP_RETURN_CMD_IN_PRG	0xFF
-+#define RESP_RETURN_SUCCESS	0
-+#define RESP_RETURN_CMD_INVAL	0x11
-+#define RESP_RETURN_CMD_LEN	0x12
-+#define RESP_RETURN_DATA_INVAL	0x13
-+#define RESP_RETURN_CHKSUM	0x14
-+#define RESP_RETURN_OCC_ERR	0x15
-+#define RESP_RETURN_STATE	0x16
-+
-+/* time interval to retry on "command in progress" return status */
-+#define CMD_IN_PRG_INT_MS	100
-+#define CMD_IN_PRG_RETRIES	(OCC_BMC_TIMEOUT_MS / CMD_IN_PRG_INT_MS)
-+
-+/* OCC command definitions */
-+#define OCC_POLL		0
-+#define OCC_SET_USER_POWR_CAP	0x22
-+
-+/* OCC poll command data */
-+#define OCC_POLL_STAT_SENSOR	0x10
-+
-+/* OCC response data offsets */
-+#define RESP_RETURN_STATUS		2
-+#define RESP_DATA_LENGTH		3
-+#define RESP_HEADER_OFFSET		5
-+#define SENSOR_STR_OFFSET		37
-+#define NUM_SENSOR_BLOCKS_OFFSET	43
-+#define SENSOR_BLOCK_OFFSET		45
-+
-+/* occ_poll_header
-+ * structure to match the raw occ poll response data
-+ */
-+struct occ_poll_header {
-+	u8 status;
-+	u8 ext_status;
-+	u8 occs_present;
-+	u8 config;
-+	u8 occ_state;
-+	u8 mode;
-+	u8 ips_status;
-+	u8 error_log_id;
-+	u32 error_log_addr_start;
-+	u16 error_log_length;
-+	u8 reserved2;
-+	u8 reserved3;
-+	u8 occ_code_level[16];
-+	u8 sensor_eye_catcher[6];
-+	u8 num_sensor_blocks;
-+	u8 sensor_data_version;
-+} __attribute__((packed, aligned(4)));
-+
-+struct occ_response {
-+	struct occ_poll_header header;
-+	struct occ_blocks data;
-+};
-+
-+struct occ {
-+	struct device *dev;
-+	void *bus;
-+	struct occ_bus_ops bus_ops;
-+	struct occ_ops ops;
-+	struct occ_config config;
-+	unsigned long last_updated;
-+	struct mutex update_lock;
-+	struct occ_response response;
-+	bool valid;
-+	u8 *raw_data;
-+};
-+
-+static int occ_check_sensor(struct occ *driver, u8 sensor_length,
-+			    u8 num_sensors, enum sensor_type t, int b)
-+{
-+	struct occ_response *resp = &driver->response;
-+	struct sensor_data_block *block = &resp->data.blocks[b];
-+
-+	if (block->sensors) {
-+		/* empty block, release old data */
-+		if (num_sensors == 0 || sensor_length == 0) {
-+			devm_kfree(driver->dev, block->sensors);
-+			block->sensors = NULL;
-+			return -ENODATA;
-+		}
-+
-+		/* different num sensors or length, re-alloc */
-+		if (num_sensors != block->header.num_sensors ||
-+		    sensor_length != block->header.sensor_length)
-+			devm_kfree(driver->dev, block->sensors);
-+		else
-+			return 0;
-+	}
-+
-+	/* each sensor type is a different size */
-+	block->sensors = driver->ops.alloc_sensor(t, num_sensors);
-+	if (!block->sensors)
-+		return -ENOMEM;
-+
-+	return 0;
-+}
-+
-+static int parse_occ_response(struct occ *driver, u16 num_bytes)
-+{
-+	int b;
-+	int s;
-+	int rc;
-+	unsigned int offset = SENSOR_BLOCK_OFFSET;
-+	int sensor_type;
-+	u8 num_sensor_blocks;
-+	struct sensor_data_block_header *block;
-+	struct device *dev = driver->dev;
-+	u8 *data = driver->raw_data;
-+	struct occ_response *resp = &driver->response;
-+
-+	/* check if the data is valid */
-+	if (strncmp(&data[SENSOR_STR_OFFSET], "SENSOR", 6) != 0) {
-+		dev_err(dev, "no SENSOR string in response\n");
-+		return -ENODATA;
-+	}
-+
-+	num_sensor_blocks = data[NUM_SENSOR_BLOCKS_OFFSET];
-+	if (num_sensor_blocks == 0) {
-+		dev_warn(dev, "no sensor blocks available\n");
-+		return -ENODATA;
-+	}
-+
-+	memcpy(&resp->header, &data[RESP_HEADER_OFFSET],
-+	       sizeof(struct occ_poll_header));
-+
-+	/* data length starts at actual data */
-+	num_bytes += RESP_HEADER_OFFSET;
-+
-+	/* translate fields > 1 byte */
-+	resp->header.error_log_addr_start =
-+		be32_to_cpu(resp->header.error_log_addr_start);
-+	resp->header.error_log_length =
-+		be16_to_cpu(resp->header.error_log_length);
-+
-+	for (b = 0; b < num_sensor_blocks && b < MAX_OCC_SENSOR_TYPE; b++) {
-+		if (offset + sizeof(struct sensor_data_block_header) >
-+		    num_bytes) {
-+			dev_warn(dev, "exceeded data length\n");
-+			return 0;
-+		}
-+
-+		block = (struct sensor_data_block_header *)&data[offset];
-+		offset += sizeof(struct sensor_data_block_header);
-+
-+		if (strncmp(block->sensor_type, "FREQ", 4) == 0)
-+			sensor_type = FREQ;
-+		else if (strncmp(block->sensor_type, "TEMP", 4) == 0)
-+			sensor_type = TEMP;
-+		else if (strncmp(block->sensor_type, "POWR", 4) == 0)
-+			sensor_type = POWER;
-+		else if (strncmp(block->sensor_type, "CAPS", 4) == 0)
-+			sensor_type = CAPS;
-+		else {
-+			dev_warn(dev, "sensor type not supported %.4s\n",
-+				block->sensor_type);
-+			continue;
-+		}
-+
-+		rc = occ_check_sensor(driver, block->sensor_length,
-+				      block->num_sensors, sensor_type, b);
-+		if (rc == -ENOMEM)
-+			return rc;
-+		else if (rc)
-+			continue;
-+
-+		resp->data.sensor_block_id[sensor_type] = b;
-+		/* copy block data over to response pointer */
-+		resp->data.blocks[b].header = *block;
-+		for (s = 0; s < block->num_sensors; s++) {
-+			if (offset + block->sensor_length > num_bytes) {
-+				dev_warn(dev, "exceeded data length\n");
-+				return 0;
-+			}
-+
-+			driver->ops.parse_sensor(data,
-+						 resp->data.blocks[b].sensors,
-+						 sensor_type, offset, s);
-+			offset += block->sensor_length;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static u8 occ_send_cmd(struct occ *driver, u8 seq, u8 type, u16 length,
-+		       const u8 *data, u8 *resp)
-+{
-+	u32 cmd1, cmd2 = 0;
-+	u16 checksum = 0;
-+	bool retry = false;
-+	int i, rc, tries = 0;
-+
-+	cmd1 = (seq << 24) | (type << 16) | length;
-+	memcpy(&cmd2, data, length);
-+	cmd2 <<= ((4 - length) * 8);
-+
-+	/* checksum: sum of every bytes of cmd1, cmd2 */
-+	for (i = 0; i < 4; i++) {
-+		checksum += (cmd1 >> (i * 8)) & 0xFF;
-+		checksum += (cmd2 >> (i * 8)) & 0xFF;
-+	}
-+
-+	cmd2 |= checksum << ((2 - length) * 8);
-+
-+	/* Init OCB */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_OR,
-+				     OCB_OR_INIT0, OCB_OR_INIT1);
-+	if (rc)
-+		goto err;
-+
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_AND,
-+				     OCB_AND_INIT0, OCB_AND_INIT1);
-+	if (rc)
-+		goto err;
-+
-+	/* Send command, 2nd half of the 64-bit addr is unused (write 0) */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_ADDRESS,
-+				     driver->config.command_addr, 0);
-+	if (rc)
-+		goto err;
-+
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_DATA, cmd1, cmd2);
-+	if (rc)
-+		goto err;
-+
-+	/* Trigger attention */
-+	rc = driver->bus_ops.putscom(driver->bus, ATTN_DATA, ATTN0, ATTN1);
-+	if (rc)
-+		goto err;
-+
-+	/* Get response data */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_ADDRESS,
-+				     driver->config.response_addr, 0);
-+	if (rc)
-+		goto err;
-+
-+	do {
-+		if (retry) {
-+			set_current_state(TASK_INTERRUPTIBLE);
-+			schedule_timeout(msecs_to_jiffies(CMD_IN_PRG_INT_MS));
-+		}
-+
-+		rc = driver->bus_ops.getscom(driver->bus, OCB_DATA,
-+					     (u64 *)resp);
-+		if (rc)
-+			goto err;
-+
-+		/* retry if we get "command in progress" return status */
-+		retry = resp[RESP_RETURN_STATUS] == RESP_RETURN_CMD_IN_PRG &&
-+			tries++ < CMD_IN_PRG_RETRIES;
-+	} while (retry);
-+
-+	/* check the occ response */
-+	switch (resp[RESP_RETURN_STATUS]) {
-+	case RESP_RETURN_CMD_IN_PRG:
-+		rc = -EALREADY;
-+		break;
-+	case RESP_RETURN_SUCCESS:
-+		rc = 0;
-+		break;
-+	case RESP_RETURN_CMD_INVAL:
-+	case RESP_RETURN_CMD_LEN:
-+	case RESP_RETURN_DATA_INVAL:
-+	case RESP_RETURN_CHKSUM:
-+		rc = -EINVAL;
-+		break;
-+	case RESP_RETURN_OCC_ERR:
-+		rc = -EREMOTE;
-+		break;
-+	default:
-+		rc = -EFAULT;
-+	}
-+
-+	if (rc < 0)
-+		dev_warn(driver->dev, "occ bad response:%d\n",
-+			 resp[RESP_RETURN_STATUS]);
-+
-+	return rc;
-+
-+err:
-+	dev_err(driver->dev, "scom op failed rc:%d\n", rc);
-+	return rc;
-+}
-+
-+static int occ_get_all(struct occ *driver)
-+{
-+	int i = 0, rc;
-+	u8 *occ_data = driver->raw_data;
-+	u16 num_bytes;
-+	const u8 poll_cmd_data = OCC_POLL_STAT_SENSOR;
-+	struct device *dev = driver->dev;
-+
-+	memset(occ_data, 0, OCC_DATA_MAX);
-+
-+	rc = occ_send_cmd(driver, 0, OCC_POLL, 1, &poll_cmd_data, occ_data);
-+	if (rc)
-+		return rc;
-+
-+	num_bytes = get_unaligned((u16 *)&occ_data[RESP_DATA_LENGTH]);
-+	num_bytes = be16_to_cpu(num_bytes);
-+
-+	if (num_bytes > OCC_DATA_MAX || num_bytes < OCC_DATA_MIN) {
-+		dev_err(dev, "bad OCC data length:%d\n", num_bytes);
-+		return -EINVAL;
-+	}
-+
-+	/* read remaining data, 8 byte scoms at a time */
-+	for (i = 8; i < num_bytes + 8; i += 8) {
-+		rc = driver->bus_ops.getscom(driver->bus, OCB_DATA,
-+					     (u64 *)&occ_data[i]);
-+		if (rc) {
-+			dev_err(dev, "getscom op failed rc:%d\n", rc);
-+			return rc;
-+		}
-+	}
-+
-+	/* don't need more sanity checks; buffer is alloc'd for max response
-+	 * size so we just check for valid data in parse_occ_response
-+	 */
-+	rc = parse_occ_response(driver, num_bytes);
-+
-+	return rc;
-+}
-+
-+int occ_update_device(struct occ *driver)
-+{
-+	int rc = 0;
-+
-+	mutex_lock(&driver->update_lock);
-+
-+	if (time_after(jiffies, driver->last_updated + HZ) || !driver->valid) {
-+		driver->valid = true;
-+
-+		rc = occ_get_all(driver);
-+		if (rc)
-+			driver->valid = false;
-+
-+		driver->last_updated = jiffies;
-+	}
-+
-+	mutex_unlock(&driver->update_lock);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL(occ_update_device);
-+
-+void *occ_get_sensor(struct occ *driver, int sensor_type)
-+{
-+	int rc;
-+	int type_id;
-+
-+	/* occ_update_device locks the update lock */
-+	rc = occ_update_device(driver);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	type_id = driver->response.data.sensor_block_id[sensor_type];
-+	if (type_id == -1)
-+		return ERR_PTR(-ENODATA);
-+
-+	return driver->response.data.blocks[type_id].sensors;
-+}
-+EXPORT_SYMBOL(occ_get_sensor);
-+
-+int occ_get_sensor_field(struct occ *occ, int sensor_type, int sensor_num,
-+			 u32 hwmon, long *val)
-+{
-+	return occ->ops.get_sensor(occ, sensor_type, sensor_num, hwmon, val);
-+}
-+EXPORT_SYMBOL(occ_get_sensor_field);
-+
-+void occ_get_response_blocks(struct occ *occ, struct occ_blocks **blocks)
-+{
-+	*blocks = &occ->response.data;
-+}
-+EXPORT_SYMBOL(occ_get_response_blocks);
-+
-+int occ_set_user_powercap(struct occ *occ, u16 cap)
-+{
-+	u8 resp[8];
-+
-+	cap = cpu_to_be16(cap);
-+
-+	return occ_send_cmd(occ, 0, OCC_SET_USER_POWR_CAP, 2, (const u8 *)&cap,
-+			    resp);
-+}
-+EXPORT_SYMBOL(occ_set_user_powercap);
-+
-+struct occ *occ_start(struct device *dev, void *bus,
-+		      struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
-+		      const struct occ_config *config)
-+{
-+	struct occ *driver = devm_kzalloc(dev, sizeof(struct occ), GFP_KERNEL);
-+
-+	if (!driver)
-+		return ERR_PTR(-ENOMEM);
-+
-+	driver->dev = dev;
-+	driver->bus = bus;
-+	driver->bus_ops = *bus_ops;
-+	driver->ops = *ops;
-+	driver->config = *config;
-+	driver->raw_data = devm_kzalloc(dev, OCC_DATA_MAX, GFP_KERNEL);
-+	if (!driver->raw_data)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mutex_init(&driver->update_lock);
-+
-+	return driver;
-+}
-+EXPORT_SYMBOL(occ_start);
-+
-+MODULE_AUTHOR("Eddie James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>");
-+MODULE_DESCRIPTION("OCC hwmon core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ.h b/drivers/hwmon/occ/occ.h
-new file mode 100644
-index 0000000..41f11b2
---- /dev/null
-+++ b/drivers/hwmon/occ/occ.h
-@@ -0,0 +1,80 @@
-+/*
-+ * occ.h - hwmon OCC driver
-+ *
-+ * This file contains data structures and function prototypes for common access
-+ * between different bus protocols and host systems.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __OCC_H__
-+#define __OCC_H__
-+
-+#include "scom.h"
-+
-+struct device;
-+struct occ;
-+
-+/* sensor_data_block_header
-+ * structure to match the raw occ sensor block header
-+ */
-+struct sensor_data_block_header {
-+	u8 sensor_type[4];
-+	u8 reserved0;
-+	u8 sensor_format;
-+	u8 sensor_length;
-+	u8 num_sensors;
-+} __attribute__((packed, aligned(4)));
-+
-+struct sensor_data_block {
-+	struct sensor_data_block_header header;
-+	void *sensors;
-+};
-+
-+enum sensor_type {
-+	FREQ = 0,
-+	TEMP,
-+	POWER,
-+	CAPS,
-+	MAX_OCC_SENSOR_TYPE
-+};
-+
-+struct occ_ops {
-+	void (*parse_sensor)(u8 *data, void *sensor, int sensor_type, int off,
-+			     int snum);
-+	void *(*alloc_sensor)(int sensor_type, int num_sensors);
-+	int (*get_sensor)(struct occ *driver, int sensor_type, int sensor_num,
-+			  u32 hwmon, long *val);
-+};
-+
-+struct occ_config {
-+	u32 command_addr;
-+	u32 response_addr;
-+};
-+
-+struct occ_blocks {
-+	int sensor_block_id[MAX_OCC_SENSOR_TYPE];
-+	struct sensor_data_block blocks[MAX_OCC_SENSOR_TYPE];
-+};
-+
-+struct occ *occ_start(struct device *dev, void *bus,
-+		      struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
-+		      const struct occ_config *config);
-+void *occ_get_sensor(struct occ *occ, int sensor_type);
-+int occ_get_sensor_field(struct occ *occ, int sensor_type, int sensor_num,
-+			 u32 hwmon, long *val);
-+void occ_get_response_blocks(struct occ *occ, struct occ_blocks **blocks);
-+int occ_update_device(struct occ *driver);
-+int occ_set_user_powercap(struct occ *occ, u16 cap);
-+
-+#endif /* __OCC_H__ */
-diff --git a/drivers/hwmon/occ/scom.h b/drivers/hwmon/occ/scom.h
-new file mode 100644
-index 0000000..b0691f3
---- /dev/null
-+++ b/drivers/hwmon/occ/scom.h
-@@ -0,0 +1,47 @@
-+/*
-+ * scom.h - hwmon OCC driver
-+ *
-+ * This file contains data structures for scom operations to the OCC
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __SCOM_H__
-+#define __SCOM_H__
-+
-+/*
-+ * occ_bus_ops - represent the low-level transfer methods to communicate with
-+ * the OCC.
-+ *
-+ * getscom - OCC scom read
-+ * @bus: handle to slave device
-+ * @address: address
-+ * @data: where to store data read from slave; buffer size must be at least
-+ * eight bytes.
-+ *
-+ * Returns 0 on success or a negative errno on error
-+ *
-+ * putscom - OCC scom write
-+ * @bus: handle to slave device
-+ * @address: address
-+ * @data0: first data word to write
-+ * @data1: second data word to write
-+ *
-+ * Returns 0 on success or a negative errno on error
-+ */
-+struct occ_bus_ops {
-+	int (*getscom)(void *bus, u32 address, u64 *data);
-+	int (*putscom)(void *bus, u32 address, u32 data0, u32 data1);
-+};
-+
-+#endif /* __SCOM_H__ */
--- 
-1.8.3.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDQ6MDI6MjZQTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6Mzg6NTNBTSAtMDUwMCwgU2VhbiBQ
+YXVsIHdyb3RlOgo+ID4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6NTQ6NDlBTSArMDEwMCwg
+VGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gPiA+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA5OjAx
+OjA3QU0gKzA5MDAsIElua2kgRGFlIHdyb3RlOgo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IDIw
+MTfrhYQgMDHsm5QgMjTsnbwgMTA6NTDsl5AgSG9lZ2V1biBLd29uIOydtCjqsIApIOyTtCDquIA6
+Cj4gPiA+ID4gPiBEZWFyIFRoaWVycnksCj4gPiA+ID4gPiAKPiA+ID4gPiA+IENvdWxkIHlvdSBw
+bGVhc2UgcmV2aWV3IHRoaXMgcGF0Y2g/Cj4gPiA+ID4gCj4gPiA+ID4gVGhpZXJyeSwgSSB0aGlu
+ayB0aGlzIHBhdGNoIGhhcyBiZWVuIHJldmlld2VkIGVub3VnaCBidXQgbm8gY29tbWVudAo+ID4g
+PiA+IGZyb20geW91LiBTZWVtcyB5b3UgYXJlIGJ1c3kuIEkgd2lsbCBwaWNrIHVwIHRoaXMuCj4g
+PiA+IAo+ID4gPiBTb3JyeSwgYnV0IHRoYXQncyBub3QgaG93IGl0IHdvcmtzLiBUaGlzIHBhdGNo
+IGhhcyBnb25lIHRocm91Z2ggOAo+ID4gPiByZXZpc2lvbnMgd2l0aGluIDQgd2Vla3MsIGFuZCBJ
+IHRlbmQgdG8gaWdub3JlIHBhdGNoZXMgbGlrZSB0aGF0IHVudGlsCj4gPiA+IHRoZSBkdXN0IHNl
+dHRsZXMuCj4gPiA+IAo+ID4gCj4gPiBTZWVtcyBsaWtlIHRoZSBkdXN0IHdhcyBwcmV0dHkgc2V0
+dGxlZC4gSXQgd2FzIHBvc3RlZCBvbiAxLzExLCBwaW5nZWQgb24gMS8yNCwKPiA+IGFuZCBwaWNr
+ZWQgdXAgb24gMS8zMS4gSSBkb24ndCB0aGluayBpdCdzIHVucmVhc29uYWJsZSB0byB0YWtlIGl0
+IHRocm91Z2gKPiA+IGFub3RoZXIgdHJlZSBhZnRlciB0aGF0Lgo+ID4gCj4gPiBJIHdvbmRlciBp
+ZiBkcm1fcGFuZWwgd291bGQgYmVuZWZpdCBmcm9tIHRoZSAtbWlzYyBncm91cCBtYWludGFpbmVy
+c2hpcCBtb2RlbAo+ID4gYXMgZHJtX2JyaWRnZSBkb2VzLiBCeSBzcHJlYWRpbmcgb3V0IHRoZSB3
+b3JrbG9hZCwgdGhlIGhpZ2gtbWFpbnRlbmFuY2UKPiA+IHBhdGNoZXMgd291bGQgaG9wZWZ1bGx5
+IGZpbmQgc29tZW9uZSB0byBzaGVwaGVyZCB0aGVtIHRocm91Z2guCj4gCj4gRXhjZXB0IHRoYXQg
+bm9ib2R5IGV4Y2VwdCBtZSByZWFsbHkgY2FyZXMuIAoKSSBjZXJ0YWlubHkgaGF2ZW4ndCBiZWVu
+IHBheWluZyBhdHRlbnRpb24uIE15IGV4Y3VzZSwgYXQgbGVhc3QsIGlzIHRoYXQgeW91J3JlIGEK
+Z3JlYXQgbWFpbnRhaW5lciBhbmQgSSBoYXZlbid0IHRob3VnaHQgdGhlIHBhdGNoZXMgbmVlZCBh
+IHNlY29uZCBsb29rLiBQZXJoYXBzCmlmIHdlIG1vdmVkIHRvd2FyZHMgYSBncm91cCwgbW9yZSBw
+ZW9wbGUgd291bGQgYmUgdmVzdGVkL2NhcmU/Cgo+IElmIHdlIGxldCBwZW9wbGUgdGFrZSBwYXRj
+aGVzCj4gdGhyb3VnaCBzZXBhcmF0ZSB0cmVlcyBvciBncm91cC1tYWludGFpbmVkIHRyZWVzIHRo
+ZXknbGwgbGlrZWx5IGdvIGluCj4gd2l0aG91dCB0b28gbXVjaCB0aG91Z2h0LiBEUk0gcGFuZWwg
+aXMgc29tZXdoYXQgZGlmZmVyZW50IGZyb20gY29yZSBEUk0KPiBpbiB0aGlzIHJlZ2FyZCBiZWNh
+dXNlIGl0cyBpbmZyYXN0cnVjdHVyZSBpcyBtaW5pbWFsIGFuZCB0aGVyZSdzIGxpdHRsZQo+IG91
+dHNpZGUgdGhlIHBhbmVsLXNpbXBsZSBkcml2ZXIuIFNvIHdlJ3JlIHN0aWxsIGF0IGEgc3RhZ2Ug
+d2hlcmUgd2UgbmVlZAo+IHRvIGZpbmUtdHVuZSB3aGF0IGRyaXZlcnMgc2hvdWxkIGxvb2sgbGlr
+ZSBhbmQgaG93IHdlIGNhbiBpbXByb3ZlLgo+IAoKRmFpciBwb2ludC4gV2l0aCBkcm1fYnJpZGdl
+LCBJJ3ZlIGJlZW4gbGVuZGluZyByZXZpZXcgaGVscCwgYnV0IGRlZmVycmluZyB0bwpBcmNoaXQg
+Zm9yIG1lcmdlIG9uIHBhdGNoZXMgd2hpY2ggSSB0aGluayBoZSBzaG91bGQgbG9vayBhdC4gR3Vz
+dGF2byBpcyBpbiBhCnNpbWlsYXIgcGxhY2Ugd2l0aCBmZW5jZXMuIGRybV9wYW5lbCBzZWVtcyBs
+aWtlIHNvbWV0aGluZyB0aGF0IHNob3VsZCBmb2xsb3cKdGhlIHNhbWUgbW9kZWwuIE1heWJlIG9u
+Y2UgbW9yZSBwZW9wbGUgKG9yIG9uZSBwZXJzb24pIGdldCB1cCB0byBzcGVlZCBvbgp0aGluZ3Ms
+IHdlIGNvdWxkIHNoYXJlIHRoZSBsb2FkLgoKPiA+ID4gT3RoZXIgdGhhbiB0aGF0LCB0aGlzIGNv
+bnRpbnVlcyB0aGUgc2FtZSBtYWRuZXNzIHRoYXQgSSd2ZSByZXBlYXRlZGx5Cj4gPiA+IGNvbXBs
+YWluZWQgYWJvdXQgaW4gdGhlIHBhc3QuIFRoZSB3aG9sZSBtZWNoYW5pc20gb2YgcnVubmluZyB0
+aHJvdWdoIGEKPiA+ID4gc2VyaWVzIG9mIHdyaXRlcyBhbmQgbm90IGNhcmluZyBhYm91dCBlcnJv
+cnMgdW50aWwgdGhlIHZlcnkgZW5kIGlzCj4gPiA+IHNvbWV0aGluZyB3ZSd2ZSBkaXNjdXNzZWQg
+YXQgbGVuZ3RoIGluIHRoZSBwYXN0LiBJdCBhbHNvIGluIGxhcmdlIHBhcnRzCj4gPiA+IGR1cGxp
+Y2F0ZXMgYSBidW5jaCBvZiBmdW5jdGlvbnMgZnJvbSBvdGhlciBTYW1zdW5nIHBhbmVsIGRyaXZl
+cnMgdGhhdCBJCj4gPiA+IGFscmVhZHkgc2FpZCBzaG91bGQgZXZlbnR1YWxseSBiZSBtb3ZlZCB0
+byBzb21ldGhpbmcgc2FuZXIuCj4gPiA+IAo+ID4gCj4gPiBGV0lXLCB0aGlzIHR5cGUgb2YgZXJy
+b3IgaGFuZGxpbmcgaXNuJ3QgbXkgcHJlZmVyZW5jZSBlaXRoZXIuIElmIHdlIG11c3QgZGVmZXIs
+Cj4gPiBJJ2QgcmF0aGVyIG5vdCBrZWVwIGl0IGluIGN0eCwgYnV0IHJhdGhlciBwYXNzIGFyb3Vu
+ZCBhbiBhcmd1bWVudCBzbyBpdCdzIG1vcmUKPiA+IG9idmlvdXMgd2UgbmVlZCB0byBkZWFsIHdp
+dGggaXQgaW4gdGhlIHJldHVybi4gVGhhdCBzYWlkLCB0aGlzIHNlZW1zIGxpa2UKPiA+IGEgY2Fz
+ZSBvZiBsZXR0aW5nIHRoZSBwZXJmZWN0IGJlIHRoZSBlbmVteSBvZiB0aGUgZ29vZCwgc3VyZWx5
+IHNvbWV0aGluZyBpcwo+ID4gYmV0dGVyIHRoYW4gbm90aGluZz8KPiAKPiBUaGF0J3Mgd2hhdCBJ
+IGVuZGVkIHVwIHNheWluZyB0aGUgbGFzdCB0d28gdGltZXMuIEJ1dCB0aGlzIGhhcyBnb3QgdG8K
+PiBzdG9wIGF0IHNvbWUgcG9pbnQuIElmIHlvdSBsb29rIGF0IG1vc3Qgb2YgdGhlIHBhbmVsIGRy
+aXZlcnMsIHRoZXkgbG9vawo+IG1vcmUgbGlrZSBtYXRlcmlhbCBmb3IgdGhlIHN0YWdpbmcgdHJl
+ZSByYXRoZXIgdGhhbiBEUk0gcHJvcGVyLgo+IAo+IFllcywgc29tZXRoaW5nIGlzIGJldHRlciB0
+aGFuIG5vdGhpbmcsIGJ1dCB3ZSBjYW4ndCBoYXZlIHRoaXMgbXVsdGlwbHkKPiBmdXJ0aGVyLgo+
+CgpTbyBwZXJoYXBzIGlmIHdlIGhhZCBtb3JlIHJldmlld2Vycywgd2UgY291bGQgdGlnaHRlbiB1
+cCB0aGUgcmV2aWV3IGZlZWRiYWNrCmxvb3AgYW5kIGF2b2lkIHRoaXMgd2hpbGUgc3RpbGwgZ2V0
+dGluZyB0aGluZ3MgbWVyZ2VkPwoKSSdtIG1vc3RseSB0aGlua2luZyBvdXQgbG9hZCBoZXJlLCBz
+byB0YWtlIGl0IGZvciB3aGF0IGl0J3Mgd29ydGguCgpTZWFuCgoKCj4gTGFzdCB0aW1lIHdlIGRp
+c2N1c3NlZCB0aGlzIHRoZXJlIHdhcyBzb21lIHJvdWdoIGNvbmNlbnN1cyB0aGF0IHRoZQo+IGlu
+aXRpYWxpemF0aW9uIHNlcXVlbmNlIHdvdWxkIGJlIHNwbGl0IGludG8gc2VwYXJhdGUgZnVuY3Rp
+b25zLCB3aGljaCBpcwo+IGFscmVhZHkgbW9zdGx5IHRydWUgZm9yIHRoZXNlIGRyaXZlcnMsIGFu
+ZCB0aGVuIHNldHRsZSBvbiBhIGNvbW1vbgo+IHNpZ25hdHVyZSBmb3IgdGhlc2UgZnVuY3Rpb25z
+LCB3aGljaCBpcyBhbHNvIG1vc3RseSB0aGUgY2FzZSBhbHJlYWR5LAo+IGFuZCB0aGVuIGhhdmUg
+YSB0YWJsZSBvZiBmdW5jdGlvbnMgdGhhdCBjYW4gYmUgY2FsbGVkIG9uZSBhZnRlciBhbm90aGVy
+Cj4gd2l0aCBlcnJvciBoYW5kbGluZyBvbiBlYWNoIGNhbGwuIFRoYXQgd2F5IGF0IGxlYXN0IHlv
+dSBjYW4gcHJvdmlkZQo+IGRpYWdub3N0aWNzIGFib3V0IHdoYXQgZnVuY3Rpb24gZmFpbGVkLCBh
+bmQgeW91IGNhbiBhYm9ydCBlYXJseSBiZWNhdXNlCj4gd2UgaGF2ZSB0byBhc3N1bWUgdGhhdCBm
+YWlsdXJlcyBhcmUgZmF0YWwuCj4gCj4gVGhpZXJyeQoKCgo+IF9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRy
+aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJl
+IEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
+aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
