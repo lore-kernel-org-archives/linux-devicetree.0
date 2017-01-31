@@ -1,196 +1,101 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 4/5] checks: Add infrastructure for setting bus type of
- nodes
-Date: Tue, 31 Jan 2017 11:26:34 +1100
-Message-ID: <20170131002634.GD14879@umbus.fritz.box>
-References: <20170124174534.3865-1-robh@kernel.org>
- <20170124174534.3865-5-robh@kernel.org>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 00:45:11 +0000
+Message-ID: <20170131004510.GQ27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170124174534.3865-5-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 06, 2017 at 06:11:18PM -0800, Steve Longerbeam wrote:
+> Philipp Zabel (3):
+>   ARM: dts: imx6qdl: Add mipi_ipu1/2 multiplexers, mipi_csi, and their
+>     connections
+>   add mux and video interface bridge entity functions
+>   platform: add video-multiplexer subdevice driver
+> 
+> Steve Longerbeam (21):
+>   [media] dt-bindings: Add bindings for i.MX media driver
+>   ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
+>   ARM: dts: imx6qdl: add media device
+>   ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
+>   ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+>   ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
+>   ARM: dts: imx6-sabreauto: create i2cmux for i2c3
+>   ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
+>   ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
+>   ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+>   UAPI: Add media UAPI Kbuild file
+>   media: Add userspace header file for i.MX
+>   media: Add i.MX media core driver
+>   media: imx: Add CSI subdev driver
+>   media: imx: Add SMFC subdev driver
+>   media: imx: Add IC subdev drivers
+>   media: imx: Add Camera Interface subdev driver
+>   media: imx: Add MIPI CSI-2 Receiver subdev driver
+>   media: imx: Add MIPI CSI-2 OV5640 sensor subdev driver
+>   media: imx: Add Parallel OV5642 sensor subdev driver
+>   ARM: imx_v6_v7_defconfig: Enable staging video4linux drivers
 
---fOHHtNG4YXGJ0yqR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Tue, Jan 24, 2017 at 11:45:33AM -0600, Rob Herring wrote:
-> In preparation to support bus specific checks, add the necessary
-> infrastructure to determine and set the bus type for nodes.
->=20
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  checks.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  dtc.h    | 11 +++++++++++
->  2 files changed, 62 insertions(+)
->=20
-> diff --git a/checks.c b/checks.c
-> index 8e310d69ca3d..5ef63a6a4317 100644
-> --- a/checks.c
-> +++ b/checks.c
-> @@ -587,6 +587,53 @@ static void fixup_path_references(struct check *c, s=
-truct dt_info *dti,
->  }
->  ERROR(path_references, fixup_path_references, NULL, &duplicate_node_name=
-s);
-> =20
-> +struct bus_type *bus_types[] =3D {
-> +	NULL
-> +};
-> +
-> +static void fixup_bus_type(struct check *c, struct dt_info *dti,
-> +				  struct node *node)
-> +{
-> +	struct bus_type **bus;
-> +
-> +	for (bus =3D bus_types; *bus !=3D NULL; bus++) {
+Trying this driver with an imx219 camera (which works with Philipp's
+driver) results in not much happening... no /dev/media* node for it,
+no subdevs, no nothing.  No clues as to what's missing either.  Only
+messages from imx-media are from registering the various subdevs.
 
-I think this would be clearer using ARRAY_SIZE() rather than the **
-and NULL terminator.
+[   37.444877] imx-media: Registered subdev imx6-mipi-csi2
+[   37.444973] imx-media: Registered subdev imx219 0-0010
+[   38.868740] imx-media: Registered subdev ipu1_ic_prpenc
+[   38.869265] imx-media: Registered subdev ipu1_ic_prpvf
+[   38.869425] imx-media: Registered subdev ipu1_ic_pp0
+[   38.870086] imx-media: Registered subdev ipu1_ic_pp1
+[   38.871510] imx-media: Registered subdev ipu2_ic_prpenc
+[   38.871743] imx-media: Registered subdev ipu1_smfc0
+[   38.873043] imx-media: Registered subdev ipu1_smfc1
+[   38.873225] imx-media: Registered subdev ipu2_ic_prpvf
+[   38.875027] imx-media: Registered subdev ipu2_smfc0
+[   38.875320] imx-media: Registered subdev ipu2_ic_pp0
+[   38.877148] imx-media: Registered subdev ipu2_smfc1
+[   38.877436] imx-media: Registered subdev ipu2_ic_pp1
+[   38.932089] imx-media: Registered subdev camif0
+[   38.956538] imx-media: Registered subdev camif1
+[   38.959148] imx-media: Registered subdev camif2
+[   38.964353] imx-media: Registered subdev camif3
+[  206.502077] imx-media: Registered subdev ipu1_csi0
+[  206.503304] imx-media: Registered subdev ipu1_csi1
+[  206.503814] imx-media: Registered subdev ipu2_csi0
+[  206.504281] imx-media: Registered subdev ipu2_csi1
 
-> +		if (!(*bus)->bridge_is_type(node))
-> +			continue;
-> +
-> +		node->bus_type =3D *bus;
-> +		break;
-> +	}
-> +}
-> +ERROR(bus_type, fixup_bus_type, NULL);
-> +
-> +static void check_bus_bridge(struct check *c, struct dt_info *dti,
-> +			     struct node *node)
-> +{
-> +	struct bus_type *bt;
-> +
-> +	if (!node->bus_type)
-> +		return;
-> +
-> +	bt =3D node->bus_type;
-> +	if (bt->check_bridge)
-> +		bt->check_bridge(c, dti, node);
-> +}
-> +WARNING(bus_bridge, check_bus_bridge, NULL);
+I also get:
 
-Hrm.  So, we have a double multiplex here, and I'm not sure that it's
-necessary.  First the table of checks themselves, then the table of
-bus types.  Could we eliminate that simply by having each bus type
-implement a check function which tests for that bus type then,
-performans any checks for the bridge then sets the bus_type field.
+[   37.200072] imx6-mipi-csi2: data lanes: 2
+[   37.200077] imx6-mipi-csi2: flags: 0x00000200
 
-It would mean that if there are multiple bus-specific things we want
-to check about the bridge, we could put them into separate checks.
-That might be clearer in some cases, and it means our existing
-messages can show something informative via the check name which
-failed, rather than just saying "(bus_bridge)" for anything wrong with
-any bus bridge.
+and from what I can see, all modules from drivers/staging/media/imx/ are
+loaded (had to load imx-csi by hand because of the brokenness in the
+drivers/gpu/ipu code attaching an device_node pointer after registering
+the platform device, which changes what userspace sees in the modalias
+file.)
 
-We could still use the bus_type field for "semi-generic" checks like
-validating unit names that are the same in outline between different
-buses, but differ in details.
+Any clues at what to look at?
 
-> +static void check_bus_device(struct check *c, struct dt_info *dti,
-> +			     struct node *node)
-> +{
-> +	struct bus_type *bt;
-> +
-> +	if (!node->parent || !node->parent->bus_type)
-> +		return;
-> +
-> +	bt =3D node->parent->bus_type;
-> +	if (bt->check_device)
-> +		bt->check_device(c, dti, node);
-> +}
-> +WARNING(bus_device, check_bus_device, NULL);
-
-Removing the double indirection would be a bit fiddlier for the bus
-devices, but the same advantages apply.
-
->  /*
->   * Semantic checks
->   */
-> @@ -753,6 +800,7 @@ static struct check *check_table[] =3D {
-> =20
->  	&explicit_phandles,
->  	&phandle_references, &path_references,
-> +	&bus_type,
-> =20
->  	&address_cells_is_cell, &size_cells_is_cell, &interrupt_cells_is_cell,
->  	&device_type_is_string, &model_is_string, &status_is_string,
-> @@ -764,6 +812,9 @@ static struct check *check_table[] =3D {
-> =20
->  	&unit_address_vs_reg,
-> =20
-> +	&bus_bridge,
-> +	&bus_device,
-> +
->  	&avoid_default_addr_size,
->  	&obsolete_chosen_interrupt_controller,
-> =20
-> diff --git a/dtc.h b/dtc.h
-> index c6f125c68ba8..f27397cd7622 100644
-> --- a/dtc.h
-> +++ b/dtc.h
-> @@ -136,6 +136,16 @@ struct label {
->  	struct label *next;
->  };
-> =20
-> +struct check;
-> +struct node;
-> +struct dt_info;
-> +
-> +struct bus_type {
-> +        bool (*bridge_is_type)(struct node *node);
-> +        void (*check_bridge)(struct check *c, struct dt_info *dti, struc=
-t node *node);
-> +        void (*check_device)(struct check *c, struct dt_info *dti, struc=
-t node *node);
-> +};
-> +
->  struct property {
->  	bool deleted;
->  	char *name;
-> @@ -162,6 +172,7 @@ struct node {
->  	int addr_cells, size_cells;
-> =20
->  	struct label *labels;
-> +	struct bus_type *bus_type;
->  };
-> =20
->  #define for_each_label_withdel(l0, l) \
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---fOHHtNG4YXGJ0yqR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJYj9m5AAoJEGw4ysog2bOSEQ8P/0mx9VsqpgDYfxvm85NhV0EF
-XQTwEzU2kRbv7HmWWtt4hTkvZzklIOoViqVRNSqgBnurT3L/iCiWvI3s5Y9VXEzd
-pM5FQue2ssMPtLMj2AK3rbUV4Gii7p7F0t8TdSe19XoWK9f5nftpJa99r5FsLHdt
-Jtl+xwmDuJ6Nft7/Yy8bwW4Rf7kpMUvS/s4XoE2I3lWPpIkNI+fhdOZTy6TsTpNR
-NKfXbegywOf8ATf4lbkuORPkr5ee8+H62tJSJeODTL6L+pP3bY9TS3JQvZx4XejW
-1WmJIFbXmr95KpGu1fN5CYf/z/gjBc8jpb6wNR23FzDj8A+4SiHq7AUdTK4j+BZK
-IUUgmrHkxXS0vruDeJlukiJU8QYWODQzw66ev0IfhmCtjwVxi7kroYnvBDgiq7BX
-f3wzlFNnqwFll5Q8RUJyFqHtfbiXhuDNMRSQpYn/7+MBXs3d9F31o2X2r233N9kP
-bZcV+WuHONdi8doQkZoYXWim4xgGNmfJO+55TyrqulWhaxHzZXO1f1cQ80Bww84L
-Yvg8I/R44KTL9/+U+aMCfq2KG7HfkuJl7lLU1RVFzpG2eyVsJWvjze01cYpHbudO
-ygmA2RpuLyrPbe61tG6JqO85BVN31S5diLD8SOXe/pwgRWTXgYpdPwqhX1vg7EHZ
-czQS8kfpJaR0b0TvanrI
-=d8uB
------END PGP SIGNATURE-----
-
---fOHHtNG4YXGJ0yqR--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
