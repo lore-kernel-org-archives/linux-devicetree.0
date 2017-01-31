@@ -1,270 +1,62 @@
-From: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
-Subject: [PATCH v3 8/9] ARM: dts: add support for I2SE Duckbill 2 EnOcean
-Date: Tue, 31 Jan 2017 07:51:14 +0100
-Message-ID: <1485845475-3129-9-git-send-email-michael.heimpold@i2se.com>
-References: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv2 04/16] ov7670: add devicetree support
+Date: Tue, 31 Jan 2017 08:53:08 +0200
+Message-ID: <20170131065308.GP7139@valkosipuli.retiisi.org.uk>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-5-hverkuil@xs4all.nl>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485845475-3129-1-git-send-email-michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170130140628.18088-5-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Hi Hans,
 
-This machine is based on I2SE's Duckbill 2 board and features a
-EnOcean daugther board based on the popular TCM310 chipset.
-This product is intended to be used for e.g. home automation purposes.
+On Mon, Jan 30, 2017 at 03:06:16PM +0100, Hans Verkuil wrote:
+> @@ -1549,6 +1551,29 @@ static const struct ov7670_devtype ov7670_devdata[] = {
+>  	},
+>  };
+>  
+> +static int ov7670_init_gpio(struct i2c_client *client, struct ov7670_info *info)
+> +{
+> +	/* Request the power down GPIO asserted */
 
-Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                     |   1 +
- arch/arm/boot/dts/imx28-duckbill-2-enocean.dts | 220 +++++++++++++++++++++++++
- 2 files changed, 221 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
+You're setting both GPIOs to low state. How about just removing the
+comments? I think they're just confusing.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5f758b9..d854dcd 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -477,6 +477,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-cfa10058.dtb \
- 	imx28-duckbill-2-485.dtb \
- 	imx28-duckbill-2.dtb \
-+	imx28-duckbill-2-enocean.dtb \
- 	imx28-duckbill.dtb \
- 	imx28-eukrea-mbmx283lc.dtb \
- 	imx28-eukrea-mbmx287lc.dtb \
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-new file mode 100644
-index 0000000..6e7a71c
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-@@ -0,0 +1,220 @@
-+/*
-+ * Copyright (C) 2015-2017 I2SE GmbH <info-eS4NqCHxEME@public.gmane.org>
-+ * Copyright (C) 2016 Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx28.dtsi"
-+
-+/ {
-+	model = "I2SE Duckbill 2 EnOcean";
-+	compatible = "i2se,duckbill", "fsl,imx28";
-+
-+	memory {
-+		reg = <0x40000000 0x08000000>;
-+	};
-+
-+	apb@80000000 {
-+		apbh@80000000 {
-+			ssp0: ssp@80010000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc0_8bit_pins_a
-+					&mmc0_cd_cfg &mmc0_sck_cfg>;
-+				bus-width = <8>;
-+				vmmc-supply = <&reg_3p3v>;
-+				status = "okay";
-+				non-removable;
-+			};
-+
-+			ssp2: ssp@80014000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc2_4bit_pins_b
-+					&mmc2_cd_cfg &mmc2_sck_cfg_b>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_3p3v>;
-+				status = "okay";
-+			};
-+
-+			pinctrl@80018000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&hog_pins_a>;
-+
-+				hog_pins_a: hog@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_LCD_D17__GPIO_1_17    /* Revision detection */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				mac0_phy_reset_pin: mac0-phy-reset@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_GPMI_ALE__GPIO_0_26    /* PHY Reset */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				mac0_phy_int_pin: mac0-phy-int@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_GPMI_D07__GPIO_0_7    /* PHY Interrupt */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				led_pins: leds@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_SAIF0_MCLK__GPIO_3_20
-+						MX28_PAD_SAIF0_LRCLK__GPIO_3_21
-+						MX28_PAD_AUART0_CTS__GPIO_3_2
-+						MX28_PAD_I2C0_SCL__GPIO_3_24
-+						MX28_PAD_I2C0_SDA__GPIO_3_25
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				enocean_button: enocean-button@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART0_RTS__GPIO_3_3
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+			};
-+		};
-+
-+		apbx@80040000 {
-+			lradc@80050000 {
-+				status = "okay";
-+			};
-+
-+			auart0: serial@8006a000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&auart0_2pins_a>;
-+				status = "okay";
-+			};
-+
-+			duart: serial@80074000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&duart_pins_a>;
-+				status = "okay";
-+			};
-+
-+			usbphy0: usbphy@8007c000 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	ahb@80080000 {
-+		usb0: usb@80080000 {
-+			status = "okay";
-+			dr_mode = "peripheral";
-+		};
-+
-+		mac0: ethernet@800f0000 {
-+			phy-mode = "rmii";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mac0_pins_a>, <&mac0_phy_reset_pin>;
-+			phy-supply = <&reg_3p3v>;
-+			phy-reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+			phy-reset-duration = <25>;
-+			phy-handle = <&ethphy>;
-+			status = "okay";
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ethphy: ethernet-phy@0 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <0>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&mac0_phy_int_pin>;
-+					interrupt-parent = <&gpio0>;
-+					interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+					max-speed = <100>;
-+				};
-+			};
-+		};
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins>;
-+
-+		status-red {
-+			label = "duckbill:red:status";
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		status-green {
-+			label = "duckbill:green:status";
-+			gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		enocean-blue {
-+			label = "duckbill:blue:enocean";
-+			gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		enocean-red {
-+			label = "duckbill:red:enocean";
-+			gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		enocean-green {
-+			label = "duckbill:green:enocean";
-+			gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&enocean_button>;
-+
-+		enocean {
-+			label = "EnOcean";
-+			linux,code = <KEY_NEW>;
-+			gpios = <&gpio3 3 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
+> +	info->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+> +			GPIOD_OUT_LOW);
+> +	if (IS_ERR(info->pwdn_gpio)) {
+> +		dev_info(&client->dev, "can't get %s GPIO\n", "pwdn");
+> +		return PTR_ERR(info->pwdn_gpio);
+> +	}
+> +
+> +	/* Request the reset GPIO deasserted */
+> +	info->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
+> +			GPIOD_OUT_LOW);
+> +	if (IS_ERR(info->resetb_gpio)) {
+> +		dev_info(&client->dev, "can't get %s GPIO\n", "resetb");
+> +		return PTR_ERR(info->resetb_gpio);
+> +	}
+> +
+> +	usleep_range(3000, 5000);
+> +
+> +	return 0;
+> +}
+> +
+>  static int ov7670_probe(struct i2c_client *client,
+>  			const struct i2c_device_id *id)
+>  {
+
 -- 
-2.6.1
+Regards,
 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
