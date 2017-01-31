@@ -1,52 +1,34 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 11/14] sata: ahci-da850: un-hardcode the MPY bits
-Date: Tue, 31 Jan 2017 20:43:11 +0530
-Message-ID: <3bcc927a-f074-7f18-cdeb-e40655c39118@ti.com>
-References: <1485770531-6772-1-git-send-email-bgolaszewski@baylibre.com>
- <1485770531-6772-12-git-send-email-bgolaszewski@baylibre.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 04/14] GPIO: Add gpio-ingenic driver
+Date: Tue, 31 Jan 2017 16:29:58 +0100
+Message-ID: <699f0c63e95ecdafe6946fdcdbb97a37@mail.crapouillou.net>
+References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
+ <20170125185207.23902-1-paul@crapouillou.net>
+ <20170125185207.23902-5-paul@crapouillou.net>
+ <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485770531-6772-12-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
-Cc: linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 30 January 2017 03:32 PM, Bartosz Golaszewski wrote:
+Le 2017-01-31 15:20, Linus Walleij a écrit :
 
-> +	/*
-> +	 * The second clock used by ahci-da850 is the external REFCLK. If we
-> +	 * didn't get it from ahci_platform_get_resources(), let's try to
-> +	 * specify the con_id in clk_get().
-> +	 */
-> +	if (!hpriv->clks[1]) {
-> +		clk = clk_get(dev, "refclk");
-> +		if (IS_ERR(clk)) {
-> +			dev_err(dev, "unable to obtain the reference clock");
-> +			return -ENODEV;
-> +		} else {
-> +			hpriv->clks[1] = clk;
-> +		}
+>> + of_property_read_u32(dev->of_node, "base", &jzgc->gc.base);
+> 
+> Remove this. Dynamic allocation should be fine, if you're using the
+> new userspace ABI like tools/gpio/* or libgpiod and only that and 
+> in-kernel
+> consumers, dynamic numbers are just fine.
 
-This results in a checkpatch warning about the unneeded else. I fixed 
-this locally to look like:
+The problem is that the QI_LB60 board code still have a lot of 
+references
+to global GPIO numbers. Just grep for JZ_GPIO_PORT in
+arch/mips/jz4740/board-qi_lb60.c to see what I mean...
 
-+        */
-+       if (!hpriv->clks[1]) {
-+               clk = clk_get(dev, "refclk");
-+               if (IS_ERR(clk)) {
-+                       dev_err(dev, "unable to obtain the reference clock");
-+                       return -ENODEV;
-+               }
-+
-+               hpriv->clks[1] = clk;
-+       }
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Paul
