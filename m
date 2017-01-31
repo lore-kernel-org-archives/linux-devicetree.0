@@ -1,81 +1,140 @@
-From: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
-Date: Tue, 31 Jan 2017 14:36:53 -0800
-Message-ID: <d5ede043-3b02-37f6-bd4a-db805e6b36d7@mentor.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
- <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
- <20170131134252.GX27312@n2100.armlinux.org.uk>
- <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
- <20170131203340.GC27312@n2100.armlinux.org.uk>
- <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
- <20170131220452.GE27312@n2100.armlinux.org.uk>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Tue, 31 Jan 2017 14:54:53 -0800
+Message-ID: <87d1f2kfgi.fsf@eliezer.anholt.net>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
+ <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
+ <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170131220452.GE27312-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ian Arkver <ian.arkver.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-a
+Content-Type: multipart/mixed; boundary="===============0858028808=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170131213132.GC872@mithrandir.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+--===============0858028808==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On 01/31/2017 02:04 PM, Russell King - ARM Linux wrote:
-> On Tue, Jan 31, 2017 at 09:55:29PM +0000, Ian Arkver wrote:
->> On 31/01/17 20:33, Russell King - ARM Linux wrote:
->>> On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
->>>> On 01/31/2017 05:42 AM, Russell King - ARM Linux wrote:
->>>>> On Fri, Jan 20, 2017 at 03:38:28PM +0100, Hans Verkuil wrote:
->>>>>> Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
->>>>>> should complain about this.
->>>>> ... and more.
->>>> Right, in version 3 that you are working with, no v4l2-compliance fixes were
->>>> in yet. A lot of the compliance errors are fixed, please look in latest
->>>> branch
->>>> imx-media-staging-md-wip at git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:slongerbeam/mediatree.git.
->>> Sorry, I'm not prepared to pull random trees from github as there's
->>> no easy way to see what's in the branch.
->>>
->>> I've always disliked github because its web interface makes it soo
->>> difficult to navigate around git trees hosted there.  You can see
->>> a commit, you can see a diff of the commit.  You can get a list of
->>> branches.  But there seems to be no way to get a list of commits
->>> similar to "git log" or even a one-line summary of each commit on
->>> a branch.  If there is, it's completely non-obvious (which I think is
->>> much of the problem with github, it's web interface is horrendous.)
->>>
->>> Or you can clone/pull the tree without knowing what you're fetching
->>> (eg, what the tree is based upon.)
->>>
->>> Or you can waste time clicking repeatedly on the "parent" commit link
->>> on each patch working your way back through the history...
->>>
->>> Well, it looks like it's bsaed on 4.10-rc1 with who-knows-what work
->> >from the linux-media tree (I didn't try and go back any further.)
->>> As I don't want to take a whole pile of other changes into my tree,
->>> I'm certainly not going to pull from your github tree.  Sorry.
->>>
->> https://github.com/slongerbeam/mediatree/compare/master...imx-media-staging-md-wip
->>
->> It's under the "Compare" button from the main view. It would be nice though
->> if the first commit's parent was some clearly tagged start point.
-> I don't want master though, I want v4.10-rc1, and if I ask for that
-> it tells me it knows nothing about v4.10-rc1, despite the fact that's
-> a tag in the mainline kernel repository which was merged into the
-> linux-media tree that this tree is based upon.
+Thierry Reding <thierry.reding@gmail.com> writes:
 
-Hi Russell, yes git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:slongerbeam/mediatree.git is a fork
-of the linux-media tree, and the imx-media-staging-md-wip branch
-is up-to-date with master, currently at 4.10-rc1.
+> [ Unknown signature status ]
+> On Tue, Jan 31, 2017 at 10:15:10AM -0800, Eric Anholt wrote:
+>> Thierry Reding <thierry.reding@gmail.com> writes:
+>>=20
+>> > [ Unknown signature status ]
+>> > On Tue, Jan 31, 2017 at 09:38:53AM -0500, Sean Paul wrote:
+>> >> On Tue, Jan 31, 2017 at 09:54:49AM +0100, Thierry Reding wrote:
+>> >> > On Tue, Jan 31, 2017 at 09:01:07AM +0900, Inki Dae wrote:
+>> >> > >=20
+>> >> > >=20
+>> >> > > 2017=EB=85=84 01=EC=9B=94 24=EC=9D=BC 10:50=EC=97=90 Hoegeun Kwon=
+ =EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+>> >> > > > Dear Thierry,
+>> >> > > >=20
+>> >> > > > Could you please review this patch?
+>> >> > >=20
+>> >> > > Thierry, I think this patch has been reviewed enough but no comme=
+nt
+>> >> > > from you. Seems you are busy. I will pick up this.
+>> >> >=20
+>> >> > Sorry, but that's not how it works. This patch has gone through 8
+>> >> > revisions within 4 weeks, and I tend to ignore patches like that un=
+til
+>> >> > the dust settles.
+>> >> >=20
+>> >>=20
+>> >> Seems like the dust was pretty settled. It was posted on 1/11, pinged=
+ on 1/24,
+>> >> and picked up on 1/31. I don't think it's unreasonable to take it thr=
+ough
+>> >> another tree after that.
+>> >>=20
+>> >> I wonder if drm_panel would benefit from the -misc group maintainersh=
+ip model
+>> >> as drm_bridge does. By spreading out the workload, the high-maintenan=
+ce
+>> >> patches would hopefully find someone to shepherd them through.
+>> >
+>> > Except that nobody except me really cares. If we let people take patch=
+es
+>> > through separate trees or group-maintained trees they'll likely go in
+>> > without too much thought. DRM panel is somewhat different from core DRM
+>> > in this regard because its infrastructure is minimal and there's little
+>> > outside the panel-simple driver. So we're still at a stage where we ne=
+ed
+>> > to fine-tune what drivers should look like and how we can improve.
+>>=20
+>> I would love to care and participate in review, but with the structure
+>> of your tree you're the only one whose review counts, so I don't
+>> participate.
+>
+> Really? What exactly do you think is special about the structure of my
+> tree? I require patches to be on dri-devel (I pick them up from the
+> patchwork instance at freedesktop.org), the tree is publicly available
+> and reviewed-by tags get picked up automatically by patchwork.
+>
+> The panel tree works exactly like any other maintainer tree. And my
+> review is *not* the only one that counts. I appreciate every Reviewed-by
+> tag I see on panel patches because it means that I don't have to look as
+> closely as I have to otherwise.
+>
+> It is true that I am responsible for those patches, that's why I get to
+> have the final word on whether or not a patch gets applied. And that's
+> no different from any other maintainer tree either.
 
-You don't need to use the web interface, just git clone the repo.
+If me reviewing a patch isn't part of unblocking that patch getting in,
+then I won't bother because all I could end up doing is punishing the
+developer of the patch.  Contributors have a hard enough time already.
 
-Steve
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliRFb0ACgkQtdYpNtH8
+nuiP1hAAuoWkYiJW8f7XTNzO+DloPyrsfTKZ9fXUWl/Oq9dejAelYsSG5udR+Wmk
+lHYsTb0dyWuQlck0zT5MA7SQoaGUiJJ3otrR7qcWjryc2Pgq7l0qlOrvQlCkKNIW
+kjO+v/p52Hfp0rm6VUOGhJhVupzyTV6pNh+9IGjxzECfV4QEftq0twTSHa1cqXK/
+QoQG7tjqA/2pnVr0KQTcBXGeSlP36MoXKM+4d+5lO3Q7LLU/mxbgvSFpqW9+Ifeu
+Zk/DsCoj7tB3pj6/qlLT4bxvajPeQ7Iznw88CdhNzLmhG4ms5ZWCA23JupSf5IA6
+RgT2cLQDqYyvu/WspKiZEVtcnSf/MSXPMvnc8krYOxEnwdO0Br1dpmzM3I/BsjQP
+GadRyztd3I8yQzIQ3sQsUDTjpLVA4gISUt3SVStTysqfbccXwMjMOdcdq5nQ3+Yo
+iUva/C5+p8t4hlSjp9vGH8JdhwvR5IYpOQVOBPuh3vy7vPZhf1hk/dcAsZIJ/nGm
+5yPMMgBTXsCr8KhdY/wBMRx+dWLYs7VmDQoHVzwtg74K6eA5Uf2EaI55mfIaThWz
+ZfTU700WRvBmAHhfU58wwPKcw2RXVBWnuBdaHFq5I54+1ub2351iu7mEGK1YZJ/o
+VZE/5PZv4tuTKAdSo66reb9E1cabzR+4OoKeBEW7sfYI3vngNwE=
+=H/ra
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============0858028808==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============0858028808==--
