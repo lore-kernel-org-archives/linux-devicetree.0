@@ -1,180 +1,174 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
- i2c-mux-simple bindings
-Date: Tue, 31 Jan 2017 08:36:48 +0100
-Message-ID: <cdc958c3-2496-be52-6407-bf9aefdfa965@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-8-git-send-email-peda@axentia.se>
- <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
- <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se>
- <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA@mail.gmail.com>
+From: Hans Holmberg <hans@pixelmunchies.com>
+Subject: [RFC PATCH v2] Input: gpio_keys - add dt abs/rel button support
+Date: Tue, 31 Jan 2017 08:55:19 +0100
+Message-ID: <20170131075516.GA4462@Gaia>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-01-30 18:20, Rob Herring wrote:
-> On Sat, Jan 28, 2017 at 4:42 PM, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org> wrote:
->> On 2017-01-27 20:39, Rob Herring wrote:
->>> On Wed, Jan 18, 2017 at 04:57:10PM +0100, Peter Rosin wrote:
->>>> Describe how a generic multiplexer controller is used to mux an i2c bus.
->>>>
->>>> Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>> Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
->>>> ---
->>>>  .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 81 ++++++++++++++++++++++
->>>>  1 file changed, 81 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>> new file mode 100644
->>>> index 000000000000..253d5027843b
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>> @@ -0,0 +1,81 @@
->>>> +Simple I2C Bus Mux
->>>> +
->>>> +This binding describes an I2C bus multiplexer that uses a mux controller
->>>> +from the mux subsystem to route the I2C signals.
->>>> +
->>>> +                                  .-----.  .-----.
->>>> +                                  | dev |  | dev |
->>>> +    .------------.                '-----'  '-----'
->>>> +    | SoC        |                   |        |
->>>> +    |            |          .--------+--------'
->>>> +    |   .------. |  .------+    child bus A, on MUX value set to 0
->>>> +    |   | I2C  |-|--| Mux  |
->>>> +    |   '------' |  '--+---+    child bus B, on MUX value set to 1
->>>> +    |   .------. |     |    '----------+--------+--------.
->>>> +    |   | MUX- | |     |               |        |        |
->>>> +    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
->>>> +    |   '------' |                  | dev |  | dev |  | dev |
->>>> +    '------------'                  '-----'  '-----'  '-----'
->>>> +
->>>> +Required properties:
->>>> +- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
->>>
->>> Not a fan of using "simple" nor the ','. Perhaps lock type should be
->>> separate property.
->>
->> How about just i2c-mux for the compatible? Because i2c-mux-mux (which
->> follows the naming of previous i2c muxes) looks really stupid. Or
->> perhaps i2c-mux-generic?
-> 
-> I like "generic" only slightly more than "simple". :)
-> 
-> If the mux is gpio controlled, then it should still be called
-> i2c-gpio-mux. Let's not invent brand new bindings when current ones
-> are easily extended. We already have pretty generic names here, let's
-> not make them more generic.
+This change adds support for specifying device tree buttons emitting
+abs/rel events.
 
-Ahh, but the whole point of this new driver is that it does not know
-if the mux is gpio controlled, if it is controlled by an adg792 chip
-or whatever might appear down the line. So, I think i2c-mux-gpio (and
-i2c-gpio-mux) is actively wrong.
+ABS events were previously supported, but only via platform data, so add
+the missing device tree property to allow axis values to be emitted with
+abs/rel events.
 
-This new driver is in fact an i2c-mux driver that (in this aspect) is more
-generic than any of the existing i2c-mux drivers, hence my suggestion.
+Also emit 0 on button releases for REL and ABS keys. This is a must-have
+for supporting digital joysticks, and aligns the driver whith
+gpio-keys-polled.
 
-If you see this new driver as something that is superseding the existing
-i2c-mux-gpio driver, I'm sad to inform you that the code is not simply
-not there. i2c-mux-gpio has acpi support and users may provide platform
-data from code. The existing i2c-mux-gpio driver also has the below
-mentioned locking heuristic. Adding all those things to the new driver
-would make it big and unwieldy and having even more unwanted tentacles
-into other subsystems. And why should it be only i2c-mux-gpio that is
-merged into this new i2c-mux driver? Why not implement a mux-pinctrl
-driver for the new mux subsustem and then merge i2c-mux-pinctrl as well?
-I say no, that way lies madness.
+Finally, report min/max values for abs axes to the input framework.
 
->>
->> I'm also happy to have the lock type as a separate property. One lock
->> type, e.g. parent-locked, could be the default and adding a 'mux-locked'
->> property could change that. Would that be ok?
-> 
-> I prefer this. Then existing bindings can use it.
-> 
->> Or should it be a requirement that one of 'mux-locked'/'parent-locked'
->> is always present?
-> 
-> I would make it boolean and make not present be the more common case.
-> Not present could also mean determined via other means as you have
-> today with existing bindings. Maybe then you need both properties.
+Signed-off-by: Hans Holmberg <hans@pixelmunchies.com>
+---
 
-Ok. Lets define that every type of i2c-mux have a default locking.
-If no property is found that overrides this default, a heuristic may
-be applied that is only allowed to very defensively use non-default
-locking (like the current heuristics in i2c-mux-gpio/i2c-mux-pinctrl
-attempt to do, they only adjust the locking for impossible cases that
-would invariably lead to a deadlock with the default locking). Then,
-there should never exist a need to enforce the default locking with
-a property.
+RFC because it alters the behaviour of abs-buttons making them
+un-sticky, reporting 0 on button releases - just like gpio-keys-polled.
 
-And given that no current i2c-mux that is mux-locked by default even
-have the ability to be parent-locked, there is (currently) no need
-for more than a bool 'mux-locked' property.
+FWIW, i've looked through the in-tree board files and not found a
+single occurence of abs gpio-buttons.
 
->>> I'm not sure I get the mux vs. parent locked fully. How do I determine
->>> what type I have? We already have bindings for several types of i2c
->>> muxes. How does the locking annotation fit into those?
->>
->> We have briefly discussed this before [1] in the context of i2c-mux-gpio
->> and i2c-mux-pinctrl, when I added the mux-locked/parent-locked distinction
->> to the i2c-mux infrastructure (it wasn't named mux-locked/parent-locked
->> way back then though). There is more detail on what the difference is
->> between the two in Documentation/i2c/i2c-topology.
->>
->> Side note regarding your remark "use an I2C controlled mux instead"; it
->> appears that I'm not alone [2] with this kind of requirement...
->>
->> [1] https://lkml.org/lkml/2016/1/6/437
->> [2] http://marc.info/?t=147877959100002&r=1&w=2
->>
->> But, now that I have pondered on this for a year or so, I firmly
->> believe it was a mistake to have the code in i2c-mux-gpio and
->> i2c-mux-pinctrl automatically try to deduce if the mux should be
->> mux-locked or parent-locked. It might be easy to make that call
->> in some trivial cases, but it is not difficult to dream up
->> scenarios where it would be extremely hard for the code to get
->> this decision right. It's just fragile. But now we have code in
->> those two muxes that has unwanted tentacles into the guts of the
->> gpio and pinctrl subsystems. Hopefully those unwanted tentacles
->> can be replaced with something based on device links? However, it
->> is still not hard to come up with scenarios that will require
->> manual intervention in order to select the right kind of i2c mux
->> locking. So, I fear that we have inadequate code trying to make a
->> decision automatically, and that we at some point down the line
->> will have some impossible case needing a binding that trumps the
->> heuristic. Why have a heuristic at all in that case? In short, it
->> should have been a binding from the start, methinks.
->>
->> That was a long rant regarding i2c-mux-gpio and i2c-mux-pinctrl.
->> I obviously think it is bad to have this new i2c mux go in the
->> same direction as those two drivers. I.e. I think a binding that
->> specifies the desired locking is preferable to any attempted
->> heuristic.
-> 
-> Having a separate, common property(ies) for these would solve this then.
+Changes since v1:
+* Corrected cc list - now the mailing lists are looped in.
 
-Yep, the plan is now to make this new i2c-mux parent-locked by default
-and then look for an optional mux-locked property, thus eliminating the
-comma and the suffix in the compatible string, leaving only whatever is
-eventually picked from 'i2c-mux-simple', 'i2c-mux', 'i2c-mux-generic' and
-'i2c-mux-whatever'.
+ .../devicetree/bindings/input/gpio-keys.txt        | 50 +++++++++++++++++++++-
+ drivers/input/keyboard/gpio_keys.c                 | 29 +++++++++++--
+ 2 files changed, 75 insertions(+), 4 deletions(-)
 
-Do I need to re-document the mux-locked/parent-locked difference? I.e.,
-is it enough to refer to Documentation/i2c/i2c-topology, or does the
-Documentation/devicetree subdir need to self-contained?
+diff --git a/Documentation/devicetree/bindings/input/gpio-keys.txt b/Documentation/devicetree/bindings/input/gpio-keys.txt
+index a949404..1b53eed 100644
+--- a/Documentation/devicetree/bindings/input/gpio-keys.txt
++++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
+@@ -22,6 +22,13 @@ both at the same time. Specifying both properties is allowed.
+ Optional subnode-properties:
+ 	- linux,input-type: Specify event type this button/key generates.
+ 	  If not specified defaults to <1> == EV_KEY.
++	- linux,input-value: If linux,input-type is EV_ABS or EV_REL then this
++	  value is sent for events this button generates when pressed.
++	  EV_ABS/EV_REL axis will generate an event with a value of 0 when
++	  all buttons with linux,input-type == type and linux,code == axis
++	  are released. This value is interpreted as a signed 32 bit value,
++	  e.g. to make a button generate a value of -1 use:
++	  linux,input-value = <0xffffffff>; /* -1 */
+ 	- debounce-interval: Debouncing interval time in milliseconds.
+ 	  If not specified defaults to 5.
+ 	- wakeup-source: Boolean, button can wake-up the system.
+@@ -47,4 +54,45 @@ Example nodes:
+ 				linux,code = <108>;
+ 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+ 			};
+-			...
++	...
++
++	gpio-joystick: {
++			compatible = "gpio-keys";
++
++			pinctrl-names = "default";
++			pinctrl-0 = <&my_pins>;
++
++			up {
++				gpios = <&gpio 26 1>;
++				linux,input-type = <EV_ABS>;
++				linux,code = <ABS_Y>;
++				linux,input-value = <0xffffffff>;
++			};
++
++			down {
++				gpios = <&gpio 13 1>;
++				linux,input-type = <EV_ABS>;
++				linux,code = <ABS_Y>;
++				linux,input-value = <1>;
++			};
++
++			left {
++				gpios = <&gpio 6 1>;
++				linux,input-type = <EV_ABS>;
++				linux,code = <ABS_X>;
++				linux,input-value = <0xffffffff>;
++			};
++
++			right {
++				gpios = <&gpio 5 1>;
++				linux,input-type = <EV_ABS>;
++				linux,code = <ABS_X>;
++				linux,input-value = <0x1>;
++			};
++
++			trigger_button {
++				gpios = <&gpio 12 1>;
++				linux,code = <BTN_TRIGGER>;
++			};
++	};
++	...
+diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
+index 9c92cdf..06d6902 100644
+--- a/drivers/input/keyboard/gpio_keys.c
++++ b/drivers/input/keyboard/gpio_keys.c
+@@ -370,9 +370,11 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
+ 		return;
+ 	}
+ 
+-	if (type == EV_ABS) {
++	if (type == EV_ABS || type == EV_REL) {
+ 		if (state)
+ 			input_event(input, type, button->code, button->value);
++		else
++			input_event(input, type, button->code, 0);
+ 	} else {
+ 		input_event(input, type, *bdata->code, state);
+ 	}
+@@ -584,6 +586,14 @@ static int gpio_keys_setup_key(struct platform_device *pdev,
+ 	*bdata->code = button->code;
+ 	input_set_capability(input, button->type ?: EV_KEY, *bdata->code);
+ 
++	if (button->type == EV_ABS) {
++		if (input_abs_get_max(input, button->code) < button->value)
++			input_abs_set_max(input, button->code, button->value);
++
++		if (input_abs_get_min(input, button->code) > button->value)
++			input_abs_set_min(input, button->code, button->value);
++	}
++
+ 	/*
+ 	 * Install custom action to cancel release timer and
+ 	 * workqueue item.
+@@ -667,6 +677,7 @@ static void gpio_keys_close(struct input_dev *input)
+ 	struct gpio_keys_button *button;
+ 	struct fwnode_handle *child;
+ 	int nbuttons;
++	int error;
+ 
+ 	nbuttons = device_get_child_node_count(dev);
+ 	if (nbuttons == 0)
+@@ -701,9 +712,21 @@ static void gpio_keys_close(struct input_dev *input)
+ 
+ 		fwnode_property_read_string(child, "label", &button->desc);
+ 
+-		if (fwnode_property_read_u32(child, "linux,input-type",
+-					     &button->type))
++		error = fwnode_property_read_u32(child, "linux,input-type",
++					     &button->type);
++		if (error) {
+ 			button->type = EV_KEY;
++		} else {
++			error = fwnode_property_read_u32(child,
++						     "linux,input-value",
++						     &button->value);
++			if ((button->type == EV_ABS || button->type == EV_REL)
++			    && error) {
++				dev_err(dev,
++					"EV_ABS/EV_REL button without value\n");
++				return ERR_PTR(-EINVAL);
++			}
++		}
+ 
+ 		button->wakeup =
+ 			fwnode_property_read_bool(child, "wakeup-source") ||
+-- 
+1.9.1
 
-Cheers,
-peda
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
