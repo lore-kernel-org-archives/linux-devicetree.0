@@ -1,52 +1,38 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
-Date: Tue, 31 Jan 2017 00:19:42 -0800
-Message-ID: <20170131081942.GC8311@dtor-ws>
-References: <20161223163214.7716-1-jelle@vdwaa.nl>
- <20170114191425.GA31309@dtor-ws>
- <20170118205712.GA5333@gmail.com>
- <20170118224946.GC11881@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170118224946.GC11881@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v1.1 10/16] irqchip/gic: Add missing forward declaration for struct device
+Date: Tue, 31 Jan 2017 10:21:33 +0200
+Message-ID: <1485850893-19707-1-git-send-email-sakari.ailus@linux.intel.com>
+References: <1485532990-8431-11-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1485532990-8431-11-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Jelle,
+A pointer to struct device is used in the header as a function argument
+but there's no declaration for it. Add one.
 
-On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
-> On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
-> > On 01/14/17 at 11:14am, Dmitry Torokhov wrote:
-> > > > +
-> > > > +static const struct of_device_id zet6223_of_match[] = {
-> > > > +	{ .compatible = "zeitec", "zet6223" },
-> > > 
-> > > The compatible should be "zeitec,zet6223", what you have here is
-> > > equivalent of:
-> > > 
-> > > 	{ .compatible = "zeitec", .data = "zet6223" },
-> > 
-> > Ah that was silly, thanks :)
-> > 
-> > > I also have been looking at you previosu submission and had some draft
-> > > changes. I reconciled them in the patch below, if it still works for you
-> > > then I'll fold everything together and apply. Please let me know.
-> > 
-> > I'll find some time to test the patch below, I've one small suggestion
-> > to the patch below.
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+---
+This patch goes before "[PATCH 10/15] of: No need to include
+linux/property.h, linux/fwnode.h is sufficient".
 
-It would be very helpful if you let me know if the patch actually works
-on the hardware: the merge window for 4.11 will be opening fairly soon.
+ include/linux/irqchip/arm-gic.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-Thanks!
-
+diff --git a/include/linux/irqchip/arm-gic.h b/include/linux/irqchip/arm-gic.h
+index eafc965..b16afa1 100644
+--- a/include/linux/irqchip/arm-gic.h
++++ b/include/linux/irqchip/arm-gic.h
+@@ -100,6 +100,7 @@
+ 
+ #include <linux/irqdomain.h>
+ 
++struct device;
+ struct device_node;
+ struct gic_chip_data;
+ 
 -- 
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
+
