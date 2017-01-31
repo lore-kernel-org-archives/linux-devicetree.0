@@ -1,81 +1,49 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
-Date: Tue, 31 Jan 2017 22:04:52 +0000
-Message-ID: <20170131220452.GE27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
- <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
- <20170131134252.GX27312@n2100.armlinux.org.uk>
- <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
- <20170131203340.GC27312@n2100.armlinux.org.uk>
- <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] regulator: cpcap: Add basic regulator support
+Date: Tue, 31 Jan 2017 14:09:53 -0800
+Message-ID: <20170131220953.GF7403@atomide.com>
+References: <20170131001241.5926-1-tony@atomide.com>
+ <20170131211256.l3e53y2mkzylfjnw@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Ian Arkver <ian.arkver.dev@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <20170131211256.l3e53y2mkzylfjnw-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 09:55:29PM +0000, Ian Arkver wrote:
-> On 31/01/17 20:33, Russell King - ARM Linux wrote:
-> >On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
-> >>On 01/31/2017 05:42 AM, Russell King - ARM Linux wrote:
-> >>>On Fri, Jan 20, 2017 at 03:38:28PM +0100, Hans Verkuil wrote:
-> >>>>Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
-> >>>>should complain about this.
-> >>>... and more.
-> >>
-> >>Right, in version 3 that you are working with, no v4l2-compliance fixes were
-> >>in yet. A lot of the compliance errors are fixed, please look in latest
-> >>branch
-> >>imx-media-staging-md-wip at git@github.com:slongerbeam/mediatree.git.
-> >
-> >Sorry, I'm not prepared to pull random trees from github as there's
-> >no easy way to see what's in the branch.
-> >
-> >I've always disliked github because its web interface makes it soo
-> >difficult to navigate around git trees hosted there.  You can see
-> >a commit, you can see a diff of the commit.  You can get a list of
-> >branches.  But there seems to be no way to get a list of commits
-> >similar to "git log" or even a one-line summary of each commit on
-> >a branch.  If there is, it's completely non-obvious (which I think is
-> >much of the problem with github, it's web interface is horrendous.)
-> >
-> >Or you can clone/pull the tree without knowing what you're fetching
-> >(eg, what the tree is based upon.)
-> >
-> >Or you can waste time clicking repeatedly on the "parent" commit link
-> >on each patch working your way back through the history...
-> >
-> >Well, it looks like it's bsaed on 4.10-rc1 with who-knows-what work
-> >from the linux-media tree (I didn't try and go back any further.)
-> >As I don't want to take a whole pile of other changes into my tree,
-> >I'm certainly not going to pull from your github tree.  Sorry.
-> >
+* Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170131 13:14]:
+> On Mon, Jan 30, 2017 at 04:12:41PM -0800, Tony Lindgren wrote:
+> > +	error = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+> > +				   rdev->desc->enable_mask,
+> > +				   rdev->desc->enable_val);
+> > +	if (error)
+> > +		return error;
+> > +
+> > +	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
+> > +		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
+> > +					   regulator->assign_mask,
+> > +					   regulator->assign_mask);
+> > +		if (error)
+> > +			return error;
+> > +	}
 > 
-> https://github.com/slongerbeam/mediatree/compare/master...imx-media-staging-md-wip
-> 
-> It's under the "Compare" button from the main view. It would be nice though
-> if the first commit's parent was some clearly tagged start point.
+> What does this second register bit do?
 
-I don't want master though, I want v4.10-rc1, and if I ask for that
-it tells me it knows nothing about v4.10-rc1, despite the fact that's
-a tag in the mainline kernel repository which was merged into the
-linux-media tree that this tree is based upon.
+My guess is that it triggers regulator idle modes in the PMIC based
+on the SoC off mode. There's no documentation for this thing..
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+I've just kept what the Motorola Linux kernel tree does here and added
+some comments to CPCAP_REG_OFF_MODE_SEC.
+
+I'll address the rest of the comments and post v2, thanks for looking.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
