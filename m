@@ -1,61 +1,80 @@
-From: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 4/5] ARM: dts: rockchip: add timer entries to rk3188 SoC
-Date: Tue, 31 Jan 2017 15:43:15 +0300
-Message-ID: <1485866596-32254-5-git-send-email-al.kochet@gmail.com>
-References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485866596-32254-1-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Inki Dae <daeinki@gmail.com>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Tue, 31 Jan 2017 21:58:55 +0900
+Message-ID: <CAAQKjZPknkhrpj_0TUS3=Z720Nu6mO7UMDy6RKceyu3OuaO8mQ@mail.gmail.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com>
+ <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
+ <58905A2B.9090101@samsung.com>
+ <CAJKOXPeCF3+YXk-GHmewn6fi0rcPbQ_GoPOeFRP2KYN=6KLLxw@mail.gmail.com>
+ <CAAQKjZNN98pah8ht=kSmwsVybA5cMP=Z6BVkfZ6HH-5rRYFQ9w@mail.gmail.com>
+ <CAJKOXPczttCexd4ZGHEFj=4-6a=9t1VsEmovPGmFFYHv1e5ZzQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAJKOXPczttCexd4ZGHEFj=4-6a=9t1VsEmovPGmFFYHv1e5ZzQ@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Donghwa Lee <dh09.lee@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi.shyti@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch add two timers to all rk3188 based boards.
-
-The first timer is from alive subsystem and it act as a backup
-for the local timers at sleep time. It act the same as other
-SoC rockchip timers already present in kernel.
-
-The second timer is from CPU subsystem and act as replacement
-for the arm-global-timer clocksource and sched clock. It run
-at stable frequency 24MHz.
-
-Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index 31f81b2..0dc52fe 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -106,6 +106,22 @@
- 		};
- 	};
- 
-+	timer3: timer@2000e000 {
-+		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-+		reg = <0x2000e000 0x20>;
-+		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
-+		clock-names = "timer", "pclk";
-+	};
-+
-+	timer6: timer@200380a0 {
-+		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-+		reg = <0x200380a0 0x20>;
-+		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
-+		clock-names = "timer", "pclk";
-+	};
-+
- 	i2s0: i2s@1011a000 {
- 		compatible = "rockchip,rk3188-i2s", "rockchip,rk3066-i2s";
- 		reg = <0x1011a000 0x2000>;
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MjAxNy0wMS0zMSAyMDozMCBHTVQrMDk6MDAgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJu
+ZWwub3JnPjoKPiBPbiBUdWUsIEphbiAzMSwgMjAxNyBhdCAxMjozNyBQTSwgSW5raSBEYWUgPGRh
+ZWlua2lAZ21haWwuY29tPiB3cm90ZToKPj4gMjAxNy0wMS0zMSAxOTowMSBHTVQrMDk6MDAgS3J6
+eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPjoKPj4+IE9uIFR1ZSwgSmFuIDMxLCAy
+MDE3IGF0IDExOjM0IEFNLCBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+IHdyb3RlOgo+
+Pj4+Cj4+Pj4KPj4+PiAyMDE364WEIDAx7JuUIDMx7J28IDE4OjIy7JeQIEtyenlzenRvZiBLb3ps
+b3dza2kg7J20KOqwgCkg7JO0IOq4gDoKPj4+Pj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMjow
+MSBBTSwgSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPiB3cm90ZToKPj4+Pj4+Cj4+Pj4+
+Pgo+Pj4+Pj4gMjAxN+uFhCAwMeyblCAyNOydvCAxMDo1MOyXkCBIb2VnZXVuIEt3b24g7J20KOqw
+gCkg7JO0IOq4gDoKPj4+Pj4+PiBEZWFyIFRoaWVycnksCj4+Pj4+Pj4KPj4+Pj4+PiBDb3VsZCB5
+b3UgcGxlYXNlIHJldmlldyB0aGlzIHBhdGNoPwo+Pj4+Pj4KPj4+Pj4+IFRoaWVycnksIEkgdGhp
+bmsgdGhpcyBwYXRjaCBoYXMgYmVlbiByZXZpZXdlZCBlbm91Z2ggYnV0IG5vIGNvbW1lbnQgZnJv
+bSB5b3UuIFNlZW1zIHlvdSBhcmUgYnVzeS4gSSB3aWxsIHBpY2sgdXAgdGhpcy4KPj4+Pj4+Cj4+
+Pj4+Cj4+Pj4+IENvbW1lbnRzIGZyb20gdjggd2VyZSBub3QgcmVzb2x2ZWQgYW5kIEkgdGhpbmsg
+d2UgYXJlIHdhaXRpbmcgZm9yIHY5Ogo+Pj4+PiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNy8x
+LzExLzE3OAo+Pj4+Pgo+Pj4+PiBJZiB0aGF0IGlzIG5vdCBjb3JyZWN0IHRoZW4gcGxlYXNlIGNs
+YXJpZnkuCj4+Pj4KPj4+PiBTZWVtcyB5b3UgcG9pbnRlZCB0byBjaGFuZ2UgdGUtZ3Bpb3MgYmlu
+ZGluZ3MgdG8gb3B0aW9uYWwuIHJpZ2h0Pwo+Pj4+Cj4+Pj4gSSB0aG91Z2h0IFJvYiBsZWZ0IGFj
+ayBzbyBpdCdzIG5vIHByb2JsZW0uCj4+Pj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTcvMS8x
+My82MjYKPj4+Cj4+PiBZZXMsIGNoYW5nZSB0aGVtIHRvIG9wdGlvbmFsLiBJIHRoaW5rIGl0IGlz
+IGEgcHJvYmxlbSAocmVnYXJkbGVzcyBvZgo+Pj4gUm9iJ3MgYWNrKSBiZWNhdXNlIHlvdSBhcmUg
+bWVyZ2luZyBhIGRyaXZlciByZXF1aXJpbmcgYSBwcm9wZXJ0eSB3aGljaAo+Pj4gc29vbiB5b3Ug
+d2FudCB0byByZW1vdmUuIElmIHlvdSBtZXJnZSBpdCAobGlrZSB0aGlzKSByZW1vdmFsIG9mCj4+
+PiB0ZS1ncGlvcyBwcm9wZXJ0eSB3aWxsIGJlIGJyZWFrYWdlIG9mIEFCSS4gVGhpcyBpcyBub3Qg
+YSBzZXJpb3VzCj4+PiBwcm9ibGVtIGJ1dCBrbm93aW5nIHN1Y2ggcGxhbiBvZiB0ZS1ncGlvcyBy
+ZW1vdmFsIHVwZnJvbnQsIGl0IHdvdWxkIGJlCj4+PiB3cm9uZyB0byBjb21taXQgc3VjaCBkcml2
+ZXIuCj4+Cj4+IFRoaXMgaXMgYSB0cml2aWFsIHRoaW5nIHNvIGl0IGRvZXNuJ3QgbWFrZSBicmVh
+a2FnZSBvZiBBQkkgYmVjYXVzZSB0aGUKPj4gcHJvcGVydHksIHRlLWdwaW9zLCBpcyAqb3B0aW9u
+YWwqLgo+Cj4gU28gd2h5IGJpbmRpbmdzIGRvY3VtZW50IGlzIG5vdCBjaGFuZ2VkPwoKU2VlbXMg
+SG9lZ2V1biBtaXNzZWQgdGhpcy4KSSBhbHNvIHRoaW5rIGl0IHNob3VsZCBzcGVjaWZ5ICp0ZS1n
+cGlvcyBpcyBvcHRpb25hbCBwcm9wZXJ0eSogbGlrZQptaXBpLWRzaSBiaW5kaW5nIGRvY3VtZW50
+IGRpZCBidXQgdGhpcyBkb2Vzbid0IGJyZWFrYWdlIG9mIEFCSSB5b3UKbWVudGlvbmVkLiBBbmQg
+SSdkIGxpa2UgdG8gc2F5IHdlIHNob3VsZCBmZWVsIEFCSSBicmVha2FnZSBpcyBhCnNlcmlvdXMg
+cHJvYmxlbS4KClNhZCB0byBzYXksIEV4eW5vcyBpcyBhbHJlYWR5IGJyb2tlbiBsaWtlIE1hcmVr
+IGRlY2xhcmVkLiBUaGlzIGlzCnJlYWxseSBhIHNlcmlvdXMgcHJvYmxlbSBFeHlub3MgbWFpbnRh
+aW5lcnMgaGF2ZSB0byBmaXggaW5jbHVkaW5nIHlvdQphbmQgbWUuCgpUaGFua3MsCklua2kgRGFl
+Cgo+Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKC4uLikKPiArICAtIHRlLWdwaW9zOiBhIEdQ
+SU8gc3BlYyBmb3IgdGhlIHRlYXJpbmcgZWZmZWN0IHN5bmNocm9uaXphdGlvbiBzaWduYWwKPiAr
+ICAgIGdwaW8gcGluIChhY3RpdmUgaGlnaCkKPgo+IEFuZHJ6ZWogcG9pbnRlZCB0aGlzIG91dCBh
+bmQgaXQgaXMgbm90IGZpeGVkIHNpbmNlIHRoZW4uIFdoYXQgaXMgdGhlCj4gcHJvYmxlbSB3aXRo
+IGZpeGluZyB0aGUgYmluZGluZ3MgZG9jdW1lbnRhdGlvbj8KPgo+PiBBbnl3YXksIHRoaXMgd291
+bGRuJ3QgYmUgKnRoZSB0aGluZ3MqIFRoaWVycnkgbWVudGlvbmVkLgo+Cj4gUHJvYmFibHkgbm90
+LCBJIGRpZCBub3QgcmVzcG9uZCB0byBUaGllcnJ5J3MgZmVlZGJhY2suCj4KPiBCZXN0IHJlZ2Fy
+ZHMsCj4gS3J6eXN6dG9mCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
