@@ -1,111 +1,81 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [RESENT PATCH] ARM: bcm2835: Add devicetree for the Raspberry Pi
- 3, for arm (32)
-Date: Tue, 31 Jan 2017 13:59:39 -0800
-Message-ID: <878tpqki0k.fsf@eliezer.anholt.net>
-References: <1484845444-4617-1-git-send-email-kraxel@redhat.com>
- <87fukcgsqp.fsf@eliezer.anholt.net>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
+Date: Tue, 31 Jan 2017 22:04:52 +0000
+Message-ID: <20170131220452.GE27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
+ <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
+ <20170131134252.GX27312@n2100.armlinux.org.uk>
+ <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
+ <20170131203340.GC27312@n2100.armlinux.org.uk>
+ <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4673999481933883809=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87fukcgsqp.fsf@eliezer.anholt.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gerd Hoffmann <kraxel@redhat.com>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Ian Arkver <ian.arkver.dev@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---===============4673999481933883809==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Tue, Jan 31, 2017 at 09:55:29PM +0000, Ian Arkver wrote:
+> On 31/01/17 20:33, Russell King - ARM Linux wrote:
+> >On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
+> >>On 01/31/2017 05:42 AM, Russell King - ARM Linux wrote:
+> >>>On Fri, Jan 20, 2017 at 03:38:28PM +0100, Hans Verkuil wrote:
+> >>>>Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
+> >>>>should complain about this.
+> >>>... and more.
+> >>
+> >>Right, in version 3 that you are working with, no v4l2-compliance fixes were
+> >>in yet. A lot of the compliance errors are fixed, please look in latest
+> >>branch
+> >>imx-media-staging-md-wip at git@github.com:slongerbeam/mediatree.git.
+> >
+> >Sorry, I'm not prepared to pull random trees from github as there's
+> >no easy way to see what's in the branch.
+> >
+> >I've always disliked github because its web interface makes it soo
+> >difficult to navigate around git trees hosted there.  You can see
+> >a commit, you can see a diff of the commit.  You can get a list of
+> >branches.  But there seems to be no way to get a list of commits
+> >similar to "git log" or even a one-line summary of each commit on
+> >a branch.  If there is, it's completely non-obvious (which I think is
+> >much of the problem with github, it's web interface is horrendous.)
+> >
+> >Or you can clone/pull the tree without knowing what you're fetching
+> >(eg, what the tree is based upon.)
+> >
+> >Or you can waste time clicking repeatedly on the "parent" commit link
+> >on each patch working your way back through the history...
+> >
+> >Well, it looks like it's bsaed on 4.10-rc1 with who-knows-what work
+> >from the linux-media tree (I didn't try and go back any further.)
+> >As I don't want to take a whole pile of other changes into my tree,
+> >I'm certainly not going to pull from your github tree.  Sorry.
+> >
+> 
+> https://github.com/slongerbeam/mediatree/compare/master...imx-media-staging-md-wip
+> 
+> It's under the "Compare" button from the main view. It would be nice though
+> if the first commit's parent was some clearly tagged start point.
 
---=-=-=
-Content-Type: text/plain
+I don't want master though, I want v4.10-rc1, and if I ask for that
+it tells me it knows nothing about v4.10-rc1, despite the fact that's
+a tag in the mainline kernel repository which was merged into the
+linux-media tree that this tree is based upon.
 
-Eric Anholt <eric@anholt.net> writes:
-
-> [ Unknown signature status ]
-> Gerd Hoffmann <kraxel@redhat.com> writes:
->
->> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
->> ---
->>  arch/arm/boot/dts/Makefile | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 7327250..82a760d 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -70,7 +70,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->>  	bcm2835-rpi-b-plus.dtb \
->>  	bcm2835-rpi-a-plus.dtb \
->>  	bcm2836-rpi-2-b.dtb \
->> -	bcm2835-rpi-zero.dtb
->> +	bcm2835-rpi-zero.dtb \
->> +	../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
->>  dtb-$(CONFIG_ARCH_BCM_5301X) += \
->>  	bcm4708-asus-rt-ac56u.dtb \
->>  	bcm4708-asus-rt-ac68u.dtb \
->
-> This would be really nice to have.
->
-> Acked-by: Eric Anholt <eric@anholt.net>
->
-> ARM upstream folks, do you have any issues with this?
-
-Absent any feedback from ARM maintainers, I think we're about ready to
-go with this.
-
-Unfortunately, I just remembered yesterday that one of the requirements
-is that we not use these sorts of ../../../ references in the DT tree.
-Instead we have to use symlinks -- see arch/arm64/boot/dts/broadcom/ for
-how we did the last round of this.
-
-I think just having links from
-arch/arm64/boot/dts/broadcom/bcm2837*.dts* to arch/arm/boot/dts/ would
-be the solution, then this Makefile could just reference
-bcm2837-rpi-3-b.dtb.
-
-Would you be able to respin this?
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliRCMsACgkQtdYpNtH8
-nug5pw/9GjcKp6gmT4trIt78m21vIkqXeGLEZvHotsoBChyjLLIfE0p0J6KG2vYw
-78R5S6HXF0EqS9Nz0SiP1FKdg/Ut2MrGdhGqg4DeRqSNLDr6d+q9AgmwcCHRNtG0
-jHvukum3LEAl9amL/nu/Ufmbrunk7fJMNs2VJP/JBiP9Z3DCGG0oySGxW14XfUF/
-/uAHufSYpV2QlIjuuELN9A405mUjHPEeitgdLXCMgjizFZ0aPkzLLsWyx5wblPgF
-88NL+E74oNnkZILEHqzGGIrI/EYcCINRYkSxI3WxtWJu8kSgHHX6BjqCyL+ZqoJ8
-2nj4mceE291TSlI1OjDjcN2bBojvulyyYTOiOmLIIShpbiZMLvVP0ugMUq1LSos5
-BfzwjUkKOzmAZGRe/qPvL0ZkU0DG4JVhuwTUTTfqCa5/LA6G3n9P5Wo0dgdOohSC
-TGeH+oyqCh4x79+fAbiVgqLCPYeYdfgoBmALCdI+I4Zuol7BnEFnR1PpU9/3cFC1
-000Su3RV7EGEMguRTtwBV83qCABXcILC8ohfx0dGUxE/9HWmrUtUmElBMMHuXU3E
-iLO/N7bTsfhE+bLM2oVzBIM7se42A03SUH3mD/JBUnnksLXTAfGeFReIUH2ZeQt0
-MlIbO5L8Ug3hBN/hVHZUyIV4a/jJsQEtLzUOzjBOjByv1Bbkb9s=
-=tGVa
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============4673999481933883809==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============4673999481933883809==--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
