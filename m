@@ -1,483 +1,66 @@
-From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: patch "phy: Add support for Qualcomm's USB HS phy" added to usb-next
-Date: Tue, 31 Jan 2017 15:27:09 +0100
-Message-ID: <1485872829249138@kroah.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
+ on TM2 board
+Date: Tue, 31 Jan 2017 09:38:53 -0500
+Message-ID: <20170131143853.GU20076@art_vandelay>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170131085449.GA19348@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-
-This is a note to let you know that I've just added the patch titled
-
-    phy: Add support for Qualcomm's USB HS phy
-
-to my usb git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-in the usb-next branch.
-
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
-
-The patch will also be merged in the next major kernel release
-during the merge window.
-
-If you have any questions about this process, please let me know.
-
-
->From e2427b09ba929c2b9d02556b74a85161a7364792 Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed, 25 Jan 2017 14:32:45 -0800
-Subject: phy: Add support for Qualcomm's USB HS phy
-
-The high-speed phy on qcom SoCs is controlled via the ULPI
-viewport.
-
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  84 ++++++
- drivers/phy/Kconfig                                |   8 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-qcom-usb-hs.c                      | 296 +++++++++++++++++++++
- 4 files changed, 389 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
- create mode 100644 drivers/phy/phy-qcom-usb-hs.c
-
-diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-new file mode 100644
-index 000000000000..b3b75c1e6285
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
-@@ -0,0 +1,84 @@
-+Qualcomm's USB HS PHY
-+
-+PROPERTIES
-+
-+- compatible:
-+    Usage: required
-+    Value type: <string>
-+    Definition: Should contain "qcom,usb-hs-phy" and more specifically one of the
-+                following:
-+
-+                        "qcom,usb-hs-phy-apq8064"
-+                        "qcom,usb-hs-phy-msm8916"
-+                        "qcom,usb-hs-phy-msm8974"
-+
-+- #phy-cells:
-+    Usage: required
-+    Value type: <u32>
-+    Definition: Should contain 0
-+
-+- clocks:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain clock specifier for the reference and sleep
-+                clocks
-+
-+- clock-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "ref" and "sleep" for the reference and sleep
-+                clocks respectively
-+
-+- resets:
-+    Usage: required
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain the phy and POR resets
-+
-+- reset-names:
-+    Usage: required
-+    Value type: <stringlist>
-+    Definition: Should contain "phy" and "por" for the phy and POR resets
-+                respectively
-+
-+- v3p3-supply:
-+    Usage: required
-+    Value type: <phandle>
-+    Definition: Should contain a reference to the 3.3V supply
-+
-+- v1p8-supply:
-+    Usage: required
-+    Value type: <phandle>
-+    Definition: Should contain a reference to the 1.8V supply
-+
-+- extcon:
-+    Usage: optional
-+    Value type: <prop-encoded-array>
-+    Definition: Should contain the vbus extcon
-+
-+- qcom,init-seq:
-+    Usage: optional
-+    Value type: <u8 array>
-+    Definition: Should contain a sequence of ULPI address and value pairs to
-+                program into the ULPI_EXT_VENDOR_SPECIFIC area. This is related
-+                to Device Mode Eye Diagram test. The addresses are offsets
-+                from the ULPI_EXT_VENDOR_SPECIFIC address, for example,
-+                <0x1 0x53> would mean "write the value 0x53 to address 0x81".
-+
-+EXAMPLE
-+
-+otg: usb-controller {
-+	ulpi {
-+		phy {
-+			compatible = "qcom,usb-hs-phy-msm8974", "qcom,usb-hs-phy";
-+			#phy-cells = <0>;
-+			clocks = <&xo_board>, <&gcc GCC_USB2A_PHY_SLEEP_CLK>;
-+			clock-names = "ref", "sleep";
-+			resets = <&gcc GCC_USB2A_PHY_BCR>, <&otg 0>;
-+			reset-names = "phy", "por";
-+			v3p3-supply = <&pm8941_l24>;
-+			v1p8-supply = <&pm8941_l6>;
-+			extcon = <&smbb>;
-+			qcom,init-seq = /bits/ 8 <0x1 0x63>;
-+		};
-+	};
-+};
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index a430a64981d5..61a22e985831 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -437,6 +437,14 @@ config PHY_QCOM_UFS
- 	help
- 	  Support for UFS PHY on QCOM chipsets.
- 
-+config PHY_QCOM_USB_HS
-+	tristate "Qualcomm USB HS PHY module"
-+	depends on USB_ULPI_BUS
-+	select GENERIC_PHY
-+	help
-+	  Support for the USB high-speed ULPI compliant phy on Qualcomm
-+	  chipsets.
-+
- config PHY_QCOM_USB_HSIC
- 	tristate "Qualcomm USB HSIC ULPI PHY module"
- 	depends on USB_ULPI_BUS
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index c43c9df5d301..0e4259473d28 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_PHY_STIH407_USB)		+= phy-stih407-usb.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_UFS) 	+= phy-qcom-ufs-qmp-14nm.o
-+obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
- obj-$(CONFIG_PHY_TUSB1210)		+= phy-tusb1210.o
- obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
-diff --git a/drivers/phy/phy-qcom-usb-hs.c b/drivers/phy/phy-qcom-usb-hs.c
-new file mode 100644
-index 000000000000..94dfbfd739c3
---- /dev/null
-+++ b/drivers/phy/phy-qcom-usb-hs.c
-@@ -0,0 +1,296 @@
-+/**
-+ * Copyright (C) 2016 Linaro Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+#include <linux/module.h>
-+#include <linux/ulpi/driver.h>
-+#include <linux/ulpi/regs.h>
-+#include <linux/clk.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/of_device.h>
-+#include <linux/reset.h>
-+#include <linux/extcon.h>
-+#include <linux/notifier.h>
-+
-+#include "ulpi_phy.h"
-+
-+#define ULPI_PWR_CLK_MNG_REG		0x88
-+# define ULPI_PWR_OTG_COMP_DISABLE	BIT(0)
-+
-+#define ULPI_MISC_A			0x96
-+# define ULPI_MISC_A_VBUSVLDEXTSEL	BIT(1)
-+# define ULPI_MISC_A_VBUSVLDEXT		BIT(0)
-+
-+
-+struct ulpi_seq {
-+	u8 addr;
-+	u8 val;
-+};
-+
-+struct qcom_usb_hs_phy {
-+	struct ulpi *ulpi;
-+	struct phy *phy;
-+	struct clk *ref_clk;
-+	struct clk *sleep_clk;
-+	struct regulator *v1p8;
-+	struct regulator *v3p3;
-+	struct reset_control *reset;
-+	struct ulpi_seq *init_seq;
-+	struct extcon_dev *vbus_edev;
-+	struct notifier_block vbus_notify;
-+};
-+
-+static int qcom_usb_hs_phy_set_mode(struct phy *phy, enum phy_mode mode)
-+{
-+	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
-+	u8 addr;
-+	int ret;
-+
-+	if (!uphy->vbus_edev) {
-+		u8 val = 0;
-+
-+		switch (mode) {
-+		case PHY_MODE_USB_OTG:
-+		case PHY_MODE_USB_HOST:
-+			val |= ULPI_INT_IDGRD;
-+		case PHY_MODE_USB_DEVICE:
-+			val |= ULPI_INT_SESS_VALID;
-+		default:
-+			break;
-+		}
-+
-+		ret = ulpi_write(uphy->ulpi, ULPI_USB_INT_EN_RISE, val);
-+		if (ret)
-+			return ret;
-+		ret = ulpi_write(uphy->ulpi, ULPI_USB_INT_EN_FALL, val);
-+	} else {
-+		switch (mode) {
-+		case PHY_MODE_USB_OTG:
-+		case PHY_MODE_USB_DEVICE:
-+			addr = ULPI_SET(ULPI_MISC_A);
-+			break;
-+		case PHY_MODE_USB_HOST:
-+			addr = ULPI_CLR(ULPI_MISC_A);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		ret = ulpi_write(uphy->ulpi, ULPI_SET(ULPI_PWR_CLK_MNG_REG),
-+				 ULPI_PWR_OTG_COMP_DISABLE);
-+		if (ret)
-+			return ret;
-+		ret = ulpi_write(uphy->ulpi, addr, ULPI_MISC_A_VBUSVLDEXTSEL);
-+	}
-+
-+	return ret;
-+}
-+
-+static int
-+qcom_usb_hs_phy_vbus_notifier(struct notifier_block *nb, unsigned long event,
-+			      void *ptr)
-+{
-+	struct qcom_usb_hs_phy *uphy;
-+	u8 addr;
-+
-+	uphy = container_of(nb, struct qcom_usb_hs_phy, vbus_notify);
-+
-+	if (event)
-+		addr = ULPI_SET(ULPI_MISC_A);
-+	else
-+		addr = ULPI_CLR(ULPI_MISC_A);
-+
-+	return ulpi_write(uphy->ulpi, addr, ULPI_MISC_A_VBUSVLDEXT);
-+}
-+
-+static int qcom_usb_hs_phy_power_on(struct phy *phy)
-+{
-+	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
-+	struct ulpi *ulpi = uphy->ulpi;
-+	const struct ulpi_seq *seq;
-+	int ret, state;
-+
-+	ret = clk_prepare_enable(uphy->ref_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(uphy->sleep_clk);
-+	if (ret)
-+		goto err_sleep;
-+
-+	ret = regulator_set_load(uphy->v1p8, 50000);
-+	if (ret < 0)
-+		goto err_1p8;
-+
-+	ret = regulator_enable(uphy->v1p8);
-+	if (ret)
-+		goto err_1p8;
-+
-+	ret = regulator_set_voltage_triplet(uphy->v3p3, 3050000, 3300000,
-+					    3300000);
-+	if (ret)
-+		goto err_3p3;
-+
-+	ret = regulator_set_load(uphy->v3p3, 50000);
-+	if (ret < 0)
-+		goto err_3p3;
-+
-+	ret = regulator_enable(uphy->v3p3);
-+	if (ret)
-+		goto err_3p3;
-+
-+	for (seq = uphy->init_seq; seq->addr; seq++) {
-+		ret = ulpi_write(ulpi, ULPI_EXT_VENDOR_SPECIFIC + seq->addr,
-+				 seq->val);
-+		if (ret)
-+			goto err_ulpi;
-+	}
-+
-+	if (uphy->reset) {
-+		ret = reset_control_reset(uphy->reset);
-+		if (ret)
-+			goto err_ulpi;
-+	}
-+
-+	if (uphy->vbus_edev) {
-+		state = extcon_get_cable_state_(uphy->vbus_edev, EXTCON_USB);
-+		/* setup initial state */
-+		qcom_usb_hs_phy_vbus_notifier(&uphy->vbus_notify, state,
-+					      uphy->vbus_edev);
-+		ret = extcon_register_notifier(uphy->vbus_edev, EXTCON_USB,
-+				&uphy->vbus_notify);
-+		if (ret)
-+			goto err_ulpi;
-+	}
-+
-+	return 0;
-+err_ulpi:
-+	regulator_disable(uphy->v3p3);
-+err_3p3:
-+	regulator_disable(uphy->v1p8);
-+err_1p8:
-+	clk_disable_unprepare(uphy->sleep_clk);
-+err_sleep:
-+	clk_disable_unprepare(uphy->ref_clk);
-+	return ret;
-+}
-+
-+static int qcom_usb_hs_phy_power_off(struct phy *phy)
-+{
-+	int ret;
-+	struct qcom_usb_hs_phy *uphy = phy_get_drvdata(phy);
-+
-+	if (uphy->vbus_edev) {
-+		ret = extcon_unregister_notifier(uphy->vbus_edev, EXTCON_USB,
-+						 &uphy->vbus_notify);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	regulator_disable(uphy->v3p3);
-+	regulator_disable(uphy->v1p8);
-+	clk_disable_unprepare(uphy->sleep_clk);
-+	clk_disable_unprepare(uphy->ref_clk);
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_usb_hs_phy_ops = {
-+	.power_on = qcom_usb_hs_phy_power_on,
-+	.power_off = qcom_usb_hs_phy_power_off,
-+	.set_mode = qcom_usb_hs_phy_set_mode,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int qcom_usb_hs_phy_probe(struct ulpi *ulpi)
-+{
-+	struct qcom_usb_hs_phy *uphy;
-+	struct phy_provider *p;
-+	struct clk *clk;
-+	struct regulator *reg;
-+	struct reset_control *reset;
-+	int size;
-+	int ret;
-+
-+	uphy = devm_kzalloc(&ulpi->dev, sizeof(*uphy), GFP_KERNEL);
-+	if (!uphy)
-+		return -ENOMEM;
-+	ulpi_set_drvdata(ulpi, uphy);
-+	uphy->ulpi = ulpi;
-+
-+	size = of_property_count_u8_elems(ulpi->dev.of_node, "qcom,init-seq");
-+	if (size < 0)
-+		size = 0;
-+	uphy->init_seq = devm_kmalloc_array(&ulpi->dev, (size / 2) + 1,
-+					   sizeof(*uphy->init_seq), GFP_KERNEL);
-+	if (!uphy->init_seq)
-+		return -ENOMEM;
-+	ret = of_property_read_u8_array(ulpi->dev.of_node, "qcom,init-seq",
-+					(u8 *)uphy->init_seq, size);
-+	if (ret && size)
-+		return ret;
-+	/* NUL terminate */
-+	uphy->init_seq[size / 2].addr = uphy->init_seq[size / 2].val = 0;
-+
-+	uphy->ref_clk = clk = devm_clk_get(&ulpi->dev, "ref");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->sleep_clk = clk = devm_clk_get(&ulpi->dev, "sleep");
-+	if (IS_ERR(clk))
-+		return PTR_ERR(clk);
-+
-+	uphy->v1p8 = reg = devm_regulator_get(&ulpi->dev, "v1p8");
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
-+
-+	uphy->v3p3 = reg = devm_regulator_get(&ulpi->dev, "v3p3");
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
-+
-+	uphy->reset = reset = devm_reset_control_get(&ulpi->dev, "por");
-+	if (IS_ERR(reset)) {
-+		if (PTR_ERR(reset) == -EPROBE_DEFER)
-+			return PTR_ERR(reset);
-+		uphy->reset = NULL;
-+	}
-+
-+	uphy->phy = devm_phy_create(&ulpi->dev, ulpi->dev.of_node,
-+				    &qcom_usb_hs_phy_ops);
-+	if (IS_ERR(uphy->phy))
-+		return PTR_ERR(uphy->phy);
-+
-+	uphy->vbus_edev = extcon_get_edev_by_phandle(&ulpi->dev, 0);
-+	if (IS_ERR(uphy->vbus_edev)) {
-+		if (PTR_ERR(uphy->vbus_edev) != -ENODEV)
-+			return PTR_ERR(uphy->vbus_edev);
-+		uphy->vbus_edev = NULL;
-+	}
-+
-+	uphy->vbus_notify.notifier_call = qcom_usb_hs_phy_vbus_notifier;
-+	phy_set_drvdata(uphy->phy, uphy);
-+
-+	p = devm_of_phy_provider_register(&ulpi->dev, of_phy_simple_xlate);
-+	return PTR_ERR_OR_ZERO(p);
-+}
-+
-+static const struct of_device_id qcom_usb_hs_phy_match[] = {
-+	{ .compatible = "qcom,usb-hs-phy", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, qcom_usb_hs_phy_match);
-+
-+static struct ulpi_driver qcom_usb_hs_phy_driver = {
-+	.probe = qcom_usb_hs_phy_probe,
-+	.driver = {
-+		.name = "qcom_usb_hs_phy",
-+		.of_match_table = qcom_usb_hs_phy_match,
-+	},
-+};
-+module_ulpi_driver(qcom_usb_hs_phy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm USB HS phy");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6NTQ6NDlBTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6MDE6MDdBTSArMDkwMCwgSW5raSBE
+YWUgd3JvdGU6Cj4gPiAKPiA+IAo+ID4gMjAxN+uFhCAwMeyblCAyNOydvCAxMDo1MOyXkCBIb2Vn
+ZXVuIEt3b24g7J20KOqwgCkg7JO0IOq4gDoKPiA+ID4gRGVhciBUaGllcnJ5LAo+ID4gPiAKPiA+
+ID4gQ291bGQgeW91IHBsZWFzZSByZXZpZXcgdGhpcyBwYXRjaD8KPiA+IAo+ID4gVGhpZXJyeSwg
+SSB0aGluayB0aGlzIHBhdGNoIGhhcyBiZWVuIHJldmlld2VkIGVub3VnaCBidXQgbm8gY29tbWVu
+dAo+ID4gZnJvbSB5b3UuIFNlZW1zIHlvdSBhcmUgYnVzeS4gSSB3aWxsIHBpY2sgdXAgdGhpcy4K
+PiAKPiBTb3JyeSwgYnV0IHRoYXQncyBub3QgaG93IGl0IHdvcmtzLiBUaGlzIHBhdGNoIGhhcyBn
+b25lIHRocm91Z2ggOAo+IHJldmlzaW9ucyB3aXRoaW4gNCB3ZWVrcywgYW5kIEkgdGVuZCB0byBp
+Z25vcmUgcGF0Y2hlcyBsaWtlIHRoYXQgdW50aWwKPiB0aGUgZHVzdCBzZXR0bGVzLgo+IAoKU2Vl
+bXMgbGlrZSB0aGUgZHVzdCB3YXMgcHJldHR5IHNldHRsZWQuIEl0IHdhcyBwb3N0ZWQgb24gMS8x
+MSwgcGluZ2VkIG9uIDEvMjQsCmFuZCBwaWNrZWQgdXAgb24gMS8zMS4gSSBkb24ndCB0aGluayBp
+dCdzIHVucmVhc29uYWJsZSB0byB0YWtlIGl0IHRocm91Z2gKYW5vdGhlciB0cmVlIGFmdGVyIHRo
+YXQuCgpJIHdvbmRlciBpZiBkcm1fcGFuZWwgd291bGQgYmVuZWZpdCBmcm9tIHRoZSAtbWlzYyBn
+cm91cCBtYWludGFpbmVyc2hpcCBtb2RlbAphcyBkcm1fYnJpZGdlIGRvZXMuIEJ5IHNwcmVhZGlu
+ZyBvdXQgdGhlIHdvcmtsb2FkLCB0aGUgaGlnaC1tYWludGVuYW5jZQpwYXRjaGVzIHdvdWxkIGhv
+cGVmdWxseSBmaW5kIHNvbWVvbmUgdG8gc2hlcGhlcmQgdGhlbSB0aHJvdWdoLgoKPiBPdGhlciB0
+aGFuIHRoYXQsIHRoaXMgY29udGludWVzIHRoZSBzYW1lIG1hZG5lc3MgdGhhdCBJJ3ZlIHJlcGVh
+dGVkbHkKPiBjb21wbGFpbmVkIGFib3V0IGluIHRoZSBwYXN0LiBUaGUgd2hvbGUgbWVjaGFuaXNt
+IG9mIHJ1bm5pbmcgdGhyb3VnaCBhCj4gc2VyaWVzIG9mIHdyaXRlcyBhbmQgbm90IGNhcmluZyBh
+Ym91dCBlcnJvcnMgdW50aWwgdGhlIHZlcnkgZW5kIGlzCj4gc29tZXRoaW5nIHdlJ3ZlIGRpc2N1
+c3NlZCBhdCBsZW5ndGggaW4gdGhlIHBhc3QuIEl0IGFsc28gaW4gbGFyZ2UgcGFydHMKPiBkdXBs
+aWNhdGVzIGEgYnVuY2ggb2YgZnVuY3Rpb25zIGZyb20gb3RoZXIgU2Ftc3VuZyBwYW5lbCBkcml2
+ZXJzIHRoYXQgSQo+IGFscmVhZHkgc2FpZCBzaG91bGQgZXZlbnR1YWxseSBiZSBtb3ZlZCB0byBz
+b21ldGhpbmcgc2FuZXIuCj4gCgpGV0lXLCB0aGlzIHR5cGUgb2YgZXJyb3IgaGFuZGxpbmcgaXNu
+J3QgbXkgcHJlZmVyZW5jZSBlaXRoZXIuIElmIHdlIG11c3QgZGVmZXIsCkknZCByYXRoZXIgbm90
+IGtlZXAgaXQgaW4gY3R4LCBidXQgcmF0aGVyIHBhc3MgYXJvdW5kIGFuIGFyZ3VtZW50IHNvIGl0
+J3MgbW9yZQpvYnZpb3VzIHdlIG5lZWQgdG8gZGVhbCB3aXRoIGl0IGluIHRoZSByZXR1cm4uIFRo
+YXQgc2FpZCwgdGhpcyBzZWVtcyBsaWtlCmEgY2FzZSBvZiBsZXR0aW5nIHRoZSBwZXJmZWN0IGJl
+IHRoZSBlbmVteSBvZiB0aGUgZ29vZCwgc3VyZWx5IHNvbWV0aGluZyBpcwpiZXR0ZXIgdGhhbiBu
+b3RoaW5nPwoKU2VhbgoKCgo+IFRoaXMgaXMgbm93IHRoZSB0aGlyZCBkcml2ZXIgYW5kIG5vYm9k
+eSdzIGdpdmluZyBhIGRhbW4gYWJvdXQgaW1wcm92aW5nCj4gdGhpbmdzLgo+IAo+IFVudGlsIHNv
+bWVib2R5IGRvZXMsIEknbSBnb2luZyB0byBoYXZlIHRvIE5BSyB0aGlzLgo+IAo+IFRoaWVycnkK
+PiAKCjxzbmlwPgoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENo
+cm9taXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
