@@ -1,72 +1,31 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Mon, 30 Jan 2017 18:06:33 -0800
-Message-ID: <396ef27c-4de2-a412-4369-9c33bf199826@gmail.com>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+Date: Mon, 30 Jan 2017 18:11:40 -0800
+Message-ID: <8e5a9936-1713-62ff-ffaa-734bcbc2c507@gmail.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <20170131004510.GQ27312@n2100.armlinux.org.uk>
- <20170131010653.GR27312@n2100.armlinux.org.uk>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+ <20170131003129.GP27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170131010653.GR27312@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170131003129.GP27312@n2100.armlinux.org.uk>
+Sender: linux-media-owner@vger.kernel.org
 To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 01/30/2017 05:06 PM, Russell King - ARM Linux wrote:
-> On Tue, Jan 31, 2017 at 12:45:11AM +0000, Russell King - ARM Linux wrote:
->> Trying this driver with an imx219 camera (which works with Philipp's
->> driver) results in not much happening... no /dev/media* node for it,
->> no subdevs, no nothing.  No clues as to what's missing either.  Only
->> messages from imx-media are from registering the various subdevs.
-> Another issue:
->
-> imx_csi                 5491  4
-> imx_camif              11654  4
-> imx_ic                 23961  8
-> imx_smfc                6639  4
-> imx_media              23308  1 imx_csi
-> imx_mipi_csi2           5544  1
-> imx_media_common       12701  6 imx_csi,imx_smfc,imx_media,imx_mipi_csi2,imx_camif,imx_ic
-> imx219                 21205  2
->
-> So how does one remove any of these modules, say, while developing a
-> camera driver?  Having to reboot to test an update makes it painfully
-> slow for testing.
+On 01/30/2017 04:31 PM, Russell King - ARM Linux wrote:
+> On Fri, Jan 06, 2017 at 06:11:39PM -0800, Steve Longerbeam wrote:
+>> +++ b/drivers/staging/media/imx/imx-mipi-csi2.c
+> ...
+>> +#define DEVICE_NAME "imx6-mipi-csi2"
+> Why is the device/driver named imx6-mipi-csi2, but the module named
+> imx-mipi-csi2 - could there be some consistency here please?
 
-Unload is not working yet, it's on the TODO list.
-
-But FWIW, here's how it currently looks in version 4
-(on the SabreSD):
-
-imx_media_csi           9663  4
-imx_media_ic           12688  6
-imx_media_capture      10201  2 imx_media_ic,imx_media_csi
-imx_media_vdic          6909  2
-imx_mipi_csi2           6293  1
-ov5640_mipi            25988  1
-imx_media              15532  0
-imx_media_common       16093  6 
-imx_media_ic,imx_media,imx_media_csi,imx_mipi_cs
-i2,imx_media_capture,imx_media_vdic
-
+right, that was missed after renaming the device node. Fixed.
 
 Steve
-
-
->
-> Philipp's driver can do this (once the unload bugs are fixed, which I
-> have patches for).
->
