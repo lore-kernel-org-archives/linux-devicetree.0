@@ -1,63 +1,59 @@
-From: Michael Heimpold <michael.heimpold@i2se.com>
-Subject: [PATCH v3 2/9] ARM: dts: imx28: rename mmc2_sck_cfg
-Date: Tue, 31 Jan 2017 07:51:08 +0100
-Message-ID: <1485845475-3129-3-git-send-email-michael.heimpold@i2se.com>
+From: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH v3 5/9] Documentation: DT: add entries for I2SE boards
+Date: Tue, 31 Jan 2017 07:51:11 +0100
+Message-ID: <1485845475-3129-6-git-send-email-michael.heimpold@i2se.com>
 References: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, Michael Heimpold <michael.heimpold@i2se.com>, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485845475-3129-1-git-send-email-michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch renames mmc2_sck_cfg in order to prepare for an alternative
-muxing setup.
+From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 
-Signed-off-by: Michael Heimpold <michael.heimpold@i2se.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+This patch adds the missing devicetree binding documentation for I2SE's
+Duckbill and Duckbill 2 series boards.
+
+Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
- arch/arm/boot/dts/imx28-m28cu3.dts | 2 +-
- arch/arm/boot/dts/imx28.dtsi       | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/i2se.txt | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
 
-diff --git a/arch/arm/boot/dts/imx28-m28cu3.dts b/arch/arm/boot/dts/imx28-m28cu3.dts
-index 2df63be..bb53294 100644
---- a/arch/arm/boot/dts/imx28-m28cu3.dts
-+++ b/arch/arm/boot/dts/imx28-m28cu3.dts
-@@ -57,7 +57,7 @@
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&mmc2_4bit_pins_a
- 					     &mmc2_cd_cfg
--					     &mmc2_sck_cfg>;
-+					     &mmc2_sck_cfg_a>;
- 				bus-width = <4>;
- 				vmmc-supply = <&reg_vddio_sd1>;
- 				status = "okay";
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index bc5cf41..857ca37 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -604,7 +604,8 @@
- 					fsl,pull-up = <MXS_PULL_DISABLE>;
- 				};
- 
--				mmc2_sck_cfg: mmc2-sck-cfg {
-+				mmc2_sck_cfg_a: mmc2-sck-cfg@0 {
-+					reg = <0>;
- 					fsl,pinmux-ids = <
- 						MX28_PAD_SSP0_DATA7__SSP2_SCK
- 					>;
+diff --git a/Documentation/devicetree/bindings/arm/i2se.txt b/Documentation/devicetree/bindings/arm/i2se.txt
+new file mode 100644
+index 0000000..9954d86
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/i2se.txt
+@@ -0,0 +1,22 @@
++I2SE Device Tree Bindings
++-------------------------
++
++Duckbill Board
++Required root node properties:
++    - compatible = "i2se,duckbill", "fsl,imx28";
++
++Duckbill 2 Board
++Required root node properties:
++    - compatible = "i2se,duckbill", "fsl,imx28";
++
++Duckbill 2 485 Board
++Required root node properties:
++    - compatible = "i2se,duckbill", "fsl,imx28";
++
++Duckbill 2 EnOcean Board
++Required root node properties:
++    - compatible = "i2se,duckbill", "fsl,imx28";
++
++Duckbill 2 SPI Board
++Required root node properties:
++    - compatible = "i2se,duckbill", "fsl,imx28";
 -- 
 2.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
