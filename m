@@ -1,403 +1,256 @@
-From: eajames.ibm@gmail.com
-Subject: [PATCH linux v5 2/6] hwmon: occ: Add sysfs interface
-Date: Mon, 30 Jan 2017 17:42:14 -0600
-Message-ID: <1485819738-957-3-git-send-email-eajames.ibm@gmail.com>
-References: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485819738-957-1-git-send-email-eajames.ibm@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, eajames@linux.vnet.ibm.com, "Edward A. James" <eajames@us.ibm.com>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH V6 2/5] PCI: Adapt pci_register_io_range() for
+ indirect-IO and  PCI I/O translation
+Date: Mon, 30 Jan 2017 18:15:51 -0600
+Message-ID: <20170131001551.GC20550@bhelgaas-glaptop.roam.corp.google.com>
+References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
+ <1485241525-201782-3-git-send-email-yuanzhichang@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1485241525-201782-3-git-send-email-yuanzhichang@hisilicon.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "zhichang.yuan" <yuanzhichang@hisilicon.com>
+Cc: mark.rutland@arm.com, benh@kernel.crashing.org, gabriele.paoloni@huawei.com, rafael@kernel.org, linux-pci@vger.kernel.org, will.deacon@arm.com, linuxarm@huawei.com, frowand.list@gmail.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, xuwei5@hisilicon.com, linux-serial@vger.kernel.org, catalin.marinas@arm.com, devicetree@vger.kernel.org, minyard@acm.org, liviu.dudau@arm.com, john.garry@huawei.com, zourongrong@gmail.com, robh+dt@kernel.org, bhelgaas@google.com, kantyzc@163.com, zhichang.yuan02@gmail.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, olof@lixom.net, brian.starkey@arm.com
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+On Tue, Jan 24, 2017 at 03:05:22PM +0800, zhichang.yuan wrote:
+> After indirect-IO is introduced, system must can assigned indirect-IO devices
+> with logical I/O ranges which are different from those for PCI I/O devices.
+> Otherwise, I/O accessors can't identify whether the I/O port is for memory
+> mapped I/O or indirect-IO.
+> As current helper, pci_register_io_range(), is used for PCI I/O ranges
+> registration and translation, indirect-IO devices should also apply these
+> helpers to manage the I/O ranges. It will be easy to ensure the assigned
+> logical I/O ranges unique.
+> But for indirect-IO devices, there is no cpu address. The current
+> pci_register_io_range() can not work for this case.
+> 
+> This patch makes some changes on the pci_register_io_range() to support the
+> I/O range registration with device's fwnode also. After this, the indirect-IO
+> devices can register the device-local I/O range to system logical I/O and
+> easily perform the translation between device-local I/O range and sytem
+> logical I/O range.
+> 
+> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
+> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Add a generic mechanism to expose the sensors provided by the OCC in
-sysfs.
+I had a couple trivial comments, but you can include my:
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- Documentation/hwmon/occ       |  62 +++++++++++
- drivers/hwmon/occ/Makefile    |   2 +-
- drivers/hwmon/occ/occ_sysfs.c | 251 ++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ_sysfs.h |  30 +++++
- 4 files changed, 344 insertions(+), 1 deletion(-)
- create mode 100644 drivers/hwmon/occ/occ_sysfs.c
- create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>	# drivers/pci parts
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-index 79d1642..d0bdf06 100644
---- a/Documentation/hwmon/occ
-+++ b/Documentation/hwmon/occ
-@@ -25,6 +25,68 @@ Currently, all versions of the OCC support four types of sensor data: power,
- temperature, frequency, and "caps," which indicate limits and thresholds used
- internally on the OCC.
- 
-+sysfs Entries
-+-------------
-+
-+The OCC driver uses the hwmon sysfs framework to provide data to userspace.
-+
-+The driver exports a number of sysfs files for each type of sensor. The
-+sensor-specific files vary depending on the processor type, though many of the
-+attributes are common for both the POWER8 and POWER9.
-+
-+The hwmon interface cannot define every type of sensor that may be used.
-+Therefore, the frequency sensor on the OCC uses the "input" type sensor defined
-+by the hwmon interface, rather than defining a new type of custom sensor.
-+
-+Below are detailed the names and meaning of each sensor file for both types of
-+processors. All sensors are read-only unless otherwise specified. <x> indicates
-+the hwmon index. sensor id indicates the unique internal OCC identifer. Please
-+see the POWER OCC specification for details on all these sensor values.
-+
-+frequency:
-+	all processors:
-+		in<x>_input - frequency value
-+		in<x>_label - sensor id
-+temperature:
-+	POWER8:
-+		temp<x>_input - temperature value
-+		temp<x>_label - sensor id
-+	POWER9 (in addition to above):
-+		temp<x>_type - FRU type
-+
-+power:
-+	POWER8:
-+		power<x>_input - power value
-+		power<x>_label - sensor id
-+		power<x>_average - accumulator
-+		power<x>_average_interval - update tag (number of samples in
-+			accumulator)
-+	POWER9:
-+		power<x>_input - power value
-+		power<x>_label - sensor id
-+		power<x>_average_min - accumulator[0]
-+		power<x>_average_max - accumulator[1] (64 bits total)
-+		power<x>_average_interval - update tag
-+		power<x>_reset_history - (function_id | (apss_channel << 8)
-+
-+caps:
-+	POWER8:
-+		power<x>_cap - current powercap
-+		power<x>_cap_max - max powercap
-+		power<x>_cap_min - min powercap
-+		power<x>_max - normal powercap
-+		power<x>_alarm - user powercap, r/w
-+	POWER9:
-+		power<x>_cap_alarm - user powercap source
-+
-+The driver also provides two sysfs entries through hwmon to better
-+control the driver and monitor the master OCC. Though there may be multiple
-+OCCs present on the system, these two files are only present for the "master"
-+OCC.
-+	name - read the name of the driver
-+	update_interval - read or write the minimum interval for polling the
-+		OCC.
-+
- BMC - Host Communications
- -------------------------
- 
-diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
-index 93cb52f..a6881f9 100644
---- a/drivers/hwmon/occ/Makefile
-+++ b/drivers/hwmon/occ/Makefile
-@@ -1 +1 @@
--obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o
-+obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o occ_sysfs.o
-diff --git a/drivers/hwmon/occ/occ_sysfs.c b/drivers/hwmon/occ/occ_sysfs.c
-new file mode 100644
-index 0000000..9598f78
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_sysfs.c
-@@ -0,0 +1,251 @@
-+/*
-+ * occ_sysfs.c - OCC sysfs interface
-+ *
-+ * This file contains the methods and data structures for implementing the OCC
-+ * hwmon sysfs entries.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/init.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include "occ.h"
-+#include "occ_sysfs.h"
-+
-+#define OCC_HWMON_NAME_LENGTH	32
-+
-+struct occ_sysfs {
-+	struct device *dev;
-+	struct occ *occ;
-+
-+	char hwmon_name[OCC_HWMON_NAME_LENGTH + 1];
-+	const u32 *sensor_hwmon_configs;
-+	struct hwmon_channel_info **occ_sensors;
-+	struct hwmon_chip_info occ_info;
-+	u16 user_powercap;
-+};
-+
-+static int occ_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
-+			  u32 attr, int channel, long *val)
-+{
-+	int rc;
-+	struct occ_sysfs *driver = dev_get_drvdata(dev);
-+	struct occ *occ = driver->occ;
-+
-+	switch (type) {
-+	case hwmon_in:
-+		rc = occ_get_sensor_field(occ, FREQ, channel, attr, val);
-+		break;
-+	case hwmon_temp:
-+		rc = occ_get_sensor_field(occ, TEMP, channel, attr, val);
-+		break;
-+	case hwmon_power:
-+		rc = occ_get_sensor_field(occ, POWER, channel, attr, val);
-+		break;
-+	default:
-+		rc = -EOPNOTSUPP;
-+	}
-+
-+	return rc;
-+}
-+
-+static int occ_hwmon_read_string(struct device *dev,
-+				 enum hwmon_sensor_types type, u32 attr,
-+				 int channel, char **str)
-+{
-+	int rc;
-+	unsigned long val = 0;
-+
-+	if (!((type == hwmon_in && attr == hwmon_in_label) ||
-+	    (type == hwmon_temp && attr == hwmon_temp_label) ||
-+	    (type == hwmon_power && attr == hwmon_power_label)))
-+		return -EOPNOTSUPP;
-+
-+	/* will fetch the "label", the sensor_id */
-+	rc = occ_hwmon_read(dev, type, attr, channel, &val);
-+	if (rc < 0)
-+		return rc;
-+
-+	rc = snprintf(*str, PAGE_SIZE - 1, "%lu", val);
-+	if (rc > 0)
-+		rc = 0;
-+
-+	return rc;
-+}
-+
-+static int occ_hwmon_write(struct device *dev, enum hwmon_sensor_types type,
-+			   u32 attr, int channel, long val)
-+{
-+	int rc;
-+	struct occ_sysfs *driver = dev_get_drvdata(dev);
-+
-+	if (type == hwmon_power && attr == hwmon_power_alarm) {
-+		rc = occ_set_user_powercap(driver->occ, val);
-+		if (rc) {
-+			dev_err(dev, "set user powercap failed:%d\n", rc);
-+			return rc;
-+		}
-+
-+		driver->user_powercap = val;
-+
-+		return rc;
-+	}
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static umode_t occ_is_visible(const void *data, enum hwmon_sensor_types type,
-+			      u32 attr, int channel)
-+{
-+	const struct occ_sysfs *driver = data;
-+
-+	switch (type) {
-+	case hwmon_chip:
-+		if (attr == hwmon_chip_update_interval)
-+			return 00644;
-+		break;
-+	case hwmon_in:
-+		if (BIT(attr) & driver->sensor_hwmon_configs[0])
-+			return 00444;
-+		break;
-+	case hwmon_temp:
-+		if (BIT(attr) & driver->sensor_hwmon_configs[1])
-+			return 00444;
-+		break;
-+	case hwmon_power:
-+		/* user power limit */
-+		if (attr == hwmon_power_alarm)
-+			return 00644;
-+		else if ((BIT(attr) & driver->sensor_hwmon_configs[2]) ||
-+			 (BIT(attr) & driver->sensor_hwmon_configs[3]))
-+			return 00444;
-+		break;
-+	default:
-+		return 0;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops occ_hwmon_ops = {
-+	.is_visible = occ_is_visible,
-+	.read = occ_hwmon_read,
-+	.read_string = occ_hwmon_read_string,
-+	.write = occ_hwmon_write,
-+};
-+
-+static const enum hwmon_sensor_types occ_sensor_types[MAX_OCC_SENSOR_TYPE] = {
-+	hwmon_in,
-+	hwmon_temp,
-+	hwmon_power,
-+	hwmon_power
-+};
-+
-+struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
-+				  const u32 *sensor_hwmon_configs,
-+				  const char *name)
-+{
-+	int rc, i, j, num_sensors, index = 0, id;
-+	char *brk;
-+	struct occ_blocks *resp = NULL;
-+	u32 *sensor_config;
-+	struct occ_sysfs *hwmon = devm_kzalloc(dev, sizeof(struct occ_sysfs),
-+					       GFP_KERNEL);
-+	if (!hwmon)
-+		return ERR_PTR(-ENOMEM);
-+
-+	/* need space for null-termination */
-+	hwmon->occ_sensors =
-+		devm_kzalloc(dev, sizeof(struct hwmon_channel_info *) *
-+			     (MAX_OCC_SENSOR_TYPE + 1), GFP_KERNEL);
-+	if (!hwmon->occ_sensors)
-+		return ERR_PTR(-ENOMEM);
-+
-+	hwmon->occ = occ;
-+	hwmon->sensor_hwmon_configs = sensor_hwmon_configs;
-+	hwmon->occ_info.ops = &occ_hwmon_ops;
-+	hwmon->occ_info.info =
-+		(const struct hwmon_channel_info **)hwmon->occ_sensors;
-+
-+	occ_get_response_blocks(occ, &resp);
-+
-+	for (i = 0; i < MAX_OCC_SENSOR_TYPE; ++i)
-+		resp->sensor_block_id[i] = -1;
-+
-+	/* read sensor data from occ */
-+	rc = occ_update_device(occ);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	for (i = 0; i < MAX_OCC_SENSOR_TYPE; i++) {
-+		id = resp->sensor_block_id[i];
-+		if (id < 0)
-+			continue;
-+
-+		num_sensors = resp->blocks[id].header.num_sensors;
-+		/* need null-termination */
-+		sensor_config = devm_kzalloc(dev,
-+					     sizeof(u32) * (num_sensors + 1),
-+					     GFP_KERNEL);
-+		if (!sensor_config)
-+			return ERR_PTR(-ENOMEM);
-+
-+		for (j = 0; j < num_sensors; j++)
-+			sensor_config[j] = sensor_hwmon_configs[i];
-+
-+		hwmon->occ_sensors[index] =
-+			devm_kzalloc(dev, sizeof(struct hwmon_channel_info),
-+				     GFP_KERNEL);
-+		if (!hwmon->occ_sensors[index])
-+			return ERR_PTR(-ENOMEM);
-+
-+		hwmon->occ_sensors[index]->type = occ_sensor_types[i];
-+		hwmon->occ_sensors[index]->config = sensor_config;
-+		index++;
-+	}
-+
-+	/* search for bad chars */
-+	strncpy(hwmon->hwmon_name, name, OCC_HWMON_NAME_LENGTH);
-+	brk = strpbrk(hwmon->hwmon_name, "-* \t\n");
-+	while (brk) {
-+		*brk = '_';
-+		brk = strpbrk(brk,  "-* \t\n");
-+	}
-+
-+	hwmon->dev = devm_hwmon_device_register_with_info(dev,
-+							  hwmon->hwmon_name,
-+							  hwmon,
-+							  &hwmon->occ_info,
-+							  NULL);
-+	if (IS_ERR(hwmon->dev)) {
-+		dev_err(dev, "cannot register hwmon device %s: %ld\n",
-+			hwmon->hwmon_name, PTR_ERR(hwmon->dev));
-+		return ERR_CAST(hwmon->dev);
-+	}
-+
-+	return hwmon;
-+}
-+EXPORT_SYMBOL(occ_sysfs_start);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("OCC sysfs driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ_sysfs.h b/drivers/hwmon/occ/occ_sysfs.h
-new file mode 100644
-index 0000000..462f9d2
---- /dev/null
-+++ b/drivers/hwmon/occ/occ_sysfs.h
-@@ -0,0 +1,30 @@
-+/*
-+ * occ_sysfs.h - OCC sysfs interface
-+ *
-+ * This file contains the data structures and function prototypes for the OCC
-+ * hwmon sysfs entries.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __OCC_SYSFS_H__
-+#define __OCC_SYSFS_H__
-+
-+struct occ;
-+struct device;
-+struct occ_sysfs;
-+
-+struct occ_sysfs *occ_sysfs_start(struct device *dev, struct occ *occ,
-+				  const u32 *sensor_hwmon_configs,
-+				  const char *name);
-+#endif /* __OCC_SYSFS_H__ */
--- 
-1.8.3.1
+in your next revision.  I don't know who you have in mind to merge this;
+it doesn't really touch much of PCI.  But let me know if you need anything
+else from me.
+
+> ---
+>  drivers/acpi/pci_root.c | 12 +++++-------
+>  drivers/of/address.c    |  8 ++------
+>  drivers/pci/pci.c       | 44 ++++++++++++++++++++++++++++++++++++++++----
+>  include/linux/pci.h     |  7 +++++--
+>  4 files changed, 52 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
+> index bf601d4..6cadf05 100644
+> --- a/drivers/acpi/pci_root.c
+> +++ b/drivers/acpi/pci_root.c
+> @@ -730,7 +730,8 @@ static void acpi_pci_root_validate_resources(struct device *dev,
+>  	}
+>  }
+>  
+> -static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
+> +static void acpi_pci_root_remap_iospace(struct fwnode_handle *node,
+> +					struct resource_entry *entry)
+>  {
+>  #ifdef PCI_IOBASE
+>  	struct resource *res = entry->res;
+> @@ -739,11 +740,7 @@ static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
+>  	resource_size_t length = resource_size(res);
+>  	unsigned long port;
+>  
+> -	if (pci_register_io_range(cpu_addr, length))
+> -		goto err;
+> -
+> -	port = pci_address_to_pio(cpu_addr);
+> -	if (port == (unsigned long)-1)
+> +	if (pci_register_io_range(node, cpu_addr, length, &port))
+>  		goto err;
+>  
+>  	res->start = port;
+> @@ -781,7 +778,8 @@ int acpi_pci_probe_root_resources(struct acpi_pci_root_info *info)
+>  	else {
+>  		resource_list_for_each_entry_safe(entry, tmp, list) {
+>  			if (entry->res->flags & IORESOURCE_IO)
+> -				acpi_pci_root_remap_iospace(entry);
+> +				acpi_pci_root_remap_iospace(&device->fwnode,
+> +							    entry);
+>  
+>  			if (entry->res->flags & IORESOURCE_DISABLED)
+>  				resource_list_destroy_entry(entry);
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 02b2903..d85d228 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -2,6 +2,7 @@
+>  #define pr_fmt(fmt)	"OF: " fmt
+>  
+>  #include <linux/device.h>
+> +#include <linux/fwnode.h>
+>  #include <linux/io.h>
+>  #include <linux/ioport.h>
+>  #include <linux/module.h>
+> @@ -323,14 +324,9 @@ int of_pci_range_to_resource(struct of_pci_range *range,
+>  
+>  	if (res->flags & IORESOURCE_IO) {
+>  		unsigned long port;
+> -		err = pci_register_io_range(range->cpu_addr, range->size);
+> +		err = pci_register_io_range(&np->fwnode, range->cpu_addr, range->size, &port);
+>  		if (err)
+>  			goto invalid_range;
+> -		port = pci_address_to_pio(range->cpu_addr);
+> -		if (port == (unsigned long)-1) {
+> -			err = -EINVAL;
+> -			goto invalid_range;
+> -		}
+>  		res->start = port;
+>  	} else {
+>  		if ((sizeof(resource_size_t) < 8) &&
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index a881c0d..5289221 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -3241,6 +3241,7 @@ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
+>  #ifdef PCI_IOBASE
+>  struct io_range {
+>  	struct list_head list;
+> +	struct fwnode_handle *node;
+>  	phys_addr_t start;
+>  	resource_size_t size;
+>  };
+> @@ -3253,7 +3254,8 @@ struct io_range {
+>   * Record the PCI IO range (expressed as CPU physical address + size).
+>   * Return a negative value if an error has occured, zero otherwise
+>   */
+> -int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+> +int __weak pci_register_io_range(struct fwnode_handle *node, phys_addr_t addr,
+> +				 resource_size_t size, unsigned long *port)
+>  {
+>  	int err = 0;
+>  
+> @@ -3261,10 +3263,31 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+>  	struct io_range *range;
+>  	resource_size_t allocated_size = 0;
+>  
+> +	/*
+> +	 * As indirect-IO which support multiple bus instances is introduced,
+> +	 * the input 'addr' is probably not page-aligned. If the PCI I/O
+> +	 * ranges are registered after indirect-IO, there is risk that the
+> +	 * start logical PIO assigned to PCI I/O is not page-aligned.
+> +	 * This will cause some I/O subranges are not remapped or overlapped
+> +	 * in pci_remap_iospace() handling.
+> +	 */
+> +	WARN_ON(addr != IO_RANGE_IOEXT && !(addr & PAGE_MASK));
+> +	/*
+> +	 * MMIO will call ioremap, it is better to align size with PAGE_SIZE,
+> +	 * then the return linux virtual PIO is page-aligned.
+> +	 */
+> +	if (size & PAGE_MASK)
+> +		size = PAGE_ALIGN(size);
+> +
+>  	/* check if the range hasn't been previously recorded */
+>  	spin_lock(&io_range_lock);
+>  	list_for_each_entry(range, &io_range_list, list) {
+> -		if (addr >= range->start && addr + size <= range->start + size) {
+> +		if (node == range->node)
+> +			goto end_register;
+> +
+> +		if (addr != IO_RANGE_IOEXT &&
+> +		    addr >= range->start &&
+> +		    addr + size <= range->start + size) {
+>  			/* range already registered, bail out */
+>  			goto end_register;
+>  		}
+> @@ -3290,6 +3313,7 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+>  		goto end_register;
+>  	}
+>  
+> +	range->node = node;
+>  	range->start = addr;
+>  	range->size = size;
+>  
+> @@ -3297,6 +3321,14 @@ int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
+>  
+>  end_register:
+>  	spin_unlock(&io_range_lock);
+> +
+> +	*port = allocated_size;
+> +#else
+> +	/*
+> +	 * powerpc and microblaze have their own registration,
+> +	 * just look up the value here
+> +	 */
+> +	*port = pci_address_to_pio(addr);
+>  #endif
+>  
+>  	return err;
+> @@ -3315,7 +3347,9 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
+>  
+>  	spin_lock(&io_range_lock);
+>  	list_for_each_entry(range, &io_range_list, list) {
+> -		if (pio >= allocated_size && pio < allocated_size + range->size) {
+> +		if (range->start != IO_RANGE_IOEXT &&
+> +			pio >= allocated_size &&
+> +			pio < allocated_size + range->size) {
+>  			address = range->start + pio - allocated_size;
+>  			break;
+>  		}
+> @@ -3336,7 +3370,9 @@ unsigned long __weak pci_address_to_pio(phys_addr_t address)
+>  
+>  	spin_lock(&io_range_lock);
+>  	list_for_each_entry(res, &io_range_list, list) {
+> -		if (address >= res->start && address < res->start + res->size) {
+> +		if (res->start != IO_RANGE_IOEXT &&
+> +			address >= res->start &&
+> +			address < res->start + res->size) {
+>  			addr = address - res->start + offset;
+>  			break;
+>  		}
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index e2d1a12..8d91af8 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -34,6 +34,9 @@
+>  
+>  #include <linux/pci_ids.h>
+>  
+> +/* the macro below flags an invalid cpu address
+> + * and is used by IO special hosts              */
+> +#define IO_RANGE_IOEXT (resource_size_t)(-1ull)
+>  /*
+>   * The PCI interface treats multi-function devices as independent
+>   * devices.  The slot/function address of each device is encoded
+> @@ -1197,8 +1200,8 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+>  						  resource_size_t),
+>  			void *alignf_data);
+>  
+> -
+> -int pci_register_io_range(phys_addr_t addr, resource_size_t size);
+> +int pci_register_io_range(struct fwnode_handle *node, phys_addr_t addr,
+> +			  resource_size_t size, unsigned long *port);
+>  unsigned long pci_address_to_pio(phys_addr_t addr);
+>  phys_addr_t pci_pio_to_address(unsigned long pio);
+>  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
+> -- 
+> 1.9.1
+> 
