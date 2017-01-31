@@ -1,80 +1,65 @@
-From: Inki Dae <daeinki@gmail.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Tue, 31 Jan 2017 21:58:55 +0900
-Message-ID: <CAAQKjZPknkhrpj_0TUS3=Z720Nu6mO7UMDy6RKceyu3OuaO8mQ@mail.gmail.com>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com>
- <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
- <58905A2B.9090101@samsung.com>
- <CAJKOXPeCF3+YXk-GHmewn6fi0rcPbQ_GoPOeFRP2KYN=6KLLxw@mail.gmail.com>
- <CAAQKjZNN98pah8ht=kSmwsVybA5cMP=Z6BVkfZ6HH-5rRYFQ9w@mail.gmail.com>
- <CAJKOXPczttCexd4ZGHEFj=4-6a=9t1VsEmovPGmFFYHv1e5ZzQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 01/14] Documentation: dt/bindings: Document pinctrl-ingenic
+Date: Tue, 31 Jan 2017 13:59:37 +0100
+Message-ID: <CACRpkda+2tnuO=AcN=HAD+YoaM4eEgnyjju7ioJL1op7+jFtqA@mail.gmail.com>
+References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
+ <20170122144947.16158-1-paul@crapouillou.net> <20170122144947.16158-2-paul@crapouillou.net>
+ <CACRpkdZFRH84c4x7HBwgmY3fH+=Qq4q167c9oPhvrJ70MQkjaA@mail.gmail.com> <08e9505d2d366557950f8e6a4e81f57a@mail.crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAJKOXPczttCexd4ZGHEFj=4-6a=9t1VsEmovPGmFFYHv1e5ZzQ@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Donghwa Lee <dh09.lee@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Kukjin Kim <kgene@kernel.org>, Andi Shyti <andi.shyti@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <08e9505d2d366557950f8e6a4e81f57a-p8hskv8pF7lEPksTRSfcJOTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-p
 List-Id: devicetree@vger.kernel.org
 
-MjAxNy0wMS0zMSAyMDozMCBHTVQrMDk6MDAgS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJu
-ZWwub3JnPjoKPiBPbiBUdWUsIEphbiAzMSwgMjAxNyBhdCAxMjozNyBQTSwgSW5raSBEYWUgPGRh
-ZWlua2lAZ21haWwuY29tPiB3cm90ZToKPj4gMjAxNy0wMS0zMSAxOTowMSBHTVQrMDk6MDAgS3J6
-eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPjoKPj4+IE9uIFR1ZSwgSmFuIDMxLCAy
-MDE3IGF0IDExOjM0IEFNLCBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+IHdyb3RlOgo+
-Pj4+Cj4+Pj4KPj4+PiAyMDE364WEIDAx7JuUIDMx7J28IDE4OjIy7JeQIEtyenlzenRvZiBLb3ps
-b3dza2kg7J20KOqwgCkg7JO0IOq4gDoKPj4+Pj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMjow
-MSBBTSwgSW5raSBEYWUgPGlua2kuZGFlQHNhbXN1bmcuY29tPiB3cm90ZToKPj4+Pj4+Cj4+Pj4+
-Pgo+Pj4+Pj4gMjAxN+uFhCAwMeyblCAyNOydvCAxMDo1MOyXkCBIb2VnZXVuIEt3b24g7J20KOqw
-gCkg7JO0IOq4gDoKPj4+Pj4+PiBEZWFyIFRoaWVycnksCj4+Pj4+Pj4KPj4+Pj4+PiBDb3VsZCB5
-b3UgcGxlYXNlIHJldmlldyB0aGlzIHBhdGNoPwo+Pj4+Pj4KPj4+Pj4+IFRoaWVycnksIEkgdGhp
-bmsgdGhpcyBwYXRjaCBoYXMgYmVlbiByZXZpZXdlZCBlbm91Z2ggYnV0IG5vIGNvbW1lbnQgZnJv
-bSB5b3UuIFNlZW1zIHlvdSBhcmUgYnVzeS4gSSB3aWxsIHBpY2sgdXAgdGhpcy4KPj4+Pj4+Cj4+
-Pj4+Cj4+Pj4+IENvbW1lbnRzIGZyb20gdjggd2VyZSBub3QgcmVzb2x2ZWQgYW5kIEkgdGhpbmsg
-d2UgYXJlIHdhaXRpbmcgZm9yIHY5Ogo+Pj4+PiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxNy8x
-LzExLzE3OAo+Pj4+Pgo+Pj4+PiBJZiB0aGF0IGlzIG5vdCBjb3JyZWN0IHRoZW4gcGxlYXNlIGNs
-YXJpZnkuCj4+Pj4KPj4+PiBTZWVtcyB5b3UgcG9pbnRlZCB0byBjaGFuZ2UgdGUtZ3Bpb3MgYmlu
-ZGluZ3MgdG8gb3B0aW9uYWwuIHJpZ2h0Pwo+Pj4+Cj4+Pj4gSSB0aG91Z2h0IFJvYiBsZWZ0IGFj
-ayBzbyBpdCdzIG5vIHByb2JsZW0uCj4+Pj4gaHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTcvMS8x
-My82MjYKPj4+Cj4+PiBZZXMsIGNoYW5nZSB0aGVtIHRvIG9wdGlvbmFsLiBJIHRoaW5rIGl0IGlz
-IGEgcHJvYmxlbSAocmVnYXJkbGVzcyBvZgo+Pj4gUm9iJ3MgYWNrKSBiZWNhdXNlIHlvdSBhcmUg
-bWVyZ2luZyBhIGRyaXZlciByZXF1aXJpbmcgYSBwcm9wZXJ0eSB3aGljaAo+Pj4gc29vbiB5b3Ug
-d2FudCB0byByZW1vdmUuIElmIHlvdSBtZXJnZSBpdCAobGlrZSB0aGlzKSByZW1vdmFsIG9mCj4+
-PiB0ZS1ncGlvcyBwcm9wZXJ0eSB3aWxsIGJlIGJyZWFrYWdlIG9mIEFCSS4gVGhpcyBpcyBub3Qg
-YSBzZXJpb3VzCj4+PiBwcm9ibGVtIGJ1dCBrbm93aW5nIHN1Y2ggcGxhbiBvZiB0ZS1ncGlvcyBy
-ZW1vdmFsIHVwZnJvbnQsIGl0IHdvdWxkIGJlCj4+PiB3cm9uZyB0byBjb21taXQgc3VjaCBkcml2
-ZXIuCj4+Cj4+IFRoaXMgaXMgYSB0cml2aWFsIHRoaW5nIHNvIGl0IGRvZXNuJ3QgbWFrZSBicmVh
-a2FnZSBvZiBBQkkgYmVjYXVzZSB0aGUKPj4gcHJvcGVydHksIHRlLWdwaW9zLCBpcyAqb3B0aW9u
-YWwqLgo+Cj4gU28gd2h5IGJpbmRpbmdzIGRvY3VtZW50IGlzIG5vdCBjaGFuZ2VkPwoKU2VlbXMg
-SG9lZ2V1biBtaXNzZWQgdGhpcy4KSSBhbHNvIHRoaW5rIGl0IHNob3VsZCBzcGVjaWZ5ICp0ZS1n
-cGlvcyBpcyBvcHRpb25hbCBwcm9wZXJ0eSogbGlrZQptaXBpLWRzaSBiaW5kaW5nIGRvY3VtZW50
-IGRpZCBidXQgdGhpcyBkb2Vzbid0IGJyZWFrYWdlIG9mIEFCSSB5b3UKbWVudGlvbmVkLiBBbmQg
-SSdkIGxpa2UgdG8gc2F5IHdlIHNob3VsZCBmZWVsIEFCSSBicmVha2FnZSBpcyBhCnNlcmlvdXMg
-cHJvYmxlbS4KClNhZCB0byBzYXksIEV4eW5vcyBpcyBhbHJlYWR5IGJyb2tlbiBsaWtlIE1hcmVr
-IGRlY2xhcmVkLiBUaGlzIGlzCnJlYWxseSBhIHNlcmlvdXMgcHJvYmxlbSBFeHlub3MgbWFpbnRh
-aW5lcnMgaGF2ZSB0byBmaXggaW5jbHVkaW5nIHlvdQphbmQgbWUuCgpUaGFua3MsCklua2kgRGFl
-Cgo+Cj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKC4uLikKPiArICAtIHRlLWdwaW9zOiBhIEdQ
-SU8gc3BlYyBmb3IgdGhlIHRlYXJpbmcgZWZmZWN0IHN5bmNocm9uaXphdGlvbiBzaWduYWwKPiAr
-ICAgIGdwaW8gcGluIChhY3RpdmUgaGlnaCkKPgo+IEFuZHJ6ZWogcG9pbnRlZCB0aGlzIG91dCBh
-bmQgaXQgaXMgbm90IGZpeGVkIHNpbmNlIHRoZW4uIFdoYXQgaXMgdGhlCj4gcHJvYmxlbSB3aXRo
-IGZpeGluZyB0aGUgYmluZGluZ3MgZG9jdW1lbnRhdGlvbj8KPgo+PiBBbnl3YXksIHRoaXMgd291
-bGRuJ3QgYmUgKnRoZSB0aGluZ3MqIFRoaWVycnkgbWVudGlvbmVkLgo+Cj4gUHJvYmFibHkgbm90
-LCBJIGRpZCBub3QgcmVzcG9uZCB0byBUaGllcnJ5J3MgZmVlZGJhY2suCj4KPiBCZXN0IHJlZ2Fy
-ZHMsCj4gS3J6eXN6dG9mCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Fri, Jan 27, 2017 at 4:27 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote:
+> [Me]:
+>> In the former case, if this pertains to the *inside* of the SoC:
+>> is it just different between jz4740 and jz4780?
+>> In that case, just code this into the driver as .data to the .compatible
+>> in the DT match. No special DT properties needed.
+>
+> Well, I've been taught that devicetree is for describing the hardware, and
+> the driver code is for functionality. So that's why I put it in devicetree.
+
+This is a gray area.
+
+But as GPIO maintainer I'm not happy about encoding information
+about the hardware, that can be deducted from the compatible-string,
+into the devicetree.
+
+I prefer to encode per-compatible hardware information tables into
+the driver, as structs, and pick the right table based on the compatible
+string as .data in the of match entry.
+
+It's simple to retrieve into the driver using of_device_get_match_data()
+these days.
+
+> That's also the reason why I put the list of functions and groups in
+> devicetree and not in the driver code.
+
+I'm not super-happy about that either, and it's not the way I would
+have done it but the argument has been made
+that it is a lot of opaque data and people prefer to maintain it
+in the device tree.
+
+I accept it for functions and groups, but I don't like it.
+
+I will not fold to any consistency arguments of the type "now
+you allowed this one thing, so you must allow this other thing
+so you are consistent", just no. I didn't like it the first time, so I'm
+not liking it anymore the second time.
+
+I guess if the DT people tell me it has to be done this way I would
+accept it. After a lot of discussion. But noone has.
+
+Please make it a table and put it in the driver instead.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
