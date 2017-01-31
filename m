@@ -1,47 +1,88 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 22/24] media: imx: Add MIPI CSI-2 OV5640 sensor subdev
- driver
-Date: Mon, 30 Jan 2017 19:31:20 -0800
-Message-ID: <12fbe4d6-3e62-53b1-feef-011e1ad7affe@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-23-git-send-email-steve_longerbeam@mentor.com>
- <20170130232955.GK27312@n2100.armlinux.org.uk>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 08/10] dmaengine: sun6i: allow build on
+ ARM64 platforms (sun50i)
+Date: Tue, 31 Jan 2017 09:02:36 +0530
+Message-ID: <20170131033236.GH19244@localhost>
+References: <20170129023331.62106-1-icenowy@aosc.xyz>
+ <20170129023331.62106-9-icenowy@aosc.xyz>
+ <20170130164210.GD19244@localhost>
+ <3729521485800635@web23g.yandex.ru>
+Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170130232955.GK27312@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDLNNTP63EBBBQEKYDCAKGQEDEOK4ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <3729521485800635-hGpGylqI9Klxpj1cXAZ9Bg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 31, 2017 at 02:23:55AM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> 31.01.2017, 00:41, "Vinod Koul" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> > On Sun, Jan 29, 2017 at 10:33:29AM +0800, Icenowy Zheng wrote:
+> >> =C2=A0As 64-bit Allwinner H5 SoC has the same DMA engine with H3, the =
+DMA
+> >> =C2=A0driver should be allowed to be built for ARM64, in order to make=
+ it work on H5.
+> >>
+> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> >> =C2=A0Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> =C2=A0Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> =C2=A0---
+> >> =C2=A0Patch introduced between v1 and v2, to satisfy the newly added H=
+3/H5 audio
+> >> =C2=A0codec support.
+> >>
+> >> =C2=A0=C2=A0drivers/dma/Kconfig | 2 +-
+> >> =C2=A0=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> =C2=A0diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
+> >> =C2=A0index 0d6a96ee9fc7..d01d59812cf3 100644
+> >> =C2=A0--- a/drivers/dma/Kconfig
+> >> =C2=A0+++ b/drivers/dma/Kconfig
+> >> =C2=A0@@ -157,7 +157,7 @@ config DMA_SUN4I
+> >>
+> >> =C2=A0=C2=A0config DMA_SUN6I
+> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tristate "=
+Allwinner A31 SoCs DMA support"
+> >> =C2=A0- depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
+> >> =C2=A0+ depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) |=
+| COMPILE_TEST
+> >
+> > Do we really need ARM64 here? also looking at others I wonder why isn't
+> > this MACH_SUNXI...?
+>=20
+> You mean directly place "ARCH_SUNXI" here?
+>=20
+> SUN4I/SUN5I/SUN7I do not use DMA_SUN6I, they have different DMA
+> controllers.
 
+No my question was different..
 
-On 01/30/2017 03:29 PM, Russell King - ARM Linux wrote:
-> On Fri, Jan 06, 2017 at 06:11:40PM -0800, Steve Longerbeam wrote:
->> +config IMX_OV5640_MIPI
->> +       tristate "OmniVision OV5640 MIPI CSI-2 camera support"
->> +       depends on GPIOLIB && VIDEO_IMX_CAMERA
->> +       select IMX_MIPI_CSI2
->> +       default y
-> Why is this defaulting to y?  New drivers should not default to enabled
-> unless they are replacing some already pre-existing functionality.
-> Ditto for the other camera driver.
+We have MACH_SUNxx for 6I and 8I, so why do we have ARCH_SUNXI and if its a=
+n
+arch SUNXI, X means it can take any value...
 
-The ov564x sensors are required for the SabreSD and SabreLite/Nitrogen
-reference boards (if VIDEO_IMX_CAMERA is enabled that is). But they're not
-required for other platforms, so you're right I shouldn't have defaulted 
-these
-to yes. Fixed.
+This schema looks pretty confusing while reading
 
+Also I had a question on usage of ARM64..
 
-Steve
+--=20
+~Vinod
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
