@@ -1,137 +1,144 @@
-From: Romain Perier <romain.perier@collabora.com>
-Subject: [PATCH v7 4/4] arm: dts: Add support for ES8388 to the
-	Radxa Rock 2
-Date: Tue, 31 Jan 2017 15:55:26 +0100
-Message-ID: <20170131145526.26808-5-romain.perier@collabora.com>
-References: <20170131145526.26808-1-romain.perier@collabora.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
+ on TM2 board
+Date: Tue, 31 Jan 2017 16:02:26 +0100
+Message-ID: <20170131150226.GB4519@ulmo.ba.sec>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
+ <20170131143853.GU20076@art_vandelay>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170131145526.26808-1-romain.perier@collabora.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-rockchip@lists.infradead.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Romain Perier <romain.perier@collabora.com>
+Content-Type: multipart/mixed; boundary="===============1084566372=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170131143853.GU20076@art_vandelay>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene@kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the DT definition of the es8388 i2c device
-found at address 0x10. It also adds the definition for connecting
-the Rockchip I2S to the es8388 analog output.
 
-This commit is based on the initial work that was done by Sjoerd Simons
-<sjoerd.simons@collabora.com> with some improvements.
+--===============1084566372==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="Bn2rw/3z4jIqBvZU"
+Content-Disposition: inline
 
-Signed-off-by: Romain Perier <romain.perier@collabora.com>
----
 
-Changes in v7:
- - Added a new label for vccio_codec
- - Use vccio_codec instead of vcca_codec
- - Splitted headphone pins into hp_det and phone_ctl 
-Changes in v6: None
-Changes in v5: None
-Changes in v4:
- - Updated to the new DT binding
- - Added the property 'rockchip,routing'
- - Renamed the node sound_es8388 to sound_i2s
-Changes in v3: None
-Changes in v2: None
+--Bn2rw/3z4jIqBvZU
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- arch/arm/boot/dts/rk3288-rock2-som.dtsi   |  2 +-
- arch/arm/boot/dts/rk3288-rock2-square.dts | 42 +++++++++++++++++++++++++++++++
- 2 files changed, 43 insertions(+), 1 deletion(-)
+On Tue, Jan 31, 2017 at 09:38:53AM -0500, Sean Paul wrote:
+> On Tue, Jan 31, 2017 at 09:54:49AM +0100, Thierry Reding wrote:
+> > On Tue, Jan 31, 2017 at 09:01:07AM +0900, Inki Dae wrote:
+> > >=20
+> > >=20
+> > > 2017=EB=85=84 01=EC=9B=94 24=EC=9D=BC 10:50=EC=97=90 Hoegeun Kwon =EC=
+=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+> > > > Dear Thierry,
+> > > >=20
+> > > > Could you please review this patch?
+> > >=20
+> > > Thierry, I think this patch has been reviewed enough but no comment
+> > > from you. Seems you are busy. I will pick up this.
+> >=20
+> > Sorry, but that's not how it works. This patch has gone through 8
+> > revisions within 4 weeks, and I tend to ignore patches like that until
+> > the dust settles.
+> >=20
+>=20
+> Seems like the dust was pretty settled. It was posted on 1/11, pinged on =
+1/24,
+> and picked up on 1/31. I don't think it's unreasonable to take it through
+> another tree after that.
+>=20
+> I wonder if drm_panel would benefit from the -misc group maintainership m=
+odel
+> as drm_bridge does. By spreading out the workload, the high-maintenance
+> patches would hopefully find someone to shepherd them through.
 
-diff --git a/arch/arm/boot/dts/rk3288-rock2-som.dtsi b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-index b25ba80..c4d320c 100644
---- a/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-+++ b/arch/arm/boot/dts/rk3288-rock2-som.dtsi
-@@ -136,7 +136,7 @@
- 				regulator-always-on;
- 			};
- 
--			vcc_io: REG2 {
-+			vcc_io: vccio_codec: REG2 {
- 				regulator-name = "VCC_IO";
- 				regulator-min-microvolt = <3300000>;
- 				regulator-max-microvolt = <3300000>;
-diff --git a/arch/arm/boot/dts/rk3288-rock2-square.dts b/arch/arm/boot/dts/rk3288-rock2-square.dts
-index dd3ad2e..f693c39 100644
---- a/arch/arm/boot/dts/rk3288-rock2-square.dts
-+++ b/arch/arm/boot/dts/rk3288-rock2-square.dts
-@@ -86,6 +86,19 @@
- 		#sound-dai-cells = <0>;
- 	};
- 
-+	sound_i2s {
-+		compatible = "rockchip,rk3288-hdmi-analog";
-+		rockchip,model = "I2S";
-+		rockchip,i2s-controller = <&i2s>;
-+		rockchip,audio-codec = <&es8388>;
-+		rockchip,routing = "Analog", "LOUT2",
-+				   "Analog", "ROUT2";
-+		rockchip,hp-en-gpios = <&gpio8 0 GPIO_ACTIVE_HIGH>;
-+		rockchip,hp-det-gpios = <&gpio7 7 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&phone_ctl>, <&hp_det>;
-+	};
-+
- 	sdio_pwrseq: sdio-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		clocks = <&hym8563>;
-@@ -173,10 +186,29 @@
- 	};
- };
- 
-+&i2c2 {
-+	status = "okay";
-+
-+	es8388: es8388@10 {
-+		compatible = "everest,es8388", "everest,es8328";
-+		reg = <0x10>;
-+		AVDD-supply = <&vccio_codec>;
-+		DVDD-supply = <&vccio_codec>;
-+		HPVDD-supply = <&vccio_codec>;
-+		PVDD-supply = <&vccio_codec>;
-+		clocks = <&cru SCLK_I2S0_OUT>;
-+		clock-names = "i2s_clk_out";
-+	};
-+};
-+
- &i2c5 {
- 	status = "okay";
- };
- 
-+&i2s {
-+	status = "okay";
-+};
-+
- &pinctrl {
- 	ir {
- 		ir_int: ir-int {
-@@ -190,6 +222,16 @@
- 		};
- 	};
- 
-+	headphone {
-+		hp_det: hp-det {
-+			rockchip,pins = <7 7 RK_FUNC_GPIO &pcfg_pull_none>;
-+		};
-+
-+		phone_ctl: phone-ctl {
-+			rockchip,pins = <8 0 RK_FUNC_GPIO &pcfg_pull_up>;
-+		};
-+	};
-+
- 	usb {
- 		host_vbus_drv: host-vbus-drv {
- 			rockchip,pins = <0 14 RK_FUNC_GPIO &pcfg_pull_none>;
--- 
-2.9.3
+Except that nobody except me really cares. If we let people take patches
+through separate trees or group-maintained trees they'll likely go in
+without too much thought. DRM panel is somewhat different from core DRM
+in this regard because its infrastructure is minimal and there's little
+outside the panel-simple driver. So we're still at a stage where we need
+to fine-tune what drivers should look like and how we can improve.
+
+> > Other than that, this continues the same madness that I've repeatedly
+> > complained about in the past. The whole mechanism of running through a
+> > series of writes and not caring about errors until the very end is
+> > something we've discussed at length in the past. It also in large parts
+> > duplicates a bunch of functions from other Samsung panel drivers that I
+> > already said should eventually be moved to something saner.
+> >=20
+>=20
+> FWIW, this type of error handling isn't my preference either. If we must =
+defer,
+> I'd rather not keep it in ctx, but rather pass around an argument so it's=
+ more
+> obvious we need to deal with it in the return. That said, this seems like
+> a case of letting the perfect be the enemy of the good, surely something =
+is
+> better than nothing?
+
+That's what I ended up saying the last two times. But this has got to
+stop at some point. If you look at most of the panel drivers, they look
+more like material for the staging tree rather than DRM proper.
+
+Yes, something is better than nothing, but we can't have this multiply
+further.
+
+Last time we discussed this there was some rough concensus that the
+initialization sequence would be split into separate functions, which is
+already mostly true for these drivers, and then settle on a common
+signature for these functions, which is also mostly the case already,
+and then have a table of functions that can be called one after another
+with error handling on each call. That way at least you can provide
+diagnostics about what function failed, and you can abort early because
+we have to assume that failures are fatal.
+
+Thierry
+
+--Bn2rw/3z4jIqBvZU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliQpwAACgkQ3SOs138+
+s6FhbxAAlZ6HlmkYuhlVcUBqtZsadl98rU0LkyuFLbKc5QApR5pQqg/cy84jyuqn
+4fGsp8V6/jEnh+rj2h5DDr1DrgnbaCaKarcN0xDNUsg6LmpXzaHLW9kKNxXA8eNI
+ex+euJOfXnWIkBy4afMvxsteU0jMWSyeA7Tq0mvqRBpkJqK2d69PLRDOspBaaHYC
+dbaFexL1/TjIt8SHCAqzk8u0yzXCHzk5YXcCffEI9lG6YS+mNwVFAhEEi++DFLAm
+2wwYX13QeNmAoaBryiD96C4yVGS5MaUfUQanRgdd8odcNhXL5R6vGayb2HoXFZXo
+yXPkqMneT08naaOH/d8djPgkgymPxyWU2uiOoLzki3cc5mtKpWMeTdq0LnfOw+r9
+kfUtQj5xmz7pMio4AXEjMMQ7VOD8qbYWjW5TE/1Odo6crqBPbVvYm8y8zfKEBsv7
+rp3WEj/uSSnrkQb2CDTJA7ygFCKgsInIC2DF61MpgNX97M5l4Z2AUt0t812DAn7h
+MwLEZlLgVyNYC+BzCziXMD+DxPDgEk6SJGWATOrqmDkgUJGxWk9czr1AUwu8BNAQ
+XARNdUmxCdcmJnHIUYyi2vJCkzXAsUK+W0t+bVZtp3Oe3U/umXV8RFP1HNaVrP3T
+X9DJvw+si7Y+ZAJlqoGI+ShE6kUbcPYUBs+YQUHHp1iKS7F8xF8=
+=W98E
+-----END PGP SIGNATURE-----
+
+--Bn2rw/3z4jIqBvZU--
+
+--===============1084566372==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1084566372==--
