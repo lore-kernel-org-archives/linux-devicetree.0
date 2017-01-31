@@ -1,165 +1,112 @@
-From: Gabriele Paoloni <gabriele.paoloni@huawei.com>
-Subject: RE: [PATCH V6 4/5] LPC: Support the device-tree LPC host on
- Hip06/Hip07
-Date: Tue, 31 Jan 2017 11:51:44 +0000
-Message-ID: <EE11001F9E5DDD47B7634E2F8A612F2E1F9F98F3@lhreml507-mbx>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-5-git-send-email-yuanzhichang@hisilicon.com>
- <a5a24e73-013d-87b5-f65f-324417f4cc60@suse.de>
- <55916a03-2710-c8bc-0894-5a58daf6da68@huawei.com>
- <2890e438-6149-c8f0-8ec7-9036a8d5cca5@suse.de>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Tue, 31 Jan 2017 13:05:20 +0100
+Message-ID: <e72546f1-bd3c-ac0b-9e94-352942293ff9@samsung.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2890e438-6149-c8f0-8ec7-9036a8d5cca5@suse.de>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexander Graf <agraf@suse.de>, John Garry <john.garry@huawei.com>, Yuanzhichang <yuanzhichang@hisilicon.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "rafael@kernel.org" <rafael@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "brian.starkey@arm.com" <brian.starkey@arm.com>, "olof@lixom.net" <olof@lixom.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "minyard@acm.org" <minyard@acm.org>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "zhichang.yuan02@gmail.com" <zhichang.yuan02@gmail.com>, "liviu.dudau@arm.com" <liviu.dudau@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "zourongrong@gmail.com" <zourongrong@gmail.com>, "kantyzc@163.com" <kantyzc@163.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20170131085449.GA19348@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Inki Dae <inki.dae@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, andi.shyti@samsung.com, devicetree@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex thanks for reviewing
-
-[...]
-
-> >
-> >>> + * The port size of legacy I/O devices is normally less than
-> 0x400.
-> >>> + * Defining the I/O range size as 0x400 here should be sufficient
-> for
-> >>> + * all peripherals under one bus.
-> >>> + */
-> >>
-> >> This comment doesn't make a lot of sense. What is the limit? Is
-> there a
-> >> hardware limit?
-> >>
-> >> We don't dynamically allocate devices on the lpc bus, so why imply a
-> >> limit at all?
-> >>
-> >
-> > IIRC from previously asking Zhichang this before, this is the upper
-> > range we can address devices on the LPC bus. But the value was 0x1000
-> then.
-> 
-> Well, all devices that we want to address are defined by firmware (via
-> device tree or dsdt). So I'm not quite sure what this arbitrary limit
-> buys us.
-
-Following a previous discussion with Arnd:
-<< We know that the ISA/LPC bus can only have up to 65536 ports,
-so you can register all of those, or possibly limit it further to
-1024 or 4096 ports, whichever matches the bus implementation. >>
-(https://lkml.org/lkml/2016/11/10/95)
-
-We decided to register a fixed IO range for our LPC.
-About the specific reason for choosing 0x400 I think Zhichang can
-clarify once he's back (he's OOO now)   
-
-> 
-
-[...]
-
-> >>> +
-> >>> +        /* whole operation must be atomic */
-> >>> +        spin_lock_irqsave(&lpcdev->cycle_lock, flags);
-> >>
-> >> Ouch. This is going to kill your RT jitter. Is there no better way?
-> >>
-> >
-> > Obviously the bus register driving is non-atomic, so we need some way
-> to
-> > lock out.
-> >
-> > I think that it is not so critical for low-speed/infrequent-access
-> bus.
-> >
-> > If we were going to use virtual UART in the BMC on the LPC bus then
-> we
-> > could consider more.
-> 
-> Well, it basically means that an arbitrary daemon running in user space
-> that checks your temperature readings via the ipmi interface could
-> create a lot of jitter. That could be very critical if you want to use
-> this hardware for real time critical applications, such as telecom.
-> 
-> I bet that if you leave it like that and postpone the decision to fix
-> it
-> to "later", in 1 or 2 years you will cause someone weeks of debugging
-> to
-> track down why their voip gateway loses packets from time to time.
-
-Thanks for the heads-up. We'll discuss internally after Chinese holidays
-to understand if this implementation is compatible with the intended
-deployment scenarions 
-
-> 
-> >
-
-[...]
-
-> >>> +static u64 hisilpc_comm_in(void *devobj, unsigned long pio, size_t
-> >>> dlen)
-> >>> +{
-> >>> +    struct hisilpc_dev *lpcdev = devobj;
-> >>> +    struct lpc_cycle_para iopara;
-> >>> +    u32 rd_data;
-> >>
-> >> rd_data needs to be initialized to 0. Otherwise it may contain stale
-> >> stack contents and corrupt non-32bit dlen returns.
-> >>
-> >
-> > I think so, since we read into this value byte-by-byte. We also seem
-> to
-> > return a 32b value but should return 64b value according to the
-> prototype.
-> 
-> IIRC LPC (well, PIO) doesn't support bigger requests than 32bit. At
-> least I can't think of an x86 instruction that would allow bigger
-> transactions. So there's no need to make it 64bit. However, the
-> question
-> is why the prototype is 64bit then. Hm. :)
-> 
-> Maybe the prototype should be only 32bit.
-
-Maybe you're right :)
-
-Looking at extio.c we never return a 64b value.
-I'll double check with Zhichang once he's back...
-
-> 
-> >
-> >>> +    unsigned char *newbuf;
-> >>> +    int ret = 0;
-> >>> +    unsigned long ptaddr;
-> >>> +
-> >>> +    if (!lpcdev || !dlen || dlen > LPC_MAX_DULEN ||    (dlen &
-> (dlen
-> >>> - 1)))
-> >>> +        return -1;
-> >>
-> >> Isn't this -EINVAL?
-> >
-> > Not sure. This value is returned directly to the inb/outb caller,
-> which
-> > would not check this value for error.
-> >
-> > It could be argued that the checking is paranoia. If not, we should
-> > treat the failure as a more severe event.
-> 
-> Oh, I see. In that case -1 makes a lot of sense since it's the default
-> read value on x86 for unallocated space.
-> 
-> This probably deserves a comment (and/or maybe a #define)
-> 
-> 
-> Alex
+T24gMzEuMDEuMjAxNyAwOTo1NCwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24gVHVlLCBKYW4g
+MzEsIDIwMTcgYXQgMDk6MDE6MDdBTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6Cj4+Cj4+IDIwMTfr
+hYQgMDHsm5QgMjTsnbwgMTA6NTDsl5AgSG9lZ2V1biBLd29uIOydtCjqsIApIOyTtCDquIA6Cj4+
+PiBEZWFyIFRoaWVycnksCj4+Pgo+Pj4gQ291bGQgeW91IHBsZWFzZSByZXZpZXcgdGhpcyBwYXRj
+aD8KPj4gVGhpZXJyeSwgSSB0aGluayB0aGlzIHBhdGNoIGhhcyBiZWVuIHJldmlld2VkIGVub3Vn
+aCBidXQgbm8gY29tbWVudAo+PiBmcm9tIHlvdS4gU2VlbXMgeW91IGFyZSBidXN5LiBJIHdpbGwg
+cGljayB1cCB0aGlzLgo+IFNvcnJ5LCBidXQgdGhhdCdzIG5vdCBob3cgaXQgd29ya3MuIFRoaXMg
+cGF0Y2ggaGFzIGdvbmUgdGhyb3VnaCA4Cj4gcmV2aXNpb25zIHdpdGhpbiA0IHdlZWtzLCBhbmQg
+SSB0ZW5kIHRvIGlnbm9yZSBwYXRjaGVzIGxpa2UgdGhhdCB1bnRpbAo+IHRoZSBkdXN0IHNldHRs
+ZXMuCj4KPiBPdGhlciB0aGFuIHRoYXQsIHRoaXMgY29udGludWVzIHRoZSBzYW1lIG1hZG5lc3Mg
+dGhhdCBJJ3ZlIHJlcGVhdGVkbHkKPiBjb21wbGFpbmVkIGFib3V0IGluIHRoZSBwYXN0LiBUaGUg
+d2hvbGUgbWVjaGFuaXNtIG9mIHJ1bm5pbmcgdGhyb3VnaCBhCj4gc2VyaWVzIG9mIHdyaXRlcyBh
+bmQgbm90IGNhcmluZyBhYm91dCBlcnJvcnMgdW50aWwgdGhlIHZlcnkgZW5kIGlzCj4gc29tZXRo
+aW5nIHdlJ3ZlIGRpc2N1c3NlZCBhdCBsZW5ndGggaW4gdGhlIHBhc3QuIAoKWWVzLCB3ZSBoYXZl
+IGRpc2N1c3NlZCB0aGUgcGF0dGVybiwgYnV0IHdpdGhvdXQgYW55IGNvbmNsdXNpb24uIFRoZQpw
+YXR0ZXJuIGlzIGNvcnJlY3QsIHVzZWQgaW4gZGlmZmVyZW50IHBsYWNlcyBpbiBrZXJuZWwgKHNl
+ZSBiZWxvdyBmb3IKZXhhbXBsZXMpIGFuZCBzaWduaWZpY2FudGx5IGRlY3JlYXNlcyBzb3VyY2Ug
+Y29kZSBzaXplLiBEaXNhbGxvd2luZyBpdAppbiBwYW5lbHMgc3Vic3lzdGVtIGp1c3QgYmVjYXVz
+ZSBvZiBwZXJzb25hbCBwcmVmZXJlbmNlcyBvZiB0aGUKbWFpbnRhaW5lciBkb2VzIG5vdCBzZWVt
+IHRvIGJlIHByb3Blci4KCj4gSXQgYWxzbyBpbiBsYXJnZSBwYXJ0cwo+IGR1cGxpY2F0ZXMgYSBi
+dW5jaCBvZiBmdW5jdGlvbnMgZnJvbSBvdGhlciBTYW1zdW5nIHBhbmVsIGRyaXZlcnMgdGhhdCBJ
+Cj4gYWxyZWFkeSBzYWlkIHNob3VsZCBldmVudHVhbGx5IGJlIG1vdmVkIHRvIHNvbWV0aGluZyBz
+YW5lci4KCkN1cnJlbnRseSB0aGVyZSBhcmUgdHdvIFNhbXN1bmcgcGFuZWwgZHJpdmVycywgb25l
+IGlzIG9uIFNQSSBidXMsCmFub3RoZXIgb25lIGlzIG9uIERTSS4KSSBhbSAoY28tKWF1dGhvciBv
+ZiBib3RoIGRyaXZlcnMsIHRoZXkgaGF2ZSBzb21lIHNpbWlsYXJpdGllcyBidXQgSSBkaWQKbm90
+IHNlZSBhbnkgZ2FpbiBpbiBtYWtpbmcgYWRkaXRpb25hbCBhYnN0cmFjdGlvbnMgb3ZlciB0cmFu
+c3BvcnQgbGF5ZXIKanVzdCB0byBtYWtlIG9uZSBvciB0d28gc21hbGwgZnVuY3Rpb25zIGNvbW1v
+bi4KQ291bGQgeW91IGJlIG1vcmUgcHJlY2lzZSB3aGF0IGFyZSB5b3UgdGFsa2luZyBhYm91dCwg
+b3IgY291bGQgeW91IGdpdmUKYSBsaW5rIHRvIHRoZSBtYWlsIHdoZXJlIHlvdSBzYWlkIGl0LiBB
+bnl0aGluZyBJIHJlbWVtYmVyIHdhcyBhCmRpc2N1c3Npb24gYWJvdXQgdWdseSBtYWdpYyBpbml0
+aWFsaXphdGlvbiBzZXF1ZW5jZXMgZHVlIHRvIHBvb3IKZG9jdW1lbnRhdGlvbi4KCkFuZCBiZWxv
+dyBwcm9taXNlZCBleGFtcGxlcyBvZiB0aGUgZXJyb3IgcGF0dGVybiwgaXQgd2FzIHRpbWUgY29u
+c3VtaW5nCnRvIGZpbmQgdGhlbSwgc28gcGxlYXNlIGF0IGxlYXN0IHJlYWQgdGhlbSA6KQoKQWxt
+b3N0IGV4YWN0bHkgdGhlIHNhbWUgcGF0dGVybnMgZm9yIHRoZSBzYW1lIHB1cnBvc2U6CgoxLiBo
+dHRwOi8vbHhyLmZyZWUtZWxlY3Ryb25zLmNvbS9zb3VyY2UvZHJpdmVycy9uZXQvaWVlZTgwMjE1
+NC9hdHVzYi5jI0w2MwogICAgQ2l0YXRpb24gZnJvbSB0aGUgY29kZToKICAgIFRvIHJlZHVjZSB0
+aGUgbnVtYmVyIG9mIGVycm9yIGNoZWNrcyBpbiB0aGUgY29kZSwgd2UgcmVjb3JkIHRoZQpmaXJz
+dCBlcnJvcgogICAgaW4gYXR1c2ItPmVyciBhbmQgcmVqZWN0IGFsbCBzdWJzZXF1ZW50IHJlcXVl
+c3RzIHVudGlsIHRoZSBlcnJvciBpcwpjbGVhcmVkLgoKMi4gaHR0cDovL2x4ci5mcmVlLWVsZWN0
+cm9ucy5jb20vc291cmNlL2RyaXZlcnMvbWQvZG0tdGhpbi5jP3Y9NC40I0w5MTcKMy4gaHR0cDov
+L2x4ci5mcmVlLWVsZWN0cm9ucy5jb20vc291cmNlL25ldC85cC90cmFuc19mZC5jP3Y9My4xOCNM
+Mjk3CjQuCmh0dHA6Ly9seHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9kcml2ZXJzL21lZGlh
+L3Y0bDItY29yZS92NGwyLWN0cmxzLmMjTDIyMzQKNS4gaHR0cDovL2x4ci5mcmVlLWVsZWN0cm9u
+cy5jb20vc291cmNlL2RyaXZlcnMvbWVkaWEvaTJjL3M1azViYWYuYyNMNDUxCiAgICBUaGlzIGlz
+IG15IGRyaXZlciwgSSBtZW50aW9uIGl0IGhlcmUganVzdCB0byBzaG93IGl0IHdhcyBub3QgYQpw
+cm9ibGVtIHRvIG1lcmdlIGl0IHRvIG1lZGlhIHN1YnN5c3RlbS4KClNpbWlsYXIgcGF0dGVybnM6
+Cgo2LiBodHRwOi8vbHhyLmZyZWUtZWxlY3Ryb25zLmNvbS9zb3VyY2UvZnMvc2VxX2ZpbGUuYyNM
+Mzk4CiAgICBEbyBub3QgcHJvY2VzcyBvYmplY3QgaWYgYnVmZmVyIGlzIGZ1bGwsIGl0IGFsbG93
+cyB0byBkbyBub3QgY2hlY2sKYnVmZmVyIHNpemUgYWZ0ZXIgZXZlcnkgd3JpdGUsIGZvciBleGFt
+cGxlOgo+ICAgICBzZXFfcHJpbnRmKG0sICIgaGFyZGlycS1zYWZlIGxvY2tzOiAgICAgICAgICAg
+ICUxMWx1XG4iLAo+ICAgICAgICAgICAgIG5yX2hhcmRpcnFfc2FmZSk7Cj4gICAgIHNlcV9wcmlu
+dGYobSwgIiBoYXJkaXJxLXVuc2FmZSBsb2NrczogICAgICAgICAgJTExbHVcbiIsCj4gICAgICAg
+ICAgICAgbnJfaGFyZGlycV91bnNhZmUpOwo+ICAgICBzZXFfcHJpbnRmKG0sICIgc29mdGlycS1z
+YWZlIGxvY2tzOiAgICAgICAgICAgICUxMWx1XG4iLAo+ICAgICAgICAgICAgIG5yX3NvZnRpcnFf
+c2FmZSk7Cj4gICAgIHNlcV9wcmludGYobSwgIiBzb2Z0aXJxLXVuc2FmZSBsb2NrczogICAgICAg
+ICAgJTExbHVcbiIsCj4gICAgICAgICAgICAgbnJfc29mdGlycV91bnNhZmUpOwo+ICAgICBzZXFf
+cHJpbnRmKG0sICIgaXJxLXNhZmUgbG9ja3M6ICAgICAgICAgICAgICAgICUxMWx1XG4iLAo+ICAg
+ICAgICAgICAgIG5yX2lycV9zYWZlKTsKPiAgICAgc2VxX3ByaW50ZihtLCAiIGlycS11bnNhZmUg
+bG9ja3M6ICAgICAgICAgICAgICAlMTFsdVxuIiwKPiAgICAgICAgICAgICBucl9pcnFfdW5zYWZl
+KTsKPgo+ICAgICBzZXFfcHJpbnRmKG0sICIgaGFyZGlycS1yZWFkLXNhZmUgbG9ja3M6ICAgICAg
+ICUxMWx1XG4iLAo+ICAgICAgICAgICAgIG5yX2hhcmRpcnFfcmVhZF9zYWZlKTsKPiAgICAgc2Vx
+X3ByaW50ZihtLCAiIGhhcmRpcnEtcmVhZC11bnNhZmUgbG9ja3M6ICAgICAlMTFsdVxuIiwKPiAg
+ICAgICAgICAgICBucl9oYXJkaXJxX3JlYWRfdW5zYWZlKTsKPiAgICAgc2VxX3ByaW50ZihtLCAi
+IHNvZnRpcnEtcmVhZC1zYWZlIGxvY2tzOiAgICAgICAlMTFsdVxuIiwKPiAgICAgICAgICAgICBu
+cl9zb2Z0aXJxX3JlYWRfc2FmZSk7Cj4gICAgIHNlcV9wcmludGYobSwgIiBzb2Z0aXJxLXJlYWQt
+dW5zYWZlIGxvY2tzOiAgICAgJTExbHVcbiIsCj4gICAgICAgICAgICAgbnJfc29mdGlycV9yZWFk
+X3Vuc2FmZSk7Cj4gICAgIHNlcV9wcmludGYobSwgIiBpcnEtcmVhZC1zYWZlIGxvY2tzOiAgICAg
+ICAgICAgJTExbHVcbiIsCj4gICAgICAgICAgICAgbnJfaXJxX3JlYWRfc2FmZSk7Cj4gICAgIHNl
+cV9wcmludGYobSwgIiBpcnEtcmVhZC11bnNhZmUgbG9ja3M6ICAgICAgICAgJTExbHVcbiIsCj4g
+ICAgICAgICAgICAgbnJfaXJxX3JlYWRfdW5zYWZlKTsKPgo+ICAgICBzZXFfcHJpbnRmKG0sICIg
+dW5jYXRlZ29yaXplZCBsb2NrczogICAgICAgICAgICUxMWx1XG4iLAo+ICAgICAgICAgICAgIG5y
+X3VuY2F0ZWdvcml6ZWQpOwo+ICAgICBzZXFfcHJpbnRmKG0sICIgdW51c2VkIGxvY2tzOiAgICAg
+ICAgICAgICAgICAgICUxMWx1XG4iLAo+ICAgICAgICAgICAgIG5yX3VudXNlZCk7Cj4gICAgIHNl
+cV9wcmludGYobSwgIiBtYXggbG9ja2luZyBkZXB0aDogICAgICAgICAgICAgJTExdVxuIiwKPiAg
+ICAgICAgICAgICBtYXhfbG9ja2RlcF9kZXB0aCk7CgpOb3cgdHJ5IHRvIGltYWdpbmUgaG93IGl0
+IHdvdWxkIGxvb2sgbGlrZSBpZiB5b3UgYWRkIGVycm9yIGNoZWNraW5nCmFmdGVyIGVhY2ggY2Fs
+bC4KCjcuIGh0dHA6Ly9seHIuZnJlZS1lbGVjdHJvbnMuY29tL3NvdXJjZS9saWIvZGV2cmVzLmMj
+TDEyOQogICAgUG9zdHBvbmVkIGVycm9yIGNoZWNrOgo+ICovcmVzID0gcGxhdGZvcm1fZ2V0X3Jl
+c291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAwKTsvKgo+IC8qYiovKi9hc2UgPSBkZXZtX2lv
+cmVtYXBfcmVzb3VyY2UoJnBkZXYtPmRldiwgcmVzKTsvKgo+ICovaWYgKElTX0VSUihiYXNlKSkv
+Kgo+IC8qKi8qL3JldHVybiBQVFJfRVJSKGJhc2UpOy8qCgoKUmVnYXJkcwpBbmRyemVqCgpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
+bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
