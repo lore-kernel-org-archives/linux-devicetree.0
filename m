@@ -1,149 +1,131 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
- OTG HS/FS in FS mode (internal PHY)
-Date: Tue, 31 Jan 2017 19:49:23 +0000
-Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B410454@US01WEMBX2.internal.synopsys.com>
-References: <20170129022110.54032-1-bruherrera@gmail.com>
- <20170129022110.54032-2-bruherrera@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: soc-core: remove OF adjusting for
+	snd_soc_of_parse_card_name" to the asoc tree
+Date: Tue, 31 Jan 2017 20:02:23 +0000
+Message-ID: <E1cYedD-0005Yv-FZ@debutante>
+References: <878tpxqac4.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <878tpxqac4.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon <horms@verge.net.au>, Linux-DT <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/28/2017 6:21 PM, Bruno Herrera wrote:
-> This patch introduces a new parameter to activate USB OTG HS/FS core embedded
-> phy transceiver. The STM32F4x9 SoC uses the GGPIO register to enable the transceiver.
-> Also add the dwc2_core_params structure for stm32f4 otg fs.
->
-> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/usb/dwc2/core.h   |  4 ++++
->  drivers/usb/dwc2/hcd.c    | 13 ++++++++++++-
->  drivers/usb/dwc2/hw.h     |  2 ++
->  drivers/usb/dwc2/params.c | 20 ++++++++++++++++++++
->  4 files changed, 38 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index b9b62f1..ed8ce42 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -423,6 +423,9 @@ enum dwc2_ep0_state {
->   *			needed.
->   *			0 - No (default)
->   *			1 - Yes
-> + * @activate_transceiver: Activate internal transceiver using GGPIO register.
-> + *			0 - Deactivate the transceiver (default)
-> + *			1 - Activate the transceiver
->   * @g_dma:              Enables gadget dma usage (default: autodetect).
->   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
->   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-> @@ -477,6 +480,7 @@ struct dwc2_core_params {
->  	bool uframe_sched;
->  	bool external_id_pin_ctl;
->  	bool hibernation;
-> +	bool activate_transceiver;
+The patch
 
-Seeing as this is very specific to the STM FS platform using a GGPIO
-register bit that only exists for it, maybe call it something like:
+   ASoC: soc-core: remove OF adjusting for snd_soc_of_parse_card_name
 
-activate_stm_fs_transceiver
+has been applied to the asoc tree at
 
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
->  	u16 max_packet_count;
->  	u32 max_transfer_size;
->  	u32 ahbcfg;
-> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-> index a73722e..190a441 100644
-> --- a/drivers/usb/dwc2/hcd.c
-> +++ b/drivers/usb/dwc2/hcd.c
-> @@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
->
->  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  {
-> -	u32 usbcfg, i2cctl;
-> +	u32 usbcfg, ggpio, i2cctl;
->  	int retval = 0;
->
->  	/*
-> @@ -145,6 +145,17 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  				return retval;
->  			}
->  		}
-> +
-> +		ggpio = dwc2_readl(hsotg->regs + GGPIO);
-> +		if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN) &&
-> +		    (hsotg->params.activate_transceiver > 0)) {
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-This is bool so no need to check > 0.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +			dev_dbg(hsotg->dev, "Activating transceiver\n");
-> +			/* STM32F4x9 uses the GGPIO register as general core
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Use '/*' by itself to start multi-line comments.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> +			 * configuration register.
-> +			 */
-> +			ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
-> +			dwc2_writel(ggpio, hsotg->regs + GGPIO);
-> +		}
+Thanks,
+Mark
 
-Make this whole block conditional on the parameter.
+>From b07609cecaac6681a2fca3eebc1bae7b00282620 Mon Sep 17 00:00:00 2001
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Date: Fri, 27 Jan 2017 06:37:51 +0000
+Subject: [PATCH] ASoC: soc-core: remove OF adjusting for
+ snd_soc_of_parse_card_name
 
->  	}
->
->  	/*
-> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-> index bde7248..9b432c1 100644
-> --- a/drivers/usb/dwc2/hw.h
-> +++ b/drivers/usb/dwc2/hw.h
-> @@ -225,6 +225,8 @@
->
->  #define GPVNDCTL			HSOTG_REG(0x0034)
->  #define GGPIO				HSOTG_REG(0x0038)
-> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	(1 << 16)
-> +
+Because prototype of OF-graph sound card support didn't have Sound Card
+node, commit 8f5ebb1bee15b5720741a98414767bb86f6c2b23
+("ASoC: soc-core: adjust for graph on snd_soc_of_parse_card_name")
+adjusted to it on each functions.
 
-Use BIT macro
+But final discussion result of ALSA SoC / OF-graph ML, OF-graph sound
+card has node. Thus, this commit became no longer needed.
 
->  #define GUID				HSOTG_REG(0x003c)
->  #define GSNPSID				HSOTG_REG(0x0040)
->  #define GHWCFG1				HSOTG_REG(0x0044)
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index 2990c34..a35abba 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -120,6 +120,23 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
->  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
->  }
->
-> +static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
-> +{
-> +	struct dwc2_core_params *p = &hsotg->params;
-> +
-> +	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
-> +	p->speed = DWC2_SPEED_PARAM_FULL;
-> +	p->host_rx_fifo_size = 128;
-> +	p->host_nperio_tx_fifo_size = 96;
-> +	p->host_perio_tx_fifo_size = 96;
-> +	p->max_packet_count = 256;
-> +	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
-> +	p->i2c_enable = false;
-> +	p->uframe_sched = false;
-> +	p->activate_transceiver = true;
-> +
+This reverts commit 8f5ebb1bee15b5720741a98414767bb86f6c2b23.
 
-Remove newline
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ include/sound/soc.h  |  7 ++-----
+ sound/soc/soc-core.c | 11 +++++------
+ 2 files changed, 7 insertions(+), 11 deletions(-)
 
-[snip]
-
-Regards,
-John
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/include/sound/soc.h b/include/sound/soc.h
+index 34bd033443dc..6ecabeb8d31d 100644
+--- a/include/sound/soc.h
++++ b/include/sound/soc.h
+@@ -1644,11 +1644,8 @@ static inline struct snd_soc_platform *snd_soc_kcontrol_platform(
+ int snd_soc_util_init(void);
+ void snd_soc_util_exit(void);
+ 
+-#define snd_soc_of_parse_card_name(card, propname) \
+-	snd_soc_of_parse_card_name_from_node(card, NULL, propname)
+-int snd_soc_of_parse_card_name_from_node(struct snd_soc_card *card,
+-					 struct device_node *np,
+-					 const char *propname);
++int snd_soc_of_parse_card_name(struct snd_soc_card *card,
++			       const char *propname);
+ int snd_soc_of_parse_audio_simple_widgets(struct snd_soc_card *card,
+ 					  const char *propname);
+ int snd_soc_of_parse_tdm_slot(struct device_node *np,
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index 4ff2448f6023..ebaebc7c9699 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -3492,10 +3492,10 @@ void snd_soc_unregister_codec(struct device *dev)
+ EXPORT_SYMBOL_GPL(snd_soc_unregister_codec);
+ 
+ /* Retrieve a card's name from device tree */
+-int snd_soc_of_parse_card_name_from_node(struct snd_soc_card *card,
+-					 struct device_node *np,
+-					 const char *propname)
++int snd_soc_of_parse_card_name(struct snd_soc_card *card,
++			       const char *propname)
+ {
++	struct device_node *np;
+ 	int ret;
+ 
+ 	if (!card->dev) {
+@@ -3503,8 +3503,7 @@ int snd_soc_of_parse_card_name_from_node(struct snd_soc_card *card,
+ 		return -EINVAL;
+ 	}
+ 
+-	if (!np)
+-		np = card->dev->of_node;
++	np = card->dev->of_node;
+ 
+ 	ret = of_property_read_string_index(np, propname, 0, &card->name);
+ 	/*
+@@ -3521,7 +3520,7 @@ int snd_soc_of_parse_card_name_from_node(struct snd_soc_card *card,
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL_GPL(snd_soc_of_parse_card_name_from_node);
++EXPORT_SYMBOL_GPL(snd_soc_of_parse_card_name);
+ 
+ static const struct snd_soc_dapm_widget simple_widgets[] = {
+ 	SND_SOC_DAPM_MIC("Microphone", NULL),
+-- 
+2.11.0
