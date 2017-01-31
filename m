@@ -1,66 +1,106 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
-Date: Tue, 31 Jan 2017 20:33:40 +0000
-Message-ID: <20170131203340.GC27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
- <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
- <20170131134252.GX27312@n2100.armlinux.org.uk>
- <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v4 2/8] devicetree: power: add battery state machine documentation
+Date: Tue, 31 Jan 2017 12:59:22 -0800
+Message-ID: <CAKvHMgRL9g1oY7oYYv45zLw4dtQwDDchuOVeROHVTJ9vhRMF0g@mail.gmail.com>
+References: <20170122071404.9654-3-matt@ranostay.consulting>
+ <20170122222212.27086-1-liam@networkimprov.net> <20170129180619.di5ul4owkzjveoct@earth>
+ <CAKvHMgTrFjjEWwK-NeGOF1o6KRQPXYUvcqWcDwaW+5ZKjQ7VZA@mail.gmail.com>
+ <20170130023934.l5s7jwaozcjovqhc@earth> <CAKvHMgQFj1K2yLH3bRWYJDqB9qSVU_Gi_n2ZQB_scyg-TRCroA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKvHMgQFj1K2yLH3bRWYJDqB9qSVU_Gi_n2ZQB_scyg-TRCroA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
-> On 01/31/2017 05:42 AM, Russell King - ARM Linux wrote:
-> >On Fri, Jan 20, 2017 at 03:38:28PM +0100, Hans Verkuil wrote:
-> >>Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
-> >>should complain about this.
-> >... and more.
-> 
-> Right, in version 3 that you are working with, no v4l2-compliance fixes were
-> in yet. A lot of the compliance errors are fixed, please look in latest
-> branch
-> imx-media-staging-md-wip at git@github.com:slongerbeam/mediatree.git.
+On Sun, Jan 29, 2017 at 6:46 PM, Liam Breck <liam@networkimprov.net> wrote:
+> On Sun, Jan 29, 2017 at 6:39 PM, Sebastian Reichel <sre@kernel.org> wrote:
+>> Hi,
+>>
+>> On Sun, Jan 29, 2017 at 03:32:10PM -0800, Liam Breck wrote:
+>>> On Sun, Jan 29, 2017 at 10:06 AM, Sebastian Reichel <sre@kernel.org> wrote:
+>>> > On Sun, Jan 22, 2017 at 02:22:12PM -0800, Liam Breck wrote:
+>>> ...
+>>> >> +Batteries must be referenced by chargers and/or fuel-gauges
+>>> >> +using a phandle. The phandle's property should be named
+>>> >> +"monitored-battery".
+>>> >> +
+>>> >> +Example:
+>>> >> +
+>>> >> +     bat: battery {
+>>> >> +             compatible = "fixed-battery";
+>>> >> +             terminate-microvolt = <3700000>;
+>>> >> +             design-microwatt-hours = <5290000>;
+>>> >> +             design-microamp-hours = <1430000>;
+>>> >> +     };
+>>> >> +
+>>> >> +     charger: charger@0 {
+>>> >> +             ....
+>>> >> +             monitored-battery = <&bat>;
+>>> >> +             ...
+>>> >> +     };
+>>> >> +
+>>> >> +     fuel_gauge: fuel_gauge@0 {
+>>> >> +             ....
+>>> >> +             monitored-battery = <&bat>;
+>>> >> +             ...
+>>> >> +     };
+>>> >
+>>> > The charger stuff does does not integrate well with
+>>> > pre-existing support for power-supplies property
+>>> > described in
+>>> > Documentation/devicetree/bindings/power/supply/power_supply.txt
+>>> >
+>>> > I think the proper chain would be:
+>>> >
+>>> > bat: battery {
+>>> >         compatible = "fixed-battery";
+>>> >         terminate-microvolt = <3700000>;
+>>> >         design-microwatt-hours = <5290000>;
+>>> >         design-microamp-hours = <1430000>;
+>>> > };
+>>> >
+>>> > fuel_gauge: fuel_gauge@0 {
+>>> >         ...
+>>> >         monitored-battery = <&bat>;
+>>> >         power-supplies = <&charger>;
+>>> >         ...
+>>> > };
+>>> >
+>>> > charger: charger@0 {
+>>> >         ...
+>>> > };
+>>> >
+>>> > I added the power-supplies node to the fuel-gauge instead of the battery,
+>>> > since fuel-gauge + fixed-battery is basically a smart battery.
+>>>
+>>> BQ24190 charger will need other params from a battery node. How does
+>>> it get them in this scenario?
+>>
+>> It should be able to get all required properties from the bq27xxx.
+>> Otherwise supporting smart batteries is impossible. What properties
+>> do you need?
+>
+> These two, at a minimum:
+>
+> - precharge-microamps: maximum charge current during precharge
+>   phase (typically 20% of battery capacity)
+>
+> - termination-microamps: a charge cycle terminates when the
+>   battery voltage is above recharge threshold, and the current is below
+>   this setting (typically 10% of battery capacity)
 
-Sorry, I'm not prepared to pull random trees from github as there's
-no easy way to see what's in the branch.
+The relevant docs, see section 9.5.1.4
+http://www.ti.com/lit/ds/symlink/bq24190.pdf#31
 
-I've always disliked github because its web interface makes it soo
-difficult to navigate around git trees hosted there.  You can see
-a commit, you can see a diff of the commit.  You can get a list of
-branches.  But there seems to be no way to get a list of commits
-similar to "git log" or even a one-line summary of each commit on
-a branch.  If there is, it's completely non-obvious (which I think is
-much of the problem with github, it's web interface is horrendous.)
+BQ27xxx doesn't know about these parameters, but they are
+characteristics of a fixed-battery, since the values are based on its
+capacity. Smart batteries may have a circuit to limit current during
+these phases. The BQ24190 charger is intended for dumb batteries :-)
 
-Or you can clone/pull the tree without knowing what you're fetching
-(eg, what the tree is based upon.)
+So I believe letting charger and fuel-gauge both reference
+monitored-battery is the right scheme.
 
-Or you can waste time clicking repeatedly on the "parent" commit link
-on each patch working your way back through the history...
-
-Well, it looks like it's bsaed on 4.10-rc1 with who-knows-what work
-from the linux-media tree (I didn't try and go back any further.)
-As I don't want to take a whole pile of other changes into my tree,
-I'm certainly not going to pull from your github tree.  Sorry.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+~.~
