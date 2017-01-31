@@ -1,48 +1,86 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCHv2 3/3] arm64: dts: marvell: adjust name of sd-mmc-gop
- clock in syscon
-Date: Tue, 31 Jan 2017 11:52:40 +0100
-Message-ID: <87bmun1oxz.fsf@free-electrons.com>
-References: <1482316017-22154-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482316017-22154-4-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170131114418.46e23bd4@free-electrons.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 11:00:27 +0000
+Message-ID: <20170131110027.GU27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170131004510.GQ27312@n2100.armlinux.org.uk>
+ <951c1a08-c0f2-4333-b4bf-410de8dd863f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170131114418.46e23bd4@free-electrons.com> (Thomas Petazzoni's
- message of "Tue, 31 Jan 2017 11:44:18 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Stephen Boyd <sboyd@codeaurora.org>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Hanna Hawa <hannah@marvell.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <951c1a08-c0f2-4333-b4bf-410de8dd863f@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLAogCiBPbiBtYXIuLCBqYW52LiAzMSAyMDE3LCBUaG9tYXMgUGV0YXp6b25pIDx0
-aG9tYXMucGV0YXp6b25pQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cgo+IEhlbGxvLAo+Cj4g
-T24gV2VkLCAyMSBEZWMgMjAxNiAxMToyNjo1NyArMDEwMCwgVGhvbWFzIFBldGF6em9uaSB3cm90
-ZToKPj4gVGhpcyBjb21taXQgYWRqdXN0cyB0aGUgbmFtZXMgb2YgZ2F0YWJsZSBjbG9jayAjMTgg
-b2YgdGhlIE1hcnZlbGwgQXJtYWRhCj4+IENQMTEwIHN5c3RlbSBjb250cm9sbGVyLiBUaGlzIGNs
-b2NrIG5vdCBvbmx5IGNvbnRyb2xzIFNEL01NQywgYnV0IGFsc28KPj4gdGhlIEdPUCAoR3JvdXAg
-T2YgUG9ydHMpIHVzZWQgZm9yIG5ldHdvcmtpbmcuIFNvIHRoZSBjbG9jayBpcyByZW5hbWVkIHRv
-Cj4+IHtjcG0sY3BzfS1zZC1tbWMtZ29wIGluc3RlYWQgb2Yge2NwbSxjcHN9LXNkLW1tYy4KPj4g
-Cj4+IFNpZ25lZC1vZmYtYnk6IFRob21hcyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAZnJl
-ZS1lbGVjdHJvbnMuY29tPgo+Cj4gR3LDqWdvcnksIHNpbmNlIHBhdGNoZXMgMS8zIGFuZCAyLzMg
-b2YgdGhpcyBzZXJpZXMgaGF2ZSBiZWVuIGFwcGxpZWQsCj4gY291bGQgeW91IHRha2UgdGhpcyBQ
-QVRDSCAzLzMgPwoKSSBjb21wbGV0ZWx5IG1pc3NlZCB0aGlzIHBhdGNoIQoKTm93LCBhcHBsaWVk
-IG9uIG12ZWJ1L2R0NjQKClRoYW5rcywKCkdyZWdvcnkKCgoKPgo+IFRoYW5rcyEKPgo+IFRob21h
-cwo+IC0tIAo+IFRob21hcyBQZXRhenpvbmksIENUTywgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRl
-ZCBMaW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNv
-bQoKLS0gCkdyZWdvcnkgQ2xlbWVudCwgRnJlZSBFbGVjdHJvbnMKS2VybmVsLCBkcml2ZXJzLCBy
-ZWFsLXRpbWUgYW5kIGVtYmVkZGVkIExpbnV4CmRldmVsb3BtZW50LCBjb25zdWx0aW5nLCB0cmFp
-bmluZyBhbmQgc3VwcG9ydC4KaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Mon, Jan 30, 2017 at 05:22:01PM -0800, Steve Longerbeam wrote:
+> I'm also having trouble finding a datasheet for it, but from what
+> I've read, it has a MIPI CSI-2 interface. It should work fine as long
+> as it presents a single source pad, registers asynchronously, and
+> sets its entity function to MEDIA_ENT_F_CAM_SENSOR.
+
+Yes, it is MIPI CSI-2, and yes it has a single source pad, registers
+asynchronously, but that's about as far as it goes.
+
+The structure is a camera sensor followed by some processing.  So just
+like the smiapp code, I've ended up with multiple subdevs describing
+each stage of the sensors pipeline.
+
+Just like smiapp, the camera sensor block (which is the very far end
+of the pipeline) is marked with MEDIA_ENT_F_CAM_SENSOR.  However, in
+front of that is the binner, which just like smiapp gets a separate
+entity.  It's this entity which is connected to the mipi-csi2 subdev.
+
+Unlike smiapp, which does not set an entity function, I set my binner
+entity as MEDIA_ENT_F_PROC_VIDEO_SCALER on the basis that that is
+what V4L2 documentation recommend:
+
+    -  ..  row 27
+
+       ..  _MEDIA-ENT-F-PROC-VIDEO-SCALER:
+
+       -  ``MEDIA_ENT_F_PROC_VIDEO_SCALER``
+
+       -  Video scaler. An entity capable of video scaling must have
+          at least one sink pad and one source pad, and scale the
+          video frame(s) received on its sink pad(s) to a different
+          resolution output on its source pad(s). The range of
+          supported scaling ratios is entity-specific and can differ
+          between the horizontal and vertical directions (in particular
+          scaling can be supported in one direction only). Binning and
+          skipping are considered as scaling.
+
+This causes attempts to configure the ipu1_csi0 interface to fail:
+
+media-ctl -v -d /dev/media1 --set-v4l2 '"ipu1_csi0":1[fmt:SGBRG8/512x512@1/30]'
+Opening media device /dev/media1
+Enumerating entities
+Found 29 entities
+Enumerating pads and links
+Setting up format SGBRG8 512x512 on pad ipu1_csi0/1
+Unable to set format: No such device (-19)
+Unable to setup formats: No such device (19)
+
+and in the kernel log:
+
+ipu1_csi0: no sensor attached
+
+And yes, I already know that my next problem is going to be that the bayer
+formats are not supported in your driver (just like Philipp's driver) but
+adding them should not be difficult... but only once this issue is resolved.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
