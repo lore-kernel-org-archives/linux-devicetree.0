@@ -1,401 +1,117 @@
-From: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Subject: [PATCH v3 2/2] iio: distance: add devantech us ranger srf04
-Date: Tue, 31 Jan 2017 19:03:45 +0100
-Message-ID: <20170131180345.GA12892@andreas>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Tue, 31 Jan 2017 10:15:10 -0800
+Message-ID: <87r33j85ap.fsf@eliezer.anholt.net>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
+ <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shraddha.6596-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w@1wt.eu, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjenning-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ak-n176/SwNRljddJNmlsFzeA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1379450264=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170131150226.GB4519@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Sean Paul <seanpaul@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the ultrasonic ranger srf04 of devantech.
+--===============1379450264==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-This device is measuring the distance of objects in a range between 1 cm
-and 3 meters and a theoretical resolution of 3 mm.
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-There are two GPIOs used:
-  - trigger: set as output to the device when the measurement should start
-  - echo: set by the device when the ultrasonic wave is sent out and reset
-    when the echo is recognized; this needs to be an interrupt input
+Thierry Reding <thierry.reding@gmail.com> writes:
 
-The time between setting and resetting the echo pin is the time the
-waveform needed for one round trip. This time is recorded in the interrupt
-handler.
+> [ Unknown signature status ]
+> On Tue, Jan 31, 2017 at 09:38:53AM -0500, Sean Paul wrote:
+>> On Tue, Jan 31, 2017 at 09:54:49AM +0100, Thierry Reding wrote:
+>> > On Tue, Jan 31, 2017 at 09:01:07AM +0900, Inki Dae wrote:
+>> > >=20
+>> > >=20
+>> > > 2017=EB=85=84 01=EC=9B=94 24=EC=9D=BC 10:50=EC=97=90 Hoegeun Kwon =
+=EC=9D=B4(=EA=B0=80) =EC=93=B4 =EA=B8=80:
+>> > > > Dear Thierry,
+>> > > >=20
+>> > > > Could you please review this patch?
+>> > >=20
+>> > > Thierry, I think this patch has been reviewed enough but no comment
+>> > > from you. Seems you are busy. I will pick up this.
+>> >=20
+>> > Sorry, but that's not how it works. This patch has gone through 8
+>> > revisions within 4 weeks, and I tend to ignore patches like that until
+>> > the dust settles.
+>> >=20
+>>=20
+>> Seems like the dust was pretty settled. It was posted on 1/11, pinged on=
+ 1/24,
+>> and picked up on 1/31. I don't think it's unreasonable to take it through
+>> another tree after that.
+>>=20
+>> I wonder if drm_panel would benefit from the -misc group maintainership =
+model
+>> as drm_bridge does. By spreading out the workload, the high-maintenance
+>> patches would hopefully find someone to shepherd them through.
+>
+> Except that nobody except me really cares. If we let people take patches
+> through separate trees or group-maintained trees they'll likely go in
+> without too much thought. DRM panel is somewhat different from core DRM
+> in this regard because its infrastructure is minimal and there's little
+> outside the panel-simple driver. So we're still at a stage where we need
+> to fine-tune what drivers should look like and how we can improve.
 
-The distance is calculated in the read function by using the ultrasonic
-speed at 20 degrees celsius which is about 343 m/s.
+I would love to care and participate in review, but with the structure
+of your tree you're the only one whose review counts, so I don't
+participate.
 
-Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
----
- MAINTAINERS                    |   6 +
- drivers/iio/proximity/Kconfig  |  11 ++
- drivers/iio/proximity/Makefile |   1 +
- drivers/iio/proximity/srf04.c  | 304 +++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 322 insertions(+)
- create mode 100644 drivers/iio/proximity/srf04.c
+As is, I'm stuck out here with my panel driver I submitted on December
+14th completely ignored, and no other developer will look at it because
+their review doesn't count and only yours does.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa6af014fd72..ba979cc48fd8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3469,6 +3469,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git
- S:	Maintained
- F:	drivers/usb/dwc3/
- 
-+DEVANTECH SRF ULTRASONIC RANGER IIO DRIVER
-+M:	Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-+L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-+S:	Maintained
-+F:	drivers/iio/proximity/srf*.c
-+
- DEVICE COREDUMP (DEV_COREDUMP)
- M:	Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
- L:	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-index ef4c73db5b53..0bcbc66eae6e 100644
---- a/drivers/iio/proximity/Kconfig
-+++ b/drivers/iio/proximity/Kconfig
-@@ -32,6 +32,17 @@ config LIDAR_LITE_V2
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called pulsedlight-lite-v2
- 
-+config SRF04
-+	tristate "Devantech SRF04 ultrasonic ranger sensor"
-+	depends on GPIOLIB
-+	help
-+	  Say Y here to build a driver for Devantech SRF04 ultrasonic
-+	  ranger sensor. This driver can be used to measure the distance
-+	  of objects. It is using two GPIOs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called srf04.
-+
- config SX9500
- 	tristate "SX9500 Semtech proximity sensor"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-index 9aadd9a8ee99..97c046c1dfc5 100644
---- a/drivers/iio/proximity/Makefile
-+++ b/drivers/iio/proximity/Makefile
-@@ -5,4 +5,5 @@
- # When adding new entries keep the list in alphabetical order
- obj-$(CONFIG_AS3935)		+= as3935.o
- obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
-+obj-$(CONFIG_SRF04)		+= srf04.o
- obj-$(CONFIG_SX9500)		+= sx9500.o
-diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-new file mode 100644
-index 000000000000..e37667f933b3
---- /dev/null
-+++ b/drivers/iio/proximity/srf04.c
-@@ -0,0 +1,304 @@
-+/*
-+ * SRF04: ultrasonic sensor for distance measuring by using GPIOs
-+ *
-+ * Copyright (c) 2017 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ *
-+ * For details about the device see:
-+ * http://www.robot-electronics.co.uk/htm/srf04tech.htm
-+ *
-+ * the measurement cycle as timing diagram looks like:
-+ *
-+ *          +---+
-+ * GPIO     |   |
-+ * trig:  --+   +------------------------------------------------------
-+ *          ^   ^
-+ *          |<->|
-+ *         udelay(10)
-+ *
-+ * ultra           +-+ +-+ +-+
-+ * sonic           | | | | | |
-+ * burst: ---------+ +-+ +-+ +-----------------------------------------
-+ *                           .
-+ * ultra                     .              +-+ +-+ +-+
-+ * sonic                     .              | | | | | |
-+ * echo:  ----------------------------------+ +-+ +-+ +----------------
-+ *                           .                        .
-+ *                           +------------------------+
-+ * GPIO                      |                        |
-+ * echo:  -------------------+                        +---------------
-+ *                           ^                        ^
-+ *                           interrupt                interrupt
-+ *                           (ts_rising)              (ts_falling)
-+ *                           |<---------------------->|
-+ *                              pulse time measured
-+ *                              --> one round trip of ultra sonic waves
-+ */
-+#include <linux/err.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/sched.h>
-+#include <linux/interrupt.h>
-+#include <linux/delay.h>
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+struct srf04_data {
-+	struct device		*dev;
-+	struct gpio_desc	*gpiod_trig;
-+	struct gpio_desc	*gpiod_echo;
-+	struct mutex		lock;
-+	int			irqnr;
-+	ktime_t			ts_rising;
-+	ktime_t			ts_falling;
-+	struct completion	rising;
-+	struct completion	falling;
-+};
-+
-+static irqreturn_t srf04_handle_irq(int irq, void *dev_id)
-+{
-+	struct iio_dev *indio_dev = dev_id;
-+	struct srf04_data *data = iio_priv(indio_dev);
-+	ktime_t now = ktime_get();
-+
-+	if (gpiod_get_value(data->gpiod_echo)) {
-+		data->ts_rising = now;
-+		complete(&data->rising);
-+	} else {
-+		data->ts_falling = now;
-+		complete(&data->falling);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int srf04_read(struct srf04_data *data)
-+{
-+	int ret;
-+	ktime_t ktime_dt;
-+	u64 dt_ns;
-+	u32 time_ns, distance_mm;
-+
-+	/*
-+	 * just one read-echo-cycle can take place at a time
-+	 * ==> lock against concurrent reading calls
-+	 */
-+	mutex_lock(&data->lock);
-+
-+	reinit_completion(&data->rising);
-+	reinit_completion(&data->falling);
-+
-+	gpiod_set_value(data->gpiod_trig, 1);
-+	udelay(10);
-+	gpiod_set_value(data->gpiod_trig, 0);
-+
-+	/* it cannot take more than 20 ms */
-+	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
-+	if (ret < 0) {
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	} else if (ret == 0) {
-+		mutex_unlock(&data->lock);
-+		return -ETIMEDOUT;
-+	}
-+
-+	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
-+	if (ret < 0) {
-+		mutex_unlock(&data->lock);
-+		return ret;
-+	} else if (ret == 0) {
-+		mutex_unlock(&data->lock);
-+		return -ETIMEDOUT;
-+	}
-+
-+	ktime_dt = ktime_sub(data->ts_falling, data->ts_rising);
-+
-+	mutex_unlock(&data->lock);
-+
-+	dt_ns = ktime_to_ns(ktime_dt);
-+	/*
-+	 * measuring more than 3 meters is beyond the capabilities of
-+	 * the sensor
-+	 * ==> filter out invalid results for not measuring echos of
-+	 *     another us sensor
-+	 *
-+	 * formula:
-+	 *         distance       3 m
-+	 * time = ---------- = --------- = 9404389 ns
-+	 *          speed       319 m/s
-+	 *
-+	 * using a minimum speed at -20 °C of 319 m/s
-+	 */
-+	if (dt_ns > 9404389)
-+		return -EIO;
-+
-+	time_ns = dt_ns;
-+
-+	/*
-+	 * the speed as function of the temperature is approximately:
-+	 *
-+	 * speed = 331,5 + 0,6 * Temp
-+	 *   with Temp in °C
-+	 *   and speed in m/s
-+	 *
-+	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
-+	 * temperature
-+	 *
-+	 * therefore:
-+	 *             time     343
-+	 * distance = ------ * -----
-+	 *             10^6       2
-+	 *   with time in ns
-+	 *   and distance in mm (one way)
-+	 *
-+	 * because we limit to 3 meters the multiplication with 343 just
-+	 * fits into 32 bit
-+	 */
-+	distance_mm = time_ns * 343 / 2000000;
-+
-+	return distance_mm;
-+}
-+
-+static int srf04_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *channel, int *val,
-+			    int *val2, long info)
-+{
-+	struct srf04_data *data = iio_priv(indio_dev);
-+	int ret;
-+
-+	if (channel->type != IIO_DISTANCE)
-+		return -EINVAL;
-+
-+	switch (info) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = srf04_read(data);
-+		if (ret < 0)
-+			return ret;
-+		*val = ret;
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		/*
-+		 * theoretical maximum resolution is 3 mm
-+		 * 1 LSB is 1 mm
-+		 */
-+		*val = 0;
-+		*val2 = 1000;
-+		return IIO_VAL_INT_PLUS_MICRO;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info srf04_iio_info = {
-+	.driver_module		= THIS_MODULE,
-+	.read_raw		= srf04_read_raw,
-+};
-+
-+static const struct iio_chan_spec srf04_chan_spec[] = {
-+	{
-+		.type = IIO_DISTANCE,
-+		.info_mask_separate =
-+				BIT(IIO_CHAN_INFO_RAW) |
-+				BIT(IIO_CHAN_INFO_SCALE),
-+	},
-+};
-+
-+static int srf04_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct srf04_data *data;
-+	struct iio_dev *indio_dev;
-+	int ret;
-+
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(struct srf04_data));
-+	if (!indio_dev) {
-+		dev_err(dev, "failed to allocate IIO device\n");
-+		return -ENOMEM;
-+	}
-+
-+	data = iio_priv(indio_dev);
-+	data->dev = dev;
-+
-+	mutex_init(&data->lock);
-+	init_completion(&data->rising);
-+	init_completion(&data->falling);
-+
-+	data->gpiod_trig = devm_gpiod_get(dev, "trig", GPIOD_OUT_LOW);
-+	if (IS_ERR(data->gpiod_trig)) {
-+		dev_err(dev, "failed to get trig-gpios: err=%ld\n",
-+					PTR_ERR(data->gpiod_trig));
-+		return PTR_ERR(data->gpiod_trig);
-+	}
-+
-+	data->gpiod_echo = devm_gpiod_get(dev, "echo", GPIOD_IN);
-+	if (IS_ERR(data->gpiod_echo)) {
-+		dev_err(dev, "failed to get echo-gpios: err=%ld\n",
-+					PTR_ERR(data->gpiod_echo));
-+		return PTR_ERR(data->gpiod_echo);
-+	}
-+
-+	if (gpiod_cansleep(data->gpiod_echo)) {
-+		dev_err(data->dev, "cansleep-GPIOs not supported\n");
-+		return -ENODEV;
-+	}
-+
-+	data->irqnr = gpiod_to_irq(data->gpiod_echo);
-+	if (data->irqnr < 0) {
-+		dev_err(data->dev, "gpiod_to_irq: %d\n", data->irqnr);
-+		return data->irqnr;
-+	}
-+
-+	ret = devm_request_irq(dev, data->irqnr, srf04_handle_irq,
-+			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-+			pdev->name, indio_dev);
-+	if (ret < 0) {
-+		dev_err(data->dev, "request_irq: %d\n", ret);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+
-+	indio_dev->name = "srf04";
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->info = &srf04_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = srf04_chan_spec;
-+	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
-+
-+	return devm_iio_device_register(dev, indio_dev);
-+}
-+
-+static const struct of_device_id of_srf04_match[] = {
-+	{ .compatible = "devantech,srf04", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_srf04_match);
-+
-+static struct platform_driver srf04_driver = {
-+	.probe		= srf04_probe,
-+	.driver		= {
-+		.name		= "srf04-gpio",
-+		.of_match_table	= of_srf04_match,
-+	},
-+};
-+
-+module_platform_driver(srf04_driver);
-+
-+MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
-+MODULE_DESCRIPTION("SRF04 ultrasonic sensor for distance measuring using GPIOs");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:srf04");
--- 
-2.1.4
+I would love for drm-panel to be moved under -misc.
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliQ1C8ACgkQtdYpNtH8
+nuiNbA//f3VEpehrmIiZOQYiKOusFo/DeWl/Uw2/aUJeiezrzHzFtGaIQL+m4a+O
+as4FNKIl7vwC87zw2V98xDVNNY/HlMrI914/PUZY7k31Ta5mSGpdHIkjRn377Apn
+CND44YaCOnbyO1LcFiTfgNrCWP5yq+p+bPC8NPRlphLlxw+s/CjywwPVdanNS8F2
+D+J+JstsYTP6C0cucU32n/ZBDbDTxNqySjTz2IttbfaVp+Y1Yq/fRGqA6sw8nN+C
+79668VxzPCBP9AjnEQ2lVrlMtiRFP1xOgXo90xJ3lVGQdtrnJ1RW0lCSwAT2I2K0
+KLaQb4wuKDlEzkkhDHCFtQXgHmqs4bJJWxlWcRho4L6/jPEHYO3vj4AZWVkkLVEs
+nMiK4MDRVH9JGT5i66Nd6KlyQh6afCH6ul5ZkBc1CklW5gsxr2DvqZ37SHd5zW87
+PuIG8nVZR4Xw6+aHiMSDZbZLQdXYCi9Xr9LwoFwlj82tJD17e8ncCpNkzSASCz0A
+UWRlCu4r7DFvGNJSB6LgCm8pJX3ATnRP1PtgbQgFevlaZItP3dvvw1Hf2jkIQKLO
+X+M4Cj5OnxypotkzVXkdowhHY9KTs1EBeCR/vbm2Q9LURihi/FGGl7C5j565L5NR
+OJDjkDSV247RyOjXmdDyuHdWgDsNJW9hVEBgDUbJz/o0I5tXSXU=
+=FkzR
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+--===============1379450264==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1379450264==--
