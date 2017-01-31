@@ -1,42 +1,52 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: [PATCH 1/4] dt-bindings: Add binding for brcm,bcm2835-sdhost.
-Date: Tue, 31 Jan 2017 09:10:34 +0100
-Message-ID: <1485850234.23903.18.camel@redhat.com>
-References: <1485516989-1072-1-git-send-email-kraxel@redhat.com>
- <1485516989-1072-2-git-send-email-kraxel@redhat.com>
- <2012885435.15821.1485812279271@email.1und1.de>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
+Date: Tue, 31 Jan 2017 00:19:42 -0800
+Message-ID: <20170131081942.GC8311@dtor-ws>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+ <20170114191425.GA31309@dtor-ws>
+ <20170118205712.GA5333@gmail.com>
+ <20170118224946.GC11881@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2012885435.15821.1485812279271@email.1und1.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, rjui@broadcom.com, lee@kernel.org, linux-mmc@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170118224946.GC11881@dtor-ws>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mo, 2017-01-30 at 22:37 +0100, Stefan Wahren wrote:
-> > Gerd Hoffmann <kraxel@redhat.com> hat am 27. Januar 2017 um 12:36 geschrieben:
-> > 
-> > 
-> > From: Eric Anholt <eric@anholt.net>
-> > 
-> > This is the other SD controller on the platform, which can be swapped
-> > to the role of SD card host using pin muxing.
-> 
-> AFAIK the SDHOST controller isn't able to handle SDIO. Maybe we should
-> mention this in the binding document.
+Hi Jelle,
 
-Hmm, I think the driver commit message and the Kconfig help text are
-better places for that.
+On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
+> On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
+> > On 01/14/17 at 11:14am, Dmitry Torokhov wrote:
+> > > > +
+> > > > +static const struct of_device_id zet6223_of_match[] = {
+> > > > +	{ .compatible = "zeitec", "zet6223" },
+> > > 
+> > > The compatible should be "zeitec,zet6223", what you have here is
+> > > equivalent of:
+> > > 
+> > > 	{ .compatible = "zeitec", .data = "zet6223" },
+> > 
+> > Ah that was silly, thanks :)
+> > 
+> > > I also have been looking at you previosu submission and had some draft
+> > > changes. I reconciled them in the patch below, if it still works for you
+> > > then I'll fold everything together and apply. Please let me know.
+> > 
+> > I'll find some time to test the patch below, I've one small suggestion
+> > to the patch below.
 
-cheers,
-  Gerd
+It would be very helpful if you let me know if the patch actually works
+on the hardware: the merge window for 4.11 will be opening fairly soon.
+
+Thanks!
+
+-- 
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
