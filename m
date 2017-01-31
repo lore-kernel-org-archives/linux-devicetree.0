@@ -1,134 +1,145 @@
-From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
-Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
-Date: Tue, 31 Jan 2017 16:30:38 +0100
-Message-ID: <72ac395d-645f-08f6-c6f4-6b3d94187a78@st.com>
-References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
- <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
- <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
- <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
- <20170127101545.g53uah57vgfu55o5@dell>
- <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
- <20170127171746.lf2nbpsaqs3dmy44@dell>
- <3810896b-c982-e9fd-b095-658921422855@kernel.org>
- <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
+From: eajames@linux.vnet.ibm.com
+Subject: [PATCH linux v5 3/6] hwmon: occ: Add I2C transport implementation for SCOM operations
+Date: Tue, 31 Jan 2017 09:43:54 -0600
+Message-ID: <1485877437-13598-4-git-send-email-eajames@linux.vnet.ibm.com>
+References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux@roeck-us.net
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lars,
+From: "Edward A. James" <eajames@us.ibm.com>
 
-On 01/29/2017 03:19 PM, Lars-Peter Clausen wrote:
-> On 01/29/2017 01:28 PM, Jonathan Cameron wrote:
-> [...]
->>>> Jonathan, Mark, Please could you share your opinion on this topic?
->> Hmm - based on a fairly quick read through of the code (which is never
->> ideal!). I can see that the ideal would indeed be as Lee says, to
->> expand the IIO interfaces sufficiently to support what you need.
->>
->>
->> So, reading the code (fairly quickly I'm afraid as had a lot of reviews
->> to catch up on this weekend).
->> What we need:
->> 1) DMA support in the ADC driver.  This would be a good anyway!
->> 2) DMA consumer support - I defer to Lars for comments on this.
->> 3) Means of describing and controlling the sinc filters applied. 
->> 4) Appropriate channel support.  I'm not convinced that it doesn't make
->> sense to have IIO channels for the microphones - at least in a streaming
->> mode.  It's data - I don't really care what ;)
->> Coarsely it's a filtered pulse per period counter which is
->> a perfectly valid type to have a channel for.
->>
->> The big question to my mind is the DMA consumer support. How would
->> it work. It it wouldn't this is somewhat of a non starter.
->>
->> To bring up another slightly ugly MFD case where it is borderline
->> on whether an MFD makes sense (just as a reference point of something
->> we have discussed a few times before)
->>
->> ADCs with features directed at touchscreen support.
->> These are odd as the ADC bit is generic, but the specific output
->> and read sequences used for touchscreen reading don't correspond to
->> anything that makes any real sense for other applications.
->>
->> We have started to get hybrid drives that have an MFD underneath but
->> do the ADC reads through IIO consumer interfaces, and the timing
->> control from a touchscreen driver.  We haven't really gotten this
->> one right yet either.
->>
->> Here however, to my mind things are different - as I read it
->> (and feel free to point out what I'm missing), the sound usecase
->> is just a question of setting up sampling frequencies and filters
->> appropriate to the microphones and what ASoC expects?
->>
->> That's not to say the IIO dma stuff is flexible enough (yet) to
->> handle the data flows, but perhaps we can work towards that.
-> 
-> Yeah, so this is a bit different, but not unexpected. And I'm sure we'll see
-> more similar hardware in the future. I've talked about this before[1], the
-> cost structure of creating and manufacturing new hardware drives the design
-> in a certain direction so that we end up with general purpose hardware that
-> suddenly has applications in multiple frameworks that were previously fully
-> orthogonal.
-> 
-> This device is certainly not a multi-function-device. It only has one
-> function, it's a sigma-delta demodulator. It is rather a
-> multi-purpose-device. It can be used for sigma-delta demodulation in audio
-> applications as well as more specialized data capture applications.
-> 
-> It's comparable to something like a GPIO that can be used to control a reset
-> pin or turn on and off a LED. The GPIO chip is not considered
-> multi-function-device though, even though it can be used for many different
-> applications.
-> 
-> As for DMA we already have a lot of DMA infrastructure on the audio side and
-> we probably want to reuse that rather than inserting IIO as a middle layer
-> since audio buffer capture as different requirements from IIO buffer and
-> we'd have to go the route of the least common denominator and loose
-> expressibility in the process.
+Add functions to send SCOM operations over I2C bus. The BMC can
+communicate with the Power8 host processor over I2C, but needs to use SCOM
+operations in order to access the OCC register space.
 
-I'm agree with your analysis.
-Audio DMA engine seems a more secure solution to avoid audio runtime
-issue, and should minimize impact in IIO.
+Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+---
+ drivers/hwmon/occ/occ_scom_i2c.c | 77 ++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/occ/occ_scom_i2c.h | 26 ++++++++++++++
+ 2 files changed, 103 insertions(+)
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
 
-> 
-> I've created a IIO buffer[2] that does not capture data to memory but is
-> only used to enable/disable the data capture process. We use this in setups
-> where the data is passed from the converter to a application specific
-> processing chain without ever going through system memory. This buffer could
-> probably also be used here on the audio side to control the converter state.
+diff --git a/drivers/hwmon/occ/occ_scom_i2c.c b/drivers/hwmon/occ/occ_scom_i2c.c
+new file mode 100644
+index 0000000..74bd6ff
+--- /dev/null
++++ b/drivers/hwmon/occ/occ_scom_i2c.c
+@@ -0,0 +1,77 @@
++/*
++ * occ_scom_i2c.c - hwmon OCC driver
++ *
++ * This file contains the functions for performing SCOM operations over I2C bus
++ * to access the OCC.
++ *
++ * Copyright 2016 IBM Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/i2c.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include "occ_scom_i2c.h"
++#include "scom.h"
++
++int occ_i2c_getscom(void *bus, u32 address, u64 *data)
++{
++	ssize_t rc;
++	u64 buf;
++	struct i2c_client *client = bus;
++	struct i2c_msg msgs[2];
++
++	msgs[0].addr = client->addr;
++	msgs[0].flags = client->flags & I2C_M_TEN;
++	msgs[0].len = sizeof(u32);
++	msgs[0].buf = (char *)&address;
++
++	msgs[1].addr = client->addr;
++	msgs[1].flags = client->flags & I2C_M_TEN;
++	msgs[1].flags |= I2C_M_RD;
++	msgs[1].len = sizeof(u64);
++	msgs[1].buf = (char *)&buf;
++
++	rc = i2c_transfer(client->adapter, msgs, 2);
++	if (rc < 0)
++		return rc;
++
++	*data = be64_to_cpu(buf);
++
++	return 0;
++}
++EXPORT_SYMBOL(occ_i2c_getscom);
++
++int occ_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1)
++{
++	u32 buf[3];
++	ssize_t rc;
++	struct i2c_client *client = bus;
++
++	/* send raw data, user can handle endian */
++	buf[0] = address;
++	buf[1] = data1;
++	buf[2] = data0;
++
++	rc = i2c_master_send(client, (const char *)buf, sizeof(u32) * 3);
++	if (rc < 0)
++		return rc;
++	else if (rc != sizeof(u32) * 3)
++		return -EIO;
++
++	return 0;
++}
++EXPORT_SYMBOL(occ_i2c_putscom);
++
++MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
++MODULE_DESCRIPTION("I2C OCC SCOM transport");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/hwmon/occ/occ_scom_i2c.h b/drivers/hwmon/occ/occ_scom_i2c.h
+new file mode 100644
+index 0000000..945739c
+--- /dev/null
++++ b/drivers/hwmon/occ/occ_scom_i2c.h
+@@ -0,0 +1,26 @@
++/*
++ * occ_scom_i2c.h - hwmon OCC driver
++ *
++ * This file contains function protoypes for peforming SCOM operations over I2C
++ * bus to access the OCC.
++ *
++ * Copyright 2016 IBM Corp.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#ifndef __OCC_SCOM_I2C_H__
++#define __OCC_SCOM_I2C_H__
++
++int occ_i2c_getscom(void *bus, u32 address, u64 *data);
++int occ_i2c_putscom(void *bus, u32 address, u32 data0, u32 data1);
++
++#endif /* __OCC_SCOM_I2C_H__ */
+-- 
+1.8.3.1
 
-This remind me HDMI.
-For HDMI, solution integrated is a drm driver that probes
-"hdmi-audio-codec" driver.
-
-Something similar could be done. An IIO device that probes a generic DAI
-ASoC driver. Driver data structure should be used to provide DMA config
-and IIO device phandles. Then DAI drivers could use your "hw_consummer"
-interface to control iio device...
-
-> 
-> - Lars
-> 
-> [1]
-> https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2016-July/003029.html
-> 
-> [2]
-> https://github.com/analogdevicesinc/linux/blob/xcomm_zynq/drivers/iio/buffer/hw_consumer.c
-> 
-
-Regards
-Arnaud
