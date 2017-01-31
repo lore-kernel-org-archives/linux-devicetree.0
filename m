@@ -1,58 +1,26 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] arm: mvebu: Fix whitespace in armada-xp-98dx3236.dtsi
-Date: Tue, 31 Jan 2017 16:42:09 +1300
-Message-ID: <20170131034209.3848-1-chris.packham@alliedtelesis.co.nz>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mmc: sunxi: Document A64 eMMC compatible
+Date: Tue, 31 Jan 2017 11:49:32 +0800
+Message-ID: <CAGb2v65jUDDdoBduokzm2fxxeLKTYNB6x3D-s4GqBv4CdtnE5Q@mail.gmail.com>
+References: <20170130132713.20750-1-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregory.clement@free-electrons.com, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170130132713.20750-1-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Change sequences of 8 spaces to hard-tabs.
+On Mon, Jan 30, 2017 at 9:27 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> We introduced recently a new compatible to deal with the A64 eMMC
+> controller, let's document its binding.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-I think this crept in during review and I didn't notice. The file is new enough
-that we shouldn't lose any useful history.
-
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
-
-diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index 9461128fae24..f6a03dcee5ef 100644
---- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-+++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -201,13 +201,13 @@
- 			#size-cells = <1>;
- 			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
- 
--                        dfx_coredivclk: corediv-clock@f8268 {
--                                compatible = "marvell,mv98dx3236-corediv-clock";
--                                reg = <0xf8268 0xc>;
--                                #clock-cells = <1>;
--                                clocks = <&mainpll>;
--                                clock-output-names = "nand";
--                        };
-+			dfx_coredivclk: corediv-clock@f8268 {
-+				compatible = "marvell,mv98dx3236-corediv-clock";
-+				reg = <0xf8268 0xc>;
-+				#clock-cells = <1>;
-+				clocks = <&mainpll>;
-+				clock-output-names = "nand";
-+			};
- 
- 			dfx: dfx@0 {
- 				compatible = "marvell,dfx-server";
--- 
-2.11.0.24.ge6920cf
+Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
