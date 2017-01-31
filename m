@@ -1,71 +1,136 @@
-From: eajames@linux.vnet.ibm.com
-Subject: [PATCH linux v5 0/6] drivers: hwmon: Add On-Chip Controller driver
-Date: Tue, 31 Jan 2017 09:43:51 -0600
-Message-ID: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
+Date: Tue, 31 Jan 2017 17:48:07 +0100
+Message-ID: <1485881287.2932.73.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
+ <1485877882.2932.70.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485877882.2932.70.camel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+On Tue, 2017-01-31 at 16:51 +0100, Philipp Zabel wrote:
+> On Fri, 2017-01-06 at 18:11 -0800, Steve Longerbeam wrote:
+> [...]
+> > +static int csi_set_fmt(struct v4l2_subdev *sd,
+> > +		       struct v4l2_subdev_pad_config *cfg,
+> > +		       struct v4l2_subdev_format *sdformat)
+> > +{
+> > +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+> > +	struct v4l2_mbus_framefmt *infmt, *outfmt;
+> > +	struct v4l2_rect crop;
+> > +	int ret;
+> > +
+> > +	if (sdformat->pad >= CSI_NUM_PADS)
+> > +		return -EINVAL;
+> > +
+> > +	if (priv->stream_on)
+> > +		return -EBUSY;
+> > +
+> > +	infmt = &priv->format_mbus[priv->input_pad];
+> > +	outfmt = &priv->format_mbus[priv->output_pad];
+> > +
+> > +	if (sdformat->pad == priv->output_pad) {
+> > +		sdformat->format.code = infmt->code;
+> > +		sdformat->format.field = infmt->field;
+> > +		crop.left = priv->crop.left;
+> > +		crop.top = priv->crop.top;
+> > +		crop.width = sdformat->format.width;
+> > +		crop.height = sdformat->format.height;
+> > +		ret = csi_try_crop(priv, &crop);
+> 
+> This is the wrong way around, see also below.
+> 
+> Here the the output sdformat->format.width/height should be set to the
+> priv->crop.width/height (or priv->crop.width/height / 2, to enable
+> downscaling). The crop rectangle should not be changed by an output pad
+> set_fmt.
+[...]
+> The crop rectangle instead should be reset to the full input frame when
+> the input pad format is set.
 
-This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
-on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
-Controller). The OCC is an embedded processor that provides real time
-power and thermal monitoring.
+How about this:
 
-The driver provides an interface on a BMC to poll OCC sensor data, set
-user power caps, and perform some basic OCC error handling. It interfaces
-with userspace through hwmon.
+----------8<----------
+diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+index 5e80a0871b139..8220e4204a125 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -484,6 +484,8 @@ static int csi_setup(struct csi_priv *priv)
+ 	if_fmt.field = outfmt->field;
+ 
+ 	ipu_csi_set_window(priv->csi, &priv->crop);
++	ipu_csi_set_downsize(priv->csi, priv->crop.width == 2 * outfmt->width,
++					priv->crop.height == 2 * outfmt->height);
+ 
+ 	ipu_csi_init_interface(priv->csi, &sensor_mbus_cfg, &if_fmt);
+ 
+@@ -830,15 +832,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	switch (sdformat->pad) {
+ 	case CSI_SRC_PAD_DIRECT:
+ 	case CSI_SRC_PAD_IDMAC:
+-		crop.left = priv->crop.left;
+-		crop.top = priv->crop.top;
+-		crop.width = sdformat->format.width;
+-		crop.height = sdformat->format.height;
+-		ret = csi_try_crop(priv, &crop, sensor);
+-		if (ret)
+-			return ret;
+-		sdformat->format.width = crop.width;
+-		sdformat->format.height = crop.height;
++		if (sdformat->format.width < priv->crop.width * 3 / 4)
++			sdformat->format.width = priv->crop.width / 2;
++		else
++			sdformat->format.width = priv->crop.width;
++		if (sdformat->format.height < priv->crop.height * 3 / 4)
++			sdformat->format.height = priv->crop.height / 2;
++		else
++			sdformat->format.height = priv->crop.height;
+ 
+ 		if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
+ 			cc = imx_media_find_format(0, sdformat->format.code,
+@@ -887,6 +888,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		}
+ 		break;
+ 	case CSI_SINK_PAD:
++		crop.left = 0;
++		crop.top = 0;
++		crop.width = sdformat->format.width;
++		crop.height = sdformat->format.height;
++		ret = csi_try_crop(priv, &crop, sensor);
++		if (ret)
++			return ret;
++
+ 		cc = imx_media_find_format(0, sdformat->format.code,
+ 					   true, false);
+ 		if (!cc) {
+@@ -904,9 +913,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 	} else {
+ 		priv->format_mbus[sdformat->pad] = sdformat->format;
+ 		priv->cc[sdformat->pad] = cc;
+-		/* Update the crop window if this is an output pad  */
+-		if (sdformat->pad == CSI_SRC_PAD_DIRECT ||
+-		    sdformat->pad == CSI_SRC_PAD_IDMAC)
++		/* Reset the crop window if this is the input pad  */
++		if (sdformat->pad == CSI_SINK_PAD)
+ 			priv->crop = crop;
+ 	}
+ 
+---------->8----------
 
-The driver is currently functional only for the OCC on POWER8 chips.
-Communicating with the POWER9 OCC requries FSI support.
-
-Edward A. James (6):
-  hwmon: Add core On-Chip Controller support for POWER CPUs
-  hwmon: occ: Add sysfs interface
-  hwmon: occ: Add I2C transport implementation for SCOM operations
-  hwmon: occ: Add callbacks for parsing P8 OCC datastructures
-  hwmon: occ: Add hwmon implementation for the P8 OCC
-  hwmon: occ: Add callbacks for parsing P9 OCC datastructures
-
- Documentation/devicetree/bindings/hwmon/occ.txt |  13 +
- Documentation/hwmon/occ                         | 114 ++++++
- MAINTAINERS                                     |   7 +
- drivers/hwmon/Kconfig                           |   2 +
- drivers/hwmon/Makefile                          |   1 +
- drivers/hwmon/occ/Kconfig                       |  29 ++
- drivers/hwmon/occ/Makefile                      |   2 +
- drivers/hwmon/occ/occ.c                         | 470 ++++++++++++++++++++++++
- drivers/hwmon/occ/occ.h                         |  80 ++++
- drivers/hwmon/occ/occ_p8.c                      | 247 +++++++++++++
- drivers/hwmon/occ/occ_p8.h                      |  30 ++
- drivers/hwmon/occ/occ_p9.c                      | 308 ++++++++++++++++
- drivers/hwmon/occ/occ_p9.h                      |  30 ++
- drivers/hwmon/occ/occ_scom_i2c.c                |  77 ++++
- drivers/hwmon/occ/occ_scom_i2c.h                |  26 ++
- drivers/hwmon/occ/occ_sysfs.c                   | 251 +++++++++++++
- drivers/hwmon/occ/occ_sysfs.h                   |  30 ++
- drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++
- drivers/hwmon/occ/scom.h                        |  47 +++
- 19 files changed, 1868 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
- create mode 100644 Documentation/hwmon/occ
- create mode 100644 drivers/hwmon/occ/Kconfig
- create mode 100644 drivers/hwmon/occ/Makefile
- create mode 100644 drivers/hwmon/occ/occ.c
- create mode 100644 drivers/hwmon/occ/occ.h
- create mode 100644 drivers/hwmon/occ/occ_p8.c
- create mode 100644 drivers/hwmon/occ/occ_p8.h
- create mode 100644 drivers/hwmon/occ/occ_p9.c
- create mode 100644 drivers/hwmon/occ/occ_p9.h
- create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
- create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
- create mode 100644 drivers/hwmon/occ/occ_sysfs.c
- create mode 100644 drivers/hwmon/occ/occ_sysfs.h
- create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
- create mode 100644 drivers/hwmon/occ/scom.h
-
--- 
-1.8.3.1
+regards
+Philipp
