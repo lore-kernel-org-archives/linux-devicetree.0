@@ -1,72 +1,88 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] regulator: cpcap: Add basic regulator support
-Date: Tue, 31 Jan 2017 23:13:56 +0000
-Message-ID: <20170131231356.yubhrtyehkr462mo@sirena.org.uk>
-References: <20170131001241.5926-1-tony@atomide.com>
- <20170131211256.l3e53y2mkzylfjnw@sirena.org.uk>
- <20170131220953.GF7403@atomide.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
+Date: Tue, 31 Jan 2017 23:30:42 +0000
+Message-ID: <20170131233042.GF27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
+ <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
+ <20170131134252.GX27312@n2100.armlinux.org.uk>
+ <b0517394-7717-3e1d-b850-e2b69a9c19e9@gmail.com>
+ <20170131203340.GC27312@n2100.armlinux.org.uk>
+ <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
+ <20170131220452.GE27312@n2100.armlinux.org.uk>
+ <d5ede043-3b02-37f6-bd4a-db805e6b36d7@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="jpdxfvqowm7gyc4x"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 Content-Disposition: inline
-In-Reply-To: <20170131220953.GF7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <d5ede043-3b02-37f6-bd4a-db805e6b36d7@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, Ian Arkver <ian.arkver.dev@gmail.com>, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 31, 2017 at 02:36:53PM -0800, Steve Longerbeam wrote:
+> On 01/31/2017 02:04 PM, Russell King - ARM Linux wrote:
+> >I don't want master though, I want v4.10-rc1, and if I ask for that
+> >it tells me it knows nothing about v4.10-rc1, despite the fact that's
+> >a tag in the mainline kernel repository which was merged into the
+> >linux-media tree that this tree is based upon.
+> 
+> Hi Russell, yes git@github.com:slongerbeam/mediatree.git is a fork
+> of the linux-media tree, and the imx-media-staging-md-wip branch
+> is up-to-date with master, currently at 4.10-rc1.
 
---jpdxfvqowm7gyc4x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+"up to date" is different from "contains other stuff other than is in
+4.10-rc1".
 
-On Tue, Jan 31, 2017 at 02:09:53PM -0800, Tony Lindgren wrote:
-> * Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170131 13:14]:
-> > On Mon, Jan 30, 2017 at 04:12:41PM -0800, Tony Lindgren wrote:
-> > > +	error = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
-> > > +				   rdev->desc->enable_mask,
-> > > +				   rdev->desc->enable_val);
-> > > +	if (error)
-> > > +		return error;
-> > > +
-> > > +	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
-> > > +		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
-> > > +					   regulator->assign_mask,
-> > > +					   regulator->assign_mask);
-> > > +		if (error)
-> > > +			return error;
-> > > +	}
+What I see in your tree is that your code is based off a merge commit
+between something called "patchwork" (which I assume is a branch in
+the media tree containing stuff commited from patch work) and v4.10-rc1.
 
-> > What does this second register bit do?
+Now, you don't get a commit when merging unless there's changes that
+aren't in the commit you're merging - if "patchwork" was up to date
+with v4.10-rc1, then git would have done a "fast forward" to v4.10-rc1.
 
-> My guess is that it triggers regulator idle modes in the PMIC based
-> on the SoC off mode. There's no documentation for this thing..
+Therefore, while it may be "up to date" with v4.10-rc1 in so far that
+it's had v4.10-rc1 merged into it, that's not what I've been saying.
+There are other changes below that merge commit which aren't in
+v4.10-rc1.  It's those other changes that I'm talking about, and it's
+those other changes I do not want without knowing what they are.
 
-> I've just kept what the Motorola Linux kernel tree does here and added
-> some comments to CPCAP_REG_OFF_MODE_SEC.
+It may be that those other changes have since been merged into
+v4.10-rc6 - but github's web interface can't show me that.  In fact,
+github's web interface is pretty damned useless as far as this stuff
+goes.
 
-> I'll address the rest of the comments and post v2, thanks for looking.
+So, what I'll get if I clone or pull your imx-media-staging-md-wip
+branch is, yes, a copy of all your changes, but _also_ all the
+changes that are in the media tree that _aren't_ in mainline at the
+point that v4.10-rc1 was merged.
 
-OK, thanks - comments should cover it here.
+> You don't need to use the web interface, just git clone the repo.
 
---jpdxfvqowm7gyc4x
-Content-Type: application/pgp-signature; name="signature.asc"
+You're assuming I want to work off the top of your commits.  I don't.
+I've got other dependencies.
 
------BEGIN PGP SIGNATURE-----
+Then there's yet another problem - lets say that I get a copy of your
+patches that haven't been on the mailing list, and I then want to make
+a comment about it.  I can't reply to a patch that hasn't been on the
+mailing list.  So, the long established mechanism by which the Linux
+community does patch review breaks down.
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliRGjMACgkQJNaLcl1U
-h9BCUgf/WpeUMgLHZyjkizmQJvrzHfTU3wRC6VM5yezR1nViHWnNAb1y/MnDvLp8
-OrGQHnpQRTLFI+7OGyBEYllT+Uw/lwOVORCk/cxTISWqvXQ0vmWYIhaaxggoczCD
-pLzEAUhBJzaErHGdkhv+7Us3wbOyz8Tjod2RWa/jJiZAPo+k1tgBYKL0lQRsVWY7
-d9cO8FDicGsGuLk3BFfAa7lEFfr7nGsIa1PFxG6V+07nUxvW1gs9rbLvu/mIsOyl
-rmUl/ydXMLg3ntXnEfV8e5Gzy0e3MXiE9WJ45ihbW4GFeNIbudHBtKWW4bbQ2+Hv
-W0UWcs5P+7Egv0n5gDuTRt/4PqYYIg==
-=pznc
------END PGP SIGNATURE-----
+So no, sorry, I'm not fetching your tree, and I will persist with your
+v3 patch set for the time being.
 
---jpdxfvqowm7gyc4x--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
