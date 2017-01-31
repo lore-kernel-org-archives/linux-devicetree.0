@@ -1,117 +1,226 @@
-From: Emil Velikov <emil.l.velikov@gmail.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Tue, 31 Jan 2017 21:32:42 +0000
-Message-ID: <CACvgo52MeWN2q-0xPHq+YPSzJzoRXC5+rb_=xdic_015qy8Yig@mail.gmail.com>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com>
- <20170131085449.GA19348@ulmo.ba.sec> <20170131143853.GU20076@art_vandelay>
- <20170131150226.GB4519@ulmo.ba.sec> <20170131154951.GZ20076@art_vandelay>
- <20170131211728.GB872@mithrandir.ba.sec>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
+ property
+Date: Tue, 31 Jan 2017 22:34:02 +0100
+Message-ID: <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com>
+References: <20170120215605.15728-1-zajec5@gmail.com>
+ <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
+ <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
+ <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
+ <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
+ <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
+ <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170131211728.GB872@mithrandir.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, Donghwa Lee <dh09.lee@samsung.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, Kukjin Kim <kgene@kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzEgSmFudWFyeSAyMDE3IGF0IDIxOjE3LCBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRp
-bmdAZ21haWwuY29tPiB3cm90ZToKPiBPbiBUdWUsIEphbiAzMSwgMjAxNyBhdCAxMDo0OTo1MUFN
-IC0wNTAwLCBTZWFuIFBhdWwgd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA0OjAy
-OjI2UE0gKzAxMDAsIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+PiA+IE9uIFR1ZSwgSmFuIDMxLCAy
-MDE3IGF0IDA5OjM4OjUzQU0gLTA1MDAsIFNlYW4gUGF1bCB3cm90ZToKPj4gPiA+IE9uIFR1ZSwg
-SmFuIDMxLCAyMDE3IGF0IDA5OjU0OjQ5QU0gKzAxMDAsIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+
-PiA+ID4gPiBPbiBUdWUsIEphbiAzMSwgMjAxNyBhdCAwOTowMTowN0FNICswOTAwLCBJbmtpIERh
-ZSB3cm90ZToKPj4gPiA+ID4gPgo+PiA+ID4gPiA+Cj4+ID4gPiA+ID4gMjAxN+uFhCAwMeyblCAy
-NOydvCAxMDo1MOyXkCBIb2VnZXVuIEt3b24g7J20KOqwgCkg7JO0IOq4gDoKPj4gPiA+ID4gPiA+
-IERlYXIgVGhpZXJyeSwKPj4gPiA+ID4gPiA+Cj4+ID4gPiA+ID4gPiBDb3VsZCB5b3UgcGxlYXNl
-IHJldmlldyB0aGlzIHBhdGNoPwo+PiA+ID4gPiA+Cj4+ID4gPiA+ID4gVGhpZXJyeSwgSSB0aGlu
-ayB0aGlzIHBhdGNoIGhhcyBiZWVuIHJldmlld2VkIGVub3VnaCBidXQgbm8gY29tbWVudAo+PiA+
-ID4gPiA+IGZyb20geW91LiBTZWVtcyB5b3UgYXJlIGJ1c3kuIEkgd2lsbCBwaWNrIHVwIHRoaXMu
-Cj4+ID4gPiA+Cj4+ID4gPiA+IFNvcnJ5LCBidXQgdGhhdCdzIG5vdCBob3cgaXQgd29ya3MuIFRo
-aXMgcGF0Y2ggaGFzIGdvbmUgdGhyb3VnaCA4Cj4+ID4gPiA+IHJldmlzaW9ucyB3aXRoaW4gNCB3
-ZWVrcywgYW5kIEkgdGVuZCB0byBpZ25vcmUgcGF0Y2hlcyBsaWtlIHRoYXQgdW50aWwKPj4gPiA+
-ID4gdGhlIGR1c3Qgc2V0dGxlcy4KPj4gPiA+ID4KPj4gPiA+Cj4+ID4gPiBTZWVtcyBsaWtlIHRo
-ZSBkdXN0IHdhcyBwcmV0dHkgc2V0dGxlZC4gSXQgd2FzIHBvc3RlZCBvbiAxLzExLCBwaW5nZWQg
-b24gMS8yNCwKPj4gPiA+IGFuZCBwaWNrZWQgdXAgb24gMS8zMS4gSSBkb24ndCB0aGluayBpdCdz
-IHVucmVhc29uYWJsZSB0byB0YWtlIGl0IHRocm91Z2gKPj4gPiA+IGFub3RoZXIgdHJlZSBhZnRl
-ciB0aGF0Lgo+PiA+ID4KPj4gPiA+IEkgd29uZGVyIGlmIGRybV9wYW5lbCB3b3VsZCBiZW5lZml0
-IGZyb20gdGhlIC1taXNjIGdyb3VwIG1haW50YWluZXJzaGlwIG1vZGVsCj4+ID4gPiBhcyBkcm1f
-YnJpZGdlIGRvZXMuIEJ5IHNwcmVhZGluZyBvdXQgdGhlIHdvcmtsb2FkLCB0aGUgaGlnaC1tYWlu
-dGVuYW5jZQo+PiA+ID4gcGF0Y2hlcyB3b3VsZCBob3BlZnVsbHkgZmluZCBzb21lb25lIHRvIHNo
-ZXBoZXJkIHRoZW0gdGhyb3VnaC4KPj4gPgo+PiA+IEV4Y2VwdCB0aGF0IG5vYm9keSBleGNlcHQg
-bWUgcmVhbGx5IGNhcmVzLgo+Pgo+PiBJIGNlcnRhaW5seSBoYXZlbid0IGJlZW4gcGF5aW5nIGF0
-dGVudGlvbi4gTXkgZXhjdXNlLCBhdCBsZWFzdCwgaXMgdGhhdCB5b3UncmUgYQo+PiBncmVhdCBt
-YWludGFpbmVyIGFuZCBJIGhhdmVuJ3QgdGhvdWdodCB0aGUgcGF0Y2hlcyBuZWVkIGEgc2Vjb25k
-IGxvb2suIFBlcmhhcHMKPj4gaWYgd2UgbW92ZWQgdG93YXJkcyBhIGdyb3VwLCBtb3JlIHBlb3Bs
-ZSB3b3VsZCBiZSB2ZXN0ZWQvY2FyZT8KPgo+IEkgZG91YnQgdGhhdCBncm91cCBtYWludGFpbmVy
-c2hpcCB3b3VsZCBjaGFuZ2UgbXVjaCBhYm91dCB0aGUgbGFjayBvZgo+IHBlZXIgcmV2aWV3LiBQ
-ZWVyIHJldmlldyBtYWtlcyBtYWludGVuYW5jZSBhIGxvdCBlYXNpZXIuIFVzdWFsbHkgd2hlbiBJ
-Cj4gc2VlIHRoYXQgYSBwYXRjaCBoYXMgYmVlbiByZXZpZXdlZCBieSBzb21lb25lIHRoYXQgSSB0
-aGluayBJIGNhbiB0cnVzdCwKPiBJIG9ubHkgZ2l2ZSBpdCBhIHZlcnkgYnJpZWYgbG9vayBiZWZv
-cmUgYXBwbHlpbmcuIEhvd2V2ZXIsIGlmIHRoZXJlJ3MKPiBiZWVuIG5vIG90aGVyIHJldmlldyBJ
-IG5lZWQgdG8gdGFrZSBhIGxvdCBtb3JlIHRpbWUgdG8gcmV2aWV3Lgo+Cj4+ID4gSWYgd2UgbGV0
-IHBlb3BsZSB0YWtlIHBhdGNoZXMKPj4gPiB0aHJvdWdoIHNlcGFyYXRlIHRyZWVzIG9yIGdyb3Vw
-LW1haW50YWluZWQgdHJlZXMgdGhleSdsbCBsaWtlbHkgZ28gaW4KPj4gPiB3aXRob3V0IHRvbyBt
-dWNoIHRob3VnaHQuIERSTSBwYW5lbCBpcyBzb21ld2hhdCBkaWZmZXJlbnQgZnJvbSBjb3JlIERS
-TQo+PiA+IGluIHRoaXMgcmVnYXJkIGJlY2F1c2UgaXRzIGluZnJhc3RydWN0dXJlIGlzIG1pbmlt
-YWwgYW5kIHRoZXJlJ3MgbGl0dGxlCj4+ID4gb3V0c2lkZSB0aGUgcGFuZWwtc2ltcGxlIGRyaXZl
-ci4gU28gd2UncmUgc3RpbGwgYXQgYSBzdGFnZSB3aGVyZSB3ZSBuZWVkCj4+ID4gdG8gZmluZS10
-dW5lIHdoYXQgZHJpdmVycyBzaG91bGQgbG9vayBsaWtlIGFuZCBob3cgd2UgY2FuIGltcHJvdmUu
-Cj4+ID4KPj4KPj4gRmFpciBwb2ludC4gV2l0aCBkcm1fYnJpZGdlLCBJJ3ZlIGJlZW4gbGVuZGlu
-ZyByZXZpZXcgaGVscCwgYnV0IGRlZmVycmluZyB0bwo+PiBBcmNoaXQgZm9yIG1lcmdlIG9uIHBh
-dGNoZXMgd2hpY2ggSSB0aGluayBoZSBzaG91bGQgbG9vayBhdC4gR3VzdGF2byBpcyBpbiBhCj4+
-IHNpbWlsYXIgcGxhY2Ugd2l0aCBmZW5jZXMuIGRybV9wYW5lbCBzZWVtcyBsaWtlIHNvbWV0aGlu
-ZyB0aGF0IHNob3VsZCBmb2xsb3cKPj4gdGhlIHNhbWUgbW9kZWwuIE1heWJlIG9uY2UgbW9yZSBw
-ZW9wbGUgKG9yIG9uZSBwZXJzb24pIGdldCB1cCB0byBzcGVlZCBvbgo+PiB0aGluZ3MsIHdlIGNv
-dWxkIHNoYXJlIHRoZSBsb2FkLgo+Cj4gSSBjZXJ0YWlubHkgd291bGRuJ3QgbWluZCBtb3JlIHBl
-b3BsZSByZXZpZXdpbmcgcGFuZWwgcGF0Y2hlcy4gQXBwbHlpbmcKPiB0aGVtIGlzIHRoZSBlYXN5
-IHBhcnQuCj4KPj4gPiA+ID4gT3RoZXIgdGhhbiB0aGF0LCB0aGlzIGNvbnRpbnVlcyB0aGUgc2Ft
-ZSBtYWRuZXNzIHRoYXQgSSd2ZSByZXBlYXRlZGx5Cj4+ID4gPiA+IGNvbXBsYWluZWQgYWJvdXQg
-aW4gdGhlIHBhc3QuIFRoZSB3aG9sZSBtZWNoYW5pc20gb2YgcnVubmluZyB0aHJvdWdoIGEKPj4g
-PiA+ID4gc2VyaWVzIG9mIHdyaXRlcyBhbmQgbm90IGNhcmluZyBhYm91dCBlcnJvcnMgdW50aWwg
-dGhlIHZlcnkgZW5kIGlzCj4+ID4gPiA+IHNvbWV0aGluZyB3ZSd2ZSBkaXNjdXNzZWQgYXQgbGVu
-Z3RoIGluIHRoZSBwYXN0LiBJdCBhbHNvIGluIGxhcmdlIHBhcnRzCj4+ID4gPiA+IGR1cGxpY2F0
-ZXMgYSBidW5jaCBvZiBmdW5jdGlvbnMgZnJvbSBvdGhlciBTYW1zdW5nIHBhbmVsIGRyaXZlcnMg
-dGhhdCBJCj4+ID4gPiA+IGFscmVhZHkgc2FpZCBzaG91bGQgZXZlbnR1YWxseSBiZSBtb3ZlZCB0
-byBzb21ldGhpbmcgc2FuZXIuCj4+ID4gPiA+Cj4+ID4gPgo+PiA+ID4gRldJVywgdGhpcyB0eXBl
-IG9mIGVycm9yIGhhbmRsaW5nIGlzbid0IG15IHByZWZlcmVuY2UgZWl0aGVyLiBJZiB3ZSBtdXN0
-IGRlZmVyLAo+PiA+ID4gSSdkIHJhdGhlciBub3Qga2VlcCBpdCBpbiBjdHgsIGJ1dCByYXRoZXIg
-cGFzcyBhcm91bmQgYW4gYXJndW1lbnQgc28gaXQncyBtb3JlCj4+ID4gPiBvYnZpb3VzIHdlIG5l
-ZWQgdG8gZGVhbCB3aXRoIGl0IGluIHRoZSByZXR1cm4uIFRoYXQgc2FpZCwgdGhpcyBzZWVtcyBs
-aWtlCj4+ID4gPiBhIGNhc2Ugb2YgbGV0dGluZyB0aGUgcGVyZmVjdCBiZSB0aGUgZW5lbXkgb2Yg
-dGhlIGdvb2QsIHN1cmVseSBzb21ldGhpbmcgaXMKPj4gPiA+IGJldHRlciB0aGFuIG5vdGhpbmc/
-Cj4+ID4KPj4gPiBUaGF0J3Mgd2hhdCBJIGVuZGVkIHVwIHNheWluZyB0aGUgbGFzdCB0d28gdGlt
-ZXMuIEJ1dCB0aGlzIGhhcyBnb3QgdG8KPj4gPiBzdG9wIGF0IHNvbWUgcG9pbnQuIElmIHlvdSBs
-b29rIGF0IG1vc3Qgb2YgdGhlIHBhbmVsIGRyaXZlcnMsIHRoZXkgbG9vawo+PiA+IG1vcmUgbGlr
-ZSBtYXRlcmlhbCBmb3IgdGhlIHN0YWdpbmcgdHJlZSByYXRoZXIgdGhhbiBEUk0gcHJvcGVyLgo+
-PiA+Cj4+ID4gWWVzLCBzb21ldGhpbmcgaXMgYmV0dGVyIHRoYW4gbm90aGluZywgYnV0IHdlIGNh
-bid0IGhhdmUgdGhpcyBtdWx0aXBseQo+PiA+IGZ1cnRoZXIuCj4+ID4KPj4KPj4gU28gcGVyaGFw
-cyBpZiB3ZSBoYWQgbW9yZSByZXZpZXdlcnMsIHdlIGNvdWxkIHRpZ2h0ZW4gdXAgdGhlIHJldmll
-dyBmZWVkYmFjawo+PiBsb29wIGFuZCBhdm9pZCB0aGlzIHdoaWxlIHN0aWxsIGdldHRpbmcgdGhp
-bmdzIG1lcmdlZD8KPgo+IE1heWJlLiBMaWtlIEkgc2FpZCwgSSB3b3VsZCB2ZXJ5IG11Y2ggd2Vs
-Y29tZSBtb3JlIHJldmlldyBvbiBwYW5lbAo+IHBhdGNoZXMuCj4KSSB0aGluayB0aGF0IHRoZXJl
-J3MgYSBwYXJ0IHRoYXQgSW5raSBhbmQvb3Igb3RoZXJzIG1pZ2h0IGhhdmUKZm9yZ290dGVuLiBC
-ZWluZyB0aGUgc29sZS9jb3JlIHBlcnNvbiByZXZpZXdpbmcgdGhpcyBsZWFkcyB0byBhIGJpdAp0
-b28gb2Z0ZW4gcmVwZWF0IG9mIHRoZSBzYW1lIHByaW5jaXBsZXMgLi4uIHdoaWNoIGFmdGVyIGEg
-d2hpbGUgZ2V0cyBhCmJpdCBbcGljayB5b3VyIGZhdm91cml0ZSBub24tY29vbCB3b3JkXS4KCklu
-IG9uZSBvZiBteSBleHBlcmllbmNlcyBbd2hpc3QgYXR0ZW1wdGluZyB0byBoZWxwIG91dF0sIG9u
-ZSBoYWQgdG8KcmVwZWF0L3Jld29yZCB0aGUgZXhhY3Qgc2FtZSB0aGluZyB0aHJlZSB0aW1lcyBp
-biBvcmRlciB0byBiZQphZGRyZXNzZWQgOi1cCgotRW1pbApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Rafał,
+
+On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
+> On 01/25/2017 10:04 PM, Jacek Anaszewski wrote:
+>> On 01/25/2017 10:03 AM, Rafał Miłecki wrote:
+>>> On 21 January 2017 at 22:42, Jacek Anaszewski
+>>> <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On 01/21/2017 05:24 PM, Rafał Miłecki wrote:
+>>>>> On 20 January 2017 at 23:35, Jacek Anaszewski
+>>>>> <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> On 01/20/2017 10:56 PM, Rafał Miłecki wrote:
+>>>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>>>>
+>>>>>>> Some LEDs can be related to particular devices described in DT. This
+>>>>>>> property allows specifying such relations. E.g. USB LED should
+>>>>>>> usually
+>>>>>>> be used to indicate some USB port(s) state.
+>>>>>>>
+>>>>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>>>>>> ---
+>>>>>>> V2: Replace "usb-ports" with "led-triggers" property which is
+>>>>>>> more generic and
+>>>>>>>     allows specifying other devices as well.
+>>>>>>>
+>>>>>>> When bindings patch is related to some followup implementation,
+>>>>>>> they usually go
+>>>>>>> through the same tree.
+>>>>>>>
+>>>>>>> Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds:
+>>>>>>> Improve examples by
+>>>>>>> adding some context") from kernel/git/j.anaszewski/linux-leds.git
+>>>>>>> . Is there any
+>>>>>>> way to solve this dependency issue? Or should this patch wait
+>>>>>>> until 3.11 is
+>>>>>>> released?
+>>>>>>> ---
+>>>>>>>  Documentation/devicetree/bindings/leds/common.txt | 16
+>>>>>>> ++++++++++++++++
+>>>>>>>  1 file changed, 16 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> index 24b656014089..17632a041196 100644
+>>>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>>> @@ -49,6 +49,17 @@ Optional properties for child nodes:
+>>>>>>>  - panic-indicator : This property specifies that the LED should
+>>>>>>> be used,
+>>>>>>>                   if at all possible, as a panic indicator.
+>>>>>>>
+>>>>>>> +- led-triggers : List of devices that should trigger this LED
+>>>>>>> activity. Some
+>>>>>>> +              LEDs can be related to a specific device and
+>>>>>>> should somehow
+>>>>>>> +              indicate its state. E.g. USB 2.0 LED may react to
+>>>>>>> device(s) in
+>>>>>>> +              a USB 2.0 port(s). Another common example is
+>>>>>>> switch or router
+>>>>>>> +              with multiple Ethernet ports each of them having
+>>>>>>> its own LED
+>>>>>>> +              assigned (assuminled-trigger-usbportg they are not
+>>>>>>> hardwired).
+>>>>>>> +              In such cases this property should contain
+>>>>>>> phandle(s) of
+>>>>>>> +              related device(s). In many cases LED can be
+>>>>>>> related to more
+>>>>>>> +              than one device (e.g. one USB LED vs. multiple USB
+>>>>>>> ports) so a
+>>>>>>> +              list of entries can be specified.
+>>>>>>> +
+>>>>>>
+>>>>>> This implies that it is possible to define multiple triggers for
+>>>>>> a LED class device but it is not supported by LED Trigger core.
+>>>>>> There is linux,default-trigger property which allows to define one
+>>>>>> trigger that will be initially assigned.
+>>>>
+>>>>> With proposed "led-triggers" property one could assign different
+>>>>> trigger *sources* to a LED. You could e.g. assign 2 USB ports, network
+>>>>> device & CPU to a single LED. For reason explained above Linux
+>>>>> couldn't support all of them at once.
+>>>>>
+>>>>>
+>>>>>> I am aware that this is renamed usb-ports property from v1,
+>>>>>> that attempts to address Rob's comment, but we can't do that this
+>>>>>> way.
+>>>>>> Maybe usb-ports property could be documented in led-trigger-usbport's
+>>>>>> specific bindings and a reference to it could be added next to the
+>>>>>> related entry on the list of the available LED triggers (which is
+>>>>>> actually missing) in
+>>>>>> Documentation/devicetree/bindings/leds/common.txt.
+>>>>>
+>>>>> I'm wondering if we need to care about this Linux limitation and if it
+>>>>> should stop us from adding this flexible DT property. Maybe we could
+>>>>> live with Linux having limitation of supporting one trigger type at a
+>>>>> time?
+>>>>
+>>>> That's what I meant. Generally I have objections to the generic
+>>>> property for defining list of allowed triggers. That's why I proposed
+>>>> to stay by usb-ports property that would be specific to only one
+>>>> trigger: led-trigger-usbport.
+>>>>
+>>>> led-trigger-usbport in fact is an entirely new type of LED trigger.
+>>>> LED triggers is a kernel based source of events. All existing triggers
+>>>> react only to a single, well defined source of events, whereas
+>>>> led-trigger-usbport allows to define the scope of events (usb ports)
+>>>> to notify about. Activity on each port is treated similarly and the LED
+>>>> class device that listens to the trigger notifications doesn't know
+>>>> which exact port triggered the notification.
+>>>>
+>>>> From this POV led-trigger-usbport is kind of facade, which allows
+>>>> for it to fit well into the LED Trigger design and API, and usb ports
+>>>> are not identical with LED triggers, but sit rather one level below.
+>>>> It is led-trigger-usbport which is visible to the LED subsystem, and
+>>>> not every single usb port.
+>>>>
+>>>>> So e.g. if one assigns 2 USB ports + network device + CPU and
+>>>>> decides to use "usport" trigger driver he'll get LED indicating status
+>>>>> of USB ports only.
+>>>>
+>>>> How would it be different from the current state? Only in limiting
+>>>> the scope of triggers available for a LED class device.
+>>>
+>>> It won't differ from the current state. I just wanted to make it clear
+>>> Linux trigger drivers may respect only selected "led-triggers" values
+>>> (phandles). Like "usbport" respecting USB port phandles but ignoring
+>>> CPU ones, net ones, etc.
+>>
+>> This is the ambiguity I want to avoid. According to my analysis from
+>> the previous message, physical usb port is one level below usbport LED
+>> trigger, and it should be reflected in DT binding documentation. You
+>> can't write usb1-port1 (using the convention from Documentation/leds/
+>> ledtrig-usbport.txt) to the "triggers" sysfs file. You can only register
+>> usbport trigger which can be configured to notify about activity on
+>> usb1-port1.
+>>
+>> That's why I proposed linux,trigger-sources name for that.
+>> Let's not confuse LED triggers with events originating from physical
+>> devices or other sources of kernel events, being in turn translated by
+>> LED triggers to LED brightness changes.
+>>
+>> This is a thing about naming. It is tempting to call sources of kernel
+>> events "triggers", but they are not LED triggers on they own. LED
+>> trigger is a driver that registers itself in LED Trigger core using
+>> led_trigger_register() API.
+> 
+> Thanks a lot Jacek for this explanation (and sorry but I needed a bit of
+> time to
+> think about this). I can finally see your point, I think we're on the
+> same page
+> now.
+> 
+> I think that for all this time I was thinking from the pure DT
+> perspective. If
+> you ignore fact that Linux has multiple LED trigger drivers, then
+> "led-triggers"
+> may not sound that bad.
+> 
+> After reading your description however I can see this property can be
+> misleading
+> as Linux people may think "drivers" when seeing "triggers".
+> 
+> I still think this is a useful property and I hope we can still find a
+> way to
+> name it in a sane way: to be nice from DT PoV and march Linux LEDs
+> subsystem.
+
+I also see the need for this property.
+
+> I think we should still work on some generic property (without linux,
+> prefix) as
+> this seems to be something generic, not really specific to Linux
+> implementation.
+> Specifying relation between LED and devices is something than AFAICS can be
+> reused by other systems as well.
+> 
+> So my suggestion is to try some new name & leave linux,default-trigger
+> to allow
+> specifying one single trigger driver as required by current Linux
+> implementation.
+> 
+> What do you think about this?
+> 
+> There are few suggestions to came to my mind:
+> "trigger-sources"
+> "trigger-devices"
+> "led-trigger-devices"
+> "led-related-devices"
+> "led-event-devices"
+
+trigger-devices would work in this specific use case,
+where we can give phandles to usb ports. Nonetheless, we
+have also other kernel based events serving as trigger
+sources - e.g. timer.
+
+In this case I'd go for trigger-sources, but we'd need
+to have some generic way of defining the source like timer.
+
+-- 
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
