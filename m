@@ -1,123 +1,120 @@
 From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 3/5] checks: Warn on node name unit-addresses with '0x'
- or leading 0s
-Date: Tue, 31 Jan 2017 11:17:11 +1100
-Message-ID: <20170131001711.GC14879@umbus.fritz.box>
+Subject: Re: [PATCH 1/5] checks: Add Warning for stricter property name
+ character checking
+Date: Tue, 31 Jan 2017 11:32:13 +1100
+Message-ID: <20170131003213.GE14879@umbus.fritz.box>
 References: <20170124174534.3865-1-robh@kernel.org>
- <20170124174534.3865-4-robh@kernel.org>
+ <20170124174534.3865-2-robh@kernel.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+        protocol="application/pgp-signature"; boundary="u5E4XgoOPWr4PD9E"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170124174534.3865-4-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170124174534.3865-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---gr/z0/N6AeWAPJVB
+--u5E4XgoOPWr4PD9E
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 24, 2017 at 11:45:32AM -0600, Rob Herring wrote:
-> Node name unit-addresses should never begin with 0x or leading 0s
-> regardless of whether they have a bus specific address (i.e. one with
-> commas) or not. Add warnings to check for these cases.
+On Tue, Jan 24, 2017 at 11:45:30AM -0600, Rob Herring wrote:
+> While '?', '.', '+', '*', and '_' are considered valid characters their
+> use is discouraged in recommended practices. '#' is also only
+> recommended to be used at the beginning of property names.
+
+Hrm.  I'm not totally convinced about this.  PAPR definitely specifies
+a few properties that include '#' not at the beginning.  I'm not sure
+that IEEE1275 doesn't as well (it's not exactly easy to grep for a
+single character).
+
+I'm not sure about '?' either.  I didn't positively identify any
+properties including it, but there are certainly OF configuration
+variables specified by PAPR including '?', and I think those will be
+exposed in the device tree as properties.
+
+I'm not 100% sure about '*' either, I have a vague memory of some spec
+that requires it, but I'm not certain.
+
+AFAIK, excluding '.', '+' and '_' should be ok, except for device_type
+which you already have special exception for.
+
+> Testing this found one typo error with '.' used instead of ','. The
+> rest of the warnings were all from underscores.
 >=20
 > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-I'd prefer to see this check split out on its own rather than folded
-into unit_address_vs_reg.  Strictly speaking you could have a bus
-binding which does specify unit addresses starting with leading 0 or
-0x, although it's pretty unlikely.  Splitting this out will make it
-easier to override this when we start having cases where we can really
-check the unit address is correct versus the bus binding.
-
 > ---
->  checks.c                       | 10 ++++++++++
->  tests/run_tests.sh             |  2 ++
->  tests/unit-addr-leading-0s.dts | 10 ++++++++++
->  tests/unit-addr-leading-0x.dts | 10 ++++++++++
->  4 files changed, 32 insertions(+)
->  create mode 100644 tests/unit-addr-leading-0s.dts
->  create mode 100644 tests/unit-addr-leading-0x.dts
+>  checks.c | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 >=20
 > diff --git a/checks.c b/checks.c
-> index 0c78d69316bc..8e310d69ca3d 100644
+> index 3d18e45374c8..a0d4a9d968d7 100644
 > --- a/checks.c
 > +++ b/checks.c
-> @@ -288,6 +288,16 @@ static void check_unit_address_vs_reg(struct check *=
+> @@ -239,6 +239,7 @@ ERROR(duplicate_property_names, check_duplicate_prope=
+rty_names, NULL);
+>  #define UPPERCASE	"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+>  #define DIGITS		"0123456789"
+>  #define PROPNODECHARS	LOWERCASE UPPERCASE DIGITS ",._+*#?-"
+> +#define PROPNODECHARSSTRICT	LOWERCASE UPPERCASE DIGITS ",-"
+> =20
+>  static void check_node_name_chars(struct check *c, struct dt_info *dti,
+>  				  struct node *node)
+> @@ -299,6 +300,38 @@ static void check_property_name_chars(struct check *=
 c, struct dt_info *dti,
->  		if (!unitname[0])
->  			FAIL(c, "Node %s has a reg or ranges property, but no unit name",
->  			    node->fullpath);
+>  }
+>  ERROR(property_name_chars, check_property_name_chars, PROPNODECHARS);
+> =20
+> +static void check_property_name_chars_strict(struct check *c,
+> +					     struct dt_info *dti,
+> +					     struct node *node)
+> +{
+> +	struct property *prop;
 > +
-> +		if (!strncmp(unitname, "0x", 2)) {
-> +			FAIL(c, "Node %s unit name should not have leading \"0x\"",
-> +			    node->fullpath);
-> +			/* skip over 0x for next test */
-> +			unitname +=3D 2;
+> +	for_each_property(node, prop) {
+> +		const char *name =3D prop->name;
+> +		int n =3D strspn(name, c->data);
+> +
+> +		if (n =3D=3D strlen(prop->name))
+> +			continue;
+> +
+> +		/* Certain names are whitelisted */
+> +		if (strcmp(name, "device_type") =3D=3D 0)
+> +			continue;
+> +
+> +		/*
+> +		 * # is only allowed at the beginning of property names not counting
+> +		 * the vendor prefix.
+> +		 */
+> +		if (name[n] =3D=3D '#' && ((n =3D=3D 0) || (name[n-1] =3D=3D ','))) {
+> +			name +=3D n + 1;
+> +			n =3D strspn(name, c->data);
 > +		}
-> +		if (unitname[0] =3D=3D '0' && isxdigit(unitname[1]))
-> +			FAIL(c, "Node %s unit name should not have leading 0s",
-> +			    node->fullpath);
->  	} else {
->  		if (unitname[0])
->  			FAIL(c, "Node %s has a unit name, but no reg property",
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index 157dbaea7600..2c06666a9e23 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -539,6 +539,8 @@ dtc_tests () {
->      check_tests obsolete-chosen-interrupt-controller.dts obsolete_chosen=
-_interrupt_controller
->      check_tests reg-without-unit-addr.dts unit_address_vs_reg
->      check_tests unit-addr-without-reg.dts unit_address_vs_reg
-> +    check_tests unit-addr-leading-0x.dts unit_address_vs_reg
-> +    check_tests unit-addr-leading-0s.dts unit_address_vs_reg
->      run_sh_test dtc-checkfails.sh node_name_chars -- -I dtb -O dtb bad_n=
-ode_char.dtb
->      run_sh_test dtc-checkfails.sh node_name_format -- -I dtb -O dtb bad_=
-node_format.dtb
->      run_sh_test dtc-checkfails.sh prop_name_chars -- -I dtb -O dtb bad_p=
-rop_char.dtb
-> diff --git a/tests/unit-addr-leading-0s.dts b/tests/unit-addr-leading-0s.=
-dts
-> new file mode 100644
-> index 000000000000..7c8e2cebbc84
-> --- /dev/null
-> +++ b/tests/unit-addr-leading-0s.dts
-> @@ -0,0 +1,10 @@
-> +/dts-v1/;
+> +		if (n < strlen(name))
+> +			FAIL(c, "Character '%c' not recommended in property name \"%s\", node=
+ %s",
+> +			     name[n], prop->name, node->fullpath);
+> +	}
+> +}
+> +WARNING(property_name_chars_strict, check_property_name_chars_strict, PR=
+OPNODECHARSSTRICT);
 > +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
+>  #define DESCLABEL_FMT	"%s%s%s%s%s"
+>  #define DESCLABEL_ARGS(node,prop,mark)		\
+>  	((mark) ? "value of " : ""),		\
+> @@ -703,6 +736,8 @@ static struct check *check_table[] =3D {
+>  	&address_cells_is_cell, &size_cells_is_cell, &interrupt_cells_is_cell,
+>  	&device_type_is_string, &model_is_string, &status_is_string,
+> =20
+> +	&property_name_chars_strict,
 > +
-> +	node@001 {
-> +		reg =3D <1 0>;
-> +	};
-> +};
-> diff --git a/tests/unit-addr-leading-0x.dts b/tests/unit-addr-leading-0x.=
-dts
-> new file mode 100644
-> index 000000000000..7ed7254e8dc2
-> --- /dev/null
-> +++ b/tests/unit-addr-leading-0x.dts
-> @@ -0,0 +1,10 @@
-> +/dts-v1/;
-> +
-> +/ {
-> +	#address-cells =3D <1>;
-> +	#size-cells =3D <1>;
-> +
-> +	node@0x1 {
-> +		reg =3D <1 0>;
-> +	};
-> +};
+>  	&addr_size_cells, &reg_format, &ranges_format,
+> =20
+>  	&unit_address_vs_reg,
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -125,28 +122,28 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---gr/z0/N6AeWAPJVB
+--u5E4XgoOPWr4PD9E
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJYj9eEAAoJEGw4ysog2bOSa7UQAIyAlO30uIr0wdjPezEKLC5v
-KT51pbdiYJ1xW++RW5QbrOl/gsaHSq9BgdLN8pRteyyPBAR2gUKKAqfgqS9GJgxn
-TAEjGFAnaRPspp74Fb3wx5dxXcJbBaywYsaRrj/QiG5IByRuXWOKJ4vHDuuuNw8H
-OrMOmv/n4jO7EYRw3SNW6hJnclLFAmgF4JxM223uNv9W6/JvLqtEcacwk0hp9Fvl
-W7Tq4MNgTXxGBhaIf9QGFpX8PXHPuC5CYQgbLvwypUyfSaj6K79tZiR2T0sxJVqy
-Hcz54K8EmBHym/Te99rl1TPsRkvMhFZmnHt2es3NEaWmfZRw24HN91uZgPnaHWcY
-fBSq8lsy+HHYXStR6gBSjUZQ24Py7lIJ4su0LGp+iTescM3Tg2HZAip7ednJLZhm
-291028GYcuK2NR0zp1XzqXky8uEmPcnFTby1CLvMr9IO+1jrVPhojyWT/LIU4VJN
-hUs1BczT8M67TKDN5eUpPi6lxykdH4yZPeSYZ73zpy5UvdR8RE19otuhj4ZLM3Mp
-SjW5XOa6MywKrP6MCCQskkC4yUSDk4EzVvdz+XxcrPGdKxF/9DfEQ2BOvjPS+uAY
-OQESsmMwiuseexX8tGtwES+M/b+3q9SuHCB/Br4kg6YyurfyuwYOKPh1tqZojFws
-Rdjmd/TDH5+mmgKx+cFu
-=OWWl
+iQIcBAEBCAAGBQJYj9sNAAoJEGw4ysog2bOSS2IQAJxB1I1fu9tm4F2OArFDO/Ps
+i9zoL1seZKuAUKZSof0FGfXXR0z6tBvFhG5N9Wl0yYizT/kW2MyuzltufhaydVpV
+eUnbDleIojsraruhrYmMWE/0CdHKSOIZr9axCwAl8eVwsA++B90Wa0bEac79LWQj
+WehLpm/4gdIcNaq0Z2LUSUCRSbGMMAKmiOEnQknS8cyJPXRa9UR7m8XrZq+uVbL5
+FvzBuAZh9JtooWTXUCOuZMcpFp2tSCDt1ITrqWNDBt2kIxQbHOX4TpMo4rIhAJ5y
+E/RBhNmts8aX7Gxq96VYV0pAAwt6pno+YtcdYft/wq4FLRHS+s37bVxfg9QN3YH7
+q7bQGV5W8+PYjWhJNyeGekO3EYVh1mph/PaHWhQa+MnnLyO8JO5TYNcRCzJOBwRF
+ZEyW9UWMUfyfOZX228crwSs+DVY+WSvDMUeZSgDbyiRGcI5jcIBDe22m3wX7MFLB
+cuq/FVCtX8LVZby90qs9AnSxVBVzL64VlLQ828c9vwVdSusKqyo8O4+Pcz6o/2U/
+EI5Gsw5fjiSWXCeAR/pW587wngPmJAWgLvMSp4h9Btpubsx8KNJKNZvJxjjH/oxR
+mse/D2Qeh2K6ft87PTyOR4Zh6S1ZB7qoMxF0U1QlnNajyhwNNY/xsy0O/snpSF8v
+MRpCIsHgTWD87e3iJPZY
+=A8fX
 -----END PGP SIGNATURE-----
 
---gr/z0/N6AeWAPJVB--
+--u5E4XgoOPWr4PD9E--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
