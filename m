@@ -1,85 +1,60 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v3 2/8] ASoC: sun4i-i2s: Add quirks to
- handle a31 compatible
-Date: Tue, 31 Jan 2017 11:31:23 +0100
-Message-ID: <20170131103123.6ldkmxhkpaihllmp@lukather>
-References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
- <20170131100552.27949-3-mylene.josserand@free-electrons.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
+Date: Tue, 31 Jan 2017 10:30:19 +0000
+Message-ID: <20170131103019.GT27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3770042874258146638=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170131100552.27949-3-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, robh+dt@kernel.org, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 06, 2017 at 06:11:35PM -0800, Steve Longerbeam wrote:
+> This is a media entity subdevice for the i.MX Camera
+> Serial Interface module.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
 
---===============3770042874258146638==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="vmgisapw3be5myiv"
-Content-Disposition: inline
+The lack of s_frame_interval/g_frame_interval in this driver means:
 
+media-ctl -v -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SGBRG8/512x512@1/30]'
 
---vmgisapw3be5myiv
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Opening media device /dev/media1
+Enumerating entities
+Found 29 entities
+Enumerating pads and links
+Setting up format SGBRG8 512x512 on pad imx6-mipi-csi2/1
+Format set: SGBRG8 512x512
+Setting up frame interval 1/30 on entity imx6-mipi-csi2
+Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to setup formats: Inappropriate ioctl for device (25)
 
-On Tue, Jan 31, 2017 at 11:05:46AM +0100, Myl=E8ne Josserand wrote:
-> Some SoCs have a reset line that must be asserted/deasserted.
-> This patch adds a quirk to handle the new compatible
-> "allwinner,sun6i-a31-i2s" which will deassert the reset
-> line on probe function and assert it on remove's one.
->=20
-> This new compatible is useful in case of A33 codec driver, for example.
->=20
-> Signed-off-by: Myl=E8ne Josserand <mylene.josserand@free-electrons.com>
+which causes the setup of the next element in the chain to also fail
+(because the above media-ctl command doesn't set the sink on the
+ipu1 csi0 mux.)
 
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+It seems to me that without the frame interval supported throughout the
+chain, there's no way for an application to properly negotiate the
+capture parameters via the "try" mechanism, since it has no idea whether
+the frame rate it wants is supported throughout the subdev chain.  Eg,
+the sensor may be able to do 100fps but there could be something in the
+pipeline that restricts it due to bandwidth.
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---vmgisapw3be5myiv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYkGd7AAoJEBx+YmzsjxAg2QwQALyyGcnDoYV3rl+FNVM8PhxR
-10KbgzT/HO2XfDCCuiXhxkOGkEDxa1S15pKIS5RF5zZeN4XhC4CiVmCS3EUlKc7y
-iiMo3SsqPW+htRZDqlYqQdQIjiT+RY7uJWkMz2y+X2B769WAOv/wy9LmLfNOFG1e
-kqBHTPRUsLXTpTnJlb6vGg3DWxPxPXrRvLVvVcrjSDmyTgfw56q4qLMxQ7Cm6RjX
-LliXUqnlBe4Ec7QcYWrnpb7kxksUTlYyxHv7eW7HTgGRXnAjQCUFgdTo6kjN53aE
-avLEchAbocQqWRgvczVx2KXEpT0GBhrrFzjeLFIOKZ48rf84QG00VeFFlPfvF9mv
-tE9Q2tSal+oKfXrfwrvIpv1CUxXSgBrwi+M1ActxawXecRjx9MsbBrMixWBrDlpz
-/BpMZOw60QDKgyTcgaW4KQ4vOkduQSgYx9by94xzsRK4d2JVB69TOMScH1WujIJh
-W6BmmREBzDNQoAofVdhs33aOtSMi3WJtaq8fG8gKVj0vCR+VTYoyAjZj0HXLimQ5
-IF7hsFNiUQh0s6em6zfB8jC2LECaZel/KhqATfJzqH5ONaE68wBI1Af4gJoqPWd+
-IuntS3Q7k3iuZ9ZHqQBUxsW9mbBnaIrnrjYHzciVHANKp6zX4MDdG+r8vTjweg/p
-giVPebbag9GyD+bBSiJS
-=jALR
------END PGP SIGNATURE-----
-
---vmgisapw3be5myiv--
-
---===============3770042874258146638==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3770042874258146638==--
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
