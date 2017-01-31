@@ -1,129 +1,47 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: soc-core: remove OF adjusting for
-	snd_soc_of_parse_audio_routing" to the asoc tree
-Date: Tue, 31 Jan 2017 20:02:32 +0000
-Message-ID: <E1cYedM-0005bg-Hm@debutante>
-References: <87d1f9qadv.wl%kuninori.morimoto.gx@renesas.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 1/7] drm: Add DRM support for tiny LCD displays
+Date: Tue, 31 Jan 2017 21:10:17 +0100
+Message-ID: <20170131201017.7gejvl3fffjaeyyd@phenom.ffwll.local>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-2-noralf@tronnes.org>
+ <20170131162341.ejr2b3bq7tghafzj@phenom.ffwll.local>
+ <1d854076-841a-7af3-36d2-eaf97b148388@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87d1f9qadv.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Linux-DT <devicetree@vger.kernel.org>, alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1d854076-841a-7af3-36d2-eaf97b148388@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   ASoC: soc-core: remove OF adjusting for snd_soc_of_parse_audio_routing
-
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 2bc644af610f28d05812f224636a95a57c2631d1 Mon Sep 17 00:00:00 2001
-From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Date: Fri, 27 Jan 2017 06:36:50 +0000
-Subject: [PATCH] ASoC: soc-core: remove OF adjusting for
- snd_soc_of_parse_audio_routing
-
-Because prototype of OF-graph sound card support didn't have Sound Card
-node, commit 7364c8dc255232db33bcd1c5b19eb8f34cf6108a
-("ASoC: soc-core: adjust for graph on snd_soc_of_parse_audio_routing")
-adjusted to it on each functions.
-
-But final discussion result of ALSA SoC / OF-graph ML, OF-graph sound
-card has node. Thus, this commit became no longer needed.
-
-This reverts commit 7364c8dc255232db33bcd1c5b19eb8f34cf6108a.
-
-Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/sound/soc.h  | 9 ++-------
- sound/soc/soc-core.c | 9 +++------
- 2 files changed, 5 insertions(+), 13 deletions(-)
-
-diff --git a/include/sound/soc.h b/include/sound/soc.h
-index 2b502f6cc6d0..838e03778b58 100644
---- a/include/sound/soc.h
-+++ b/include/sound/soc.h
-@@ -1668,13 +1668,8 @@ void snd_soc_of_parse_audio_prefix_from_node(struct snd_soc_card *card,
- 				   struct snd_soc_codec_conf *codec_conf,
- 				   struct device_node *of_node,
- 				   const char *propname);
--
--#define snd_soc_of_parse_audio_routing(card, propname) \
--	snd_soc_of_parse_audio_routing_from_node(card, NULL, propname)
--int snd_soc_of_parse_audio_routing_from_node(struct snd_soc_card *card,
--					     struct device_node *np,
--					     const char *propname);
--
-+int snd_soc_of_parse_audio_routing(struct snd_soc_card *card,
-+				   const char *propname);
- unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
- 				     const char *prefix,
- 				     struct device_node **bitclkmaster,
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index f1901bb1466e..e30984fd649b 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -3690,17 +3690,14 @@ void snd_soc_of_parse_audio_prefix_from_node(struct snd_soc_card *card,
- }
- EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_prefix_from_node);
- 
--int snd_soc_of_parse_audio_routing_from_node(struct snd_soc_card *card,
--				   struct device_node *np,
-+int snd_soc_of_parse_audio_routing(struct snd_soc_card *card,
- 				   const char *propname)
- {
-+	struct device_node *np = card->dev->of_node;
- 	int num_routes;
- 	struct snd_soc_dapm_route *routes;
- 	int i, ret;
- 
--	if (!np)
--		np = card->dev->of_node;
--
- 	num_routes = of_property_count_strings(np, propname);
- 	if (num_routes < 0 || num_routes & 1) {
- 		dev_err(card->dev,
-@@ -3747,7 +3744,7 @@ int snd_soc_of_parse_audio_routing_from_node(struct snd_soc_card *card,
- 
- 	return 0;
- }
--EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_routing_from_node);
-+EXPORT_SYMBOL_GPL(snd_soc_of_parse_audio_routing);
- 
- unsigned int snd_soc_of_parse_daifmt(struct device_node *np,
- 				     const char *prefix,
--- 
-2.11.0
+T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDc6MDE6MTBQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
+IHdyb3RlOgo+IAo+IERlbiAzMS4wMS4yMDE3IDE3LjIzLCBza3JldiBEYW5pZWwgVmV0dGVyOgo+
+ID4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDU6MDM6MTNQTSArMDEwMCwgTm9yYWxmIFRyw7hu
+bmVzIHdyb3RlOgo+ID4gPiB0aW55ZHJtIHByb3ZpZGVzIGhlbHBlcnMgZm9yIHZlcnkgc2ltcGxl
+IGRpc3BsYXlzIHRoYXQgY2FuIHVzZQo+ID4gPiBDTUEgYmFja2VkIGZyYW1lYnVmZmVycyBhbmQg
+bmVlZCBmbHVzaGluZyBvbiBjaGFuZ2VzLgo+ID4gPiAKPiA+ID4gU2lnbmVkLW9mZi1ieTogTm9y
+YWxmIFRyw7hubmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gPiA+IEFja2VkLWJ5OiBEYW5pZWwg
+VmV0dGVyIDxkYW5pZWwudmV0dGVyQGZmd2xsLmNoPgo+ID4gSSBzcG90dGVkIGFub3RoZXIgdGlu
+eSBvbmUsIGJ1dCB5ZWFoIGxvb2tzIGFyZSBzdXByZW1lbHkgcmVhc29uYWJsZSwgYWNrCj4gPiBv
+biBhbGwgdGhlIGRybSBwYXJ0cy4gQW5kIHBsZWFzZSBzZW5kIGEgcHVsbCByZXF1ZXN0IGZvciBh
+bGwgb2YgaXQgYXMgc29vbgo+ID4gYXMgeW91IGhhdmUgdGhlIGR0IGFja3MuCj4gCj4gVGhlIGZp
+cnN0IERPQyBzZWN0aW9uIGlzIGp1c3QgYW4gb3ZlcnZpZXcgYW5kIHRoZSBzZWNvbmQgaXMgaG93
+IHRvIHVzZQo+IHRoZSBjb3JlIGZ1bmN0aW9uYWxpdHkuIFRoZXkgYXJlIHJlZmVyZW5jZWQgc2Vw
+YXJhdGVseSBpbiB0aW55ZHJtLnJzdC4KPiBBdCBsZWFzdCB0aGV5IHNob3cgdXAgd2hlbiBJIGJ1
+aWxkIGh0bWxkb2NzIDotKQoKSSB3YXMgYmxpbmQsIHllcyBpdCdzIGFsbCB0aGVyZSBvbiAybmQg
+bG9vayA6LSkKLURhbmllbAotLSAKRGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50
+ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2
+ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
+aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
