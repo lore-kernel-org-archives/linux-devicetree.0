@@ -1,68 +1,108 @@
-From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
-Subject: [PATCH v3 6/8] ARM: dts: sun8i: Add audio codec,
-	dai and card for A33
-Date: Tue, 31 Jan 2017 11:05:50 +0100
-Message-ID: <20170131100552.27949-7-mylene.josserand@free-electrons.com>
-References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 11:09:24 +0100
+Message-ID: <1485857364.2932.27.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+         <1484929911.2897.70.camel@pengutronix.de>
+         <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
+         <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
+         <1485169204.2874.57.camel@pengutronix.de>
+         <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
+         <1485257269.3600.96.camel@pengutronix.de>
+         <20170130130657.GR27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170130130657.GR27312@n2100.armlinux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBhdWRpbyBjb2RlYywgZGFpIGFuZCBhIHNpbXBsZSBjYXJkIHRvIGJlIGFibGUgdG8g
-dXNlIHRoZQphdWRpbyBzdHJlYW0gb2YgdGhlIGJ1aWx0aW4gY29kZWMgb24gc3VuOGkgU29DLgoK
-VGhpcyBjb21taXQgYWRkcyBhbHNvIGFuIGF1ZGlvLXJvdXRpbmcgZm9yIHRoZSBzb3VuZCBjYXJk
-IG5vZGUgdG8gbGluawp0aGUgYW5hbG9nIERBUE0gd2lkZ2V0cyAoUmlnaHQvTGVmdCBEQUMpIGFu
-ZCB0aGUgZGlnaXRhbCBvbmUncyBhcyB0aGV5CmFyZSBjcmVhdGVkIGluIGRpZmZlcmVudCBkcml2
-ZXJzLgoKU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5qb3NzZXJhbmRA
-ZnJlZS1lbGVjdHJvbnMuY29tPgotLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNp
-IHwgNDUgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNo
-YW5nZWQsIDQ1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
-dW44aS1hMzMuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpCmluZGV4IDVh
-OWJhNDNjY2IwNy4uMThjMTc0ZmVmODRmIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9z
-dW44aS1hMzMuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9zdW44aS1hMzMuZHRzaQpAQCAt
-MTA0LDYgKzEwNCwyOCBAQAogCQlyZWcgPSA8MHg0MDAwMDAwMCAweDgwMDAwMDAwPjsKIAl9Owog
-CisJc291bmQ6IHNvdW5kIHsKKwkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYXVkaW8tY2FyZCI7CisJ
-CXNpbXBsZS1hdWRpby1jYXJkLG5hbWUgPSAic3VuOGktYTMzLWF1ZGlvIjsKKwkJc2ltcGxlLWF1
-ZGlvLWNhcmQsZm9ybWF0ID0gImkycyI7CisJCXNpbXBsZS1hdWRpby1jYXJkLGZyYW1lLW1hc3Rl
-ciA9IDwmbGlua19jb2RlYz47CisJCXNpbXBsZS1hdWRpby1jYXJkLGJpdGNsb2NrLW1hc3RlciA9
-IDwmbGlua19jb2RlYz47CisJCXNpbXBsZS1hdWRpby1jYXJkLG1jbGstZnMgPSA8NTEyPjsKKwkJ
-c2ltcGxlLWF1ZGlvLWNhcmQsYXV4LWRldnMgPSA8JmNvZGVjX2FuYWxvZz47CisJCXNpbXBsZS1h
-dWRpby1jYXJkLHJvdXRpbmcgPQorCQkJIkxlZnQgREFDIiwgIkRpZ2l0YWwgTGVmdCBEQUMiLAor
-CQkJIlJpZ2h0IERBQyIsICJEaWdpdGFsIFJpZ2h0IERBQyI7CisJCXN0YXR1cyA9ICJkaXNhYmxl
-ZCI7CisKKwkJc2ltcGxlLWF1ZGlvLWNhcmQsY3B1IHsKKwkJCXNvdW5kLWRhaSA9IDwmZGFpPjsK
-KwkJfTsKKworCQlsaW5rX2NvZGVjOiBzaW1wbGUtYXVkaW8tY2FyZCxjb2RlYyB7CisJCQlzb3Vu
-ZC1kYWkgPSA8JmNvZGVjPjsKKwkJfTsKKwl9OworCiAJc29jQDAxYzAwMDAwIHsKIAkJdGNvbjA6
-IGxjZC1jb250cm9sbGVyQDAxYzBjMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1
-bjhpLWEzMy10Y29uIjsKQEAgLTE1MSw2ICsxNzMsMjkgQEAKIAkJCXJlc2V0LW5hbWVzID0gImFo
-YiI7CiAJCX07CiAKKwkJZGFpOiBkYWlAMDFjMjJjMDAgeworCQkJI3NvdW5kLWRhaS1jZWxscyA9
-IDwwPjsKKwkJCWNvbXBhdGlibGUgPSAiYWxsd2lubmVyLHN1bjZpLWEzMS1pMnMiOworCQkJcmVn
-ID0gPDB4MDFjMjJjMDAgMHgyMDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI5IElSUV9U
-WVBFX0xFVkVMX0hJR0g+OworCQkJY2xvY2tzID0gPCZjY3UgQ0xLX0JVU19DT0RFQz4sIDwmY2N1
-IENMS19BQ19ESUc+OworCQkJY2xvY2stbmFtZXMgPSAiYXBiIiwgIm1vZCI7CisJCQlyZXNldHMg
-PSA8JmNjdSBSU1RfQlVTX0NPREVDPjsKKwkJCWRtYXMgPSA8JmRtYSAxNT4sIDwmZG1hIDE1PjsK
-KwkJCWRtYS1uYW1lcyA9ICJyeCIsICJ0eCI7CisJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQl9
-OworCisJCWNvZGVjOiBjb2RlY0AwMWMyMmUwMCB7CisJCQkjc291bmQtZGFpLWNlbGxzID0gPDA+
-OworCQkJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktYTMzLWNvZGVjIjsKKwkJCXJlZyA9
-IDwweDAxYzIyZTAwIDB4NDAwPjsKKwkJCWludGVycnVwdHMgPSA8R0lDX1NQSSAyOSBJUlFfVFlQ
-RV9MRVZFTF9ISUdIPjsKKwkJCWNsb2NrcyA9IDwmY2N1IENMS19CVVNfQ09ERUM+LCA8JmNjdSBD
-TEtfQUNfRElHPjsKKwkJCWNsb2NrLW5hbWVzID0gImJ1cyIsICJtb2QiOworCQkJc3RhdHVzID0g
-ImRpc2FibGVkIjsKKwkJfTsKKwogCQlmZTA6IGRpc3BsYXktZnJvbnRlbmRAMDFlMDAwMDAgewog
-CQkJY29tcGF0aWJsZSA9ICJhbGx3aW5uZXIsc3VuOGktYTMzLWRpc3BsYXktZnJvbnRlbmQiOwog
-CQkJcmVnID0gPDB4MDFlMDAwMDAgMHgyMDAwMD47Ci0tIAoyLjExLjAKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0
-CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qu
-b3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+On Mon, 2017-01-30 at 13:06 +0000, Russell King - ARM Linux wrote:
+> > The central issue seems to be that I think media pad links / media bus
+> > formats should describe physical links, such as parallel or serial
+> > buses, and the formats of pixels flowing through them, whereas Steve
+> > would like to extend them to describe software transports and in-memory
+> > formats.
+> 
+> This probably isn't the right place to attach this comment in this
+> thread, but... the issue of media bus formats matching physical buses
+> is an argument that I think is already lost.
+
+It is unfortunate that the parallel format definitions have been reused
+for the MIPI logical formats, but I suppose we have to live with that.
+Still, I think this is not a reason to open the floodgates and start
+describing in-memory formats using MEDIA_BUS_FMT_*
+
+Does at least the combination of logical format and number of lanes
+uniquiely describe the physical format?
+For the 4-lane LVDS bus formats there are JEIDA/VESA variants where just
+the bit ordering is different (MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
+MEDIA_BUS_FMT_RGB888_1X7X4_JEIDA).
+
+> For example, take the 10-bit bayer formats:
+> 
+> #define MEDIA_BUS_FMT_SBGGR10_1X10              0x3007
+> #define MEDIA_BUS_FMT_SGBRG10_1X10              0x300e
+> #define MEDIA_BUS_FMT_SGRBG10_1X10              0x300a
+> #define MEDIA_BUS_FMT_SRGGB10_1X10              0x300f
+> 
+> These are commonly used on CSI serial buses (see the smiapp driver for
+> example).  From the description at the top of the file, it says the
+> 1X10 means that one pixel is transferred as one 10-bit sample.
+>
+> However, the format on wire is somewhat different - four pixels are
+> transmitted over five bytes:
+> 
+> 	P0	P1	P2	P3	P0	P1	P2	P3
+> 	8-bit	8-bit	8-bit	8-bit	2-bit	2-bit	2-bit	2-bit
+> 
+> This gives two problems:
+> 1) it doesn't fit in any sensible kind of "one pixel transferred as
+>    N M-bit samples" description because the pixel/sample values
+>    (depending how you look at them) are broken up.
+> 
+> 2) changing this will probably be a user visible change, as things
+>    like smiapp are already in use.
+> 
+> So, I think what we actually have is the media bus formats describing
+> the _logical_ bus format.  Yes, one pixel is transferred as one 10-bit
+> sample in this case.
+
+Yes. I suppose one way to look at it is that the MIPI CSI-2 specified
+formats are representations of corresponding parallel bus formats.
+
+> To help illustrate my point, consider the difference between
+> MEDIA_BUS_FMT_RGB565_1X16 and MEDIA_BUS_FMT_RGB565_2X8_BE or
+> MEDIA_BUS_FMT_RGB565_2X8_LE.  RGB565_1X16 means 1 pixel over an effective
+> 16-bit wide bus (if it's not 16-bit, then it has to be broken up into
+> separate "samples".)  RGB565_2X8 means 1 pixel as two 8-bit samples.
+> 
+> So, the 10-bit bayer is 1 pixel as 1.25 bytes.  Or is it, over a serial
+> bus.  Using the RGB565 case, 10-bit bayer over a 4 lane CSI bus becomes
+> interesting:
+> 
+> 	first byte	2nd	3rd
+> lane 1	P0 9:2		S0	P7 9:2
+> lane 2	P1 9:2		P4 9:2	S1
+> lane 3	P2 9:2		P5 9:2	P8 9:2
+> lane 4	P3 9:2		P6 9:2	P9 9:2
+> 
+> S0 = P0/P1/P2/P3 least significant two bits
+> S1 = P4/P5/P6/P7 least significant two bits
+> 
+> or 2 lane CSI:
+> 	first byte	2nd	3rd	4th	5th
+> lane 1	P0 9:2		P2	S0	P5	P7
+> lane 2	P1 9:2		P3	P4	P6	S1
+> 
+> or 1 lane CSI:
+> lane 1	P0 P1 P2 P3 S0 P4 P5 P6 P7 S1 P8 P9 ...
+
+These do look like three different media bus formats to me.
+
+regards
+Philipp
