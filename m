@@ -1,79 +1,42 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Tue, 31 Jan 2017 13:14:36 +0000
-Message-ID: <20170131131436.GW27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
- <1484929911.2897.70.camel@pengutronix.de>
- <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
- <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
- <1485169204.2874.57.camel@pengutronix.de>
- <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
- <1485257269.3600.96.camel@pengutronix.de>
- <20170130130657.GR27312@n2100.armlinux.org.uk>
- <1485857364.2932.27.camel@pengutronix.de>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH 3/8] Documentation: dt-bindings: Add STM32 pinctrl driver DT
+ bindings
+Date: Tue, 31 Jan 2017 14:14:20 +0100
+Message-ID: <1485868465-30446-4-git-send-email-alexandre.torgue@st.com>
+References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1485857364.2932.27.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gma
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 11:09:24AM +0100, Philipp Zabel wrote:
-> On Mon, 2017-01-30 at 13:06 +0000, Russell King - ARM Linux wrote:
-> > To help illustrate my point, consider the difference between
-> > MEDIA_BUS_FMT_RGB565_1X16 and MEDIA_BUS_FMT_RGB565_2X8_BE or
-> > MEDIA_BUS_FMT_RGB565_2X8_LE.  RGB565_1X16 means 1 pixel over an effective
-> > 16-bit wide bus (if it's not 16-bit, then it has to be broken up into
-> > separate "samples".)  RGB565_2X8 means 1 pixel as two 8-bit samples.
-> > 
-> > So, the 10-bit bayer is 1 pixel as 1.25 bytes.  Or is it, over a serial
-> > bus.  Using the RGB565 case, 10-bit bayer over a 4 lane CSI bus becomes
-> > interesting:
-> > 
-> > 	first byte	2nd	3rd
-> > lane 1	P0 9:2		S0	P7 9:2
-> > lane 2	P1 9:2		P4 9:2	S1
-> > lane 3	P2 9:2		P5 9:2	P8 9:2
-> > lane 4	P3 9:2		P6 9:2	P9 9:2
-> > 
-> > S0 = P0/P1/P2/P3 least significant two bits
-> > S1 = P4/P5/P6/P7 least significant two bits
-> > 
-> > or 2 lane CSI:
-> > 	first byte	2nd	3rd	4th	5th
-> > lane 1	P0 9:2		P2	S0	P5	P7
-> > lane 2	P1 9:2		P3	P4	P6	S1
-> > 
-> > or 1 lane CSI:
-> > lane 1	P0 P1 P2 P3 S0 P4 P5 P6 P7 S1 P8 P9 ...
-> 
-> These do look like three different media bus formats to me.
+Add compatible sting for stm32h743 MCU.
 
-This isn't limited to the serial side - the parallel bus side between
-the CSI2 interface and CSI2IPU wrapper, and the CSI2IPU wrapper and
-the CS0/1 interfaces is much the same with 10-bit bayer.
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Think of the CSI2 <-> CSI2IPU bit as the 4-lane case, lane 0 ending
-up on the least significant 8 bits of the 32-bit bus, lane 3 on the
-top 8-bits.
-
-Post CSI2IPU, it talks about a 16-bit bus in the diagrams, so that's
-kind of the 2-lane case above...
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+index b24583a..ac8dcb7 100644
+--- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
+@@ -10,6 +10,7 @@ Required properies:
+  - compatible: value should be one of the following:
+    (a) "st,stm32f429-pinctrl"
+    (b) "st,stm32f746-pinctrl"
++   (c) "st,stm32h743-pinctrl"
+  - #address-cells: The value of this property must be 1
+  - #size-cells	: The value of this property must be 1
+  - ranges	: defines mapping between pin controller node (parent) to
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+1.9.1
