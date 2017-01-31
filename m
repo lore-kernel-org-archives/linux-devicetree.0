@@ -1,34 +1,134 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 04/14] GPIO: Add gpio-ingenic driver
-Date: Tue, 31 Jan 2017 16:29:58 +0100
-Message-ID: <699f0c63e95ecdafe6946fdcdbb97a37@mail.crapouillou.net>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net>
- <20170125185207.23902-5-paul@crapouillou.net>
- <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 2/7] MFD: add STM32 DFSDM support
+Date: Tue, 31 Jan 2017 16:30:38 +0100
+Message-ID: <72ac395d-645f-08f6-c6f4-6b3d94187a78@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-3-git-send-email-arnaud.pouliquen@st.com>
+ <20170124082249.GR16020@dell> <283c0e48-55e2-6516-369d-91dc72d12f73@st.com>
+ <20170124113658.GW16020@dell> <a1aaaa20-ac00-b182-f1c1-63152be41135@st.com>
+ <20170127101545.g53uah57vgfu55o5@dell>
+ <7b3eb38d-4fd1-2006-7423-94f2a7b38b27@st.com>
+ <20170127171746.lf2nbpsaqs3dmy44@dell>
+ <3810896b-c982-e9fd-b095-658921422855@kernel.org>
+ <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <80a4e7f9-b972-599c-198a-f05c1713123c@metafoo.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 2017-01-31 15:20, Linus Walleij a écrit :
+Hello Lars,
 
->> + of_property_read_u32(dev->of_node, "base", &jzgc->gc.base);
+On 01/29/2017 03:19 PM, Lars-Peter Clausen wrote:
+> On 01/29/2017 01:28 PM, Jonathan Cameron wrote:
+> [...]
+>>>> Jonathan, Mark, Please could you share your opinion on this topic?
+>> Hmm - based on a fairly quick read through of the code (which is never
+>> ideal!). I can see that the ideal would indeed be as Lee says, to
+>> expand the IIO interfaces sufficiently to support what you need.
+>>
+>>
+>> So, reading the code (fairly quickly I'm afraid as had a lot of reviews
+>> to catch up on this weekend).
+>> What we need:
+>> 1) DMA support in the ADC driver.  This would be a good anyway!
+>> 2) DMA consumer support - I defer to Lars for comments on this.
+>> 3) Means of describing and controlling the sinc filters applied. 
+>> 4) Appropriate channel support.  I'm not convinced that it doesn't make
+>> sense to have IIO channels for the microphones - at least in a streaming
+>> mode.  It's data - I don't really care what ;)
+>> Coarsely it's a filtered pulse per period counter which is
+>> a perfectly valid type to have a channel for.
+>>
+>> The big question to my mind is the DMA consumer support. How would
+>> it work. It it wouldn't this is somewhat of a non starter.
+>>
+>> To bring up another slightly ugly MFD case where it is borderline
+>> on whether an MFD makes sense (just as a reference point of something
+>> we have discussed a few times before)
+>>
+>> ADCs with features directed at touchscreen support.
+>> These are odd as the ADC bit is generic, but the specific output
+>> and read sequences used for touchscreen reading don't correspond to
+>> anything that makes any real sense for other applications.
+>>
+>> We have started to get hybrid drives that have an MFD underneath but
+>> do the ADC reads through IIO consumer interfaces, and the timing
+>> control from a touchscreen driver.  We haven't really gotten this
+>> one right yet either.
+>>
+>> Here however, to my mind things are different - as I read it
+>> (and feel free to point out what I'm missing), the sound usecase
+>> is just a question of setting up sampling frequencies and filters
+>> appropriate to the microphones and what ASoC expects?
+>>
+>> That's not to say the IIO dma stuff is flexible enough (yet) to
+>> handle the data flows, but perhaps we can work towards that.
 > 
-> Remove this. Dynamic allocation should be fine, if you're using the
-> new userspace ABI like tools/gpio/* or libgpiod and only that and 
-> in-kernel
-> consumers, dynamic numbers are just fine.
+> Yeah, so this is a bit different, but not unexpected. And I'm sure we'll see
+> more similar hardware in the future. I've talked about this before[1], the
+> cost structure of creating and manufacturing new hardware drives the design
+> in a certain direction so that we end up with general purpose hardware that
+> suddenly has applications in multiple frameworks that were previously fully
+> orthogonal.
+> 
+> This device is certainly not a multi-function-device. It only has one
+> function, it's a sigma-delta demodulator. It is rather a
+> multi-purpose-device. It can be used for sigma-delta demodulation in audio
+> applications as well as more specialized data capture applications.
+> 
+> It's comparable to something like a GPIO that can be used to control a reset
+> pin or turn on and off a LED. The GPIO chip is not considered
+> multi-function-device though, even though it can be used for many different
+> applications.
+> 
+> As for DMA we already have a lot of DMA infrastructure on the audio side and
+> we probably want to reuse that rather than inserting IIO as a middle layer
+> since audio buffer capture as different requirements from IIO buffer and
+> we'd have to go the route of the least common denominator and loose
+> expressibility in the process.
 
-The problem is that the QI_LB60 board code still have a lot of 
-references
-to global GPIO numbers. Just grep for JZ_GPIO_PORT in
-arch/mips/jz4740/board-qi_lb60.c to see what I mean...
+I'm agree with your analysis.
+Audio DMA engine seems a more secure solution to avoid audio runtime
+issue, and should minimize impact in IIO.
 
--Paul
+> 
+> I've created a IIO buffer[2] that does not capture data to memory but is
+> only used to enable/disable the data capture process. We use this in setups
+> where the data is passed from the converter to a application specific
+> processing chain without ever going through system memory. This buffer could
+> probably also be used here on the audio side to control the converter state.
+
+This remind me HDMI.
+For HDMI, solution integrated is a drm driver that probes
+"hdmi-audio-codec" driver.
+
+Something similar could be done. An IIO device that probes a generic DAI
+ASoC driver. Driver data structure should be used to provide DMA config
+and IIO device phandles. Then DAI drivers could use your "hw_consummer"
+interface to control iio device...
+
+> 
+> - Lars
+> 
+> [1]
+> https://lists.linuxfoundation.org/pipermail/ksummit-discuss/2016-July/003029.html
+> 
+> [2]
+> https://github.com/analogdevicesinc/linux/blob/xcomm_zynq/drivers/iio/buffer/hw_consumer.c
+> 
+
+Regards
+Arnaud
