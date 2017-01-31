@@ -1,98 +1,166 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 03/14] pinctrl-ingenic: add a pinctrl driver for the
- Ingenic jz47xx SoCs
-Date: Tue, 31 Jan 2017 15:05:43 +0100
-Message-ID: <CACRpkdZKNACkOYJtUcYavriSxSDMy0iLt2SUX+d8DcKPXofXyw@mail.gmail.com>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net> <20170125185207.23902-4-paul@crapouillou.net>
+From: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+Subject: Re: [PATCH 3/7] IIO: add bindings for STM32 DFSDM ADC
+	driver
+Date: Tue, 31 Jan 2017 15:10:43 +0100
+Message-ID: <d9747aa9-e3c2-f280-7dca-8862e8e74e6e@st.com>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-4-git-send-email-arnaud.pouliquen@st.com>
+ <fa6b541d-2818-afa7-82fa-eb19806e9f4d@kernel.org>
+ <36426523-c59f-4010-b341-acb60ebdcbb5@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170125185207.23902-4-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, linux-p
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <36426523-c59f-4010-b341-acb60ebdcbb5@kernel.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Jonathan Cameron <jic23@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Alexandre TORGUE <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 7:51 PM, Paul Cercueil <paul@crapouillou.net> wrote:
+Hi Jonathan,
 
-> This driver handles pin configuration and pin muxing for the
-> JZ4740 and JZ4780 SoCs from Ingenic.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+On 01/29/2017 01:42 PM, Jonathan Cameron wrote:
+> On 29/01/17 11:58, Jonathan Cameron wrote:
+>> On 23/01/17 16:32, Arnaud Pouliquen wrote:
+>>> This patch adds documentation of device tree bindings for the
+>>> STM32 DFSDM ADC.
+>>>
+>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen@st.com>
+>> Trivial bits inline.
+>>> ---
+>>>  .../bindings/iio/adc/st,stm32-dfsdm-adc.txt        | 60 ++++++++++++++++++++++
+>>>  1 file changed, 60 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt 
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt  b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt 
+>>> new file mode 100644
+>>> index 0000000..c156bcb
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/st,stm32-dfsdm-adc.txt 	
+>>> @@ -0,0 +1,60 @@
+>>> +STMicroelectronics STM32 DFSDM ADC device driver
+>>> +
+>>> +STM32 DFSDM ADC is a sigma delta analog-to-digital converter.
+>>> +It has to be declared in device-tree as a subnode of the DFSDM mfd node.
+>>> +
+>>> +It has several multiplexed input channels. Conversions can be performed
+>>> +in single, scan or discontinuous mode. Conversions can be launched in software
+>>> +or using hardware triggers.
+>>> +Each instance of the driver uses one filter instance handle by the DFSDM mfd
+>>> +driver.
+>>> +
+>>> +DFSDM also offers extra features:
+>>> +-The analog watchdog feature allows the application to detect if the
+>>> + input voltage goes beyond the user-defined, higher or lower thresholds.
+>>> +-The short circuit detection allows allows the application to detect if the
+>>> + input is in CC.
+>>> +-The clock absence detection allows application to detect if SPI input is clocked.
+>>> +
+>>> +Required properties:
+>>> +- compatible:	Must be "st,stm32-dfsdm-adc".
+>>> +- reg:		Specifies the DFSDM filter instance.
+>>> +- #io-channel-cells = <1>: See the IIO bindings section "IIO consumers".
+>>> +- st,adc-channels:	List of single-ended channels muxed for this ADC.
+>>> +- st,adc-channel-names:	List of single-ended channels Name.
+>>> +
+>>> +Optional properties:
+>>> +- st,adc-channel-types:	Single-ended channel input type. Default value is 0.
+>>> +			- 0: SPI with data on rising edge (default)
+>>> +			- 1: SPI with data on falling edge
+>> This is an element that can be described without magic numbers so I'd
+>> prefer that you do so.
+>>
+>> Also spell check edage -> edge.
+>>
+>>> +			- 2: manchester codec, rising edage = logic 0
+>>> +			- 3: manchester codec, rising edage = logic 1
+>>> +- st,adc-channel-clk-src: Conversion clock source. default value is 1.
+>>> +			  - 0: External SPI clocl (CLKIN x)
+>>> +			  - 1: internal SPI clock (CLKOUT) (default)
+>>> +			  - 2: internal SPI clock divided by 2 (falling edge).
+>>> +			  - 2: internal SPI clock divided by 2 (rising edge).
+>> 3?
+>>> +- st,adc-alt-channel: 	  must be defined if Two ADCs are connected on same SPI
+>>> +			  input.
+>>> +			  If not set channel n is connected to SPI input n.
+>>> +			  If set channel n is connected to SPI input n + 1.
+>> ? Two data inputs with shared clock?
+>>> +
+>>> +Example:
+>>> +	dfsdm: dfsdm@4400D000 {
+> I'd like to actually see the ADCs on the end of these explicitly
+> described as well.  It's entirely possible we'll have something
+> that isn't simply a dumb sigma delta modulator that will need
+> it's own driver.
+> 
+> In some senses what we actually have here is a data bus so we
+> should be able to describe things on it in that fashion
+> rather than just describing the data that is in coming.
+> Our boundary of knowledge isn't at the edge of this device!
+> 
+> A quick example google fed me would be the gain control on a
+> maxim ds8102.
+> 
+> Tricky bit here will be defining this nice and generally when we
+> currently only have the one piece of hardware to do it with ;)
+> 
+> That's what makes kernel development fun!
+> 
 
-This is starting to look very nice.
+What you describe here seems similar to audio codecs device defined in
+ASoC. An Audio codec is an external chip that is connected to SoC
+through an audio bus.
+ASoC allows to bind this codec with the SOC DAI (digital Audio Interface).
 
-> +#include <linux/compiler.h>
-> +#include <linux/gpio.h>
+FYI we should have this kind of feature to support on STM32 uin second step:
+DSFDM input can also process stm32 ADC output through an hardware pipe
+(stm32-adc IIO driver that has been recently integrated in kernel).
+Internally, to pipe the ADC with DFSDM, we use an extension of inkern
+interface that is very similar with the one mentioned by Lars:
 
-Use <linux/gpio/driver.h> if it is a GPIO driver. I should
-be enough ... I think.
+https://github.com/analogdevicesinc/linux/blob/xcomm_zynq/drivers
+/iio/buffer/hw_consumer.c
 
-> +static int ingenic_pinctrl_parse_dt_func(struct ingenic_pinctrl *jzpc,
-> +               struct device_node *np)
-> +{
-> +       unsigned int num_groups;
-> +       struct device_node *group_node;
-> +       unsigned int i, j;
-> +       int err, npins, *pins, *confs;
-> +       const char **groups;
-> +
-> +       num_groups = of_get_child_count(np);
-> +       groups = devm_kzalloc(jzpc->dev,
-> +                       sizeof(*groups) * num_groups, GFP_KERNEL);
-> +       if (!groups)
-> +               return -ENOMEM;
-> +
-> +       i = 0;
-> +       for_each_child_of_node(np, group_node) {
-> +               groups[i++] = group_node->name;
-> +
-> +               npins = of_property_count_elems_of_size(group_node,
-> +                               "ingenic,pins", 8);
-> +               if (npins < 0)
-> +                       return npins;
-> +
-> +               pins = devm_kzalloc(jzpc->dev,
-> +                               sizeof(*pins) * npins, GFP_KERNEL);
-> +               confs = devm_kzalloc(jzpc->dev,
-> +                               sizeof(*confs) * npins, GFP_KERNEL);
-> +               if (!pins || !confs)
-> +                       return -ENOMEM;
-> +
-> +               for (j = 0; j < npins; j++) {
-> +                       of_property_read_u32_index(group_node,
-> +                                       "ingenic,pins", j * 2, &pins[j]);
-> +
-> +                       of_property_read_u32_index(group_node,
-> +                                       "ingenic,pins", j * 2 + 1, &confs[j]);
+Don't know if this is what Lars has in mind... but a solution could be
+to define a new type of IIO that would be something like
+"postprocessing" or "filter". This new iio device type could be piped to
+a frontend IIO device to export a new one (through hw_consumer.c interface).
+In this case for simple device like PDM audio microphone that does not
+required control a kind of dummy frontend device could be defined...
 
-If I didn't mention before this could pperhaps just use "pins"?
+Regards
+Arnaud
 
-Or does these DT entries not match the generic bindings?
-
-> +               }
-> +
-> +               err = pinctrl_generic_add_group(jzpc->pctl, group_node->name,
-> +                               pins, npins, confs);
-> +               if (err)
-> +                       return err;
-> +       }
-> +
-> +       return pinmux_generic_add_function(jzpc->pctl, np->name,
-> +                       groups, num_groups, NULL);
-> +}
-
-If you just use "pins" can this even be parsed by a generic parser function
-pinconf_generic_dt_subnode_to_map()?
-
-Yours,
-Linus Walleij
+>>> +		iio_dfsdm0: iio-dfsdm@0 {
+>>> +			compatible = "st,stm32-dfsdm-adc";
+>>> +			#io-channel-cells = <1>;
+>>> +			reg = <0>;
+>>> +			st,adc-channels = <1>;
+>>> +			st,adc-channel-names = "in0";
+>>> +		};
+>>> +		iio_dfsdm1: iio-dfsdm@1 {
+>>> +			compatible = "st,stm32-dfsdm-adc";
+>>> +			#io-channel-cells = <1>;
+>>> +			reg = <1>;
+>>> +			st,adc-channels = <1>;
+>>> +			st,adc-channel-names = "in1";
+>>> +			st,adc-channel-types = <1>;
+>>> +			st,adc-alt-channel = <1>;
+>>> +		};
+>>> +	};
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> 
