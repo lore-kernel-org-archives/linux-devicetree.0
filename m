@@ -1,88 +1,51 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 08/10] dmaengine: sun6i: allow build on
- ARM64 platforms (sun50i)
-Date: Tue, 31 Jan 2017 09:02:36 +0530
-Message-ID: <20170131033236.GH19244@localhost>
-References: <20170129023331.62106-1-icenowy@aosc.xyz>
- <20170129023331.62106-9-icenowy@aosc.xyz>
- <20170130164210.GD19244@localhost>
- <3729521485800635@web23g.yandex.ru>
-Reply-To: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH RESEND 2/5] dmaengine: Provide a wrapper for memcpy
+ operations
+Date: Tue, 31 Jan 2017 09:04:14 +0530
+Message-ID: <20170131033414.GI19244@localhost>
+References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1485535324-28393-3-git-send-email-boris.brezillon@free-electrons.com>
+ <20170130165417.GF19244@localhost>
+ <20170130184721.072c0de1@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDLNNTP63EBBBQEKYDCAKGQEDEOK4ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <3729521485800635-hGpGylqI9Klxpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20170130184721.072c0de1@bbrezillon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, Alexandre Courbot <gnurou@gmail.com>, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, dmaengine@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Brian
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 02:23:55AM +0800, Icenowy Zheng wrote:
->=20
->=20
-> 31.01.2017, 00:41, "Vinod Koul" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> > On Sun, Jan 29, 2017 at 10:33:29AM +0800, Icenowy Zheng wrote:
-> >> =C2=A0As 64-bit Allwinner H5 SoC has the same DMA engine with H3, the =
-DMA
-> >> =C2=A0driver should be allowed to be built for ARM64, in order to make=
- it work on H5.
-> >>
-> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> =C2=A0Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> =C2=A0---
-> >> =C2=A0Patch introduced between v1 and v2, to satisfy the newly added H=
-3/H5 audio
-> >> =C2=A0codec support.
-> >>
-> >> =C2=A0=C2=A0drivers/dma/Kconfig | 2 +-
-> >> =C2=A0=C2=A01 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> =C2=A0diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-> >> =C2=A0index 0d6a96ee9fc7..d01d59812cf3 100644
-> >> =C2=A0--- a/drivers/dma/Kconfig
-> >> =C2=A0+++ b/drivers/dma/Kconfig
-> >> =C2=A0@@ -157,7 +157,7 @@ config DMA_SUN4I
-> >>
-> >> =C2=A0=C2=A0config DMA_SUN6I
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0tristate "=
-Allwinner A31 SoCs DMA support"
-> >> =C2=A0- depends on MACH_SUN6I || MACH_SUN8I || COMPILE_TEST
-> >> =C2=A0+ depends on MACH_SUN6I || MACH_SUN8I || (ARM64 && ARCH_SUNXI) |=
-| COMPILE_TEST
-> >
-> > Do we really need ARM64 here? also looking at others I wonder why isn't
-> > this MACH_SUNXI...?
->=20
-> You mean directly place "ARCH_SUNXI" here?
->=20
-> SUN4I/SUN5I/SUN7I do not use DMA_SUN6I, they have different DMA
-> controllers.
+On Mon, Jan 30, 2017 at 06:47:21PM +0100, Boris Brezillon wrote:
+> Hi Vinod,
+> 
+> On Mon, 30 Jan 2017 22:24:17 +0530
+> Vinod Koul <vinod.koul@intel.com> wrote:
+> 
+> > On Fri, Jan 27, 2017 at 05:42:01PM +0100, Boris Brezillon wrote:
+> > > Almost all ->device_prep_dma_xx() methods have a wrapper defined in
+> > > dmaengine.h. Add one for  ->device_prep_dma_memcpy().  
+> > 
+> > Looks good to me.
+> > 
+> > Acked-by: Vinod Koul <vinod.koul@intel.com>
+> > 
+> > 
+> 
+> Maybe you can take this patch directly (the NAND related bits are for
+> 4.12).
 
-No my question was different..
+Good idea, applied now..
 
-We have MACH_SUNxx for 6I and 8I, so why do we have ARCH_SUNXI and if its a=
-n
-arch SUNXI, X means it can take any value...
-
-This schema looks pretty confusing while reading
-
-Also I had a question on usage of ARM64..
-
---=20
+-- 
 ~Vinod
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
