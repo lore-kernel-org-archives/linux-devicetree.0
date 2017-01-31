@@ -1,136 +1,175 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
-Date: Tue, 31 Jan 2017 17:48:07 +0100
-Message-ID: <1485881287.2932.73.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
- <1485877882.2932.70.camel@pengutronix.de>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
+ property
+Date: Tue, 31 Jan 2017 17:11:43 +0100
+Message-ID: <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
+References: <20170120215605.15728-1-zajec5@gmail.com>
+ <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
+ <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
+ <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
+ <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
+ <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1485877882.2932.70.camel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-01-31 at 16:51 +0100, Philipp Zabel wrote:
-> On Fri, 2017-01-06 at 18:11 -0800, Steve Longerbeam wrote:
-> [...]
-> > +static int csi_set_fmt(struct v4l2_subdev *sd,
-> > +		       struct v4l2_subdev_pad_config *cfg,
-> > +		       struct v4l2_subdev_format *sdformat)
-> > +{
-> > +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-> > +	struct v4l2_mbus_framefmt *infmt, *outfmt;
-> > +	struct v4l2_rect crop;
-> > +	int ret;
-> > +
-> > +	if (sdformat->pad >= CSI_NUM_PADS)
-> > +		return -EINVAL;
-> > +
-> > +	if (priv->stream_on)
-> > +		return -EBUSY;
-> > +
-> > +	infmt = &priv->format_mbus[priv->input_pad];
-> > +	outfmt = &priv->format_mbus[priv->output_pad];
-> > +
-> > +	if (sdformat->pad == priv->output_pad) {
-> > +		sdformat->format.code = infmt->code;
-> > +		sdformat->format.field = infmt->field;
-> > +		crop.left = priv->crop.left;
-> > +		crop.top = priv->crop.top;
-> > +		crop.width = sdformat->format.width;
-> > +		crop.height = sdformat->format.height;
-> > +		ret = csi_try_crop(priv, &crop);
-> 
-> This is the wrong way around, see also below.
-> 
-> Here the the output sdformat->format.width/height should be set to the
-> priv->crop.width/height (or priv->crop.width/height / 2, to enable
-> downscaling). The crop rectangle should not be changed by an output pad
-> set_fmt.
-[...]
-> The crop rectangle instead should be reset to the full input frame when
-> the input pad format is set.
+On 01/25/2017 10:04 PM, Jacek Anaszewski wrote:
+> On 01/25/2017 10:03 AM, Rafał Miłecki wrote:
+>> On 21 January 2017 at 22:42, Jacek Anaszewski
+>> <jacek.anaszewski@gmail.com> wrote:
+>>> On 01/21/2017 05:24 PM, Rafał Miłecki wrote:
+>>>> On 20 January 2017 at 23:35, Jacek Anaszewski
+>>>> <jacek.anaszewski@gmail.com> wrote:
+>>>>> On 01/20/2017 10:56 PM, Rafał Miłecki wrote:
+>>>>>> From: Rafał Miłecki <rafal@milecki.pl>
+>>>>>>
+>>>>>> Some LEDs can be related to particular devices described in DT. This
+>>>>>> property allows specifying such relations. E.g. USB LED should usually
+>>>>>> be used to indicate some USB port(s) state.
+>>>>>>
+>>>>>> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+>>>>>> ---
+>>>>>> V2: Replace "usb-ports" with "led-triggers" property which is more generic and
+>>>>>>     allows specifying other devices as well.
+>>>>>>
+>>>>>> When bindings patch is related to some followup implementation, they usually go
+>>>>>> through the same tree.
+>>>>>>
+>>>>>> Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds: Improve examples by
+>>>>>> adding some context") from kernel/git/j.anaszewski/linux-leds.git . Is there any
+>>>>>> way to solve this dependency issue? Or should this patch wait until 3.11 is
+>>>>>> released?
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/leds/common.txt | 16 ++++++++++++++++
+>>>>>>  1 file changed, 16 insertions(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> index 24b656014089..17632a041196 100644
+>>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
+>>>>>> @@ -49,6 +49,17 @@ Optional properties for child nodes:
+>>>>>>  - panic-indicator : This property specifies that the LED should be used,
+>>>>>>                   if at all possible, as a panic indicator.
+>>>>>>
+>>>>>> +- led-triggers : List of devices that should trigger this LED activity. Some
+>>>>>> +              LEDs can be related to a specific device and should somehow
+>>>>>> +              indicate its state. E.g. USB 2.0 LED may react to device(s) in
+>>>>>> +              a USB 2.0 port(s). Another common example is switch or router
+>>>>>> +              with multiple Ethernet ports each of them having its own LED
+>>>>>> +              assigned (assuminled-trigger-usbportg they are not hardwired).
+>>>>>> +              In such cases this property should contain phandle(s) of
+>>>>>> +              related device(s). In many cases LED can be related to more
+>>>>>> +              than one device (e.g. one USB LED vs. multiple USB ports) so a
+>>>>>> +              list of entries can be specified.
+>>>>>> +
+>>>>>
+>>>>> This implies that it is possible to define multiple triggers for
+>>>>> a LED class device but it is not supported by LED Trigger core.
+>>>>> There is linux,default-trigger property which allows to define one
+>>>>> trigger that will be initially assigned.
+>>>
+>>>> With proposed "led-triggers" property one could assign different
+>>>> trigger *sources* to a LED. You could e.g. assign 2 USB ports, network
+>>>> device & CPU to a single LED. For reason explained above Linux
+>>>> couldn't support all of them at once.
+>>>>
+>>>>
+>>>>> I am aware that this is renamed usb-ports property from v1,
+>>>>> that attempts to address Rob's comment, but we can't do that this way.
+>>>>> Maybe usb-ports property could be documented in led-trigger-usbport's
+>>>>> specific bindings and a reference to it could be added next to the
+>>>>> related entry on the list of the available LED triggers (which is
+>>>>> actually missing) in Documentation/devicetree/bindings/leds/common.txt.
+>>>>
+>>>> I'm wondering if we need to care about this Linux limitation and if it
+>>>> should stop us from adding this flexible DT property. Maybe we could
+>>>> live with Linux having limitation of supporting one trigger type at a
+>>>> time?
+>>>
+>>> That's what I meant. Generally I have objections to the generic
+>>> property for defining list of allowed triggers. That's why I proposed
+>>> to stay by usb-ports property that would be specific to only one
+>>> trigger: led-trigger-usbport.
+>>>
+>>> led-trigger-usbport in fact is an entirely new type of LED trigger.
+>>> LED triggers is a kernel based source of events. All existing triggers
+>>> react only to a single, well defined source of events, whereas
+>>> led-trigger-usbport allows to define the scope of events (usb ports)
+>>> to notify about. Activity on each port is treated similarly and the LED
+>>> class device that listens to the trigger notifications doesn't know
+>>> which exact port triggered the notification.
+>>>
+>>> From this POV led-trigger-usbport is kind of facade, which allows
+>>> for it to fit well into the LED Trigger design and API, and usb ports
+>>> are not identical with LED triggers, but sit rather one level below.
+>>> It is led-trigger-usbport which is visible to the LED subsystem, and
+>>> not every single usb port.
+>>>
+>>>> So e.g. if one assigns 2 USB ports + network device + CPU and
+>>>> decides to use "usport" trigger driver he'll get LED indicating status
+>>>> of USB ports only.
+>>>
+>>> How would it be different from the current state? Only in limiting
+>>> the scope of triggers available for a LED class device.
+>>
+>> It won't differ from the current state. I just wanted to make it clear
+>> Linux trigger drivers may respect only selected "led-triggers" values
+>> (phandles). Like "usbport" respecting USB port phandles but ignoring
+>> CPU ones, net ones, etc.
+>
+> This is the ambiguity I want to avoid. According to my analysis from
+> the previous message, physical usb port is one level below usbport LED
+> trigger, and it should be reflected in DT binding documentation. You
+> can't write usb1-port1 (using the convention from Documentation/leds/
+> ledtrig-usbport.txt) to the "triggers" sysfs file. You can only register
+> usbport trigger which can be configured to notify about activity on
+> usb1-port1.
+>
+> That's why I proposed linux,trigger-sources name for that.
+> Let's not confuse LED triggers with events originating from physical
+> devices or other sources of kernel events, being in turn translated by
+> LED triggers to LED brightness changes.
+>
+> This is a thing about naming. It is tempting to call sources of kernel
+> events "triggers", but they are not LED triggers on they own. LED
+> trigger is a driver that registers itself in LED Trigger core using
+> led_trigger_register() API.
 
-How about this:
+Thanks a lot Jacek for this explanation (and sorry but I needed a bit of time to
+think about this). I can finally see your point, I think we're on the same page
+now.
 
-----------8<----------
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index 5e80a0871b139..8220e4204a125 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -484,6 +484,8 @@ static int csi_setup(struct csi_priv *priv)
- 	if_fmt.field = outfmt->field;
- 
- 	ipu_csi_set_window(priv->csi, &priv->crop);
-+	ipu_csi_set_downsize(priv->csi, priv->crop.width == 2 * outfmt->width,
-+					priv->crop.height == 2 * outfmt->height);
- 
- 	ipu_csi_init_interface(priv->csi, &sensor_mbus_cfg, &if_fmt);
- 
-@@ -830,15 +832,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 	switch (sdformat->pad) {
- 	case CSI_SRC_PAD_DIRECT:
- 	case CSI_SRC_PAD_IDMAC:
--		crop.left = priv->crop.left;
--		crop.top = priv->crop.top;
--		crop.width = sdformat->format.width;
--		crop.height = sdformat->format.height;
--		ret = csi_try_crop(priv, &crop, sensor);
--		if (ret)
--			return ret;
--		sdformat->format.width = crop.width;
--		sdformat->format.height = crop.height;
-+		if (sdformat->format.width < priv->crop.width * 3 / 4)
-+			sdformat->format.width = priv->crop.width / 2;
-+		else
-+			sdformat->format.width = priv->crop.width;
-+		if (sdformat->format.height < priv->crop.height * 3 / 4)
-+			sdformat->format.height = priv->crop.height / 2;
-+		else
-+			sdformat->format.height = priv->crop.height;
- 
- 		if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
- 			cc = imx_media_find_format(0, sdformat->format.code,
-@@ -887,6 +888,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 		}
- 		break;
- 	case CSI_SINK_PAD:
-+		crop.left = 0;
-+		crop.top = 0;
-+		crop.width = sdformat->format.width;
-+		crop.height = sdformat->format.height;
-+		ret = csi_try_crop(priv, &crop, sensor);
-+		if (ret)
-+			return ret;
-+
- 		cc = imx_media_find_format(0, sdformat->format.code,
- 					   true, false);
- 		if (!cc) {
-@@ -904,9 +913,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
- 	} else {
- 		priv->format_mbus[sdformat->pad] = sdformat->format;
- 		priv->cc[sdformat->pad] = cc;
--		/* Update the crop window if this is an output pad  */
--		if (sdformat->pad == CSI_SRC_PAD_DIRECT ||
--		    sdformat->pad == CSI_SRC_PAD_IDMAC)
-+		/* Reset the crop window if this is the input pad  */
-+		if (sdformat->pad == CSI_SINK_PAD)
- 			priv->crop = crop;
- 	}
- 
----------->8----------
+I think that for all this time I was thinking from the pure DT perspective. If
+you ignore fact that Linux has multiple LED trigger drivers, then "led-triggers"
+may not sound that bad.
 
-regards
-Philipp
+After reading your description however I can see this property can be misleading
+as Linux people may think "drivers" when seeing "triggers".
+
+I still think this is a useful property and I hope we can still find a way to
+name it in a sane way: to be nice from DT PoV and march Linux LEDs subsystem.
+
+I think we should still work on some generic property (without linux, prefix) as
+this seems to be something generic, not really specific to Linux implementation.
+Specifying relation between LED and devices is something than AFAICS can be
+reused by other systems as well.
+
+So my suggestion is to try some new name & leave linux,default-trigger to allow
+specifying one single trigger driver as required by current Linux
+implementation.
+
+What do you think about this?
+
+There are few suggestions to came to my mind:
+"trigger-sources"
+"trigger-devices"
+"led-trigger-devices"
+"led-related-devices"
+"led-event-devices"
+Do you think any of them would work? Or can you think of any better name?
