@@ -1,60 +1,310 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
-Date: Tue, 31 Jan 2017 10:30:19 +0000
-Message-ID: <20170131103019.GT27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv2 10/16] ov2640: enable clock and fix power/reset
+Date: Tue, 31 Jan 2017 12:20:20 +0200
+Message-ID: <20170131102020.GT7139@valkosipuli.retiisi.org.uk>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-11-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <20170130140628.18088-11-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 06:11:35PM -0800, Steve Longerbeam wrote:
-> This is a media entity subdevice for the i.MX Camera
-> Serial Interface module.
+Hi Hans,
+
+Thank you for the patchset!
+
+On Mon, Jan 30, 2017 at 03:06:22PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> Convert v4l2_clk to normal clk, enable the clock and fix the power/reset
+> handling.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > ---
+>  drivers/media/i2c/ov2640.c | 80 +++++++++++++++++-----------------------------
+>  1 file changed, 29 insertions(+), 51 deletions(-)
+> 
+> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
+> index 83f88ef..565742b 100644
+> --- a/drivers/media/i2c/ov2640.c
+> +++ b/drivers/media/i2c/ov2640.c
+> @@ -16,15 +16,14 @@
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/i2c.h>
+> +#include <linux/clk.h>
+>  #include <linux/slab.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/consumer.h>
+> -#include <linux/of_gpio.h>
+>  #include <linux/v4l2-mediabus.h>
+>  #include <linux/videodev2.h>
+>  
+> -#include <media/v4l2-clk.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-subdev.h>
+>  #include <media/v4l2-ctrls.h>
+> @@ -284,7 +283,7 @@ struct ov2640_priv {
+>  	struct v4l2_subdev		subdev;
+>  	struct v4l2_ctrl_handler	hdl;
+>  	u32	cfmt_code;
+> -	struct v4l2_clk			*clk;
+> +	struct clk			*clk;
 
-The lack of s_frame_interval/g_frame_interval in this driver means:
+Nice!
 
-media-ctl -v -d /dev/media1 --set-v4l2 '"imx6-mipi-csi2":1[fmt:SGBRG8/512x512@1/30]'
+>  	const struct ov2640_win_size	*win;
+>  
+>  	struct gpio_desc *resetb_gpio;
+> @@ -656,8 +655,9 @@ static int ov2640_mask_set(struct i2c_client *client,
+>  	return i2c_smbus_write_byte_data(client, reg, val);
+>  }
+>  
+> -static int ov2640_reset(struct i2c_client *client)
+> +static int ov2640_reset(struct v4l2_subdev *sd, u32 val)
+>  {
+> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	int ret;
+>  	const struct regval_list reset_seq[] = {
+>  		{BANK_SEL, BANK_SEL_SENS},
+> @@ -735,21 +735,6 @@ static int ov2640_s_register(struct v4l2_subdev *sd,
+>  }
+>  #endif
+>  
+> -static int ov2640_s_power(struct v4l2_subdev *sd, int on)
+> -{
+> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+> -	struct ov2640_priv *priv = to_ov2640(client);
+> -
+> -	gpiod_direction_output(priv->pwdn_gpio, !on);
+> -	if (on && priv->resetb_gpio) {
+> -		/* Active the resetb pin to perform a reset pulse */
+> -		gpiod_direction_output(priv->resetb_gpio, 1);
+> -		usleep_range(3000, 5000);
+> -		gpiod_direction_output(priv->resetb_gpio, 0);
 
-Opening media device /dev/media1
-Enumerating entities
-Found 29 entities
-Enumerating pads and links
-Setting up format SGBRG8 512x512 on pad imx6-mipi-csi2/1
-Format set: SGBRG8 512x512
-Setting up frame interval 1/30 on entity imx6-mipi-csi2
-Unable to set frame interval: Inappropriate ioctl for device (-25)Unable to setup formats: Inappropriate ioctl for device (25)
+Do you still perform the reset sequence somewhere? This could be crucial for
+reliability.
 
-which causes the setup of the next element in the chain to also fail
-(because the above media-ctl command doesn't set the sink on the
-ipu1 csi0 mux.)
+> -	}
+> -	return 0;
+> -}
+> -
+>  /* Select the nearest higher resolution for capture */
+>  static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
+>  {
+> @@ -769,9 +754,10 @@ static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
+>  	return &ov2640_supported_win_sizes[default_size];
+>  }
+>  
+> -static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+> +static int ov2640_set_params(struct v4l2_subdev *sd, u32 *width, u32 *height,
+>  			     u32 code)
+>  {
+> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  	struct ov2640_priv       *priv = to_ov2640(client);
+>  	const struct regval_list *selected_cfmt_regs;
+>  	int ret;
+> @@ -802,7 +788,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>  	}
+>  
+>  	/* reset hardware */
+> -	ov2640_reset(client);
+> +	ov2640_reset(sd, 0);
+>  
+>  	/* initialize the sensor with default data */
+>  	dev_dbg(&client->dev, "%s: Init default", __func__);
+> @@ -840,7 +826,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>  
+>  err:
+>  	dev_err(&client->dev, "%s: Error %d", __func__, ret);
+> -	ov2640_reset(client);
+> +	ov2640_reset(sd, 0);
+>  	priv->win = NULL;
+>  
+>  	return ret;
+> @@ -877,7 +863,6 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>  		struct v4l2_subdev_format *format)
+>  {
+>  	struct v4l2_mbus_framefmt *mf = &format->format;
+> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>  
+>  	if (format->pad)
+>  		return -EINVAL;
+> @@ -902,7 +887,7 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>  	}
+>  
+>  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+> -		return ov2640_set_params(client, &mf->width,
+> +		return ov2640_set_params(sd, &mf->width,
+>  					 &mf->height, mf->code);
+>  	cfg->try_fmt = *mf;
+>  	return 0;
+> @@ -947,10 +932,6 @@ static int ov2640_video_probe(struct i2c_client *client)
+>  	const char *devname;
+>  	int ret;
+>  
+> -	ret = ov2640_s_power(&priv->subdev, 1);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	/*
+>  	 * check and show product ID and manufacturer ID
+>  	 */
+> @@ -978,7 +959,6 @@ static int ov2640_video_probe(struct i2c_client *client)
+>  	ret = v4l2_ctrl_handler_setup(&priv->hdl);
+>  
+>  done:
+> -	ov2640_s_power(&priv->subdev, 0);
+>  	return ret;
+>  }
+>  
+> @@ -991,7 +971,7 @@ static struct v4l2_subdev_core_ops ov2640_subdev_core_ops = {
+>  	.g_register	= ov2640_g_register,
+>  	.s_register	= ov2640_s_register,
+>  #endif
+> -	.s_power	= ov2640_s_power,
+> +	.reset		= ov2640_reset,
 
-It seems to me that without the frame interval supported throughout the
-chain, there's no way for an application to properly negotiate the
-capture parameters via the "try" mechanism, since it has no idea whether
-the frame rate it wants is supported throughout the subdev chain.  Eg,
-the sensor may be able to do 100fps but there could be something in the
-pipeline that restricts it due to bandwidth.
+Why?
+
+We have s_power() callback. Shouldn't you run the reset sequence when the
+device is powered on?
+
+Few if any bridge / ISP drivers will use the reset op. It should rather be
+removed.
+
+>  };
+>  
+>  static const struct v4l2_subdev_pad_ops ov2640_subdev_pad_ops = {
+> @@ -1006,9 +986,17 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
+>  	.pad	= &ov2640_subdev_pad_ops,
+>  };
+>  
+> -static int ov2640_probe_dt(struct i2c_client *client,
+> -		struct ov2640_priv *priv)
+> +static int ov2640_init_gpio(struct i2c_client *client,
+> +			    struct ov2640_priv *priv)
+>  {
+> +	/* Request the power down GPIO deasserted */
+> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+> +			GPIOD_OUT_LOW);
+> +	if (!priv->pwdn_gpio)
+> +		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
+
+I'm pretty sure not finding a GPIO using devm_gpiod_get_optional() already
+produces at least one line of output elsewhere.
+
+> +	else if (IS_ERR(priv->pwdn_gpio))
+> +		return PTR_ERR(priv->pwdn_gpio);
+> +
+>  	/* Request the reset GPIO deasserted */
+>  	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
+>  			GPIOD_OUT_LOW);
+> @@ -1017,14 +1005,6 @@ static int ov2640_probe_dt(struct i2c_client *client,
+>  	else if (IS_ERR(priv->resetb_gpio))
+>  		return PTR_ERR(priv->resetb_gpio);
+>  
+> -	/* Request the power down GPIO asserted */
+> -	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+> -			GPIOD_OUT_HIGH);
+> -	if (!priv->pwdn_gpio)
+> -		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
+
+Same here.
+
+> -	else if (IS_ERR(priv->pwdn_gpio))
+> -		return PTR_ERR(priv->pwdn_gpio);
+> -
+>  	return 0;
+>  }
+>  
+> @@ -1051,9 +1031,10 @@ static int ov2640_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	priv->clk = v4l2_clk_get(&client->dev, "xvclk");
+> +	priv->clk = clk_get(&client->dev, "xvclk");
+>  	if (IS_ERR(priv->clk))
+>  		return -EPROBE_DEFER;
+> +	clk_prepare_enable(priv->clk);
+
+I wonder V4L2 clock framework did this. This should be done in the s_power()
+callback, not here.
+
+>  
+>  	if (!client->dev.of_node) {
+>  		dev_err(&client->dev, "Missing platform_data for driver\n");
+> @@ -1061,9 +1042,9 @@ static int ov2640_probe(struct i2c_client *client,
+>  		goto err_clk;
+>  	}
+>  
+> -	ret = ov2640_probe_dt(client, priv);
+> +	ret = ov2640_init_gpio(client, priv);
+>  	if (ret)
+> -		goto err_clk;
+> +		return ret;
+>  
+>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+> @@ -1074,25 +1055,23 @@ static int ov2640_probe(struct i2c_client *client,
+>  	priv->subdev.ctrl_handler = &priv->hdl;
+>  	if (priv->hdl.error) {
+>  		ret = priv->hdl.error;
+> -		goto err_clk;
+> +		goto err_hdl;
+>  	}
+>  
+>  	ret = ov2640_video_probe(client);
+>  	if (ret < 0)
+> -		goto err_videoprobe;
+> +		goto err_hdl;
+>  
+>  	ret = v4l2_async_register_subdev(&priv->subdev);
+>  	if (ret < 0)
+> -		goto err_videoprobe;
+> +		goto err_hdl;
+>  
+>  	dev_info(&adapter->dev, "OV2640 Probed\n");
+>  
+>  	return 0;
+>  
+> -err_videoprobe:
+> +err_hdl:
+>  	v4l2_ctrl_handler_free(&priv->hdl);
+> -err_clk:
+> -	v4l2_clk_put(priv->clk);
+>  	return ret;
+>  }
+>  
+> @@ -1101,9 +1080,8 @@ static int ov2640_remove(struct i2c_client *client)
+>  	struct ov2640_priv       *priv = to_ov2640(client);
+>  
+>  	v4l2_async_unregister_subdev(&priv->subdev);
+> -	v4l2_clk_put(priv->clk);
+> -	v4l2_device_unregister_subdev(&priv->subdev);
+>  	v4l2_ctrl_handler_free(&priv->hdl);
+
+Shouldn't you free the control handler afterwards? I'm not sure if this
+makes a lot of difference though.
+
+> +	v4l2_device_unregister_subdev(&priv->subdev);
+>  	return 0;
+>  }
+>  
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
