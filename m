@@ -1,46 +1,47 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 04/14] GPIO: Add gpio-ingenic driver
-Date: Tue, 31 Jan 2017 15:20:04 +0100
-Message-ID: <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net> <20170125185207.23902-5-paul@crapouillou.net>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 15:25:10 +0100
+Message-ID: <1485872710.2932.65.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1485870854.2932.63.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170125185207.23902-5-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux MIPS <linux-mips@linux-mips.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, linux-p
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485870854.2932.63.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-Forgot to mention this:
+On Tue, 2017-01-31 at 14:54 +0100, Philipp Zabel wrote:
+> Hi Steve,
+> 
+> I have just tested the imx-media-staging-md-wip branch on a Nitrogen6X
+> with a tc358743 (BD_HDMI_MIPI HDMI to MIPI CSI-2 receiver board). Some
+> observations:
+> 
+> # Link pipeline
+> media-ctl -l "'tc358743 1-000f':0->'imx6-mipi-csi2':0[1]"
+> media-ctl -l "'imx6-mipi-csi2':1->'ipu1_csi0_mux':0[1]"
+> media-ctl -l "'ipu1_csi0_mux':2->'ipu1_csi0':0[1]"
+> media-ctl -l "'ipu1_csi0':2->'ipu1_csi0 capture':0[1]"
+> 
+> # Provide an EDID to the HDMI source
+> v4l2-ctl -d /dev/v4l-subdev2 --set-edid=file=edid-1080p.hex
+> # At this point the HDMI source is enabled and sends a 1080p60 signal
+> # Configure detected DV timings
+> media-ctl --set-dv "'tc358743 1-000f':0"
+> 
+> # Set pad formats
+> media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
+> media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
+> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
 
-On Wed, Jan 25, 2017 at 7:51 PM, Paul Cercueil <paul@crapouillou.net> wrote:
-> This driver handles the GPIOs of all the Ingenic JZ47xx SoCs
-> currently supported by the upsteam Linux kernel.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-(...)
-> +       jzgc->gc.base = -1;
+I noticed this seems to get ignored. The format is incorrectly set to
+UYVY even though I request UYVY2X8 (see CSI2IPU chapter, Figure 19-10.
+YUV422-8 data reception in the reference manual), but it seems to work
+anyway.
 
-Nice
-
-> +       of_property_read_u32(dev->of_node, "base", &jzgc->gc.base);
-
-Remove this. Dynamic allocation should be fine, if you're using the
-new userspace ABI like tools/gpio/* or libgpiod and only that and in-kernel
-consumers, dynamic numbers are just fine.
-
-If you have old sysfs userspace that you need to support using the
-global GPIO numberspace, please look into ways to phase that out.
-
-Yours,
-Linus Walleij
+regards
+Philipp
