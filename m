@@ -1,85 +1,70 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Tue, 31 Jan 2017 14:54:14 +0100
-Message-ID: <1485870854.2932.63.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+Date: Tue, 31 Jan 2017 14:04:12 +0000
+Message-ID: <20170131140411.GY27312@n2100.armlinux.org.uk>
+References: <1484929911.2897.70.camel@pengutronix.de>
+ <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
+ <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
+ <1485169204.2874.57.camel@pengutronix.de>
+ <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
+ <1485257269.3600.96.camel@pengutronix.de>
+ <20170130130657.GR27312@n2100.armlinux.org.uk>
+ <1485857364.2932.27.camel@pengutronix.de>
+ <20170131131436.GW27312@n2100.armlinux.org.uk>
+ <1485869700.2932.57.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1485869700.2932.57.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gma
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+On Tue, Jan 31, 2017 at 02:35:00PM +0100, Philipp Zabel wrote:
+> On Tue, 2017-01-31 at 13:14 +0000, Russell King - ARM Linux wrote:
+> > This isn't limited to the serial side - the parallel bus side between
+> > the CSI2 interface and CSI2IPU wrapper, and the CSI2IPU wrapper and
+> > the CS0/1 interfaces is much the same with 10-bit bayer.
+> > 
+> > Think of the CSI2 <-> CSI2IPU bit as the 4-lane case, lane 0 ending
+> > up on the least significant 8 bits of the 32-bit bus, lane 3 on the
+> > top 8-bits.
+> > 
+> > Post CSI2IPU, it talks about a 16-bit bus in the diagrams, so that's
+> > kind of the 2-lane case above...
+> 
+> You are right, on the parallel buses the format most definitely is not
+> MEDIA_BUS_FMT_SBGGR10_1X10. We don't have any representation of the
+> 32-bit bus between CSI2 host and CSI2IPU gasket because we model the two
+> as a single entity, but the four 16-bit parallel buses between the
+> CSI2IPU gasket and the IPU1/2 CSI0/1 probably should be set to a custom
+> format describing this accurately.
 
-I have just tested the imx-media-staging-md-wip branch on a Nitrogen6X
-with a tc358743 (BD_HDMI_MIPI HDMI to MIPI CSI-2 receiver board). Some
-observations:
+Yep.  I should also point out that there's a very odd transformation
+going on somewhere, and I don't yet know where.
 
-# Link pipeline
-media-ctl -l "'tc358743 1-000f':0->'imx6-mipi-csi2':0[1]"
-media-ctl -l "'imx6-mipi-csi2':1->'ipu1_csi0_mux':0[1]"
-media-ctl -l "'ipu1_csi0_mux':2->'ipu1_csi0':0[1]"
-media-ctl -l "'ipu1_csi0':2->'ipu1_csi0 capture':0[1]"
+The sensor is definitely outputting GBRG format, but what seems to get
+written into memory is RGGB format.  It's somewhere post CSI, because
+when I was using the (broken) CSI compander with 10 bit bayer, the red
+compander channel affected the red channel output from the camera, but
+changed the green component written to memory... it's very much like
+either the first line gets lost somewhere, or the odd/even lines are
+transposed.  It could also be a gstreamer bug.  As I say, it's not
+something I've looked into deeply enough yet... too many other issues
+to chase down!
 
-# Provide an EDID to the HDMI source
-v4l2-ctl -d /dev/v4l-subdev2 --set-edid=file=edid-1080p.hex
-# At this point the HDMI source is enabled and sends a 1080p60 signal
-# Configure detected DV timings
-media-ctl --set-dv "'tc358743 1-000f':0"
-
-# Set pad formats
-media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
-media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
-media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
-media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080]"
-
-v4l2-ctl -d /dev/video4 -V
-# This still is configured to 640x480, which is inconsistent with
-# the 'ipu1_csi0':2 pad format. The pad set_fmt above should
-# have set this, too.
-
-v4l2-ctl --list-formats -d /dev/video4
-# This lists all the RGB formats, which it shouldn't. There is
-# no CSC in this pipeline, so we should be limited to YUV formats
-# only.
-
-# Set capture format
-v4l2-ctl -d /dev/video4 -v width=1920,height=1080,pixelformat=UYVY
-
-v4l2-ctl -d /dev/video4 -V
-# Now the capture format is correctly configured to 1920x1080.
-
-v4l2-ctl -d 4 --list-frameintervals=width=1920,height=1080,pixelformat=UYVY
-# This lists nothing. We should at least provide the 'ipu1_csi0':2 pad
-# frame interval. In the future this should list fractions achievable
-# via frame skipping.
-
-v4l2-compliance -d /dev/video4
-# This fails two tests:
-# fail: v4l2-test-input-output.cpp(383): std == 0
-# fail: v4l2-test-input-output.cpp(449): invalid attributes for input 0
-# test VIDIOC_G/S/ENUMINPUT: FAIL
-# and
-# fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
-# test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
-
-# (Slowly) stream JPEG images to a display host:
-gst-launch-1.0 -v v4l2src device=/dev/video4 ! jpegenc ! rtpjpegpay ! udpsink
-
-I've done this a few times, and sometimes I only get a "ipu1_csi0: EOF
-timeout" message when starting streaming.
-
-regards
-Philipp
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
