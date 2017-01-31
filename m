@@ -1,81 +1,78 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
-Date: Tue, 31 Jan 2017 11:20:01 +0000
-Message-ID: <20170131112001.GV27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Tue, 31 Jan 2017 13:30:16 +0200
+Message-ID: <CAJKOXPczttCexd4ZGHEFj=4-6a=9t1VsEmovPGmFFYHv1e5ZzQ@mail.gmail.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com> <588FD3C3.7080508@samsung.com>
+ <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
+ <58905A2B.9090101@samsung.com> <CAJKOXPeCF3+YXk-GHmewn6fi0rcPbQ_GoPOeFRP2KYN=6KLLxw@mail.gmail.com>
+ <CAAQKjZNN98pah8ht=kSmwsVybA5cMP=Z6BVkfZ6HH-5rRYFQ9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <CAAQKjZNN98pah8ht=kSmwsVybA5cMP=Z6BVkfZ6HH-5rRYFQ9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
+To: Inki Dae <daeinki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, DRI mailing list <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 06, 2017 at 06:11:35PM -0800, Steve Longerbeam wrote:
-> +static int csi_link_validate(struct v4l2_subdev *sd,
-> +			     struct media_link *link,
-> +			     struct v4l2_subdev_format *source_fmt,
-> +			     struct v4l2_subdev_format *sink_fmt)
-> +{
-> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-> +	bool is_csi2;
-> +	int ret;
-> +
-> +	ret = v4l2_subdev_link_validate_default(sd, link, source_fmt, sink_fmt);
-> +	if (ret)
-> +		return ret;
-> +
-> +	priv->sensor = __imx_media_find_sensor(priv->md, &priv->sd.entity);
-> +	if (IS_ERR(priv->sensor)) {
-> +		v4l2_err(&priv->sd, "no sensor attached\n");
-> +		ret = PTR_ERR(priv->sensor);
-> +		priv->sensor = NULL;
-> +		return ret;
-> +	}
-> +
-> +	ret = v4l2_subdev_call(priv->sensor->sd, video, g_mbus_config,
-> +			       &priv->sensor_mbus_cfg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	is_csi2 = (priv->sensor_mbus_cfg.type == V4L2_MBUS_CSI2);
-> +
-> +	if (is_csi2) {
-> +		int vc_num = 0;
-> +		/*
-> +		 * NOTE! It seems the virtual channels from the mipi csi-2
-> +		 * receiver are used only for routing by the video mux's,
-> +		 * or for hard-wired routing to the CSI's. Once the stream
-> +		 * enters the CSI's however, they are treated internally
-> +		 * in the IPU as virtual channel 0.
-> +		 */
-> +#if 0
-> +		vc_num = imx_media_find_mipi_csi2_channel(priv->md,
-> +							  &priv->sd.entity);
-> +		if (vc_num < 0)
-> +			return vc_num;
-> +#endif
-> +		ipu_csi_set_mipi_datatype(priv->csi, vc_num,
-> +					  &priv->format_mbus[priv->input_pad]);
+On Tue, Jan 31, 2017 at 12:37 PM, Inki Dae <daeinki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 2017-01-31 19:01 GMT+09:00 Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>> On Tue, Jan 31, 2017 at 11:34 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>
+>>>
+>>> 2017년 01월 31일 18:22에 Krzysztof Kozlowski 이(가) 쓴 글:
+>>>> On Tue, Jan 31, 2017 at 2:01 AM, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>
+>>>>>
+>>>>> 2017년 01월 24일 10:50에 Hoegeun Kwon 이(가) 쓴 글:
+>>>>>> Dear Thierry,
+>>>>>>
+>>>>>> Could you please review this patch?
+>>>>>
+>>>>> Thierry, I think this patch has been reviewed enough but no comment from you. Seems you are busy. I will pick up this.
+>>>>>
+>>>>
+>>>> Comments from v8 were not resolved and I think we are waiting for v9:
+>>>> https://lkml.org/lkml/2017/1/11/178
+>>>>
+>>>> If that is not correct then please clarify.
+>>>
+>>> Seems you pointed to change te-gpios bindings to optional. right?
+>>>
+>>> I thought Rob left ack so it's no problem.
+>>> https://lkml.org/lkml/2017/1/13/626
+>>
+>> Yes, change them to optional. I think it is a problem (regardless of
+>> Rob's ack) because you are merging a driver requiring a property which
+>> soon you want to remove. If you merge it (like this) removal of
+>> te-gpios property will be breakage of ABI. This is not a serious
+>> problem but knowing such plan of te-gpios removal upfront, it would be
+>> wrong to commit such driver.
+>
+> This is a trivial thing so it doesn't make breakage of ABI because the
+> property, te-gpios, is *optional*.
 
-This seems (at least to me) to go against the spirit of the subdev
-negotiation.  Here, you seem to bypass the negotiation performed
-between the CSI and the attached device, wanting to grab the
-format from the CSI2 sensor directly.  That bypasses negotiation
-performed at the CSI2 subdev and video muxes.
+So why bindings document is not changed?
 
-The same goes for the frame rate monitoring code - imho, the frame
-rate should be something that results from negotiation with the
-neighbouring element, not by poking at some entity that is several
-entities away.
++Required properties:
+(...)
++  - te-gpios: a GPIO spec for the tearing effect synchronization signal
++    gpio pin (active high)
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Andrzej pointed this out and it is not fixed since then. What is the
+problem with fixing the bindings documentation?
+
+> Anyway, this wouldn't be *the things* Thierry mentioned.
+
+Probably not, I did not respond to Thierry's feedback.
+
+Best regards,
+Krzysztof
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
