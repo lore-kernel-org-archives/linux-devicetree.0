@@ -1,54 +1,92 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Tue, 31 Jan 2017 12:01:22 +0200
-Message-ID: <CAJKOXPeCF3+YXk-GHmewn6fi0rcPbQ_GoPOeFRP2KYN=6KLLxw@mail.gmail.com>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com> <588FD3C3.7080508@samsung.com>
- <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com> <58905A2B.9090101@samsung.com>
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@free-electrons.com>
+Subject: [PATCH v3 0/8] Add sun8i A33 audio driver
+Date: Tue, 31 Jan 2017 11:05:44 +0100
+Message-ID: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <58905A2B.9090101@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, robh@kernel.org, airlied@linux.ie, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, maxime.ripard@free-electrons.com, wens@csie.org, perex@perex.cz, tiwai@suse.com
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, mylene.josserand@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 11:34 AM, Inki Dae <inki.dae@samsung.com> wrote:
->
->
-> 2017년 01월 31일 18:22에 Krzysztof Kozlowski 이(가) 쓴 글:
->> On Tue, Jan 31, 2017 at 2:01 AM, Inki Dae <inki.dae@samsung.com> wrote:
->>>
->>>
->>> 2017년 01월 24일 10:50에 Hoegeun Kwon 이(가) 쓴 글:
->>>> Dear Thierry,
->>>>
->>>> Could you please review this patch?
->>>
->>> Thierry, I think this patch has been reviewed enough but no comment from you. Seems you are busy. I will pick up this.
->>>
->>
->> Comments from v8 were not resolved and I think we are waiting for v9:
->> https://lkml.org/lkml/2017/1/11/178
->>
->> If that is not correct then please clarify.
->
-> Seems you pointed to change te-gpios bindings to optional. right?
->
-> I thought Rob left ack so it's no problem.
-> https://lkml.org/lkml/2017/1/13/626
-
-Yes, change them to optional. I think it is a problem (regardless of
-Rob's ack) because you are merging a driver requiring a property which
-soon you want to remove. If you merge it (like this) removal of
-te-gpios property will be breakage of ABI. This is not a serious
-problem but knowing such plan of te-gpios removal upfront, it would be
-wrong to commit such driver.
-
-Best regards,
-Krzysztof
+SGVsbG8gZXZlcnlvbmUsCgpUaGlzIGEgVjMgb2YgbXkgQWxsd2lubmVyIEEzMyAoc3VuOGkpIGF1
+ZGlvIGNvZGVjIGRyaXZlci4KVGVzdGVkIG9uIGxpbnV4LW5leHQtMjAxNzAxMzEgdGFnLgoKQ2hh
+bmdlcyBzaW5jZSBWMjoKCS0gUmVtb3ZlZCBwYXRjaGVzIGZyb20gdjIgYWxyZWFkeSBtZXJnZWQ6
+Cgljb21taXQgZWJhZDY0ZDE5Mzc3OSAoIkFTb0M6IHN1bjRpLWkyczogSW5jcmVhc2UgRE1BIG1h
+eCBidXJzdCB0byA4IikKCWNvbW1pdCA2MDNhMGM4YWY5Y2IyICgiY2xrOiBzdW54aS1uZzogYTMz
+OiBBZGQgQ0xLX1NFVF9SQVRFX1BBUkVOVCB0byBhYy1kaWciKQoJLSBSZW1vdmVkICJyZXNldC1u
+YW1lcyIgZnJvbSBzdW40aS1pMnMgZHJpdmVyCgktIEZpeGVkIHRoZSBidWlsZCB3YXJuaW5nIGZy
+b20gc3VuOGktY29kZWMKCS0gRml4ZWQgc29tZSB2YXJpb3VzIHRvcGljcyBzdWNoIGFzIHN1Ympl
+Y3QgbGluZQoJZm9yIGR0IGJpbmRpbmdzIHBhdGNoLCByZW5hbWVkIHRoZSBzaW1wbGUtY2FyZAoJ
+YW5kIGRpc2FibGVkIHRoZSBzaW1wbGUtY2FyZC4KCkNoYW5nZXMgc2luY2UgVjE6CgktIFJlbW92
+ZSB0aGUgYW5hbG9nIGNvZGVjIGRyaXZlciBhcyBhIGJldHRlciB2ZXJzaW9uIGhhcyBiZWVuCglj
+b21taXR0ZWQgYnkgQ2hlbi1ZdSBUc2FpIGFuZCBpcyBhbHJlYWR5IG1lcmdlZC4KCS0gUmVtb3Zl
+IHRoZSBhdWRpby1jYXJkIGFzIHNpbXBsZS1jYXJkIGNhbiBiZSB1c2VkCgktIFRoZSBETUEgbWF4
+YnVyc3QgaXMgc2V0IHRvIDggaW4gdGhlIHN1bjRpLWkycyBpbnN0ZWFkIG9mCglhZGRpbmcgdGhl
+IG1heGJ1cnN0IG9mIDQgaW4gU3VuNmkgZG1hIGVuZ2luZS4KCS0gQ3JlYXRlIGEgbmV3IGNvbXBh
+dGlibGUgZm9yIHN1bjRpLWkycyB0byBoYW5kbGUgdGhlIHJlc2V0CglsaW5lLgoJLSBGaXggdmFy
+aW91cyBwcm9ibGVtcyBpbiBzdW44aS1jb2RlYyBkcml2ZXIgYWNjb3JkaW5nIHRvIFYxJ3MKCXJl
+dmlld3MKCS0gQWRkIHRoZSBwbV9ydW50aW1lIGhvb2tzIGluIHN1bjhpLWNvZGVjIGRyaXZlciB0
+byBwcmVwYXJlLwoJdW5wcmVwYXJlIGNsb2Nrcy4KCS0gVXBkYXRlIHRoZSBEVFMgYWNjb3JkaW5n
+IHRvIENoZW4tWXUncyBhbmFsb2cgY29kZWMgZHJpdmVyLgoJLSBSZW5hbWUgc3VuOGktY29kZWMn
+cyBjbG9ja3MgdG8gImJ1cyIgYW5kICJtb2QiCgktIFRoZSBmaXJzdCAiZGVsYXkiIGlzc3VlIGZy
+b20gVjEgaXMgZml4ZWQgYnkgdXNpbmcgYSBkZWxheQoJd2hlbiBlbmFibGluZyB0aGUgaGVhZHBo
+b25lIGFtcGxpZmllciB0byBsZXQgdGhlIGFtcGxpZmllcgoJYmVpbmcgdXAuCgpQYXRjaGVzIDEg
+YW5kIDIgYWRkIGEgbmV3IGNvbXBhdGlibGUgImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIgp0byBo
+YW5kbGUgdGhlIHJlc2V0IGxpbmUgZm9yIHN1bjRpLWkycyBkcml2ZXIuIEl0IHVzZXMgYSBxdWly
+ayB0bwp1c2UgYSB2ZXJzaW9uIHdpdGggb3Igd2l0aG91dCByZXNldCBsaW5lcy4KClBhdGNoIDMg
+YWRkcyB0aGUgc3VuOGkgY29kZWMgZHJpdmVyIHdoaWNoIHJlcHJlc2VudHMgdGhlIGRpZ2l0YWwg
+cGFydApvZiB0aGUgQTMzIGNvZGVjLiBJdCBzdXBwb3J0cyBvbmx5IHBsYXliYWNrIGZlYXR1cmVz
+LgoKUGF0aCA0IGZpeGVzIHRoZSBwcmV2aW91cyBpc3N1ZSBvZiBhICJmaXJzdCB0aW1lIGRlbGF5
+IiBpbiBWMSAoc2VlIGNvdmVyCmxldHRlcikuIERvIG5vdCBoZXNpdGF0ZSBpZiB5b3UgaGF2ZSBj
+b21tZW50cyBvbiB0aGlzIHBhdGNoLgoKUGF0Y2hlcyA1IGFkZHMgdGhlIGR0LWJpbmRpbmdzIGRv
+Y3VtZW50YXRpb24gZm9yIG5ldyBhdWRpbyBkcml2ZXIKYWRkZWQgaW4gdGhpcyBzZXJpZSAoc3Vu
+OGktY29kZWMpLgoKUGF0Y2ggNiBhZGRzIHRoZSBjcHUgREFJLCBjb2RlYyBhbmQgYXVkaW8gbm9k
+ZXMgdG8gc3VuOGktYTMzIGRldmljZSB0cmVlLgoKUGF0Y2hlcyA3IGFuZCA4IGVuYWJsZSB0aGUg
+YXVkaW8gb24gUGFycm90IGFuZCBTaW5saW54J3MgYm9hcmRzLgoKVGhlIERBSSBmb3IgdGhpcyBB
+MzMgY29kZWMgaXMgdGhlIHNhbWUgdGhhbiBmb3IgQTIwOiAic3VuNGktaTJzIi4KQ3VycmVudGx5
+LCB0aGUgc3VuOGktYTMzIGNvZGVjIGRyaXZlciBoYW5kbGVzIG9ubHkgdGhlIHBsYXliYWNrIGZl
+YXR1cmUuClRoZSBvdGhlciBvbmVzIChzdWNoIGFzIGNhcHR1cmUpIGFuZCBhbGwgb3RoZXIgaW50
+ZXJmYWNlcyBleGNlcHQKaGVhZHBob25lIGFyZSBub3Qgc3VwcG9ydGVkLiBJIHdpbGwgc2VuZCBh
+IHBhdGNoIHRvIGhhbmRsZSB0aGUKY2FwdHVyZSB3aXRoIG1pY3JvcGhvbmVzIGluIG5leHQgZmV3
+IHdlZWtzLgoKRXhhbXBsZXMgb2YgYW1peGVyIGNvbW1hbmRzOgoJYW1peGVyIHNldCAnSGVhZHBo
+b25lJyA3NSUKCWFtaXhlciBzZXQgJ0hlYWRwaG9uZScgb24KCWFtaXhlciBzZXQgJ0RBQycgb24K
+CWFtaXhlciBzZXQgJ1JpZ2h0IERBQyBNaXhlciBSU2xvdCAwJyBvbgoJYW1peGVyIHNldCAnTGVm
+dCBEQUMgTWl4ZXIgTFNsb3QgMCcgb24KCkl0IHdhcyB0ZXN0ZWQgb24gUGFycm90IGFuZCBTaW5s
+aW54IGJvYXJkcy4KCkxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGFueSBjb21tZW50cyBvbiB0aGlz
+IHNlcmllLgoKVGhhbmsgeW91IGluIGFkdmFuY2UsCkJlc3QgcmVnYXJkcywKCk15bMOobmUgSm9z
+c2VyYW5kICg4KToKICBBU29DOiBzdW40aS1pMnM6IFVwZGF0ZSBiaW5kaW5nIGRvY3VtZW50YXRp
+b24gdG8gaW5jbHVkZSBBMzEKICBBU29DOiBzdW40aS1pMnM6IEFkZCBxdWlya3MgdG8gaGFuZGxl
+IGEzMSBjb21wYXRpYmxlCiAgQVNvQzogQWRkIHN1bjhpIGRpZ2l0YWwgYXVkaW8gY29kZWMKICBB
+U29DOiBzdW44aS1jb2RlYy1hbmFsb2c6IEFkZCBhbXBsaWZpZXIgZXZlbnQgdG8gZml4IGZpcnN0
+IGRlbGF5CiAgQVNvQzogY29kZWNzOiBBZGQgc3VuOGktYTMzIGJpbmRpbmcgZG9jdW1lbnRhdGlv
+bgogIEFSTTogZHRzOiBzdW44aTogQWRkIGF1ZGlvIGNvZGVjLCBkYWkgYW5kIGNhcmQgZm9yIEEz
+MwogIEFSTTogZHRzOiBzdW44aTogcGFycm90OiBFbmFibGUgYXVkaW8gbm9kZXMKICBBUk06IGR0
+czogc3VuOGk6IHNpbmxpbng6IEVuYWJsZSBhdWRpbyBub2RlcwoKIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3NvdW5kL3N1bjRpLWkycy50eHQgICAgICAgIHwgICA1ICsKIC4uLi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3NvdW5kL3N1bjhpLWEzMy1jb2RlYy50eHQgIHwgIDc1ICsrKysKIGFyY2gvYXJt
+L2Jvb3QvZHRzL3N1bjhpLWEzMy1zaW5saW54LXNpbmEzMy5kdHMgICAgIHwgIDEyICsKIGFyY2gv
+YXJtL2Jvb3QvZHRzL3N1bjhpLWEzMy5kdHNpICAgICAgICAgICAgICAgICAgIHwgIDQ1ICsrCiBh
+cmNoL2FybS9ib290L2R0cy9zdW44aS1yMTYtcGFycm90LmR0cyAgICAgICAgICAgICB8ICAxMiAr
+CiBzb3VuZC9zb2Mvc3VueGkvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAx
+MSArCiBzb3VuZC9zb2Mvc3VueGkvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8
+ICAgMSArCiBzb3VuZC9zb2Mvc3VueGkvc3VuNGktaTJzLmMgICAgICAgICAgICAgICAgICAgICAg
+ICB8ICA1NyArKy0KIHNvdW5kL3NvYy9zdW54aS9zdW44aS1jb2RlYy1hbmFsb2cuYyAgICAgICAg
+ICAgICAgIHwgIDMwICstCiBzb3VuZC9zb2Mvc3VueGkvc3VuOGktY29kZWMuYyAgICAgICAgICAg
+ICAgICAgICAgICB8IDQ5OSArKysrKysrKysrKysrKysrKysrKysKIDEwIGZpbGVzIGNoYW5nZWQs
+IDc0MyBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9zdW44aS1hMzMtY29kZWMudHh0
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgc291bmQvc29jL3N1bnhpL3N1bjhpLWNvZGVjLmMKCi0tIAoy
+LjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFs
+c2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8v
+bWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
