@@ -1,371 +1,79 @@
-From: Alexandre TORGUE <alexandre.torgue@st.com>
-Subject: [PATCH 7/8] ARM: dts: stm32: Add STM32H743 MCU and STM32H743i-EVAL board
-Date: Tue, 31 Jan 2017 14:14:24 +0100
-Message-ID: <1485868465-30446-8-git-send-email-alexandre.torgue@st.com>
-References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 13:14:36 +0000
+Message-ID: <20170131131436.GW27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <c6e98327-7e2c-f34a-2d23-af7b236de441@xs4all.nl>
+ <1484929911.2897.70.camel@pengutronix.de>
+ <3fb68686-9447-2d8a-e2d2-005e4138cd43@gmail.com>
+ <5d23d244-aa0e-401c-24a9-07f28acf1563@xs4all.nl>
+ <1485169204.2874.57.camel@pengutronix.de>
+ <ce2d1851-8a2e-ea0b-25b8-be6649b1ebaf@gmail.com>
+ <1485257269.3600.96.camel@pengutronix.de>
+ <20170130130657.GR27312@n2100.armlinux.org.uk>
+ <1485857364.2932.27.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1485857364.2932.27.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gma
 List-Id: devicetree@vger.kernel.org
 
-Add basic support for STM32H743 MCU and his eval board.
-The STMicrolectornics's STM32H743 MCU is based on  Cortex-M7 core
-running up to @400MHz with 2MB internal flash and 1MB internal RAM.
+On Tue, Jan 31, 2017 at 11:09:24AM +0100, Philipp Zabel wrote:
+> On Mon, 2017-01-30 at 13:06 +0000, Russell King - ARM Linux wrote:
+> > To help illustrate my point, consider the difference between
+> > MEDIA_BUS_FMT_RGB565_1X16 and MEDIA_BUS_FMT_RGB565_2X8_BE or
+> > MEDIA_BUS_FMT_RGB565_2X8_LE.  RGB565_1X16 means 1 pixel over an effective
+> > 16-bit wide bus (if it's not 16-bit, then it has to be broken up into
+> > separate "samples".)  RGB565_2X8 means 1 pixel as two 8-bit samples.
+> > 
+> > So, the 10-bit bayer is 1 pixel as 1.25 bytes.  Or is it, over a serial
+> > bus.  Using the RGB565 case, 10-bit bayer over a 4 lane CSI bus becomes
+> > interesting:
+> > 
+> > 	first byte	2nd	3rd
+> > lane 1	P0 9:2		S0	P7 9:2
+> > lane 2	P1 9:2		P4 9:2	S1
+> > lane 3	P2 9:2		P5 9:2	P8 9:2
+> > lane 4	P3 9:2		P6 9:2	P9 9:2
+> > 
+> > S0 = P0/P1/P2/P3 least significant two bits
+> > S1 = P4/P5/P6/P7 least significant two bits
+> > 
+> > or 2 lane CSI:
+> > 	first byte	2nd	3rd	4th	5th
+> > lane 1	P0 9:2		P2	S0	P5	P7
+> > lane 2	P1 9:2		P3	P4	P6	S1
+> > 
+> > or 1 lane CSI:
+> > lane 1	P0 P1 P2 P3 S0 P4 P5 P6 P7 S1 P8 P9 ...
+> 
+> These do look like three different media bus formats to me.
 
-For more details see:
-Documentation/arm/stm32/stm32h743-overview.txt
+This isn't limited to the serial side - the parallel bus side between
+the CSI2 interface and CSI2IPU wrapper, and the CSI2IPU wrapper and
+the CS0/1 interfaces is much the same with 10-bit bayer.
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+Think of the CSI2 <-> CSI2IPU bit as the 4-lane case, lane 0 ending
+up on the least significant 8 bits of the 32-bit bus, lane 3 on the
+top 8-bits.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index cccdbcb..f38a845 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -746,7 +746,8 @@ dtb-$(CONFIG_ARCH_STM32)+= \
- 	stm32f429-disco.dtb \
- 	stm32f469-disco.dtb \
- 	stm32429i-eval.dtb \
--	stm32746g-eval.dtb
-+	stm32746g-eval.dtb \
-+	stm32h743i-eval.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-new file mode 100644
-index 0000000..fcc1e06
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-@@ -0,0 +1,156 @@
-+/*
-+ * Copyright 2017 - Alexandre Torgue <alexandre.torgue@st.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include <dt-bindings/pinctrl/stm32h7-pinfunc.h>
-+
-+/ {
-+	soc {
-+		pin-controller {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "st,stm32h743-pinctrl";
-+			ranges = <0 0x58020000 0x3000>;
-+			pins-are-numbered;
-+
-+			gpioa: gpio@58020000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x0 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOA";
-+			};
-+
-+			gpiob: gpio@58020400 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x400 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOB";
-+			};
-+
-+			gpioc: gpio@58020800 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x800 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOC";
-+			};
-+
-+			gpiod: gpio@58020c00 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0xc00 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOD";
-+			};
-+
-+			gpioe: gpio@58021000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x1000 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOE";
-+			};
-+
-+			gpiof: gpio@58021400 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x1400 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOF";
-+			};
-+
-+			gpiog: gpio@58021800 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x1800 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOG";
-+			};
-+
-+			gpioh: gpio@58021c00 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x1c00 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOH";
-+			};
-+
-+			gpioi: gpio@58022000 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x2000 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOI";
-+			};
-+
-+			gpioj: gpio@58022400 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x2400 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOJ";
-+			};
-+
-+			gpiok: gpio@58022800 {
-+				gpio-controller;
-+				#gpio-cells = <2>;
-+				reg = <0x2800 0x400>;
-+				clocks = <&timer_clk>;
-+				st,bank-name = "GPIOK";
-+			};
-+
-+			usart1_pins: usart1@0 {
-+				pins1 {
-+					pinmux = <STM32H7_PB14_FUNC_USART1_TX>;
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+				pins2 {
-+					pinmux = <STM32H7_PB15_FUNC_USART1_RX>;
-+					bias-disable;
-+				};
-+			};
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
-new file mode 100644
-index 0000000..4685629
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32h743.dtsi
-@@ -0,0 +1,83 @@
-+/*
-+ * Copyright 2017 - Alexandre Torgue <alexandre.torgue@st.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "skeleton.dtsi"
-+#include "armv7-m.dtsi"
-+
-+/ {
-+	clocks {
-+		clk_hse: clk-hse {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
-+
-+		timer_clk: timer-clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <125000000>;
-+		};
-+	};
-+
-+	soc {
-+		usart1: serial@40011000 {
-+			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
-+			reg = <0x40011000 0x400>;
-+			interrupts = <37>;
-+			status = "disabled";
-+			clocks = <&timer_clk>;
-+
-+		};
-+
-+		timer5: timer@40000c00 {
-+			compatible = "st,stm32-timer";
-+			reg = <0x40000c00 0x400>;
-+			interrupts = <50>;
-+			clocks = <&timer_clk>;
-+		};
-+	};
-+};
-+
-+&systick {
-+	clock-frequency = <250000000>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-new file mode 100644
-index 0000000..c6effbb
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -0,0 +1,74 @@
-+/*
-+ * Copyright 2017 - Alexandre Torgue <alexandre.torgue@st.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "stm32h743.dtsi"
-+#include "stm32h743-pinctrl.dtsi"
-+
-+/ {
-+	model = "STMicroelectronics STM32H743i-EVAL board";
-+	compatible = "st,stm32h743i-eval", "st,stm32h743";
-+
-+	chosen {
-+		bootargs = "root=/dev/ram";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0xd0000000 0x2000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &usart1;
-+	};
-+};
-+
-+&clk_hse {
-+	clock-frequency = <125000000>;
-+};
-+
-+&usart1 {
-+	pinctrl-0 = <&usart1_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
+Post CSI2IPU, it talks about a 16-bit bus in the diagrams, so that's
+kind of the 2-lane case above...
+
 -- 
-1.9.1
-
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
