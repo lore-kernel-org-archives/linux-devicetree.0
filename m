@@ -1,7 +1,7 @@
-From: Ian Arkver <ian.arkver.dev@gmail.com>
+From: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
-Date: Tue, 31 Jan 2017 22:33:40 +0000
-Message-ID: <93e5a426-03f3-c4f1-c27f-75b8b78c0a02@gmail.com>
+Date: Tue, 31 Jan 2017 14:36:53 -0800
+Message-ID: <d5ede043-3b02-37f6-bd4a-db805e6b36d7@mentor.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
  <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
  <b7456d40-040d-41b7-45bc-ef6709ab7933@xs4all.nl>
@@ -11,24 +11,18 @@ References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
  <2297c62c-ae9b-3942-4700-ce268a61a6d5@gmail.com>
  <20170131220452.GE27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170131220452.GE27312@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170131220452.GE27312-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ian Arkver <ian.arkver.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-a
 List-Id: devicetree@vger.kernel.org
 
-On 31/01/17 22:04, Russell King - ARM Linux wrote:
+
+
+On 01/31/2017 02:04 PM, Russell King - ARM Linux wrote:
 > On Tue, Jan 31, 2017 at 09:55:29PM +0000, Ian Arkver wrote:
 >> On 31/01/17 20:33, Russell King - ARM Linux wrote:
 >>> On Tue, Jan 31, 2017 at 10:21:26AM -0800, Steve Longerbeam wrote:
@@ -37,12 +31,10 @@ On 31/01/17 22:04, Russell King - ARM Linux wrote:
 >>>>>> Should be set to something like 'platform:imx-media-camif'. v4l2-compliance
 >>>>>> should complain about this.
 >>>>> ... and more.
->>>>
 >>>> Right, in version 3 that you are working with, no v4l2-compliance fixes were
 >>>> in yet. A lot of the compliance errors are fixed, please look in latest
 >>>> branch
->>>> imx-media-staging-md-wip at git@github.com:slongerbeam/mediatree.git.
->>>
+>>>> imx-media-staging-md-wip at git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:slongerbeam/mediatree.git.
 >>> Sorry, I'm not prepared to pull random trees from github as there's
 >>> no easy way to see what's in the branch.
 >>>
@@ -65,26 +57,25 @@ On 31/01/17 22:04, Russell King - ARM Linux wrote:
 >>> As I don't want to take a whole pile of other changes into my tree,
 >>> I'm certainly not going to pull from your github tree.  Sorry.
 >>>
->>
 >> https://github.com/slongerbeam/mediatree/compare/master...imx-media-staging-md-wip
 >>
 >> It's under the "Compare" button from the main view. It would be nice though
 >> if the first commit's parent was some clearly tagged start point.
->
 > I don't want master though, I want v4.10-rc1, and if I ask for that
 > it tells me it knows nothing about v4.10-rc1, despite the fact that's
 > a tag in the mainline kernel repository which was merged into the
 > linux-media tree that this tree is based upon.
->
 
-Yeah, that's what I meant about the first parent's commit not being a 
-clearly tagged branch point. At least you get the series on one page. 
-Maybe it's time for a rebase or a v4 series Steve?
+Hi Russell, yes git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:slongerbeam/mediatree.git is a fork
+of the linux-media tree, and the imx-media-staging-md-wip branch
+is up-to-date with master, currently at 4.10-rc1.
 
-Personally, I use a bare repo with multiple remotes and fetch branches 
-from various trees. Then gitk --all --since(etc) is pretty good at 
-giving the overview picture. You don't need to pull the commits over 
-into any of your working branches if you don't want to.
+You don't need to use the web interface, just git clone the repo.
 
-Regards,
-Ian
+Steve
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
