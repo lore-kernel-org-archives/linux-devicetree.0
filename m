@@ -1,56 +1,72 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 2/8] power: add power sequence library
-Date: Wed, 1 Feb 2017 00:10:17 +0100
-Message-ID: <CAJZ5v0iR7p-ftUzvVwW96Y55A=vYG8_UbhjuA4vw0BFFZ8a9iw@mail.gmail.com>
-References: <1483425211-14473-1-git-send-email-peter.chen@nxp.com> <1483425211-14473-3-git-send-email-peter.chen@nxp.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: cpcap: Add basic regulator support
+Date: Tue, 31 Jan 2017 23:13:56 +0000
+Message-ID: <20170131231356.yubhrtyehkr462mo@sirena.org.uk>
+References: <20170131001241.5926-1-tony@atomide.com>
+ <20170131211256.l3e53y2mkzylfjnw@sirena.org.uk>
+ <20170131220953.GF7403@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1483425211-14473-3-git-send-email-peter.chen@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, p.zabel@pengutronix.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="jpdxfvqowm7gyc4x"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170131220953.GF7403-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 3, 2017 at 7:33 AM, Peter Chen <peter.chen@nxp.com> wrote:
-> We have an well-known problem that the device needs to do some power
-> sequence before it can be recognized by related host, the typical
-> example like hard-wired mmc devices and usb devices.
->
-> This power sequence is hard to be described at device tree and handled by
-> related host driver, so we have created a common power sequence
-> library to cover this requirement. The core code has supplied
-> some common helpers for host driver, and individual power sequence
-> libraries handle kinds of power sequence for devices. The pwrseq
-> librares always need to allocate extra instance for compatible
-> string match.
->
-> pwrseq_generic is intended for general purpose of power sequence, which
-> handles gpios and clocks currently, and can cover other controls in
-> future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> if only one power sequence is needed, else call of_pwrseq_on_list
-> /of_pwrseq_off_list instead (eg, USB hub driver).
->
-> For new power sequence library, it can add its compatible string
-> to pwrseq_of_match_table, then the pwrseq core will match it with
-> DT's, and choose this library at runtime.
->
-> Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
 
-Quite honestly, I have a really hard time with trying to follow this
-code and the total lack of documentation makes it even harder.  In
-particular, the generic power sequence code is not even commented at
-all, so it really is hard to say how this is going to work, let alone
-deciding whether or not to apply it.
+--jpdxfvqowm7gyc4x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Plus, of course, the USB core changes must be acked by the maintainer
-thereof for me to be able to handle the series.
+On Tue, Jan 31, 2017 at 02:09:53PM -0800, Tony Lindgren wrote:
+> * Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [170131 13:14]:
+> > On Mon, Jan 30, 2017 at 04:12:41PM -0800, Tony Lindgren wrote:
+> > > +	error = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
+> > > +				   rdev->desc->enable_mask,
+> > > +				   rdev->desc->enable_val);
+> > > +	if (error)
+> > > +		return error;
+> > > +
+> > > +	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
+> > > +		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
+> > > +					   regulator->assign_mask,
+> > > +					   regulator->assign_mask);
+> > > +		if (error)
+> > > +			return error;
+> > > +	}
 
-But at this point I basically need you to explain the design to me, please.
+> > What does this second register bit do?
 
-Thanks,
-Rafael
+> My guess is that it triggers regulator idle modes in the PMIC based
+> on the SoC off mode. There's no documentation for this thing..
+
+> I've just kept what the Motorola Linux kernel tree does here and added
+> some comments to CPCAP_REG_OFF_MODE_SEC.
+
+> I'll address the rest of the comments and post v2, thanks for looking.
+
+OK, thanks - comments should cover it here.
+
+--jpdxfvqowm7gyc4x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliRGjMACgkQJNaLcl1U
+h9BCUgf/WpeUMgLHZyjkizmQJvrzHfTU3wRC6VM5yezR1nViHWnNAb1y/MnDvLp8
+OrGQHnpQRTLFI+7OGyBEYllT+Uw/lwOVORCk/cxTISWqvXQ0vmWYIhaaxggoczCD
+pLzEAUhBJzaErHGdkhv+7Us3wbOyz8Tjod2RWa/jJiZAPo+k1tgBYKL0lQRsVWY7
+d9cO8FDicGsGuLk3BFfAa7lEFfr7nGsIa1PFxG6V+07nUxvW1gs9rbLvu/mIsOyl
+rmUl/ydXMLg3ntXnEfV8e5Gzy0e3MXiE9WJ45ihbW4GFeNIbudHBtKWW4bbQ2+Hv
+W0UWcs5P+7Egv0n5gDuTRt/4PqYYIg==
+=pznc
+-----END PGP SIGNATURE-----
+
+--jpdxfvqowm7gyc4x--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
