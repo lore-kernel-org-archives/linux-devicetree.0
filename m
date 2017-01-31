@@ -1,110 +1,76 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
- on TM2 board
-Date: Tue, 31 Jan 2017 10:49:51 -0500
-Message-ID: <20170131154951.GZ20076@art_vandelay>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay>
- <20170131150226.GB4519@ulmo.ba.sec>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
+Date: Tue, 31 Jan 2017 16:51:22 +0100
+Message-ID: <1485877882.2932.70.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170131150226.GB4519@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDQ6MDI6MjZQTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
-d3JvdGU6Cj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6Mzg6NTNBTSAtMDUwMCwgU2VhbiBQ
-YXVsIHdyb3RlOgo+ID4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6NTQ6NDlBTSArMDEwMCwg
-VGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gPiA+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA5OjAx
-OjA3QU0gKzA5MDAsIElua2kgRGFlIHdyb3RlOgo+ID4gPiA+IAo+ID4gPiA+IAo+ID4gPiA+IDIw
-MTfrhYQgMDHsm5QgMjTsnbwgMTA6NTDsl5AgSG9lZ2V1biBLd29uIOydtCjqsIApIOyTtCDquIA6
-Cj4gPiA+ID4gPiBEZWFyIFRoaWVycnksCj4gPiA+ID4gPiAKPiA+ID4gPiA+IENvdWxkIHlvdSBw
-bGVhc2UgcmV2aWV3IHRoaXMgcGF0Y2g/Cj4gPiA+ID4gCj4gPiA+ID4gVGhpZXJyeSwgSSB0aGlu
-ayB0aGlzIHBhdGNoIGhhcyBiZWVuIHJldmlld2VkIGVub3VnaCBidXQgbm8gY29tbWVudAo+ID4g
-PiA+IGZyb20geW91LiBTZWVtcyB5b3UgYXJlIGJ1c3kuIEkgd2lsbCBwaWNrIHVwIHRoaXMuCj4g
-PiA+IAo+ID4gPiBTb3JyeSwgYnV0IHRoYXQncyBub3QgaG93IGl0IHdvcmtzLiBUaGlzIHBhdGNo
-IGhhcyBnb25lIHRocm91Z2ggOAo+ID4gPiByZXZpc2lvbnMgd2l0aGluIDQgd2Vla3MsIGFuZCBJ
-IHRlbmQgdG8gaWdub3JlIHBhdGNoZXMgbGlrZSB0aGF0IHVudGlsCj4gPiA+IHRoZSBkdXN0IHNl
-dHRsZXMuCj4gPiA+IAo+ID4gCj4gPiBTZWVtcyBsaWtlIHRoZSBkdXN0IHdhcyBwcmV0dHkgc2V0
-dGxlZC4gSXQgd2FzIHBvc3RlZCBvbiAxLzExLCBwaW5nZWQgb24gMS8yNCwKPiA+IGFuZCBwaWNr
-ZWQgdXAgb24gMS8zMS4gSSBkb24ndCB0aGluayBpdCdzIHVucmVhc29uYWJsZSB0byB0YWtlIGl0
-IHRocm91Z2gKPiA+IGFub3RoZXIgdHJlZSBhZnRlciB0aGF0Lgo+ID4gCj4gPiBJIHdvbmRlciBp
-ZiBkcm1fcGFuZWwgd291bGQgYmVuZWZpdCBmcm9tIHRoZSAtbWlzYyBncm91cCBtYWludGFpbmVy
-c2hpcCBtb2RlbAo+ID4gYXMgZHJtX2JyaWRnZSBkb2VzLiBCeSBzcHJlYWRpbmcgb3V0IHRoZSB3
-b3JrbG9hZCwgdGhlIGhpZ2gtbWFpbnRlbmFuY2UKPiA+IHBhdGNoZXMgd291bGQgaG9wZWZ1bGx5
-IGZpbmQgc29tZW9uZSB0byBzaGVwaGVyZCB0aGVtIHRocm91Z2guCj4gCj4gRXhjZXB0IHRoYXQg
-bm9ib2R5IGV4Y2VwdCBtZSByZWFsbHkgY2FyZXMuIAoKSSBjZXJ0YWlubHkgaGF2ZW4ndCBiZWVu
-IHBheWluZyBhdHRlbnRpb24uIE15IGV4Y3VzZSwgYXQgbGVhc3QsIGlzIHRoYXQgeW91J3JlIGEK
-Z3JlYXQgbWFpbnRhaW5lciBhbmQgSSBoYXZlbid0IHRob3VnaHQgdGhlIHBhdGNoZXMgbmVlZCBh
-IHNlY29uZCBsb29rLiBQZXJoYXBzCmlmIHdlIG1vdmVkIHRvd2FyZHMgYSBncm91cCwgbW9yZSBw
-ZW9wbGUgd291bGQgYmUgdmVzdGVkL2NhcmU/Cgo+IElmIHdlIGxldCBwZW9wbGUgdGFrZSBwYXRj
-aGVzCj4gdGhyb3VnaCBzZXBhcmF0ZSB0cmVlcyBvciBncm91cC1tYWludGFpbmVkIHRyZWVzIHRo
-ZXknbGwgbGlrZWx5IGdvIGluCj4gd2l0aG91dCB0b28gbXVjaCB0aG91Z2h0LiBEUk0gcGFuZWwg
-aXMgc29tZXdoYXQgZGlmZmVyZW50IGZyb20gY29yZSBEUk0KPiBpbiB0aGlzIHJlZ2FyZCBiZWNh
-dXNlIGl0cyBpbmZyYXN0cnVjdHVyZSBpcyBtaW5pbWFsIGFuZCB0aGVyZSdzIGxpdHRsZQo+IG91
-dHNpZGUgdGhlIHBhbmVsLXNpbXBsZSBkcml2ZXIuIFNvIHdlJ3JlIHN0aWxsIGF0IGEgc3RhZ2Ug
-d2hlcmUgd2UgbmVlZAo+IHRvIGZpbmUtdHVuZSB3aGF0IGRyaXZlcnMgc2hvdWxkIGxvb2sgbGlr
-ZSBhbmQgaG93IHdlIGNhbiBpbXByb3ZlLgo+IAoKRmFpciBwb2ludC4gV2l0aCBkcm1fYnJpZGdl
-LCBJJ3ZlIGJlZW4gbGVuZGluZyByZXZpZXcgaGVscCwgYnV0IGRlZmVycmluZyB0bwpBcmNoaXQg
-Zm9yIG1lcmdlIG9uIHBhdGNoZXMgd2hpY2ggSSB0aGluayBoZSBzaG91bGQgbG9vayBhdC4gR3Vz
-dGF2byBpcyBpbiBhCnNpbWlsYXIgcGxhY2Ugd2l0aCBmZW5jZXMuIGRybV9wYW5lbCBzZWVtcyBs
-aWtlIHNvbWV0aGluZyB0aGF0IHNob3VsZCBmb2xsb3cKdGhlIHNhbWUgbW9kZWwuIE1heWJlIG9u
-Y2UgbW9yZSBwZW9wbGUgKG9yIG9uZSBwZXJzb24pIGdldCB1cCB0byBzcGVlZCBvbgp0aGluZ3Ms
-IHdlIGNvdWxkIHNoYXJlIHRoZSBsb2FkLgoKPiA+ID4gT3RoZXIgdGhhbiB0aGF0LCB0aGlzIGNv
-bnRpbnVlcyB0aGUgc2FtZSBtYWRuZXNzIHRoYXQgSSd2ZSByZXBlYXRlZGx5Cj4gPiA+IGNvbXBs
-YWluZWQgYWJvdXQgaW4gdGhlIHBhc3QuIFRoZSB3aG9sZSBtZWNoYW5pc20gb2YgcnVubmluZyB0
-aHJvdWdoIGEKPiA+ID4gc2VyaWVzIG9mIHdyaXRlcyBhbmQgbm90IGNhcmluZyBhYm91dCBlcnJv
-cnMgdW50aWwgdGhlIHZlcnkgZW5kIGlzCj4gPiA+IHNvbWV0aGluZyB3ZSd2ZSBkaXNjdXNzZWQg
-YXQgbGVuZ3RoIGluIHRoZSBwYXN0LiBJdCBhbHNvIGluIGxhcmdlIHBhcnRzCj4gPiA+IGR1cGxp
-Y2F0ZXMgYSBidW5jaCBvZiBmdW5jdGlvbnMgZnJvbSBvdGhlciBTYW1zdW5nIHBhbmVsIGRyaXZl
-cnMgdGhhdCBJCj4gPiA+IGFscmVhZHkgc2FpZCBzaG91bGQgZXZlbnR1YWxseSBiZSBtb3ZlZCB0
-byBzb21ldGhpbmcgc2FuZXIuCj4gPiA+IAo+ID4gCj4gPiBGV0lXLCB0aGlzIHR5cGUgb2YgZXJy
-b3IgaGFuZGxpbmcgaXNuJ3QgbXkgcHJlZmVyZW5jZSBlaXRoZXIuIElmIHdlIG11c3QgZGVmZXIs
-Cj4gPiBJJ2QgcmF0aGVyIG5vdCBrZWVwIGl0IGluIGN0eCwgYnV0IHJhdGhlciBwYXNzIGFyb3Vu
-ZCBhbiBhcmd1bWVudCBzbyBpdCdzIG1vcmUKPiA+IG9idmlvdXMgd2UgbmVlZCB0byBkZWFsIHdp
-dGggaXQgaW4gdGhlIHJldHVybi4gVGhhdCBzYWlkLCB0aGlzIHNlZW1zIGxpa2UKPiA+IGEgY2Fz
-ZSBvZiBsZXR0aW5nIHRoZSBwZXJmZWN0IGJlIHRoZSBlbmVteSBvZiB0aGUgZ29vZCwgc3VyZWx5
-IHNvbWV0aGluZyBpcwo+ID4gYmV0dGVyIHRoYW4gbm90aGluZz8KPiAKPiBUaGF0J3Mgd2hhdCBJ
-IGVuZGVkIHVwIHNheWluZyB0aGUgbGFzdCB0d28gdGltZXMuIEJ1dCB0aGlzIGhhcyBnb3QgdG8K
-PiBzdG9wIGF0IHNvbWUgcG9pbnQuIElmIHlvdSBsb29rIGF0IG1vc3Qgb2YgdGhlIHBhbmVsIGRy
-aXZlcnMsIHRoZXkgbG9vawo+IG1vcmUgbGlrZSBtYXRlcmlhbCBmb3IgdGhlIHN0YWdpbmcgdHJl
-ZSByYXRoZXIgdGhhbiBEUk0gcHJvcGVyLgo+IAo+IFllcywgc29tZXRoaW5nIGlzIGJldHRlciB0
-aGFuIG5vdGhpbmcsIGJ1dCB3ZSBjYW4ndCBoYXZlIHRoaXMgbXVsdGlwbHkKPiBmdXJ0aGVyLgo+
-CgpTbyBwZXJoYXBzIGlmIHdlIGhhZCBtb3JlIHJldmlld2Vycywgd2UgY291bGQgdGlnaHRlbiB1
-cCB0aGUgcmV2aWV3IGZlZWRiYWNrCmxvb3AgYW5kIGF2b2lkIHRoaXMgd2hpbGUgc3RpbGwgZ2V0
-dGluZyB0aGluZ3MgbWVyZ2VkPwoKSSdtIG1vc3RseSB0aGlua2luZyBvdXQgbG9hZCBoZXJlLCBz
-byB0YWtlIGl0IGZvciB3aGF0IGl0J3Mgd29ydGguCgpTZWFuCgoKCj4gTGFzdCB0aW1lIHdlIGRp
-c2N1c3NlZCB0aGlzIHRoZXJlIHdhcyBzb21lIHJvdWdoIGNvbmNlbnN1cyB0aGF0IHRoZQo+IGlu
-aXRpYWxpemF0aW9uIHNlcXVlbmNlIHdvdWxkIGJlIHNwbGl0IGludG8gc2VwYXJhdGUgZnVuY3Rp
-b25zLCB3aGljaCBpcwo+IGFscmVhZHkgbW9zdGx5IHRydWUgZm9yIHRoZXNlIGRyaXZlcnMsIGFu
-ZCB0aGVuIHNldHRsZSBvbiBhIGNvbW1vbgo+IHNpZ25hdHVyZSBmb3IgdGhlc2UgZnVuY3Rpb25z
-LCB3aGljaCBpcyBhbHNvIG1vc3RseSB0aGUgY2FzZSBhbHJlYWR5LAo+IGFuZCB0aGVuIGhhdmUg
-YSB0YWJsZSBvZiBmdW5jdGlvbnMgdGhhdCBjYW4gYmUgY2FsbGVkIG9uZSBhZnRlciBhbm90aGVy
-Cj4gd2l0aCBlcnJvciBoYW5kbGluZyBvbiBlYWNoIGNhbGwuIFRoYXQgd2F5IGF0IGxlYXN0IHlv
-dSBjYW4gcHJvdmlkZQo+IGRpYWdub3N0aWNzIGFib3V0IHdoYXQgZnVuY3Rpb24gZmFpbGVkLCBh
-bmQgeW91IGNhbiBhYm9ydCBlYXJseSBiZWNhdXNlCj4gd2UgaGF2ZSB0byBhc3N1bWUgdGhhdCBm
-YWlsdXJlcyBhcmUgZmF0YWwuCj4gCj4gVGhpZXJyeQoKCgo+IF9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRy
-aS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJl
-IEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBPUwpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, 2017-01-06 at 18:11 -0800, Steve Longerbeam wrote:
+[...]
+> +static int csi_set_fmt(struct v4l2_subdev *sd,
+> +		       struct v4l2_subdev_pad_config *cfg,
+> +		       struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+> +	struct v4l2_mbus_framefmt *infmt, *outfmt;
+> +	struct v4l2_rect crop;
+> +	int ret;
+> +
+> +	if (sdformat->pad >= CSI_NUM_PADS)
+> +		return -EINVAL;
+> +
+> +	if (priv->stream_on)
+> +		return -EBUSY;
+> +
+> +	infmt = &priv->format_mbus[priv->input_pad];
+> +	outfmt = &priv->format_mbus[priv->output_pad];
+> +
+> +	if (sdformat->pad == priv->output_pad) {
+> +		sdformat->format.code = infmt->code;
+> +		sdformat->format.field = infmt->field;
+> +		crop.left = priv->crop.left;
+> +		crop.top = priv->crop.top;
+> +		crop.width = sdformat->format.width;
+> +		crop.height = sdformat->format.height;
+> +		ret = csi_try_crop(priv, &crop);
+
+This is the wrong way around, see also below.
+
+Here the the output sdformat->format.width/height should be set to the
+priv->crop.width/height (or priv->crop.width/height / 2, to enable
+downscaling). The crop rectangle should not be changed by an output pad
+set_fmt.
+
+> +		if (ret)
+> +			return ret;
+> +		sdformat->format.width = crop.width;
+> +		sdformat->format.height = crop.height;
+> +	}
+> +
+> +	if (sdformat->which == V4L2_SUBDEV_FORMAT_TRY) {
+> +		cfg->try_fmt = sdformat->format;
+> +	} else {
+> +		priv->format_mbus[sdformat->pad] = sdformat->format;
+> +		/* Update the crop window if this is output pad  */
+> +		if (sdformat->pad == priv->output_pad)
+> +			priv->crop = crop;
+
+The crop rectangle instead should be reset to the full input frame when
+the input pad format is set.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
