@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v3 14/18] drivers/fsi: Remove all scanned devices during master unregister
-Date: Wed,  1 Feb 2017 10:53:54 -0600
-Message-ID: <20170201165358.45415-15-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v3 16/18] drivers/fsi: Add documentation for GPIO based FSI master
+Date: Wed,  1 Feb 2017 10:53:56 -0600
+Message-ID: <20170201165358.45415-17-cbostic@linux.vnet.ibm.com>
 References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
@@ -12,45 +12,90 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chris Bostic <cbostic@us.ibm.com>
 
-Master will remove all previously scanned devices during an
-unregister operation. This will be necessary should any master
-attempt to register more than once.
+Define the device tree bindings for the GPIO master type.
 
 Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ .../devicetree/bindings/fsi/fsi-master-gpio.txt    | 71 ++++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index af7965f..28b82d1 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -428,12 +428,26 @@ int fsi_master_register(struct fsi_master *master)
- }
- EXPORT_SYMBOL_GPL(fsi_master_register);
- 
-+static int fsi_slave_device_remove(struct device *dev, void *data)
-+{
-+	put_device(dev);
-+	return 0;
-+}
+diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+new file mode 100644
+index 0000000..5d589bf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+@@ -0,0 +1,71 @@
++Device-tree bindings for FSI master implemented with GPIO
++---------------------------------------------------------
 +
-+static int fsi_master_slave_remove(struct device *dev, void *data)
-+{
-+	device_for_each_child(dev, NULL, fsi_slave_device_remove);
-+	device_unregister(dev);
-+	return 0;
-+}
++Typically a FSI master is defined in hardware with output control
++lines designated for Enable, Data, Clock, etc..  In the case of
++a 'GPIO FSI master', however, it may be the case that there is no
++such master defined in hardware and must be implemented in standard
++GPIO to interact with its slaves.  In this 'virtual' FSI master
++case the GPIO pins representing clk and data are directly
++connected to the slaves.
 +
- void fsi_master_unregister(struct fsi_master *master)
- {
- 	if (!master || !master->dev)
- 		return;
- 
- 	ida_simple_remove(&master_ida, master->idx);
-+	device_for_each_child(master->dev, NULL, fsi_master_slave_remove);
- 	put_device(master->dev);
- }
- EXPORT_SYMBOL_GPL(fsi_master_unregister);
++The GPIO FSI master node
++-------------------------
++This node describes a FSI master implmented with GPIO.
++Required property:
++	compatible = "ibm,fsi-master-gpio"
++
++The standard FSI master node
++----------------------------
++This node describes a FSI master implmemented fully in hardware
++with dedicated input/output pins required for its function (i.e.
++not using generic GPIO pins).
++Required property:
++	compatible = "ibm,fsi-master"
++
++
++GPIO FSI master property/pin descriptions
++------------------------------------------
++clk -	The master controlled clock line that indicates to the
++	slave when to read in or send out new data - required.
++data -	The serial data line containing information to be sent or
++	received by the master.  This line is bi-directional.  During
++	command phase the master controls the line and when a response
++	is required the slave takes control - required.
++enable - Controls power state of data line - optional.
++trans - Voltage translator control. In some applications the data line
++	must have its signal levels altered by a translator. If this is
++	necessary then control of signal direction is managed via this
++	line - optional.
++mux -	Multiplexor control.  This activates/deactivates the data line
++	in cases where it is one of many possible selections via mux -
++	optional.
++
++Required properties:
++	- compatible = "ibm,fsi-master-gpio";
++	- clk-gpios;
++	- data-gpios;
++
++Optional properties:
++	- enable-gpios;
++	- trans-gpios;
++	- mux-gpios;
++
++Order of property activation:
++1. clk
++2. data
++3. trans
++4. enable
++5. mux
++
++
++Example:
++
++fsi-master {
++	compatible = "ibm,fsi-master-gpio", "ibm,fsi-master";
++	clk-gpios = <&gpio 0>, <&gpio 6>;
++	data-gpios = <&gpio 1>, <&gpio 7>;
++	enable-gpios = <&gpio 2>, <&gpio 8>;
++	trans-gpios = <&gpio 3>, <&gpio 9>;
++	mux-gpios = <&gpio 4>, <&gpio 10>;
++}
 -- 
 1.8.2.2
