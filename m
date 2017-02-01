@@ -1,13 +1,13 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/4] arm64: dts: m3ulcb: enable I2C
-Date: Wed, 1 Feb 2017 13:35:34 +0100
-Message-ID: <CAMuHMdVONMQRvJBKSVAxKMy1FNM1-Z6RvHVEU3hdRtR57M+2Kw@mail.gmail.com>
+Subject: Re: [PATCH 2/4] arm64: dts: m3ulcb: Update memory node to 2 GiB map
+Date: Wed, 1 Feb 2017 13:38:44 +0100
+Message-ID: <CAMuHMdXDr-docSsx8WMto7_5yJL1kL3bsPXxezL8Or3r+WVdqQ@mail.gmail.com>
 References: <1485442422-18259-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1485442449-18300-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1485442460-18339-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1485442449-18300-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <1485442460-18339-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
@@ -17,7 +17,14 @@ On Thu, Jan 26, 2017 at 3:54 PM, Vladimir Barinov
 <vladimir.barinov@cogentembedded.com> wrote:
 > From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 >
-> This supports I2C2 bus on M3ULCB board
+> This patch updates memory region:
+>
+>   - After changes, the new map of the m3ulcb board on R8A7796 SoC
+>     Bank0: 1GiB RAM : 0x000048000000 -> 0x0007fffffff
+>     Bank1: 1GiB RAM : 0x000600000000 -> 0x0063fffffff
+>
+>   - Before changes, the old map looked like this:
+>     Bank0: 1GiB RAM : 0x000048000000 -> 0x0007fffffff
 >
 > Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
