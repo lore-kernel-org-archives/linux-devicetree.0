@@ -1,59 +1,73 @@
-From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: [PATCH v2] EDAC: mpc85xx: Add T2080 l2-cache support
-Date: Thu,  2 Feb 2017 12:16:24 +1300
-Message-ID: <20170201231624.28843-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] drm/msm: remove qcom,
+ gpu-pwrlevels bindings
+Date: Wed, 1 Feb 2017 16:26:44 -0700
+Message-ID: <20170201232643.GA17664@jcrouse-lnx.qualcomm.com>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-2-robdclark@gmail.com>
+ <87vaswh0i9.fsf@eliezer.anholt.net>
+ <CAF6AEGt8mj8S+iv8aHVwyqm3f-5NhzmRv5Ajv5TmJXee5YLxVg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGt8mj8S+iv8aHVwyqm3f-5NhzmRv5Ajv5TmJXee5YLxVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The l2-cache controller on the T2080 SoC has similar capabilities to the
-others already supported by the mpc85xx_edac driver. Add it to the list
-of compatible devices.
-
-Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Acked-by: Johannes Thumshirn <jth-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-This is a resend of a patch that got an ack[1] but didn't seem to get
-picked up.
-
-[1] http://marc.info/?l=linux-edac&m=148042072225488&w=2
-
-Changes since v1:
-- Collect ack from Johannes.
-
- arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 1 +
- drivers/edac/mpc85xx_edac.c                 | 1 +
- 2 files changed, 2 insertions(+)
-
-diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-index c744569a20e1..a97296c64eb2 100644
---- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-@@ -678,5 +678,6 @@
- 		compatible = "fsl,t2080-l2-cache-controller";
- 		reg = <0xc20000 0x40000>;
- 		next-level-cache = <&cpc>;
-+		interrupts = <16 2 1 9>;
- 	};
- };
-diff --git a/drivers/edac/mpc85xx_edac.c b/drivers/edac/mpc85xx_edac.c
-index 8f66cbed70b7..67f7bc3fe5b3 100644
---- a/drivers/edac/mpc85xx_edac.c
-+++ b/drivers/edac/mpc85xx_edac.c
-@@ -629,6 +629,7 @@ static const struct of_device_id mpc85xx_l2_err_of_match[] = {
- 	{ .compatible = "fsl,p1020-l2-cache-controller", },
- 	{ .compatible = "fsl,p1021-l2-cache-controller", },
- 	{ .compatible = "fsl,p2020-l2-cache-controller", },
-+	{ .compatible = "fsl,t2080-l2-cache-controller", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, mpc85xx_l2_err_of_match);
--- 
-2.11.0.24.ge6920cf
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMDE6MzU6NDdQTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IE9uIE1vbiwgSmFuIDMwLCAyMDE3IGF0IDE6MjEgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFu
+aG9sdC5uZXQ+IHdyb3RlOgo+ID4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0
+ZXM6Cj4gPgo+ID4+IFRoZSBwbGFuIGlzIHRvIHVzZSB0aGUgT1BQIGJpbmRpbmdzLiAgRm9yIG5v
+dywgcmVtb3ZlIHRoZSBkb2N1bWVudGF0aW9uCj4gPj4gZm9yIHFjb20sZ3B1LXB3cmxldmVscywg
+YW5kIG1ha2UgdGhlIGRyaXZlciBmYWxsIGJhY2sgdG8gYSBzYWZlIGxvdwo+ID4+IGNsb2NrIGlm
+IHRoZSBub2RlIGlzIG5vdCBwcmVzZW50Lgo+ID4+Cj4gPj4gTm90ZSB0aGF0IG5vIHVwc3RyZWFt
+IGR0YiB1c2UgdGhpcyBub2RlLiAgRm9yIG5vdyB3ZSBrZWVwIGNvbXBhdGliaWxpdHkKPiA+PiB3
+aXRoIHRoaXMgbm9kZSB0byBhdm9pZCBicmVha2luZyBjb21wYXRpYmlsaXR5IHdpdGggZG93bnN0
+cmVhbSBhbmRyb2lkCj4gPj4gZHQgZmlsZXMuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSb2Ig
+Q2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gPgo+ID4gV2lsbCB3ZSBuZWVkIHRoZSBidXMg
+ZnJlcXVlbmN5IGtub2JzIHRoYXQgSSBzZWUgaW4gdGhlIG9sZCBwd3JsZXZlbHMKPiA+IG5vZGU/
+ICBJZiBzbywgd2hhdCB3b3VsZCB0aGUgcGxhbiBiZSBmb3IgZG9pbmcgdGhhdCB3aXRoaW4gT1BQ
+Pwo+IAo+IFNvLCB0aGF0IEkgdGhpbmsgaXMgb25lIG9mIHRoZSBvcGVuIHF1ZXN0aW9ucy4gIEpv
+cmRhbiBrbm93cyB0aGlzCj4gc3R1ZmYgYSBsb3QgYmV0dGVyIHRoYW4gSSwgYnV0IG15IHVuZGVy
+c3RhbmRpbmcgaXMgdGhhdCBidXMgYW5kIGNsawo+IHNjYWxlICpiYXNpY2FsbHkqIGluZGVwZW5k
+ZW50bHksIGV4Y2VwdCB0aGF0IGEgZ2l2ZW4gZ3B1IGNsayB3ZSB3YW50IGEKPiBkaWZmZXJlbnQg
+bWluaW11bSBidXMgY2xrLgo+IAo+IChJJ20gbm90IHN1cmUgaWYgdGhhdCBpcyBhIGZ1bmN0aW9u
+YWwgcmVxdWlyZW1lbnQsIG9yIGp1c3Qgd2hhdCBxY29tCj4gYXJyaXZlZCBhdCBhZnRlciBwZXJm
+b3JtYW5jZSB0dW5pbmcuLikKPiAKPiBUaGVyZSBpcyBzb21lIHdvcmsgb25nb2luZyB0byBnZXQg
+c29tZSBzb3J0IG9mIHVwc3RyZWFtIGJ1cyBzY2FsaW5nCj4gc2NhbGluZywgYWx0aG91Z2ggSSdt
+IG5vdCByZWFsbHkgc3VyZSB5ZXQgd2hhdCB0aGUgYmluZGluZ3MgZm9yIHRoaXMKPiB3b3VsZCBs
+b29rIGxpa2UuCj4gCj4gU28gYmFzaWNhbGx5IHNob3J0IGFuc3dlciBpcyAiSSBkb24ndCBrbm93
+Li4gdGhlcmUgYXJlIHRvbyBtYW55IG9wZW4KPiBxdWVzdGlvbnMiLiAgTWF5YmUgaW4gdGhlIGVu
+ZCB3ZSByZS1pbnRyb2R1Y2UgcWNvbSxncHUtcHdybGV2ZWxzLiAgQnV0Cj4gSSB0aGluayBmb3Ig
+bm93IHRoZSBhcHByb2FjaCBvZiBub3QgZG9jdW1lbnRpbmcgaXQgYW5kIGhhdmUgc2FmZS9zbG93
+Cj4gY2xrIGZhbGxiYWNrIGluIHRoZSBkcml2ZXIgaXMgYSByZWFzb25hYmxlIHdheSB0byBtb3Zl
+IGZvcndhcmQgd2l0aAo+IGdldHRpbmcgc29tZSBiYXNpYyBncHUgbm9kZXMgaW50byB1cHN0cmVh
+bSBkdHMgZmlsZXMuCgpSb2IgaGFzIGl0IHJpZ2h0LiAgT24gYSBmdWxseSBvcHRpbWl6ZWQgcGxh
+dGZvcm0gdGhlIGJ1cyBkb2VzIHNjYWxlCmluZGVwZW5kZW50bHkgZnJvbSB0aGUgR1BVIGJ1dCB3
+aGVuIHdlIHN3aXRjaCBHUFUgbGV2ZWxzIHVwIHdlIG5lZWQgdG8KaW1tZWRpYXRlbHkga2ljayB0
+aGUgYnVzIHRvIGEgbmV3IGJhc2VsaW5lIGxldmVsIG90aGVyd2lzZSBpdCB1bmRlcnJ1bnMuCgpF
+dmVudHVhbGx5IHNvbWVib2R5IHdpbGwgaGF2ZSB0byBmaWd1cmUgb3V0IGhvdyB0byBtYWtlIE9Q
+UCB3b3JrIHdpdGggYm90aApkZXZpY2UgYW5kIGJ1cyBmcmVxdWVuY3kuIFBlcmhhcHMgdGhhdCB3
+aWxsIGhhcHBlbiBieSB0aGUgdGltZSB1c2VmdWwgYnVzCnNjYWxpbmcgaGl0cyB0aGUga2VybmVs
+LCBvdGhlcndpc2Ugd2Ugd2lsbCBoYXZlIHRvIHN1ZmZlciBhbG9uZyB3aXRoIHR3byB0YWJsZXMK
+YW5kIGEgY2xvc2VyIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBHUFUgZHJpdmVyIGFuZCB0aGUg
+ZGV2ZnJlcSBnb3Zlcm5vciB0aGFuCmFueSBvZiB1cyBhcmUgY29tZm9ydGFibGUgd2l0aC4gTHVj
+a2lseSBmb3IgdGhpcyBkaXNjdXNzaW9uIHRoYXQgc29tZWRheSBpcyBpbgp0aGUgZnV0dXJlIGFu
+ZCB3ZSBjYW4gZm9jdXMgb24gZG9pbmcgdGhlIGZycWV1ZW5jeSByaWdodC4KCkpvcmRhbgoKLS0g
+ClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2Rl
+IEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8g
+bWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
