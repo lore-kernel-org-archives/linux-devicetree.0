@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 07/18] drivers/fsi: Add FSI crc calculators to library
-Date: Wed,  1 Feb 2017 10:53:47 -0600
-Message-ID: <20170201165358.45415-8-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v3 09/18] drivers/fsi: Implement slave initialisation
+Date: Wed,  1 Feb 2017 10:53:49 -0600
+Message-ID: <20170201165358.45415-10-cbostic@linux.vnet.ibm.com>
 References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170201165358.45415-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
@@ -12,111 +12,96 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 
-Add some helpers for the crc checks for the slave configuration table.
-This works 4-bits-at-a-time, using a simple table approach.
-
-We will need this in the FSI core code, as well as any master
-implementations that need to calculate CRCs in software.
+Create fsi_slave devices during the master scan.
 
 Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 ---
- include/linux/crc-fsi.h | 29 +++++++++++++++++++++++++++++
- lib/Makefile            |  1 +
- lib/crc-fsi.c           | 39 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 69 insertions(+)
- create mode 100644 include/linux/crc-fsi.h
- create mode 100644 lib/crc-fsi.c
+ drivers/fsi/fsi-core.c | 56 ++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 54 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/crc-fsi.h b/include/linux/crc-fsi.h
-new file mode 100644
-index 0000000..e96d2f0
---- /dev/null
-+++ b/include/linux/crc-fsi.h
-@@ -0,0 +1,29 @@
-+/*
-+ * FSI CRC calculator
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ *
-+ * Implements the standard FSI CRC:
-+ *
-+ *   Width 1 - 32
-+ *   Poly  0x0017 (x^4 + x^2 + x^1 + x^0)
-+ */
-+
-+#ifndef CRC_FSI_H
-+#define CRC_FSI_H
-+
-+#include <linux/types.h>
-+
-+uint8_t crc_fsi(uint8_t c, uint64_t x, int bits);
-+
-+#endif /* CRC_FSI_H */
-diff --git a/lib/Makefile b/lib/Makefile
-index 50144a3..c840628 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -230,3 +230,4 @@ obj-$(CONFIG_UBSAN) += ubsan.o
- UBSAN_SANITIZE_ubsan.o := n
- 
- obj-$(CONFIG_SBITMAP) += sbitmap.o
-+obj-$(CONFIG_FSI) += crc-fsi.o
-diff --git a/lib/crc-fsi.c b/lib/crc-fsi.c
-new file mode 100644
-index 0000000..55cfe9d
---- /dev/null
-+++ b/lib/crc-fsi.c
-@@ -0,0 +1,39 @@
-+/*
-+ * FSI CRC calculator
-+ *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/types.h>
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 5f9f7a9..931bcba 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -17,10 +17,15 @@
+ #include <linux/fsi.h>
+ #include <linux/module.h>
+ #include <linux/idr.h>
 +#include <linux/crc-fsi.h>
++#include <linux/slab.h>
+ 
+ #include "fsi-master.h"
+ 
+ #define FSI_N_SLAVES	4
++#define FSI_SLAVE_CONF_CRC_SHIFT        4
++#define FSI_SLAVE_CONF_CRC_MASK         0x0000000f
++#define FSI_SLAVE_CONF_DATA_BITS        28
+ 
+ static DEFINE_IDA(master_ida);
+ 
+@@ -34,12 +39,59 @@ struct fsi_slave {
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ 
+ /* FSI slave support */
 +
-+/* crc helpers */
-+static const uint8_t crc_fsi_tab[] = {
-+	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
-+	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
-+};
-+
-+uint8_t crc_fsi(uint8_t c, uint64_t x, int bits)
++static void fsi_slave_release(struct device *dev)
 +{
-+	int i;
++	struct fsi_slave *slave = to_fsi_slave(dev);
 +
-+	/* Align to 4-bits */
-+	bits = (bits + 3) & ~0x3;
-+
-+	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
-+	for (i = bits; i >= 0; i -= 4)
-+		c = crc_fsi_tab[c ^ ((x >> i) & 0xf)];
-+
-+	return c;
++	kfree(slave);
 +}
-+EXPORT_SYMBOL_GPL(crc_fsi);
++
+ static int fsi_slave_init(struct fsi_master *master,
+ 		int link, uint8_t slave_id)
+ {
+-	/* todo: initialise slave device, perform engine scan */
++	struct fsi_slave *slave;
++	uint32_t chip_id;
++	int rc;
++	uint8_t crc;
++
++	rc = master->read(master, link, slave_id, 0, &chip_id, sizeof(chip_id));
++	if (rc) {
++		dev_warn(master->dev, "can't read slave %02x:%02x: %d\n",
++				link, slave_id, rc);
++		return -ENODEV;
++	}
++	crc = crc_fsi(0, chip_id >> FSI_SLAVE_CONF_CRC_SHIFT,
++			FSI_SLAVE_CONF_DATA_BITS);
++	if (crc != (chip_id & FSI_SLAVE_CONF_CRC_MASK)) {
++		dev_warn(master->dev, "slave %02x:%02x invalid chip id CRC!\n",
++				link, slave_id);
++		return -EIO;
++	}
++
++	pr_debug("fsi: found chip %08x at %02x:%02x:%02x\n",
++			master->idx, chip_id, link, slave_id);
++
++	/* we can communicate with a slave; create devices and scan */
++	slave = kzalloc(sizeof(*slave), GFP_KERNEL);
++	if (!slave)
++		return -ENOMEM;
++
++	slave->master = master;
++	slave->id = slave_id;
++	slave->dev.parent = master->dev;
++	slave->dev.release = fsi_slave_release;
++
++	dev_set_name(&slave->dev, "slave@%02x:%02x", link, slave_id);
++	rc = device_register(&slave->dev);
++	if (rc < 0) {
++		dev_warn(master->dev, "failed to create slave device: %d\n",
++				rc);
++		put_device(&slave->dev);
++		return rc;
++	}
+ 
+-	return -ENODEV;
++	return rc;
+ }
+ 
+ /* FSI master support */
 -- 
 1.8.2.2
 
