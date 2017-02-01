@@ -1,109 +1,52 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv2 05/16] ov7670: document device tree bindings
-Date: Wed, 1 Feb 2017 10:40:25 -0600
-Message-ID: <20170201164025.hiayfe6ku2sk4d2m@rob-hp-laptop>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
- <20170130140628.18088-6-hverkuil@xs4all.nl>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH 0/8] ADD STM32H743 MCU and STM32H743i-Eval board supports
+Date: Wed, 1 Feb 2017 17:47:43 +0100
+Message-ID: <83444163-8b25-b2e9-205a-188f29df0d24@st.com>
+References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdb35JdbE5bPMU_NeVehnA-qs3aAxCgE0==L=Z9vmq1yWQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170130140628.18088-6-hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdb35JdbE5bPMU_NeVehnA-qs3aAxCgE0==L=Z9vmq1yWQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 03:06:17PM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> Add binding documentation and add that file to the MAINTAINERS entry.
+Hi Linus
 
-This should come before the driver support.
+On 02/01/2017 04:16 PM, Linus Walleij wrote:
+> On Tue, Jan 31, 2017 at 2:14 PM, Alexandre TORGUE
+> <alexandre.torgue@st.com> wrote:
+>
+>> This series adds basic support for STM32H743 MCU and stm32h743i-eval board.
+>> With it, you can boot stm32h743i-eval board successfully.
+>
+> Patch 1 & 2 look fine to me.
+>
+> Shall I just apply them and offer them on an immutable branch based
+> on v4.10 so you can pull that into ARM SoC if you want to get this in
+> for v4.11?
 
-> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-> ---
->  .../devicetree/bindings/media/i2c/ov7670.txt       | 44 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> new file mode 100644
-> index 0000000..a014694
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
-> @@ -0,0 +1,44 @@
-> +* Omnivision OV7670 CMOS sensor
-> +
-> +The Omnivision OV7670 sensor supports multiple resolutions output, such as
-> +CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
-> +output formats.
-> +
-> +Required Properties:
-> +- compatible: should be "ovti,ov7670"
-> +- clocks: reference to the xclk input clock.
-> +- clock-names: should be "xclk".
-> +
-> +Optional Properties:
-> +- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
+Thanks, but I think it is a bit late for this cycle. Indeed I'm close to 
+send a second round for STM32 DT, but I don't plan to add STM32H7 
+support. I prefere to let machine & DT patches in review.
+Anyway, I 'll be happy if you take pinctrl & bindings parts in this 
+cycle :).
 
-We've somewhat standardized naming for reset gpios to "reset-gpios" even 
-if that doesn't quite match the pin name.
+Regards
+Alex
 
-> +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
-
-Same here with "powerdown-gpios".
-
-> +
-> +The device node must contain one 'port' child node for its digital output
-> +video port, in accordance with the video interface bindings defined in
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
-> +
-> +Example:
-> +
-> +	i2c1: i2c@f0018000 {
-> +		status = "okay";
-> +
-> +		ov7670: camera@0x21 {
-
-Drop the '0x'.
-
-> +			compatible = "ovti,ov7670";
-> +			reg = <0x21>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +			resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-> +			pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-> +			clocks = <&pck0>;
-> +			clock-names = "xclk";
-> +			assigned-clocks = <&pck0>;
-> +			assigned-clock-rates = <25000000>;
-> +
-> +			port {
-> +				ov7670_0: endpoint {
-> +					remote-endpoint = <&isi_0>;
-> +					bus-width = <8>;
-> +				};
-> +			};
-> +		};
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cfff2c9..67df205 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9101,6 +9101,7 @@ L:	linux-media@vger.kernel.org
->  T:	git git://linuxtv.org/media_tree.git
->  S:	Maintained
->  F:	drivers/media/i2c/ov7670.c
-> +F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
->  
->  ONENAND FLASH DRIVER
->  M:	Kyungmin Park <kyungmin.park@samsung.com>
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Yours,
+> Linus Walleij
+>
