@@ -1,45 +1,78 @@
-From: Sean Young <sean-hENCXIMQXOg@public.gmane.org>
-Subject: Re: [PATCH v2] Documentation: devicetree: meson-ir:
- "linux,rc-map-name" is supported
-Date: Wed, 1 Feb 2017 22:49:57 +0000
-Message-ID: <20170201224957.GA3631@gofer.mess.org>
-References: <20170131212112.5582-1-martin.blumenstingl@googlemail.com>
- <20170201221415.22794-1-martin.blumenstingl@googlemail.com>
- <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ@mail.gmail.com>
+From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
+Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module
+ table
+Date: Wed, 1 Feb 2017 19:50:16 -0300
+Message-ID: <8810e197-f071-5a3d-c376-8c365fb60640@osg.samsung.com>
+References: <cover.1482936802.git.hns@goldelico.com>
+ <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com>
+ <20170128193558.GC38136@dtor-ws>
+ <F39E49DD-45AF-4491-A26E-F3A9D86F30F6@goldelico.com>
+ <20170129180108.GA10743@dtor-ws>
+ <A169CC1E-9EC9-43CA-887B-1382F1903CE1@goldelico.com>
+ <B64DBFB0-62E8-4B4C-957F-C90C33BEF693@goldelico.com>
+ <cc403765-9b88-1424-a77f-36e775fbd5a0@osg.samsung.com>
+ <20170201222832.GA25554@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170201222832.GA25554@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 11:26:14PM +0100, Martin Blumenstingl wrote:
-> On Wed, Feb 1, 2017 at 11:14 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> > The driver already parses the "linux,rc-map-name" property. Add this
-> > information to the documentation so .dts maintainers don't have to look
-> > it up in the source-code.
-> >
-> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> > Changes since v1:
-> > - removed character which shows up as whitespace from subject
-> I have verified that I really sent this without a whitespace (I'm
-> using git send-email, so the patch is not mangled by some webmailer) -
-> unfortunately it seems to appear again (maybe one of the receiving
-> mail-servers or the mailing-list software does something weird here).
+Hello Dmitry,
+
+On 02/01/2017 07:28 PM, Dmitry Torokhov wrote:
+
+[snip]
+
+>>
+>> As said, changing the core is trivial. A RFC patch is [0].
+>>
+>> The problem is how to make sure that this change won't cause regressions
+>> in existing drivers.
 > 
-> @Mauro: can you handle this when you merge the patch - or do you want
-> me to push this to some git repo from which you can pull?
+> If the concern with drivers having I2C or SPI device table, but not OF
+> device table, then I think cocinnelle could be used to scan and find
+> them.
+>
 
-I'll apply it to my rc-tree and fix up any problems.
+I don't think coccinelle is a good fit for this since you may have to look if
+a DTS is using in its compatible string a device that's in an SPI table or if
+a DT binding documents this device as a compatible string.
 
+But yes I get your point and I agree that is just a matter of having a script
+to look for these. Someone should have the time to write it though :)
 
-Sean
+>>
+>> There was particularly tricky for the spi-nor driver, it doesn't help that
+>> a lot of DT are using undocumented compatible strings (sometimes with no
+>> vendor prefix). You can see the discussion here [1].
+>>
+>> In the same thread Mark Brown said that it wasn't that bad to have the
+>> information in the OF device ID table duplicated in a SPI device table.
+>>
+>> Certainly isn't the best approach but IMHO is better than the module not
+>> loading.
+> 
+> You can always build the module into kernel or load it by hand if it is
+> that important. Module autoloading does not work anyway if you have
+> several compatible strings, like
+> 
+> 	compatible = "vendor,new-device", "vendor,generic-device";
+> 
+> Thanks.
+>
+
+Agree.
+
+Best regards,
+-- 
+Javier Martinez Canillas
+Open Source Group
+Samsung Research America
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
