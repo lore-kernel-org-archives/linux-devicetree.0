@@ -1,73 +1,57 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] drm/msm: remove qcom,
- gpu-pwrlevels bindings
-Date: Wed, 1 Feb 2017 16:26:44 -0700
-Message-ID: <20170201232643.GA17664@jcrouse-lnx.qualcomm.com>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-2-robdclark@gmail.com>
- <87vaswh0i9.fsf@eliezer.anholt.net>
- <CAF6AEGt8mj8S+iv8aHVwyqm3f-5NhzmRv5Ajv5TmJXee5YLxVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGt8mj8S+iv8aHVwyqm3f-5NhzmRv5Ajv5TmJXee5YLxVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Markus Mayer <code@mmayer.net>
+Subject: [PATCH v6 0/2] cpufreq: brcmstb-cpufreq: CPUfreq driver for older Broadcom STB SoCs
+Date: Wed,  1 Feb 2017 15:26:36 -0800
+Message-ID: <20170201232638.74396-1-code@mmayer.net>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>
+Cc: Markus Mayer <mmayer@broadcom.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux Clock List <linux-clk@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMDE6MzU6NDdQTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
-Ogo+IE9uIE1vbiwgSmFuIDMwLCAyMDE3IGF0IDE6MjEgUE0sIEVyaWMgQW5ob2x0IDxlcmljQGFu
-aG9sdC5uZXQ+IHdyb3RlOgo+ID4gUm9iIENsYXJrIDxyb2JkY2xhcmtAZ21haWwuY29tPiB3cml0
-ZXM6Cj4gPgo+ID4+IFRoZSBwbGFuIGlzIHRvIHVzZSB0aGUgT1BQIGJpbmRpbmdzLiAgRm9yIG5v
-dywgcmVtb3ZlIHRoZSBkb2N1bWVudGF0aW9uCj4gPj4gZm9yIHFjb20sZ3B1LXB3cmxldmVscywg
-YW5kIG1ha2UgdGhlIGRyaXZlciBmYWxsIGJhY2sgdG8gYSBzYWZlIGxvdwo+ID4+IGNsb2NrIGlm
-IHRoZSBub2RlIGlzIG5vdCBwcmVzZW50Lgo+ID4+Cj4gPj4gTm90ZSB0aGF0IG5vIHVwc3RyZWFt
-IGR0YiB1c2UgdGhpcyBub2RlLiAgRm9yIG5vdyB3ZSBrZWVwIGNvbXBhdGliaWxpdHkKPiA+PiB3
-aXRoIHRoaXMgbm9kZSB0byBhdm9pZCBicmVha2luZyBjb21wYXRpYmlsaXR5IHdpdGggZG93bnN0
-cmVhbSBhbmRyb2lkCj4gPj4gZHQgZmlsZXMuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBSb2Ig
-Q2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gPgo+ID4gV2lsbCB3ZSBuZWVkIHRoZSBidXMg
-ZnJlcXVlbmN5IGtub2JzIHRoYXQgSSBzZWUgaW4gdGhlIG9sZCBwd3JsZXZlbHMKPiA+IG5vZGU/
-ICBJZiBzbywgd2hhdCB3b3VsZCB0aGUgcGxhbiBiZSBmb3IgZG9pbmcgdGhhdCB3aXRoaW4gT1BQ
-Pwo+IAo+IFNvLCB0aGF0IEkgdGhpbmsgaXMgb25lIG9mIHRoZSBvcGVuIHF1ZXN0aW9ucy4gIEpv
-cmRhbiBrbm93cyB0aGlzCj4gc3R1ZmYgYSBsb3QgYmV0dGVyIHRoYW4gSSwgYnV0IG15IHVuZGVy
-c3RhbmRpbmcgaXMgdGhhdCBidXMgYW5kIGNsawo+IHNjYWxlICpiYXNpY2FsbHkqIGluZGVwZW5k
-ZW50bHksIGV4Y2VwdCB0aGF0IGEgZ2l2ZW4gZ3B1IGNsayB3ZSB3YW50IGEKPiBkaWZmZXJlbnQg
-bWluaW11bSBidXMgY2xrLgo+IAo+IChJJ20gbm90IHN1cmUgaWYgdGhhdCBpcyBhIGZ1bmN0aW9u
-YWwgcmVxdWlyZW1lbnQsIG9yIGp1c3Qgd2hhdCBxY29tCj4gYXJyaXZlZCBhdCBhZnRlciBwZXJm
-b3JtYW5jZSB0dW5pbmcuLikKPiAKPiBUaGVyZSBpcyBzb21lIHdvcmsgb25nb2luZyB0byBnZXQg
-c29tZSBzb3J0IG9mIHVwc3RyZWFtIGJ1cyBzY2FsaW5nCj4gc2NhbGluZywgYWx0aG91Z2ggSSdt
-IG5vdCByZWFsbHkgc3VyZSB5ZXQgd2hhdCB0aGUgYmluZGluZ3MgZm9yIHRoaXMKPiB3b3VsZCBs
-b29rIGxpa2UuCj4gCj4gU28gYmFzaWNhbGx5IHNob3J0IGFuc3dlciBpcyAiSSBkb24ndCBrbm93
-Li4gdGhlcmUgYXJlIHRvbyBtYW55IG9wZW4KPiBxdWVzdGlvbnMiLiAgTWF5YmUgaW4gdGhlIGVu
-ZCB3ZSByZS1pbnRyb2R1Y2UgcWNvbSxncHUtcHdybGV2ZWxzLiAgQnV0Cj4gSSB0aGluayBmb3Ig
-bm93IHRoZSBhcHByb2FjaCBvZiBub3QgZG9jdW1lbnRpbmcgaXQgYW5kIGhhdmUgc2FmZS9zbG93
-Cj4gY2xrIGZhbGxiYWNrIGluIHRoZSBkcml2ZXIgaXMgYSByZWFzb25hYmxlIHdheSB0byBtb3Zl
-IGZvcndhcmQgd2l0aAo+IGdldHRpbmcgc29tZSBiYXNpYyBncHUgbm9kZXMgaW50byB1cHN0cmVh
-bSBkdHMgZmlsZXMuCgpSb2IgaGFzIGl0IHJpZ2h0LiAgT24gYSBmdWxseSBvcHRpbWl6ZWQgcGxh
-dGZvcm0gdGhlIGJ1cyBkb2VzIHNjYWxlCmluZGVwZW5kZW50bHkgZnJvbSB0aGUgR1BVIGJ1dCB3
-aGVuIHdlIHN3aXRjaCBHUFUgbGV2ZWxzIHVwIHdlIG5lZWQgdG8KaW1tZWRpYXRlbHkga2ljayB0
-aGUgYnVzIHRvIGEgbmV3IGJhc2VsaW5lIGxldmVsIG90aGVyd2lzZSBpdCB1bmRlcnJ1bnMuCgpF
-dmVudHVhbGx5IHNvbWVib2R5IHdpbGwgaGF2ZSB0byBmaWd1cmUgb3V0IGhvdyB0byBtYWtlIE9Q
-UCB3b3JrIHdpdGggYm90aApkZXZpY2UgYW5kIGJ1cyBmcmVxdWVuY3kuIFBlcmhhcHMgdGhhdCB3
-aWxsIGhhcHBlbiBieSB0aGUgdGltZSB1c2VmdWwgYnVzCnNjYWxpbmcgaGl0cyB0aGUga2VybmVs
-LCBvdGhlcndpc2Ugd2Ugd2lsbCBoYXZlIHRvIHN1ZmZlciBhbG9uZyB3aXRoIHR3byB0YWJsZXMK
-YW5kIGEgY2xvc2VyIHJlbGF0aW9uc2hpcCBiZXR3ZWVuIHRoZSBHUFUgZHJpdmVyIGFuZCB0aGUg
-ZGV2ZnJlcSBnb3Zlcm5vciB0aGFuCmFueSBvZiB1cyBhcmUgY29tZm9ydGFibGUgd2l0aC4gTHVj
-a2lseSBmb3IgdGhpcyBkaXNjdXNzaW9uIHRoYXQgc29tZWRheSBpcyBpbgp0aGUgZnV0dXJlIGFu
-ZCB3ZSBjYW4gZm9jdXMgb24gZG9pbmcgdGhlIGZycWV1ZW5jeSByaWdodC4KCkpvcmRhbgoKLS0g
-ClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2Rl
-IEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8g
-bWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+From: Markus Mayer <mmayer@broadcom.com>
+
+This CPUfreq driver provides basic frequency scaling for older Broadcom
+STB SoCs that do not use AVS firmware with DVFS support. There is no
+support for voltage scaling.
+
+v5 of this patch can be found at: https://lkml.org/lkml/2017/1/18/1093
+
+Changes since v5:
+  - Removed DT properties div-table and div-shift-width (Stephen Boyd)
+  - Renamed node from cpu-clk-div@... to clock-controller@... (Rob Herring)
+  - No code changes
+
+v4 of this patch can be found at: https://lkml.org/lkml/2016/12/20/670
+
+Changes since v4:
+  - Simplified (and hopefully clarified) binding document
+  - No code changes
+
+v3 of this patch can be found at: https://lkml.org/lkml/2016/11/22/747
+
+Changes since v3:
+  - added binding document
+  - got rid of calls to __clk_lookup(), using devm_clk_get() instead
+  - re-worked clock lookup code a bit, along with switching to devm_clk_get()
+  - get_frequencies() became a void function, removing the need for some
+    error checking
+  - fixed CONFIG_ARM_BRCM_AVS_CPUFREQ typo
+  - fixed MODULE_DEVICE_TABLE declaration
+
+
+Markus Mayer (2):
+  dt-bindings: brcm: clocks: add binding for brcmstb-cpu-clk-div
+  cpufreq: brcmstb-cpufreq: CPUfreq driver for older Broadcom STB SoCs
+
+ .../bindings/clock/brcm,brcmstb-cpu-clk-div.txt    |  22 ++
+ MAINTAINERS                                        |   1 +
+ drivers/cpufreq/Kconfig.arm                        |  12 +
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/brcmstb-cpufreq.c                  | 377 +++++++++++++++++++++
+ 5 files changed, 413 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
+ create mode 100644 drivers/cpufreq/brcmstb-cpufreq.c
+
+-- 
+2.7.4
+
