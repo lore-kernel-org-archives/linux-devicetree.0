@@ -1,148 +1,124 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v3 00/18] FSI device driver introduction
-Date: Wed,  1 Feb 2017 11:01:29 -0600
-Message-ID: <20170201170129.45478-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
+Date: Wed, 1 Feb 2017 11:09:35 -0600
+Message-ID: <20170201170935.tqwbxc2mhkvngyyk@rob-hp-laptop>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-3-robdclark@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170130164921.20744-3-robdclark@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Clark <robdclark@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
-driver. FSI is a high fan out serial bus consisting of a clock and a serial
-data line capable of running at speeds up to 166 MHz.
-
-This set provides the basic framework to add FSI extensions to the
-Linux bus and device models. Master specific implementations are
-defined to utilize the core FSI function.
-
-In Linux, we have a core FSI "bus type", along with drivers for FSI
-masters and engines.
-
-The FSI master drivers expose a read/write interface to the bus address
-space. The master drivers are under drivers/fsi/fsi-master-*.c.
-
-The core handles probing and discovery of slaves and slave
-engines, using those read/write interfaces. It is responsible for
-creating the endpoint Linux devices corresponding to the discovered
-engines on each slave.
-
-Slave engines are identified by an 'engine' type, and an optional
-version. Engine, a.k.a. client, drivers are matched and bound to these
-engines during discovery.
-
-This patch set does not include extended FSI function such as:
-    *  Hub master support
-    *  Cascaded master support
-    *  Application layer hot plug notification
-    *  Application layer FSI bus status interface
-
-Common FSI terminology:
-
-* Master
-    Controller of the FSI bus.  Only the master is allowed to control the
-    clock line and is the initiator of all transactions on a bus.
-
-* Slave
-    The receiver or target of a master initiated transaction.  The slave
-    cannot initiate communications on a bus and must respond to any
-    master requests for data.
-
-* CFAM
-    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
-    ASIC residing in any device requiring FSI communications. CFAMs
-    consist of an array of hardware 'engines' used for various purposes.
-    I2C masters, UARTs, General Purpose IO hardware are common types of
-    these engines.
-
-* Configuration Space / Table
-    A table contained at the beginning of each CFAM address space.
-    This table lists information such as the CFAM's ID, which engine types
-    and versions it has available, as well as its addressing range.
-
-* FSI Engine driver
-    A device driver that registers with the FSI core so that it can access
-    devices it owns on an FSI bus.
-
-Chris Bostic (8):
-  drivers/fsi: Kick off master scan via sysfs
-  drivers/fsi: Set up links for slave communication
-  drivers/fsi: Set slave SMODE to init communication
-  drivers/fsi: Remove all scanned devices during master unregister
-  drivers/fsi: Add FSI bus documentation
-  drivers/fsi: Add documentation for GPIO based FSI master
-  drivers/fsi: Document FSI master sysfs files in ABI
-  drivers/fsi: Add GPIO based FSI master
-
-Changes for v3:
-    - Patch set contained an invalid 18/18 test patch not
-      meant for community review, corrected.
-
-Changes for v2:
-    - Change from atomic global for master number to ida simple
-      interface.
-    - Add valid pointer checks on register and unregister utils.
-    - Move CRC calculation utilities out of driver to lib path.
-    - Clean up white space issues.
-    - Remove added list management of master devices and use
-      instead the device_for_each_child method available in the
-      bus.
-    - Add new patch to document FSI bus functionality.
-    - Add new patch documenting FSI gpio master.
-    - Rearrage patch set to have documentation earlier than code
-      implementing it.
-    - Document all compatible strings used in device tree bindings.
-    - Elaborate documentation definition of FSI GPIO master.
-    - Describe in more detail what each GPIO FSI master pin is for.
-    - Re-order compatible strings in example binding so that most
-      specific device comes first.
-    - Indicate proper activation order of all FSI GPIO master pins.
-    - Fix an unmatched '>' bracket in the example for binding.
-    - Bracket each element of the example bindings individually.
-    - Add new patch documenting sysfs-bus-fsi attributes.
-    - Merge FSI GPIO master init into probe function.
-    - Set pin initial values at time of pin request.
-    - Assign value of master->master.dev at probe time.
-    - Use get_optional interface for all optional GPIO pins.
-
-Jeremy Kerr (10):
-  drivers/fsi: Add empty fsi bus definitions
-  drivers/fsi: Add device & driver definitions
-  drivers/fsi: add driver to device matches
-  drivers/fsi: Add fsi master definition
-  drivers/fsi: Add slave definition
-  drivers/fsi: Add empty master scan
-  drivers/fsi: Add FSI crc calculators to library
-  drivers/fsi: Implement slave initialisation
-  drivers/fsi: scan slaves & register devices
-  drivers/fsi: Add device read/write/peek functions
-
- Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
- .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
- Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
- drivers/Kconfig                                    |   2 +
- drivers/Makefile                                   |   1 +
- drivers/fsi/Kconfig                                |  23 +
- drivers/fsi/Makefile                               |   3 +
- drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
- drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
- drivers/fsi/fsi-master.h                           |  39 ++
- include/linux/crc-fsi.h                            |  29 ++
- include/linux/fsi.h                                |  60 +++
- lib/Makefile                                       |   1 +
- lib/crc-fsi.c                                      |  39 ++
- 14 files changed, 1352 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
- create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
- create mode 100644 drivers/fsi/Kconfig
- create mode 100644 drivers/fsi/Makefile
- create mode 100644 drivers/fsi/fsi-core.c
- create mode 100644 drivers/fsi/fsi-master-gpio.c
- create mode 100644 drivers/fsi/fsi-master.h
- create mode 100644 include/linux/crc-fsi.h
- create mode 100644 include/linux/fsi.h
- create mode 100644 lib/crc-fsi.c
-
--- 
-1.8.2.2
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTE6NDk6MTlBTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IFRoZSBvcmlnaW5hbCB3YXkgd2UgZGV0ZXJtaW5lZCB0aGUgZ3B1IHZlcnNpb24gd2FzIGJh
+c2VkIG9uIGRvd25zdHJlYW0KPiBiaW5kaW5ncyBmcm9tIGFuZHJvaWQga2VybmVsLiAgQSBjbGVh
+bmVyIHdheSBpcyB0byBnZXQgdGhlIHZlcnNpb24gZnJvbQo+IHRoZSBjb21wYXRpYmxlIHN0cmlu
+Zy4KPiAKPiBOb3RlIHRoYXQgbm8gdXBzdHJlYW0gZHRiIHVzZXMgdGhlc2UgYmluZGluZ3MuICBC
+dXQgdGhlIGNvZGUgc3RpbGwKPiBzdXBwb3J0cyBmYWxsaW5nIGJhY2sgdG8gdGhlIGxlZ2FjeSBi
+aW5kaW5ncyAod2l0aCBhIHdhcm5pbmcpLCBzbyB0aGF0Cj4gd2UgYXJlIHN0aWxsIGNvbXBhdGli
+bGUgd2l0aCB0aGUgZ3B1IGR0IG5vZGUgZnJvbSBhbmRyb2lkIGRldmljZQo+IGtlcm5lbHMuCgpG
+aW5lIGZvciBvbmUgZHJpdmVyL2JpbmRpbmcsIGJ1dCB3ZSB3b3VsZG4ndCByZWFsbHkgd2FudCB0
+byBkbyBjYXJyeSAKZG93bnN0cmVhbSBjb21wYXRpYmlsaXR5IGZvciBldmVyeXRoaW5nLgoKPiAK
+PiBTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gLS0tCj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgICAgICAgIHwgMTEg
+KysrLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19kZXZpY2UuYyAgICAg
+ICAgIHwgNDMgKysrKysrKysrKysrKysrKysrKysrLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL21z
+bV9kcnYuYyAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKPiAgMyBmaWxlcyBjaGFuZ2VkLCA0
+OSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCBiL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gaW5kZXggNzQ3
+Yjk4NC4uN2FjMzA1MiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gQEAgLTEsNyArMSwxMSBAQAo+ICBRdWFs
+Y29tbSBhZHJlbm8vc25hcGRyYWdvbiBHUFUKPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+LS0gY29tcGF0aWJsZTogInFjb20sYWRyZW5vLTN4eCIKPiArLSBjb21wYXRpYmxlOiAicWNvbSxh
+ZHJlbm8tWFlaLlciLCAicWNvbSxhZHJlbm8iCj4gKyAgICBmb3IgZXhhbXBsZTogInFjb20sYWRy
+ZW5vLTMwNi4wIiwgInFjb20sYWRyZW5vIgo+ICsgIE5vdGUgdGhhdCB5b3UgbmVlZCB0byBsaXN0
+IHRoZSBsZXNzIHNwZWNpZmljICJxY29tLGFkcmVubyIgKHNpbmNlIHRoaXMKPiArICBpcyB3aGF0
+IHRoZSBkZXZpY2UgaXMgbWF0Y2hlZCBvbiksIGluIGFkZGl0aW9uIHRvIHRoZSBtb3JlIHNwZWNp
+ZmljCj4gKyAgd2l0aCB0aGUgY2hpcC1pZC4KPiAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVz
+cyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICAtIGludGVycnVw
+dHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGdwdS4KPiAgLSBjbG9ja3M6IGRldmlj
+ZSBjbG9ja3MKPiBAQCAtMTAsOCArMTQsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICog
+ImNvcmVfY2xrIgo+ICAgICogImlmYWNlX2NsayIKPiAgICAqICJtZW1faWZhY2VfY2xrIgo+IC0t
+IHFjb20sY2hpcGlkOiBncHUgY2hpcC1pZC4gIE5vdGUgdGhpcyBtYXkgYmVjb21lIG9wdGlvbmFs
+IGZvciBmdXR1cmUKPiAtICBkZXZpY2VzIGlmIHdlIGNhbiByZWxpYWJseSByZWFkIHRoZSBjaGlw
+aWQgZnJvbSBodwo+ICAKPiAgRXhhbXBsZToKPiAgCj4gQEAgLTE5LDcgKzIxLDcgQEAgRXhhbXBs
+ZToKPiAgCS4uLgo+ICAKPiAgCWdwdTogcWNvbSxrZ3NsLTNkMEA0MzAwMDAwIHsKPiAtCQljb21w
+YXRpYmxlID0gInFjb20sYWRyZW5vLTN4eCI7Cj4gKwkJY29tcGF0aWJsZSA9ICJxY29tLGFkcmVu
+by0zMjAuMiIsICJxY29tLGFkcmVubyI7Cj4gIAkJcmVnID0gPDB4MDQzMDAwMDAgMHgyMDAwMD47
+Cj4gIAkJcmVnLW5hbWVzID0gImtnc2xfM2QwX3JlZ19tZW1vcnkiOwo+ICAJCWludGVycnVwdHMg
+PSA8R0lDX1NQSSA4MCAwPjsKPiBAQCAtMzIsNiArMzQsNSBAQCBFeGFtcGxlOgo+ICAJCSAgICA8
+Jm1tY2MgR0ZYM0RfQ0xLPiwKPiAgCQkgICAgPCZtbWNjIEdGWDNEX0FIQl9DTEs+LAo+ICAJCSAg
+ICA8Jm1tY2MgTU1TU19JTUVNX0FIQl9DTEs+Owo+IC0JCXFjb20sY2hpcGlkID0gPDB4MDMwMjAx
+MDA+Owo+ICAJfTsKPiAgfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJl
+bm8vYWRyZW5vX2RldmljZS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2Rl
+dmljZS5jCj4gaW5kZXggN2I5MTgxYjIuLmZkYWVmNjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
+cHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
+L21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jCj4gQEAgLTE4OSw2ICsxODksNDYgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCB7Cj4gIAl7ICJxY29tLGdwdS1xdWlyay1mYXVsdC1kZXRlY3QtbWFzayIs
+IEFEUkVOT19RVUlSS19GQVVMVF9ERVRFQ1RfTUFTSyB9LAo+ICB9Owo+ICAKPiArc3RhdGljIGlu
+dCBmaW5kX2NoaXBpZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiAqY2hpcGlkKQo+ICt7Cj4gKwlz
+dHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9mX25vZGU7Cj4gKwlzdHJ1Y3QgcHJvcGVy
+dHkgKnByb3A7Cj4gKwljb25zdCBjaGFyICpjb21wYXQ7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCS8q
+IGZpcnN0IHNlYXJjaCB0aGUgY29tcGF0IHN0cmluZ3MgZm9yIHFjb20sYWRyZW5vLVhZWi5XOiAq
+Lwo+ICsJcHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobm9kZSwgImNvbXBhdGlibGUiLCBOVUxMKTsK
+PiArCWZvciAoY29tcGF0ID0gb2ZfcHJvcF9uZXh0X3N0cmluZyhwcm9wLCBOVUxMKTsgY29tcGF0
+Owo+ICsJICAgICBjb21wYXQgPSBvZl9wcm9wX25leHRfc3RyaW5nKHByb3AsIGNvbXBhdCkpIHsK
+Cm9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZwoKSG93ZXZlciwgeW91IHNwZWNpZnkgaW4gdGhl
+IGJpbmRpbmcgaXQgc2hvdWxkIGJlIHRoZSAxc3Qgc3RyaW5nLCBzbyB5b3UgCnJlYWxseSBkb24n
+dCBuZWVkIGEgbG9vcCBoZXJlIGFuZCBjb3VsZCB1c2UgCm9mX3Byb3BlcnR5X3JlYWRfc3RyaW5n
+X2luZGV4LgoKV2l0aCB0aGF0LAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
+cmc+CgoKPiArCQl1bnNpZ25lZCByZXYsIHBhdGNoOwo+ICsKPiArCQlpZiAoc3NjYW5mKGNvbXBh
+dCwgInFjb20sYWRyZW5vLSV1LiV1IiwgJnJldiwgJnBhdGNoKSAhPSAyKQo+ICsJCQljb250aW51
+ZTsKPiArCj4gKwkJKmNoaXBpZCA9IDA7Cj4gKwkJKmNoaXBpZCB8PSAocmV2IC8gMTAwKSA8PCAy
+NDsgIC8qIGNvcmUgKi8KPiArCQlyZXYgJT0gMTAwOwo+ICsJCSpjaGlwaWQgfD0gKHJldiAvIDEw
+KSA8PCAxNjsgICAvKiBtYWpvciAqLwo+ICsJCXJldiAlPSAxMDsKPiArCQkqY2hpcGlkIHw9IHJl
+diA8PCA4OyAgICAgICAgICAgLyogbWlub3IgKi8KPiArCQkqY2hpcGlkIHw9IHBhdGNoOwo+ICsK
+PiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwkvKiBhbmQgaWYgdGhhdCBmYWlscywgZmFsbCBi
+YWNrIHRvIGxlZ2FjeSAicWNvbSxjaGlwaWQiIHByb3BlcnR5OiAqLwo+ICsJcmV0ID0gb2ZfcHJv
+cGVydHlfcmVhZF91MzIobm9kZSwgInFjb20sY2hpcGlkIiwgY2hpcGlkKTsKPiArCWlmIChyZXQp
+Cj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlkZXZfd2FybihkZXYsICJVc2luZyBsZWdhY3kgcWNv
+bSxjaGlwaWQgYmluZGluZyFcbiIpOwo+ICsJZGV2X3dhcm4oZGV2LCAiVXNlIGNvbXBhdGlibGUg
+cWNvbSxhZHJlbm8tJXUldSV1LiV1IGluc3RlYWQuXG4iLAo+ICsJCQkoKmNoaXBpZCA+PiAyNCkg
+JiAweGZmLCAoKmNoaXBpZCA+PiAxNikgJiAweGZmLAo+ICsJCQkoKmNoaXBpZCA+PiA4KSAmIDB4
+ZmYsICpjaGlwaWQgJiAweGZmKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAgc3RhdGlj
+IGludCBhZHJlbm9fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rl
+ciwgdm9pZCAqZGF0YSkKPiAgewo+ICAJc3RhdGljIHN0cnVjdCBhZHJlbm9fcGxhdGZvcm1fY29u
+ZmlnIGNvbmZpZyA9IHt9Owo+IEBAIC0xOTYsNyArMjM2LDcgQEAgc3RhdGljIGludCBhZHJlbm9f
+YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0
+YSkKPiAgCXUzMiB2YWw7Cj4gIAlpbnQgcmV0LCBpOwo+ICAKPiAtCXJldCA9IG9mX3Byb3BlcnR5
+X3JlYWRfdTMyKG5vZGUsICJxY29tLGNoaXBpZCIsICZ2YWwpOwo+ICsJcmV0ID0gZmluZF9jaGlw
+aWQoZGV2LCAmdmFsKTsKPiAgCWlmIChyZXQpIHsKPiAgCQlkZXZfZXJyKGRldiwgImNvdWxkIG5v
+dCBmaW5kIGNoaXBpZDogJWRcbiIsIHJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiBAQCAtMjY1LDYg
+KzMwNSw3IEBAIHN0YXRpYyBpbnQgYWRyZW5vX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
+ICpwZGV2KQo+ICB9Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkdF9t
+YXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJxY29tLGFkcmVubyIgfSwKPiAgCXsgLmNv
+bXBhdGlibGUgPSAicWNvbSxhZHJlbm8tM3h4IiB9LAo+ICAJLyogZm9yIGJhY2t3YXJkcyBjb21w
+YXQgdy8gZG93bnN0cmVhbSBrZ3NsIERUIGZpbGVzOiAqLwo+ICAJeyAuY29tcGF0aWJsZSA9ICJx
+Y29tLGtnc2wtM2QwIiB9LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9k
+cnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gaW5kZXggZTI5YmI2Ni4uNmI4
+NWM0MSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYwo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gQEAgLTk4NSw2ICs5ODUsNyBAQCBzdGF0
+aWMgaW50IGFkZF9kaXNwbGF5X2NvbXBvbmVudHMoc3RydWN0IGRldmljZSAqZGV2LAo+ICAgKiBh
+cyBjb21wb25lbnRzLgo+ICAgKi8KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+bXNtX2dwdV9tYXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJxY29tLGFkcmVubyIgfSwK
+PiAgCXsgLmNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8tM3h4IiB9LAo+ICAJeyAuY29tcGF0aWJs
+ZSA9ICJxY29tLGtnc2wtM2QwIiB9LAo+ICAJeyB9LAo+IC0tIAo+IDIuOS4zCj4gCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
+IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
+ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
