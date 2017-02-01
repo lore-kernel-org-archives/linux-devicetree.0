@@ -1,106 +1,143 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Tue, 31 Jan 2017 17:26:45 -0800
-Message-ID: <5586b893-bf5c-6133-0789-ccce60626b86@gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
+Date: Tue, 31 Jan 2017 17:40:18 -0800
+Message-ID: <3813b482-49e8-10e0-8197-864ad84eff95@gmail.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1485870854.2932.63.camel@pengutronix.de>
+ <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
+ <1485877882.2932.70.camel@pengutronix.de>
+ <1485881287.2932.73.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485870854.2932.63.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1485881287.2932.73.camel@pengutronix.de>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 01/31/2017 05:54 AM, Philipp Zabel wrote:
-> Hi Steve,
->
-> I have just tested the imx-media-staging-md-wip branch on a Nitrogen6X
-> with a tc358743 (BD_HDMI_MIPI HDMI to MIPI CSI-2 receiver board). Some
-> observations:
->
-> # Link pipeline
-> media-ctl -l "'tc358743 1-000f':0->'imx6-mipi-csi2':0[1]"
-> media-ctl -l "'imx6-mipi-csi2':1->'ipu1_csi0_mux':0[1]"
-> media-ctl -l "'ipu1_csi0_mux':2->'ipu1_csi0':0[1]"
-> media-ctl -l "'ipu1_csi0':2->'ipu1_csi0 capture':0[1]"
->
-> # Provide an EDID to the HDMI source
-> v4l2-ctl -d /dev/v4l-subdev2 --set-edid=file=edid-1080p.hex
-> # At this point the HDMI source is enabled and sends a 1080p60 signal
-> # Configure detected DV timings
-> media-ctl --set-dv "'tc358743 1-000f':0"
->
-> # Set pad formats
-> media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
-> media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
-> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
-> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080]"
->
-> v4l2-ctl -d /dev/video4 -V
-> # This still is configured to 640x480, which is inconsistent with
-> # the 'ipu1_csi0':2 pad format. The pad set_fmt above should
-> # have set this, too.
+On 01/31/2017 08:48 AM, Philipp Zabel wrote:
+> On Tue, 2017-01-31 at 16:51 +0100, Philipp Zabel wrote:
+>> On Fri, 2017-01-06 at 18:11 -0800, Steve Longerbeam wrote:
+>> [...]
+>>> +static int csi_set_fmt(struct v4l2_subdev *sd,
+>>> +		       struct v4l2_subdev_pad_config *cfg,
+>>> +		       struct v4l2_subdev_format *sdformat)
+>>> +{
+>>> +	struct csi_priv *priv = v4l2_get_subdevdata(sd);
+>>> +	struct v4l2_mbus_framefmt *infmt, *outfmt;
+>>> +	struct v4l2_rect crop;
+>>> +	int ret;
+>>> +
+>>> +	if (sdformat->pad >= CSI_NUM_PADS)
+>>> +		return -EINVAL;
+>>> +
+>>> +	if (priv->stream_on)
+>>> +		return -EBUSY;
+>>> +
+>>> +	infmt = &priv->format_mbus[priv->input_pad];
+>>> +	outfmt = &priv->format_mbus[priv->output_pad];
+>>> +
+>>> +	if (sdformat->pad == priv->output_pad) {
+>>> +		sdformat->format.code = infmt->code;
+>>> +		sdformat->format.field = infmt->field;
+>>> +		crop.left = priv->crop.left;
+>>> +		crop.top = priv->crop.top;
+>>> +		crop.width = sdformat->format.width;
+>>> +		crop.height = sdformat->format.height;
+>>> +		ret = csi_try_crop(priv, &crop);
+>> This is the wrong way around, see also below.
+>>
+>> Here the the output sdformat->format.width/height should be set to the
+>> priv->crop.width/height (or priv->crop.width/height / 2, to enable
+>> downscaling). The crop rectangle should not be changed by an output pad
+>> set_fmt.
+> [...]
+>> The crop rectangle instead should be reset to the full input frame when
+>> the input pad format is set.
+> How about this:
 
-Because you've only configured the source pads,
-and not the sink pads. The ipu_csi source format is
-dependent on the sink format - output crop window is
-limited by max input sensor frame, and since sink pad is
-still at 640x480, output is reduced to that.
-
-Maybe I'm missing something, is it expected behavior that
-a source format should be automatically propagated to
-the sink?
-
->
-> v4l2-ctl --list-formats -d /dev/video4
-> # This lists all the RGB formats, which it shouldn't. There is
-> # no CSC in this pipeline, so we should be limited to YUV formats
-> # only.
-
-right, need to fix that. Probably by poking the attached
-source subdev (csi or prpenc/vf) for its supported formats.
-
-
->
-> # Set capture format
-> v4l2-ctl -d /dev/video4 -v width=1920,height=1080,pixelformat=UYVY
->
-> v4l2-ctl -d /dev/video4 -V
-> # Now the capture format is correctly configured to 1920x1080.
->
-> v4l2-ctl -d 4 --list-frameintervals=width=1920,height=1080,pixelformat=UYVY
-> # This lists nothing. We should at least provide the 'ipu1_csi0':2 pad
-> # frame interval. In the future this should list fractions achievable
-> # via frame skipping.
-
-yes, need to implement g_frame_interval.
-
-> v4l2-compliance -d /dev/video4
-> # This fails two tests:
-> # fail: v4l2-test-input-output.cpp(383): std == 0
-> # fail: v4l2-test-input-output.cpp(449): invalid attributes for input 0
-> # test VIDIOC_G/S/ENUMINPUT: FAIL
-> # and
-> # fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
-> # test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
->
-> # (Slowly) stream JPEG images to a display host:
-> gst-launch-1.0 -v v4l2src device=/dev/video4 ! jpegenc ! rtpjpegpay ! udpsink
->
-> I've done this a few times, and sometimes I only get a "ipu1_csi0: EOF
-> timeout" message when starting streaming.
-
-It's hard to say what is going on there, it would be great if I could get my
-hands on a Nitrogen6X with the tc35874 to help you debug.
+Thanks for the patch, I'll try it tomorrow.
 
 Steve
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> ----------8<----------
+> diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
+> index 5e80a0871b139..8220e4204a125 100644
+> --- a/drivers/staging/media/imx/imx-media-csi.c
+> +++ b/drivers/staging/media/imx/imx-media-csi.c
+> @@ -484,6 +484,8 @@ static int csi_setup(struct csi_priv *priv)
+>   	if_fmt.field = outfmt->field;
+>   
+>   	ipu_csi_set_window(priv->csi, &priv->crop);
+> +	ipu_csi_set_downsize(priv->csi, priv->crop.width == 2 * outfmt->width,
+> +					priv->crop.height == 2 * outfmt->height);
+>   
+>   	ipu_csi_init_interface(priv->csi, &sensor_mbus_cfg, &if_fmt);
+>   
+> @@ -830,15 +832,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+>   	switch (sdformat->pad) {
+>   	case CSI_SRC_PAD_DIRECT:
+>   	case CSI_SRC_PAD_IDMAC:
+> -		crop.left = priv->crop.left;
+> -		crop.top = priv->crop.top;
+> -		crop.width = sdformat->format.width;
+> -		crop.height = sdformat->format.height;
+> -		ret = csi_try_crop(priv, &crop, sensor);
+> -		if (ret)
+> -			return ret;
+> -		sdformat->format.width = crop.width;
+> -		sdformat->format.height = crop.height;
+> +		if (sdformat->format.width < priv->crop.width * 3 / 4)
+> +			sdformat->format.width = priv->crop.width / 2;
+> +		else
+> +			sdformat->format.width = priv->crop.width;
+> +		if (sdformat->format.height < priv->crop.height * 3 / 4)
+> +			sdformat->format.height = priv->crop.height / 2;
+> +		else
+> +			sdformat->format.height = priv->crop.height;
+>   
+>   		if (sdformat->pad == CSI_SRC_PAD_IDMAC) {
+>   			cc = imx_media_find_format(0, sdformat->format.code,
+> @@ -887,6 +888,14 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+>   		}
+>   		break;
+>   	case CSI_SINK_PAD:
+> +		crop.left = 0;
+> +		crop.top = 0;
+> +		crop.width = sdformat->format.width;
+> +		crop.height = sdformat->format.height;
+> +		ret = csi_try_crop(priv, &crop, sensor);
+> +		if (ret)
+> +			return ret;
+> +
+>   		cc = imx_media_find_format(0, sdformat->format.code,
+>   					   true, false);
+>   		if (!cc) {
+> @@ -904,9 +913,8 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+>   	} else {
+>   		priv->format_mbus[sdformat->pad] = sdformat->format;
+>   		priv->cc[sdformat->pad] = cc;
+> -		/* Update the crop window if this is an output pad  */
+> -		if (sdformat->pad == CSI_SRC_PAD_DIRECT ||
+> -		    sdformat->pad == CSI_SRC_PAD_IDMAC)
+> +		/* Reset the crop window if this is the input pad  */
+> +		if (sdformat->pad == CSI_SINK_PAD)
+>   			priv->crop = crop;
+>   	}
+>   
+> ---------->8----------
+>
+> regards
+> Philipp
