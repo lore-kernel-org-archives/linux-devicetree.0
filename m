@@ -1,29 +1,38 @@
 From: <y@lvd4224.freescale.com>
-Subject: [PATCH v5 0/3] Add QorIQ LS2088A platform support
-Date: Wed, 1 Feb 2017 11:46:56 +0530
-Message-ID: <49517.5564465628$1505297193@news.gmane.org>
+Subject: [PATCH v5 3/3] arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+Date: Wed, 1 Feb 2017 11:46:59 +0530
+Message-ID: <12697.831032756$1505297197@news.gmane.org>
+References: <1485929819-17171-1-git-send-email-y>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485929819-17171-1-git-send-email-y>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 
-This patchset adds support for the QorIQ LS2088A SoC.
-LS2088A SoC is similar to LS2080A SoC with a few differences like it has A72 cores.
+This patch adds the device tree support for FSL LS2088A SoC based on
+ARMv8 architecture.
 
-This patchset
-        - reorganize LS2088A DTS/DTSI for code reuseability
-        - adds LS2088A device dtsi and dts files.
+Following levels of DTSI/DTS files have been created for the LS2088A
+SoC family:
 
-Abhimanyu Saini (3):
-  dt-bindings: Add compatible for LS2088A QDS and RDB board
-  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
-  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+     - fsl-ls2088a.dtsi:
+            DTS-Include file for FSL LS2088A SoC.
 
+     - fsl-ls2088a-qds.dts:
+            DTS file for FSL LS2088A QDS board.
+
+     - fsl-ls2088a-rdb.dts:
+            DTS file for FSL LS2088A RDB board.
+
+Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+---
 Changes for v5:
 	- Add missing includes
 Changes for v4:
@@ -32,37 +41,340 @@ Changes for v4:
 	- add missing files
 Changes for v3:
 	- rename dts/dtsi files
-Changes for v2:
-	- reorganize LS2088A device tree to use common
-	  nodes from LS2080A device trees.
-	- Both LS2080A and LS2088A have same hardware
-	  controllers, so separate dt-binding patches for
-	  pcie, gpio, dspi, qspi are not required.
 
-Abhimanyu Saini (3):
-  dt-bindings: Add compatible for LS2088A QDS and RDB board
-  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
-  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
-
- Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
- arch/arm64/boot/dts/freescale/Makefile             |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 155 +---
- arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +--
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 859 ++-------------------
- arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  66 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  66 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 153 ++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 196 +++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 151 ++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 753 ++++++++++++++++++
- 11 files changed, 1488 insertions(+), 1034 deletions(-)
+ arch/arm64/boot/dts/freescale/Makefile            |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts |  64 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts |  64 +++++++++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi    | 165 ++++++++++++++++++++++
+ 4 files changed, 295 insertions(+)
  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
  create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
 
+diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
+index 39db645..6d5df45 100644
+--- a/arch/arm64/boot/dts/freescale/Makefile
++++ b/arch/arm64/boot/dts/freescale/Makefile
+@@ -8,6 +8,8 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
+ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
++dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
+  
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
+new file mode 100644
+index 0000000..ebcd6ee
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
+@@ -0,0 +1,64 @@
++/*
++ * Device Tree file for Freescale LS2088A QDS Board.
++ *
++ * Copyright (C) 2016-17, Freescale Semiconductor
++ *
++ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "fsl-ls2088a.dtsi"
++#include "fsl-ls208xa-qds.dtsi"
++
++/ {
++	model = "Freescale Layerscape 2088A QDS Board";
++	compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
++
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
+new file mode 100644
+index 0000000..5992dc1
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
+@@ -0,0 +1,64 @@
++/*
++ * Device Tree file for Freescale LS2088A RDB Board.
++ *
++ * Copyright (C) 2016-17, Freescale Semiconductor
++ *
++ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "fsl-ls2088a.dtsi"
++#include "fsl-ls208xa-rdb.dtsi"
++
++/ {
++	model = "Freescale Layerscape 2088A RDB Board";
++	compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
++
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++	};
++
++	chosen {
++		stdout-path = "serial1:115200n8";
++	};
++};
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+new file mode 100644
+index 0000000..33ce404
+--- /dev/null
++++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+@@ -0,0 +1,165 @@
++/*
++ * Device Tree Include file for Freescale Layerscape-2088A family SoC.
++ *
++ * Copyright (C) 2016-17, Freescale Semiconductor
++ *
++ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPLv2 or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++#include "fsl-ls208xa.dtsi"
++
++&cpu {
++	cpu0: cpu@0 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x0>;
++		clocks = <&clockgen 1 0>;
++		next-level-cache = <&cluster0_l2>;
++		#cooling-cells = <2>;
++	};
++
++	cpu1: cpu@1 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x1>;
++		clocks = <&clockgen 1 0>;
++		next-level-cache = <&cluster0_l2>;
++	};
++
++	cpu2: cpu@100 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x100>;
++		clocks = <&clockgen 1 1>;
++		next-level-cache = <&cluster1_l2>;
++		#cooling-cells = <2>;
++	};
++
++	cpu3: cpu@101 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x101>;
++		clocks = <&clockgen 1 1>;
++		next-level-cache = <&cluster1_l2>;
++	};
++
++	cpu4: cpu@200 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x200>;
++		clocks = <&clockgen 1 2>;
++		next-level-cache = <&cluster2_l2>;
++		#cooling-cells = <2>;
++	};
++
++	cpu5: cpu@201 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x201>;
++		clocks = <&clockgen 1 2>;
++		next-level-cache = <&cluster2_l2>;
++	};
++
++	cpu6: cpu@300 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x300>;
++		clocks = <&clockgen 1 3>;
++		next-level-cache = <&cluster3_l2>;
++		#cooling-cells = <2>;
++	};
++
++	cpu7: cpu@301 {
++		device_type = "cpu";
++		compatible = "arm,cortex-a72";
++		reg = <0x301>;
++		clocks = <&clockgen 1 3>;
++		next-level-cache = <&cluster3_l2>;
++	};
++
++	cluster0_l2: l2-cache0 {
++		compatible = "cache";
++	};
++
++	cluster1_l2: l2-cache1 {
++		compatible = "cache";
++	};
++
++	cluster2_l2: l2-cache2 {
++		compatible = "cache";
++	};
++
++	cluster3_l2: l2-cache3 {
++		compatible = "cache";
++	};
++};
++
++&pcie1 {
++	reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++	       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
++
++	ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000
++		  0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>;
++};
++
++&pcie2 {
++	reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++	       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
++
++	ranges = <0x81000000 0x0 0x00000000 0x28 0x00010000 0x0 0x00010000
++		  0x82000000 0x0 0x40000000 0x28 0x40000000 0x0 0x40000000>;
++};
++
++&pcie3 {
++	reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
++	       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
++
++	ranges = <0x81000000 0x0 0x00000000 0x30 0x00010000 0x0 0x00010000
++		  0x82000000 0x0 0x40000000 0x30 0x40000000 0x0 0x40000000>;
++};
++
++&pcie4 {
++	reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
++	       0x38 0x00000000 0x0 0x00002000>; /* configuration space */
++
++	ranges = <0x81000000 0x0 0x00000000 0x38 0x00010000 0x0 0x00010000
++		  0x82000000 0x0 0x40000000 0x38 0x40000000 0x0 0x40000000>;
++};
 -- 
 1.9.1
 
