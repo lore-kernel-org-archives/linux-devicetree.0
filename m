@@ -1,381 +1,59 @@
-From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v5 3/3][RESEND] arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
-Date: Wed, 1 Feb 2017 11:58:36 +0530
-Message-ID: <1485930516-23146-4-git-send-email-abhimanyu.saini@nxp.com>
-References: <1485930516-23146-1-git-send-email-abhimanyu.saini@nxp.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: i.MX25: add AIPS control registers
+Date: Wed, 1 Feb 2017 08:09:37 +0100
+Message-ID: <20170201070937.pcblnpebxb65llto@pengutronix.de>
+References: <1485890402-22974-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485930516-23146-1-git-send-email-abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1485890402-22974-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>, Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>, Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
+To: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device tree support for FSL LS2088A SoC based on
-ARMv8 architecture.
+On Tue, Jan 31, 2017 at 08:20:01PM +0100, Martin Kaiser wrote:
+> The i.MX25 contains two AHB to IP bridges (AIPS), each of which has a set of
+> control registers. Add the memory regions for the control registers to
+> the Device Tree.
+> 
+> All the registers from the i.MX53 AIPSTZ are present on the i.MX25 as
+> well. Indicate that we are compatible to fsl,imx53-aipstz. However,
+> don't use aipstz for our name, this seems to be specific to i.MX53.
+> 
+> Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx25.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> index e0ba550..4c4768f 100644
+> --- a/arch/arm/boot/dts/imx25.dtsi
+> +++ b/arch/arm/boot/dts/imx25.dtsi
+> @@ -93,6 +93,11 @@
+>  			reg = <0x43f00000 0x100000>;
+>  			ranges;
+>  
+> +			aips1: bridge@43f00000 {
+> +				compatible = "fsl,imx25-aips", "fsl,imx53-aipstz";
+> +				reg = <0x43f00000 0x60>;
+> +			};
 
-Following levels of DTSI/DTS files have been created for the LS2088A
-SoC family:
+The additional compatible properties should indicate if there is an
+older ip block this one is compatible to. Since i.MX53 is newer than
+i.MX25 this goes into the wrong direction. If anything you could add the
+"fsl,imx25-aips" compatible to the i.MX53 dtsi file, but I don't think
+that's worth it.
 
-     - fsl-ls2088a.dtsi:
-            DTS-Include file for FSL LS2088A SoC.
+Sascha
 
-     - fsl-ls2088a-qds.dts:
-            DTS file for FSL LS2088A QDS board.
 
-     - fsl-ls2088a-rdb.dts:
-            DTS file for FSL LS2088A RDB board.
-
-Signed-off-by: Priyanka Jain <priyanka.jain-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Ashish Kumar <ashish.kumar-3arQi8VN3Tc@public.gmane.org>
-Signed-off-by: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
----
-Changes for v5:
-	- Add missing includes
-Changes for v4:
-	- Incorporated Shawn's comments by reorganizing
-	  DTSI, moving all #include to the top and,
-	- add missing files
-Changes for v3:
-	- rename dts/dtsi files
-
- arch/arm64/boot/dts/freescale/Makefile            |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts |  64 +++++++++
- arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts |  64 +++++++++
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi    | 165 ++++++++++++++++++++++
- 4 files changed, 295 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 39db645..6d5df45 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -8,6 +8,8 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-qds.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2088a-rdb.dtb
-  
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
-new file mode 100644
-index 0000000..ebcd6ee
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
-@@ -0,0 +1,64 @@
-+/*
-+ * Device Tree file for Freescale LS2088A QDS Board.
-+ *
-+ * Copyright (C) 2016-17, Freescale Semiconductor
-+ *
-+ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls2088a.dtsi"
-+#include "fsl-ls208xa-qds.dtsi"
-+
-+/ {
-+	model = "Freescale Layerscape 2088A QDS Board";
-+	compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
-new file mode 100644
-index 0000000..5992dc1
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
-@@ -0,0 +1,64 @@
-+/*
-+ * Device Tree file for Freescale LS2088A RDB Board.
-+ *
-+ * Copyright (C) 2016-17, Freescale Semiconductor
-+ *
-+ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls2088a.dtsi"
-+#include "fsl-ls208xa-rdb.dtsi"
-+
-+/ {
-+	model = "Freescale Layerscape 2088A RDB Board";
-+	compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
-+
-+	aliases {
-+		serial0 = &serial0;
-+		serial1 = &serial1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial1:115200n8";
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-new file mode 100644
-index 0000000..33ce404
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
-@@ -0,0 +1,165 @@
-+/*
-+ * Device Tree Include file for Freescale Layerscape-2088A family SoC.
-+ *
-+ * Copyright (C) 2016-17, Freescale Semiconductor
-+ *
-+ * Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPLv2 or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+#include "fsl-ls208xa.dtsi"
-+
-+&cpu {
-+	cpu0: cpu@0 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x0>;
-+		clocks = <&clockgen 1 0>;
-+		next-level-cache = <&cluster0_l2>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	cpu1: cpu@1 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x1>;
-+		clocks = <&clockgen 1 0>;
-+		next-level-cache = <&cluster0_l2>;
-+	};
-+
-+	cpu2: cpu@100 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x100>;
-+		clocks = <&clockgen 1 1>;
-+		next-level-cache = <&cluster1_l2>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	cpu3: cpu@101 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x101>;
-+		clocks = <&clockgen 1 1>;
-+		next-level-cache = <&cluster1_l2>;
-+	};
-+
-+	cpu4: cpu@200 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x200>;
-+		clocks = <&clockgen 1 2>;
-+		next-level-cache = <&cluster2_l2>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	cpu5: cpu@201 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x201>;
-+		clocks = <&clockgen 1 2>;
-+		next-level-cache = <&cluster2_l2>;
-+	};
-+
-+	cpu6: cpu@300 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x300>;
-+		clocks = <&clockgen 1 3>;
-+		next-level-cache = <&cluster3_l2>;
-+		#cooling-cells = <2>;
-+	};
-+
-+	cpu7: cpu@301 {
-+		device_type = "cpu";
-+		compatible = "arm,cortex-a72";
-+		reg = <0x301>;
-+		clocks = <&clockgen 1 3>;
-+		next-level-cache = <&cluster3_l2>;
-+	};
-+
-+	cluster0_l2: l2-cache0 {
-+		compatible = "cache";
-+	};
-+
-+	cluster1_l2: l2-cache1 {
-+		compatible = "cache";
-+	};
-+
-+	cluster2_l2: l2-cache2 {
-+		compatible = "cache";
-+	};
-+
-+	cluster3_l2: l2-cache3 {
-+		compatible = "cache";
-+	};
-+};
-+
-+&pcie1 {
-+	reg = <0x00 0x03400000 0x0 0x00100000   /* controller registers */
-+	       0x20 0x00000000 0x0 0x00002000>; /* configuration space */
-+
-+	ranges = <0x81000000 0x0 0x00000000 0x20 0x00010000 0x0 0x00010000
-+		  0x82000000 0x0 0x40000000 0x20 0x40000000 0x0 0x40000000>;
-+};
-+
-+&pcie2 {
-+	reg = <0x00 0x03500000 0x0 0x00100000   /* controller registers */
-+	       0x28 0x00000000 0x0 0x00002000>; /* configuration space */
-+
-+	ranges = <0x81000000 0x0 0x00000000 0x28 0x00010000 0x0 0x00010000
-+		  0x82000000 0x0 0x40000000 0x28 0x40000000 0x0 0x40000000>;
-+};
-+
-+&pcie3 {
-+	reg = <0x00 0x03600000 0x0 0x00100000   /* controller registers */
-+	       0x30 0x00000000 0x0 0x00002000>; /* configuration space */
-+
-+	ranges = <0x81000000 0x0 0x00000000 0x30 0x00010000 0x0 0x00010000
-+		  0x82000000 0x0 0x40000000 0x30 0x40000000 0x0 0x40000000>;
-+};
-+
-+&pcie4 {
-+	reg = <0x00 0x03700000 0x0 0x00100000   /* controller registers */
-+	       0x38 0x00000000 0x0 0x00002000>; /* configuration space */
-+
-+	ranges = <0x81000000 0x0 0x00000000 0x38 0x00010000 0x0 0x00010000
-+		  0x82000000 0x0 0x40000000 0x38 0x40000000 0x0 0x40000000>;
-+};
 -- 
-1.9.1
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
