@@ -1,123 +1,109 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 17/24] media: imx: Add CSI subdev driver
-Date: Wed, 1 Feb 2017 00:58:05 +0000
-Message-ID: <20170201005805.GI27312@n2100.armlinux.org.uk>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+Date: Tue, 31 Jan 2017 17:02:40 -0800
+Message-ID: <6e77aefa-4f22-60e9-7cc0-55c3a2de3124@gmail.com>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
- <20170131112001.GV27312@n2100.armlinux.org.uk>
- <7ffe2dc6-4098-e89f-03fa-1007eccd7abd@gmail.com>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+ <20170131000125.GO27312@n2100.armlinux.org.uk>
+ <1485856160.2932.10.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7ffe2dc6-4098-e89f-03fa-1007eccd7abd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1485856160.2932.10.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 04:31:55PM -0800, Steve Longerbeam wrote:
-> 
-> 
-> On 01/31/2017 03:20 AM, Russell King - ARM Linux wrote:
-> >On Fri, Jan 06, 2017 at 06:11:35PM -0800, Steve Longerbeam wrote:
-> >>+static int csi_link_validate(struct v4l2_subdev *sd,
-> >>+			     struct media_link *link,
-> >>+			     struct v4l2_subdev_format *source_fmt,
-> >>+			     struct v4l2_subdev_format *sink_fmt)
-> >>+{
-> >>+	struct csi_priv *priv = v4l2_get_subdevdata(sd);
-> >>+	bool is_csi2;
-> >>+	int ret;
-> >>+
-> >>+	ret = v4l2_subdev_link_validate_default(sd, link, source_fmt, sink_fmt);
-> >>+	if (ret)
-> >>+		return ret;
-> >>+
-> >>+	priv->sensor = __imx_media_find_sensor(priv->md, &priv->sd.entity);
-> >>+	if (IS_ERR(priv->sensor)) {
-> >>+		v4l2_err(&priv->sd, "no sensor attached\n");
-> >>+		ret = PTR_ERR(priv->sensor);
-> >>+		priv->sensor = NULL;
-> >>+		return ret;
-> >>+	}
-> >>+
-> >>+	ret = v4l2_subdev_call(priv->sensor->sd, video, g_mbus_config,
-> >>+			       &priv->sensor_mbus_cfg);
-> >>+	if (ret)
-> >>+		return ret;
-> >>+
-> >>+	is_csi2 = (priv->sensor_mbus_cfg.type == V4L2_MBUS_CSI2);
-> >>+
-> >>+	if (is_csi2) {
-> >>+		int vc_num = 0;
-> >>+		/*
-> >>+		 * NOTE! It seems the virtual channels from the mipi csi-2
-> >>+		 * receiver are used only for routing by the video mux's,
-> >>+		 * or for hard-wired routing to the CSI's. Once the stream
-> >>+		 * enters the CSI's however, they are treated internally
-> >>+		 * in the IPU as virtual channel 0.
-> >>+		 */
-> >>+#if 0
-> >>+		vc_num = imx_media_find_mipi_csi2_channel(priv->md,
-> >>+							  &priv->sd.entity);
-> >>+		if (vc_num < 0)
-> >>+			return vc_num;
-> >>+#endif
-> >>+		ipu_csi_set_mipi_datatype(priv->csi, vc_num,
-> >>+					  &priv->format_mbus[priv->input_pad]);
-> >This seems (at least to me) to go against the spirit of the subdev
-> >negotiation.  Here, you seem to bypass the negotiation performed
-> >between the CSI and the attached device, wanting to grab the
-> >format from the CSI2 sensor directly.  That bypasses negotiation
-> >performed at the CSI2 subdev and video muxes.
-> 
-> This isn't so much grabbing a pad format, it is determining
-> which source pad at the imx6-mipi-csi2 receiver subdev is
-> reached from this CSI (which determines the virtual channel
-> the CSI is receiving).
-> 
-> If there was a way to determine the vc# via a status register
-> in the CSI, that would be perfect, but there isn't. In fact, the CSIs
-> seem to be ignoring the meta-data bus sent by the CSI2IPU gasket
-> which contains this info, or that bus is not being routed to the CSIs.
-> As the note says, the CSIs only accept vc0 at the CSI_MIPI_DI register.
-> Any other value programmed there results in no data from the CSI.
-> 
-> And even the presence of CSI_MIPI_DI register makes no sense to me,
-> the CSIs are given the vc# and MIPI datatype from the CSI2IPU meta-data
-> bus, so I don't understand why it needs to be told.
 
-The CSI_MIPI_DI register selects the data stream we want from the
-CSI2 camera.
 
-CSI2 cameras can produce many different data streams - for example,
-a CSI2 camera can, for the same image, produce a YUV encoded frame
-and a jpeg-encoded frame.  These are sent over the CSI2 serial bus
-using two different data types.
+On 01/31/2017 01:49 AM, Philipp Zabel wrote:
+> On Tue, 2017-01-31 at 00:01 +0000, Russell King - ARM Linux wrote:
+> [...]
+>> The iMX6 manuals call for a very specific seven sequence of initialisation
+>> for CSI2, which begins with:
+>>
+>> 1. reset the D-PHY.
+>> 2. place MIPI sensor in LP-11 state
+>> 3. perform D-PHY initialisation
+>> 4. configure CSI2 lanes and de-assert resets and shutdown signals
+>>
+>> Since you reset the CSI2 at power up and then release it, how do you
+>> guarantee that the published sequence is followed?
 
-The CSI2IPU converts the serial data streams into a parallel data
-stream, feeding that into the CSI layer.  The CSI layer, in
-conjunction with the CSI_MIPI_DI register, selects one of these
-streams to pass on to the SMFC and other blocks.
+Hi Russell,
 
->From what I've read, the CSI can also be programmed to pass other
-streams on as well, but I've never tried that.
+In "40.3.1 Startup Sequence", it states that step 1 is to "De-assert
+CSI2 presetn signal (global reset)". I can't find any description of
+this signal in the manual, that statement is the only mention of it. I
+don't know if this the D-PHY reset signal,  it sounds more like
+CSI2_RESETN (CSI-2 host controller reset).
 
-In my particular case, the IMX219 camera produces a complete frame
-using the RAW8 or RAW10 MIPI data type, and also produces two lines
-of register data per frame, encoded using another data type.  I
-think it should be possible to program the CSI to pass this other
-data on as "generic data" through a different FIFO and have it
-written to memory, which makes it possible to know the camera
-settings for each frame.  (This isn't something I'm interested in
-though, I'm just using it as an example of why, possibly, there's
-that register in the CSI block.)
+In any case, I re-reviewed the published sequence in the manual,
+and it does look like there are a couple problems.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+The pipeline power up sequence in imx-media driver is as follows:
+s_power(ON) op is called first on the imx6-mipi-csi2, in which CSI2 and
+D-PHY resets are asserted and then de-asserted via the CSI2_RESETN
+and CSI2_DPHY_RSTZ registers, the D-PHY is initialized, and lanes set.
+
+At this point the MIPI sensor may be powered down (in fact, in OV5640
+case, the PWDN pin is asserted). So there could be a problem here,
+I don't think the D-PHY is considered in the LP-11 stop state when the
+D-PHY master is powered off :). A fix might simply be to reverse power
+on, sensor first so that it can be placed in LP-11, then imx6-mipi-csi2.
+
+The following steps are carried out by s_stream() calls. Sensor s_stream(ON)
+is called first which starts a clock on the clock lane. Then imx6-mipi-csi2
+s_stream(ON) in which the PHY_STATE register is polled to confirm the D-PHY
+stop state, then looks for active clock on lock lane.
+
+There could be a problem there too. Again should be fixed simply by
+calling stream-on on the imx6-mipi-csi2 first, then sensor.
+
+So I will try the following sequence:
+
+1. sensor power on (put D-PHY in LP-11 stop state).
+2. csi-2 power on (deassert CSI2 and D-PHY resets, D-PHY init, verify 
+LP-11).
+3. sensor stream on (starts clock on clock lane).
+4. csi-2 stream on (confirm clock on clock lane).
+
+That comes closest to meeting the sequence requirements.
+
+But this also puts a requirement on MIPI sensors that s_power(ON)
+should only place the D_PHY in LP-11, and _not_ start the clock lane.
+But perhaps that is correct behavior anyway.
+
+Steve
+
+
+>> With Philipp's driver, this is easy, because there is a prepare_stream
+>> callback which gives the sensor an opportunity to get everything
+>> correctly configured according to the negotiated parameters, and place
+>> the sensor in LP-11 state.
+>>
+>> Some sensors do not power up in LP-11 state, but need to be programmed
+>> fully before being asked to momentarily stream.  Only at that point is
+>> the sensor guaranteed to be in the required LP-11 state.
+> Do you expect that 1. and 2. could depend on the negotiated parameters
+> in any way on some hardware? I had removed the prepare_stream callback
+> from my driver in v2 because for my use case at least the above sequence
+> could be realized by
+>
+> 1. in imx-mipi-csi2 s_power(1)
+> 2. in MIPI sensor s_power(1)
+> 3./4. in imx-mipi-csi2 s_stream(1)
+> 4. in MIPI sensor s_stream(1)
+>
+> as long as the sensor is correctly put back into LP-11 in s_stream(0).
+>
+> regards
+> Philipp
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
