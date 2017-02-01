@@ -1,82 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] regulator: cpcap: Add basic regulator support
-Date: Wed, 1 Feb 2017 11:14:35 -0600
-Message-ID: <20170201171435.hl3atrmrrz7mjsmo@rob-hp-laptop>
-References: <20170131001241.5926-1-tony@atomide.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the DP83867
+ TI's PHY driver
+Date: Wed, 1 Feb 2017 18:16:10 +0100
+Message-ID: <20170201171610.GC7395@lunn.ch>
+References: <1485960215-5148-1-git-send-email-lukma@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170131001241.5926-1-tony@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
+In-Reply-To: <1485960215-5148-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Karicheri Muralidharan <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 04:12:41PM -0800, Tony Lindgren wrote:
-> Many Motorola phones like droid 4 are using a custom PMIC called CPCAP
-> or 6556002. This PMIC is used with several SoCs, I've noticed at least
-> omap3, omap4 and Tegra2 based Motorola phones and tablets using it.
+On Wed, Feb 01, 2017 at 03:43:35PM +0100, Lukasz Majewski wrote:
+> This patch adds support for enabling or disabling the port mirroring
+> feature of the DP83867 TI's PHY device.
 > 
-> Cc: devicetree@vger.kernel.org
-> Cc: Marcel Partap <mpartap@gmx.net>
-> Cc: Michael Scott <michael.scott@linaro.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> With the cpcap core MFD driver now in Linux next as commit
-> 3d66c8abc13e ("mfd: cpcap: Add minimal support"), here's a related
-> regulator driver. This is needed to support more devices on droid 4,
-> such as the LCD and touchscreen.
-> 
-> ---
->  .../bindings/regulator/cpcap-regulator.txt         |  34 ++
->  drivers/regulator/Kconfig                          |   7 +
->  drivers/regulator/Makefile                         |   1 +
->  drivers/regulator/cpcap-regulator.c                | 517 +++++++++++++++++++++
->  4 files changed, 559 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
->  create mode 100644 drivers/regulator/cpcap-regulator.c
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-> new file mode 100644
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
-> @@ -0,0 +1,34 @@
-> +Motorola CPCAP PMIC voltage regulators
-> +------------------------------------
-> +
-> +Requires node properties:
-> +- "compatible" value one of:
-> +    "motorola,cpcap-regulator"
-> +    "motorola,mapphone-cpcap-regulator"
-> +
-> +Required regulator properties:
-> +- "regulator-name"
-> +- "regulator-enable-ramp-delay"
-> +- "regulator-min-microvolt"
-> +- "regulator-max-microvolt"
-> +
-> +Optional regulator properties:
-> +- "regulator-boot-on"
-> +
-> +See Documentation/devicetree/bindings/regulator/regulator.txt
-> +for more details about the regulator properties.
-> +
-> +Example:
-> +
-> +cpcap_regulator: regulator@600 {
+> One use case is when bootstrap configuration enables this feature (because
+> of e.g. LED wiring) so then one needs to disable it in software
+> (u-boot/Linux).
 
-unit-address with no reg prop.
+Hi Lukasz
 
-> +	compatible = "motorola,cpcap-regulator";
-> +
-> +	cpcap_regulators: regulators {
-> +		sw5: SW5 {
-> +			regulator-min-microvolt = <5050000>;
-> +			regulator-max-microvolt = <5050000>;
-> +			regulator-enable-ramp-delay = <50000>;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +};
+How does this differ from "enet-phy-lane-swap"?
+
+Thanks
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
