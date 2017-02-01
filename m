@@ -1,75 +1,122 @@
-From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
-Date: Wed, 1 Feb 2017 20:35:55 +0100
-Message-ID: <20170201193554.GB8453@gmail.com>
-References: <20161223163214.7716-1-jelle@vdwaa.nl>
- <20170114191425.GA31309@dtor-ws>
- <20170118205712.GA5333@gmail.com>
- <20170118224946.GC11881@dtor-ws>
- <20170131081942.GC8311@dtor-ws>
- <20170201191058.GA8453@gmail.com>
- <20170201192053.GB40720@dtor-ws>
- <20170201192331.GC40720@dtor-ws>
- <20170201193023.GD40720@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 12/22 v2] ARM: dts: add top-level DT bindings for Cortina Gemini
+Date: Wed,  1 Feb 2017 20:46:32 +0100
+Message-ID: <20170201194632.18455-1-linus.walleij@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170201193023.GD40720@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/17 at 11:30am, Dmitry Torokhov wrote:
-> On Wed, Feb 01, 2017 at 11:23:31AM -0800, Dmitry Torokhov wrote:
-> > On Wed, Feb 01, 2017 at 11:20:53AM -0800, Dmitry Torokhov wrote:
-> > > On Wed, Feb 01, 2017 at 08:10:59PM +0100, Jelle van der Waa wrote:
-> > > > On 01/31/17 at 12:19am, Dmitry Torokhov wrote:
-> > > > > Hi Jelle,
-> > > > > 
-> > > > > On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
-> > > > > > On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
-> > > > > > > > I also have been looking at you previosu submission and had some draft
-> > > > > > > > changes. I reconciled them in the patch below, if it still works for you
-> > > > > > > > then I'll fold everything together and apply. Please let me know.
-> > > > > > > 
-> > > > > > > I'll find some time to test the patch below, I've one small suggestion
-> > > > > > > to the patch below.
-> > > > > 
-> > > > > It would be very helpful if you let me know if the patch actually works
-> > > > > on the hardware: the merge window for 4.11 will be opening fairly soon.
-> > > > 
-> > > > Sorry, I had a busy week and at first it didn't work since I didn't have
-> > > > a regulator and I think the code for the regular might be wrong.
-> > > > 
-> > > > I think that you want the regulators to be optional, but
-> > > > devm_regulator_get_optional errors out when no vcc/vio is configured.
-> > > > Changing it to devm_regulator_get makes the driver work. I guess this is
-> > > > since devm_regulator_get_optional doesn't allow the creation of a dummy
-> > > > device while devm_regulator_get does.
-> > > 
-> > > Ah, yes, these should have been non-optional. I'll fix it up and apply
-> > > then.
-> > 
-> > Hmm.. but no, we only acess regulators if they are non-NULL in
-> > zet6223_power_on(). I used devm_regulator_get_optional() to avoid
-> > needless sleep in zet6223_power_on() when we do not have regulators
-> > defined. Let me look some more...
-> 
-> What is the error you are getting from devm_regulator_get_optional()?
-> What kind of system is that? Do you have system with full constraints?
+This adds the top level SoC bindings for Cortina systems Gemini
+platforms.
 
-The system is an ARM tablet, I don't know what regulator it uses for the
-touchscreen (since I don't have any schematics).
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Rename required property "intcon" to "interrupt-controller"
+- Elaborate a bit on the SoC origins
+- Put the example DTS SoC nodes in a soc {} node
+---
+ Documentation/devicetree/bindings/arm/gemini.txt | 81 ++++++++++++++++++++++++
+ 1 file changed, 81 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/gemini.txt
 
-The error I get is:
-
-[    1.274337] zet6223 1-0076: failed to get 'vio' regulator: -19
-
-
+diff --git a/Documentation/devicetree/bindings/arm/gemini.txt b/Documentation/devicetree/bindings/arm/gemini.txt
+new file mode 100644
+index 000000000000..eb788302d3e9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/gemini.txt
+@@ -0,0 +1,81 @@
++Cortina systems Gemini platforms
++
++The Gemini SoC is the project name for an ARMv4 FA525-based SoC originally
++produced by Storlink Semiconductor around 2005. The company was renamed
++later renamed Storm Semiconductor. The chip product name is Storlink SL3516.
++It was derived from earlier products from Storm named SL3316 (Centroid) and
++SL3512.
++
++Storm Semiconductor was acquired by Cortina Systems in 2008 and the SoC was
++produced and used for NAS and similar usecases. In 2014 Cortina Systems was
++in turn acquired by Inphi, who seem to have discontinued this product family.
++
++Required properties (in root node):
++	compatible = "cortina,gemini";
++
++Required nodes:
++
++- syscon: the root node must have a system controller node pointing to the
++  global control registers, with the compatible string
++  "cortina,gemini-syscon", "syscon";
++
++- timer: the root node must have a timer node pointing to the SoC timer
++  block, with the compatible string "cortina,gemini-timer"
++  See: clocksource/cortina,gemini-timer.txt
++
++- interrup-controller: the root node must have an interrupt controller
++  node pointing to the SoC interrupt controller block, with the compatible
++  string "cortina,gemini-interrupt-controller"
++  See interrupt-controller/cortina,gemini-interrupt-controller.txt
++
++Example:
++
++/ {
++	model = "Foo Gemini Machine";
++	compatible = "cortina,gemini";
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x8000000>;
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++		interrupt-parent = <&intcon>;
++
++		syscon: syscon@40000000 {
++			compatible = "cortina,gemini-syscon", "syscon";
++			reg = <0x40000000 0x1000>;
++		};
++
++		uart0: serial@42000000 {
++			compatible = "ns16550a";
++			reg = <0x42000000 0x100>;
++			clock-frequency = <48000000>;
++			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
++			reg-shift = <2>;
++		};
++
++		timer@43000000 {
++			compatible = "cortina,gemini-timer";
++			reg = <0x43000000 0x1000>;
++			interrupt-parent = <&intcon>;
++			interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
++				     <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
++				     <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
++			syscon = <&syscon>;
++		};
++
++		intcon: interrupt-controller@48000000 {
++			compatible = "cortina,gemini-interrupt-controller";
++			reg = <0x48000000 0x1000>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++	};
++};
 -- 
-Jelle van der Waa
+2.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
