@@ -1,101 +1,37 @@
-From: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
-Date: Wed, 1 Feb 2017 12:25:36 -0500
-Message-ID: <CAF6AEGtoHn4YVbtZ7JzveKfa7QK=0=HURAURTXQN=4JgNRWCFA@mail.gmail.com>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-3-robdclark@gmail.com>
- <20170201170935.tqwbxc2mhkvngyyk@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/8] ASoC: sun4i-i2s: Update binding documentation to
+ include A31
+Date: Wed, 1 Feb 2017 11:26:29 -0600
+Message-ID: <20170201172629.6hcabndljh4bwm5p@rob-hp-laptop>
+References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
+ <20170131100552.27949-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20170201170935.tqwbxc2mhkvngyyk@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170131100552.27949-2-mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMSwgMjAxNyBhdCAxMjowOSBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
-Lm9yZz4gd3JvdGU6Cj4gT24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTE6NDk6MTlBTSAtMDUwMCwg
-Um9iIENsYXJrIHdyb3RlOgo+PiBUaGUgb3JpZ2luYWwgd2F5IHdlIGRldGVybWluZWQgdGhlIGdw
-dSB2ZXJzaW9uIHdhcyBiYXNlZCBvbiBkb3duc3RyZWFtCj4+IGJpbmRpbmdzIGZyb20gYW5kcm9p
-ZCBrZXJuZWwuICBBIGNsZWFuZXIgd2F5IGlzIHRvIGdldCB0aGUgdmVyc2lvbiBmcm9tCj4+IHRo
-ZSBjb21wYXRpYmxlIHN0cmluZy4KPj4KPj4gTm90ZSB0aGF0IG5vIHVwc3RyZWFtIGR0YiB1c2Vz
-IHRoZXNlIGJpbmRpbmdzLiAgQnV0IHRoZSBjb2RlIHN0aWxsCj4+IHN1cHBvcnRzIGZhbGxpbmcg
-YmFjayB0byB0aGUgbGVnYWN5IGJpbmRpbmdzICh3aXRoIGEgd2FybmluZyksIHNvIHRoYXQKPj4g
-d2UgYXJlIHN0aWxsIGNvbXBhdGlibGUgd2l0aCB0aGUgZ3B1IGR0IG5vZGUgZnJvbSBhbmRyb2lk
-IGRldmljZQo+PiBrZXJuZWxzLgo+Cj4gRmluZSBmb3Igb25lIGRyaXZlci9iaW5kaW5nLCBidXQg
-d2Ugd291bGRuJ3QgcmVhbGx5IHdhbnQgdG8gZG8gY2FycnkKPiBkb3duc3RyZWFtIGNvbXBhdGli
-aWxpdHkgZm9yIGV2ZXJ5dGhpbmcuCgp5ZWFoLCBJJ20gbm90IG5lY2Vzc2FyaWx5IHNpZ25pbmcg
-dXAgdG8gc3VwcG9ydCB0aGUgZG93bnN0cmVhbQpiaW5kaW5ncyBmb3JldmVyLi4gYnV0IGZvciBu
-b3cgdGhlIGJlbmVmaXQgb3V0d2VpZ2hzIHRoZSBjb3N0LiAgV2UnbGwKc2VlIGhvdyB0aGF0IGdv
-ZXMgd2hlbiB3ZSBoYXZlIE9QUCBhbmQgYnVzIHNjYWxpbmcgaW4gdGhlIG1peC4KCj4+Cj4+IFNp
-Z25lZC1vZmYtYnk6IFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4KPj4gLS0tCj4+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0ICAgICAgICB8IDExICsr
-Ky0tLQo+PiAgZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jICAgICAg
-ICAgfCA0MyArKysrKysrKysrKysrKysrKysrKystCj4+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL21z
-bV9kcnYuYyAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKPj4gIDMgZmlsZXMgY2hhbmdlZCwg
-NDkgaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPj4gaW5kZXgg
-NzQ3Yjk4NC4uN2FjMzA1MiAxMDA2NDQKPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPj4gQEAgLTEsNyArMSwxMSBAQAo+
-PiAgUXVhbGNvbW0gYWRyZW5vL3NuYXBkcmFnb24gR1BVCj4+Cj4+ICBSZXF1aXJlZCBwcm9wZXJ0
-aWVzOgo+PiAtLSBjb21wYXRpYmxlOiAicWNvbSxhZHJlbm8tM3h4Igo+PiArLSBjb21wYXRpYmxl
-OiAicWNvbSxhZHJlbm8tWFlaLlciLCAicWNvbSxhZHJlbm8iCj4+ICsgICAgZm9yIGV4YW1wbGU6
-ICJxY29tLGFkcmVuby0zMDYuMCIsICJxY29tLGFkcmVubyIKPj4gKyAgTm90ZSB0aGF0IHlvdSBu
-ZWVkIHRvIGxpc3QgdGhlIGxlc3Mgc3BlY2lmaWMgInFjb20sYWRyZW5vIiAoc2luY2UgdGhpcwo+
-PiArICBpcyB3aGF0IHRoZSBkZXZpY2UgaXMgbWF0Y2hlZCBvbiksIGluIGFkZGl0aW9uIHRvIHRo
-ZSBtb3JlIHNwZWNpZmljCj4+ICsgIHdpdGggdGhlIGNoaXAtaWQuCj4+ICAtIHJlZzogUGh5c2lj
-YWwgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMu
-Cj4+ICAtIGludGVycnVwdHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGdwdS4KPj4g
-IC0gY2xvY2tzOiBkZXZpY2UgY2xvY2tzCj4+IEBAIC0xMCw4ICsxNCw2IEBAIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4+ICAgICogImNvcmVfY2xrIgo+PiAgICAqICJpZmFjZV9jbGsiCj4+ICAgICog
-Im1lbV9pZmFjZV9jbGsiCj4+IC0tIHFjb20sY2hpcGlkOiBncHUgY2hpcC1pZC4gIE5vdGUgdGhp
-cyBtYXkgYmVjb21lIG9wdGlvbmFsIGZvciBmdXR1cmUKPj4gLSAgZGV2aWNlcyBpZiB3ZSBjYW4g
-cmVsaWFibHkgcmVhZCB0aGUgY2hpcGlkIGZyb20gaHcKPj4KPj4gIEV4YW1wbGU6Cj4+Cj4+IEBA
-IC0xOSw3ICsyMSw3IEBAIEV4YW1wbGU6Cj4+ICAgICAgIC4uLgo+Pgo+PiAgICAgICBncHU6IHFj
-b20sa2dzbC0zZDBANDMwMDAwMCB7Cj4+IC0gICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJxY29t
-LGFkcmVuby0zeHgiOwo+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8t
-MzIwLjIiLCAicWNvbSxhZHJlbm8iOwo+PiAgICAgICAgICAgICAgIHJlZyA9IDwweDA0MzAwMDAw
-IDB4MjAwMDA+Owo+PiAgICAgICAgICAgICAgIHJlZy1uYW1lcyA9ICJrZ3NsXzNkMF9yZWdfbWVt
-b3J5IjsKPj4gICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODAgMD47Cj4+IEBA
-IC0zMiw2ICszNCw1IEBAIEV4YW1wbGU6Cj4+ICAgICAgICAgICAgICAgICAgIDwmbW1jYyBHRlgz
-RF9DTEs+LAo+PiAgICAgICAgICAgICAgICAgICA8Jm1tY2MgR0ZYM0RfQUhCX0NMSz4sCj4+ICAg
-ICAgICAgICAgICAgICAgIDwmbW1jYyBNTVNTX0lNRU1fQUhCX0NMSz47Cj4+IC0gICAgICAgICAg
-ICAgcWNvbSxjaGlwaWQgPSA8MHgwMzAyMDEwMD47Cj4+ICAgICAgIH07Cj4+ICB9Owo+PiBkaWZm
-IC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jIGIvZHJp
-dmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jCj4+IGluZGV4IDdiOTE4MWIy
-Li5mZGFlZjY3IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJl
-bm9fZGV2aWNlLmMKPj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2Rl
-dmljZS5jCj4+IEBAIC0xODksNiArMTg5LDQ2IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgewo+PiAg
-ICAgICB7ICJxY29tLGdwdS1xdWlyay1mYXVsdC1kZXRlY3QtbWFzayIsIEFEUkVOT19RVUlSS19G
-QVVMVF9ERVRFQ1RfTUFTSyB9LAo+PiAgfTsKPj4KPj4gK3N0YXRpYyBpbnQgZmluZF9jaGlwaWQo
-c3RydWN0IGRldmljZSAqZGV2LCB1MzIgKmNoaXBpZCkKPj4gK3sKPj4gKyAgICAgc3RydWN0IGRl
-dmljZV9ub2RlICpub2RlID0gZGV2LT5vZl9ub2RlOwo+PiArICAgICBzdHJ1Y3QgcHJvcGVydHkg
-KnByb3A7Cj4+ICsgICAgIGNvbnN0IGNoYXIgKmNvbXBhdDsKPj4gKyAgICAgaW50IHJldDsKPj4g
-Kwo+PiArICAgICAvKiBmaXJzdCBzZWFyY2ggdGhlIGNvbXBhdCBzdHJpbmdzIGZvciBxY29tLGFk
-cmVuby1YWVouVzogKi8KPj4gKyAgICAgcHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobm9kZSwgImNv
-bXBhdGlibGUiLCBOVUxMKTsKPj4gKyAgICAgZm9yIChjb21wYXQgPSBvZl9wcm9wX25leHRfc3Ry
-aW5nKHByb3AsIE5VTEwpOyBjb21wYXQ7Cj4+ICsgICAgICAgICAgY29tcGF0ID0gb2ZfcHJvcF9u
-ZXh0X3N0cmluZyhwcm9wLCBjb21wYXQpKSB7Cj4KPiBvZl9wcm9wZXJ0eV9mb3JfZWFjaF9zdHJp
-bmcKPgo+IEhvd2V2ZXIsIHlvdSBzcGVjaWZ5IGluIHRoZSBiaW5kaW5nIGl0IHNob3VsZCBiZSB0
-aGUgMXN0IHN0cmluZywgc28geW91Cj4gcmVhbGx5IGRvbid0IG5lZWQgYSBsb29wIGhlcmUgYW5k
-IGNvdWxkIHVzZQo+IG9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nX2luZGV4LgoKSSBzdXBwb3NlIHRo
-YXQgSSBkb24ndCBuZWVkIHRvIGhhdmUgdGhhdCByZXN0cmljdGlvbiBhYm91dCBiZWluZyAxc3QK
-c3RyaW5nLi4gb3RvaCwgZnJvbSBsb29raW5nIGF0IG90aGVyIGR0IG5vZGVzLCB0aGF0IHRoZSBt
-b3JlIHNwZWNpZmljCmlzIHN1cHBvc2VkIHRvIGNvbWUgZmlyc3QsIHNvIEkgZ3Vlc3MgaXQgZG9l
-c24ndCBodXJ0IHRvIGVuZm9yY2UgaXQuLgoKPiBXaXRoIHRoYXQsCj4KPiBBY2tlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCgpUaHgKCkJSLAotUgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZy
-ZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Tue, Jan 31, 2017 at 11:05:45AM +0100, Mylène Josserand wrote:
+> Add a new compatible for sun4i-i2s driver to handle some
+> SoCs that have a reset line that must be asserted/deasserted.
+> 
+> This new compatible, "allwinner,sun6i-a31-i2s", requires the
+> property "resets" which should be a phandle to the reset line.
+> Except these differences, the compatible is identical to previous one
+> which will not handle a reset line.
+> 
+> Signed-off-by: Mylène Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/sound/sun4i-i2s.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
