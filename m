@@ -1,44 +1,72 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 4/6] arm64: dts: rockchip: add Gru/Kevin DTS
-Date: Tue, 28 Feb 2017 14:54:33 -0800
-Message-ID: <CAD=FV=VS6YBjUQsix=nHteKG6jt=+LGWpDSqrP4VRu5LxOVc3A@mail.gmail.com>
-References: <20170210010521.78872-1-briannorris@chromium.org>
- <20170210010521.78872-5-briannorris@chromium.org> <6978416.eyJmBK6ozI@phil>
+From: <y@lvd4224.freescale.com>
+Subject: [PATCH v5 0/3] Add QorIQ LS2088A platform support
+Date: Wed, 1 Feb 2017 11:46:56 +0530
+Message-ID: <49517.5564465628$1505297193@news.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6978416.eyJmBK6ozI@phil>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Barber <smbarber@chromium.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, Chris Zhong <zyw@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Caesar Wang <wxt@rock-chips.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 
-On Tue, Feb 28, 2017 at 2:00 PM, Heiko Stuebner <heiko@sntech.de> wrote:
->> +     pp3300_wifi_bt: pp3300-wifi-bt {
->> +             compatible = "regulator-fixed";
->> +             regulator-name = "pp3300_wifi_bt";
->> +             /* NOTE: wlan_module_pd_l pinctrl in pp1800_pcie */
->> +
->> +             enable-active-high;
->> +
->> +             /* NOTE: this GPIO also used in pp1800_pcie */
->
-> does the gpio subsystem like this double usage?
+This patchset adds support for the QorIQ LS2088A SoC.
+LS2088A SoC is similar to LS2080A SoC with a few differences like it has A72 cores.
 
-Yes, see commit f19b00da8ed3 ("regulator: core: support shared enable
-GPIO concept").  ...but there's no great place to put the pinctrl node
-though, unfortunately.  It's either randomly pick one of the two or
-add it as a system-level hog.
+This patchset
+        - reorganize LS2088A DTS/DTSI for code reuseability
+        - adds LS2088A device dtsi and dts files.
 
--Doug
+Abhimanyu Saini (3):
+  dt-bindings: Add compatible for LS2088A QDS and RDB board
+  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
+  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+
+Changes for v5:
+	- Add missing includes
+Changes for v4:
+	- Incorporated Shawn's comments by reorganizing
+	  DTSI, moving all #include to the top and,
+	- add missing files
+Changes for v3:
+	- rename dts/dtsi files
+Changes for v2:
+	- reorganize LS2088A device tree to use common
+	  nodes from LS2080A device trees.
+	- Both LS2080A and LS2088A have same hardware
+	  controllers, so separate dt-binding patches for
+	  pcie, gpio, dspi, qspi are not required.
+
+Abhimanyu Saini (3):
+  dt-bindings: Add compatible for LS2088A QDS and RDB board
+  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
+  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
+
+ Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
+ arch/arm64/boot/dts/freescale/Makefile             |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 155 +---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +--
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 859 ++-------------------
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  66 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  66 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 153 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 196 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 151 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 753 ++++++++++++++++++
+ 11 files changed, 1488 insertions(+), 1034 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
