@@ -1,33 +1,68 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the DP83867
- TI's PHY driver
-Date: Wed, 1 Feb 2017 18:16:10 +0100
-Message-ID: <20170201171610.GC7395@lunn.ch>
-References: <1485960215-5148-1-git-send-email-lukma@denx.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] Documentation: DT: add entries for I2SE boards
+Date: Wed, 1 Feb 2017 11:18:38 -0600
+Message-ID: <20170201171838.vihswvpdro54aqiq@rob-hp-laptop>
+References: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
+ <1485845475-3129-6-git-send-email-michael.heimpold@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1485960215-5148-1-git-send-email-lukma-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <1485845475-3129-6-git-send-email-michael.heimpold-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Karicheri Muralidharan <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 03:43:35PM +0100, Lukasz Majewski wrote:
-> This patch adds support for enabling or disabling the port mirroring
-> feature of the DP83867 TI's PHY device.
+On Tue, Jan 31, 2017 at 07:51:11AM +0100, Michael Heimpold wrote:
+> From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+
+"dt-bindings: arm:" is preferred subject prefix.
+
 > 
-> One use case is when bootstrap configuration enables this feature (because
-> of e.g. LED wiring) so then one needs to disable it in software
-> (u-boot/Linux).
+> This patch adds the missing devicetree binding documentation for I2SE's
+> Duckbill and Duckbill 2 series boards.
+> 
+> Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/i2se.txt | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/i2se.txt b/Documentation/devicetree/bindings/arm/i2se.txt
+> new file mode 100644
+> index 0000000..9954d86
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/i2se.txt
+> @@ -0,0 +1,22 @@
+> +I2SE Device Tree Bindings
+> +-------------------------
+> +
+> +Duckbill Board
+> +Required root node properties:
+> +    - compatible = "i2se,duckbill", "fsl,imx28";
+> +
+> +Duckbill 2 Board
+> +Required root node properties:
+> +    - compatible = "i2se,duckbill", "fsl,imx28";
+> +
+> +Duckbill 2 485 Board
+> +Required root node properties:
+> +    - compatible = "i2se,duckbill", "fsl,imx28";
+> +
+> +Duckbill 2 EnOcean Board
+> +Required root node properties:
+> +    - compatible = "i2se,duckbill", "fsl,imx28";
+> +
+> +Duckbill 2 SPI Board
+> +Required root node properties:
+> +    - compatible = "i2se,duckbill", "fsl,imx28";
 
-Hi Lukasz
+It's kind of pointless to have "i2se,duckbill" if you use the same one 
+for all these boards.
 
-How does this differ from "enet-phy-lane-swap"?
-
-Thanks
-    Andrew
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
