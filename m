@@ -1,37 +1,48 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the DP83867
- TI's PHY driver
-Date: Wed, 1 Feb 2017 11:05:12 -0800
-Message-ID: <2f3766f0-42df-6aab-dda1-14022c57fb30@gmail.com>
-References: <1485960215-5148-1-git-send-email-lukma@denx.de>
- <20170201171610.GC7395@lunn.ch>
+From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
+Date: Wed, 1 Feb 2017 20:10:59 +0100
+Message-ID: <20170201191058.GA8453@gmail.com>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+ <20170114191425.GA31309@dtor-ws>
+ <20170118205712.GA5333@gmail.com>
+ <20170118224946.GC11881@dtor-ws>
+ <20170131081942.GC8311@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170201171610.GC7395-g2DYL2Zd6BY@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170131081942.GC8311@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Karicheri Muralidharan <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2017 09:16 AM, Andrew Lunn wrote:
-> On Wed, Feb 01, 2017 at 03:43:35PM +0100, Lukasz Majewski wrote:
->> This patch adds support for enabling or disabling the port mirroring
->> feature of the DP83867 TI's PHY device.
->>
->> One use case is when bootstrap configuration enables this feature (because
->> of e.g. LED wiring) so then one needs to disable it in software
->> (u-boot/Linux).
+On 01/31/17 at 12:19am, Dmitry Torokhov wrote:
+> Hi Jelle,
 > 
-> Hi Lukasz
+> On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
+> > On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
+> > > > I also have been looking at you previosu submission and had some draft
+> > > > changes. I reconciled them in the patch below, if it still works for you
+> > > > then I'll fold everything together and apply. Please let me know.
+> > > 
+> > > I'll find some time to test the patch below, I've one small suggestion
+> > > to the patch below.
 > 
-> How does this differ from "enet-phy-lane-swap"?
+> It would be very helpful if you let me know if the patch actually works
+> on the hardware: the merge window for 4.11 will be opening fairly soon.
 
-Same here, I am confused about what port mirroring could be meaning here
-and if we can find a better way to describe what is being added. Thanks!
+Sorry, I had a busy week and at first it didn't work since I didn't have
+a regulator and I think the code for the regular might be wrong.
+
+I think that you want the regulators to be optional, but
+devm_regulator_get_optional errors out when no vcc/vio is configured.
+Changing it to devm_regulator_get makes the driver work. I guess this is
+since devm_regulator_get_optional doesn't allow the creation of a dummy
+device while devm_regulator_get does.
+
 -- 
-Florian
+Jelle van der Waa
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
