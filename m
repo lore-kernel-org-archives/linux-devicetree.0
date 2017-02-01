@@ -1,41 +1,37 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dt-bindings: mfd: as3722: Drop reference to
- pm_power_off
-Date: Wed, 1 Feb 2017 10:18:41 -0600
-Message-ID: <20170201161841.jqp4zrc5solviaxl@rob-hp-laptop>
-References: <20170130105122.6475-1-thierry.reding@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 4/5] soc: samsung: pm_domains: Read domain name from
+ the new label property
+Date: Wed, 1 Feb 2017 10:25:54 -0600
+Message-ID: <20170201162554.airhzowkqpyaxqpf@rob-hp-laptop>
+References: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
+ <CGME20170130121915eucas1p23aa4f4be912bcd64f9521f6e6b51132f@eucas1p2.samsung.com>
+ <1485778740-30337-5-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170130105122.6475-1-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1485778740-30337-5-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 11:51:20AM +0100, Thierry Reding wrote:
-> From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+On Mon, Jan 30, 2017 at 01:18:59PM +0100, Marek Szyprowski wrote:
+> Device tree nodes for each power domain should use generic "power-domain"
+> name, so using it as a domain name doesn't give much benefits. This patch
+> adds support for human readable names defined in 'label' property. Such
+> names are visible to userspace and makes debugging much easier. When no
+> 'label' property is found, driver keeps using the name constructed from
+> full node name.
+
+I'm not sure this is really a good use of label. label is intended for 
+end user visible things like ports/connectors on a board. It's fine 
+here, but I wouldn't want to see it used everywhere.
+
 > 
-> Devicetree bindings are supposed to be operating system independent and
-> should thus not describe how a specific functionality is implemented in
-> Linux.
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
 > ---
->  Documentation/devicetree/bindings/mfd/as3722.txt | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-
-Applied, thanks.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Documentation/devicetree/bindings/power/pd-samsung.txt |  4 ++++
+>  drivers/soc/samsung/pm_domains.c                       | 12 ++++++++++--
+>  2 files changed, 14 insertions(+), 2 deletions(-)
