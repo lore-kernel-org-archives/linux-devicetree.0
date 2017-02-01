@@ -1,91 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v2 1/2] Documentation: dt-bindings: Document
- bindings for ASPEED AST2400/AST2500 PWM and Fan tach controller device
- driver
-Date: Wed, 1 Feb 2017 08:58:37 -0600
-Message-ID: <20170201145837.ybfqvz4rdpaiw323@rob-hp-laptop>
-References: <20170127093400.28904-1-jaghu@google.com>
- <20170127093400.28904-2-jaghu@google.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/8] pinctrl: stm32: use gpio-ranges to declare bank range
+Date: Wed, 1 Feb 2017 16:01:26 +0100
+Message-ID: <CACRpkdbhqT688-1MajRshqgn0bH0h2s=LM06gEQYgRmMZC_n0g@mail.gmail.com>
+References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
+ <1485533721-9019-3-git-send-email-alexandre.torgue@st.com>
+ <CACRpkdYtZCJVrZhXOPXd-MNMX0Ry_H1dLQopKwsj9HnO03BtKg@mail.gmail.com> <2d0cd144-9a72-52d5-b2c9-c6c9e09ac494@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170127093400.28904-2-jaghu@google.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-Cc: openbmc@lists.ozlabs.org, linux@roeck-us.net, joel@jms.id.au, jdelvare@suse.com, linux-hwmon@vger.kernel.org, corbet@lwn.net, linux-doc@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <2d0cd144-9a72-52d5-b2c9-c6c9e09ac494@st.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, Patrice Chotard <patrice.chotard@st.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 01:33:59AM -0800, Jaghathiswari Rankappagounder Natarajan wrote:
-> This binding provides interface for adding values related to ASPEED
-> AST2400/2500 PWM and Fan tach controller support.
-> The PWM controller can support upto 8 PWM output ports.
-> The Fan tach controller can support upto 16 tachometer inputs.
-> Types M, N and 0 are three types just to have three independent
-> PWM/Fan Tach related settings.
+On Mon, Jan 30, 2017 at 5:29 PM, Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+> On 01/30/2017 04:19 PM, Linus Walleij wrote:
 
-This still looks overly complicated to me and very specific to ASpeed. 
-You need to define a common structure that works for fans. To start 
-with, define a node for the fans themselves. This should use the 
-PWM binding and a -gpios property for the tach (when connected to a 
-GPIO). 
+>>> +       if (!of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0,
+>>> &args))
+>>> +               bank_nr = args.args[1] / STM32_GPIO_PINS_PER_BANK;
+>>> +       else {
+>>> +               range->name = bank->gpio_chip.label;
+>>> +               range->id = bank_nr;
+>>> +               range->pin_base = range->id * STM32_GPIO_PINS_PER_BANK;
+>>> +               range->base = range->id * STM32_GPIO_PINS_PER_BANK;
+>>> +               range->npins = npins;
+>>> +               range->gc = &bank->gpio_chip;
+>>> +               pinctrl_add_gpio_range(pctl->pctl_dev,
+>>> +                                      &pctl->banks[bank_nr].range);
+>>> +       }
+>
+>
+> I Keep the old way to get range in order to keep compatibility with older
+> device tree (if no gpio ranges are defined).
 
-Something like this:
+Aha I understand. Sorry for my stupidity.
 
-ctrl: fan-controller@1234 {
-	...
-	#pwm-cells = <3>;
-	fan@0 {
-		reg = <0>; /* 'Channel' of the controller */
-		pwms = <&ctrl 0 ...>;
-		tach-gpios = <&gpio 1>;
-		vcc-supply = <&reg_12V>;
-	};
-};
+Go ahead with this!
 
-We already have a pwm-fan binding. This should build on or possibly 
-replace that.
-
-> 
-> Signed-off-by: Jaghathiswari Rankappagounder Natarajan <jaghu@google.com>
-> ---
-> v2:
-> - Removed '_' in node or property names
-> - Gave some explanation for the properties used.
-> 
->  .../devicetree/bindings/hwmon/aspeed-pwm-tacho.txt | 178 +++++++++++++++++++++
->  1 file changed, 178 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> new file mode 100644
-> index 000000000000..290122bfe170
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/aspeed-pwm-tacho.txt
-> @@ -0,0 +1,178 @@
-> +ASPEED AST2400/AST2500 PWM and Fan Tacho controller device driver
-> +
-> +The ASPEED PWM controller can support upto 8 PWM outputs. The ASPEED Fan Tacho
-> +controller can support upto 16 tachometer inputs.
-
-AIUI, each fan has a PWM and a tach input. How would you use more than 8 
-tach inputs?
-
-> +
-> +There are three different types M, N, O. These three types are just to have
-> +different PWM and Fan Tach settings. Each type can have the following settings:
-> +	PWM related:
-> +		1) PWM period
-> +		2) PWM clock division high
-> +		3) PWM clock division low
-> +	Fan Tach related:
-> +		1) Fan Tach type enable
-> +		2) Fan Tach clock division
-> +		3) Fan Tach mode selection
-> +		4) Fan Tach period
-> +
-> +Each PWM port should be assigned a type which can be type M, N or O.
-
-What is the definition of M, N, and O?
-
-Rob
+Yours,
+Linus Walleij
