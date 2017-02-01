@@ -1,52 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/8] Documentation: dt: Add new compatible to STM32
- pinctrl driver bindings
-Date: Wed, 1 Feb 2017 09:06:09 -0600
-Message-ID: <20170201150609.cbhwon76m6igmhyh@rob-hp-laptop>
-References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
- <1485533721-9019-7-git-send-email-alexandre.torgue@st.com>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH v3 1/8] ASoC: sun4i-i2s: Update binding
+ documentation to include A31
+Date: Wed, 1 Feb 2017 16:08:50 +0100
+Message-ID: <b0611ab1-5b69-23da-6835-278d0fd1b6ba@free-electrons.com>
+References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
+ <20170131100552.27949-2-mylene.josserand@free-electrons.com>
+ <20170131211702.taxbrgxwo7b4daej@sirena.org.uk>
+ <feb16b69-388f-10e5-7be5-c750095ee52b@free-electrons.com>
+ <20170201115958.7a2odxxyhzm3ofew@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485533721-9019-7-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170201115958.7a2odxxyhzm3ofew@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 05:15:19PM +0100, Alexandre TORGUE wrote:
-> Add new compatible for stm32f469 MCU.
-> 
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> index 25d9809..4f0487d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> @@ -9,7 +9,8 @@ Pin controller node:
->  Required properies:
->   - compatible: value should be one of the following:
->     (a) "st,stm32f429-pinctrl"
-> -   (b) "st,stm32f746-pinctrl"
-> +   (b) "st,stm32f469-pinctrl"
-> +   (c) "st,stm32f746-pinctrl"
+Hi,
 
-Drop the a,b,c. Otherwise, you'll be changing a bunch of lines every 
-time.
+On 01/02/2017 12:59, Mark Brown wrote:
+> On Wed, Feb 01, 2017 at 08:44:56AM +0100, Mylene Josserand wrote:
+>> On 31/01/2017 22:17, Mark Brown wrote:
+>>> On Tue, Jan 31, 2017 at 11:05:45AM +0100, Myl=E8ne Josserand wrote:
+>>>> Add a new compatible for sun4i-i2s driver to handle some
+>>>> SoCs that have a reset line that must be asserted/deasserted.
+>
+>>> This doesn't apply against current code, please check and resend.
+>
+>> I based my series on linux-next 20170131. Which one I should use?
+>
+> You should be submitting against my git tree (which should be what's in
+> -next...).
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+>
 
-With that,
+Okay, thank you! I will update my series according to your branch.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Best regards,
 
+-- =
 
->   - #address-cells: The value of this property must be 1
->   - #size-cells	: The value of this property must be 1
->   - ranges	: defines mapping between pin controller node (parent) to
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Myl=E8ne Josserand, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
