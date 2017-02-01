@@ -1,69 +1,163 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] Documentation: DT: add entries for I2SE boards
-Date: Wed, 1 Feb 2017 11:18:38 -0600
-Message-ID: <20170201171838.vihswvpdro54aqiq@rob-hp-laptop>
-References: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
- <1485845475-3129-6-git-send-email-michael.heimpold@i2se.com>
+From: Christopher Bostic <christopher.lee.bostic@gmail.com>
+Subject: Re: [PATCH v2 15/18] drivers/fsi: Add documentation for GPIO based
+ FSI master
+Date: Wed, 1 Feb 2017 11:17:51 -0600
+Message-ID: <CAA0LjjXBO3Ua-HpTsq_Tfn4QAm7wwdTr2FHApRC7vvT+dhtrvg@mail.gmail.com>
+References: <1484260543-80300-1-git-send-email-christopher.lee.bostic@gmail.com>
+ <20170118215755.xoamoc2rrzhy4kyz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485845475-3129-6-git-send-email-michael.heimpold-eS4NqCHxEME@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan.wahren-eS4NqCHxEME@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170118215755.xoamoc2rrzhy4kyz@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Greg KH <gregkh@linuxfoundation.org>, Michael Turquette <mturquette@baylibre.com>, geert+renesas@glider.be, Open List OF Flattened dev tree bindings <devicetree@vger.kernel.org>, "Moderated list: ARM PORT" <linux-arm-kernel@lists.infradead.org>, Joel Stanley <joel@jms.id.au>, Jeremy Kerr <jk@ozlabs.org>, Linux open list <linux-kernel@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>, Alistair Popple <alistair@popple.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Chris Bostic <cbostic@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 07:51:11AM +0100, Michael Heimpold wrote:
-> From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+On Wed, Jan 18, 2017 at 3:57 PM, Rob Herring <robh@kernel.org> wrote:
+> On Thu, Jan 12, 2017 at 04:35:43PM -0600, christopher.lee.bostic@gmail.com wrote:
+>> From: Chris Bostic <cbostic@us.ibm.com>
+>>
+>> Define the device tree bindings for the GPIO master type.
+>>
+>> Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
+>>
+>> ---
+>>
+>> V2 - Break out this documentation update from the code implementing
+>>      The GPIO master function.
+>>
+>>    - Move the documentation to an earlier patch than the code
+>>      implementing the function.
+>>
+>>    - Document all 'compatible' strings used in the series.
+>>
+>>    - Write binding document in terms of hardware, not software.
+>>
+>>    - Elaborate on what a GPIO based FSI master is versus a non
+>>      GPIO based master.
+>>
+>>    - Give a more detailed description of what each pin in the GPIO
+>>      FSI master is to be used for.
+>>
+>>    - Re-order compatible strings in example so that most specific
+>>      comes first.
+>>
+>>    - Indicate the proper order each pin should be initialized.
+>>
+>>    - Fix an unmatched '>' bracket in the example for binding.
+>>
+>>    - Bracket each element of the example list items individually.
+>> ---
+>>  .../devicetree/bindings/fsi/fsi-master-gpio.txt    | 71 ++++++++++++++++++++++
+>>  1 file changed, 71 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+>> new file mode 100644
+>> index 0000000..5d589bf
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+>> @@ -0,0 +1,71 @@
+>> +Device-tree bindings for FSI master implemented with GPIO
+>> +---------------------------------------------------------
+>> +
+>> +Typically a FSI master is defined in hardware with output control
+>> +lines designated for Enable, Data, Clock, etc..  In the case of
+>> +a 'GPIO FSI master', however, it may be the case that there is no
+>> +such master defined in hardware and must be implemented in standard
+>> +GPIO to interact with its slaves.  In this 'virtual' FSI master
+>> +case the GPIO pins representing clk and data are directly
+>> +connected to the slaves.
+>> +
+>> +The GPIO FSI master node
+>> +-------------------------
+>> +This node describes a FSI master implmented with GPIO.
+>> +Required property:
+>> +     compatible = "ibm,fsi-master-gpio"
+>
+> Generally, we don't have a vendor prefix for GPIO based implementations.
+>
 
-"dt-bindings: arm:" is preferred subject prefix.
+Hi Rob
 
-> 
-> This patch adds the missing devicetree binding documentation for I2SE's
-> Duckbill and Duckbill 2 series boards.
-> 
-> Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
-> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/i2se.txt | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/i2se.txt b/Documentation/devicetree/bindings/arm/i2se.txt
-> new file mode 100644
-> index 0000000..9954d86
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/i2se.txt
-> @@ -0,0 +1,22 @@
-> +I2SE Device Tree Bindings
-> +-------------------------
-> +
-> +Duckbill Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl,imx28";
-> +
-> +Duckbill 2 Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl,imx28";
-> +
-> +Duckbill 2 485 Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl,imx28";
-> +
-> +Duckbill 2 EnOcean Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl,imx28";
-> +
-> +Duckbill 2 SPI Board
-> +Required root node properties:
-> +    - compatible = "i2se,duckbill", "fsl,imx28";
+Will make the change in the next revision (v4).
 
-It's kind of pointless to have "i2se,duckbill" if you use the same one 
-for all these boards.
+>> +
+>> +The standard FSI master node
+>> +----------------------------
+>> +This node describes a FSI master implmemented fully in hardware
+>> +with dedicated input/output pins required for its function (i.e.
+>> +not using generic GPIO pins).
+>> +Required property:
+>> +     compatible = "ibm,fsi-master"
+>
+> This and GPIO binding should be in 2 docs.
+>
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Will separate out.
+
+>> +
+>> +
+>> +GPIO FSI master property/pin descriptions
+>> +------------------------------------------
+>> +clk -        The master controlled clock line that indicates to the
+>> +     slave when to read in or send out new data - required.
+>> +data -       The serial data line containing information to be sent or
+>> +     received by the master.  This line is bi-directional.  During
+>> +     command phase the master controls the line and when a response
+>> +     is required the slave takes control - required.
+>> +enable - Controls power state of data line - optional.
+>> +trans - Voltage translator control. In some applications the data line
+>> +     must have its signal levels altered by a translator. If this is
+>> +     necessary then control of signal direction is managed via this
+>> +     line - optional.
+>> +mux -        Multiplexor control.  This activates/deactivates the data line
+>> +     in cases where it is one of many possible selections via mux -
+>> +     optional.
+>
+> Combine these descriptions and the property names, grouped as below.
+>
+
+Will update.
+
+>> +
+>> +Required properties:
+>> +     - compatible = "ibm,fsi-master-gpio";
+>> +     - clk-gpios;
+>> +     - data-gpios;
+>> +
+>> +Optional properties:
+>> +     - enable-gpios;
+>> +     - trans-gpios;
+>> +     - mux-gpios;
+>> +
+>> +Order of property activation:
+>> +1. clk
+>> +2. data
+>> +3. trans
+>> +4. enable
+>> +5. mux
+>> +
+>> +
+>> +Example:
+>> +
+>> +fsi-master {
+>> +     compatible = "ibm,fsi-master-gpio", "ibm,fsi-master";
+>
+> From the description, these should be mutually exclusive.
+
+Will change.
+
+Thanks for your input.
+
+>
+>> +     clk-gpios = <&gpio 0>, <&gpio 6>;
+>> +     data-gpios = <&gpio 1>, <&gpio 7>;
+>> +     enable-gpios = <&gpio 2>, <&gpio 8>;
+>> +     trans-gpios = <&gpio 3>, <&gpio 9>;
+>> +     mux-gpios = <&gpio 4>, <&gpio 10>;
+>> +}
+>> --
+>> 1.8.2.2
+>>
