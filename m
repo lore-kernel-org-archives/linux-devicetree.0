@@ -1,42 +1,63 @@
-From: Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/8] ASoC: sun4i-i2s: Update binding documentation to
- include A31
-Date: Wed, 1 Feb 2017 08:44:56 +0100
-Message-ID: <feb16b69-388f-10e5-7be5-c750095ee52b@free-electrons.com>
-References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
- <20170131100552.27949-2-mylene.josserand@free-electrons.com>
- <20170131211702.taxbrgxwo7b4daej@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170131211702.taxbrgxwo7b4daej-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v9 1/3] dt-bindings: Add support for samsung s6e3ha2 panel
+ binding
+Date: Wed, 01 Feb 2017 16:46:52 +0900
+Message-ID: <1485935214-16210-2-git-send-email-hoegeun.kwon@samsung.com>
+References: <1485935214-16210-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170201074711epcas1p3c7f9542d5b6a4501dd7d440d866951ec@epcas1p3.samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1485935214-16210-1-git-send-email-hoegeun.kwon@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: krzk@kernel.org, robh@kernel.org, thierry.reding@gmail.com, airlied@linux.ie, kgene@kernel.org
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, inki.dae@samsung.com, a.hajda@samsung.com, cw00.choi@samsung.com, jh80.chung@samsung.com, andi.shyti@samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The Samsung s6e3ha2 is a 5.7" 1440x2560 AMOLED panel connected
+using MIPI-DSI interfaces.
 
-On 31/01/2017 22:17, Mark Brown wrote:
-> On Tue, Jan 31, 2017 at 11:05:45AM +0100, Mylène Josserand wrote:
->> Add a new compatible for sun4i-i2s driver to handle some
->> SoCs that have a reset line that must be asserted/deasserted.
->
-> This doesn't apply against current code, please check and resend.
->
+Signed-off-by: Donghwa Lee <dh09.lee@samsung.com>
+Signed-off-by: Hyungwon Hwang <human.hwang@samsung.com>
+Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/display/panel/samsung,s6e3ha2.txt     | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
 
-I based my series on linux-next 20170131. Which one I should use?
-
-Thank you in advance,
-
-Best regards,
-
+diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+new file mode 100644
+index 0000000..18854f4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e3ha2.txt
+@@ -0,0 +1,28 @@
++Samsung S6E3HA2 5.7" 1440x2560 AMOLED panel
++
++Required properties:
++  - compatible: "samsung,s6e3ha2"
++  - reg: the virtual channel number of a DSI peripheral
++  - vdd3-supply: I/O voltage supply
++  - vci-supply: voltage supply for analog circuits
++  - reset-gpios: a GPIO spec for the reset pin (active low)
++  - enable-gpios: a GPIO spec for the panel enable pin (active high)
++
++Optional properties:
++  - te-gpios: a GPIO spec for the tearing effect synchronization signal
++    gpio pin (active high)
++
++Example:
++&dsi {
++	...
++
++	panel@0 {
++		compatible = "samsung,s6e3ha2";
++		reg = <0>;
++		vdd3-supply = <&ldo27_reg>;
++		vci-supply = <&ldo28_reg>;
++		reset-gpios = <&gpg0 0 GPIO_ACTIVE_LOW>;
++		enable-gpios = <&gpf1 5 GPIO_ACTIVE_HIGH>;
++		te-gpios = <&gpf1 3 GPIO_ACTIVE_HIGH>;
++	};
++};
 -- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
