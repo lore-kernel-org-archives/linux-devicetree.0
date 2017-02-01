@@ -1,56 +1,152 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH] dt-bindings: display: move ANX7814 and SiI8620 bridge
- bindings
-Date: Wed, 1 Feb 2017 08:50:34 +0530
-Message-ID: <45552135-5904-f235-5b5e-d0dc26052204@codeaurora.org>
-References: <20170131175417.20486-1-robh@kernel.org>
+From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
+ OTG HS/FS in FS mode (internal PHY)
+Date: Wed, 1 Feb 2017 03:37:07 +0000
+Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B411720@US01WEMBX2.internal.synopsys.com>
+References: <20170201012547.76158-1-bruherrera@gmail.com>
+ <20170201012547.76158-2-bruherrera@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170131175417.20486-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 01/31/2017 11:24 PM, Rob Herring wrote:
-> A few bindings snuck into bindings/video/bridge since consolidating
-> everything under bindings/display/bridge/. Move them to the correct
-> spot.
+On 1/31/2017 5:26 PM, Bruno Herrera wrote:
+> This patch introduces a new parameter to activate USB OTG HS/FS core
+> embedded phy transceiver. The STM32F4x9 SoC uses the GGPIO register
+> to enable the transceiver.
+> Also add the dwc2_set_params function for stm32f4 otg fs.
 >
-> Cc: Andrzej Hajda <a.hajda@samsung.com>
-> Cc: Archit Taneja <architt@codeaurora.org>
-> Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> Cc: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Archit Taneja <architt@codeaurora.org>
+Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+
+Regards,
+John
+
 
 > ---
+>  drivers/usb/dwc2/core.h   |  5 +++++
+>  drivers/usb/dwc2/hcd.c    | 15 ++++++++++++++-
+>  drivers/usb/dwc2/hw.h     |  2 ++
+>  drivers/usb/dwc2/params.c | 19 +++++++++++++++++++
+>  4 files changed, 40 insertions(+), 1 deletion(-)
 >
-> I plan to apply this to my tree.
+> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
+> index b9b62f1..252400b 100644
+> --- a/drivers/usb/dwc2/core.h
+> +++ b/drivers/usb/dwc2/core.h
+> @@ -423,6 +423,10 @@ enum dwc2_ep0_state {
+>   *			needed.
+>   *			0 - No (default)
+>   *			1 - Yes
+> + * @activate_stm_fs_transceiver: Activate internal transceiver using GGPIO
+> + *			register.
+> + *			0 - Deactivate the transceiver (default)
+> + *			1 - Activate the transceiver
+>   * @g_dma:              Enables gadget dma usage (default: autodetect).
+>   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
+>   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
+> @@ -477,6 +481,7 @@ struct dwc2_core_params {
+>  	bool uframe_sched;
+>  	bool external_id_pin_ctl;
+>  	bool hibernation;
+> +	bool activate_stm_fs_transceiver;
+>  	u16 max_packet_count;
+>  	u32 max_transfer_size;
+>  	u32 ahbcfg;
+> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
+> index a73722e..b5a70b6 100644
+> --- a/drivers/usb/dwc2/hcd.c
+> +++ b/drivers/usb/dwc2/hcd.c
+> @@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
 >
-> Rob
+>  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>  {
+> -	u32 usbcfg, i2cctl;
+> +	u32 usbcfg, ggpio, i2cctl;
+>  	int retval = 0;
 >
->  Documentation/devicetree/bindings/{video => display}/bridge/anx7814.txt   | 0
->  .../devicetree/bindings/{video => display}/bridge/sil-sii8620.txt         | 0
->  2 files changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{video => display}/bridge/anx7814.txt (100%)
->  rename Documentation/devicetree/bindings/{video => display}/bridge/sil-sii8620.txt (100%)
+>  	/*
+> @@ -145,6 +145,19 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
+>  				return retval;
+>  			}
+>  		}
+> +
+> +		if (hsotg->params.activate_stm_fs_transceiver) {
+> +			ggpio = dwc2_readl(hsotg->regs + GGPIO);
+> +			if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN)) {
+> +				dev_dbg(hsotg->dev, "Activating transceiver\n");
+> +				/*
+> +				 * STM32F4x9 uses the GGPIO register as general
+> +				 * core configuration register.
+> +				 */
+> +				ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
+> +				dwc2_writel(ggpio, hsotg->regs + GGPIO);
+> +			}
+> +		}
+>  	}
 >
-> diff --git a/Documentation/devicetree/bindings/video/bridge/anx7814.txt b/Documentation/devicetree/bindings/display/bridge/anx7814.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/video/bridge/anx7814.txt
-> rename to Documentation/devicetree/bindings/display/bridge/anx7814.txt
-> diff --git a/Documentation/devicetree/bindings/video/bridge/sil-sii8620.txt b/Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/video/bridge/sil-sii8620.txt
-> rename to Documentation/devicetree/bindings/display/bridge/sil-sii8620.txt
+>  	/*
+> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
+> index bde7248..4592012 100644
+> --- a/drivers/usb/dwc2/hw.h
+> +++ b/drivers/usb/dwc2/hw.h
+> @@ -225,6 +225,8 @@
+>
+>  #define GPVNDCTL			HSOTG_REG(0x0034)
+>  #define GGPIO				HSOTG_REG(0x0038)
+> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	BIT(16)
+> +
+>  #define GUID				HSOTG_REG(0x003c)
+>  #define GSNPSID				HSOTG_REG(0x0040)
+>  #define GHWCFG1				HSOTG_REG(0x0044)
+> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
+> index 2990c34..9cd8722 100644
+> --- a/drivers/usb/dwc2/params.c
+> +++ b/drivers/usb/dwc2/params.c
+> @@ -120,6 +120,22 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
+>  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
+>  }
+>
+> +static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
+> +{
+> +	struct dwc2_core_params *p = &hsotg->params;
+> +
+> +	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
+> +	p->speed = DWC2_SPEED_PARAM_FULL;
+> +	p->host_rx_fifo_size = 128;
+> +	p->host_nperio_tx_fifo_size = 96;
+> +	p->host_perio_tx_fifo_size = 96;
+> +	p->max_packet_count = 256;
+> +	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
+> +	p->i2c_enable = false;
+> +	p->uframe_sched = false;
+> +	p->activate_stm_fs_transceiver = true;
+> +}
+> +
+>  const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
+>  	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
+> @@ -133,6 +149,9 @@ const struct of_device_id dwc2_of_match_table[] = {
+>  	{ .compatible = "amlogic,meson-gxbb-usb",
+>  	  .data = dwc2_set_amlogic_params },
+>  	{ .compatible = "amcc,dwc-otg", .data = dwc2_set_amcc_params },
+> +	{ .compatible = "st,stm32f4x9-fsotg",
+> +	  .data = dwc2_set_stm32f4x9_fsotg_params },
+> +	{ .compatible = "st,stm32f4x9-hsotg" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
 >
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
