@@ -1,61 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] pinctrl: dt-bindings: samsung: Add Exynos7 specific
- pinctrl macro definitions
-Date: Wed, 1 Feb 2017 13:51:00 +0100
-Message-ID: <CACRpkdYLpQHT1ykYE1tNJpNRyUt7ezhyxznbe=dPu70mPn0OLQ@mail.gmail.com>
-References: <1484718141-28785-1-git-send-email-pankaj.dubey@samsung.com>
- <CGME20170118054002epcas5p3b08e2f419976e17a3c584d64776810fd@epcas5p3.samsung.com>
- <1484718141-28785-3-git-send-email-pankaj.dubey@samsung.com>
- <20170118141935.eu7wmki7jnjdarkw@kozik-lap> <7a0d543f-37e8-98e9-15b4-7d3f808f8516@samsung.com>
- <20170127144123.slmwxorx7cjxwtcr@kozik-lap>
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Subject: [PATCH v2 net-next] net: phy: Add LED mode driver for Microsemi
+Date: Wed, 1 Feb 2017 18:23:45 +0530
+Message-ID: <1485953626-25780-1-git-send-email-Raju.Lakkaraju@microsemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170127144123.slmwxorx7cjxwtcr@kozik-lap>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sanath-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, root <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: f.fainelli@gmail.com, Allan.Nielsen@microsemi.com, andrew@lunn.ch, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 27, 2017 at 3:41 PM, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Jan 27, 2017 at 01:25:42PM +0100, Sylwester Nawrocki wrote:
->> On 01/18/2017 03:19 PM, Krzysztof Kozlowski wrote:
->> > On Wed, Jan 18, 2017 at 11:12:20AM +0530, Pankaj Dubey wrote:
->> >> Exynos7 SoC pinctrl configurations are similar to existing Exynos4/5 except
->> >> for FSYS1 pinctrl drive strengths. So adding Exynos7 specific FSYS1 blocks
->> >> pinctrl driver strength related macros which will be used in Exynos7
->> >> DTSi files.
->> >>
->> >> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> ---
->> >>  include/dt-bindings/pinctrl/samsung.h | 8 ++++++++
->> >>  1 file changed, 8 insertions(+)
->> >>
->> >
->> > Acked-by: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> >
->> > I will need this header, so Sylwester if it is okay with you, could you
->> > provide a tag with it (or ack it)?
->>
->> Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>
->> I don't have pinctrl/samsung git tree, Linus applies patches directly.
->
-> Oh, my mistake.
->
-> Linus,
-> This is similar case as "pinctrl: dt-bindings: samsung: add drive
-> strength macros for Exynos5433" [1].
+From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
 
-OK
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+LED Mode:
+Microsemi PHY support 2 LEDs (LED[0] and LED[1]) to display different
+status information that can be selected by setting LED mode.
 
-I expect that you take it through ARM SoC and/or send me a pull
-request for it on an immutable branch, whatever is best.
+LED Mode parameter (vsc8531, led-0-mode) and (vsc8531, led-1-mode) get from
+Device Tree.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tested on Beaglebone Black with VSC 8531 PHY.
+
+Change set:
+v0:
+- Initial version of LED driver for Microsemi PHYs.
+v1:
+- Update all review comments given by Andrew.
+- Add new header file "mscc-phy-vsc8531.h" to define DT macros.
+- Add error/range check for DT LED mode input
+v2:
+- Fixed x86_64 build error.
+
+Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+
+
+Raju Lakkaraju (1):
+  net: phy: Add LED mode driver for Microsemi PHYs.
+
+ .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 10 +++
+ drivers/net/phy/mscc.c                             | 85 +++++++++++++++++++++-
+ include/dt-bindings/net/mscc-phy-vsc8531.h         | 29 ++++++++
+ 3 files changed, 123 insertions(+), 1 deletion(-)
+ create mode 100644 include/dt-bindings/net/mscc-phy-vsc8531.h
+
+-- 
+2.7.4
