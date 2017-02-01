@@ -1,38 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/4] power: reset: Add Gemini poweroff DT bindings
-Date: Wed, 1 Feb 2017 11:11:48 -0600
-Message-ID: <20170201171148.zp2aol4abushh335@rob-hp-laptop>
-References: <20170130193635.18644-1-linus.walleij@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] regulator: cpcap: Add basic regulator support
+Date: Wed, 1 Feb 2017 11:14:35 -0600
+Message-ID: <20170201171435.hl3atrmrrz7mjsmo@rob-hp-laptop>
+References: <20170131001241.5926-1-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170130193635.18644-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170131001241.5926-1-tony@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 08:36:32PM +0100, Linus Walleij wrote:
-> This adds device tree bindings to the power management controller
-> in the Gemini SoC.
+On Mon, Jan 30, 2017 at 04:12:41PM -0800, Tony Lindgren wrote:
+> Many Motorola phones like droid 4 are using a custom PMIC called CPCAP
+> or 6556002. This PMIC is used with several SoCs, I've noticed at least
+> omap3, omap4 and Tegra2 based Motorola phones and tablets using it.
 > 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Marcel Partap <mpartap@gmx.net>
+> Cc: Michael Scott <michael.scott@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
 > ---
-> Sebastian: please just merge this when your are pleased
-> with it. I will funnel the ARM parts through the ARM SoC tree.
+> 
+> With the cpcap core MFD driver now in Linux next as commit
+> 3d66c8abc13e ("mfd: cpcap: Add minimal support"), here's a related
+> regulator driver. This is needed to support more devices on droid 4,
+> such as the LCD and touchscreen.
+> 
 > ---
->  .../devicetree/bindings/power/reset/gemini-poweroff.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/gemini-poweroff.txt
+>  .../bindings/regulator/cpcap-regulator.txt         |  34 ++
+>  drivers/regulator/Kconfig                          |   7 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/cpcap-regulator.c                | 517 +++++++++++++++++++++
+>  4 files changed, 559 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+>  create mode 100644 drivers/regulator/cpcap-regulator.c
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+> new file mode 100644
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+> @@ -0,0 +1,34 @@
+> +Motorola CPCAP PMIC voltage regulators
+> +------------------------------------
+> +
+> +Requires node properties:
+> +- "compatible" value one of:
+> +    "motorola,cpcap-regulator"
+> +    "motorola,mapphone-cpcap-regulator"
+> +
+> +Required regulator properties:
+> +- "regulator-name"
+> +- "regulator-enable-ramp-delay"
+> +- "regulator-min-microvolt"
+> +- "regulator-max-microvolt"
+> +
+> +Optional regulator properties:
+> +- "regulator-boot-on"
+> +
+> +See Documentation/devicetree/bindings/regulator/regulator.txt
+> +for more details about the regulator properties.
+> +
+> +Example:
+> +
+> +cpcap_regulator: regulator@600 {
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+unit-address with no reg prop.
+
+> +	compatible = "motorola,cpcap-regulator";
+> +
+> +	cpcap_regulators: regulators {
+> +		sw5: SW5 {
+> +			regulator-min-microvolt = <5050000>;
+> +			regulator-max-microvolt = <5050000>;
+> +			regulator-enable-ramp-delay = <50000>;
+> +			regulator-boot-on;
+> +		};
+> +	};
+> +};
