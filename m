@@ -1,169 +1,121 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 08/16] atmel-isi: document device tree bindings
-Date: Wed, 1 Feb 2017 10:50:59 -0600
-Message-ID: <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
- <20170130140628.18088-9-hverkuil@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 00/18] FSI device driver introduction
+Date: Wed,  1 Feb 2017 10:53:40 -0600
+Message-ID: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170130140628.18088-9-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 03:06:20PM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> Document the device tree bindings for this driver.
+Introduction of the IBM 'Flexible Support Interface' (FSI) bus device
+driver. FSI is a high fan out serial bus consisting of a clock and a serial
+data line capable of running at speeds up to 166 MHz.
 
-Bindings document h/w not drivers.
+This set provides the basic framework to add FSI extensions to the
+Linux bus and device models. Master specific implementations are
+defined to utilize the core FSI function.
 
-> 
-> Mostly copied from the atmel-isc bindings.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/atmel-isi.txt        | 91 +++++++++++++---------
->  1 file changed, 56 insertions(+), 35 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> index 251f008..d1934b4 100644
-> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
-> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
-> @@ -1,51 +1,72 @@
-> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
-> -----------------------------------------------
-> +Atmel Image Sensor Interface (ISI)
-> +----------------------------------
->  
-> -Required properties:
-> -- compatible: must be "atmel,at91sam9g45-isi"
-> -- reg: physical base address and length of the registers set for the device;
-> -- interrupts: should contain IRQ line for the ISI;
-> -- clocks: list of clock specifiers, corresponding to entries in
-> -          the clock-names property;
-> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
-> +Required properties for ISI:
-> +- compatible
-> +	Must be "atmel,at91sam9g45-isi".
-> +- reg
-> +	Physical base address and length of the registers set for the device.
-> +- interrupts
-> +	Should contain IRQ line for the ISI.
-> +- clocks
-> +	List of clock specifiers, corresponding to entries in
-> +	the clock-names property;
-> +	Please refer to clock-bindings.txt.
-> +- clock-names
-> +	Required elements: "isi_clk".
-> +- #clock-cells
-> +	Should be 0.
+In Linux, we have a core FSI "bus type", along with drivers for FSI
+masters and engines.
 
-This reformatting is unrelated and the old form was more standard for 
-bindings (not that we have any real standard).
+The FSI master drivers expose a read/write interface to the bus address
+space. The master drivers are under drivers/fsi/fsi-master-*.c.
 
-> +- pinctrl-names, pinctrl-0
-> +	Please refer to pinctrl-bindings.txt.
->  
->  ISI supports a single port node with parallel bus. It should contain one
->  'port' child node with child 'endpoint' node. Please refer to the bindings
->  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
->  
->  Example:
-> -	isi: isi@f0034000 {
-> -		compatible = "atmel,at91sam9g45-isi";
-> -		reg = <0xf0034000 0x4000>;
-> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
->  
-> -		clocks = <&isi_clk>;
-> -		clock-names = "isi_clk";
-> +isi: isi@f0034000 {
-> +	compatible = "atmel,at91sam9g45-isi";
-> +	reg = <0xf0034000 0x4000>;
-> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
-> +	clocks = <&isi_clk>;
-> +	clock-names = "isi_clk";
-> +	status = "ok";
-> +	port {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		isi_0: endpoint {
-> +			reg = <0>;
+The core handles probing and discovery of slaves and slave
+engines, using those read/write interfaces. It is responsible for
+creating the endpoint Linux devices corresponding to the discovered
+engines on each slave.
 
-Drop reg.
+Slave engines are identified by an 'engine' type, and an optional
+version. Engine, a.k.a. client, drivers are matched and bound to these
+engines during discovery.
 
-> +			remote-endpoint = <&ov2640_0>;
-> +			bus-width = <8>;
-> +			vsync-active = <1>;
-> +			hsync-active = <1>;
+This patch set does not include extended FSI function such as:
+    *  Hub master support
+    *  Cascaded master support
+    *  Application layer hot plug notification
+    *  Application layer FSI bus status interface
 
-Which side of the connect is supposed to define these?
+Common FSI terminology:
 
-> +		};
-> +	};
-> +};
-> +
-> +i2c1: i2c@f0018000 {
-> +	status = "okay";
->  
-> +	ov2640: camera@0x30 {
+* Master
+    Controller of the FSI bus.  Only the master is allowed to control the
+    clock line and is the initiator of all transactions on a bus.
 
-Drop the '0x'.
+* Slave
+    The receiver or target of a master initiated transaction.  The slave
+    cannot initiate communications on a bus and must respond to any
+    master requests for data.
 
-> +		compatible = "ovti,ov2640";
-> +		reg = <0x30>;
->  		pinctrl-names = "default";
-> -		pinctrl-0 = <&pinctrl_isi>;
-> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-> +		clocks = <&pck0>;
-> +		clock-names = "xvclk";
-> +		assigned-clocks = <&pck0>;
-> +		assigned-clock-rates = <25000000>;
->  
->  		port {
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			isi_0: endpoint {
-> -				remote-endpoint = <&ov2640_0>;
-> +			ov2640_0: endpoint {
-> +				remote-endpoint = <&isi_0>;
->  				bus-width = <8>;
+* CFAM
+    Stands for Common Field replaceable unit Access Macro.  A CFAM is an
+    ASIC residing in any device requiring FSI communications. CFAMs
+    consist of an array of hardware 'engines' used for various purposes.
+    I2C masters, UARTs, General Purpose IO hardware are common types of
+    these engines.
 
-It is pointless to define bus-width at both ends.
+* Configuration Space / Table
+    A table contained at the beginning of each CFAM address space.
+    This table lists information such as the CFAM's ID, which engine types
+    and versions it has available, as well as its addressing range.
 
->  			};
->  		};
->  	};
-> -
-> -	i2c1: i2c@f0018000 {
-> -		ov2640: camera@0x30 {
-> -			compatible = "ovti,ov2640";
-> -			reg = <0x30>;
-> -
-> -			port {
-> -				ov2640_0: endpoint {
-> -					remote-endpoint = <&isi_0>;
-> -					bus-width = <8>;
-> -				};
-> -			};
-> -		};
-> -	};
-> +};
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* FSI Engine driver
+    A device driver that registers with the FSI core so that it can access
+    devices it owns on an FSI bus.
+
+Chris Bostic (8):
+  drivers/fsi: Kick off master scan via sysfs
+  drivers/fsi: Set up links for slave communication
+  drivers/fsi: Set slave SMODE to init communication
+  drivers/fsi: Remove all scanned devices during master unregister
+  drivers/fsi: Add FSI bus documentation
+  drivers/fsi: Add documentation for GPIO based FSI master
+  drivers/fsi: Document FSI master sysfs files in ABI
+  drivers/fsi: Add GPIO based FSI master
+
+Jeremy Kerr (10):
+  drivers/fsi: Add empty fsi bus definitions
+  drivers/fsi: Add device & driver definitions
+  drivers/fsi: add driver to device matches
+  drivers/fsi: Add fsi master definition
+  drivers/fsi: Add slave definition
+  drivers/fsi: Add empty master scan
+  drivers/fsi: Add FSI crc calculators to library
+  drivers/fsi: Implement slave initialisation
+  drivers/fsi: scan slaves & register devices
+  drivers/fsi: Add device read/write/peek functions
+
+ Documentation/ABI/testing/sysfs-bus-fsi            |   6 +
+ .../devicetree/bindings/fsi/fsi-master-gpio.txt    |  71 +++
+ Documentation/devicetree/bindings/fsi/fsi.txt      |  54 +++
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/fsi/Kconfig                                |  23 +
+ drivers/fsi/Makefile                               |   3 +
+ drivers/fsi/fsi-core.c                             | 494 +++++++++++++++++++
+ drivers/fsi/fsi-master-gpio.c                      | 530 +++++++++++++++++++++
+ drivers/fsi/fsi-master.h                           |  39 ++
+ include/linux/crc-fsi.h                            |  29 ++
+ include/linux/fsi.h                                |  60 +++
+ lib/Makefile                                       |   1 +
+ lib/crc-fsi.c                                      |  39 ++
+ 14 files changed, 1352 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-fsi
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi-master-gpio.txt
+ create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+ create mode 100644 drivers/fsi/Kconfig
+ create mode 100644 drivers/fsi/Makefile
+ create mode 100644 drivers/fsi/fsi-core.c
+ create mode 100644 drivers/fsi/fsi-master-gpio.c
+ create mode 100644 drivers/fsi/fsi-master.h
+ create mode 100644 include/linux/crc-fsi.h
+ create mode 100644 include/linux/fsi.h
+ create mode 100644 lib/crc-fsi.c
+
+-- 
+1.8.2.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
