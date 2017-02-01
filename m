@@ -1,77 +1,42 @@
-From: <gabriel.fernandez@st.com>
-Subject: [Resend PATCH v2 1/3] dt-bindings: mfd: stm32f4: Fix STM32F4_X_CLOCK() macro
-Date: Wed, 1 Feb 2017 14:09:54 +0100
-Message-ID: <1485954596-11014-2-git-send-email-gabriel.fernandez@st.com>
-References: <1485954596-11014-1-git-send-email-gabriel.fernandez@st.com>
+From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [Resend PATCH v2 0/3] STM32F4 Clock binding fix & update
+Date: Wed, 1 Feb 2017 14:09:53 +0100
+Message-ID: <1485954596-11014-1-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485954596-11014-1-git-send-email-gabriel.fernandez@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, gabriel.fernandez@st.com, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
 
-Macro to select a clock was not correct.
+v2:
+- Only rename commit subject of first patch to avoid the error:
+ Remote Server returned '<vger.kernel.org #5.7.1 SMTP;
+ 550 5.7.1 Content-Policy reject msg: The capital Triple-X in subject
+ is way too often associated with junk email,
 
-Offset of enable register starts at 0x30, then calculation to select a bit is:
-(@enable_reg - 0x30) / 4 * 32 + bit_to_select
+This patch-set includes:
+ - a fix to STM32F4_X_CLOCK() macro
+ - an update of missing binding definition
+ - a patch to use STM32F4_X_CLOCK() macro
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
-Tested-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Acked-by: Stephen Boyd <sboyd@codeaurora.org>
+Gabriel Fernandez (3):
+  dt-bindings: mfd: stm32f4: Fix STM32F4_X_CLOCK() macro
+  dt-bindings: mfd: stm32f4: Add missing binding definition
+  ARM: dts: stm32: Use clock DT binding definition on stm32f429 family
 
----
- include/dt-bindings/mfd/stm32f4-rcc.h | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/stm32429i-eval.dts  |  2 +-
+ arch/arm/boot/dts/stm32f429.dtsi      | 66 +++++++++++++++++++----------------
+ include/dt-bindings/mfd/stm32f4-rcc.h | 24 +++++++++----
+ 3 files changed, 53 insertions(+), 39 deletions(-)
 
-diff --git a/include/dt-bindings/mfd/stm32f4-rcc.h b/include/dt-bindings/mfd/stm32f4-rcc.h
-index e98942d..f662b19 100644
---- a/include/dt-bindings/mfd/stm32f4-rcc.h
-+++ b/include/dt-bindings/mfd/stm32f4-rcc.h
-@@ -25,7 +25,7 @@
- #define STM32F4_RCC_AHB1_OTGHS	29
- 
- #define STM32F4_AHB1_RESET(bit) (STM32F4_RCC_AHB1_##bit + (0x10 * 8))
--#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit + (0x30 * 8))
-+#define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit)
- 
- 
- /* AHB2 */
-@@ -36,13 +36,13 @@
- #define STM32F4_RCC_AHB2_OTGFS	7
- 
- #define STM32F4_AHB2_RESET(bit)	(STM32F4_RCC_AHB2_##bit + (0x14 * 8))
--#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + (0x34 * 8))
-+#define STM32F4_AHB2_CLOCK(bit)	(STM32F4_RCC_AHB2_##bit + 0x20)
- 
- /* AHB3 */
- #define STM32F4_RCC_AHB3_FMC	0
- 
- #define STM32F4_AHB3_RESET(bit)	(STM32F4_RCC_AHB3_##bit + (0x18 * 8))
--#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + (0x38 * 8))
-+#define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + 0x40)
- 
- /* APB1 */
- #define STM32F4_RCC_APB1_TIM2	0
-@@ -72,7 +72,7 @@
- #define STM32F4_RCC_APB1_UART8	31
- 
- #define STM32F4_APB1_RESET(bit)	(STM32F4_RCC_APB1_##bit + (0x20 * 8))
--#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + (0x40 * 8))
-+#define STM32F4_APB1_CLOCK(bit)	(STM32F4_RCC_APB1_##bit + 0x80)
- 
- /* APB2 */
- #define STM32F4_RCC_APB2_TIM1	0
-@@ -93,6 +93,6 @@
- #define STM32F4_RCC_APB2_LTDC	26
- 
- #define STM32F4_APB2_RESET(bit)	(STM32F4_RCC_APB2_##bit + (0x24 * 8))
--#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + (0x44 * 8))
-+#define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + 0xA0)
- 
- #endif /* _DT_BINDINGS_MFD_STM32F4_RCC_H */
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
