@@ -1,80 +1,86 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 12/22 v2] ARM: dts: add top-level DT bindings for Cortina
- Gemini
-Date: Wed, 1 Feb 2017 21:04:48 +0100
-Message-ID: <20170201200448.ljvyo4qpkduwoc4h@piout.net>
-References: <20170201194632.18455-1-linus.walleij@linaro.org>
-Mime-Version: 1.0
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module table
+Date: Wed, 1 Feb 2017 21:20:37 +0100
+Message-ID: <B64DBFB0-62E8-4B4C-957F-C90C33BEF693@goldelico.com>
+References: <cover.1482936802.git.hns@goldelico.com> <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com> <20170128193558.GC38136@dtor-ws> <F39E49DD-45AF-4491-A26E-F3A9D86F30F6@goldelico.com> <20170129180108.GA10743@dtor-ws> <A169CC1E-9EC9-43CA-887B-1382F1903CE1@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170201194632.18455-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <A169CC1E-9EC9-43CA-887B-1382F1903CE1@goldelico.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Javier Martinez Canillas <javier@osg.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Michel Verlaan <michel.verl@gmail.com>, Nick Dyer <nick@shmanahar.org>, Tony Lindgren <tony@atomide.com>, LKML <linux-kernel@vger.kernel.org>, Benjamin Tissoires <benjamin.tissoires@redhat.com>, linux-omap <linux-omap@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, Igor Grinberg <grinberg@compulab.co.il>, Hans Verkuil <hans.verkuil@cisco.com>, linux-input@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Eric Engestrom <eric@engestrom.ch>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Mika_Penttil=C3=A4?= <mika.penttila@nextfour.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Petr Cvek <petr.cvek@tul.cz>, Siebren
 List-Id: devicetree@vger.kernel.org
 
-On 01/02/2017 at 20:46:32 +0100, Linus Walleij wrote:
-> This adds the top level SoC bindings for Cortina systems Gemini
-> platforms.
-> 
-> Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> ChangeLog v1->v2:
-> - Rename required property "intcon" to "interrupt-controller"
-> - Elaborate a bit on the SoC origins
-> - Put the example DTS SoC nodes in a soc {} node
-> ---
->  Documentation/devicetree/bindings/arm/gemini.txt | 81 ++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/gemini.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/gemini.txt b/Documentation/devicetree/bindings/arm/gemini.txt
-> new file mode 100644
-> index 000000000000..eb788302d3e9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/gemini.txt
-> @@ -0,0 +1,81 @@
-> +Cortina systems Gemini platforms
-> +
-> +The Gemini SoC is the project name for an ARMv4 FA525-based SoC originally
-> +produced by Storlink Semiconductor around 2005. The company was renamed
-> +later renamed Storm Semiconductor. The chip product name is Storlink SL3516.
-> +It was derived from earlier products from Storm named SL3316 (Centroid) and
-> +SL3512.
-> +
-> +Storm Semiconductor was acquired by Cortina Systems in 2008 and the SoC was
-> +produced and used for NAS and similar usecases. In 2014 Cortina Systems was
-> +in turn acquired by Inphi, who seem to have discontinued this product family.
-> +
-> +Required properties (in root node):
-> +	compatible = "cortina,gemini";
-> +
-> +Required nodes:
-> +
-> +- syscon: the root node must have a system controller node pointing to the
-> +  global control registers, with the compatible string
-> +  "cortina,gemini-syscon", "syscon";
-> +
-> +- timer: the root node must have a timer node pointing to the SoC timer
-> +  block, with the compatible string "cortina,gemini-timer"
-> +  See: clocksource/cortina,gemini-timer.txt
-> +
-> +- interrup-controller: the root node must have an interrupt controller
+Hi Dmitry, Javier,
 
-interrupt-controller maybe ? ;)
+> Am 29.01.2017 um 19:25 schrieb H. Nikolaus Schaller =
+<hns@goldelico.com>:
+>=20
+> Hi Dmitry,
+>=20
+>> Am 29.01.2017 um 19:01 schrieb Dmitry Torokhov =
+<dmitry.torokhov@gmail.com>:
+>>=20
+>> On Sun, Jan 29, 2017 at 09:39:39AM +0100, H. Nikolaus Schaller wrote:
+>>> Hi Dmitry,
+>>>=20
+>>>> Am 28.01.2017 um 20:35 schrieb Dmitry Torokhov =
+<dmitry.torokhov@gmail.com>:
+>>>>=20
+>>>> On Wed, Dec 28, 2016 at 03:53:21PM +0100, H. Nikolaus Schaller =
+wrote:
+>>>>> Fix module table so that the driver is loaded if compiled
+>>>>> as module and requested by DT.
+>>>>>=20
+>>>>=20
+>>>> I believe I already replied to a similar patch: we alreadyhave =
+necessary
+>>>> aliases in this driver, we need to fix module loading to use it.
+>>>=20
+>>> Yes, you did comment on [PATCH v6 7/8] (19 Nov 2016):
+>>>=20
+>>>>> We really need to fix it between spi/i23c core and module utils =
+instead
+>>>>> of keeping adding duplicate IDs all over drivers. We already have =
+OF
+>>>>> module device table containing the same data, we should be able to =
+use
+>>>>> it.
+>>>=20
+>>> And Javier Martinez Canillas replied (23 Nov 2016):
+>>>=20
+>>>> Agreed, unfortunately until the I2C and SPI core are changed to =
+properly
+>>>> report OF modaliases, we will have to keep adding these duplicated =
+IDs.
+>>>>=20
+>>>> And changing the I2C and SPI core isn't trivial since it could =
+break a
+>>>> lot of drivers that rely on a platform modalias being reported =
+(i.e: no
+>>>> OF device IDs present in the drivers even when are registered via =
+DT).
+>>>=20
+>>> Therefore I didn't see a need to change it.
+>>=20
+>> I agree that changing I2C and SPI core is not trivial, however this =
+is
+>> no reason for piling up workarounds in all drivers. Are you seriously
+>> advocating going though *every* driver and copying OF data into =
+I2C/SPI
+>> instead of doing the right thing and fixing the root of the issue?
+>=20
+> If you prefer to have this done (and I agree it would be a tiny =
+improvement),
+> please do it for us all. But please after merging this workaround.
 
+Have we been lucky to find someone who is able and willing to work on =
+this?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If not, I'd recommend to stay with the current level of optimality.
+
+BR and thanks,
+Nikolaus
+
