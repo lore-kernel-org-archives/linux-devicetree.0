@@ -1,41 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/8] Documentation: dt-bindings: Add STM32 pinctrl driver
- DT bindings
-Date: Wed, 1 Feb 2017 11:33:02 -0600
-Message-ID: <20170201173302.3ws4ehcjqlcnf663@rob-hp-laptop>
-References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
- <1485868465-30446-4-git-send-email-alexandre.torgue@st.com>
+Subject: Re: [PATCH linux v5 5/6] hwmon: occ: Add hwmon implementation for
+ the P8 OCC
+Date: Wed, 1 Feb 2017 11:34:50 -0600
+Message-ID: <20170201173450.ysuk3j2hwoldz72o@rob-hp-laptop>
+References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1485868465-30446-4-git-send-email-alexandre.torgue@st.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: eajames@linux.vnet.ibm.com
+Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 02:14:20PM +0100, Alexandre TORGUE wrote:
-> Add compatible sting for stm32h743 MCU.
+On Tue, Jan 31, 2017 at 09:43:56AM -0600, eajames@linux.vnet.ibm.com wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
+> well as probe the entire driver from the I2C bus. I2C is the communication
+> method between the BMC and the P8 OCC.
+> 
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
 
-Also, you can drop "Documentation: " from the subject as it is 
-redundant.
+Please add acks when posting new versions.
 
-> 
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> index b24583a..ac8dcb7 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
-> @@ -10,6 +10,7 @@ Required properies:
->   - compatible: value should be one of the following:
->     (a) "st,stm32f429-pinctrl"
->     (b) "st,stm32f746-pinctrl"
-> +   (c) "st,stm32h743-pinctrl"
->   - #address-cells: The value of this property must be 1
->   - #size-cells	: The value of this property must be 1
->   - ranges	: defines mapping between pin controller node (parent) to
-> -- 
-> 1.9.1
-> 
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/hwmon/occ/Kconfig                       |  14 ++++
+>  drivers/hwmon/occ/Makefile                      |   1 +
+>  drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++++++++++++++++++++
+>  4 files changed, 132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+>  create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
