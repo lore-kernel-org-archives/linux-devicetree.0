@@ -1,50 +1,70 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Wed, 01 Feb 2017 14:47:15 +0900
-Message-ID: <2c7df9c8-8658-f65e-969d-ba5d9de7163f@samsung.com>
-References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com>
- <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
+From: Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH v5 0/3][RESEND] Add QorIQ LS2088A platform support
+Date: Wed, 1 Feb 2017 11:58:33 +0530
+Message-ID: <1485930516-23146-1-git-send-email-abhimanyu.saini@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Inki Dae <inki.dae@samsung.com>, thierry.reding@gmail.com, robh@kernel.org, airlied@linux.ie, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: scott.wood-3arQi8VN3Tc@public.gmane.org, stuart.yoder-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Abhimanyu Saini <abhimanyu.saini-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds support for the QorIQ LS2088A SoC.
+LS2088A SoC is similar to LS2080A SoC with a few differences like it has A72 cores.
 
+This patchset
+        - reorganize LS2088A DTS/DTSI for code reuseability
+        - adds LS2088A device dtsi and dts files.
 
-On 01/31/2017 06:22 PM, Krzysztof Kozlowski wrote:
-> On Tue, Jan 31, 2017 at 2:01 AM, Inki Dae <inki.dae@samsung.com> wrote:
->>
->> 2017년 01월 24일 10:50에 Hoegeun Kwon 이(가) 쓴 글:
->>> Dear Thierry,
->>>
->>> Could you please review this patch?
->> Thierry, I think this patch has been reviewed enough but no comment from you. Seems you are busy. I will pick up this.
->>
-> Comments from v8 were not resolved and I think we are waiting for v9:
-> https://lkml.org/lkml/2017/1/11/178
->
-> If that is not correct then please clarify.
+Abhimanyu Saini (3):
+  dt-bindings: Add compatible for LS2088A QDS and RDB board
+  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
+  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
 
-Dear Krzysztof,
+Changes for v5:
+	- Add missing includes
+Changes for v4:
+	- Incorporated Shawn's comments by reorganizing
+	  DTSI, moving all #include to the top and,
+	- add missing files
+Changes for v3:
+	- rename dts/dtsi files
+Changes for v2:
+	- reorganize LS2088A device tree to use common
+	  nodes from LS2080A device trees.
+	- Both LS2080A and LS2088A have same hardware
+	  controllers, so separate dt-binding patches for
+	  pcie, gpio, dspi, qspi are not required.
 
-I'm sorry, I was mistaken.
-I will change them to optional and will send it to the V9 patch.
+Abhimanyu Saini (3):
+  dt-bindings: Add compatible for LS2088A QDS and RDB board
+  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
+  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
 
-Best Regards,
-Hoegeun
+ Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
+ arch/arm64/boot/dts/freescale/Makefile             |   2 +
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 155 +---
+ arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +--
+ arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 859 ++-------------------
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  66 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  66 ++
+ arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 153 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 196 +++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 151 ++++
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 753 ++++++++++++++++++
+ 11 files changed, 1488 insertions(+), 1034 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
 
->
-> Best regards,
-> Krzysztof
->
->
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
