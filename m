@@ -1,124 +1,76 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] drm/msm: drop qcom,chipid
-Date: Wed, 1 Feb 2017 11:09:35 -0600
-Message-ID: <20170201170935.tqwbxc2mhkvngyyk@rob-hp-laptop>
-References: <20170130164921.20744-1-robdclark@gmail.com>
- <20170130164921.20744-3-robdclark@gmail.com>
+From: Christopher Bostic <christopher.lee.bostic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 15/18] drivers/fsi: Add documentation for GPIO based
+ FSI master
+Date: Wed, 1 Feb 2017 11:09:38 -0600
+Message-ID: <CAA0LjjVMh4DNH7BoF_pgQHWowS0d4_LBue_VP20GkydHSgcLow@mail.gmail.com>
+References: <1484260543-80300-1-git-send-email-christopher.lee.bostic@gmail.com>
+ <20170118215755.xoamoc2rrzhy4kyz@rob-hp-laptop> <f0933f56-6a23-9c53-6e10-0e1ca18082e2@ozlabs.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170130164921.20744-3-robdclark@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Clark <robdclark@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <f0933f56-6a23-9c53-6e10-0e1ca18082e2-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Open List OF Flattened dev tree bindings <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Moderated list: ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Linux open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTE6NDk6MTlBTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
-Ogo+IFRoZSBvcmlnaW5hbCB3YXkgd2UgZGV0ZXJtaW5lZCB0aGUgZ3B1IHZlcnNpb24gd2FzIGJh
-c2VkIG9uIGRvd25zdHJlYW0KPiBiaW5kaW5ncyBmcm9tIGFuZHJvaWQga2VybmVsLiAgQSBjbGVh
-bmVyIHdheSBpcyB0byBnZXQgdGhlIHZlcnNpb24gZnJvbQo+IHRoZSBjb21wYXRpYmxlIHN0cmlu
-Zy4KPiAKPiBOb3RlIHRoYXQgbm8gdXBzdHJlYW0gZHRiIHVzZXMgdGhlc2UgYmluZGluZ3MuICBC
-dXQgdGhlIGNvZGUgc3RpbGwKPiBzdXBwb3J0cyBmYWxsaW5nIGJhY2sgdG8gdGhlIGxlZ2FjeSBi
-aW5kaW5ncyAod2l0aCBhIHdhcm5pbmcpLCBzbyB0aGF0Cj4gd2UgYXJlIHN0aWxsIGNvbXBhdGli
-bGUgd2l0aCB0aGUgZ3B1IGR0IG5vZGUgZnJvbSBhbmRyb2lkIGRldmljZQo+IGtlcm5lbHMuCgpG
-aW5lIGZvciBvbmUgZHJpdmVyL2JpbmRpbmcsIGJ1dCB3ZSB3b3VsZG4ndCByZWFsbHkgd2FudCB0
-byBkbyBjYXJyeSAKZG93bnN0cmVhbSBjb21wYXRpYmlsaXR5IGZvciBldmVyeXRoaW5nLgoKPiAK
-PiBTaWduZWQtb2ZmLWJ5OiBSb2IgQ2xhcmsgPHJvYmRjbGFya0BnbWFpbC5jb20+Cj4gLS0tCj4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgICAgICAgIHwgMTEg
-KysrLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vYWRyZW5vL2FkcmVub19kZXZpY2UuYyAgICAg
-ICAgIHwgNDMgKysrKysrKysrKysrKysrKysrKysrLQo+ICBkcml2ZXJzL2dwdS9kcm0vbXNtL21z
-bV9kcnYuYyAgICAgICAgICAgICAgICAgICAgICB8ICAxICsKPiAgMyBmaWxlcyBjaGFuZ2VkLCA0
-OSBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gaW5kZXggNzQ3
-Yjk4NC4uN2FjMzA1MiAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gQEAgLTEsNyArMSwxMSBAQAo+ICBRdWFs
-Y29tbSBhZHJlbm8vc25hcGRyYWdvbiBHUFUKPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-LS0gY29tcGF0aWJsZTogInFjb20sYWRyZW5vLTN4eCIKPiArLSBjb21wYXRpYmxlOiAicWNvbSxh
-ZHJlbm8tWFlaLlciLCAicWNvbSxhZHJlbm8iCj4gKyAgICBmb3IgZXhhbXBsZTogInFjb20sYWRy
-ZW5vLTMwNi4wIiwgInFjb20sYWRyZW5vIgo+ICsgIE5vdGUgdGhhdCB5b3UgbmVlZCB0byBsaXN0
-IHRoZSBsZXNzIHNwZWNpZmljICJxY29tLGFkcmVubyIgKHNpbmNlIHRoaXMKPiArICBpcyB3aGF0
-IHRoZSBkZXZpY2UgaXMgbWF0Y2hlZCBvbiksIGluIGFkZGl0aW9uIHRvIHRoZSBtb3JlIHNwZWNp
-ZmljCj4gKyAgd2l0aCB0aGUgY2hpcC1pZC4KPiAgLSByZWc6IFBoeXNpY2FsIGJhc2UgYWRkcmVz
-cyBhbmQgbGVuZ3RoIG9mIHRoZSBjb250cm9sbGVyJ3MgcmVnaXN0ZXJzLgo+ICAtIGludGVycnVw
-dHM6IFRoZSBpbnRlcnJ1cHQgc2lnbmFsIGZyb20gdGhlIGdwdS4KPiAgLSBjbG9ja3M6IGRldmlj
-ZSBjbG9ja3MKPiBAQCAtMTAsOCArMTQsNiBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICog
-ImNvcmVfY2xrIgo+ICAgICogImlmYWNlX2NsayIKPiAgICAqICJtZW1faWZhY2VfY2xrIgo+IC0t
-IHFjb20sY2hpcGlkOiBncHUgY2hpcC1pZC4gIE5vdGUgdGhpcyBtYXkgYmVjb21lIG9wdGlvbmFs
-IGZvciBmdXR1cmUKPiAtICBkZXZpY2VzIGlmIHdlIGNhbiByZWxpYWJseSByZWFkIHRoZSBjaGlw
-aWQgZnJvbSBodwo+ICAKPiAgRXhhbXBsZToKPiAgCj4gQEAgLTE5LDcgKzIxLDcgQEAgRXhhbXBs
-ZToKPiAgCS4uLgo+ICAKPiAgCWdwdTogcWNvbSxrZ3NsLTNkMEA0MzAwMDAwIHsKPiAtCQljb21w
-YXRpYmxlID0gInFjb20sYWRyZW5vLTN4eCI7Cj4gKwkJY29tcGF0aWJsZSA9ICJxY29tLGFkcmVu
-by0zMjAuMiIsICJxY29tLGFkcmVubyI7Cj4gIAkJcmVnID0gPDB4MDQzMDAwMDAgMHgyMDAwMD47
-Cj4gIAkJcmVnLW5hbWVzID0gImtnc2xfM2QwX3JlZ19tZW1vcnkiOwo+ICAJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSA4MCAwPjsKPiBAQCAtMzIsNiArMzQsNSBAQCBFeGFtcGxlOgo+ICAJCSAgICA8
-Jm1tY2MgR0ZYM0RfQ0xLPiwKPiAgCQkgICAgPCZtbWNjIEdGWDNEX0FIQl9DTEs+LAo+ICAJCSAg
-ICA8Jm1tY2MgTU1TU19JTUVNX0FIQl9DTEs+Owo+IC0JCXFjb20sY2hpcGlkID0gPDB4MDMwMjAx
-MDA+Owo+ICAJfTsKPiAgfTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJl
-bm8vYWRyZW5vX2RldmljZS5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2Rl
-dmljZS5jCj4gaW5kZXggN2I5MTgxYjIuLmZkYWVmNjcgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9n
-cHUvZHJtL21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJt
-L21zbS9hZHJlbm8vYWRyZW5vX2RldmljZS5jCj4gQEAgLTE4OSw2ICsxODksNDYgQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCB7Cj4gIAl7ICJxY29tLGdwdS1xdWlyay1mYXVsdC1kZXRlY3QtbWFzayIs
-IEFEUkVOT19RVUlSS19GQVVMVF9ERVRFQ1RfTUFTSyB9LAo+ICB9Owo+ICAKPiArc3RhdGljIGlu
-dCBmaW5kX2NoaXBpZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHUzMiAqY2hpcGlkKQo+ICt7Cj4gKwlz
-dHJ1Y3QgZGV2aWNlX25vZGUgKm5vZGUgPSBkZXYtPm9mX25vZGU7Cj4gKwlzdHJ1Y3QgcHJvcGVy
-dHkgKnByb3A7Cj4gKwljb25zdCBjaGFyICpjb21wYXQ7Cj4gKwlpbnQgcmV0Owo+ICsKPiArCS8q
-IGZpcnN0IHNlYXJjaCB0aGUgY29tcGF0IHN0cmluZ3MgZm9yIHFjb20sYWRyZW5vLVhZWi5XOiAq
-Lwo+ICsJcHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobm9kZSwgImNvbXBhdGlibGUiLCBOVUxMKTsK
-PiArCWZvciAoY29tcGF0ID0gb2ZfcHJvcF9uZXh0X3N0cmluZyhwcm9wLCBOVUxMKTsgY29tcGF0
-Owo+ICsJICAgICBjb21wYXQgPSBvZl9wcm9wX25leHRfc3RyaW5nKHByb3AsIGNvbXBhdCkpIHsK
-Cm9mX3Byb3BlcnR5X2Zvcl9lYWNoX3N0cmluZwoKSG93ZXZlciwgeW91IHNwZWNpZnkgaW4gdGhl
-IGJpbmRpbmcgaXQgc2hvdWxkIGJlIHRoZSAxc3Qgc3RyaW5nLCBzbyB5b3UgCnJlYWxseSBkb24n
-dCBuZWVkIGEgbG9vcCBoZXJlIGFuZCBjb3VsZCB1c2UgCm9mX3Byb3BlcnR5X3JlYWRfc3RyaW5n
-X2luZGV4LgoKV2l0aCB0aGF0LAoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5v
-cmc+CgoKPiArCQl1bnNpZ25lZCByZXYsIHBhdGNoOwo+ICsKPiArCQlpZiAoc3NjYW5mKGNvbXBh
-dCwgInFjb20sYWRyZW5vLSV1LiV1IiwgJnJldiwgJnBhdGNoKSAhPSAyKQo+ICsJCQljb250aW51
-ZTsKPiArCj4gKwkJKmNoaXBpZCA9IDA7Cj4gKwkJKmNoaXBpZCB8PSAocmV2IC8gMTAwKSA8PCAy
-NDsgIC8qIGNvcmUgKi8KPiArCQlyZXYgJT0gMTAwOwo+ICsJCSpjaGlwaWQgfD0gKHJldiAvIDEw
-KSA8PCAxNjsgICAvKiBtYWpvciAqLwo+ICsJCXJldiAlPSAxMDsKPiArCQkqY2hpcGlkIHw9IHJl
-diA8PCA4OyAgICAgICAgICAgLyogbWlub3IgKi8KPiArCQkqY2hpcGlkIHw9IHBhdGNoOwo+ICsK
-PiArCQlyZXR1cm4gMDsKPiArCX0KPiArCj4gKwkvKiBhbmQgaWYgdGhhdCBmYWlscywgZmFsbCBi
-YWNrIHRvIGxlZ2FjeSAicWNvbSxjaGlwaWQiIHByb3BlcnR5OiAqLwo+ICsJcmV0ID0gb2ZfcHJv
-cGVydHlfcmVhZF91MzIobm9kZSwgInFjb20sY2hpcGlkIiwgY2hpcGlkKTsKPiArCWlmIChyZXQp
-Cj4gKwkJcmV0dXJuIHJldDsKPiArCj4gKwlkZXZfd2FybihkZXYsICJVc2luZyBsZWdhY3kgcWNv
-bSxjaGlwaWQgYmluZGluZyFcbiIpOwo+ICsJZGV2X3dhcm4oZGV2LCAiVXNlIGNvbXBhdGlibGUg
-cWNvbSxhZHJlbm8tJXUldSV1LiV1IGluc3RlYWQuXG4iLAo+ICsJCQkoKmNoaXBpZCA+PiAyNCkg
-JiAweGZmLCAoKmNoaXBpZCA+PiAxNikgJiAweGZmLAo+ICsJCQkoKmNoaXBpZCA+PiA4KSAmIDB4
-ZmYsICpjaGlwaWQgJiAweGZmKTsKPiArCj4gKwlyZXR1cm4gMDsKPiArfQo+ICsKPiAgc3RhdGlj
-IGludCBhZHJlbm9fYmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rl
-ciwgdm9pZCAqZGF0YSkKPiAgewo+ICAJc3RhdGljIHN0cnVjdCBhZHJlbm9fcGxhdGZvcm1fY29u
-ZmlnIGNvbmZpZyA9IHt9Owo+IEBAIC0xOTYsNyArMjM2LDcgQEAgc3RhdGljIGludCBhZHJlbm9f
-YmluZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3Rlciwgdm9pZCAqZGF0
-YSkKPiAgCXUzMiB2YWw7Cj4gIAlpbnQgcmV0LCBpOwo+ICAKPiAtCXJldCA9IG9mX3Byb3BlcnR5
-X3JlYWRfdTMyKG5vZGUsICJxY29tLGNoaXBpZCIsICZ2YWwpOwo+ICsJcmV0ID0gZmluZF9jaGlw
-aWQoZGV2LCAmdmFsKTsKPiAgCWlmIChyZXQpIHsKPiAgCQlkZXZfZXJyKGRldiwgImNvdWxkIG5v
-dCBmaW5kIGNoaXBpZDogJWRcbiIsIHJldCk7Cj4gIAkJcmV0dXJuIHJldDsKPiBAQCAtMjY1LDYg
-KzMwNSw3IEBAIHN0YXRpYyBpbnQgYWRyZW5vX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNl
-ICpwZGV2KQo+ICB9Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkdF9t
-YXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJxY29tLGFkcmVubyIgfSwKPiAgCXsgLmNv
-bXBhdGlibGUgPSAicWNvbSxhZHJlbm8tM3h4IiB9LAo+ICAJLyogZm9yIGJhY2t3YXJkcyBjb21w
-YXQgdy8gZG93bnN0cmVhbSBrZ3NsIERUIGZpbGVzOiAqLwo+ICAJeyAuY29tcGF0aWJsZSA9ICJx
-Y29tLGtnc2wtM2QwIiB9LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9k
-cnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gaW5kZXggZTI5YmI2Ni4uNmI4
-NWM0MSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYwo+ICsrKyBi
-L2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCj4gQEAgLTk4NSw2ICs5ODUsNyBAQCBzdGF0
-aWMgaW50IGFkZF9kaXNwbGF5X2NvbXBvbmVudHMoc3RydWN0IGRldmljZSAqZGV2LAo+ICAgKiBh
-cyBjb21wb25lbnRzLgo+ICAgKi8KPiAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
-bXNtX2dwdV9tYXRjaFtdID0gewo+ICsJeyAuY29tcGF0aWJsZSA9ICJxY29tLGFkcmVubyIgfSwK
-PiAgCXsgLmNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8tM3h4IiB9LAo+ICAJeyAuY29tcGF0aWJs
-ZSA9ICJxY29tLGtnc2wtM2QwIiB9LAo+ICAJeyB9LAo+IC0tIAo+IDIuOS4zCj4gCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jan 18, 2017 at 8:11 PM, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org> wrote:
+> Hi Chris,
+>
+> From this:
+>
+>>> +
+>>> +The standard FSI master node
+>>> +----------------------------
+>>> +This node describes a FSI master implmemented fully in hardware
+>>> +with dedicated input/output pins required for its function (i.e.
+>>> +not using generic GPIO pins).
+>>> +Required property:
+>>> +    compatible = "ibm,fsi-master"
+>
+> and this:
+>
+>>> +Example:
+>>> +
+>>> +fsi-master {
+>>> +    compatible = "ibm,fsi-master-gpio", "ibm,fsi-master";
+>>
+>> From the description, these should be mutually exclusive.
+>
+> I agree with Rob here. The intention is for "ibm,fsi-master" to be an
+> abstract master -- simply indicating that this node describes a master,
+> with no specific implementation, and "ibm,fsi-master-gpio" to be a
+> GPIO-based implementation. A hardware-based FSI master would have a
+> different compatible value, based on the hardware.
+>
+> We should remove references to implementations in the "The standard FSI
+> master node" section, because this is independent of implementation.
+>
+
+Hi,
+
+OK will make that change for version 4.
+
+>>> +    clk-gpios = <&gpio 0>, <&gpio 6>;
+>>> +    data-gpios = <&gpio 1>, <&gpio 7>;
+>>> +    enable-gpios = <&gpio 2>, <&gpio 8>;
+>>> +    trans-gpios = <&gpio 3>, <&gpio 9>;
+>>> +    mux-gpios = <&gpio 4>, <&gpio 10>;
+>
+> Do we support multiple-link masters? This example implies a 2-link
+> master.
+>
+
+Should we start with a single link in this case?  To start off with
+only one link is supported by the master.
+
+Thanks
+
+> Cheers,
+>
+>
+> Jeremy
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
