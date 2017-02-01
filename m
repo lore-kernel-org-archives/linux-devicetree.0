@@ -1,61 +1,67 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev driver
-Date: Wed, 1 Feb 2017 01:13:49 +0000
-Message-ID: <20170201011349.GJ27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
- <20170131000125.GO27312@n2100.armlinux.org.uk>
- <1485856160.2932.10.camel@pengutronix.de>
- <6e77aefa-4f22-60e9-7cc0-55c3a2de3124@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <6e77aefa-4f22-60e9-7cc0-55c3a2de3124@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+From: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v5 0/5] usb: dwc2: Add support for USB OTG on STM32F4x9
+Date: Tue, 31 Jan 2017 23:25:42 -0200
+Message-ID: <20170201012547.76158-1-bruherrera@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+The STM32F4x9 MCU family has two DWC2 USB OTG cores on it. One core is
+USB OTG FS and other core is USB OTG HS. The USB FS core only works with
+its internal phy whilst the USF HS core can work in HS with external ulpi
+phy or in FS/LS speed with the embedded FS PHY.
 
-On Tue, Jan 31, 2017 at 05:02:40PM -0800, Steve Longerbeam wrote:
-> But this also puts a requirement on MIPI sensors that s_power(ON)
-> should only place the D_PHY in LP-11, and _not_ start the clock lane.
-> But perhaps that is correct behavior anyway.
+The goal of this patch series is to enable the use of USB OTG FS/HS cores
+in FS mode using the internal phy.
 
-If the CSI2 DPHY is held in reset state, it shouldn't matter what the
-sensor does.  In the case of IMX219, it needs a full setup of the
-device, including enabling it to stream (so it starts the clock lane
-etc) in order to get it into LP-11 state.  Merely disabling the XCLR
-signal leaves the lanes grounded.
+Changes since v5:
+- Fix checkpatch --strict for usb related files
+- Changed struct dwc2_core_params param name from activate_transceiver to
+activate_stm_fs_transceiver
 
-I do seem to remember reading in one of the MIPI specs that this is
-rather expected behaviour, though I can't point at a paragraph this
-late in the night.
+Changes since v4:
+- Rebase on top of repository https://github.com/synopsys-usb/linux
+- Changes var names from STM32F4xx to STM32F4x9
 
-So, the only way to satisfy these requirements is this order:
+Changes since v3:
+- Removed commented lines from patch (sent by mistake)
+- Split DTS patch by boards and SOC
+- Removed unnecessary pinctrl nodes from DTS files
 
-- assert PHY reset signals (so blocking any activity on the CSI lanes)
-- initialise the sensor (including allowing it to start streaming and
-  then stopping the stream - at that point, the lanes will be in LP-11.)
-- deassert the resets as per the iMX6 documentation and follow the
-  remaining procedure.
+Changes since v2:
+- Rename driver variables to meet the driver standard
+- Add compatible string for HS core
 
-I'll look at your other points tomorrow.
+Changes since v1:
+- Add dwc2_core_params structure for stm32f4 otg fs
+- Add compatible string for FS core/mode
+- Use GGPIO register to deativate power down of the phy
 
-Thanks.
+Bruno Herrera (5):
+  usb: dwc2: Add support for STM32F429/439/469 USB OTG HS/FS in FS mode
+    (internal PHY)
+  ARM: dts: stm32: Add USB FS support for STM32F429 MCU
+  ARM: dts: stm32: Enable USB FS on stm32f469-disco
+  ARM: dts: stm32: Enable USB HS in FS mode (embedded phy) on
+    stm32f429-disco
+  dt-bindings: Document the STM32 USB OTG DWC2 core binding
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  4 ++++
+ arch/arm/boot/dts/stm32f429-disco.dts          | 16 +++++++++++++
+ arch/arm/boot/dts/stm32f429.dtsi               | 31 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/stm32f469-disco.dts          | 16 +++++++++++++
+ drivers/usb/dwc2/core.h                        |  5 +++++
+ drivers/usb/dwc2/hcd.c                         | 15 ++++++++++++-
+ drivers/usb/dwc2/hw.h                          |  2 ++
+ drivers/usb/dwc2/params.c                      | 19 ++++++++++++++++
+ 8 files changed, 107 insertions(+), 1 deletion(-)
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+2.10.1 (Apple Git-78)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
