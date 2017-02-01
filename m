@@ -1,151 +1,108 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/5] usb: dwc2: Add support for STM32F429/439/469 USB
- OTG HS/FS in FS mode (internal PHY)
-Date: Wed, 1 Feb 2017 03:37:07 +0000
-Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B411720@US01WEMBX2.internal.synopsys.com>
-References: <20170201012547.76158-1-bruherrera@gmail.com>
- <20170201012547.76158-2-bruherrera@gmail.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
+Date: Wed, 1 Feb 2017 10:52:12 +0530
+Message-ID: <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
+References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
+ <1483499169-16329-3-git-send-email-hs.liao@mediatek.com> <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
+ <1485419833.990.1.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1485419833.990.1.camel@mtksdaap41>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.torgue-qxv4g6HH51o@public.gmane.org" <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/31/2017 5:26 PM, Bruno Herrera wrote:
-> This patch introduces a new parameter to activate USB OTG HS/FS core
-> embedded phy transceiver. The STM32F4x9 SoC uses the GGPIO register
-> to enable the transceiver.
-> Also add the dwc2_set_params function for stm32f4 otg fs.
+On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Jassi,
 >
-> Signed-off-by: Bruno Herrera <bruherrera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
+>> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+>>
+>> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+>> > new file mode 100644
+>> > index 0000000..747bcd3
+>> > --- /dev/null
+>> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+>>
+>> ...
+>>
+>> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
+>> > +{
+>> > +       struct cmdq *cmdq;
+>> > +       struct cmdq_task *task;
+>> > +       unsigned long curr_pa, end_pa;
+>> > +
+>> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
+>> > +
+>> > +       /* Client should not flush new tasks if suspended. */
+>> > +       WARN_ON(cmdq->suspended);
+>> > +
+>> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
+>> > +       task->cmdq = cmdq;
+>> > +       INIT_LIST_HEAD(&task->list_entry);
+>> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
+>> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
+>> >
+>> You seem to parse the requests and responses, that should ideally be
+>> done in client driver.
+>> Also, we are here in atomic context, can you move it in client driver
+>> (before the spin_lock)?
+>> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
+>
+> will do
+>
+>> ....
+>> > +
+>> > +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
+>> > +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
+>> > +       cmdq->mbox.of_xlate = cmdq_xlate;
+>> > +
+>> > +       /* make use of TXDONE_BY_ACK */
+>> > +       cmdq->mbox.txdone_irq = false;
+>> > +       cmdq->mbox.txdone_poll = false;
+>> > +
+>> > +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
+>> >
+>> You mean  i < CMDQ_THR_MAX_COUNT
+>
+> will do
+>
+>> > +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
+>> > +                               CMDQ_THR_SIZE * i;
+>> > +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
+>> >
+>> You seem the queue mailbox requests in this controller driver? why not
+>> use the mailbox api for that?
+>>
+>> > +               init_timer(&cmdq->thread[i].timeout);
+>> > +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
+>> > +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
+>> >
+>> Here again... you seem to ignore the polling mechanism provided by the
+>> mailbox api, and implement your own.
+>
+> The queue is used to record the tasks which are flushed into CMDQ
+> hardware (GCE). We are handling time critical tasks, so we have to
+> queue them in GCE rather than a software queue (e.g. mailbox buffer).
+> Let me use display as an example. Many display tasks are flushed into
+> CMDQ to wait next vsync event. When vsync event is triggered by display
+> hardware, GCE needs to process all flushed tasks "within vblank" to
+> prevent garbage on screen. This is all done by GCE (without CPU)
+> to fulfill time critical requirement. After GCE finish its work,
+> it will generate interrupts, and then CMDQ driver will let clients know
+> which tasks are done.
+>
+Does the GCE provide any 'lock' to prevent modifying (by adding tasks
+to) the GCE h/w buffer when it is processing it at vsync?  Otherwise
+there maybe race/error. If there is such a 'lock' flag/irq, that could
+help here. However, you are supposed to know your h/w better, so I
+will accept this implementation assuming it can't be done any better.
 
-Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Please address other comments and resubmit.
 
-Regards,
-John
-
-
-> ---
->  drivers/usb/dwc2/core.h   |  5 +++++
->  drivers/usb/dwc2/hcd.c    | 15 ++++++++++++++-
->  drivers/usb/dwc2/hw.h     |  2 ++
->  drivers/usb/dwc2/params.c | 19 +++++++++++++++++++
->  4 files changed, 40 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-> index b9b62f1..252400b 100644
-> --- a/drivers/usb/dwc2/core.h
-> +++ b/drivers/usb/dwc2/core.h
-> @@ -423,6 +423,10 @@ enum dwc2_ep0_state {
->   *			needed.
->   *			0 - No (default)
->   *			1 - Yes
-> + * @activate_stm_fs_transceiver: Activate internal transceiver using GGPIO
-> + *			register.
-> + *			0 - Deactivate the transceiver (default)
-> + *			1 - Activate the transceiver
->   * @g_dma:              Enables gadget dma usage (default: autodetect).
->   * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
->   * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-> @@ -477,6 +481,7 @@ struct dwc2_core_params {
->  	bool uframe_sched;
->  	bool external_id_pin_ctl;
->  	bool hibernation;
-> +	bool activate_stm_fs_transceiver;
->  	u16 max_packet_count;
->  	u32 max_transfer_size;
->  	u32 ahbcfg;
-> diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-> index a73722e..b5a70b6 100644
-> --- a/drivers/usb/dwc2/hcd.c
-> +++ b/drivers/usb/dwc2/hcd.c
-> @@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
->
->  static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  {
-> -	u32 usbcfg, i2cctl;
-> +	u32 usbcfg, ggpio, i2cctl;
->  	int retval = 0;
->
->  	/*
-> @@ -145,6 +145,19 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
->  				return retval;
->  			}
->  		}
-> +
-> +		if (hsotg->params.activate_stm_fs_transceiver) {
-> +			ggpio = dwc2_readl(hsotg->regs + GGPIO);
-> +			if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN)) {
-> +				dev_dbg(hsotg->dev, "Activating transceiver\n");
-> +				/*
-> +				 * STM32F4x9 uses the GGPIO register as general
-> +				 * core configuration register.
-> +				 */
-> +				ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
-> +				dwc2_writel(ggpio, hsotg->regs + GGPIO);
-> +			}
-> +		}
->  	}
->
->  	/*
-> diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-> index bde7248..4592012 100644
-> --- a/drivers/usb/dwc2/hw.h
-> +++ b/drivers/usb/dwc2/hw.h
-> @@ -225,6 +225,8 @@
->
->  #define GPVNDCTL			HSOTG_REG(0x0034)
->  #define GGPIO				HSOTG_REG(0x0038)
-> +#define GGPIO_STM32_OTG_GCCFG_PWRDWN	BIT(16)
-> +
->  #define GUID				HSOTG_REG(0x003c)
->  #define GSNPSID				HSOTG_REG(0x0040)
->  #define GHWCFG1				HSOTG_REG(0x0044)
-> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-> index 2990c34..9cd8722 100644
-> --- a/drivers/usb/dwc2/params.c
-> +++ b/drivers/usb/dwc2/params.c
-> @@ -120,6 +120,22 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
->  	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
->  }
->
-> +static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
-> +{
-> +	struct dwc2_core_params *p = &hsotg->params;
-> +
-> +	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
-> +	p->speed = DWC2_SPEED_PARAM_FULL;
-> +	p->host_rx_fifo_size = 128;
-> +	p->host_nperio_tx_fifo_size = 96;
-> +	p->host_perio_tx_fifo_size = 96;
-> +	p->max_packet_count = 256;
-> +	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
-> +	p->i2c_enable = false;
-> +	p->uframe_sched = false;
-> +	p->activate_stm_fs_transceiver = true;
-> +}
-> +
->  const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
->  	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
-> @@ -133,6 +149,9 @@ const struct of_device_id dwc2_of_match_table[] = {
->  	{ .compatible = "amlogic,meson-gxbb-usb",
->  	  .data = dwc2_set_amlogic_params },
->  	{ .compatible = "amcc,dwc-otg", .data = dwc2_set_amcc_params },
-> +	{ .compatible = "st,stm32f4x9-fsotg",
-> +	  .data = dwc2_set_stm32f4x9_fsotg_params },
-> +	{ .compatible = "st,stm32f4x9-hsotg" },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
->
-
-
-
+Thanks
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
