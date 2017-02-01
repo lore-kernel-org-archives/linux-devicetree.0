@@ -1,119 +1,42 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v3 11/18] drivers/fsi: Add device read/write/peek functions
-Date: Wed,  1 Feb 2017 10:53:51 -0600
-Message-ID: <20170201165358.45415-12-cbostic@linux.vnet.ibm.com>
-References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, Chris Bostic <cbostic@us.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] drm/msm: remove qcom,
+	gpu-pwrlevels bindings
+Date: Wed, 1 Feb 2017 11:01:48 -0600
+Message-ID: <20170201170148.o4p4dxzpr57c32ch@rob-hp-laptop>
+References: <20170130164921.20744-1-robdclark@gmail.com>
+ <20170130164921.20744-2-robdclark@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170130164921.20744-2-robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
-
-This change introduces the fsi device API: simple read, write and peek
-accessors for the devices' address spaces.
-
-Includes contributions from Chris Bostic <cbostic@us.ibm.com>
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
----
- drivers/fsi/fsi-core.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/fsi.h    |  6 ++++++
- 2 files changed, 53 insertions(+)
-
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index f7ef993..3119aa1 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -35,6 +35,8 @@
- #define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
- #define FSI_SLAVE_CONF_DATA_BITS	28
- 
-+#define FSI_PEEK_BASE			0x410
-+
- static const int engine_page_size = 0x400;
- 
- static DEFINE_IDA(master_ida);
-@@ -48,8 +50,46 @@ struct fsi_slave {
- 
- #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
- 
-+static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-+		void *val, size_t size);
-+static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-+		const void *val, size_t size);
-+
- /* FSI endpoint-device support */
- 
-+int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
-+		size_t size)
-+{
-+	if (addr > dev->size)
-+		return -EINVAL;
-+
-+	if (addr + size > dev->size)
-+		return -EINVAL;
-+
-+	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_read);
-+
-+int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
-+		size_t size)
-+{
-+	if (addr > dev->size)
-+		return -EINVAL;
-+
-+	if (addr + size > dev->size)
-+		return -EINVAL;
-+
-+	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_write);
-+
-+int fsi_device_peek(struct fsi_device *dev, void *val)
-+{
-+	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
-+
-+	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
-+}
-+
- static void fsi_device_release(struct device *_device)
- {
- 	struct fsi_device *device = to_fsi_dev(_device);
-@@ -81,6 +121,13 @@ static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
- 			slave->id, addr, val, size);
- }
- 
-+static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-+			const void *val, size_t size)
-+{
-+	return slave->master->write(slave->master, slave->link,
-+			slave->id, addr, val, size);
-+}
-+
- static int fsi_slave_scan(struct fsi_slave *slave)
- {
- 	uint32_t engine_addr;
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index efa55ba..273945d 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -27,6 +27,12 @@ struct fsi_device {
- 	uint32_t		size;
- };
- 
-+extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
-+		void *val, size_t size);
-+extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
-+		const void *val, size_t size);
-+extern int fsi_device_peek(struct fsi_device *dev, void *val);
-+
- struct fsi_device_id {
- 	u8	engine_type;
- 	u8	version;
--- 
-1.8.2.2
+T24gTW9uLCBKYW4gMzAsIDIwMTcgYXQgMTE6NDk6MThBTSAtMDUwMCwgUm9iIENsYXJrIHdyb3Rl
+Ogo+IFRoZSBwbGFuIGlzIHRvIHVzZSB0aGUgT1BQIGJpbmRpbmdzLiAgRm9yIG5vdywgcmVtb3Zl
+IHRoZSBkb2N1bWVudGF0aW9uCj4gZm9yIHFjb20sZ3B1LXB3cmxldmVscywgYW5kIG1ha2UgdGhl
+IGRyaXZlciBmYWxsIGJhY2sgdG8gYSBzYWZlIGxvdwo+IGNsb2NrIGlmIHRoZSBub2RlIGlzIG5v
+dCBwcmVzZW50Lgo+IAo+IE5vdGUgdGhhdCBubyB1cHN0cmVhbSBkdGIgdXNlIHRoaXMgbm9kZS4g
+IEZvciBub3cgd2Uga2VlcCBjb21wYXRpYmlsaXR5Cj4gd2l0aCB0aGlzIG5vZGUgdG8gYXZvaWQg
+YnJlYWtpbmcgY29tcGF0aWJpbGl0eSB3aXRoIGRvd25zdHJlYW0gYW5kcm9pZAo+IGR0IGZpbGVz
+Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IFJvYiBDbGFyayA8cm9iZGNsYXJrQGdtYWlsLmNvbT4KPiAt
+LS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50
+eHQgfCAxNSAtLS0tLS0tLS0tLS0tLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9hZHJlbm8vYWRy
+ZW5vX2RldmljZS5jICAgICAgICAgICAgfCAgNiArKysrLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0
+IGluc2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxy
+b2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVk
+cmVubwo=
