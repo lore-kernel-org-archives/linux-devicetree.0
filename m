@@ -1,10 +1,16 @@
-Return-Path: <SRS0=Obav=ZO=lvd4224.freescale.com=b49017@kernel.org>
-Message-ID: <589180e7.db24620a.c0375.0cbaSMTPIN_ADDED_BROKEN@mx.google.com>
+Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
+Message-ID: <58917d6a.5a48620a.a802f.1939SMTPIN_ADDED_BROKEN@mx.google.com>
+Received: from mail-dm3nam03on0067.outbound.protection.outlook.com ([104.47.41.67]:10816
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1750991AbdBAGRI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Feb 2017 01:17:08 -0500
 From: <y@lvd4224.freescale.com>
 Subject: [PATCH v5 0/3] Add QorIQ LS2088A platform support
 Date: Wed, 1 Feb 2017 11:46:56 +0530
 MIME-Version: 1.0
 Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
 Cc: scott.wood@nxp.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Abhimanyu Saini <abhimanyu.saini@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
@@ -64,3 +70,4 @@ Abhimanyu Saini (3):
 
 -- 
 1.9.1
+
