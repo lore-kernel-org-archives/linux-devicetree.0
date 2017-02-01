@@ -1,78 +1,58 @@
-From: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>
-Subject: Re: [PATCH v9 6/8] drivers:input:ads7846(+tsc2046): fix spi module
- table
-Date: Wed, 1 Feb 2017 19:50:16 -0300
-Message-ID: <8810e197-f071-5a3d-c376-8c365fb60640@osg.samsung.com>
-References: <cover.1482936802.git.hns@goldelico.com>
- <c79bdd79a22dab877b8a80136ac253c951698745.1482936802.git.hns@goldelico.com>
- <20170128193558.GC38136@dtor-ws>
- <F39E49DD-45AF-4491-A26E-F3A9D86F30F6@goldelico.com>
- <20170129180108.GA10743@dtor-ws>
- <A169CC1E-9EC9-43CA-887B-1382F1903CE1@goldelico.com>
- <B64DBFB0-62E8-4B4C-957F-C90C33BEF693@goldelico.com>
- <cc403765-9b88-1424-a77f-36e775fbd5a0@osg.samsung.com>
- <20170201222832.GA25554@dtor-ws>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v2] EDAC: mpc85xx: Add T2080 l2-cache support
+Date: Thu,  2 Feb 2017 12:16:24 +1300
+Message-ID: <20170201231624.28843-1-chris.packham@alliedtelesis.co.nz>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170201222832.GA25554@dtor-ws>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michel Verlaan <michel.verl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Tissoires <benjamin.tissoires-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Mika_Penttil=c3=a4?= <mika.penttila-MRsr7dthA9VWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
+The l2-cache controller on the T2080 SoC has similar capabilities to the
+others already supported by the mpc85xx_edac driver. Add it to the list
+of compatible devices.
 
-On 02/01/2017 07:28 PM, Dmitry Torokhov wrote:
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Acked-by: Johannes Thumshirn <jth-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+This is a resend of a patch that got an ack[1] but didn't seem to get
+picked up.
 
-[snip]
+[1] http://marc.info/?l=linux-edac&m=148042072225488&w=2
 
->>
->> As said, changing the core is trivial. A RFC patch is [0].
->>
->> The problem is how to make sure that this change won't cause regressions
->> in existing drivers.
-> 
-> If the concern with drivers having I2C or SPI device table, but not OF
-> device table, then I think cocinnelle could be used to scan and find
-> them.
->
+Changes since v1:
+- Collect ack from Johannes.
 
-I don't think coccinelle is a good fit for this since you may have to look if
-a DTS is using in its compatible string a device that's in an SPI table or if
-a DT binding documents this device as a compatible string.
+ arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 1 +
+ drivers/edac/mpc85xx_edac.c                 | 1 +
+ 2 files changed, 2 insertions(+)
 
-But yes I get your point and I agree that is just a matter of having a script
-to look for these. Someone should have the time to write it though :)
-
->>
->> There was particularly tricky for the spi-nor driver, it doesn't help that
->> a lot of DT are using undocumented compatible strings (sometimes with no
->> vendor prefix). You can see the discussion here [1].
->>
->> In the same thread Mark Brown said that it wasn't that bad to have the
->> information in the OF device ID table duplicated in a SPI device table.
->>
->> Certainly isn't the best approach but IMHO is better than the module not
->> loading.
-> 
-> You can always build the module into kernel or load it by hand if it is
-> that important. Module autoloading does not work anyway if you have
-> several compatible strings, like
-> 
-> 	compatible = "vendor,new-device", "vendor,generic-device";
-> 
-> Thanks.
->
-
-Agree.
-
-Best regards,
+diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
+index c744569a20e1..a97296c64eb2 100644
+--- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
+@@ -678,5 +678,6 @@
+ 		compatible = "fsl,t2080-l2-cache-controller";
+ 		reg = <0xc20000 0x40000>;
+ 		next-level-cache = <&cpc>;
++		interrupts = <16 2 1 9>;
+ 	};
+ };
+diff --git a/drivers/edac/mpc85xx_edac.c b/drivers/edac/mpc85xx_edac.c
+index 8f66cbed70b7..67f7bc3fe5b3 100644
+--- a/drivers/edac/mpc85xx_edac.c
++++ b/drivers/edac/mpc85xx_edac.c
+@@ -629,6 +629,7 @@ static const struct of_device_id mpc85xx_l2_err_of_match[] = {
+ 	{ .compatible = "fsl,p1020-l2-cache-controller", },
+ 	{ .compatible = "fsl,p1021-l2-cache-controller", },
+ 	{ .compatible = "fsl,p2020-l2-cache-controller", },
++	{ .compatible = "fsl,t2080-l2-cache-controller", },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, mpc85xx_l2_err_of_match);
 -- 
-Javier Martinez Canillas
-Open Source Group
-Samsung Research America
+2.11.0.24.ge6920cf
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
