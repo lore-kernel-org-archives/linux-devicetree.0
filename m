@@ -1,122 +1,97 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 12/22 v2] ARM: dts: add top-level DT bindings for Cortina Gemini
-Date: Wed,  1 Feb 2017 20:46:32 +0100
-Message-ID: <20170201194632.18455-1-linus.walleij@linaro.org>
+From: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for brcmstb-cpu-clk-div
+Date: Wed, 1 Feb 2017 11:50:51 -0800
+Message-ID: <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
+References: <20170119002933.7529-1-code@mmayer.net> <20170119002933.7529-2-code@mmayer.net>
+ <20170121005202.GB8801@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170121005202.GB8801-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Clock List <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the top level SoC bindings for Cortina systems Gemini
-platforms.
+On 20 January 2017 at 16:52, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> On 01/18, Markus Mayer wrote:
+>> diff --git a/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt b/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
+>> new file mode 100644
+>> index 0000000..c4acb53
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
+>> @@ -0,0 +1,27 @@
+>> +The CPU divider node serves as the sole clock for the CPU complex. It supports
+>> +power-of-2 clock division, with a divider of "1" as the default highest-speed
+>> +setting.
+>> +
+>> +Required properties:
+>> +- compatible: shall be "brcm,brcmstb-cpu-clk-div"
+>> +- reg: address and width of the divider configuration register
+>> +- #clock-cells: shall be set to 0
+>> +- clocks: phandle of clock provider which provides the source clock
+>> +          (this would typically be a "fixed-clock" type PLL)
+>> +- div-table: list of (raw_value,divider) ordered pairs that correspond to the
+>> +             allowed clock divider settings
+>> +- div-shift-width: least-significant bit position and width of divider value
+>
+> Are these properties used? Please don't put these types of
+> details in DT.
 
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v1->v2:
-- Rename required property "intcon" to "interrupt-controller"
-- Elaborate a bit on the SoC origins
-- Put the example DTS SoC nodes in a soc {} node
----
- Documentation/devicetree/bindings/arm/gemini.txt | 81 ++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/gemini.txt
+Yeah, unfortunately they are. Luckily, I think the issue can be
+resolved quite easily, because the user of those properties isn't
+involved in this series.
 
-diff --git a/Documentation/devicetree/bindings/arm/gemini.txt b/Documentation/devicetree/bindings/arm/gemini.txt
-new file mode 100644
-index 000000000000..eb788302d3e9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/gemini.txt
-@@ -0,0 +1,81 @@
-+Cortina systems Gemini platforms
-+
-+The Gemini SoC is the project name for an ARMv4 FA525-based SoC originally
-+produced by Storlink Semiconductor around 2005. The company was renamed
-+later renamed Storm Semiconductor. The chip product name is Storlink SL3516.
-+It was derived from earlier products from Storm named SL3316 (Centroid) and
-+SL3512.
-+
-+Storm Semiconductor was acquired by Cortina Systems in 2008 and the SoC was
-+produced and used for NAS and similar usecases. In 2014 Cortina Systems was
-+in turn acquired by Inphi, who seem to have discontinued this product family.
-+
-+Required properties (in root node):
-+	compatible = "cortina,gemini";
-+
-+Required nodes:
-+
-+- syscon: the root node must have a system controller node pointing to the
-+  global control registers, with the compatible string
-+  "cortina,gemini-syscon", "syscon";
-+
-+- timer: the root node must have a timer node pointing to the SoC timer
-+  block, with the compatible string "cortina,gemini-timer"
-+  See: clocksource/cortina,gemini-timer.txt
-+
-+- interrup-controller: the root node must have an interrupt controller
-+  node pointing to the SoC interrupt controller block, with the compatible
-+  string "cortina,gemini-interrupt-controller"
-+  See interrupt-controller/cortina,gemini-interrupt-controller.txt
-+
-+Example:
-+
-+/ {
-+	model = "Foo Gemini Machine";
-+	compatible = "cortina,gemini";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&intcon>;
-+
-+		syscon: syscon@40000000 {
-+			compatible = "cortina,gemini-syscon", "syscon";
-+			reg = <0x40000000 0x1000>;
-+		};
-+
-+		uart0: serial@42000000 {
-+			compatible = "ns16550a";
-+			reg = <0x42000000 0x100>;
-+			clock-frequency = <48000000>;
-+			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+		};
-+
-+		timer@43000000 {
-+			compatible = "cortina,gemini-timer";
-+			reg = <0x43000000 0x1000>;
-+			interrupt-parent = <&intcon>;
-+			interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
-+				     <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
-+				     <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
-+			syscon = <&syscon>;
-+		};
-+
-+		intcon: interrupt-controller@48000000 {
-+			compatible = "cortina,gemini-interrupt-controller";
-+			reg = <0x48000000 0x1000>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+};
--- 
-2.9.3
+They are currently being used by a clock driver
+("drivers/clk/clk-brcmstb.c") that hasn't been upstreamed yet. I
+performed some code archeology. While I wasn't 100% successful in
+tracking down the origins of this interface, it looks like it was
+designed this way a while back (4+ years or so), probably before
+device tree best practices were developed or, at least, before they
+were widely known.
 
+So, what I can do is to remove the properties from the official
+binding. (I'll send an update to that effect shortly.) Once the
+binding is accepted upstream, we can work on fixing up the design of
+clk-brcmstb.c, so it doesn't rely on these properties anymore (and
+derives them from the compatible string instead), and then proceed to
+upstream that, as well.
+
+I don't think this approach would cause any conflicts or problems.
+
+>> +
+>> +Optional properties:
+>> +- clock-names: the clock may be named
+>> +
+>> +Example:
+>> +     cpuclkdiv: cpu-clk-div@f03e257c {
+>> +             compatible = "brcm,brcmstb-cpu-clk-div";
+>> +             reg = <0xf03e257c 0x4>;
+>
+> This register really looks like some offset in something larger.
+> Is there some clock controller? What's the hw block at
+> 0xf03e2000? Maybe I already asked this.
+
+It looks this way, but in this case, looks are deceiving. The address
+and the length are really correct the way they are.
+
+This memory area holds a range of only loosely related configuration
+registers. It's called the Bus Interface Unit Register Set and deals
+with configuring the CPU in general. At address 0xf03e257c, there
+happens to be the clock divider register we need, and it's really just
+one register, i.e. 4 bytes.
+
+>> +             div-table = <0x00 1>;
+>> +             div-shift-width = <0 5>;
+>> +             #clock-cells = <0>;
+>> +             clocks = <&cpupll>;
+>> +             clock-names = "cpupll";
+>> +     };
+>>
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
