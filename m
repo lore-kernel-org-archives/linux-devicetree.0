@@ -1,72 +1,49 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] EDAC: mpc85xx: Add T2080 l2-cache support
-Date: Thu, 2 Feb 2017 00:27:35 +0100
-Message-ID: <20170201232735.byk7bnpeoqtcc7mh@pd.tnic>
-References: <20170201231624.28843-1-chris.packham@alliedtelesis.co.nz>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev
+ driver
+Date: Wed, 1 Feb 2017 23:44:38 +0000
+Message-ID: <20170201234438.GS27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170201231624.28843-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+In-Reply-To: <1483755102-24785-22-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 12:16:24PM +1300, Chris Packham wrote:
-> The l2-cache controller on the T2080 SoC has similar capabilities to the
-> others already supported by the mpc85xx_edac driver. Add it to the list
-> of compatible devices.
-> 
-> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> Acked-by: Johannes Thumshirn <jth-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> This is a resend of a patch that got an ack[1] but didn't seem to get
-> picked up.
-> 
-> [1] http://marc.info/?l=linux-edac&m=148042072225488&w=2
-> 
-> Changes since v1:
-> - Collect ack from Johannes.
+On Fri, Jan 06, 2017 at 06:11:39PM -0800, Steve Longerbeam wrote:
+> +static int imxcsi2_get_fmt(struct v4l2_subdev *sd,
+> +			   struct v4l2_subdev_pad_config *cfg,
+> +			   struct v4l2_subdev_format *sdformat)
+> +{
+> +	struct imxcsi2_dev *csi2 = sd_to_dev(sd);
+> +
+> +	sdformat->format = csi2->format_mbus;
+> +
+> +	return 0;
+> +}
 
-Whoops, my bad. Sorry about that.
+Hi Steve,
 
->  arch/powerpc/boot/dts/fsl/t2081si-post.dtsi | 1 +
->  drivers/edac/mpc85xx_edac.c                 | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> index c744569a20e1..a97296c64eb2 100644
-> --- a/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/t2081si-post.dtsi
-> @@ -678,5 +678,6 @@
->  		compatible = "fsl,t2080-l2-cache-controller";
->  		reg = <0xc20000 0x40000>;
->  		next-level-cache = <&cpc>;
-> +		interrupts = <16 2 1 9>;
->  	};
->  };
-> diff --git a/drivers/edac/mpc85xx_edac.c b/drivers/edac/mpc85xx_edac.c
-> index 8f66cbed70b7..67f7bc3fe5b3 100644
-> --- a/drivers/edac/mpc85xx_edac.c
-> +++ b/drivers/edac/mpc85xx_edac.c
-> @@ -629,6 +629,7 @@ static const struct of_device_id mpc85xx_l2_err_of_match[] = {
->  	{ .compatible = "fsl,p1020-l2-cache-controller", },
->  	{ .compatible = "fsl,p1021-l2-cache-controller", },
->  	{ .compatible = "fsl,p2020-l2-cache-controller", },
-> +	{ .compatible = "fsl,t2080-l2-cache-controller", },
+This isn't correct, and I suspect the other get_fmt implementations are
+the same - I've just checked imx-csi.c, and that also appears to have
+the same issue.
 
-WARNING: DT compatible string "fsl,t2080-l2-cache-controller" appears un-documented -- check ./Documentation/devicetree/bindings/
-#58: FILE: drivers/edac/mpc85xx_edac.c:632:
-+       { .compatible = "fsl,t2080-l2-cache-controller", },
-
-What is checkpatch.pl trying to tell me here?
+When get_fmt() is called with sdformat->which == V4L2_SUBDEV_FORMAT_TRY,
+you need to return the try format rather than the current format.  See
+the second paragraph of Documentation/media/uapi/v4l/dev-subdev.rst's
+"Format Negotiation" section, where it talks about using
+V4L2_SUBDEV_FORMAT_TRY with both VIDIOC_SUBDEV_G_FMT and
+VIDIOC_SUBDEV_S_FMT.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
