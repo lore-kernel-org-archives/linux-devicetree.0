@@ -1,187 +1,55 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
-Date: Wed, 1 Feb 2017 21:19:22 +0200
-Message-ID: <20170201210648-mutt-send-email-mst@kernel.org>
-References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
- <20170201195732-mutt-send-email-mst@kernel.org>
- <20170201182659.GM8177@arm.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
+Date: Wed, 1 Feb 2017 11:20:53 -0800
+Message-ID: <20170201192053.GB40720@dtor-ws>
+References: <20161223163214.7716-1-jelle@vdwaa.nl>
+ <20170114191425.GA31309@dtor-ws>
+ <20170118205712.GA5333@gmail.com>
+ <20170118224946.GC11881@dtor-ws>
+ <20170131081942.GC8311@dtor-ws>
+ <20170201191058.GA8453@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170201182659.GM8177-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170201191058.GA8453-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+To: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 06:27:09PM +0000, Will Deacon wrote:
-> On Wed, Feb 01, 2017 at 08:09:21PM +0200, Michael S. Tsirkin wrote:
-> > On Wed, Feb 01, 2017 at 12:25:57PM +0000, Robin Murphy wrote:
-> > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> > > index 7e38ed79c3fc..961af25b385c 100644
-> > > --- a/drivers/virtio/virtio_ring.c
-> > > +++ b/drivers/virtio/virtio_ring.c
-> > > @@ -20,6 +20,7 @@
-> > >  #include <linux/virtio_ring.h>
-> > >  #include <linux/virtio_config.h>
-> > >  #include <linux/device.h>
-> > > +#include <linux/property.h>
-> > >  #include <linux/slab.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/hrtimer.h>
-> > > @@ -160,10 +161,14 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
-> > >  		return true;
-> > >  
-> > >  	/*
-> > > -	 * On ARM-based machines, the DMA ops will do the right thing,
-> > > -	 * so always use them with legacy devices.
-> > > +	 * On ARM-based machines, the coherent DMA ops will do the right
-> > > +	 * thing, so always use them with legacy devices. However, using
-> > > +	 * non-coherent DMA when the host *is* actually coherent, but has
-> > > +	 * forgotten to tell us, is going to break badly; since this situation
-> > > +	 * already exists in the wild, maintain the old behaviour there.
-> > >  	 */
-> > > -	if (IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64))
-> > > +	if ((IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64)) &&
-> > > +	    device_get_dma_attr(&vdev->dev) == DEV_DMA_COHERENT)
-> > >  		return !virtio_has_feature(vdev, VIRTIO_F_VERSION_1);
-> > >  
-> > >  	return false;
+On Wed, Feb 01, 2017 at 08:10:59PM +0100, Jelle van der Waa wrote:
+> On 01/31/17 at 12:19am, Dmitry Torokhov wrote:
+> > Hi Jelle,
 > > 
-> > This is exactly what I feared.
+> > On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
+> > > On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
+> > > > > I also have been looking at you previosu submission and had some draft
+> > > > > changes. I reconciled them in the patch below, if it still works for you
+> > > > > then I'll fold everything together and apply. Please let me know.
+> > > > 
+> > > > I'll find some time to test the patch below, I've one small suggestion
+> > > > to the patch below.
+> > 
+> > It would be very helpful if you let me know if the patch actually works
+> > on the hardware: the merge window for 4.11 will be opening fairly soon.
 > 
-> Yes, sorry about this. It works fine for virtio-pci (where "dma-coherent"
-> is used) and it also works on the fastmodel if you disable cache-modelling
-> (which is needed to make the thing run at a usable pace) so we didn't spot
-> this in testing.
+> Sorry, I had a busy week and at first it didn't work since I didn't have
+> a regulator and I think the code for the regular might be wrong.
 > 
-> > Could we identify fastboot and do the special dance just for it?
-> 
-> [assuming you mean fastmodel instead of fastboot]
-> 
-> > I'd like to do that instead. It's fastboot doing the unreasonable thing
-> > here and deviating from what every other legacy device without exception
-> > did for years. If this means fastboot will need to update to virtio 1,
-> > all the better.
-> 
-> The problem still exists with virtio 1, unless we require that the
-> "dma-coherent" property is set/unset correctly when VIRTIO_F_IOMMU_PLATFORM
-> is advertised by the device (which is what I suggested in my reply).
+> I think that you want the regulators to be optional, but
+> devm_regulator_get_optional errors out when no vcc/vio is configured.
+> Changing it to devm_regulator_get makes the driver work. I guess this is
+> since devm_regulator_get_optional doesn't allow the creation of a dummy
+> device while devm_regulator_get does.
 
-I'm not ignoring that, but I need to understand that part a bit better.
-I'll reply to that patch in a day or two after looking at how _CCA is
-supposed to work.
+Ah, yes, these should have been non-optional. I'll fix it up and apply
+then.
 
-> We can't detect the fastmodel,
+Thanks!
 
-Surely, it puts a hardware id somewhere? I think you mean
-fastmodel isn't always affected, right?
-
-> but we could implicitly treat virtio-mmio
-> devices as cache-coherent regardless of the "dma-coherent" flag. I already
-> prototyped this, but I suspect the devicetree people will push back (and
-> there's a similar patch needed for ACPI).
-> 
-> See below. Do you prefer this approach?
-> 
-> Will
-> 
-> --->8
-
-I'd like to see basically
-
-if (fastmodel)
-	a pile of special work-arounds
-else
-	not less hacky but more common virtio work-arounds
-
-:)
-
-And then I can apply whatever comes from @arm.com and not
-worry about breaking actual hardware.
-
-> >From f6ad4e331c26e7ba53132c8cc74e26f782391570 Mon Sep 17 00:00:00 2001
-> From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> Date: Mon, 30 Jan 2017 17:28:31 +0000
-> Subject: [PATCH] of/address: Allow devices to report DMA coherency based on
->  compatible string
-> 
-> Some devices (e.g. virtio-mmio) are implicitly cache coherent with respect
-> to DMA operations and therefore do not mandate the use of "dma-coherent"
-> in their devicetree bindings. In order to ensure that these devices work
-> correctly when using the DMA API, we need to treat them specially in
-> of_dma_is_coherent by identifying them as unconditionally coherent.
-> 
-> This patch adds a static, table-based search against the compatible
-> string for the device in of_dma_is_coherent before walking the
-> hierarchy looking for "dma-coherent". This allows existing virtio-mmio
-> devices (e.g. those emulated by QEMU) to function correctly when placed
-> behind an IOMMU that requires use of the DMA ops to map the vring.
-> 
-> Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/of/address.c | 32 ++++++++++++++++++++++++++++++--
->  1 file changed, 30 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 02b2903fe9d2..af29b115b8aa 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -891,19 +891,47 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
->  }
->  EXPORT_SYMBOL_GPL(of_dma_get_range);
->  
-> +/*
-> + * DMA from some device types is always cache-coherent, and in some unfortunate
-> + * cases the "dma-coherent" property is not used.
-> + */
-> +static const char *of_device_dma_coherent_tbl[] = {
-> +	/*
-> +	 * Virtio MMIO devices are assumed to be cache-coherent when accessing
-> +	 * main memory. Neither QEMU nor kvmtool emit "dma-coherent" properties
-> +	 * for their generated virtio MMIO device nodes, and the binding
-> +	 * documentation doesn't mention them either. When using the DMA API
-> +	 * (e.g. because there is an IOMMU in the system), we must report true
-> +	 * here to avoid lockups where writes to the vring via a non-coherent
-> +	 * mapping are not made visible to the device emulation.
-> +	 */
-> +	"virtio,mmio",
-> +	NULL,
-> +};
-> +
->  /**
->   * of_dma_is_coherent - Check if device is coherent
->   * @np:	device node
->   *
->   * It returns true if "dma-coherent" property was found
-> - * for this device in DT.
-> + * for this device in DT or the device is statically known to be
-> + * coherent.
->   */
->  bool of_dma_is_coherent(struct device_node *np)
->  {
->  	struct device_node *node = of_node_get(np);
->  
-> +	/*
-> +	 * Check for implicit DMA coherence first, since we don't want
-> +	 * to inherit this.
-> +	 */
-> +	if (of_device_compatible_match(np, of_device_dma_coherent_tbl)) {
-> +		of_node_put(node);
-> +		return true;
-> +	}
-> +
->  	while (node) {
-> -		if (of_property_read_bool(node, "dma-coherent")) {
-> +		if (of_property_read_bool(node, "dma-coherent")){
->  			of_node_put(node);
->  			return true;
->  		}
-> -- 
-> 2.1.4
+-- 
+Dmitry
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
