@@ -1,56 +1,32 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH v3 1/8] ASoC: sun4i-i2s: Update binding
- documentation to include A31
-Date: Wed, 1 Feb 2017 16:08:50 +0100
-Message-ID: <b0611ab1-5b69-23da-6835-278d0fd1b6ba@free-electrons.com>
-References: <20170131100552.27949-1-mylene.josserand@free-electrons.com>
- <20170131100552.27949-2-mylene.josserand@free-electrons.com>
- <20170131211702.taxbrgxwo7b4daej@sirena.org.uk>
- <feb16b69-388f-10e5-7be5-c750095ee52b@free-electrons.com>
- <20170201115958.7a2odxxyhzm3ofew@sirena.org.uk>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/8] ADD STM32H743 MCU and STM32H743i-Eval board supports
+Date: Wed, 1 Feb 2017 16:16:53 +0100
+Message-ID: <CACRpkdb35JdbE5bPMU_NeVehnA-qs3aAxCgE0==L=Z9vmq1yWQ@mail.gmail.com>
+References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170201115958.7a2odxxyhzm3ofew@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485868465-30446-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 31, 2017 at 2:14 PM, Alexandre TORGUE
+<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
 
-On 01/02/2017 12:59, Mark Brown wrote:
-> On Wed, Feb 01, 2017 at 08:44:56AM +0100, Mylene Josserand wrote:
->> On 31/01/2017 22:17, Mark Brown wrote:
->>> On Tue, Jan 31, 2017 at 11:05:45AM +0100, Myl=E8ne Josserand wrote:
->>>> Add a new compatible for sun4i-i2s driver to handle some
->>>> SoCs that have a reset line that must be asserted/deasserted.
->
->>> This doesn't apply against current code, please check and resend.
->
->> I based my series on linux-next 20170131. Which one I should use?
->
-> You should be submitting against my git tree (which should be what's in
-> -next...).
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
->
+> This series adds basic support for STM32H743 MCU and stm32h743i-eval board.
+> With it, you can boot stm32h743i-eval board successfully.
 
-Okay, thank you! I will update my series according to your branch.
+Patch 1 & 2 look fine to me.
 
-Best regards,
+Shall I just apply them and offer them on an immutable branch based
+on v4.10 so you can pull that into ARM SoC if you want to get this in
+for v4.11?
 
--- =
-
-Myl=E8ne Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
