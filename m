@@ -1,23 +1,23 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] arm64: dts: h3ulcb: enable HS200 for eMMC
-Date: Wed, 1 Feb 2017 14:05:41 +0100
-Message-ID: <CAMuHMdXPoGEjz2Z88u7iGT1sBJXZVW4TxwyZrfYyCfgnia1Ddw@mail.gmail.com>
-References: <1485443606-22566-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1485443640-22651-1-git-send-email-vladimir.barinov@cogentembedded.com>
+Subject: Re: [PATCH 3/4] arm64: dts: m3ulcb: enable EthernetAVB
+Date: Wed, 1 Feb 2017 14:10:56 +0100
+Message-ID: <CAMuHMdUQbResdbbRA1M1tZiauZKjO8Es=YZ+YLmH1UzrKBLUhA@mail.gmail.com>
+References: <1485442422-18259-1-git-send-email-vladimir.barinov@cogentembedded.com>
+ <1485442469-18378-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1485443640-22651-1-git-send-email-vladimir.barinov@cogentembedded.com>
+In-Reply-To: <1485442469-18378-1-git-send-email-vladimir.barinov@cogentembedded.com>
 Sender: linux-renesas-soc-owner@vger.kernel.org
 To: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2017 at 4:14 PM, Vladimir Barinov
+On Thu, Jan 26, 2017 at 3:54 PM, Vladimir Barinov
 <vladimir.barinov@cogentembedded.com> wrote:
 > From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 >
-> This supports HS200 mode for eMMC on H3ULCB board
+> This supports Ethernet AVB on M3ULCB board
 >
 > Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
 
