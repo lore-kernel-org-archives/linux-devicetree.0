@@ -1,38 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 6/7] dt-bindings: Add Multi-Inno MI0283QT binding
-Date: Wed, 1 Feb 2017 11:42:53 -0600
-Message-ID: <20170201174253.rogt2suxme6vpsct@rob-hp-laptop>
-References: <20170131160319.9695-1-noralf@tronnes.org>
- <20170131160319.9695-7-noralf@tronnes.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] iio: distance: add dt binding for devantech-srf04
+Date: Wed, 1 Feb 2017 11:44:36 -0600
+Message-ID: <20170201174436.6p5hdis2rvpqus6g@rob-hp-laptop>
+References: <20170131180306.GA12880@andreas>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170131160319.9695-7-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <20170131180306.GA12880@andreas>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shraddha.6596-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w@1wt.eu, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjenning-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDU6MDM6MThQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
-IHdyb3RlOgo+IEFkZCBkZXZpY2UtdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBN
-STAyODNRVCBkaXNwbGF5IHBhbmVsLgo+IAo+IFNpZ25lZC1vZmYtYnk6IE5vcmFsZiBUcsO4bm5l
-cyA8bm9yYWxmQHRyb25uZXMub3JnPgo+IC0tLQo+IAo+IERhdGFzaGVldDogaHR0cHM6Ly9jZG4t
-c2hvcC5hZGFmcnVpdC5jb20vZGF0YXNoZWV0cy9NSTAyODNRVC0xMStWMS4xLlBERgo+IAo+ICAu
-Li4vYmluZGluZ3MvZGlzcGxheS9tdWx0aS1pbm5vLG1pMDI4M3F0LnR4dCAgICAgICB8IDI3ICsr
-KysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDI3IGluc2VydGlvbnMoKykK
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L211bHRpLWlubm8sbWkwMjgzcXQudHh0CgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJv
-YmhAa2VybmVsLm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Tue, Jan 31, 2017 at 07:03:06PM +0100, Andreas Klinger wrote:
+> This patch adds dt binding for devantech ultrasonic ranger srf04.
+> 
+> The vendor "devantech" was already added to the vendor list with
+>         "[PATCH v4 1/3] iio: distance: srf08: add trivial DT binding"
+> 
+> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
+> ---
+>  .../bindings/iio/proximity/devantech-srf04.txt     | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/proximity/devantech-srf04.txt
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
