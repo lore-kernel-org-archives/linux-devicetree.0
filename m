@@ -1,97 +1,76 @@
-From: Markus Mayer <markus.mayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for brcmstb-cpu-clk-div
-Date: Wed, 1 Feb 2017 11:50:51 -0800
-Message-ID: <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
-References: <20170119002933.7529-1-code@mmayer.net> <20170119002933.7529-2-code@mmayer.net>
- <20170121005202.GB8801@codeaurora.org>
+From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 4/6] bus: add driver for the Technologic Systems NBUS
+Date: Wed, 1 Feb 2017 14:56:11 -0500
+Message-ID: <7bc0871f-ac0a-e8a0-0c84-a0e61b3991a8@savoirfairelinux.com>
+References: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
+ <20161214231237.17496-5-sebastien.bourdelin@savoirfairelinux.com>
+ <CACRpkdYHHrYY-fAPnNmV94ejFJ36rhSF0SqSVHkTNq+YCRNNZw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170121005202.GB8801-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <CACRpkdYHHrYY-fAPnNmV94ejFJ36rhSF0SqSVHkTNq+YCRNNZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Linux Clock List <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel <kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2017 at 16:52, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> On 01/18, Markus Mayer wrote:
->> diff --git a/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt b/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
->> new file mode 100644
->> index 0000000..c4acb53
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
->> @@ -0,0 +1,27 @@
->> +The CPU divider node serves as the sole clock for the CPU complex. It supports
->> +power-of-2 clock division, with a divider of "1" as the default highest-speed
->> +setting.
->> +
->> +Required properties:
->> +- compatible: shall be "brcm,brcmstb-cpu-clk-div"
->> +- reg: address and width of the divider configuration register
->> +- #clock-cells: shall be set to 0
->> +- clocks: phandle of clock provider which provides the source clock
->> +          (this would typically be a "fixed-clock" type PLL)
->> +- div-table: list of (raw_value,divider) ordered pairs that correspond to the
->> +             allowed clock divider settings
->> +- div-shift-width: least-significant bit position and width of divider value
->
-> Are these properties used? Please don't put these types of
-> details in DT.
+Hi Linus,
 
-Yeah, unfortunately they are. Luckily, I think the issue can be
-resolved quite easily, because the user of those properties isn't
-involved in this series.
+Thanks for your feedback.
+I have a question regarding your recommendation, see below.
 
-They are currently being used by a clock driver
-("drivers/clk/clk-brcmstb.c") that hasn't been upstreamed yet. I
-performed some code archeology. While I wasn't 100% successful in
-tracking down the origins of this interface, it looks like it was
-designed this way a while back (4+ years or so), probably before
-device tree best practices were developed or, at least, before they
-were widely known.
-
-So, what I can do is to remove the properties from the official
-binding. (I'll send an update to that effect shortly.) Once the
-binding is accepted upstream, we can work on fixing up the design of
-clk-brcmstb.c, so it doesn't rely on these properties anymore (and
-derives them from the compatible string instead), and then proceed to
-upstream that, as well.
-
-I don't think this approach would cause any conflicts or problems.
+On 12/30/2016 02:58 AM, Linus Walleij wrote:
 
 >> +
->> +Optional properties:
->> +- clock-names: the clock may be named
+>> +static DEFINE_MUTEX(ts_nbus_lock);
+>> +static bool ts_nbus_ready;
+> 
+> Why not move this to the struct ts_nbus state container?
+> 
+> It seems to be per-bus not per-system.
+> 
+>> +#define TS_NBUS_READ_MODE  0
+>> +#define TS_NBUS_WRITE_MODE 1
+>> +#define TS_NBUS_DIRECTION_IN  0
+>> +#define TS_NBUS_DIRECTION_OUT 1
+>> +#define TS_NBUS_WRITE_ADR 0
+>> +#define TS_NBUS_WRITE_VAL 1
 >> +
->> +Example:
->> +     cpuclkdiv: cpu-clk-div@f03e257c {
->> +             compatible = "brcm,brcmstb-cpu-clk-div";
->> +             reg = <0xf03e257c 0x4>;
->
-> This register really looks like some offset in something larger.
-> Is there some clock controller? What's the hw block at
-> 0xf03e2000? Maybe I already asked this.
+>> +struct ts_nbus {
+>> +       struct pwm_device *pwm;
+>> +       int num_data;
+>> +       int *data;
+>> +       int csn;
+>> +       int txrx;
+>> +       int strobe;
+>> +       int ale;
+>> +       int rdy;
+>> +};
+>> +
+>> +static struct ts_nbus *ts_nbus;
+> 
+> Nopes. No singletons please.
+> 
+> Use the state container pattern:
+> Documentation/driver-model/design-patterns.txt
+> 
 
-It looks this way, but in this case, looks are deceiving. The address
-and the length are really correct the way they are.
+I understand the idea but have problem to find a good way to implement it.
 
-This memory area holds a range of only loosely related configuration
-registers. It's called the Bus Interface Unit Register Set and deals
-with configuring the CPU in general. At address 0xf03e257c, there
-happens to be the clock divider register we need, and it's really just
-one register, i.e. 4 bytes.
+Other drivers using the NBUS which are child nodes in the device tree
+will use the ts_nbus_write() and ts_nbus_read() functions, it means these
+drivers should have a pointer to the allocated ts_nbus and pass it to
+the write() and read() functions as an argument if i'm not using a
+singleton here.
+But i'm lacking knowledge on how to properly share this pointer when
+initializing the NBUS driver with the child nodes.
 
->> +             div-table = <0x00 1>;
->> +             div-shift-width = <0 5>;
->> +             #clock-cells = <0>;
->> +             clocks = <&cpupll>;
->> +             clock-names = "cpupll";
->> +     };
->>
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+Perhaps my design is not appropriate for what i'm doing, if someone can
+point me on a similar problematic it will be really helpful.
+
+Best Regards,
+Sebastien.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
