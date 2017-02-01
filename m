@@ -1,30 +1,67 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/5] ARM: dts: rockchip: update compatible property for rk322x timer
-Date: Wed, 01 Feb 2017 10:34:12 +0100
-Message-ID: <1941169.lor3YnaQdI@phil>
-References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com> <1485866596-32254-3-git-send-email-al.kochet@gmail.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v6 4/5] ARM: dts: rockchip: add timer entries to rk3188 SoC
+Date: Wed, 01 Feb 2017 10:43:12 +0100
+Message-ID: <1522448.qizf3bPadS@phil>
+References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com> <1485866596-32254-5-git-send-email-al.kochet@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485866596-32254-3-git-send-email-al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485866596-32254-5-git-send-email-al.kochet@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexander Kochetkov <al.kochet@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 31. Januar 2017, 15:43:13 CET schrieb Alexander Kochetkov:
-> Property set to '"rockchip,rk3228-timer", "rockchip,rk3288-timer"'
-> to match devicetree bindings.
+Am Dienstag, 31. Januar 2017, 15:43:15 CET schrieb Alexander Kochetkov:
+> The patch add two timers to all rk3188 based boards.
 > 
-> Signed-off-by: Alexander Kochetkov <al.kochet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Suggested-by: Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> The first timer is from alive subsystem and it act as a backup
+> for the local timers at sleep time. It act the same as other
+> SoC rockchip timers already present in kernel.
+> 
+> The second timer is from CPU subsystem and act as replacement
+> for the arm-global-timer clocksource and sched clock. It run
+> at stable frequency 24MHz.
+> 
+> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
+> ---
+>  arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
+> index 31f81b2..0dc52fe 100644
+> --- a/arch/arm/boot/dts/rk3188.dtsi
+> +++ b/arch/arm/boot/dts/rk3188.dtsi
+> @@ -106,6 +106,22 @@
+>  		};
+>  	};
+> 
+> +	timer3: timer@2000e000 {
+> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
+> +		reg = <0x2000e000 0x20>;
+> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
+> +		clock-names = "timer", "pclk";
+> +	};
+> +
+> +	timer6: timer@200380a0 {
+> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
+> +		reg = <0x200380a0 0x20>;
+> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
+> +		clock-names = "timer", "pclk";
+> +	};
+> +
 
 depending on who is picking that up, they can add my
-Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-if needed
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+if needed.
+
+I've also double checked the timer clocks - especially the pclks.
+Timer3 has its own separate pclk, while all other timers are supplied by 
+pclk_timer0.
+
+
+Heiko
