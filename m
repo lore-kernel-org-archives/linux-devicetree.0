@@ -1,39 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v5 5/6] hwmon: occ: Add hwmon implementation for
- the P8 OCC
-Date: Wed, 1 Feb 2017 11:34:50 -0600
-Message-ID: <20170201173450.ysuk3j2hwoldz72o@rob-hp-laptop>
-References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v3 5/7] dt-bindings: display: Add common rotation property
+Date: Wed, 1 Feb 2017 11:41:13 -0600
+Message-ID: <20170201174113.g7sdkhtzvizg5ajv@rob-hp-laptop>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-6-noralf@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: eajames@linux.vnet.ibm.com
-Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+In-Reply-To: <20170131160319.9695-6-noralf@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 09:43:56AM -0600, eajames@linux.vnet.ibm.com wrote:
-> From: "Edward A. James" <eajames@us.ibm.com>
-> 
-> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
-> well as probe the entire driver from the I2C bus. I2C is the communication
-> method between the BMC and the P8 OCC.
-> 
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
-
-Please add acks when posting new versions.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/hwmon/occ/Kconfig                       |  14 ++++
->  drivers/hwmon/occ/Makefile                      |   1 +
->  drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++++++++++++++++++++
->  4 files changed, 132 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
->  create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+T24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDU6MDM6MTdQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
+IHdyb3RlOgo+IERpc3BsYXkgcGFuZWxzIGNhbiBiZSBvcmllbnRlZCBtYW55IHdheXMsIGVzcGVj
+aWFsbHkgaW4gdGhlIGVtYmVkZGVkCj4gd29ybGQuIFRoZSByb3RhdGlvbiBwcm9wZXJ0eSBpcyBh
+IHdheSB0byBkZXNjcmliZSB0aGlzIG9yaWVudGF0aW9uLgo+IFRoZSBjb3VudGVyIGNsb2Nrd2lz
+ZSBkaXJlY3Rpb24gaXMgY2hvc2VuIGJlY2F1c2UgdGhhdCdzIHdoYXQgZmJkZXYKPiBhbmQgZHJt
+IHVzZS4KClRoZSBoL3cgbW91bnRpbmcgaXMgcm90YXRlZCBjb3VudGVyIGNsb2Nrd2lzZSwgc28g
+dGhlIGZyYW1lYnVmZmVycycgCmNvbnRlbnRzIGFyZSByb3RhdGVkIGNsb2Nrd2lzZSwgcmlnaHQ/
+IAoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBOb3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9y
+Zz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZGlz
+cGxheS50eHQgfCA0ICsrKysKClRoaXMgaXMgcGFuZWwgcHJvcGVydHksIHNvIGJpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvcGFuZWwudHh0LgoKPiAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygr
+KQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvZGlzcGxheS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZGlzcGxheS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9kaXNwbGF5LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0
+Cj4gaW5kZXggMDAwMDAwMC4uZTJlNjg2Nwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9kaXNwbGF5LnR4dAo+IEBAIC0wLDAg
+KzEsNCBAQAo+ICtDb21tb24gZGlzcGxheSBwcm9wZXJ0aWVzCj4gKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KPiArCj4gKy0gcm90YXRpb246CURpc3BsYXkgcm90YXRpb24gaW4gZGVncmVlcyBj
+b3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQo+IC0tIAo+IDIuMTAuMgo+IAo+IC0tCj4g
+VG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vic2NyaWJl
+IGRldmljZXRyZWUiIGluCj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9yZG9tb0B2Z2Vy
+Lmtlcm5lbC5vcmcKPiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdlci5rZXJuZWwu
+b3JnL21ham9yZG9tby1pbmZvLmh0bWwKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
