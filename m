@@ -1,40 +1,61 @@
-From: Michael Ellerman <patch-notifications-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [v6,1/5] powernv:idle: Add IDLE_STATE_ENTER_SEQ_NORET macro
-Date: Wed,  1 Feb 2017 12:05:30 +1100 (AEDT)
-Message-ID: <3vClL26Q2hz9rxw@ozlabs.org>
-References: <1485333389-5752-2-git-send-email-ego@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485333389-5752-2-git-send-email-ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Neuling <mikey-/owAOxkjmzZAfugRpC6u6w@public.gmane.org>, Vaidyanathan Srinivasan <svaidy-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Shreyas B. Prabhu" <shreyasbp-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shilpasri G Bhat <shilpa.bhat-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Stewart Smith <stewart-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev driver
+Date: Wed, 1 Feb 2017 01:13:49 +0000
+Message-ID: <20170201011349.GJ27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+ <20170131000125.GO27312@n2100.armlinux.org.uk>
+ <1485856160.2932.10.camel@pengutronix.de>
+ <6e77aefa-4f22-60e9-7cc0-55c3a2de3124@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <6e77aefa-4f22-60e9-7cc0-55c3a2de3124@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-01-25 at 08:36:25 UTC, "Gautham R. Shenoy" wrote:
-> From: "Gautham R. Shenoy" <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> 
-> Currently all the low-power idle states are expected to wake up
-> at reset vector 0x100. Which is why the macro IDLE_STATE_ENTER_SEQ
-> that puts the CPU to an idle state and never returns.
-> 
-> On ISA v3.0, when the ESL and EC bits in the PSSCR are zero, the CPU
-> is expected to wake up at the next instruction of the idle
-> instruction.
-> 
-> This patch adds a new macro named IDLE_STATE_ENTER_SEQ_NORET for the
-> no-return variant and reuses the name IDLE_STATE_ENTER_SEQ
-> for a variant that allows resuming operation at the instruction next
-> to the idle-instruction.
-> 
-> Acked-by: Balbir Singh <bsingharora-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Gautham R. Shenoy <ego-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Hi Steve,
 
-Series applied to powerpc next, thanks.
+On Tue, Jan 31, 2017 at 05:02:40PM -0800, Steve Longerbeam wrote:
+> But this also puts a requirement on MIPI sensors that s_power(ON)
+> should only place the D_PHY in LP-11, and _not_ start the clock lane.
+> But perhaps that is correct behavior anyway.
 
-https://git.kernel.org/powerpc/c/823b7bd5156a93872d9561b3f033df
+If the CSI2 DPHY is held in reset state, it shouldn't matter what the
+sensor does.  In the case of IMX219, it needs a full setup of the
+device, including enabling it to stream (so it starts the clock lane
+etc) in order to get it into LP-11 state.  Merely disabling the XCLR
+signal leaves the lanes grounded.
 
-cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I do seem to remember reading in one of the MIPI specs that this is
+rather expected behaviour, though I can't point at a paragraph this
+late in the night.
+
+So, the only way to satisfy these requirements is this order:
+
+- assert PHY reset signals (so blocking any activity on the CSI lanes)
+- initialise the sensor (including allowing it to start streaming and
+  then stopping the stream - at that point, the lanes will be in LP-11.)
+- deassert the resets as per the iMX6 documentation and follow the
+  remaining procedure.
+
+I'll look at your other points tomorrow.
+
+Thanks.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
