@@ -1,45 +1,57 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH v2] Documentation: devicetree: meson-ir: "linux,rc-map-name" is supported
-Date: Wed,  1 Feb 2017 23:14:15 +0100
-Message-ID: <20170201221415.22794-1-martin.blumenstingl@googlemail.com>
-References: <20170131212112.5582-1-martin.blumenstingl@googlemail.com>
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH v2] ARM: dts: i.MX25: add AIPS control registers
+Date: Wed,  1 Feb 2017 23:16:18 +0100
+Message-ID: <1485987378-27784-1-git-send-email-martin@kaiser.cx>
+References: <1485890402-22974-1-git-send-email-martin@kaiser.cx>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170131212112.5582-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1485890402-22974-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, afaerber-l3A5Bk7waGM@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The driver already parses the "linux,rc-map-name" property. Add this
-information to the documentation so .dts maintainers don't have to look
-it up in the source-code.
+The i.MX25 contains two AHB to IP bridges (AIPS), each of which has a set of
+control registers. Add the memory regions for the control registers to
+the Device Tree.
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 ---
-Changes since v1:
-- removed character which shows up as whitespace from subject
-- added Rob Herring's ACK
+v2:
+   removed the "fsl,imx53-aipstz" property as per Sascha's request
 
- Documentation/devicetree/bindings/media/meson-ir.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx25.dtsi |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/meson-ir.txt b/Documentation/devicetree/bindings/media/meson-ir.txt
-index e7e3f3c4fc8f..efd9d29a8f10 100644
---- a/Documentation/devicetree/bindings/media/meson-ir.txt
-+++ b/Documentation/devicetree/bindings/media/meson-ir.txt
-@@ -8,6 +8,9 @@ Required properties:
-  - reg		: physical base address and length of the device registers
-  - interrupts	: a single specifier for the interrupt from the device
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index e0ba550..1914858 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -93,6 +93,11 @@
+ 			reg = <0x43f00000 0x100000>;
+ 			ranges;
  
-+Optional properties:
-+ - linux,rc-map-name:	see rc.txt file in the same directory.
++			aips1: bridge@43f00000 {
++				compatible = "fsl,imx25-aips";
++				reg = <0x43f00000 0x60>;
++			};
 +
- Example:
+ 			i2c1: i2c@43f80000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -342,6 +347,11 @@
+ 			reg = <0x53f00000 0x100000>;
+ 			ranges;
  
- 	ir-receiver@c8100480 {
++			aips2: bridge@53f00000 {
++				compatible = "fsl,imx25-aips";
++				reg = <0x53f00000 0x60>;
++			};
++
+ 			clks: ccm@53f80000 {
+ 				compatible = "fsl,imx25-ccm";
+ 				reg = <0x53f80000 0x4000>;
 -- 
-2.11.0
+1.7.10.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
