@@ -1,42 +1,32 @@
-From: <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [Resend PATCH v2 0/3] STM32F4 Clock binding fix & update
-Date: Wed, 1 Feb 2017 14:09:53 +0100
-Message-ID: <1485954596-11014-1-git-send-email-gabriel.fernandez@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 5/8] mfd: exynos-lpass: Remove pad retention control
+Date: Wed, 1 Feb 2017 07:24:04 -0600
+Message-ID: <20170201132404.wxwcai7qbvcumaic@rob-hp-laptop>
+References: <1485419634-28331-1-git-send-email-m.szyprowski@samsung.com>
+ <CGME20170126083403eucas1p2328ed884334b453ffb1faac3c745cec3@eucas1p2.samsung.com>
+ <1485419634-28331-6-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gabriel.fernandez-qxv4g6HH51o@public.gmane.org, ludovic.barre-qxv4g6HH51o@public.gmane.org, olivier.bideau-qxv4g6HH51o@public.gmane.org, amelie.delaunay-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485419634-28331-6-git-send-email-m.szyprowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Lee Jones <lee.jones@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+On Thu, Jan 26, 2017 at 09:33:51AM +0100, Marek Szyprowski wrote:
+> Pad retention should be controlled from pin control driver, so remove it
+> from Exynos LPASS driver. After this change, no more access to PMU regmap
+> is needed, so remove also the code for handling PMU regmap.
+> 
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  .../bindings/mfd/samsung,exynos5433-lpass.txt           |  2 --
 
-v2:
-- Only rename commit subject of first patch to avoid the error:
- Remote Server returned '<vger.kernel.org #5.7.1 SMTP;
- 550 5.7.1 Content-Policy reject msg: The capital Triple-X in subject
- is way too often associated with junk email,
+Acked-by: Rob Herring <robh@kernel.org>
 
-This patch-set includes:
- - a fix to STM32F4_X_CLOCK() macro
- - an update of missing binding definition
- - a patch to use STM32F4_X_CLOCK() macro
-
-Gabriel Fernandez (3):
-  dt-bindings: mfd: stm32f4: Fix STM32F4_X_CLOCK() macro
-  dt-bindings: mfd: stm32f4: Add missing binding definition
-  ARM: dts: stm32: Use clock DT binding definition on stm32f429 family
-
- arch/arm/boot/dts/stm32429i-eval.dts  |  2 +-
- arch/arm/boot/dts/stm32f429.dtsi      | 66 +++++++++++++++++++----------------
- include/dt-bindings/mfd/stm32f4-rcc.h | 24 +++++++++----
- 3 files changed, 53 insertions(+), 39 deletions(-)
-
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  drivers/mfd/exynos-lpass.c                              | 17 -----------------
+>  include/linux/mfd/syscon/exynos5-pmu.h                  |  3 ---
+>  3 files changed, 22 deletions(-)
