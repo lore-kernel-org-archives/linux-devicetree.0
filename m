@@ -1,92 +1,119 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 13/16] ov2640: update bindings
-Date: Wed, 1 Feb 2017 10:58:56 -0600
-Message-ID: <20170201165856.vadsezfz46qarc2m@rob-hp-laptop>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
- <20170130140628.18088-14-hverkuil@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170130140628.18088-14-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v3 11/18] drivers/fsi: Add device read/write/peek functions
+Date: Wed,  1 Feb 2017 10:53:51 -0600
+Message-ID: <20170201165358.45415-12-cbostic@linux.vnet.ibm.com>
+References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, gregkh@linuxfoundation.org, mturquette@baylibre.com, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, Chris Bostic <cbostic@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 03:06:25PM +0100, Hans Verkuil wrote:
-> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> 
-> Update the bindings for this device based on a working DT example.
-> 
-> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov2640.txt       | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov2640.txt b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> index c429b5b..5e6c445 100644
-> --- a/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov2640.txt
-> @@ -1,8 +1,8 @@
->  * Omnivision OV2640 CMOS sensor
->  
-> -The Omnivision OV2640 sensor support multiple resolutions output, such as
-> -CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
-> -output format.
-> +The Omnivision OV2640 sensor supports multiple resolutions output, such as
-> +CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
-> +output formats.
->  
->  Required Properties:
->  - compatible: should be "ovti,ov2640"
-> @@ -20,20 +20,18 @@ Documentation/devicetree/bindings/media/video-interfaces.txt.
->  Example:
->  
->  	i2c1: i2c@f0018000 {
-> +		status = "okay";
+From: Jeremy Kerr <jk@ozlabs.org>
 
-There's no point in showing status in examples.
+This change introduces the fsi device API: simple read, write and peek
+accessors for the devices' address spaces.
 
-> +
->  		ov2640: camera@0x30 {
+Includes contributions from Chris Bostic <cbostic@us.ibm.com>
 
-Drop the '0x' while here.
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
+---
+ drivers/fsi/fsi-core.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fsi.h    |  6 ++++++
+ 2 files changed, 53 insertions(+)
 
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
->  			compatible = "ovti,ov2640";
->  			reg = <0x30>;
-> -
->  			pinctrl-names = "default";
-> -			pinctrl-0 = <&pinctrl_pck1 &pinctrl_ov2640_pwdn &pinctrl_ov2640_resetb>;
-> -
-> -			resetb-gpios = <&pioE 24 GPIO_ACTIVE_LOW>;
-> -			pwdn-gpios = <&pioE 29 GPIO_ACTIVE_HIGH>;
-> -
-> -			clocks = <&pck1>;
-> +			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
-> +			resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
-> +			pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
-> +			clocks = <&pck0>;
->  			clock-names = "xvclk";
-> -
-> -			assigned-clocks = <&pck1>;
-> +			assigned-clocks = <&pck0>;
->  			assigned-clock-rates = <25000000>;
->  
->  			port {
-> -- 
-> 2.10.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index f7ef993..3119aa1 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -35,6 +35,8 @@
+ #define FSI_SLAVE_CONF_CRC_MASK		0x0000000f
+ #define FSI_SLAVE_CONF_DATA_BITS	28
+ 
++#define FSI_PEEK_BASE			0x410
++
+ static const int engine_page_size = 0x400;
+ 
+ static DEFINE_IDA(master_ida);
+@@ -48,8 +50,46 @@ struct fsi_slave {
+ 
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
+ 
++static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++		void *val, size_t size);
++static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++		const void *val, size_t size);
++
+ /* FSI endpoint-device support */
+ 
++int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
++		size_t size)
++{
++	if (addr > dev->size)
++		return -EINVAL;
++
++	if (addr + size > dev->size)
++		return -EINVAL;
++
++	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_read);
++
++int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
++		size_t size)
++{
++	if (addr > dev->size)
++		return -EINVAL;
++
++	if (addr + size > dev->size)
++		return -EINVAL;
++
++	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_write);
++
++int fsi_device_peek(struct fsi_device *dev, void *val)
++{
++	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
++
++	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
++}
++
+ static void fsi_device_release(struct device *_device)
+ {
+ 	struct fsi_device *device = to_fsi_dev(_device);
+@@ -81,6 +121,13 @@ static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
+ 			slave->id, addr, val, size);
+ }
+ 
++static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++			const void *val, size_t size)
++{
++	return slave->master->write(slave->master, slave->link,
++			slave->id, addr, val, size);
++}
++
+ static int fsi_slave_scan(struct fsi_slave *slave)
+ {
+ 	uint32_t engine_addr;
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index efa55ba..273945d 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -27,6 +27,12 @@ struct fsi_device {
+ 	uint32_t		size;
+ };
+ 
++extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
++		void *val, size_t size);
++extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
++		const void *val, size_t size);
++extern int fsi_device_peek(struct fsi_device *dev, void *val);
++
+ struct fsi_device_id {
+ 	u8	engine_type;
+ 	u8	version;
+-- 
+1.8.2.2
