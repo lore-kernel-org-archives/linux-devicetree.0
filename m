@@ -1,7 +1,7 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v3 03/18] drivers/fsi: add driver to device matches
-Date: Wed,  1 Feb 2017 10:53:43 -0600
-Message-ID: <20170201165358.45415-4-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v3 02/18] drivers/fsi: Add device & driver definitions
+Date: Wed,  1 Feb 2017 10:53:42 -0600
+Message-ID: <20170201165358.45415-3-cbostic@linux.vnet.ibm.com>
 References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
@@ -12,83 +12,36 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Driver bind to devices based on the engine types & (optional) versions.
+Add structs for fsi devices & drivers, and struct device conversion
+functions.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Chris Bostic <cbostic@us.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 21 +++++++++++++++++++++
- include/linux/fsi.h    | 21 +++++++++++++++++++--
- 2 files changed, 40 insertions(+), 2 deletions(-)
+ include/linux/fsi.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 3e45306..3d55bd5 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -19,8 +19,29 @@
- 
- /* FSI core & Linux bus type definitions */
- 
-+static int fsi_bus_match(struct device *dev, struct device_driver *drv)
-+{
-+	struct fsi_device *fsi_dev = to_fsi_dev(dev);
-+	struct fsi_driver *fsi_drv = to_fsi_drv(drv);
-+	const struct fsi_device_id *id;
-+
-+	if (!fsi_drv->id_table)
-+		return 0;
-+
-+	for (id = fsi_drv->id_table; id->engine_type; id++) {
-+		if (id->engine_type != fsi_dev->engine_type)
-+			continue;
-+		if (id->version == FSI_VERSION_ANY ||
-+				id->version == fsi_dev->version)
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
- struct bus_type fsi_bus_type = {
- 	.name		= "fsi",
-+	.match		= fsi_bus_match,
- };
- EXPORT_SYMBOL_GPL(fsi_bus_type);
- 
 diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index f73886a..273cbf6 100644
+index 47aa181..f73886a 100644
 --- a/include/linux/fsi.h
 +++ b/include/linux/fsi.h
-@@ -18,11 +18,28 @@
+@@ -17,6 +17,17 @@
+ 
  #include <linux/device.h>
  
- struct fsi_device {
--	struct device dev;
-+	struct device		dev;
-+	u8			engine_type;
-+	u8			version;
- };
- 
-+struct fsi_device_id {
-+	u8	engine_type;
-+	u8	version;
++struct fsi_device {
++	struct device dev;
 +};
 +
-+#define FSI_VERSION_ANY		0
++struct fsi_driver {
++	struct device_driver drv;
++};
 +
-+#define FSI_DEVICE(t) \
-+	.engine_type = (t), .version = FSI_VERSION_ANY,
++#define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
++#define to_fsi_drv(drvp) container_of(drvp, struct fsi_driver, drv)
 +
-+#define FSI_DEVICE_VERSIONED(t, v) \
-+	.engine_type = (t), .version = (v),
-+
-+
- struct fsi_driver {
--	struct device_driver drv;
-+	struct device_driver		drv;
-+	const struct fsi_device_id	*id_table;
- };
+ extern struct bus_type fsi_bus_type;
  
- #define to_fsi_dev(devp) container_of(devp, struct fsi_device, dev)
+ #endif /* LINUX_FSI_H */
 -- 
 1.8.2.2
