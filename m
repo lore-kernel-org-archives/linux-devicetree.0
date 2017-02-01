@@ -1,73 +1,88 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 01/10] serial: st-asc: Ignore the parity error bit if 8-bit
- mode is enabled
-Date: Wed,  1 Feb 2017 14:31:36 +0000
-Message-ID: <20170201143145.31962-2-lee.jones@linaro.org>
-References: <20170201143145.31962-1-lee.jones@linaro.org>
+Subject: Re: [Resend PATCH v2 2/3] dt-bindings: mfd: stm32f4: Add missing
+ binding definition
+Date: Wed, 1 Feb 2017 14:34:40 +0000
+Message-ID: <20170201143440.mal2tjmrtxpv4wva@dell>
+References: <1485954596-11014-1-git-send-email-gabriel.fernandez@st.com>
+ <1485954596-11014-3-git-send-email-gabriel.fernandez@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170201143145.31962-1-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, dt@kernel.org, devicetree@vger.kernel.org
-Cc: patrice.chotard@st.com, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485954596-11014-3-git-send-email-gabriel.fernandez@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: gabriel.fernandez@st.com
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, daniel.thompson@linaro.org, andrea.merello@gmail.com, radoslaw.pietrzyk@gmail.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, ludovic.barre@st.com, olivier.bideau@st.com, amelie.delaunay@st.com
 List-Id: devicetree@vger.kernel.org
 
-The datasheet states:
+On Wed, 01 Feb 2017, gabriel.fernandez@st.com wrote:
 
-"If the MODE field selects an 8-bit frame then this [parity error] bit
- is undefined. Software should ignore this bit when reading 8-bit frames."
+> From: Gabriel Fernandez <gabriel.fernandez@st.com>
+> 
+> This patch adds missing binding definition (backupram, ethernet, otg,
+> qspi, adc & dsi)
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
+> ---
+>  include/dt-bindings/mfd/stm32f4-rcc.h | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/tty/serial/st-asc.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-index 379e5bd..69e6232 100644
---- a/drivers/tty/serial/st-asc.c
-+++ b/drivers/tty/serial/st-asc.c
-@@ -287,9 +287,19 @@ static void asc_transmit_chars(struct uart_port *port)
- static void asc_receive_chars(struct uart_port *port)
- {
- 	struct tty_port *tport = &port->state->port;
--	unsigned long status;
-+	unsigned long status, mode;
- 	unsigned long c = 0;
- 	char flag;
-+	bool ignore_pe = false;
-+
-+	/*
-+	 * Datasheet states: If the MODE field selects an 8-bit frame then
-+	 * this [parity error] bit is undefined. Software should ignore this
-+	 * bit when reading 8-bit frames.
-+	 */
-+	mode = asc_in(port, ASC_CTL) & ASC_CTL_MODE_MSK;
-+	if (mode == ASC_CTL_MODE_8BIT || mode == ASC_CTL_MODE_8BIT_PAR)
-+		ignore_pe = true;
- 
- 	if (port->irq_wake)
- 		pm_wakeup_event(tport->tty->dev, 0);
-@@ -299,8 +309,8 @@ static void asc_receive_chars(struct uart_port *port)
- 		flag = TTY_NORMAL;
- 		port->icount.rx++;
- 
--		if ((c & (ASC_RXBUF_FE | ASC_RXBUF_PE)) ||
--			status & ASC_STA_OE) {
-+		if (status & ASC_STA_OE || c & ASC_RXBUF_FE ||
-+		    (c & ASC_RXBUF_PE && !ignore_pe)) {
- 
- 			if (c & ASC_RXBUF_FE) {
- 				if (c == (ASC_RXBUF_FE | ASC_RXBUF_DUMMY_RX)) {
+> diff --git a/include/dt-bindings/mfd/stm32f4-rcc.h b/include/dt-bindings/mfd/stm32f4-rcc.h
+> index f662b19..082a81c 100644
+> --- a/include/dt-bindings/mfd/stm32f4-rcc.h
+> +++ b/include/dt-bindings/mfd/stm32f4-rcc.h
+> @@ -18,11 +18,17 @@
+>  #define STM32F4_RCC_AHB1_GPIOJ	9
+>  #define STM32F4_RCC_AHB1_GPIOK	10
+>  #define STM32F4_RCC_AHB1_CRC	12
+> +#define STM32F4_RCC_AHB1_BKPSRAM	18
+> +#define STM32F4_RCC_AHB1_CCMDATARAM	20
+>  #define STM32F4_RCC_AHB1_DMA1	21
+>  #define STM32F4_RCC_AHB1_DMA2	22
+>  #define STM32F4_RCC_AHB1_DMA2D	23
+>  #define STM32F4_RCC_AHB1_ETHMAC	25
+> -#define STM32F4_RCC_AHB1_OTGHS	29
+> +#define STM32F4_RCC_AHB1_ETHMACTX	26
+> +#define STM32F4_RCC_AHB1_ETHMACRX	27
+> +#define STM32F4_RCC_AHB1_ETHMACPTP	28
+> +#define STM32F4_RCC_AHB1_OTGHS		29
+> +#define STM32F4_RCC_AHB1_OTGHSULPI	30
+>  
+>  #define STM32F4_AHB1_RESET(bit) (STM32F4_RCC_AHB1_##bit + (0x10 * 8))
+>  #define STM32F4_AHB1_CLOCK(bit) (STM32F4_RCC_AHB1_##bit)
+> @@ -40,6 +46,7 @@
+>  
+>  /* AHB3 */
+>  #define STM32F4_RCC_AHB3_FMC	0
+> +#define STM32F4_RCC_AHB3_QSPI	1
+>  
+>  #define STM32F4_AHB3_RESET(bit)	(STM32F4_RCC_AHB3_##bit + (0x18 * 8))
+>  #define STM32F4_AHB3_CLOCK(bit)	(STM32F4_RCC_AHB3_##bit + 0x40)
+> @@ -79,7 +86,9 @@
+>  #define STM32F4_RCC_APB2_TIM8	1
+>  #define STM32F4_RCC_APB2_USART1	4
+>  #define STM32F4_RCC_APB2_USART6	5
+> -#define STM32F4_RCC_APB2_ADC	8
+> +#define STM32F4_RCC_APB2_ADC1	8
+> +#define STM32F4_RCC_APB2_ADC2	9
+> +#define STM32F4_RCC_APB2_ADC3	10
+>  #define STM32F4_RCC_APB2_SDIO	11
+>  #define STM32F4_RCC_APB2_SPI1	12
+>  #define STM32F4_RCC_APB2_SPI4	13
+> @@ -91,6 +100,7 @@
+>  #define STM32F4_RCC_APB2_SPI6	21
+>  #define STM32F4_RCC_APB2_SAI1	22
+>  #define STM32F4_RCC_APB2_LTDC	26
+> +#define STM32F4_RCC_APB2_DSI	27
+>  
+>  #define STM32F4_APB2_RESET(bit)	(STM32F4_RCC_APB2_##bit + (0x24 * 8))
+>  #define STM32F4_APB2_CLOCK(bit)	(STM32F4_RCC_APB2_##bit + 0xA0)
+
 -- 
-2.9.3
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
