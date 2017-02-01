@@ -1,110 +1,101 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
-Date: Wed, 1 Feb 2017 20:09:21 +0200
-Message-ID: <20170201195732-mutt-send-email-mst@kernel.org>
-References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
+Date: Wed, 1 Feb 2017 13:12:18 -0500
+Message-ID: <20170201181218.GA8595@art_vandelay>
+References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
+ <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
+ <20170123174841.GB25789@trickycodes.roam.corp.google.com>
+ <5886BB8F.6040707@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <5886BB8F.6040707@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, tfiga@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 12:25:57PM +0000, Robin Murphy wrote:
-> By forcing on DMA API usage for ARM systems, we have inadvertently
-> kicked open a hornets' nest in terms of cache-coherency. Namely that
-> unless the virtio device is explicitly described as capable of coherent
-> DMA by firmware, the DMA APIs on ARM and other DT-based platforms will
-> assume it is non-coherent. This turns out to cause a big problem for the
-> likes of QEMU and kvmtool, which generate virtio-mmio devices in their
-> guest DTs but neglect to add the often-overlooked "dma-coherent"
-> property; as a result, we end up with the guest making non-cacheable
-> accesses to the vring, the host doing so cacheably, both talking past
-> each other and things going horribly wrong.
-> 
-> To prevent regressing those existing use cases relying on implicit
-> coherency, but still fixing the original problem of (coherent PCI)
-> legacy devices behind IOMMUs, take the more conservative approach of
-> only hitting the DMA API switch for coherent devices, where we can be
-> sure it is safe, and preserving the old non-DMA behaviour otherwise.
-> This does not affect devices setting the VIRTIO_F_IOMMU_PLATFORM flag,
-> which as before are still at the mercy of architecture code correctly
-> knowing their coherency, so explicitly call this out in the virtio-mmio
-> DT binding in the hope of heading off any further workarounds for future
-> firmware mishaps.
-> 
-> Fixes: c7070619f340 ("vring: Force use of DMA API for ARM-based systems with legacy devices")
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/virtio/mmio.txt |  3 +++
->  drivers/virtio/virtio_ring.c                      | 11 ++++++++---
->  2 files changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
-> index 5069c1b8e193..8f2a981e1010 100644
-> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
-> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
-> @@ -7,6 +7,8 @@ Required properties:
->  - compatible:	"virtio,mmio" compatibility string
->  - reg:		control registers base address and size including configuration space
->  - interrupts:	interrupt generated by the device
-> +- dma-coherent:	required if the device (or host emulation) accesses memory
-> +		cache-coherently, absent otherwise
->  
->  Example:
->  
-> @@ -14,4 +16,5 @@ Example:
->  		compatible = "virtio,mmio";
->  		reg = <0x3000 0x100>;
->  		interrupts = <41>;
-> +		dma-coherent;
->  	}
-> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-> index 7e38ed79c3fc..961af25b385c 100644
-> --- a/drivers/virtio/virtio_ring.c
-> +++ b/drivers/virtio/virtio_ring.c
-> @@ -20,6 +20,7 @@
->  #include <linux/virtio_ring.h>
->  #include <linux/virtio_config.h>
->  #include <linux/device.h>
-> +#include <linux/property.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
->  #include <linux/hrtimer.h>
-> @@ -160,10 +161,14 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
->  		return true;
->  
->  	/*
-> -	 * On ARM-based machines, the DMA ops will do the right thing,
-> -	 * so always use them with legacy devices.
-> +	 * On ARM-based machines, the coherent DMA ops will do the right
-> +	 * thing, so always use them with legacy devices. However, using
-> +	 * non-coherent DMA when the host *is* actually coherent, but has
-> +	 * forgotten to tell us, is going to break badly; since this situation
-> +	 * already exists in the wild, maintain the old behaviour there.
->  	 */
-> -	if (IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64))
-> +	if ((IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64)) &&
-> +	    device_get_dma_attr(&vdev->dev) == DEV_DMA_COHERENT)
->  		return !virtio_has_feature(vdev, VIRTIO_F_VERSION_1);
->  
->  	return false;
-
-This is exactly what I feared.
-
-Could we identify fastboot and do the special dance just for it?
-
-I'd like to do that instead. It's fastboot doing the unreasonable thing
-here and deviating from what every other legacy device without exception
-did for years. If this means fastboot will need to update to virtio 1,
-all the better.
-
-> -- 
-> 2.11.0.dirty
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMjQsIDIwMTcgYXQgMTA6Mjc6MjdBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gSGkgU2Vhbgo+IAo+IE9uIDAxLzI0LzIwMTcgMDE6NDggQU0sIFNlYW4gUGF1bCB3cm90
+ZToKPiA+T24gRnJpLCBKYW4gMjAsIDIwMTcgYXQgMDY6MTA6NDlQTSArMDgwMCwgQ2hyaXMgWmhv
+bmcgd3JvdGU6Cj4gPj5UaGUgTUlQSSBEU0kgZG8gbm90IG5lZWQgY2hlY2sgdGhlIHZhbGlkaXR5
+IG9mIHJlc29sdXRpb24sIHRoZSBtYXgKPiA+PnJlc29sdXRpb24gc2hvdWxkIGRlcGVuZCBWT1Au
+IEhlbmNlLCByZW1vdmUgcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQKPiA+PmhlcmUuCj4gPkRv
+ZXMgdm9wIGFjdHVhbGx5IGVuZm9yY2UgdGhpcywgdGhvdWdoPyBJIHNlZSB0aGF0IG1vZGVfY29u
+ZmlnLm1heF93aWR0aCBpcwo+ID40MDk2LCBidXQgdGhlcmUgaXMgbm8gYm91bmRzIGNoZWNraW5n
+IGluIG1vZGVfZml4dXAoKS4KPiA+Cj4gPlRoZSBjb25uZWN0b3IgaXMgY3VycmVudGx5IHJlamVj
+dGluZyBldmVyeXRoaW5nIGdyZWF0ZXIgdGhhbiAyMDQ3LiBTbyBJIHRoaW5rCj4gPnlvdSdyZSBn
+b2luZyB0byByZWdyZXNzIGJlaGF2aW9yIGhlcmUuCj4gPgo+ID5TZWFuCj4gVGhlIG1pcGkgY29u
+dHJvbGxlciBoYXMgbm90IHRoaXMgd2lkdGggbGltaXQsIGl0IGRlcGVuZCB0aGUgVk9QLAo+IHN1
+Y2ggYXMgUkszMzk5LCBWT1BfTElUIG9ubHkgc3VwcG9ydCAyNTYwLAo+IGJ1dCBWT1BfQklHIHN1
+cHBvcnQgNEsuIFNvIHRoaXMgZHJpdmVyIHNob3VsZCBjaGVjayB0aGUgd2lkdGggaGVyZS4KCkkg
+ZG9uJ3Qgc2VlIGFueXRoaW5nIGluIHRoZSB2b3AgZHJpdmVyIHRoYXQgcmVqZWN0cyBsYXJnZSBt
+b2RlcyBmb3IgbGl0dGxlIHZvcC4KU28sIHdoaWxlIEkgYWdyZWUgdGhlIGNoZWNrIHNob3VsZG4n
+dCBiZSBoZXJlLCB5b3Ugc2hvdWxkIG1vdmUgaXQgdG8gd2hlcmUgaXQKc2hvdWxkIGJlIGluc3Rl
+YWQgb2YgcmVtb3ZpbmcgaXQgZW50aXJlbHkuCgpTZWFuCgo+IAo+ID4KPiA+Cj4gPj5TaWduZWQt
+b2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+ID4+LS0tCj4gPj4KPiA+
+PkNoYW5nZXMgaW4gdjM6IE5vbmUKPiA+Pgo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+ZHctbWlwaS1kc2kuYyB8IDM5IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+
+PiAgMSBmaWxlIGNoYW5nZWQsIDM5IGRlbGV0aW9ucygtKQo+ID4+Cj4gPj5kaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0v
+cm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+ID4+aW5kZXggYTkzY2U5Ny4uNmYwZTI1MiAxMDA2NDQK
+PiA+Pi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCj4gPj4rKysg
+Yi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+ID4+QEAgLTI3OCw4ICsy
+NzgsNiBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHsKPiA+PiAgCXUzMiBncmZfZHNp
+MF9tb2RlOwo+ID4+ICAJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+ID4+ICAJdW5zaWduZWQgaW50
+IG1heF9kYXRhX2xhbmVzOwo+ID4+LQllbnVtIGRybV9tb2RlX3N0YXR1cyAoKm1vZGVfdmFsaWQp
+KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4gPj4tCQkJCQkgICBzdHJ1Y3QgZHJt
+X2Rpc3BsYXlfbW9kZSAqbW9kZSk7Cj4gPj4gIH07Cj4gPj4gIHN0cnVjdCBkd19taXBpX2RzaSB7
+Cj4gPj5AQCAtMTA4MSwyMyArMTA3OSw4IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfY29ubmVj
+dG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4+ICAJcmV0
+dXJuIGRybV9wYW5lbF9nZXRfbW9kZXMoZHNpLT5wYW5lbCk7Cj4gPj4gIH0KPiA+Pi1zdGF0aWMg
+ZW51bSBkcm1fbW9kZV9zdGF0dXMgZHdfbWlwaV9kc2lfbW9kZV92YWxpZCgKPiA+Pi0JCQkJCXN0
+cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4gPj4tCQkJCQlzdHJ1Y3QgZHJtX2Rpc3Bs
+YXlfbW9kZSAqbW9kZSkKPiA+Pi17Cj4gPj4tCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gY29u
+X3RvX2RzaShjb25uZWN0b3IpOwo+ID4+LQo+ID4+LQllbnVtIGRybV9tb2RlX3N0YXR1cyBtb2Rl
+X3N0YXR1cyA9IE1PREVfT0s7Cj4gPj4tCj4gPj4tCWlmIChkc2ktPnBkYXRhLT5tb2RlX3ZhbGlk
+KQo+ID4+LQkJbW9kZV9zdGF0dXMgPSBkc2ktPnBkYXRhLT5tb2RlX3ZhbGlkKGNvbm5lY3Rvciwg
+bW9kZSk7Cj4gPj4tCj4gPj4tCXJldHVybiBtb2RlX3N0YXR1czsKPiA+Pi19Cj4gPj4tCj4gPj4g
+IHN0YXRpYyBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgZHdfbWlwaV9kc2lfY29u
+bmVjdG9yX2hlbHBlcl9mdW5jcyA9IHsKPiA+PiAgCS5nZXRfbW9kZXMgPSBkd19taXBpX2RzaV9j
+b25uZWN0b3JfZ2V0X21vZGVzLAo+ID4+LQkubW9kZV92YWxpZCA9IGR3X21pcGlfZHNpX21vZGVf
+dmFsaWQsCj4gPj4gIH07Cj4gPj4gIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2RybV9jb25uZWN0
+b3JfZGVzdHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4+QEAgLTExNjgs
+MzMgKzExNTEsMTEgQEAgc3RhdGljIGludCByb2NrY2hpcF9taXBpX3BhcnNlX2R0KHN0cnVjdCBk
+d19taXBpX2RzaSAqZHNpKQo+ID4+ICAJcmV0dXJuIDA7Cj4gPj4gIH0KPiA+Pi1zdGF0aWMgZW51
+bSBkcm1fbW9kZV9zdGF0dXMgcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQoCj4gPj4tCQkJCQlz
+dHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+ID4+LQkJCQkJc3RydWN0IGRybV9kaXNw
+bGF5X21vZGUgKm1vZGUpCj4gPj4tewo+ID4+LQkvKgo+ID4+LQkgKiBUaGUgVklEX1BLVF9TSVpF
+IGZpZWxkIGluIHRoZSBEU0lfVklEX1BLVF9DRkcKPiA+Pi0JICogcmVnaXN0ZXIgaXMgMTEtYml0
+Lgo+ID4+LQkgKi8KPiA+Pi0JaWYgKG1vZGUtPmhkaXNwbGF5ID4gMHg3ZmYpCj4gPj4tCQlyZXR1
+cm4gTU9ERV9CQURfSFZBTFVFOwo+ID4+LQo+ID4+LQkvKgo+ID4+LQkgKiBUaGUgVl9BQ1RJVkVf
+TElORVMgZmllbGQgaW4gdGhlIERTSV9WVElNSU5HX0NGRwo+ID4+LQkgKiByZWdpc3RlciBpcyAx
+MS1iaXQuCj4gPj4tCSAqLwo+ID4+LQlpZiAobW9kZS0+dmRpc3BsYXkgPiAweDdmZikKPiA+Pi0J
+CXJldHVybiBNT0RFX0JBRF9WVkFMVUU7Cj4gPj4tCj4gPj4tCXJldHVybiBNT0RFX09LOwo+ID4+
+LX0KPiA+Pi0KPiA+PiAgc3RhdGljIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgcmszMjg4
+X21pcGlfZHNpX2Rydl9kYXRhID0gewo+ID4+ICAJLmRzaTBfZW5fYml0ID0gUkszMjg4X0RTSTBf
+U0VMX1ZPUF9MSVQsCj4gPj4gIAkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJ
+VCwKPiA+PiAgCS5ncmZfc3dpdGNoX3JlZyA9IFJLMzI4OF9HUkZfU09DX0NPTjYsCj4gPj4gIAku
+bWF4X2RhdGFfbGFuZXMgPSA0LAo+ID4+LQkubW9kZV92YWxpZCA9IHJrMzI4OF9taXBpX2RzaV9t
+b2RlX3ZhbGlkLAo+ID4+ICB9Owo+ID4+ICBzdGF0aWMgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRf
+ZGF0YSByazMzOTlfbWlwaV9kc2lfZHJ2X2RhdGEgPSB7Cj4gPj4tLSAKPiA+PjIuNi4zCj4gPj4K
+PiA+Pl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPj5k
+cmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gPj5kcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cj4gPj5odHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
+cC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9t
+aXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
