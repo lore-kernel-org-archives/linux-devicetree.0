@@ -1,67 +1,95 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v6 4/5] ARM: dts: rockchip: add timer entries to rk3188 SoC
-Date: Wed, 01 Feb 2017 10:43:12 +0100
-Message-ID: <1522448.qizf3bPadS@phil>
-References: <1485866596-32254-1-git-send-email-al.kochet@gmail.com> <1485866596-32254-5-git-send-email-al.kochet@gmail.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++
+ Bridge
+Date: Wed, 1 Feb 2017 15:14:42 +0530
+Message-ID: <b84ac3b8-3626-3eb2-7293-0affb58b7752@codeaurora.org>
+References: <cover.1483301745.git.peter.senna@collabora.com>
+ <4232c88a99f44a24287d04d74b891e2eb139864c.1483301745.git.peter.senna@collabora.com>
+ <759f96e2-43da-45ba-cf8d-55bc1f6e8442@codeaurora.org>
+ <20170128141646.GA21291@collabora.com> <877f5ciilg.fsf@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485866596-32254-5-git-send-email-al.kochet@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Kochetkov <al.kochet@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Caesar Wang <wxt@rock-chips.com>, Huang Tao <huangtao@rock-chips.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <877f5ciilg.fsf@intel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jani Nikula <jani.nikula@linux.intel.com>, Peter Senna Tschudin <peter.senna@collabora.com>
+Cc: mark.rutland@arm.com, martyn.welch@collabora.co.uk, daniel.vetter@ffwll.ch, peter.senna@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, ykk@rock-chips.com, jslaby@suse.cz, mchehab@osg.samsung.com, linux@armlinux.org.uk, javier@dowhile0.org, treding@nvidia.com, linux@roeck-us.net, martin.donnelly@ge.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, enric.balletbo@collabora.com, rmk+kernel@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, tiwai@suse.com, kernel@pengutronix.de, galak@codeaurora.org, Fabio Estevam <fabio.estevam@nxp.com>, akpm@linux-foundation.org, shawnguo@kernel.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 31. Januar 2017, 15:43:15 CET schrieb Alexander Kochetkov:
-> The patch add two timers to all rk3188 based boards.
-> 
-> The first timer is from alive subsystem and it act as a backup
-> for the local timers at sleep time. It act the same as other
-> SoC rockchip timers already present in kernel.
-> 
-> The second timer is from CPU subsystem and act as replacement
-> for the arm-global-timer clocksource and sched clock. It run
-> at stable frequency 24MHz.
-> 
-> Signed-off-by: Alexander Kochetkov <al.kochet@gmail.com>
-> ---
->  arch/arm/boot/dts/rk3188.dtsi |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-> index 31f81b2..0dc52fe 100644
-> --- a/arch/arm/boot/dts/rk3188.dtsi
-> +++ b/arch/arm/boot/dts/rk3188.dtsi
-> @@ -106,6 +106,22 @@
->  		};
->  	};
-> 
-> +	timer3: timer@2000e000 {
-> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-> +		reg = <0x2000e000 0x20>;
-> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_TIMER3>, <&cru PCLK_TIMER3>;
-> +		clock-names = "timer", "pclk";
-> +	};
-> +
-> +	timer6: timer@200380a0 {
-> +		compatible = "rockchip,rk3188-timer", "rockchip,rk3288-timer";
-> +		reg = <0x200380a0 0x20>;
-> +		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru SCLK_TIMER6>, <&cru PCLK_TIMER0>;
-> +		clock-names = "timer", "pclk";
-> +	};
-> +
-
-depending on who is picking that up, they can add my
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-
-if needed.
-
-I've also double checked the timer clocks - especially the pclks.
-Timer3 has its own separate pclk, while all other timers are supplied by 
-pclk_timer0.
 
 
-Heiko
+On 01/30/2017 10:35 PM, Jani Nikula wrote:
+> On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna@collabora.com> wrote:
+>> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
+>> Hi Archit,
+>>
+>> Thank you for the comments!
+>>
+>> [...]
+>>>> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+>>>> +	if (total_size > EDID_LENGTH) {
+>>>> +		kfree(block);
+>>>> +		block = kmalloc(total_size, GFP_KERNEL);
+>>>> +		if (!block)
+>>>> +			return NULL;
+>>>> +
+>>>> +		/* Yes, read the entire buffer, and do not skip the first
+>>>> +		 * EDID_LENGTH bytes.
+>>>> +		 */
+>>>
+>>> Is this the reason why you aren't using drm_do_get_edid()?
+>>
+>> Yes, for some hw specific reason, it is necessary to read the entire
+>> EDID buffer starting from 0, not block by block.
+>
+> Hrmh, I'm planning on moving the edid override and firmware edid
+> mechanisms at the drm_do_get_edid() level to be able to truly and
+> transparently use a different edid. Currently, they're only used for
+> modes, really, and lead to some info retrieved from overrides, some from
+> the real edid. This kind of hacks will bypass the override/firmware edid
+> mechanisms then too. :(
+
+It seems like there is a HW issue which prevents them from reading EDID
+from an offset. So, I'm not sure if it is a hack or a HW limitation.
+
+One way around this would be to hide the HW requirement in the
+get_edid_block func pointer passed to drm_do_get_edid(). This
+would, however, result in more i2c reads (equal to # of extension
+blocks) than what the patch currently does.
+
+Peter, if you think doing extra EDID reads isn't too costly on your
+platform, you could consider using drm_do_get_edid(). If not, I guess
+you'll miss out on the additional functionality Jani is going to add
+in the future.
+
+Thanks,
+Archit
+
+
+>
+> BR,
+> Jani.
+>
+>
+>>
+>> [...]
+>>
+>> I fixed all your other suggestions. Thank you!
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
