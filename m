@@ -1,76 +1,109 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
-Date: Wed, 1 Feb 2017 10:35:00 -0600
-Message-ID: <20170201163500.ivxnxejurhzzoctl@rob-hp-laptop>
-References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
- <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCHv2 05/16] ov7670: document device tree bindings
+Date: Wed, 1 Feb 2017 10:40:25 -0600
+Message-ID: <20170201164025.hiayfe6ku2sk4d2m@rob-hp-laptop>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-6-hverkuil@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1485784663-19505-4-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <20170130140628.18088-6-hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 02:57:41PM +0100, Fabrice Gasnier wrote:
-> Add dt documentation for st,stm32-exti-trigger.
-> EXTi gpio signal can be routed internally as trigger source for various
-
-s/gpio/GPIO/
-
-> IPs (e.g. for ADC or DAC conversions).
-
-Please use "dt-bindings: iio:" for the subject prefix.
-
+On Mon, Jan 30, 2017 at 03:06:17PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil@cisco.com>
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> Add binding documentation and add that file to the MAINTAINERS entry.
+
+This should come before the driver support.
+
+> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
 > ---
->  .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>  .../devicetree/bindings/media/i2c/ov7670.txt       | 44 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov7670.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+> diff --git a/Documentation/devicetree/bindings/media/i2c/ov7670.txt b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
 > new file mode 100644
-> index 0000000..ebf2645
+> index 0000000..a014694
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
-> @@ -0,0 +1,17 @@
-> +STMicroelectronics STM32 EXTI trigger bindings
+> +++ b/Documentation/devicetree/bindings/media/i2c/ov7670.txt
+> @@ -0,0 +1,44 @@
+> +* Omnivision OV7670 CMOS sensor
 > +
-> +EXTi gpio signal can be routed internally as trigger source for various
-
-s/gpio/GPIO/
-
-> +IPs (e.g. for ADC or DAC conversions).
+> +The Omnivision OV7670 sensor supports multiple resolutions output, such as
+> +CIF, SVGA, UXGA. It also can support the YUV422/420, RGB565/555 or raw RGB
+> +output formats.
 > +
-> +Contents of a stm32 exti trigger root node:
+> +Required Properties:
+> +- compatible: should be "ovti,ov7670"
+> +- clocks: reference to the xclk input clock.
+> +- clock-names: should be "xclk".
+> +
+> +Optional Properties:
+> +- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
 
-Drop "root"
+We've somewhat standardized naming for reset gpios to "reset-gpios" even 
+if that doesn't quite match the pin name.
 
-> +-------------------------------------------
-> +Required properties:
-> +- compatible: Should be "st,stm32-exti-trigger"
+> +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
 
-This whole binding looks a bit suspicious. Is this actually a h/w block? 
-What makes it stm32 specific? Seems like the gpio properties should just 
-be part of the ADC or DAC that they trigger.
+Same here with "powerdown-gpios".
 
-> +- extiN-gpio: optional gpio line that may be used as external trigger source
-
--gpios is the preferred form.
-
-> +  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on stm32f4).
+> +
+> +The device node must contain one 'port' child node for its digital output
+> +video port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt.
 > +
 > +Example:
-> +	triggers {
-> +		compatible = "st,stm32-exti-trigger";
-> +		exti11-gpio=<&gpioa 11 0>;
+> +
+> +	i2c1: i2c@f0018000 {
+> +		status = "okay";
+> +
+> +		ov7670: camera@0x21 {
 
-spaces around the "=".
+Drop the '0x'.
 
+> +			compatible = "ovti,ov7670";
+> +			reg = <0x21>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+> +			resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+> +			pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+> +			clocks = <&pck0>;
+> +			clock-names = "xclk";
+> +			assigned-clocks = <&pck0>;
+> +			assigned-clock-rates = <25000000>;
+> +
+> +			port {
+> +				ov7670_0: endpoint {
+> +					remote-endpoint = <&isi_0>;
+> +					bus-width = <8>;
+> +				};
+> +			};
+> +		};
 > +	};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cfff2c9..67df205 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9101,6 +9101,7 @@ L:	linux-media@vger.kernel.org
+>  T:	git git://linuxtv.org/media_tree.git
+>  S:	Maintained
+>  F:	drivers/media/i2c/ov7670.c
+> +F:	Documentation/devicetree/bindings/media/i2c/ov7670.txt
+>  
+>  ONENAND FLASH DRIVER
+>  M:	Kyungmin Park <kyungmin.park@samsung.com>
 > -- 
-> 1.9.1
+> 2.10.2
 > 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
