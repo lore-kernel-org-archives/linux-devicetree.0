@@ -1,76 +1,34 @@
-From: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 4/6] bus: add driver for the Technologic Systems NBUS
-Date: Wed, 1 Feb 2017 14:56:11 -0500
-Message-ID: <7bc0871f-ac0a-e8a0-0c84-a0e61b3991a8@savoirfairelinux.com>
-References: <20161214231237.17496-1-sebastien.bourdelin@savoirfairelinux.com>
- <20161214231237.17496-5-sebastien.bourdelin@savoirfairelinux.com>
- <CACRpkdYHHrYY-fAPnNmV94ejFJ36rhSF0SqSVHkTNq+YCRNNZw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] PCI: add DT bindings for Cortina Gemini PCI Host Bridge
+Date: Wed, 1 Feb 2017 21:00:14 +0100
+Message-ID: <CACRpkdZFHBufh1ZunKnY018_TN-s80drQ_f-KTtPoR6O5OGHrg@mail.gmail.com>
+References: <20170128204839.18330-1-linus.walleij@linaro.org> <20170131003137.GE20550@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYHHrYY-fAPnNmV94ejFJ36rhSF0SqSVHkTNq+YCRNNZw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170131003137.GE20550-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel <kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Tue, Jan 31, 2017 at 1:31 AM, Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-Thanks for your feedback.
-I have a question regarding your recommendation, see below.
+>> +- bus-range: set to <0x00 0x00> (only root bus)
+>
+> Why is this limited to bus 0?  Is everything completely soldered down
+> with no possibility of adding or replacing PCI devices? The interrupt-map
+> below suggests slots, though.  If there's a slot, we could plug in a card
+> with a bridge, which would mean more than just bus 0.
 
-On 12/30/2016 02:58 AM, Linus Walleij wrote:
+I thought so because it's a NAS box (the typical usecase) but when I
+dismantled it and turned it over, wow, there is indeed a MiniPCI
+slot!
 
->> +
->> +static DEFINE_MUTEX(ts_nbus_lock);
->> +static bool ts_nbus_ready;
-> 
-> Why not move this to the struct ts_nbus state container?
-> 
-> It seems to be per-bus not per-system.
-> 
->> +#define TS_NBUS_READ_MODE  0
->> +#define TS_NBUS_WRITE_MODE 1
->> +#define TS_NBUS_DIRECTION_IN  0
->> +#define TS_NBUS_DIRECTION_OUT 1
->> +#define TS_NBUS_WRITE_ADR 0
->> +#define TS_NBUS_WRITE_VAL 1
->> +
->> +struct ts_nbus {
->> +       struct pwm_device *pwm;
->> +       int num_data;
->> +       int *data;
->> +       int csn;
->> +       int txrx;
->> +       int strobe;
->> +       int ale;
->> +       int rdy;
->> +};
->> +
->> +static struct ts_nbus *ts_nbus;
-> 
-> Nopes. No singletons please.
-> 
-> Use the state container pattern:
-> Documentation/driver-model/design-patterns.txt
-> 
+OK I will augment this to 0x00 0xff.
 
-I understand the idea but have problem to find a good way to implement it.
-
-Other drivers using the NBUS which are child nodes in the device tree
-will use the ts_nbus_write() and ts_nbus_read() functions, it means these
-drivers should have a pointer to the allocated ts_nbus and pass it to
-the write() and read() functions as an argument if i'm not using a
-singleton here.
-But i'm lacking knowledge on how to properly share this pointer when
-initializing the NBUS driver with the child nodes.
-
-Perhaps my design is not appropriate for what i'm doing, if someone can
-point me on a similar problematic it will be really helpful.
-
-Best Regards,
-Sebastien.
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
