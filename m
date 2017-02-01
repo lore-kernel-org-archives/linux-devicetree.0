@@ -1,52 +1,170 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/8] ADD STM32H743 MCU and STM32H743i-Eval board supports
-Date: Wed, 1 Feb 2017 17:47:43 +0100
-Message-ID: <83444163-8b25-b2e9-205a-188f29df0d24@st.com>
-References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
- <CACRpkdb35JdbE5bPMU_NeVehnA-qs3aAxCgE0==L=Z9vmq1yWQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 08/16] atmel-isi: document device tree bindings
+Date: Wed, 1 Feb 2017 10:50:59 -0600
+Message-ID: <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-9-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdb35JdbE5bPMU_NeVehnA-qs3aAxCgE0==L=Z9vmq1yWQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Jonathan Corbet <corbet@lwn.net>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170130140628.18088-9-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
+On Mon, Jan 30, 2017 at 03:06:20PM +0100, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> 
+> Document the device tree bindings for this driver.
 
-On 02/01/2017 04:16 PM, Linus Walleij wrote:
-> On Tue, Jan 31, 2017 at 2:14 PM, Alexandre TORGUE
-> <alexandre.torgue@st.com> wrote:
->
->> This series adds basic support for STM32H743 MCU and stm32h743i-eval board.
->> With it, you can boot stm32h743i-eval board successfully.
->
-> Patch 1 & 2 look fine to me.
->
-> Shall I just apply them and offer them on an immutable branch based
-> on v4.10 so you can pull that into ARM SoC if you want to get this in
-> for v4.11?
+Bindings document h/w not drivers.
 
-Thanks, but I think it is a bit late for this cycle. Indeed I'm close to 
-send a second round for STM32 DT, but I don't plan to add STM32H7 
-support. I prefere to let machine & DT patches in review.
-Anyway, I 'll be happy if you take pinctrl & bindings parts in this 
-cycle :).
+> 
+> Mostly copied from the atmel-isc bindings.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/media/atmel-isi.txt        | 91 +++++++++++++---------
+>  1 file changed, 56 insertions(+), 35 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> index 251f008..d1934b4 100644
+> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
+> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+> @@ -1,51 +1,72 @@
+> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+> -----------------------------------------------
+> +Atmel Image Sensor Interface (ISI)
+> +----------------------------------
+>  
+> -Required properties:
+> -- compatible: must be "atmel,at91sam9g45-isi"
+> -- reg: physical base address and length of the registers set for the device;
+> -- interrupts: should contain IRQ line for the ISI;
+> -- clocks: list of clock specifiers, corresponding to entries in
+> -          the clock-names property;
+> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+> +Required properties for ISI:
+> +- compatible
+> +	Must be "atmel,at91sam9g45-isi".
+> +- reg
+> +	Physical base address and length of the registers set for the device.
+> +- interrupts
+> +	Should contain IRQ line for the ISI.
+> +- clocks
+> +	List of clock specifiers, corresponding to entries in
+> +	the clock-names property;
+> +	Please refer to clock-bindings.txt.
+> +- clock-names
+> +	Required elements: "isi_clk".
+> +- #clock-cells
+> +	Should be 0.
 
-Regards
-Alex
+This reformatting is unrelated and the old form was more standard for 
+bindings (not that we have any real standard).
 
->
-> Yours,
-> Linus Walleij
->
+> +- pinctrl-names, pinctrl-0
+> +	Please refer to pinctrl-bindings.txt.
+>  
+>  ISI supports a single port node with parallel bus. It should contain one
+>  'port' child node with child 'endpoint' node. Please refer to the bindings
+>  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>  
+>  Example:
+> -	isi: isi@f0034000 {
+> -		compatible = "atmel,at91sam9g45-isi";
+> -		reg = <0xf0034000 0x4000>;
+> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+>  
+> -		clocks = <&isi_clk>;
+> -		clock-names = "isi_clk";
+> +isi: isi@f0034000 {
+> +	compatible = "atmel,at91sam9g45-isi";
+> +	reg = <0xf0034000 0x4000>;
+> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
+> +	clocks = <&isi_clk>;
+> +	clock-names = "isi_clk";
+> +	status = "ok";
+> +	port {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		isi_0: endpoint {
+> +			reg = <0>;
+
+Drop reg.
+
+> +			remote-endpoint = <&ov2640_0>;
+> +			bus-width = <8>;
+> +			vsync-active = <1>;
+> +			hsync-active = <1>;
+
+Which side of the connect is supposed to define these?
+
+> +		};
+> +	};
+> +};
+> +
+> +i2c1: i2c@f0018000 {
+> +	status = "okay";
+>  
+> +	ov2640: camera@0x30 {
+
+Drop the '0x'.
+
+> +		compatible = "ovti,ov2640";
+> +		reg = <0x30>;
+>  		pinctrl-names = "default";
+> -		pinctrl-0 = <&pinctrl_isi>;
+> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+> +		clocks = <&pck0>;
+> +		clock-names = "xvclk";
+> +		assigned-clocks = <&pck0>;
+> +		assigned-clock-rates = <25000000>;
+>  
+>  		port {
+> -			#address-cells = <1>;
+> -			#size-cells = <0>;
+> -
+> -			isi_0: endpoint {
+> -				remote-endpoint = <&ov2640_0>;
+> +			ov2640_0: endpoint {
+> +				remote-endpoint = <&isi_0>;
+>  				bus-width = <8>;
+
+It is pointless to define bus-width at both ends.
+
+>  			};
+>  		};
+>  	};
+> -
+> -	i2c1: i2c@f0018000 {
+> -		ov2640: camera@0x30 {
+> -			compatible = "ovti,ov2640";
+> -			reg = <0x30>;
+> -
+> -			port {
+> -				ov2640_0: endpoint {
+> -					remote-endpoint = <&isi_0>;
+> -					bus-width = <8>;
+> -				};
+> -			};
+> -		};
+> -	};
+> +};
+> -- 
+> 2.10.2
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
