@@ -1,279 +1,201 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
- property
-Date: Wed, 1 Feb 2017 22:26:55 +0100
-Message-ID: <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com>
-References: <20170120215605.15728-1-zajec5@gmail.com>
- <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
- <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
- <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
- <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
- <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
- <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
- <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com>
- <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] checks: Add infrastructure for setting bus type of
+ nodes
+Date: Wed, 1 Feb 2017 15:54:31 -0600
+Message-ID: <20170201215431.txsjccticxj6urhe@rob-hp-laptop>
+References: <20170124174534.3865-1-robh@kernel.org>
+ <20170124174534.3865-5-robh@kernel.org>
+ <20170131002634.GD14879@umbus.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d3535c2c-2a7c-4e8d-552c-666f76043b7d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170131002634.GD14879-K0bRW+63XPQe6aEkudXLsA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2017 04:56 PM, Rafał Miłecki wrote:
-> On 01/31/2017 10:34 PM, Jacek Anaszewski wrote:
->> On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
->>> On 01/25/2017 10:04 PM, Jacek Anaszewski wrote:
->>>> On 01/25/2017 10:03 AM, Rafał Miłecki wrote:
->>>>> On 21 January 2017 at 22:42, Jacek Anaszewski
->>>>> <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>> On 01/21/2017 05:24 PM, Rafał Miłecki wrote:
->>>>>>> On 20 January 2017 at 23:35, Jacek Anaszewski
->>>>>>> <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>>>>> On 01/20/2017 10:56 PM, Rafał Miłecki wrote:
->>>>>>>>> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>>>>>
->>>>>>>>> Some LEDs can be related to particular devices described in DT.
->>>>>>>>> This
->>>>>>>>> property allows specifying such relations. E.g. USB LED should
->>>>>>>>> usually
->>>>>>>>> be used to indicate some USB port(s) state.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>>>>>>>> ---
->>>>>>>>> V2: Replace "usb-ports" with "led-triggers" property which is
->>>>>>>>> more generic and
->>>>>>>>>     allows specifying other devices as well.
->>>>>>>>>
->>>>>>>>> When bindings patch is related to some followup implementation,
->>>>>>>>> they usually go
->>>>>>>>> through the same tree.
->>>>>>>>>
->>>>>>>>> Greg: this patch is based on top of e64b8cc72bf9 ("DT: leds:
->>>>>>>>> Improve examples by
->>>>>>>>> adding some context") from kernel/git/j.anaszewski/linux-leds.git
->>>>>>>>> . Is there any
->>>>>>>>> way to solve this dependency issue? Or should this patch wait
->>>>>>>>> until 3.11 is
->>>>>>>>> released?
->>>>>>>>> ---
->>>>>>>>>  Documentation/devicetree/bindings/leds/common.txt | 16
->>>>>>>>> ++++++++++++++++
->>>>>>>>>  1 file changed, 16 insertions(+)
->>>>>>>>>
->>>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>> b/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>> index 24b656014089..17632a041196 100644
->>>>>>>>> --- a/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>> +++ b/Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>> @@ -49,6 +49,17 @@ Optional properties for child nodes:
->>>>>>>>>  - panic-indicator : This property specifies that the LED should
->>>>>>>>> be used,
->>>>>>>>>                   if at all possible, as a panic indicator.
->>>>>>>>>
->>>>>>>>> +- led-triggers : List of devices that should trigger this LED
->>>>>>>>> activity. Some
->>>>>>>>> +              LEDs can be related to a specific device and
->>>>>>>>> should somehow
->>>>>>>>> +              indicate its state. E.g. USB 2.0 LED may react to
->>>>>>>>> device(s) in
->>>>>>>>> +              a USB 2.0 port(s). Another common example is
->>>>>>>>> switch or router
->>>>>>>>> +              with multiple Ethernet ports each of them having
->>>>>>>>> its own LED
->>>>>>>>> +              assigned (assuminled-trigger-usbportg they are not
->>>>>>>>> hardwired).
->>>>>>>>> +              In such cases this property should contain
->>>>>>>>> phandle(s) of
->>>>>>>>> +              related device(s). In many cases LED can be
->>>>>>>>> related to more
->>>>>>>>> +              than one device (e.g. one USB LED vs. multiple USB
->>>>>>>>> ports) so a
->>>>>>>>> +              list of entries can be specified.
->>>>>>>>> +
->>>>>>>>
->>>>>>>> This implies that it is possible to define multiple triggers for
->>>>>>>> a LED class device but it is not supported by LED Trigger core.
->>>>>>>> There is linux,default-trigger property which allows to define one
->>>>>>>> trigger that will be initially assigned.
->>>>>>
->>>>>>> With proposed "led-triggers" property one could assign different
->>>>>>> trigger *sources* to a LED. You could e.g. assign 2 USB ports,
->>>>>>> network
->>>>>>> device & CPU to a single LED. For reason explained above Linux
->>>>>>> couldn't support all of them at once.
->>>>>>>
->>>>>>>
->>>>>>>> I am aware that this is renamed usb-ports property from v1,
->>>>>>>> that attempts to address Rob's comment, but we can't do that this
->>>>>>>> way.
->>>>>>>> Maybe usb-ports property could be documented in
->>>>>>>> led-trigger-usbport's
->>>>>>>> specific bindings and a reference to it could be added next to the
->>>>>>>> related entry on the list of the available LED triggers (which is
->>>>>>>> actually missing) in
->>>>>>>> Documentation/devicetree/bindings/leds/common.txt.
->>>>>>>
->>>>>>> I'm wondering if we need to care about this Linux limitation and
->>>>>>> if it
->>>>>>> should stop us from adding this flexible DT property. Maybe we could
->>>>>>> live with Linux having limitation of supporting one trigger type
->>>>>>> at a
->>>>>>> time?
->>>>>>
->>>>>> That's what I meant. Generally I have objections to the generic
->>>>>> property for defining list of allowed triggers. That's why I proposed
->>>>>> to stay by usb-ports property that would be specific to only one
->>>>>> trigger: led-trigger-usbport.
->>>>>>
->>>>>> led-trigger-usbport in fact is an entirely new type of LED trigger.
->>>>>> LED triggers is a kernel based source of events. All existing
->>>>>> triggers
->>>>>> react only to a single, well defined source of events, whereas
->>>>>> led-trigger-usbport allows to define the scope of events (usb ports)
->>>>>> to notify about. Activity on each port is treated similarly and
->>>>>> the LED
->>>>>> class device that listens to the trigger notifications doesn't know
->>>>>> which exact port triggered the notification.
->>>>>>
->>>>>> From this POV led-trigger-usbport is kind of facade, which allows
->>>>>> for it to fit well into the LED Trigger design and API, and usb ports
->>>>>> are not identical with LED triggers, but sit rather one level below.
->>>>>> It is led-trigger-usbport which is visible to the LED subsystem, and
->>>>>> not every single usb port.
->>>>>>
->>>>>>> So e.g. if one assigns 2 USB ports + network device + CPU and
->>>>>>> decides to use "usport" trigger driver he'll get LED indicating
->>>>>>> status
->>>>>>> of USB ports only.
->>>>>>
->>>>>> How would it be different from the current state? Only in limiting
->>>>>> the scope of triggers available for a LED class device.
->>>>>
->>>>> It won't differ from the current state. I just wanted to make it clear
->>>>> Linux trigger drivers may respect only selected "led-triggers" values
->>>>> (phandles). Like "usbport" respecting USB port phandles but ignoring
->>>>> CPU ones, net ones, etc.
->>>>
->>>> This is the ambiguity I want to avoid. According to my analysis from
->>>> the previous message, physical usb port is one level below usbport LED
->>>> trigger, and it should be reflected in DT binding documentation. You
->>>> can't write usb1-port1 (using the convention from Documentation/leds/
->>>> ledtrig-usbport.txt) to the "triggers" sysfs file. You can only
->>>> register
->>>> usbport trigger which can be configured to notify about activity on
->>>> usb1-port1.
->>>>
->>>> That's why I proposed linux,trigger-sources name for that.
->>>> Let's not confuse LED triggers with events originating from physical
->>>> devices or other sources of kernel events, being in turn translated by
->>>> LED triggers to LED brightness changes.
->>>>
->>>> This is a thing about naming. It is tempting to call sources of kernel
->>>> events "triggers", but they are not LED triggers on they own. LED
->>>> trigger is a driver that registers itself in LED Trigger core using
->>>> led_trigger_register() API.
->>>
->>> Thanks a lot Jacek for this explanation (and sorry but I needed a bit of
->>> time to
->>> think about this). I can finally see your point, I think we're on the
->>> same page
->>> now.
->>>
->>> I think that for all this time I was thinking from the pure DT
->>> perspective. If
->>> you ignore fact that Linux has multiple LED trigger drivers, then
->>> "led-triggers"
->>> may not sound that bad.
->>>
->>> After reading your description however I can see this property can be
->>> misleading
->>> as Linux people may think "drivers" when seeing "triggers".
->>>
->>> I still think this is a useful property and I hope we can still find a
->>> way to
->>> name it in a sane way: to be nice from DT PoV and march Linux LEDs
->>> subsystem.
->>
->> I also see the need for this property.
->>
->>> I think we should still work on some generic property (without linux,
->>> prefix) as
->>> this seems to be something generic, not really specific to Linux
->>> implementation.
->>> Specifying relation between LED and devices is something than AFAICS
->>> can be
->>> reused by other systems as well.
->>>
->>> So my suggestion is to try some new name & leave linux,default-trigger
->>> to allow
->>> specifying one single trigger driver as required by current Linux
->>> implementation.
->>>
->>> What do you think about this?
->>>
->>> There are few suggestions to came to my mind:
->>> "trigger-sources"
->>> "trigger-devices"
->>> "led-trigger-devices"
->>> "led-related-devices"
->>> "led-event-devices"
->>
->> trigger-devices would work in this specific use case,
->> where we can give phandles to usb ports. Nonetheless, we
->> have also other kernel based events serving as trigger
->> sources - e.g. timer.
->>
->> In this case I'd go for trigger-sources, but we'd need
->> to have some generic way of defining the source like timer.
+On Tue, Jan 31, 2017 at 11:26:34AM +1100, David Gibson wrote:
+> On Tue, Jan 24, 2017 at 11:45:33AM -0600, Rob Herring wrote:
+> > In preparation to support bus specific checks, add the necessary
+> > infrastructure to determine and set the bus type for nodes.
+> > 
+> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  checks.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  dtc.h    | 11 +++++++++++
+> >  2 files changed, 62 insertions(+)
+
+[...]
+
+> > +static void check_bus_bridge(struct check *c, struct dt_info *dti,
+> > +			     struct node *node)
+> > +{
+> > +	struct bus_type *bt;
+> > +
+> > +	if (!node->bus_type)
+> > +		return;
+> > +
+> > +	bt = node->bus_type;
+> > +	if (bt->check_bridge)
+> > +		bt->check_bridge(c, dti, node);
+> > +}
+> > +WARNING(bus_bridge, check_bus_bridge, NULL);
 > 
-> I'd leave timer for later discussion but I'm glad you brought this problem.
-> Maybe we could discuss this on another example that is more supported like
-> GPIOs?
+> Hrm.  So, we have a double multiplex here, and I'm not sure that it's
+> necessary.  First the table of checks themselves, then the table of
+> bus types.  Could we eliminate that simply by having each bus type
+> implement a check function which tests for that bus type then,
+> performans any checks for the bridge then sets the bus_type field.
 > 
-> We know this property allows specifying USB ports and we want it to support
-> mixing various sources. So a very simple sample case seems to be using
-> it for
-> specifying GPIO as trigger source.
+> It would mean that if there are multiple bus-specific things we want
+> to check about the bridge, we could put them into separate checks.
+> That might be clearer in some cases, and it means our existing
+> messages can show something informative via the check name which
+> failed, rather than just saying "(bus_bridge)" for anything wrong with
+> any bus bridge.
 > 
-> Is this possible to mix various entries in a list assigned to single
-> property?
-> Let's say:
-> trigger-sources =
->     <&ohci_port1>,
->     <&ehci_port1>,
->     <&gpio 1 GPIO_ACTIVE_HIGH>;
+> We could still use the bus_type field for "semi-generic" checks like
+> validating unit names that are the same in outline between different
+> buses, but differ in details.
 
-According to my knowledge all elements in the list are elements
-of one array, no matter if they are comma separated or space separated
-in "<>" brackets. DT maintainer would have to confirm that though.
+Something like this what you have in mind? If we have additional checks 
+to add, we can just use the existing prerq functionality.
 
-> Is this possible to support this? If so, which function I can use to detect
-> what is pointed by a phandle?
-> I'm not that familiar with DT and I'm not sure how to handle this.
+8<--------------------------------------------------------------------------
+>From 5cea821e6078f84eaae5af317651a4a696d1f0f7 Mon Sep 17 00:00:00 2001
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Date: Wed, 1 Feb 2017 15:43:32 -0600
+Subject: [PATCH v2] checks: Add bus checks for PCI buses
 
-I wonder if this is correct way to go. Maybe we should think of
-creating entirely new trigger mechanism that would allow for having
-multiple active triggers at a time.
+Add PCI bridge and device node checks. We identify PCI bridges with
+'device_type = "pci"' as only PCI bridges should set that property. For
+bridges, check that ranges is present and #address-cells and
 
-Of course trigger-sources would be still useful for defining
-a list of devices of the same type like in case of usbport trigger.
-Nonetheless, I have a problem with this property being a part of
-LED class device DT bindings. Triggers are not tightly coupled with
-LED class devices, but trigger-sources being a list of usb ports
-would be applicable only to usbport trigger. What if there was
-another combo trigger e.g. for reporting activity on mulitple GPIOs?
+For devices, the primary check is the reg property and the unit address.
+Device unit addresses are in the form DD or DD,F where DD is the
+device 0-0x1f and F is the function 0-7.
 
-Should we have separate list of trigger sources per any possible
-existing trigger type? Aren't we going to far from pure hardware
-description the Device Tree was initially predestined to?
+Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ checks.c | 74 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ dtc.h    |  4 +++-
+ 2 files changed, 77 insertions(+), 1 deletion(-)
 
+diff --git a/checks.c b/checks.c
+index 225ace39c698..b727c49d457c 100644
+--- a/checks.c
++++ b/checks.c
+@@ -702,6 +702,77 @@ static void check_ranges_format(struct check *c, struct dt_info *dti,
+ }
+ WARNING(ranges_format, check_ranges_format, NULL, &addr_size_cells);
+ 
++static void check_pci_bridge(struct check *c, struct dt_info *dti, struct node *node)
++{
++	struct property *prop;
++
++	prop = get_property(node, "device_type");
++	if (!prop || strcmp(prop->val.val, "pci"))
++		return;
++
++	node->bus_type = PCI_BUS_TYPE;
++
++	prop = get_property(node, "ranges");
++	if (!prop) {
++		FAIL(c, "Node %s missing ranges for PCI bridge (or not a bridge)",
++			     node->fullpath);
++		return;
++	}
++
++	if (node_addr_cells(node) != 3)
++		FAIL(c, "Node %s incorrect #address-cells for PCI bridge",
++			     node->fullpath);
++	if (node_size_cells(node) != 2)
++		FAIL(c, "Node %s incorrect #size-cells for PCI bridge",
++			     node->fullpath);
++}
++WARNING(pci_bridge, check_pci_bridge, NULL, &device_type_is_string,&addr_size_cells);
++
++static void check_pci_device(struct check *c, struct dt_info *dti, struct node *node)
++{
++	struct property *prop;
++	const char *unitname = get_unitname(node);
++	char unit_addr[5];
++	unsigned int dev, func, reg;
++
++	if (!node->parent || (node->parent->bus_type != PCI_BUS_TYPE))
++		return;
++
++	prop = get_property(node, "reg");
++	if (!prop)
++		return;
++
++	reg = fdt32_to_cpu(*((cell_t *)prop->val.val));
++
++	dev = (reg & 0xf800) >> 11;
++	func = (reg & 0x700) >> 8;
++
++	if (reg & 0xff000000)
++		FAIL(c, "Node %s PCI reg address is not configuration space",
++			     node->fullpath);
++
++	if (dev > 0x1f)
++		FAIL(c, "Node %s PCI device number out of range",
++			     node->fullpath);
++	if (func > 7)
++		FAIL(c, "Node %s PCI function number out of range",
++		     node->fullpath);
++
++	if (func == 0) {
++		snprintf(unit_addr, sizeof(unit_addr), "%x", dev);
++		if (!strcmp(unitname, unit_addr))
++			return;
++	}
++
++	snprintf(unit_addr, sizeof(unit_addr), "%x,%x", dev, func);
++	if (!strcmp(unitname, unit_addr))
++		return;
++
++	FAIL(c, "Node %s PCI unit address format error, expected \"%s\"",
++	     node->fullpath, unit_addr);
++}
++WARNING(pci_device, check_pci_device, NULL, &reg_format);
++
+ /*
+  * Style checks
+  */
+@@ -775,6 +846,9 @@ static struct check *check_table[] = {
+ 	&unit_address_vs_reg,
+ 	&unit_address_format,
+ 
++	&pci_bridge,
++	&pci_device,
++
+ 	&avoid_default_addr_size,
+ 	&obsolete_chosen_interrupt_controller,
+ 
+diff --git a/dtc.h b/dtc.h
+index c6f125c68ba8..03c249c65101 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -146,6 +146,8 @@ struct property {
+ 	struct label *labels;
+ };
+ 
++#define PCI_BUS_TYPE	1
++
+ struct node {
+ 	bool deleted;
+ 	char *name;
+@@ -159,7 +161,7 @@ struct node {
+ 	int basenamelen;
+ 
+ 	cell_t phandle;
+-	int addr_cells, size_cells;
++	int addr_cells, size_cells, bus_type;
+ 
+ 	struct label *labels;
+ };
 -- 
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.1
