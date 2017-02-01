@@ -1,73 +1,51 @@
 Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
-Message-ID: <58917d6a.5a48620a.a802f.1939SMTPIN_ADDED_BROKEN@mx.google.com>
-Received: from mail-dm3nam03on0067.outbound.protection.outlook.com ([104.47.41.67]:10816
-        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+Message-ID: <58917d76.964f620a.f61b6.381dSMTPIN_ADDED_BROKEN@mx.google.com>
+Received: from mail-sn1nam01on0044.outbound.protection.outlook.com ([104.47.32.44]:1985
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1750991AbdBAGRI (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 1 Feb 2017 01:17:08 -0500
+        id S1751005AbdBAGRW (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Feb 2017 01:17:22 -0500
 From: <y@lvd4224.freescale.com>
-Subject: [PATCH v5 0/3] Add QorIQ LS2088A platform support
-Date: Wed, 1 Feb 2017 11:46:56 +0530
+Subject: [PATCH v5 1/3] dt-bindings: Add compatible for LS2088A QDS and RDB board
+Date: Wed, 1 Feb 2017 11:46:57 +0530
+In-Reply-To: <1485929819-17171-1-git-send-email-y>
+References: <1485929819-17171-1-git-send-email-y>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: scott.wood@nxp.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Abhimanyu Saini <abhimanyu.saini@nxp.com>
+Cc: scott.wood@nxp.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Abhimanyu Saini <abhimanyu.saini@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
 From: Abhimanyu Saini <abhimanyu.saini@nxp.com>
 
-This patchset adds support for the QorIQ LS2088A SoC.
-LS2088A SoC is similar to LS2080A SoC with a few differences like it has A72 cores.
+Signed-off-by: Abhimanyu Saini <abhimanyu.saini@nxp.com>
+Signed-off-by: Priyanka Jain <priyanka.jain@nxp.com>
+Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/fsl.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-This patchset
-        - reorganize LS2088A DTS/DTSI for code reuseability
-        - adds LS2088A device dtsi and dts files.
-
-Abhimanyu Saini (3):
-  dt-bindings: Add compatible for LS2088A QDS and RDB board
-  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
-  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
-
-Changes for v5:
-	- Add missing includes
-Changes for v4:
-	- Incorporated Shawn's comments by reorganizing
-	  DTSI, moving all #include to the top and,
-	- add missing files
-Changes for v3:
-	- rename dts/dtsi files
-Changes for v2:
-	- reorganize LS2088A device tree to use common
-	  nodes from LS2080A device trees.
-	- Both LS2080A and LS2088A have same hardware
-	  controllers, so separate dt-binding patches for
-	  pcie, gpio, dspi, qspi are not required.
-
-Abhimanyu Saini (3):
-  dt-bindings: Add compatible for LS2088A QDS and RDB board
-  arm64: dts: freescale: ls2080a: Split devicetree for code resuability
-  arm64: dts: freescale: ls2088a: Add DTS support for FSL's LS2088A SoC
-
- Documentation/devicetree/bindings/arm/fsl.txt      |  11 +
- arch/arm64/boot/dts/freescale/Makefile             |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls2080a-qds.dts  | 155 +---
- arch/arm64/boot/dts/freescale/fsl-ls2080a-rdb.dts  | 110 +--
- arch/arm64/boot/dts/freescale/fsl-ls2080a.dtsi     | 859 ++-------------------
- arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts  |  66 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts  |  66 ++
- arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi     | 153 ++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi | 196 +++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi | 151 ++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     | 753 ++++++++++++++++++
- 11 files changed, 1488 insertions(+), 1034 deletions(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls2088a.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-qds.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa-rdb.dtsi
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-
+diff --git a/Documentation/devicetree/bindings/arm/fsl.txt b/Documentation/devicetree/bindings/arm/fsl.txt
+index c9c567a..645e8ff 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.txt
++++ b/Documentation/devicetree/bindings/arm/fsl.txt
+@@ -195,3 +195,14 @@ LS2080A ARMv8 based RDB Board
+ Required root node properties:
+     - compatible = "fsl,ls2080a-rdb", "fsl,ls2080a";
+ 
++LS2088A SoC
++Required root node properties:
++    - compatible = "fsl,ls2088a";
++
++LS2088A ARMv8 based QDS Board
++Required root node properties:
++    - compatible = "fsl,ls2088a-qds", "fsl,ls2088a";
++
++LS2088A ARMv8 based RDB Board
++Required root node properties:
++    - compatible = "fsl,ls2088a-rdb", "fsl,ls2088a";
 -- 
 1.9.1
 
