@@ -1,101 +1,78 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
-Date: Wed, 1 Feb 2017 13:12:18 -0500
-Message-ID: <20170201181218.GA8595@art_vandelay>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
- <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
- <20170123174841.GB25789@trickycodes.roam.corp.google.com>
- <5886BB8F.6040707@rock-chips.com>
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: display: move ANX7814 and SiI8620 bridge
+ bindings
+Date: Wed, 1 Feb 2017 19:18:18 +0100
+Message-ID: <20170201181817.GA8287@ulmo.ba.sec>
+References: <20170131175417.20486-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170131175417.20486-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5886BB8F.6040707@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, tfiga@chromium.org, linux-arm-kernel@lists.infradead.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMjQsIDIwMTcgYXQgMTA6Mjc6MjdBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gSGkgU2Vhbgo+IAo+IE9uIDAxLzI0LzIwMTcgMDE6NDggQU0sIFNlYW4gUGF1bCB3cm90
-ZToKPiA+T24gRnJpLCBKYW4gMjAsIDIwMTcgYXQgMDY6MTA6NDlQTSArMDgwMCwgQ2hyaXMgWmhv
-bmcgd3JvdGU6Cj4gPj5UaGUgTUlQSSBEU0kgZG8gbm90IG5lZWQgY2hlY2sgdGhlIHZhbGlkaXR5
-IG9mIHJlc29sdXRpb24sIHRoZSBtYXgKPiA+PnJlc29sdXRpb24gc2hvdWxkIGRlcGVuZCBWT1Au
-IEhlbmNlLCByZW1vdmUgcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQKPiA+PmhlcmUuCj4gPkRv
-ZXMgdm9wIGFjdHVhbGx5IGVuZm9yY2UgdGhpcywgdGhvdWdoPyBJIHNlZSB0aGF0IG1vZGVfY29u
-ZmlnLm1heF93aWR0aCBpcwo+ID40MDk2LCBidXQgdGhlcmUgaXMgbm8gYm91bmRzIGNoZWNraW5n
-IGluIG1vZGVfZml4dXAoKS4KPiA+Cj4gPlRoZSBjb25uZWN0b3IgaXMgY3VycmVudGx5IHJlamVj
-dGluZyBldmVyeXRoaW5nIGdyZWF0ZXIgdGhhbiAyMDQ3LiBTbyBJIHRoaW5rCj4gPnlvdSdyZSBn
-b2luZyB0byByZWdyZXNzIGJlaGF2aW9yIGhlcmUuCj4gPgo+ID5TZWFuCj4gVGhlIG1pcGkgY29u
-dHJvbGxlciBoYXMgbm90IHRoaXMgd2lkdGggbGltaXQsIGl0IGRlcGVuZCB0aGUgVk9QLAo+IHN1
-Y2ggYXMgUkszMzk5LCBWT1BfTElUIG9ubHkgc3VwcG9ydCAyNTYwLAo+IGJ1dCBWT1BfQklHIHN1
-cHBvcnQgNEsuIFNvIHRoaXMgZHJpdmVyIHNob3VsZCBjaGVjayB0aGUgd2lkdGggaGVyZS4KCkkg
-ZG9uJ3Qgc2VlIGFueXRoaW5nIGluIHRoZSB2b3AgZHJpdmVyIHRoYXQgcmVqZWN0cyBsYXJnZSBt
-b2RlcyBmb3IgbGl0dGxlIHZvcC4KU28sIHdoaWxlIEkgYWdyZWUgdGhlIGNoZWNrIHNob3VsZG4n
-dCBiZSBoZXJlLCB5b3Ugc2hvdWxkIG1vdmUgaXQgdG8gd2hlcmUgaXQKc2hvdWxkIGJlIGluc3Rl
-YWQgb2YgcmVtb3ZpbmcgaXQgZW50aXJlbHkuCgpTZWFuCgo+IAo+ID4KPiA+Cj4gPj5TaWduZWQt
-b2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+ID4+LS0tCj4gPj4KPiA+
-PkNoYW5nZXMgaW4gdjM6IE5vbmUKPiA+Pgo+ID4+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
-ZHctbWlwaS1kc2kuYyB8IDM5IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+
-PiAgMSBmaWxlIGNoYW5nZWQsIDM5IGRlbGV0aW9ucygtKQo+ID4+Cj4gPj5kaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+ID4+aW5kZXggYTkzY2U5Ny4uNmYwZTI1MiAxMDA2NDQK
-PiA+Pi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCj4gPj4rKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+ID4+QEAgLTI3OCw4ICsy
-NzgsNiBAQCBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHsKPiA+PiAgCXUzMiBncmZfZHNp
-MF9tb2RlOwo+ID4+ICAJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+ID4+ICAJdW5zaWduZWQgaW50
-IG1heF9kYXRhX2xhbmVzOwo+ID4+LQllbnVtIGRybV9tb2RlX3N0YXR1cyAoKm1vZGVfdmFsaWQp
-KHN0cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4gPj4tCQkJCQkgICBzdHJ1Y3QgZHJt
-X2Rpc3BsYXlfbW9kZSAqbW9kZSk7Cj4gPj4gIH07Cj4gPj4gIHN0cnVjdCBkd19taXBpX2RzaSB7
-Cj4gPj5AQCAtMTA4MSwyMyArMTA3OSw4IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfY29ubmVj
-dG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4+ICAJcmV0
-dXJuIGRybV9wYW5lbF9nZXRfbW9kZXMoZHNpLT5wYW5lbCk7Cj4gPj4gIH0KPiA+Pi1zdGF0aWMg
-ZW51bSBkcm1fbW9kZV9zdGF0dXMgZHdfbWlwaV9kc2lfbW9kZV92YWxpZCgKPiA+Pi0JCQkJCXN0
-cnVjdCBkcm1fY29ubmVjdG9yICpjb25uZWN0b3IsCj4gPj4tCQkJCQlzdHJ1Y3QgZHJtX2Rpc3Bs
-YXlfbW9kZSAqbW9kZSkKPiA+Pi17Cj4gPj4tCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gY29u
-X3RvX2RzaShjb25uZWN0b3IpOwo+ID4+LQo+ID4+LQllbnVtIGRybV9tb2RlX3N0YXR1cyBtb2Rl
-X3N0YXR1cyA9IE1PREVfT0s7Cj4gPj4tCj4gPj4tCWlmIChkc2ktPnBkYXRhLT5tb2RlX3ZhbGlk
-KQo+ID4+LQkJbW9kZV9zdGF0dXMgPSBkc2ktPnBkYXRhLT5tb2RlX3ZhbGlkKGNvbm5lY3Rvciwg
-bW9kZSk7Cj4gPj4tCj4gPj4tCXJldHVybiBtb2RlX3N0YXR1czsKPiA+Pi19Cj4gPj4tCj4gPj4g
-IHN0YXRpYyBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgZHdfbWlwaV9kc2lfY29u
-bmVjdG9yX2hlbHBlcl9mdW5jcyA9IHsKPiA+PiAgCS5nZXRfbW9kZXMgPSBkd19taXBpX2RzaV9j
-b25uZWN0b3JfZ2V0X21vZGVzLAo+ID4+LQkubW9kZV92YWxpZCA9IGR3X21pcGlfZHNpX21vZGVf
-dmFsaWQsCj4gPj4gIH07Cj4gPj4gIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2RybV9jb25uZWN0
-b3JfZGVzdHJveShzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+ID4+QEAgLTExNjgs
-MzMgKzExNTEsMTEgQEAgc3RhdGljIGludCByb2NrY2hpcF9taXBpX3BhcnNlX2R0KHN0cnVjdCBk
-d19taXBpX2RzaSAqZHNpKQo+ID4+ICAJcmV0dXJuIDA7Cj4gPj4gIH0KPiA+Pi1zdGF0aWMgZW51
-bSBkcm1fbW9kZV9zdGF0dXMgcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQoCj4gPj4tCQkJCQlz
-dHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+ID4+LQkJCQkJc3RydWN0IGRybV9kaXNw
-bGF5X21vZGUgKm1vZGUpCj4gPj4tewo+ID4+LQkvKgo+ID4+LQkgKiBUaGUgVklEX1BLVF9TSVpF
-IGZpZWxkIGluIHRoZSBEU0lfVklEX1BLVF9DRkcKPiA+Pi0JICogcmVnaXN0ZXIgaXMgMTEtYml0
-Lgo+ID4+LQkgKi8KPiA+Pi0JaWYgKG1vZGUtPmhkaXNwbGF5ID4gMHg3ZmYpCj4gPj4tCQlyZXR1
-cm4gTU9ERV9CQURfSFZBTFVFOwo+ID4+LQo+ID4+LQkvKgo+ID4+LQkgKiBUaGUgVl9BQ1RJVkVf
-TElORVMgZmllbGQgaW4gdGhlIERTSV9WVElNSU5HX0NGRwo+ID4+LQkgKiByZWdpc3RlciBpcyAx
-MS1iaXQuCj4gPj4tCSAqLwo+ID4+LQlpZiAobW9kZS0+dmRpc3BsYXkgPiAweDdmZikKPiA+Pi0J
-CXJldHVybiBNT0RFX0JBRF9WVkFMVUU7Cj4gPj4tCj4gPj4tCXJldHVybiBNT0RFX09LOwo+ID4+
-LX0KPiA+Pi0KPiA+PiAgc3RhdGljIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgcmszMjg4
-X21pcGlfZHNpX2Rydl9kYXRhID0gewo+ID4+ICAJLmRzaTBfZW5fYml0ID0gUkszMjg4X0RTSTBf
-U0VMX1ZPUF9MSVQsCj4gPj4gIAkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJ
-VCwKPiA+PiAgCS5ncmZfc3dpdGNoX3JlZyA9IFJLMzI4OF9HUkZfU09DX0NPTjYsCj4gPj4gIAku
-bWF4X2RhdGFfbGFuZXMgPSA0LAo+ID4+LQkubW9kZV92YWxpZCA9IHJrMzI4OF9taXBpX2RzaV9t
-b2RlX3ZhbGlkLAo+ID4+ICB9Owo+ID4+ICBzdGF0aWMgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRf
-ZGF0YSByazMzOTlfbWlwaV9kc2lfZHJ2X2RhdGEgPSB7Cj4gPj4tLSAKPiA+PjIuNi4zCj4gPj4K
-PiA+Pl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gPj5k
-cmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gPj5kcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-Cj4gPj5odHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo+IAo+IAo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCj4gZHJpLWRldmVsIG1haWxpbmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKPiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAoKLS0gClNlYW4gUGF1bCwgU29mdHdhcmUgRW5naW5lZXIsIEdvb2dsZSAvIENocm9t
-aXVtIE9TCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jan 31, 2017 at 11:54:17AM -0600, Rob Herring wrote:
+> A few bindings snuck into bindings/video/bridge since consolidating
+> everything under bindings/display/bridge/. Move them to the correct
+> spot.
+>=20
+> Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> Cc: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>=20
+> I plan to apply this to my tree.
+>=20
+> Rob
+>=20
+>  Documentation/devicetree/bindings/{video =3D> display}/bridge/anx7814.tx=
+t   | 0
+>  .../devicetree/bindings/{video =3D> display}/bridge/sil-sii8620.txt     =
+    | 0
+>  2 files changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{video =3D> display}/bridge/anx=
+7814.txt (100%)
+>  rename Documentation/devicetree/bindings/{video =3D> display}/bridge/sil=
+-sii8620.txt (100%)
+
+I wonder how long it will take until there aren't any patches left in
+people's trees that use the old location...
+
+Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliSJmYACgkQ3SOs138+
+s6F4Hg/+JlIhwqgjrMmmQh+piNaXaolWt1v+DhgqNIgCX5QPfbm8h7s6iKnESsfN
+l8LcA+Nvv77gstx+p7wvjOL8iFmbeID7zcm2wwGAUQmBzyMeqGum7bXGOsyZQH2k
+CdVjxF46ZICG0ZEg5/rAHGSZ8Nwm+QzFlKd/tJA5lapsYkXDy2/k2qSKl4tclE2D
+g+GewCLhvQh125NfzHsmw1zfLzKYdMb4+KND0eLCILSR24q+AWVi9ROXswHVfo6L
+29b7SuCGPJymGNqfNq4jHYFghY668yiiGf2b82npBZZ9ccZqsr7OK8qhuVaPN4bx
+HGGIFAcw34CRD9a89NYbcZe4XVmEhWDA8K44tCs9CH2EtcfqqMptOHJOWKMyiY4C
+bi1HXmtMuyq74bpQFqBzrzOEt7mgYnZ8Ma1xslaenhNjjZ7Sh0qbN+hi2niiulaa
+/mUOh7Mv0uEmhsOL/BLqla27f+wfi8jM60joK7Qh11LBboUJf58EJV8PPVlhTk01
+6qDlzDkYijrktCZsmMihAAq37mNkik+amglQ8YaVYIfdluv2pBLgRtNLaPXKAQQQ
+4vmZ8PlyPfXBclLeN+HOaWLWbYPqC88RJOGDMBkkgUeYyYhlE2BNXRquCdHqW6Q8
+qb7yMSXeqw7kbVyyPe7JcxXNZuUKd49P7zIwHmeeEL4qCIDMMys=
+=AexN
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
