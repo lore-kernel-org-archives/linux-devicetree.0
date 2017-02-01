@@ -1,145 +1,106 @@
-From: Bruno Herrera <bruherrera@gmail.com>
-Subject: [PATCH v5 1/5] usb: dwc2: Add support for STM32F429/439/469 USB OTG
- HS/FS in FS mode (internal PHY)
-Date: Tue, 31 Jan 2017 23:25:43 -0200
-Message-ID: <20170201012547.76158-2-bruherrera@gmail.com>
-References: <20170201012547.76158-1-bruherrera@gmail.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Tue, 31 Jan 2017 17:26:45 -0800
+Message-ID: <5586b893-bf5c-6133-0789-ccce60626b86@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1485870854.2932.63.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170201012547.76158-1-bruherrera@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, johnyoun@synopsys.com, felipe.balbi@linux.intel.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1485870854.2932.63.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-This patch introduces a new parameter to activate USB OTG HS/FS core
-embedded phy transceiver. The STM32F4x9 SoC uses the GGPIO register
-to enable the transceiver.
-Also add the dwc2_set_params function for stm32f4 otg fs.
 
-Signed-off-by: Bruno Herrera <bruherrera@gmail.com>
----
- drivers/usb/dwc2/core.h   |  5 +++++
- drivers/usb/dwc2/hcd.c    | 15 ++++++++++++++-
- drivers/usb/dwc2/hw.h     |  2 ++
- drivers/usb/dwc2/params.c | 19 +++++++++++++++++++
- 4 files changed, 40 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/core.h b/drivers/usb/dwc2/core.h
-index b9b62f1..252400b 100644
---- a/drivers/usb/dwc2/core.h
-+++ b/drivers/usb/dwc2/core.h
-@@ -423,6 +423,10 @@ enum dwc2_ep0_state {
-  *			needed.
-  *			0 - No (default)
-  *			1 - Yes
-+ * @activate_stm_fs_transceiver: Activate internal transceiver using GGPIO
-+ *			register.
-+ *			0 - Deactivate the transceiver (default)
-+ *			1 - Activate the transceiver
-  * @g_dma:              Enables gadget dma usage (default: autodetect).
-  * @g_dma_desc:         Enables gadget descriptor DMA (default: autodetect).
-  * @g_rx_fifo_size:	The periodic rx fifo size for the device, in
-@@ -477,6 +481,7 @@ struct dwc2_core_params {
- 	bool uframe_sched;
- 	bool external_id_pin_ctl;
- 	bool hibernation;
-+	bool activate_stm_fs_transceiver;
- 	u16 max_packet_count;
- 	u32 max_transfer_size;
- 	u32 ahbcfg;
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index a73722e..b5a70b6 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -121,7 +121,7 @@ static void dwc2_init_fs_ls_pclk_sel(struct dwc2_hsotg *hsotg)
- 
- static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
- {
--	u32 usbcfg, i2cctl;
-+	u32 usbcfg, ggpio, i2cctl;
- 	int retval = 0;
- 
- 	/*
-@@ -145,6 +145,19 @@ static int dwc2_fs_phy_init(struct dwc2_hsotg *hsotg, bool select_phy)
- 				return retval;
- 			}
- 		}
-+
-+		if (hsotg->params.activate_stm_fs_transceiver) {
-+			ggpio = dwc2_readl(hsotg->regs + GGPIO);
-+			if (!(ggpio & GGPIO_STM32_OTG_GCCFG_PWRDWN)) {
-+				dev_dbg(hsotg->dev, "Activating transceiver\n");
-+				/*
-+				 * STM32F4x9 uses the GGPIO register as general
-+				 * core configuration register.
-+				 */
-+				ggpio |= GGPIO_STM32_OTG_GCCFG_PWRDWN;
-+				dwc2_writel(ggpio, hsotg->regs + GGPIO);
-+			}
-+		}
- 	}
- 
- 	/*
-diff --git a/drivers/usb/dwc2/hw.h b/drivers/usb/dwc2/hw.h
-index bde7248..4592012 100644
---- a/drivers/usb/dwc2/hw.h
-+++ b/drivers/usb/dwc2/hw.h
-@@ -225,6 +225,8 @@
- 
- #define GPVNDCTL			HSOTG_REG(0x0034)
- #define GGPIO				HSOTG_REG(0x0038)
-+#define GGPIO_STM32_OTG_GCCFG_PWRDWN	BIT(16)
-+
- #define GUID				HSOTG_REG(0x003c)
- #define GSNPSID				HSOTG_REG(0x0040)
- #define GHWCFG1				HSOTG_REG(0x0044)
-diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
-index 2990c34..9cd8722 100644
---- a/drivers/usb/dwc2/params.c
-+++ b/drivers/usb/dwc2/params.c
-@@ -120,6 +120,22 @@ static void dwc2_set_amcc_params(struct dwc2_hsotg *hsotg)
- 	p->ahbcfg = GAHBCFG_HBSTLEN_INCR16 << GAHBCFG_HBSTLEN_SHIFT;
- }
- 
-+static void dwc2_set_stm32f4x9_fsotg_params(struct dwc2_hsotg *hsotg)
-+{
-+	struct dwc2_core_params *p = &hsotg->params;
-+
-+	p->otg_cap = DWC2_CAP_PARAM_NO_HNP_SRP_CAPABLE;
-+	p->speed = DWC2_SPEED_PARAM_FULL;
-+	p->host_rx_fifo_size = 128;
-+	p->host_nperio_tx_fifo_size = 96;
-+	p->host_perio_tx_fifo_size = 96;
-+	p->max_packet_count = 256;
-+	p->phy_type = DWC2_PHY_TYPE_PARAM_FS;
-+	p->i2c_enable = false;
-+	p->uframe_sched = false;
-+	p->activate_stm_fs_transceiver = true;
-+}
-+
- const struct of_device_id dwc2_of_match_table[] = {
- 	{ .compatible = "brcm,bcm2835-usb", .data = dwc2_set_bcm_params },
- 	{ .compatible = "hisilicon,hi6220-usb", .data = dwc2_set_his_params  },
-@@ -133,6 +149,9 @@ const struct of_device_id dwc2_of_match_table[] = {
- 	{ .compatible = "amlogic,meson-gxbb-usb",
- 	  .data = dwc2_set_amlogic_params },
- 	{ .compatible = "amcc,dwc-otg", .data = dwc2_set_amcc_params },
-+	{ .compatible = "st,stm32f4x9-fsotg",
-+	  .data = dwc2_set_stm32f4x9_fsotg_params },
-+	{ .compatible = "st,stm32f4x9-hsotg" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, dwc2_of_match_table);
--- 
-2.10.1 (Apple Git-78)
+On 01/31/2017 05:54 AM, Philipp Zabel wrote:
+> Hi Steve,
+>
+> I have just tested the imx-media-staging-md-wip branch on a Nitrogen6X
+> with a tc358743 (BD_HDMI_MIPI HDMI to MIPI CSI-2 receiver board). Some
+> observations:
+>
+> # Link pipeline
+> media-ctl -l "'tc358743 1-000f':0->'imx6-mipi-csi2':0[1]"
+> media-ctl -l "'imx6-mipi-csi2':1->'ipu1_csi0_mux':0[1]"
+> media-ctl -l "'ipu1_csi0_mux':2->'ipu1_csi0':0[1]"
+> media-ctl -l "'ipu1_csi0':2->'ipu1_csi0 capture':0[1]"
+>
+> # Provide an EDID to the HDMI source
+> v4l2-ctl -d /dev/v4l-subdev2 --set-edid=file=edid-1080p.hex
+> # At this point the HDMI source is enabled and sends a 1080p60 signal
+> # Configure detected DV timings
+> media-ctl --set-dv "'tc358743 1-000f':0"
+>
+> # Set pad formats
+> media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
+> media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
+> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
+> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080]"
+>
+> v4l2-ctl -d /dev/video4 -V
+> # This still is configured to 640x480, which is inconsistent with
+> # the 'ipu1_csi0':2 pad format. The pad set_fmt above should
+> # have set this, too.
+
+Because you've only configured the source pads,
+and not the sink pads. The ipu_csi source format is
+dependent on the sink format - output crop window is
+limited by max input sensor frame, and since sink pad is
+still at 640x480, output is reduced to that.
+
+Maybe I'm missing something, is it expected behavior that
+a source format should be automatically propagated to
+the sink?
+
+>
+> v4l2-ctl --list-formats -d /dev/video4
+> # This lists all the RGB formats, which it shouldn't. There is
+> # no CSC in this pipeline, so we should be limited to YUV formats
+> # only.
+
+right, need to fix that. Probably by poking the attached
+source subdev (csi or prpenc/vf) for its supported formats.
+
+
+>
+> # Set capture format
+> v4l2-ctl -d /dev/video4 -v width=1920,height=1080,pixelformat=UYVY
+>
+> v4l2-ctl -d /dev/video4 -V
+> # Now the capture format is correctly configured to 1920x1080.
+>
+> v4l2-ctl -d 4 --list-frameintervals=width=1920,height=1080,pixelformat=UYVY
+> # This lists nothing. We should at least provide the 'ipu1_csi0':2 pad
+> # frame interval. In the future this should list fractions achievable
+> # via frame skipping.
+
+yes, need to implement g_frame_interval.
+
+> v4l2-compliance -d /dev/video4
+> # This fails two tests:
+> # fail: v4l2-test-input-output.cpp(383): std == 0
+> # fail: v4l2-test-input-output.cpp(449): invalid attributes for input 0
+> # test VIDIOC_G/S/ENUMINPUT: FAIL
+> # and
+> # fail: v4l2-test-controls.cpp(782): subscribe event for control 'User Controls' failed
+> # test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: FAIL
+>
+> # (Slowly) stream JPEG images to a display host:
+> gst-launch-1.0 -v v4l2src device=/dev/video4 ! jpegenc ! rtpjpegpay ! udpsink
+>
+> I've done this a few times, and sometimes I only get a "ipu1_csi0: EOF
+> timeout" message when starting streaming.
+
+It's hard to say what is going on there, it would be great if I could get my
+hands on a Nitrogen6X with the tc35874 to help you debug.
+
+Steve
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
