@@ -1,5 +1,10 @@
-Return-Path: <SRS0=Obav=ZO=lvd4224.freescale.com=b49017@kernel.org>
-Message-ID: <58918532.4362630a.642cd.c395SMTPIN_ADDED_BROKEN@mx.google.com>
+Return-Path: <SRS0=Wk4Z=ZO=vger.kernel.org=devicetree-owner@kernel.org>
+Message-ID: <58917d72.036a630a.6733c.87aaSMTPIN_ADDED_BROKEN@mx.google.com>
+Received: from mail-cys01nam02on0082.outbound.protection.outlook.com ([104.47.37.82]:12064
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1751005AbdBAGRJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 1 Feb 2017 01:17:09 -0500
 From: <y@lvd4224.freescale.com>
 Subject: [PATCH v5 2/3] arm64: dts: freescale: ls2080a: Split devicetree for code resuability
 Date: Wed, 1 Feb 2017 11:46:58 +0530
@@ -7,8 +12,9 @@ In-Reply-To: <1485929819-17171-1-git-send-email-y>
 References: <1485929819-17171-1-git-send-email-y>
 MIME-Version: 1.0
 Content-Type: text/plain
+Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc: scott.wood@nxp.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Abhimanyu Saini <abhimanyu.saini@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Ashish
+Cc: scott.wood@nxp.com, stuart.yoder@nxp.com, linux-arm-kernel@lists.infradead.org, Abhimanyu Saini <abhimanyu.saini@nxp.com>, Priyanka Jain <priyanka.jain@nxp.com>, Ashish Kumar <ashish.kumar@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
 From: Abhimanyu Saini <abhimanyu.saini@nxp.com>
@@ -2368,3 +2374,4 @@ index 0000000..abb2fff
 +};
 -- 
 1.9.1
+
