@@ -1,109 +1,50 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Wed, 1 Feb 2017 10:52:12 +0530
-Message-ID: <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
- <1483499169-16329-3-git-send-email-hs.liao@mediatek.com> <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
- <1485419833.990.1.camel@mtksdaap41>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Wed, 01 Feb 2017 14:47:15 +0900
+Message-ID: <2c7df9c8-8658-f65e-969d-ba5d9de7163f@samsung.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com>
+ <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485419833.990.1.camel@mtksdaap41>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, CK HU <ck.hu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, cawa cheng <cawa.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Bibby Hsieh <bibby.hsieh-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Daoyuan Huang <daoyuan.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Damon Chu <damon.chu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAJKOXPfB0yuQY2bdTEYegU+eakBw32X80ALJkxB2sUX8xFjy+g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>, thierry.reding@gmail.com, robh@kernel.org, airlied@linux.ie, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, a.hajda@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Andi Shyti <andi.shyti@samsung.com>, Donghwa Lee <dh09.lee@samsung.com>, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Jassi,
->
-> On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
->> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->>
->> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
->> > new file mode 100644
->> > index 0000000..747bcd3
->> > --- /dev/null
->> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
->>
->> ...
->>
->> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
->> > +{
->> > +       struct cmdq *cmdq;
->> > +       struct cmdq_task *task;
->> > +       unsigned long curr_pa, end_pa;
->> > +
->> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
->> > +
->> > +       /* Client should not flush new tasks if suspended. */
->> > +       WARN_ON(cmdq->suspended);
->> > +
->> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
->> > +       task->cmdq = cmdq;
->> > +       INIT_LIST_HEAD(&task->list_entry);
->> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
->> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
->> >
->> You seem to parse the requests and responses, that should ideally be
->> done in client driver.
->> Also, we are here in atomic context, can you move it in client driver
->> (before the spin_lock)?
->> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
->
-> will do
->
->> ....
->> > +
->> > +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
->> > +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
->> > +       cmdq->mbox.of_xlate = cmdq_xlate;
->> > +
->> > +       /* make use of TXDONE_BY_ACK */
->> > +       cmdq->mbox.txdone_irq = false;
->> > +       cmdq->mbox.txdone_poll = false;
->> > +
->> > +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
->> >
->> You mean  i < CMDQ_THR_MAX_COUNT
->
-> will do
->
->> > +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
->> > +                               CMDQ_THR_SIZE * i;
->> > +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
->> >
->> You seem the queue mailbox requests in this controller driver? why not
->> use the mailbox api for that?
->>
->> > +               init_timer(&cmdq->thread[i].timeout);
->> > +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
->> > +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
->> >
->> Here again... you seem to ignore the polling mechanism provided by the
->> mailbox api, and implement your own.
->
-> The queue is used to record the tasks which are flushed into CMDQ
-> hardware (GCE). We are handling time critical tasks, so we have to
-> queue them in GCE rather than a software queue (e.g. mailbox buffer).
-> Let me use display as an example. Many display tasks are flushed into
-> CMDQ to wait next vsync event. When vsync event is triggered by display
-> hardware, GCE needs to process all flushed tasks "within vblank" to
-> prevent garbage on screen. This is all done by GCE (without CPU)
-> to fulfill time critical requirement. After GCE finish its work,
-> it will generate interrupts, and then CMDQ driver will let clients know
-> which tasks are done.
->
-Does the GCE provide any 'lock' to prevent modifying (by adding tasks
-to) the GCE h/w buffer when it is processing it at vsync?  Otherwise
-there maybe race/error. If there is such a 'lock' flag/irq, that could
-help here. However, you are supposed to know your h/w better, so I
-will accept this implementation assuming it can't be done any better.
 
-Please address other comments and resubmit.
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 01/31/2017 06:22 PM, Krzysztof Kozlowski wrote:
+> On Tue, Jan 31, 2017 at 2:01 AM, Inki Dae <inki.dae@samsung.com> wrote:
+>>
+>> 2017년 01월 24일 10:50에 Hoegeun Kwon 이(가) 쓴 글:
+>>> Dear Thierry,
+>>>
+>>> Could you please review this patch?
+>> Thierry, I think this patch has been reviewed enough but no comment from you. Seems you are busy. I will pick up this.
+>>
+> Comments from v8 were not resolved and I think we are waiting for v9:
+> https://lkml.org/lkml/2017/1/11/178
+>
+> If that is not correct then please clarify.
+
+Dear Krzysztof,
+
+I'm sorry, I was mistaken.
+I will change them to optional and will send it to the V9 patch.
+
+Best Regards,
+Hoegeun
+
+>
+> Best regards,
+> Krzysztof
+>
+>
