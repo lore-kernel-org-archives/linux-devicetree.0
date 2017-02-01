@@ -1,49 +1,105 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Wed, 1 Feb 2017 10:53:10 +0000
-Message-ID: <20170201105310.GN27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1485870854.2932.63.camel@pengutronix.de>
- <5586b893-bf5c-6133-0789-ccce60626b86@gmail.com>
- <1485941457.3353.13.camel@pengutronix.de>
- <20170201101111.GL27312@n2100.armlinux.org.uk>
- <1485945751.3353.28.camel@pengutronix.de>
+From: "Peter Senna Tschudin" <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: =?utf-8?q?Re=3A?==?utf-8?q?_=5BPATCH?= V7 =?utf-8?q?3=2F4=5D?=
+ =?utf-8?q?_drm=2Fbridge=3A?= Add driver for GE B850v3
+ =?utf-8?q?LVDS=2FDP++?= Bridge
+Date: Wed, 01 Feb 2017 10:58:43 +0000
+Message-ID: <64ff-5891bf80-f-117f65c0@159002012>
+References: <b84ac3b8-3626-3eb2-7293-0affb58b7752@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1485945751.3353.28.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+in-reply-to: <b84ac3b8-3626-3eb2-7293-0affb58b7752-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org, martin.donnelly-JJi787mZWgc@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, tiwai-IBi9RG/b67k@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Jani N
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 11:42:31AM +0100, Philipp Zabel wrote:
-> On Wed, 2017-02-01 at 10:11 +0000, Russell King - ARM Linux wrote:
-> Right, it's just that in the latest version there is no v4l2_subdev for
-> fifos and idmac. There is the capture interface entity that represents
-> one of the IDMAC write channels, but that doesn't have a pad and format
-> configuration.
-> The SMFC entity was removed because the fifo can be considered part of
-> the link between CSI and IDMAC. There is no manual configuration
-> necessary as the SMFC itself can't do anything to the data that flows
-> through it. There is no reason to present it to userspace as a no-op
-> entity.
-> So in the direct CSI -> SMFC -> IDMAC case, the CSI source pad now is
-> the nearest neighbor pad to the IDMAC capture video device.
+Hi Archit,
+ 
+On 01 February, 2017 10:44 CET, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote: 
 
-Ok, that sounds fine then.
+> 
+> 
+> On 01/30/2017 10:35 PM, Jani Nikula wrote:
+> > On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+> >> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
+> >> Hi Archit,
+> >>
+> >> Thank you for the comments!
+> >>
+> >> [...]
+> >>>> +	total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+> >>>> +	if (total_size > EDID_LENGTH) {
+> >>>> +		kfree(block);
+> >>>> +		block = kmalloc(total_size, GFP_KERNEL);
+> >>>> +		if (!block)
+> >>>> +			return NULL;
+> >>>> +
+> >>>> +		/* Yes, read the entire buffer, and do not skip the first
+> >>>> +		 * EDID_LENGTH bytes.
+> >>>> +		 */
+> >>>
+> >>> Is this the reason why you aren't using drm_do_get_edid()?
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+> >>
+> >> Yes, for some hw specific reason, it is necessary to read the entire
+> >> EDID buffer starting from 0, not block by block.
+> >
+> > Hrmh, I'm planning on moving the edid override and firmware edid
+> > mechanisms at the drm_do_get_edid() level to be able to truly and
+> > transparently use a different edid. Currently, they're only used for
+> > modes, really, and lead to some info retrieved from overrides, some from
+> > the real edid. This kind of hacks will bypass the override/firmware edid
+> > mechanisms then too. :(
+> 
+> It seems like there is a HW issue which prevents them from reading EDID
+> from an offset. So, I'm not sure if it is a hack or a HW limitation.
+
+> 
+> One way around this would be to hide the HW requirement in the
+> get_edid_block func pointer passed to drm_do_get_edid(). This
+> would, however, result in more i2c reads (equal to # of extension
+> blocks) than what the patch currently does.
+> 
+> Peter, if you think doing extra EDID reads isn't too costly on your
+> platform, you could consider using drm_do_get_edid(). If not, I guess
+> you'll miss out on the additional functionality Jani is going to add
+
+> in the future.
+
+My concern is that for almost one year now, every time I fix something one or two new requests are made. I'm happy to fix the driver, but I want a list of the changes that are required to get it upstream, before I make more changes. Can we agree on exactly what is preventing this driver to get upstream? Then I'll fix it.
+
+> 
+> Thanks,
+> Archit
+> 
+> 
+> >
+> > BR,
+> > Jani.
+> >
+> >
+> >>
+> >> [...]
+> >>
+> >> I fixed all your other suggestions. Thank you!
+> >> _______________________________________________
+> >> dri-devel mailing list
+> >> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> 
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+ 
+ 
+ 
+ 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
