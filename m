@@ -1,88 +1,43 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Wed, 1 Feb 2017 10:11:12 +0000
-Message-ID: <20170201101111.GL27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1485870854.2932.63.camel@pengutronix.de>
- <5586b893-bf5c-6133-0789-ccce60626b86@gmail.com>
- <1485941457.3353.13.camel@pengutronix.de>
+From: Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RESENT PATCH] ARM: bcm2835: Add devicetree for the Raspberry
+ Pi 3, for arm (32)
+Date: Wed, 01 Feb 2017 11:24:32 +0100
+Message-ID: <1485944672.1076.50.camel@redhat.com>
+References: <1484845444-4617-1-git-send-email-kraxel@redhat.com>
+         <87fukcgsqp.fsf@eliezer.anholt.net> <878tpqki0k.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1485941457.3353.13.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <878tpqki0k.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 10:30:57AM +0100, Philipp Zabel wrote:
-> On Tue, 2017-01-31 at 17:26 -0800, Steve Longerbeam wrote:
-> [...]
-> > right, need to fix that. Probably by poking the attached
-> > source subdev (csi or prpenc/vf) for its supported formats.
-> 
-> You are right, in bayer/raw mode only one specific format should be
-> listed, depending on the CSI output pad format.
+> >> -	bcm2835-rpi-zero.dtb
+> >> +	bcm2835-rpi-zero.dtb \
+> >> +	../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dtb
 
-It depends what Steve means by "source subdev".
+> Unfortunately, I just remembered yesterday that one of the requirements
+> is that we not use these sorts of ../../../ references in the DT tree.
+> Instead we have to use symlinks -- see arch/arm64/boot/dts/broadcom/ for
+> how we did the last round of this.
 
-It should be the next sub-device below the bridge - if we have this
-setup of subdev's:
+Yes, we did that with the *.dtsi include files.
+Not fully sure this is a requirement for the Makefile too.
 
----> CSI ---> SMFC ---> IDMAC
+> I think just having links from
+> arch/arm64/boot/dts/broadcom/bcm2837*.dts* to arch/arm/boot/dts/ would
+> be the solution, then this Makefile could just reference
+> bcm2837-rpi-3-b.dtb.
 
-then the format configured at the SMFC's output pad is what matters,
-not what was configured at CSI.
+I suspect it is not that easy, last time I tried it didn't work.
+Will try again though.
 
-It's the responsibility of SMFC and CSI to make sure that their source
-pads are configured with a compatible format for their corresponding
-source pad, and it's also the sink subdev's responsibility to check
-that the configuration across a link is valid (possibly via
-v4l2_subdev_link_validate(), or a more intensive or relaxed test if
-required.)
-
-For example:
-
-- when CSI's source pad is configured with a RGGB output format,
-  userspace media-ctl will also set that on SMFC's sink pad.
-- when SMFC's sink pad is configured, SMFC should configure it's
-  source pad with an identical format (RGGB).
-- when SMFC's source pad is configured, it should refuse to change
-  the format, because SMFC can't modify pixel the format - it's
-  just a buffer.
-
-When starting to stream (Documentation/media/kapi/v4l2-subdev.rst) the
-link validation function is called, and:
-
-- the SMFC driver's link_validate function will be called to validate
-  the CSI -> SMFC link.  This allows the SMFC to be sure that there's
-  a compatible configuration - and, since the link does not allow
-  format conversion, it should verify that the format on the CSI's
-  source pad is the same as SMFC's sink pad.
-
-Not only does this match what the hardware's doing, it also means that,
-because there's no format conversion between the CSI's hardware output
-and IDMAC, we don't need to care about trying to fetch the CSI's source
-pad configuration from the IDMAC end - we can fetch that information
-from our neighbour's SMFC's source pad _or_ our own sink pad if we have
-one.
-
-To see why this is an important, consider what the effect would be if
-SMFC did have the capability to change the pixel format.  That means the
-format presented to the IDMAC block would depend on the configuration of
-SMFC, and the CSI's source pad format is no longer relevant to IDMAC.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+cheers,
+  Gerd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
