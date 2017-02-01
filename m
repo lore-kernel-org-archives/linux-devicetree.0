@@ -1,95 +1,49 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
-Date: Wed, 1 Feb 2017 14:57:11 +0000
-Message-ID: <20170201145711.GC8177@arm.com>
-References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH v2 06/10] dt-bindings: serial: Update
+ 'uart-has-rtscts' description
+Date: Wed, 1 Feb 2017 14:57:16 +0000
+Message-ID: <20170201145716.GE28760@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <20170201143145.31962-1-lee.jones@linaro.org>
+ <20170201143145.31962-7-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, mst@redhat.com, virtualization@lists.linux-foundation.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170201143145.31962-7-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 12:25:57PM +0000, Robin Murphy wrote:
-> By forcing on DMA API usage for ARM systems, we have inadvertently
-> kicked open a hornets' nest in terms of cache-coherency. Namely that
-> unless the virtio device is explicitly described as capable of coherent
-> DMA by firmware, the DMA APIs on ARM and other DT-based platforms will
-> assume it is non-coherent. This turns out to cause a big problem for the
-> likes of QEMU and kvmtool, which generate virtio-mmio devices in their
-> guest DTs but neglect to add the often-overlooked "dma-coherent"
-> property; as a result, we end up with the guest making non-cacheable
-> accesses to the vring, the host doing so cacheably, both talking past
-> each other and things going horribly wrong.
+On Wed, 01 Feb 2017, Lee Jones wrote:
+
+> 'uart-has-rtscts' property and 'rts-gpios|cts-gpios' are normally
+> mutually exclusive, however it is possible for some drivers to have
+> a dynamic approach, meaning that both properties can be relevant.
 > 
-> To prevent regressing those existing use cases relying on implicit
-> coherency, but still fixing the original problem of (coherent PCI)
-> legacy devices behind IOMMUs, take the more conservative approach of
-> only hitting the DMA API switch for coherent devices, where we can be
-> sure it is safe, and preserving the old non-DMA behaviour otherwise.
-> This does not affect devices setting the VIRTIO_F_IOMMU_PLATFORM flag,
-> which as before are still at the mercy of architecture code correctly
-> knowing their coherency, so explicitly call this out in the virtio-mmio
-> DT binding in the hope of heading off any further workarounds for future
-> firmware mishaps.
-> 
-> Fixes: c7070619f340 ("vring: Force use of DMA API for ARM-based systems with legacy devices")
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Acked-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
 > ---
->  Documentation/devicetree/bindings/virtio/mmio.txt |  3 +++
->  drivers/virtio/virtio_ring.c                      | 11 ++++++++---
->  2 files changed, 11 insertions(+), 3 deletions(-)
+>  Documentation/devicetree/bindings/serial/serial.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/virtio/mmio.txt b/Documentation/devicetree/bindings/virtio/mmio.txt
-> index 5069c1b8e193..8f2a981e1010 100644
-> --- a/Documentation/devicetree/bindings/virtio/mmio.txt
-> +++ b/Documentation/devicetree/bindings/virtio/mmio.txt
-> @@ -7,6 +7,8 @@ Required properties:
->  - compatible:	"virtio,mmio" compatibility string
->  - reg:		control registers base address and size including configuration space
->  - interrupts:	interrupt generated by the device
-> +- dma-coherent:	required if the device (or host emulation) accesses memory
-> +		cache-coherently, absent otherwise
-
-So QEMU is getting with not providing this property at the moment and this
-patch continues to ensure that works coherently, which is the right thing
-to do. However, if QEMU ever emulates devices with VIRTIO_F_IOMMU_PLATFORM,
-then it will need to provide this property for coherent virtio-mmio
-devices upstream of the IOMMU otherwise things won't work.
-
-I think that's acceptable given that VIRTIO_F_IOMMU_PLATFORM has never
-done the right thing with respect to coherency if "dma-coherent" is not
-present, but it would be nice to call that out somewhere so that QEMU
-developers can be aware of this pitfall.
-
-Could we add something like:
-
-
-  Linux implementation note:
-
-  virtio-mmio devices that do not advertise the VIRTIO_F_IOMMU_PLATFORM
-  feature are treated as cache-coherent irrespective of the "dma-coherent"
-  property.  If VIRTIO_F_IOMMU_PLATFORM is advertised, then the
-  "dma-coherent" property must accurately reflect the coherency of the
-  device.
-
-
-?
-
-I know that the binding documentation needs to be OS agnostic, but I think
-it's useful to describe the Linux behaviour here given that QEMU is
-technically in violation of the binding after this patch is applied.
-
-Will
+> diff --git a/Documentation/devicetree/bindings/serial/serial.txt b/Documentation/devicetree/bindings/serial/serial.txt
+> index fd970f7..b542a0e 100644
+> --- a/Documentation/devicetree/bindings/serial/serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/serial.txt
+> @@ -23,7 +23,8 @@ Optional properties:
+>      they are available for use (wired and enabled by pinmux configuration).
+>      This depends on both the UART hardware and the board wiring.
+>      Note that this property is mutually-exclusive with "cts-gpios" and
+> -    "rts-gpios" above.
+> +    "rts-gpios" above, unless support is provided to switch between modes
+> +    dynamically.
+>  
+>  
+>  Examples:
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
