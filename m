@@ -1,22 +1,26 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH 3/8] Documentation: dt-bindings: Add STM32 pinctrl driver
  DT bindings
-Date: Wed, 1 Feb 2017 11:31:50 -0600
-Message-ID: <20170201173150.lri7qgq52oflm2m7@rob-hp-laptop>
+Date: Wed, 1 Feb 2017 11:33:02 -0600
+Message-ID: <20170201173302.3ws4ehcjqlcnf663@rob-hp-laptop>
 References: <1485868465-30446-1-git-send-email-alexandre.torgue@st.com>
  <1485868465-30446-4-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
 In-Reply-To: <1485868465-30446-4-git-send-email-alexandre.torgue@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: Alexandre TORGUE <alexandre.torgue@st.com>
 Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, lee.jones@linaro.org, Jonathan Corbet <corbet@lwn.net>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, Jan 31, 2017 at 02:14:20PM +0100, Alexandre TORGUE wrote:
 > Add compatible sting for stm32h743 MCU.
+
+Also, you can drop "Documentation: " from the subject as it is 
+redundant.
+
 > 
 > Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 > 
@@ -29,9 +33,6 @@ On Tue, Jan 31, 2017 at 02:14:20PM +0100, Alexandre TORGUE wrote:
 >     (a) "st,stm32f429-pinctrl"
 >     (b) "st,stm32f746-pinctrl"
 > +   (c) "st,stm32h743-pinctrl"
-
-Drop the a,b,c.
-
 >   - #address-cells: The value of this property must be 1
 >   - #size-cells	: The value of this property must be 1
 >   - ranges	: defines mapping between pin controller node (parent) to
