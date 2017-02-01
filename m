@@ -1,49 +1,60 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH v3 18/24] media: imx: Add SMFC subdev driver
-Date: Wed, 1 Feb 2017 18:39:18 +0000
-Message-ID: <20170201183918.GP27312@n2100.armlinux.org.uk>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-19-git-send-email-steve_longerbeam@mentor.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v4 2/6] drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
+Date: Wed, 1 Feb 2017 13:41:27 -0500
+Message-ID: <20170201184127.GB8595@art_vandelay>
+References: <1485225486-669-1-git-send-email-zyw@rock-chips.com>
+ <1485225486-669-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1483755102-24785-19-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
+In-Reply-To: <1485225486-669-3-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
-
-On Fri, Jan 06, 2017 at 06:11:36PM -0800, Steve Longerbeam wrote:
-> +/*
-> + * Min/Max supported width and heights.
-> + *
-> + * We allow planar output from the SMFC, so we have to align
-> + * output width by 16 pixels to meet IDMAC alignment requirements,
-> + * which also means input width must have the same alignment.
-> + */
-> +#define MIN_W       176
-> +#define MIN_H       144
-> +#define MAX_W      8192
-> +#define MAX_H      4096
-> +#define W_ALIGN    4 /* multiple of 16 pixels */
-
-Does this only apply to planar formats?
-
-I notice Philipp's driver allows 8 pixel alignment.  If it's only for
-planar formats, it ought to determine the alignment based on the
-requested format rather than hard-coding it to the maximum alignment
-of all the supported formats.
-
-Thanks.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBKYW4gMjQsIDIwMTcgYXQgMTA6Mzg6MDJBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gVGhlIHZvcGIvdm9wbCBzd2l0Y2ggcmVnaXN0ZXIgb2YgUkszMzk5IG1pcGkgaXMgZGlm
+ZmVyZW50IGZyb20gUkszMjg4LAo+IHRoZSBkZWZhdWx0IHNldHRpbmcgZm9yIG1pcGkgZHNpIG1v
+ZGUgaXMgZGlmZmVyZW50IHRvbywgc28gYWRkIGEKPiBvZl9kZXZpY2VfaWQgc3RydWN0dXJlIHRv
+IGRpc3Rpbmd1aXNoIHRoZW0sIGFuZCBtYWtlIHN1cmUgc2V0IHRoZQo+IGNvcnJlY3QgbW9kZSBi
+ZWZvcmUgbWlwaSBwaHkgaW5pdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3
+QHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2Nr
+LWNoaXBzLmNvbT4KPiAKPiAtLS0KPiAKPiBDaGFuZ2VzIGluIHY0Ogo+IC0gcmVtb3ZlIHRoZSB1
+bnJlbGF0ZWQgY2hhbmdlCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGJhc2Ugb24gSm9obiBLZWVw
+aW5nJ3MgcGF0Y2ggc2VyaWVzCj4gCj4gIGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBp
+LWRzaS5jIHwgNjggKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLQo+ICAxIGZpbGUg
+Y2hhbmdlZCwgNTggaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIGIvZHJpdmVycy9ncHUv
+ZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKPiBpbmRleCA0NWFmODkwLi5iN2I2N2JlIDEwMDY0
+NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCj4gKysrIGIv
+ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKCjxzbmlwPgoKPiBAQCAtMTI0
+OSw2ICsxMjkzLDEwIEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfYmluZChzdHJ1Y3QgZGV2aWNl
+ICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKPiAgCQljbGtfZGlzYWJsZV91bnByZXBhcmUo
+ZHNpLT5wY2xrKTsKPiAgCX0KPiAgCj4gKwlkc2ktPnBoeV9jZmdfY2xrID0gZGV2bV9jbGtfZ2V0
+KGRldiwgInBoeV9jZmciKTsKPiArCWlmIChJU19FUlIoZHNpLT5waHlfY2ZnX2NsaykpCj4gKwkJ
+ZGV2X2RiZyhkZXYsICJoYXZlIG5vdCBwaHlfY2ZnX2Nsa1xuIik7CgpZb3Ugc2hvdWxkIGRpZmZl
+cmVudGlhdGUgYmV0d2VlbiBFTk9ERVYgYW5kIG90aGVyIGVycm9ycyBoZXJlLCByZXR1cm5pbmcg
+YW4KZXJyb3IgaWYgaXQncyBub3QgRU5PREVWLiBJZiBpdCBpcyBFTk9ERVYsIGp1c3Qgc2V0IHBo
+eV9jZmdfY2xrIHRvIE5VTEwsIHRoZW4KeW91IGNhbiByZW1vdmUgYWxsIG9mIHRoZSBpZiAoSVNf
+RVJSKGRzaS0+cGh5X2NmZ19jbGspIGNoZWNrcyBldmVyeXdoZXJlIHNpbmNlCmNsa18qIGZ1bmN0
+aW9ucyBjaGVjayBmb3IgTlVMTC4KClNlYW4KCj4gKwo+ICAJcmV0ID0gY2xrX3ByZXBhcmVfZW5h
+YmxlKGRzaS0+cGxscmVmX2Nsayk7Cj4gIAlpZiAocmV0KSB7Cj4gIAkJZGV2X2VycihkZXYsICIl
+czogRmFpbGVkIHRvIGVuYWJsZSBwbGxyZWZfY2xrXG4iLCBfX2Z1bmNfXyk7Cj4gLS0gCj4gMi42
+LjMKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwKCi0tIApTZWFuIFBhdWwsIFNvZnR3YXJlIEVuZ2luZWVyLCBHb29nbGUgLyBDaHJvbWl1bSBP
+UwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
+ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
+aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
