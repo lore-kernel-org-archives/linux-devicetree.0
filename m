@@ -1,63 +1,54 @@
-From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the
- DP83867 TI's PHY driver
-Date: Thu, 2 Feb 2017 16:22:12 +0100
-Message-ID: <20170202162212.4d479fa5@jawa>
-References: <1485960215-5148-1-git-send-email-lukma@denx.de>
-        <20170201171610.GC7395@lunn.ch>
-        <2f3766f0-42df-6aab-dda1-14022c57fb30@gmail.com>
-        <20170201220500.29d478aa@jawa>
-        <20170201211440.GG7395@lunn.ch>
-        <20170201231323.732dd327@jawa>
-        <20170202015416.GG4967@lunn.ch>
-        <20170202101739.67e7e6b3@jawa>
-        <20170202131112.GI4967@lunn.ch>
+From: Jani Nikula <jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on TM2 board
+Date: Thu, 02 Feb 2017 17:30:34 +0200
+Message-ID: <871svgzk2t.fsf@intel.com>
+References: <1484116439-7275-1-git-send-email-hoegeun.kwon@samsung.com> <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com> <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com> <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com> <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec> <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec> <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170202131112.GI4967-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20170131213132.GC872-+E7KM1FDEuO2P7RxrfNFTMXXUOn6P5/W@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Karicheri Muralidharan <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2 Feb 2017 14:11:12 +0100
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+On Tue, 31 Jan 2017, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Tue, Jan 31, 2017 at 10:15:10AM -0800, Eric Anholt wrote:
+>> I would love for drm-panel to be moved under -misc.
+>
+> Like that's going to magically motivate people to spend their time
+> reviewing other patches. The only thing that group maintainership adds
+> is redundancy.
 
-> > The bootstrapping process in the PHY sets this bit. This is wrong
-> > since the board lane layout is not "swapped"
->  
-> Ah, you mean a strapping pin? Resistor to ground/VCC?
+Adding redundancy is not an insignificant thing. I think it can be quite
+liberating to not have everything and everybody depend on you. You can
+defer to others when you're busy, tired, sick, whatever. Things still
+move on.
 
-Yes, exactly.
+And I don't think redundancy is the only thing that group maintainership
+adds. You'll have maintainers that complement each other, with different
+skill sets and abilities and experience. They don't all look at the same
+things. As maintainers tend to be more senior folks, I find sharing the
+load of the more mundane tasks of maintainership free up their time to
+contribute more of their technical skills to the project, for example
+review.
 
-> That is a different matter. It makes it a lot less likely to break
-> some existing board with such a change.
-> 
-> > I have thought a bit about that and I think that we should define
-> > complementary "net-phy-lane-no-swap" as suggested by Florian. Then
-> > affected boards could define it and use.
-> 
-> This is the most flexible solution. Yes, that is O.K. for me.
+It's just my personal view on i915, but I think people take more
+responsibility of their own work, instead of just sending patches and
+waiting for stuff to happen, when they have commit access. But you have
+to trust the people.
 
-Ok. thanks.
-
-> 
->      Andrew
+I didn't intend for this to become a kind of sales pitch, but I do think
+drm-panel would be a good fit for drm-misc. Personally I think it's your
+call, but I think you should think about it. (And that decision should,
+obviously, be made calmly, independent of any particular patch series.)
 
 
+BR,
+Jani.
 
-
-Best regards,
-
-Lukasz Majewski
-
---
-
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
+-- 
+Jani Nikula, Intel Open Source Technology Center
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
