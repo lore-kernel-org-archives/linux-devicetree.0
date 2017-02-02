@@ -1,467 +1,340 @@
-From: Steve Twiss <stwiss.opensource@diasemi.com>
-Subject: [RESEND PATCH V5 7/8] thermal: da9062/61: Thermal junction
- temperature monitoring driver
-Date: Thu, 2 Feb 2017 09:03:47 +0000
-Message-ID: <6a1a651530fdaedd3e380aa33749ca5fce1a80a8.1486026227.git.stwiss.opensource@diasemi.com>
-References: <cover.1486026227.git.stwiss.opensource@diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <cover.1486026227.git.stwiss.opensource@diasemi.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, Zhang Rui <rui.zhang@intel.com>
-Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Lukasz Luba <lukasz.luba@arm.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v7 3/3] watchdog: zx2967: add watchdog controller driver for  ZTE's zx2967 family
+Date: Thu,  2 Feb 2017 17:16:35 +0800
+Message-ID: <1486026995-23356-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Steve Twiss <stwiss.opensource@diasemi.com>
+This patch adds watchdog controller driver for ZTE's zx2967 family.
 
-Add junction temperature monitoring supervisor device driver, compatible
-with the DA9062 and DA9061 PMICs. A MODULE_DEVICE_TABLE() macro is added.
-
-If the PMIC's internal junction temperature rises above T_WARN (125 degC)
-an interrupt is issued. This T_WARN level is defined as the
-THERMAL_TRIP_HOT trip-wire inside the device driver.
-
-The thermal triggering mechanism is interrupt based and happens when the
-temperature rises above a given threshold level. The component cannot
-return an exact temperature, it only has knowledge if the temperature is
-above or below a given threshold value. A status bit must be polled to
-detect when the temperature falls below that threshold level again. A
-kernel work queue is configured to repeatedly poll and detect when the
-temperature falls below this trip-wire, between 1 and 10 second intervals
-(defaulting at 3 seconds).
-
-This scheme is provided as an example. It would be expected that any
-final implementation will also include a notify() function and any of these
-settings could be altered to match the application where appropriate.
-
-When over-temperature is reached, the interrupt from the DA9061/2 will be
-repeatedly triggered. The IRQ is therefore disabled when the first
-over-temperature event happens and the status bit is polled using a
-work-queue until it becomes false.
-
-This strategy is designed to allow the periodic transmission of uevents
-(HOT trip point) as the first level of temperature supervision method. It
-is intended for non-invasive temperature control, where the necessary
-measures for cooling the system down are left to the host software. Once
-the temperature falls again, the IRQ is re-enabled so a new critical
-over-temperature event can be detected.
-
-Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
-This patch applies against linux-next and v4.9
+ drivers/watchdog/Kconfig      |  10 ++
+ drivers/watchdog/Makefile     |   1 +
+ drivers/watchdog/zx2967_wdt.c | 274 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 285 insertions(+)
+ create mode 100644 drivers/watchdog/zx2967_wdt.c
 
-v4 -> v5
- - Rebased from v4.8 to v4.9
- - Updates from comments by Eduardo Valentin
- - Replace vendor defined dlg,tjunc-temp-polling-period-ms with standard
-   thermal core polling-delay-passive as part of the device tree
-   initialisation
- - Change to the commit message content and device driver source code to
-   include an explanation of the repeated uevent strategy for monitoring
-   over-temperature
- - Rename warning threshold name from TEMP_WARN to T_WARN to match the
-   latest datasheet naming convention
- - Added reviewed-by Lukasz Luba to commit message
-
-v3 -> v4
- - Patch renamed from [PATCH V3 8/9] to [PATCH V4 7/8]
- - Reordering of cancel_delayed_work_sync() in remove function
- - dev_warn() message for out-of-range polling period requests
- - Explanatory comment for expected values defined for
-   DEFAULT_POLLING_MS_PERIOD, MAX_POLLING_MS_PERIOD and
-   MIN_POLLING_MS_PERIOD
-
-v2 -> v3
- - Patch renamed from [PATCH V2 09/10] to [PATCH V3 8/9]
- - Addition of MODULE_DEVICE_TABLE macro to allow modinfo additions
-
-v1 -> v2
- - Patch renamed from [PATCH V1 05/10] to [PATCH V2 09/10] -- these
-   changes were made to fix checkpatch warnings caused by the patch
-   set dependency order
- - List the header files in alphabetical order
- - Remove "GPL v2" and replace with MODULE_LICENSE("GPL") to match the
-   copyright "GNU Public License v2 or later" option in the header
-   comment for this file. See the allowed identifiers in the file
-   include/linux/module.h +170
- - Remove notify function "da9062_thermal_notify" function.
- - MODULE_AUTHOR() macros removes Company Name and just gives Name in
-   accordance with include/linux/module.h +200
- - Remove the compatible "dlg,da9061-thermal" option in the of_device_id
-   struct table. This patch now assumes the use of a DA9062 fallback
-   compatible string in the DTS when using the DA9061 thermal component
-   of the DA9061 device.
- - Re-ordered some assignments earlier in the probe() for thermal->hw,
-   thermal->polling_period, thermal->mode, thermal->dev
- - Added further information in the patch description to explain the use
-   of the device driver's built-in work-queue.
-
-Regards,
-Steve Twiss, Dialog Semiconductor Ltd.
-
-
- drivers/thermal/Kconfig          |  10 ++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/da9062-thermal.c | 314 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 325 insertions(+)
- create mode 100644 drivers/thermal/da9062-thermal.c
-
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index a13541b..400d15c 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -292,6 +292,16 @@ config DB8500_CPUFREQ_COOLING
- 	  bound cpufreq cooling device turns active to set CPU frequency low to
- 	  cool down the CPU.
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index acb00b5..05093a2 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called aspeed_wdt.
  
-+config DA9062_THERMAL
-+	tristate "DA9062/DA9061 Dialog Semiconductor thermal driver"
-+	depends on MFD_DA9062
-+	depends on OF
++config ZX2967_WATCHDOG
++	tristate "ZTE zx2967 SoCs watchdog support"
++	depends on ARCH_ZX
++	select WATCHDOG_CORE
 +	help
-+	  Enable this for the Dialog Semiconductor thermal sensor driver.
-+	  This will report PMIC junction over-temperature for one thermal trip
-+	  zone.
-+	  Compatible with the DA9062 and DA9061 PMICs.
++	  Say Y here to include support for the watchdog timer
++	  in ZTE zx2967 SoCs.
++	  To compile this driver as a module, choose M here: the
++	  module will be called zx2967_wdt.
 +
- config INTEL_POWERCLAMP
- 	tristate "Intel PowerClamp idle injection driver"
- 	depends on THERMAL
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index c92eb22..f7783b3 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -40,6 +40,7 @@ obj-$(CONFIG_IMX_THERMAL)	+= imx_thermal.o
- obj-$(CONFIG_MAX77620_THERMAL)	+= max77620_thermal.o
- obj-$(CONFIG_QORIQ_THERMAL)	+= qoriq_thermal.o
- obj-$(CONFIG_DB8500_CPUFREQ_COOLING)	+= db8500_cpufreq_cooling.o
-+obj-$(CONFIG_DA9062_THERMAL)	+= da9062-thermal.o
- obj-$(CONFIG_INTEL_POWERCLAMP)	+= intel_powerclamp.o
- obj-$(CONFIG_X86_PKG_TEMP_THERMAL)	+= x86_pkg_temp_thermal.o
- obj-$(CONFIG_INTEL_SOC_DTS_IOSF_CORE)	+= intel_soc_dts_iosf.o
-diff --git a/drivers/thermal/da9062-thermal.c b/drivers/thermal/da9062-thermal.c
+ # AVR32 Architecture
+ 
+ config AT32AP700X_WDT
+diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+index 0c3d35e..bf2d296 100644
+--- a/drivers/watchdog/Makefile
++++ b/drivers/watchdog/Makefile
+@@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+ obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+ obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+ obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
++obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+ 
+ # AVR32 Architecture
+ obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
 new file mode 100644
-index 0000000..52a095d
+index 0000000..818f17e
 --- /dev/null
-+++ b/drivers/thermal/da9062-thermal.c
-@@ -0,0 +1,314 @@
++++ b/drivers/watchdog/zx2967_wdt.c
+@@ -0,0 +1,274 @@
 +/*
-+ * Thermal device driver for DA9062 and DA9061
-+ * Copyright (C) 2016  Dialog Semiconductor Ltd.
++ * watchdog driver for ZTE's zx2967 family
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
++ * Copyright (C) 2017 ZTE Ltd.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++ *
++ * License terms: GNU General Public License (GPL) version 2
 + */
 +
-+/* When over-temperature is reached, an interrupt from the device will be
-+ * triggered. Following this event the interrupt will be disabled and
-+ * periodic transmission of uevents (HOT trip point) should define the
-+ * first level of temperature supervision. It is expected that any final
-+ * implementation of the thermal driver will include a .notify() function
-+ * to implement these uevents to userspace.
-+ *
-+ * These uevents are intended to indicate non-invasive temperature control
-+ * of the system, where the necessary measures for cooling are the
-+ * responsibility of the host software. Once the temperature falls again,
-+ * the IRQ is re-enabled so the start of a new over-temperature event can
-+ * be detected without constant software monitoring.
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/mfd/syscon.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
++#include <linux/of_address.h>
 +#include <linux/platform_device.h>
 +#include <linux/regmap.h>
-+#include <linux/thermal.h>
-+#include <linux/workqueue.h>
++#include <linux/reset.h>
++#include <linux/watchdog.h>
 +
-+#include <linux/mfd/da9062/core.h>
-+#include <linux/mfd/da9062/registers.h>
++#define ZX2967_WDT_CFG_REG			0x4
++#define ZX2967_WDT_LOAD_REG			0x8
++#define ZX2967_WDT_REFRESH_REG			0x18
++#define ZX2967_WDT_START_REG			0x1c
 +
-+/* Minimum, maximum and default polling millisecond periods are provided
-+ * here as an example. It is expected that any final implementation to also
-+ * include a modification of these settings to match the required
-+ * application.
-+ */
-+#define DA9062_DEFAULT_POLLING_MS_PERIOD	3000
-+#define DA9062_MAX_POLLING_MS_PERIOD		10000
-+#define DA9062_MIN_POLLING_MS_PERIOD		1000
++#define ZX2967_WDT_REFRESH_MASK			0x3f
 +
-+#define DA9062_MILLI_CELSIUS(t)			((t)*1000)
++#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
++#define ZX2967_WDT_START_EN			0x1
 +
-+struct da9062_thermal_config {
-+	const char *name;
++#define ZX2967_WDT_WRITEKEY			0x12340000
++
++#define ZX2967_WDT_DIV_DEFAULT			16
++#define ZX2967_WDT_DEFAULT_TIMEOUT		32
++#define ZX2967_WDT_MIN_TIMEOUT			1
++#define ZX2967_WDT_MAX_TIMEOUT			524
++#define ZX2967_WDT_MAX_COUNT			0xffff
++
++#define ZX2967_WDT_CLK_FREQ			0x8000
++
++#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
++
++struct zx2967_wdt {
++	struct watchdog_device	wdt_device;
++	void __iomem		*reg_base;
++	struct clk		*clock;
 +};
 +
-+struct da9062_thermal {
-+	struct da9062 *hw;
-+	struct delayed_work work;
-+	struct thermal_zone_device *zone;
-+	enum thermal_device_mode mode;
-+	struct mutex lock;
-+	int temperature;
-+	int irq;
-+	const struct da9062_thermal_config *config;
-+	struct device *dev;
-+};
-+
-+static void da9062_thermal_poll_on(struct work_struct *work)
++static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
 +{
-+	struct da9062_thermal *thermal = container_of(work,
-+						struct da9062_thermal,
-+						work.work);
-+	unsigned int val;
++	return readl_relaxed(wdt->reg_base + reg);
++}
++
++static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
++{
++	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
++}
++
++static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
++{
++	u32 val;
++
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
++	val ^= ZX2967_WDT_REFRESH_MASK;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
++}
++
++static int
++zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
++	unsigned int count;
++
++	count = timeout * ZX2967_WDT_CLK_FREQ;
++	if (count > divisor * ZX2967_WDT_MAX_COUNT)
++		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
++	count = DIV_ROUND_UP(count, divisor);
++	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
++	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
++	zx2967_wdt_refresh(wdt);
++	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
++
++	return 0;
++}
++
++static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
++{
++	u32 val;
++
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
++	val |= ZX2967_WDT_START_EN;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
++}
++
++static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
++{
++	u32 val;
++
++	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
++	val &= ~ZX2967_WDT_START_EN;
++	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
++}
++
++static int zx2967_wdt_start(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	zx2967_wdt_set_timeout(wdd, wdd->timeout);
++	__zx2967_wdt_start(wdt);
++
++	return 0;
++}
++
++static int zx2967_wdt_stop(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	__zx2967_wdt_stop(wdt);
++
++	return 0;
++}
++
++static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
++{
++	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
++
++	zx2967_wdt_refresh(wdt);
++
++	return 0;
++}
++
++#define ZX2967_WDT_OPTIONS \
++	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
++static const struct watchdog_info zx2967_wdt_ident = {
++	.options          =     ZX2967_WDT_OPTIONS,
++	.identity         =	"zx2967 watchdog",
++};
++
++static struct watchdog_ops zx2967_wdt_ops = {
++	.owner = THIS_MODULE,
++	.start = zx2967_wdt_start,
++	.stop = zx2967_wdt_stop,
++	.ping = zx2967_wdt_keepalive,
++	.set_timeout = zx2967_wdt_set_timeout,
++};
++
++static void zx2967_wdt_reset_sysctrl(struct device *dev)
++{
 +	int ret;
++	void __iomem *regmap;
++	unsigned int offset, mask, config;
++	struct of_phandle_args out_args;
 +
-+	/* clear E_TEMP */
-+	ret = regmap_write(thermal->hw->regmap,
-+				DA9062AA_EVENT_B,
-+				DA9062AA_E_TEMP_MASK);
++	ret = of_parse_phandle_with_fixed_args(dev->of_node,
++			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
++	if (ret)
++		return;
++
++	offset = out_args.args[0];
++	config = out_args.args[1];
++	mask = out_args.args[2];
++
++	regmap = syscon_node_to_regmap(out_args.np);
++	if (IS_ERR(regmap)) {
++		of_node_put(out_args.np);
++		return;
++	}
++
++	regmap_update_bits(regmap, offset, mask, config);
++	of_node_put(out_args.np);
++}
++
++static int zx2967_wdt_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct zx2967_wdt *wdt;
++	struct resource *base;
++	int ret;
++	struct reset_control *rstc;
++
++	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
++	if (!wdt)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, wdt);
++
++	wdt->wdt_device.info = &zx2967_wdt_ident;
++	wdt->wdt_device.ops = &zx2967_wdt_ops;
++	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
++	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
++	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
++	wdt->wdt_device.parent = &pdev->dev;
++
++	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	wdt->reg_base = devm_ioremap_resource(dev, base);
++	if (IS_ERR(wdt->reg_base)) {
++		dev_err(dev, "ioremap failed\n");
++		return PTR_ERR(wdt->reg_base);
++	}
++
++	zx2967_wdt_reset_sysctrl(dev);
++
++	wdt->clock = devm_clk_get(dev, NULL);
++	if (IS_ERR(wdt->clock)) {
++		dev_err(dev, "failed to find watchdog clock source\n");
++		return PTR_ERR(wdt->clock);
++	}
++
++	ret = clk_prepare_enable(wdt->clock);
 +	if (ret < 0) {
-+		dev_err(thermal->dev,
-+			"Cannot clear the TJUNC temperature status\n");
-+		goto err_enable_irq;
++		dev_err(dev, "failed to enable clock\n");
++		return ret;
 +	}
++	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
 +
-+	/* Now read E_TEMP again: it is acting like a status bit.
-+	 * If over-temperature, then this status will be true.
-+	 * If not over-temperature, this status will be false.
-+	 */
-+	ret = regmap_read(thermal->hw->regmap,
-+			  DA9062AA_EVENT_B,
-+			  &val);
-+	if (ret < 0) {
-+		dev_err(thermal->dev,
-+			"Cannot check the TJUNC temperature status\n");
-+		goto err_enable_irq;
-+	} else {
-+		if (val & DA9062AA_E_TEMP_MASK) {
-+			mutex_lock(&thermal->lock);
-+			thermal->temperature = DA9062_MILLI_CELSIUS(125);
-+			mutex_unlock(&thermal->lock);
-+			thermal_zone_device_update(thermal->zone,
-+						   THERMAL_EVENT_UNSPECIFIED);
-+
-+			schedule_delayed_work(&thermal->work,
-+				msecs_to_jiffies(thermal->zone->passive_delay));
-+			return;
-+		} else {
-+			mutex_lock(&thermal->lock);
-+			thermal->temperature = DA9062_MILLI_CELSIUS(0);
-+			mutex_unlock(&thermal->lock);
-+			thermal_zone_device_update(thermal->zone,
-+						   THERMAL_EVENT_UNSPECIFIED);
-+		}
-+	}
-+
-+err_enable_irq:
-+	enable_irq(thermal->irq);
-+}
-+
-+static irqreturn_t da9062_thermal_irq_handler(int irq, void *data)
-+{
-+	struct da9062_thermal *thermal = data;
-+
-+	disable_irq_nosync(thermal->irq);
-+	schedule_delayed_work(&thermal->work, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int da9062_thermal_get_mode(struct thermal_zone_device *z,
-+				   enum thermal_device_mode *mode)
-+{
-+	struct da9062_thermal *thermal = z->devdata;
-+	*mode = thermal->mode;
-+	return 0;
-+}
-+
-+static int da9062_thermal_get_trip_type(struct thermal_zone_device *z,
-+				int trip,
-+				enum thermal_trip_type *type)
-+{
-+	struct da9062_thermal *thermal = z->devdata;
-+
-+	switch (trip) {
-+	case 0:
-+		*type = THERMAL_TRIP_HOT;
-+		break;
-+	default:
-+		dev_err(thermal->dev,
-+			"Driver does not support more than 1 trip-wire\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int da9062_thermal_get_trip_temp(struct thermal_zone_device *z,
-+					int trip,
-+					int *temp)
-+{
-+	struct da9062_thermal *thermal = z->devdata;
-+
-+	switch (trip) {
-+	case 0:
-+		*temp = DA9062_MILLI_CELSIUS(125);
-+		break;
-+	default:
-+		dev_err(thermal->dev,
-+			"Driver does not support more than 1 trip-wire\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int da9062_thermal_get_temp(struct thermal_zone_device *z,
-+				   int *temp)
-+{
-+	struct da9062_thermal *thermal = z->devdata;
-+
-+	mutex_lock(&thermal->lock);
-+	*temp = thermal->temperature;
-+	mutex_unlock(&thermal->lock);
-+
-+	return 0;
-+}
-+
-+static struct thermal_zone_device_ops da9062_thermal_ops = {
-+	.get_temp	= da9062_thermal_get_temp,
-+	.get_mode	= da9062_thermal_get_mode,
-+	.get_trip_type	= da9062_thermal_get_trip_type,
-+	.get_trip_temp	= da9062_thermal_get_trip_temp,
-+};
-+
-+static const struct da9062_thermal_config da9062_config = {
-+	.name = "da9062-thermal",
-+};
-+
-+static const struct of_device_id da9062_compatible_reg_id_table[] = {
-+	{ .compatible = "dlg,da9062-thermal", .data = &da9062_config },
-+	{ },
-+};
-+
-+MODULE_DEVICE_TABLE(of, da9062_compatible_reg_id_table);
-+
-+static int da9062_thermal_probe(struct platform_device *pdev)
-+{
-+	struct da9062 *chip = dev_get_drvdata(pdev->dev.parent);
-+	struct da9062_thermal *thermal;
-+	unsigned int pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
-+	const struct of_device_id *match;
-+	int ret = 0;
-+
-+	match = of_match_node(da9062_compatible_reg_id_table,
-+			      pdev->dev.of_node);
-+	if (!match)
-+		return -ENXIO;
-+
-+	if (pdev->dev.of_node) {
-+		if (!of_property_read_u32(pdev->dev.of_node,
-+					  "polling-delay-passive",
-+					  &pp_tmp)) {
-+			if (pp_tmp < DA9062_MIN_POLLING_MS_PERIOD ||
-+				pp_tmp > DA9062_MAX_POLLING_MS_PERIOD) {
-+				dev_warn(&pdev->dev,
-+					 "Out-of-range polling period %d ms\n",
-+					 pp_tmp);
-+				pp_tmp = DA9062_DEFAULT_POLLING_MS_PERIOD;
-+			}
-+		}
-+	}
-+
-+	thermal = devm_kzalloc(&pdev->dev, sizeof(struct da9062_thermal),
-+			       GFP_KERNEL);
-+	if (!thermal) {
-+		ret = -ENOMEM;
++	rstc = devm_reset_control_get(dev, NULL);
++	if (IS_ERR(rstc)) {
++		dev_err(dev, "failed to get rstc");
++		ret = PTR_ERR(rstc);
 +		goto err;
 +	}
 +
-+	thermal->config = match->data;
-+	thermal->hw = chip;
-+	thermal->mode = THERMAL_DEVICE_ENABLED;
-+	thermal->dev = &pdev->dev;
++	reset_control_assert(rstc);
++	reset_control_deassert(rstc);
 +
-+	INIT_DELAYED_WORK(&thermal->work, da9062_thermal_poll_on);
-+	mutex_init(&thermal->lock);
++	watchdog_set_drvdata(&wdt->wdt_device, wdt);
++	watchdog_init_timeout(&wdt->wdt_device,
++			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
++	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
 +
-+	thermal->zone = thermal_zone_device_register(thermal->config->name,
-+					1, 0, thermal,
-+					&da9062_thermal_ops, NULL, pp_tmp,
-+					0);
-+	if (IS_ERR(thermal->zone)) {
-+		dev_err(&pdev->dev, "Cannot register thermal zone device\n");
-+		ret = PTR_ERR(thermal->zone);
++	ret = watchdog_register_device(&wdt->wdt_device);
++	if (ret)
 +		goto err;
-+	}
 +
-+	dev_dbg(&pdev->dev,
-+		"TJUNC temperature polling period set at %d ms\n",
-+		thermal->zone->passive_delay);
++	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
++		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
 +
-+	ret = platform_get_irq_byname(pdev, "THERMAL");
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to get platform IRQ.\n");
-+		goto err_zone;
-+	}
-+	thermal->irq = ret;
-+
-+	ret = request_threaded_irq(thermal->irq, NULL,
-+				   da9062_thermal_irq_handler,
-+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+				   "THERMAL", thermal);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to request thermal device IRQ.\n");
-+		goto err_zone;
-+	}
-+
-+	platform_set_drvdata(pdev, thermal);
 +	return 0;
 +
-+err_zone:
-+	thermal_zone_device_unregister(thermal->zone);
 +err:
++	clk_disable_unprepare(wdt->clock);
 +	return ret;
 +}
 +
-+static int da9062_thermal_remove(struct platform_device *pdev)
++static int zx2967_wdt_remove(struct platform_device *pdev)
 +{
-+	struct	da9062_thermal *thermal = platform_get_drvdata(pdev);
++	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
 +
-+	free_irq(thermal->irq, thermal);
-+	cancel_delayed_work_sync(&thermal->work);
-+	thermal_zone_device_unregister(thermal->zone);
++	watchdog_unregister_device(&wdt->wdt_device);
++	clk_disable_unprepare(wdt->clock);
++
 +	return 0;
 +}
 +
-+static struct platform_driver da9062_thermal_driver = {
-+	.probe	= da9062_thermal_probe,
-+	.remove	= da9062_thermal_remove,
-+	.driver	= {
-+		.name	= "da9062-thermal",
-+		.of_match_table = da9062_compatible_reg_id_table,
++static const struct of_device_id zx2967_wdt_match[] = {
++	{ .compatible = "zte,zx296718-wdt", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
++
++static struct platform_driver zx2967_wdt_driver = {
++	.probe		= zx2967_wdt_probe,
++	.remove		= zx2967_wdt_remove,
++	.driver		= {
++		.name	= "zx2967-wdt",
++		.of_match_table	= of_match_ptr(zx2967_wdt_match),
 +	},
 +};
++module_platform_driver(zx2967_wdt_driver);
 +
-+module_platform_driver(da9062_thermal_driver);
-+
-+MODULE_AUTHOR("Steve Twiss");
-+MODULE_DESCRIPTION("Thermal TJUNC device driver for Dialog DA9062 and DA9061");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:da9062-thermal");
++MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
++MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
++MODULE_LICENSE("GPL v2");
 -- 
-end-of-patch for RESEND PATCH V5
+2.7.4
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
