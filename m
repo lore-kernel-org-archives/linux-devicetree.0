@@ -1,89 +1,65 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
-Date: Thu, 2 Feb 2017 01:46:20 +0000
-Message-ID: <CACvgo535iyFvdOWzQHRnU++Ye0GgyZyN3R9ALSXRP7k3EPyRGA@mail.gmail.com>
-References: <b84ac3b8-3626-3eb2-7293-0affb58b7752@codeaurora.org>
- <64ff-5891bf80-f-117f65c0@159002012> <20170201113536.dig22kidlw6mjoz5@phenom.ffwll.local>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the DP83867
+ TI's PHY driver
+Date: Thu, 2 Feb 2017 02:54:16 +0100
+Message-ID: <20170202015416.GG4967@lunn.ch>
+References: <1485960215-5148-1-git-send-email-lukma@denx.de>
+ <20170201171610.GC7395@lunn.ch>
+ <2f3766f0-42df-6aab-dda1-14022c57fb30@gmail.com>
+ <20170201220500.29d478aa@jawa>
+ <20170201211440.GG7395@lunn.ch>
+ <20170201231323.732dd327@jawa>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170201113536.dig22kidlw6mjoz5-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170201231323.732dd327@jawa>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, martin.donnelly-JJi787mZWgc@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Senna Tschudin <peter.senna@>
+To: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>, Karicheri Muralidharan <m-karicheri2-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Engestrom <eric-op+oiCINJLTt9jDmeYuA0g@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 February 2017 at 11:35, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org> wrote:
-> On Wed, Feb 01, 2017 at 10:58:43AM +0000, Peter Senna Tschudin wrote:
->> Hi Archit,
->>
->> On 01 February, 2017 10:44 CET, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>
->> >
->> >
->> > On 01/30/2017 10:35 PM, Jani Nikula wrote:
->> > > On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
->> > >> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
->> > >> Hi Archit,
->> > >>
->> > >> Thank you for the comments!
->> > >>
->> > >> [...]
->> > >>>> +      total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
->> > >>>> +      if (total_size > EDID_LENGTH) {
->> > >>>> +              kfree(block);
->> > >>>> +              block = kmalloc(total_size, GFP_KERNEL);
->> > >>>> +              if (!block)
->> > >>>> +                      return NULL;
->> > >>>> +
->> > >>>> +              /* Yes, read the entire buffer, and do not skip the first
->> > >>>> +               * EDID_LENGTH bytes.
->> > >>>> +               */
->> > >>>
->> > >>> Is this the reason why you aren't using drm_do_get_edid()?
->>
->> > >>
->> > >> Yes, for some hw specific reason, it is necessary to read the entire
->> > >> EDID buffer starting from 0, not block by block.
->> > >
->> > > Hrmh, I'm planning on moving the edid override and firmware edid
->> > > mechanisms at the drm_do_get_edid() level to be able to truly and
->> > > transparently use a different edid. Currently, they're only used for
->> > > modes, really, and lead to some info retrieved from overrides, some from
->> > > the real edid. This kind of hacks will bypass the override/firmware edid
->> > > mechanisms then too. :(
->> >
->> > It seems like there is a HW issue which prevents them from reading EDID
->> > from an offset. So, I'm not sure if it is a hack or a HW limitation.
->>
->> >
->> > One way around this would be to hide the HW requirement in the
->> > get_edid_block func pointer passed to drm_do_get_edid(). This
->> > would, however, result in more i2c reads (equal to # of extension
->> > blocks) than what the patch currently does.
->> >
->> > Peter, if you think doing extra EDID reads isn't too costly on your
->> > platform, you could consider using drm_do_get_edid(). If not, I guess
->> > you'll miss out on the additional functionality Jani is going to add
->>
->> > in the future.
->>
->> My concern is that for almost one year now, every time I fix something
->> one or two new requests are made. I'm happy to fix the driver, but I
->> want a list of the changes that are required to get it upstream, before
->> I make more changes. Can we agree on exactly what is preventing this
->> driver to get upstream? Then I'll fix it.
->
-> I think addressing this edid reading question post-merge is perfectly
-> fine. Aside, want to keep maintaing your stuff as part of the drm-misc
-> group, with the drivers-in-misc experiment?
+On Wed, Feb 01, 2017 at 11:13:23PM +0100, Lukasz Majewski wrote:
+> Hi Andrew,
+> 
+> > > We would need a tri-state device tree properly:
+> > > 
+> > > 1. Not defined - do nothing
+> > > 2. Defined as 0 -> explicitly disable port mirroring
+> > > 3. Defined as 1 -> explicitly enable port mirriring
+> > > 
+> > > The "net-phy-lane-swap" only fulfills points 1 and 3 above.
+> > > 
+> > > In my use case I do need point 2.
+> > 
+> > Looking at the datasheet, PORT_MIRROR_EN defaults to 0. So it seems
+> > reasonable to unconditionally set it to 0 when the PHY driver
+> > loads. Any device which needs a value of 1 can set "net-phy-lane-swap"
+> 
+> Unconditionally setting this field to 0 (as we expect the reset default
+> setting) seems to me like a good solution. 
+> 
+> However, I was not sure if such approach is acceptable by the community.
 
-Wasn't there some entry level for people ? It's not like Peter is
-thick or anything, just that he has not reviewed or replied (afaict)
-to any patches, even on ones where he was explicitly cc'd.
-Although he's got dozens of contributions elsewhere, there's only a
-single patch of his in DRM.
+So the issue here is, are there boards with bootloaders which set this
+"lane swap" bit, and rely on Linux not changing it, because the
+hardware design has such a swap?
 
--Emil
+It seems the bootloader you are using does this. But in your case, it
+does it wrongly. I'm guessing you have a vendor bootloader? And no
+easy access to the sources? Otherwise you would of fixed the
+bootloader. So can we assume there are vendor designed boards which
+require the swap? Do they run a mainline kernel? Or only the vendor
+kernel?
+
+If we know of mainline boards which are going to break, we should not
+do this.
+
+If however we do decide to reset it to default value, i think it would
+be good to implement net-phy-lane-swap as well, so giving people an
+easier path towards mainline.
+
+       Andrew
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
