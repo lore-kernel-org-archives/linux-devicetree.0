@@ -1,80 +1,89 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Wed, 1 Feb 2017 16:19:27 -0800
-Message-ID: <8e577a3f-8d44-9dde-9507-36c3769228b6@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1485870854.2932.63.camel@pengutronix.de>
- <5586b893-bf5c-6133-0789-ccce60626b86@gmail.com>
- <1485941457.3353.13.camel@pengutronix.de>
+From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
+Date: Thu, 2 Feb 2017 01:46:20 +0000
+Message-ID: <CACvgo535iyFvdOWzQHRnU++Ye0GgyZyN3R9ALSXRP7k3EPyRGA@mail.gmail.com>
+References: <b84ac3b8-3626-3eb2-7293-0affb58b7752@codeaurora.org>
+ <64ff-5891bf80-f-117f65c0@159002012> <20170201113536.dig22kidlw6mjoz5@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485941457.3353.13.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170201113536.dig22kidlw6mjoz5-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
+To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, martin.donnelly-JJi787mZWgc@public.gmane.org, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Senna Tschudin <peter.senna@>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/01/2017 01:30 AM, Philipp Zabel wrote:
-> On Tue, 2017-01-31 at 17:26 -0800, Steve Longerbeam wrote:
-> [...]
->>> # Set pad formats
->>> media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
->>> media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
->>> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
->>> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080]"
->>>
->>> v4l2-ctl -d /dev/video4 -V
->>> # This still is configured to 640x480, which is inconsistent with
->>> # the 'ipu1_csi0':2 pad format. The pad set_fmt above should
->>> # have set this, too.
->> Because you've only configured the source pads,
->> and not the sink pads. The ipu_csi source format is
->> dependent on the sink format - output crop window is
->> limited by max input sensor frame, and since sink pad is
->> still at 640x480, output is reduced to that.
-> No, it is set (see below). What happens is that capture_g_fmt_vid_cap
-> just returns the capture devices' priv->vdev.fmt, even if it is
-> incompatible with the connected csi subdevice's output pad format.
+On 1 February 2017 at 11:35, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org> wrote:
+> On Wed, Feb 01, 2017 at 10:58:43AM +0000, Peter Senna Tschudin wrote:
+>> Hi Archit,
+>>
+>> On 01 February, 2017 10:44 CET, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>
+>> >
+>> >
+>> > On 01/30/2017 10:35 PM, Jani Nikula wrote:
+>> > > On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> wrote:
+>> > >> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
+>> > >> Hi Archit,
+>> > >>
+>> > >> Thank you for the comments!
+>> > >>
+>> > >> [...]
+>> > >>>> +      total_size = (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_LENGTH;
+>> > >>>> +      if (total_size > EDID_LENGTH) {
+>> > >>>> +              kfree(block);
+>> > >>>> +              block = kmalloc(total_size, GFP_KERNEL);
+>> > >>>> +              if (!block)
+>> > >>>> +                      return NULL;
+>> > >>>> +
+>> > >>>> +              /* Yes, read the entire buffer, and do not skip the first
+>> > >>>> +               * EDID_LENGTH bytes.
+>> > >>>> +               */
+>> > >>>
+>> > >>> Is this the reason why you aren't using drm_do_get_edid()?
+>>
+>> > >>
+>> > >> Yes, for some hw specific reason, it is necessary to read the entire
+>> > >> EDID buffer starting from 0, not block by block.
+>> > >
+>> > > Hrmh, I'm planning on moving the edid override and firmware edid
+>> > > mechanisms at the drm_do_get_edid() level to be able to truly and
+>> > > transparently use a different edid. Currently, they're only used for
+>> > > modes, really, and lead to some info retrieved from overrides, some from
+>> > > the real edid. This kind of hacks will bypass the override/firmware edid
+>> > > mechanisms then too. :(
+>> >
+>> > It seems like there is a HW issue which prevents them from reading EDID
+>> > from an offset. So, I'm not sure if it is a hack or a HW limitation.
+>>
+>> >
+>> > One way around this would be to hide the HW requirement in the
+>> > get_edid_block func pointer passed to drm_do_get_edid(). This
+>> > would, however, result in more i2c reads (equal to # of extension
+>> > blocks) than what the patch currently does.
+>> >
+>> > Peter, if you think doing extra EDID reads isn't too costly on your
+>> > platform, you could consider using drm_do_get_edid(). If not, I guess
+>> > you'll miss out on the additional functionality Jani is going to add
+>>
+>> > in the future.
+>>
+>> My concern is that for almost one year now, every time I fix something
+>> one or two new requests are made. I'm happy to fix the driver, but I
+>> want a list of the changes that are required to get it upstream, before
+>> I make more changes. Can we agree on exactly what is preventing this
+>> driver to get upstream? Then I'll fix it.
 >
-> priv->vdev.fmt was never changed from the default set in
-> imx_media_capture_device_register, because capture_s/try_fmt_vid_cap
-> were not called yet.
+> I think addressing this edid reading question post-merge is perfectly
+> fine. Aside, want to keep maintaing your stuff as part of the drm-misc
+> group, with the drivers-in-misc experiment?
 
-Ah, yep, this is a bug. Need to modify the capture device's
-width/height at .set_fmt() in the subdev's device-node source
-pad (csi and prpenc/vf).
+Wasn't there some entry level for people ? It's not like Peter is
+thick or anything, just that he has not reviewed or replied (afaict)
+to any patches, even on ones where he was explicitly cc'd.
+Although he's got dozens of contributions elsewhere, there's only a
+single patch of his in DRM.
 
->> Maybe I'm missing something, is it expected behavior that
->> a source format should be automatically propagated to
->> the sink?
-> media-ctl propagates the output pad format to all remote subdevices'
-> input pads for all enabled links:
->
-> https://git.linuxtv.org/v4l-utils.git/tree/utils/media-ctl/libv4l2subdev.c#n693
-
-Ah cool, I wasn't aware media-ctl did this, but it makes sense and
-makes it easier on the user.
-
-Steve
-
->
->>> v4l2-ctl --list-formats -d /dev/video4
->>> # This lists all the RGB formats, which it shouldn't. There is
->>> # no CSC in this pipeline, so we should be limited to YUV formats
->>> # only.
->> right, need to fix that. Probably by poking the attached
->> source subdev (csi or prpenc/vf) for its supported formats.
-> You are right, in bayer/raw mode only one specific format should be
-> listed, depending on the CSI output pad format.
->
-> regards
-> Philipp
->
-
+-Emil
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
