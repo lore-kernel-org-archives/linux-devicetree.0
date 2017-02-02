@@ -1,79 +1,91 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
- on TM2 board
-Date: Thu, 2 Feb 2017 20:52:42 +0100
-Message-ID: <20170202195242.GA9941@ulmo.ba.sec>
-References: <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay>
- <20170131150226.GB4519@ulmo.ba.sec>
- <87r33j85ap.fsf@eliezer.anholt.net>
- <20170131213132.GC872@mithrandir.ba.sec>
- <5891224E.5010402@samsung.com> <20170201144405.GA17698@ulmo.ba.sec>
- <589329C5.2070206@samsung.com>
+From: Breno Lima <breno.lima-3arQi8VN3Tc@public.gmane.org>
+Subject: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
+Date: Thu, 2 Feb 2017 18:04:00 -0200
+Message-ID: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1835089144=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <589329C5.2070206@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, cw00.choi@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, linux-kernel@vger.kernel.org, andi.shyti@samsung.com, jh80.chung@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, brenomatheus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Breno Lima <breno.lima-3arQi8VN3Tc@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Add support for Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480)
+TFT with Touch-Panel, which can be supported by the simple panel driver.
 
---===============1835089144==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
-Content-Disposition: inline
+Data-sheet available at:
+http://www.glyn.de/data/glyn/media/doc/43wvf1g-0.pdf
 
+Signed-off-by: Breno Lima <breno.lima-3arQi8VN3Tc@public.gmane.org>
+---
+ .../bindings/display/panel/sii,43wvf1g.txt         |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt
 
---1yeeQ81UyVL57Vl7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+diff --git a/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt b/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt
+new file mode 100644
+index 0000000..bbbc49f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt
+@@ -0,0 +1,7 @@
++Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480) TFT with Touch-Panel
++
++Required properties:
++- compatible: should be "sii,43wvf1g"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 06aaf79..0e08c56 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -863,6 +863,31 @@ static const struct panel_desc hannstar_hsd070pww1 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
+ };
+ 
++static const struct display_timing sii_43wvf1g_timing = {
++	.pixelclock = { 33500000, 33500000, 33500000 },
++	.hactive = { 800, 800, 800 },
++	.hfront_porch = {  164, 164, 164 },
++	.hback_porch = { 89, 89, 89 },
++	.hsync_len = { 10, 10, 10 },
++	.vactive = { 480, 480, 480 },
++	.vfront_porch = { 10, 10, 10 },
++	.vback_porch = { 23, 23, 23 },
++	.vsync_len = { 10, 10, 10 },
++	.flags = DISPLAY_FLAGS_DE_LOW,
++};
++
++static const struct panel_desc sii_43wvf1g = {
++	.timings = &sii_43wvf1g_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 93,
++		.height = 57,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
++	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_NEGEDGE,
++};
++
+ static const struct display_timing hannstar_hsd100pxn1_timing = {
+ 	.pixelclock = { 55000000, 65000000, 75000000 },
+ 	.hactive = { 1024, 1024, 1024 },
+@@ -1853,6 +1878,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "samsung,ltn140at29-301",
+ 		.data = &samsung_ltn140at29_301,
+ 	}, {
++		.compatible = "sii,43wvf1g",
++		.data = &sii_43wvf1g,
++	}, {
+ 		.compatible = "sharp,lq101k1ly04",
+ 		.data = &sharp_lq101k1ly04,
+ 	}, {
+-- 
+2.7.4
 
-I'm going to need to cool down for a bit. Let's resume this on Monday,
-maybe we can get back to being constructive after the weekend.
-
-Thierry
-
---1yeeQ81UyVL57Vl7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliTjgcACgkQ3SOs138+
-s6GTrw/+IQAU2KF6oTkmZkkN/goDvr90+uW72K/lmon7utxYESXmjwxN+RAtAtrq
-H4WeBzNmZWhinf77aaAlVWSYZQMO2k27NYAAbhVXDRbpJStvSLLgxl50X8WtRr8W
-QIsy83zUvsV+opQSsiWMNNGXxpNydN/BWd3ZHINRLf1+oDHUFUAKqzNPFai/itoh
-Gwx0rK1ByeiOpLx2UhLYyANc86Yvbtq1W260FsGXs9K412tL0MRUZtM/H7gKo9vL
-KFqi7F14HNjIL6fLZb3/1nolIj5/WqORXisTPT8lkxvymi43stuDj2e6cCsysi9O
-ds8KTC1iwzwAn5lGSR9lM7UARuQwCBaS+vqi5WNm1H/9INyc6LHLNvY7dd0lNiGh
-b6dbsodPQddoz2PtujtNELPG40OtIlalbybs6JrHyGCrYDMeqmly5rH/M06G9g8p
-NNWgNpBwPdYP2YnyOZIRK8SFVfblxZlm0re4/Clj891mk9gxm9+T8GBqWnrkq83/
-fvmJeIhdBQao+6tBjv9jHTNIXw1QipycteOOU7OUFJE3Mvrs3FDUHOoEQkb6Ve4n
-WArsq+4r4nhsGouNHW/yZ7WlOCE9WS+fq+Ygztr8hW9SUd+LkgRBun2osuGN+KrR
-gz9krLN7m3EIg9y1gEpRQf8RwTxBzqzUVpE3fDQdob6Q0T36l6o=
-=3gQ7
------END PGP SIGNATURE-----
-
---1yeeQ81UyVL57Vl7--
-
---===============1835089144==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1835089144==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
