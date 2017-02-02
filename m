@@ -1,52 +1,49 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] phy: Add USB3 PHY support for Broadcom NSP SoC
-Date: Thu, 2 Feb 2017 07:48:35 +0100
-Message-ID: <6be62ef6-e90c-b5f8-adcd-0ea62ab73ced@gmail.com>
-References: <1484669670-4201-4-git-send-email-yendapally.reddy@broadcom.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCHv2 08/16] atmel-isi: document device tree bindings
+Date: Thu, 2 Feb 2017 09:05:07 +0200
+Message-ID: <20170202070507.GY7139@valkosipuli.retiisi.org.uk>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-9-hverkuil@xs4all.nl>
+ <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1484669670-4201-4-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org, Guennadi Liakhovetski <guennadi.liakhovetski@intel.com>, Songjun Wu <songjun.wu@microchip.com>, devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-[Resending with fixed/complete Cc-s]
+Hi Rob,
 
-On Tue, 17 Jan 2017 11:14:29 -0500, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:> This patch adds support for Broadcom NSP USB3 PHY
- >
- > Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Wed, Feb 01, 2017 at 10:50:59AM -0600, Rob Herring wrote:
+> > +			remote-endpoint = <&ov2640_0>;
+> > +			bus-width = <8>;
+> > +			vsync-active = <1>;
+> > +			hsync-active = <1>;
+> 
+> Which side of the connect is supposed to define these?
 
-Seriously?! I really dislike what you did there.
+Today we have endpoint properties at each endpoint independently of the
+remote endpoint. I guess you could obtain the endpoint properties from the
+remote endpoint as well. There are exceptions though.
 
-NACK.
+The configuration might not always be exactly the same. The parallel
+interface is a little bit special: you could conceivably have a transmitter
+with 8 wires but a receiver that could only use 10 or more. The wiring could
+be such that the two most significant bits of the transmitter would be wired
+to the two least significant bits on the receiver side. In this case the
+bus-width property would have different values at each endpoint.
 
-You are aware this block is common for both: Northstar and Northstar Plus and
-we already have phy-bcm-ns-usb3.c! In fact Jon told me to rewrite my initial
-driver to make is possible to reuse it on NSP and I did that!
+If we were to do something like that, it should be done everywhere and such
+exceptions be handled somehow.
 
-This is old comment from Jon:
+The CSI-2 lane mapping configuration (where supported by the hardware) is
+also specific to an endpoint.
 
-In 30 March 2016 at 23:31, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
- > On Mon, Mar 28, 2016 at 9:46 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
- > wrote:
- >>
- >> CC: bcm-kernel-feedback-list, Jon
- >
- >
- > This is a common IP block with NSP.  I believe with some minor changes it
- > can support both.  Please allow me 1-2 days to look at these in more detail
- > and see if I can get these patches working on NSP.
+-- 
+Kind regards,
 
-Please start using existing code instead of inventing everything from the
-scratch internally at Broadcom. You did the same thing with (Q)SPI driver.
-
-
-This driver duplicates phy-bcm-ns-usb3.c and should have not been accepted. I
-strongly suggest *reverting* it and adjusting existing driver if needed.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
