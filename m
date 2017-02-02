@@ -1,132 +1,205 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
-Date: Thu, 2 Feb 2017 21:18:32 +0100
-Message-ID: <20170202201832.GB9941@ulmo.ba.sec>
-References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
+ property
+Date: Thu, 2 Feb 2017 21:44:12 +0100
+Message-ID: <f5cd17e7-2560-acdd-79c6-7dc1b0988e73@gmail.com>
+References: <20170120215605.15728-1-zajec5@gmail.com>
+ <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
+ <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
+ <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
+ <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
+ <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
+ <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
+ <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com>
+ <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
+ <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com>
+ <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1638420744=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Breno Lima <breno.lima@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, fabio.estevam@nxp.com, shawnguo@kernel.org, brenomatheus@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
+On 02/01/2017 10:55 PM, Rafał Miłecki wrote:
+> On 02/01/2017 10:26 PM, Jacek Anaszewski wrote:
+>> On 02/01/2017 04:56 PM, Rafał Miłecki wrote:
+>>> On 01/31/2017 10:34 PM, Jacek Anaszewski wrote:
+>>>> On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
+>>>>> Thanks a lot Jacek for this explanation (and sorry but I needed a
+>>>>> bit of
+>>>>> time to
+>>>>> think about this). I can finally see your point, I think we're on the
+>>>>> same page
+>>>>> now.
+>>>>>
+>>>>> I think that for all this time I was thinking from the pure DT
+>>>>> perspective. If
+>>>>> you ignore fact that Linux has multiple LED trigger drivers, then
+>>>>> "led-triggers"
+>>>>> may not sound that bad.
+>>>>>
+>>>>> After reading your description however I can see this property can be
+>>>>> misleading
+>>>>> as Linux people may think "drivers" when seeing "triggers".
+>>>>>
+>>>>> I still think this is a useful property and I hope we can still find a
+>>>>> way to
+>>>>> name it in a sane way: to be nice from DT PoV and march Linux LEDs
+>>>>> subsystem.
+>>>>
+>>>> I also see the need for this property.
+>>>>
+>>>>> I think we should still work on some generic property (without linux,
+>>>>> prefix) as
+>>>>> this seems to be something generic, not really specific to Linux
+>>>>> implementation.
+>>>>> Specifying relation between LED and devices is something than AFAICS
+>>>>> can be
+>>>>> reused by other systems as well.
+>>>>>
+>>>>> So my suggestion is to try some new name & leave linux,default-trigger
+>>>>> to allow
+>>>>> specifying one single trigger driver as required by current Linux
+>>>>> implementation.
+>>>>>
+>>>>> What do you think about this?
+>>>>>
+>>>>> There are few suggestions to came to my mind:
+>>>>> "trigger-sources"
+>>>>> "trigger-devices"
+>>>>> "led-trigger-devices"
+>>>>> "led-related-devices"
+>>>>> "led-event-devices"
+>>>>
+>>>> trigger-devices would work in this specific use case,
+>>>> where we can give phandles to usb ports. Nonetheless, we
+>>>> have also other kernel based events serving as trigger
+>>>> sources - e.g. timer.
+>>>>
+>>>> In this case I'd go for trigger-sources, but we'd need
+>>>> to have some generic way of defining the source like timer.
+>>>
+>>> I'd leave timer for later discussion but I'm glad you brought this
+>>> problem.
+>>> Maybe we could discuss this on another example that is more supported
+>>> like
+>>> GPIOs?
+>>>
+>>> We know this property allows specifying USB ports and we want it to
+>>> support
+>>> mixing various sources. So a very simple sample case seems to be using
+>>> it for
+>>> specifying GPIO as trigger source.
+>>>
+>>> Is this possible to mix various entries in a list assigned to single
+>>> property?
+>>> Let's say:
+>>> trigger-sources =
+>>>     <&ohci_port1>,
+>>>     <&ehci_port1>,
+>>>     <&gpio 1 GPIO_ACTIVE_HIGH>;
+>>
+>> According to my knowledge all elements in the list are elements
+>> of one array, no matter if they are comma separated or space separated
+>> in "<>" brackets. DT maintainer would have to confirm that though.
+> 
+> This matches my knowledge as well.
 
---===============1638420744==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Content-Disposition: inline
+Having that, we would be limited to a list of fixed size
+tuples IMHO.
+
+> 
+>>> Is this possible to support this? If so, which function I can use to
+>>> detect
+>>> what is pointed by a phandle?
+>>> I'm not that familiar with DT and I'm not sure how to handle this.
+>>
+>> I wonder if this is correct way to go. Maybe we should think of
+>> creating entirely new trigger mechanism that would allow for having
+>> multiple active triggers at a time.
+> 
+> I'm OK with reworking Linux's triggers if it need be. I think we should
+> agree
+> on binding(s) first though.
+
+I was thinking of creating entirely new mechanism (new sysfs file),
+as we can't break existing users.
 
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> 
+>> Of course trigger-sources would be still useful for defining
+>> a list of devices of the same type like in case of usbport trigger.
+>> Nonetheless, I have a problem with this property being a part of
+>> LED class device DT bindings. Triggers are not tightly coupled with
+>> LED class devices, but trigger-sources being a list of usb ports
+>> would be applicable only to usbport trigger. What if there was
+>> another combo trigger e.g. for reporting activity on mulitple GPIOs?
+> 
+> That was exactly my point with above trigger-sources example including 2
+> USB
+> ports & GPIO.
 
-On Thu, Feb 02, 2017 at 06:04:00PM -0200, Breno Lima wrote:
-> Add support for Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480)
-> TFT with Touch-Panel, which can be supported by the simple panel driver.
->=20
-> Data-sheet available at:
-> http://www.glyn.de/data/glyn/media/doc/43wvf1g-0.pdf
->=20
-> Signed-off-by: Breno Lima <breno.lima@nxp.com>
-> ---
->  .../bindings/display/panel/sii,43wvf1g.txt         |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 28 ++++++++++++++++=
-++++++
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sii,4=
-3wvf1g.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.=
-txt b/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt
-> new file mode 100644
-> index 0000000..bbbc49f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/sii,43wvf1g.txt
-> @@ -0,0 +1,7 @@
-> +Seiko Instruments Inc. 4.3" WVGA (800 x RGB x 480) TFT with Touch-Panel
-> +
-> +Required properties:
-> +- compatible: should be "sii,43wvf1g"
-> +
-> +This binding is compatible with the simple-panel binding, which is speci=
-fied
-> +in simple-panel.txt in this directory.
-> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel=
-/panel-simple.c
-> index 06aaf79..0e08c56 100644
-> --- a/drivers/gpu/drm/panel/panel-simple.c
-> +++ b/drivers/gpu/drm/panel/panel-simple.c
-> @@ -863,6 +863,31 @@ static const struct panel_desc hannstar_hsd070pww1 =
-=3D {
->  	.bus_format =3D MEDIA_BUS_FMT_RGB666_1X7X3_SPWG,
->  };
-> =20
-> +static const struct display_timing sii_43wvf1g_timing =3D {
-> +	.pixelclock =3D { 33500000, 33500000, 33500000 },
-> +	.hactive =3D { 800, 800, 800 },
-> +	.hfront_porch =3D {  164, 164, 164 },
-> +	.hback_porch =3D { 89, 89, 89 },
-> +	.hsync_len =3D { 10, 10, 10 },
-> +	.vactive =3D { 480, 480, 480 },
-> +	.vfront_porch =3D { 10, 10, 10 },
-> +	.vback_porch =3D { 23, 23, 23 },
-> +	.vsync_len =3D { 10, 10, 10 },
-> +	.flags =3D DISPLAY_FLAGS_DE_LOW,
-> +};
+How usbport trigger would make use use of information about GPIO?
+Does it mean that in this approach triggers would arbitrarily choose
+trigger-sources applicable for them?
 
-I was going to say that you should list minimum and maximum values, and
-that the default implementation will give you the typical values, but it
-seems like the datasheet doesn't have minimum and maximum values, so
-this looks fine.
+> 
+>> Should we have separate list of trigger sources per any possible
+>> existing trigger type? Aren't we going to far from pure hardware
+>> description the Device Tree was initially predestined to?
+> 
+> That would simplify things, but it gets us back to *multiple* properties
+> like
+> led-usb-triggers (or led-usb-trigger-sources)
+> led-pci-triggers (or led-pci-trigger-sources)
+> led-gpio-triggers (or led-gpio-trigger-sources)
+> etc.
 
-Shawn, Fabio, anyone want to give this a Tested-by? I take it that this,
-in combination with Fabio's patch to fix the displacement would make the
-SabreSD display work properly?
+Right, I was rather skeptical in my question - I don't like this
+solution too.
 
-Thierry
+> Last time Rob said he's not going to accept something like this, see:
+> 
+> On 23 January 2017 at 17:45, Rob Herring <robh@kernel.org> wrote:
+>> I'm not going to accept something specific to USB. So the choice is make
+>> the existing property work for USB or design something more flexible and
+>> generic.
+> 
+> So I think the main question right now is if this is possible to support
+> mixed
+> entries in a list like that
+> trigger-sources =
+>     <&ohci_port1>,
+>     <&ehci_port1>,
+>     <&gpio 1 GPIO_ACTIVE_HIGH>;
+> 
+> I posted as example.
+> 
+> I was also trying to find help on IRC #devicetree channel but didn't get
+> any
+> response:
+> [09:15] <rmilecki> hi, i've a question about mixing various entries in a
+> single list
+> [09:16] <rmilecki> is this possible to have different /syntax/ in every
+> list element
+> [09:16] <rmilecki> and have driver detect what does it reference?
+> [09:16] <rmilecki> i'll post an example
+> [09:17] <rmilecki> trigger-sources = <&ohci_port1>, <&ehci_port1>,
+> <&gpio 1 GPIO_ACTIVE_HIGH>;
+> [09:18] <rmilecki> this question is related to my work in [PATCH V2 1/2]
+> dt-bindings: leds: document new led-triggers property
+> [09:18] <rmilecki> beware, there is a long discussion in that thread
+> 
+> Rob: do you still follow this thread? We'd like to use single property
+> as you
+> suggested, but is it possible to work with something like trigger-sources
+> example posted above?
+> 
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliTlBUACgkQ3SOs138+
-s6FDAw/7BZWr1TgKpAzE/GNqVtWbPQOFHLBjS5f2V+S6RlOU32soTJs3kDOKdIwC
-jfieCcn44VRmG8cri1/cbC/wh1quQb1E2A/WRt4E8evJ+YSJA8SG8KfxvtADES6M
-v8ouPaz4DvPiljMNo9TUDGKyuHIpIXeGNkN87Ie2Ct5fkmp+RuAUdQTx+WD55DmO
-ctYy4m9DAxs2bC1tPsRli32o4Z5Dww2EtvdXZxx1o44POQjCPyWlcxsYKmmtzJT4
-2FQzSemwCSRS7yWT8I6RoXL3sDuGBv/xUCRUzexSTJfBYEy2DA28qJraVgZvxmq+
-01TBx324UE91HZCs1e197qBUF/p2MWlHIA7YMGcY15ax2jySvI16gHtoWsotIrCN
-UdTKs6puXoYXMiTKtcKW/4UVbU7V31f1NVSjMc5Bn0hfafpkJdn+SMd+56tJpOwr
-nr1LOPNQk5INNtScS7rslwV6/xjj7qe0a2lguQDExVK7kkODES9NtQjG6WNh9z54
-D3qc5fdUG/T9xkg1eFA/oDEM7cgvzCBgBkd9KNBPu4WaLQ51BnfbioEYBuNEt/On
-S5H72NuH0Hb11gonLZl3y+ff8lUmjvS6KNxSs+3HJngfz+a9RS20K98ieg10/IMj
-YYbgK4RNwmorttOiIfmshRPOAkdkttyL93kPCTquwyahqQ5zksI=
-=DdSg
------END PGP SIGNATURE-----
-
---rS8CxjVDS/+yyDmU--
-
---===============1638420744==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1638420744==--
+-- 
+Best regards,
+Jacek Anaszewski
