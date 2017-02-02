@@ -1,100 +1,77 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
-Date: Thu, 2 Feb 2017 18:16:38 +0200
-Message-ID: <20170202181357-mutt-send-email-mst@kernel.org>
-References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
- <20170201195732-mutt-send-email-mst@kernel.org>
- <20170201182659.GM8177@arm.com>
- <20170201210648-mutt-send-email-mst@kernel.org>
- <20170202112614.GB30577@arm.com>
- <bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v2 02/16] device property: Add fwnode_get_parent()
+Date: Thu,  2 Feb 2017 18:22:12 +0200
+Message-ID: <1486052546-19257-3-git-send-email-sakari.ailus@linux.intel.com>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 01:34:03PM +0000, Robin Murphy wrote:
-> On 02/02/17 11:26, Will Deacon wrote:
-> > On Wed, Feb 01, 2017 at 09:19:22PM +0200, Michael S. Tsirkin wrote:
-> >> On Wed, Feb 01, 2017 at 06:27:09PM +0000, Will Deacon wrote:
-> >>> On Wed, Feb 01, 2017 at 08:09:21PM +0200, Michael S. Tsirkin wrote:
-> >>>> I'd like to do that instead. It's fastboot doing the unreasonable thing
-> >>>> here and deviating from what every other legacy device without exception
-> >>>> did for years. If this means fastboot will need to update to virtio 1,
-> >>>> all the better.
-> >>>
-> >>> The problem still exists with virtio 1, unless we require that the
-> >>> "dma-coherent" property is set/unset correctly when VIRTIO_F_IOMMU_PLATFORM
-> >>> is advertised by the device (which is what I suggested in my reply).
-> >>
-> >> I'm not ignoring that, but I need to understand that part a bit better.
-> >> I'll reply to that patch in a day or two after looking at how _CCA is
-> >> supposed to work.
-> > 
-> > Thanks. I do think that whatever solution we come up with for virtio 1
-> > should influence what we do for legacy.
-> > 
-> >>> We can't detect the fastmodel,
-> >>
-> >> Surely, it puts a hardware id somewhere? I think you mean
-> >> fastmodel isn't always affected, right?
-> > 
-> > I don't think there's a hardware ID. The thing is, the fastmodel is a
-> > toolkit for building all sorts of platforms: you can chop and change
-> > the CPUs, the peripherals, the memory, the interrupt controller, the
-> > interconnect etc. Pretty much everything can be customised. So, for
-> > any fastmodel configuration that places virtio upstream of the SMMU
-> > (which is common, because virtio is one of the few DMA-capable peripherals
-> > that the fastmodel supports), we need to do something special.
-> > 
-> >> I'd like to see basically
-> >>
-> >> if (fastmodel)
-> >> 	a pile of special work-arounds
-> >> else
-> >> 	not less hacky but more common virtio work-arounds
-> >>
-> >> :)
-> >>
-> >> And then I can apply whatever comes from @arm.com and not
-> >> worry about breaking actual hardware.
-> > 
-> > What we could do is call iommu_group_get(&vdev->dev) for legacy
-> 
-> Actually, that should be vdev->dev.parent - I'm now not sure quite what
-> I managed to successfully test yesterday, but apparently it wasn't this
-> patch :(
-> 
-> > devices if CONFIG_ARM64. If that returns non-NULL, then we know that
-> > the device is upstream of an SMMU, which means it must be the fastmodel.
-> 
-> We can boot 32-bit kernels on models, so I'd be inclined to keep
-> CONFIG_ARM included, but I do tend to agree that explicitly checking for
-> an IOMMU is probably the cleanest approach if we reposition this as a
-> more specific quirk. I'll split apart the "Fast Models are wacky" vs.
-> "uh-oh device coherency" aspects and spin a v2 so that we can
-> (hopefully) sort the regression out ASAP.
-> 
-> Robin.
-> 
-> > 
-> > Will
-> > 
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-I still think the right thing to do for this platform is to add an API
-for driver to say "disable protection for this device and allow
-this device 1:1 access to all memory".  This
-would make both platforms which bypass the iommu and platforms that
-don't happy as PA == dma address.
+Now that ACPI has support for returning parent firmware node for both types
+of nodes we can expose this to others as well. This adds a new function
+fwnode_get_parent() that can be used for DT and ACPI nodes to retrieve the
+parent firmware node.
 
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/base/property.c  | 25 +++++++++++++++++++++++++
+ include/linux/property.h |  2 ++
+ 2 files changed, 27 insertions(+)
+
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 43a36d6..384998a 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -867,6 +867,31 @@ int device_add_properties(struct device *dev, struct property_entry *properties)
+ EXPORT_SYMBOL_GPL(device_add_properties);
+ 
+ /**
++ * fwnode_get_parent - Return parent firwmare node
++ * @fwnode: Firmware whose parent is retrieved
++ *
++ * Return parent firmware node of the given node if possible or %NULL if no
++ * parent was available.
++ */
++struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *parent = NULL;
++
++	if (is_of_node(fwnode)) {
++		struct device_node *node;
++
++		node = of_get_parent(to_of_node(fwnode));
++		if (node)
++			parent = &node->fwnode;
++	} else if (is_acpi_node(fwnode)) {
++		parent = acpi_node_get_parent(fwnode);
++	}
++
++	return parent;
++}
++EXPORT_SYMBOL_GPL(fwnode_get_parent);
++
++/**
+  * device_get_next_child_node - Return the next child node handle for a device
+  * @dev: Device to find the next child node for.
+  * @child: Handle to one of the device's child nodes or a null handle.
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 856e50b..85060bf 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -70,6 +70,8 @@ int fwnode_property_read_string(struct fwnode_handle *fwnode,
+ int fwnode_property_match_string(struct fwnode_handle *fwnode,
+ 				 const char *propname, const char *string);
+ 
++struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode);
++
+ struct fwnode_handle *device_get_next_child_node(struct device *dev,
+ 						 struct fwnode_handle *child);
+ 
 -- 
-MST
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
+
