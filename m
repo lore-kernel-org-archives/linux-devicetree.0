@@ -1,156 +1,247 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
-Date: Thu, 2 Feb 2017 12:37:21 +0000
-Message-ID: <CACvgo50bOZ=jzeJc_J4_7fpiEh9-ATKo1KOhAia2679AGA=mng@mail.gmail.com>
-References: <CACvgo535iyFvdOWzQHRnU++Ye0GgyZyN3R9ALSXRP7k3EPyRGA@mail.gmail.com>
- <3e31-58931d80-1-221fa900@101383713>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
+ TM2 board
+Date: Thu, 02 Feb 2017 21:44:53 +0900
+Message-ID: <589329C5.2070206@samsung.com>
+References: <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
+ <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
+ <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
+ <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
+ <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
+ <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
+ <5891224E.5010402@samsung.com> <20170201144405.GA17698@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3e31-58931d80-1-221fa900@101383713>
+In-reply-to: <20170201144405.GA17698-EkSeR96xj6Pcmrwk2tT4+A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, tiwai-IBi9RG/b67k@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Jani Nikula <jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, Maur
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2 February 2017 at 11:53, Peter Senna Tschudin
-<peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> wrote:
->
-> On 02 February, 2017 02:46 CET, Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> w=
-rote:
->
->> On 1 February 2017 at 11:35, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org> wrote:
->> > On Wed, Feb 01, 2017 at 10:58:43AM +0000, Peter Senna Tschudin wrote:
->> >> Hi Archit,
->> >>
->> >> On 01 February, 2017 10:44 CET, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org=
-> wrote:
->> >>
->> >> >
->> >> >
->> >> > On 01/30/2017 10:35 PM, Jani Nikula wrote:
->> >> > > On Sat, 28 Jan 2017, Peter Senna Tschudin <peter.senna@collabora.=
-com> wrote:
->> >> > >> On Thu, Jan 05, 2017 at 01:18:47PM +0530, Archit Taneja wrote:
->> >> > >> Hi Archit,
->> >> > >>
->> >> > >> Thank you for the comments!
->> >> > >>
->> >> > >> [...]
->> >> > >>>> +      total_size =3D (block[EDID_EXT_BLOCK_CNT] + 1) * EDID_L=
-ENGTH;
->> >> > >>>> +      if (total_size > EDID_LENGTH) {
->> >> > >>>> +              kfree(block);
->> >> > >>>> +              block =3D kmalloc(total_size, GFP_KERNEL);
->> >> > >>>> +              if (!block)
->> >> > >>>> +                      return NULL;
->> >> > >>>> +
->> >> > >>>> +              /* Yes, read the entire buffer, and do not skip=
- the first
->> >> > >>>> +               * EDID_LENGTH bytes.
->> >> > >>>> +               */
->> >> > >>>
->> >> > >>> Is this the reason why you aren't using drm_do_get_edid()?
->> >>
->> >> > >>
->> >> > >> Yes, for some hw specific reason, it is necessary to read the en=
-tire
->> >> > >> EDID buffer starting from 0, not block by block.
->> >> > >
->> >> > > Hrmh, I'm planning on moving the edid override and firmware edid
->> >> > > mechanisms at the drm_do_get_edid() level to be able to truly and
->> >> > > transparently use a different edid. Currently, they're only used =
-for
->> >> > > modes, really, and lead to some info retrieved from overrides, so=
-me from
->> >> > > the real edid. This kind of hacks will bypass the override/firmwa=
-re edid
->> >> > > mechanisms then too. :(
->> >> >
->> >> > It seems like there is a HW issue which prevents them from reading =
-EDID
->> >> > from an offset. So, I'm not sure if it is a hack or a HW limitation=
-.
->> >>
->> >> >
->> >> > One way around this would be to hide the HW requirement in the
->> >> > get_edid_block func pointer passed to drm_do_get_edid(). This
->> >> > would, however, result in more i2c reads (equal to # of extension
->> >> > blocks) than what the patch currently does.
->> >> >
->> >> > Peter, if you think doing extra EDID reads isn't too costly on your
->> >> > platform, you could consider using drm_do_get_edid(). If not, I gue=
-ss
->> >> > you'll miss out on the additional functionality Jani is going to ad=
-d
->> >>
->> >> > in the future.
->> >>
->> >> My concern is that for almost one year now, every time I fix somethin=
-g
->> >> one or two new requests are made. I'm happy to fix the driver, but I
->> >> want a list of the changes that are required to get it upstream, befo=
-re
->> >> I make more changes. Can we agree on exactly what is preventing this
->> >> driver to get upstream? Then I'll fix it.
->> >
->> > I think addressing this edid reading question post-merge is perfectly
->> > fine. Aside, want to keep maintaing your stuff as part of the drm-misc
->> > group, with the drivers-in-misc experiment?
+Dear Thierry,
+
+
+2017년 02월 01일 23:44에 Thierry Reding 이(가) 쓴 글:
+> On Wed, Feb 01, 2017 at 08:48:30AM +0900, Inki Dae wrote:
 >>
->> Wasn't there some entry level for people ? It's not like Peter is
->> thick or anything, just that he has not reviewed or replied (afaict)
->
->> to any patches, even on ones where he was explicitly cc'd.
->> Although he's got dozens of contributions elsewhere, there's only a
->> single patch of his in DRM.
->
-> "Any" is an exaggeration. See:
->
-> c6c1f9bc798bee7cf
-> ...
-> Tested-by: Peter Senna Tschudin <peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> Even if my involvement with drm started with my driver last year, I took =
-my personal time to report this issue, and to test multiple iterations of t=
-he fix. Then my "single patch in DRM" involved some work to get it right, a=
-nd it is something, that made imx-ldb better by adding a feature it did not=
- support before.
->
-> You made me curious. Can you point to the explicit cases where Peter "has=
- not reviewed or replied to any patches, even on ones where he was explicit=
-ly cc'd"? And can you list case by case your take on why I should have done=
- differently?
->
-> Also it is not clear to me what the problem really is here. I'm assuming =
-is not me, but if I was qualified from your perspective then would be no pr=
-oblem, right?
->
-Ok seems like my wording came out, rather off.
+>>
+>> 2017년 02월 01일 06:31에 Thierry Reding 이(가) 쓴 글:
+>>> On Tue, Jan 31, 2017 at 10:15:10AM -0800, Eric Anholt wrote:
+>>>> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+>>>>
+>>>>> [ Unknown signature status ]
+>>>>> On Tue, Jan 31, 2017 at 09:38:53AM -0500, Sean Paul wrote:
+>>>>>> On Tue, Jan 31, 2017 at 09:54:49AM +0100, Thierry Reding wrote:
+>>>>>>> On Tue, Jan 31, 2017 at 09:01:07AM +0900, Inki Dae wrote:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> 2017년 01월 24일 10:50에 Hoegeun Kwon 이(가) 쓴 글:
+>>>>>>>>> Dear Thierry,
+>>>>>>>>>
+>>>>>>>>> Could you please review this patch?
+>>>>>>>>
+>>>>>>>> Thierry, I think this patch has been reviewed enough but no comment
+>>>>>>>> from you. Seems you are busy. I will pick up this.
+>>>>>>>
+>>>>>>> Sorry, but that's not how it works. This patch has gone through 8
+>>>>>>> revisions within 4 weeks, and I tend to ignore patches like that until
+>>>>>>> the dust settles.
+>>>>>>>
+>>>>>>
+>>>>>> Seems like the dust was pretty settled. It was posted on 1/11, pinged on 1/24,
+>>>>>> and picked up on 1/31. I don't think it's unreasonable to take it through
+>>>>>> another tree after that.
+>>>>>>
+>>>>>> I wonder if drm_panel would benefit from the -misc group maintainership model
+>>>>>> as drm_bridge does. By spreading out the workload, the high-maintenance
+>>>>>> patches would hopefully find someone to shepherd them through.
+>>>>>
+>>>>> Except that nobody except me really cares. If we let people take patches
+>>>>> through separate trees or group-maintained trees they'll likely go in
+>>>>> without too much thought. DRM panel is somewhat different from core DRM
+>>>>> in this regard because its infrastructure is minimal and there's little
+>>>>> outside the panel-simple driver. So we're still at a stage where we need
+>>>>> to fine-tune what drivers should look like and how we can improve.
+>>>>
+>>>> I would love to care and participate in review, but with the structure
+>>>> of your tree you're the only one whose review counts, so I don't
+>>>> participate.
+>>>
+>>> Really? What exactly do you think is special about the structure of my
+>>> tree? I require patches to be on dri-devel (I pick them up from the
+>>> patchwork instance at freedesktop.org), the tree is publicly available
+>>> and reviewed-by tags get picked up automatically by patchwork.
+>>>
+>>> The panel tree works exactly like any other maintainer tree. And my
+>>> review is *not* the only one that counts. I appreciate every Reviewed-by
+>>> tag I see on panel patches because it means that I don't have to look as
+>>> closely as I have to otherwise.
+>>
+>> I don't think the panel tree works exactly like other maintainer tree.
+>>
+>> I'd like to recommend you to read below Greg's blog. This blog says
+>> about *Role of a Linux Kernel Maintainer*.
+>> http://www.kroah.com/log/linux/maintainer_pledge.html
+> 
+> Okay, now you're being unfair. You can't compare people to Greg. He
+> is beyond human.
+> 
+>> Especially, I'd like to emphasize below things,
+>> - I will review your patch within 1-2 weeks.
+>> - I will offer semi-constructive criticism of your patches.
+>> - I will let you know the status of your patch if it is rejected, or
+>> if it is accepted, what tree it has gone into, where you can find it,
+>> and when you can expect to see it merged into Linus's tree.
+> 
+> First, this is a pledge by Greg, and you can hardly hold me to this if
+> it isn't coming from me. I agree that the above is ideal, but I'm also
+> much less efficient as a maintainer as Greg. So are many others. There
+> simply isn't enough bandwidth to be able to do the above in every case
+> in addition to the day job and real life.
+> 
+> That said, when I do get around to review patches I think I'm pretty
+> good at the second and third points, though.
 
-Peter, as mentioned on IRC my messages is not aimed to be picking on
-you in the slightest way. Pardon if it came as such.
+Agree. You did well really.
 
-It had two main points:
- - Daniel, gents - is drm-misc aimed at devs with limited (no?)
-review/commit history in the area and/or the kernel in general ?
-In this case, Peter have quite noticeable experience [in kernel
-development] with little-to no in DRM.
-Should one draw a line in the sand somewhere ?
+> 
+> Secondly, it's very convenient how you focus on the maintainers' duties
+> and completely leave out what maintainers expect from contributors. If
+> you go and read some of the references linked to by Greg's post, maybe
+> you'll understand my position a little better as well.
+> 
+>> Why do you ignore contributor's patch? Even though the patch is ugly,
+>> I think you need to point it out and give your feedback to
+>> contributers as a maintainer.
+>> There was some cases I often missed to review with busy work but I
+>> don't ignore contributor's patch.
+> 
+> I will admit that ignoring the patch in this instance may not have been
+> the best course of action. But this particular instance was making it
+> exceptionally difficult for me, which is why I was going to shunt this
+> until the next cycle so that I could focus on getting the less tiresome
+> patches in.
+> 
+> And interestingly nobody seems to care about this current discussion
+> either. So yesterday somebody requested another change to the DT binding
+> after this discussion had started, and after I had NAK'ed the patch, but
+> then I see that today there's yet another revision with no attempt to do
+> anything about the concerns that I had raised.
+> 
+>> That was why I tried to pick this patch up to my tree to induce your
+>> feedback.
+>>
+>> You mentioned like below,
+>> "This patch has gone through 8 revisions within 4 weeks, and I tend to
+>> ignore patches like that until the dust settles."
+> 
+> Yes, two or three of those weeks were during a Christmas break and while
+> the merge window was open. Sometimes maintainers do need time to
+> recharge.
+> 
+>> Yes, it's been over a month since contributor sent this patch, and
+>> even he requested ping~~~ but there was no comment from you.
+>> You say "I tend to ignore patches like that until the dust settles."
+> 
+> And I did look at the patch after seeing the ping, but I immediately got
+> frustrated because it repeats the same mistakes that I had been
+> complaining about, and evidently had been too lax about, when the other
+> two Samsung drivers got merged. And I do remember some of the names that
+> were involved previously, so I think it's fair to assume that you knew I
+> wasn't happy about it, and yet you keep sending the same crappy code.
 
- - You patch has been on a long [bit rocky road] for a while, with
-devs giving you [what seems like] a partial reviews.
-Have you considered reviewing others' patches in exchange for a [more
-complete one] of this one ? According to git log people have poked you
-a handful of times, but seemingly you were busy.
+I think we hadn't reached any conclusion for futher specified TODO.
 
-Note that neither of the above is supposed to belittle individuals or
-the group maintainer model of drm-misc, but to point out what may not
-seem obvious.
+And below thing Andrzej H. mentioned is all which making you to complain? 
+https://lkml.org/lkml/2017/1/31/353
 
-Regards,
-Emil
+> 
+>> I'd like to say *maintainer is really not a place for power*, and
+>> maintainer would implicitly have a role to encourage in contribution
+>> activity of contributer.
+> 
+> Those are two orthogonal issues. Of course maintainership is about
+> power, because otherwise how is a maintainer different from a regular
+> contributor?
+> 
+> And I do encourage contributions, as long as they are worthy. I did go
+> through the trouble of explaining the last few times why I think these
+> drivers aren't good enough, but I'm not very motivated to do it once
+> more because I did try and be encouraging in the past, and did accept
+> patches because I thought somebody would eventually come around and do
+> things better with the next submission. But I was proven wrong. If you
+
+Please, do not expect all other contributors know and understand this. Especially, what you talked about in the past would be an unknown fact to new people.
+And please, do encourage contributions from people who may post really ugly things you think. If you ignore or don't encourage them, then the community will stop growing.
+
+Seems you want to have only the maintainer's role as a technical leader.
+
+I think you already know below Daniel's blog,
+http://blog.ffwll.ch/2017/01/maintainers-dont-scale.html
+
+I realized other maintainers had been contemplating this - maintainer's role - for a long time.
+I'd like to recommend you to read *It's About the People* chapter.
+
+Thank someone for sharing this. :)
+
+> don't care about addressing the issues I bring up during review, I can
+> not be expected to care about your patch submissions any longer.
+
+Again. That is what Andrzej H. mentioned?
+https://lkml.org/lkml/2017/1/31/353
+
+Or is there other thing I don't know?
+
+> 
+>> And you are continuing reply to other maintainer's comments but no
+>> comment to the contributor. This guy would still be ping~. :)
+> 
+> I fully expect contributors to read all of the comments that are made in
+> response to their submission. If they can't be bothered to follow the
+> discussion that ensues from their contributions, why should I bother
+> looking at their patches?
+> 
+>> You said you've repeatedly complained but how new contributors know this?
+>>
+>> And you also said,
+>> "DRM panel is somewhat different from core DRM in this regard because
+>> its infrastructure is minimal and there's little outside the
+>> panel-simple driver. So we're still at a stage where we need to
+>> fine-tune what drivers should look like and how we can improve"
+>>
+>> Please, move panel directory to drivers/staging so that other
+>> contributors aren't confused. I think drm-panel should be stayed in
+>> staging yet until the things you mentioned will be improved because
+>> while being discussed and improved, other contributors will continue
+>> their contributions.
+> 
+> You're twisting my words. I'm not saying that the DRM panel framework
+> should be in staging. What I am saying is that we have only a handful of
+> drivers, and most people find that panel-simple is a suitable one. And I
+> think it works great for those cases.
+
+I know this, and yes, maybe it can definitely reduce much code and it works well but I think this couldn't cover everything.
+Display panel device have many functions by vendor. I.e., Color tone change, Outdoor mode, and so on.
+
+And seems that you didn't reached the agreement enough with other people at least.
+
+Thierry, if you continue to insist on this and block other contributions, you may become a diminisher than becoming a multiplier.
+
+Thanks,
+Inki Dae
+
+> 
+> But the other more complicated drivers are a new thing, so we don't have
+> anything like best practices yet. But when I look at the current patches
+> as well as the existing Samsung panel drivers that it no doubt was
+> inspired by, I realize this is not at all something I consider a good
+> example of how such drivers should be written. So we're going to have to
+> find ways to improve this before I'm going to accept this patch.
+> 
+> Thierry
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
