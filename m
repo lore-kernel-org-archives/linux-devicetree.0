@@ -1,47 +1,74 @@
-From: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: am335x-chiliboard: Support power button
-Date: Thu,  2 Feb 2017 13:11:54 +0100
-Message-ID: <20170202121155.6575-1-m.niestroj@grinn-global.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: dts: r8a7791: link DU to VSPDs
+Date: Thu, 2 Feb 2017 16:02:39 +0300
+Message-ID: <afeb1f60-e60a-2c5c-4a12-7fda7bda7c50@cogentembedded.com>
+References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
+ <2492577.tBEnW0tCHD@wasted.cogentembedded.com>
+ <4ae454ad-296c-dec9-27e9-fd050333737f@cogentembedded.com>
+ <CANqRtoSQTa0fHJSwAHbN3hXSZ=m1kuR2GsUWE5ojN5AN-9i6Bw@mail.gmail.com>
+ <4bf0b27c-9641-391d-fc05-8cdc20ce4ec3@cogentembedded.com>
+ <CANqRtoTpsMix30+ESO-bEdaBM8H_9eTOLuoWShQABhmgJk23EA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoTpsMix30+ESO-bEdaBM8H_9eTOLuoWShQABhmgJk23EA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On chiliBoard power button is connected to TPS65217. It signals power
-button presses by asserting interrupt output and allows to read the
-state by i2c bus.
+Hello!
 
-Handle TPS65217 interrupts and enable notifications of power button
-presses.
+On 02/01/2017 03:01 PM, Magnus Damm wrote:
 
-Signed-off-by: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
----
- arch/arm/boot/dts/am335x-chiliboard.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>>>>> Add the "vsps" property to the DU device node in order to link this node
+>>>>> to
+>>>>> the VSPD nodes.
+>>>>>
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>>>>>
+>>>>> ---
+>>>>> Changes in version 2:
+>>>>> - rebased the patch.
+>>>>>
+>>>>> This patch is against the 'renesas-devel-20170125-v4.10-rc5' of Simon
+>>>>> Horman's
+>>>>> 'renesas.git' repo.  It's  only meaningful if the DRM driver patches
+>>>>> I've
+>>>>> just
+>>>>> posted are applied.
+>>>>
+>>>>
+>>>>
+>>>>    Forgot to note that without this patch the DU driver fails to link to
+>>>> VSPD and probe correctly, so there's no video signal. So it makes sense
+>>>> to
+>>>> apply before the DU driver patch (once it's ACKed for merge)...
+>>>
+>>>
+>>> Doesn't that translate to breaking the DT ABI? Is there someway we can
+>>> avoid doing that?
+>>
+>>
+>>    It doesn't -- if this patch is merged ahead of the DU patches.
+>
+> Perhaps I'm misunderstanding, but if you require a DTS patch to be
+> merged before a driver change then doesn't this mean that older DTBs
+> will stop working with newer kernels and the user is forced to update
+> the DTB to avoid breakage?
 
-diff --git a/arch/arm/boot/dts/am335x-chiliboard.dts b/arch/arm/boot/dts/am335x-chiliboard.dts
-index 2a624b3c9258..4e13cc03d656 100644
---- a/arch/arm/boot/dts/am335x-chiliboard.dts
-+++ b/arch/arm/boot/dts/am335x-chiliboard.dts
-@@ -185,3 +185,13 @@
- 	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
- 	status = "okay";
- };
-+
-+&tps {
-+	interrupt-parent = <&intc>;
-+	interrupts = <7>; /* NNMI */
-+
-+	pwrbutton {
-+		interrupts = <2>;
-+		status = "okay";
-+	};
-+};
--- 
-2.11.0
+    Yes, it seems so. :-(
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> It would be nice if older DTBs could keep on working as before and the
+> DU driver modification would work both with connected VSPs and also
+> keep on working as before in case the VSP connection is not present in
+> DT.
+
+    I'll try to look into that...
+
+> Cheers,
+>
+> / magnus
+
+MBR, Sergei
