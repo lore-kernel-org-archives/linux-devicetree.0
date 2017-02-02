@@ -1,82 +1,58 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ARM: sun8i: dt: Add mali node
-Date: Thu, 2 Feb 2017 15:38:44 +0800
-Message-ID: <CAGb2v64A9y3QEkv+hCQ_ONssSXQTo8JE0G4zUjvUr9q5R9Lyvg@mail.gmail.com>
-References: <b098c4fa9fce88361cca20417978734d0e1b5cca.1485939041.git-series.maxime.ripard@free-electrons.com>
- <82ff2fdb784b1444c8dc4a2d85f17522b9187741.1485939041.git-series.maxime.ripard@free-electrons.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] serial: st-asc: Allow handling of RTS line
+Date: Thu, 2 Feb 2017 07:42:36 +0000
+Message-ID: <20170202074236.ni3tozz3er4g3t64@dell>
+References: <20170127172804.23881-1-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <82ff2fdb784b1444c8dc4a2d85f17522b9187741.1485939041.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170127172804.23881-1-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jslaby-IBi9RG/b67k@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2017 at 4:53 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> The A23 and A33 have an ARM Mali 400 GPU. Now that we have a binding, add
-> it to our DT.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Greg, Jiri,
 
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> When hardware flow-control is disabled, manual toggling of the UART's
+> reset line (RTS) using userland applications (e.g. stty) is not
+> possible, since the ASC IP does not provide this functionality in the
+> same was as some other IPs do.  Thus, we have to do this manually.
+> 
+> This set ensures the correct Pinctrl groups are configured and
+> obtained for both manual toggling of the RTS line and for the IP to
+> take over the lines when HW flow-control is requested by the user. 
+> 
+> Lee Jones (10):
+>   serial: st-asc: Ignore the parity error bit if 8-bit mode is enabled
+>   serial: st-asc: Provide RTS functionality
+>   serial: st-asc: Read in all Pinctrl states
+>   serial: st-asc: (De)Register GPIOD and swap Pinctrl profiles
+>   serial: st-asc: Use generic DT binding for announcing RTS/CTS lines
+>   dt-bindings: serial: Update 'uart-has-rtscts' description
+>   ARM: dts: STiH410-b2260: Identify the UART RTS line
+>   ARM: dts: STiH407-pinctrl: Add Pinctrl group for HW flow-control
+>   ARM: dts: STiH407-family: Use new Pinctrl groups
+>   ARM: dts: STiH410-b2260: Enable HW flow-control
+> 
+>  .../devicetree/bindings/serial/serial.txt          |   3 +-
+>  arch/arm/boot/dts/stih407-family.dtsi              |   3 +-
+>  arch/arm/boot/dts/stih407-pinctrl.dtsi             |  12 ++-
+>  arch/arm/boot/dts/stih410-b2260.dts                |   5 +
+>  drivers/tty/serial/st-asc.c                        | 101 +++++++++++++++++++--
+>  5 files changed, 110 insertions(+), 14 deletions(-)
 
->
-> ---
->
-> Changes from v2:
->   - Removed leading 0 from the unit address
-> ---
->  arch/arm/boot/dts/sun8i-a23-a33.dtsi | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> index d92fdf5a7b26..35008b78d899 100644
-> --- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
-> @@ -472,6 +472,32 @@
->                         #size-cells = <0>;
->                 };
->
-> +               mali: gpu@1c40000 {
-> +                       compatible = "allwinner,sun8i-a23-mali",
-> +                                    "allwinner,sun7i-a20-mali", "arm,mali-400";
-> +                       reg = <0x01c40000 0x10000>;
-> +                       interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>,
-> +                                    <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
-> +                       interrupt-names = "gp",
-> +                                         "gpmmu",
-> +                                         "pp0",
-> +                                         "ppmmu0",
-> +                                         "pp1",
-> +                                         "ppmmu1",
-> +                                         "pmu";
-> +                       clocks = <&ccu CLK_BUS_GPU>, <&ccu CLK_GPU>;
-> +                       clock-names = "bus", "core";
-> +                       resets = <&ccu RST_BUS_GPU>;
-> +
-> +                       assigned-clocks = <&ccu CLK_GPU>;
-> +                       assigned-clock-rates = <408000000>;
+Looks like everyone is happy with the set.
 
-Is the driver supposed to do DVFS for the GPU? If so, do we need to
-specify operating points and/or regulator supplies?
+Are you planning to merge it?
 
-Thanks
-ChenYu
-
-> +               };
-> +
->                 gic: interrupt-controller@01c81000 {
->                         compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
->                         reg = <0x01c81000 0x1000>,
-> --
-> git-series 0.8.11
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
