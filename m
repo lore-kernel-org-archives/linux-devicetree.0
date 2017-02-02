@@ -1,51 +1,78 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v2] Documentation: devicetree: meson-ir:
- "linux,rc-map-name" is supported
-Date: Thu, 2 Feb 2017 14:04:15 +0100
-Message-ID: <cccd0fef-fa2c-bdfd-b7dd-b26ef288dfa0@suse.de>
-References: <20170131212112.5582-1-martin.blumenstingl@googlemail.com>
- <20170201221415.22794-1-martin.blumenstingl@googlemail.com>
- <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: orion5x: fix Makefile for linkstation-lschl.dtb
+Date: Thu, 02 Feb 2017 14:05:49 +0100
+Message-ID: <87wpd8wxn6.fsf@free-electrons.com>
+References: <20170202113856.728043-1-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170202113856.728043-1-arnd-r2nGTMty4D4@public.gmane.org> (Arnd Bergmann's message
+        of "Thu, 2 Feb 2017 12:38:33 +0100")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Roger Shimizu <rogershimizu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 01.02.2017 um 23:26 schrieb Martin Blumenstingl:
-> On Wed, Feb 1, 2017 at 11:14 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> The driver already parses the "linux,rc-map-name" property. Add this
->> information to the documentation so .dts maintainers don't have to look
->> it up in the source-code.
->>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> ---
->> Changes since v1:
->> - removed character which shows up as whitespace from subject
-> I have verified that I really sent this without a whitespace (I'm
-> using git send-email, so the patch is not mangled by some webmailer) -
-> unfortunately it seems to appear again (maybe one of the receiving
-> mail-servers or the mailing-list software does something weird here).
+Hi Arnd,
+ 
+ On jeu., fÃ©vr. 02 2017, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-Shows up fine here now,
+> The rename of orion5x-lschl.dts needs to be reflected in the Makefile:
+>
+> make[3]: *** No rule to make target
+> 'arch/arm/boot/dts/orion5x-lschl.dtb', needed by '__build'.
 
-Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Sorry for that, I did a make dtbs but with the wrong config, (mvebu_v7)
+:(
 
-Didn't expect a resend for that btw.
+The offending patch is in my mvebu/fixes branch that you didn't applied
+yet. How do you want to proceed?
+
+Will you applied this patch just after merging tags/mvebu-fixes-4.10-1 ?
+
+Do you want I resubmit a PR with your patch?
+
+In this case I could also squash your patch in the offending patch.
+
+In any case, if needed you can add my
+
+Acked-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Thanks,
-Andreas
+
+Gregory
+
+
+>
+> Fixes: 6cfd3cd8d836 ("ARM: dts: orion5x-lschl: More consistent naming on linkstation series")
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 10eec600cf6b..47208fc5a750 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -633,7 +633,7 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+>  	orion5x-lacie-ethernet-disk-mini-v2.dtb \
+>  	orion5x-linkstation-lsgl.dtb \
+>  	orion5x-linkstation-lswtgl.dtb \
+> -	orion5x-lschl.dtb \
+> +	orion5x-linkstation-lschl.dtb \
+>  	orion5x-lswsgl.dtb \
+>  	orion5x-maxtor-shared-storage-2.dtb \
+>  	orion5x-netgear-wnr854t.dtb \
+> -- 
+> 2.9.0
+>
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
