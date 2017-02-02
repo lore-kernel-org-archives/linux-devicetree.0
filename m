@@ -1,35 +1,54 @@
-From: Hans Holmberg <hans-syntQev1tZzUyQxjFilb4QC/G2K4zDHf@public.gmane.org>
-Subject: Re: [RFC PATCH v2] Input: gpio_keys - add dt abs/rel button support
-Date: Thu, 2 Feb 2017 16:04:21 +0100
-Message-ID: <20170202150254.GA3682@Gaia>
-References: <20170131075516.GA4462@Gaia>
- <20170201172531.cdhjrl4rfidgouul@rob-hp-laptop>
+From: eajames <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH linux v5 5/6] hwmon: occ: Add hwmon implementation for the
+ P8 OCC
+Date: Thu, 02 Feb 2017 09:06:36 -0600
+Message-ID: <87f4e9636acbcc5facc169d590b110cb@linux.vnet.ibm.com>
+References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
+ <20170201173450.ysuk3j2hwoldz72o@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170201172531.cdhjrl4rfidgouul@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170201173450.ysuk3j2hwoldz72o@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 11:25:31AM -0600, Rob Herring wrote:
-> On Tue, Jan 31, 2017 at 08:55:19AM +0100, Hans Holmberg wrote:
-> > +
-> > +	gpio-joystick: {
+On 2017-02-01 11:34, Rob Herring wrote:
+> On Tue, Jan 31, 2017 at 09:43:56AM -0600, eajames@linux.vnet.ibm.com 
+> wrote:
+>> From: "Edward A. James" <eajames@us.ibm.com>
+>> 
+>> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, 
+>> as
+>> well as probe the entire driver from the I2C bus. I2C is the 
+>> communication
+>> method between the BMC and the P8 OCC.
+>> 
+>> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>> ---
+>>  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
 > 
-> Why do we need a whole new example?
+> Please add acks when posting new versions.
 
-I found it motivated to describe a use case with the new property, since
-it is very different from "normal" keys(and I think there are enough
-tac 2's out there that are waiting to be hooked up :).
-
-If you think the new example is surperflous, I'll chuck it out.
+Thanks Rob, should I put up a new version with acked by, and no other 
+changes? Also, do you mean to acknowledge this patch only, or all the 
+patches? I'm new to this process...
 
 Thanks,
-Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Eddie
+
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+>>  drivers/hwmon/occ/Kconfig                       |  14 ++++
+>>  drivers/hwmon/occ/Makefile                      |   1 +
+>>  drivers/hwmon/occ/p8_occ_i2c.c                  | 104 
+>> ++++++++++++++++++++++++
+>>  4 files changed, 132 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+>>  create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
