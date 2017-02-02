@@ -1,63 +1,78 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Thu, 2 Feb 2017 22:29:25 +0000
-Message-ID: <20170202222925.GW27312@n2100.armlinux.org.uk>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
+Date: Thu, 2 Feb 2017 22:35:28 +0000
+Message-ID: <20170202223528.GX27312@n2100.armlinux.org.uk>
 References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <20170202172245.GT27312@n2100.armlinux.org.uk>
- <20170202175600.GU27312@n2100.armlinux.org.uk>
- <4815b9c8-782a-ac67-d296-c4acb296d849@gmail.com>
- <20170202185826.GV27312@n2100.armlinux.org.uk>
- <2e1cf096-ecb8-ba3d-a554-f4cc6999ed4e@gmail.com>
+ <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2e1cf096-ecb8-ba3d-a554-f4cc6999ed4e@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+In-Reply-To: <1483755102-24785-21-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 11:12:41AM -0800, Steve Longerbeam wrote:
-> Here is the current .queue_setup() op in imx-media-capture.c:
-> 
-> static int capture_queue_setup(struct vb2_queue *vq,
->                                unsigned int *nbuffers,
->                                unsigned int *nplanes,
->                                unsigned int sizes[],
->                                struct device *alloc_devs[])
-> {
->         struct capture_priv *priv = vb2_get_drv_priv(vq);
->         struct v4l2_pix_format *pix = &priv->vdev.fmt.fmt.pix;
->         unsigned int count = *nbuffers;
-> 
->         if (vq->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
->                 return -EINVAL;
-> 
->         if (*nplanes) {
->                 if (*nplanes != 1 || sizes[0] < pix->sizeimage)
->                         return -EINVAL;
->                 count += vq->num_buffers;
->         }
-> 
->         while (pix->sizeimage * count > VID_MEM_LIMIT)
->                 count--;
+On Fri, Jan 06, 2017 at 06:11:38PM -0800, Steve Longerbeam wrote:
+> +struct camif_priv {
+> +	struct device         *dev;
+> +	struct video_device    vfd;
 
-That's a weird way of writing:
+You can't do this.
 
-	unsigned int max_num = VID_MEM_LIMIT / pix->sizeimage;
-	count = max(count, max_num);
+> +static struct video_device camif_videodev = {
+> +	.fops		= &camif_fops,
+> +	.ioctl_ops	= &camif_ioctl_ops,
+> +	.minor		= -1,
+> +	.release	= video_device_release,
+> +	.vfl_dir	= VFL_DIR_RX,
+> +	.tvnorms	= V4L2_STD_NTSC | V4L2_STD_PAL | V4L2_STD_SECAM,
+> +};
+
+> +static int camif_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_media_internal_sd_platformdata *pdata;
+> +	struct camif_priv *priv;
+> +	struct video_device *vfd;
+> +	int ret;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+
+You kmalloc this structure, so this structure has the lifetime of
+the driver being bound to the platform device.
+
+> +	vfd = &priv->vfd;
+> +	*vfd = camif_videodev;
+
+However, "*vfd" contains a struct device, and you _correctly_ set the
+release function for "*vfd" to video_device_release via camif_videodev.
+
+However, if you try to rmmod imx-media, then you end up with a kernel
+warning that you're freeing memory containing a held lock, and later
+chaos ensues because kmalloc has been corrupted.
+
+The root cause of this is embedding the device structure within the
+video_device into the driver's private data.  *Any* structure what so
+ever that contains a kref is reference counted, and that includes
+struct device, and therefore also includes struct video_device.  What
+that means is that its lifetime is _not_ under _your_ control, and
+you may not free it except through its release function (which is
+video_device_release().)  However, that also tries to kfree (with an
+offset of 4) your private data, which results in the warning and the
+corrupted kmalloc free lists.
+
+The solution is simple, make "vfd" a pointer in your private data
+structure and kmalloc() it separately, letting video_device_release()
+kfree() that data when it needs to.
 
 -- 
 RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
 FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
 according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
