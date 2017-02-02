@@ -1,109 +1,29 @@
-From: Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: DTB file appears to have corrupted node property according to fdtdump
- and kernel?
-Date: Thu, 2 Feb 2017 20:09:34 +0200
-Message-ID: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: am335x-chiliboard: Support power button
+Date: Thu, 2 Feb 2017 10:20:34 -0800
+Message-ID: <20170202182034.GG7403@atomide.com>
+References: <20170202121155.6575-1-m.niestroj@grinn-global.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170202121155.6575-1-m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Marcin Niestroj <m.niestroj-z3quKL4iOrmQ6ZAhV5LmOA@public.gmane.org> [170202 05:03]:
+> On chiliBoard power button is connected to TPS65217. It signals power
+> button presses by asserting interrupt output and allows to read the
+> state by i2c bus.
+> 
+> Handle TPS65217 interrupts and enable notifications of power button
+> presses.
 
-I have a particular device tree node property which refuses to reach
-the Linux kernel without corruption:
+Applying both into omap-for-v4.11/dt thanks.
 
-I am looking at the following call stack:
-
-#0 of_platform_bus_create(...)
-#1 of_platform_bus_create(...)
-#2 of_platform_bus_create(...)
-#3 of_platform_populate(...)
-#4 sama5_dt_device_init(...)
-#5 customize_machine(...)
-#6 do_one_initcall(...)
-#7 do_initcall_level(...)
-#8 do_initcalls()
-#9 do_basic_setup() at main.c:881
-#10 kernel_init_freeable() at main.c:1004
-#11 kernel_init(unused = <Value currently has no location>) at main.c:941
-
-Once I reach the i2c node below, I can walk the properties linked list
-in the debugger. Once I get to the lsm6ds3 child and the "interrupts"
-property, the value is (second value corrupted as zero)
-
- interrupts = <0xc 0x0>;
-
-(I am investigating this because the second value which is used as the
-interrupt trigger is always zero when the driver reads it).
-
-I have done some additional tests using the dtc and fdtdump utility to
-try and isolate the issue.
-
->From the extract below from the preprocessed file:
-
-   i2c1: i2c@f0018000 {
-    compatible = "atmel,at91sam9x5-i2c";
-    reg = <0xf0018000 0x4000>;
-    interrupts = <0x13 0x4 0x6>;
-    dmas = <0x2 0x2 0x9 0x2 0x2 0xa>;
-    dma-names = "tx", "rx";
-    pinctrl-names = "default";
-    pinctrl-0 = <0x12>;
-    #address-cells = <0x1>;
-    #size-cells = <0x0>;
-    clocks = <0x13>;
-    status = "okay";
-    clock-frequency = <0x61a80>;
-    atmel,recover-scl = <0x14 0x1b 0x0>;
-    atmel,recover-sda = <0x14 0x1a 0x0>;
-
-    lsm6ds3@6b {
-     compatible = "st,lsm6ds3";
-     reg = <0x6b>;
-     pinctrl-names = "default";
-     pinctrl-0 = <0x15>;
-     interrupt-parent = <0x16>;
-     interrupts = <0xc 0x1>;
-     interrupt-names = "lsm6ds_int1";
-     st,drdy-int-pin = <0x1>;
-    };
-   };
-
-Version: DTC 1.4.0 (ubuntu package) for manual testing.
-
-(1)  fdtdump mix6000.dtb | grep interrupts
-
-Thsi returns the interrupt line as:
-
-interrupts = <0x0000000c 0x000001d0>;
-
-(2) In the linux kernel the of_platform_populate() reads the same property as:
-
-0x0000000c 0x00000000 with lenth=8
-
-(3) If I take the DTS file and manually compile the DTB with the dtc
-compiler, and convert it back to the DTS the correct values are shown
-
-(4) If I change the interrupt value:
-
-interrupts = <0xc 0x0>;
-
-and I do:
-
-cat <file-old.dtb> | od -t x1 > file1.txt
-cat <file-mod.dtb> | od -t x1 > file2.txt
-kdiff3 file1.txt file2.txt
-
-I actually see a single hex byte change from 0x1 to 0x0.
-
-If it was not for the faulty fdtdump output (in conjuection with the
-Linux kernel zero at the same place) I would have said its definately
-a kernel issue.
-
-Any ideas?
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
