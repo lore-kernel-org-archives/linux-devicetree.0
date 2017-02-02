@@ -1,77 +1,369 @@
-From: Icenowy Zheng <icenowy@aosc.xyz>
-Subject: Re: [PATCH v3 08/10] dmaengine: sun6i: allow build on
-	ARM64 platforms (sun50i)
-Date: Thu, 02 Feb 2017 23:50:42 +0800
-Message-ID: <5605761486050642@web3m.yandex.ru>
-References: <20170129023331.62106-1-icenowy@aosc.xyz>
- <20170129023331.62106-9-icenowy@aosc.xyz>
- <20170130164210.GD19244@localhost>
- <3729521485800635@web23g.yandex.ru> <20170131033236.GH19244@localhost>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Thu, 2 Feb 2017 08:50:48 -0700
+Message-ID: <20170202155048.GA15052@linaro.org>
+References: <1486026995-23356-1-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170131033236.GH19244@localhost>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Andre Przywara <andre.przywara@arm.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-sunxi@googlegroups.com" <linux-sunxi@googlegroups.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>, Mark Brown <broonie@kernel.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486026995-23356-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-CgozMS4wMS4yMDE3LCAxMTozMiwgIlZpbm9kIEtvdWwiIDx2aW5vZC5rb3VsQGludGVsLmNvbT46
-Cj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDI6MjM6NTVBTSArMDgwMCwgSWNlbm93eSBaaGVu
-ZyB3cm90ZToKPj4gwqAzMS4wMS4yMDE3LCAwMDo0MSwgIlZpbm9kIEtvdWwiIDx2aW5vZC5rb3Vs
-QGludGVsLmNvbT46Cj4+IMKgPiBPbiBTdW4sIEphbiAyOSwgMjAxNyBhdCAxMDozMzoyOUFNICsw
-ODAwLCBJY2Vub3d5IFpoZW5nIHdyb3RlOgo+PiDCoD4+IMKgQXMgNjQtYml0IEFsbHdpbm5lciBI
-NSBTb0MgaGFzIHRoZSBzYW1lIERNQSBlbmdpbmUgd2l0aCBIMywgdGhlIERNQQo+PiDCoD4+IMKg
-ZHJpdmVyIHNob3VsZCBiZSBhbGxvd2VkIHRvIGJlIGJ1aWx0IGZvciBBUk02NCwgaW4gb3JkZXIg
-dG8gbWFrZSBpdCB3b3JrIG9uIEg1Lgo+PiDCoD4+Cj4+IMKgPj4gwqBTaWduZWQtb2ZmLWJ5OiBJ
-Y2Vub3d5IFpoZW5nIDxpY2Vub3d5QGFvc2MueHl6Pgo+PiDCoD4+IMKgQWNrZWQtYnk6IE1heGlt
-ZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+PiDCoD4+IMKgQWNr
-ZWQtYnk6IENoZW4tWXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPj4gwqA+PiDCoC0tLQo+PiDCoD4+
-IMKgUGF0Y2ggaW50cm9kdWNlZCBiZXR3ZWVuIHYxIGFuZCB2MiwgdG8gc2F0aXNmeSB0aGUgbmV3
-bHkgYWRkZWQgSDMvSDUgYXVkaW8KPj4gwqA+PiDCoGNvZGVjIHN1cHBvcnQuCj4+IMKgPj4KPj4g
-wqA+PiDCoMKgZHJpdmVycy9kbWEvS2NvbmZpZyB8IDIgKy0KPj4gwqA+PiDCoMKgMSBmaWxlIGNo
-YW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCj4+IMKgPj4KPj4gwqA+PiDCoGRp
-ZmYgLS1naXQgYS9kcml2ZXJzL2RtYS9LY29uZmlnIGIvZHJpdmVycy9kbWEvS2NvbmZpZwo+PiDC
-oD4+IMKgaW5kZXggMGQ2YTk2ZWU5ZmM3Li5kMDFkNTk4MTJjZjMgMTAwNjQ0Cj4+IMKgPj4gwqAt
-LS0gYS9kcml2ZXJzL2RtYS9LY29uZmlnCj4+IMKgPj4gwqArKysgYi9kcml2ZXJzL2RtYS9LY29u
-ZmlnCj4+IMKgPj4gwqBAQCAtMTU3LDcgKzE1Nyw3IEBAIGNvbmZpZyBETUFfU1VONEkKPj4gwqA+
-Pgo+PiDCoD4+IMKgwqBjb25maWcgRE1BX1NVTjZJCj4+IMKgPj4gwqDCoMKgwqDCoMKgwqDCoMKg
-wqB0cmlzdGF0ZSAiQWxsd2lubmVyIEEzMSBTb0NzIERNQSBzdXBwb3J0Igo+PiDCoD4+IMKgLSBk
-ZXBlbmRzIG9uIE1BQ0hfU1VONkkgfHwgTUFDSF9TVU44SSB8fCBDT01QSUxFX1RFU1QKPj4gwqA+
-PiDCoCsgZGVwZW5kcyBvbiBNQUNIX1NVTjZJIHx8IE1BQ0hfU1VOOEkgfHwgKEFSTTY0ICYmIEFS
-Q0hfU1VOWEkpIHx8IENPTVBJTEVfVEVTVAo+PiDCoD4KPj4gwqA+IERvIHdlIHJlYWxseSBuZWVk
-IEFSTTY0IGhlcmU/IGFsc28gbG9va2luZyBhdCBvdGhlcnMgSSB3b25kZXIgd2h5IGlzbid0Cj4+
-IMKgPiB0aGlzIE1BQ0hfU1VOWEkuLi4/Cj4+Cj4+IMKgWW91IG1lYW4gZGlyZWN0bHkgcGxhY2Ug
-IkFSQ0hfU1VOWEkiIGhlcmU/Cj4+Cj4+IMKgU1VONEkvU1VONUkvU1VON0kgZG8gbm90IHVzZSBE
-TUFfU1VONkksIHRoZXkgaGF2ZSBkaWZmZXJlbnQgRE1BCj4+IMKgY29udHJvbGxlcnMuCj4KPiBO
-byBteSBxdWVzdGlvbiB3YXMgZGlmZmVyZW50Li4KPgo+IFdlIGhhdmUgTUFDSF9TVU54eCBmb3Ig
-NkkgYW5kIDhJLCBzbyB3aHkgZG8gd2UgaGF2ZSBBUkNIX1NVTlhJIGFuZCBpZiBpdHMgYW4KPiBh
-cmNoIFNVTlhJLCBYIG1lYW5zIGl0IGNhbiB0YWtlIGFueSB2YWx1ZS4uLgo+Cj4gVGhpcyBzY2hl
-bWEgbG9va3MgcHJldHR5IGNvbmZ1c2luZyB3aGlsZSByZWFkaW5nCgpJdCdzIGEgd2VpcmQgc2No
-ZW1hIG1hZGUgYnkgdGhlIHZlbmRvci4KCj4gQWxzbyBJIGhhZCBhIHF1ZXN0aW9uIG9uIHVzYWdl
-IG9mIEFSTTY0Li4KCkZvciBBUk02NCwgd2UgaGF2ZSBubyBNQUNIX1NVTjUwSSwgYXMgdGhlIG9u
-bHkgQVJNNjQtY2FwYWJsZSBzZXJpZXMgaW4gU1VOWEkKaXMgU1VONTBJLiBTbyBJIHVzZSAoQVJN
-NjQgJiYgQVJDSF9TVU5YSSkgaGVyZSB0byByZXByZXNlbnQgIk1BQ0hfU1VONTBJIi4KClAuUy4g
-QWxsd2lubmVyIGhhdmUgc3VuNGkoQTEwKSwgc3VuNWkoQTEzL0ExMHMvR1I4KSwgc3VuNmkoQTMx
-L0EzMXMpLCBzdW43aShBMjApLApzdW44aShBMjMvQTMzL0gzL1Yzcy9BODNUKSwgc3VuOWkoQTgw
-KSwgc3VuNTBpKEE2NC9INSkuIEZyb20gdGhlIHN1bjZpCmdlbmVyYXRpb24sIHRoaW5ncyBjaGFu
-Z2VkIGEgbG90OyBob3dldmVyLCBzdW43aSBpcyBhIGRlcml2YXRpb24gb2Ygc3VuNGkuIEluIFUt
-Qm9vdCwKZXZlcnkgU29DIGFmdGVyIHN1bjZpIChleGNlcHQgc3VuN2kpIGhhdmUgYW4gb3B0aW9u
-IENPTkZJR19HRU5fU1VONkkuCgpUaGlzIERNQWVuZ2luZSBkcml2ZXIgaXMgZm9yIHRoZSBuZXcg
-Z2VuZXJhdGlvbiBETUEgZW5naW5lLgoKU1VONEksIFNVTjVJIGFuZCBTVU43SSBoYXZlIG5vIGhh
-cmR3YXJlIHRoYXQgdXNlcyBzdWNoIGEgRE1BZW5naW5lLCBzbyBoZXJlJ3MKTUFDSF9TVU42SSB8
-fCBNQUNIX1NVTjhJIHx8IChBUk02NCAmJiBBUkNIX1NVTlhJKSwgdG8gcHJldmVudCBpdCB0byBi
-ZSBidWlsdAppbiBhIGtlcm5lbCB0aGF0IGRvIG5vdCBzdXBwb3J0IGFueSBzeXN0ZW0gd2l0aCBz
-dWNoIGEgRE1BZW5naW5lLgoKPgo+IC0tCj4gflZpbm9kCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2
-ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxt
-YW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+Hi Baoyou,
+
+This version looks better - just a couple of comments below on things I didn't
+notice before.
+
+On Thu, Feb 02, 2017 at 05:16:35PM +0800, Baoyou Xie wrote:
+> This patch adds watchdog controller driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig      |  10 ++
+>  drivers/watchdog/Makefile     |   1 +
+>  drivers/watchdog/zx2967_wdt.c | 274 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 285 insertions(+)
+>  create mode 100644 drivers/watchdog/zx2967_wdt.c
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index acb00b5..05093a2 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called aspeed_wdt.
+>  
+> +config ZX2967_WATCHDOG
+> +	tristate "ZTE zx2967 SoCs watchdog support"
+> +	depends on ARCH_ZX
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  in ZTE zx2967 SoCs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called zx2967_wdt.
+> +
+>  # AVR32 Architecture
+>  
+>  config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0c3d35e..bf2d296 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+>  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+> +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+>  
+>  # AVR32 Architecture
+>  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
+> new file mode 100644
+> index 0000000..818f17e
+> --- /dev/null
+> +++ b/drivers/watchdog/zx2967_wdt.c
+> @@ -0,0 +1,274 @@
+> +/*
+> + * watchdog driver for ZTE's zx2967 family
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define ZX2967_WDT_CFG_REG			0x4
+> +#define ZX2967_WDT_LOAD_REG			0x8
+> +#define ZX2967_WDT_REFRESH_REG			0x18
+> +#define ZX2967_WDT_START_REG			0x1c
+> +
+> +#define ZX2967_WDT_REFRESH_MASK			0x3f
+> +
+> +#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
+> +#define ZX2967_WDT_START_EN			0x1
+> +
+> +#define ZX2967_WDT_WRITEKEY			0x12340000
+> +
+> +#define ZX2967_WDT_DIV_DEFAULT			16
+> +#define ZX2967_WDT_DEFAULT_TIMEOUT		32
+> +#define ZX2967_WDT_MIN_TIMEOUT			1
+> +#define ZX2967_WDT_MAX_TIMEOUT			524
+> +#define ZX2967_WDT_MAX_COUNT			0xffff
+> +
+> +#define ZX2967_WDT_CLK_FREQ			0x8000
+> +
+> +#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
+> +
+> +struct zx2967_wdt {
+> +	struct watchdog_device	wdt_device;
+> +	void __iomem		*reg_base;
+> +	struct clk		*clock;
+> +};
+> +
+> +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+> +{
+> +	return readl_relaxed(wdt->reg_base + reg);
+> +}
+> +
+> +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
+> +{
+> +	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+
+I fail to understand the reason behind OR'ing values written to every register
+with ZX2967_WDT_WRITEKEY (apologies if this was already discussed), especially
+since 'val' is a u32.
+
+A mask of 0x12340000 definitely looks odd to me.  Something like 0x0003ffff
+would have been understandable.  I also worry that any value greater than
+0x3ffff will be corrupted when being OR'ed with ZX2967_WDT_WRITEKEY.
+
+> +}
+> +
+> +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
+> +	val ^= ZX2967_WDT_REFRESH_MASK;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
+
+Same thing here... Why is an XOR operation needed?  Please add good
+comments in the code when doing things like that.  Again, apologies if you
+already answered this question.
+
+> +}
+> +
+> +static int
+> +zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
+> +	unsigned int count;
+> +
+> +	count = timeout * ZX2967_WDT_CLK_FREQ;
+> +	if (count > divisor * ZX2967_WDT_MAX_COUNT)
+> +		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
+> +	count = DIV_ROUND_UP(count, divisor);
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
+> +	zx2967_wdt_refresh(wdt);
+> +	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val |= ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
+> +}
+> +
+> +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val &= ~ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
+> +}
+> +
+> +static int zx2967_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_set_timeout(wdd, wdd->timeout);
+> +	__zx2967_wdt_start(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	__zx2967_wdt_stop(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_refresh(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +#define ZX2967_WDT_OPTIONS \
+> +	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
+> +static const struct watchdog_info zx2967_wdt_ident = {
+> +	.options          =     ZX2967_WDT_OPTIONS,
+> +	.identity         =	"zx2967 watchdog",
+> +};
+> +
+> +static struct watchdog_ops zx2967_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = zx2967_wdt_start,
+> +	.stop = zx2967_wdt_stop,
+> +	.ping = zx2967_wdt_keepalive,
+> +	.set_timeout = zx2967_wdt_set_timeout,
+> +};
+> +
+> +static void zx2967_wdt_reset_sysctrl(struct device *dev)
+> +{
+> +	int ret;
+> +	void __iomem *regmap;
+> +	unsigned int offset, mask, config;
+> +	struct of_phandle_args out_args;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(dev->of_node,
+> +			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
+> +	if (ret)
+> +		return;
+> +
+> +	offset = out_args.args[0];
+> +	config = out_args.args[1];
+> +	mask = out_args.args[2];
+> +
+> +	regmap = syscon_node_to_regmap(out_args.np);
+> +	if (IS_ERR(regmap)) {
+> +		of_node_put(out_args.np);
+> +		return;
+> +	}
+> +
+> +	regmap_update_bits(regmap, offset, mask, config);
+> +	of_node_put(out_args.np);
+> +}
+> +
+> +static int zx2967_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct zx2967_wdt *wdt;
+> +	struct resource *base;
+> +	int ret;
+> +	struct reset_control *rstc;
+> +
+> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +
+> +	wdt->wdt_device.info = &zx2967_wdt_ident;
+> +	wdt->wdt_device.ops = &zx2967_wdt_ops;
+> +	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
+> +	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
+> +	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
+> +	wdt->wdt_device.parent = &pdev->dev;
+> +
+> +	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->reg_base = devm_ioremap_resource(dev, base);
+> +	if (IS_ERR(wdt->reg_base)) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		return PTR_ERR(wdt->reg_base);
+> +	}
+> +
+> +	zx2967_wdt_reset_sysctrl(dev);
+> +
+> +	wdt->clock = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(wdt->clock)) {
+> +		dev_err(dev, "failed to find watchdog clock source\n");
+> +		return PTR_ERR(wdt->clock);
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
+> +
+> +	rstc = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(rstc)) {
+> +		dev_err(dev, "failed to get rstc");
+> +		ret = PTR_ERR(rstc);
+> +		goto err;
+> +	}
+> +
+> +	reset_control_assert(rstc);
+> +	reset_control_deassert(rstc);
+
+Much better.
+
+> +
+> +	watchdog_set_drvdata(&wdt->wdt_device, wdt);
+> +	watchdog_init_timeout(&wdt->wdt_device,
+> +			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
+> +	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
+> +
+> +	ret = watchdog_register_device(&wdt->wdt_device);
+> +	if (ret)
+> +		goto err;
+> +
+> +	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
+> +		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
+> +
+> +	return 0;
+> +
+> +err:
+> +	clk_disable_unprepare(wdt->clock);
+> +	return ret;
+> +}
+> +
+> +static int zx2967_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdt_device);
+> +	clk_disable_unprepare(wdt->clock);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_wdt_match[] = {
+> +	{ .compatible = "zte,zx296718-wdt", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
+> +
+> +static struct platform_driver zx2967_wdt_driver = {
+> +	.probe		= zx2967_wdt_probe,
+> +	.remove		= zx2967_wdt_remove,
+> +	.driver		= {
+> +		.name	= "zx2967-wdt",
+> +		.of_match_table	= of_match_ptr(zx2967_wdt_match),
+> +	},
+> +};
+> +module_platform_driver(zx2967_wdt_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
