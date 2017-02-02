@@ -1,197 +1,100 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
- i2c-mux-simple bindings
-Date: Thu, 2 Feb 2017 10:08:19 -0600
-Message-ID: <CAL_JsqLCdM5s8FYqys-m5wpr4QeeE-rQaRXCt+rjQz3qm+E2qA@mail.gmail.com>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-8-git-send-email-peda@axentia.se> <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
- <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se> <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA@mail.gmail.com>
- <cdc958c3-2496-be52-6407-bf9aefdfa965@axentia.se>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
+Date: Thu, 2 Feb 2017 18:16:38 +0200
+Message-ID: <20170202181357-mutt-send-email-mst@kernel.org>
+References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
+ <20170201195732-mutt-send-email-mst@kernel.org>
+ <20170201182659.GM8177@arm.com>
+ <20170201210648-mutt-send-email-mst@kernel.org>
+ <20170202112614.GB30577@arm.com>
+ <bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <cdc958c3-2496-be52-6407-bf9aefdfa965@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 1:36 AM, Peter Rosin <peda@axentia.se> wrote:
-> On 2017-01-30 18:20, Rob Herring wrote:
->> On Sat, Jan 28, 2017 at 4:42 PM, Peter Rosin <peda@axentia.se> wrote:
->>> On 2017-01-27 20:39, Rob Herring wrote:
->>>> On Wed, Jan 18, 2017 at 04:57:10PM +0100, Peter Rosin wrote:
->>>>> Describe how a generic multiplexer controller is used to mux an i2c bus.
->>>>>
->>>>> Acked-by: Jonathan Cameron <jic23@kernel.org>
->>>>> Signed-off-by: Peter Rosin <peda@axentia.se>
->>>>> ---
->>>>>  .../devicetree/bindings/i2c/i2c-mux-simple.txt     | 81 ++++++++++++++++++++++
->>>>>  1 file changed, 81 insertions(+)
->>>>>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>>> new file mode 100644
->>>>> index 000000000000..253d5027843b
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/i2c/i2c-mux-simple.txt
->>>>> @@ -0,0 +1,81 @@
->>>>> +Simple I2C Bus Mux
->>>>> +
->>>>> +This binding describes an I2C bus multiplexer that uses a mux controller
->>>>> +from the mux subsystem to route the I2C signals.
->>>>> +
->>>>> +                                  .-----.  .-----.
->>>>> +                                  | dev |  | dev |
->>>>> +    .------------.                '-----'  '-----'
->>>>> +    | SoC        |                   |        |
->>>>> +    |            |          .--------+--------'
->>>>> +    |   .------. |  .------+    child bus A, on MUX value set to 0
->>>>> +    |   | I2C  |-|--| Mux  |
->>>>> +    |   '------' |  '--+---+    child bus B, on MUX value set to 1
->>>>> +    |   .------. |     |    '----------+--------+--------.
->>>>> +    |   | MUX- | |     |               |        |        |
->>>>> +    |   | Ctrl |-|-----+            .-----.  .-----.  .-----.
->>>>> +    |   '------' |                  | dev |  | dev |  | dev |
->>>>> +    '------------'                  '-----'  '-----'  '-----'
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: i2c-mux-simple,mux-locked or i2c-mux-simple,parent-locked
->>>>
->>>> Not a fan of using "simple" nor the ','. Perhaps lock type should be
->>>> separate property.
->>>
->>> How about just i2c-mux for the compatible? Because i2c-mux-mux (which
->>> follows the naming of previous i2c muxes) looks really stupid. Or
->>> perhaps i2c-mux-generic?
->>
->> I like "generic" only slightly more than "simple". :)
->>
->> If the mux is gpio controlled, then it should still be called
->> i2c-gpio-mux. Let's not invent brand new bindings when current ones
->> are easily extended. We already have pretty generic names here, let's
->> not make them more generic.
->
-> Ahh, but the whole point of this new driver is that it does not know
-> if the mux is gpio controlled, if it is controlled by an adg792 chip
-> or whatever might appear down the line. So, I think i2c-mux-gpio (and
-> i2c-gpio-mux) is actively wrong.
+On Thu, Feb 02, 2017 at 01:34:03PM +0000, Robin Murphy wrote:
+> On 02/02/17 11:26, Will Deacon wrote:
+> > On Wed, Feb 01, 2017 at 09:19:22PM +0200, Michael S. Tsirkin wrote:
+> >> On Wed, Feb 01, 2017 at 06:27:09PM +0000, Will Deacon wrote:
+> >>> On Wed, Feb 01, 2017 at 08:09:21PM +0200, Michael S. Tsirkin wrote:
+> >>>> I'd like to do that instead. It's fastboot doing the unreasonable thing
+> >>>> here and deviating from what every other legacy device without exception
+> >>>> did for years. If this means fastboot will need to update to virtio 1,
+> >>>> all the better.
+> >>>
+> >>> The problem still exists with virtio 1, unless we require that the
+> >>> "dma-coherent" property is set/unset correctly when VIRTIO_F_IOMMU_PLATFORM
+> >>> is advertised by the device (which is what I suggested in my reply).
+> >>
+> >> I'm not ignoring that, but I need to understand that part a bit better.
+> >> I'll reply to that patch in a day or two after looking at how _CCA is
+> >> supposed to work.
+> > 
+> > Thanks. I do think that whatever solution we come up with for virtio 1
+> > should influence what we do for legacy.
+> > 
+> >>> We can't detect the fastmodel,
+> >>
+> >> Surely, it puts a hardware id somewhere? I think you mean
+> >> fastmodel isn't always affected, right?
+> > 
+> > I don't think there's a hardware ID. The thing is, the fastmodel is a
+> > toolkit for building all sorts of platforms: you can chop and change
+> > the CPUs, the peripherals, the memory, the interrupt controller, the
+> > interconnect etc. Pretty much everything can be customised. So, for
+> > any fastmodel configuration that places virtio upstream of the SMMU
+> > (which is common, because virtio is one of the few DMA-capable peripherals
+> > that the fastmodel supports), we need to do something special.
+> > 
+> >> I'd like to see basically
+> >>
+> >> if (fastmodel)
+> >> 	a pile of special work-arounds
+> >> else
+> >> 	not less hacky but more common virtio work-arounds
+> >>
+> >> :)
+> >>
+> >> And then I can apply whatever comes from @arm.com and not
+> >> worry about breaking actual hardware.
+> > 
+> > What we could do is call iommu_group_get(&vdev->dev) for legacy
+> 
+> Actually, that should be vdev->dev.parent - I'm now not sure quite what
+> I managed to successfully test yesterday, but apparently it wasn't this
+> patch :(
+> 
+> > devices if CONFIG_ARM64. If that returns non-NULL, then we know that
+> > the device is upstream of an SMMU, which means it must be the fastmodel.
+> 
+> We can boot 32-bit kernels on models, so I'd be inclined to keep
+> CONFIG_ARM included, but I do tend to agree that explicitly checking for
+> an IOMMU is probably the cleanest approach if we reposition this as a
+> more specific quirk. I'll split apart the "Fast Models are wacky" vs.
+> "uh-oh device coherency" aspects and spin a v2 so that we can
+> (hopefully) sort the regression out ASAP.
+> 
+> Robin.
+> 
+> > 
+> > Will
+> > 
 
-That's fine for the driver, but the DT bindings should reflect the
-h/w. Be happy that i2c-gpio-mux is allowed. I could easily say it
-needs to be actual part numbers for compatible strings.
+I still think the right thing to do for this platform is to add an API
+for driver to say "disable protection for this device and allow
+this device 1:1 access to all memory".  This
+would make both platforms which bypass the iommu and platforms that
+don't happy as PA == dma address.
 
-How is it okay that we now have 2 drivers for the same thing: the
-i2c-gpio-mux driver and this i2c mux-controller driver with a gpio
-mux-controller driver. I'm surprised Wolfram is okay with that.
-
-> This new driver is in fact an i2c-mux driver that (in this aspect) is more
-> generic than any of the existing i2c-mux drivers, hence my suggestion.
-
-If it is more generic, then it should be able to replace existing drivers.
-
-> If you see this new driver as something that is superseding the existing
-> i2c-mux-gpio driver, I'm sad to inform you that the code is not simply
-> not there. i2c-mux-gpio has acpi support and users may provide platform
-> data from code. The existing i2c-mux-gpio driver also has the below
-> mentioned locking heuristic. Adding all those things to the new driver
-> would make it big and unwieldy and having even more unwanted tentacles
-> into other subsystems. And why should it be only i2c-mux-gpio that is
-> merged into this new i2c-mux driver? Why not implement a mux-pinctrl
-> driver for the new mux subsustem and then merge i2c-mux-pinctrl as well?
-> I say no, that way lies madness.
-
-Sounds like a good idea to me. I'm not saying you need to merge any of
-them right now though (that's Wolfram's call).
-
-None of this has anything to do with the binding though. Compatible
-strings should be specific. That's not up for debate. Whether the
-driver bound to a compatible string is common or specific to that
-compatible string is completely up to the OS. That decision can change
-over time, but the binding should not.
-
->>> I'm also happy to have the lock type as a separate property. One lock
->>> type, e.g. parent-locked, could be the default and adding a 'mux-locked'
->>> property could change that. Would that be ok?
->>
->> I prefer this. Then existing bindings can use it.
->>
->>> Or should it be a requirement that one of 'mux-locked'/'parent-locked'
->>> is always present?
->>
->> I would make it boolean and make not present be the more common case.
->> Not present could also mean determined via other means as you have
->> today with existing bindings. Maybe then you need both properties.
->
-> Ok. Lets define that every type of i2c-mux have a default locking.
-> If no property is found that overrides this default, a heuristic may
-> be applied that is only allowed to very defensively use non-default
-> locking (like the current heuristics in i2c-mux-gpio/i2c-mux-pinctrl
-> attempt to do, they only adjust the locking for impossible cases that
-> would invariably lead to a deadlock with the default locking). Then,
-> there should never exist a need to enforce the default locking with
-> a property.
->
-> And given that no current i2c-mux that is mux-locked by default even
-> have the ability to be parent-locked, there is (currently) no need
-> for more than a bool 'mux-locked' property.
-
-Okay, good.
-
->>>> I'm not sure I get the mux vs. parent locked fully. How do I determine
->>>> what type I have? We already have bindings for several types of i2c
->>>> muxes. How does the locking annotation fit into those?
->>>
->>> We have briefly discussed this before [1] in the context of i2c-mux-gpio
->>> and i2c-mux-pinctrl, when I added the mux-locked/parent-locked distinction
->>> to the i2c-mux infrastructure (it wasn't named mux-locked/parent-locked
->>> way back then though). There is more detail on what the difference is
->>> between the two in Documentation/i2c/i2c-topology.
->>>
->>> Side note regarding your remark "use an I2C controlled mux instead"; it
->>> appears that I'm not alone [2] with this kind of requirement...
->>>
->>> [1] https://lkml.org/lkml/2016/1/6/437
->>> [2] http://marc.info/?t=147877959100002&r=1&w=2
->>>
->>> But, now that I have pondered on this for a year or so, I firmly
->>> believe it was a mistake to have the code in i2c-mux-gpio and
->>> i2c-mux-pinctrl automatically try to deduce if the mux should be
->>> mux-locked or parent-locked. It might be easy to make that call
->>> in some trivial cases, but it is not difficult to dream up
->>> scenarios where it would be extremely hard for the code to get
->>> this decision right. It's just fragile. But now we have code in
->>> those two muxes that has unwanted tentacles into the guts of the
->>> gpio and pinctrl subsystems. Hopefully those unwanted tentacles
->>> can be replaced with something based on device links? However, it
->>> is still not hard to come up with scenarios that will require
->>> manual intervention in order to select the right kind of i2c mux
->>> locking. So, I fear that we have inadequate code trying to make a
->>> decision automatically, and that we at some point down the line
->>> will have some impossible case needing a binding that trumps the
->>> heuristic. Why have a heuristic at all in that case? In short, it
->>> should have been a binding from the start, methinks.
->>>
->>> That was a long rant regarding i2c-mux-gpio and i2c-mux-pinctrl.
->>> I obviously think it is bad to have this new i2c mux go in the
->>> same direction as those two drivers. I.e. I think a binding that
->>> specifies the desired locking is preferable to any attempted
->>> heuristic.
->>
->> Having a separate, common property(ies) for these would solve this then.
->
-> Yep, the plan is now to make this new i2c-mux parent-locked by default
-> and then look for an optional mux-locked property, thus eliminating the
-> comma and the suffix in the compatible string, leaving only whatever is
-> eventually picked from 'i2c-mux-simple', 'i2c-mux', 'i2c-mux-generic' and
-> 'i2c-mux-whatever'.
->
-> Do I need to re-document the mux-locked/parent-locked difference? I.e.,
-> is it enough to refer to Documentation/i2c/i2c-topology, or does the
-> Documentation/devicetree subdir need to self-contained?
-
-We do try to keep things self contained, but I'm okay with not
-duplicating everything in the binding. Just try to summarize what
-mux-locked means.
-
-Rob
+-- 
+MST
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
