@@ -1,14 +1,15 @@
 From: James Liao <jamesjj.liao@mediatek.com>
-Subject: Re: [PATCH 1/2] Documentation: devicetree: change the mediatek
- ethernet compatible string
-Date: Thu, 2 Feb 2017 13:07:07 +0800
-Message-ID: <1486012027.25978.0.camel@mtksdaap41>
+Subject: Re: [PATCH 2/2] net-next: ethernet: mediatek: change the compatible
+ string
+Date: Thu, 2 Feb 2017 13:07:29 +0800
+Message-ID: <1486012049.25978.1.camel@mtksdaap41>
 References: <1485332455-34743-1-git-send-email-john@phrozen.org>
+         <1485332455-34743-2-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1485332455-34743-1-git-send-email-john@phrozen.org>
+In-Reply-To: <1485332455-34743-2-git-send-email-john@phrozen.org>
 Sender: netdev-owner@vger.kernel.org
 To: John Crispin <john@phrozen.org>
 Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
@@ -31,19 +32,19 @@ On Wed, 2017-01-25 at 09:20 +0100, John Crispin wrote:
 Acked-by: James Liao <jamesjj.liao@mediatek.com>
 
 > ---
->  Documentation/devicetree/bindings/net/mediatek-net.txt |    2 +-
+>  drivers/net/ethernet/mediatek/mtk_eth_soc.c |    2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
-> index c010faf..c7194e8 100644
-> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
-> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
-> @@ -7,7 +7,7 @@ have dual GMAC each represented by a child node..
->  * Ethernet controller node
+> diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> index 25ae0c5..9e75768 100644
+> --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+> @@ -2515,7 +2515,7 @@ static int mtk_remove(struct platform_device *pdev)
+>  }
 >  
->  Required properties:
-> -- compatible: Should be "mediatek,mt7623-eth"
-> +- compatible: Should be "mediatek,mt2701-eth"
->  - reg: Address and length of the register set for the device
->  - interrupts: Should contain the three frame engines interrupts in numeric
->  	order. These are fe_int0, fe_int1 and fe_int2.
+>  const struct of_device_id of_mtk_match[] = {
+> -	{ .compatible = "mediatek,mt7623-eth" },
+> +	{ .compatible = "mediatek,mt2701-eth" },
+>  	{},
+>  };
+>  MODULE_DEVICE_TABLE(of, of_mtk_match);
