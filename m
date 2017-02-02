@@ -1,70 +1,63 @@
-From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: [PATCHv2] ARM: dts: Add EMAC AXI settings for Arria10
-Date: Thu,  2 Feb 2017 16:05:21 -0600
-Message-ID: <1486073121-3364-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dinh.nguyen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Thu, 2 Feb 2017 22:29:25 +0000
+Message-ID: <20170202222925.GW27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170202172245.GT27312@n2100.armlinux.org.uk>
+ <20170202175600.GU27312@n2100.armlinux.org.uk>
+ <4815b9c8-782a-ac67-d296-c4acb296d849@gmail.com>
+ <20170202185826.GV27312@n2100.armlinux.org.uk>
+ <2e1cf096-ecb8-ba3d-a554-f4cc6999ed4e@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <2e1cf096-ecb8-ba3d-a554-f4cc6999ed4e@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, Steve Longerbeam <steve_longerbeam@mentor.com>, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, p.zabel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, laurent.pinchart+renesas@ideasonboard.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On Thu, Feb 02, 2017 at 11:12:41AM -0800, Steve Longerbeam wrote:
+> Here is the current .queue_setup() op in imx-media-capture.c:
+> 
+> static int capture_queue_setup(struct vb2_queue *vq,
+>                                unsigned int *nbuffers,
+>                                unsigned int *nplanes,
+>                                unsigned int sizes[],
+>                                struct device *alloc_devs[])
+> {
+>         struct capture_priv *priv = vb2_get_drv_priv(vq);
+>         struct v4l2_pix_format *pix = &priv->vdev.fmt.fmt.pix;
+>         unsigned int count = *nbuffers;
+> 
+>         if (vq->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>                 return -EINVAL;
+> 
+>         if (*nplanes) {
+>                 if (*nplanes != 1 || sizes[0] < pix->sizeimage)
+>                         return -EINVAL;
+>                 count += vq->num_buffers;
+>         }
+> 
+>         while (pix->sizeimage * count > VID_MEM_LIMIT)
+>                 count--;
 
-Add the device tree entries needed to support the EMAC AXI
-bus settings on the Arria10 SoCFPGA chip.
+That's a weird way of writing:
 
-Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
-v2 Add the AXI configuration to the other DW EMACs in the chip.
----
- arch/arm/boot/dts/socfpga_arria10.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+	unsigned int max_num = VID_MEM_LIMIT / pix->sizeimage;
+	count = max(count, max_num);
 
-diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
-index f520cbf..9abc7d8 100644
---- a/arch/arm/boot/dts/socfpga_arria10.dtsi
-+++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
-@@ -400,6 +400,12 @@
- 				};
- 		};
- 
-+		socfpga_axi_setup: stmmac-axi-config {
-+			snps,wr_osr_lmt = <0xf>;
-+			snps,rd_osr_lmt = <0xf>;
-+			snps,blen = <0 0 0 0 16 0 0>;
-+		};
-+
- 		gmac0: ethernet@ff800000 {
- 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
- 			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
-@@ -416,6 +422,7 @@
- 			clock-names = "stmmaceth";
- 			resets = <&rst EMAC0_RESET>;
- 			reset-names = "stmmaceth";
-+			snps,axi-config = <&socfpga_axi_setup>;
- 			status = "disabled";
- 		};
- 
-@@ -435,6 +442,7 @@
- 			clock-names = "stmmaceth";
- 			resets = <&rst EMAC1_RESET>;
- 			reset-names = "stmmaceth";
-+			snps,axi-config = <&socfpga_axi_setup>;
- 			status = "disabled";
- 		};
- 
-@@ -452,6 +460,7 @@
- 			rx-fifo-depth = <16384>;
- 			clocks = <&l4_mp_clk>;
- 			clock-names = "stmmaceth";
-+			snps,axi-config = <&socfpga_axi_setup>;
- 			status = "disabled";
- 		};
- 
 -- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
