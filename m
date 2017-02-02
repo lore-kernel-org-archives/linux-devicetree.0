@@ -1,38 +1,52 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 3/6] async_tx: Handle DMA devices having support for fewer
- PQ coefficients
-Date: Wed, 1 Feb 2017 22:01:13 -0800
-Message-ID: <CAPcyv4gBFu7skx_8cvsaL0sL5=44DMcWY_EjWSCfaNd8oh=Svw@mail.gmail.com>
-References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com> <1486010836-25228-4-git-send-email-anup.patel@broadcom.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] phy: Add USB3 PHY support for Broadcom NSP SoC
+Date: Thu, 2 Feb 2017 07:48:35 +0100
+Message-ID: <6be62ef6-e90c-b5f8-adcd-0ea62ab73ced@gmail.com>
+References: <1484669670-4201-4-git-send-email-yendapally.reddy@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1486010836-25228-4-git-send-email-anup.patel@broadcom.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1484669670-4201-4-git-send-email-yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2017 at 8:47 PM, Anup Patel <anup.patel@broadcom.com> wrote:
-> The DMAENGINE framework assumes that if PQ offload is supported by a
-> DMA device then all 256 PQ coefficients are supported. This assumption
-> does not hold anymore because we now have BCM-SBA-RAID offload engine
-> which supports PQ offload with limited number of PQ coefficients.
->
-> This patch extends async_tx APIs to handle DMA devices with support
-> for fewer PQ coefficients.
->
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> ---
->  crypto/async_tx/async_pq.c          |  3 +++
->  crypto/async_tx/async_raid6_recov.c | 12 ++++++++++--
->  include/linux/dmaengine.h           | 19 +++++++++++++++++++
->  include/linux/raid/pq.h             |  3 +++
->  4 files changed, 35 insertions(+), 2 deletions(-)
+[Resending with fixed/complete Cc-s]
 
-So, I hate the way async_tx does these checks on each operation, and
-it's ok for me to say that because it's my fault. Really it's md that
-should be validating engine offload capabilities once at the beginning
-of time. I'd rather we move in that direction than continue to pile
-onto a bad design.
+On Tue, 17 Jan 2017 11:14:29 -0500, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:> This patch adds support for Broadcom NSP USB3 PHY
+ >
+ > Signed-off-by: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+
+Seriously?! I really dislike what you did there.
+
+NACK.
+
+You are aware this block is common for both: Northstar and Northstar Plus and
+we already have phy-bcm-ns-usb3.c! In fact Jon told me to rewrite my initial
+driver to make is possible to reuse it on NSP and I did that!
+
+This is old comment from Jon:
+
+In 30 March 2016 at 23:31, Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+ > On Mon, Mar 28, 2016 at 9:46 PM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+ > wrote:
+ >>
+ >> CC: bcm-kernel-feedback-list, Jon
+ >
+ >
+ > This is a common IP block with NSP.  I believe with some minor changes it
+ > can support both.  Please allow me 1-2 days to look at these in more detail
+ > and see if I can get these patches working on NSP.
+
+Please start using existing code instead of inventing everything from the
+scratch internally at Broadcom. You did the same thing with (Q)SPI driver.
+
+
+This driver duplicates phy-bcm-ns-usb3.c and should have not been accepted. I
+strongly suggest *reverting* it and adjusting existing driver if needed.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
