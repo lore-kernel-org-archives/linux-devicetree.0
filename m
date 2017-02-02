@@ -1,280 +1,179 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH V6 2/5] PCI: Adapt pci_register_io_range() for indirect-IO
- and PCI I/O translation
-Date: Fri, 3 Feb 2017 00:00:20 +0100
-Message-ID: <CAJZ5v0ghZ-DHoBCJNX39A3EK1ogAO7Au4sZu37aCUTz1p9sy3A@mail.gmail.com>
-References: <1485241525-201782-1-git-send-email-yuanzhichang@hisilicon.com>
- <1485241525-201782-3-git-send-email-yuanzhichang@hisilicon.com> <068bbe37-42f4-e245-f900-c639c68404b9@huawei.com>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
+ property
+Date: Fri, 3 Feb 2017 00:00:46 +0100
+Message-ID: <aa97923a-d46c-ad90-a96a-0017129daeb8@gmail.com>
+References: <20170120215605.15728-1-zajec5@gmail.com>
+ <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
+ <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
+ <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
+ <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
+ <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
+ <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
+ <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com>
+ <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
+ <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com>
+ <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
+ <f5cd17e7-2560-acdd-79c6-7dc1b0988e73@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <068bbe37-42f4-e245-f900-c639c68404b9@huawei.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: John Garry <john.garry@huawei.com>
-Cc: "zhichang.yuan" <yuanzhichang@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, brian.starkey@arm.com, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxarm@huawei.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>linux
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <f5cd17e7-2560-acdd-79c6-7dc1b0988e73@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 2, 2017 at 6:36 PM, John Garry <john.garry@huawei.com> wrote:
-> Hi Rafael,
+On 02/02/2017 09:44 PM, Jacek Anaszewski wrote:
+> On 02/01/2017 10:55 PM, Rafał Miłecki wrote:
+>> On 02/01/2017 10:26 PM, Jacek Anaszewski wrote:
+>>> On 02/01/2017 04:56 PM, Rafał Miłecki wrote:
+>>>> On 01/31/2017 10:34 PM, Jacek Anaszewski wrote:
+>>>>> On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
+>>>>>> Thanks a lot Jacek for this explanation (and sorry but I needed a
+>>>>>> bit of
+>>>>>> time to
+>>>>>> think about this). I can finally see your point, I think we're on the
+>>>>>> same page
+>>>>>> now.
+>>>>>>
+>>>>>> I think that for all this time I was thinking from the pure DT
+>>>>>> perspective. If
+>>>>>> you ignore fact that Linux has multiple LED trigger drivers, then
+>>>>>> "led-triggers"
+>>>>>> may not sound that bad.
+>>>>>>
+>>>>>> After reading your description however I can see this property can be
+>>>>>> misleading
+>>>>>> as Linux people may think "drivers" when seeing "triggers".
+>>>>>>
+>>>>>> I still think this is a useful property and I hope we can still find a
+>>>>>> way to
+>>>>>> name it in a sane way: to be nice from DT PoV and march Linux LEDs
+>>>>>> subsystem.
+>>>>>
+>>>>> I also see the need for this property.
+>>>>>
+>>>>>> I think we should still work on some generic property (without linux,
+>>>>>> prefix) as
+>>>>>> this seems to be something generic, not really specific to Linux
+>>>>>> implementation.
+>>>>>> Specifying relation between LED and devices is something than AFAICS
+>>>>>> can be
+>>>>>> reused by other systems as well.
+>>>>>>
+>>>>>> So my suggestion is to try some new name & leave linux,default-trigger
+>>>>>> to allow
+>>>>>> specifying one single trigger driver as required by current Linux
+>>>>>> implementation.
+>>>>>>
+>>>>>> What do you think about this?
+>>>>>>
+>>>>>> There are few suggestions to came to my mind:
+>>>>>> "trigger-sources"
+>>>>>> "trigger-devices"
+>>>>>> "led-trigger-devices"
+>>>>>> "led-related-devices"
+>>>>>> "led-event-devices"
+>>>>>
+>>>>> trigger-devices would work in this specific use case,
+>>>>> where we can give phandles to usb ports. Nonetheless, we
+>>>>> have also other kernel based events serving as trigger
+>>>>> sources - e.g. timer.
+>>>>>
+>>>>> In this case I'd go for trigger-sources, but we'd need
+>>>>> to have some generic way of defining the source like timer.
+>>>>
+>>>> I'd leave timer for later discussion but I'm glad you brought this
+>>>> problem.
+>>>> Maybe we could discuss this on another example that is more supported
+>>>> like
+>>>> GPIOs?
+>>>>
+>>>> We know this property allows specifying USB ports and we want it to
+>>>> support
+>>>> mixing various sources. So a very simple sample case seems to be using
+>>>> it for
+>>>> specifying GPIO as trigger source.
+>>>>
+>>>> Is this possible to mix various entries in a list assigned to single
+>>>> property?
+>>>> Let's say:
+>>>> trigger-sources =
+>>>>     <&ohci_port1>,
+>>>>     <&ehci_port1>,
+>>>>     <&gpio 1 GPIO_ACTIVE_HIGH>;
+>>>
+>>> According to my knowledge all elements in the list are elements
+>>> of one array, no matter if they are comma separated or space separated
+>>> in "<>" brackets. DT maintainer would have to confirm that though.
+>>
+>> This matches my knowledge as well.
 >
-> Could you kindly check the minor changes to drivers/acpi/pci_root.c?  It
-> would also be appreciated if you could review the ACPI-relevant parts in
-> lib/extio.c, in [PATCH V5 5/5] LPC: Add the ACPI LPC support
+> Having that, we would be limited to a list of fixed size
+> tuples IMHO.
 
-If you want patches to be reviewed from the ACPI perspective, please
-CC them to linux-acpi.  I'm not the only person who may be interested
-in them.
-
-The change is pci_root.c looks OK to me, but it's Bjorn's call anyway.
-
-Thanks,
-Rafael
+That sounds OK. Now I spent some time thinking about this I think it can work.
+First of all we may need something like #sources-cells to extend our property
+in the future.
+Secondly it should be possible to detect type of phandle node by trying things
+one by one. We should be e.g. able to check is phandle is for GPIO by trying
+of_find_gpiochip_by_xlate.
 
 
-
-> On 24/01/2017 07:05, zhichang.yuan wrote:
+>>>> Is this possible to support this? If so, which function I can use to
+>>>> detect
+>>>> what is pointed by a phandle?
+>>>> I'm not that familiar with DT and I'm not sure how to handle this.
+>>>
+>>> I wonder if this is correct way to go. Maybe we should think of
+>>> creating entirely new trigger mechanism that would allow for having
+>>> multiple active triggers at a time.
 >>
->> After indirect-IO is introduced, system must can assigned indirect-IO
->> devices
->> with logical I/O ranges which are different from those for PCI I/O
->> devices.
->> Otherwise, I/O accessors can't identify whether the I/O port is for memory
->> mapped I/O or indirect-IO.
->> As current helper, pci_register_io_range(), is used for PCI I/O ranges
->> registration and translation, indirect-IO devices should also apply these
->> helpers to manage the I/O ranges. It will be easy to ensure the assigned
->> logical I/O ranges unique.
->> But for indirect-IO devices, there is no cpu address. The current
->> pci_register_io_range() can not work for this case.
->>
->> This patch makes some changes on the pci_register_io_range() to support
->> the
->> I/O range registration with device's fwnode also. After this, the
->> indirect-IO
->> devices can register the device-local I/O range to system logical I/O and
->> easily perform the translation between device-local I/O range and sytem
->> logical I/O range.
->>
->> Signed-off-by: zhichang.yuan <yuanzhichang@hisilicon.com>
->> Signed-off-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->>  drivers/acpi/pci_root.c | 12 +++++-------
->>  drivers/of/address.c    |  8 ++------
->>  drivers/pci/pci.c       | 44 ++++++++++++++++++++++++++++++++++++++++----
->>  include/linux/pci.h     |  7 +++++--
->>  4 files changed, 52 insertions(+), 19 deletions(-)
->>
->> diff --git a/drivers/acpi/pci_root.c b/drivers/acpi/pci_root.c
->> index bf601d4..6cadf05 100644
->> --- a/drivers/acpi/pci_root.c
->> +++ b/drivers/acpi/pci_root.c
->> @@ -730,7 +730,8 @@ static void acpi_pci_root_validate_resources(struct
->> device *dev,
->>         }
->>  }
->>
->> -static void acpi_pci_root_remap_iospace(struct resource_entry *entry)
->> +static void acpi_pci_root_remap_iospace(struct fwnode_handle *node,
->> +                                       struct resource_entry *entry)
->>  {
->>  #ifdef PCI_IOBASE
->>         struct resource *res = entry->res;
->> @@ -739,11 +740,7 @@ static void acpi_pci_root_remap_iospace(struct
->> resource_entry *entry)
->>         resource_size_t length = resource_size(res);
->>         unsigned long port;
->>
->> -       if (pci_register_io_range(cpu_addr, length))
->> -               goto err;
->> -
->> -       port = pci_address_to_pio(cpu_addr);
->> -       if (port == (unsigned long)-1)
->> +       if (pci_register_io_range(node, cpu_addr, length, &port))
->>                 goto err;
->>
->>         res->start = port;
->> @@ -781,7 +778,8 @@ int acpi_pci_probe_root_resources(struct
->> acpi_pci_root_info *info)
->>         else {
->>                 resource_list_for_each_entry_safe(entry, tmp, list) {
->>                         if (entry->res->flags & IORESOURCE_IO)
->> -                               acpi_pci_root_remap_iospace(entry);
->> +
->> acpi_pci_root_remap_iospace(&device->fwnode,
->> +                                                           entry);
->>
->>                         if (entry->res->flags & IORESOURCE_DISABLED)
->>                                 resource_list_destroy_entry(entry);
->> diff --git a/drivers/of/address.c b/drivers/of/address.c
->> index 02b2903..d85d228 100644
->> --- a/drivers/of/address.c
->> +++ b/drivers/of/address.c
->> @@ -2,6 +2,7 @@
->>  #define pr_fmt(fmt)    "OF: " fmt
->>
->>  #include <linux/device.h>
->> +#include <linux/fwnode.h>
->>  #include <linux/io.h>
->>  #include <linux/ioport.h>
->>  #include <linux/module.h>
->> @@ -323,14 +324,9 @@ int of_pci_range_to_resource(struct of_pci_range
->> *range,
->>
->>         if (res->flags & IORESOURCE_IO) {
->>                 unsigned long port;
->> -               err = pci_register_io_range(range->cpu_addr, range->size);
->> +               err = pci_register_io_range(&np->fwnode, range->cpu_addr,
->> range->size, &port);
->>                 if (err)
->>                         goto invalid_range;
->> -               port = pci_address_to_pio(range->cpu_addr);
->> -               if (port == (unsigned long)-1) {
->> -                       err = -EINVAL;
->> -                       goto invalid_range;
->> -               }
->>                 res->start = port;
->>         } else {
->>                 if ((sizeof(resource_size_t) < 8) &&
->> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
->> index a881c0d..5289221 100644
->> --- a/drivers/pci/pci.c
->> +++ b/drivers/pci/pci.c
->> @@ -3241,6 +3241,7 @@ int pci_request_regions_exclusive(struct pci_dev
->> *pdev, const char *res_name)
->>  #ifdef PCI_IOBASE
->>  struct io_range {
->>         struct list_head list;
->> +       struct fwnode_handle *node;
->>         phys_addr_t start;
->>         resource_size_t size;
->>  };
->> @@ -3253,7 +3254,8 @@ struct io_range {
->>   * Record the PCI IO range (expressed as CPU physical address + size).
->>   * Return a negative value if an error has occured, zero otherwise
->>   */
->> -int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
->> +int __weak pci_register_io_range(struct fwnode_handle *node, phys_addr_t
->> addr,
->> +                                resource_size_t size, unsigned long
->> *port)
->>  {
->>         int err = 0;
->>
->> @@ -3261,10 +3263,31 @@ int __weak pci_register_io_range(phys_addr_t addr,
->> resource_size_t size)
->>         struct io_range *range;
->>         resource_size_t allocated_size = 0;
->>
->> +       /*
->> +        * As indirect-IO which support multiple bus instances is
->> introduced,
->> +        * the input 'addr' is probably not page-aligned. If the PCI I/O
->> +        * ranges are registered after indirect-IO, there is risk that the
->> +        * start logical PIO assigned to PCI I/O is not page-aligned.
->> +        * This will cause some I/O subranges are not remapped or
->> overlapped
->> +        * in pci_remap_iospace() handling.
->> +        */
->> +       WARN_ON(addr != IO_RANGE_IOEXT && !(addr & PAGE_MASK));
->> +       /*
->> +        * MMIO will call ioremap, it is better to align size with
->> PAGE_SIZE,
->> +        * then the return linux virtual PIO is page-aligned.
->> +        */
->> +       if (size & PAGE_MASK)
->> +               size = PAGE_ALIGN(size);
->> +
->>         /* check if the range hasn't been previously recorded */
->>         spin_lock(&io_range_lock);
->>         list_for_each_entry(range, &io_range_list, list) {
->> -               if (addr >= range->start && addr + size <= range->start +
->> size) {
->> +               if (node == range->node)
->> +                       goto end_register;
->> +
->> +               if (addr != IO_RANGE_IOEXT &&
->> +                   addr >= range->start &&
->> +                   addr + size <= range->start + size) {
->>                         /* range already registered, bail out */
->>                         goto end_register;
->>                 }
->> @@ -3290,6 +3313,7 @@ int __weak pci_register_io_range(phys_addr_t addr,
->> resource_size_t size)
->>                 goto end_register;
->>         }
->>
->> +       range->node = node;
->>         range->start = addr;
->>         range->size = size;
->>
->> @@ -3297,6 +3321,14 @@ int __weak pci_register_io_range(phys_addr_t addr,
->> resource_size_t size)
->>
->>  end_register:
->>         spin_unlock(&io_range_lock);
->> +
->> +       *port = allocated_size;
->> +#else
->> +       /*
->> +        * powerpc and microblaze have their own registration,
->> +        * just look up the value here
->> +        */
->> +       *port = pci_address_to_pio(addr);
->>  #endif
->>
->>         return err;
->> @@ -3315,7 +3347,9 @@ phys_addr_t pci_pio_to_address(unsigned long pio)
->>
->>         spin_lock(&io_range_lock);
->>         list_for_each_entry(range, &io_range_list, list) {
->> -               if (pio >= allocated_size && pio < allocated_size +
->> range->size) {
->> +               if (range->start != IO_RANGE_IOEXT &&
->> +                       pio >= allocated_size &&
->> +                       pio < allocated_size + range->size) {
->>                         address = range->start + pio - allocated_size;
->>                         break;
->>                 }
->> @@ -3336,7 +3370,9 @@ unsigned long __weak pci_address_to_pio(phys_addr_t
->> address)
->>
->>         spin_lock(&io_range_lock);
->>         list_for_each_entry(res, &io_range_list, list) {
->> -               if (address >= res->start && address < res->start +
->> res->size) {
->> +               if (res->start != IO_RANGE_IOEXT &&
->> +                       address >= res->start &&
->> +                       address < res->start + res->size) {
->>                         addr = address - res->start + offset;
->>                         break;
->>                 }
->> diff --git a/include/linux/pci.h b/include/linux/pci.h
->> index e2d1a12..8d91af8 100644
->> --- a/include/linux/pci.h
->> +++ b/include/linux/pci.h
->> @@ -34,6 +34,9 @@
->>
->>  #include <linux/pci_ids.h>
->>
->> +/* the macro below flags an invalid cpu address
->> + * and is used by IO special hosts              */
->> +#define IO_RANGE_IOEXT (resource_size_t)(-1ull)
->>  /*
->>   * The PCI interface treats multi-function devices as independent
->>   * devices.  The slot/function address of each device is encoded
->> @@ -1197,8 +1200,8 @@ int __must_check pci_bus_alloc_resource(struct
->> pci_bus *bus,
->>                                                   resource_size_t),
->>                         void *alignf_data);
->>
->> -
->> -int pci_register_io_range(phys_addr_t addr, resource_size_t size);
->> +int pci_register_io_range(struct fwnode_handle *node, phys_addr_t addr,
->> +                         resource_size_t size, unsigned long *port);
->>  unsigned long pci_address_to_pio(phys_addr_t addr);
->>  phys_addr_t pci_pio_to_address(unsigned long pio);
->>  int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
->>
+>> I'm OK with reworking Linux's triggers if it need be. I think we should
+>> agree
+>> on binding(s) first though.
 >
+> I was thinking of creating entirely new mechanism (new sysfs file),
+> as we can't break existing users.
+
+Agree.
+
+
+>>> Of course trigger-sources would be still useful for defining
+>>> a list of devices of the same type like in case of usbport trigger.
+>>> Nonetheless, I have a problem with this property being a part of
+>>> LED class device DT bindings. Triggers are not tightly coupled with
+>>> LED class devices, but trigger-sources being a list of usb ports
+>>> would be applicable only to usbport trigger. What if there was
+>>> another combo trigger e.g. for reporting activity on mulitple GPIOs?
+>>
+>> That was exactly my point with above trigger-sources example including 2
+>> USB
+>> ports & GPIO.
 >
+> How usbport trigger would make use use of information about GPIO?
+> Does it mean that in this approach triggers would arbitrarily choose
+> trigger-sources applicable for them?
+
+It wouldn't. It would simply ignore it.
+
+We could modify ledtrig-gpio.c however to support this new property
+(ex-"led-triggers") and make use of specified GPIO(s). Of course ledtrig-gpio
+would ignore specified USB ports. One type per LED trigger driver.
+
+
+>>> Should we have separate list of trigger sources per any possible
+>>> existing trigger type? Aren't we going to far from pure hardware
+>>> description the Device Tree was initially predestined to?
+>>
+>> That would simplify things, but it gets us back to *multiple* properties
+>> like
+>> led-usb-triggers (or led-usb-trigger-sources)
+>> led-pci-triggers (or led-pci-trigger-sources)
+>> led-gpio-triggers (or led-gpio-trigger-sources)
+>> etc.
+>
+> Right, I was rather skeptical in my question - I don't like this
+> solution too.
