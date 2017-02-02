@@ -1,38 +1,151 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] arm64: dts: h3ulcb: Update memory node to 4 GiB map
-Date: Thu, 2 Feb 2017 10:18:59 +0100
-Message-ID: <20170202091858.GJ21831@verge.net.au>
-References: <1485443606-22566-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <1485443632-22612-1-git-send-email-vladimir.barinov@cogentembedded.com>
- <CAMuHMdV8Mn83rpkqaB655GPSjw1E_QLCcRJKoU+QYyogMEv1mw@mail.gmail.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
+Date: Thu, 2 Feb 2017 10:19:33 +0100
+Message-ID: <e814a2c6-f0de-cb56-eb3a-e22daed8990b@st.com>
+References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+ <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
+ <20170201163500.ivxnxejurhzzoctl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV8Mn83rpkqaB655GPSjw1E_QLCcRJKoU+QYyogMEv1mw@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Vladimir Barinov <vladimir.barinov@cogentembedded.com>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170201163500.ivxnxejurhzzoctl@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, jic23@kernel.org, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 01:40:08PM +0100, Geert Uytterhoeven wrote:
-> On Thu, Jan 26, 2017 at 4:13 PM, Vladimir Barinov
-> <vladimir.barinov@cogentembedded.com> wrote:
-> > From: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> >
-> > This patch adds memory region:
-> >
-> >   - After changes, the H3ULCB board has the following map:
-> >     Bank0: 1GiB RAM : 0x000048000000 -> 0x0007fffffff
-> >     Bank1: 1GiB RAM : 0x000500000000 -> 0x0053fffffff
-> >     Bank2: 1GiB RAM : 0x000600000000 -> 0x0063fffffff
-> >     Bank3: 1GiB RAM : 0x000700000000 -> 0x0073fffffff
-> >
-> >   - Before changes, the old map looked like this:
-> >     Bank0: 1GiB RAM : 0x000048000000 -> 0x0007fffffff
-> >
-> > Signed-off-by: Vladimir Barinov <vladimir.barinov+renesas@cogentembedded.com>
-> 
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+On 02/01/2017 05:35 PM, Rob Herring wrote:
+> On Mon, Jan 30, 2017 at 02:57:41PM +0100, Fabrice Gasnier wrote:
+>> Add dt documentation for st,stm32-exti-trigger.
+>> EXTi gpio signal can be routed internally as trigger source for various
+>
+> s/gpio/GPIO/
+>
+>> IPs (e.g. for ADC or DAC conversions).
+>
+> Please use "dt-bindings: iio:" for the subject prefix.
 
-Thanks, I have queued this up.
+Hi Rob,
+
+I'll fix this in V2.
+
+>
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>> new file mode 100644
+>> index 0000000..ebf2645
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>> @@ -0,0 +1,17 @@
+>> +STMicroelectronics STM32 EXTI trigger bindings
+>> +
+>> +EXTi gpio signal can be routed internally as trigger source for various
+>
+> s/gpio/GPIO/
+>
+>> +IPs (e.g. for ADC or DAC conversions).
+>> +
+>> +Contents of a stm32 exti trigger root node:
+>
+> Drop "root"
+I'll fix these in V2.
+
+>
+>> +-------------------------------------------
+>> +Required properties:
+>> +- compatible: Should be "st,stm32-exti-trigger"
+>
+> This whole binding looks a bit suspicious. Is this actually a h/w block?
+> What makes it stm32 specific? Seems like the gpio properties should just
+> be part of the ADC or DAC that they trigger.
+
+Please let me explain in more details.
+I think best is I add following documentation in binding. Something like:
+
+GPIO + EXTI controller side | ADC side (input trigger MUX, same for DAC)
+                             |
+        IIO trigger         --->         IIO device
+                             |                  __________
+                             |          inX  --|          \
+                             |          ...  --|  SAR ADC  |-->
+         __                  |         __      |__________/
+PA11 --|  \                 | TIMx --|  \   trigger   ^
+PB11 --|   |                  ...  --|   }----------->'
+...  --|   }---- EXTI11 ---------->--|__/
+      --|   |                |
+PJ11 --|__/                 |
+
+In fact, this driver configures GPIO and EXTI controllers (left side of
+above scheme), and it registers corresponding trigger in IIO. Then it 
+can be used by other IPs registered as IIO devices.
+
+I think this should be outside of ADC or DAC IIO device drivers, to live 
+in separate IIO trigger driver. It will avoid duplicating code (e.g. 
+PATCH 4) into several IIO device drivers.
+
+Is it ok to declare this as separate IIO trigger driver?
+Maybe Jonathan could also advise on this ?
+
+As I see it, this is stm32 specific, as any GPIO bank, (e.g. PA11,
+PB11...) can be selected to generate (EXTI11) hardware trigger signal.
+
+>
+>> +- extiN-gpio: optional gpio line that may be used as external trigger source
+>
+> -gpios is the preferred form.
+
+I apologize, I didn't make it clear in the first place. Please let me 
+rephrase. Is bellow description more suitable ?
+
+- extiN-gpio: One or several named GPIO lines that may be used as
+   external trigger source by STM32 ADC, DAC. N may be 0..15.
+   For example, on stm32f4, exti11-gpio can trig ADC, exti9-gpio can
+   trig DAC.
+
+>
+>> +  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on stm32f4).
+>> +
+>> +Example:
+>> +	triggers {
+>> +		compatible = "st,stm32-exti-trigger";
+>> +		exti11-gpio=<&gpioa 11 0>;
+>
+> spaces around the "=".
+I'll fix it in V2, and also add example for more that one EXTI trigger:
+
+	triggers {
+		compatible = "st,stm32-exti-trigger";
+		exti9-gpio = <&gpioa 9 0>;
+		exti11-gpio = <&gpioa 11 0>;
+		...
+	};
+
+Above binding can typically be used in board dt, in case on-board gpio 
+is connected/used as trigger source for IIO device (STM32 ADC/DAC).
+
+Please let me know if this clarifies, so I'll do necessary changes in V2.
+
+Many thanks for your review.
+Best Regards,
+Fabrice
+
+>
+>> +	};
+>> --
+>> 1.9.1
+>>
