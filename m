@@ -1,86 +1,189 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 net-next 01/16] dt-bindings: net: update Marvell PPv2
- binding for PPv2.2 support
-Date: Thu, 2 Feb 2017 17:56:50 +0100
-Message-ID: <20170202175650.1fc06c2d@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-2-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170103201842.hdg2uzzesog2jund@rob-hp-laptop>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v2 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Thu, 2 Feb 2017 09:00:01 -0800
+Message-ID: <CAHQ1cqEwbSumUp1ECPib_GTFD-AD4FsHWciqU6piniKvW45=TQ@mail.gmail.com>
+References: <20170201165559.22436-1-andrew.smirnov@gmail.com>
+ <20170201165559.22436-4-andrew.smirnov@gmail.com> <1485971830.23471.17.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170103201842.hdg2uzzesog2jund@rob-hp-laptop>
-Sender: netdev-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485971830.23471.17.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-pci@vger.kernel.org, Andrey Yurovsky <yurovsky@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Wed, Feb 1, 2017 at 9:57 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Am Mittwoch, den 01.02.2017, 08:55 -0800 schrieb Andrey Smirnov:
+>> Add various bits of code needed to support i.MX7D variant of the IP.
+>>
+>> Cc: yurovsky@gmail.com
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Lee Jones <lee.jones@linaro.org>
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+>> ---
+>>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
+>>  drivers/pci/host/pci-imx6.c                        | 136 +++++++++++++++++----
+>>  include/linux/mfd/syscon/imx7-gpc.h                |  18 +++
+>>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+>>  include/linux/mfd/syscon/imx7-src.h                |  18 +++
+>>  5 files changed, 156 insertions(+), 26 deletions(-)
+>>  create mode 100644 include/linux/mfd/syscon/imx7-gpc.h
+>>  create mode 100644 include/linux/mfd/syscon/imx7-src.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> index 83aeb1f..9f57759 100644
+>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+>> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+>>  and thus inherits all the common properties defined in designware-pcie.txt.
+>>
+>>  Required properties:
+>> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+>> +- compatible:
+>> +     - "fsl,imx6q-pcie"
+>> +     - "fsl,imx6sx-pcie",
+>> +     - "fsl,imx6qp-pcie"
+>> +     - "fsl,imx7d-pcie"
+>>  - reg: base address and length of the PCIe controller
+>>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>>    entry for each entry in the interrupt-names property.
+>> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+>> index 3ef8093..e64ddd9 100644
+>> --- a/drivers/pci/host/pci-imx6.c
+>> +++ b/drivers/pci/host/pci-imx6.c
+>> @@ -17,6 +17,8 @@
+>>  #include <linux/kernel.h>
+>>  #include <linux/mfd/syscon.h>
+>>  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+>> +#include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
+>> +#include <linux/mfd/syscon/imx7-src.h>
+>>  #include <linux/module.h>
+>>  #include <linux/of_gpio.h>
+>>  #include <linux/of_device.h>
+>> @@ -27,6 +29,7 @@
+>>  #include <linux/signal.h>
+>>  #include <linux/types.h>
+>>  #include <linux/interrupt.h>
+>> +#include <linux/pm_domain.h>
+>
+> I don't think you need this include. PM domain handling should be done
+> by the linux driver core if the pcie node is placed in the proper
+> power-domain.
+>
+> The pcie driver should only indirectly handle pm domains via the runtime
+> pm kernel facilities.
+>
 
-On Tue, 3 Jan 2017 14:18:42 -0600, Rob Herring wrote:
+You are right, I have no reason to have this include. It's just a
+experimentation leftover I forgot to remove. Will get rid of it in v3.
 
-> > +- port-id: ID of the port from the MAC point of view
-> > +- gop-port-id: only for marvell,armada-7k-pp2, ID of the port from the
-> > +  GOP (Group Of Ports) point of view  
-> 
-> What GOP is needs a better explanation. Why doesn't 375 need this?
+>>
+>>  #include "pcie-designware.h"
+>>
+>> @@ -36,6 +39,7 @@ enum imx6_pcie_variants {
+>>       IMX6Q,
+>>       IMX6SX,
+>>       IMX6QP,
+>> +     IMX7D,
+>>  };
+>>
+>>  struct imx6_pcie {
+>> @@ -47,6 +51,7 @@ struct imx6_pcie {
+>>       struct clk              *pcie_inbound_axi;
+>>       struct clk              *pcie;
+>>       struct regmap           *iomuxc_gpr;
+>> +     struct regmap           *src;
+>>       enum imx6_pcie_variants variant;
+>>       u32                     tx_deemph_gen1;
+>>       u32                     tx_deemph_gen2_3p5db;
+>> @@ -56,6 +61,11 @@ struct imx6_pcie {
+>>       int                     link_gen;
+>>  };
+>>
+>> +/* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+>> +#define PHY_PLL_LOCK_WAIT_MAX_RETRIES        2000
+>> +#define PHY_PLL_LOCK_WAIT_USLEEP_MIN 50
+>> +#define PHY_PLL_LOCK_WAIT_USLEEP_MAX 200
+>> +
+>>  /* PCIe Root Complex registers (memory-mapped) */
+>>  #define PCIE_RC_LCR                          0x7c
+>>  #define PCIE_RC_LCR_MAX_LINK_SPEEDS_GEN1     0x1
+>> @@ -251,6 +261,16 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>>       u32 val, gpr1, gpr12;
+>>
+>>       switch (imx6_pcie->variant) {
+>> +     case IMX7D:
+>> +             regmap_update_bits(imx6_pcie->src,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                IMX7D_SRC_PCIEPHY_RCR_PCIEPHY_G_RST,
+>> +                                IMX7D_SRC_PCIEPHY_RCR_PCIEPHY_G_RST);
+>> +             regmap_update_bits(imx6_pcie->src,
+>> +                                SRC_PCIEPHY_RCR,
+>> +                                IMX7D_SRC_PCIEPHY_RCR_PCIEPHY_BTN,
+>> +                                IMX7D_SRC_PCIEPHY_RCR_PCIEPHY_BTN);
+>> +             break;
+>
+> I suppose those are just some random bits tossed together, that can't
+> reasonably be abstracted by a reset controller, right? In that case I'm
+> fine with the code as is.
 
-GOP stands for "group of ports", it's one of the HW component inside
-the PPv2 IP.
+Hmm, good point, I didn't think of that. SRC is a system reset
+controller, after all, so I think it actually might be possible to do
+what you describe. I'll investigate the possibility and convert this
+if I can in v3.
 
-Armada 375 also has the same GOP, but we described the registers in a
-different way for Armada 375, with one reg entry per port:
+>
+>>       case IMX6SX:
+>>               regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+>>                                  IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
+>> @@ -333,11 +353,33 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>>               regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
+>>                                  IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
+>>               break;
+>> +     case IMX7D:
+>> +             break;
+>>       }
+>>
+>>       return ret;
+>>  }
+>>
+> [...]
+>
+>> diff --git a/include/linux/mfd/syscon/imx7-gpc.h b/include/linux/mfd/syscon/imx7-gpc.h
+>> new file mode 100644
+>> index 0000000..38e1c9a9
+>> --- /dev/null
+>> +++ b/include/linux/mfd/syscon/imx7-gpc.h
+>> @@ -0,0 +1,18 @@
+>> +/*
+>> + * Copyright (C) 2017 Impinj
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#ifndef __LINUX_IMX7_GPC_H
+>> +#define __LINUX_IMX7_GPC_H
+>> +
+>> +#define GPC_PGC_CPU_MAPPING  0xec
+>> +#define GPC_PU_PGC_SW_PUP_REQ        0xf8
+>> +
+>> +#define IMX7D_PCIE_PHY_A7_DOMAIN     BIT(3)
+>> +#define IMX7D_PCIE_PHY_SW_PUP_REQ    BIT(1)
+>> +
+>> +#endif
+>
+> This file isn't referenced in the patch anymore. Please remove.
 
-        reg = <0xf0000 0xa000>,
-              <0xc0000 0x3060>,
-              <0xc4000 0x100>,
-              <0xc5000 0x100>;
+More leftover code that I missed. Will remove in v3 and sorry for this noise.
 
-The last two entries are the per-port registers for eth0 and eth1.
-
-For PPv2.2, we wanted to simplify a little bit the register mappings,
-and simply reflect the memory map of the SoC. In the SoC datasheet,
-there are two memory areas for the networking subsystem, which are the
-two areas reflected in:
-
-        reg = <0x0 0x100000>,
-              <0x100000 0x80000>;
-
-The per-port registers are inside the second register area. But by
-exposing the entire register area in the Device Tree binding, we allow
-improvements in the driver that need additional registers to be made
-without changing the Device Tree description of the device.
-
-> > +Example for marvell,armada-7k-pp2:
-> > +
-> > +cpm_ethernet: ethernet@0 {
-> > +	compatible = "marvell,armada-7k-pp22";
-> > +	reg = <0x0 0x100000>,
-> > +	      <0x100000 0x80000>;
-> > +	clocks = <&cpm_syscon0 1 3>, <&cpm_syscon0 1 9>, <&cpm_syscon0 1 5>;
-> > +	clock-names = "pp_clk", "gop_clk", "gp_clk";
-> > +	status = "disabled";  
-> 
-> Drop status from examples.
-
-OK, so I'll have to adjust this for the existing armada-375-pp2 example
-as well.
-
-> > +
-> > +	eth0: eth@0 {  
-> 
-> unit address requires a reg property. Or this can be 'eth0' instead.
-
-Same here, the sub-nodes don't have a reg property for armada-375-pp2,
-so I guess this comment applies as well, right?
-
-Thanks for your feedback!
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+Andrey
