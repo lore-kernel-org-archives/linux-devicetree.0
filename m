@@ -1,61 +1,46 @@
-From: Michael Zoran <mzoran@crowfest.net>
-Subject: Re: [RESENT PATCH] ARM: bcm2835: Add devicetree for the Raspberry
- Pi 3, for arm (32)
-Date: Thu, 02 Feb 2017 00:37:52 -0800
-Message-ID: <1486024672.11636.1.camel@crowfest.net>
-References: <1484845444-4617-1-git-send-email-kraxel@redhat.com>
-         <87fukcgsqp.fsf@eliezer.anholt.net> <878tpqki0k.fsf@eliezer.anholt.net>
-         <1485944672.1076.50.camel@redhat.com> <1485951653.1076.54.camel@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1485951653.1076.54.camel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
+From: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+Subject: [PATCH V2] Add devicetree for the Raspberry Pi 3, for arm (32)
+Date: Thu,  2 Feb 2017 01:05:36 -0800
+Message-ID: <20170202090536.16724-1-mzoran@crowfest.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org
+Cc: kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-01 at 13:20 +0100, Gerd Hoffmann wrote:
-> > > I think just having links from
-> > > arch/arm64/boot/dts/broadcom/bcm2837*.dts* to arch/arm/boot/dts/
-> > > would
-> > > be the solution, then this Makefile could just reference
-> > > bcm2837-rpi-3-b.dtb.
-> > 
-> > I suspect it is not that easy, last time I tried it didn't work.
-> > Will try again though.
-> 
-> Yep, dtbs_install fails:
-> 
-> [ ... ]
->   INSTALL arch/arm/boot/dts/bcm2835-rpi-b-plus.dtb
->   INSTALL arch/arm/boot/dts/bcm2835-rpi-a-plus.dtb
->   INSTALL arch/arm/boot/dts/bcm2836-rpi-2-b.dtb
->   INSTALL 
-> cp: missing destination file operand after '/boot/dtbs/4.10.0-rc5+'
-> Try 'cp --help' for more information.
-> /root/linux/scripts/Makefile.dtbinst:41: recipe for target
-> 'bcm2837-rpi-3-b.dts' failed
-> make[3]: *** [bcm2837-rpi-3-b.dts] Error 1
-> arch/arm/Makefile:348: recipe for target 'dtbs_install' failed
-> make[2]: *** [dtbs_install] Error 2
-> Makefile:150: recipe for target 'sub-make' failed
-> make[1]: *** [sub-make] Error 2
-> Makefile:24: recipe for target '__sub-make' failed
+Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile            | 3 ++-
+ arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
 
-This is actually a problem I had to deal with way in the begging of
-ARM64.  What was done in the github tree was to have the one of the DTS
- files(in this case 64) #include the 32 bit dts.  That way it's not
-needed to have the symbolic link and install should work.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 8bd8878efe7b..72ba524df912 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -72,7 +72,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-b-plus.dtb \
+ 	bcm2835-rpi-a-plus.dtb \
+ 	bcm2836-rpi-2-b.dtb \
+-	bcm2835-rpi-zero.dtb
++	bcm2835-rpi-zero.dtb \
++	bcm2837-rpi-3-b.dtb
+ dtb-$(CONFIG_ARCH_BCM_5301X) += \
+ 	bcm4708-asus-rt-ac56u.dtb \
+ 	bcm4708-asus-rt-ac68u.dtb \
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+new file mode 100644
+index 000000000000..48ad20f83255
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+@@ -0,0 +1,2 @@
++#include "../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts"
++
+-- 
+2.11.0
 
-I know it's ulgy, but it works...
-
-Take a look at:
-https://github.com/raspberrypi/linux/blob/rpi-4.10.y/arch/arm64/boot/dt
-s/broadcom/bcm2710-rpi-3-b.dts
-
-Here is what the file contains:
-#define RPI364
-
-#include "../../../../arm/boot/dts/bcm2710-rpi-3-b.dts"
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
