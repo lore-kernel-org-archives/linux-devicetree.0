@@ -1,46 +1,49 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH v5 3/3] thermal: zx2967: add thermal driver for ZTE's
- zx2967 family
-Date: Wed, 1 Feb 2017 21:04:27 -0800
-Message-ID: <20170202050425.GA7360@localhost.localdomain>
-References: <1484714522-26651-1-git-send-email-baoyou.xie@linaro.org>
- <1484714522-26651-3-git-send-email-baoyou.xie@linaro.org>
+From: James Liao <jamesjj.liao@mediatek.com>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: change the mediatek
+ ethernet compatible string
+Date: Thu, 2 Feb 2017 13:07:07 +0800
+Message-ID: <1486012027.25978.0.camel@mtksdaap41>
+References: <1485332455-34743-1-git-send-email-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1484714522-26651-3-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1485332455-34743-1-git-send-email-john@phrozen.org>
+Sender: netdev-owner@vger.kernel.org
+To: John Crispin <john@phrozen.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hey Bao,
-
-On Wed, Jan 18, 2017 at 12:42:02PM +0800, Baoyou Xie wrote:
-> This patch adds thermal driver for ZTE's zx2967 family.
+On Wed, 2017-01-25 at 09:20 +0100, John Crispin wrote:
+> When the binding was defined, I was not aware that mt2701 was an earlier
+> version of the SoC. For sake of consistency, the ethernet driver should
+> use mt2701 inside the compat string as this is the earliest SoC with the
+> ethernet core.
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-
-<cut>
-
-> +
-> +	/*
-> +	 * Calculate temperature
-> +	 *   922	initial value of calibration cure
-> +	 *   1.951	slope of calibration cure
-> +	 */
-> +	*temp = DIV_ROUND_CLOSEST((val - 922) * 1000, 1951);
-
-You can describe the offset and slope using DT and avoid this to be hard
-coded in your driver. Besides, if you read offset and slope from DT,
-your driver will be ready for any upcoming sensor addition that you may
-want to support in future, given that would required slope and offset
-change, per sensor, per chip version.
-
-Can you please check if you can move these to DT?
-
-BR,
-> -- 
-> 2.7.4
+> The ethernet driver is currently of no real use until we finish and
+> upstream the DSA driver. There are no users of this binding yet. It should
+> be safe to fix this now before it is too late and we need to provide
+> backward compatibility for the mt7623-eth compat string.
 > 
+> Reported-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: John Crispin <john@phrozen.org>
+
+Acked-by: James Liao <jamesjj.liao@mediatek.com>
+
+> ---
+>  Documentation/devicetree/bindings/net/mediatek-net.txt |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/mediatek-net.txt b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> index c010faf..c7194e8 100644
+> --- a/Documentation/devicetree/bindings/net/mediatek-net.txt
+> +++ b/Documentation/devicetree/bindings/net/mediatek-net.txt
+> @@ -7,7 +7,7 @@ have dual GMAC each represented by a child node..
+>  * Ethernet controller node
+>  
+>  Required properties:
+> -- compatible: Should be "mediatek,mt7623-eth"
+> +- compatible: Should be "mediatek,mt2701-eth"
+>  - reg: Address and length of the register set for the device
+>  - interrupts: Should contain the three frame engines interrupts in numeric
+>  	order. These are fe_int0, fe_int1 and fe_int2.
