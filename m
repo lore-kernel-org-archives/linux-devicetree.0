@@ -1,48 +1,185 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH linux v5 5/6] hwmon: occ: Add hwmon implementation for the
- P8 OCC
-Date: Thu, 2 Feb 2017 09:31:38 -0600
-Message-ID: <CAL_JsqKV=dtPjpaB3ipVz6PY=nRnOePEStsWKUjvKT+3CxOhTg@mail.gmail.com>
-References: <1485877437-13598-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1485877437-13598-6-git-send-email-eajames@linux.vnet.ibm.com>
- <20170201173450.ysuk3j2hwoldz72o@rob-hp-laptop> <87f4e9636acbcc5facc169d590b110cb@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
+Date: Thu, 2 Feb 2017 09:45:07 -0600
+Message-ID: <CAL_JsqKgGuh5==Xfd6LKZe70G1NiuesW0_xE98CZQZ3=BCPvLg@mail.gmail.com>
+References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+ <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
+ <20170201163500.ivxnxejurhzzoctl@rob-hp-laptop> <e814a2c6-f0de-cb56-eb3a-e22daed8990b@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <87f4e9636acbcc5facc169d590b110cb@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: eajames <eajames@linux.vnet.ibm.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, "wsa@the-dreams.de" <wsa@the-dreams.de>, Andrew Jeffery <andrew@aj.id.au>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e814a2c6-f0de-cb56-eb3a-e22daed8990b-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 2, 2017 at 9:06 AM, eajames <eajames@linux.vnet.ibm.com> wrote:
-> On 2017-02-01 11:34, Rob Herring wrote:
++Linus W
+
+On Thu, Feb 2, 2017 at 3:19 AM, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+> On 02/01/2017 05:35 PM, Rob Herring wrote:
 >>
->> On Tue, Jan 31, 2017 at 09:43:56AM -0600, eajames@linux.vnet.ibm.com
->> wrote:
+>> On Mon, Jan 30, 2017 at 02:57:41PM +0100, Fabrice Gasnier wrote:
 >>>
->>> From: "Edward A. James" <eajames@us.ibm.com>
+>>> Add dt documentation for st,stm32-exti-trigger.
+>>> EXTi gpio signal can be routed internally as trigger source for various
+>>
+>>
+>> s/gpio/GPIO/
+>>
+>>> IPs (e.g. for ADC or DAC conversions).
+>>
+>>
+>> Please use "dt-bindings: iio:" for the subject prefix.
+>
+>
+> Hi Rob,
+>
+> I'll fix this in V2.
+>
+>>
 >>>
->>> Add code to tie the hwmon sysfs code and the POWER8 OCC code together, as
->>> well as probe the entire driver from the I2C bus. I2C is the
->>> communication
->>> method between the BMC and the P8 OCC.
->>>
->>> Signed-off-by: Edward A. James <eajames@us.ibm.com>
->>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 >>> ---
->>>  Documentation/devicetree/bindings/hwmon/occ.txt |  13 +++
+>>>  .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17
+>>> +++++++++++++++++
+>>>  1 file changed, 17 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>> b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>> new file mode 100644
+>>> index 0000000..ebf2645
+>>> --- /dev/null
+>>> +++
+>>> b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>> @@ -0,0 +1,17 @@
+>>> +STMicroelectronics STM32 EXTI trigger bindings
+>>> +
+>>> +EXTi gpio signal can be routed internally as trigger source for various
 >>
 >>
->> Please add acks when posting new versions.
+>> s/gpio/GPIO/
+>>
+>>> +IPs (e.g. for ADC or DAC conversions).
+>>> +
+>>> +Contents of a stm32 exti trigger root node:
+>>
+>>
+>> Drop "root"
+>
+> I'll fix these in V2.
+>
+>>
+>>> +-------------------------------------------
+>>> +Required properties:
+>>> +- compatible: Should be "st,stm32-exti-trigger"
+>>
+>>
+>> This whole binding looks a bit suspicious. Is this actually a h/w block?
+>> What makes it stm32 specific? Seems like the gpio properties should just
+>> be part of the ADC or DAC that they trigger.
 >
 >
-> Thanks Rob, should I put up a new version with acked by, and no other
-> changes? Also, do you mean to acknowledge this patch only, or all the
-> patches? I'm new to this process...
+> Please let me explain in more details.
+> I think best is I add following documentation in binding. Something like:
+>
+> GPIO + EXTI controller side | ADC side (input trigger MUX, same for DAC)
+>                             |
+>        IIO trigger         --->         IIO device
+>                             |                  __________
+>                             |          inX  --|          \
+>                             |          ...  --|  SAR ADC  |-->
+>         __                  |         __      |__________/
+> PA11 --|  \                 | TIMx --|  \   trigger   ^
+> PB11 --|   |                  ...  --|   }----------->'
+> ...  --|   }---- EXTI11 ---------->--|__/
+>      --|   |                |
+> PJ11 --|__/                 |
+>
+> In fact, this driver configures GPIO and EXTI controllers (left side of
+> above scheme), and it registers corresponding trigger in IIO. Then it can be
+> used by other IPs registered as IIO devices.
+>
+> I think this should be outside of ADC or DAC IIO device drivers, to live in
+> separate IIO trigger driver. It will avoid duplicating code (e.g. PATCH 4)
+> into several IIO device drivers.
+>
+> Is it ok to declare this as separate IIO trigger driver?
 
-No, only when you send a new version of the series. If you don't send
-a new version, the maintainer should add any acks when applying. You
-just can't expect them to find all versions and add the acks.
+Drivers and DT nodes are not necessarily 1 to 1.
 
-Rob
+What controls the GPIO line that is used for the trigger?
+
+> Maybe Jonathan could also advise on this ?
+>
+> As I see it, this is stm32 specific, as any GPIO bank, (e.g. PA11,
+> PB11...) can be selected to generate (EXTI11) hardware trigger signal.
+
+This seems more like a pinmux'ing issue than a GPIO. This isn't really
+a GPIO if it is routed to a h/w control.
+
+A -gpios property for a trigger would make sense if you had a driver
+handling GPIO interrupts to generate IIO triggers. This seems to be
+just mux control.
+
+>>> +- extiN-gpio: optional gpio line that may be used as external trigger
+>>> source
+>>
+>>
+>> -gpios is the preferred form.
+>
+>
+> I apologize, I didn't make it clear in the first place. Please let me
+> rephrase. Is bellow description more suitable ?
+
+What I mean is the property name is wrong. It should be "extiN-gpios".
+
+>
+> - extiN-gpio: One or several named GPIO lines that may be used as
+>   external trigger source by STM32 ADC, DAC. N may be 0..15.
+>   For example, on stm32f4, exti11-gpio can trig ADC, exti9-gpio can
+>   trig DAC.
+>
+>>
+>>> +  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on
+>>> stm32f4).
+>>> +
+>>> +Example:
+>>> +       triggers {
+>>> +               compatible = "st,stm32-exti-trigger";
+>>> +               exti11-gpio=<&gpioa 11 0>;
+>>
+>>
+>> spaces around the "=".
+>
+> I'll fix it in V2, and also add example for more that one EXTI trigger:
+>
+>         triggers {
+>                 compatible = "st,stm32-exti-trigger";
+>                 exti9-gpio = <&gpioa 9 0>;
+>                 exti11-gpio = <&gpioa 11 0>;
+>                 ...
+>         };
+>
+> Above binding can typically be used in board dt, in case on-board gpio is
+> connected/used as trigger source for IIO device (STM32 ADC/DAC).
+>
+> Please let me know if this clarifies, so I'll do necessary changes in V2.
+>
+> Many thanks for your review.
+> Best Regards,
+> Fabrice
+>
+>>
+>>> +       };
+>>> --
+>>> 1.9.1
+>>>
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
