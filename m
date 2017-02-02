@@ -1,147 +1,372 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver
- on TM2 board
-Date: Thu, 2 Feb 2017 17:48:51 +0100
-Message-ID: <20170202164851.GA9055@ulmo.ba.sec>
-References: <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com>
- <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay>
- <20170131150226.GB4519@ulmo.ba.sec>
- <87r33j85ap.fsf@eliezer.anholt.net>
- <20170131213132.GC872@mithrandir.ba.sec>
- <871svgzk2t.fsf@intel.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] thermal: zx2967: add thermal driver for ZTE's
+ zx2967 family
+Date: Thu, 2 Feb 2017 09:56:13 -0700
+Message-ID: <20170202165613.GB15052@linaro.org>
+References: <1486048086-3431-1-git-send-email-baoyou.xie@linaro.org>
+ <1486048086-3431-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GvXjxJ+pjyke8COw"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <871svgzk2t.fsf-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1486048086-3431-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jani Nikula <jani.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Donghwa Lee <dh09.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 02, 2017 at 11:08:06PM +0800, Baoyou Xie wrote:
+> This patch adds thermal driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/thermal/Kconfig          |   8 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/zx2967_thermal.c | 265 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 274 insertions(+)
+>  create mode 100644 drivers/thermal/zx2967_thermal.c
+> 
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 18f2de6..f64bd50 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -444,4 +444,12 @@ config BCM2835_THERMAL
+>  	help
+>  	  Support for thermal sensors on Broadcom bcm2835 SoCs.
+>  
+> +config ZX2967_THERMAL
+> +	tristate "Thermal sensors on zx2967 SoC"
+> +	depends on ARCH_ZX || COMPILE_TEST
+> +	help
+> +	  Enable the zx2967 thermal sensors driver, which supports
+> +	  the primitive temperature sensor embedded in zx2967 SoCs.
+> +	  This sensor generates the real time die temperature.
+> +
+>  endif
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 677c6d9..c00c05e 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+>  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
+>  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+>  obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
+> +obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+> diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
+> new file mode 100644
+> index 0000000..d8642cf
+> --- /dev/null
+> +++ b/drivers/thermal/zx2967_thermal.c
+> @@ -0,0 +1,265 @@
+> +/*
+> + * ZTE's zx2967 family thermal sensor driver
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/thermal.h>
+> +
+> +/* Power Mode: 0->low 1->high */
+> +#define ZX2967_THERMAL_POWER_MODE	0
+> +
+> +/* DCF Control Register */
+> +#define ZX2967_THERMAL_DCF		0x4
+> +
+> +/* Selection Register */
+> +#define ZX2967_THERMAL_SEL		0x8
+> +
+> +/* Control Register */
+> +#define ZX2967_THERMAL_CTRL		0x10
+> +
+> +#define ZX2967_THERMAL_READY		0x1000
+> +#define ZX2967_THERMAL_TEMP_MASK	0xfff
+> +#define ZX2967_THERMAL_ID_MASK		0x18
+> +#define ZX2967_THERMAL_ID0		0x8
+> +#define ZX2967_THERMAL_ID1		0x10
+> +
+> +struct zx2967_thermal_sensor {
+> +	struct zx2967_thermal_priv *priv;
+> +	struct thermal_zone_device *tzd;
+> +	int id;
+> +};
+> +
+> +#define NUM_SENSORS	1
+> +
+> +struct zx2967_thermal_priv {
+> +	struct zx2967_thermal_sensor	sensors[NUM_SENSORS];
 
---GvXjxJ+pjyke8COw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do we really need an array here if there's only 1 sensor?
 
-On Thu, Feb 02, 2017 at 05:30:34PM +0200, Jani Nikula wrote:
-> On Tue, 31 Jan 2017, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, Jan 31, 2017 at 10:15:10AM -0800, Eric Anholt wrote:
-> >> I would love for drm-panel to be moved under -misc.
-> >
-> > Like that's going to magically motivate people to spend their time
-> > reviewing other patches. The only thing that group maintainership adds
-> > is redundancy.
->=20
-> Adding redundancy is not an insignificant thing. I think it can be quite
-> liberating to not have everything and everybody depend on you. You can
-> defer to others when you're busy, tired, sick, whatever. Things still
-> move on.
+> +	/* Prevents reads sensor in parallel */
+> +	struct mutex			lock;
+> +	struct clk			*clk_gate;
+> +	struct clk			*pclk;
+> +	s32				slope;
+> +	s32				offset;
+> +	void __iomem			*regs;
+> +	struct device			*dev;
+> +};
 
-Oh, I certainly see the advantages in sharing maintainership. However, I
-think it really only works well if you've got active developers working
-together on the code already. Then it's very natural to let all of them
-manage a tree.
+Please add proper kernel style documentation for both structure.  And as far as
+I can tell the stuctures could be merged into a single one. 
 
-But for drm-panel, I've rarely seen anyone review patches. Sometimes the
-easy patches (i.e. panel-simple) get reviewed by parties that have some
-interest in seeing the patches merged. However, there's usually no
-review at all for the more complicated patches.
+> +
+> +static int zx2967_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	if (priv && priv->pclk)
+> +		clk_disable_unprepare(priv->pclk);
+> +
+> +	if (priv && priv->clk_gate)
+> +		clk_disable_unprepare(priv->clk_gate);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +	int error;
+> +
+> +	error = clk_prepare_enable(priv->clk_gate);
+> +	if (error)
+> +		return error;
+> +
+> +	error = clk_prepare_enable(priv->pclk);
+> +	if (error) {
+> +		clk_disable_unprepare(priv->clk_gate);
+> +		return error;
+> +	}
+> +
+> +	return 0;
+> +}
 
-Given that, I doubt that group maintainership is going to have the
-desired effect. Just because the tree is group maintained doesn't mean
-that all of a sudden people are going to care about the patches. So I
-suspect that even if panel drivers were managed in drm-misc, I'd still
-be the only person reviewing the patches. And really, managing a tree
-is peanuts compared to the amount of work it takes to properly review
-code.
+The above two function need to be enclosed with CONFIG_PM_SLEEP.  Have a look at
+other drivers that are using SIMPLE_DEV_PM_OPS.
 
-With group maintainership, for this type of tree in particular, I think
-it's likely for the quality bar to be lowered. There aren't any best
-practices yet for anything beyond panel-simple, and therefore little to
-no review is likely going to make people still pick up patches. This is
-quite different to the DRM/KMS core bits and drivers because there are
-established best practices and people can usually spot when new code is
-not living up to expectations.
+> +
+> +static int zx2967_thermal_get_temp(void *data, int *temp)
+> +{
+> +	void __iomem *regs;
+> +	struct zx2967_thermal_sensor *sensor = data;
+> +	struct zx2967_thermal_priv *priv = sensor->priv;
+> +	unsigned long timeout = jiffies + msecs_to_jiffies(100);
+> +	u32 val, sel_id;
+> +
+> +	regs = priv->regs;
+> +	mutex_lock(&priv->lock);
+> +
+> +	writel_relaxed(0, regs + ZX2967_THERMAL_POWER_MODE);
+> +	writel_relaxed(2, regs + ZX2967_THERMAL_DCF);
+> +
+> +	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
+> +	val &= ~ZX2967_THERMAL_ID_MASK;
+> +	sel_id = sensor->id ? ZX2967_THERMAL_ID0 : ZX2967_THERMAL_ID1;
+> +	val |= sel_id;
+> +	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
+> +
+> +	usleep_range(100, 300);
 
-> And I don't think redundancy is the only thing that group maintainership
-> adds. You'll have maintainers that complement each other, with different
-> skill sets and abilities and experience. They don't all look at the same
-> things. As maintainers tend to be more senior folks, I find sharing the
-> load of the more mundane tasks of maintainership free up their time to
-> contribute more of their technical skills to the project, for example
-> review.
+Polling (like below) can't be use here?  If not provide a good explanation as to
+why that is the case.
 
-I don't understand why group maintainership would be necessary for this.
-Surely people will review code irrespective of who finally applies their
-patch. If they don't in a single maintainer project, why would they
-suddenly start reviewing code in group maintained projects?
+> +	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL);
+> +	while (!(val & ZX2967_THERMAL_READY)) {
+> +		if (time_after(jiffies, timeout)) {
+> +			dev_err(priv->dev, "Thermal sensor %d data timeout\n",
+> +				sensor->id);
+> +			mutex_unlock(&priv->lock);
+> +			return -ETIMEDOUT;
+> +		}
+> +		usleep_range(100, 300);
+> +		val = readl_relaxed(regs + ZX2967_THERMAL_CTRL);
+> +	}
 
-> It's just my personal view on i915, but I think people take more
-> responsibility of their own work, instead of just sending patches and
-> waiting for stuff to happen, when they have commit access. But you have
-> to trust the people.
+See if you can use readx_poll_timeout()
 
-That's not something that we're discussing here. Surely giving the world
-access to the maintainer trees is not a goal that we're pursuing here.
-It will still only be a handful of selected people that will have commit
-access, so how's that going to change things for contributors that don't
-have commit access?
+> +
+> +	writel_relaxed(3, regs + ZX2967_THERMAL_DCF);
+> +	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
+> +			 & ZX2967_THERMAL_TEMP_MASK;
+> +	writel_relaxed(1, regs + ZX2967_THERMAL_POWER_MODE);
 
-The bottom line still is that we have a requirement to have patches
-reviewed before they get applied. So even if everybody had commit access
-we'd still need someone to review a patch before it gets applied. Like I
-said, reviewing is really the difficult part of a maintainer's job.
-Applying a patch is trivial, build-testing is equally trivial and so is
-sending out a pull request. All of the above can be easily automated to
-a point where it's completely painless.
+Please add a #define (along with an explanation) for the values used with
+writel_relaxed().  Otherwise reviewers are left guessing. 
 
-> I didn't intend for this to become a kind of sales pitch, but I do think
-> drm-panel would be a good fit for drm-misc. Personally I think it's your
-> call, but I think you should think about it. (And that decision should,
-> obviously, be made calmly, independent of any particular patch series.)
+> +
+> +	/* Calculate temperature */
+> +	*temp = DIV_ROUND_CLOSEST(((s32)val + priv->offset) * 1000,
+> +				  priv->slope);
 
-You know what? I completely agree with you that drm-panel would be a
-good fit for drm-misc. It's effectively part of the DRM/KMS core and
-used by most drivers. But it's never been treated that way. Maybe it
-is because it's been maintained in a separate tree from the very
-beginning, perhaps that was a mistake in the first place. Then again,
-back when drm-panel was started we didn't have group maintainership,
-so none of the existing trees would've been a good fit.
+Same here, I have to guess why 1000 is used.
 
-In the end, I keep getting back to the question that everybody except
-me seems to know the answer to: why would there be a difference in how
-contributors behave depending on the number of maintainers?
+> +
+> +	mutex_unlock(&priv->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
+> +	.get_temp = zx2967_thermal_get_temp,
+> +};
+> +
+> +static int zx2967_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct zx2967_thermal_priv *priv;
+> +	struct resource *res;
+> +	u32 buf[2];
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->regs))
+> +		return PTR_ERR(priv->regs);
+> +
+> +	ret = of_property_read_u32_array(pdev->dev.of_node,
+> +					 "coefficients", buf, 2);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to read coefficients\n");
+> +		return ret;
+> +	}
+> +	priv->slope = (s32)buf[0];
+> +	priv->offset = (s32)buf[1];
 
-Thierry
+Are you sure you don't want to check the values of ->slope and ->offset?  I
+certainly wouldn't trust the DT...
 
---GvXjxJ+pjyke8COw
-Content-Type: application/pgp-signature; name="signature.asc"
+> +
+> +	priv->clk_gate = devm_clk_get(&pdev->dev, "gate");
+> +	if (IS_ERR(priv->clk_gate)) {
+> +		ret = PTR_ERR(priv->clk_gate);
+> +		dev_err(&pdev->dev, "failed to get clock gate: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(priv->clk_gate);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	priv->pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(priv->pclk)) {
+> +		ret = PTR_ERR(priv->pclk);
+> +		clk_disable_unprepare(priv->clk_gate);
 
------BEGIN PGP SIGNATURE-----
+An error path is already defined below - add a 'goto' statement that jumps to
+it.  That way it consolidates the exit point for the function and avoid code
+duplication.  
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliTYvEACgkQ3SOs138+
-s6F4vw/+IeVfhz8Vw+G7fiPPf+Xp9XsP/iy2rg3EEbBw1EYgNfv3bIhqXAhG9kc9
-pqLdnH/RG7ZU2v8hkmYFfcmEDyxuq+bIHtpUkmybowRe5n8uke1BsOukjSxz7iAO
-5SBszj4lBTdl3cz8112WdN1IgrSx7YJL0M1tUSUczqROB8iL2DCpSg0xxhhZwu68
-T3FrP+X8JHfyi39bzj35f2bKCsMhuEXuXXuual3mrGn89MtkvQ0Ge57dJOmH8/8j
-6cklgVMrm9ZgHinv/gmMEJ+du0AnAe2XgR1Zio1JwMN72S58Ez/3bewOl/s/pc0Y
-JuCBCd54S0gjtmNf06TwsnzIumYLqojcRyncP5ltYfJZYWK9q1QIzjnc49GRLEYd
-4vK/D0rsk3sIQ4IEH95v/dni1zsDSW4/rp4Ugw0XIuATQyQx+0KXWuxdXEyp4ErU
-D3c0RO5lVQSQcCbWoXT/MaRudGAlvY7FxN5krNyS4/uz6Q9GvI2cz0z4E3wfYF1G
-3Q9KPXuvsjt9xtRPcznbV00iMgyicC2oZPbycuVJtZalrWpyrgzDZ5YRaibEARQM
-OaHujhykBRojKLvKW61waBfg8KD5GUEcQ+mFg3UogW+XXEOEMSFwbKoLlAwtTzoB
-8lL47EFEbKfMmsd+k9UQRjWwt8m1vnwVcJi9AjR8O7dU4LeoWe8=
-=6j20
------END PGP SIGNATURE-----
+> +		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(priv->pclk);
+> +	if (ret) {
+> +		clk_disable_unprepare(priv->clk_gate);
 
---GvXjxJ+pjyke8COw--
+Same comment a above.
+
+> +		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	mutex_init(&priv->lock);
+> +	for (i = 0; i < NUM_SENSORS; i++) {
+> +		struct zx2967_thermal_sensor *sensor = &priv->sensors[i];
+> +
+> +		sensor->priv = priv;
+> +		sensor->id = i;
+> +		sensor->tzd = thermal_zone_of_sensor_register(&pdev->dev,
+> +					i, sensor, &zx2967_of_thermal_ops);
+> +		if (IS_ERR(sensor->tzd)) {
+> +			ret = PTR_ERR(sensor->tzd);
+> +			dev_err(&pdev->dev, "failed to register sensor %d: %d\n",
+> +				i, ret);
+> +			goto remove_ts;
+> +		}
+> +	}
+> +	priv->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	return 0;
+> +
+> +remove_ts:
+> +	clk_disable_unprepare(priv->clk_gate);
+> +	clk_disable_unprepare(priv->pclk);
+> +	for (i--; i >= 0; i--)
+> +		thermal_zone_of_sensor_unregister(&pdev->dev,
+> +						  priv->sensors[i].tzd);
+> +
+> +	return ret;
+> +}
+> +
+> +static int zx2967_thermal_exit(struct platform_device *pdev)
+> +{
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < NUM_SENSORS; i++) {
+> +		struct zx2967_thermal_sensor *sensor = &priv->sensors[i];
+> +
+> +		thermal_zone_of_sensor_unregister(&pdev->dev, sensor->tzd);
+> +	}
+> +	clk_disable_unprepare(priv->pclk);
+> +	clk_disable_unprepare(priv->clk_gate);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_thermal_id_table[] = {
+> +	{ .compatible = "zte,zx296718-thermal" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
+> +
+> +static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
+> +			 zx2967_thermal_suspend, zx2967_thermal_resume);
+> +
+> +static struct platform_driver zx2967_thermal_driver = {
+> +	.probe = zx2967_thermal_probe,
+> +	.remove = zx2967_thermal_exit,
+> +	.driver = {
+> +		.name = "zx2967_thermal",
+> +		.of_match_table = zx2967_thermal_id_table,
+> +		.pm = &zx2967_thermal_pm_ops,
+> +	},
+> +};
+> +module_platform_driver(zx2967_thermal_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
