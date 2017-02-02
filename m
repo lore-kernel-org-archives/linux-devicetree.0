@@ -1,65 +1,46 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 6/6] dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
-Date: Thu,  2 Feb 2017 10:17:16 +0530
-Message-ID: <1486010836-25228-7-git-send-email-anup.patel@broadcom.com>
-References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486010836-25228-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH v5 3/3] thermal: zx2967: add thermal driver for ZTE's
+ zx2967 family
+Date: Wed, 1 Feb 2017 21:04:27 -0800
+Message-ID: <20170202050425.GA7360@localhost.localdomain>
+References: <1484714522-26651-1-git-send-email-baoyou.xie@linaro.org>
+ <1484714522-26651-3-git-send-email-baoyou.xie@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1484714522-26651-3-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: jun.nie@linaro.org, rui.zhang@intel.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT bindings document for newly added Broadcom
-SBA RAID driver.
+Hey Bao,
 
-Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- .../devicetree/bindings/dma/brcm,iproc-sba.txt     | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
+On Wed, Jan 18, 2017 at 12:42:02PM +0800, Baoyou Xie wrote:
+> This patch adds thermal driver for ZTE's zx2967 family.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-new file mode 100644
-index 0000000..092913a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
-@@ -0,0 +1,29 @@
-+* Broadcom SBA RAID engine
-+
-+Required properties:
-+- compatible: Should be one of the following
-+	      "brcm,iproc-sba"
-+	      "brcm,iproc-sba-v2"
-+  The "brcm,iproc-sba" has support for only 6 PQ coefficients
-+  The "brcm,iproc-sba-v2" has support for only 30 PQ coefficients
-+- mboxes: List of phandle and mailbox channel specifiers
-+
-+Example:
-+
-+raid_mbox: mbox@67400000 {
-+	...
-+	#mbox-cells = <3>;
-+	...
-+};
-+
-+raid0 {
-+	compatible = "brcm,iproc-sba-v2";
-+	mboxes = <&raid_mbox 0 0x1 0xffff>,
-+		 <&raid_mbox 1 0x1 0xffff>,
-+		 <&raid_mbox 2 0x1 0xffff>,
-+		 <&raid_mbox 3 0x1 0xffff>,
-+		 <&raid_mbox 4 0x1 0xffff>,
-+		 <&raid_mbox 5 0x1 0xffff>,
-+		 <&raid_mbox 6 0x1 0xffff>,
-+		 <&raid_mbox 7 0x1 0xffff>;
-+};
--- 
-2.7.4
+<cut>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +	/*
+> +	 * Calculate temperature
+> +	 *   922	initial value of calibration cure
+> +	 *   1.951	slope of calibration cure
+> +	 */
+> +	*temp = DIV_ROUND_CLOSEST((val - 922) * 1000, 1951);
+
+You can describe the offset and slope using DT and avoid this to be hard
+coded in your driver. Besides, if you read offset and slope from DT,
+your driver will be ready for any upcoming sensor addition that you may
+want to support in future, given that would required slope and offset
+change, per sensor, per chip version.
+
+Can you please check if you can move these to DT?
+
+BR,
+> -- 
+> 2.7.4
+> 
