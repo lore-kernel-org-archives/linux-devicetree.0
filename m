@@ -1,74 +1,109 @@
-From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH V2] Add devicetree for the Raspberry Pi 3, for arm (32)
-Date: Thu, 02 Feb 2017 10:05:53 -0800
-Message-ID: <871svgxybi.fsf@eliezer.anholt.net>
-References: <20170202090536.16724-1-mzoran@crowfest.net>
+From: Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: DTB file appears to have corrupted node property according to fdtdump
+ and kernel?
+Date: Thu, 2 Feb 2017 20:09:34 +0200
+Message-ID: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170202090536.16724-1-mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+Hi,
 
-Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org> writes:
+I have a particular device tree node property which refuses to reach
+the Linux kernel without corruption:
 
-> Signed-off-by: Michael Zoran <mzoran-O+n0w2l5AFbk1uMJSBkQmQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile            | 3 ++-
->  arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 8bd8878efe7b..72ba524df912 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -72,7 +72,8 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->  	bcm2835-rpi-b-plus.dtb \
->  	bcm2835-rpi-a-plus.dtb \
->  	bcm2836-rpi-2-b.dtb \
-> -	bcm2835-rpi-zero.dtb
-> +	bcm2835-rpi-zero.dtb \
-> +	bcm2837-rpi-3-b.dtb
->  dtb-$(CONFIG_ARCH_BCM_5301X) += \
->  	bcm4708-asus-rt-ac56u.dtb \
->  	bcm4708-asus-rt-ac68u.dtb \
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> new file mode 100644
-> index 000000000000..48ad20f83255
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-> @@ -0,0 +1,2 @@
-> +#include "../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts"
-> +
+I am looking at the following call stack:
 
-This won't work, for the same reason as v1.
+#0 of_platform_bus_create(...)
+#1 of_platform_bus_create(...)
+#2 of_platform_bus_create(...)
+#3 of_platform_populate(...)
+#4 sama5_dt_device_init(...)
+#5 customize_machine(...)
+#6 do_one_initcall(...)
+#7 do_initcall_level(...)
+#8 do_initcalls()
+#9 do_basic_setup() at main.c:881
+#10 kernel_init_freeable() at main.c:1004
+#11 kernel_init(unused = <Value currently has no location>) at main.c:941
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Once I reach the i2c node below, I can walk the properties linked list
+in the debugger. Once I get to the lsm6ds3 child and the "interrupts"
+property, the value is (second value corrupted as zero)
 
------BEGIN PGP SIGNATURE-----
+ interrupts = <0xc 0x0>;
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliTdQEACgkQtdYpNtH8
-nuhwkw/+IMqUB1C/TE6NdBUkA3IuZrpijsA42iqqyxeU+suOQeBxG8KXig/HNAyh
-I4dtkwJwfTSzi7BGXMMD+J7bhLSChTdbcBGd3bPoTwaXtLWrZapms7EvOJZFzvDM
-nbXRnuV5R0HHuD5Uof9/EIAYRyZZwp9l/vi+xDtPowTNHIt6iQW9h/hutCgARcfA
-oi+WE3ovxUVE74krgu2ppI9TzuWNAJiKETYS1azguBDjHfvAM5hxp894VRA8tWET
-V9NJQqsoPv1GVdVIKYIo6EssH8fCHJWdrNzxwLA28Gc3ldBV5F21kJiL5dBi45Cv
-pdhR9q0lfoC+ddL07ucyL9frSJqXTkLbp6Y3eaVXWdHllUG95k4F0YiEIN3odkhD
-W7FV+SVhmkNUaqzibr0yT5wQS2ip/kJmvklCGUAYwe19YG5QfUnKWdBL/A9UWDNs
-GiMn05dzhkHJZaoCqbEOr/zvrf2gZKWuIze/SXEJ8N1AsfaSR2B2SdjinE51BtyX
-ZFcfyZEsqzXGQb3IeC2Ds2hXiH8NbiCrJoksLTWauMAELVIhhYrJBf2V5iYG/Sg6
-aFVdQAHkjs7qfM//kONJ4dSaXrIaFM2WkmVxS0C3GJmDhH4I8xg8P5TCLtlwhNof
-2aqWROz3N6verdjS0u9hzWjSDd2/+ymor3SYlyPSBH31yJ0FLo4=
-=MBdk
------END PGP SIGNATURE-----
---=-=-=--
+(I am investigating this because the second value which is used as the
+interrupt trigger is always zero when the driver reads it).
+
+I have done some additional tests using the dtc and fdtdump utility to
+try and isolate the issue.
+
+>From the extract below from the preprocessed file:
+
+   i2c1: i2c@f0018000 {
+    compatible = "atmel,at91sam9x5-i2c";
+    reg = <0xf0018000 0x4000>;
+    interrupts = <0x13 0x4 0x6>;
+    dmas = <0x2 0x2 0x9 0x2 0x2 0xa>;
+    dma-names = "tx", "rx";
+    pinctrl-names = "default";
+    pinctrl-0 = <0x12>;
+    #address-cells = <0x1>;
+    #size-cells = <0x0>;
+    clocks = <0x13>;
+    status = "okay";
+    clock-frequency = <0x61a80>;
+    atmel,recover-scl = <0x14 0x1b 0x0>;
+    atmel,recover-sda = <0x14 0x1a 0x0>;
+
+    lsm6ds3@6b {
+     compatible = "st,lsm6ds3";
+     reg = <0x6b>;
+     pinctrl-names = "default";
+     pinctrl-0 = <0x15>;
+     interrupt-parent = <0x16>;
+     interrupts = <0xc 0x1>;
+     interrupt-names = "lsm6ds_int1";
+     st,drdy-int-pin = <0x1>;
+    };
+   };
+
+Version: DTC 1.4.0 (ubuntu package) for manual testing.
+
+(1)  fdtdump mix6000.dtb | grep interrupts
+
+Thsi returns the interrupt line as:
+
+interrupts = <0x0000000c 0x000001d0>;
+
+(2) In the linux kernel the of_platform_populate() reads the same property as:
+
+0x0000000c 0x00000000 with lenth=8
+
+(3) If I take the DTS file and manually compile the DTB with the dtc
+compiler, and convert it back to the DTS the correct values are shown
+
+(4) If I change the interrupt value:
+
+interrupts = <0xc 0x0>;
+
+and I do:
+
+cat <file-old.dtb> | od -t x1 > file1.txt
+cat <file-mod.dtb> | od -t x1 > file2.txt
+kdiff3 file1.txt file2.txt
+
+I actually see a single hex byte change from 0x1 to 0x0.
+
+If it was not for the faulty fdtdump output (in conjuection with the
+Linux kernel zero at the same place) I would have said its definately
+a kernel issue.
+
+Any ideas?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
