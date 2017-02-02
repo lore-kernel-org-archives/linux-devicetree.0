@@ -1,74 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] ARM: dts: r8a7791: link DU to VSPDs
-Date: Thu, 2 Feb 2017 16:02:39 +0300
-Message-ID: <afeb1f60-e60a-2c5c-4a12-7fda7bda7c50@cogentembedded.com>
-References: <1529351.Fac5N2tKoF@wasted.cogentembedded.com>
- <2492577.tBEnW0tCHD@wasted.cogentembedded.com>
- <4ae454ad-296c-dec9-27e9-fd050333737f@cogentembedded.com>
- <CANqRtoSQTa0fHJSwAHbN3hXSZ=m1kuR2GsUWE5ojN5AN-9i6Bw@mail.gmail.com>
- <4bf0b27c-9641-391d-fc05-8cdc20ce4ec3@cogentembedded.com>
- <CANqRtoTpsMix30+ESO-bEdaBM8H_9eTOLuoWShQABhmgJk23EA@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v2] Documentation: devicetree: meson-ir:
+ "linux,rc-map-name" is supported
+Date: Thu, 2 Feb 2017 14:04:15 +0100
+Message-ID: <cccd0fef-fa2c-bdfd-b7dd-b26ef288dfa0@suse.de>
+References: <20170131212112.5582-1-martin.blumenstingl@googlemail.com>
+ <20170201221415.22794-1-martin.blumenstingl@googlemail.com>
+ <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoTpsMix30+ESO-bEdaBM8H_9eTOLuoWShQABhmgJk23EA@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFBinCDF2d36E2hp7w_ehqdErdZPK9maQLpBmqMoGMPZmTTqqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
-
-On 02/01/2017 03:01 PM, Magnus Damm wrote:
-
->>>>> Add the "vsps" property to the DU device node in order to link this node
->>>>> to
->>>>> the VSPD nodes.
->>>>>
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>>>
->>>>> ---
->>>>> Changes in version 2:
->>>>> - rebased the patch.
->>>>>
->>>>> This patch is against the 'renesas-devel-20170125-v4.10-rc5' of Simon
->>>>> Horman's
->>>>> 'renesas.git' repo.  It's  only meaningful if the DRM driver patches
->>>>> I've
->>>>> just
->>>>> posted are applied.
->>>>
->>>>
->>>>
->>>>    Forgot to note that without this patch the DU driver fails to link to
->>>> VSPD and probe correctly, so there's no video signal. So it makes sense
->>>> to
->>>> apply before the DU driver patch (once it's ACKed for merge)...
->>>
->>>
->>> Doesn't that translate to breaking the DT ABI? Is there someway we can
->>> avoid doing that?
+Am 01.02.2017 um 23:26 schrieb Martin Blumenstingl:
+> On Wed, Feb 1, 2017 at 11:14 PM, Martin Blumenstingl
+> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+>> The driver already parses the "linux,rc-map-name" property. Add this
+>> information to the documentation so .dts maintainers don't have to look
+>> it up in the source-code.
 >>
->>
->>    It doesn't -- if this patch is merged ahead of the DU patches.
->
-> Perhaps I'm misunderstanding, but if you require a DTS patch to be
-> merged before a driver change then doesn't this mean that older DTBs
-> will stop working with newer kernels and the user is forced to update
-> the DTB to avoid breakage?
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> Changes since v1:
+>> - removed character which shows up as whitespace from subject
+> I have verified that I really sent this without a whitespace (I'm
+> using git send-email, so the patch is not mangled by some webmailer) -
+> unfortunately it seems to appear again (maybe one of the receiving
+> mail-servers or the mailing-list software does something weird here).
 
-    Yes, it seems so. :-(
+Shows up fine here now,
 
-> It would be nice if older DTBs could keep on working as before and the
-> DU driver modification would work both with connected VSPs and also
-> keep on working as before in case the VSP connection is not present in
-> DT.
+Reviewed-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 
-    I'll try to look into that...
+Didn't expect a resend for that btw.
 
-> Cheers,
->
-> / magnus
+Thanks,
+Andreas
 
-MBR, Sergei
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
