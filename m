@@ -1,340 +1,118 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v7 3/3] watchdog: zx2967: add watchdog controller driver for  ZTE's zx2967 family
-Date: Thu,  2 Feb 2017 17:16:35 +0800
-Message-ID: <1486026995-23356-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] net: phy: dp83867: Port mirroring support in the
+ DP83867 TI's PHY driver
+Date: Thu, 2 Feb 2017 10:17:39 +0100
+Message-ID: <20170202101739.67e7e6b3@jawa>
+References: <1485960215-5148-1-git-send-email-lukma@denx.de>
+        <20170201171610.GC7395@lunn.ch>
+        <2f3766f0-42df-6aab-dda1-14022c57fb30@gmail.com>
+        <20170201220500.29d478aa@jawa>
+        <20170201211440.GG7395@lunn.ch>
+        <20170201231323.732dd327@jawa>
+        <20170202015416.GG4967@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170202015416.GG4967@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Mugunthan V N <mugunthanvnm@ti.com>, Karicheri Muralidharan <m-karicheri2@ti.com>, linux-kernel@vger.kernel.org, Eric Engestrom <eric@engestrom.ch>, netdev@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds watchdog controller driver for ZTE's zx2967 family.
+Hi Andrew,
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/watchdog/Kconfig      |  10 ++
- drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/zx2967_wdt.c | 274 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 285 insertions(+)
- create mode 100644 drivers/watchdog/zx2967_wdt.c
+> On Wed, Feb 01, 2017 at 11:13:23PM +0100, Lukasz Majewski wrote:
+> > Hi Andrew,
+> > 
+> > > > We would need a tri-state device tree properly:
+> > > > 
+> > > > 1. Not defined - do nothing
+> > > > 2. Defined as 0 -> explicitly disable port mirroring
+> > > > 3. Defined as 1 -> explicitly enable port mirriring
+> > > > 
+> > > > The "net-phy-lane-swap" only fulfills points 1 and 3 above.
+> > > > 
+> > > > In my use case I do need point 2.
+> > > 
+> > > Looking at the datasheet, PORT_MIRROR_EN defaults to 0. So it
+> > > seems reasonable to unconditionally set it to 0 when the PHY
+> > > driver loads. Any device which needs a value of 1 can set
+> > > "net-phy-lane-swap"
+> > 
+> > Unconditionally setting this field to 0 (as we expect the reset
+> > default setting) seems to me like a good solution. 
+> > 
+> > However, I was not sure if such approach is acceptable by the
+> > community.
+> 
+> So the issue here is, are there boards with bootloaders which set this
+> "lane swap" bit,
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index acb00b5..05093a2 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called aspeed_wdt.
- 
-+config ZX2967_WATCHDOG
-+	tristate "ZTE zx2967 SoCs watchdog support"
-+	depends on ARCH_ZX
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include support for the watchdog timer
-+	  in ZTE zx2967 SoCs.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called zx2967_wdt.
-+
- # AVR32 Architecture
- 
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 0c3d35e..bf2d296 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
- obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
- obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
- obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
-+obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
- 
- # AVR32 Architecture
- obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
-new file mode 100644
-index 0000000..818f17e
---- /dev/null
-+++ b/drivers/watchdog/zx2967_wdt.c
-@@ -0,0 +1,274 @@
-+/*
-+ * watchdog driver for ZTE's zx2967 family
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/watchdog.h>
-+
-+#define ZX2967_WDT_CFG_REG			0x4
-+#define ZX2967_WDT_LOAD_REG			0x8
-+#define ZX2967_WDT_REFRESH_REG			0x18
-+#define ZX2967_WDT_START_REG			0x1c
-+
-+#define ZX2967_WDT_REFRESH_MASK			0x3f
-+
-+#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
-+#define ZX2967_WDT_START_EN			0x1
-+
-+#define ZX2967_WDT_WRITEKEY			0x12340000
-+
-+#define ZX2967_WDT_DIV_DEFAULT			16
-+#define ZX2967_WDT_DEFAULT_TIMEOUT		32
-+#define ZX2967_WDT_MIN_TIMEOUT			1
-+#define ZX2967_WDT_MAX_TIMEOUT			524
-+#define ZX2967_WDT_MAX_COUNT			0xffff
-+
-+#define ZX2967_WDT_CLK_FREQ			0x8000
-+
-+#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
-+
-+struct zx2967_wdt {
-+	struct watchdog_device	wdt_device;
-+	void __iomem		*reg_base;
-+	struct clk		*clock;
-+};
-+
-+static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
-+{
-+	return readl_relaxed(wdt->reg_base + reg);
-+}
-+
-+static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
-+{
-+	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
-+}
-+
-+static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
-+	val ^= ZX2967_WDT_REFRESH_MASK;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
-+}
-+
-+static int
-+zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
-+	unsigned int count;
-+
-+	count = timeout * ZX2967_WDT_CLK_FREQ;
-+	if (count > divisor * ZX2967_WDT_MAX_COUNT)
-+		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
-+	count = DIV_ROUND_UP(count, divisor);
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
-+	zx2967_wdt_refresh(wdt);
-+	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
-+
-+	return 0;
-+}
-+
-+static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val |= ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
-+{
-+	u32 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val &= ~ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static int zx2967_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_set_timeout(wdd, wdd->timeout);
-+	__zx2967_wdt_start(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	__zx2967_wdt_stop(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_refresh(wdt);
-+
-+	return 0;
-+}
-+
-+#define ZX2967_WDT_OPTIONS \
-+	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
-+static const struct watchdog_info zx2967_wdt_ident = {
-+	.options          =     ZX2967_WDT_OPTIONS,
-+	.identity         =	"zx2967 watchdog",
-+};
-+
-+static struct watchdog_ops zx2967_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = zx2967_wdt_start,
-+	.stop = zx2967_wdt_stop,
-+	.ping = zx2967_wdt_keepalive,
-+	.set_timeout = zx2967_wdt_set_timeout,
-+};
-+
-+static void zx2967_wdt_reset_sysctrl(struct device *dev)
-+{
-+	int ret;
-+	void __iomem *regmap;
-+	unsigned int offset, mask, config;
-+	struct of_phandle_args out_args;
-+
-+	ret = of_parse_phandle_with_fixed_args(dev->of_node,
-+			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
-+	if (ret)
-+		return;
-+
-+	offset = out_args.args[0];
-+	config = out_args.args[1];
-+	mask = out_args.args[2];
-+
-+	regmap = syscon_node_to_regmap(out_args.np);
-+	if (IS_ERR(regmap)) {
-+		of_node_put(out_args.np);
-+		return;
-+	}
-+
-+	regmap_update_bits(regmap, offset, mask, config);
-+	of_node_put(out_args.np);
-+}
-+
-+static int zx2967_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct zx2967_wdt *wdt;
-+	struct resource *base;
-+	int ret;
-+	struct reset_control *rstc;
-+
-+	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, wdt);
-+
-+	wdt->wdt_device.info = &zx2967_wdt_ident;
-+	wdt->wdt_device.ops = &zx2967_wdt_ops;
-+	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
-+	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
-+	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
-+	wdt->wdt_device.parent = &pdev->dev;
-+
-+	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->reg_base = devm_ioremap_resource(dev, base);
-+	if (IS_ERR(wdt->reg_base)) {
-+		dev_err(dev, "ioremap failed\n");
-+		return PTR_ERR(wdt->reg_base);
-+	}
-+
-+	zx2967_wdt_reset_sysctrl(dev);
-+
-+	wdt->clock = devm_clk_get(dev, NULL);
-+	if (IS_ERR(wdt->clock)) {
-+		dev_err(dev, "failed to find watchdog clock source\n");
-+		return PTR_ERR(wdt->clock);
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clock);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
-+
-+	rstc = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(rstc)) {
-+		dev_err(dev, "failed to get rstc");
-+		ret = PTR_ERR(rstc);
-+		goto err;
-+	}
-+
-+	reset_control_assert(rstc);
-+	reset_control_deassert(rstc);
-+
-+	watchdog_set_drvdata(&wdt->wdt_device, wdt);
-+	watchdog_init_timeout(&wdt->wdt_device,
-+			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
-+	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
-+
-+	ret = watchdog_register_device(&wdt->wdt_device);
-+	if (ret)
-+		goto err;
-+
-+	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
-+		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
-+
-+	return 0;
-+
-+err:
-+	clk_disable_unprepare(wdt->clock);
-+	return ret;
-+}
-+
-+static int zx2967_wdt_remove(struct platform_device *pdev)
-+{
-+	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdt_device);
-+	clk_disable_unprepare(wdt->clock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_wdt_match[] = {
-+	{ .compatible = "zte,zx296718-wdt", },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
-+
-+static struct platform_driver zx2967_wdt_driver = {
-+	.probe		= zx2967_wdt_probe,
-+	.remove		= zx2967_wdt_remove,
-+	.driver		= {
-+		.name	= "zx2967-wdt",
-+		.of_match_table	= of_match_ptr(zx2967_wdt_match),
-+	},
-+};
-+module_platform_driver(zx2967_wdt_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+The bootstrapping process in the PHY sets this bit. This is wrong since
+the board lane layout is not "swapped"
+
+The bootloader (u-boot) fixes this, since we need to support
+networking (tftp, ping).
+
+
+> and rely on Linux not changing it, 
+
+When we boot Linux everything is OK, until the dp83867 driver comes
+into play and performs reset (including register reset).
+
+Then the "bootstrap", initial line swap is setup again (wrongly). So we
+need a way in Linux to make things correct again.
+
+> because the
+> hardware design has such a swap?
+> 
+> It seems the bootloader you are using does this. 
+
+The bootloader fixes things, but then in Linux the PHY driver
+(dp83867.c) performs "RESET" which breaks networking again.
+
+> But in your case, it
+> does it wrongly. 
+
+The bootloader does its job correctly.
+
+> I'm guessing you have a vendor bootloader? And no
+> easy access to the sources? 
+
+Mainline u-boot (all vendor code will be upstreamed).
+
+> Otherwise you would of fixed the
+> bootloader. So can we assume there are vendor designed boards which
+> require the swap? Do they run a mainline kernel? Or only the vendor
+> kernel?
+
+All stuff is going to run mainline kernel (LTS - v4.9 ?).
+
+> 
+> If we know of mainline boards which are going to break, we should not
+> do this.
+> 
+> If however we do decide to reset it to default value, i think it would
+> be good to implement net-phy-lane-swap as well, so giving people an
+> easier path towards mainline.
+
+I have thought a bit about that and I think that we should define
+complementary "net-phy-lane-no-swap" as suggested by Florian. Then
+affected boards could define it and use.
+
+> 
+>        Andrew
+
+
+
+
+Best regards,
+
+Lukasz Majewski
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
