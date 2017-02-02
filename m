@@ -1,42 +1,53 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 net-next 01/16] dt-bindings: net: update Marvell PPv2
- binding for PPv2.2 support
-Date: Thu, 2 Feb 2017 17:44:57 +0100
-Message-ID: <20170202174457.17ceabe9@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-2-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170107093228.GI14217@n2100.armlinux.org.uk>
+From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
+Date: Thu, 2 Feb 2017 18:45:41 +0200
+Message-ID: <20170202184443-mutt-send-email-mst@kernel.org>
+References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
+ <20170201195732-mutt-send-email-mst@kernel.org>
+ <20170201182659.GM8177@arm.com>
+ <20170201210648-mutt-send-email-mst@kernel.org>
+ <20170202112614.GB30577@arm.com>
+ <bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5@arm.com>
+ <20170202182224-mutt-send-email-mst@kernel.org>
+ <20170202164049.GI13839@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170107093228.GI14217@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170202164049.GI13839-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Sat, 7 Jan 2017 09:32:28 +0000, Russell King - ARM Linux wrote:
-> On Wed, Dec 28, 2016 at 05:46:17PM +0100, Thomas Petazzoni wrote:
-> > @@ -31,7 +43,7 @@ Optional properties (port):
-> >    then fixed link is assumed, and the 'fixed-link' property is
-> >    mandatory.  
+On Thu, Feb 02, 2017 at 04:40:49PM +0000, Will Deacon wrote:
+> On Thu, Feb 02, 2017 at 06:30:28PM +0200, Michael S. Tsirkin wrote:
+> > I am inclined to say, for 4.10 let's revert
+> > c7070619f3408d9a0dffbed9149e6f00479cf43b since what it fixes is not a
+> > regression in 4.10.
 > 
-> Not directly related to this patch, but this context is wrong.  The
-> PP2 driver _requires_ a PHY.  It doesn't support fixed-link in its
-> current form.  I think the DT binding describes an expectation of
-> a future driver.
+> No complaints there, as long as we can keep working to fix this for 4.11
+> and onwards. You'll also need to cc stable on the revert.
 > 
-> The side effect is that if trying to use a fixed-link on any port,
-> the ethernet driver fails to probe.
+> > So I think we can defer the fix to 4.11.
+> > I think we still want f7f6634d23830ff74335734fbdb28ea109c1f349
+> > for hosts with virtio 1 support.
+> > 
+> > All this will hopefully push hosts to just implement virtio 1.
+> > For mmio the changes are very small: several new registers,
+> > that's all. You want this for proper 64 bit dma mask anyway.
+> 
+> As I've said, virtio 1 will have exactly the same issue unless we start
+> requiring firmware to advertise dma-coherent/_CCA for virtio-mmio
+> devices correctly.
+> 
+> Will
 
-Correct. I will send a patch to adjust the Device Tree binding
-documentation accordingly. Thanks for noticing this mistake!
+I mostly agree with that, just didn't have time to read up on _CCA yet.
 
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+MST
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
