@@ -1,97 +1,70 @@
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH] ARM: shmobile: r7s72100: Enable L2 cache
-Date: Thu,  2 Feb 2017 16:20:00 -0500
-Message-ID: <20170202212000.10768-1-chris.brandt@renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCHv2] ARM: dts: Add EMAC AXI settings for Arria10
+Date: Thu,  2 Feb 2017 16:05:21 -0600
+Message-ID: <1486073121-3364-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dinguyen-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org, dinh.nguyen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This enables the 128KB L2 cache in the RZ/A1 (R7S72100).
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-The 'Write full line of zeros mode' of this Cortex-A9 cannot be used
-because the sideband signals between the CA9 and PL310 are not connected.
-Since there is no option to disable this feature in the cache-l2x0 driver,
-our only option is to specify a secure write function which will then cause
-the cache-l2x0 driver to not enable this feature.
+Add the device tree entries needed to support the EMAC AXI
+bus settings on the Arria10 SoCFPGA chip.
 
-If you do not override a l2c_write_sec function which causes the line of
-zeros mode to be enabled, then the system will crash pretty quickly after
-the L2C is enabled.
-
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 ---
- arch/arm/boot/dts/r7s72100.dtsi         |  9 +++++++++
- arch/arm/mach-shmobile/setup-r7s72100.c | 21 +++++++++++++++++++++
- 2 files changed, 30 insertions(+)
+v2 Add the AXI configuration to the other DW EMACs in the chip.
+---
+ arch/arm/boot/dts/socfpga_arria10.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-index 74e684f..08aaaff 100644
---- a/arch/arm/boot/dts/r7s72100.dtsi
-+++ b/arch/arm/boot/dts/r7s72100.dtsi
-@@ -177,6 +177,7 @@
- 			compatible = "arm,cortex-a9";
- 			reg = <0>;
- 			clock-frequency = <400000000>;
-+			next-level-cache = <&L2>;
+diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+index f520cbf..9abc7d8 100644
+--- a/arch/arm/boot/dts/socfpga_arria10.dtsi
++++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+@@ -400,6 +400,12 @@
+ 				};
  		};
- 	};
  
-@@ -368,6 +369,14 @@
- 			<0xe8202000 0x1000>;
- 	};
- 
-+	L2: cache-controller@3ffff000 {
-+		compatible = "arm,pl310-cache";
-+		reg = <0x3ffff000 0x1000>;
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-+		cache-unified;
-+		cache-level = <2>;
-+	};
++		socfpga_axi_setup: stmmac-axi-config {
++			snps,wr_osr_lmt = <0xf>;
++			snps,rd_osr_lmt = <0xf>;
++			snps,blen = <0 0 0 0 16 0 0>;
++		};
 +
- 	i2c0: i2c@fcfee000 {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-diff --git a/arch/arm/mach-shmobile/setup-r7s72100.c b/arch/arm/mach-shmobile/setup-r7s72100.c
-index d46639f..655deba 100644
---- a/arch/arm/mach-shmobile/setup-r7s72100.c
-+++ b/arch/arm/mach-shmobile/setup-r7s72100.c
-@@ -15,6 +15,7 @@
-  */
+ 		gmac0: ethernet@ff800000 {
+ 			compatible = "altr,socfpga-stmmac", "snps,dwmac-3.72a", "snps,dwmac";
+ 			altr,sysmgr-syscon = <&sysmgr 0x44 0>;
+@@ -416,6 +422,7 @@
+ 			clock-names = "stmmaceth";
+ 			resets = <&rst EMAC0_RESET>;
+ 			reset-names = "stmmaceth";
++			snps,axi-config = <&socfpga_axi_setup>;
+ 			status = "disabled";
+ 		};
  
- #include <linux/kernel.h>
-+#include <linux/io.h>
+@@ -435,6 +442,7 @@
+ 			clock-names = "stmmaceth";
+ 			resets = <&rst EMAC1_RESET>;
+ 			reset-names = "stmmaceth";
++			snps,axi-config = <&socfpga_axi_setup>;
+ 			status = "disabled";
+ 		};
  
- #include <asm/mach/arch.h>
+@@ -452,6 +460,7 @@
+ 			rx-fifo-depth = <16384>;
+ 			clocks = <&l4_mp_clk>;
+ 			clock-names = "stmmaceth";
++			snps,axi-config = <&socfpga_axi_setup>;
+ 			status = "disabled";
+ 		};
  
-@@ -25,7 +26,27 @@ static const char *const r7s72100_boards_compat_dt[] __initconst = {
- 	NULL,
- };
- 
-+/*
-+ * The 'Write full line of zeros mode' of this Cortex-A9 cannot be used because
-+ * the sideband signals between the CA9 and PL310 are not connected. Since there
-+ * is no option to disable this feature in the cache-l2x0 driver, our only
-+ * option is to specify a secure write function which will then cause the
-+ * cache-l2x0 driver to not enable this feature.
-+ */
-+static void r7s72100_l2c_write_sec(unsigned long val, unsigned int reg)
-+{
-+	static void __iomem *base;
-+
-+	if (!base)
-+		base = ioremap_nocache(0x3ffff000, SZ_4K);
-+
-+	writel_relaxed(val, base + reg);
-+}
-+
- DT_MACHINE_START(R7S72100_DT, "Generic R7S72100 (Flattened Device Tree)")
-+	.l2c_aux_val    = 0,
-+	.l2c_aux_mask   = ~0,
-+	.l2c_write_sec	= r7s72100_l2c_write_sec,
- 	.init_early	= shmobile_init_delay,
- 	.init_late	= shmobile_init_late,
- 	.dt_compat	= r7s72100_boards_compat_dt,
 -- 
-2.10.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
