@@ -1,57 +1,134 @@
-From: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++ Bridge
-Date: Fri, 3 Feb 2017 12:25:24 +0000
-Message-ID: <CACvgo53BpgFwr3-LRhe8QpvD3ZRMr7huaRKyp5PTAY6O60J3xA@mail.gmail.com>
-References: <CACvgo535iyFvdOWzQHRnU++Ye0GgyZyN3R9ALSXRP7k3EPyRGA@mail.gmail.com>
- <3e31-58931d80-1-221fa900@101383713> <CACvgo50bOZ=jzeJc_J4_7fpiEh9-ATKo1KOhAia2679AGA=mng@mail.gmail.com>
- <20170203080040.qn53xnpojxzk4qoi@phenom.ffwll.local>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: [PATCH] devicetree: Add video bus switch
+Date: Fri, 3 Feb 2017 13:35:08 +0100
+Message-ID: <20170203123508.GA10286@amd>
+References: <20161023200355.GA5391@amd>
+ <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170203080040.qn53xnpojxzk4qoi-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20161224152031.GA8420@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, Peter Senna Tschudin <peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, martin.donnelly-JJi787mZWgc@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 3 February 2017 at 08:00, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org> wrote:
-> On Thu, Feb 02, 2017 at 12:37:21PM +0000, Emil Velikov wrote:
->>  - Daniel, gents - is drm-misc aimed at devs with limited (no?)
->> review/commit history in the area and/or the kernel in general ?
->> In this case, Peter have quite noticeable experience [in kernel
->> development] with little-to no in DRM.
->> Should one draw a line in the sand somewhere ?
->
-> We're fairly lenient with accepting new drivers already, and for drivers
-> in drm-misc we require some checks and peer review to make sure new folks
-> learn faster. But it's an expirement, I fully expect some fallout and then
-> some learnign and fine tuning from that, and maybe we even need to crank
-> requirements back up to a much higher level of experience.
->
-> But for drivers I'm honestly not too concerned: As long as there's some
-> process in place to foster learning&collaboration (which I think will be
-> better with this) I really don't see much harm in merging non-perfect
-> driver code.
->
-Thank you Daniel, this is very well said. Being lenient to begin with
-and adjusting where/if needed is the more welcoming approach, indeed.
-Doubt there'll be (m)any cases of (ab|mis)use but even if so, nobody
-can see the future.
 
->>  - You patch has been on a long [bit rocky road] for a while, with
->> devs giving you [what seems like] a partial reviews.
->> Have you considered reviewing others' patches in exchange for a [more
->> complete one] of this one ? According to git log people have poked you
->> a handful of times, but seemingly you were busy.
->
-> Just a clarification: When I review drivers I don't do a fairly cursor
-> look, hunting for areas where some refactoring and align with drm best
-> practices would be good. And I think that's perfectly fine and enough to
-> get a driver landed, but we're definitely not 100% consistent on this
-> within drm-misc. Probably will take some time to figure this out.
-Seems like I've missed "Peter, your patch..." above, silly me.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for answering my [what may seem silly] questions ;-)
-Emil
+
+N900 contains front and back camera, with a switch between the
+two. This adds support for the switch component, and it is now
+possible to select between front and back cameras during runtime.
+
+This adds documentation for the devicetree binding.
+
+Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+
+
+diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b=
+/Documentation/devicetree/bindings/media/video-bus-switch.txt
+new file mode 100644
+index 0000000..1b9f8e0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+@@ -0,0 +1,63 @@
++Video Bus Switch Binding
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++This is a binding for a gpio controlled switch for camera interfaces. Such=
+ a
++device is used on some embedded devices to connect two cameras to the same
++interface of a image signal processor.
++
++Required properties
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++compatible	: must contain "video-bus-switch"
++switch-gpios	: GPIO specifier for the gpio, which can toggle the
++		  selected camera. The GPIO should be configured, so
++		  that a disabled GPIO means, that the first port is
++		  selected.
++
++Required Port nodes
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++More documentation on these bindings is available in
++video-interfaces.txt in the same directory.
++
++reg		: The interface:
++		  0 - port for image signal processor
++		  1 - port for first camera sensor
++		  2 - port for second camera sensor
++
++Example
++=3D=3D=3D=3D=3D=3D=3D
++
++video-bus-switch {
++	compatible =3D "video-bus-switch"
++	switch-gpios =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
++
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++
++		port@0 {
++			reg =3D <0>;
++
++			csi_switch_in: endpoint {
++				remote-endpoint =3D <&csi_isp>;
++			};
++		};
++
++		port@1 {
++			reg =3D <1>;
++
++			csi_switch_out1: endpoint {
++				remote-endpoint =3D <&csi_cam1>;
++			};
++		};
++
++		port@2 {
++			reg =3D <2>;
++
++			csi_switch_out2: endpoint {
++				remote-endpoint =3D <&csi_cam2>;
++			};
++		};
++	};
++};
+
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliUePwACgkQMOfwapXb+vKJTQCfQduvtz/0WVlKURllpoCZ5ftu
+E7AAoJIJkHA98p8p88THy+Jhv7cCUu/q
+=+2+b
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
