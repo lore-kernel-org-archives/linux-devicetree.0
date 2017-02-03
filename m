@@ -1,134 +1,61 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: [PATCH] devicetree: Add video bus switch
-Date: Fri, 3 Feb 2017 13:35:08 +0100
-Message-ID: <20170203123508.GA10286@amd>
-References: <20161023200355.GA5391@amd>
- <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
- <20161214122451.GB27011@amd>
- <20161222100104.GA30917@amd>
- <20161222133938.GA30259@amd>
- <20161224152031.GA8420@amd>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+From: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Subject: [PATCH v3] ARM: dts: i.MX25: add AIPS control registers
+Date: Fri,  3 Feb 2017 13:59:52 +0100
+Message-ID: <1486126792-28186-1-git-send-email-martin@kaiser.cx>
+References: <1485890402-22974-1-git-send-email-martin@kaiser.cx>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20161224152031.GA8420@amd>
+In-Reply-To: <1485890402-22974-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The i.MX25 contains two AHB to IP bridges (AIPS), each of which has a set of
+control registers. Add the memory regions for the control registers to
+the Device Tree.
 
---mP3DRpeJDSE+ciuQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+---
+v3:
+   fixed the size of the memory regions, both are 16KBytes long
 
+v2:
+   removed the "fsl,imx53-aipstz" property as per Sascha's request
 
-N900 contains front and back camera, with a switch between the
-two. This adds support for the switch component, and it is now
-possible to select between front and back cameras during runtime.
+ arch/arm/boot/dts/imx25.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-This adds documentation for the devicetree binding.
-
-Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-
-
-diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b=
-/Documentation/devicetree/bindings/media/video-bus-switch.txt
-new file mode 100644
-index 0000000..1b9f8e0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-@@ -0,0 +1,63 @@
-+Video Bus Switch Binding
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+This is a binding for a gpio controlled switch for camera interfaces. Such=
- a
-+device is used on some embedded devices to connect two cameras to the same
-+interface of a image signal processor.
-+
-+Required properties
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+compatible	: must contain "video-bus-switch"
-+switch-gpios	: GPIO specifier for the gpio, which can toggle the
-+		  selected camera. The GPIO should be configured, so
-+		  that a disabled GPIO means, that the first port is
-+		  selected.
-+
-+Required Port nodes
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+More documentation on these bindings is available in
-+video-interfaces.txt in the same directory.
-+
-+reg		: The interface:
-+		  0 - port for image signal processor
-+		  1 - port for first camera sensor
-+		  2 - port for second camera sensor
-+
-+Example
-+=3D=3D=3D=3D=3D=3D=3D
-+
-+video-bus-switch {
-+	compatible =3D "video-bus-switch"
-+	switch-gpios =3D <&gpio1 1 GPIO_ACTIVE_HIGH>;
-+
-+	ports {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		port@0 {
-+			reg =3D <0>;
-+
-+			csi_switch_in: endpoint {
-+				remote-endpoint =3D <&csi_isp>;
+diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+index e0ba550..5ae8a14 100644
+--- a/arch/arm/boot/dts/imx25.dtsi
++++ b/arch/arm/boot/dts/imx25.dtsi
+@@ -93,6 +93,11 @@
+ 			reg = <0x43f00000 0x100000>;
+ 			ranges;
+ 
++			aips1: bridge@43f00000 {
++				compatible = "fsl,imx25-aips";
++				reg = <0x43f00000 0x4000>;
 +			};
-+		};
 +
-+		port@1 {
-+			reg =3D <1>;
-+
-+			csi_switch_out1: endpoint {
-+				remote-endpoint =3D <&csi_cam1>;
+ 			i2c1: i2c@43f80000 {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+@@ -342,6 +347,11 @@
+ 			reg = <0x53f00000 0x100000>;
+ 			ranges;
+ 
++			aips2: bridge@53f00000 {
++				compatible = "fsl,imx25-aips";
++				reg = <0x53f00000 0x4000>;
 +			};
-+		};
 +
-+		port@2 {
-+			reg =3D <2>;
-+
-+			csi_switch_out2: endpoint {
-+				remote-endpoint =3D <&csi_cam2>;
-+			};
-+		};
-+	};
-+};
+ 			clks: ccm@53f80000 {
+ 				compatible = "fsl,imx25-ccm";
+ 				reg = <0x53f80000 0x4000>;
+-- 
+2.1.4
 
-
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---mP3DRpeJDSE+ciuQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAliUePwACgkQMOfwapXb+vKJTQCfQduvtz/0WVlKURllpoCZ5ftu
-E7AAoJIJkHA98p8p88THy+Jhv7cCUu/q
-=+2+b
------END PGP SIGNATURE-----
-
---mP3DRpeJDSE+ciuQ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
