@@ -1,92 +1,228 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
- descriptors and adapt accessors
-Date: Fri, 3 Feb 2017 16:02:27 +0100
-Message-ID: <20170203160227.08b40c58@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170106142901.GC14217@n2100.armlinux.org.uk>
-        <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
-        <20170203142446.2ee517a7@free-electrons.com>
-        <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 10/10] iommu: Remove iommu_register_instance interface
+Date: Fri,  3 Feb 2017 16:17:48 +0100
+Message-ID: <1486135068-23994-11-git-send-email-joro@8bytes.org>
+References: <1486135068-23994-1-git-send-email-joro@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <231514f4-2e35-8bde-4469-aada833635aa-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1486135068-23994-1-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
 
-On Fri, 3 Feb 2017 14:05:13 +0000, Robin Murphy wrote:
+And also move its remaining functionality to
+iommu_device_register() and 'struct iommu_device'.
 
-> > So do you have a better suggestion? The descriptors only have enough
-> > space to store a 40-bit virtual address, which is not enough to fit the
-> > virtual addresses used by Linux for SKBs. This is why I'm instead
-> > relying on the fact that the descriptors can store the 40-bit physical
-> > address, and convert it back to a virtual address, which should be fine
-> > on ARM64 because the entire physical memory is part of the kernel linear
-> > mapping.  
-> 
-> OK, that has nothing to do with DMA addresses then.
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+---
+ drivers/iommu/arm-smmu-v3.c  |  3 +--
+ drivers/iommu/arm-smmu.c     |  4 ++--
+ drivers/iommu/exynos-iommu.c |  2 --
+ drivers/iommu/iommu.c        | 37 ++++++-------------------------------
+ drivers/iommu/msm_iommu.c    |  2 --
+ drivers/iommu/mtk_iommu.c    |  1 -
+ include/linux/iommu.h        |  8 +-------
+ include/linux/of_iommu.h     |  6 ------
+ 8 files changed, 10 insertions(+), 53 deletions(-)
 
-Well, it has to do with DMA in the sense that those buffers are
-mapped with dma_map_single(). So the address that is given to us by the
-hardware as the "physical address of the RX buffer" is the one that we
-have initially given to the hardware and was the result of 
-dma_map_single().
-
-> > Russell proposal of testing the size of a virtual address
-> > pointer instead would solve this I believe, correct?  
-> 
-> AFAICS, even that shouldn't really be necessary - for all VA/PA
-> combinations of 32/32, 32/40 and 64/40, storing virt_to_phys() of the
-> SKB VA won't overflow 40 bits,
-
-I'm already lost here. Why are you talking about virt_to_phys() ? See
-above: we have the dma_addr_t returned from dma_map_single(), and we
-need to find back the corresponding virtual address, because there is
-not enough room in the HW descriptors to store a full 64-bit VA.
-
-> so a corresponding phys_to_virt() at the other end can't go wrong
-> either. If you really do want to special-case things based on VA
-> size, though, either CONFIG_64BIT or sizeof(void *) would indeed be
-> infinitely more useful than the unrelated DMA address width - I know
-> this driver's never going to run on SPARC64, but that's one example
-> of where the above logic would lead to precisely the truncated VA
-> it's trying to avoid.
-
-What is different on SPARC64 here?
-
-The situation we have is the following:
-
- - On systems where VAs are 32-bit wide, we have enough room to store
-   the VA in the HW descriptor. So when we receive a packet, the HW
-   descriptor provides us directly with the VA of the network packet,
-   and the DMA address of the packet. We can dma_unmap_single() the
-   packet, and do its processing.
-
- - On systems where VAs are 64-bit wide, we don't have enough room to
-   store the VA in the HW descriptor. However, on 64-bit systems, the
-   entire physical memory is mapped in the kernel linear mapping, so
-   phys_to_virt() is valid on any physical address. And we use this
-   property to retrieve the full 64-bit VA using the DMA address that
-   we get from the HW descriptor.
-
-   Since what we get from the HW descriptor is a DMA address, that's
-   why we're using phys_to_virt(dma_to_phys(...)).
-
-Best regards,
-
-Thomas
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 37094b5..3b00a2e 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2698,10 +2698,9 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	smmu->iommu.ops = &arm_smmu_ops;
++	smmu->iommu.fwnode = dev->fwnode;
+ 	ret = iommu_device_register(&smmu->iommu);
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+-
+ #ifdef CONFIG_PCI
+ 	if (pci_bus_type.iommu_ops != &arm_smmu_ops) {
+ 		pci_request_acs();
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 827e778..dbbd2f2 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -2112,7 +2112,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	smmu->iommu.ops = &arm_smmu_ops;
++	smmu->iommu.ops    = &arm_smmu_ops;
++	smmu->iommu.fwnode = dev->fwnode;
+ 
+ 	err = iommu_device_register(&smmu->iommu);
+ 	if (err) {
+@@ -2120,7 +2121,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+ 	platform_set_drvdata(pdev, smmu);
+ 	arm_smmu_device_reset(smmu);
+ 
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 90f0f52..839f6c1 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -644,8 +644,6 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_enable(dev);
+ 
+-	of_iommu_set_ops(dev->of_node, &exynos_iommu_ops);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 21061da..a7e14b4 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1647,43 +1647,18 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	return ret;
+ }
+ 
+-struct iommu_instance {
+-	struct list_head list;
+-	struct fwnode_handle *fwnode;
+-	const struct iommu_ops *ops;
+-};
+-static LIST_HEAD(iommu_instance_list);
+-static DEFINE_SPINLOCK(iommu_instance_lock);
+-
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops)
+-{
+-	struct iommu_instance *iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
+-
+-	if (WARN_ON(!iommu))
+-		return;
+-
+-	of_node_get(to_of_node(fwnode));
+-	INIT_LIST_HEAD(&iommu->list);
+-	iommu->fwnode = fwnode;
+-	iommu->ops = ops;
+-	spin_lock(&iommu_instance_lock);
+-	list_add_tail(&iommu->list, &iommu_instance_list);
+-	spin_unlock(&iommu_instance_lock);
+-}
+-
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct iommu_instance *instance;
+ 	const struct iommu_ops *ops = NULL;
++	struct iommu_device *iommu;
+ 
+-	spin_lock(&iommu_instance_lock);
+-	list_for_each_entry(instance, &iommu_instance_list, list)
+-		if (instance->fwnode == fwnode) {
+-			ops = instance->ops;
++	spin_lock(&iommu_device_lock);
++	list_for_each_entry(iommu, &iommu_device_list, list)
++		if (iommu->fwnode == fwnode) {
++			ops = iommu->ops;
+ 			break;
+ 		}
+-	spin_unlock(&iommu_instance_lock);
++	spin_unlock(&iommu_device_lock);
+ 	return ops;
+ }
+ 
+diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+index 38d19f9..b89b47e 100644
+--- a/drivers/iommu/msm_iommu.c
++++ b/drivers/iommu/msm_iommu.c
+@@ -810,8 +810,6 @@ static int msm_iommu_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
+ 
+-	of_iommu_set_ops(pdev->dev.of_node, &msm_iommu_ops);
+-
+ 	pr_info("device mapped at %p, irq %d with %d ctx banks\n",
+ 		iommu->base, iommu->irq, iommu->ncb);
+ 
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 9fb7258..f0612aa 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -681,7 +681,6 @@ static int mtk_iommu_init_fn(struct device_node *np)
+ 		return ret;
+ 	}
+ 
+-	of_iommu_set_ops(np, &mtk_iommu_ops);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index e53452f..3fac95e 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -214,6 +214,7 @@ struct iommu_ops {
+ struct iommu_device {
+ 	struct list_head list;
+ 	const struct iommu_ops *ops;
++	struct fwnode_handle *fwnode;
+ 	struct device dev;
+ };
+ 
+@@ -369,8 +370,6 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 		      const struct iommu_ops *ops);
+ void iommu_fwspec_free(struct device *dev);
+ int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops);
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+ 
+ #else /* CONFIG_IOMMU_API */
+@@ -601,11 +600,6 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
+ 	return -ENODEV;
+ }
+ 
+-static inline void iommu_register_instance(struct fwnode_handle *fwnode,
+-					   const struct iommu_ops *ops)
+-{
+-}
+-
+ static inline
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+index 66fcbc9..fc4add3 100644
+--- a/include/linux/of_iommu.h
++++ b/include/linux/of_iommu.h
+@@ -31,12 +31,6 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 
+ #endif	/* CONFIG_OF_IOMMU */
+ 
+-static inline void of_iommu_set_ops(struct device_node *np,
+-				    const struct iommu_ops *ops)
+-{
+-	iommu_register_instance(&np->fwnode, ops);
+-}
+-
+ static inline const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+ {
+ 	return iommu_ops_from_fwnode(&np->fwnode);
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
