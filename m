@@ -1,59 +1,40 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 1/2] dt-bindings: display: panel: Add bindings for the
- Sitronix ST7789V panel
-Date: Fri,  3 Feb 2017 10:59:05 +0100
-Message-ID: <097eb2ad92f68f0f1a7c035c9b6b094afaf34dc1.1486115846.git-series.maxime.ripard@free-electrons.com>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/2] drm/panel: Add support for the Sitronix ST7789V
+Date: Fri,  3 Feb 2017 10:59:04 +0100
+Message-ID: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFNpdHJvbml4IFNUNzc4OVYgaXMgYW4gTENEIHBhbmVsIGNvbnRyb2xsZXIsIGNvbnRyb2xs
-ZWQgb3ZlciBTUEksIHRoYXQKY2FuIGRyaXZlIDE4LWJpdHMgMjQweDMyMCBMQ0QgZGlzcGxheXMu
-CgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
-b25zLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
-YW5lbC9zaXRyb25peCxzdDc3ODl2LnR4dCB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25z
-KC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3Nzg5di50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaXRyb25peCxzdDc3ODl2
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Np
-dHJvbml4LHN0Nzc4OXYudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
-MC4uZjcwZTZlOWM1NGVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3Nzg5di50eHQKQEAgLTAsMCAr
-MSwzNiBAQAorU2l0cm9uaXggU1Q3Nzg5ViBSR0IgcGFuZWwgd2l0aCBTUEkgY29udHJvbCBidXMK
-KworUmVxdWlyZWQgcHJvcGVydGllczoKKyAgLSBjb21wYXRpYmxlOiAic2l0cm9uaXgsc3Q3Nzg5
-diIKKyAgLSByZWc6IENoaXAgc2VsZWN0IG9mIHRoZSBwYW5lbCBvbiB0aGUgU1BJIGJ1cworICAt
-IHJlc2V0LWdwaW9zOiBhIEdQSU8gcGhhbmRsZSBmb3IgdGhlIHJlc2V0IHBpbgorCitPcHRpb25h
-bCBwcm9wZXJ0aWVzOgorICAtIGJhY2tsaWdodDogcGhhbmRsZSB0byB0aGUgYmFja2xpZ2h0IHVz
-ZWQKKworVGhlIGdlbmVyaWMgYmluZGluZ3MgZm9yIHRoZSBTUEkgc2xhdmVzIGRvY3VtZW50ZWQg
-aW4gWzFdIGFsc28gYXBwbGllcworCitUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdw
-b3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxkCisnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGlu
-ZyB0byB0aGUgYmluZGluZ3MgZGVmaW5lZCBpbiBbMl0uIFRoaXMKK25vZGUgc2hvdWxkIGRlc2Ny
-aWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgorCitbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9zcGkvc3BpLWJ1cy50eHQKK1syXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2dyYXBoLnR4dAorCitFeGFtcGxlOgorCitwYW5lbEAwIHsKKwljb21wYXRpYmxlID0g
-InNpdHJvbml4LHN0Nzc4OXYiOworCXJlZyA9IDwwPjsKKwlyZXNldC1ncGlvcyA9IDwmcGlvIDYg
-MTEgR1BJT19BQ1RJVkVfTE9XPjsKKwliYWNrbGlnaHQgPSA8JnB3bV9ibD47CisJc3BpLW1heC1m
-cmVxdWVuY3kgPSA8MTAwMDAwPjsKKwlzcGktY3BvbDsKKwlzcGktY3BoYTsKKworCXBvcnQgewor
-CQlwYW5lbF9pbnB1dDogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9v
-dXRfcGFuZWw+OworCQl9OworCX07Cit9OwotLSAKZ2l0LXNlcmllcyAwLjguMTEKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+Here is an attempt at supporting the ST7789V LCD controller from Sitronix.
+
+It is controlled through an SPI bus, with a twist, since each byte sent
+must be prefixed by a bit, which needs an 9-bits-per-word SPI controller,
+which is quite rare. Else, you would need to bitbang it.
+
+Let me know what you think,
+Maxime
+
+Maxime Ripard (2):
+  dt-bindings: display: panel: Add bindings for the Sitronix ST7789V panel
+  drm/panel: Add driver for sitronix ST7789V panel
+
+ Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt |  36 ++++++-
+ drivers/gpu/drm/panel/Kconfig                                        |   4 +-
+ drivers/gpu/drm/panel/Makefile                                       |   1 +-
+ drivers/gpu/drm/panel/panel-sitronix-st7789v.c                       | 435 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+ 4 files changed, 476 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+
+base-commit: 2a6e628efb37432a83bb42b00e3c403b1d8873dd
+-- 
+git-series 0.8.11
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
