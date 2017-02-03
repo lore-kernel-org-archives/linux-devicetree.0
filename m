@@ -1,124 +1,152 @@
-From: Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: DTB file appears to have corrupted node property according to
- fdtdump and kernel?
-Date: Fri, 3 Feb 2017 10:38:42 +0200
-Message-ID: <CAPBAm7Ts4shbZA0vt_XDn5ytUKCN3n5WSrZuT-m2e28DG5KAEw@mail.gmail.com>
-References: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA@mail.gmail.com>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 0/3] Support qcom's HSIC USB and rewrite USB2 HS
+ support
+Date: Fri, 3 Feb 2017 16:46:18 +0800
+Message-ID: <20170203084618.GA25013@b29397-desktop>
+References: <20170125223245.2688-1-stephen.boyd@linaro.org>
+ <588A149C.6020207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <588A149C.6020207-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2 February 2017 at 20:09, Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi,
->
-> I have a particular device tree node property which refuses to reach
-> the Linux kernel without corruption:
->
-> I am looking at the following call stack:
->
-> #0 of_platform_bus_create(...)
-> #1 of_platform_bus_create(...)
-> #2 of_platform_bus_create(...)
-> #3 of_platform_populate(...)
-> #4 sama5_dt_device_init(...)
-> #5 customize_machine(...)
-> #6 do_one_initcall(...)
-> #7 do_initcall_level(...)
-> #8 do_initcalls()
-> #9 do_basic_setup() at main.c:881
-> #10 kernel_init_freeable() at main.c:1004
-> #11 kernel_init(unused = <Value currently has no location>) at main.c:941
->
-> Once I reach the i2c node below, I can walk the properties linked list
-> in the debugger. Once I get to the lsm6ds3 child and the "interrupts"
-> property, the value is (second value corrupted as zero)
->
->  interrupts = <0xc 0x0>;
->
-> (I am investigating this because the second value which is used as the
-> interrupt trigger is always zero when the driver reads it).
->
-> I have done some additional tests using the dtc and fdtdump utility to
-> try and isolate the issue.
->
-> From the extract below from the preprocessed file:
->
->    i2c1: i2c@f0018000 {
->     compatible = "atmel,at91sam9x5-i2c";
->     reg = <0xf0018000 0x4000>;
->     interrupts = <0x13 0x4 0x6>;
->     dmas = <0x2 0x2 0x9 0x2 0x2 0xa>;
->     dma-names = "tx", "rx";
->     pinctrl-names = "default";
->     pinctrl-0 = <0x12>;
->     #address-cells = <0x1>;
->     #size-cells = <0x0>;
->     clocks = <0x13>;
->     status = "okay";
->     clock-frequency = <0x61a80>;
->     atmel,recover-scl = <0x14 0x1b 0x0>;
->     atmel,recover-sda = <0x14 0x1a 0x0>;
->
->     lsm6ds3@6b {
->      compatible = "st,lsm6ds3";
->      reg = <0x6b>;
->      pinctrl-names = "default";
->      pinctrl-0 = <0x15>;
->      interrupt-parent = <0x16>;
->      interrupts = <0xc 0x1>;
->      interrupt-names = "lsm6ds_int1";
->      st,drdy-int-pin = <0x1>;
->     };
->    };
->
-> Version: DTC 1.4.0 (ubuntu package) for manual testing.
->
-> (1)  fdtdump mix6000.dtb | grep interrupts
->
-> Thsi returns the interrupt line as:
->
-> interrupts = <0x0000000c 0x000001d0>;
->
-> (2) In the linux kernel the of_platform_populate() reads the same property as:
->
-> 0x0000000c 0x00000000 with lenth=8
->
-> (3) If I take the DTS file and manually compile the DTB with the dtc
-> compiler, and convert it back to the DTS the correct values are shown
->
-> (4) If I change the interrupt value:
->
-> interrupts = <0xc 0x0>;
->
-> and I do:
->
-> cat <file-old.dtb> | od -t x1 > file1.txt
-> cat <file-mod.dtb> | od -t x1 > file2.txt
-> kdiff3 file1.txt file2.txt
->
-> I actually see a single hex byte change from 0x1 to 0x0.
->
-> If it was not for the faulty fdtdump output (in conjuection with the
-> Linux kernel zero at the same place) I would have said its definately
-> a kernel issue.
->
-> Any ideas?
+On Thu, Jan 26, 2017 at 08:54:12PM +0530, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On Thursday 26 January 2017 04:02 AM, Stephen Boyd wrote:
+> > This patch series continues the usb chipidea rewrite for 
+> > Qualcommm platforms. I've dropped the patches that were applied
+> > to Peter's tree for chipidea. Now the phy drivers are left,
+> > along with the patch to call phy_set_mode() at the right place.
+> > 
+> > I've left the HSIC phy driver here, because it wasn't merged in
+> > the last round. Nothing has changed in that driver, so I believe
+> > it is ready to be merged now. The chipidea patch is independent and
+> > can be merged without causing any dependency with the phy tree.
+> 
+> merged the phy patches. Please send a patch updating the MAINTAINERS for the
+> phy driver.
+> 
+> Thanks
+> Kishon
+> > 
+> > Patches based on v4.10-rc1 + first 22 patches from v5. Full
+> > branch is here[1].
+> > 
+> > Changes from v7:
+> >  * Dropped set_vbus() callback (Kishon)
+> >  * Made phy_set_mode() generic and moved into ci_platform_configure() (Peter)
+> > 
+> > Changes from v6:
+> >  * Dropped first 22 applied patches
+> >  * Rewrote phy_set_mode() patch to be msm specific
+> >  * New set_vbus() callback in phy framework
+> >  * Updated HS phy driver for set_vbus() callback
+> > 
+> > Changes from v5:
+> >  * Replaced "Emulate OTGSC interrupt enable path" patch with a patch
+> >    from Peter
+> >  * Updated HS phy driver to support set_mode callback to handle pullup
+> >  * New patch to set the mode to device or host in chipidea udc pullup
+> >    function to toggle the pullup for HS mode
+> >  * New patch to drop lock around event_notify callback to avoid lockdep
+> >    issues
+> >  * Removal of extcon usage from HS phy driver
+> >  * Picked up acks from Heikki and Peter on ULPI core patch
+> > 
+> > Changes from v4:
+> >  * Picked up Acks from Rob
+> >  * Updated HS phy init sequence DT property to restrict it to offsets
+> > 
+> > Changes from v3:
+> >  * Picked up Acks from Peter
+> >  * Updated extcon consolidation patch per Peter's comments
+> >  * Folded in simplification from Heikki for ULPI DT matching
+> > 
+> > Changes from v2:
+> >  * Added SoC specific compatibles in phy bindings
+> >  * Dropped AVVIS patch for OTG statemachine
+> >  * New patch to consolidate extcon handlers
+> >  * Picked up Acks from Peter
+> >  * Rebased onto v4.8-rc1
+> >  * Reworked ULPI OF code to look at vid == 0 instead of pid == 0
+> >  * Dropped ULPI bindings for vid and pid overrides
+> > 
+> > Changes from v1:
+> >  * Reworked ULPI device probing to keep using vendor/product ids that
+> >    come from DT if needed and falls back to OF style match when product id
+> >    is 0
+> >  * PHY init later patch was rejected so that moved to a quirk flag and
+> >    the msm wrapper started managing the phy on/off
+> >  * Updated clk requirements for HSIC phy in binding doc
+> >  * Added optional clk in wrapper for "housekeeping" found on older qcom
+> >    platforms
+> >  * Bug fix to OTGSC polling function
+> >  * Changed runtime PM patch to set as active instead of get/put
+> > 
+> > TODO:
+> >  * DMA fails on arm64 so we need something like [2] to make it work.
 
-I mad a very embarrassing mistake.
+It will be fixed after [1] has merged, but I have not found them either
+at Greg's linus tree or next tree.
 
-Our system has two boot paths and changed our main DT, while I tested
-the changes on a debug boot path using a second DT. The second DT
-happen to have the same LSM6DS3 node defined from a previous driver we
-tested, and had the second "interrupts" field hardcoded as zero.
+[1] http://www.spinics.net/lists/linux-usb/msg152375.html
 
-I should have made additional changes to the DT to confirm the updated
-file actually reach the kernel in our build flow.
+Peter
 
-Thanks
+> >  * The db410c needs a driver to toggle the onboard switch to connect
+> >    the usb hub instead of micro port when the usb cable is disconnected.
+> >    I've sent a patch set for this[3], which needs some further
+> >    discussion/development. The current plan is to reintroduce the usb
+> >    mux framework.
+> >  * apq8064 platforms need a vbus regulator to really use otg and I haven't
+> >    tried out the RPM based regulators yet
+> >  * The HSIC phy on the apq8074 dragonboard is connected to a usb4604
+> >    device which requires the i2c driver to probe and send an i2c
+> >    sequence before the HSIC controller enumerates or HSIC doesn't work.
+> >    Right now I have a hack to force the controller to probe defer
+> >    once so that usb4604 probes first. This needs a more proper solution
+> >    like having the DT describe a linkage between the controller and
+> >    the usb device so we can enforce probe ordering. My current plan
+> >    is to use DT graphs/endpoints for this.
+> > 
+> > [1] https://git.linaro.org/people/stephen.boyd/linux.git/log/?h=usb-hsic-8074
+> > [2] https://patchwork.kernel.org/patch/9319527/
+> > [3] https://lkml.kernel.org/r/20160914014246.31847-1-stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+> > 
+> > Stephen Boyd (3):
+> >   usb: chipidea: Configure phy for appropriate mode
+> >   phy: Add support for Qualcomm's USB HSIC phy
+> >   phy: Add support for Qualcomm's USB HS phy
+> > 
+> >  .../devicetree/bindings/phy/qcom,usb-hs-phy.txt    |  84 ++++++
+> >  .../devicetree/bindings/phy/qcom,usb-hsic-phy.txt  |  65 +++++
+> >  drivers/phy/Kconfig                                |  15 ++
+> >  drivers/phy/Makefile                               |   2 +
+> >  drivers/phy/phy-qcom-usb-hs.c                      | 296 +++++++++++++++++++++
+> >  drivers/phy/phy-qcom-usb-hsic.c                    | 160 +++++++++++
+> >  drivers/usb/chipidea/core.c                        |  20 +-
+> >  7 files changed, 636 insertions(+), 6 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-phy.txt
+> >  create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hsic-phy.txt
+> >  create mode 100644 drivers/phy/phy-qcom-usb-hs.c
+> >  create mode 100644 drivers/phy/phy-qcom-usb-hsic.c
+> > 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+
+Best Regards,
+Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
