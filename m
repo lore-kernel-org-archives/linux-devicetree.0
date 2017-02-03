@@ -1,121 +1,378 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
- descriptors and adapt accessors
-Date: Fri, 3 Feb 2017 16:31:25 +0000
-Message-ID: <c2633b97-3a94-e22d-ddea-147327a5d3d6@arm.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170106142901.GC14217@n2100.armlinux.org.uk>
- <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
- <20170203142446.2ee517a7@free-electrons.com>
- <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
- <20170203160227.08b40c58@free-electrons.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 3/3] thermal: zx2967: add thermal driver for ZTE's
+ zx2967 family
+Date: Fri, 3 Feb 2017 09:36:05 -0700
+Message-ID: <20170203163605.GB30336@linaro.org>
+References: <1486116655-24111-1-git-send-email-baoyou.xie@linaro.org>
+ <1486116655-24111-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170203160227.08b40c58-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486116655-24111-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/17 15:02, Thomas Petazzoni wrote:
-> Hello,
+On Fri, Feb 03, 2017 at 06:10:55PM +0800, Baoyou Xie wrote:
+> This patch adds thermal driver for ZTE's zx2967 family.
 > 
-> On Fri, 3 Feb 2017 14:05:13 +0000, Robin Murphy wrote:
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/thermal/Kconfig          |   8 ++
+>  drivers/thermal/Makefile         |   1 +
+>  drivers/thermal/zx2967_thermal.c | 281 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 290 insertions(+)
+>  create mode 100644 drivers/thermal/zx2967_thermal.c
 > 
->>> So do you have a better suggestion? The descriptors only have enough
->>> space to store a 40-bit virtual address, which is not enough to fit the
->>> virtual addresses used by Linux for SKBs. This is why I'm instead
->>> relying on the fact that the descriptors can store the 40-bit physical
->>> address, and convert it back to a virtual address, which should be fine
->>> on ARM64 because the entire physical memory is part of the kernel linear
->>> mapping.  
->>
->> OK, that has nothing to do with DMA addresses then.
-> 
-> Well, it has to do with DMA in the sense that those buffers are
-> mapped with dma_map_single(). So the address that is given to us by the
-> hardware as the "physical address of the RX buffer" is the one that we
-> have initially given to the hardware and was the result of 
-> dma_map_single().
+> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> index 18f2de6..f64bd50 100644
+> --- a/drivers/thermal/Kconfig
+> +++ b/drivers/thermal/Kconfig
+> @@ -444,4 +444,12 @@ config BCM2835_THERMAL
+>  	help
+>  	  Support for thermal sensors on Broadcom bcm2835 SoCs.
+>  
+> +config ZX2967_THERMAL
+> +	tristate "Thermal sensors on zx2967 SoC"
+> +	depends on ARCH_ZX || COMPILE_TEST
+> +	help
+> +	  Enable the zx2967 thermal sensors driver, which supports
+> +	  the primitive temperature sensor embedded in zx2967 SoCs.
+> +	  This sensor generates the real time die temperature.
+> +
+>  endif
+> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> index 677c6d9..c00c05e 100644
+> --- a/drivers/thermal/Makefile
+> +++ b/drivers/thermal/Makefile
+> @@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+>  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
+>  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+>  obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
+> +obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+> diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
+> new file mode 100644
+> index 0000000..fba55b1c
+> --- /dev/null
+> +++ b/drivers/thermal/zx2967_thermal.c
+> @@ -0,0 +1,281 @@
+> +/*
+> + * ZTE's zx2967 family thermal sensor driver
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/thermal.h>
+> +
+> +/* Power Mode: 0->low 1->high */
+> +#define ZX2967_THERMAL_POWER_MODE	0
+> +#define ZX2967_POWER_MODE_LOW		0
+> +#define ZX2967_POWER_MODE_HIGH		1
+> +
+> +/* DCF Control Register */
+> +#define ZX2967_THERMAL_DCF		0x4
+> +#define ZX2967_DCF_EN			BIT(1)
+> +#define ZX2967_DCF_FREEZE		BIT(0)
+> +
+> +/* Selection Register */
+> +#define ZX2967_THERMAL_SEL		0x8
+> +
+> +/* Control Register */
+> +#define ZX2967_THERMAL_CTRL		0x10
+> +
+> +#define ZX2967_THERMAL_READY		BIT(12)
+> +#define ZX2967_THERMAL_TEMP_MASK	0xfff
+> +#define ZX2967_THERMAL_ID_MASK		0x18
+> +#define ZX2967_THERMAL_ID0		0x10
+> +#define ZX2967_THERMAL_ID1		0x8
+> +
+> +#define ZX2967_GET_TEMP_TIMEOUT_US	(100 * 1024)
+> +
+> +struct zx2967_thermal_sensor {
+> +	struct zx2967_thermal_priv *priv;
+> +	struct thermal_zone_device *tzd;
+> +	int id;
+> +};
+> +
+> +/*
+> + * Now, one sensor remains in system, but in fact, we intend to support
+> + * two sensors.
+> + */
 
-Ah, right. DMA addresses are not physical addresses. They may look very
-much alike on many platforms, but that cannot be relied upon. On some
-platforms, some of the "address bits" actually encode things like bus
-attributes. If the device is behind an IOMMU, the DMA address can be
-entirely arbitrary, and the only way to convert it back to a CPU address
-(physical or virtual) is to walk the IOMMU page table.
+The general rule of thumb is to write drivers for the current HW and add
+enhancement when new revision come out but I will let Zhang and Eduardo
+make the call. 
 
->>> Russell proposal of testing the size of a virtual address
->>> pointer instead would solve this I believe, correct?  
->>
->> AFAICS, even that shouldn't really be necessary - for all VA/PA
->> combinations of 32/32, 32/40 and 64/40, storing virt_to_phys() of the
->> SKB VA won't overflow 40 bits,
+> +#define NUM_SENSORS	1
+> +
+> +struct zx2967_thermal_priv {
+> +	struct zx2967_thermal_sensor	sensors[NUM_SENSORS];
+> +	/* Prevents reads sensor in parallel */
+> +	struct mutex			lock;
+> +	struct clk			*clk_gate;
+> +	struct clk			*pclk;
+> +	void __iomem			*regs;
+> +	struct device			*dev;
+> +};
+
+Normally all new structure need to use the proper comment style [1] (as noted in my
+previous email) but this one is pretty obvious and private to this file.  Again
+I'll let Zhang and Eduardo decide what they want to do here.
+
+[1]. http://lxr.free-electrons.com/source/Documentation/CodingStyle 
+
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int zx2967_thermal_suspend(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +
+> +	if (priv && priv->pclk)
+> +		clk_disable_unprepare(priv->pclk);
+> +
+> +	if (priv && priv->clk_gate)
+> +		clk_disable_unprepare(priv->clk_gate);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_thermal_resume(struct device *dev)
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +	int error;
+> +
+> +	error = clk_prepare_enable(priv->clk_gate);
+> +	if (error)
+> +		return error;
+> +
+> +	error = clk_prepare_enable(priv->pclk);
+> +	if (error) {
+> +		clk_disable_unprepare(priv->clk_gate);
+> +		return error;
+> +	}
+> +
+> +	return 0;
+> +}
+> +static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
+> +			 zx2967_thermal_suspend, zx2967_thermal_resume);
+
+The pm_runtime macros are built in such a way that the call to SIMPLE_DEV_PM_OPS
+itself doesn't have to be enclosed in the #if/#endif.  That way you don't have
+to add the #if/#endif in the platform driver definition. 
+
+> +#endif
+> +
+> +static int zx2967_thermal_get_temp(void *data, int *temp)
+> +{
+> +	void __iomem *regs;
+> +	struct zx2967_thermal_sensor *sensor = data;
+> +	struct zx2967_thermal_priv *priv = sensor->priv;
+> +	u32 val, sel_id;
+> +	int ret;
+> +
+> +	if (!sensor->tzd)
+> +		return -EAGAIN;
+> +
+> +	regs = priv->regs;
+> +	mutex_lock(&priv->lock);
+> +	writel_relaxed(ZX2967_POWER_MODE_LOW,
+> +		       regs + ZX2967_THERMAL_POWER_MODE);
+> +	writel_relaxed(ZX2967_DCF_EN, regs + ZX2967_THERMAL_DCF);
+> +
+> +	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
+> +	val &= ~ZX2967_THERMAL_ID_MASK;
+> +	sel_id = sensor->id ? ZX2967_THERMAL_ID1 : ZX2967_THERMAL_ID0;
+> +	val |= sel_id;
+> +	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
+> +
+> +	usleep_range(100, 300);
+
+You have not addressed my comment from the previous review, something that
+affects my motivation to keep reviewing your work and help you get your code
+upstream.
+
+> +	ret = readx_poll_timeout(readl, regs + ZX2967_THERMAL_CTRL,
+> +				 val, val & ZX2967_THERMAL_READY, 300,
+> +				 ZX2967_GET_TEMP_TIMEOUT_US);
+> +	if (ret) {
+> +		dev_err(priv->dev, "Thermal sensor %d data timeout\n",
+> +			sensor->id);
+> +		mutex_unlock(&priv->lock);
+
+                goto out;
+
+> +		return ret;
+> +	}
+> +
+> +	writel_relaxed(ZX2967_DCF_FREEZE | ZX2967_DCF_EN,
+> +		       regs + ZX2967_THERMAL_DCF);
+> +	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
+> +			 & ZX2967_THERMAL_TEMP_MASK;
+> +	writel_relaxed(ZX2967_POWER_MODE_HIGH,
+> +		       regs + ZX2967_THERMAL_POWER_MODE);
+> +
+> +	/*
+> +	 * Calculate temperature
+> +	 * In dts, coefficients are multiplied by 1000.
+> +	 */
+> +	*temp = DIV_ROUND_CLOSEST(((s32)val + sensor->tzd->tzp->offset) * 1000,
+> +				  sensor->tzd->tzp->slope);
 > 
-> I'm already lost here. Why are you talking about virt_to_phys() ? See
-> above: we have the dma_addr_t returned from dma_map_single(), and we
-> need to find back the corresponding virtual address, because there is
-> not enough room in the HW descriptors to store a full 64-bit VA.
 
-That's the wrong approach. You need to keep track of the VA which you
-gave to dma_map_single() in the first place; *that* can be packed into
-40 bits with a round-trip through a CPU physical address, assuming that
-this "VA" field in the hardware descriptor is in addition to the actual
-DMA address (and that the hardware descriptor is something different to
-the rx_desc struct to which you could presumably just add an extra pointer).
+out:
 
->> so a corresponding phys_to_virt() at the other end can't go wrong
->> either. If you really do want to special-case things based on VA
->> size, though, either CONFIG_64BIT or sizeof(void *) would indeed be
->> infinitely more useful than the unrelated DMA address width - I know
->> this driver's never going to run on SPARC64, but that's one example
->> of where the above logic would lead to precisely the truncated VA
->> it's trying to avoid.
+> +	mutex_unlock(&priv->lock);
+> +
+> +	return 0;
+
+        return ret;
+
+> +}
+> +
+> +static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
+> +	.get_temp = zx2967_thermal_get_temp,
+> +};
+> +
+> +static int zx2967_thermal_probe(struct platform_device *pdev)
+> +{
+> +	struct zx2967_thermal_priv *priv;
+> +	struct resource *res;
+> +	int ret, i;
+> +
+> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(priv->regs))
+> +		return PTR_ERR(priv->regs);
+> +
+> +	priv->clk_gate = devm_clk_get(&pdev->dev, "gate");
+> +	if (IS_ERR(priv->clk_gate)) {
+> +		ret = PTR_ERR(priv->clk_gate);
+> +		dev_err(&pdev->dev, "failed to get clock gate: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(priv->clk_gate);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> +			ret);
+> +		return ret;
+> +	}
+> +
+> +	priv->pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(priv->pclk)) {
+> +		ret = PTR_ERR(priv->pclk);
+> +		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
+> +		goto disable_clk_gate;
+> +	}
+> +
+> +	ret = clk_prepare_enable(priv->pclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
+> +			ret);
+> +		goto disable_clk_gate;
+> +	}
+> +
+> +	mutex_init(&priv->lock);
+> +	for (i = 0; i < NUM_SENSORS; i++) {
+> +		struct zx2967_thermal_sensor *sensor = &priv->sensors[i];
+> +
+> +		sensor->priv = priv;
+> +		sensor->id = i;
+> +		sensor->tzd = thermal_zone_of_sensor_register(&pdev->dev,
+> +					i, sensor, &zx2967_of_thermal_ops);
+> +
+> +		if (IS_ERR(sensor->tzd)) {
+> +			ret = PTR_ERR(sensor->tzd);
+> +			dev_err(&pdev->dev, "failed to register sensor %d: %d\n",
+> +				i, ret);
+> +			goto remove_ts;
+> +		}
+> +
+> +		if (sensor->tzd->tzp->slope == 0) {
+> +			thermal_zone_of_sensor_unregister(&pdev->dev,
+> +							sensor->tzd);
+> +			dev_err(&pdev->dev,
+> +				"coefficients of sensor-%d is invalid\n", i);
+> +			ret = -EINVAL;
+> +			goto remove_ts;
+> +		}
+> +	}
+> +	priv->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, priv);
+> +
+> +	return 0;
+> +
+> +remove_ts:
+> +	for (i--; i >= 0; i--)
+> +		thermal_zone_of_sensor_unregister(&pdev->dev,
+> +						  priv->sensors[i].tzd);
+> +	clk_disable_unprepare(priv->pclk);
+> +disable_clk_gate:
+> +	clk_disable_unprepare(priv->clk_gate);
+> +
+> +	return ret;
+> +}
+> +
+> +static int zx2967_thermal_exit(struct platform_device *pdev)
+> +{
+> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
+> +	int i;
+> +
+> +	for (i = 0; i < NUM_SENSORS; i++) {
+> +		struct zx2967_thermal_sensor *sensor = &priv->sensors[i];
+> +
+> +		thermal_zone_of_sensor_unregister(&pdev->dev, sensor->tzd);
+> +	}
+> +	clk_disable_unprepare(priv->pclk);
+> +	clk_disable_unprepare(priv->clk_gate);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_thermal_id_table[] = {
+> +	{ .compatible = "zte,zx296718-thermal" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
+> +
+> +static struct platform_driver zx2967_thermal_driver = {
+> +	.probe = zx2967_thermal_probe,
+> +	.remove = zx2967_thermal_exit,
+> +	.driver = {
+> +		.name = "zx2967_thermal",
+> +		.of_match_table = zx2967_thermal_id_table,
+> +#ifdef CONFIG_PM_SLEEP
+> +		.pm = &zx2967_thermal_pm_ops,
+> +#endif
+> +	},
+> +};
+> +module_platform_driver(zx2967_thermal_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
 > 
-> What is different on SPARC64 here?
-
-void * and phys_addr_t are 64-bit, but dma_addr_t is 32-bit. The more
-realistic concern, though, is that this using dma_to_phys() - which is a
-DMA-API-internal helper for SWIOTLB - will break the driver's
-COMPILE_TEST dependency.
-
-> The situation we have is the following:
-> 
->  - On systems where VAs are 32-bit wide, we have enough room to store
->    the VA in the HW descriptor. So when we receive a packet, the HW
->    descriptor provides us directly with the VA of the network packet,
->    and the DMA address of the packet. We can dma_unmap_single() the
->    packet, and do its processing.
-> 
->  - On systems where VAs are 64-bit wide, we don't have enough room to
->    store the VA in the HW descriptor. However, on 64-bit systems, the
->    entire physical memory is mapped in the kernel linear mapping, so
->    phys_to_virt() is valid on any physical address. And we use this
->    property to retrieve the full 64-bit VA using the DMA address that
->    we get from the HW descriptor.
-> 
->    Since what we get from the HW descriptor is a DMA address, that's
->    why we're using phys_to_virt(dma_to_phys(...)).
-
-Marvell's product page tells me that Armada7k/8k include an IOMMU; at
-some point, somebody's surely going to want to use it, and any invalid
-assumptions about physical addresses are going to go bang.  You need to
-treat CPU and DMA addresses as entirely separate, but since any CPU
-address used for streaming DMA - i.e. dma_map_*() - must be a valid
-linear map address, virtual and physical are relatively interchangeable
-if the latter works out more convenient.
-
-Robin.
-
-> 
-> Best regards,
-> 
-> Thomas
-> 
-
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
