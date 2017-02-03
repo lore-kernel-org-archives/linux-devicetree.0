@@ -1,56 +1,59 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Fri, 3 Feb 2017 10:57:30 +0100
-Message-ID: <20170203095730.GA29502@kroah.com>
-References: <1486043069-1575-1-git-send-email-richard.leitner@skidata.com>
- <20170203090327.GA27160@kroah.com>
- <c523e5c0-8138-52f6-827a-348c31513402@skidata.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 1/2] dt-bindings: display: panel: Add bindings for the
+ Sitronix ST7789V panel
+Date: Fri,  3 Feb 2017 10:59:05 +0100
+Message-ID: <097eb2ad92f68f0f1a7c035c9b6b094afaf34dc1.1486115846.git-series.maxime.ripard@free-electrons.com>
+References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c523e5c0-8138-52f6-827a-348c31513402@skidata.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 10:44:05AM +0100, Richard Leitner wrote:
-> Hi Greg,
-> 
-> On 02/03/2017 10:03 AM, Greg KH wrote:
-> > On Thu, Feb 02, 2017 at 02:44:29PM +0100, Richard Leitner wrote:
-> >> This patch adds a driver for configuration of the Microchip USB251xB/xBi
-> >> USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
-> >> configuration interface and two to four USB 2.0 downstream ports.
-> >>
-> >> Furthermore add myself as a maintainer for this driver.
-> >>
-> >> The datasheet can be found at the manufacturers website, see [1]. All
-> >> device-tree exposed configuration features have been tested on a i.MX6
-> >> platform with a USB2512B hub.
-> >>
-> >> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
-> >>
-> >> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> > 
-> > What is "RFC" about this?  If you don't think it's ready to be merged,
-> > I'll agree with that and so I've deleted it from my review queue :)
-> 
-> As it's my first patch which adds a new driver I thought (after reading
-> [1]) a "RFC" would be appropriate. Isn't it?
-> 
-> As stated in the commit message we tested it internally on an i.MX6
-> platform. Therefore, from my/our point of view, it works as expected and
-> should be ready to be merged (otherwise I wouldn't have submitted it to
-> the ML ;-) ).
-> 
-> So how should I proceed here? Re-send it without "RFC"? Wait for some
-> feedback? Something completely different?
-
-resend it without the RFC and I'll be glad to review it for inclusion.
-
-thanks,
-
-greg k-h
+VGhlIFNpdHJvbml4IFNUNzc4OVYgaXMgYW4gTENEIHBhbmVsIGNvbnRyb2xsZXIsIGNvbnRyb2xs
+ZWQgb3ZlciBTUEksIHRoYXQKY2FuIGRyaXZlIDE4LWJpdHMgMjQweDMyMCBMQ0QgZGlzcGxheXMu
+CgpTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ry
+b25zLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9w
+YW5lbC9zaXRyb25peCxzdDc3ODl2LnR4dCB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKyksIDAgZGVsZXRpb25z
+KC0pCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3Nzg5di50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaXRyb25peCxzdDc3ODl2
+LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3Np
+dHJvbml4LHN0Nzc4OXYudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAw
+MC4uZjcwZTZlOWM1NGVkCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2l0cm9uaXgsc3Q3Nzg5di50eHQKQEAgLTAsMCAr
+MSwzNiBAQAorU2l0cm9uaXggU1Q3Nzg5ViBSR0IgcGFuZWwgd2l0aCBTUEkgY29udHJvbCBidXMK
+KworUmVxdWlyZWQgcHJvcGVydGllczoKKyAgLSBjb21wYXRpYmxlOiAic2l0cm9uaXgsc3Q3Nzg5
+diIKKyAgLSByZWc6IENoaXAgc2VsZWN0IG9mIHRoZSBwYW5lbCBvbiB0aGUgU1BJIGJ1cworICAt
+IHJlc2V0LWdwaW9zOiBhIEdQSU8gcGhhbmRsZSBmb3IgdGhlIHJlc2V0IHBpbgorCitPcHRpb25h
+bCBwcm9wZXJ0aWVzOgorICAtIGJhY2tsaWdodDogcGhhbmRsZSB0byB0aGUgYmFja2xpZ2h0IHVz
+ZWQKKworVGhlIGdlbmVyaWMgYmluZGluZ3MgZm9yIHRoZSBTUEkgc2xhdmVzIGRvY3VtZW50ZWQg
+aW4gWzFdIGFsc28gYXBwbGllcworCitUaGUgZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdw
+b3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNoaWxkCisnZW5kcG9pbnQnIG5vZGUsIGFjY29yZGlu
+ZyB0byB0aGUgYmluZGluZ3MgZGVmaW5lZCBpbiBbMl0uIFRoaXMKK25vZGUgc2hvdWxkIGRlc2Ny
+aWJlIHBhbmVsJ3MgdmlkZW8gYnVzLgorCitbMV06IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy9zcGkvc3BpLWJ1cy50eHQKK1syXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2dyYXBoLnR4dAorCitFeGFtcGxlOgorCitwYW5lbEAwIHsKKwljb21wYXRpYmxlID0g
+InNpdHJvbml4LHN0Nzc4OXYiOworCXJlZyA9IDwwPjsKKwlyZXNldC1ncGlvcyA9IDwmcGlvIDYg
+MTEgR1BJT19BQ1RJVkVfTE9XPjsKKwliYWNrbGlnaHQgPSA8JnB3bV9ibD47CisJc3BpLW1heC1m
+cmVxdWVuY3kgPSA8MTAwMDAwPjsKKwlzcGktY3BvbDsKKwlzcGktY3BoYTsKKworCXBvcnQgewor
+CQlwYW5lbF9pbnB1dDogZW5kcG9pbnQgeworCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZ0Y29uMF9v
+dXRfcGFuZWw+OworCQl9OworCX07Cit9OwotLSAKZ2l0LXNlcmllcyAwLjguMTEKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
