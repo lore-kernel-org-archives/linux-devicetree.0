@@ -1,53 +1,157 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH 2/2] DTS: dra7: Add "opp_high" opp node to support 1.5 GHz
- SoC operation
-Date: Fri, 3 Feb 2017 10:56:57 -0600
-Message-ID: <e398ff96-dca7-7934-70b1-9a95c01d3b27@ti.com>
-References: <1486135491-14223-1-git-send-email-lukma@denx.de>
- <1486135491-14223-2-git-send-email-lukma@denx.de>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Fri, 3 Feb 2017 09:07:17 -0800
+Message-ID: <20170203170717.GA14521@roeck-us.net>
+References: <1486092140-1017-1-git-send-email-baoyou.xie@linaro.org>
+ <1486092140-1017-3-git-send-email-baoyou.xie@linaro.org>
+ <20170203160257.GA30336@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486135491-14223-2-git-send-email-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170203160257.GA30336-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2017 09:24 AM, Lukasz Majewski wrote:
-> The "opp_high" property brings support for 1.5 GHz CPU frequency for TI's
-> am57xx line of processors.
->
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
-> ---
->  arch/arm/boot/dts/dra7.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->
+On Fri, Feb 03, 2017 at 09:02:57AM -0700, Mathieu Poirier wrote:
+> On Fri, Feb 03, 2017 at 11:22:20AM +0800, Baoyou Xie wrote:
+> > This patch adds watchdog controller driver for ZTE's zx2967 family.
+> > 
+> > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/watchdog/Kconfig      |  10 ++
+> >  drivers/watchdog/Makefile     |   1 +
+> >  drivers/watchdog/zx2967_wdt.c | 285 ++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 296 insertions(+)
+> >  create mode 100644 drivers/watchdog/zx2967_wdt.c
+> > 
+> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > index acb00b5..05093a2 100644
+> > --- a/drivers/watchdog/Kconfig
+> > +++ b/drivers/watchdog/Kconfig
+> > @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+> >  	  To compile this driver as a module, choose M here: the
+> >  	  module will be called aspeed_wdt.
+> >  
+> > +config ZX2967_WATCHDOG
+> > +	tristate "ZTE zx2967 SoCs watchdog support"
+> > +	depends on ARCH_ZX
+> > +	select WATCHDOG_CORE
+> > +	help
+> > +	  Say Y here to include support for the watchdog timer
+> > +	  in ZTE zx2967 SoCs.
+> > +	  To compile this driver as a module, choose M here: the
+> > +	  module will be called zx2967_wdt.
+> > +
+> >  # AVR32 Architecture
+> >  
+> >  config AT32AP700X_WDT
+> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> > index 0c3d35e..bf2d296 100644
+> > --- a/drivers/watchdog/Makefile
+> > +++ b/drivers/watchdog/Makefile
+> > @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+> >  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+> >  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+> >  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+> > +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+> >  
+> >  # AVR32 Architecture
+> >  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> > diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
+> > new file mode 100644
+> > index 0000000..2daaca2
+> > --- /dev/null
+> > +++ b/drivers/watchdog/zx2967_wdt.c
+> > @@ -0,0 +1,285 @@
+> > +/*
+> > + * watchdog driver for ZTE's zx2967 family
+> > + *
+> > + * Copyright (C) 2017 ZTE Ltd.
+> > + *
+> > + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > + *
+> > + * License terms: GNU General Public License (GPL) version 2
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/io.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of_address.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/watchdog.h>
+> > +
+> > +#define ZX2967_WDT_CFG_REG			0x4
+> > +#define ZX2967_WDT_LOAD_REG			0x8
+> > +#define ZX2967_WDT_REFRESH_REG			0x18
+> > +#define ZX2967_WDT_START_REG			0x1c
+> > +
+> > +#define ZX2967_WDT_REFRESH_MASK			0x3f
+> > +
+> > +#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
+> > +#define ZX2967_WDT_START_EN			0x1
+> > +
+> > +/*
+> > + * Hardware magic number.
+> > + * When watchdog reg is written, the lowest 16 bits are valid, but
+> > + * the highest 16 bits should be always this number.
+> > + */
+> 
+> Thanks for the explanation, much better now.
+> 
+> > +#define ZX2967_WDT_WRITEKEY			(0x1234 << 16)
+> > +
+> > +#define ZX2967_WDT_DIV_DEFAULT			16
+> > +#define ZX2967_WDT_DEFAULT_TIMEOUT		32
+> > +#define ZX2967_WDT_MIN_TIMEOUT			1
+> > +#define ZX2967_WDT_MAX_TIMEOUT			524
+> > +#define ZX2967_WDT_MAX_COUNT			0xffff
+> > +
+> > +#define ZX2967_WDT_CLK_FREQ			0x8000
+> > +
+> > +#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
+> > +
+> > +struct zx2967_wdt {
+> > +	struct watchdog_device	wdt_device;
+> > +	void __iomem		*reg_base;
+> > +	struct clk		*clock;
+> > +};
+> > +
+> > +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+> > +{
+> > +	return readl_relaxed(wdt->reg_base + reg);
+> > +}
+> > +
+> > +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u16 val)
+> > +{
+> > +	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+> > +}
+> 
+> You were correct with the u32 type.  My comment was about making sure the value
+> of the value given to the function wasn't bigger than 65535 (0xffff), which
+> would have been corrupted by the OR'ing with ZX2967_WDT_WRITEKEY.  
+> 
+> Going with a u16 forces you to manipulate u16 types in all the functions below
+> but the read operation is still a u32, leaving to the compiler the task of
+> stripping the top 16 bit.  
+> 
+> My suggestion is to go back to a u32 for zx2967_wdt_writel() but to AND 'val'
+> with 0x0000ffff before OR'ing it with ZX2967_WDT_WRITEKEY.
+> 
 
-This can't be blindly enabled for all am57xx SoCs, there is a forthcoming 
-ti-cpufreq [1] driver that is needed that will decided which OPPs can and cannot 
-be enabled for the specific variant in use.
+For the record, I am fine either way, including not masking at all;
+I considered that a theoretic problem that only applies if reading
+a register can return a value other than 0 in the upper 16 bit.
+So, ultimately, this patch series is now waiting for your Ack.
 
-Regards,
-Dave
-
-[1] http://www.spinics.net/lists/devicetree/msg158967.html
-
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index a860a56..5e678cd 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -108,6 +108,11 @@
->  			opp-hz = /bits/ 64 <1176000000>;
->  			opp-microvolt = <1160000 885000 1160000>;
->  		};
-> +
-> +		opp_high@1500000000 {
-> +			opp-hz = /bits/ 64 <1500000000>;
-> +			opp-microvolt = <1210000 950000 1250000>;
-> +		};
->  	};
->
->  	/*
->
+Guenter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
