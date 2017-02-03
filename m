@@ -1,65 +1,163 @@
-From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Subject: Re: [PATCH 3/5] mfd: axp20x: Add support for the AXP808 PMIC
-Date: Fri, 3 Feb 2017 22:47:54 +0100
-Message-ID: <20170203214753.rbybkadomljcvtdg@localhost>
-References: <cover.1485456003.git.rask@formelder.dk>
- <e1d6d6acfaa95e214b6baa73a7edeaa8e6af3670.1485456006.git.rask@formelder.dk>
- <CAGb2v64O7wax5Pku=VVY3rgS2Ybm-=BDQQT+oB13FSGQHhtkiw@mail.gmail.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Fri, 3 Feb 2017 15:48:18 -0700
+Message-ID: <CANLsYkxCdEjvQ3p3nKxmB284cAbo5vPinrAHRX5jdMgZEQR0Xg@mail.gmail.com>
+References: <1486092140-1017-1-git-send-email-baoyou.xie@linaro.org>
+ <1486092140-1017-3-git-send-email-baoyou.xie@linaro.org> <20170203160257.GA30336@linaro.org>
+ <20170203170717.GA14521@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64O7wax5Pku=VVY3rgS2Ybm-=BDQQT+oB13FSGQHhtkiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170203170717.GA14521-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 03:23:33PM +0800, Chen-Yu Tsai wrote:
-> On Fri, Jan 27, 2017 at 5:25 AM, Rask Ingemann Lambertsen
-> <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org> wrote:
-[...]
-> > diff --git a/drivers/mfd/axp20x.c b/drivers/mfd/axp20x.c
-> > index 25115fe..2d3383e 100644
-> > --- a/drivers/mfd/axp20x.c
-> > +++ b/drivers/mfd/axp20x.c
-[...]
-> > @@ -148,6 +149,13 @@ static const struct regmap_range axp806_writeable_ranges[] = {
-> >         regmap_reg_range(AXP806_REG_ADDR_EXT, AXP806_REG_ADDR_EXT),
-> >  };
-> >
-> > +static const struct regmap_range axp808_writeable_ranges[] = {
-> > +       regmap_reg_range(AXP20X_DATACACHE(0), AXP20X_DATACACHE(3)),
-> > +       regmap_reg_range(AXP806_PWR_OUT_CTRL1, AXP806_CLDO3_V_CTRL),
-> > +       regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IRQ2_EN),
-> > +       regmap_reg_range(AXP20X_IRQ1_STATE, AXP20X_IRQ2_STATE),
-> > +};
-> > +
-> >  static const struct regmap_range axp806_volatile_ranges[] = {
-> >         regmap_reg_range(AXP20X_IRQ1_STATE, AXP20X_IRQ2_STATE),
-> >  };
-> > @@ -162,6 +170,11 @@ static const struct regmap_access_table axp806_volatile_table = {
-> >         .n_yes_ranges   = ARRAY_SIZE(axp806_volatile_ranges),
-> >  };
-> >
-> > +static const struct regmap_access_table axp808_writeable_table = {
-> > +       .yes_ranges     = axp808_writeable_ranges,
-> > +       .n_yes_ranges   = ARRAY_SIZE(axp808_writeable_ranges),
-> 
-> You could probably get away with using axp806_writeable_ranges,
-> and pass ARRAY_SIZE(axp808_writeable_ranges) - 1 for .n_yes_ranges.
+On 3 February 2017 at 10:07, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> On Fri, Feb 03, 2017 at 09:02:57AM -0700, Mathieu Poirier wrote:
+>> On Fri, Feb 03, 2017 at 11:22:20AM +0800, Baoyou Xie wrote:
+>> > This patch adds watchdog controller driver for ZTE's zx2967 family.
+>> >
+>> > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  drivers/watchdog/Kconfig      |  10 ++
+>> >  drivers/watchdog/Makefile     |   1 +
+>> >  drivers/watchdog/zx2967_wdt.c | 285 ++++++++++++++++++++++++++++++++++++++++++
+>> >  3 files changed, 296 insertions(+)
+>> >  create mode 100644 drivers/watchdog/zx2967_wdt.c
+>> >
+>> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>> > index acb00b5..05093a2 100644
+>> > --- a/drivers/watchdog/Kconfig
+>> > +++ b/drivers/watchdog/Kconfig
+>> > @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+>> >       To compile this driver as a module, choose M here: the
+>> >       module will be called aspeed_wdt.
+>> >
+>> > +config ZX2967_WATCHDOG
+>> > +   tristate "ZTE zx2967 SoCs watchdog support"
+>> > +   depends on ARCH_ZX
+>> > +   select WATCHDOG_CORE
+>> > +   help
+>> > +     Say Y here to include support for the watchdog timer
+>> > +     in ZTE zx2967 SoCs.
+>> > +     To compile this driver as a module, choose M here: the
+>> > +     module will be called zx2967_wdt.
+>> > +
+>> >  # AVR32 Architecture
+>> >
+>> >  config AT32AP700X_WDT
+>> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>> > index 0c3d35e..bf2d296 100644
+>> > --- a/drivers/watchdog/Makefile
+>> > +++ b/drivers/watchdog/Makefile
+>> > @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>> >  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>> >  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+>> >  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+>> > +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+>> >
+>> >  # AVR32 Architecture
+>> >  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+>> > diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
+>> > new file mode 100644
+>> > index 0000000..2daaca2
+>> > --- /dev/null
+>> > +++ b/drivers/watchdog/zx2967_wdt.c
+>> > @@ -0,0 +1,285 @@
+>> > +/*
+>> > + * watchdog driver for ZTE's zx2967 family
+>> > + *
+>> > + * Copyright (C) 2017 ZTE Ltd.
+>> > + *
+>> > + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > + *
+>> > + * License terms: GNU General Public License (GPL) version 2
+>> > + */
+>> > +
+>> > +#include <linux/clk.h>
+>> > +#include <linux/io.h>
+>> > +#include <linux/mfd/syscon.h>
+>> > +#include <linux/module.h>
+>> > +#include <linux/of_address.h>
+>> > +#include <linux/platform_device.h>
+>> > +#include <linux/regmap.h>
+>> > +#include <linux/reset.h>
+>> > +#include <linux/watchdog.h>
+>> > +
+>> > +#define ZX2967_WDT_CFG_REG                 0x4
+>> > +#define ZX2967_WDT_LOAD_REG                        0x8
+>> > +#define ZX2967_WDT_REFRESH_REG                     0x18
+>> > +#define ZX2967_WDT_START_REG                       0x1c
+>> > +
+>> > +#define ZX2967_WDT_REFRESH_MASK                    0x3f
+>> > +
+>> > +#define ZX2967_WDT_CFG_DIV(n)                      ((((n) & 0xff) - 1) << 8)
+>> > +#define ZX2967_WDT_START_EN                        0x1
+>> > +
+>> > +/*
+>> > + * Hardware magic number.
+>> > + * When watchdog reg is written, the lowest 16 bits are valid, but
+>> > + * the highest 16 bits should be always this number.
+>> > + */
+>>
+>> Thanks for the explanation, much better now.
+>>
+>> > +#define ZX2967_WDT_WRITEKEY                        (0x1234 << 16)
+>> > +
+>> > +#define ZX2967_WDT_DIV_DEFAULT                     16
+>> > +#define ZX2967_WDT_DEFAULT_TIMEOUT         32
+>> > +#define ZX2967_WDT_MIN_TIMEOUT                     1
+>> > +#define ZX2967_WDT_MAX_TIMEOUT                     524
+>> > +#define ZX2967_WDT_MAX_COUNT                       0xffff
+>> > +
+>> > +#define ZX2967_WDT_CLK_FREQ                        0x8000
+>> > +
+>> > +#define ZX2967_WDT_FLAG_REBOOT_MON         BIT(0)
+>> > +
+>> > +struct zx2967_wdt {
+>> > +   struct watchdog_device  wdt_device;
+>> > +   void __iomem            *reg_base;
+>> > +   struct clk              *clock;
+>> > +};
+>> > +
+>> > +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+>> > +{
+>> > +   return readl_relaxed(wdt->reg_base + reg);
+>> > +}
+>> > +
+>> > +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u16 val)
+>> > +{
+>> > +   writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+>> > +}
+>>
+>> You were correct with the u32 type.  My comment was about making sure the value
+>> of the value given to the function wasn't bigger than 65535 (0xffff), which
+>> would have been corrupted by the OR'ing with ZX2967_WDT_WRITEKEY.
+>>
+>> Going with a u16 forces you to manipulate u16 types in all the functions below
+>> but the read operation is still a u32, leaving to the compiler the task of
+>> stripping the top 16 bit.
+>>
+>> My suggestion is to go back to a u32 for zx2967_wdt_writel() but to AND 'val'
+>> with 0x0000ffff before OR'ing it with ZX2967_WDT_WRITEKEY.
+>>
+>
+> For the record, I am fine either way, including not masking at all;
+> I considered that a theoretic problem that only applies if reading
+> a register can return a value other than 0 in the upper 16 bit.
+> So, ultimately, this patch series is now waiting for your Ack.
+>
 
-Assuming that register ranges not supported on the AXP808 are always
-at one end of the table, I think it will ease maintenance by avoiding
-duplicate data should entries be added or removed in the future. I'll put
-a comment above axp806_writeable_ranges to point out what's going on.
+Now that there is sufficient comments in the code to understand what's
+going on, I'm also fine either way.  As long as
+zx2967_wdt_readl/writel() are consistent with one another.
 
-> Or maybe the compiler figures out the 2 arrays share common data.
+Mathieu
 
-It doesn't as of gcc 6.2.1.
-
--- 
-Rask Ingemann Lambertsen
+> Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
