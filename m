@@ -1,40 +1,55 @@
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: [PATCH v2 7/8] ARM: dts: bcm283x: switch from &sdhci to &sdhost
-Date: Fri,  3 Feb 2017 13:11:52 +0100
-Message-ID: <1486123913-31705-8-git-send-email-kraxel@redhat.com>
-References: <1486123913-31705-1-git-send-email-kraxel@redhat.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486123913-31705-1-git-send-email-kraxel@redhat.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, swarren@wwwdotorg.org, lee@kernel.org, eric@anholt.net, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 5/7] dt-bindings: display: Add common rotation property
+Date: Fri, 3 Feb 2017 13:16:45 +0100
+Message-ID: <30cce12b-b6c6-c651-409e-5574b5f7576e@tronnes.org>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-6-noralf@tronnes.org>
+ <20170201174113.g7sdkhtzvizg5ajv@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170201174113.g7sdkhtzvizg5ajv@rob-hp-laptop>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-sdcard access with the sdhost controller is faster.
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-index 7d89af2..e6beecb 100644
---- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
-+++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
-@@ -65,13 +65,13 @@
- &sdhci {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&emmc_gpio48>;
--	status = "okay";
- 	bus-width = <4>;
- };
- 
- &sdhost {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&sdhost_gpio48>;
-+	status = "okay";
- 	bus-width = <4>;
- };
- 
--- 
-1.8.3.1
+VGhpZXJyeSwgcGxlYXNlIGhhdmUgYSBsb29rIGF0IHRoaXMuCkluIHdoaWNoIGRpcmVjdGlvbiBz
+aG91bGQgd2Ugcm90YXRlIHRvIG1hdGNoIGhvdyBkcm0gcm90YXRpb24gd29ya3M/CgoKRGVuIDAx
+LjAyLjIwMTcgMTguNDEsIHNrcmV2IFJvYiBIZXJyaW5nOgo+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3
+IGF0IDA1OjAzOjE3UE0gKzAxMDAsIE5vcmFsZiBUcsO4bm5lcyB3cm90ZToKPj4gRGlzcGxheSBw
+YW5lbHMgY2FuIGJlIG9yaWVudGVkIG1hbnkgd2F5cywgZXNwZWNpYWxseSBpbiB0aGUgZW1iZWRk
+ZWQKPj4gd29ybGQuIFRoZSByb3RhdGlvbiBwcm9wZXJ0eSBpcyBhIHdheSB0byBkZXNjcmliZSB0
+aGlzIG9yaWVudGF0aW9uLgo+PiBUaGUgY291bnRlciBjbG9ja3dpc2UgZGlyZWN0aW9uIGlzIGNo
+b3NlbiBiZWNhdXNlIHRoYXQncyB3aGF0IGZiZGV2Cj4+IGFuZCBkcm0gdXNlLgo+IFRoZSBoL3cg
+bW91bnRpbmcgaXMgcm90YXRlZCBjb3VudGVyIGNsb2Nrd2lzZSwgc28gdGhlIGZyYW1lYnVmZmVy
+cycKPiBjb250ZW50cyBhcmUgcm90YXRlZCBjbG9ja3dpc2UsIHJpZ2h0Pwo+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPgo+PiAtLS0KPj4gICBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9kaXNwbGF5LnR4dCB8IDQg
+KysrKwo+IFRoaXMgaXMgcGFuZWwgcHJvcGVydHksIHNvIGJpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+cGFuZWwudHh0Lgo+Cj4+ICAgMSBmaWxlIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKQo+PiAgIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9kaXNwbGF5LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvZGlzcGxheS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9kaXNwbGF5LnR4dAo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBp
+bmRleCAwMDAwMDAwLi5lMmU2ODY3Cj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvZGlzcGxheS50eHQKPj4gQEAgLTAsMCAr
+MSw0IEBACj4+ICtDb21tb24gZGlzcGxheSBwcm9wZXJ0aWVzCj4+ICstLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tCj4+ICsKPj4gKy0gcm90YXRpb246CURpc3BsYXkgcm90YXRpb24gaW4gZGVncmVl
+cyBjb3VudGVyIGNsb2Nrd2lzZSAoMCw5MCwxODAsMjcwKQo+PiAtLSAKPj4gMi4xMC4yCj4+Cj4+
+IC0tCj4+IFRvIHVuc3Vic2NyaWJlIGZyb20gdGhpcyBsaXN0OiBzZW5kIHRoZSBsaW5lICJ1bnN1
+YnNjcmliZSBkZXZpY2V0cmVlIiBpbgo+PiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jk
+b21vQHZnZXIua2VybmVsLm9yZwo+PiBNb3JlIG1ham9yZG9tbyBpbmZvIGF0ICBodHRwOi8vdmdl
+ci5rZXJuZWwub3JnL21ham9yZG9tby1pbmZvLmh0bWwKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
