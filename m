@@ -1,38 +1,225 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v4 05/10] serial: st-asc: Use generic DT binding for announcing RTS/CTS lines
-Date: Fri,  3 Feb 2017 10:23:14 +0000
-Message-ID: <20170203102319.23489-6-lee.jones@linaro.org>
-References: <20170203102319.23489-1-lee.jones@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170203102319.23489-1-lee.jones@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jslaby@suse.com, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, patrice.chotard@st.com, Lee Jones <lee.jones@linaro.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
+Date: Fri, 3 Feb 2017 11:37:37 +0100
+Message-ID: <9ef03374-9108-aec4-d2d8-58af17d62fef@st.com>
+References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com>
+ <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
+ <20170201163500.ivxnxejurhzzoctl@rob-hp-laptop>
+ <e814a2c6-f0de-cb56-eb3a-e22daed8990b@st.com>
+ <CAL_JsqKgGuh5==Xfd6LKZe70G1NiuesW0_xE98CZQZ3=BCPvLg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKgGuh5==Xfd6LKZe70G1NiuesW0_xE98CZQZ3=BCPvLg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Lars-Peter Clausen <lars@metafoo.de>, Alexandre Torgue <alexandre.torgue@st.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Peter Meerwald <pmeerw@pmeerw.net>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jonathan Cameron <jic23@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Hartmut Knaack <knaack.h@gmx.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The initial binding 'st,hw-flow-control' isn't used anywhere, in neither
-in upstream nor downstream kernels.  It isn't even documented in
-dt-bindings, so we can safely assume it's safe to swap to the generic
-one.
+On 02/02/2017 04:45 PM, Rob Herring wrote:
+> +Linus W
+>
+> On Thu, Feb 2, 2017 at 3:19 AM, Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>> On 02/01/2017 05:35 PM, Rob Herring wrote:
+>>>
+>>> On Mon, Jan 30, 2017 at 02:57:41PM +0100, Fabrice Gasnier wrote:
+>>>>
+>>>> Add dt documentation for st,stm32-exti-trigger.
+>>>> EXTi gpio signal can be routed internally as trigger source for various
+>>>
+>>>
+>>> s/gpio/GPIO/
+>>>
+>>>> IPs (e.g. for ADC or DAC conversions).
+>>>
+>>>
+>>> Please use "dt-bindings: iio:" for the subject prefix.
+>>
+>>
+>> Hi Rob,
+>>
+>> I'll fix this in V2.
+>>
+>>>
+>>>>
+>>>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>>>> ---
+>>>>  .../bindings/iio/trigger/st,stm32-exti-trigger.txt      | 17
+>>>> +++++++++++++++++
+>>>>  1 file changed, 17 insertions(+)
+>>>>  create mode 100644
+>>>> Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>>> b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>>> new file mode 100644
+>>>> index 0000000..ebf2645
+>>>> --- /dev/null
+>>>> +++
+>>>> b/Documentation/devicetree/bindings/iio/trigger/st,stm32-exti-trigger.txt
+>>>> @@ -0,0 +1,17 @@
+>>>> +STMicroelectronics STM32 EXTI trigger bindings
+>>>> +
+>>>> +EXTi gpio signal can be routed internally as trigger source for various
+>>>
+>>>
+>>> s/gpio/GPIO/
+>>>
+>>>> +IPs (e.g. for ADC or DAC conversions).
+>>>> +
+>>>> +Contents of a stm32 exti trigger root node:
+>>>
+>>>
+>>> Drop "root"
+>>
+>> I'll fix these in V2.
+>>
+>>>
+>>>> +-------------------------------------------
+>>>> +Required properties:
+>>>> +- compatible: Should be "st,stm32-exti-trigger"
+>>>
+>>>
+>>> This whole binding looks a bit suspicious. Is this actually a h/w block?
+>>> What makes it stm32 specific? Seems like the gpio properties should just
+>>> be part of the ADC or DAC that they trigger.
+>>
+>>
+>> Please let me explain in more details.
+>> I think best is I add following documentation in binding. Something like:
+>>
+>> GPIO + EXTI controller side | ADC side (input trigger MUX, same for DAC)
+>>                             |
+>>        IIO trigger         --->         IIO device
+>>                             |                  __________
+>>                             |          inX  --|          \
+>>                             |          ...  --|  SAR ADC  |-->
+>>         __                  |         __      |__________/
+>> PA11 --|  \                 | TIMx --|  \   trigger   ^
+>> PB11 --|   |                  ...  --|   }----------->'
+>> ...  --|   }---- EXTI11 ---------->--|__/
+>>      --|   |                |
+>> PJ11 --|__/                 |
+>>
+>> In fact, this driver configures GPIO and EXTI controllers (left side of
+>> above scheme), and it registers corresponding trigger in IIO. Then it can be
+>> used by other IPs registered as IIO devices.
+>>
+>> I think this should be outside of ADC or DAC IIO device drivers, to live in
+>> separate IIO trigger driver. It will avoid duplicating code (e.g. PATCH 4)
+>> into several IIO device drivers.
+>>
+>> Is it ok to declare this as separate IIO trigger driver?
+>
+> Drivers and DT nodes are not necessarily 1 to 1.
+Hi Rob,
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/tty/serial/st-asc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry, I don't get it. Can you clarify ?
 
-diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-index e521078..bcf1d33 100644
---- a/drivers/tty/serial/st-asc.c
-+++ b/drivers/tty/serial/st-asc.c
-@@ -794,7 +794,7 @@ static struct asc_port *asc_of_get_asc_port(struct platform_device *pdev)
- 		return NULL;
- 
- 	asc_ports[id].hw_flow_control = of_property_read_bool(np,
--							"st,hw-flow-control");
-+							"uart-has-rtscts");
- 	asc_ports[id].force_m1 =  of_property_read_bool(np, "st,force_m1");
- 	asc_ports[id].port.line = id;
- 	asc_ports[id].rts = NULL;
--- 
-2.9.3
+>
+> What controls the GPIO line that is used for the trigger?
+
+This can be anything connected to GPIO line, such as (on board)
+push-button, external synchronization signal ...
+
+>
+>> Maybe Jonathan could also advise on this ?
+>>
+>> As I see it, this is stm32 specific, as any GPIO bank, (e.g. PA11,
+>> PB11...) can be selected to generate (EXTI11) hardware trigger signal.
+>
+> This seems more like a pinmux'ing issue than a GPIO. This isn't really
+> a GPIO if it is routed to a h/w control.
+
+Sorry, muxing part (e.g. PA11, PB11...) isn't shown in above scheme.
+GPIO is muxed via gpio/pinctrl driver.
+
+>
+> A -gpios property for a trigger would make sense if you had a driver
+> handling GPIO interrupts to generate IIO triggers. This seems to be
+> just mux control.
+
+This is almost it, there are two stages.
+- trigger starts conversion on device (e.g. ADC...) by hardware (no need 
+for interrupt on 1st stage, data isn't ready anyway).
+- 2nd stage, end of conversion polls the trigger.
+
+Just to summarize, rephrase, in case push button is used to trigger 
+conversions:
+- 1st declare GPIO (to which push button is connected)
+- GPIO is muxed into external interrupt (e.g. EXTI) by using pinctrl
+and exti driver. This may be compared to a 'gpio_keys' up to this point.
+- EXTI line is able to either generate an interrupt (not used here)
+and/or start conversion as trigger line (that is used here).
+- end of conversion does the actual trigger poll.
+
+>
+>>>> +- extiN-gpio: optional gpio line that may be used as external trigger
+>>>> source
+>>>
+>>>
+>>> -gpios is the preferred form.
+>>
+>>
+>> I apologize, I didn't make it clear in the first place. Please let me
+>> rephrase. Is bellow description more suitable ?
+>
+> What I mean is the property name is wrong. It should be "extiN-gpios".
+Oh... got it, thanks.
+I'll update this.
+
+Best Regards,
+Fabrice
+>
+>>
+>> - extiN-gpio: One or several named GPIO lines that may be used as
+>>   external trigger source by STM32 ADC, DAC. N may be 0..15.
+>>   For example, on stm32f4, exti11-gpio can trig ADC, exti9-gpio can
+>>   trig DAC.
+>>
+>>>
+>>>> +  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on
+>>>> stm32f4).
+>>>> +
+>>>> +Example:
+>>>> +       triggers {
+>>>> +               compatible = "st,stm32-exti-trigger";
+>>>> +               exti11-gpio=<&gpioa 11 0>;
+>>>
+>>>
+>>> spaces around the "=".
+>>
+>> I'll fix it in V2, and also add example for more that one EXTI trigger:
+>>
+>>         triggers {
+>>                 compatible = "st,stm32-exti-trigger";
+>>                 exti9-gpio = <&gpioa 9 0>;
+>>                 exti11-gpio = <&gpioa 11 0>;
+>>                 ...
+>>         };
+>>
+>> Above binding can typically be used in board dt, in case on-board gpio is
+>> connected/used as trigger source for IIO device (STM32 ADC/DAC).
+>>
+>> Please let me know if this clarifies, so I'll do necessary changes in V2.
+>>
+>> Many thanks for your review.
+>> Best Regards,
+>> Fabrice
+>>
+>>>
+>>>> +       };
+>>>> --
+>>>> 1.9.1
+>>>>
+>>
