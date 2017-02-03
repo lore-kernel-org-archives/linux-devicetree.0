@@ -1,66 +1,79 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH v2 4/8] arm: set CONFIG_MMC_BCM2835=y in bcm2835_defconfig
-Date: Fri, 03 Feb 2017 09:26:14 -0800
-Message-ID: <87inorp4nd.fsf@eliezer.anholt.net>
-References: <1486123913-31705-1-git-send-email-kraxel@redhat.com> <1486123913-31705-5-git-send-email-kraxel@redhat.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3] ARM: dts: i.MX25: add AIPS control registers
+Date: Fri, 3 Feb 2017 18:27:26 +0100
+Message-ID: <20170203172726.5kn5h6xkrl4zszmd@pengutronix.de>
+References: <1485890402-22974-1-git-send-email-martin@kaiser.cx>
+ <1486126792-28186-1-git-send-email-martin@kaiser.cx>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1486123913-31705-5-git-send-email-kraxel@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-rpi-kernel@lists.infradead.org
-Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, f.fainelli@gmail.com, rjui@broadcom.com, sbranden@broadcom.com, bcm-kernel-feedback-list@broadcom.com, swarren@wwwdotorg.org, lee@kernel.org, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486126792-28186-1-git-send-email-martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
+On Fri, Feb 03, 2017 at 01:59:52PM +0100, Martin Kaiser wrote:
+> The i.MX25 contains two AHB to IP bridges (AIPS), each of which has a set of
+> control registers. Add the memory regions for the control registers to
+> the Device Tree.
+> 
+> Signed-off-by: Martin Kaiser <martin-XxZfDwE/svGeZLLa646FqQ@public.gmane.org>
 
-Gerd Hoffmann <kraxel@redhat.com> writes:
+Reviewed-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+Sascha
 
 > ---
->  arch/arm/configs/bcm2835_defconfig | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/configs/bcm2835_defconfig b/arch/arm/configs/bcm2835_defconfig
-> index 4b89f4e..3767c24 100644
-> --- a/arch/arm/configs/bcm2835_defconfig
-> +++ b/arch/arm/configs/bcm2835_defconfig
-> @@ -92,6 +92,7 @@ CONFIG_MMC=y
->  CONFIG_MMC_SDHCI=y
->  CONFIG_MMC_SDHCI_PLTFM=y
->  CONFIG_MMC_SDHCI_IPROC=y
-> +CONFIG_MMC_BCM2835=y
->  CONFIG_NEW_LEDS=y
->  CONFIG_LEDS_CLASS=y
->  CONFIG_LEDS_GPIO=y
+> v3:
+>    fixed the size of the memory regions, both are 16KBytes long
+> 
+> v2:
+>    removed the "fsl,imx53-aipstz" property as per Sascha's request
+> 
+>  arch/arm/boot/dts/imx25.dtsi | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx25.dtsi b/arch/arm/boot/dts/imx25.dtsi
+> index e0ba550..5ae8a14 100644
+> --- a/arch/arm/boot/dts/imx25.dtsi
+> +++ b/arch/arm/boot/dts/imx25.dtsi
+> @@ -93,6 +93,11 @@
+>  			reg = <0x43f00000 0x100000>;
+>  			ranges;
+>  
+> +			aips1: bridge@43f00000 {
+> +				compatible = "fsl,imx25-aips";
+> +				reg = <0x43f00000 0x4000>;
+> +			};
+> +
+>  			i2c1: i2c@43f80000 {
+>  				#address-cells = <1>;
+>  				#size-cells = <0>;
+> @@ -342,6 +347,11 @@
+>  			reg = <0x53f00000 0x100000>;
+>  			ranges;
+>  
+> +			aips2: bridge@53f00000 {
+> +				compatible = "fsl,imx25-aips";
+> +				reg = <0x53f00000 0x4000>;
+> +			};
+> +
+>  			clks: ccm@53f80000 {
+>  				compatible = "fsl,imx25-ccm";
+>  				reg = <0x53f80000 0x4000>;
+> -- 
+> 2.1.4
+> 
+> 
 
-If you end up resubmitting this, could you extend the commit message of
-the defconfig changes to explain why it's being done?  Something like:
-
-"We need to enable this controller so that we can switch the SD card's
-pinmux over to it by default, which will improve storage read/write
-speed."
-
-(even better if we have some sort of stats on how much better it is).
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAliUvTYACgkQtdYpNtH8
-nuhnwhAArIo0CGRhU4Vvixs04z84mvIhxontaANi7PBo2ulrtOhdqhAYakf5kYOh
-5oIHhpkAgBjwTWpL0FtPyzJ3Gj1qdUMxb3sCF9ZHk6How79qDk/inbN9If4ppbY5
-wrTX8rVc3Spefa3hY2aDXeNiDhMwhx6i/NAE18l6d2VGAjSpOfiismW7/QLu0Ti+
-H5CBPT/RfJMX+PMEq5izUAJoiMPJwDzy43ac314GQrMmcJ2zoN4RKBtdFPQbvnAt
-JaBr8xjDUYolluwXfyjGgzs/VZfZNCR6U7kelrVbV+1GtKSuhF3GxUii1bs9ob8j
-bhwtiiIJFMf5sXZUxmmyUlzaPOb0RobpR5CDFQV4Ebfs9Pq6mA3t4uSR/XAxxspI
-1CShsprzuumcHGCPWuuPz7nbyMvyJoY11pO3mrz0PfaZpTHN3GyRR+rlx2p6YDDS
-IUL9kn6iZAfEp9lWtvrI0b5BFwTce5DT1huvXILgYLBYwtYQqTu7aDnAzPeZYtyz
-g+9u/gZRg/ILXcbTcadhiwl2QLzpxNW+dAKCqpW8DrnGhddlOOywz9RT7wH3Ebqt
-Yo2reTmhodyJYC/FxdDMUWmIoe1UQWJFtGda/ZMwhIGigc7qfxoszDVNWC2pyJdg
-8TuAkfJpB1jmUo3SRQjyTgp+xgA0hSTdIIRP7y84mDmdSK103HA=
-=1TEz
------END PGP SIGNATURE-----
---=-=-=--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
