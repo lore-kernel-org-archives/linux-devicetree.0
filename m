@@ -1,51 +1,80 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/3 v3] watchdog: add DT bindings for
-	Cortina Gemini
-Date: Fri,  3 Feb 2017 20:55:51 +0100
-Message-ID: <20170203195551.4825-1-linus.walleij@linaro.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for
+ brcmstb-cpu-clk-div
+Date: Fri, 3 Feb 2017 12:06:52 -0800
+Message-ID: <20170203200652.GD25384@codeaurora.org>
+References: <20170119002933.7529-1-code@mmayer.net>
+ <20170119002933.7529-2-code@mmayer.net>
+ <20170121005202.GB8801@codeaurora.org>
+ <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <openwrt-devel-bounces@lists.openwrt.org>
-List-Unsubscribe: <https://lists.openwrt.org/cgi-bin/mailman/options/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=unsubscribe>
-List-Archive: <http://lists.openwrt.org/pipermail/openwrt-devel/>
-List-Post: <mailto:openwrt-devel@lists.openwrt.org>
-List-Help: <mailto:openwrt-devel-request@lists.openwrt.org?subject=help>
-List-Subscribe: <https://lists.openwrt.org/cgi-bin/mailman/listinfo/openwrt-devel>,
- <mailto:openwrt-devel-request@lists.openwrt.org?subject=subscribe>
-Errors-To: openwrt-devel-bounces@lists.openwrt.org
-Sender: "openwrt-devel" <openwrt-devel-bounces@lists.openwrt.org>
-To: Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, Wim Van Sebroeck <wim@iguana.be>, Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
-Cc: openwrt-devel@openwrt.org, devicetree@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Markus Mayer <markus.mayer@broadcom.com>
+Cc: Markus Mayer <code@mmayer.net>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux Clock List <linux-clk@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIERUIGJpbmRpbmdzIGZvciB0aGUgQ29ydGluYSBzeXN0ZW1zIEdlbWluaSBTb0MK
-d2F0Y2hkb2cgdGltZXIuCgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKUmV2aWV3ZWQt
-Ynk6IEd1ZW50ZXIgUm9lY2sgPGxpbnV4QHJvZWNrLXVzLm5ldD4KQWNrZWQtYnk6IFJvYiBIZXJy
-aW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IExpbnVzIFdhbGxlaWogPGxpbnVz
-LndhbGxlaWpAbGluYXJvLm9yZz4KLS0tCkNoYW5nZUxvZyB2Mi0+djM6Ci0gRml4ZWQgc3BlbGxp
-bmcgZXJyb3IgaW4gZmlsZW5hbWUgImdlbWluIiB0byAiZ2VtaW5pIgotIENvbGxlY3RlZCBBQ0tz
-CkNoYW5nZUxvZyB2MS0+djI6Ci0gTWFrZSB0aGUgdGltZW91dCBhbiBvcHRpb25hbCBwcm9wZXJ0
-eQotIERvIG5vdCBtZW50aW9uIGFueSBMaW51eCBkZWZhdWx0cyBpZiB0aGUgcHJvcGVydHkgaXMg
-bm90IHRoZXJlCi0tLQogLi4uL2JpbmRpbmdzL3dhdGNoZG9nL2NvcnRpbmEsZ2VtaW5pLXdhdGNo
-ZG9nLnR4dCAgICAgICB8IDE3ICsrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTcg
-aW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy93YXRjaGRvZy9jb3J0aW5hLGdlbWluaS13YXRjaGRvZy50eHQKCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvd2F0Y2hkb2cvY29ydGluYSxn
-ZW1pbmktd2F0Y2hkb2cudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3dh
-dGNoZG9nL2NvcnRpbmEsZ2VtaW5pLXdhdGNoZG9nLnR4dApuZXcgZmlsZSBtb2RlIDEwMDY0NApp
-bmRleCAwMDAwMDAwMDAwMDAuLmJjNGI4NjVkMTc4YgotLS0gL2Rldi9udWxsCisrKyBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy93YXRjaGRvZy9jb3J0aW5hLGdlbWluaS13YXRj
-aGRvZy50eHQKQEAgLTAsMCArMSwxNyBAQAorQ29ydGluYSBTeXN0ZW1zIEdlbWluaSBTb0MgV2F0
-Y2hkb2cKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZSA6IG11c3QgYmUgImNv
-cnRpbmEsZ2VtaW5pLXdhdGNoZG9nIgorLSByZWcgOiBzaGFsbCBjb250YWluIGJhc2UgcmVnaXN0
-ZXIgbG9jYXRpb24gYW5kIGxlbmd0aAorLSBpbnRlcnJ1cHRzIDogc2hhbGwgY29udGFpbiB0aGUg
-aW50ZXJydXB0IGZvciB0aGUgd2F0Y2hkb2cKKworT3B0aW9uYWwgcHJvcGVydGllczoKKy0gdGlt
-ZW91dC1zZWMgOiB0aGUgZGVmYXVsdCB3YXRjaGRvZyB0aW1lb3V0IGluIHNlY29uZHMuCisKK0V4
-YW1wbGU6CisKK3dhdGNoZG9nQDQxMDAwMDAwIHsKKwljb21wYXRpYmxlID0gImNvcnRpbmEsZ2Vt
-aW5pLXdhdGNoZG9nIjsKKwlyZWcgPSA8MHg0MTAwMDAwMCAweDEwMDA+OworCWludGVycnVwdHMg
-PSA8MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKK307Ci0tIAoyLjkuMwpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpvcGVud3J0LWRldmVsIG1haWxpbmcgbGlz
-dApvcGVud3J0LWRldmVsQGxpc3RzLm9wZW53cnQub3JnCmh0dHBzOi8vbGlzdHMub3BlbndydC5v
-cmcvY2dpLWJpbi9tYWlsbWFuL2xpc3RpbmZvL29wZW53cnQtZGV2ZWwK
+On 02/01, Markus Mayer wrote:
+> On 20 January 2017 at 16:52, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >
+> > Are these properties used? Please don't put these types of
+> > details in DT.
+> 
+> Yeah, unfortunately they are. Luckily, I think the issue can be
+> resolved quite easily, because the user of those properties isn't
+> involved in this series.
+> 
+> They are currently being used by a clock driver
+> ("drivers/clk/clk-brcmstb.c") that hasn't been upstreamed yet. I
+> performed some code archeology. While I wasn't 100% successful in
+> tracking down the origins of this interface, it looks like it was
+> designed this way a while back (4+ years or so), probably before
+> device tree best practices were developed or, at least, before they
+> were widely known.
+> 
+> So, what I can do is to remove the properties from the official
+> binding. (I'll send an update to that effect shortly.) Once the
+> binding is accepted upstream, we can work on fixing up the design of
+> clk-brcmstb.c, so it doesn't rely on these properties anymore (and
+> derives them from the compatible string instead), and then proceed to
+> upstream that, as well.
+
+Ok. Sounds like some cleanup needs to be done on the way
+upstream.
+
+> > This register really looks like some offset in something larger.
+> > Is there some clock controller? What's the hw block at
+> > 0xf03e2000? Maybe I already asked this.
+> 
+> It looks this way, but in this case, looks are deceiving. The address
+> and the length are really correct the way they are.
+> 
+> This memory area holds a range of only loosely related configuration
+> registers. It's called the Bus Interface Unit Register Set and deals
+> with configuring the CPU in general. At address 0xf03e257c, there
+> happens to be the clock divider register we need, and it's really just
+> one register, i.e. 4 bytes.
+
+We've seen this style of hardware design before. I'd prefer we
+make the "Bus Interface Unit Register Set" into one device node
+and have a driver probe for it that registers this clock. If
+other things need to be controlled in there then the driver will
+do more than just register one clock, possibly hooking into
+multiple frameworks. The compatible string can indicate which SoC
+it is if the divider register offset changes or if the register
+layout is a total free for all.
+
+Either way, having reg properties end in non-zero values is
+suspect on ARM systems because a device is usually aligned to at
+least a 1k boundary for proper CPU addressing and mapping of the
+device. We can't possibly make a smaller mapping than a page
+anyway, so the registers around this one register will need to be
+mapped with the same attributes, hence the desire to make one
+device for the hardware block.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
