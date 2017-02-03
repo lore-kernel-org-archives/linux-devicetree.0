@@ -1,68 +1,93 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH 2/8] power: add power sequence library
-Date: Fri, 03 Feb 2017 22:14:31 +0100
-Message-ID: <16336642.sihi7izbLX@aspire.rjw.lan>
-References: <1483425211-14473-1-git-send-email-peter.chen@nxp.com> <20170201080817.GD17968@kroah.com> <20170203081614.GA24614@b29397-desktop>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Fri, 3 Feb 2017 23:34:54 +0200
+Message-ID: <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
+References: <20161023200355.GA5391@amd>
+ <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170203130740.GB12291@valkosipuli.retiisi.org.uk>
+ <20170203210610.GA18379@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170203081614.GA24614@b29397-desktop>
+Content-Disposition: inline
+In-Reply-To: <20170203210610.GA18379@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, p.zabel@pengutronix.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, February 03, 2017 04:16:15 PM Peter Chen wrote:
-> On Wed, Feb 01, 2017 at 09:08:17AM +0100, Greg Kroah-Hartman wrote:
-> > On Wed, Feb 01, 2017 at 12:10:17AM +0100, Rafael J. Wysocki wrote:
-> > > On Tue, Jan 3, 2017 at 7:33 AM, Peter Chen <peter.chen@nxp.com> wrote:
-> > > > We have an well-known problem that the device needs to do some power
-> > > > sequence before it can be recognized by related host, the typical
-> > > > example like hard-wired mmc devices and usb devices.
-> > > >
-> > > > This power sequence is hard to be described at device tree and handled by
-> > > > related host driver, so we have created a common power sequence
-> > > > library to cover this requirement. The core code has supplied
-> > > > some common helpers for host driver, and individual power sequence
-> > > > libraries handle kinds of power sequence for devices. The pwrseq
-> > > > librares always need to allocate extra instance for compatible
-> > > > string match.
-> > > >
-> > > > pwrseq_generic is intended for general purpose of power sequence, which
-> > > > handles gpios and clocks currently, and can cover other controls in
-> > > > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > > if only one power sequence is needed, else call of_pwrseq_on_list
-> > > > /of_pwrseq_off_list instead (eg, USB hub driver).
-> > > >
-> > > > For new power sequence library, it can add its compatible string
-> > > > to pwrseq_of_match_table, then the pwrseq core will match it with
-> > > > DT's, and choose this library at runtime.
-> > > >
-> > > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> > > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > > Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> > > 
-> > > Quite honestly, I have a really hard time with trying to follow this
-> > > code and the total lack of documentation makes it even harder. 
+Hi Pavel,
+
+On Fri, Feb 03, 2017 at 10:06:10PM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> Sorry about that, Is it ok I add the design doc at:
-> Documentation/power/power-sequence/design.rst?
-
-You can do that if you think it will address the request to explain the design.
-
-> > > particular, the generic power sequence code is not even commented at
-> > > all, 
+> > My apologies for the delays in reviewing. Feel free to ping me in the future
+> > if this happens. :-)
 > 
-> The generic power sequence code just implements the APIs which are 
-> called at power/pwrseq/core.c, and those API are commented at
-> include/linux/power/pwrseq.h. Anyway, I will add more comments at it.
+> No problem :-). If you could review the C-code, too... that would be
+> nice. It should be in your inbox somewhere (and I attached it below,
+> without the dts part).
+> 
+> 
+> > > +Required properties
+> > > +===================
+> > > +
+> > > +compatible	: must contain "video-bus-switch"
+> > 
+> > How generic is this? Should we have e.g. nokia,video-bus-switch? And if so,
+> > change the file name accordingly.
+> 
+> Generic for "single GPIO controls the switch", AFAICT. But that should
+> be common enough...
 
-It actually seems to be doing more than that and I'm not sure why the code in
-core.c is necessary at all.  The "generic" thing seems to be the only user of
-it anyway and the callbacks seem to be tailored to its needs.
+Um, yes. Then... how about: video-bus-switch-gpio? No Nokia prefix.
 
-Thanks,
-Rafael
+> 
+> > > +reg		: The interface:
+> > > +		  0 - port for image signal processor
+> > > +		  1 - port for first camera sensor
+> > > +		  2 - port for second camera sensor
+> > 
+> > I'd say this must be pretty much specific to the one in N900. You could have
+> > more ports. Or you could say that ports beyond 0 are camera sensors. I guess
+> > this is good enough for now though, it can be changed later on with the
+> > source if a need arises.
+> 
+> Well, I'd say that selecting between two sensors is going to be the
+> common case. If someone needs more than two, it will no longer be
+> simple GPIO, so we'll have some fixing to do.
+
+It could be two GPIOs --- that's how the GPIO I2C mux works.
+
+But I'd be surprised if someone ever uses something like that again. ;-)
+
+> 
+> > Btw. was it still considered a problem that the endpoint properties for the
+> > sensors can be different? With the g_routing() pad op which is to be added,
+> > the ISP driver (should actually go to a framework somewhere) could parse the
+> > graph and find the proper endpoint there.
+> 
+> I don't know about g_routing. I added g_endpoint_config method that
+> passes the configuration, and that seems to work for me.
+> 
+> I don't see g_routing in next-20170201 . Is there place to look?
+
+I think there was a patch by Laurent to LMML quite some time ago. I suppose
+that set will be repicked soonish.
+
+I don't really object using g_endpoint_config() as a temporary solution; I'd
+like to have Laurent's opinion on that though. Another option is to wait,
+but we've already waited a looong time (as in total).
+
+I'll reply to the other patch containing the code.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
