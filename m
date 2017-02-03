@@ -1,348 +1,301 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v8 3/3] watchdog: zx2967: add watchdog controller driver for  ZTE's zx2967 family
-Date: Fri,  3 Feb 2017 11:22:20 +0800
-Message-ID: <1486092140-1017-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486092140-1017-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486092140-1017-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jun.nie@linaro.org, wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, mathieu.poirier@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH 2/4] ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236
+Date: Fri,  3 Feb 2017 16:40:10 +1300
+Message-ID: <20170203034012.29399-3-chris.packham@alliedtelesis.co.nz>
+References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170203034012.29399-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds watchdog controller driver for ZTE's zx2967 family.
+The Marvell datasheets refer to the integrated CPU as "Armada-XP". In
+reality there are a number of differences to the actual Armada-XP so
+rather than including armada-xp.dtsi and disabling many of the IP
+blocks. Include armada-370-xp.dtsi and add the required nodes.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 ---
- drivers/watchdog/Kconfig      |  10 ++
- drivers/watchdog/Makefile     |   1 +
- drivers/watchdog/zx2967_wdt.c | 285 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 296 insertions(+)
- create mode 100644 drivers/watchdog/zx2967_wdt.c
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi | 194 +++++++++++++++++++++++-------
+ 1 file changed, 151 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index acb00b5..05093a2 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called aspeed_wdt.
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index bd8261fdec81..cbf5cd0c6429 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -45,11 +45,14 @@
+  * common to all Armada XP SoCs.
+  */
  
-+config ZX2967_WATCHDOG
-+	tristate "ZTE zx2967 SoCs watchdog support"
-+	depends on ARCH_ZX
-+	select WATCHDOG_CORE
-+	help
-+	  Say Y here to include support for the watchdog timer
-+	  in ZTE zx2967 SoCs.
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called zx2967_wdt.
-+
- # AVR32 Architecture
+-#include "armada-xp.dtsi"
++#include "armada-370-xp.dtsi"
  
- config AT32AP700X_WDT
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index 0c3d35e..bf2d296 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
- obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
- obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
- obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
-+obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+ / {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
+ 	model = "Marvell 98DX3236 SoC";
+-	compatible = "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
  
- # AVR32 Architecture
- obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
-diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
-new file mode 100644
-index 0000000..2daaca2
---- /dev/null
-+++ b/drivers/watchdog/zx2967_wdt.c
-@@ -0,0 +1,285 @@
-+/*
-+ * watchdog driver for ZTE's zx2967 family
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie@linaro.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
+ 	aliases {
+ 		gpio0 = &gpio0;
+@@ -72,12 +75,19 @@
+ 	};
+ 
+ 	soc {
++		compatible = "marvell,armadaxp-mbus", "simple-bus";
 +
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+#include <linux/watchdog.h>
+ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+ 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+ 			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+ 			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
+ 			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
+ 
++		bootrom {
++			compatible = "marvell,bootrom";
++			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
++		};
 +
-+#define ZX2967_WDT_CFG_REG			0x4
-+#define ZX2967_WDT_LOAD_REG			0x8
-+#define ZX2967_WDT_REFRESH_REG			0x18
-+#define ZX2967_WDT_START_REG			0x1c
+ 		/*
+ 		 * 98DX3236 has 1 x1 PCIe unit Gen2.0
+ 		 */
+@@ -117,31 +127,92 @@
+ 		};
+ 
+ 		internal-regs {
++			sdramc@1400 {
++				compatible = "marvell,armada-xp-sdram-controller";
++				reg = <0x1400 0x500>;
++			};
 +
-+#define ZX2967_WDT_REFRESH_MASK			0x3f
++			L2: l2-cache@8000 {
++				compatible = "marvell,aurora-system-cache";
++				reg = <0x08000 0x1000>;
++				cache-id-part = <0x100>;
++				cache-level = <2>;
++				cache-unified;
++				wt-override;
++			};
 +
-+#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
-+#define ZX2967_WDT_START_EN			0x1
++			gpio0: gpio@18100 {
++				compatible = "marvell,orion-gpio";
++				reg = <0x18100 0x40>;
++				ngpios = <32>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <82>, <83>, <84>, <85>;
++			};
 +
-+/*
-+ * Hardware magic number.
-+ * When watchdog reg is written, the lowest 16 bits are valid, but
-+ * the highest 16 bits should be always this number.
-+ */
-+#define ZX2967_WDT_WRITEKEY			(0x1234 << 16)
++			/* does not exist */
++			gpio1: gpio@18140 {
++				compatible = "marvell,orion-gpio";
++				reg = <0x18140 0x40>;
++				status = "disabled";
++			};
 +
-+#define ZX2967_WDT_DIV_DEFAULT			16
-+#define ZX2967_WDT_DEFAULT_TIMEOUT		32
-+#define ZX2967_WDT_MIN_TIMEOUT			1
-+#define ZX2967_WDT_MAX_TIMEOUT			524
-+#define ZX2967_WDT_MAX_COUNT			0xffff
++			gpio2: gpio@18180 { /* rework some properties */
++				compatible = "marvell,orion-gpio";
++				reg = <0x18180 0x40>;
++				ngpios = <1>; /* only gpio #32 */
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <87>;
++			};
 +
-+#define ZX2967_WDT_CLK_FREQ			0x8000
++			systemc: system-controller@18200 {
++				compatible = "marvell,armada-370-xp-system-controller";
++				reg = <0x18200 0x500>;
++			};
 +
-+#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
++			gateclk: clock-gating-control@18220 {
++				compatible = "marvell,armada-xp-gating-clock";
++				reg = <0x18220 0x4>;
++				clocks = <&coreclk 0>;
++				#clock-cells = <1>;
++			};
 +
-+struct zx2967_wdt {
-+	struct watchdog_device	wdt_device;
-+	void __iomem		*reg_base;
-+	struct clk		*clock;
+ 			coreclk: mvebu-sar@18230 {
+ 				compatible = "marvell,mv98dx3236-core-clock";
++				reg = <0x18230 0x08>;
++				#clock-cells = <1>;
+ 			};
+ 
+ 			cpuclk: clock-complex@18700 {
++				#clock-cells = <1>;
+ 				compatible = "marvell,mv98dx3236-cpu-clock";
++				reg = <0x18700 0x24>, <0x1c054 0x10>;
++				clocks = <&coreclk 1>;
+ 			};
+ 
+ 			corediv-clock@18740 {
+ 				status = "disabled";
+ 			};
+ 
+-			xor@60900 {
+-				status = "disabled";
++			cpu-config@21000 {
++				compatible = "marvell,armada-xp-cpu-config";
++				reg = <0x21000 0x8>;
+ 			};
+ 
+-			crypto@90000 {
+-				status = "disabled";
++			ethernet@70000 {
++				compatible = "marvell,armada-xp-neta";
+ 			};
+ 
+-			xor@f0900 {
+-				status = "disabled";
++			ethernet@74000 {
++				compatible = "marvell,armada-xp-neta";
+ 			};
+ 
+-			xor@f0800 {
++			xor1: xor@f0800 {
+ 				compatible = "marvell,orion-xor";
+ 				reg = <0xf0800 0x100
+ 				       0xf0a00 0x100>;
+@@ -161,37 +232,28 @@
+ 				};
+ 			};
+ 
+-			gpio0: gpio@18100 {
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
+-				ngpios = <32>;
+-				gpio-controller;
+-				#gpio-cells = <2>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-				interrupts = <82>, <83>, <84>, <85>;
+-			};
+-
+-			/* does not exist */
+-			gpio1: gpio@18140 {
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
+-				status = "disabled";
++			nand: nand@d0000 {
++				clocks = <&dfx_coredivclk 0>;
+ 			};
+ 
+-			gpio2: gpio@18180 { /* rework some properties */
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18180 0x40>;
+-				ngpios = <1>; /* only gpio #32 */
+-				gpio-controller;
+-				#gpio-cells = <2>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-				interrupts = <87>;
+-			};
++			xor0: xor@f0900 {
++				compatible = "marvell,orion-xor";
++				reg = <0xF0900 0x100
++				       0xF0B00 0x100>;
++				clocks = <&gateclk 28>;
++				status = "okay";
+ 
+-			nand: nand@d0000 {
+-				clocks = <&dfx_coredivclk 0>;
++				xor00 {
++					interrupts = <94>;
++					dmacap,memcpy;
++					dmacap,xor;
++				};
++				xor01 {
++					interrupts = <95>;
++					dmacap,memcpy;
++					dmacap,xor;
++					dmacap,memset;
++				};
+ 			};
+ 		};
+ 
+@@ -225,6 +287,53 @@
+ 			};
+ 		};
+ 	};
++
++	clocks {
++		/* 25 MHz reference crystal */
++		refclk: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++	};
 +};
 +
-+static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
-+{
-+	return readl_relaxed(wdt->reg_base + reg);
-+}
-+
-+static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u16 val)
-+{
-+	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
-+}
-+
-+static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
-+{
-+	u16 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
-+	/*
-+	 * Bit 4-5, 1 and 2: refresh config info
-+	 * Bit 2-3, 1 and 2: refresh counter
-+	 * Bit 0-1, 1 and 2: refresh int-value
-+	 * we shift each group value between 1 and 2 to refresh all data.
-+	 */
-+	val ^= ZX2967_WDT_REFRESH_MASK;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG, val);
-+}
-+
-+static int
-+zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
-+	u32 count;
-+
-+	count = timeout * ZX2967_WDT_CLK_FREQ;
-+	if (count > divisor * ZX2967_WDT_MAX_COUNT)
-+		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
-+	count = DIV_ROUND_UP(count, divisor);
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG, ZX2967_WDT_CFG_DIV(divisor));
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG, count);
-+	zx2967_wdt_refresh(wdt);
-+	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
-+
-+	return 0;
-+}
-+
-+static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
-+{
-+	u16 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val |= ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
-+{
-+	u16 val;
-+
-+	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
-+	val &= ~ZX2967_WDT_START_EN;
-+	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG, val);
-+}
-+
-+static int zx2967_wdt_start(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_set_timeout(wdd, wdd->timeout);
-+	__zx2967_wdt_start(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_stop(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	__zx2967_wdt_stop(wdt);
-+
-+	return 0;
-+}
-+
-+static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
-+{
-+	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
-+
-+	zx2967_wdt_refresh(wdt);
-+
-+	return 0;
-+}
-+
-+#define ZX2967_WDT_OPTIONS \
-+	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
-+static const struct watchdog_info zx2967_wdt_ident = {
-+	.options          =     ZX2967_WDT_OPTIONS,
-+	.identity         =	"zx2967 watchdog",
++&i2c0 {
++	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
++	reg = <0x11000 0x100>;
 +};
 +
-+static struct watchdog_ops zx2967_wdt_ops = {
-+	.owner = THIS_MODULE,
-+	.start = zx2967_wdt_start,
-+	.stop = zx2967_wdt_stop,
-+	.ping = zx2967_wdt_keepalive,
-+	.set_timeout = zx2967_wdt_set_timeout,
++&i2c1 {
++	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
++	reg = <0x11100 0x100>;
 +};
 +
-+static void zx2967_wdt_reset_sysctrl(struct device *dev)
-+{
-+	int ret;
-+	void __iomem *regmap;
-+	unsigned int offset, mask, config;
-+	struct of_phandle_args out_args;
-+
-+	ret = of_parse_phandle_with_fixed_args(dev->of_node,
-+			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
-+	if (ret)
-+		return;
-+
-+	offset = out_args.args[0];
-+	config = out_args.args[1];
-+	mask = out_args.args[2];
-+
-+	regmap = syscon_node_to_regmap(out_args.np);
-+	if (IS_ERR(regmap)) {
-+		of_node_put(out_args.np);
-+		return;
-+	}
-+
-+	regmap_update_bits(regmap, offset, mask, config);
-+	of_node_put(out_args.np);
-+}
-+
-+static int zx2967_wdt_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct zx2967_wdt *wdt;
-+	struct resource *base;
-+	int ret;
-+	struct reset_control *rstc;
-+
-+	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-+	if (!wdt)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, wdt);
-+
-+	wdt->wdt_device.info = &zx2967_wdt_ident;
-+	wdt->wdt_device.ops = &zx2967_wdt_ops;
-+	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
-+	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
-+	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
-+	wdt->wdt_device.parent = &pdev->dev;
-+
-+	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	wdt->reg_base = devm_ioremap_resource(dev, base);
-+	if (IS_ERR(wdt->reg_base)) {
-+		dev_err(dev, "ioremap failed\n");
-+		return PTR_ERR(wdt->reg_base);
-+	}
-+
-+	zx2967_wdt_reset_sysctrl(dev);
-+
-+	wdt->clock = devm_clk_get(dev, NULL);
-+	if (IS_ERR(wdt->clock)) {
-+		dev_err(dev, "failed to find watchdog clock source\n");
-+		return PTR_ERR(wdt->clock);
-+	}
-+
-+	ret = clk_prepare_enable(wdt->clock);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
-+
-+	rstc = devm_reset_control_get(dev, NULL);
-+	if (IS_ERR(rstc)) {
-+		dev_err(dev, "failed to get rstc");
-+		ret = PTR_ERR(rstc);
-+		goto err;
-+	}
-+
-+	reset_control_assert(rstc);
-+	reset_control_deassert(rstc);
-+
-+	watchdog_set_drvdata(&wdt->wdt_device, wdt);
-+	watchdog_init_timeout(&wdt->wdt_device,
-+			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
-+	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
-+
-+	ret = watchdog_register_device(&wdt->wdt_device);
-+	if (ret)
-+		goto err;
-+
-+	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
-+		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
-+
-+	return 0;
-+
-+err:
-+	clk_disable_unprepare(wdt->clock);
-+	return ret;
-+}
-+
-+static int zx2967_wdt_remove(struct platform_device *pdev)
-+{
-+	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
-+
-+	watchdog_unregister_device(&wdt->wdt_device);
-+	clk_disable_unprepare(wdt->clock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_wdt_match[] = {
-+	{ .compatible = "zte,zx296718-wdt", },
-+	{}
++&mpic {
++	reg = <0x20a00 0x2d0>, <0x21070 0x58>;
 +};
-+MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
 +
-+static struct platform_driver zx2967_wdt_driver = {
-+	.probe		= zx2967_wdt_probe,
-+	.remove		= zx2967_wdt_remove,
-+	.driver		= {
-+		.name	= "zx2967-wdt",
-+		.of_match_table	= of_match_ptr(zx2967_wdt_match),
-+	},
++&timer {
++	compatible = "marvell,armada-xp-timer";
++	clocks = <&coreclk 2>, <&refclk>;
++	clock-names = "nbclk", "fixed";
 +};
-+module_platform_driver(zx2967_wdt_driver);
 +
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
-+MODULE_LICENSE("GPL v2");
++&watchdog {
++	compatible = "marvell,armada-xp-wdt";
++	clocks = <&coreclk 2>, <&refclk>;
++	clock-names = "nbclk", "fixed";
++};
++
++&cpurst {
++	reg = <0x20800 0x20>;
++};
++
++&usb0 {
++	clocks = <&gateclk 18>;
++};
++
++&usb1 {
++	clocks = <&gateclk 19>;
+ };
+ 
+ &pinctrl {
+@@ -237,14 +346,13 @@
+ 	};
+ };
+ 
+-&sdio {
+-	status = "disabled";
++&spi0 {
++	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
++	pinctrl-0 = <&spi0_pins>;
++	pinctrl-names = "default";
+ };
+ 
+-&crypto_sram0 {
++&sdio {
+ 	status = "disabled";
+ };
+ 
+-&crypto_sram1 {
+-	status = "disabled";
+-};
 -- 
-2.7.4
+2.11.0.24.ge6920cf
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
