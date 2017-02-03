@@ -1,137 +1,125 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
- i2c-mux-simple bindings
-Date: Fri, 3 Feb 2017 09:25:53 +0100
-Message-ID: <5dc05e28-45c7-1dfe-3cd2-53e55490b48a@axentia.se>
-References: <1484755035-25927-1-git-send-email-peda@axentia.se>
- <1484755035-25927-8-git-send-email-peda@axentia.se>
- <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
- <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se>
- <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA@mail.gmail.com>
- <cdc958c3-2496-be52-6407-bf9aefdfa965@axentia.se>
- <CAL_JsqLCdM5s8FYqys-m5wpr4QeeE-rQaRXCt+rjQz3qm+E2qA@mail.gmail.com>
+From: Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: DTB file appears to have corrupted node property according to
+ fdtdump and kernel?
+Date: Fri, 3 Feb 2017 10:38:42 +0200
+Message-ID: <CAPBAm7Ts4shbZA0vt_XDn5ytUKCN3n5WSrZuT-m2e28DG5KAEw@mail.gmail.com>
+References: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLCdM5s8FYqys-m5wpr4QeeE-rQaRXCt+rjQz3qm+E2qA@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPBAm7R0y_ddrre7ydOioNfXbimwtyFonBxwoBaK+BXWuUipcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-02-02 17:08, Rob Herring wrote:
-> On Tue, Jan 31, 2017 at 1:36 AM, Peter Rosin <peda@axentia.se> wrote:
->> If you see this new driver as something that is superseding the existing
->> i2c-mux-gpio driver, I'm sad to inform you that the code is not simply
->> not there. i2c-mux-gpio has acpi support and users may provide platform
->> data from code. The existing i2c-mux-gpio driver also has the below
->> mentioned locking heuristic. Adding all those things to the new driver
->> would make it big and unwieldy and having even more unwanted tentacles
->> into other subsystems. And why should it be only i2c-mux-gpio that is
->> merged into this new i2c-mux driver? Why not implement a mux-pinctrl
->> driver for the new mux subsustem and then merge i2c-mux-pinctrl as well?
->> I say no, that way lies madness.
-> 
-> Sounds like a good idea to me. I'm not saying you need to merge any of
-> them right now though (that's Wolfram's call).
+On 2 February 2017 at 20:09, Frederik Lotter <frederik.lotter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi,
+>
+> I have a particular device tree node property which refuses to reach
+> the Linux kernel without corruption:
+>
+> I am looking at the following call stack:
+>
+> #0 of_platform_bus_create(...)
+> #1 of_platform_bus_create(...)
+> #2 of_platform_bus_create(...)
+> #3 of_platform_populate(...)
+> #4 sama5_dt_device_init(...)
+> #5 customize_machine(...)
+> #6 do_one_initcall(...)
+> #7 do_initcall_level(...)
+> #8 do_initcalls()
+> #9 do_basic_setup() at main.c:881
+> #10 kernel_init_freeable() at main.c:1004
+> #11 kernel_init(unused = <Value currently has no location>) at main.c:941
+>
+> Once I reach the i2c node below, I can walk the properties linked list
+> in the debugger. Once I get to the lsm6ds3 child and the "interrupts"
+> property, the value is (second value corrupted as zero)
+>
+>  interrupts = <0xc 0x0>;
+>
+> (I am investigating this because the second value which is used as the
+> interrupt trigger is always zero when the driver reads it).
+>
+> I have done some additional tests using the dtc and fdtdump utility to
+> try and isolate the issue.
+>
+> From the extract below from the preprocessed file:
+>
+>    i2c1: i2c@f0018000 {
+>     compatible = "atmel,at91sam9x5-i2c";
+>     reg = <0xf0018000 0x4000>;
+>     interrupts = <0x13 0x4 0x6>;
+>     dmas = <0x2 0x2 0x9 0x2 0x2 0xa>;
+>     dma-names = "tx", "rx";
+>     pinctrl-names = "default";
+>     pinctrl-0 = <0x12>;
+>     #address-cells = <0x1>;
+>     #size-cells = <0x0>;
+>     clocks = <0x13>;
+>     status = "okay";
+>     clock-frequency = <0x61a80>;
+>     atmel,recover-scl = <0x14 0x1b 0x0>;
+>     atmel,recover-sda = <0x14 0x1a 0x0>;
+>
+>     lsm6ds3@6b {
+>      compatible = "st,lsm6ds3";
+>      reg = <0x6b>;
+>      pinctrl-names = "default";
+>      pinctrl-0 = <0x15>;
+>      interrupt-parent = <0x16>;
+>      interrupts = <0xc 0x1>;
+>      interrupt-names = "lsm6ds_int1";
+>      st,drdy-int-pin = <0x1>;
+>     };
+>    };
+>
+> Version: DTC 1.4.0 (ubuntu package) for manual testing.
+>
+> (1)  fdtdump mix6000.dtb | grep interrupts
+>
+> Thsi returns the interrupt line as:
+>
+> interrupts = <0x0000000c 0x000001d0>;
+>
+> (2) In the linux kernel the of_platform_populate() reads the same property as:
+>
+> 0x0000000c 0x00000000 with lenth=8
+>
+> (3) If I take the DTS file and manually compile the DTB with the dtc
+> compiler, and convert it back to the DTS the correct values are shown
+>
+> (4) If I change the interrupt value:
+>
+> interrupts = <0xc 0x0>;
+>
+> and I do:
+>
+> cat <file-old.dtb> | od -t x1 > file1.txt
+> cat <file-mod.dtb> | od -t x1 > file2.txt
+> kdiff3 file1.txt file2.txt
+>
+> I actually see a single hex byte change from 0x1 to 0x0.
+>
+> If it was not for the faulty fdtdump output (in conjuection with the
+> Linux kernel zero at the same place) I would have said its definately
+> a kernel issue.
+>
+> Any ideas?
 
-If we're pedantic I probably have some stake in it too, being the i2c-mux
-maintainer and all. But, agreed, I arrived quite late to the Linux kernel
-party and my opinion might perhaps not carry all that much weight...
+I mad a very embarrassing mistake.
 
-> None of this has anything to do with the binding though. Compatible
-> strings should be specific. That's not up for debate. Whether the
+Our system has two boot paths and changed our main DT, while I tested
+the changes on a debug boot path using a second DT. The second DT
+happen to have the same LSM6DS3 node defined from a previous driver we
+tested, and had the second "interrupts" field hardcoded as zero.
 
-Ok, I'm going to focus on the compatible string for a minute and leave
-the implementation details for some other discussion.
+I should have made additional changes to the DT to confirm the updated
+file actually reach the kernel in our build flow.
 
-> driver bound to a compatible string is common or specific to that
-> compatible string is completely up to the OS. That decision can change
-> over time, but the binding should not.
-
-So, there's the existing compatible "i2c-mux-gpio" ("i2c-gpio-mux" is
-wrong) that you seem to suggest is what I should stick to. I object to
-that.
-
-As you say, the bindings and compatible strings should describe hardware,
-and you also state they should be specific. I agree. But, why are you
-then apparently suggesting (by implication) that for this (hypothetical)
-hardware...
-
-    .----.
-    |SDA0|-----------.
-    |SCL0|---------. |
-    |    |         | |
-    |    |      .-------.
-    |    |      |adg792a|
-    |    |      |       |
-    |ADC0|------|D1  S1A|---- signal A
-    |    |      |    S1B|---- signal B
-    |    |      |    S1C|---- signal C
-    |    |      |    S1D|---- signal D
-    |    |      |       |
-    |SDA1|---+--|D2  S2A|---- i2s segment foo A
-    |SCL1|-. |  |    S2B|---- i2s segment foo B
-    '----' | |  |    S2C|---- i2s segment foo C
-           | |  |    S2D|---- i2s segment foo D
-           | |  |       |
-           | '--|D3  S3A|---- i2s segment bar A
-           |    |    S3B|---- i2s segment bar B
-           |    |    S3C|---- i2s segment bar C
-           |    |    S3D|---- i2s segment bar D
-           |    '-------'
-           |                  A B C D   A B C D  (feed SCL1 to each of
-           |                  | | | |   | | | |   the 8 muxed segments)
-           '------------------+-+-+-+---+-+-+-'
-
-...the devicetree should be like below?
-
-&i2c0 {
-	mux: mux-controller@50 {
-		compatible = "adi,adg792a";
-		reg = <0x50>;
-		#mux-control-cells = <1>;
-	};
-};
-
-adc-mux {
-	compatible = "io-channel-mux";
-	io-channels = <&adc 0>;
-	io-channel-names = "parent";
-
-	mux-controls = <&mux 0>;
-
-	...
-};
-
-i2c-mux-foo {
-	compatible = "i2c-mux-gpio";
-	i2c-parent = <&i2c1>;
-
-	mux-controls = <&mux 1>;
-
-	...
-};
-
-i2c-mux-bar {
-	compatible = "i2c-mux-gpio";
-	i2c-parent = <&i2c1>;
-
-	mux-controls = <&mux 2>;
-
-	...
-};
-
-There must be some disconnect, because those "i2c-mux-gpio" compatible
-strings are just dead wrong. There simply are no gpio pins involved at
-all and that "gpio" suffix is just totally out of place.
-
-So, since you are not happy with "i2c-mux-simple", "i2c-mux-generic" or
-"i2c-mux" that I have suggested, can you please come up with something
-that is good enough for the above?
-
-Or, are you /really/ suggesting "i2c-mux-gpio"?
-
-Cheers,
-peda
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
