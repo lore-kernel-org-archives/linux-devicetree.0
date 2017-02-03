@@ -1,276 +1,243 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 2/2] drm/panel: Add driver for sitronix ST7789V panel
-Date: Fri,  3 Feb 2017 10:59:06 +0100
-Message-ID: <8194211279dd2d1b1c2e88a3c17d154c356bbbc7.1486115846.git-series.maxime.ripard@free-electrons.com>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 06/15] device property: Add support for remote endpoints
+Date: Fri, 3 Feb 2017 11:59:22 +0200
+Message-ID: <20170203095922.GA12291@valkosipuli.retiisi.org.uk>
+References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
+ <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
+ <20170131095827.GS7139@valkosipuli.retiisi.org.uk>
+ <CAL_JsqJar8AtP__Vyfdra3_Q-6jkcJ_MH3DL55P4t4GzaNOLJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJar8AtP__Vyfdra3_Q-6jkcJ_MH3DL55P4t4GzaNOLJA@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, laurent.pinchart@ideasonboard.com, g.liakhovetski@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-U2lnbmVkLW9mZi1ieTogTWF4aW1lIFJpcGFyZCA8bWF4aW1lLnJpcGFyZEBmcmVlLWVsZWN0cm9u
-cy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcgICAgICAgICAgICAgICAg
-ICB8ICAgNCArLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAg
-ICB8ICAgMSArLQogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYu
-YyB8IDQzNSArKysrKysrKysrKysrKysrKystCiAzIGZpbGVzIGNoYW5nZWQsIDQ0MCBpbnNlcnRp
-b25zKCspLCAwIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
-bS9wYW5lbC9wYW5lbC1zaXRyb25peC1zdDc3ODl2LmMKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
-dS9kcm0vcGFuZWwvS2NvbmZpZyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnCmluZGV4
-IDYyYWJhOTc2ZTc0NC4uZDA3Yjk5NmEwN2I4IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0v
-cGFuZWwvS2NvbmZpZworKysgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZwpAQCAtODEs
-NCArODEsOCBAQCBjb25maWcgRFJNX1BBTkVMX1NIQVJQX0xTMDQzVDFMRTAxCiAJICBTYXkgWSBo
-ZXJlIGlmIHlvdSB3YW50IHRvIGVuYWJsZSBzdXBwb3J0IGZvciBTaGFycCBMUzA0M1QxTEUwMSBx
-SEQKIAkgICg1NDB4OTYwKSBEU0kgcGFuZWwgYXMgZm91bmQgb24gdGhlIFF1YWxjb21tIEFQUTgw
-NzQgRHJhZ29uYm9hcmQKIAorY29uZmlnIERSTV9QQU5FTF9TSVRST05JWF9TVDc3ODlWCisJdHJp
-c3RhdGUgIlNpdHJvbnggU1Q3Nzg5ViBwYW5lbCIKKwlkZXBlbmRzIG9uIE9GICYmIFNQSQorCiBl
-bmRtZW51CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUgYi9kcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKaW5kZXggYTVjN2VjMDIzNmUwLi40MWIyNDVkMzk5
-ODQgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZQorKysgYi9kcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKQEAgLTYsMyArNiw0IEBAIG9iai0kKENPTkZJR19E
-Uk1fUEFORUxfU0FNU1VOR19MRDkwNDApICs9IHBhbmVsLXNhbXN1bmctbGQ5MDQwLm8KIG9iai0k
-KENPTkZJR19EUk1fUEFORUxfU0FNU1VOR19TNkU4QUEwKSArPSBwYW5lbC1zYW1zdW5nLXM2ZThh
-YTAubwogb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFSUF9MUTEwMVIxU1gwMSkgKz0gcGFuZWwt
-c2hhcnAtbHExMDFyMXN4MDEubwogb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFSUF9MUzA0M1Qx
-TEUwMSkgKz0gcGFuZWwtc2hhcnAtbHMwNDN0MWxlMDEubworb2JqLSQoQ09ORklHX0RSTV9QQU5F
-TF9TSVRST05JWF9TVDc3ODlWKSArPSBwYW5lbC1zaXRyb25peC1zdDc3ODl2Lm8KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaXRyb25peC1zdDc3ODl2LmMgYi9kcml2
-ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2l0cm9uaXgtc3Q3Nzg5di5jCm5ldyBmaWxlIG1vZGUg
-MTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uYWFiODE3YjU1YWE2Ci0tLSAvZGV2L251bGwKKysr
-IGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYuYwpAQCAtMCww
-ICsxLDQzNSBAQAorLyoKKyAqIENvcHlyaWdodCAoQykgMjAxNyBGcmVlIEVsZWN0cm9ucworICoK
-KyAqIFRoaXMgcHJvZ3JhbSBpcyBmcmVlIHNvZnR3YXJlOyB5b3UgY2FuIHJlZGlzdHJpYnV0ZSBp
-dCBhbmQvb3IKKyAqIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFs
-IFB1YmxpYyBMaWNlbnNlIHZlcnNpb24KKyAqIDIgYXMgcHVibGlzaGVkIGJ5IHRoZSBGcmVlIFNv
-ZnR3YXJlIEZvdW5kYXRpb24uCisgKi8KKworI2luY2x1ZGUgPGRybS9kcm1QLmg+CisjaW5jbHVk
-ZSA8ZHJtL2RybV9wYW5lbC5oPgorCisjaW5jbHVkZSA8bGludXgvZ3Bpby9jb25zdW1lci5oPgor
-I2luY2x1ZGUgPGxpbnV4L3NwaS9zcGkuaD4KKworI2RlZmluZSBTVDc3ODlWX1NMUElOX0NNRAkJ
-MHgxMAorCisjZGVmaW5lIFNUNzc4OVZfU0xQT1VUX0NNRAkJMHgxMQorCisjZGVmaW5lIFNUNzc4
-OVZfSU5WT05fQ01ECQkweDIxCisKKyNkZWZpbmUgU1Q3Nzg5Vl9ESVNQT0ZGX0NNRAkJMHgyOAor
-CisjZGVmaW5lIFNUNzc4OVZfRElTUE9OX0NNRAkJMHgyOQorCisjZGVmaW5lIFNUNzc4OVZfTUFE
-Q1RMX0NNRAkJMHgzNgorCisjZGVmaW5lIFNUNzc4OVZfQ09MTU9EX0NNRAkJMHgzYQorI2RlZmlu
-ZSBTVDc3ODlWX0NPTE1PRF9SR0JfRk1UXzE4QklUUwkJKDYgPDwgNCkKKyNkZWZpbmUgU1Q3Nzg5
-Vl9DT0xNT0RfQ1RSTF9GTVRfMThCSVRTCQkoNiA8PCAwKQorCisjZGVmaW5lIFNUNzc4OVZfUkFN
-Q1RSTF9DTUQJCTB4YjAKKyNkZWZpbmUgU1Q3Nzg5Vl9SQU1DVFJMX1JNX1JHQgkJCUJJVCg0KQor
-I2RlZmluZSBTVDc3ODlWX1JBTUNUUkxfRE1fUkdCCQkJQklUKDApCisjZGVmaW5lIFNUNzc4OVZf
-UkFNQ1RSTF9NQUdJQwkJCSgzIDw8IDYpCisjZGVmaW5lIFNUNzc4OVZfUkFNQ1RSTF9FUEYobikJ
-CQkoKChuKSAmIDMpIDw8IDQpCisKKyNkZWZpbmUgU1Q3Nzg5Vl9SR0JDVFJMX0NNRAkJMHhiMQor
-I2RlZmluZSBTVDc3ODlWX1JHQkNUUkxfV08JCQlCSVQoNykKKyNkZWZpbmUgU1Q3Nzg5Vl9SR0JD
-VFJMX1JDTShuKQkJCSgoKG4pICYgMykgPDwgNSkKKyNkZWZpbmUgU1Q3Nzg5Vl9SR0JDVFJMX1ZT
-WU5DX0hJR0gJCUJJVCgzKQorI2RlZmluZSBTVDc3ODlWX1JHQkNUUkxfSFNZTkNfSElHSAkJQklU
-KDIpCisjZGVmaW5lIFNUNzc4OVZfUkdCQ1RSTF9QQ0xLX0hJR0gJCUJJVCgxKQorI2RlZmluZSBT
-VDc3ODlWX1JHQkNUUkxfVkJQKG4pCQkJKChuKSAmIDB4N2YpCisjZGVmaW5lIFNUNzc4OVZfUkdC
-Q1RSTF9IQlAobikJCQkoKG4pICYgMHgxZikKKworI2RlZmluZSBTVDc3ODlWX1BPUkNUUkxfQ01E
-CQkweGIyCisjZGVmaW5lIFNUNzc4OVZfUE9SQ1RSTF9JRExFX0JQKG4pCQkoKChuKSAmIDB4Zikg
-PDwgNCkKKyNkZWZpbmUgU1Q3Nzg5Vl9QT1JDVFJMX0lETEVfRlAobikJCSgobikgJiAweGYpCisj
-ZGVmaW5lIFNUNzc4OVZfUE9SQ1RSTF9QQVJUSUFMX0JQKG4pCQkoKChuKSAmIDB4ZikgPDwgNCkK
-KyNkZWZpbmUgU1Q3Nzg5Vl9QT1JDVFJMX1BBUlRJQUxfRlAobikJCSgobikgJiAweGYpCisKKyNk
-ZWZpbmUgU1Q3Nzg5Vl9HQ1RSTF9DTUQJCTB4YjcKKyNkZWZpbmUgU1Q3Nzg5Vl9HQ1RSTF9WR0hT
-KG4pCQkJKCgobikgJiA3KSA8PCA0KQorI2RlZmluZSBTVDc3ODlWX0dDVFJMX1ZHTFMobikJCQko
-KG4pICYgNykKKworI2RlZmluZSBTVDc3ODlWX1ZDT01TX0NNRAkJMHhiYgorCisjZGVmaW5lIFNU
-Nzc4OVZfTENNQ1RSTF9DTUQJCTB4YzAKKyNkZWZpbmUgU1Q3Nzg5Vl9MQ01DVFJMX1hCR1IJCQlC
-SVQoNSkKKyNkZWZpbmUgU1Q3Nzg5Vl9MQ01DVFJMX1hNWAkJCUJJVCgzKQorI2RlZmluZSBTVDc3
-ODlWX0xDTUNUUkxfWE1ICQkJQklUKDIpCisKKyNkZWZpbmUgU1Q3Nzg5Vl9WRFZWUkhFTl9DTUQJ
-CTB4YzIKKyNkZWZpbmUgU1Q3Nzg5Vl9WRFZWUkhFTl9DTURFTgkJCUJJVCgwKQorCisjZGVmaW5l
-IFNUNzc4OVZfVlJIU19DTUQJCTB4YzMKKworI2RlZmluZSBTVDc3ODlWX1ZEVlNfQ01ECQkweGM0
-CisKKyNkZWZpbmUgU1Q3Nzg5Vl9GUkNUUkwyX0NNRAkJMHhjNgorCisjZGVmaW5lIFNUNzc4OVZf
-UFdDVFJMMV9DTUQJCTB4ZDAKKyNkZWZpbmUgU1Q3Nzg5Vl9QV0NUUkwxX01BR0lDCQkJMHhhNAor
-I2RlZmluZSBTVDc3ODlWX1BXQ1RSTDFfQVZERChuKQkJCSgoKG4pICYgMykgPDwgNikKKyNkZWZp
-bmUgU1Q3Nzg5Vl9QV0NUUkwxX0FWQ0wobikJCQkoKChuKSAmIDMpIDw8IDQpCisjZGVmaW5lIFNU
-Nzc4OVZfUFdDVFJMMV9WRFMobikJCQkoKG4pICYgMykKKworI2RlZmluZSBTVDc3ODlWX1BWR0FN
-Q1RSTF9DTUQJCTB4ZTAKKyNkZWZpbmUgU1Q3Nzg5Vl9QVkdBTUNUUkxfSlAwKG4pCQkoKChuKSAm
-IDMpIDw8IDQpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1DVFJMX0pQMShuKQkJKCgobikgJiAzKSA8
-PCA0KQorI2RlZmluZSBTVDc3ODlWX1BWR0FNQ1RSTF9WUDAobikJCSgobikgJiAweGYpCisjZGVm
-aW5lIFNUNzc4OVZfUFZHQU1DVFJMX1ZQMShuKQkJKChuKSAmIDB4M2YpCisjZGVmaW5lIFNUNzc4
-OVZfUFZHQU1DVFJMX1ZQMihuKQkJKChuKSAmIDB4M2YpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1D
-VFJMX1ZQNChuKQkJKChuKSAmIDB4MWYpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1DVFJMX1ZQNihu
-KQkJKChuKSAmIDB4MWYpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1DVFJMX1ZQMTMobikJCSgobikg
-JiAweGYpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1DVFJMX1ZQMjAobikJCSgobikgJiAweDdmKQor
-I2RlZmluZSBTVDc3ODlWX1BWR0FNQ1RSTF9WUDI3KG4pCQkoKG4pICYgNykKKyNkZWZpbmUgU1Q3
-Nzg5Vl9QVkdBTUNUUkxfVlAzNihuKQkJKCgobikgJiA3KSA8PCA0KQorI2RlZmluZSBTVDc3ODlW
-X1BWR0FNQ1RSTF9WUDQzKG4pCQkoKG4pICYgMHg3ZikKKyNkZWZpbmUgU1Q3Nzg5Vl9QVkdBTUNU
-UkxfVlA1MChuKQkJKChuKSAmIDB4ZikKKyNkZWZpbmUgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA1Nyhu
-KQkJKChuKSAmIDB4MWYpCisjZGVmaW5lIFNUNzc4OVZfUFZHQU1DVFJMX1ZQNTkobikJCSgobikg
-JiAweDFmKQorI2RlZmluZSBTVDc3ODlWX1BWR0FNQ1RSTF9WUDYxKG4pCQkoKG4pICYgMHgzZikK
-KyNkZWZpbmUgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA2MihuKQkJKChuKSAmIDB4M2YpCisjZGVmaW5l
-IFNUNzc4OVZfUFZHQU1DVFJMX1ZQNjMobikJCSgoKG4pICYgMHhmKSA8PCA0KQorCisjZGVmaW5l
-IFNUNzc4OVZfTlZHQU1DVFJMX0NNRAkJMHhlMQorI2RlZmluZSBTVDc3ODlWX05WR0FNQ1RSTF9K
-TjAobikJCSgoKG4pICYgMykgPDwgNCkKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxfSk4xKG4p
-CQkoKChuKSAmIDMpIDw8IDQpCisjZGVmaW5lIFNUNzc4OVZfTlZHQU1DVFJMX1ZOMChuKQkJKChu
-KSAmIDB4ZikKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk4xKG4pCQkoKG4pICYgMHgzZikK
-KyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk4yKG4pCQkoKG4pICYgMHgzZikKKyNkZWZpbmUg
-U1Q3Nzg5Vl9OVkdBTUNUUkxfVk40KG4pCQkoKG4pICYgMHgxZikKKyNkZWZpbmUgU1Q3Nzg5Vl9O
-VkdBTUNUUkxfVk42KG4pCQkoKG4pICYgMHgxZikKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxf
-Vk4xMyhuKQkJKChuKSAmIDB4ZikKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk4yMChuKQkJ
-KChuKSAmIDB4N2YpCisjZGVmaW5lIFNUNzc4OVZfTlZHQU1DVFJMX1ZOMjcobikJCSgobikgJiA3
-KQorI2RlZmluZSBTVDc3ODlWX05WR0FNQ1RSTF9WTjM2KG4pCQkoKChuKSAmIDcpIDw8IDQpCisj
-ZGVmaW5lIFNUNzc4OVZfTlZHQU1DVFJMX1ZONDMobikJCSgobikgJiAweDdmKQorI2RlZmluZSBT
-VDc3ODlWX05WR0FNQ1RSTF9WTjUwKG4pCQkoKG4pICYgMHhmKQorI2RlZmluZSBTVDc3ODlWX05W
-R0FNQ1RSTF9WTjU3KG4pCQkoKG4pICYgMHgxZikKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxf
-Vk41OShuKQkJKChuKSAmIDB4MWYpCisjZGVmaW5lIFNUNzc4OVZfTlZHQU1DVFJMX1ZONjEobikJ
-CSgobikgJiAweDNmKQorI2RlZmluZSBTVDc3ODlWX05WR0FNQ1RSTF9WTjYyKG4pCQkoKG4pICYg
-MHgzZikKKyNkZWZpbmUgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk42MyhuKQkJKCgobikgJiAweGYpIDw8
-IDQpCisKK3N0cnVjdCBzdDc3ODl2IHsKKwlzdHJ1Y3QgZHJtX3BhbmVsIHBhbmVsOworCXN0cnVj
-dCBzcGlfZGV2aWNlICpzcGk7CisJc3RydWN0IGdwaW9fZGVzYyAqcmVzZXQ7CisJc3RydWN0IGJh
-Y2tsaWdodF9kZXZpY2UgKmJhY2tsaWdodDsKK307CisKK2VudW0gc3Q3Nzg5dl9wcmVmaXggewor
-CVNUNzc4OVZfQ09NTUFORCA9IDAsCisJU1Q3Nzg5Vl9EQVRBID0gMSwKK307CisKK3N0YXRpYyBp
-bmxpbmUgc3RydWN0IHN0Nzc4OXYgKnBhbmVsX3RvX3N0Nzc4OXYoc3RydWN0IGRybV9wYW5lbCAq
-cGFuZWwpCit7CisJcmV0dXJuIGNvbnRhaW5lcl9vZihwYW5lbCwgc3RydWN0IHN0Nzc4OXYsIHBh
-bmVsKTsKK30KKworc3RhdGljIGludCBzdDc3ODl2X3NwaV93cml0ZShzdHJ1Y3Qgc3Q3Nzg5diAq
-Y3R4LCB1OCBwcmVmaXgsIHU4IGRhdGEpCit7CisJc3RydWN0IHNwaV90cmFuc2ZlciB4ZmVyID0g
-eyB9OworCXN0cnVjdCBzcGlfbWVzc2FnZSBtc2c7CisJdTE2IHR4YnVmID0gKChwcmVmaXggJiAx
-KSA8PCA4KSB8IGRhdGE7CisKKwlzcGlfbWVzc2FnZV9pbml0KCZtc2cpOworCisJeGZlci50eF9i
-dWYgPSAmdHhidWY7CisJeGZlci5iaXRzX3Blcl93b3JkID0gOTsKKwl4ZmVyLmxlbiA9IHNpemVv
-Zih0eGJ1Zik7CisKKwlzcGlfbWVzc2FnZV9hZGRfdGFpbCgmeGZlciwgJm1zZyk7CisJcmV0dXJu
-IHNwaV9zeW5jKGN0eC0+c3BpLCAmbXNnKTsKK30KKworc3RhdGljIGludCBzdDc3ODl2X3dyaXRl
-X2NvbW1hbmQoc3RydWN0IHN0Nzc4OXYgKmN0eCwgdTggY21kKQoreworCXJldHVybiBzdDc3ODl2
-X3NwaV93cml0ZShjdHgsIFNUNzc4OVZfQ09NTUFORCwgY21kKTsKK30KKworc3RhdGljIGludCBz
-dDc3ODl2X3dyaXRlX2RhdGEoc3RydWN0IHN0Nzc4OXYgKmN0eCwgdTggY21kKQoreworCXJldHVy
-biBzdDc3ODl2X3NwaV93cml0ZShjdHgsIFNUNzc4OVZfREFUQSwgY21kKTsKK30KKworc3RhdGlj
-IGludCBzdDc3ODl2X3dyaXRlX2NvbW1hbmRfZGF0YShzdHJ1Y3Qgc3Q3Nzg5diAqY3R4LCB1OCBj
-bWQsCisJCQkJICAgICAgdW5zaWduZWQgbG9uZyBuX2RhdGEsIC4uLikKK3sKKwl2YV9saXN0IGFw
-OworCWludCBpOworCisJc3Q3Nzg5dl93cml0ZV9jb21tYW5kKGN0eCwgY21kKTsKKworCXZhX3N0
-YXJ0KGFwLCBuX2RhdGEpOworCWZvciAoaSA9IDA7IGkgPCBuX2RhdGE7IGkrKykKKwkJc3Q3Nzg5
-dl93cml0ZV9kYXRhKGN0eCwgdmFfYXJnKGFwLCBpbnQpKTsKKwl2YV9lbmQoYXApOworCisJcmV0
-dXJuIDA7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSBkZWZhdWx0
-X21vZGUgPSB7CisJLmNsb2NrID0gNzAwMCwKKwkuaGRpc3BsYXkgPSAyNDAsCisJLmhzeW5jX3N0
-YXJ0ID0gMjQwICsgMzgsCisJLmhzeW5jX2VuZCA9IDI0MCArIDM4ICsgMTAsCisJLmh0b3RhbCA9
-IDI0MCArIDM4ICsgMTAgKyAxMCwKKwkudmRpc3BsYXkgPSAzMjAsCisJLnZzeW5jX3N0YXJ0ID0g
-MzIwICsgOCwKKwkudnN5bmNfZW5kID0gMzIwICsgOCArIDQsCisJLnZ0b3RhbCA9IDMyMCArIDgg
-KyA0ICsgNCwKKwkudnJlZnJlc2ggPSA2MCwKK307CisKK3N0YXRpYyBpbnQgc3Q3Nzg5dl9nZXRf
-bW9kZXMoc3RydWN0IGRybV9wYW5lbCAqcGFuZWwpCit7CisJc3RydWN0IGRybV9jb25uZWN0b3Ig
-KmNvbm5lY3RvciA9IHBhbmVsLT5jb25uZWN0b3I7CisJc3RydWN0IGRybV9kaXNwbGF5X21vZGUg
-Km1vZGU7CisKKwltb2RlID0gZHJtX21vZGVfZHVwbGljYXRlKHBhbmVsLT5kcm0sICZkZWZhdWx0
-X21vZGUpOworCWlmICghbW9kZSkgeworCQlkZXZfZXJyKHBhbmVsLT5kcm0tPmRldiwgImZhaWxl
-ZCB0byBhZGQgbW9kZSAldXgldXhAJXVcbiIsCisJCQlkZWZhdWx0X21vZGUuaGRpc3BsYXksIGRl
-ZmF1bHRfbW9kZS52ZGlzcGxheSwKKwkJCWRlZmF1bHRfbW9kZS52cmVmcmVzaCk7CisJCXJldHVy
-biAtRU5PTUVNOworCX0KKworCWRybV9tb2RlX3NldF9uYW1lKG1vZGUpOworCisJbW9kZS0+dHlw
-ZSA9IERSTV9NT0RFX1RZUEVfRFJJVkVSIHwgRFJNX01PREVfVFlQRV9QUkVGRVJSRUQ7CisJZHJt
-X21vZGVfcHJvYmVkX2FkZChjb25uZWN0b3IsIG1vZGUpOworCisJcGFuZWwtPmNvbm5lY3Rvci0+
-ZGlzcGxheV9pbmZvLndpZHRoX21tID0gNjE7CisJcGFuZWwtPmNvbm5lY3Rvci0+ZGlzcGxheV9p
-bmZvLmhlaWdodF9tbSA9IDEwMzsKKworCXJldHVybiAxOworfQorCisjZGVmaW5lIE5VTUFSR1Mo
-Li4uKSAgKHNpemVvZigoaW50W10pe19fVkFfQVJHU19ffSkgLyBzaXplb2YoaW50KSkKKyNkZWZp
-bmUgc3Q3Nzg5dl9zZW5kKGN0eCwgY21kLCAuLi4pCQkJCQlcCisJc3Q3Nzg5dl93cml0ZV9jb21t
-YW5kX2RhdGEoY3R4LCBjbWQsIE5VTUFSR1MoX19WQV9BUkdTX18pLAlcCisJCQkJICAgIyNfX1ZB
-X0FSR1NfXykKKworc3RhdGljIGludCBzdDc3ODl2X3ByZXBhcmUoc3RydWN0IGRybV9wYW5lbCAq
-cGFuZWwpCit7CisJc3RydWN0IHN0Nzc4OXYgKmN0eCA9IHBhbmVsX3RvX3N0Nzc4OXYocGFuZWwp
-OworCisJZ3Bpb2Rfc2V0X3ZhbHVlKGN0eC0+cmVzZXQsIDEpOworCW1zbGVlcCgzMCk7CisJZ3Bp
-b2Rfc2V0X3ZhbHVlKGN0eC0+cmVzZXQsIDApOworCW1zbGVlcCgxMjApOworCisJc3Q3Nzg5dl9z
-ZW5kKGN0eCwgU1Q3Nzg5Vl9TTFBPVVRfQ01EKTsKKworCS8qIFdlIG5lZWQgdG8gd2FpdCAxMjBt
-cyBhZnRlciBhIHNsZWVwIG91dCBjb21tYW5kICovCisJbXNsZWVwKDEyMCk7CisKKwlzdDc3ODl2
-X3NlbmQoY3R4LCBTVDc3ODlWX01BRENUTF9DTUQsIDApOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwg
-U1Q3Nzg5Vl9DT0xNT0RfQ01ELAorCQkgICAgIFNUNzc4OVZfQ09MTU9EX0NUUkxfRk1UXzE4QklU
-UyB8CisJCSAgICAgU1Q3Nzg5Vl9DT0xNT0RfUkdCX0ZNVF8xOEJJVFMpOworCisJc3Q3Nzg5dl9z
-ZW5kKGN0eCwgU1Q3Nzg5Vl9QT1JDVFJMX0NNRCwKKwkJICAgICAweGMsCQkvKiBCYWNrcG9yY2gs
-IG5vcm1hbCBtb2RlKi8KKwkJICAgICAweGMsCQkvKiBGcm9udHBvcmNoLCBub3JtYWwgbW9kZSAq
-LworCQkgICAgIDAsCQkJLyogRGlzYWJsZSBzZXBhcmF0ZSBwb3JjaCBjb250cm9sICovCisJCSAg
-ICAgU1Q3Nzg5Vl9QT1JDVFJMX0lETEVfQlAoMykgfAorCQkgICAgIFNUNzc4OVZfUE9SQ1RSTF9J
-RExFX0ZQKDMpLAorCQkgICAgIFNUNzc4OVZfUE9SQ1RSTF9QQVJUSUFMX0JQKDMpIHwKKwkJICAg
-ICBTVDc3ODlWX1BPUkNUUkxfUEFSVElBTF9GUCgzKSk7CisKKwlzdDc3ODl2X3NlbmQoY3R4LCBT
-VDc3ODlWX0dDVFJMX0NNRCwKKwkJICAgICBTVDc3ODlWX0dDVFJMX1ZHTFMoNSkgfCBTVDc3ODlW
-X0dDVFJMX1ZHSFMoMykpOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9WQ09NU19DTUQs
-IDB4MmIpOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9MQ01DVFJMX0NNRCwgU1Q3Nzg5
-Vl9MQ01DVFJMX1hNSCB8CisJCSAgICAgU1Q3Nzg5Vl9MQ01DVFJMX1hNWCB8IFNUNzc4OVZfTENN
-Q1RSTF9YQkdSKTsKKworCXN0Nzc4OXZfc2VuZChjdHgsIFNUNzc4OVZfVkRWVlJIRU5fQ01ELCBT
-VDc3ODlWX1ZEVlZSSEVOX0NNREVOKTsKKworCXN0Nzc4OXZfc2VuZChjdHgsIFNUNzc4OVZfVlJI
-U19DTUQsIDB4Zik7CisKKwlzdDc3ODl2X3NlbmQoY3R4LCBTVDc3ODlWX1ZEVlNfQ01ELCAweDIw
-KTsKKworCXN0Nzc4OXZfc2VuZChjdHgsIFNUNzc4OVZfRlJDVFJMMl9DTUQsIDB4Zik7CisKKwlz
-dDc3ODl2X3NlbmQoY3R4LCBTVDc3ODlWX1BXQ1RSTDFfQ01ELCBTVDc3ODlWX1BXQ1RSTDFfTUFH
-SUMsCisJCSAgICAgU1Q3Nzg5Vl9QV0NUUkwxX0FWREQoMikgfCBTVDc3ODlWX1BXQ1RSTDFfQVZD
-TCgyKSB8CisJCSAgICAgU1Q3Nzg5Vl9QV0NUUkwxX1ZEUygxKSk7CisKKwlzdDc3ODl2X3NlbmQo
-Y3R4LCBTVDc3ODlWX1BWR0FNQ1RSTF9DTUQsCisJCSAgICAgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA2
-MygweGQpLAorCQkgICAgIFNUNzc4OVZfUFZHQU1DVFJMX1ZQMSgweGNhKSwKKwkJICAgICBTVDc3
-ODlWX1BWR0FNQ1RSTF9WUDIoMHhlKSwKKwkJICAgICBTVDc3ODlWX1BWR0FNQ1RSTF9WUDQoOCks
-CisJCSAgICAgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA2KDkpLAorCQkgICAgIFNUNzc4OVZfUFZHQU1D
-VFJMX1ZQMTMoNyksCisJCSAgICAgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlAyMCgweDJkKSwKKwkJICAg
-ICBTVDc3ODlWX1BWR0FNQ1RSTF9WUDI3KDB4YikgfCBTVDc3ODlWX1BWR0FNQ1RSTF9WUDM2KDMp
-LAorCQkgICAgIFNUNzc4OVZfUFZHQU1DVFJMX1ZQNDMoMHgzZCksCisJCSAgICAgU1Q3Nzg5Vl9Q
-VkdBTUNUUkxfSlAxKDMpIHwgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA1MCg0KSwKKwkJICAgICBTVDc3
-ODlWX1BWR0FNQ1RSTF9WUDU3KDB4YSksCisJCSAgICAgU1Q3Nzg5Vl9QVkdBTUNUUkxfVlA1OSgw
-eGEpLAorCQkgICAgIFNUNzc4OVZfUFZHQU1DVFJMX1ZQNjEoMHgxYiksCisJCSAgICAgU1Q3Nzg5
-Vl9QVkdBTUNUUkxfVlA2MigweDI4KSk7CisKKwlzdDc3ODl2X3NlbmQoY3R4LCBTVDc3ODlWX05W
-R0FNQ1RSTF9DTUQsCisJCSAgICAgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk42MygweGQpLAorCQkgICAg
-IFNUNzc4OVZfTlZHQU1DVFJMX1ZOMSgweGNhKSwKKwkJICAgICBTVDc3ODlWX05WR0FNQ1RSTF9W
-TjIoMHhmKSwKKwkJICAgICBTVDc3ODlWX05WR0FNQ1RSTF9WTjQoOCksCisJCSAgICAgU1Q3Nzg5
-Vl9OVkdBTUNUUkxfVk42KDgpLAorCQkgICAgIFNUNzc4OVZfTlZHQU1DVFJMX1ZOMTMoNyksCisJ
-CSAgICAgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk4yMCgweDJlKSwKKwkJICAgICBTVDc3ODlWX05WR0FN
-Q1RSTF9WTjI3KDB4YykgfCBTVDc3ODlWX05WR0FNQ1RSTF9WTjM2KDUpLAorCQkgICAgIFNUNzc4
-OVZfTlZHQU1DVFJMX1ZONDMoMHg0MCksCisJCSAgICAgU1Q3Nzg5Vl9OVkdBTUNUUkxfSk4xKDMp
-IHwgU1Q3Nzg5Vl9OVkdBTUNUUkxfVk41MCg0KSwKKwkJICAgICBTVDc3ODlWX05WR0FNQ1RSTF9W
-TjU3KDkpLAorCQkgICAgIFNUNzc4OVZfTlZHQU1DVFJMX1ZONTkoMHhiKSwKKwkJICAgICBTVDc3
-ODlWX05WR0FNQ1RSTF9WTjYxKDB4MWIpLAorCQkgICAgIFNUNzc4OVZfTlZHQU1DVFJMX1ZONjIo
-MHgyOCkpOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9JTlZPTl9DTUQpOworCisJc3Q3
-Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9SQU1DVFJMX0NNRCwKKwkJICAgICBTVDc3ODlWX1JBTUNU
-UkxfRE1fUkdCIHwgU1Q3Nzg5Vl9SQU1DVFJMX1JNX1JHQiwKKwkJICAgICBTVDc3ODlWX1JBTUNU
-UkxfRVBGKDMpIHwgU1Q3Nzg5Vl9SQU1DVFJMX01BR0lDKTsKKworCXN0Nzc4OXZfc2VuZChjdHgs
-IFNUNzc4OVZfUkdCQ1RSTF9DTUQsCisJCSAgICAgU1Q3Nzg5Vl9SR0JDVFJMX1dPIHwgU1Q3Nzg5
-Vl9SR0JDVFJMX1JDTSgyKSB8CisJCSAgICAgU1Q3Nzg5Vl9SR0JDVFJMX1ZTWU5DX0hJR0ggfCBT
-VDc3ODlWX1JHQkNUUkxfSFNZTkNfSElHSCB8CisJCSAgICAgU1Q3Nzg5Vl9SR0JDVFJMX1BDTEtf
-SElHSCwKKwkJICAgICBTVDc3ODlWX1JHQkNUUkxfVkJQKDgpLCBTVDc3ODlWX1JHQkNUUkxfSEJQ
-KDIwKSk7CisKKwlyZXR1cm4gMDsKK30KKworc3RhdGljIGludCBzdDc3ODl2X2VuYWJsZShzdHJ1
-Y3QgZHJtX3BhbmVsICpwYW5lbCkKK3sKKwlzdHJ1Y3Qgc3Q3Nzg5diAqY3R4ID0gcGFuZWxfdG9f
-c3Q3Nzg5dihwYW5lbCk7CisKKwlpZiAoY3R4LT5iYWNrbGlnaHQpIHsKKwkJY3R4LT5iYWNrbGln
-aHQtPnByb3BzLnN0YXRlICY9IH5CTF9DT1JFX0ZCQkxBTks7CisJCWN0eC0+YmFja2xpZ2h0LT5w
-cm9wcy5wb3dlciA9IEZCX0JMQU5LX1VOQkxBTks7CisJCWJhY2tsaWdodF91cGRhdGVfc3RhdHVz
-KGN0eC0+YmFja2xpZ2h0KTsKKwl9CisKKwlyZXR1cm4gc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5
-Vl9ESVNQT05fQ01EKTsKK30KKworc3RhdGljIGludCBzdDc3ODl2X2Rpc2FibGUoc3RydWN0IGRy
-bV9wYW5lbCAqcGFuZWwpCit7CisJc3RydWN0IHN0Nzc4OXYgKmN0eCA9IHBhbmVsX3RvX3N0Nzc4
-OXYocGFuZWwpOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9ESVNQT0ZGX0NNRCk7CisK
-KwlpZiAoY3R4LT5iYWNrbGlnaHQpIHsKKwkJY3R4LT5iYWNrbGlnaHQtPnByb3BzLnBvd2VyID0g
-RkJfQkxBTktfUE9XRVJET1dOOworCQljdHgtPmJhY2tsaWdodC0+cHJvcHMuc3RhdGUgfD0gQkxf
-Q09SRV9GQkJMQU5LOworCQliYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhjdHgtPmJhY2tsaWdodCk7
-CisJfQorCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBpbnQgc3Q3Nzg5dl91bnByZXBhcmUoc3Ry
-dWN0IGRybV9wYW5lbCAqcGFuZWwpCit7CisJc3RydWN0IHN0Nzc4OXYgKmN0eCA9IHBhbmVsX3Rv
-X3N0Nzc4OXYocGFuZWwpOworCisJc3Q3Nzg5dl9zZW5kKGN0eCwgU1Q3Nzg5Vl9TTFBJTl9DTUQp
-OworCisJcmV0dXJuIDA7Cit9CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX3BhbmVsX2Z1bmNz
-IHN0Nzc4OXZfZHJtX2Z1bmNzID0geworCS5kaXNhYmxlCT0gc3Q3Nzg5dl9kaXNhYmxlLAorCS5l
-bmFibGUJCT0gc3Q3Nzg5dl9lbmFibGUsCisJLmdldF9tb2Rlcwk9IHN0Nzc4OXZfZ2V0X21vZGVz
-LAorCS5wcmVwYXJlCT0gc3Q3Nzg5dl9wcmVwYXJlLAorCS51bnByZXBhcmUJPSBzdDc3ODl2X3Vu
-cHJlcGFyZSwKK307CisKK3N0YXRpYyBpbnQgc3Q3Nzg5dl9wcm9iZShzdHJ1Y3Qgc3BpX2Rldmlj
-ZSAqc3BpKQoreworCXN0cnVjdCBkZXZpY2Vfbm9kZSAqYmFja2xpZ2h0OworCXN0cnVjdCBzdDc3
-ODl2ICpjdHg7CisJaW50IHJldDsKKworCWN0eCA9IGRldm1fa3phbGxvYygmc3BpLT5kZXYsIHNp
-emVvZigqY3R4KSwgR0ZQX0tFUk5FTCk7CisJaWYgKCFjdHgpCisJCXJldHVybiAtRU5PTUVNOwor
-CisJc3BpX3NldF9kcnZkYXRhKHNwaSwgY3R4KTsKKwljdHgtPnNwaSA9IHNwaTsKKworCWN0eC0+
-cGFuZWwuZGV2ID0gJnNwaS0+ZGV2OworCWN0eC0+cGFuZWwuZnVuY3MgPSAmc3Q3Nzg5dl9kcm1f
-ZnVuY3M7CisKKwljdHgtPnJlc2V0ID0gZGV2bV9ncGlvZF9nZXQoJnNwaS0+ZGV2LCAicmVzZXQi
-LCBHUElPRF9PVVRfTE9XKTsKKwlpZiAoSVNfRVJSKGN0eC0+cmVzZXQpKSB7CisJCWRldl9lcnIo
-JnNwaS0+ZGV2LCAiQ291bGRuJ3QgZ2V0IG91ciByZXNldCBsaW5lXG4iKTsKKwkJcmV0dXJuIFBU
-Ul9FUlIoY3R4LT5yZXNldCk7CisJfQorCisJYmFja2xpZ2h0ID0gb2ZfcGFyc2VfcGhhbmRsZShz
-cGktPmRldi5vZl9ub2RlLCAiYmFja2xpZ2h0IiwgMCk7CisJaWYgKGJhY2tsaWdodCkgeworCQlj
-dHgtPmJhY2tsaWdodCA9IG9mX2ZpbmRfYmFja2xpZ2h0X2J5X25vZGUoYmFja2xpZ2h0KTsKKwkJ
-b2Zfbm9kZV9wdXQoYmFja2xpZ2h0KTsKKworCQlpZiAoIWN0eC0+YmFja2xpZ2h0KQorCQkJcmV0
-dXJuIC1FUFJPQkVfREVGRVI7CisJfQorCisJcmV0ID0gZHJtX3BhbmVsX2FkZCgmY3R4LT5wYW5l
-bCk7CisJaWYgKHJldCA8IDApCisJCWdvdG8gZXJyX2ZyZWVfYmFja2xpZ2h0OworCisJcmV0dXJu
-IDA7CisKK2Vycl9mcmVlX2JhY2tsaWdodDoKKwlpZiAoY3R4LT5iYWNrbGlnaHQpCisJCXB1dF9k
-ZXZpY2UoJmN0eC0+YmFja2xpZ2h0LT5kZXYpOworCisJcmV0dXJuIHJldDsKK30KKworc3RhdGlj
-IGludCBzdDc3ODl2X3JlbW92ZShzdHJ1Y3Qgc3BpX2RldmljZSAqc3BpKQoreworCXN0cnVjdCBz
-dDc3ODl2ICpjdHggPSBzcGlfZ2V0X2RydmRhdGEoc3BpKTsKKworCWRybV9wYW5lbF9kZXRhY2go
-JmN0eC0+cGFuZWwpOworCWRybV9wYW5lbF9yZW1vdmUoJmN0eC0+cGFuZWwpOworCisJaWYgKGN0
-eC0+YmFja2xpZ2h0KQorCQlwdXRfZGV2aWNlKCZjdHgtPmJhY2tsaWdodC0+ZGV2KTsKKworCXJl
-dHVybiAwOworfQorCitzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBzdDc3ODl2X29m
-X21hdGNoW10gPSB7CisJeyAuY29tcGF0aWJsZSA9ICJzaXRyb25peCxzdDc3ODl2IiB9LAorCXsg
-fQorfTsKK01PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHN0Nzc4OXZfb2ZfbWF0Y2gpOworCitzdGF0
-aWMgc3RydWN0IHNwaV9kcml2ZXIgc3Q3Nzg5dl9kcml2ZXIgPSB7CisJLnByb2JlID0gc3Q3Nzg5
-dl9wcm9iZSwKKwkucmVtb3ZlID0gc3Q3Nzg5dl9yZW1vdmUsCisJLmRyaXZlciA9IHsKKwkJLm5h
-bWUgPSAic3Q3Nzg5diIsCisJCS5vZl9tYXRjaF90YWJsZSA9IHN0Nzc4OXZfb2ZfbWF0Y2gsCisJ
-fSwKK307Cittb2R1bGVfc3BpX2RyaXZlcihzdDc3ODl2X2RyaXZlcik7CisKK01PRFVMRV9BVVRI
-T1IoIk1heGltZSBSaXBhcmQgPG1heGltZS5yaXBhcmRAZnJlZS1lbGVjdHJvbnMuY29tPiIpOwor
-TU9EVUxFX0RFU0NSSVBUSU9OKCJTaXRyb25peCBzdDc3ODl2IExDRCBEcml2ZXIiKTsKK01PRFVM
-RV9MSUNFTlNFKCJHUEwgdjIiKTsKLS0gCmdpdC1zZXJpZXMgMC44LjExCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Rob,
+
+On Thu, Feb 02, 2017 at 11:19:08AM -0600, Rob Herring wrote:
+> On Tue, Jan 31, 2017 at 3:58 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
+> > Hi Rob,
+> >
+> > Thank you for the review.
+> >
+> > On Fri, Jan 27, 2017 at 03:45:04PM -0600, Rob Herring wrote:
+> >> On Fri, Jan 27, 2017 at 10:03 AM, Sakari Ailus
+> >> <sakari.ailus@linux.intel.com> wrote:
+> >> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> >
+> >> > This follows DT implementation of of_graph_* APIs but we call them
+> >> > fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
+> >> > will be used. For ACPI we use the new ACPI graph implementation instead.
+> >> >
+> >> > This commit includes code from Sakari Ailus.
+> >>
+> >> Then it should have your S-o-b. Actually, either way it should have it.
+> >
+> > I'll add that.
+> >
+> >>
+> >> Whether or not copying DT graphs is a good idea or not, I'll let
+> >> someone else chime in on that...
+> >>
+> >> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> >> > ---
+> >> >  drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
+> >> >  include/linux/property.h |   9 ++++
+> >> >  2 files changed, 131 insertions(+)
+> >> >
+> >> > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> >> > index c0011cf..cf602c3 100644
+> >> > --- a/drivers/base/property.c
+> >> > +++ b/drivers/base/property.c
+> >> > @@ -15,6 +15,7 @@
+> >> >  #include <linux/kernel.h>
+> >> >  #include <linux/of.h>
+> >> >  #include <linux/of_address.h>
+> >> > +#include <linux/of_graph.h>
+> >> >  #include <linux/property.h>
+> >> >  #include <linux/etherdevice.h>
+> >> >  #include <linux/phy.h>
+> >> > @@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
+> >> >         return device_get_mac_addr(dev, "address", addr, alen);
+> >> >  }
+> >> >  EXPORT_SYMBOL(device_get_mac_address);
+> >> > +
+> >> > +/**
+> >> > + * device_graph_get_next_endpoint - Get next endpoint firmware node
+> >> > + * @fwnode: Pointer to the parent firmware node
+> >> > + * @prev: Previous endpoint node or %NULL to get the first
+> >> > + *
+> >> > + * Returns an endpoint firmware node pointer or %NULL if no more endpoints
+> >> > + * are available.
+> >> > + */
+> >> > +struct fwnode_handle *
+> >> > +fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
+> >> > +                              struct fwnode_handle *prev)
+> >> > +{
+> >> > +       struct fwnode_handle *endpoint = NULL;
+> >> > +
+> >> > +       if (is_of_node(fwnode)) {
+> >> > +               struct device_node *node;
+> >> > +
+> >> > +               node = of_graph_get_next_endpoint(to_of_node(fwnode),
+> >> > +                                                 to_of_node(prev));
+> >> > +
+> >> > +               if (node)
+> >> > +                       endpoint = &node->fwnode;
+> >> > +       } else if (is_acpi_node(fwnode)) {
+> >> > +               endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
+> >> > +               if (IS_ERR(endpoint))
+> >> > +                       endpoint = NULL;
+> >> > +       }
+> >>
+> >> This is an ugly pattern IMO. Why not define an ops struct and set it
+> >> to OF or ACPI rather than check on every function call with
+> >> is_{of,acpi}_node()?
+> >
+> > That appears to be an established practice in the implementation of the
+> > device / fwnode property API.
+> 
+> I know. That doesn't mean it is good practice or not in need of
+> refactoring as fwnode API expands.
+> 
+> > One option could be to choose the relevant ops struct based on fwnode type
+> > in each function operating on the fwnode.
+> 
+> That helps absolutely nothing.
+
+You could add a bunch of macros to help with that, and wrap the actual
+functions so that you'd find the ops using the macro. It'd be less pretty
+than having an ops pointer in the struct, I agree.
+
+> 
+> > Alternatively it could be set at the time when the fwnode field is set. A
+> > large number of drivers are manipulating their OF nodes, some do that for
+> > fwnodes as well.
+> 
+> What do you mean by manipulating? A fwnode should be statically
+> pointing to a DT node and the DT node is static.
+
+I should have phrased that differently. The OF node (or fwnode_handle)
+pointers are stored locally in driver specific structs. Now that I look at
+that more closely, the only problems appears to be that most forget
+of_node_get() but that's unrelated to this.
+
+> 
+> > Manually setting the ops struct pointer in those cases
+> > might not be robust enough: sometimes one could simply forget. Also, adding
+> > a pointer to struct fwnode_handle would increase the size of the struct
+> > significantly without much gain.
+> 
+> 4 or 8 bytes, really?
+
+Per node. Going forward, 8 is getting more and more common.
+
+> 
+> >
+> > The number of functions operating on fwnode_handle is rather limited. I
+> > wonder if it'd be simply better to keep it as-is.
+> 
+> It was, but you're adding a lot.
+
+With the patchset, there are 14 occurrences of is_of_node() and 12
+occurrences of is_acpi_node(). Before the numbers were 6 and 4,
+respectively.
+
+I think it'd be good to have a third opinion on that.
+
+I presume you'd prefer these changes done before this set?
+
+> 
+> >> The of_graph_* functions need some better helpers too, so duplicating
+> >> them 2 more times is not ideal. Basically, drivers are left to do too
+> >> much of the walking of nodes themselves.
+> >
+> > I have to admit my experience in using them is limited to V4L2, but I have
+> > to say they've been working pretty well for what they're used for. Actually
+> > the graph functionality was originally specific for V4L2, that could be the
+> > reason why the current API is a good fit for V4L2. :-)
+> 
+> I'd guess the problem is V4L2 has common graph code and DRM does not.
+
+The graph code is generic, what V4L2 has concerning OF is common parsing of
+the properties. That's the current state at least.
+
+> I'd also guess we can find common patterns in both that could be
+> abstracted. And as you noticed, ALSA folks are working on using OF
+> graph.
+
+Please see drivers/media/platform/omap3isp/isp.c, and isp_of_parse_nodes()
+there. This is where the omap3isp driver parses information originating from
+DT. That's a pretty good example, most other V4L2 drivers that work with OF
+nodes do something similar.
+
+isp_of_parse_nodes() function could certainly be improved, but the
+improvement would be related to the interface of V4L2 async framework.
+That's not really related to DT or graphs.
+
+The V4L2 async framework is already aware of DT but it just makes it
+possible to match devices using OF nodes. It could well facilitate the
+process a lot more than it does now.
+
+I wonder if something similar could be done for DRM.
+
+Cc Guennadi and Laurent.
+
+> 
+> > The current use ACPI use case is related to V4L2 as well (I'll post a new
+> > version in the near future):
+> >
+> > <URL:http://www.spinics.net/lists/linux-media/msg106160.html>
+> >
+> > Are there any particular pain points that should be addressed?
+> 
+> I think generally we want drivers to avoid walking the port and
+> endpoint nodes themselves. Rather, have functions like "For my device
+> node, give me the device node connected via port N, endpoint M."
+
+I'd like to question whether that really helps: you need to iterate over all
+the ports and all the endpoints in them, instead of being simply given all
+the endpoints that have connected devices, one by one. At least when it
+comes to V4L2, I prefer the latter. As noted, I believe the enumerating
+work could (and should) be moved to the V4L2 async framework.
+
+It does show the firmware concepts to the driver but is there any harm from
+doing so?
+
+> Essentially, that is of_graph_get_endpoint_by_regs and
+> of_graph_get_remote_port_parent. The only time drivers really should
+> have port or endpoint node ptrs is to read properties, so maybe we add
+> property retrieval functions that take the device node and port and
+> endpoint numbers.
+> 
+> Really it may be an exercise in just removing some of the functions
+> which are too low level.
+> 
+> Take of_cal_create_instance() as an example. Here's what it does:
+> 
+> - Find port with reg == inst
+> - Get port's first endpoint
+> - Get remote port parent and save sensor_node
+> - Get the remote endpoint node
+> - Parse the remote endpoint properties (v4l2_of_parse_endpoint)
+> 
+> The first 3 steps are 40 lines of code and could be just 1 function
+> call returning node ptr for sensor_node.
+> 
+> v4l2_of_parse_link also open codes stuff that should be in the core.
+> 
+> > I noticed Kunimori Morimoto's patchset adding of_graph_get_remote_endpoint()
+> > which is just a new convenience function to the current API.
+> 
+> Right, I had similar comments there.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
