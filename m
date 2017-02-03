@@ -1,108 +1,136 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Fri, 3 Feb 2017 12:50:45 +0100
-Message-ID: <20170203115045.GA1350@amd>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
- <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: sun8i-codec-analog: Add amplifier event
+	to fix first delay" to the asoc tree
+Date: Fri, 03 Feb 2017 13:03:00 +0100
+Message-ID: <E1cZcZw-0000kv-Q7@finisterre>
+References: <20170117140230.23142-7-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170119214905.GD3205-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============7265525251442857250=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170117140230.23142-7-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+Cc: mark.rutland@arm.com, thomas.petazzoni@free-electrons.com, alsa-devel@alsa-project.org, mylene.josserand@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mturquette@baylibre.com, linux-sunxi@googlegroups.com, sboyd@codeaurora.org, tiwai@suse.com, robh+dt@kernel.org, lgirdwood@gmail.com, wens@csie.org, broonie@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--===============7265525251442857250==
+Content-Type: text/plain
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
+The patch
+
+   ASoC: sun8i-codec-analog: Add amplifier event to fix first delay
+
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From bf14da7e55169964a1e6f35dc9d7428dc9e9013c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Myl=C3=A8ne=20Josserand?=
+ <mylene.josserand@free-electrons.com>
+Date: Thu, 2 Feb 2017 10:24:18 +0100
+Subject: [PATCH] ASoC: sun8i-codec-analog: Add amplifier event to fix first
+ delay
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+When playing a sound for the first time, a short delay, where the audio
+file is not played, can be noticed.
+On a second play (right after), the sound is played correctly.
+If we wait a short time (~5 sec which corresponds to the aplay
+timeout), the delay is back.
+
+This patch fixes it by using an event on headphone amplifier.
+It allows to keep the amplifier enable while playing a sound.
+A delay of 700ms allows to wait that the amplifier is powered-up
+before playing the sound.
+
+Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
+Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/sunxi/sun8i-codec-analog.c | 30 ++++++++++++++++++++++++++++--
+ 1 file changed, 28 insertions(+), 2 deletions(-)
+
+diff --git a/sound/soc/sunxi/sun8i-codec-analog.c b/sound/soc/sunxi/sun8i-codec-analog.c
+index af02290ebe49..72331332b72e 100644
+--- a/sound/soc/sunxi/sun8i-codec-analog.c
++++ b/sound/soc/sunxi/sun8i-codec-analog.c
+@@ -398,11 +398,37 @@ static const struct snd_kcontrol_new sun8i_codec_hp_src[] = {
+ 		      sun8i_codec_hp_src_enum),
+ };
+ 
++static int sun8i_headphone_amp_event(struct snd_soc_dapm_widget *w,
++				     struct snd_kcontrol *k, int event)
++{
++	struct snd_soc_component *component = snd_soc_dapm_to_component(w->dapm);
++
++	if (SND_SOC_DAPM_EVENT_ON(event)) {
++		snd_soc_component_update_bits(component, SUN8I_ADDA_PAEN_HP_CTRL,
++					      BIT(SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN),
++					      BIT(SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN));
++		/*
++		 * Need a delay to have the amplifier up. 700ms seems the best
++		 * compromise between the time to let the amplifier up and the
++		 * time not to feel this delay while playing a sound.
++		 */
++		msleep(700);
++	} else if (SND_SOC_DAPM_EVENT_OFF(event)) {
++		snd_soc_component_update_bits(component, SUN8I_ADDA_PAEN_HP_CTRL,
++					      BIT(SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN),
++					      0x0);
++	}
++
++	return 0;
++}
++
+ static const struct snd_soc_dapm_widget sun8i_codec_headphone_widgets[] = {
+ 	SND_SOC_DAPM_MUX("Headphone Source Playback Route",
+ 			 SND_SOC_NOPM, 0, 0, sun8i_codec_hp_src),
+-	SND_SOC_DAPM_OUT_DRV("Headphone Amp", SUN8I_ADDA_PAEN_HP_CTRL,
+-			     SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN, 0, NULL, 0),
++	SND_SOC_DAPM_OUT_DRV_E("Headphone Amp", SUN8I_ADDA_PAEN_HP_CTRL,
++			       SUN8I_ADDA_PAEN_HP_CTRL_HPPAEN, 0, NULL, 0,
++			       sun8i_headphone_amp_event,
++			       SND_SOC_DAPM_PRE_PMU | SND_SOC_DAPM_PRE_PMD),
+ 	SND_SOC_DAPM_SUPPLY("HPCOM Protection", SUN8I_ADDA_PAEN_HP_CTRL,
+ 			    SUN8I_ADDA_PAEN_HP_CTRL_COMPTEN, 0, NULL, 0),
+ 	SND_SOC_DAPM_REG(snd_soc_dapm_supply, "HPCOM", SUN8I_ADDA_PAEN_HP_CTRL,
+-- 
+2.11.0
+
+
+--===============7265525251442857250==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> > @@ -76,6 +76,11 @@ Optional endpoint properties
-> >    mode horizontal and vertical synchronization signals are provided to=
- the
-> >    slave device (data source) by the master device (data sink). In the =
-master
-> >    mode the data source device is also the source of the synchronizatio=
-n signals.
-> > +- bus-type: data bus type. Possible values are:
-> > +  0 - MIPI CSI2
-> > +  1 - parallel / Bt656
-> > +  2 - MIPI CSI1
-> > +  3 - CCP2
->=20
-> Actually, thinking about this again --- we only need to explictly specify
-> busses if we're dealing with either CCP2 or CSI-1. The vast majority of t=
-he
-> actual busses are and continue to be CSI-2 or either parallel or Bt.656. =
-As
-> they can be implicitly detected, we would have an option to just drop val=
-ues
-> 0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
-> CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
-> bus-type will need to be supported anyway.
-
-Hmm. "Just deleting the others" may be a bit confusing... but what
-about this? It explains what we can autodetect.
-
-Best regards,
-								Pavel
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b=
-/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 08c4498..d54093b 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -77,10 +77,10 @@ Optional endpoint properties
-   slave device (data source) by the master device (data sink). In the mast=
-er
-   mode the data source device is also the source of the synchronization si=
-gnals.
- - bus-type: data bus type. Possible values are:
--  0 - MIPI CSI2
--  1 - parallel / Bt656
--  2 - MIPI CSI1
--  3 - CCP2
-+  0 - autodetect based on other properties (MIPI CSI2, parallel, Bt656)
-+  1 - MIPI CSI1
-+  2 - CCP2
-+  Autodetection is default, and bus-type property may be omitted in that c=
-ase.
- - bus-width: number of data lines actively used, valid for the parallel bu=
-sses.
- - data-shift: on the parallel data busses, if bus-width is used to specify=
- the
-   number of data lines, data-shift can be used to specify which data lines=
- are
 
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAliUbpUACgkQMOfwapXb+vKpWgCgjqqV/Dkmc42a5e2en6Xvoq4d
-WO8AoIgDGWMJI4yUfUDFFqvOsAYAz6hm
-=oRA4
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--===============7265525251442857250==--
