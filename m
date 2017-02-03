@@ -1,137 +1,56 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Fri, 03 Feb 2017 14:47:57 +0900
-Message-ID: <5894198D.2000307@samsung.com>
-References: <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
- <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
- <87d1f2kfgi.fsf@eliezer.anholt.net> <20170201145249.GB17698@ulmo.ba.sec>
- <CACvgo504WEd_pPrjEViH+-i8BNwEjQ-q7MdnYWJ3V6uTB_tk5Q@mail.gmail.com>
- <CGME20170201190354epcas4p13f64f3d4b4d27b10cf1222f203b25367@epcas4p1.samsung.com>
- <20170201190331.GB14264@art_vandelay>
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH V7 3/4] drm/bridge: Add driver for GE B850v3 LVDS/DP++
+ Bridge
+Date: Fri, 3 Feb 2017 09:00:40 +0100
+Message-ID: <20170203080040.qn53xnpojxzk4qoi@phenom.ffwll.local>
+References: <CACvgo535iyFvdOWzQHRnU++Ye0GgyZyN3R9ALSXRP7k3EPyRGA@mail.gmail.com>
+ <3e31-58931d80-1-221fa900@101383713>
+ <CACvgo50bOZ=jzeJc_J4_7fpiEh9-ATKo1KOhAia2679AGA=mng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20170201190331.GB14264@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>, Emil Velikov <emil.l.velikov@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Donghwa Lee <dh09.lee@samsung.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, andi.shyti@samsung.com, jh80.chung@samsung.com, cw00.choi@samsung.com, Kukjin Kim <kgene@kernel.org>, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACvgo50bOZ=jzeJc_J4_7fpiEh9-ATKo1KOhAia2679AGA=mng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter Senna Tschudin <peter.senna-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, martyn.welch-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, peter.senna-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Peter Senna Tschudin <peter.senna-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, martin.donnelly-JJi787mZWgc@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <rmk+kernel@armlinux>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDAy7JuUIDAy7J28IDA0OjAz7JeQIFNlYW4gUGF1bCDsnbQo6rCAKSDsk7Qg6riA
-Ogo+IE9uIFdlZCwgRmViIDAxLCAyMDE3IGF0IDAzOjI5OjQwUE0gKzAwMDAsIEVtaWwgVmVsaWtv
-diB3cm90ZToKPj4gT24gMSBGZWJydWFyeSAyMDE3IGF0IDE0OjUyLCBUaGllcnJ5IFJlZGluZyA8
-dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPiB3cm90ZToKPj4+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3
-IGF0IDAyOjU0OjUzUE0gLTA4MDAsIEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+IFRoaWVycnkgUmVk
-aW5nIDx0aGllcnJ5LnJlZGluZ0BnbWFpbC5jb20+IHdyaXRlczoKPj4+Pgo+Pj4+PiBbIFVua25v
-d24gc2lnbmF0dXJlIHN0YXR1cyBdCj4+Pj4+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDEwOjE1
-OjEwQU0gLTA4MDAsIEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+Pj4gVGhpZXJyeSBSZWRpbmcgPHRo
-aWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JpdGVzOgo+Pj4+Pj4KPj4+Pj4+PiBbIFVua25vd24g
-c2lnbmF0dXJlIHN0YXR1cyBdCj4+Pj4+Pj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDk6Mzg6
-NTNBTSAtMDUwMCwgU2VhbiBQYXVsIHdyb3RlOgo+Pj4+Pj4+PiBPbiBUdWUsIEphbiAzMSwgMjAx
-NyBhdCAwOTo1NDo0OUFNICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPj4+Pj4+Pj4+IE9u
-IFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA5OjAxOjA3QU0gKzA5MDAsIElua2kgRGFlIHdyb3RlOgo+
-Pj4+Pj4+Pj4+Cj4+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+PiAyMDE364WEIDAx7JuUIDI07J28IDEwOjUw
-7JeQIEhvZWdldW4gS3dvbiDsnbQo6rCAKSDsk7Qg6riAOgo+Pj4+Pj4+Pj4+PiBEZWFyIFRoaWVy
-cnksCj4+Pj4+Pj4+Pj4+Cj4+Pj4+Pj4+Pj4+IENvdWxkIHlvdSBwbGVhc2UgcmV2aWV3IHRoaXMg
-cGF0Y2g/Cj4+Pj4+Pj4+Pj4KPj4+Pj4+Pj4+PiBUaGllcnJ5LCBJIHRoaW5rIHRoaXMgcGF0Y2gg
-aGFzIGJlZW4gcmV2aWV3ZWQgZW5vdWdoIGJ1dCBubyBjb21tZW50Cj4+Pj4+Pj4+Pj4gZnJvbSB5
-b3UuIFNlZW1zIHlvdSBhcmUgYnVzeS4gSSB3aWxsIHBpY2sgdXAgdGhpcy4KPj4+Pj4+Pj4+Cj4+
-Pj4+Pj4+PiBTb3JyeSwgYnV0IHRoYXQncyBub3QgaG93IGl0IHdvcmtzLiBUaGlzIHBhdGNoIGhh
-cyBnb25lIHRocm91Z2ggOAo+Pj4+Pj4+Pj4gcmV2aXNpb25zIHdpdGhpbiA0IHdlZWtzLCBhbmQg
-SSB0ZW5kIHRvIGlnbm9yZSBwYXRjaGVzIGxpa2UgdGhhdCB1bnRpbAo+Pj4+Pj4+Pj4gdGhlIGR1
-c3Qgc2V0dGxlcy4KPj4+Pj4+Pj4+Cj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFNlZW1zIGxpa2UgdGhlIGR1
-c3Qgd2FzIHByZXR0eSBzZXR0bGVkLiBJdCB3YXMgcG9zdGVkIG9uIDEvMTEsIHBpbmdlZCBvbiAx
-LzI0LAo+Pj4+Pj4+PiBhbmQgcGlja2VkIHVwIG9uIDEvMzEuIEkgZG9uJ3QgdGhpbmsgaXQncyB1
-bnJlYXNvbmFibGUgdG8gdGFrZSBpdCB0aHJvdWdoCj4+Pj4+Pj4+IGFub3RoZXIgdHJlZSBhZnRl
-ciB0aGF0Lgo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBJIHdvbmRlciBpZiBkcm1fcGFuZWwgd291bGQgYmVu
-ZWZpdCBmcm9tIHRoZSAtbWlzYyBncm91cCBtYWludGFpbmVyc2hpcCBtb2RlbAo+Pj4+Pj4+PiBh
-cyBkcm1fYnJpZGdlIGRvZXMuIEJ5IHNwcmVhZGluZyBvdXQgdGhlIHdvcmtsb2FkLCB0aGUgaGln
-aC1tYWludGVuYW5jZQo+Pj4+Pj4+PiBwYXRjaGVzIHdvdWxkIGhvcGVmdWxseSBmaW5kIHNvbWVv
-bmUgdG8gc2hlcGhlcmQgdGhlbSB0aHJvdWdoLgo+Pj4+Pj4+Cj4+Pj4+Pj4gRXhjZXB0IHRoYXQg
-bm9ib2R5IGV4Y2VwdCBtZSByZWFsbHkgY2FyZXMuIElmIHdlIGxldCBwZW9wbGUgdGFrZSBwYXRj
-aGVzCj4+Pj4+Pj4gdGhyb3VnaCBzZXBhcmF0ZSB0cmVlcyBvciBncm91cC1tYWludGFpbmVkIHRy
-ZWVzIHRoZXknbGwgbGlrZWx5IGdvIGluCj4+Pj4+Pj4gd2l0aG91dCB0b28gbXVjaCB0aG91Z2h0
-LiBEUk0gcGFuZWwgaXMgc29tZXdoYXQgZGlmZmVyZW50IGZyb20gY29yZSBEUk0KPj4+Pj4+PiBp
-biB0aGlzIHJlZ2FyZCBiZWNhdXNlIGl0cyBpbmZyYXN0cnVjdHVyZSBpcyBtaW5pbWFsIGFuZCB0
-aGVyZSdzIGxpdHRsZQo+Pj4+Pj4+IG91dHNpZGUgdGhlIHBhbmVsLXNpbXBsZSBkcml2ZXIuIFNv
-IHdlJ3JlIHN0aWxsIGF0IGEgc3RhZ2Ugd2hlcmUgd2UgbmVlZAo+Pj4+Pj4+IHRvIGZpbmUtdHVu
-ZSB3aGF0IGRyaXZlcnMgc2hvdWxkIGxvb2sgbGlrZSBhbmQgaG93IHdlIGNhbiBpbXByb3ZlLgo+
-Pj4+Pj4KPj4+Pj4+IEkgd291bGQgbG92ZSB0byBjYXJlIGFuZCBwYXJ0aWNpcGF0ZSBpbiByZXZp
-ZXcsIGJ1dCB3aXRoIHRoZSBzdHJ1Y3R1cmUKPj4+Pj4+IG9mIHlvdXIgdHJlZSB5b3UncmUgdGhl
-IG9ubHkgb25lIHdob3NlIHJldmlldyBjb3VudHMsIHNvIEkgZG9uJ3QKPj4+Pj4+IHBhcnRpY2lw
-YXRlLgo+Pj4+Pgo+Pj4+PiBSZWFsbHk/IFdoYXQgZXhhY3RseSBkbyB5b3UgdGhpbmsgaXMgc3Bl
-Y2lhbCBhYm91dCB0aGUgc3RydWN0dXJlIG9mIG15Cj4+Pj4+IHRyZWU/IEkgcmVxdWlyZSBwYXRj
-aGVzIHRvIGJlIG9uIGRyaS1kZXZlbCAoSSBwaWNrIHRoZW0gdXAgZnJvbSB0aGUKPj4+Pj4gcGF0
-Y2h3b3JrIGluc3RhbmNlIGF0IGZyZWVkZXNrdG9wLm9yZyksIHRoZSB0cmVlIGlzIHB1YmxpY2x5
-IGF2YWlsYWJsZQo+Pj4+PiBhbmQgcmV2aWV3ZWQtYnkgdGFncyBnZXQgcGlja2VkIHVwIGF1dG9t
-YXRpY2FsbHkgYnkgcGF0Y2h3b3JrLgo+Pj4+Pgo+Pj4+PiBUaGUgcGFuZWwgdHJlZSB3b3JrcyBl
-eGFjdGx5IGxpa2UgYW55IG90aGVyIG1haW50YWluZXIgdHJlZS4gQW5kIG15Cj4+Pj4+IHJldmll
-dyBpcyAqbm90KiB0aGUgb25seSBvbmUgdGhhdCBjb3VudHMuIEkgYXBwcmVjaWF0ZSBldmVyeSBS
-ZXZpZXdlZC1ieQo+Pj4+PiB0YWcgSSBzZWUgb24gcGFuZWwgcGF0Y2hlcyBiZWNhdXNlIGl0IG1l
-YW5zIHRoYXQgSSBkb24ndCBoYXZlIHRvIGxvb2sgYXMKPj4+Pj4gY2xvc2VseSBhcyBJIGhhdmUg
-dG8gb3RoZXJ3aXNlLgo+Pj4+Pgo+Pj4+PiBJdCBpcyB0cnVlIHRoYXQgSSBhbSByZXNwb25zaWJs
-ZSBmb3IgdGhvc2UgcGF0Y2hlcywgdGhhdCdzIHdoeSBJIGdldCB0bwo+Pj4+PiBoYXZlIHRoZSBm
-aW5hbCB3b3JkIG9uIHdoZXRoZXIgb3Igbm90IGEgcGF0Y2ggZ2V0cyBhcHBsaWVkLiBBbmQgdGhh
-dCdzCj4+Pj4+IG5vIGRpZmZlcmVudCBmcm9tIGFueSBvdGhlciBtYWludGFpbmVyIHRyZWUgZWl0
-aGVyLgo+Pj4+Cj4+Pj4gSWYgbWUgcmV2aWV3aW5nIGEgcGF0Y2ggaXNuJ3QgcGFydCBvZiB1bmJs
-b2NraW5nIHRoYXQgcGF0Y2ggZ2V0dGluZyBpbiwKPj4+PiB0aGVuIEkgd29uJ3QgYm90aGVyIGJl
-Y2F1c2UgYWxsIEkgY291bGQgZW5kIHVwIGRvaW5nIGlzIHB1bmlzaGluZyB0aGUKPj4+PiBkZXZl
-bG9wZXIgb2YgdGhlIHBhdGNoLiAgQ29udHJpYnV0b3JzIGhhdmUgYSBoYXJkIGVub3VnaCB0aW1l
-IGFscmVhZHkuCj4+Pgo+Pj4gTWF5YmUgeW91IHNob3VsZCBnbyBhbmQgcmVhZCBteSBwcmV2aW91
-cyByZXBseSBhZ2FpbiBtb3JlIGNhcmVmdWxseS4KPj4+IFBlcmhhcHMgdGhlbiB5b3UnbGwgcmVh
-bGl6ZSB0aGF0IHJldmlld3MgYXJlIGluIGZhY3QgaGVscGluZyBpbiBnZXR0aW5nCj4+PiBwYXRj
-aGVzIG1lcmdlZC4KPj4+Cj4+PiBJbnRlcmVzdGluZ2x5IG15IGluYm94IGRvZXNuJ3Qgc2hvdyB5
-b3UgZXZlciBib3RoZXJpbmcgdG8gcmV2aWV3IHBhbmVsCj4+PiBwYXRjaGVzLCBzbyBtYXliZSB5
-b3Ugc2hvdWxkIGJlIG1vcmUgY2FyZWZ1bCBhYm91dCB5b3VyIGFzc3VtcHRpb25zLgo+Pj4KPj4g
-R2VudHMsIGl0J3MgdW5kZXJzdGFuZGFibGUgdGhhdCBlbW90aW9ucyBtaWdodCBiZSBydW5uaW5n
-IGhpZ2guCj4+Cj4+IFdoYXQncyB0aGUgcG9pbnQgaW4gcG9pbnRpbmcgZmluZ2VycyBhdCBlYWNo
-IG90aGVyIC0gdGhlcmUgaXMgZW5vdWdoCj4+IHRvIGdvIGluIGVhY2ggZGlyZWN0aW9uLgo+PiBM
-ZXQgdXMgYWxsIHN0ZXAgYmFjayBmb3IgYSBzZWNvbmQgYW5kIGNvbnNpZGVyIGhvdyB3ZSBjYW4g
-bWFrZSB0aGluZ3MgYmV0dGVyLgo+Pgo+IAo+IFNlZW1zIGxpa2UgSSBraWNrZWQgdXAgc29tZSBk
-dXN0IGhlcmUsIGZvciB0aGF0IEkgYXBvbG9naXplLiBJIGNlcnRhaW5seSBkaWQgbm90Cj4gaW50
-ZW5kIHRvIGRpbWluaXNoIFRoaWVycnkncyAob3IgYW55b25lIGVsc2Uncykgcm9sZSBhcyBtYWlu
-dGFpbmVyLgo+IAo+IFRvIHB1dCB0aGlzIGFzIGNvbmNpc2VseSBhcyBJIGNhbiwgSSB0aG91Z2h0
-IGRybV9wYW5lbCB3b3VsZCBiZSBhIGdvb2QgY2FuZGlkYXRlCj4gZm9yIC1taXNjIGdpdmVuOgo+
-ICAgICAgICAgLSBkcm1fYnJpZGdlIGlzIGFscmVhZHkgbWFpbnRhaW5lZCB0aGVyZQo+ICAgICAg
-ICAgLSB0aGUgZHJpdmVycyBhcmUgc21hbGwsIGFuZCB3ZSBqdXN0IHJlc29sdmVkIHRvIG1haW50
-YWluIHNtYWxsIGRyaXZlcnMKPiAgICAgICAgICAgaW4gLW1pc2MKPiAgICAgICAgIC0gbmV3IHBh
-dGNoZXMgYXJlIGJsb2NrZWQgb24gYSBzaW5nbGUgcmV2aWV3ZXIvY29tbWl0dGVyIGFzIG9wcG9z
-ZWQgdG8gYQo+ICAgICAgICAgICBxdWFsaWZpZWQgY29tbWl0dGVlICh3aGljaCBJIGhhdmUgY29t
-ZSB0byB1bmRlcnN0YW5kIGlzIGEgZmVhdHVyZSBpbgo+ICAgICAgICAgICB0aGlzIGluc3RhbmNl
-KQoKQWdyZWUuIGRybV9wYW5lbCBpcyBub3QgbGFyZ2UgZW5vdWdoIHRvIHJlcXVpcmUgYW5vdGhl
-ciBtYWludGFpbmVyLgpIb3dldmVyLCB3ZSBoYWQgYWxyZWFkeSBhZ3JlZWQgdGhhdCBUaGllcnJ5
-IG1hbmFnZXMgZHJtX3BhbmVsLCBlaXRoZXIgaW1wbGljaXRseSBvciBleHBsaWNpdGx5LgpTZWVt
-cyBoZSdzIHRpcmVkIG5vdyBhbmQgaGUgd2FudHMgdG8gdGFsayBhYm91dCB0aGlzIGlzc3VlIGFn
-YWluIG9uIG5leHQgTW9uZGF5LgpBdCB0aGUgbWVldGluZywgSSB0aGluayB3ZSBjb3VsZCBkZWNp
-ZGUgd2hldGhlciBnb2luZyB0byBncm91cCBtYWludGFpbmVyc2hpcCBtb2RlbCwgc3RheSBhcy1p
-cyBvciBvdGhlciBiZXR0ZXIgd2F5LCBpbmNsdWRpbmcgcmVhY2hpbmcgY29uc2Vuc3VzLgoKVGhh
-bmtzLApJbmtpIERhZQoKPiAKPiBTbyBpZiB3ZSBjYW4ndCBtaWdyYXRlIGl0IHRvIC1taXNjIG5v
-dywgZm9yIGZlYXIgb2YgcXVhbGl0eSBpc3N1ZXMsIHdoYXQgYXJlIHRoZQo+IHN0ZXBzIG5lY2Vz
-c2FyeSB0byAiZGUtc3RhZ2UiIGl0Pwo+IAo+IFNlYW4KPiAKPiAKPj4gSSB0aGluayBpdCdsbCBi
-ZSBuaWNlIHRvIGhhdmUgc29tZS9tb3N0IG9mIHRoZSBjb21tb24gY29uY2VybnMgdGhhdAo+PiBU
-aGllcnJ5L290aGVycyBjb21lcyBhY3Jvc3MgZG9jdW1lbnRlZCAtIGluLWtlcm5lbCwgYmxvZyBw
-b3N0LCBvdGhlci4KPj4gU3VjaCB0aGF0IG9uZSBjYW4gcmVmZXJlbmNlIHRvIHNwZWNpZmljIHBv
-aW50cyBhcyBwYXRjaCBmYWxscyBzdWItcGFyLgo+PiBXZSBhbGwgd2FudCB0byBoYXZlIGEgYmFs
-YW5jZSBvZiBuaWNlbHkgd3JpdHRlbiBkcml2ZXIgYW5kIHF1aWNrCj4+IG1lcmdlLgo+Pgo+PiBJ
-bmtpLCBJIGJlbGlldmUgbXlzZWxmIGFuZCBvdGhlcnMgaGF2ZSBpbnZpdGVkIHlvdSBiZWZvcmUg
-b24KPj4gI2RyaS1kZXZlbC4gVGhpcyBpcyBhbm90aGVyIG1lZGl1bSB3aGVyZSB5b3UgY2FuIHBv
-a2UgZGV2cyBhbmQgZnJvbSBteQo+PiBleHBlcmllbmNlIC0gaXQgdGVuZHMgdG8gYmUgbW9yZSBl
-ZmZpY2llbnQsIG1vc3Qgb2YgdGhlIHRpbWUuCj4+Cj4+IFRoYW5rcwo+PiBFbWlsCj4+IF9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+IGRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKPj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+PiBodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo+IApfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFp
-bGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Feb 02, 2017 at 12:37:21PM +0000, Emil Velikov wrote:
+>  - Daniel, gents - is drm-misc aimed at devs with limited (no?)
+> review/commit history in the area and/or the kernel in general ?
+> In this case, Peter have quite noticeable experience [in kernel
+> development] with little-to no in DRM.
+> Should one draw a line in the sand somewhere ?
+
+We're fairly lenient with accepting new drivers already, and for drivers
+in drm-misc we require some checks and peer review to make sure new folks
+learn faster. But it's an expirement, I fully expect some fallout and then
+some learnign and fine tuning from that, and maybe we even need to crank
+requirements back up to a much higher level of experience.
+
+But for drivers I'm honestly not too concerned: As long as there's some
+process in place to foster learning&collaboration (which I think will be
+better with this) I really don't see much harm in merging non-perfect
+driver code.
+
+>  - You patch has been on a long [bit rocky road] for a while, with
+> devs giving you [what seems like] a partial reviews.
+> Have you considered reviewing others' patches in exchange for a [more
+> complete one] of this one ? According to git log people have poked you
+> a handful of times, but seemingly you were busy.
+
+Just a clarification: When I review drivers I don't do a fairly cursor
+look, hunting for areas where some refactoring and align with drm best
+practices would be good. And I think that's perfectly fine and enough to
+get a driver landed, but we're definitely not 100% consistent on this
+within drm-misc. Probably will take some time to figure this out.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
