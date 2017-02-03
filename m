@@ -1,70 +1,79 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 04/14] GPIO: Add gpio-ingenic driver
-Date: Fri, 3 Feb 2017 14:58:50 +0100
-Message-ID: <CACRpkdZNodsRJ33wTJGgrAJpSs=_bXa0yv5ate_7XwjKR0xEnw@mail.gmail.com>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net> <20170125185207.23902-5-paul@crapouillou.net>
- <CACRpkdbcO+1c7izYpn0sb1mkE1ORFETMq=xtzVi1hKbJz0EWfw@mail.gmail.com> <699f0c63e95ecdafe6946fdcdbb97a37@mail.crapouillou.net>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
+ descriptors and adapt accessors
+Date: Fri, 3 Feb 2017 14:05:13 +0000
+Message-ID: <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20170106142901.GC14217@n2100.armlinux.org.uk>
+ <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
+ <20170203142446.2ee517a7@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <699f0c63e95ecdafe6946fdcdbb97a37-p8hskv8pF7lEPksTRSfcJOTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-p
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170203142446.2ee517a7@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 4:29 PM, Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org> wrote=
-:
-> Le 2017-01-31 15:20, Linus Walleij a =C3=A9crit :
->
->>> + of_property_read_u32(dev->of_node, "base", &jzgc->gc.base);
+On 03/02/17 13:24, Thomas Petazzoni wrote:
+> Hello,
+> 
+> On Fri, 6 Jan 2017 14:44:56 +0000, Robin Murphy wrote:
+> 
+>>>> +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
+>>>> +		dma_addr_t dma_addr =
+>>>> +			rx_desc->pp22.buf_phys_addr_key_hash & DMA_BIT_MASK(40);
+>>>> +		phys_addr_t phys_addr =
+>>>> +			dma_to_phys(port->dev->dev.parent, dma_addr);  
 >>
+>> Ugh, this looks bogus. dma_to_phys(), in the arm64 case at least, is
+>> essentially a SWIOTLB internal helper function which has to be
+>> implemented in architecture code because reasons. Calling it from a
+>> driver is almost certainly wrong (it doesn't even exist on most
+>> architectures). Besides, if this is really a genuine dma_addr_t obtained
+>> from a DMA API call, you cannot infer it to be related to a CPU physical
+>> address, or convertible to one at all.
+> 
+> So do you have a better suggestion? The descriptors only have enough
+> space to store a 40-bit virtual address, which is not enough to fit the
+> virtual addresses used by Linux for SKBs. This is why I'm instead
+> relying on the fact that the descriptors can store the 40-bit physical
+> address, and convert it back to a virtual address, which should be fine
+> on ARM64 because the entire physical memory is part of the kernel linear
+> mapping.
+
+OK, that has nothing to do with DMA addresses then.
+
+>>>> +		return (unsigned long)phys_to_virt(phys_addr);
+>>>> +#else
+>>>> +		return rx_desc->pp22.buf_cookie_misc & DMA_BIT_MASK(40);
+>>>> +#endif  
+>>>
+>>> I'm not sure that's the best way of selecting the difference.  
 >>
->> Remove this. Dynamic allocation should be fine, if you're using the
->> new userspace ABI like tools/gpio/* or libgpiod and only that and
->> in-kernel
->> consumers, dynamic numbers are just fine.
->
->
-> The problem is that the QI_LB60 board code still have a lot of references
-> to global GPIO numbers. Just grep for JZ_GPIO_PORT in
-> arch/mips/jz4740/board-qi_lb60.c to see what I mean...
+>> Given that CONFIG_ARCH_DMA_ADDR_T_64BIT could be enabled on 32-bit LPAE
+>> systems, indeed it definitely isn't.
+> 
+> Russell proposal of testing the size of a virtual address
+> pointer instead would solve this I believe, correct?
 
-OK I understand we might need a compromise here to get the code moving.
+AFAICS, even that shouldn't really be necessary - for all VA/PA
+combinations of 32/32, 32/40 and 64/40, storing virt_to_phys() of the
+SKB VA won't overflow 40 bits, so a corresponding phys_to_virt() at the
+other end can't go wrong either. If you really do want to special-case
+things based on VA size, though, either CONFIG_64BIT or sizeof(void *)
+would indeed be infinitely more useful than the unrelated DMA address
+width - I know this driver's never going to run on SPARC64, but that's
+one example of where the above logic would lead to precisely the
+truncated VA it's trying to avoid.
 
-But we need to keep it out of the device tree.
+Robin.
 
-I think it's better to put a base table relative to the memory base in
-the driver in that case:
-
-unsigned int gpio_global_base;
-
-switch (memory_base_address) {
-case 0x41000000:
-    gpio_global_base =3D 0x00;
-    break;
-case 0x42000000:
-    gpio_global_base =3D 0x20;
-
-(...)
-
-etc. (Those are not your base addresses but you get the idea).
-
-Include a few comments like:
-
-/*
- * DO NOT EXPAND THIS: FOR BACKWARD GPIO NUMBERSPACE
- * COMPATIBIBILITY ONLY: WORK TO TRANSITION CONSUMERS TO
- * USE THE GPIO DESCRIPTOR API IN <linux/gpio/consumer.h> INSTEAD.
- */
-
-Then I'll be happy :)
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> 
+> Thomas
+> 
