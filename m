@@ -1,66 +1,137 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH 2/8] power: add power sequence library
-Date: Fri, 3 Feb 2017 16:16:15 +0800
-Message-ID: <20170203081614.GA24614@b29397-desktop>
-References: <1483425211-14473-1-git-send-email-peter.chen@nxp.com>
- <1483425211-14473-3-git-send-email-peter.chen@nxp.com>
- <CAJZ5v0iR7p-ftUzvVwW96Y55A=vYG8_UbhjuA4vw0BFFZ8a9iw@mail.gmail.com>
- <20170201080817.GD17968@kroah.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v8 07/12] dt-bindings: i2c: i2c-mux-simple: document
+ i2c-mux-simple bindings
+Date: Fri, 3 Feb 2017 09:25:53 +0100
+Message-ID: <5dc05e28-45c7-1dfe-3cd2-53e55490b48a@axentia.se>
+References: <1484755035-25927-1-git-send-email-peda@axentia.se>
+ <1484755035-25927-8-git-send-email-peda@axentia.se>
+ <20170127193917.6xuunrkjkqh4f2v7@rob-hp-laptop>
+ <835415bf-77af-6131-d018-d0bc7d8233b0@axentia.se>
+ <CAL_JsqLVrzm4BEv3kpOGRoaRq+cqvSm+A6weZfU8H8i9dc=tcA@mail.gmail.com>
+ <cdc958c3-2496-be52-6407-bf9aefdfa965@axentia.se>
+ <CAL_JsqLCdM5s8FYqys-m5wpr4QeeE-rQaRXCt+rjQz3qm+E2qA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170201080817.GD17968@kroah.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Chen <peter.chen@nxp.com>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, p.zabel@pengutronix.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sas
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLCdM5s8FYqys-m5wpr4QeeE-rQaRXCt+rjQz3qm+E2qA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, Andrew Morton <akpm@linux-foundation.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 09:08:17AM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Feb 01, 2017 at 12:10:17AM +0100, Rafael J. Wysocki wrote:
-> > On Tue, Jan 3, 2017 at 7:33 AM, Peter Chen <peter.chen@nxp.com> wrote:
-> > > We have an well-known problem that the device needs to do some power
-> > > sequence before it can be recognized by related host, the typical
-> > > example like hard-wired mmc devices and usb devices.
-> > >
-> > > This power sequence is hard to be described at device tree and handled by
-> > > related host driver, so we have created a common power sequence
-> > > library to cover this requirement. The core code has supplied
-> > > some common helpers for host driver, and individual power sequence
-> > > libraries handle kinds of power sequence for devices. The pwrseq
-> > > librares always need to allocate extra instance for compatible
-> > > string match.
-> > >
-> > > pwrseq_generic is intended for general purpose of power sequence, which
-> > > handles gpios and clocks currently, and can cover other controls in
-> > > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > if only one power sequence is needed, else call of_pwrseq_on_list
-> > > /of_pwrseq_off_list instead (eg, USB hub driver).
-> > >
-> > > For new power sequence library, it can add its compatible string
-> > > to pwrseq_of_match_table, then the pwrseq core will match it with
-> > > DT's, and choose this library at runtime.
-> > >
-> > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
-> > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
-> > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
-> > > Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
-> > > Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> > 
-> > Quite honestly, I have a really hard time with trying to follow this
-> > code and the total lack of documentation makes it even harder. 
+On 2017-02-02 17:08, Rob Herring wrote:
+> On Tue, Jan 31, 2017 at 1:36 AM, Peter Rosin <peda@axentia.se> wrote:
+>> If you see this new driver as something that is superseding the existing
+>> i2c-mux-gpio driver, I'm sad to inform you that the code is not simply
+>> not there. i2c-mux-gpio has acpi support and users may provide platform
+>> data from code. The existing i2c-mux-gpio driver also has the below
+>> mentioned locking heuristic. Adding all those things to the new driver
+>> would make it big and unwieldy and having even more unwanted tentacles
+>> into other subsystems. And why should it be only i2c-mux-gpio that is
+>> merged into this new i2c-mux driver? Why not implement a mux-pinctrl
+>> driver for the new mux subsustem and then merge i2c-mux-pinctrl as well?
+>> I say no, that way lies madness.
+> 
+> Sounds like a good idea to me. I'm not saying you need to merge any of
+> them right now though (that's Wolfram's call).
 
-Sorry about that, Is it ok I add the design doc at:
-Documentation/power/power-sequence/design.rst?
+If we're pedantic I probably have some stake in it too, being the i2c-mux
+maintainer and all. But, agreed, I arrived quite late to the Linux kernel
+party and my opinion might perhaps not carry all that much weight...
 
-> > particular, the generic power sequence code is not even commented at
-> > all, 
+> None of this has anything to do with the binding though. Compatible
+> strings should be specific. That's not up for debate. Whether the
 
-The generic power sequence code just implements the APIs which are 
-called at power/pwrseq/core.c, and those API are commented at
-include/linux/power/pwrseq.h. Anyway, I will add more comments at it.
-	
--- 
+Ok, I'm going to focus on the compatible string for a minute and leave
+the implementation details for some other discussion.
 
-Best Regards,
-Peter Chen
+> driver bound to a compatible string is common or specific to that
+> compatible string is completely up to the OS. That decision can change
+> over time, but the binding should not.
+
+So, there's the existing compatible "i2c-mux-gpio" ("i2c-gpio-mux" is
+wrong) that you seem to suggest is what I should stick to. I object to
+that.
+
+As you say, the bindings and compatible strings should describe hardware,
+and you also state they should be specific. I agree. But, why are you
+then apparently suggesting (by implication) that for this (hypothetical)
+hardware...
+
+    .----.
+    |SDA0|-----------.
+    |SCL0|---------. |
+    |    |         | |
+    |    |      .-------.
+    |    |      |adg792a|
+    |    |      |       |
+    |ADC0|------|D1  S1A|---- signal A
+    |    |      |    S1B|---- signal B
+    |    |      |    S1C|---- signal C
+    |    |      |    S1D|---- signal D
+    |    |      |       |
+    |SDA1|---+--|D2  S2A|---- i2s segment foo A
+    |SCL1|-. |  |    S2B|---- i2s segment foo B
+    '----' | |  |    S2C|---- i2s segment foo C
+           | |  |    S2D|---- i2s segment foo D
+           | |  |       |
+           | '--|D3  S3A|---- i2s segment bar A
+           |    |    S3B|---- i2s segment bar B
+           |    |    S3C|---- i2s segment bar C
+           |    |    S3D|---- i2s segment bar D
+           |    '-------'
+           |                  A B C D   A B C D  (feed SCL1 to each of
+           |                  | | | |   | | | |   the 8 muxed segments)
+           '------------------+-+-+-+---+-+-+-'
+
+...the devicetree should be like below?
+
+&i2c0 {
+	mux: mux-controller@50 {
+		compatible = "adi,adg792a";
+		reg = <0x50>;
+		#mux-control-cells = <1>;
+	};
+};
+
+adc-mux {
+	compatible = "io-channel-mux";
+	io-channels = <&adc 0>;
+	io-channel-names = "parent";
+
+	mux-controls = <&mux 0>;
+
+	...
+};
+
+i2c-mux-foo {
+	compatible = "i2c-mux-gpio";
+	i2c-parent = <&i2c1>;
+
+	mux-controls = <&mux 1>;
+
+	...
+};
+
+i2c-mux-bar {
+	compatible = "i2c-mux-gpio";
+	i2c-parent = <&i2c1>;
+
+	mux-controls = <&mux 2>;
+
+	...
+};
+
+There must be some disconnect, because those "i2c-mux-gpio" compatible
+strings are just dead wrong. There simply are no gpio pins involved at
+all and that "gpio" suffix is just totally out of place.
+
+So, since you are not happy with "i2c-mux-simple", "i2c-mux-generic" or
+"i2c-mux" that I have suggested, can you please come up with something
+that is good enough for the above?
+
+Or, are you /really/ suggesting "i2c-mux-gpio"?
+
+Cheers,
+peda
