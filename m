@@ -1,85 +1,99 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
-Date: Fri, 03 Feb 2017 16:10:30 +0200
-Message-ID: <2144135.6kAFTUafxi@avalon>
-References: <20160229143309.28517.77269.sendpatchset@little-apple>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
+Date: Fri, 3 Feb 2017 16:16:49 +0200
+Message-ID: <20170203141649.GC12291@valkosipuli.retiisi.org.uk>
+References: <20161228183036.GA13139@amd>
+ <20170111225335.GA21553@amd>
+ <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
+ <20170203115045.GA1350@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20160229143309.28517.77269.sendpatchset@little-apple>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: robh+dt@kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, galak@codeaurora.org, horms+renesas@verge.net.au
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170203115045.GA1350@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Pavel,
 
-On Monday 29 Feb 2016 23:33:09 Magnus Damm wrote:
-> From: Magnus Damm <damm+renesas@opensource.se>
+On Fri, Feb 03, 2017 at 12:50:45PM +0100, Pavel Machek wrote:
+> Hi!
 > 
-> Update the IPMMU DT binding documentation to include the r8a7795 compat
-> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
-> be used to describe the topology and the relationship between the various
-> cache IPMMU instances and the main IPMMU.
+> > > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > > @@ -76,6 +76,11 @@ Optional endpoint properties
+> > >    mode horizontal and vertical synchronization signals are provided to the
+> > >    slave device (data source) by the master device (data sink). In the master
+> > >    mode the data source device is also the source of the synchronization signals.
+> > > +- bus-type: data bus type. Possible values are:
+> > > +  0 - MIPI CSI2
+> > > +  1 - parallel / Bt656
+> > > +  2 - MIPI CSI1
+> > > +  3 - CCP2
+> > 
+> > Actually, thinking about this again --- we only need to explictly specify
+> > busses if we're dealing with either CCP2 or CSI-1. The vast majority of the
+> > actual busses are and continue to be CSI-2 or either parallel or Bt.656. As
+> > they can be implicitly detected, we would have an option to just drop values
+> > 0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
+> > CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
+> > bus-type will need to be supported anyway.
 > 
-> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+> Hmm. "Just deleting the others" may be a bit confusing... but what
+> about this? It explains what we can autodetect.
+> 
+> Best regards,
+> 								Pavel
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 08c4498..d54093b 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -77,10 +77,10 @@ Optional endpoint properties
+>    slave device (data source) by the master device (data sink). In the master
+>    mode the data source device is also the source of the synchronization signals.
+>  - bus-type: data bus type. Possible values are:
+> -  0 - MIPI CSI2
+> -  1 - parallel / Bt656
+> -  2 - MIPI CSI1
+> -  3 - CCP2
+> +  0 - autodetect based on other properties (MIPI CSI2, parallel, Bt656)
 
-This DT binding has been merged already, but isn't used upstream (nor in the 
-dts nor in the drivers). We plan to start using it, and I'd like to seize this 
-last opportunity to change it if needed and ask you for a review.
+In the meantime, I also realised that we need to separate MIPI C-PHY and
+D-PHY from each other. So I think we'll need that property for CSI-2
+nevertheless. How about:
 
-> ---
+0 - autodetect based on other properties (MIPI CSI-2 D-PHY, parallel or Bt656)
+1 - MIPI CSI-2 C-PHY
+2 - MIPI CSI1
+3 - CCP2 
+
+I wouldn't add a separate entry for the parallel case as there are plenty of
+existing DT binaries with parallel interface configuration without phy-type
+property. They will need to be continue to be supported anyway, so there's
+not too much value in adding a type for that purpose.
+
+I do find this a bit annoying; we should have had something like phy-type
+from day one rather than try to guess which phy is being used...
+
+> +  1 - MIPI CSI1
+> +  2 - CCP2
+> +  Autodetection is default, and bus-type property may be omitted in that case.
+>  - bus-width: number of data lines actively used, valid for the parallel busses.
+>  - data-shift: on the parallel data busses, if bus-width is used to specify the
+>    number of data lines, data-shift can be used to specify which data lines are
 > 
->  Written against linux-next tag next-20160229
 > 
->  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++-
->  1 file changed, 13 insertions(+), 2 deletions(-)
-> 
-> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
-> +++
-> work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	
-2016-02
-> -29 23:25:15.540513000 +0900 @@ -7,23 +7,34 @@ connected to the IPMMU
-> through a port ca
-> 
->  Required Properties:
-> 
-> -  - compatible: Must contain SoC-specific and generic entries from below.
-> +  - compatible: Must contain SoC-specific and generic entry below in case
-> +    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
-> 
->      - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
->      - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
->      - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
->      - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
->      - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
-> +    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
->      - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
-> 
->    - reg: Base address and size of the IPMMU registers.
->    - interrupts: Specifiers for the MMU fault interrupts. For instances that
-> support secure mode two interrupts must be specified, for non-secure and
-> secure mode, in that order. For instances that don't support secure mode a
-> -    single interrupt must be specified.
-> +    single interrupt must be specified. Not required for cache IPMMUs.
-> 
->    - #iommu-cells: Must be 1.
-> 
-> +Optional properties:
-> +
-> +  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
-> +    The first cell is a phandle to the main IPMMU and the second cell is
-> +    the interrupt bit number associated with the particular cache IPMMU
-> device.
-> +    The interrupt bit number needs to match the main IPMMU IMSSTR register.
-> +    Only used by cache IPMMU instances.
-> +
-> +
->  Each bus master connected to an IPMMU must reference the IPMMU in its
-> device node with the following property:
+
 
 -- 
-Regards,
+Kind regards,
 
-Laurent Pinchart
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
