@@ -1,79 +1,85 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
- descriptors and adapt accessors
-Date: Fri, 3 Feb 2017 14:05:13 +0000
-Message-ID: <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170106142901.GC14217@n2100.armlinux.org.uk>
- <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
- <20170203142446.2ee517a7@free-electrons.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] iommu/ipmmu-vmsa: Add r8a7795 DT binding
+Date: Fri, 03 Feb 2017 16:10:30 +0200
+Message-ID: <2144135.6kAFTUafxi@avalon>
+References: <20160229143309.28517.77269.sendpatchset@little-apple>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170203142446.2ee517a7@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20160229143309.28517.77269.sendpatchset@little-apple>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, mark.rutland@arm.com, laurent.pinchart+renesas@ideasonboard.com, geert+renesas@glider.be, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, joro@8bytes.org, linux-renesas-soc@vger.kernel.org, iommu@lists.linux-foundation.org, galak@codeaurora.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/17 13:24, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Fri, 6 Jan 2017 14:44:56 +0000, Robin Murphy wrote:
-> 
->>>> +#ifdef CONFIG_ARCH_DMA_ADDR_T_64BIT
->>>> +		dma_addr_t dma_addr =
->>>> +			rx_desc->pp22.buf_phys_addr_key_hash & DMA_BIT_MASK(40);
->>>> +		phys_addr_t phys_addr =
->>>> +			dma_to_phys(port->dev->dev.parent, dma_addr);  
->>
->> Ugh, this looks bogus. dma_to_phys(), in the arm64 case at least, is
->> essentially a SWIOTLB internal helper function which has to be
->> implemented in architecture code because reasons. Calling it from a
->> driver is almost certainly wrong (it doesn't even exist on most
->> architectures). Besides, if this is really a genuine dma_addr_t obtained
->> from a DMA API call, you cannot infer it to be related to a CPU physical
->> address, or convertible to one at all.
-> 
-> So do you have a better suggestion? The descriptors only have enough
-> space to store a 40-bit virtual address, which is not enough to fit the
-> virtual addresses used by Linux for SKBs. This is why I'm instead
-> relying on the fact that the descriptors can store the 40-bit physical
-> address, and convert it back to a virtual address, which should be fine
-> on ARM64 because the entire physical memory is part of the kernel linear
-> mapping.
+Hi Rob,
 
-OK, that has nothing to do with DMA addresses then.
-
->>>> +		return (unsigned long)phys_to_virt(phys_addr);
->>>> +#else
->>>> +		return rx_desc->pp22.buf_cookie_misc & DMA_BIT_MASK(40);
->>>> +#endif  
->>>
->>> I'm not sure that's the best way of selecting the difference.  
->>
->> Given that CONFIG_ARCH_DMA_ADDR_T_64BIT could be enabled on 32-bit LPAE
->> systems, indeed it definitely isn't.
+On Monday 29 Feb 2016 23:33:09 Magnus Damm wrote:
+> From: Magnus Damm <damm+renesas@opensource.se>
 > 
-> Russell proposal of testing the size of a virtual address
-> pointer instead would solve this I believe, correct?
-
-AFAICS, even that shouldn't really be necessary - for all VA/PA
-combinations of 32/32, 32/40 and 64/40, storing virt_to_phys() of the
-SKB VA won't overflow 40 bits, so a corresponding phys_to_virt() at the
-other end can't go wrong either. If you really do want to special-case
-things based on VA size, though, either CONFIG_64BIT or sizeof(void *)
-would indeed be infinitely more useful than the unrelated DMA address
-width - I know this driver's never going to run on SPARC64, but that's
-one example of where the above logic would lead to precisely the
-truncated VA it's trying to avoid.
-
-Robin.
-
+> Update the IPMMU DT binding documentation to include the r8a7795 compat
+> string as well as the "renesas,ipmmu-main" property that on r8a7795 will
+> be used to describe the topology and the relationship between the various
+> cache IPMMU instances and the main IPMMU.
 > 
-> Thanks,
+> Signed-off-by: Magnus Damm <damm+renesas@opensource.se>
+
+This DT binding has been merged already, but isn't used upstream (nor in the 
+dts nor in the drivers). We plan to start using it, and I'd like to seize this 
+last opportunity to change it if needed and ask you for a review.
+
+> ---
 > 
-> Thomas
+>  Written against linux-next tag next-20160229
 > 
+>  Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt |   15 ++++-
+>  1 file changed, 13 insertions(+), 2 deletions(-)
+> 
+> --- 0001/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt
+> +++
+> work/Documentation/devicetree/bindings/iommu/renesas,ipmmu-vmsa.txt	
+2016-02
+> -29 23:25:15.540513000 +0900 @@ -7,23 +7,34 @@ connected to the IPMMU
+> through a port ca
+> 
+>  Required Properties:
+> 
+> -  - compatible: Must contain SoC-specific and generic entries from below.
+> +  - compatible: Must contain SoC-specific and generic entry below in case
+> +    the device is compatible with the R-Car Gen2 VMSA-compatible IPMMU.
+> 
+>      - "renesas,ipmmu-r8a73a4" for the R8A73A4 (R-Mobile APE6) IPMMU.
+>      - "renesas,ipmmu-r8a7790" for the R8A7790 (R-Car H2) IPMMU.
+>      - "renesas,ipmmu-r8a7791" for the R8A7791 (R-Car M2-W) IPMMU.
+>      - "renesas,ipmmu-r8a7793" for the R8A7793 (R-Car M2-N) IPMMU.
+>      - "renesas,ipmmu-r8a7794" for the R8A7794 (R-Car E2) IPMMU.
+> +    - "renesas,ipmmu-r8a7795" for the R8A7795 (R-Car H3) IPMMU.
+>      - "renesas,ipmmu-vmsa" for generic R-Car Gen2 VMSA-compatible IPMMU.
+> 
+>    - reg: Base address and size of the IPMMU registers.
+>    - interrupts: Specifiers for the MMU fault interrupts. For instances that
+> support secure mode two interrupts must be specified, for non-secure and
+> secure mode, in that order. For instances that don't support secure mode a
+> -    single interrupt must be specified.
+> +    single interrupt must be specified. Not required for cache IPMMUs.
+> 
+>    - #iommu-cells: Must be 1.
+> 
+> +Optional properties:
+> +
+> +  - renesas,ipmmu-main: reference to the main IPMMU instance in two cells.
+> +    The first cell is a phandle to the main IPMMU and the second cell is
+> +    the interrupt bit number associated with the particular cache IPMMU
+> device.
+> +    The interrupt bit number needs to match the main IPMMU IMSSTR register.
+> +    Only used by cache IPMMU instances.
+> +
+> +
+>  Each bus master connected to an IPMMU must reference the IPMMU in its
+> device node with the following property:
+
+-- 
+Regards,
+
+Laurent Pinchart
