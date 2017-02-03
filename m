@@ -1,83 +1,92 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 00/24] i.MX Media Driver
-Date: Fri, 03 Feb 2017 16:41:14 +0200
-Message-ID: <2201157.ylZrBapgio@avalon>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com> <1485941457.3353.13.camel@pengutronix.de> <8e577a3f-8d44-9dde-9507-36c3769228b6@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
+ descriptors and adapt accessors
+Date: Fri, 3 Feb 2017 16:02:27 +0100
+Message-ID: <20170203160227.08b40c58@free-electrons.com>
+References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
+        <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
+        <20170106142901.GC14217@n2100.armlinux.org.uk>
+        <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
+        <20170203142446.2ee517a7@free-electrons.com>
+        <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8e577a3f-8d44-9dde-9507-36c3769228b6@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <231514f4-2e35-8bde-4469-aada833635aa-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Chulski <stefanc-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Wednesday 01 Feb 2017 16:19:27 Steve Longerbeam wrote:
-> On 02/01/2017 01:30 AM, Philipp Zabel wrote:
-> > On Tue, 2017-01-31 at 17:26 -0800, Steve Longerbeam wrote:
-> > [...]
-> > 
-> >>> # Set pad formats
-> >>> media-ctl --set-v4l2 "'tc358743 1-000f':0[fmt:UYVY/1920x1080]"
-> >>> media-ctl --set-v4l2 "'imx6-mipi-csi2':1[fmt:UYVY2X8/1920x1080]"
-> >>> media-ctl --set-v4l2 "'ipu1_csi0_mux':2[fmt:UYVY2X8/1920x1080]"
-> >>> media-ctl --set-v4l2 "'ipu1_csi0':2[fmt:AYUV32/1920x1080]"
-> >>> 
-> >>> v4l2-ctl -d /dev/video4 -V
-> >>> # This still is configured to 640x480, which is inconsistent with
-> >>> # the 'ipu1_csi0':2 pad format. The pad set_fmt above should
-> >>> # have set this, too.
-> >> 
-> >> Because you've only configured the source pads,
-> >> and not the sink pads. The ipu_csi source format is
-> >> dependent on the sink format - output crop window is
-> >> limited by max input sensor frame, and since sink pad is
-> >> still at 640x480, output is reduced to that.
-> > 
-> > No, it is set (see below). What happens is that capture_g_fmt_vid_cap
-> > just returns the capture devices' priv->vdev.fmt, even if it is
-> > incompatible with the connected csi subdevice's output pad format.
-> > 
-> > priv->vdev.fmt was never changed from the default set in
-> > imx_media_capture_device_register, because capture_s/try_fmt_vid_cap
-> > were not called yet.
+On Fri, 3 Feb 2017 14:05:13 +0000, Robin Murphy wrote:
+
+> > So do you have a better suggestion? The descriptors only have enough
+> > space to store a 40-bit virtual address, which is not enough to fit the
+> > virtual addresses used by Linux for SKBs. This is why I'm instead
+> > relying on the fact that the descriptors can store the 40-bit physical
+> > address, and convert it back to a virtual address, which should be fine
+> > on ARM64 because the entire physical memory is part of the kernel linear
+> > mapping.  
 > 
-> Ah, yep, this is a bug. Need to modify the capture device's
-> width/height at .set_fmt() in the subdev's device-node source
-> pad (csi and prpenc/vf).
+> OK, that has nothing to do with DMA addresses then.
+
+Well, it has to do with DMA in the sense that those buffers are
+mapped with dma_map_single(). So the address that is given to us by the
+hardware as the "physical address of the RX buffer" is the one that we
+have initially given to the hardware and was the result of 
+dma_map_single().
+
+> > Russell proposal of testing the size of a virtual address
+> > pointer instead would solve this I believe, correct?  
 > 
-> >> Maybe I'm missing something, is it expected behavior that
-> >> a source format should be automatically propagated to
-> >> the sink?
-> > 
-> > media-ctl propagates the output pad format to all remote subdevices'
-> > input pads for all enabled links:
-> > 
-> > https://git.linuxtv.org/v4l-utils.git/tree/utils/media-ctl/libv4l2subdev.c
-> > #n693
->
-> Ah cool, I wasn't aware media-ctl did this, but it makes sense and
-> makes it easier on the user.
+> AFAICS, even that shouldn't really be necessary - for all VA/PA
+> combinations of 32/32, 32/40 and 64/40, storing virt_to_phys() of the
+> SKB VA won't overflow 40 bits,
 
-To be precise, userspace is responsible for propagating formats *between* 
-subdevs (source to sink, over a link) and drivers for propagating formats *in* 
-subdevs (sink to source, inside the subdev).
+I'm already lost here. Why are you talking about virt_to_phys() ? See
+above: we have the dma_addr_t returned from dma_map_single(), and we
+need to find back the corresponding virtual address, because there is
+not enough room in the HW descriptors to store a full 64-bit VA.
 
-> >>> v4l2-ctl --list-formats -d /dev/video4
-> >>> # This lists all the RGB formats, which it shouldn't. There is
-> >>> # no CSC in this pipeline, so we should be limited to YUV formats
-> >>> # only.
-> >> 
-> >> right, need to fix that. Probably by poking the attached
-> >> source subdev (csi or prpenc/vf) for its supported formats.
-> > 
-> > You are right, in bayer/raw mode only one specific format should be
-> > listed, depending on the CSI output pad format.
+> so a corresponding phys_to_virt() at the other end can't go wrong
+> either. If you really do want to special-case things based on VA
+> size, though, either CONFIG_64BIT or sizeof(void *) would indeed be
+> infinitely more useful than the unrelated DMA address width - I know
+> this driver's never going to run on SPARC64, but that's one example
+> of where the above logic would lead to precisely the truncated VA
+> it's trying to avoid.
 
+What is different on SPARC64 here?
+
+The situation we have is the following:
+
+ - On systems where VAs are 32-bit wide, we have enough room to store
+   the VA in the HW descriptor. So when we receive a packet, the HW
+   descriptor provides us directly with the VA of the network packet,
+   and the DMA address of the packet. We can dma_unmap_single() the
+   packet, and do its processing.
+
+ - On systems where VAs are 64-bit wide, we don't have enough room to
+   store the VA in the HW descriptor. However, on 64-bit systems, the
+   entire physical memory is mapped in the kernel linear mapping, so
+   phys_to_virt() is valid on any physical address. And we use this
+   property to retrieve the full 64-bit VA using the DMA address that
+   we get from the HW descriptor.
+
+   Since what we get from the HW descriptor is a DMA address, that's
+   why we're using phys_to_virt(dma_to_phys(...)).
+
+Best regards,
+
+Thomas
 -- 
-Regards,
-
-Laurent Pinchart
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
