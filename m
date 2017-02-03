@@ -1,243 +1,145 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 06/15] device property: Add support for remote endpoints
-Date: Fri, 3 Feb 2017 11:59:22 +0200
-Message-ID: <20170203095922.GA12291@valkosipuli.retiisi.org.uk>
-References: <1485532990-8431-1-git-send-email-sakari.ailus@linux.intel.com>
- <1485532990-8431-7-git-send-email-sakari.ailus@linux.intel.com>
- <CAL_JsqL+avBhLD9jwk-yfCsxYWTBPZo5OrNB0JBLs8Ri6xtOgw@mail.gmail.com>
- <20170131095827.GS7139@valkosipuli.retiisi.org.uk>
- <CAL_JsqJar8AtP__Vyfdra3_Q-6jkcJ_MH3DL55P4t4GzaNOLJA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJar8AtP__Vyfdra3_Q-6jkcJ_MH3DL55P4t4GzaNOLJA@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, laurent.pinchart@ideasonboard.com, g.liakhovetski@gmx.de
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v7 1/3] dt: bindings: add documentation for zx2967 family  thermal sensor
+Date: Fri,  3 Feb 2017 18:10:53 +0800
+Message-ID: <1486116655-24111-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: mathieu.poirier@linaro.org, jun.nie@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+This patch adds dt-binding documentation for zx2967 family thermal sensor.
 
-On Thu, Feb 02, 2017 at 11:19:08AM -0600, Rob Herring wrote:
-> On Tue, Jan 31, 2017 at 3:58 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Jan 27, 2017 at 03:45:04PM -0600, Rob Herring wrote:
-> >> On Fri, Jan 27, 2017 at 10:03 AM, Sakari Ailus
-> >> <sakari.ailus@linux.intel.com> wrote:
-> >> > From: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >> >
-> >> > This follows DT implementation of of_graph_* APIs but we call them
-> >> > fwnode_graph_* instead. For DT nodes the existing of_graph_* implementation
-> >> > will be used. For ACPI we use the new ACPI graph implementation instead.
-> >> >
-> >> > This commit includes code from Sakari Ailus.
-> >>
-> >> Then it should have your S-o-b. Actually, either way it should have it.
-> >
-> > I'll add that.
-> >
-> >>
-> >> Whether or not copying DT graphs is a good idea or not, I'll let
-> >> someone else chime in on that...
-> >>
-> >> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> >> > ---
-> >> >  drivers/base/property.c  | 122 +++++++++++++++++++++++++++++++++++++++++++++++
-> >> >  include/linux/property.h |   9 ++++
-> >> >  2 files changed, 131 insertions(+)
-> >> >
-> >> > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> >> > index c0011cf..cf602c3 100644
-> >> > --- a/drivers/base/property.c
-> >> > +++ b/drivers/base/property.c
-> >> > @@ -15,6 +15,7 @@
-> >> >  #include <linux/kernel.h>
-> >> >  #include <linux/of.h>
-> >> >  #include <linux/of_address.h>
-> >> > +#include <linux/of_graph.h>
-> >> >  #include <linux/property.h>
-> >> >  #include <linux/etherdevice.h>
-> >> >  #include <linux/phy.h>
-> >> > @@ -1111,3 +1112,124 @@ void *device_get_mac_address(struct device *dev, char *addr, int alen)
-> >> >         return device_get_mac_addr(dev, "address", addr, alen);
-> >> >  }
-> >> >  EXPORT_SYMBOL(device_get_mac_address);
-> >> > +
-> >> > +/**
-> >> > + * device_graph_get_next_endpoint - Get next endpoint firmware node
-> >> > + * @fwnode: Pointer to the parent firmware node
-> >> > + * @prev: Previous endpoint node or %NULL to get the first
-> >> > + *
-> >> > + * Returns an endpoint firmware node pointer or %NULL if no more endpoints
-> >> > + * are available.
-> >> > + */
-> >> > +struct fwnode_handle *
-> >> > +fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
-> >> > +                              struct fwnode_handle *prev)
-> >> > +{
-> >> > +       struct fwnode_handle *endpoint = NULL;
-> >> > +
-> >> > +       if (is_of_node(fwnode)) {
-> >> > +               struct device_node *node;
-> >> > +
-> >> > +               node = of_graph_get_next_endpoint(to_of_node(fwnode),
-> >> > +                                                 to_of_node(prev));
-> >> > +
-> >> > +               if (node)
-> >> > +                       endpoint = &node->fwnode;
-> >> > +       } else if (is_acpi_node(fwnode)) {
-> >> > +               endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
-> >> > +               if (IS_ERR(endpoint))
-> >> > +                       endpoint = NULL;
-> >> > +       }
-> >>
-> >> This is an ugly pattern IMO. Why not define an ops struct and set it
-> >> to OF or ACPI rather than check on every function call with
-> >> is_{of,acpi}_node()?
-> >
-> > That appears to be an established practice in the implementation of the
-> > device / fwnode property API.
-> 
-> I know. That doesn't mean it is good practice or not in need of
-> refactoring as fwnode API expands.
-> 
-> > One option could be to choose the relevant ops struct based on fwnode type
-> > in each function operating on the fwnode.
-> 
-> That helps absolutely nothing.
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+---
+ .../devicetree/bindings/thermal/zx2967-thermal.txt | 116 +++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
 
-You could add a bunch of macros to help with that, and wrap the actual
-functions so that you'd find the ops using the macro. It'd be less pretty
-than having an ops pointer in the struct, I agree.
-
-> 
-> > Alternatively it could be set at the time when the fwnode field is set. A
-> > large number of drivers are manipulating their OF nodes, some do that for
-> > fwnodes as well.
-> 
-> What do you mean by manipulating? A fwnode should be statically
-> pointing to a DT node and the DT node is static.
-
-I should have phrased that differently. The OF node (or fwnode_handle)
-pointers are stored locally in driver specific structs. Now that I look at
-that more closely, the only problems appears to be that most forget
-of_node_get() but that's unrelated to this.
-
-> 
-> > Manually setting the ops struct pointer in those cases
-> > might not be robust enough: sometimes one could simply forget. Also, adding
-> > a pointer to struct fwnode_handle would increase the size of the struct
-> > significantly without much gain.
-> 
-> 4 or 8 bytes, really?
-
-Per node. Going forward, 8 is getting more and more common.
-
-> 
-> >
-> > The number of functions operating on fwnode_handle is rather limited. I
-> > wonder if it'd be simply better to keep it as-is.
-> 
-> It was, but you're adding a lot.
-
-With the patchset, there are 14 occurrences of is_of_node() and 12
-occurrences of is_acpi_node(). Before the numbers were 6 and 4,
-respectively.
-
-I think it'd be good to have a third opinion on that.
-
-I presume you'd prefer these changes done before this set?
-
-> 
-> >> The of_graph_* functions need some better helpers too, so duplicating
-> >> them 2 more times is not ideal. Basically, drivers are left to do too
-> >> much of the walking of nodes themselves.
-> >
-> > I have to admit my experience in using them is limited to V4L2, but I have
-> > to say they've been working pretty well for what they're used for. Actually
-> > the graph functionality was originally specific for V4L2, that could be the
-> > reason why the current API is a good fit for V4L2. :-)
-> 
-> I'd guess the problem is V4L2 has common graph code and DRM does not.
-
-The graph code is generic, what V4L2 has concerning OF is common parsing of
-the properties. That's the current state at least.
-
-> I'd also guess we can find common patterns in both that could be
-> abstracted. And as you noticed, ALSA folks are working on using OF
-> graph.
-
-Please see drivers/media/platform/omap3isp/isp.c, and isp_of_parse_nodes()
-there. This is where the omap3isp driver parses information originating from
-DT. That's a pretty good example, most other V4L2 drivers that work with OF
-nodes do something similar.
-
-isp_of_parse_nodes() function could certainly be improved, but the
-improvement would be related to the interface of V4L2 async framework.
-That's not really related to DT or graphs.
-
-The V4L2 async framework is already aware of DT but it just makes it
-possible to match devices using OF nodes. It could well facilitate the
-process a lot more than it does now.
-
-I wonder if something similar could be done for DRM.
-
-Cc Guennadi and Laurent.
-
-> 
-> > The current use ACPI use case is related to V4L2 as well (I'll post a new
-> > version in the near future):
-> >
-> > <URL:http://www.spinics.net/lists/linux-media/msg106160.html>
-> >
-> > Are there any particular pain points that should be addressed?
-> 
-> I think generally we want drivers to avoid walking the port and
-> endpoint nodes themselves. Rather, have functions like "For my device
-> node, give me the device node connected via port N, endpoint M."
-
-I'd like to question whether that really helps: you need to iterate over all
-the ports and all the endpoints in them, instead of being simply given all
-the endpoints that have connected devices, one by one. At least when it
-comes to V4L2, I prefer the latter. As noted, I believe the enumerating
-work could (and should) be moved to the V4L2 async framework.
-
-It does show the firmware concepts to the driver but is there any harm from
-doing so?
-
-> Essentially, that is of_graph_get_endpoint_by_regs and
-> of_graph_get_remote_port_parent. The only time drivers really should
-> have port or endpoint node ptrs is to read properties, so maybe we add
-> property retrieval functions that take the device node and port and
-> endpoint numbers.
-> 
-> Really it may be an exercise in just removing some of the functions
-> which are too low level.
-> 
-> Take of_cal_create_instance() as an example. Here's what it does:
-> 
-> - Find port with reg == inst
-> - Get port's first endpoint
-> - Get remote port parent and save sensor_node
-> - Get the remote endpoint node
-> - Parse the remote endpoint properties (v4l2_of_parse_endpoint)
-> 
-> The first 3 steps are 40 lines of code and could be just 1 function
-> call returning node ptr for sensor_node.
-> 
-> v4l2_of_parse_link also open codes stuff that should be in the core.
-> 
-> > I noticed Kunimori Morimoto's patchset adding of_graph_get_remote_endpoint()
-> > which is just a new convenience function to the current API.
-> 
-> Right, I had similar comments there.
-
+diff --git a/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+new file mode 100644
+index 0000000..169a699
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+@@ -0,0 +1,116 @@
++* ZTE zx2967 family Thermal
++
++Required Properties:
++- compatible: should be one of the following.
++    * zte,zx296718-thermal
++- reg: physical base address of the controller and length of memory mapped
++    region.
++- clocks : Pairs of phandle and specifier referencing the controller's clocks.
++- clock-names: "gate" for the topcrm clock.
++	       "pclk" for the apb clock.
++- #thermal-sensor-cells: must be 0.
++
++Please note: coefficients defined in thermal-zones section need to be
++multiplied by 1000.
++
++Example for tempsensor:
++
++	tempsensor: tempsensor@148a000 {
++		compatible = "zte,zx296718-thermal";
++		reg = <0x0148a000 0x20>;
++		clocks = <&topcrm TEMPSENSOR_GATE>, <&audiocrm AUDIO_TS_PCLK>;
++		clock-names = "gate", "pclk";
++		#thermal-sensor-cells = <0>;
++	};
++
++Example for cooling device:
++
++	cooling_dev: cooling_dev {
++		cluster0_cooling_dev: cluster0-cooling-dev {
++			#cooling-cells = <2>;
++			cpumask = <0xf>;
++			capacitance = <1500>;
++		};
++
++	cluster1_cooling_dev: cluster1-cooling-dev {
++			#cooling-cells = <2>;
++			cpumask = <0x30>;
++			capacitance = <2000>;
++		};
++	};
++
++Example for thermal zones:
++
++	thermal-zones {
++		zx296718_thermal: zx296718_thermal {
++			polling-delay-passive = <500>;
++			polling-delay = <1000>;
++			sustainable-power = <6500>;
++
++			thermal-sensors = <&tempsensor 0>;
++			/*
++			 * both slope and offset need to be multiplied by 1000.
++			 */
++			coefficients = <1951 (-922)>;
++
++			trips {
++				trip0: switch_on_temperature {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				trip1: desired_temperature {
++					temperature = <100000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				crit: critical_temperature {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&trip0>;
++					cooling-device = <&gpu 2 5>;
++				};
++
++				map1 {
++					trip = <&trip0>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map2 {
++					trip = <&trip1>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map3 {
++					trip = <&crit>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map4 {
++					trip = <&trip0>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <9000>;
++				};
++
++				map5 {
++					trip = <&trip1>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <4096>;
++				};
++
++				map6 {
++					trip = <&crit>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <4096>;
++				};
++			};
++		};
++	};
 -- 
-Kind regards,
+2.7.4
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
