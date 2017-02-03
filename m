@@ -1,48 +1,195 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] Documentation: dt: iio: document stm32 exti trigger
-Date: Fri, 3 Feb 2017 20:11:33 +0100
-Message-ID: <CACRpkdZLFKQbDjDXo+ir=8d8gEd=9dLicuVLEXAF2OoWefKJcA@mail.gmail.com>
-References: <1485784663-19505-1-git-send-email-fabrice.gasnier@st.com> <1485784663-19505-4-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 4/5] iio: trigger: add support for STM32 EXTI triggers
+Date: Fri, 3 Feb 2017 20:40:57 +0100
+Message-ID: <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ@mail.gmail.com>
+References: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com> <1485786840-4557-5-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1485784663-19505-4-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <1485786840-4557-5-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 30, 2017 at 2:57 PM, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+On Mon, Jan 30, 2017 at 3:33 PM, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
 
-> Add dt documentation for st,stm32-exti-trigger.
-> EXTi gpio signal can be routed internally as trigger source for various
-> IPs (e.g. for ADC or DAC conversions).
+> EXTi[0..15] gpio signal can be routed internally as trigger source for
+> ADC or DAC conversions. Configure them as interrupts to configure
+> trigger path in HW.
+>
+> Note: interrupt handler isn't required here, and corresponding interrupt
+> can be kept masked at exti controller level.
+>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
 
-And you say this is done using pin control, elsewhere in the conversation
-if I understand it correctly?
+But I see nothing STM32-specific about this driver?
 
-> +Contents of a stm32 exti trigger root node:
-> +-------------------------------------------
-> +Required properties:
-> +- compatible: Should be "st,stm32-exti-trigger"
-> +- extiN-gpio: optional gpio line that may be used as external trigger source
-> +  (e.g. N may be 0..15. For example, exti11-gpio can trig ADC on stm32f4).
+I think we should do everone a service and just create
+drivers/iio/trigger/gpio-trigger.c
+
+I wondered before why we don't have a generic GPIO IIO trigger,
+it seems like such an intuitive and useful thing to have.
+
+Let's see what Jonathan says.
+
+> +config IIO_STM32_EXTI_TRIGGER
+> +       tristate "STM32 EXTI Trigger"
+> +       depends on (ARCH_STM32 && OF) || COMPILE_TEST
+
+config IIO_GPIO_TRIGGER
+    depends on GPIOLIB
+
+> +       select STM32_EXTI
+
+Isn't the dependency actually the other way around?
+
+default STM32_EXTI makes more sense, or just put it into the
+defconfig.
+
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
 > +
-> +Example:
-> +       triggers {
-> +               compatible = "st,stm32-exti-trigger";
-> +               exti11-gpio=<&gpioa 11 0>;
-> +       };
+> +/* STM32 has up to 16 EXTI triggers on GPIOs */
+> +#define STM32_MAX_EXTI_TRIGGER 16
 
-So what I do not understand i if this has any stm32-specific behaviour at all,
-so that compatible-string has any meaning.
+Just don't put any restrictions like this so it can be widely
+reused.
 
-Should we not rather define compatible = "gpio-trigger"; to be used by
-everyone? Especially for the device tree?
+> +static irqreturn_t stm32_exti_trigger_handler(int irq, void *data)
+> +{
+> +       /* Exti handler shouldn't be invoked, and isn't used */
+> +       return IRQ_HANDLED;
+> +}
 
-If it's "mostly generic, a bit specific too" it should likely be:
+It could be a good idea to capture the timestamp here if we were
+actually using this IRQ.
 
-compatible = "gpio-trigger", "st,stm32-exit-trigger";
+> +static int stm32_exti_trigger_probe(struct platform_device *pdev)
+> +{
+> +       int irq, ret;
+> +       char name[8];
+> +       struct gpio_desc *gpio;
+> +       struct iio_trigger *trig;
+> +       unsigned int i;
+> +
+> +       for (i = 0; i < STM32_MAX_EXTI_TRIGGER; i++) {
+
+Why not just run this until devm_gpiod_get() returns -ERRNO
+or something?
+
+> +               snprintf(name, sizeof(name), "exti%d", i);
+> +
+> +               gpio = devm_gpiod_get_optional(&pdev->dev, name, GPIOD_IN);
+
+Why would it be optional?
+
+Either it is there in the device tree or we get -EINVAL or something
+if there is no
+such index in the device tree. We can get -EPROBE_DEEER too, and then
+we should exit silently or just print that deferring is happening.
+
+> +               if (IS_ERR_OR_NULL(gpio)) {
+> +                       if (IS_ERR(gpio)) {
+> +                               dev_err(&pdev->dev, "gpio %s get error %ld\n",
+> +                                       name, PTR_ERR(gpio));
+> +                               return PTR_ERR(gpio);
+> +                       }
+> +                       dev_dbg(&pdev->dev, "No %s gpio\n", name);
+> +                       continue;
+> +               }
+
+Good
+
+> +               irq = gpiod_to_irq(gpio);
+> +               if (irq < 0) {
+> +                       dev_err(&pdev->dev, "gpio %d to irq failed\n", i);
+> +                       return irq;
+> +               }
+> +
+> +               ret = devm_request_irq(&pdev->dev, irq,
+> +                                      stm32_exti_trigger_handler,
+> +                                      0, dev_name(&pdev->dev), pdev);
+> +               if (ret) {
+> +                       dev_err(&pdev->dev, "request IRQ %d failed\n", irq);
+> +                       return ret;
+> +               }
+
+Here you need some elaborate trigger edge handling.
+
+The flags that you define as "0" here, how do we say that we
+want to handle rising or falling edges, for example?
+
+I think you might want to establish these DT properties for
+GPIO triggers:
+
+gpio-trigger-rising-edge;
+gpio-trigger-falling-edge;
+
+Then:
+
+int irq_flags = 0;
+
+if (of_property_read_bool(np, "gpio-trigger-rising-edge")
+   irq_flags |= IRQF_TRIGGER_RISING;
+else if (of_property_read_bool(np, "gpio-trigger-falling-edge")
+   irq_flags |= IRQF_TRIGGER_FALLING;
+
+To pass along to the devm_request_irq() function as flags.
+
+I find it weird that it even works without. Most GPIO interrupts
+should require you to set a trigger type. But I guess it is because
+of the other weirdness you describe below.
+
+> +               /*
+> +                * gpios are configured as interrupts, so exti trigger path is
+> +                * configured in HW, and can now be used as external trigger
+> +                * source by other IPs. But getting interrupts when trigger
+> +                * occurs is unused here, so mask irq on exti controller by
+> +                * default.
+> +                */
+> +               disable_irq(irq);
+
+Aha. That is not generic. But what about just adding:
+
+if (of_property_read_bool(np, "gpio-trigger-numb-irq")
+    disable_irq();
+
+(Plus add the binding for that something like "this makes the
+GPIO mentioned get requested, translated to an IRQ, get the
+IRQ requested, and then immediately just disabled as other
+hardware will actually hande the IRQ line".)
+
+I understand that this is kind of weird: we're making a whole generic
+GPIO trigger driver just to use it with hardware that grabs and disabled
+the irq immediately.
+
+But I think that in the long run it makes for more reusable code.
+
+> +static const struct of_device_id stm32_exti_trigger_of_match[] = {
+> +       { .compatible = "st,stm32-exti-trigger" },
+> +       {},
+
+"iio-gpio-trigger"
+
+Should fit anyone, given the above amendments.
+
+> +#if IS_ENABLED(CONFIG_IIO_STM32_EXTI_TRIGGER)
+> +bool is_stm32_exti_trigger(struct iio_trigger *trig);
+> +#else
+> +static inline bool is_stm32_exti_trigger(struct iio_trigger *trig)
+> +{
+> +       return false;
+> +}
+> +#endif
+
+This seems unnecessary to broadcast to the entire kernel.
+
+Why? (Maybe I can find explanations in later patches.
 
 Yours,
 Linus Walleij
