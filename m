@@ -1,120 +1,35 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v8 2/3] drm/panel: Add support for S6E3HA2 panel driver on
- TM2 board
-Date: Fri, 03 Feb 2017 13:46:16 +0900
-Message-ID: <58940B18.9090603@samsung.com>
-References: <CGME20170111063408epcas5p2e6ec091549c3ffed8462fd95d11d3c82@epcas5p2.samsung.com>
- <1484116439-7275-3-git-send-email-hoegeun.kwon@samsung.com>
- <08c5d94b-c76f-af14-c08f-478e26a34a7c@samsung.com>
- <588FD3C3.7080508@samsung.com> <20170131085449.GA19348@ulmo.ba.sec>
- <20170131143853.GU20076@art_vandelay> <20170131150226.GB4519@ulmo.ba.sec>
- <87r33j85ap.fsf@eliezer.anholt.net> <20170131213132.GC872@mithrandir.ba.sec>
- <87d1f2kfgi.fsf@eliezer.anholt.net> <20170201145249.GB17698@ulmo.ba.sec>
- <CACvgo504WEd_pPrjEViH+-i8BNwEjQ-q7MdnYWJ3V6uTB_tk5Q@mail.gmail.com>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v2] EDAC: mpc85xx: Add T2080 l2-cache support
+Date: Fri, 03 Feb 2017 16:12:05 +1100
+Message-ID: <874m0bc0yi.fsf@concordia.ellerman.id.au>
+References: <20170201231624.28843-1-chris.packham@alliedtelesis.co.nz> <20170201232735.byk7bnpeoqtcc7mh@pd.tnic> <01fe1af463c640a8bd48e45c2752b52c@svr-chch-ex1.atlnz.lc> <20170202173005.gqesvy5owtsbrviu@pd.tnic> <87h94cb11m.fsf@concordia.ellerman.id.au> <de8ec9087f214f2fae67b8ea9be92cdc@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CACvgo504WEd_pPrjEViH+-i8BNwEjQ-q7MdnYWJ3V6uTB_tk5Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Emil Velikov <emil.l.velikov@gmail.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, "moderated list:ARM/S5P EXYNOS AR..." <linux-samsung-soc@vger.kernel.org>, cw00.choi@samsung.com, Donghwa Lee <dh09.lee@samsung.com>, "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, andi.shyti@samsung.com, jh80.chung@samsung.com, Kukjin Kim <kgene@kernel.org>, ML dri-devel <dri-devel@lists.freedesktop.org>, Hyungwon Hwang <human.hwang@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <de8ec9087f214f2fae67b8ea9be92cdc-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: "linux-edac@vger.kernel.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "morbidrsa@gmail.com" <morbidrsa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgoyMDE364WEIDAy7JuUIDAy7J28IDAwOjI57JeQIEVtaWwgVmVsaWtvdiDsnbQo6rCAKSDsk7Qg
-6riAOgo+IE9uIDEgRmVicnVhcnkgMjAxNyBhdCAxNDo1MiwgVGhpZXJyeSBSZWRpbmcgPHRoaWVy
-cnkucmVkaW5nQGdtYWlsLmNvbT4gd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDAy
-OjU0OjUzUE0gLTA4MDAsIEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4gVGhpZXJyeSBSZWRpbmcgPHRo
-aWVycnkucmVkaW5nQGdtYWlsLmNvbT4gd3JpdGVzOgo+Pj4KPj4+PiBbIFVua25vd24gc2lnbmF0
-dXJlIHN0YXR1cyBdCj4+Pj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMTA6MTU6MTBBTSAtMDgw
-MCwgRXJpYyBBbmhvbHQgd3JvdGU6Cj4+Pj4+IFRoaWVycnkgUmVkaW5nIDx0aGllcnJ5LnJlZGlu
-Z0BnbWFpbC5jb20+IHdyaXRlczoKPj4+Pj4KPj4+Pj4+IFsgVW5rbm93biBzaWduYXR1cmUgc3Rh
-dHVzIF0KPj4+Pj4+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA5OjM4OjUzQU0gLTA1MDAsIFNl
-YW4gUGF1bCB3cm90ZToKPj4+Pj4+PiBPbiBUdWUsIEphbiAzMSwgMjAxNyBhdCAwOTo1NDo0OUFN
-ICswMTAwLCBUaGllcnJ5IFJlZGluZyB3cm90ZToKPj4+Pj4+Pj4gT24gVHVlLCBKYW4gMzEsIDIw
-MTcgYXQgMDk6MDE6MDdBTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6Cj4+Pj4+Pj4+Pgo+Pj4+Pj4+
-Pj4KPj4+Pj4+Pj4+IDIwMTfrhYQgMDHsm5QgMjTsnbwgMTA6NTDsl5AgSG9lZ2V1biBLd29uIOyd
-tCjqsIApIOyTtCDquIA6Cj4+Pj4+Pj4+Pj4gRGVhciBUaGllcnJ5LAo+Pj4+Pj4+Pj4+Cj4+Pj4+
-Pj4+Pj4gQ291bGQgeW91IHBsZWFzZSByZXZpZXcgdGhpcyBwYXRjaD8KPj4+Pj4+Pj4+Cj4+Pj4+
-Pj4+PiBUaGllcnJ5LCBJIHRoaW5rIHRoaXMgcGF0Y2ggaGFzIGJlZW4gcmV2aWV3ZWQgZW5vdWdo
-IGJ1dCBubyBjb21tZW50Cj4+Pj4+Pj4+PiBmcm9tIHlvdS4gU2VlbXMgeW91IGFyZSBidXN5LiBJ
-IHdpbGwgcGljayB1cCB0aGlzLgo+Pj4+Pj4+Pgo+Pj4+Pj4+PiBTb3JyeSwgYnV0IHRoYXQncyBu
-b3QgaG93IGl0IHdvcmtzLiBUaGlzIHBhdGNoIGhhcyBnb25lIHRocm91Z2ggOAo+Pj4+Pj4+PiBy
-ZXZpc2lvbnMgd2l0aGluIDQgd2Vla3MsIGFuZCBJIHRlbmQgdG8gaWdub3JlIHBhdGNoZXMgbGlr
-ZSB0aGF0IHVudGlsCj4+Pj4+Pj4+IHRoZSBkdXN0IHNldHRsZXMuCj4+Pj4+Pj4+Cj4+Pj4+Pj4K
-Pj4+Pj4+PiBTZWVtcyBsaWtlIHRoZSBkdXN0IHdhcyBwcmV0dHkgc2V0dGxlZC4gSXQgd2FzIHBv
-c3RlZCBvbiAxLzExLCBwaW5nZWQgb24gMS8yNCwKPj4+Pj4+PiBhbmQgcGlja2VkIHVwIG9uIDEv
-MzEuIEkgZG9uJ3QgdGhpbmsgaXQncyB1bnJlYXNvbmFibGUgdG8gdGFrZSBpdCB0aHJvdWdoCj4+
-Pj4+Pj4gYW5vdGhlciB0cmVlIGFmdGVyIHRoYXQuCj4+Pj4+Pj4KPj4+Pj4+PiBJIHdvbmRlciBp
-ZiBkcm1fcGFuZWwgd291bGQgYmVuZWZpdCBmcm9tIHRoZSAtbWlzYyBncm91cCBtYWludGFpbmVy
-c2hpcCBtb2RlbAo+Pj4+Pj4+IGFzIGRybV9icmlkZ2UgZG9lcy4gQnkgc3ByZWFkaW5nIG91dCB0
-aGUgd29ya2xvYWQsIHRoZSBoaWdoLW1haW50ZW5hbmNlCj4+Pj4+Pj4gcGF0Y2hlcyB3b3VsZCBo
-b3BlZnVsbHkgZmluZCBzb21lb25lIHRvIHNoZXBoZXJkIHRoZW0gdGhyb3VnaC4KPj4+Pj4+Cj4+
-Pj4+PiBFeGNlcHQgdGhhdCBub2JvZHkgZXhjZXB0IG1lIHJlYWxseSBjYXJlcy4gSWYgd2UgbGV0
-IHBlb3BsZSB0YWtlIHBhdGNoZXMKPj4+Pj4+IHRocm91Z2ggc2VwYXJhdGUgdHJlZXMgb3IgZ3Jv
-dXAtbWFpbnRhaW5lZCB0cmVlcyB0aGV5J2xsIGxpa2VseSBnbyBpbgo+Pj4+Pj4gd2l0aG91dCB0
-b28gbXVjaCB0aG91Z2h0LiBEUk0gcGFuZWwgaXMgc29tZXdoYXQgZGlmZmVyZW50IGZyb20gY29y
-ZSBEUk0KPj4+Pj4+IGluIHRoaXMgcmVnYXJkIGJlY2F1c2UgaXRzIGluZnJhc3RydWN0dXJlIGlz
-IG1pbmltYWwgYW5kIHRoZXJlJ3MgbGl0dGxlCj4+Pj4+PiBvdXRzaWRlIHRoZSBwYW5lbC1zaW1w
-bGUgZHJpdmVyLiBTbyB3ZSdyZSBzdGlsbCBhdCBhIHN0YWdlIHdoZXJlIHdlIG5lZWQKPj4+Pj4+
-IHRvIGZpbmUtdHVuZSB3aGF0IGRyaXZlcnMgc2hvdWxkIGxvb2sgbGlrZSBhbmQgaG93IHdlIGNh
-biBpbXByb3ZlLgo+Pj4+Pgo+Pj4+PiBJIHdvdWxkIGxvdmUgdG8gY2FyZSBhbmQgcGFydGljaXBh
-dGUgaW4gcmV2aWV3LCBidXQgd2l0aCB0aGUgc3RydWN0dXJlCj4+Pj4+IG9mIHlvdXIgdHJlZSB5
-b3UncmUgdGhlIG9ubHkgb25lIHdob3NlIHJldmlldyBjb3VudHMsIHNvIEkgZG9uJ3QKPj4+Pj4g
-cGFydGljaXBhdGUuCj4+Pj4KPj4+PiBSZWFsbHk/IFdoYXQgZXhhY3RseSBkbyB5b3UgdGhpbmsg
-aXMgc3BlY2lhbCBhYm91dCB0aGUgc3RydWN0dXJlIG9mIG15Cj4+Pj4gdHJlZT8gSSByZXF1aXJl
-IHBhdGNoZXMgdG8gYmUgb24gZHJpLWRldmVsIChJIHBpY2sgdGhlbSB1cCBmcm9tIHRoZQo+Pj4+
-IHBhdGNod29yayBpbnN0YW5jZSBhdCBmcmVlZGVza3RvcC5vcmcpLCB0aGUgdHJlZSBpcyBwdWJs
-aWNseSBhdmFpbGFibGUKPj4+PiBhbmQgcmV2aWV3ZWQtYnkgdGFncyBnZXQgcGlja2VkIHVwIGF1
-dG9tYXRpY2FsbHkgYnkgcGF0Y2h3b3JrLgo+Pj4+Cj4+Pj4gVGhlIHBhbmVsIHRyZWUgd29ya3Mg
-ZXhhY3RseSBsaWtlIGFueSBvdGhlciBtYWludGFpbmVyIHRyZWUuIEFuZCBteQo+Pj4+IHJldmll
-dyBpcyAqbm90KiB0aGUgb25seSBvbmUgdGhhdCBjb3VudHMuIEkgYXBwcmVjaWF0ZSBldmVyeSBS
-ZXZpZXdlZC1ieQo+Pj4+IHRhZyBJIHNlZSBvbiBwYW5lbCBwYXRjaGVzIGJlY2F1c2UgaXQgbWVh
-bnMgdGhhdCBJIGRvbid0IGhhdmUgdG8gbG9vayBhcwo+Pj4+IGNsb3NlbHkgYXMgSSBoYXZlIHRv
-IG90aGVyd2lzZS4KPj4+Pgo+Pj4+IEl0IGlzIHRydWUgdGhhdCBJIGFtIHJlc3BvbnNpYmxlIGZv
-ciB0aG9zZSBwYXRjaGVzLCB0aGF0J3Mgd2h5IEkgZ2V0IHRvCj4+Pj4gaGF2ZSB0aGUgZmluYWwg
-d29yZCBvbiB3aGV0aGVyIG9yIG5vdCBhIHBhdGNoIGdldHMgYXBwbGllZC4gQW5kIHRoYXQncwo+
-Pj4+IG5vIGRpZmZlcmVudCBmcm9tIGFueSBvdGhlciBtYWludGFpbmVyIHRyZWUgZWl0aGVyLgo+
-Pj4KPj4+IElmIG1lIHJldmlld2luZyBhIHBhdGNoIGlzbid0IHBhcnQgb2YgdW5ibG9ja2luZyB0
-aGF0IHBhdGNoIGdldHRpbmcgaW4sCj4+PiB0aGVuIEkgd29uJ3QgYm90aGVyIGJlY2F1c2UgYWxs
-IEkgY291bGQgZW5kIHVwIGRvaW5nIGlzIHB1bmlzaGluZyB0aGUKPj4+IGRldmVsb3BlciBvZiB0
-aGUgcGF0Y2guICBDb250cmlidXRvcnMgaGF2ZSBhIGhhcmQgZW5vdWdoIHRpbWUgYWxyZWFkeS4K
-Pj4KPj4gTWF5YmUgeW91IHNob3VsZCBnbyBhbmQgcmVhZCBteSBwcmV2aW91cyByZXBseSBhZ2Fp
-biBtb3JlIGNhcmVmdWxseS4KPj4gUGVyaGFwcyB0aGVuIHlvdSdsbCByZWFsaXplIHRoYXQgcmV2
-aWV3cyBhcmUgaW4gZmFjdCBoZWxwaW5nIGluIGdldHRpbmcKPj4gcGF0Y2hlcyBtZXJnZWQuCj4+
-Cj4+IEludGVyZXN0aW5nbHkgbXkgaW5ib3ggZG9lc24ndCBzaG93IHlvdSBldmVyIGJvdGhlcmlu
-ZyB0byByZXZpZXcgcGFuZWwKPj4gcGF0Y2hlcywgc28gbWF5YmUgeW91IHNob3VsZCBiZSBtb3Jl
-IGNhcmVmdWwgYWJvdXQgeW91ciBhc3N1bXB0aW9ucy4KPj4KPiBHZW50cywgaXQncyB1bmRlcnN0
-YW5kYWJsZSB0aGF0IGVtb3Rpb25zIG1pZ2h0IGJlIHJ1bm5pbmcgaGlnaC4KPiAKPiBXaGF0J3Mg
-dGhlIHBvaW50IGluIHBvaW50aW5nIGZpbmdlcnMgYXQgZWFjaCBvdGhlciAtIHRoZXJlIGlzIGVu
-b3VnaAo+IHRvIGdvIGluIGVhY2ggZGlyZWN0aW9uLgo+IExldCB1cyBhbGwgc3RlcCBiYWNrIGZv
-ciBhIHNlY29uZCBhbmQgY29uc2lkZXIgaG93IHdlIGNhbiBtYWtlIHRoaW5ncyBiZXR0ZXIuCj4g
-Cj4gSSB0aGluayBpdCdsbCBiZSBuaWNlIHRvIGhhdmUgc29tZS9tb3N0IG9mIHRoZSBjb21tb24g
-Y29uY2VybnMgdGhhdAo+IFRoaWVycnkvb3RoZXJzIGNvbWVzIGFjcm9zcyBkb2N1bWVudGVkIC0g
-aW4ta2VybmVsLCBibG9nIHBvc3QsIG90aGVyLgo+IFN1Y2ggdGhhdCBvbmUgY2FuIHJlZmVyZW5j
-ZSB0byBzcGVjaWZpYyBwb2ludHMgYXMgcGF0Y2ggZmFsbHMgc3ViLXBhci4KPiBXZSBhbGwgd2Fu
-dCB0byBoYXZlIGEgYmFsYW5jZSBvZiBuaWNlbHkgd3JpdHRlbiBkcml2ZXIgYW5kIHF1aWNrCj4g
-bWVyZ2UuCj4gCj4gSW5raSwgSSBiZWxpZXZlIG15c2VsZiBhbmQgb3RoZXJzIGhhdmUgaW52aXRl
-ZCB5b3UgYmVmb3JlIG9uCj4gI2RyaS1kZXZlbC4gVGhpcyBpcyBhbm90aGVyIG1lZGl1bSB3aGVy
-ZSB5b3UgY2FuIHBva2UgZGV2cyBhbmQgZnJvbSBteQo+IGV4cGVyaWVuY2UgLSBpdCB0ZW5kcyB0
-byBiZSBtb3JlIGVmZmljaWVudCwgbW9zdCBvZiB0aGUgdGltZS4KCkl0J3MgdHJ1ZSBhbmQgdG90
-YWxseSBhZ3JlZS4gSSBjYW4gcmVhbGx5IHVuZGVyc3RhbmQgVGhpZXJyeSBidXQgSSB0aGluayB3
-ZSBuZWVkIHRvIHRoaW5rIGFib3V0IG1haW50YWluZXIncyByb2xlIGZvciBvdXIgY29tbXVuaXR5
-LgpBbmQgYWxzbyBJIHRoaW5rIHRoZSBiaWcgYW5kIHNtYWxsIGNvbGxpc2lvbnMgYmV0d2VlbiBt
-YWludGFpbmVycyBhbmQgY29udHJpYnV0b3JzIGFyZSBqdXN0IHRoZSBwcm9jZXNzIG9mIGdldHRp
-bmcgYmV0dGVyLgoKVGhhbmtzLApJbmtpIERhZQoKPiAKPiBUaGFua3MKPiBFbWlsCj4gLS0KPiBU
-byB1bnN1YnNjcmliZSBmcm9tIHRoaXMgbGlzdDogc2VuZCB0aGUgbGluZSAidW5zdWJzY3JpYmUg
-ZGV2aWNldHJlZSIgaW4KPiB0aGUgYm9keSBvZiBhIG1lc3NhZ2UgdG8gbWFqb3Jkb21vQHZnZXIu
-a2VybmVsLm9yZwo+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92Z2VyLmtlcm5lbC5v
-cmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+IAo+IApfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org> writes:
+
+> On 03/02/17 12:55, Michael Ellerman wrote:
+>> Chris if you want to send a patch to add the compatible string to the
+>> l2cache.txt I would merge that, but honestly it doesn't achieve much
+>> other than possibly catching a typo in the compatible name.
+>
+> I think catching a typo might be worthwhile. It's 5 minutes work for me 
+> to grep/sed through the code to find existing compatible strings and 
+> update the document. Which might save someone else a lot of time 
+> debugging only to find out they've transposed some digits in the dts.
+>
+> I'll whip something up and send it out shortly.
+
+Thanks.
+
+cheers
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
