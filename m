@@ -1,46 +1,58 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCHv2 net-next 01/16] dt-bindings: net: update Marvell PPv2
- binding for PPv2.2 support
-Date: Fri, 3 Feb 2017 16:48:08 +0000
-Message-ID: <20170203164808.GD27312@n2100.armlinux.org.uk>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1482943592-12556-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170103201842.hdg2uzzesog2jund@rob-hp-laptop>
- <20170202175650.1fc06c2d@free-electrons.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 2/2] DTS: dra7: Add "opp_high" opp node to support 1.5 GHz
+ SoC operation
+Date: Fri, 3 Feb 2017 10:48:09 -0600
+Message-ID: <f17ceda2-45e0-9c67-7c8a-5a35132a2d0a@ti.com>
+References: <1486135491-14223-1-git-send-email-lukma@denx.de>
+ <1486135491-14223-2-git-send-email-lukma@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170202175650.1fc06c2d@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486135491-14223-2-git-send-email-lukma@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=c3=aet_Cousson?= <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 05:56:50PM +0100, Thomas Petazzoni wrote:
-> For PPv2.2, we wanted to simplify a little bit the register mappings,
-> and simply reflect the memory map of the SoC. In the SoC datasheet,
-> there are two memory areas for the networking subsystem, which are the
-> two areas reflected in:
-> 
->         reg = <0x0 0x100000>,
->               <0x100000 0x80000>;
-> 
-> The per-port registers are inside the second register area. But by
-> exposing the entire register area in the Device Tree binding, we allow
-> improvements in the driver that need additional registers to be made
-> without changing the Device Tree description of the device.
-
-Are you sure that this makes sense?  You have the serdes block at
-0x120000-0x125fff, which sits within that range, and that needs to
-be configured for SATA and PCIe, so it's not strictly just a network
-thing.
-
-I know from my experimentation that disabling the "serdes" by clearing
-the SD_EXTERNAL_CONFIG1_REG and SD_EXTERNAL_CONFIG0_REG for SATA
-channels prevents SATA working.
+On 02/03/2017 09:24 AM, Lukasz Majewski wrote:
+> The "opp_high" property brings support for 1.5 GHz CPU frequency for TI's
+> am57xx line of processors.
+>
+> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> ---
+>  arch/arm/boot/dts/dra7.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index a860a56..5e678cd 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -108,6 +108,11 @@
+>  			opp-hz = /bits/ 64 <1176000000>;
+>  			opp-microvolt = <1160000 885000 1160000>;
+>  		};
+> +
+> +		opp_high@1500000000 {
+> +			opp-hz = /bits/ 64 <1500000000>;
+> +			opp-microvolt = <1210000 950000 1250000>;
+> +		};
+>  	};
+>
+>  	/*
+>
+Please keep this out of the way till we get the AVS class0 integrated 
+in. devices wont be save at 1.5GHz without the opp powerdomain + AVS 
+Class0 implementation.
 
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Regards,
+Nishanth Menon
