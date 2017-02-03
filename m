@@ -1,163 +1,68 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] watchdog: zx2967: add watchdog controller driver
- for ZTE's zx2967 family
-Date: Fri, 3 Feb 2017 15:48:18 -0700
-Message-ID: <CANLsYkxCdEjvQ3p3nKxmB284cAbo5vPinrAHRX5jdMgZEQR0Xg@mail.gmail.com>
-References: <1486092140-1017-1-git-send-email-baoyou.xie@linaro.org>
- <1486092140-1017-3-git-send-email-baoyou.xie@linaro.org> <20170203160257.GA30336@linaro.org>
- <20170203170717.GA14521@roeck-us.net>
+From: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH 2/2] DTS: dra7: Add "opp_high" opp node to support 1.5
+ GHz SoC operation
+Date: Sat, 4 Feb 2017 00:06:15 +0100
+Message-ID: <20170204000615.4417940f@jawa>
+References: <1486135491-14223-1-git-send-email-lukma@denx.de>
+        <1486135491-14223-2-git-send-email-lukma@denx.de>
+        <f17ceda2-45e0-9c67-7c8a-5a35132a2d0a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170203170717.GA14521-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <f17ceda2-45e0-9c67-7c8a-5a35132a2d0a-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jun Nie <jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "xie.baoyou" <xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org>, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 3 February 2017 at 10:07, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Fri, Feb 03, 2017 at 09:02:57AM -0700, Mathieu Poirier wrote:
->> On Fri, Feb 03, 2017 at 11:22:20AM +0800, Baoyou Xie wrote:
->> > This patch adds watchdog controller driver for ZTE's zx2967 family.
->> >
->> > Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > ---
->> >  drivers/watchdog/Kconfig      |  10 ++
->> >  drivers/watchdog/Makefile     |   1 +
->> >  drivers/watchdog/zx2967_wdt.c | 285 ++++++++++++++++++++++++++++++++++++++++++
->> >  3 files changed, 296 insertions(+)
->> >  create mode 100644 drivers/watchdog/zx2967_wdt.c
->> >
->> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->> > index acb00b5..05093a2 100644
->> > --- a/drivers/watchdog/Kconfig
->> > +++ b/drivers/watchdog/Kconfig
->> > @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
->> >       To compile this driver as a module, choose M here: the
->> >       module will be called aspeed_wdt.
->> >
->> > +config ZX2967_WATCHDOG
->> > +   tristate "ZTE zx2967 SoCs watchdog support"
->> > +   depends on ARCH_ZX
->> > +   select WATCHDOG_CORE
->> > +   help
->> > +     Say Y here to include support for the watchdog timer
->> > +     in ZTE zx2967 SoCs.
->> > +     To compile this driver as a module, choose M here: the
->> > +     module will be called zx2967_wdt.
->> > +
->> >  # AVR32 Architecture
->> >
->> >  config AT32AP700X_WDT
->> > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->> > index 0c3d35e..bf2d296 100644
->> > --- a/drivers/watchdog/Makefile
->> > +++ b/drivers/watchdog/Makefile
->> > @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
->> >  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
->> >  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
->> >  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
->> > +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
->> >
->> >  # AVR32 Architecture
->> >  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
->> > diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
->> > new file mode 100644
->> > index 0000000..2daaca2
->> > --- /dev/null
->> > +++ b/drivers/watchdog/zx2967_wdt.c
->> > @@ -0,0 +1,285 @@
->> > +/*
->> > + * watchdog driver for ZTE's zx2967 family
->> > + *
->> > + * Copyright (C) 2017 ZTE Ltd.
->> > + *
->> > + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> > + *
->> > + * License terms: GNU General Public License (GPL) version 2
->> > + */
->> > +
->> > +#include <linux/clk.h>
->> > +#include <linux/io.h>
->> > +#include <linux/mfd/syscon.h>
->> > +#include <linux/module.h>
->> > +#include <linux/of_address.h>
->> > +#include <linux/platform_device.h>
->> > +#include <linux/regmap.h>
->> > +#include <linux/reset.h>
->> > +#include <linux/watchdog.h>
->> > +
->> > +#define ZX2967_WDT_CFG_REG                 0x4
->> > +#define ZX2967_WDT_LOAD_REG                        0x8
->> > +#define ZX2967_WDT_REFRESH_REG                     0x18
->> > +#define ZX2967_WDT_START_REG                       0x1c
->> > +
->> > +#define ZX2967_WDT_REFRESH_MASK                    0x3f
->> > +
->> > +#define ZX2967_WDT_CFG_DIV(n)                      ((((n) & 0xff) - 1) << 8)
->> > +#define ZX2967_WDT_START_EN                        0x1
->> > +
->> > +/*
->> > + * Hardware magic number.
->> > + * When watchdog reg is written, the lowest 16 bits are valid, but
->> > + * the highest 16 bits should be always this number.
->> > + */
->>
->> Thanks for the explanation, much better now.
->>
->> > +#define ZX2967_WDT_WRITEKEY                        (0x1234 << 16)
->> > +
->> > +#define ZX2967_WDT_DIV_DEFAULT                     16
->> > +#define ZX2967_WDT_DEFAULT_TIMEOUT         32
->> > +#define ZX2967_WDT_MIN_TIMEOUT                     1
->> > +#define ZX2967_WDT_MAX_TIMEOUT                     524
->> > +#define ZX2967_WDT_MAX_COUNT                       0xffff
->> > +
->> > +#define ZX2967_WDT_CLK_FREQ                        0x8000
->> > +
->> > +#define ZX2967_WDT_FLAG_REBOOT_MON         BIT(0)
->> > +
->> > +struct zx2967_wdt {
->> > +   struct watchdog_device  wdt_device;
->> > +   void __iomem            *reg_base;
->> > +   struct clk              *clock;
->> > +};
->> > +
->> > +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
->> > +{
->> > +   return readl_relaxed(wdt->reg_base + reg);
->> > +}
->> > +
->> > +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u16 val)
->> > +{
->> > +   writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
->> > +}
->>
->> You were correct with the u32 type.  My comment was about making sure the value
->> of the value given to the function wasn't bigger than 65535 (0xffff), which
->> would have been corrupted by the OR'ing with ZX2967_WDT_WRITEKEY.
->>
->> Going with a u16 forces you to manipulate u16 types in all the functions below
->> but the read operation is still a u32, leaving to the compiler the task of
->> stripping the top 16 bit.
->>
->> My suggestion is to go back to a u32 for zx2967_wdt_writel() but to AND 'val'
->> with 0x0000ffff before OR'ing it with ZX2967_WDT_WRITEKEY.
->>
->
-> For the record, I am fine either way, including not masking at all;
-> I considered that a theoretic problem that only applies if reading
-> a register can return a value other than 0 in the upper 16 bit.
-> So, ultimately, this patch series is now waiting for your Ack.
->
+Hi Nishanth,
 
-Now that there is sufficient comments in the code to understand what's
-going on, I'm also fine either way.  As long as
-zx2967_wdt_readl/writel() are consistent with one another.
+> On 02/03/2017 09:24 AM, Lukasz Majewski wrote:
+> > The "opp_high" property brings support for 1.5 GHz CPU frequency
+> > for TI's am57xx line of processors.
+> >
+> > Signed-off-by: Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/dra7.dtsi | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/dra7.dtsi
+> > b/arch/arm/boot/dts/dra7.dtsi index a860a56..5e678cd 100644
+> > --- a/arch/arm/boot/dts/dra7.dtsi
+> > +++ b/arch/arm/boot/dts/dra7.dtsi
+> > @@ -108,6 +108,11 @@
+> >  			opp-hz = /bits/ 64 <1176000000>;
+> >  			opp-microvolt = <1160000 885000 1160000>;
+> >  		};
+> > +
+> > +		opp_high@1500000000 {
+> > +			opp-hz = /bits/ 64 <1500000000>;
+> > +			opp-microvolt = <1210000 950000 1250000>;
+> > +		};
+> >  	};
+> >
+> >  	/*
+> >
+> Please keep this out of the way till we get the AVS class0 integrated 
+> in. devices wont be save at 1.5GHz without the opp powerdomain + AVS 
+> Class0 implementation.
+> 
 
-Mathieu
+Yes, correct. My AM5728 works with this opp, but AM5718 hangs when this
+frequency is enabled.
 
-> Guenter
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd-ynQEQJNshbs@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
