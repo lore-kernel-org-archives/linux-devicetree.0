@@ -1,95 +1,108 @@
 From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers
- property
-Date: Fri, 3 Feb 2017 12:05:10 +0100
-Message-ID: <20170203110510.GB30941@amd>
-References: <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com>
- <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
- <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com>
- <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
- <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com>
- <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
- <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com>
- <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
- <f5cd17e7-2560-acdd-79c6-7dc1b0988e73@gmail.com>
- <aa97923a-d46c-ad90-a96a-0017129daeb8@gmail.com>
+Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
+Date: Fri, 3 Feb 2017 12:50:45 +0100
+Message-ID: <20170203115045.GA1350@amd>
+References: <20161228183036.GA13139@amd>
+ <20170111225335.GA21553@amd>
+ <20170119214905.GD3205@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="/NkBOFFp2J2Af1nK"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <aa97923a-d46c-ad90-a96a-0017129daeb8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LED SUBSYSTEM" <linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170119214905.GD3205-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---/NkBOFFp2J2Af1nK
+--ReaqsoxgOBHFXBhH
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> >>>>Is this possible to mix various entries in a list assigned to single
-> >>>>property?
-> >>>>Let's say:
-> >>>>trigger-sources =3D
-> >>>>    <&ohci_port1>,
-> >>>>    <&ehci_port1>,
-> >>>>    <&gpio 1 GPIO_ACTIVE_HIGH>;
-
-Actually... I'm not sure I like the "multiple sources". It is somehow
-justified for ohci/ehci_port, because they... represent single
-physical port. Could we introduce something for the physical port into
-the DTS, too?
-
-> >>>According to my knowledge all elements in the list are elements
-> >>>of one array, no matter if they are comma separated or space separated
-> >>>in "<>" brackets. DT maintainer would have to confirm that though.
-> >>
-> >>This matches my knowledge as well.
-> >
-> >Having that, we would be limited to a list of fixed size
-> >tuples IMHO.
+> > --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> > @@ -76,6 +76,11 @@ Optional endpoint properties
+> >    mode horizontal and vertical synchronization signals are provided to=
+ the
+> >    slave device (data source) by the master device (data sink). In the =
+master
+> >    mode the data source device is also the source of the synchronizatio=
+n signals.
+> > +- bus-type: data bus type. Possible values are:
+> > +  0 - MIPI CSI2
+> > +  1 - parallel / Bt656
+> > +  2 - MIPI CSI1
+> > +  3 - CCP2
 >=20
-> That sounds OK. Now I spent some time thinking about this I think it can =
-work.
-> First of all we may need something like #sources-cells to extend our prop=
-erty
-> in the future.
-> Secondly it should be possible to detect type of phandle node by trying t=
-hings
-> one by one. We should be e.g. able to check is phandle is for GPIO by try=
-ing
-> of_find_gpiochip_by_xlate.
+> Actually, thinking about this again --- we only need to explictly specify
+> busses if we're dealing with either CCP2 or CSI-1. The vast majority of t=
+he
+> actual busses are and continue to be CSI-2 or either parallel or Bt.656. =
+As
+> they can be implicitly detected, we would have an option to just drop val=
+ues
+> 0 and 1 from above, i.e. only leave CSI-1 and CCP2. For now, specifying
+> CSI-2 or parallel / Bt.656 adds no value as the old DT binaries without
+> bus-type will need to be supported anyway.
 
-I am not sure if variable-length parameters here is good idea. Would
-be nice to keep it simple... Having the led representing voltage on
-gpio line is somehow strange to me. I'd rather have dts explaining
-what that voltage means ("it is battery charging signal") and than
-have led connected to that...
-									Pavel
+Hmm. "Just deleting the others" may be a bit confusing... but what
+about this? It explains what we can autodetect.
+
+Best regards,
+								Pavel
+
+diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b=
+/Documentation/devicetree/bindings/media/video-interfaces.txt
+index 08c4498..d54093b 100644
+--- a/Documentation/devicetree/bindings/media/video-interfaces.txt
++++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+@@ -77,10 +77,10 @@ Optional endpoint properties
+   slave device (data source) by the master device (data sink). In the mast=
+er
+   mode the data source device is also the source of the synchronization si=
+gnals.
+ - bus-type: data bus type. Possible values are:
+-  0 - MIPI CSI2
+-  1 - parallel / Bt656
+-  2 - MIPI CSI1
+-  3 - CCP2
++  0 - autodetect based on other properties (MIPI CSI2, parallel, Bt656)
++  1 - MIPI CSI1
++  2 - CCP2
++  Autodetection is default, and bus-type property may be omitted in that c=
+ase.
+ - bus-width: number of data lines actively used, valid for the parallel bu=
+sses.
+ - data-shift: on the parallel data busses, if bus-width is used to specify=
+ the
+   number of data lines, data-shift can be used to specify which data lines=
+ are
+
+
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---/NkBOFFp2J2Af1nK
+--ReaqsoxgOBHFXBhH
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAliUY+YACgkQMOfwapXb+vLaLwCfcHw8BxwFdm9/AT6fKURzcNn5
-bp4AniDnp3zX2+l0PEV7ls/Y675XDNDV
-=6Bjy
+iEYEARECAAYFAliUbpUACgkQMOfwapXb+vKpWgCgjqqV/Dkmc42a5e2en6Xvoq4d
+WO8AoIgDGWMJI4yUfUDFFqvOsAYAz6hm
+=oRA4
 -----END PGP SIGNATURE-----
 
---/NkBOFFp2J2Af1nK--
+--ReaqsoxgOBHFXBhH--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
