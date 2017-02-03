@@ -1,74 +1,87 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] Documentation: powerpc/fsl: Update compatible for l2cache binding
-Date: Fri,  3 Feb 2017 13:43:16 +1300
-Message-ID: <20170203004316.25291-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+From: Ken Lin <yungching0725-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6q-bx50v3/imx6q-b450v3/imx6q-b650v3: change pca953x GPIO default settings
+Date: Fri,  3 Feb 2017 09:21:14 +0800
+Message-ID: <20170203012114.20411-1-ken.lin@advantech.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ken.lin-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org, akshay.bhat-jEh4hwF5bVhBDgjK7y7TUQ@public.gmane.org, peter.stretz-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org, peter.chiang-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-List all the current valid compatible strings for the l2cache binding.
-This should stop checkpatch.pl from complaining and will hopefully save
-someone from having to debug a typo in their dts.
+Leave pca953x P06,P07 pins on b850v3 platform and P06 pin on b450v3/b650v3 unconfigured
+in the kernel space since they could be configured as DP1_RST and DP2_RST by the applications
+for the DP FW update support
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Signed-off-by: Ken Lin <ken.lin-ELdSlb/RfAS1Z/+hSey0Gg@public.gmane.org>
 ---
- .../devicetree/bindings/powerpc/fsl/l2cache.txt    | 42 ++++++++++++++++++++--
- 1 file changed, 40 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6q-b450v3.dts  |  7 +++++++
+ arch/arm/boot/dts/imx6q-b650v3.dts  |  7 +++++++
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 14 --------------
+ 3 files changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
-index c41b2187eaa8..dc9bb3182525 100644
---- a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
-+++ b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
-@@ -5,8 +5,46 @@ The cache bindings explained below are ePAPR compliant
+diff --git a/arch/arm/boot/dts/imx6q-b450v3.dts b/arch/arm/boot/dts/imx6q-b450v3.dts
+index 78bfc1a307d6..04779816d3d1 100644
+--- a/arch/arm/boot/dts/imx6q-b450v3.dts
++++ b/arch/arm/boot/dts/imx6q-b450v3.dts
+@@ -104,4 +104,11 @@
+ 		output-low;
+ 		line-name = "PCA9539-P05";
+ 	};
++
++        P07 {
++                gpio-hog;
++                gpios = <7 0>;
++                output-low;
++                line-name = "PCA9539-P07";
++        };
+ };
+diff --git a/arch/arm/boot/dts/imx6q-b650v3.dts b/arch/arm/boot/dts/imx6q-b650v3.dts
+index 1dcaee23ed9c..9ee8c81c2b80 100644
+--- a/arch/arm/boot/dts/imx6q-b650v3.dts
++++ b/arch/arm/boot/dts/imx6q-b650v3.dts
+@@ -97,6 +97,13 @@
+ 		output-low;
+ 		line-name = "PCA9539-P05";
+ 	};
++
++        P07 {
++                gpio-hog;
++                gpios = <7 0>;
++                output-low;
++                line-name = "PCA9539-P07";
++        };
+ };
  
- Required Properties:
+ &usbphy1 {
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index e4a415fd899b..f99e6efda3e2 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -184,20 +184,6 @@
+ 				interrupt-parent = <&gpio2>;
+ 				interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
  
--- compatible	: Should include "fsl,chip-l2-cache-controller" and "cache"
--		  where chip is the processor (bsc9132, npc8572 etc.)
-+- compatible	: Should include one of the following:
-+		  "fsl,8540-l2-cache-controller"
-+		  "fsl,8541-l2-cache-controller"
-+		  "fsl,8544-l2-cache-controller"
-+		  "fsl,8548-l2-cache-controller"
-+		  "fsl,8555-l2-cache-controller"
-+		  "fsl,8568-l2-cache-controller"
-+		  "fsl,b4420-l2-cache-controller"
-+		  "fsl,b4860-l2-cache-controller"
-+		  "fsl,bsc9131-l2-cache-controller"
-+		  "fsl,bsc9132-l2-cache-controller"
-+		  "fsl,c293-l2-cache-controller"
-+		  "fsl,mpc8536-l2-cache-controller"
-+		  "fsl,mpc8540-l2-cache-controller"
-+		  "fsl,mpc8541-l2-cache-controller"
-+		  "fsl,mpc8544-l2-cache-controller"
-+		  "fsl,mpc8548-l2-cache-controller"
-+		  "fsl,mpc8555-l2-cache-controller"
-+		  "fsl,mpc8560-l2-cache-controller"
-+		  "fsl,mpc8568-l2-cache-controller"
-+		  "fsl,mpc8569-l2-cache-controller"
-+		  "fsl,mpc8572-l2-cache-controller"
-+		  "fsl,p1010-l2-cache-controller"
-+		  "fsl,p1011-l2-cache-controller"
-+		  "fsl,p1012-l2-cache-controller"
-+		  "fsl,p1013-l2-cache-controller"
-+		  "fsl,p1014-l2-cache-controller"
-+		  "fsl,p1015-l2-cache-controller"
-+		  "fsl,p1016-l2-cache-controller"
-+		  "fsl,p1020-l2-cache-controller"
-+		  "fsl,p1021-l2-cache-controller"
-+		  "fsl,p1022-l2-cache-controller"
-+		  "fsl,p1023-l2-cache-controller"
-+		  "fsl,p1024-l2-cache-controller"
-+		  "fsl,p1025-l2-cache-controller"
-+		  "fsl,p2010-l2-cache-controller"
-+		  "fsl,p2020-l2-cache-controller"
-+		  "fsl,t2080-l2-cache-controller"
-+		  "fsl,t4240-l2-cache-controller"
-+		  and "cache".
- - reg		: Address and size of L2 cache controller registers
- - cache-size	: Size of the entire L2 cache
- - interrupts	: Error interrupt of L2 controller
+-				P06 {
+-					gpio-hog;
+-					gpios = <6 0>;
+-					output-low;
+-					line-name = "PCA9539-P06";
+-				};
+-
+-				P07 {
+-					gpio-hog;
+-					gpios = <7 0>;
+-					output-low;
+-					line-name = "PCA9539-P07";
+-				};
+-
+ 				P10 {
+ 					gpio-hog;
+ 					gpios = <8 0>;
 -- 
-2.11.0.24.ge6920cf
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
