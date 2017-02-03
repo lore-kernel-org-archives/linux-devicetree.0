@@ -1,54 +1,59 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 0/2] drm/panel: Add support for the Sitronix ST7789V
-Date: Fri, 3 Feb 2017 19:48:51 +0100
-Message-ID: <2db19e6e-9857-1c92-dc77-c6b862cc771f@tronnes.org>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/24] i.MX Media Driver
+Date: Fri, 3 Feb 2017 10:49:41 -0800
+Message-ID: <02a3a834-efce-e87d-6e1d-ffe21015509e@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <20170202172245.GT27312@n2100.armlinux.org.uk>
+ <20170202175600.GU27312@n2100.armlinux.org.uk>
+ <4815b9c8-782a-ac67-d296-c4acb296d849@gmail.com>
+ <20170202185826.GV27312@n2100.armlinux.org.uk>
+ <2e1cf096-ecb8-ba3d-a554-f4cc6999ed4e@gmail.com>
+ <20170202222925.GW27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170202222925.GW27312-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, robert.jarzmik-GANU6spQydw@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sudipm.m
 List-Id: devicetree@vger.kernel.org
 
 
-Den 03.02.2017 10.59, skrev Maxime Ripard:
-> Hi,
+
+On 02/02/2017 02:29 PM, Russell King - ARM Linux wrote:
+> On Thu, Feb 02, 2017 at 11:12:41AM -0800, Steve Longerbeam wrote:
+>> Here is the current .queue_setup() op in imx-media-capture.c:
+>>
+>> static int capture_queue_setup(struct vb2_queue *vq,
+>>                                 unsigned int *nbuffers,
+>>                                 unsigned int *nplanes,
+>>                                 unsigned int sizes[],
+>>                                 struct device *alloc_devs[])
+>> {
+>>          struct capture_priv *priv = vb2_get_drv_priv(vq);
+>>          struct v4l2_pix_format *pix = &priv->vdev.fmt.fmt.pix;
+>>          unsigned int count = *nbuffers;
+>>
+>>          if (vq->type != V4L2_BUF_TYPE_VIDEO_CAPTURE)
+>>                  return -EINVAL;
+>>
+>>          if (*nplanes) {
+>>                  if (*nplanes != 1 || sizes[0] < pix->sizeimage)
+>>                          return -EINVAL;
+>>                  count += vq->num_buffers;
+>>          }
+>>
+>>          while (pix->sizeimage * count > VID_MEM_LIMIT)
+>>                  count--;
+> That's a weird way of writing:
 >
-> Here is an attempt at supporting the ST7789V LCD controller from Sitronix.
+> 	unsigned int max_num = VID_MEM_LIMIT / pix->sizeimage;
+> 	count = max(count, max_num);
 
-What happens if there's another panel driven by ST7789V that needs
-a different controller initialization?
-Maybe it's better to name it after the panel, not the controller.
+I think you mean min() there, but yes thanks, fixed.
 
-> It is controlled through an SPI bus, with a twist, since each byte sent
-> must be prefixed by a bit, which needs an 9-bits-per-word SPI controller,
-> which is quite rare. Else, you would need to bitbang it.
-
-It's possible to support SPI controllers that can't do 9-bit by using
-8-bit mode and blocks of 9 bytes to send 8x 9-bit words padded with
-zeroes. Zero is MIPI DCS no-op command.
-
-Noralf.
-
-> Let me know what you think,
-> Maxime
->
-> Maxime Ripard (2):
->    dt-bindings: display: panel: Add bindings for the Sitronix ST7789V panel
->    drm/panel: Add driver for sitronix ST7789V panel
->
->   Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt |  36 ++++++-
->   drivers/gpu/drm/panel/Kconfig                                        |   4 +-
->   drivers/gpu/drm/panel/Makefile                                       |   1 +-
->   drivers/gpu/drm/panel/panel-sitronix-st7789v.c                       | 435 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
->   4 files changed, 476 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7789v.txt
->   create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7789v.c
->
-> base-commit: 2a6e628efb37432a83bb42b00e3c403b1d8873dd
+Steve
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
