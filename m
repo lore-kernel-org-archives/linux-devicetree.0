@@ -1,80 +1,100 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH RESEND v7 1/2] Add OV5647 device tree documentation
-Date: Fri, 3 Feb 2017 22:19:18 +0200
-Message-ID: <20170203201917.GB18086@kekkonen.localdomain>
-References: <cover.1486136893.git.roliveir@synopsys.com>
- <d1dc3b91af73fbcfcae54fdc80cb38389cc9bacf.1486136893.git.roliveir@synopsys.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for
+ brcmstb-cpu-clk-div
+Date: Fri, 3 Feb 2017 12:35:43 -0800
+Message-ID: <d56c827e-41cf-fcb3-42e0-792e8bf37871@gmail.com>
+References: <20170119002933.7529-1-code@mmayer.net>
+ <20170119002933.7529-2-code@mmayer.net>
+ <20170121005202.GB8801@codeaurora.org>
+ <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
+ <20170203200652.GD25384@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d1dc3b91af73fbcfcae54fdc80cb38389cc9bacf.1486136893.git.roliveir@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170203200652.GD25384@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Markus Mayer <markus.mayer@broadcom.com>
+Cc: Markus Mayer <code@mmayer.net>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux Clock List <linux-clk@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramiro,
-
-On Fri, Feb 03, 2017 at 06:18:32PM +0000, Ramiro Oliveira wrote:
-> Create device tree bindings documentation.
+On 02/03/2017 12:06 PM, Stephen Boyd wrote:
+> On 02/01, Markus Mayer wrote:
+>> On 20 January 2017 at 16:52, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>>
+>>> Are these properties used? Please don't put these types of
+>>> details in DT.
+>>
+>> Yeah, unfortunately they are. Luckily, I think the issue can be
+>> resolved quite easily, because the user of those properties isn't
+>> involved in this series.
+>>
+>> They are currently being used by a clock driver
+>> ("drivers/clk/clk-brcmstb.c") that hasn't been upstreamed yet. I
+>> performed some code archeology. While I wasn't 100% successful in
+>> tracking down the origins of this interface, it looks like it was
+>> designed this way a while back (4+ years or so), probably before
+>> device tree best practices were developed or, at least, before they
+>> were widely known.
+>>
+>> So, what I can do is to remove the properties from the official
+>> binding. (I'll send an update to that effect shortly.) Once the
+>> binding is accepted upstream, we can work on fixing up the design of
+>> clk-brcmstb.c, so it doesn't rely on these properties anymore (and
+>> derives them from the compatible string instead), and then proceed to
+>> upstream that, as well.
 > 
-> Signed-off-by: Ramiro Oliveira <roliveir@synopsys.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/media/i2c/ov5647.txt       | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5647.txt
+> Ok. Sounds like some cleanup needs to be done on the way
+> upstream.
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/ov5647.txt b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> new file mode 100644
-> index 000000000000..57fd40036c26
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/ov5647.txt
-> @@ -0,0 +1,35 @@
-> +Omnivision OV5647 raw image sensor
-> +---------------------------------
-> +
-> +OV5647 is a raw image sensor with MIPI CSI-2 and CCP2 image data interfaces
-> +and CCI (I2C compatible) control bus.
-> +
-> +Required properties:
-> +
-> +- compatible		: "ovti,ov5647".
-> +- reg			: I2C slave address of the sensor.
-> +- clocks		: Reference to the xclk clock.
-> +- clock-names		: Should be "xclk".
-> +- clock-frequency	: Frequency of the xclk clock.
-> +
-> +The common video interfaces bindings (see video-interfaces.txt) should be
-> +used to specify link to the image data receiver. The OV5647 device
-> +node should contain one 'port' child node with an 'endpoint' subnode.
-> +
-> +Example:
-> +
-> +	i2c@2000 {
-> +		...
-> +		ov: camera@36 {
-> +			compatible = "ovti,ov5647";
-> +			reg = <0x36>;
-> +			clocks = <&camera_clk>;
-> +			clock-names = "xclk";
-> +			clock-frequency = <30000000>;
+>>> This register really looks like some offset in something larger.
+>>> Is there some clock controller? What's the hw block at
+>>> 0xf03e2000? Maybe I already asked this.
+>>
+>> It looks this way, but in this case, looks are deceiving. The address
+>> and the length are really correct the way they are.
+>>
+>> This memory area holds a range of only loosely related configuration
+>> registers. It's called the Bus Interface Unit Register Set and deals
+>> with configuring the CPU in general. At address 0xf03e257c, there
+>> happens to be the clock divider register we need, and it's really just
+>> one register, i.e. 4 bytes.
+> 
+> We've seen this style of hardware design before. I'd prefer we
+> make the "Bus Interface Unit Register Set" into one device node
+> and have a driver probe for it that registers this clock. If
+> other things need to be controlled in there then the driver will
+> do more than just register one clock, possibly hooking into
+> multiple frameworks. The compatible string can indicate which SoC
+> it is if the divider register offset changes or if the register
+> layout is a total free for all.
 
-For what it's worth, the spec documents the supported frequency range as
-6--27 MHz. Most units could still work on frequencies slightly off the
-range though.
+We already have another piece of drive code that manipulates registers
+in the Bus Interface Unit located in drivers/soc/bcm/brcmstb/biuctrl.c
+and which has little to nothing to do with the CPU's clock ratio. And
+actually another one being submitted that deals with the CPU's
+read-ahead cache. I would very much prefer we keep all of them separate
+and dealing with just the register offset they need to do, but that does
+not mean the Device Tree binding has to look that way though.
 
-> +			port {
-> +				camera_1: endpoint {
-> +					remote-endpoint = <&csi1_ep1>;
-> +				};
-> +			};
-> +		};
-> +	};
+The binding for the BIUCTRL register made it here:
 
+Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+
+so we should re-use that, and have a small piece of clock provided that
+just uses the relevant register range within that larger register space
+and provide the CLOCK_RATIO. Does that work?
+
+> 
+> Either way, having reg properties end in non-zero values is
+> suspect on ARM systems because a device is usually aligned to at
+> least a 1k boundary for proper CPU addressing and mapping of the
+> device. We can't possibly make a smaller mapping than a page
+> anyway, so the registers around this one register will need to be
+> mapped with the same attributes, hence the desire to make one
+> device for the hardware block.
+
+Yes that's absolutely valid, but this is not really a problem, since
+ioremap() is smart enough to re-use existing mappings (or AFAIR).
 -- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Florian
