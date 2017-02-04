@@ -1,33 +1,262 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 0/5] DRM OF graph clean-up
-Date: Sat, 4 Feb 2017 10:47:45 +0000
-Message-ID: <20170204104745.GI27312@n2100.armlinux.org.uk>
-References: <20170204033635.10250-1-robh@kernel.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] iio: trigger: add support for STM32 EXTI triggers
+Date: Sat, 4 Feb 2017 11:39:36 +0000
+Message-ID: <1236cee4-41bf-b3b9-51e4-7e585234b0c7@kernel.org>
+References: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
+ <1485786840-4557-5-git-send-email-fabrice.gasnier@st.com>
+ <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170204033635.10250-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@freescale.com>, Xinliang Liu <z.liuxinliang@hisi>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 09:36:30PM -0600, Rob Herring wrote:
-> The Armada and Rockchip drivers remain oddballs with their own graph 
-> parsing. I can't see how the armada driver even can work. There's 
-> nothing to instantiate the armada-drm device either in DT or the kernel.
+On 03/02/17 19:40, Linus Walleij wrote:
+> On Mon, Jan 30, 2017 at 3:33 PM, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
+> 
+>> EXTi[0..15] gpio signal can be routed internally as trigger source for
+>> ADC or DAC conversions. Configure them as interrupts to configure
+>> trigger path in HW.
+>>
+>> Note: interrupt handler isn't required here, and corresponding interrupt
+>> can be kept masked at exti controller level.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> 
+> But I see nothing STM32-specific about this driver?
+> 
+> I think we should do everone a service and just create
+> drivers/iio/trigger/gpio-trigger.c
+> 
+> I wondered before why we don't have a generic GPIO IIO trigger,
+> it seems like such an intuitive and useful thing to have.
+We do, it just got renamed at some point a while back to be
+iio-trig-interrupt after it became clear that it didn't need
+to be a gpio either - just an interrupt.  Can't remember which
+part provided a non gpio interrupt pin and hence drove that
+change.  Was quite a while back!
+d4fd73bf25c3aafc891ef4443fc744d427ec1df0 specifically in 2013
 
-Correct, that's sitting out of tree because it requires either legacy
-code in arch/arm/mach-dove at the moment, or stuff for DT.  Each time
-that I looked at the DT reserved memory stuff I've ended up giving up
-as it always seemed to be half complete, and the documentation was
-confusing (seemingly referring to things that weren't merged.)
+Handling of the gpio stuff should be handled in the interrupt
+description itself.
 
-Maybe that's changed today, but I've not had a chance to look at it
-again.
+However, it's a bit different - in that in the below it
+would be the equivalent of triggering on the unused exti
+interrupt rather than on the end of conversion.
 
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+In this case, because of the hardware linkage we can effectively
+skip the first interrupt.
+
+Arguably to make this a general purpose trigger we should enable
+that interrupt if anything other than the STM devices that can
+use it in hardware are hooked on to it.
+
+So this is an interrupt trigger without the interrupt ever
+being visible to software.
+
+It might be easy enough to add that support to the generic version
+except that linking said trigger requires some register changes
+in the STM side. + there is a kicker in the various last bit
+of this patch - we need a way to find out if it's the interrupt
+we think it is (i.e. an exti interrupt)
+> 
+> Let's see what Jonathan says.
+
+
+> 
+>> +config IIO_STM32_EXTI_TRIGGER
+>> +       tristate "STM32 EXTI Trigger"
+>> +       depends on (ARCH_STM32 && OF) || COMPILE_TEST
+> 
+> config IIO_GPIO_TRIGGER
+>     depends on GPIOLIB
+> 
+>> +       select STM32_EXTI
+> 
+> Isn't the dependency actually the other way around?
+> 
+> default STM32_EXTI makes more sense, or just put it into the
+> defconfig.
+> 
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/iio/iio.h>
+>> +#include <linux/iio/trigger.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +/* STM32 has up to 16 EXTI triggers on GPIOs */
+>> +#define STM32_MAX_EXTI_TRIGGER 16
+> 
+> Just don't put any restrictions like this so it can be widely
+> reused.
+> 
+>> +static irqreturn_t stm32_exti_trigger_handler(int irq, void *data)
+>> +{
+>> +       /* Exti handler shouldn't be invoked, and isn't used */
+>> +       return IRQ_HANDLED;
+>> +}
+> 
+> It could be a good idea to capture the timestamp here if we were
+> actually using this IRQ.
+> 
+>> +static int stm32_exti_trigger_probe(struct platform_device *pdev)
+>> +{
+>> +       int irq, ret;
+>> +       char name[8];
+>> +       struct gpio_desc *gpio;
+>> +       struct iio_trigger *trig;
+>> +       unsigned int i;
+>> +
+>> +       for (i = 0; i < STM32_MAX_EXTI_TRIGGER; i++) {
+> 
+> Why not just run this until devm_gpiod_get() returns -ERRNO
+> or something?
+> 
+>> +               snprintf(name, sizeof(name), "exti%d", i);
+>> +
+>> +               gpio = devm_gpiod_get_optional(&pdev->dev, name, GPIOD_IN);
+> 
+> Why would it be optional?
+> 
+> Either it is there in the device tree or we get -EINVAL or something
+> if there is no
+> such index in the device tree. We can get -EPROBE_DEEER too, and then
+> we should exit silently or just print that deferring is happening.
+> 
+>> +               if (IS_ERR_OR_NULL(gpio)) {
+>> +                       if (IS_ERR(gpio)) {
+>> +                               dev_err(&pdev->dev, "gpio %s get error %ld\n",
+>> +                                       name, PTR_ERR(gpio));
+>> +                               return PTR_ERR(gpio);
+>> +                       }
+>> +                       dev_dbg(&pdev->dev, "No %s gpio\n", name);
+>> +                       continue;
+>> +               }
+> 
+> Good
+> 
+>> +               irq = gpiod_to_irq(gpio);
+>> +               if (irq < 0) {
+>> +                       dev_err(&pdev->dev, "gpio %d to irq failed\n", i);
+>> +                       return irq;
+>> +               }
+>> +
+>> +               ret = devm_request_irq(&pdev->dev, irq,
+>> +                                      stm32_exti_trigger_handler,
+>> +                                      0, dev_name(&pdev->dev), pdev);
+Hmm. So this is a trick to set the interrupt mapping up inside the device.
+The whole thing doesn't really exist.
+
+Rather feels like there ought to be some generic interface for
+'I want to pretend I want a particular interrupt but not actually get one'.
+
+But that would only work in this weird case where there is also a real interrupt
+associated with it - just one we elect not to use.
+>> +               if (ret) {
+>> +                       dev_err(&pdev->dev, "request IRQ %d failed\n", irq);
+>> +                       return ret;
+>> +               }
+> 
+> Here you need some elaborate trigger edge handling.
+> 
+> The flags that you define as "0" here, how do we say that we
+> want to handle rising or falling edges, for example?
+> 
+> I think you might want to establish these DT properties for
+> GPIO triggers:
+> 
+> gpio-trigger-rising-edge;
+> gpio-trigger-falling-edge;
+> 
+> Then:
+> 
+> int irq_flags = 0;
+> 
+> if (of_property_read_bool(np, "gpio-trigger-rising-edge")
+>    irq_flags |= IRQF_TRIGGER_RISING;
+> else if (of_property_read_bool(np, "gpio-trigger-falling-edge")
+>    irq_flags |= IRQF_TRIGGER_FALLING;
+Should this not all be part of the interrupt specification rather
+than down here in the specific driver?
+> 
+> To pass along to the devm_request_irq() function as flags.
+> 
+> I find it weird that it even works without. Most GPIO interrupts
+> should require you to set a trigger type. But I guess it is because
+> of the other weirdness you describe below.
+> 
+>> +               /*
+>> +                * gpios are configured as interrupts, so exti trigger path is
+>> +                * configured in HW, and can now be used as external trigger
+>> +                * source by other IPs. But getting interrupts when trigger
+>> +                * occurs is unused here, so mask irq on exti controller by
+>> +                * default.
+>> +                */
+>> +               disable_irq(irq);
+> 
+> Aha. That is not generic. But what about just adding:
+> 
+> if (of_property_read_bool(np, "gpio-trigger-numb-irq")
+>     disable_irq();
+> 
+> (Plus add the binding for that something like "this makes the
+> GPIO mentioned get requested, translated to an IRQ, get the
+> IRQ requested, and then immediately just disabled as other
+> hardware will actually hande the IRQ line".)
+> 
+> I understand that this is kind of weird: we're making a whole generic
+> GPIO trigger driver just to use it with hardware that grabs and disabled
+> the irq immediately.
+> 
+> But I think that in the long run it makes for more reusable code.
+I'd go a step further.  Whether it is numbed or not will depend on what
+is downstream.  We should be providing this interrupt like normal if
+we have other devices triggering off it.  In that case it becomes a standard
+interrupt trigger.
+
+Polling off the back of the dataready interrupt is fine if there is nothing
+earlier available. Here there is so we should really be triggering other
+devices off this earlier interrupt.
+> 
+>> +static const struct of_device_id stm32_exti_trigger_of_match[] = {
+>> +       { .compatible = "st,stm32-exti-trigger" },
+>> +       {},
+> 
+> "iio-gpio-trigger"
+> 
+> Should fit anyone, given the above amendments.
+> 
+>> +#if IS_ENABLED(CONFIG_IIO_STM32_EXTI_TRIGGER)
+>> +bool is_stm32_exti_trigger(struct iio_trigger *trig);
+>> +#else
+>> +static inline bool is_stm32_exti_trigger(struct iio_trigger *trig)
+>> +{
+>> +       return false;
+>> +}
+>> +#endif
+> 
+> This seems unnecessary to broadcast to the entire kernel.
+This one section is the only really non generic element that
+isn't supported by the existing interrupt trigger.
+Mind you that doesn't have device tree bindings yet :(
+
+I wonder if we can add some sort of flag in there to identify hardware
+blocks for tricks like this. Or at a push provide the interrupt
+to both bits of kit so they can compare and see if they are looking
+at the same one?
+> 
+> Why? (Maybe I can find explanations in later patches.
+> 
+> Yours,
+> Linus Walleij
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
