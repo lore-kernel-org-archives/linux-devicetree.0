@@ -1,149 +1,40 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
- descriptors and adapt accessors
-Date: Sat, 4 Feb 2017 14:59:38 +0100
-Message-ID: <20170204145938.6e6380d9@free-electrons.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170106142901.GC14217@n2100.armlinux.org.uk>
-        <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
-        <20170203142446.2ee517a7@free-electrons.com>
-        <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
-        <20170203155449.GC27312@n2100.armlinux.org.uk>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v8 4/4] arm: dts: Add support for ES8388 to the Radxa Rock 2
+Date: Sat, 04 Feb 2017 15:15:53 +0100
+Message-ID: <53082230.chFLIDQHUm@phil>
+References: <20170203143800.23859-1-romain.perier@collabora.com> <20170203143800.23859-5-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170203155449.GC27312@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, netdev@vger.kernel.org, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170203143800.23859-5-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Romain,
 
-On Fri, 3 Feb 2017 15:54:49 +0000, Russell King - ARM Linux wrote:
-
-> Now for a bit of a whinge.  Reading through this code is rather annoying
-> because of what's called a "physical" address which is actually a DMA
-> address as far as the kernel is concerned - this makes it much harder
-> when thinking about this issue because it causes all sorts of confusion.
-> Please can the next revision of the patches start calling things by their
-> right name - a dma_addr_t is a DMA address, not a physical address, even
-> though _numerically_ it may be the same thing.  From the point of view
-> of the kernel, you must not do phys_to_virt() on a dma_addr_t address.
-> Thanks.
-
-I do know that phys_addr_t is different from dma_addr_t. The case where
-you have an IOMMU makes this very obvious. The fact that the driver
-isn't completely correct in that respect indeed needs to be fixed.
-
-> Taking a step backwards...
+Am Freitag, 3. Februar 2017, 15:38:00 CET schrieb Romain Perier:
+> This commit adds the DT definition of the es8388 i2c device
+> found at address 0x10. It also adds the definition for connecting
+> the Rockchip I2S to the es8388 analog output.
 > 
-> How do DMA addresses and this cookie get into the receive ring - from what
-> I can see, the driver doesn't write these into the receive ring, it's the
-> hardware that writes it, and the only route I can see that they get there
-> is via writes performed in mvpp2_bm_pool_put().
-
-Correct. Here is a quick summary of my understand of the HW operation.
-The HW has a "buffer manager", i.e it can internally manage a list of
-buffers. At initialization time, we provide to the HW a list of buffers
-by pushing the DMA address and virtual address of each buffer into a
-register. Thanks to that the HW then knows about all the buffers we
-have given. Then, upon RX of a packet, the HW picks one of those
-buffers, and then fills a RX descriptor with the DMA address of the
-packet, and the VA in the "cookie" field. The "cookie" field can I
-believe be used for whatever we want, it's just "free" space in the
-descriptor.
-
-> Now, from what I can see, the "buf_virt_addr" comes from:
+> This commit is based on the initial work that was done by Sjoerd Simons
+> <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> with some improvements.
 > 
-> +static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool)
-> +{
-> +       if (likely(pool->frag_size <= PAGE_SIZE))
-> +               return netdev_alloc_frag(pool->frag_size);
-> +       else
-> +               return kmalloc(pool->frag_size, GFP_ATOMIC);
-> +}
-> 
-> via mvpp2_buf_alloc().
-> 
-> Both kmalloc() and netdev_alloc_frag() guarantee that the virtual
-> address will be in lowmem.
+> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 
-*That* is the thing I didn't realize until now. If the buffers are
-always in lowmem, then it's much easier because we can indeed use
-virt_to_phys()/phys_to_virt() on them. But it's indeed obvious they are
-in lowmem, since we get a void* pointer for them.
+applied for 4.12, with the following changes:
 
-> Given that, I would suggest changing mvpp2_bm_pool_put() as follows -
-> and this is where my point above about separating the notion of "dma
-> address" and "physical address" becomes very important:
-> 
->  static inline void mvpp2_bm_pool_put(struct mvpp2_port *port, int pool,
-> -                                    dma_addr_t buf_phys_addr,
-> -                                    unsigned long buf_virt_addr)
-> +                                    dma_addr_t dma, phys_addr_t phys)
->  {
-> 
-> and updating it to write "phys" as the existing buf_virt_addr.
-> 
-> In mvpp2_bm_bufs_add():
-> 
->                 buf = mvpp2_buf_alloc(port, bm_pool, &phys_addr, GFP_KERNEL);
->                 if (!buf)
->                         break;
->  
->                 mvpp2_bm_pool_put(port, bm_pool->id, phys_addr,
-> -                                 (unsigned long)buf);
-> +                                 virt_to_phys(buf));
-> 
-> which I think means that mvpp2_rxdesc_virt_addr_get() can just become:
-> 
->  	phys_addr_t cookie;
->  
->         /* PPv2.1 can only be used on 32 bits architectures, and there
->          * are 32 bits in buf_cookie which are enough to store the
->          * full virtual address, so things are easy.
->          */
->         if (port->priv->hw_version == MVPP21)
->                 cookie = rx_desc->pp21.buf_cookie;
->         else
->  		cookie = rx_desc->pp22.buf_cookie_misc & FORTY_BIT_MASK;
-> 
->  	return phys_to_virt(cookie);
+- subject: ARM: dts: rockchip: ... (ARM upper case + "rockchip:")
+- sound-i2s (dash instead of underscore, better alphabetical ordering)
+- es8388: dropped clock-names property, the driver only ever grabs the first
+  clock and clock-names is not part of the binding
 
-This makes complete sense. We use the cookie to store the phys_addr_t
-rather than the virtual address. I might be missing something, but it
-seems like a very good solution. Thanks for the suggestion, I'll try
-this!
 
-> I'd suggest against using DMA_BIT_MASK(40) there - because it's not a
-> DMA address, even though it happens to resolve to the same number.
-
-Sure, will update this as well.
-
-> Again, I may have missed how the addresses end up getting into
-> buf_cookie_misc, so what I suggest above may not be possible.
-
-No, I think you got it right. At least it matches my own understanding
-of the HW.
-
-> I'd also suggest that there is some test in mvpp2_bm_bufs_add() to
-> verify that the physical addresses and DMA addresses do fit within
-> the available number of bits - if they don't we could end up scribbling
-> over memory that we shouldn't be, and it looks like we have a failure
-> path there to gracefully handle that situation - gracefully compared
-> to a nasty BUG_ON().
-
-For the DMA addresses, I have some additional changes on top of my v2
-to use dma_set_mask() to ensure that DMA addresses fit in 40 bits. But
-that's only for DMA addresses indeed.
-
-Thanks again for your suggestion!
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
