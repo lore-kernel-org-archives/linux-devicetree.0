@@ -1,40 +1,52 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v8 4/4] arm: dts: Add support for ES8388 to the Radxa Rock 2
-Date: Sat, 04 Feb 2017 15:15:53 +0100
-Message-ID: <53082230.chFLIDQHUm@phil>
-References: <20170203143800.23859-1-romain.perier@collabora.com> <20170203143800.23859-5-romain.perier@collabora.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170203143800.23859-5-romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 1/2] dt-bindings: Add thermal zone to bcm2835-thermal example
+Date: Sat,  4 Feb 2017 14:16:26 +0000
+Message-ID: <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com>
+References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org
+Cc: Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Romain,
+Add a thermal zone in order to make the example complete.
 
-Am Freitag, 3. Februar 2017, 15:38:00 CET schrieb Romain Perier:
-> This commit adds the DT definition of the es8388 i2c device
-> found at address 0x10. It also adds the definition for connecting
-> the Rockchip I2S to the es8388 analog output.
-> 
-> This commit is based on the initial work that was done by Sjoerd Simons
-> <sjoerd.simons-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> with some improvements.
-> 
-> Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ .../bindings/thermal/brcm,bcm2835-thermal.txt      |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-applied for 4.12, with the following changes:
+diff --git a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+index 474531d..680aca9 100644
+--- a/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
++++ b/Documentation/devicetree/bindings/thermal/brcm,bcm2835-thermal.txt
+@@ -10,6 +10,25 @@ clocks: 	Phandle of the clock used by the thermal sensor.
+ 
+ Example:
+ 
++thermal-zones {
++	gpu_thermal: gpu-thermal {
++		polling-delay-passive = <0>;
++		polling-delay = <1000>;
++
++		thermal-sensors = <&thermal>;
++
++		trips {
++			cpu-crit {
++				temperature	= <80000>;
++				hysteresis	= <0>;
++				type		= "critical";
++			};
++		};
++		cooling-maps {
++		};
++	};
++};
++
+ thermal: thermal@7e212000 {
+ 	compatible = "brcm,bcm2835-thermal";
+ 	reg = <0x7e212000 0x8>;
+-- 
+1.7.9.5
 
-- subject: ARM: dts: rockchip: ... (ARM upper case + "rockchip:")
-- sound-i2s (dash instead of underscore, better alphabetical ordering)
-- es8388: dropped clock-names property, the driver only ever grabs the first
-  clock and clock-names is not part of the binding
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
