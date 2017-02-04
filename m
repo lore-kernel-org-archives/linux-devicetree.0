@@ -1,109 +1,117 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] i2c: zx2967: add i2c controller driver for ZTE's
- zx2967 family
-Date: Sat, 4 Feb 2017 15:15:47 +0800
-Message-ID: <20170204071545.GC3407@dragon>
-References: <1485435631-32642-1-git-send-email-baoyou.xie@linaro.org>
- <1485435631-32642-3-git-send-email-baoyou.xie@linaro.org>
+From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: patch "of: device: Support loading a module with OF based modalias" added to usb-testing
+Date: Sat, 04 Feb 2017 09:14:46 +0100
+Message-ID: <148619608625164@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ANSI_X3.4-1968
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1485435631-32642-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Only a couple of comments below.  Otherwise, the patch looks fine to me.
 
-On Thu, Jan 26, 2017 at 09:00:31PM +0800, Baoyou Xie wrote:
+This is a note to let you know that I've just added the patch titled
 
-<snip>
+    of: device: Support loading a module with OF based modalias
 
-> +static int zx2967_i2c_flush_fifos(struct zx2967_i2c_info *zx_i2c)
-> +{
-> +	u32 val;
-> +	u32 offset;
-> +
-> +	if (zx_i2c->msg_rd) {
-> +		offset = REG_RDCONF;
-> +		val = I2C_RFIFO_RESET;
-> +	} else {
-> +		offset = REG_WRCONF;
-> +		val = I2C_WFIFO_RESET;
-> +	}
-> +
-> +	val |= zx2967_i2c_readl(zx_i2c, offset);
-> +	zx2967_i2c_writel(zx_i2c, val, offset);
-> +
-> +	return 0;
+to my usb git tree which can be found at
+    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
+in the usb-testing branch.
 
-Since the function will never return other values than 0, should we
-simply define the return type as void?
+The patch will show up in the next release of the linux-next tree
+(usually sometime within the next 24 hours during the week.)
 
-> +}
+The patch will be merged to the usb-next branch sometime soon,
+after it passes testing, and the merge window is open.
 
-<snip>
+If you have any questions about this process, please let me know.
 
-> +static int zx2967_i2c_probe(struct platform_device *pdev)
-> +{
-> +	struct zx2967_i2c_info *zx_i2c;
-> +	void __iomem *reg_base;
-> +	struct resource *res;
-> +	struct clk *clk;
-> +	int ret;
-> +
-> +	zx_i2c = devm_kzalloc(&pdev->dev, sizeof(*zx_i2c), GFP_KERNEL);
-> +	if (!zx_i2c)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(reg_base))
-> +		return PTR_ERR(reg_base);
-> +
-> +	clk = devm_clk_get(&pdev->dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		dev_err(&pdev->dev, "missing controller clock");
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable i2c_clk\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = platform_get_irq(pdev, 0);
-> +	if (ret < 0)
-> +		return ret;
-> +	zx_i2c->irq = ret;
-> +
-> +	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
-> +				       &zx_i2c->clk_freq);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "missing clock-frequency");
-> +		return ret;
-> +	}
-> +
-> +	zx_i2c->reg_base = reg_base;
-> +	zx_i2c->clk = clk;
-> +	zx_i2c->dev = &pdev->dev;
-> +
-> +	zx_i2c->pin_ctrl = devm_pinctrl_get_select_default(&pdev->dev);
-> +	if (IS_ERR(zx_i2c->pin_ctrl)) {
-> +		if (PTR_ERR(zx_i2c->pin_ctrl) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		dev_info(&pdev->dev, "no pinctrl handle\n");
-> +	}
 
-You do not need this boilerplate code for request "default" pin state,
-since device core will automatically issue the call.  See section "Pin
-control requests from drivers" in Documentation/pinctrl.txt for more
-info.
+>From 9c829c097f2f1cbebcfff69a7254b1df9852fe4e Mon Sep 17 00:00:00 2001
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Wed, 28 Dec 2016 14:56:47 -0800
+Subject: of: device: Support loading a module with OF based modalias
 
-Shawn
+In the case of ULPI devices, we want to be able to load the
+driver before registering the device so that we don't get stuck
+in a loop waiting for the phy module to appear and failing usb
+controller probe. Currently we request the ulpi module via the
+ulpi ids, but in the DT case we might need to request it with the
+OF based modalias instead. Add a common function that allows
+anyone to request a module with the OF based modalias.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
+---
+ drivers/of/device.c       | 23 +++++++++++++++++++++++
+ include/linux/of_device.h |  6 ++++++
+ 2 files changed, 29 insertions(+)
+
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index fd5cfad7c403..8a22a253a830 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -226,6 +226,29 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+ 	return tsize;
+ }
+ 
++int of_device_request_module(struct device *dev)
++{
++	char *str;
++	ssize_t size;
++	int ret;
++
++	size = of_device_get_modalias(dev, NULL, 0);
++	if (size < 0)
++		return size;
++
++	str = kmalloc(size + 1, GFP_KERNEL);
++	if (!str)
++		return -ENOMEM;
++
++	of_device_get_modalias(dev, str, size);
++	str[size] = '\0';
++	ret = request_module(str);
++	kfree(str);
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(of_device_request_module);
++
+ /**
+  * of_device_uevent - Display OF related uevent information
+  */
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index cc7dd687a89d..e9afbcc8de12 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -37,6 +37,7 @@ extern const void *of_device_get_match_data(const struct device *dev);
+ 
+ extern ssize_t of_device_get_modalias(struct device *dev,
+ 					char *str, ssize_t len);
++extern int of_device_request_module(struct device *dev);
+ 
+ extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
+ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+@@ -78,6 +79,11 @@ static inline int of_device_get_modalias(struct device *dev,
+ 	return -ENODEV;
+ }
+ 
++static inline int of_device_request_module(struct device *dev)
++{
++	return -ENODEV;
++}
++
+ static inline int of_device_uevent_modalias(struct device *dev,
+ 				   struct kobj_uevent_env *env)
+ {
+-- 
+2.11.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
