@@ -1,45 +1,66 @@
-From: Jayachandran C <jnair@caviumnetworks.com>
-Subject: [PATCH RESEND 3/3] arm64: add ARCH_THUNDER2 to defconfig
-Date: Sat, 4 Feb 2017 18:37:41 +0000
-Message-ID: <1486233461-2679-4-git-send-email-jnair@caviumnetworks.com>
-References: <1486233461-2679-1-git-send-email-jnair@caviumnetworks.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] iio: trigger: add support for STM32 EXTI triggers
+Date: Sat, 4 Feb 2017 21:03:14 +0100
+Message-ID: <CACRpkdZ0BEFMBv6Gv23r62SC6wVF5su7XFGA8v8oUd7YsB6LNA@mail.gmail.com>
+References: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
+ <1485786840-4557-5-git-send-email-fabrice.gasnier@st.com> <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ@mail.gmail.com>
+ <1236cee4-41bf-b3b9-51e4-7e585234b0c7@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486233461-2679-1-git-send-email-jnair@caviumnetworks.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1236cee4-41bf-b3b9-51e4-7e585234b0c7-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This will allow the default kernel build to boot on Cavium ThunderX2
-CN99XX processors.
+On Sat, Feb 4, 2017 at 12:39 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On 03/02/17 19:40, Linus Walleij wrote:
 
-Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+>>> +               if (ret) {
+>>> +                       dev_err(&pdev->dev, "request IRQ %d failed\n", irq);
+>>> +                       return ret;
+>>> +               }
+>>
+>> Here you need some elaborate trigger edge handling.
+>>
+>> The flags that you define as "0" here, how do we say that we
+>> want to handle rising or falling edges, for example?
+>>
+>> I think you might want to establish these DT properties for
+>> GPIO triggers:
+>>
+>> gpio-trigger-rising-edge;
+>> gpio-trigger-falling-edge;
+>>
+>> Then:
+>>
+>> int irq_flags = 0;
+>>
+>> if (of_property_read_bool(np, "gpio-trigger-rising-edge")
+>>    irq_flags |= IRQF_TRIGGER_RISING;
+>> else if (of_property_read_bool(np, "gpio-trigger-falling-edge")
+>>    irq_flags |= IRQF_TRIGGER_FALLING;
+>
+> Should this not all be part of the interrupt specification rather
+> than down here in the specific driver?
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 33b744d..7a9c262 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -53,6 +53,7 @@ CONFIG_ARCH_STRATIX10=y
- CONFIG_ARCH_TEGRA=y
- CONFIG_ARCH_SPRD=y
- CONFIG_ARCH_THUNDER=y
-+CONFIG_ARCH_THUNDER2=y
- CONFIG_ARCH_UNIPHIER=y
- CONFIG_ARCH_VEXPRESS=y
- CONFIG_ARCH_VULCAN=y
--- 
-2.7.4
+I might be thinking a bit too generic here actually.
+
+I was thinking we need to support something that has
+gpio-controller; so a consumer can get a GPIO line reference
+but would not also be an interrupt-controller; so it can't
+serve interrupts through the device tree bindings but
+may still do so from the driver using gpiolibs .to_irq().
+
+So the specifier would need to come in someplace else.
+
+But I think that is maybe not at all realistic.
+
+If there is an interrupt trigger, that can be used with
+a gpio-controller that is also an interrupt-controller,
+that should be fine, and then we can use the standard
+DT bindings to specify the interrupt type.
+
+Yours,
+Linus Walleij
