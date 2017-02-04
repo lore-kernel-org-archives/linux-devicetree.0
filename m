@@ -1,88 +1,92 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/8] power: add power sequence library
-Date: Sat, 4 Feb 2017 09:56:18 +0800
-Message-ID: <20170204015618.GB25013@b29397-desktop>
-References: <1483425211-14473-1-git-send-email-peter.chen@nxp.com>
- <20170201080817.GD17968@kroah.com>
- <20170203081614.GA24614@b29397-desktop>
- <16336642.sihi7izbLX@aspire.rjw.lan>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/5] DRM OF graph clean-up
+Date: Fri,  3 Feb 2017 21:36:30 -0600
+Message-ID: <20170204033635.10250-1-robh@kernel.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <16336642.sihi7izbLX-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Rafael J. Wysocki" <rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:ULTRA-WIDEBAND (UWB) SUBSYSTEM:" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puc>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 10:14:31PM +0100, Rafael J. Wysocki wrote:
-> On Friday, February 03, 2017 04:16:15 PM Peter Chen wrote:
-> > On Wed, Feb 01, 2017 at 09:08:17AM +0100, Greg Kroah-Hartman wrote:
-> > > On Wed, Feb 01, 2017 at 12:10:17AM +0100, Rafael J. Wysocki wrote:
-> > > > On Tue, Jan 3, 2017 at 7:33 AM, Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org> wrote:
-> > > > > We have an well-known problem that the device needs to do some power
-> > > > > sequence before it can be recognized by related host, the typical
-> > > > > example like hard-wired mmc devices and usb devices.
-> > > > >
-> > > > > This power sequence is hard to be described at device tree and handled by
-> > > > > related host driver, so we have created a common power sequence
-> > > > > library to cover this requirement. The core code has supplied
-> > > > > some common helpers for host driver, and individual power sequence
-> > > > > libraries handle kinds of power sequence for devices. The pwrseq
-> > > > > librares always need to allocate extra instance for compatible
-> > > > > string match.
-> > > > >
-> > > > > pwrseq_generic is intended for general purpose of power sequence, which
-> > > > > handles gpios and clocks currently, and can cover other controls in
-> > > > > future. The host driver just needs to call of_pwrseq_on/of_pwrseq_off
-> > > > > if only one power sequence is needed, else call of_pwrseq_on_list
-> > > > > /of_pwrseq_off_list instead (eg, USB hub driver).
-> > > > >
-> > > > > For new power sequence library, it can add its compatible string
-> > > > > to pwrseq_of_match_table, then the pwrseq core will match it with
-> > > > > DT's, and choose this library at runtime.
-> > > > >
-> > > > > Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
-> > > > > Tested-by: Maciej S. Szmigiero <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>
-> > > > > Tested-by Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > > > > Reviewed-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > > > Tested-by: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > > 
-> > > > Quite honestly, I have a really hard time with trying to follow this
-> > > > code and the total lack of documentation makes it even harder. 
-> > 
-> > Sorry about that, Is it ok I add the design doc at:
-> > Documentation/power/power-sequence/design.rst?
-> 
-> You can do that if you think it will address the request to explain the design.
-> 
-> > > > particular, the generic power sequence code is not even commented at
-> > > > all, 
-> > 
-> > The generic power sequence code just implements the APIs which are 
-> > called at power/pwrseq/core.c, and those API are commented at
-> > include/linux/power/pwrseq.h. Anyway, I will add more comments at it.
-> 
-> It actually seems to be doing more than that and I'm not sure why the code in
-> core.c is necessary at all.  The "generic" thing seems to be the only user of
-> it anyway and the callbacks seem to be tailored to its needs.
-> 
+I've been unhappy with the OF graph API for some time and decided to 
+do something about it. The problem is drivers have to do too much of the 
+graph parsing and walking themselves. This has led to the same pattern 
+duplicated over and over. This series adds 2 new helpers and adapts DRM 
+drivers to use them. It only adds one new graph helper, but reduces the 
+use of the others which I hope to remove at some point. But we're not 
+there yet.
 
-Currently, the "generic" pwrseq is the only use case. But some devices may have
-custom power sequence [1], and MMC devices (mmc card/wifi) have two
-power sequences (drivers/mmc/core/pwrseq_emmc.c, drivers/mmc/core/pwrseq_simple.c)
+There's a few other things I'd like to clean-up.
 
-I have an example use case at v7 named pwrseq_compatible_sample.c for
-those custom use case [2].
+The Armada and Rockchip drivers remain oddballs with their own graph 
+parsing. I can't see how the armada driver even can work. There's 
+nothing to instantiate the armada-drm device either in DT or the kernel.
 
-[1] https://www.spinics.net/lists/devicetree/msg139756.html
-[2] https://lkml.org/lkml/2016/9/19/972
+The omapdrm driver still has some custom helpers similar to the common 
+ones, but still slightly different. It got to be more changes than I 
+wanted to make to address.
+
+Build tested only (and probably not every last driver).
+
+Rob
+
+Rob Herring (5):
+  of: introduce of_graph_get_remote_node
+  drm: of: introduce drm_of_find_panel_or_bridge
+  drm: convert drivers to use of_graph_get_remote_node
+  drm: convert drivers to use drm_of_find_panel_or_bridge
+  drm: omap: use common OF graph helpers
+
+ drivers/gpu/drm/arm/hdlcd_drv.c                  |  22 +----
+ drivers/gpu/drm/arm/malidp_drv.c                 |  29 +------
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c |  64 +++-----------
+ drivers/gpu/drm/bridge/adv7511/adv7533.c         |  12 +--
+ drivers/gpu/drm/bridge/dumb-vga-dac.c            |  15 +---
+ drivers/gpu/drm/bridge/nxp-ptn3460.c             |  16 +---
+ drivers/gpu/drm/bridge/parade-ps8622.c           |  16 +---
+ drivers/gpu/drm/bridge/tc358767.c                |  27 +-----
+ drivers/gpu/drm/bridge/ti-tfp410.c               |  15 ++--
+ drivers/gpu/drm/drm_of.c                         |  50 +++++++++++
+ drivers/gpu/drm/exynos/exynos_dp.c               |  35 +++-----
+ drivers/gpu/drm/exynos/exynos_drm_dpi.c          |  16 +---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c          |  13 +--
+ drivers/gpu/drm/exynos/exynos_drm_mic.c          |  27 +-----
+ drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c        |  49 ++++-------
+ drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c     |  27 +-----
+ drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c  |  30 +------
+ drivers/gpu/drm/imx/imx-ldb.c                    |  28 ++-----
+ drivers/gpu/drm/imx/parallel-display.c           |  35 +-------
+ drivers/gpu/drm/mediatek/mtk_dpi.c               |  12 +--
+ drivers/gpu/drm/mediatek/mtk_dsi.c               |  23 ++---
+ drivers/gpu/drm/mediatek/mtk_hdmi.c              |  26 +-----
+ drivers/gpu/drm/meson/meson_drv.c                |  12 +--
+ drivers/gpu/drm/meson/meson_venc_cvbs.c          |  19 +----
+ drivers/gpu/drm/msm/dsi/dsi_host.c               |   3 +-
+ drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c          |  28 +------
+ drivers/gpu/drm/mxsfb/mxsfb_out.c                |  36 ++------
+ drivers/gpu/drm/omapdrm/dss/dpi.c                |   2 +-
+ drivers/gpu/drm/omapdrm/dss/dsi.c                |   2 +-
+ drivers/gpu/drm/omapdrm/dss/dss-of.c             | 102 +----------------------
+ drivers/gpu/drm/omapdrm/dss/dss.c                |  61 +++-----------
+ drivers/gpu/drm/omapdrm/dss/hdmi4.c              |   3 +-
+ drivers/gpu/drm/omapdrm/dss/hdmi5.c              |   2 +-
+ drivers/gpu/drm/omapdrm/dss/omapdss.h            |  11 ---
+ drivers/gpu/drm/omapdrm/dss/venc.c               |   3 +-
+ drivers/gpu/drm/rockchip/analogix_dp-rockchip.c  |  26 +-----
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c      |  18 ++--
+ drivers/gpu/drm/sun4i/sun4i_rgb.c                |  17 ++--
+ drivers/gpu/drm/sun4i/sun4i_tcon.c               |  90 ++------------------
+ drivers/gpu/drm/tilcdc/tilcdc_crtc.c             |  11 +--
+ drivers/gpu/drm/tilcdc/tilcdc_external.c         |  66 ++-------------
+ drivers/gpu/drm/vc4/vc4_dpi.c                    |  15 +---
+ drivers/of/base.c                                |  28 +++++++
+ include/drm/drm_of.h                             |  13 +++
+ include/linux/of_graph.h                         |   8 ++
+ 45 files changed, 272 insertions(+), 891 deletions(-)
 
 -- 
+2.10.1
 
-Best Regards,
-Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
