@@ -1,262 +1,33 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] bus: add driver for the Technologic Systems NBUS
-Date: Sat, 4 Feb 2017 11:14:48 +0100
-Message-ID: <CACRpkdYfGmVBYgAc4KZGN6634WM_EyzNj_SBbALEs4WYipXRQA@mail.gmail.com>
-References: <20170203194729.20995-1-sebastien.bourdelin@savoirfairelinux.com> <20170203194729.20995-5-sebastien.bourdelin@savoirfairelinux.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH 0/5] DRM OF graph clean-up
+Date: Sat, 4 Feb 2017 10:47:45 +0000
+Message-ID: <20170204104745.GI27312@n2100.armlinux.org.uk>
+References: <20170204033635.10250-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170203194729.20995-5-sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kernel <kernel-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Mark Featherston <mark-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org>, kris-L1vi/lXTdtvnC/t2CciAbw@public.gmane.org, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>Mark
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170204033635.10250-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@freescale.com>, Xinliang Liu <z.liuxinliang@hisi>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 3, 2017 at 8:47 PM, Sebastien Bourdelin
-<sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org> wrote:
+On Fri, Feb 03, 2017 at 09:36:30PM -0600, Rob Herring wrote:
+> The Armada and Rockchip drivers remain oddballs with their own graph 
+> parsing. I can't see how the armada driver even can work. There's 
+> nothing to instantiate the armada-drm device either in DT or the kernel.
 
-> This driver implements a GPIOs bit-banged bus, called the NBUS by
-> Technologic Systems. It is used to communicate with the peripherals in
-> the FPGA on the TS-4600 SoM.
->
-> ---
-> Changes v1 -> v2:
->   - rebase on master
->   - the driver now populate its child nodes
->   - remove the 'default y' option from the Kconfig
->   - rework the driver to not use singleton anymore (suggested by Linus
->   Walleij)
->   - replace the use of the legacy GPIO API with gpiod (suggested by
->   Linus Walleij)
->   - use the ts vendor prefix for gpios (suggested by Rob Herring)
->
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
+Correct, that's sitting out of tree because it requires either legacy
+code in arch/arm/mach-dove at the moment, or stuff for DT.  Each time
+that I looked at the DT reserved memory stuff I've ended up giving up
+as it always seemed to be half complete, and the documentation was
+confusing (seemingly referring to things that weren't merged.)
 
-This is starting to look nice!
+Maybe that's changed today, but I've not had a chance to look at it
+again.
 
-More comments:
-
-First, you sprinked "inline" like cinnamon over everything, skip that. The
-compiler will inline selectively as it seems fit if you turn on optimization.
-
-> +static DEFINE_MUTEX(ts_nbus_lock);
-
-Move this into struct ts_nbus, initialize the mutex in probe()
-and just mutex_lock(&ts_nbus->lock); etc.
-
-> + * the txrx gpio is used by the FPGA to know if the following transactions
-> + * should be handled to read or write a value.
-> + */
-> +static inline void ts_nbus_set_mode(struct ts_nbus *ts_nbus, int mode)
-
-Why inline? Let the compiler decide about that.
-
-> +{
-> +       if (mode == TS_NBUS_READ_MODE)
-
-This mode parameter is too complicated. Isn't it just a bool?
-(not superimportant)
-
-> +               gpiod_set_value_cansleep(ts_nbus->txrx, 0);
-> +       else
-> +               gpiod_set_value_cansleep(ts_nbus->txrx, 1);
-> +}
-
-You're certainly just using it as a bool.
-
-> +static inline void ts_nbus_set_direction(struct ts_nbus *ts_nbus, int direction)
-> +{
-> +       int i;
-> +
-> +       for (i = 0; i < ts_nbus->data->ndescs; i++) {
-> +               if (direction == TS_NBUS_DIRECTION_IN)
-> +                       gpiod_direction_input(ts_nbus->data->desc[i]);
-> +               else
-> +                       gpiod_direction_output(ts_nbus->data->desc[i], 1);
-
-Add a comment here explaining why you driver the line high by default
-when setting it to output mode. It certainly makes sense but how
-does the electronics work and why?
-
-> +static inline void ts_nbus_reset_bus(struct ts_nbus *ts_nbus)
-> +{
-> +       int i;
-> +       int values[ts_nbus->data->ndescs];
-> +
-> +       for (i = 0; i < ts_nbus->data->ndescs; i++)
-> +               values[i] = 0;
-> +
-> +       gpiod_set_array_value_cansleep(ts_nbus->data->ndescs,
-> +                       ts_nbus->data->desc, values);
-> +       gpiod_set_value_cansleep(ts_nbus->csn, 0);
-> +       gpiod_set_value_cansleep(ts_nbus->strobe, 0);
-> +       gpiod_set_value_cansleep(ts_nbus->ale, 0);
-
-Add a comment about the process taken when this bus is reset. We
-see what is happening, but why?
-
-> +/*
-> + * let the FPGA knows it can process.
-> + */
-> +static inline void ts_nbus_start_transaction(struct ts_nbus *ts_nbus)
-
-Why inline?
-
-> +{
-> +       gpiod_set_value_cansleep(ts_nbus->strobe, 1);
-> +}
-
-For example this is a well commented function. We see what is happening
-and stobe has an evident name. Nice work!
-
-> +/*
-> + * return the byte value read from the data gpios.
-> + */
-> +static inline u8 ts_nbus_read_byte(struct ts_nbus *ts_nbus)
-
-Why inline?
-
-Then this cannot fail can it?
-
-I think this accessor should be changed to return an error code.
-
-static int ts_nbus_read_byte(struct ts_nbus *ts_nbus, u8 *val);
-
-Then if the return value from the function is != 0 it failed. Simple
-to check, just pass a pointer to the value you are getting in
-val.
-
-I KNOW I KNOW, not you have to put in error handling everywhere,
-what a DRAG! But we usually follow that pattern because...
-
-> +{
-> +       struct gpio_descs *gpios = ts_nbus->data;
-> +       int i;
-> +       u8 value = 0;
-> +
-> +       for (i = 0; i < gpios->ndescs; i++)
-
-Using gpios->ndescs is a bit overparametrized right? Isn't it
-simply 8 bits? Just putting 8 there is fine IMO. All 8 descs
-must be available for the thing to work anyway right?
-
-> +               if (gpiod_get_value_cansleep(gpios->desc[i]))
-
-This can fail and you should return an error if < 0...
-
-You are ignoring that right now. That is why the function should
-be returning an error code that is usually 0.
-
-> +                       value |= 1 << i;
-
-Use:
-#include <linux/bitops.h>
-
-value |= BIT(i);
-
-> +/*
-> + * set the data gpios accordingly to the byte value.
-> + */
-> +static inline void ts_nbus_write_byte(struct ts_nbus *ts_nbus, u8 byte)
-> +{
-> +       struct gpio_descs *gpios = ts_nbus->data;
-> +       int i;
-> +       int values[gpios->ndescs];
-> +
-> +       for (i = 0; i < gpios->ndescs; i++)
-> +               if (byte & (1 << i))
-> +                       values[i] = 1;
-> +               else
-> +                       values[i] = 0;
-> +
-> +       gpiod_set_array_value_cansleep(gpios->ndescs, gpios->desc, values);
-
-This can also fail and you should check the return code and print an error
-message if it does.
-
-> +/*
-> + * reading the bus consists of resetting the bus, then notifying the FPGA to
-> + * send the data in the data gpios and return the read value.
-> + */
-> +static inline u8 ts_nbus_read_bus(struct ts_nbus *ts_nbus)
-
-All this inline...
-
-> +/*
-> + * writing to the bus consists of resetting the bus, then define the type of
-> + * command (address/value), write the data and notify the FPGA to retrieve the
-> + * value in the data gpios.
-> + */
-> +static inline void ts_nbus_write_bus(struct ts_nbus *ts_nbus, int cmd, u8 value)
-> +{
-> +       ts_nbus_reset_bus(ts_nbus);
-> +
-> +       if (cmd == TS_NBUS_WRITE_ADR)
-> +               gpiod_set_value_cansleep(ts_nbus->ale, 1);
-> +
-> +       ts_nbus_write_byte(ts_nbus, value);
-> +       ts_nbus_start_transaction(ts_nbus);
-
-Error codes?
-
-> +       /* reading value MSB first */
-> +       do {
-> +               val = 0;
-> +               for (i = 1; i >= 0; i--)
-> +                       val |= (ts_nbus_read_bus(ts_nbus) << (i * 8));
-
-Hard to deal with errors in this loop!
-
-> +               gpiod_set_value_cansleep(ts_nbus->csn, 1);
-
-Here too.
-
-> +++ b/include/linux/ts-nbus.h
-> @@ -0,0 +1,26 @@
-> +/*
-> + * Copyright (c) 2016 - Savoir-faire Linux
-> + * Author: Sebastien Bourdelin <sebastien.bourdelin-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#ifndef _TS_NBUS_H
-> +#define _TS_NBUS_H
-> +
-> +struct ts_nbus {
-> +       struct pwm_device *pwm;
-> +       struct gpio_descs *data;
-> +       struct gpio_desc *csn;
-> +       struct gpio_desc *txrx;
-> +       struct gpio_desc *strobe;
-> +       struct gpio_desc *ale;
-> +       struct gpio_desc *rdy;
-> +};
-
-Is any consumer really looking into this struct? If not, why
-do you expose it?
-
-Move it to the ts-nbus.c file.
-
-The only thing you need in this header is:
-
-struct ts_nbus;
-
-Just that one line. The rest of the code, like the declarations
-below and all call sites, are just dealing with "pointers to something",
-they don't need to know what it is. You'll be amazed to see how it compiles.
-struct gpio_desc works exactly like that.
-
-> +extern u16 ts_nbus_read(struct ts_nbus *, u8 adr);
-> +extern int ts_nbus_write(struct ts_nbus *, u8 adr, u16 value);
-
-I suspect the first function should be augmented to return an error code.
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
