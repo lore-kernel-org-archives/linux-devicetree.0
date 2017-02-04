@@ -1,260 +1,608 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/5] iio: trigger: add support for STM32 EXTI triggers
-Date: Sat, 4 Feb 2017 11:39:36 +0000
-Message-ID: <1236cee4-41bf-b3b9-51e4-7e585234b0c7@kernel.org>
-References: <1485786840-4557-1-git-send-email-fabrice.gasnier@st.com>
- <1485786840-4557-5-git-send-email-fabrice.gasnier@st.com>
- <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "regulator: cpcap: Add basic regulator support" to the regulator tree
+Date: Sat, 04 Feb 2017 12:46:42 +0100
+Message-ID: <E1cZyni-0001vB-DJ@finisterre>
+References: <20170202234357.2405-1-tony@atomide.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZeiFYFdRWCEgYWDWh4Wn2gT29KAFao9mgj7sTi768kFQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170202234357.2405-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgdevicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgMarcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/02/17 19:40, Linus Walleij wrote:
-> On Mon, Jan 30, 2017 at 3:33 PM, Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org> wrote:
-> 
->> EXTi[0..15] gpio signal can be routed internally as trigger source for
->> ADC or DAC conversions. Configure them as interrupts to configure
->> trigger path in HW.
->>
->> Note: interrupt handler isn't required here, and corresponding interrupt
->> can be kept masked at exti controller level.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> 
-> But I see nothing STM32-specific about this driver?
-> 
-> I think we should do everone a service and just create
-> drivers/iio/trigger/gpio-trigger.c
-> 
-> I wondered before why we don't have a generic GPIO IIO trigger,
-> it seems like such an intuitive and useful thing to have.
-We do, it just got renamed at some point a while back to be
-iio-trig-interrupt after it became clear that it didn't need
-to be a gpio either - just an interrupt.  Can't remember which
-part provided a non gpio interrupt pin and hence drove that
-change.  Was quite a while back!
-d4fd73bf25c3aafc891ef4443fc744d427ec1df0 specifically in 2013
+The patch
 
-Handling of the gpio stuff should be handled in the interrupt
-description itself.
+   regulator: cpcap: Add basic regulator support
 
-However, it's a bit different - in that in the below it
-would be the equivalent of triggering on the unused exti
-interrupt rather than on the end of conversion.
+has been applied to the regulator tree at
 
-In this case, because of the hardware linkage we can effectively
-skip the first interrupt.
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
 
-Arguably to make this a general purpose trigger we should enable
-that interrupt if anything other than the STM devices that can
-use it in hardware are hooked on to it.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-So this is an interrupt trigger without the interrupt ever
-being visible to software.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-It might be easy enough to add that support to the generic version
-except that linking said trigger requires some register changes
-in the STM side. + there is a kicker in the various last bit
-of this patch - we need a way to find out if it's the interrupt
-we think it is (i.e. an exti interrupt)
-> 
-> Let's see what Jonathan says.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-> 
->> +config IIO_STM32_EXTI_TRIGGER
->> +       tristate "STM32 EXTI Trigger"
->> +       depends on (ARCH_STM32 && OF) || COMPILE_TEST
-> 
-> config IIO_GPIO_TRIGGER
->     depends on GPIOLIB
-> 
->> +       select STM32_EXTI
-> 
-> Isn't the dependency actually the other way around?
-> 
-> default STM32_EXTI makes more sense, or just put it into the
-> defconfig.
-> 
->> +#include <linux/gpio/consumer.h>
->> +#include <linux/iio/iio.h>
->> +#include <linux/iio/trigger.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +
->> +/* STM32 has up to 16 EXTI triggers on GPIOs */
->> +#define STM32_MAX_EXTI_TRIGGER 16
-> 
-> Just don't put any restrictions like this so it can be widely
-> reused.
-> 
->> +static irqreturn_t stm32_exti_trigger_handler(int irq, void *data)
->> +{
->> +       /* Exti handler shouldn't be invoked, and isn't used */
->> +       return IRQ_HANDLED;
->> +}
-> 
-> It could be a good idea to capture the timestamp here if we were
-> actually using this IRQ.
-> 
->> +static int stm32_exti_trigger_probe(struct platform_device *pdev)
->> +{
->> +       int irq, ret;
->> +       char name[8];
->> +       struct gpio_desc *gpio;
->> +       struct iio_trigger *trig;
->> +       unsigned int i;
->> +
->> +       for (i = 0; i < STM32_MAX_EXTI_TRIGGER; i++) {
-> 
-> Why not just run this until devm_gpiod_get() returns -ERRNO
-> or something?
-> 
->> +               snprintf(name, sizeof(name), "exti%d", i);
->> +
->> +               gpio = devm_gpiod_get_optional(&pdev->dev, name, GPIOD_IN);
-> 
-> Why would it be optional?
-> 
-> Either it is there in the device tree or we get -EINVAL or something
-> if there is no
-> such index in the device tree. We can get -EPROBE_DEEER too, and then
-> we should exit silently or just print that deferring is happening.
-> 
->> +               if (IS_ERR_OR_NULL(gpio)) {
->> +                       if (IS_ERR(gpio)) {
->> +                               dev_err(&pdev->dev, "gpio %s get error %ld\n",
->> +                                       name, PTR_ERR(gpio));
->> +                               return PTR_ERR(gpio);
->> +                       }
->> +                       dev_dbg(&pdev->dev, "No %s gpio\n", name);
->> +                       continue;
->> +               }
-> 
-> Good
-> 
->> +               irq = gpiod_to_irq(gpio);
->> +               if (irq < 0) {
->> +                       dev_err(&pdev->dev, "gpio %d to irq failed\n", i);
->> +                       return irq;
->> +               }
->> +
->> +               ret = devm_request_irq(&pdev->dev, irq,
->> +                                      stm32_exti_trigger_handler,
->> +                                      0, dev_name(&pdev->dev), pdev);
-Hmm. So this is a trick to set the interrupt mapping up inside the device.
-The whole thing doesn't really exist.
+Thanks,
+Mark
 
-Rather feels like there ought to be some generic interface for
-'I want to pretend I want a particular interrupt but not actually get one'.
+>From 0ad4c07edd413cb64abed217355d51af3649c5a3 Mon Sep 17 00:00:00 2001
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 2 Feb 2017 15:43:57 -0800
+Subject: [PATCH] regulator: cpcap: Add basic regulator support
 
-But that would only work in this weird case where there is also a real interrupt
-associated with it - just one we elect not to use.
->> +               if (ret) {
->> +                       dev_err(&pdev->dev, "request IRQ %d failed\n", irq);
->> +                       return ret;
->> +               }
-> 
-> Here you need some elaborate trigger edge handling.
-> 
-> The flags that you define as "0" here, how do we say that we
-> want to handle rising or falling edges, for example?
-> 
-> I think you might want to establish these DT properties for
-> GPIO triggers:
-> 
-> gpio-trigger-rising-edge;
-> gpio-trigger-falling-edge;
-> 
-> Then:
-> 
-> int irq_flags = 0;
-> 
-> if (of_property_read_bool(np, "gpio-trigger-rising-edge")
->    irq_flags |= IRQF_TRIGGER_RISING;
-> else if (of_property_read_bool(np, "gpio-trigger-falling-edge")
->    irq_flags |= IRQF_TRIGGER_FALLING;
-Should this not all be part of the interrupt specification rather
-than down here in the specific driver?
-> 
-> To pass along to the devm_request_irq() function as flags.
-> 
-> I find it weird that it even works without. Most GPIO interrupts
-> should require you to set a trigger type. But I guess it is because
-> of the other weirdness you describe below.
-> 
->> +               /*
->> +                * gpios are configured as interrupts, so exti trigger path is
->> +                * configured in HW, and can now be used as external trigger
->> +                * source by other IPs. But getting interrupts when trigger
->> +                * occurs is unused here, so mask irq on exti controller by
->> +                * default.
->> +                */
->> +               disable_irq(irq);
-> 
-> Aha. That is not generic. But what about just adding:
-> 
-> if (of_property_read_bool(np, "gpio-trigger-numb-irq")
->     disable_irq();
-> 
-> (Plus add the binding for that something like "this makes the
-> GPIO mentioned get requested, translated to an IRQ, get the
-> IRQ requested, and then immediately just disabled as other
-> hardware will actually hande the IRQ line".)
-> 
-> I understand that this is kind of weird: we're making a whole generic
-> GPIO trigger driver just to use it with hardware that grabs and disabled
-> the irq immediately.
-> 
-> But I think that in the long run it makes for more reusable code.
-I'd go a step further.  Whether it is numbed or not will depend on what
-is downstream.  We should be providing this interrupt like normal if
-we have other devices triggering off it.  In that case it becomes a standard
-interrupt trigger.
+Many Motorola phones like droid 4 are using a custom PMIC called CPCAP
+or 6556002. This PMIC is used with several SoCs, I've noticed at least
+omap3, omap4 and Tegra2 based Motorola phones and tablets using it.
 
-Polling off the back of the dataready interrupt is fine if there is nothing
-earlier available. Here there is so we should really be triggering other
-devices off this earlier interrupt.
-> 
->> +static const struct of_device_id stm32_exti_trigger_of_match[] = {
->> +       { .compatible = "st,stm32-exti-trigger" },
->> +       {},
-> 
-> "iio-gpio-trigger"
-> 
-> Should fit anyone, given the above amendments.
-> 
->> +#if IS_ENABLED(CONFIG_IIO_STM32_EXTI_TRIGGER)
->> +bool is_stm32_exti_trigger(struct iio_trigger *trig);
->> +#else
->> +static inline bool is_stm32_exti_trigger(struct iio_trigger *trig)
->> +{
->> +       return false;
->> +}
->> +#endif
-> 
-> This seems unnecessary to broadcast to the entire kernel.
-This one section is the only really non generic element that
-isn't supported by the existing interrupt trigger.
-Mind you that doesn't have device tree bindings yet :(
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/regulator/cpcap-regulator.txt         |  34 ++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/cpcap-regulator.c                | 464 +++++++++++++++++++++
+ 4 files changed, 506 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+ create mode 100644 drivers/regulator/cpcap-regulator.c
 
-I wonder if we can add some sort of flag in there to identify hardware
-blocks for tricks like this. Or at a push provide the interrupt
-to both bits of kit so they can compare and see if they are looking
-at the same one?
-> 
-> Why? (Maybe I can find explanations in later patches.
-> 
-> Yours,
-> Linus Walleij
-> 
+diff --git a/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+new file mode 100644
+index 000000000000..675f4437ce92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/cpcap-regulator.txt
+@@ -0,0 +1,34 @@
++Motorola CPCAP PMIC voltage regulators
++------------------------------------
++
++Requires node properties:
++- "compatible" value one of:
++    "motorola,cpcap-regulator"
++    "motorola,mapphone-cpcap-regulator"
++
++Required regulator properties:
++- "regulator-name"
++- "regulator-enable-ramp-delay"
++- "regulator-min-microvolt"
++- "regulator-max-microvolt"
++
++Optional regulator properties:
++- "regulator-boot-on"
++
++See Documentation/devicetree/bindings/regulator/regulator.txt
++for more details about the regulator properties.
++
++Example:
++
++cpcap_regulator: regulator {
++	compatible = "motorola,cpcap-regulator";
++
++	cpcap_regulators: regulators {
++		sw5: SW5 {
++			regulator-min-microvolt = <5050000>;
++			regulator-max-microvolt = <5050000>;
++			regulator-enable-ramp-delay = <50000>;
++			regulator-boot-on;
++		};
++	};
++};
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 936f7ccc9736..be06eb29c681 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -163,6 +163,13 @@ config REGULATOR_BCM590XX
+ 	  BCM590xx PMUs. This will enable support for the software
+ 	  controllable LDO/Switching regulators.
+ 
++config REGULATOR_CPCAP
++	tristate "Motorola CPCAP regulator"
++	depends on MFD_CPCAP
++	help
++	  Say y here for CPCAP regulator found on some Motorola phones
++	  and tablets such as Droid 4.
++
+ config REGULATOR_DA903X
+ 	tristate "Dialog Semiconductor DA9030/DA9034 regulators"
+ 	depends on PMIC_DA903X
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index 14294692beb9..ef7725e2592a 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_REGULATOR_USERSPACE_CONSUMER) += userspace-consumer.o
+ 
+ obj-$(CONFIG_REGULATOR_88PM800) += 88pm800.o
+ obj-$(CONFIG_REGULATOR_88PM8607) += 88pm8607.o
++obj-$(CONFIG_REGULATOR_CPCAP) += cpcap-regulator.o
+ obj-$(CONFIG_REGULATOR_AAT2870) += aat2870-regulator.o
+ obj-$(CONFIG_REGULATOR_AB3100) += ab3100.o
+ obj-$(CONFIG_REGULATOR_AB8500)	+= ab8500-ext.o ab8500.o
+diff --git a/drivers/regulator/cpcap-regulator.c b/drivers/regulator/cpcap-regulator.c
+new file mode 100644
+index 000000000000..cc98aceed1c1
+--- /dev/null
++++ b/drivers/regulator/cpcap-regulator.c
+@@ -0,0 +1,464 @@
++/*
++ * Motorola CPCAP PMIC regulator driver
++ *
++ * Based on cpcap-regulator.c from Motorola Linux kernel tree
++ * Copyright (C) 2009-2011 Motorola, Inc.
++ *
++ * Rewritten for mainline kernel to use device tree and regmap
++ * Copyright (C) 2017 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regulator/of_regulator.h>
++#include <linux/mfd/motorola-cpcap.h>
++
++/*
++ * Resource assignment register bits. These seem to control the state
++ * idle modes adn are used at least for omap4.
++ */
++
++/* CPCAP_REG_ASSIGN2 bits - Resource Assignment 2 */
++#define CPCAP_BIT_VSDIO_SEL		BIT(15)
++#define CPCAP_BIT_VDIG_SEL		BIT(14)
++#define CPCAP_BIT_VCAM_SEL		BIT(13)
++#define CPCAP_BIT_SW6_SEL		BIT(12)
++#define CPCAP_BIT_SW5_SEL		BIT(11)
++#define CPCAP_BIT_SW4_SEL		BIT(10)
++#define CPCAP_BIT_SW3_SEL		BIT(9)
++#define CPCAP_BIT_SW2_SEL		BIT(8)
++#define CPCAP_BIT_SW1_SEL		BIT(7)
++
++/* CPCAP_REG_ASSIGN3 bits - Resource Assignment 3 */
++#define CPCAP_BIT_VUSBINT2_SEL		BIT(15)
++#define CPCAP_BIT_VUSBINT1_SEL		BIT(14)
++#define CPCAP_BIT_VVIB_SEL		BIT(13)
++#define CPCAP_BIT_VWLAN1_SEL		BIT(12)
++#define CPCAP_BIT_VRF1_SEL		BIT(11)
++#define CPCAP_BIT_VHVIO_SEL		BIT(10)
++#define CPCAP_BIT_VDAC_SEL		BIT(9)
++#define CPCAP_BIT_VUSB_SEL		BIT(8)
++#define CPCAP_BIT_VSIM_SEL		BIT(7)
++#define CPCAP_BIT_VRFREF_SEL		BIT(6)
++#define CPCAP_BIT_VPLL_SEL		BIT(5)
++#define CPCAP_BIT_VFUSE_SEL		BIT(4)
++#define CPCAP_BIT_VCSI_SEL		BIT(3)
++#define CPCAP_BIT_SPARE_14_2		BIT(2)
++#define CPCAP_BIT_VWLAN2_SEL		BIT(1)
++#define CPCAP_BIT_VRF2_SEL		BIT(0)
++
++/* CPCAP_REG_ASSIGN4 bits - Resource Assignment 4 */
++#define CPCAP_BIT_VAUDIO_SEL		BIT(0)
++
++/*
++ * Enable register bits. At least CPCAP_BIT_AUDIO_LOW_PWR is generic,
++ * and not limited to audio regulator. Let's use the Motorola kernel
++ * naming for now until we have a better understanding of the other
++ * enable register bits. No idea why BIT(3) is not defined.
++ */
++#define CPCAP_BIT_AUDIO_LOW_PWR		BIT(6)
++#define CPCAP_BIT_AUD_LOWPWR_SPEED	BIT(5)
++#define CPCAP_BIT_VAUDIOPRISTBY		BIT(4)
++#define CPCAP_BIT_VAUDIO_MODE1		BIT(2)
++#define CPCAP_BIT_VAUDIO_MODE0		BIT(1)
++#define CPCAP_BIT_V_AUDIO_EN		BIT(0)
++
++/*
++ * Off mode configuration bit. Used currently only by SW5 on omap4. There's
++ * the following comment in Motorola Linux kernel tree for it:
++ *
++ * When set in the regulator mode, the regulator assignment will be changed
++ * to secondary when the regulator is disabled. The mode will be set back to
++ * primary when the regulator is turned on.
++ */
++#define CPCAP_REG_OFF_MODE_SEC		BIT(15)
++
++/**
++ * SoC specific configuraion for CPCAP regulator. There are at least three
++ * different SoCs each with their own parameters: omap3, omap4 and tegra2.
++ *
++ * The assign_reg and assign_mask seem to allow toggling between primary
++ * and secondary mode that at least omap4 uses for off mode.
++ */
++struct cpcap_regulator {
++	struct regulator_desc rdesc;
++	const u16 assign_reg;
++	const u16 assign_mask;
++	const u16 vsel_shift;
++};
++
++#define CPCAP_REG(_ID, reg, assignment_reg, assignment_mask, val_tbl,	\
++		mode_mask, volt_mask, volt_shft,			\
++		mode_val, off_val, volt_trans_time) {			\
++	.rdesc = {							\
++		.name = #_ID,						\
++		.of_match = of_match_ptr(#_ID),				\
++		.ops = &cpcap_regulator_ops,				\
++		.regulators_node = of_match_ptr("regulators"),		\
++		.type = REGULATOR_VOLTAGE,				\
++		.id = CPCAP_##_ID,					\
++		.owner = THIS_MODULE,					\
++		.n_voltages = ARRAY_SIZE(val_tbl),			\
++		.volt_table = (val_tbl),				\
++		.vsel_reg = (reg),					\
++		.vsel_mask = (volt_mask),				\
++		.enable_reg = (reg),					\
++		.enable_mask = (mode_mask),				\
++		.enable_val = (mode_val),				\
++		.disable_val = (off_val),				\
++		.ramp_delay = (volt_trans_time),			\
++	},								\
++	.assign_reg = (assignment_reg),					\
++	.assign_mask = (assignment_mask),				\
++	.vsel_shift = (volt_shft),					\
++}
++
++struct cpcap_ddata {
++	struct regmap *reg;
++	struct device *dev;
++	const struct cpcap_regulator *soc;
++};
++
++enum cpcap_regulator_id {
++	CPCAP_SW1,
++	CPCAP_SW2,
++	CPCAP_SW3,
++	CPCAP_SW4,
++	CPCAP_SW5,
++	CPCAP_SW6,
++	CPCAP_VCAM,
++	CPCAP_VCSI,
++	CPCAP_VDAC,
++	CPCAP_VDIG,
++	CPCAP_VFUSE,
++	CPCAP_VHVIO,
++	CPCAP_VSDIO,
++	CPCAP_VPLL,
++	CPCAP_VRF1,
++	CPCAP_VRF2,
++	CPCAP_VRFREF,
++	CPCAP_VWLAN1,
++	CPCAP_VWLAN2,
++	CPCAP_VSIM,
++	CPCAP_VSIMCARD,
++	CPCAP_VVIB,
++	CPCAP_VUSB,
++	CPCAP_VAUDIO,
++	CPCAP_NR_REGULATORS,
++};
++
++/*
++ * We need to also configure regulator idle mode for SoC off mode if
++ * CPCAP_REG_OFF_MODE_SEC is set.
++ */
++static int cpcap_regulator_enable(struct regulator_dev *rdev)
++{
++	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
++	int error, ignore;
++
++	error = regulator_enable_regmap(rdev);
++	if (error)
++		return error;
++
++	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
++		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
++					   regulator->assign_mask,
++					   regulator->assign_mask);
++		if (error)
++			ignore = regulator_disable_regmap(rdev);
++	}
++
++	return error;
++}
++
++/*
++ * We need to also configure regulator idle mode for SoC off mode if
++ * CPCAP_REG_OFF_MODE_SEC is set.
++ */
++static int cpcap_regulator_disable(struct regulator_dev *rdev)
++{
++	struct cpcap_regulator *regulator = rdev_get_drvdata(rdev);
++	int error, ignore;
++
++	if (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC) {
++		error = regmap_update_bits(rdev->regmap, regulator->assign_reg,
++					   regulator->assign_mask, 0);
++		if (error)
++			return error;
++	}
++
++	error = regulator_disable_regmap(rdev);
++	if (error && (rdev->desc->enable_val & CPCAP_REG_OFF_MODE_SEC)) {
++		ignore = regmap_update_bits(rdev->regmap, regulator->assign_reg,
++					    regulator->assign_mask,
++					    regulator->assign_mask);
++	}
++
++	return error;
++}
++
++static unsigned int cpcap_regulator_get_mode(struct regulator_dev *rdev)
++{
++	int value;
++
++	regmap_read(rdev->regmap, rdev->desc->enable_reg, &value);
++
++	if (!(value & CPCAP_BIT_AUDIO_LOW_PWR))
++		return REGULATOR_MODE_STANDBY;
++
++	return REGULATOR_MODE_NORMAL;
++}
++
++static int cpcap_regulator_set_mode(struct regulator_dev *rdev,
++				    unsigned int mode)
++{
++	int value;
++
++	switch (mode) {
++	case REGULATOR_MODE_NORMAL:
++		value = CPCAP_BIT_AUDIO_LOW_PWR;
++		break;
++	case REGULATOR_MODE_STANDBY:
++		value = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
++				  CPCAP_BIT_AUDIO_LOW_PWR, value);
++}
++
++static struct regulator_ops cpcap_regulator_ops = {
++	.enable = cpcap_regulator_enable,
++	.disable = cpcap_regulator_disable,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_iterate,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_mode = cpcap_regulator_get_mode,
++	.set_mode = cpcap_regulator_set_mode,
++};
++
++static const unsigned int unknown_val_tbl[] = { 0, };
++static const unsigned int sw5_val_tbl[] = { 0, 5050000, };
++static const unsigned int vcam_val_tbl[] = { 2600000, 2700000, 2800000,
++					     2900000, };
++static const unsigned int vcsi_val_tbl[] = { 1200000, 1800000, };
++static const unsigned int vdac_val_tbl[] = { 1200000, 1500000, 1800000,
++					     2500000,};
++static const unsigned int vdig_val_tbl[] = { 1200000, 1350000, 1500000,
++					     1875000, };
++static const unsigned int vfuse_val_tbl[] = { 1500000, 1600000, 1700000,
++					      1800000, 1900000, 2000000,
++					      2100000, 2200000, 2300000,
++					      2400000, 2500000, 2600000,
++					      2700000, 3150000, };
++static const unsigned int vhvio_val_tbl[] = { 2775000, };
++static const unsigned int vsdio_val_tbl[] = { 1500000, 1600000, 1800000,
++					      2600000, 2700000, 2800000,
++					      2900000, 3000000, };
++static const unsigned int vpll_val_tbl[] = { 1200000, 1300000, 1400000,
++					     1800000, };
++/* Quirk: 2775000 is before 2500000 for vrf1 regulator */
++static const unsigned int vrf1_val_tbl[] = { 2775000, 2500000, };
++static const unsigned int vrf2_val_tbl[] = { 0, 2775000, };
++static const unsigned int vrfref_val_tbl[] = { 2500000, 2775000, };
++static const unsigned int vwlan1_val_tbl[] = { 1800000, 1900000, };
++static const unsigned int vwlan2_val_tbl[] = { 2775000, 3000000, 3300000,
++					       3300000, };
++static const unsigned int vsim_val_tbl[] = { 1800000, 2900000, };
++static const unsigned int vsimcard_val_tbl[] = { 1800000, 2900000, };
++static const unsigned int vvib_val_tbl[] = { 1300000, 1800000, 2000000,
++					     3000000, };
++static const unsigned int vusb_val_tbl[] = { 0, 3300000, };
++static const unsigned int vaudio_val_tbl[] = { 0, 2775000, };
++
++/**
++ * SoC specific configuration for omap4. The data below is comes from Motorola
++ * Linux kernel tree. It's basically the values of cpcap_regltr_data,
++ * cpcap_regulator_mode_values and cpcap_regulator_off_mode_values, see
++ * CPCAP_REG macro above.
++ *
++ * SW1 to SW4 and SW6 seems to be unused for mapphone. Note that VSIM and
++ * VSIMCARD have a shared resource assignment bit.
++ */
++static struct cpcap_regulator omap4_regulators[] = {
++	CPCAP_REG(SW1, CPCAP_REG_S1C1, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW1_SEL, unknown_val_tbl,
++		  0, 0, 0, 0, 0, 0),
++	CPCAP_REG(SW2, CPCAP_REG_S2C1, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW2_SEL, unknown_val_tbl,
++		  0, 0, 0, 0, 0, 0),
++	CPCAP_REG(SW3, CPCAP_REG_S3C, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW3_SEL, unknown_val_tbl,
++		  0, 0, 0, 0, 0, 0),
++	CPCAP_REG(SW4, CPCAP_REG_S4C1, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW4_SEL, unknown_val_tbl,
++		  0, 0, 0, 0, 0, 0),
++	CPCAP_REG(SW5, CPCAP_REG_S5C, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW5_SEL, sw5_val_tbl,
++		  0x28, 0, 0, 0x20 | CPCAP_REG_OFF_MODE_SEC, 0, 0),
++	CPCAP_REG(SW6, CPCAP_REG_S6C, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_SW6_SEL, unknown_val_tbl,
++		  0, 0, 0, 0, 0, 0),
++	CPCAP_REG(VCAM, CPCAP_REG_VCAMC, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_VCAM_SEL, vcam_val_tbl,
++		  0x87, 0x30, 4, 0x3, 0, 420),
++	CPCAP_REG(VCSI, CPCAP_REG_VCSIC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VCSI_SEL, vcsi_val_tbl,
++		  0x47, 0x10, 4, 0x43, 0x41, 350),
++	CPCAP_REG(VDAC, CPCAP_REG_VDACC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VDAC_SEL, vdac_val_tbl,
++		  0x87, 0x30, 4, 0x3, 0, 420),
++	CPCAP_REG(VDIG, CPCAP_REG_VDIGC, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_VDIG_SEL, vdig_val_tbl,
++		  0x87, 0x30, 4, 0x82, 0, 420),
++	CPCAP_REG(VFUSE, CPCAP_REG_VFUSEC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VFUSE_SEL, vfuse_val_tbl,
++		  0x80, 0xf, 0, 0x80, 0, 420),
++	CPCAP_REG(VHVIO, CPCAP_REG_VHVIOC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VHVIO_SEL, vhvio_val_tbl,
++		  0x17, 0, 0, 0, 0x12, 0),
++	CPCAP_REG(VSDIO, CPCAP_REG_VSDIOC, CPCAP_REG_ASSIGN2,
++		  CPCAP_BIT_VSDIO_SEL, vsdio_val_tbl,
++		  0x87, 0x38, 3, 0x82, 0, 420),
++	CPCAP_REG(VPLL, CPCAP_REG_VPLLC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VPLL_SEL, vpll_val_tbl,
++		  0x43, 0x18, 3, 0x2, 0, 420),
++	CPCAP_REG(VRF1, CPCAP_REG_VRF1C, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VRF1_SEL, vrf1_val_tbl,
++		  0xac, 0x2, 1, 0x4, 0, 10),
++	CPCAP_REG(VRF2, CPCAP_REG_VRF2C, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VRF2_SEL, vrf2_val_tbl,
++		  0x23, 0x8, 3, 0, 0, 10),
++	CPCAP_REG(VRFREF, CPCAP_REG_VRFREFC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VRFREF_SEL, vrfref_val_tbl,
++		  0x23, 0x8, 3, 0, 0, 420),
++	CPCAP_REG(VWLAN1, CPCAP_REG_VWLAN1C, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VWLAN1_SEL, vwlan1_val_tbl,
++		  0x47, 0x10, 4, 0, 0, 420),
++	CPCAP_REG(VWLAN2, CPCAP_REG_VWLAN2C, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VWLAN2_SEL, vwlan2_val_tbl,
++		  0x20c, 0xc0, 6, 0x20c, 0, 420),
++	CPCAP_REG(VSIM, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
++		  0xffff, vsim_val_tbl,
++		  0x23, 0x8, 3, 0x3, 0, 420),
++	CPCAP_REG(VSIMCARD, CPCAP_REG_VSIMC, CPCAP_REG_ASSIGN3,
++		  0xffff, vsimcard_val_tbl,
++		  0x1e80, 0x8, 3, 0x1e00, 0, 420),
++	CPCAP_REG(VVIB, CPCAP_REG_VVIBC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VVIB_SEL, vvib_val_tbl,
++		  0x1, 0xc, 2, 0x1, 0, 500),
++	CPCAP_REG(VUSB, CPCAP_REG_VUSBC, CPCAP_REG_ASSIGN3,
++		  CPCAP_BIT_VUSB_SEL, vusb_val_tbl,
++		  0x11c, 0x40, 6, 0xc, 0, 0),
++	CPCAP_REG(VAUDIO, CPCAP_REG_VAUDIOC, CPCAP_REG_ASSIGN4,
++		  CPCAP_BIT_VAUDIO_SEL, vaudio_val_tbl,
++		  0x16, 0x1, 0, 0x4, 0, 0),
++	{ /* sentinel */ },
++};
++
++static const struct of_device_id cpcap_regulator_id_table[] = {
++	{
++		.compatible = "motorola,cpcap-regulator",
++	},
++	{
++		.compatible = "motorola,mapphone-cpcap-regulator",
++		.data = omap4_regulators,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, cpcap_regulator_id_table);
++
++static int cpcap_regulator_probe(struct platform_device *pdev)
++{
++	struct cpcap_ddata *ddata;
++	const struct of_device_id *match;
++	struct regulator_config config;
++	struct regulator_init_data init_data;
++	int i;
++
++	match = of_match_device(of_match_ptr(cpcap_regulator_id_table),
++				&pdev->dev);
++	if (!match)
++		return -EINVAL;
++
++	if (!match->data) {
++		dev_err(&pdev->dev, "no configuration data found\n");
++
++		return -ENODEV;
++	}
++
++	ddata = devm_kzalloc(&pdev->dev, sizeof(*ddata), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
++
++	ddata->reg = dev_get_regmap(pdev->dev.parent, NULL);
++	if (!ddata->reg)
++		return -ENODEV;
++
++	ddata->dev = &pdev->dev;
++	ddata->soc = match->data;
++	platform_set_drvdata(pdev, ddata);
++
++	memset(&config, 0, sizeof(config));
++	memset(&init_data, 0, sizeof(init_data));
++	config.dev = &pdev->dev;
++	config.regmap = ddata->reg;
++	config.init_data = &init_data;
++
++	for (i = 0; i < CPCAP_NR_REGULATORS; i++) {
++		const struct cpcap_regulator *regulator = &ddata->soc[i];
++		struct regulator_dev *rdev;
++
++		if (!regulator->rdesc.name)
++			break;
++
++		if (regulator->rdesc.volt_table == unknown_val_tbl)
++			continue;
++
++		config.driver_data = (void *)regulator;
++		rdev = devm_regulator_register(&pdev->dev,
++					       &regulator->rdesc,
++					       &config);
++		if (IS_ERR(rdev)) {
++			dev_err(&pdev->dev, "failed to register regulator %s\n",
++				regulator->rdesc.name);
++
++			return PTR_ERR(rdev);
++		}
++	}
++
++	return 0;
++}
++
++static struct platform_driver cpcap_regulator_driver = {
++	.probe		= cpcap_regulator_probe,
++	.driver		= {
++		.name	= "cpcap-regulator",
++		.of_match_table = of_match_ptr(cpcap_regulator_id_table),
++	},
++};
++
++module_platform_driver(cpcap_regulator_driver);
++
++MODULE_ALIAS("platform:cpcap-regulator");
++MODULE_AUTHOR("Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>");
++MODULE_DESCRIPTION("CPCAP regulator driver");
++MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
