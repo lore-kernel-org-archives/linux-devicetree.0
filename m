@@ -1,88 +1,149 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 1/5] of: introduce of_graph_get_remote_node
-Date: Fri,  3 Feb 2017 21:36:31 -0600
-Message-ID: <20170204033635.10250-2-robh@kernel.org>
-References: <20170204033635.10250-1-robh@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170204033635.10250-1-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@freescale.com>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puc>
+From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 1/3] dt: bindings: add documentation for zx2967 family  thermal sensor
+Date: Sat,  4 Feb 2017 11:39:55 +0800
+Message-ID: <1486179597-30953-1-git-send-email-baoyou.xie@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The OF graph API leaves too much of the graph walking to clients when
-in many cases the driver doesn't care about accessing the port or
-endpoint nodes. The drivers typically just want the device connected via
-a particular graph connection. of_graph_get_remote_node provides this
-functionality.
+This patch adds dt-binding documentation for zx2967 family thermal sensor.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/of/base.c        | 28 ++++++++++++++++++++++++++++
- include/linux/of_graph.h |  8 ++++++++
- 2 files changed, 36 insertions(+)
+ .../devicetree/bindings/thermal/zx2967-thermal.txt | 116 +++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index d4bea3c797d6..ea18ab16b92c 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -2469,3 +2469,31 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
- 	return of_get_next_parent(np);
- }
- EXPORT_SYMBOL(of_graph_get_remote_port);
+diff --git a/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+new file mode 100644
+index 0000000..0810644
+--- /dev/null
++++ b/Documentation/devicetree/bindings/thermal/zx2967-thermal.txt
+@@ -0,0 +1,116 @@
++* ZTE zx2967 family Thermal
 +
-+struct device_node *of_graph_get_remote_node(const struct device_node *node,
-+					     int port, int endpoint)
-+{
-+	struct device_node *endpoint_node, *remote;
++Required Properties:
++- compatible: should be one of the following.
++    * zte,zx296718-thermal
++- reg: physical base address of the controller and length of memory mapped
++    region.
++- clocks : Pairs of phandle and specifier referencing the controller's clocks.
++- clock-names: "topcrm" for the topcrm clock.
++	       "apb" for the apb clock.
++- #thermal-sensor-cells: must be 0.
 +
-+	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
-+	if (!endpoint_node) {
-+		pr_debug("no valid endpoint (%d, %d) for node %s\n",
-+			 port, endpoint, node->full_name);
-+		return NULL;
-+	}
++Please note: coefficients defined in thermal-zones section need to be
++multiplied by 1000.
 +
-+	remote = of_graph_get_remote_port_parent(endpoint_node);
-+	of_node_put(endpoint);
-+	if (!remote) {
-+		pr_debug("no valid remote node\n");
-+		return NULL;
-+	}
++Example for tempsensor:
 +
-+	if (!of_device_is_available(remote)) {
-+		pr_debug("not available for remote node\n");
-+		return NULL;
-+	}
++	tempsensor: tempsensor@148a000 {
++		compatible = "zte,zx296718-thermal";
++		reg = <0x0148a000 0x20>;
++		clocks = <&topcrm TEMPSENSOR_GATE>, <&audiocrm AUDIO_TS_PCLK>;
++		clock-names = "topcrm", "apb";
++		#thermal-sensor-cells = <0>;
++	};
 +
-+	return remote;
-+}
-+EXPORT_SYMBOL(of_graph_get_remote_node);
-diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
-index bb3a5a2cd570..7b71d3e09209 100644
---- a/include/linux/of_graph.h
-+++ b/include/linux/of_graph.h
-@@ -51,6 +51,8 @@ struct device_node *of_graph_get_endpoint_by_regs(
- struct device_node *of_graph_get_remote_port_parent(
- 					const struct device_node *node);
- struct device_node *of_graph_get_remote_port(const struct device_node *node);
-+struct device_node *of_graph_get_remote_node(const struct device_node *node,
-+					     int port, int endpoint);
- #else
- 
- static inline int of_graph_parse_endpoint(const struct device_node *node,
-@@ -89,6 +91,12 @@ static inline struct device_node *of_graph_get_remote_port(
- {
- 	return NULL;
- }
-+static inline struct device_node *of_graph_get_remote_node(
-+					const struct device_node *node,
-+					int port, int endpoint)
-+{
-+	return NULL;
-+}
- 
- #endif /* CONFIG_OF */
- 
++Example for cooling device:
++
++	cooling_dev: cooling_dev {
++		cluster0_cooling_dev: cluster0-cooling-dev {
++			#cooling-cells = <2>;
++			cpumask = <0xf>;
++			capacitance = <1500>;
++		};
++
++	cluster1_cooling_dev: cluster1-cooling-dev {
++			#cooling-cells = <2>;
++			cpumask = <0x30>;
++			capacitance = <2000>;
++		};
++	};
++
++Example for thermal zones:
++
++	thermal-zones {
++		zx296718_thermal: zx296718_thermal {
++			polling-delay-passive = <500>;
++			polling-delay = <1000>;
++			sustainable-power = <6500>;
++
++			thermal-sensors = <&tempsensor 0>;
++			/*
++			 * slope need to be multiplied by 1000.
++			 */
++			coefficients = <1951 (-922)>;
++
++			trips {
++				trip0: switch_on_temperature {
++					temperature = <90000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				trip1: desired_temperature {
++					temperature = <100000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				crit: critical_temperature {
++					temperature = <110000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++
++			cooling-maps {
++				map0 {
++					trip = <&trip0>;
++					cooling-device = <&gpu 2 5>;
++				};
++
++				map1 {
++					trip = <&trip0>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map2 {
++					trip = <&trip1>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map3 {
++					trip = <&crit>;
++					cooling-device = <&cluster0_cooling_dev 1 2>;
++				};
++
++				map4 {
++					trip = <&trip0>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <9000>;
++				};
++
++				map5 {
++					trip = <&trip1>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <4096>;
++				};
++
++				map6 {
++					trip = <&crit>;
++					cooling-device = <&cluster1_cooling_dev 1 2>;
++					contribution = <4096>;
++				};
++			};
++		};
++	};
 -- 
-2.10.1
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
