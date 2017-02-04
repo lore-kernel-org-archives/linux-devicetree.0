@@ -1,71 +1,196 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "regulator: gpio: correct default type" to the regulator tree
-Date: Sat, 04 Feb 2017 13:13:13 +0100
-Message-ID: <E1cZzDN-0004cF-A5@finisterre>
-References: <1402051397-5689-1-git-send-email-ldewangan@nvidia.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/7] ASoC: add bindings for STM32 DFSDM driver
+Date: Sat, 4 Feb 2017 12:13:58 +0000
+Message-ID: <325ec27f-f13d-c561-d4cf-b50cd9a3eadb@kernel.org>
+References: <1485189145-29576-1-git-send-email-arnaud.pouliquen@st.com>
+ <1485189145-29576-7-git-send-email-arnaud.pouliquen@st.com>
+ <f0f446ea-97a0-8fef-bec5-aefeed42a85a@kernel.org>
+ <71612ea0-c9d0-a85e-2d58-72609df57e35@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402051397-5689-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <71612ea0-c9d0-a85e-2d58-72609df57e35-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Holmberg <hans-syntQev1tZzUyQxjFilb4QC/G2K4zDHf@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On 30/01/17 17:32, Arnaud Pouliquen wrote:
+> Hello Johan,
+> 
+> Please find my comments in-line.
+> 
+> Regards
+> 
+> Arnaud
+> 
+> On 01/29/2017 01:19 PM, Jonathan Cameron wrote:
+>> On 23/01/17 16:32, Arnaud Pouliquen wrote:
+>>> This patch adds documentation of device tree bindings for the
+>>> STM32 DFSDM ASoC driver.
+>>>
+>>> Signed-off-by: Arnaud Pouliquen <arnaud.pouliquen-qxv4g6HH51o@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/sound/st,sm32-adfsdm.txt   | 84 ++++++++++++++++++++++
+>>>  1 file changed, 84 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt b/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
+>>> new file mode 100644
+>>> index 0000000..a1d27b8
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/st,sm32-adfsdm.txt
+>>> @@ -0,0 +1,84 @@
+>>> +STMicroelectronics STM32 ADFSDM ASoC DAI device driver.
+>>> +
+>>> +STM32 ADFSDM ASoC is a sigma delta audio interface for digital microphone.
+>>> +It has to be declared in device-tree as a subnode of the DFSDM mfd node.
+>>> +
+>>> +It offers possibility to record several mono microphones, with an option to
+>>> +synchronize all microphones on a main one (that must be piped to filter 0)
+>>> +Audio interface can be exposed through the generic ASoC simple card.
+>>> +
+>>> +2 Dmics can be connected on one SPI interface instance n.
+>>> +Convention is that the DMIC that strobes data on rising edge is connected to the
+>>> +corresponding DFSDM channel n; while the Dmic that strobes data on falling edge
+>>> +is connected to the channel n-1. Simple card property "bitclock-inversion = <1>"
+>>> +is used to specify that microphone strobes data on falling edge.
+>>> +
+>>> +SPI interface allows to be scheduled by an external SPI clock. To use it
+>>> +simple card properties "bitclock-master = <&codec>" and "system-clock-frequency"
+>>> +have to be defined in dai-link node.
+>>> +
+>>> +Required properties:
+>>> +- compatible: 	Must be "st,stm32-dfsdm-audio",
+>>> +- reg:		Specifies the DFSDM filter instance.
+>>> +- interrupts: 	DFSDM filter instance interrupt line.
+>>> +- dma:		DMA controller phandle and DMA request line associated to the
+>>> +		filter instance ( specified by the field "reg")
+>>> +- dma-names: 	must be "rx"
+>>> +
+>>> +- st,input-id:		Id of the SPI/Manchester interface used.
+>>> +- st,dai-filter-order:  SinC filter order from 0 to 5.
+>>> +			0: FastSinC
+>>> +			[1-5]: order 1 to 5.
+>>> +			For audio purpose it is recommended to use order 3 to 5.
+>> Interesting for audio you consider it feature of the hardware, but for ADC you
+>> consider that this should be userspace controlled.
+>> Personally I'd like to see more detail on those filters but if this is convention
+>> in Asoc then so be it.
+> 
+> Configure filter and integrator is quite tricky. Updating filter and
+> integrator parameters have impact on sample resolution and output sample
+> rate.
+> Sample resolution is the peak to peak data value and depends on
+> oversampling parameters and filter order.
+> 
+> Output sample rate depends on SPI input clock frequency oversampling
+> parameters and filter order.
+> 
+> High filter order gives a better resolution and a better filter response
+> but allows less dynamic to find the good rate...
+> 
+> So it is a compromise between resolution, rate and filtering.
+> 
+> For ADC use case, filter orders 1 to 3 are recommended.
+> For audio use case, orders 3 to 5 are recommended.
+I'm never against allowing users enough rope to hang themselves
+as long as the defaults are sensible :)
+> 
+> On IIO side i proposed to expose tuning in ABI, to allows application
+> fine tuning.
+> Need to document it...
+> 
+> For ASOC it is another story. Application requests a rate and a sample
+> format. So filter parameters are computed based on SPI bus clock
+> frequency, expected audio sample rate and audio sample format.
+> This is done in stm32_adfsdm_get_best_osr in sound/soc/stm/stm32_adfsdm.c.
+If there is only ever one sensible answer, fair enough on not being
+able to pick and choose.
+> 
+> Now your comment trig a good point. Perhaps a better option in IIO,
+> could be to offer same kind of ABI than ASOC interface:
+> - standard oversampling-ratio ABI. based on it filter and integrator
+> oversampling ratios will be computed to maximize the resolution.
+> - a read only resolution ABI:
+> /sys/bus/iio/devices/iio:deviceX/in_adc_x_resolution. That give the
+> computed resolution.
+Would this be directly exposed in terms of the 'maximum value' that
+could come out?  If so we could use the existing range description
+callbacks (called _available though that's somewhat missleading in
+this case).
+> 
+> In this case filter order will be part of the DT for IIO and ASoC.
+> This would also match with a redesign of the DFSDM driver in IIO...
+Sounds to me like it would be sensible to do restrict things somewhat
+in the first instance, and perhaps rename them as 'defaults' in the
+future if we decide that userspace control does make sense.
+Basically do it the first time someone bashes us over the head with
+a usecase we aren't supporting well.
 
-   regulator: gpio: correct default type
-
-has been applied to the regulator tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 17db9f386632c9c9182a3318b89b742be08c1c2a Mon Sep 17 00:00:00 2001
-From: Hans Holmberg <hans-syntQev1tZzUyQxjFilb4QC/G2K4zDHf@public.gmane.org>
-Date: Fri, 3 Feb 2017 15:29:12 +0100
-Subject: [PATCH] regulator: gpio: correct default type
-
-The driver defaults to voltage, not current, type so correct
-this in the device tree binding documentation.
-
-Signed-off-by: Hans Holmberg <hans-syntQev1tZzUyQxjFilb4QC/G2K4zDHf@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/regulator/gpio-regulator.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index e5cac1e0ca8a..dd1ed789728e 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -13,7 +13,7 @@ Optional properties:
- - startup-delay-us	: Startup time in microseconds.
- - enable-active-high	: Polarity of GPIO is active high (default is low).
- - regulator-type	: Specifies what is being regulated, must be either
--			  "voltage" or "current", defaults to current.
-+			  "voltage" or "current", defaults to voltage.
- 
- Any property defined as part of the core regulator binding defined in
- regulator.txt can also be used.
--- 
-2.11.0
+> 
+>>> +
+>>> +Optional properties:
+>>> + - st,dai0-synchronized: Set to 1 to synchronize DAI with DFSDM instance 0.
+>>> +
+>>> +Exemple of a card with 2 Dmics synchronized and connected on SPI interface 1.
+>> Example.
+>>> +
+>>> +	dfsdm: dfsdm@4400D000 {
+>>> +		dai_dfsdm0: dfsdm-audio@0 {
+>>> +			compatible = "st,stm32-dfsdm-audio";
+>>> +			#sound-dai-cells = <0>;
+>>> +			reg = <0>;
+>>> +			dmas = <&dmamux1 101 0x400 0x00>;
+>>> +			dma-names = "rx";
+>>> +			st,input-id = <0>;
+>>> +			st,dai-filter-order = <5>;
+>>> +		};
+>>> +		dai_dfsdm1: dfsdm-audio@1 {
+>>> +			compatible = "st,stm32-dfsdm-audio";
+>>> +			#sound-dai-cells = <0>;
+>>> +			reg = <0>;
+>>> +			dmas = <&dmamux1 102 0x400 0x00>;
+>>> +			dma-names = "rx";
+>>> +			st,input-id = <0>;
+>>> +			st,dai0-synchronized = <1>;
+>>> +			st,dai-filter-order = <5>;
+>>> +		};
+>>> +	};
+>>> +	sound_dfsdm_pdm {
+>>> +		compatible = "simple-audio-card";
+>>> +		simple-audio-card,name = "dfsdm_pdm";
+>>> +		status = "okay";
+>>> +
+>>> +		dfsdm0_mic0: simple-audio-card,dai-link@0 {
+>>> +			format = "pdm";
+>>> +			cpu {
+>>> +				sound-dai = <&dai_dfsdm0>;
+>>> +			};
+>>> +			dmic0_codec: codec {
+>>> +				sound-dai = <&dmic0>;
+>>> +			};
+>>> +		};
+>>> +		dfsdm0_mic1: simple-audio-card,dai-link@1 {
+>>> +			format = "pdm";
+>>> +			bitclock-inversion = <1>;
+>>> +			cpu {
+>>> +				sound-dai = <&dai_dfsdm1>;
+>>> +			};
+>>> +			codec {
+>>> +				sound-dai = <&dmic1>;
+>>> +			};
+>>> +		};
+>>> +	};
+>>>
+>> Jonathan
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
