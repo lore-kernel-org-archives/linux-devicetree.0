@@ -1,39 +1,38 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 4/5] soc: samsung: pm_domains: Read domain name from
- the new label property
-Date: Sat, 4 Feb 2017 17:46:57 +0200
-Message-ID: <20170204154657.c4pts6wppsq3wmf2@kozik-lap>
-References: <1485778740-30337-1-git-send-email-m.szyprowski@samsung.com>
- <CGME20170130121915eucas1p23aa4f4be912bcd64f9521f6e6b51132f@eucas1p2.samsung.com>
- <1485778740-30337-5-git-send-email-m.szyprowski@samsung.com>
- <20170201162554.airhzowkqpyaxqpf@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170201162554.airhzowkqpyaxqpf@rob-hp-laptop>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Inki Dae <inki.dae@samsung.com>, devicetree@vger.kernel.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH] Documentation: devicetree: Add PHY no lane swap binding
+Date: Sat,  4 Feb 2017 16:47:47 +0100
+Message-ID: <1486223267-11875-1-git-send-email-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, jbrunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jon Mason <jon.mason@broadcom.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 10:25:54AM -0600, Rob Herring wrote:
-> On Mon, Jan 30, 2017 at 01:18:59PM +0100, Marek Szyprowski wrote:
-> > Device tree nodes for each power domain should use generic "power-domain"
-> > name, so using it as a domain name doesn't give much benefits. This patch
-> > adds support for human readable names defined in 'label' property. Such
-> > names are visible to userspace and makes debugging much easier. When no
-> > 'label' property is found, driver keeps using the name constructed from
-> > full node name.
-> 
-> I'm not sure this is really a good use of label. label is intended for 
-> end user visible things like ports/connectors on a board. It's fine 
-> here, but I wouldn't want to see it used everywhere.
->
+Add the documentation to avoid PHY lane swapping. This is a boolean
+entry to notify the phy device drivers that the TX/RX lanes NO need
+to be swapped.
+The use case for this binding mostly happens after wrong HW
+configuration of PHY IC during bootstrap.
 
-Thanks for comments. We want to use the label here for user visible
-output - through dmesg or debugfs. Otherwise, we would have to stick
-(always) to more descriptive node names, like "lcd-power-domain@xxxxx".
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
+---
+ Documentation/devicetree/bindings/net/phy.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index fb5056b..5e25bc9 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -39,6 +39,10 @@ Optional Properties:
+ - enet-phy-lane-swap: If set, indicates the PHY will swap the TX/RX lanes to
+   compensate for the board being designed with the lanes swapped.
+ 
++- enet-phy-lane-no-swap: If set, indicates that PHY will disable swap of the
++  TX/RX lanes. This binding allows the PHY to work correcly after e.g. wrong
++  bootstrap configuration caused by issues in PCB layout design.
++
+ - eee-broken-100tx:
+ - eee-broken-1000t:
+ - eee-broken-10gt:
+-- 
+2.1.4
