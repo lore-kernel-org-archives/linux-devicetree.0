@@ -1,409 +1,115 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] iio: distance: add devantech us ranger srf04
-Date: Sat, 4 Feb 2017 12:20:46 +0000
-Message-ID: <803316c0-ceba-5d17-cb6e-1dc726e1c77c@kernel.org>
-References: <20170131180345.GA12892@andreas>
+Subject: Re: [PATCH 1/5] iio: imu: st_lsm6dsx: add support to multiple devices
+ with the same settings
+Date: Sat, 4 Feb 2017 12:23:24 +0000
+Message-ID: <2a6ad76c-399d-bb2e-1ad5-54a1fb91aa00@kernel.org>
+References: <20170129104928.15533-1-lorenzo.bianconi@st.com>
+ <20170129104928.15533-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170131180345.GA12892@andreas>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dledford-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, shraddha.6596-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, w@1wt.eu, balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mtk.manpages-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sjenning-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vilhelm.gray-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170129104928.15533-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 31/01/17 18:03, Andreas Klinger wrote:
-> This patch adds support for the ultrasonic ranger srf04 of devantech.
+On 29/01/17 10:49, Lorenzo Bianconi wrote:
+> Add capability to support multiple devices with the same
+> st_lsm6dsx_settings like LSM6DSM/LSM6DSL
 > 
-> This device is measuring the distance of objects in a range between 1 cm
-> and 3 meters and a theoretical resolution of 3 mm.
-> 
-> There are two GPIOs used:
->   - trigger: set as output to the device when the measurement should start
->   - echo: set by the device when the ultrasonic wave is sent out and reset
->     when the echo is recognized; this needs to be an interrupt input
-> 
-> The time between setting and resetting the echo pin is the time the
-> waveform needed for one round trip. This time is recorded in the interrupt
-> handler.
-> 
-> The distance is calculated in the read function by using the ultrasonic
-> speed at 20 degrees celsius which is about 343 m/s.
-> 
-> Signed-off-by: Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-Applied.  Thanks
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Applied to the togreg branch of iio.git and pushed out as testing for the autobuilders
+to play with it.
+
+Thanks,
 
 Jonathan
 > ---
->  MAINTAINERS                    |   6 +
->  drivers/iio/proximity/Kconfig  |  11 ++
->  drivers/iio/proximity/Makefile |   1 +
->  drivers/iio/proximity/srf04.c  | 304 +++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 322 insertions(+)
->  create mode 100644 drivers/iio/proximity/srf04.c
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h      |  3 ++-
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c | 30 +++++++++++++++-------------
+>  2 files changed, 18 insertions(+), 15 deletions(-)
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index fa6af014fd72..ba979cc48fd8 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3469,6 +3469,12 @@ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git
->  S:	Maintained
->  F:	drivers/usb/dwc3/
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> index 69deafe..2c1bb9e 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx.h
+> @@ -20,6 +20,7 @@
+>  enum st_lsm6dsx_hw_id {
+>  	ST_LSM6DS3_ID,
+>  	ST_LSM6DSM_ID,
+> +	ST_LSM6DSX_MAX_ID,
+>  };
 >  
-> +DEVANTECH SRF ULTRASONIC RANGER IIO DRIVER
-> +M:	Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-> +L:	linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +S:	Maintained
-> +F:	drivers/iio/proximity/srf*.c
-> +
->  DEVICE COREDUMP (DEV_COREDUMP)
->  M:	Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>
->  L:	linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> diff --git a/drivers/iio/proximity/Kconfig b/drivers/iio/proximity/Kconfig
-> index ef4c73db5b53..0bcbc66eae6e 100644
-> --- a/drivers/iio/proximity/Kconfig
-> +++ b/drivers/iio/proximity/Kconfig
-> @@ -32,6 +32,17 @@ config LIDAR_LITE_V2
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called pulsedlight-lite-v2
+>  #define ST_LSM6DSX_CHAN_SIZE		2
+> @@ -50,7 +51,7 @@ struct st_lsm6dsx_reg {
+>  struct st_lsm6dsx_settings {
+>  	u8 wai;
+>  	u16 max_fifo_size;
+> -	enum st_lsm6dsx_hw_id id;
+> +	enum st_lsm6dsx_hw_id id[ST_LSM6DSX_MAX_ID];
+>  };
 >  
-> +config SRF04
-> +	tristate "Devantech SRF04 ultrasonic ranger sensor"
-> +	depends on GPIOLIB
-> +	help
-> +	  Say Y here to build a driver for Devantech SRF04 ultrasonic
-> +	  ranger sensor. This driver can be used to measure the distance
-> +	  of objects. It is using two GPIOs.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called srf04.
-> +
->  config SX9500
->  	tristate "SX9500 Semtech proximity sensor"
->  	select IIO_BUFFER
-> diff --git a/drivers/iio/proximity/Makefile b/drivers/iio/proximity/Makefile
-> index 9aadd9a8ee99..97c046c1dfc5 100644
-> --- a/drivers/iio/proximity/Makefile
-> +++ b/drivers/iio/proximity/Makefile
-> @@ -5,4 +5,5 @@
->  # When adding new entries keep the list in alphabetical order
->  obj-$(CONFIG_AS3935)		+= as3935.o
->  obj-$(CONFIG_LIDAR_LITE_V2)	+= pulsedlight-lidar-lite-v2.o
-> +obj-$(CONFIG_SRF04)		+= srf04.o
->  obj-$(CONFIG_SX9500)		+= sx9500.o
-> diff --git a/drivers/iio/proximity/srf04.c b/drivers/iio/proximity/srf04.c
-> new file mode 100644
-> index 000000000000..e37667f933b3
-> --- /dev/null
-> +++ b/drivers/iio/proximity/srf04.c
-> @@ -0,0 +1,304 @@
-> +/*
-> + * SRF04: ultrasonic sensor for distance measuring by using GPIOs
-> + *
-> + * Copyright (c) 2017 Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + * For details about the device see:
-> + * http://www.robot-electronics.co.uk/htm/srf04tech.htm
-> + *
-> + * the measurement cycle as timing diagram looks like:
-> + *
-> + *          +---+
-> + * GPIO     |   |
-> + * trig:  --+   +------------------------------------------------------
-> + *          ^   ^
-> + *          |<->|
-> + *         udelay(10)
-> + *
-> + * ultra           +-+ +-+ +-+
-> + * sonic           | | | | | |
-> + * burst: ---------+ +-+ +-+ +-----------------------------------------
-> + *                           .
-> + * ultra                     .              +-+ +-+ +-+
-> + * sonic                     .              | | | | | |
-> + * echo:  ----------------------------------+ +-+ +-+ +----------------
-> + *                           .                        .
-> + *                           +------------------------+
-> + * GPIO                      |                        |
-> + * echo:  -------------------+                        +---------------
-> + *                           ^                        ^
-> + *                           interrupt                interrupt
-> + *                           (ts_rising)              (ts_falling)
-> + *                           |<---------------------->|
-> + *                              pulse time measured
-> + *                              --> one round trip of ultra sonic waves
-> + */
-> +#include <linux/err.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/property.h>
-> +#include <linux/sched.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/delay.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +
-> +struct srf04_data {
-> +	struct device		*dev;
-> +	struct gpio_desc	*gpiod_trig;
-> +	struct gpio_desc	*gpiod_echo;
-> +	struct mutex		lock;
-> +	int			irqnr;
-> +	ktime_t			ts_rising;
-> +	ktime_t			ts_falling;
-> +	struct completion	rising;
-> +	struct completion	falling;
-> +};
-> +
-> +static irqreturn_t srf04_handle_irq(int irq, void *dev_id)
-> +{
-> +	struct iio_dev *indio_dev = dev_id;
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +	ktime_t now = ktime_get();
-> +
-> +	if (gpiod_get_value(data->gpiod_echo)) {
-> +		data->ts_rising = now;
-> +		complete(&data->rising);
-> +	} else {
-> +		data->ts_falling = now;
-> +		complete(&data->falling);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static int srf04_read(struct srf04_data *data)
-> +{
-> +	int ret;
-> +	ktime_t ktime_dt;
-> +	u64 dt_ns;
-> +	u32 time_ns, distance_mm;
-> +
-> +	/*
-> +	 * just one read-echo-cycle can take place at a time
-> +	 * ==> lock against concurrent reading calls
-> +	 */
-> +	mutex_lock(&data->lock);
-> +
-> +	reinit_completion(&data->rising);
-> +	reinit_completion(&data->falling);
-> +
-> +	gpiod_set_value(data->gpiod_trig, 1);
-> +	udelay(10);
-> +	gpiod_set_value(data->gpiod_trig, 0);
-> +
-> +	/* it cannot take more than 20 ms */
-> +	ret = wait_for_completion_killable_timeout(&data->rising, HZ/50);
-> +	if (ret < 0) {
-> +		mutex_unlock(&data->lock);
-> +		return ret;
-> +	} else if (ret == 0) {
-> +		mutex_unlock(&data->lock);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	ret = wait_for_completion_killable_timeout(&data->falling, HZ/50);
-> +	if (ret < 0) {
-> +		mutex_unlock(&data->lock);
-> +		return ret;
-> +	} else if (ret == 0) {
-> +		mutex_unlock(&data->lock);
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	ktime_dt = ktime_sub(data->ts_falling, data->ts_rising);
-> +
-> +	mutex_unlock(&data->lock);
-> +
-> +	dt_ns = ktime_to_ns(ktime_dt);
-> +	/*
-> +	 * measuring more than 3 meters is beyond the capabilities of
-> +	 * the sensor
-> +	 * ==> filter out invalid results for not measuring echos of
-> +	 *     another us sensor
-> +	 *
-> +	 * formula:
-> +	 *         distance       3 m
-> +	 * time = ---------- = --------- = 9404389 ns
-> +	 *          speed       319 m/s
-> +	 *
-> +	 * using a minimum speed at -20 °C of 319 m/s
-> +	 */
-> +	if (dt_ns > 9404389)
-> +		return -EIO;
-> +
-> +	time_ns = dt_ns;
-> +
-> +	/*
-> +	 * the speed as function of the temperature is approximately:
-> +	 *
-> +	 * speed = 331,5 + 0,6 * Temp
-> +	 *   with Temp in °C
-> +	 *   and speed in m/s
-> +	 *
-> +	 * use 343 m/s as ultrasonic speed at 20 °C here in absence of the
-> +	 * temperature
-> +	 *
-> +	 * therefore:
-> +	 *             time     343
-> +	 * distance = ------ * -----
-> +	 *             10^6       2
-> +	 *   with time in ns
-> +	 *   and distance in mm (one way)
-> +	 *
-> +	 * because we limit to 3 meters the multiplication with 343 just
-> +	 * fits into 32 bit
-> +	 */
-> +	distance_mm = time_ns * 343 / 2000000;
-> +
-> +	return distance_mm;
-> +}
-> +
-> +static int srf04_read_raw(struct iio_dev *indio_dev,
-> +			    struct iio_chan_spec const *channel, int *val,
-> +			    int *val2, long info)
-> +{
-> +	struct srf04_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (channel->type != IIO_DISTANCE)
-> +		return -EINVAL;
-> +
-> +	switch (info) {
-> +	case IIO_CHAN_INFO_RAW:
-> +		ret = srf04_read(data);
-> +		if (ret < 0)
-> +			return ret;
-> +		*val = ret;
-> +		return IIO_VAL_INT;
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/*
-> +		 * theoretical maximum resolution is 3 mm
-> +		 * 1 LSB is 1 mm
-> +		 */
-> +		*val = 0;
-> +		*val2 = 1000;
-> +		return IIO_VAL_INT_PLUS_MICRO;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static const struct iio_info srf04_iio_info = {
-> +	.driver_module		= THIS_MODULE,
-> +	.read_raw		= srf04_read_raw,
-> +};
-> +
-> +static const struct iio_chan_spec srf04_chan_spec[] = {
-> +	{
-> +		.type = IIO_DISTANCE,
-> +		.info_mask_separate =
-> +				BIT(IIO_CHAN_INFO_RAW) |
-> +				BIT(IIO_CHAN_INFO_SCALE),
-> +	},
-> +};
-> +
-> +static int srf04_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct srf04_data *data;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(dev, sizeof(struct srf04_data));
-> +	if (!indio_dev) {
-> +		dev_err(dev, "failed to allocate IIO device\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	data = iio_priv(indio_dev);
-> +	data->dev = dev;
-> +
-> +	mutex_init(&data->lock);
-> +	init_completion(&data->rising);
-> +	init_completion(&data->falling);
-> +
-> +	data->gpiod_trig = devm_gpiod_get(dev, "trig", GPIOD_OUT_LOW);
-> +	if (IS_ERR(data->gpiod_trig)) {
-> +		dev_err(dev, "failed to get trig-gpios: err=%ld\n",
-> +					PTR_ERR(data->gpiod_trig));
-> +		return PTR_ERR(data->gpiod_trig);
-> +	}
-> +
-> +	data->gpiod_echo = devm_gpiod_get(dev, "echo", GPIOD_IN);
-> +	if (IS_ERR(data->gpiod_echo)) {
-> +		dev_err(dev, "failed to get echo-gpios: err=%ld\n",
-> +					PTR_ERR(data->gpiod_echo));
-> +		return PTR_ERR(data->gpiod_echo);
-> +	}
-> +
-> +	if (gpiod_cansleep(data->gpiod_echo)) {
-> +		dev_err(data->dev, "cansleep-GPIOs not supported\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	data->irqnr = gpiod_to_irq(data->gpiod_echo);
-> +	if (data->irqnr < 0) {
-> +		dev_err(data->dev, "gpiod_to_irq: %d\n", data->irqnr);
-> +		return data->irqnr;
-> +	}
-> +
-> +	ret = devm_request_irq(dev, data->irqnr, srf04_handle_irq,
-> +			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-> +			pdev->name, indio_dev);
-> +	if (ret < 0) {
-> +		dev_err(data->dev, "request_irq: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, indio_dev);
-> +
-> +	indio_dev->name = "srf04";
-> +	indio_dev->dev.parent = &pdev->dev;
-> +	indio_dev->info = &srf04_iio_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->channels = srf04_chan_spec;
-> +	indio_dev->num_channels = ARRAY_SIZE(srf04_chan_spec);
-> +
-> +	return devm_iio_device_register(dev, indio_dev);
-> +}
-> +
-> +static const struct of_device_id of_srf04_match[] = {
-> +	{ .compatible = "devantech,srf04", },
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, of_srf04_match);
-> +
-> +static struct platform_driver srf04_driver = {
-> +	.probe		= srf04_probe,
-> +	.driver		= {
-> +		.name		= "srf04-gpio",
-> +		.of_match_table	= of_srf04_match,
-> +	},
-> +};
-> +
-> +module_platform_driver(srf04_driver);
-> +
-> +MODULE_AUTHOR("Andreas Klinger <ak-n176/SwNRljddJNmlsFzeA@public.gmane.org>");
-> +MODULE_DESCRIPTION("SRF04 ultrasonic sensor for distance measuring using GPIOs");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:srf04");
+>  enum st_lsm6dsx_sensor_id {
+> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> index c92ddcc..499e60a 100644
+> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_core.c
+> @@ -74,12 +74,6 @@
+>  #define ST_LSM6DSX_REG_GYRO_OUT_Y_L_ADDR	0x24
+>  #define ST_LSM6DSX_REG_GYRO_OUT_Z_L_ADDR	0x26
+>  
+> -#define ST_LSM6DS3_WHOAMI			0x69
+> -#define ST_LSM6DSM_WHOAMI			0x6a
+> -
+> -#define ST_LSM6DS3_MAX_FIFO_SIZE		8192
+> -#define ST_LSM6DSM_MAX_FIFO_SIZE		4096
+> -
+>  #define ST_LSM6DSX_ACC_FS_2G_GAIN		IIO_G_TO_M_S_2(61)
+>  #define ST_LSM6DSX_ACC_FS_4G_GAIN		IIO_G_TO_M_S_2(122)
+>  #define ST_LSM6DSX_ACC_FS_8G_GAIN		IIO_G_TO_M_S_2(244)
+> @@ -164,14 +158,18 @@ static const struct st_lsm6dsx_fs_table_entry st_lsm6dsx_fs_table[] = {
+>  
+>  static const struct st_lsm6dsx_settings st_lsm6dsx_sensor_settings[] = {
+>  	{
+> -		.wai = ST_LSM6DS3_WHOAMI,
+> -		.max_fifo_size = ST_LSM6DS3_MAX_FIFO_SIZE,
+> -		.id = ST_LSM6DS3_ID,
+> +		.wai = 0x69,
+> +		.max_fifo_size = 8192,
+> +		.id = {
+> +			[0] = ST_LSM6DS3_ID,
+> +		},
+>  	},
+>  	{
+> -		.wai = ST_LSM6DSM_WHOAMI,
+> -		.max_fifo_size = ST_LSM6DSM_MAX_FIFO_SIZE,
+> -		.id = ST_LSM6DSM_ID,
+> +		.wai = 0x6a,
+> +		.max_fifo_size = 4096,
+> +		.id = {
+> +			[0] = ST_LSM6DSM_ID,
+> +		},
+>  	},
+>  };
+>  
+> @@ -241,11 +239,15 @@ int st_lsm6dsx_write_with_mask(struct st_lsm6dsx_hw *hw, u8 addr, u8 mask,
+>  
+>  static int st_lsm6dsx_check_whoami(struct st_lsm6dsx_hw *hw, int id)
+>  {
+> -	int err, i;
+> +	int err, i, j;
+>  	u8 data;
+>  
+>  	for (i = 0; i < ARRAY_SIZE(st_lsm6dsx_sensor_settings); i++) {
+> -		if (id == st_lsm6dsx_sensor_settings[i].id)
+> +		for (j = 0; j < ST_LSM6DSX_MAX_ID; j++) {
+> +			if (id == st_lsm6dsx_sensor_settings[i].id[j])
+> +				break;
+> +		}
+> +		if (j < ST_LSM6DSX_MAX_ID)
+>  			break;
+>  	}
+>  
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
