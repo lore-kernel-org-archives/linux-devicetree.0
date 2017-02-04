@@ -1,61 +1,149 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] Documentation: devicetree: Add PHY no lane swap binding
-Date: Sat, 4 Feb 2017 13:38:29 -0800
-Message-ID: <509fadc4-164c-7333-1871-fd6e615e57c9@gmail.com>
-References: <1486223267-11875-1-git-send-email-lukma@denx.de>
- <20170204172329.GA8364@lunn.ch>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Sat, 4 Feb 2017 22:56:10 +0100
+Message-ID: <20170204215610.GA9243@amd>
+References: <20161023200355.GA5391@amd>
+ <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170203130740.GB12291@valkosipuli.retiisi.org.uk>
+ <20170203210610.GA18379@amd>
+ <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170204172329.GA8364@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, jbrunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jon Mason <jon.mason@broadcom.com>, Fabio Estevam <fabio.estevam@nxp.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, laurent.pinchart@ideasonboard.com
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Le 02/04/17 à 09:23, Andrew Lunn a écrit :
-> On Sat, Feb 04, 2017 at 04:47:47PM +0100, Lukasz Majewski wrote:
->> Add the documentation to avoid PHY lane swapping. This is a boolean
->> entry to notify the phy device drivers that the TX/RX lanes NO need
-> 
-> that the TX/RX lanes should not be swapped.
-> 
->> to be swapped.
->> The use case for this binding mostly happens after wrong HW
->> configuration of PHY IC during bootstrap.
->>
->> Signed-off-by: Lukasz Majewski <lukma@denx.de>
->> ---
->>  Documentation/devicetree/bindings/net/phy.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
->> index fb5056b..5e25bc9 100644
->> --- a/Documentation/devicetree/bindings/net/phy.txt
->> +++ b/Documentation/devicetree/bindings/net/phy.txt
->> @@ -39,6 +39,10 @@ Optional Properties:
->>  - enet-phy-lane-swap: If set, indicates the PHY will swap the TX/RX lanes to
->>    compensate for the board being designed with the lanes swapped.
->>  
->> +- enet-phy-lane-no-swap: If set, indicates that PHY will disable swap of the
->> +  TX/RX lanes. This binding allows the PHY to work correcly after e.g. wrong
->> +  bootstrap configuration caused by issues in PCB layout design.
 
-s/binding/property/
+--opJtzjQTFsWo+cga
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +
-> 
-> We are leaving it undefined what it means if neither
-> enet-phy-lane-no-swap nor enet-phy-lane-swap properties are present.
-> Do we want to define this? That the swap should be left untouched by
-> the driver?
+Hi!
 
-Since this is a description of the hardware, absence of a properties
-should mean that the driver is at freedom to either keep the hardware
-defaults, or come up with its own settings that are sensible for that
-particular PHY device.
+> > > > +Required properties
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > +
+> > > > +compatible	: must contain "video-bus-switch"
+> > >=20
+> > > How generic is this? Should we have e.g. nokia,video-bus-switch? And =
+if so,
+> > > change the file name accordingly.
+> >=20
+> > Generic for "single GPIO controls the switch", AFAICT. But that should
+> > be common enough...
+>=20
+> Um, yes. Then... how about: video-bus-switch-gpio? No Nokia prefix.
 
-What would you see clarified here?
--- 
-Florian
+Ok, done. I also fixed the english a bit.
+
+> > > > +reg		: The interface:
+> > > > +		  0 - port for image signal processor
+> > > > +		  1 - port for first camera sensor
+> > > > +		  2 - port for second camera sensor
+> > >=20
+> > > I'd say this must be pretty much specific to the one in N900. You cou=
+ld have
+> > > more ports. Or you could say that ports beyond 0 are camera sensors. =
+I guess
+> > > this is good enough for now though, it can be changed later on with t=
+he
+> > > source if a need arises.
+> >=20
+> > Well, I'd say that selecting between two sensors is going to be the
+> > common case. If someone needs more than two, it will no longer be
+> > simple GPIO, so we'll have some fixing to do.
+>=20
+> It could be two GPIOs --- that's how the GPIO I2C mux works.
+>=20
+> But I'd be surprised if someone ever uses something like that
+> again. ;-)
+
+I'd say.. lets handle that when we see hardware like that.
+
+> > > Btw. was it still considered a problem that the endpoint properties f=
+or the
+> > > sensors can be different? With the g_routing() pad op which is to be =
+added,
+> > > the ISP driver (should actually go to a framework somewhere) could pa=
+rse the
+> > > graph and find the proper endpoint there.
+> >=20
+> > I don't know about g_routing. I added g_endpoint_config method that
+> > passes the configuration, and that seems to work for me.
+> >=20
+> > I don't see g_routing in next-20170201 . Is there place to look?
+>=20
+> I think there was a patch by Laurent to LMML quite some time ago. I suppo=
+se
+> that set will be repicked soonish.
+>=20
+> I don't really object using g_endpoint_config() as a temporary solution; =
+I'd
+> like to have Laurent's opinion on that though. Another option is to wait,
+> but we've already waited a looong time (as in total).
+
+Laurent, do you have some input here? We have simple "2 cameras
+connected to one signal processor" situation here. We need some way of
+passing endpoint configuration from the sensors through the switch. I
+did this:
+
+> > @@ -415,6 +416,8 @@ struct v4l2_subdev_video_ops {
+> >                          const struct v4l2_mbus_config *cfg);
+> >     int (*s_rx_buffer)(struct v4l2_subdev *sd, void *buf,
+> >                        unsigned int *size);
+> > +   int (*g_endpoint_config)(struct v4l2_subdev *sd,
+> > +                       struct v4l2_of_endpoint *cfg);
+
+Google of g_routing tells me:
+
+9) Highly reconfigurable hardware - Julien Beraud
+
+- 44 sub-devices connected with an interconnect.
+- As long as formats match, any sub-device could be connected to any
+- other sub-device through a link.
+- The result is 44 * 44 links at worst.
+- A switch sub-device proposed as the solution to model the
+- interconnect. The sub-devices are connected to the switch
+- sub-devices through the hardware links that connect to the
+- interconnect.
+- The switch would be controlled through new IOCTLs S_ROUTING and
+- G_ROUTING.
+- Patches available:
+ http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=3Dxilinx-wip
+
+but the patches are from 2005. So I guess I'll need some guidance here...
+
+> I'll reply to the other patch containing the code.
+
+Ok, thanks.
+								Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--opJtzjQTFsWo+cga
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliWTfoACgkQMOfwapXb+vJGpgCaA11DUW57SgRdf3Xi9yAd4QmZ
+sFMAn0Gga7IICyx1LzxFwUjzV8D/oJGH
+=DVuo
+-----END PGP SIGNATURE-----
+
+--opJtzjQTFsWo+cga--
