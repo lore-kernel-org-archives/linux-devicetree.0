@@ -1,316 +1,137 @@
-From: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v8 3/3] thermal: zx2967: add thermal driver for ZTE's zx2967  family
-Date: Sat,  4 Feb 2017 11:39:57 +0800
-Message-ID: <1486179597-30953-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486179597-30953-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486179597-30953-1-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH 2/2] DTS: dra7: Add "opp_high" opp node to support 1.5
+ GHz SoC operation
+Date: Sat, 4 Feb 2017 06:30:30 +0100
+Message-ID: <20170204063030.3ba736f9@jawa>
+References: <1486135491-14223-1-git-send-email-lukma@denx.de>
+        <1486135491-14223-2-git-send-email-lukma@denx.de>
+        <e398ff96-dca7-7934-70b1-9a95c01d3b27@ti.com>
+        <20170204002150.707b231d@jawa>
+        <79e08896-895e-4996-8402-832328b4f7d8@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <79e08896-895e-4996-8402-832328b4f7d8@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Dave Gerlach <d-gerlach@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, =?UTF-8?B?QmVub8OudA==?= Cousson <bcousson@baylibre.com>, Russell King <linux@armlinux.org.uk>, Viresh Kumar <viresh.kumar@linaro.org>, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds thermal driver for ZTE's zx2967 family.
+Hi Nishanth,
 
-Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/thermal/Kconfig          |   8 ++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/zx2967_thermal.c | 255 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 264 insertions(+)
- create mode 100644 drivers/thermal/zx2967_thermal.c
+> On 02/03/2017 05:21 PM, Lukasz Majewski wrote:
+> > Hi Dave,
+> >
+> > Thanks for sharing the knowledge :-)
+> >
+> >> On 02/03/2017 09:24 AM, Lukasz Majewski wrote:
+> >>> The "opp_high" property brings support for 1.5 GHz CPU frequency
+> >>> for TI's am57xx line of processors.
+> >>>
+> >>> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >>> ---
+> >>>  arch/arm/boot/dts/dra7.dtsi | 5 +++++
+> >>>  1 file changed, 5 insertions(+)
+> >>>
+> >>
+> >> This can't be blindly enabled for all am57xx SoCs,
+> >
+> > Yes, I'm fully aware of AVS, which uses fuses and SoC silicon
+> > revision to assess if frequency can be enabled.
+> >
+> > Example from my playground:
+> >
+> > - AM5728 works with 1.5 GHz enabled
+> >
+> > - AM5718 hangs when I try to enable 1.5 GHz frequency
+> >
+> >
+> >> there is a
+> >> forthcoming ti-cpufreq [1] driver
+> >
+> > I've backported and tested this code on v4.9 vanilla. It works :-)
+> >
+> >> that is needed that will decided
+> >> which OPPs can and cannot be enabled for the specific variant in
+> >> use.
+> >
+> > I do have a question:
+> >
+> > Do you know the correct opp-supported-hw value for 1.5 GHz on AM57x8
+> > SoC?
+> > In TI's SDK Linux (v4.4): opp-supported-hw = <0xFF 0x04>; but this
+> > seems to be always enabled (and not taking silicon revision and
+> > efuse into account).
+> 
+> There is a TISDK 4.9 being built up as well (we typically do let the 
+> driver soak for a test cycle prior to posting it upstream) but if it 
+> is of interest.. it should match the version Dave posted upstream..
+> 
+> http://git.ti.com/ti-linux-kernel/ti-linux-kernel/blobs/ti-lsk-linux-4.9.y/arch/arm/boot/dts/dra7.dtsi#line100
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 18f2de6..f64bd50 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -444,4 +444,12 @@ config BCM2835_THERMAL
- 	help
- 	  Support for thermal sensors on Broadcom bcm2835 SoCs.
- 
-+config ZX2967_THERMAL
-+	tristate "Thermal sensors on zx2967 SoC"
-+	depends on ARCH_ZX || COMPILE_TEST
-+	help
-+	  Enable the zx2967 thermal sensors driver, which supports
-+	  the primitive temperature sensor embedded in zx2967 SoCs.
-+	  This sensor generates the real time die temperature.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 677c6d9..c00c05e 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
-+obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
-diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
-new file mode 100644
-index 0000000..d177238
---- /dev/null
-+++ b/drivers/thermal/zx2967_thermal.c
-@@ -0,0 +1,255 @@
-+/*
-+ * ZTE's zx2967 family thermal sensor driver
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+/* Power Mode: 0->low 1->high */
-+#define ZX2967_THERMAL_POWER_MODE	0
-+#define ZX2967_POWER_MODE_LOW		0
-+#define ZX2967_POWER_MODE_HIGH		1
-+
-+/* DCF Control Register */
-+#define ZX2967_THERMAL_DCF		0x4
-+#define ZX2967_DCF_EN			BIT(1)
-+#define ZX2967_DCF_FREEZE		BIT(0)
-+
-+/* Selection Register */
-+#define ZX2967_THERMAL_SEL		0x8
-+
-+/* Control Register */
-+#define ZX2967_THERMAL_CTRL		0x10
-+
-+#define ZX2967_THERMAL_READY		BIT(12)
-+#define ZX2967_THERMAL_TEMP_MASK	GENMASK(11, 0)
-+#define ZX2967_THERMAL_ID_MASK		0x18
-+#define ZX2967_THERMAL_ID		0x10
-+
-+#define ZX2967_GET_TEMP_TIMEOUT_US	(100 * 1024)
-+
-+/* zx2967 Thermal Sensor Private Structure */
-+struct zx2967_thermal_priv {
-+	/* struct thermal_zone_device where the sensor is registered */
-+	struct thermal_zone_device	*tzd;
-+	/* prevents reads sensor in parallel */
-+	struct mutex			lock;
-+	/* topcrm clk structure */
-+	struct clk			*clk_topcrm;
-+	/* apb clk structure */
-+	struct clk			*clk_apb;
-+	/* pointer to base address of the thermal sensor */
-+	void __iomem			*regs;
-+	struct device			*dev;
-+};
-+
-+static int zx2967_thermal_get_temp(void *data, int *temp)
-+{
-+	void __iomem *regs;
-+	struct zx2967_thermal_priv *priv = data;
-+	u32 val;
-+	int ret;
-+
-+	if (!priv->tzd)
-+		return -EAGAIN;
-+
-+	regs = priv->regs;
-+	mutex_lock(&priv->lock);
-+	writel_relaxed(ZX2967_POWER_MODE_LOW,
-+		       regs + ZX2967_THERMAL_POWER_MODE);
-+	writel_relaxed(ZX2967_DCF_EN, regs + ZX2967_THERMAL_DCF);
-+
-+	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
-+	val &= ~ZX2967_THERMAL_ID_MASK;
-+	val |= ZX2967_THERMAL_ID;
-+	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
-+
-+	/*
-+	 * Must wait for a while, surely it's a bit odd.
-+	 * otherwise temperature value we got has a few deviation, even if
-+	 * the THERMAL_READY bit is set.
-+	 */
-+	usleep_range(100, 300);
-+	ret = readx_poll_timeout(readl, regs + ZX2967_THERMAL_CTRL,
-+				 val, val & ZX2967_THERMAL_READY, 300,
-+				 ZX2967_GET_TEMP_TIMEOUT_US);
-+	if (ret) {
-+		dev_err(priv->dev, "Thermal sensor data timeout\n");
-+		goto unlock;
-+	}
-+
-+	writel_relaxed(ZX2967_DCF_FREEZE | ZX2967_DCF_EN,
-+		       regs + ZX2967_THERMAL_DCF);
-+	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
-+			 & ZX2967_THERMAL_TEMP_MASK;
-+	writel_relaxed(ZX2967_POWER_MODE_HIGH,
-+		       regs + ZX2967_THERMAL_POWER_MODE);
-+
-+	/*
-+	 * Calculate temperature
-+	 * In dts, slope is multiplied by 1000.
-+	 */
-+	*temp = DIV_ROUND_CLOSEST(((s32)val + priv->tzd->tzp->offset) * 1000,
-+				  priv->tzd->tzp->slope);
-+
-+unlock:
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
-+static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
-+	.get_temp = zx2967_thermal_get_temp,
-+};
-+
-+static int zx2967_thermal_probe(struct platform_device *pdev)
-+{
-+	struct zx2967_thermal_priv *priv;
-+	struct resource *res;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->regs))
-+		return PTR_ERR(priv->regs);
-+
-+	priv->clk_topcrm = devm_clk_get(&pdev->dev, "topcrm");
-+	if (IS_ERR(priv->clk_topcrm)) {
-+		ret = PTR_ERR(priv->clk_topcrm);
-+		dev_err(&pdev->dev, "failed to get topcrm clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk_topcrm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable topcrm clock: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	priv->clk_apb = devm_clk_get(&pdev->dev, "apb");
-+	if (IS_ERR(priv->clk_apb)) {
-+		ret = PTR_ERR(priv->clk_apb);
-+		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
-+		goto disable_clk_topcrm;
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk_apb);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable apb clock: %d\n",
-+			ret);
-+		goto disable_clk_topcrm;
-+	}
-+
-+	mutex_init(&priv->lock);
-+	priv->tzd = thermal_zone_of_sensor_register(&pdev->dev,
-+					0, priv, &zx2967_of_thermal_ops);
-+
-+	if (IS_ERR(priv->tzd)) {
-+		ret = PTR_ERR(priv->tzd);
-+		dev_err(&pdev->dev, "failed to register sensor: %d\n", ret);
-+		goto disable_clk_all;
-+	}
-+
-+	if (priv->tzd->tzp->slope == 0) {
-+		thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-+		dev_err(&pdev->dev, "coefficients of sensor is invalid\n");
-+		ret = -EINVAL;
-+		goto disable_clk_all;
-+	}
-+
-+	priv->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+
-+disable_clk_all:
-+	clk_disable_unprepare(priv->clk_apb);
-+disable_clk_topcrm:
-+	clk_disable_unprepare(priv->clk_topcrm);
-+	return ret;
-+}
-+
-+static int zx2967_thermal_exit(struct platform_device *pdev)
-+{
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+
-+	thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-+	clk_disable_unprepare(priv->clk_topcrm);
-+	clk_disable_unprepare(priv->clk_apb);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_thermal_id_table[] = {
-+	{ .compatible = "zte,zx296718-thermal" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int zx2967_thermal_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+
-+	if (priv && priv->clk_topcrm)
-+		clk_disable_unprepare(priv->clk_topcrm);
-+
-+	if (priv && priv->clk_apb)
-+		clk_disable_unprepare(priv->clk_apb);
-+
-+	return 0;
-+}
-+
-+static int zx2967_thermal_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+	int error;
-+
-+	error = clk_prepare_enable(priv->clk_topcrm);
-+	if (error)
-+		return error;
-+
-+	error = clk_prepare_enable(priv->clk_apb);
-+	if (error) {
-+		clk_disable_unprepare(priv->clk_topcrm);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
-+			 zx2967_thermal_suspend, zx2967_thermal_resume);
-+
-+static struct platform_driver zx2967_thermal_driver = {
-+	.probe = zx2967_thermal_probe,
-+	.remove = zx2967_thermal_exit,
-+	.driver = {
-+		.name = "zx2967_thermal",
-+		.of_match_table = zx2967_thermal_id_table,
-+		.pm = &zx2967_thermal_pm_ops,
-+	},
-+};
-+module_platform_driver(zx2967_thermal_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+This opp_table0 DTS node definition is different than the one sent to ML
+by Dave (e.g. opp-microvolt has different definition).
+
+> 
+> > For my use case it would be best to see what data should prevent my
+> > AM5718 from 1.5 GHz OPP.
+> >
+> > In other words I need to be 100% sure that my silicon SoC version
+> > doesn't support the 1.5 GHz frequency.
+> >
+> 
+> look at dra7_efuse_xlate which does a speed grade decode of the
+> speeds permitted.. a value of 15 or 23 should permit 1.5GHz. those
+> are common for DRA7/AM57 SoCs.
+
+Ok, I've checked this and both SoCs have value 23, so they should
+support 1.5 GHz operation. Hence, the AM5718 should not hang.
+
+> 
+> If the efuses seem set for 1.5GHz, the chip should be capable of 
+> 1.5GHz, i'd start suspecting regulators, slew rates and the like.
+
+Then I do need to examine them.
+
+> 
+> http://www.ti.com/lit/pdf/spruhz7
+> rev d: page 371 -> 23 (0x17) = X speed designator Refer to device DM 
+> for supported speed grades for a given device, and the definition for 
+> supported speed grades.
+> So, if you go to 
+> http://www.ti.com/product/AM5718/datasheet/specifications#SWPS043-7245x 
+> -> you will see the "X" designator in AM5718xxX which does support 23 
+> and 1.5GHz.
+
+Yes, correct.
+
+> 
+> 
+> Now, if you did get one of the pre-production samples,
+
+Is there any prod_id (or any other register value), which indicates the
+production sample?
+
+> it is possible 
+> to have efuses slightly messed up on very initial samples - at least 
+> internally, we have had them replaced and none of those samples
+> should have exited TI.. but mistakes might happen.. if the efuse
+> value does not meet the speed grade in documentation, then, please
+> contact TI FAE your company works with and let them know for what to
+> do alternatively, you can also file it on e2e.ti.com for further
+> support.
+> 
+
+Thanks for support.
+
+
+Best regards,
+
+Lukasz Majewski
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
