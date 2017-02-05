@@ -1,94 +1,88 @@
-From: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [RFC 1/2] devicetree: add lm90 thermal_zone sensor support
-Date: Sun,  5 Feb 2017 22:03:15 +0100
-Message-ID: <e2c150ce1312a524ea0a524f3d476f910333ae82.1486327509.git.chunkeey@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jean Delvare <jdelvare-IBi9RG/b67k@public.gmane.org>, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Sun, 5 Feb 2017 22:12:20 +0100
+Message-ID: <20170205211219.GA27072@amd>
+References: <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170203130740.GB12291@valkosipuli.retiisi.org.uk>
+ <20170203210610.GA18379@amd>
+ <20170203213454.GD12291@valkosipuli.retiisi.org.uk>
+ <20170204215610.GA9243@amd>
+ <20170204223350.GF12291@valkosipuli.retiisi.org.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170204223350.GF12291@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, mchehab@s-opensource.com
+Cc: laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the LM90's devicetree definition to
-include the #thermal-sensor-cells property as well as
-the sensor constants in include/dt-bindings/thermal/lm90.h.
 
-Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
-I'm aware that there was atleast one previous attempt to add
-thermal_zone temperature sensors for the LM90 module. This was
-discussed on:
-<http://www.gossamer-threads.com/lists/linux/kernel/1992853>
-<https://lkml.org/lkml/2014/3/4/194>
+--VbJkn9YxBvnuCH5J
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This RFC is meant to get it going again. As I would really
-like to have this functionality for the Netgear WNDR4700.
-This router uses a G781 to measure the SoCs temperature
-in order to regulate a TC654 fan-controller.
-<https://git.lede-project.org/?p=source.git;a=commit;h=9e0fd1b52ad1f805a308bf6a5a13236f352fd962>
----
- Documentation/devicetree/bindings/hwmon/lm90.txt |  6 ++++++
- MAINTAINERS                                      |  1 +
- include/dt-bindings/thermal/lm90.h               | 12 ++++++++++++
- 3 files changed, 19 insertions(+)
- create mode 100644 include/dt-bindings/thermal/lm90.h
+Hi!
 
-diff --git a/Documentation/devicetree/bindings/hwmon/lm90.txt b/Documentation/devicetree/bindings/hwmon/lm90.txt
-index e8632486b9ef..97581266e329 100644
---- a/Documentation/devicetree/bindings/hwmon/lm90.txt
-+++ b/Documentation/devicetree/bindings/hwmon/lm90.txt
-@@ -33,6 +33,11 @@ Optional properties:
-               LM90 "-ALERT" pin output.
-               See interrupt-controller/interrupts.txt for the format.
- 
-+- #thermal-sensor-cells: should be set to 1. See thermal/thermal.txt for
-+	      details. See <include/dt-bindings/thermal/lm90.h> for the
-+	      definition of the local, remote and 2nd remote sensor index
-+	      constants.
-+
- Example LM90 node:
- 
- temp-sensor {
-@@ -41,4 +46,5 @@ temp-sensor {
- 	vcc-supply = <&palmas_ldo6_reg>;
- 	interrupt-parent = <&gpio>;
- 	interrupts = <TEGRA_GPIO(O, 4) IRQ_TYPE_LEVEL_LOW>;
-+	#thermal-sensor-cells = <1>;
- }
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5e637e2b3ff9..8c2ea8a18064 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7541,6 +7541,7 @@ S:	Maintained
- F:	Documentation/hwmon/lm90
- F:	Documentation/devicetree/bindings/hwmon/lm90.txt
- F:	drivers/hwmon/lm90.c
-+F:	include/dt-bindings/thermal/lm90.h
- 
- LM95234 HARDWARE MONITOR DRIVER
- M:	Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-diff --git a/include/dt-bindings/thermal/lm90.h b/include/dt-bindings/thermal/lm90.h
-new file mode 100644
-index 000000000000..39d90f3e63ee
---- /dev/null
-+++ b/include/dt-bindings/thermal/lm90.h
-@@ -0,0 +1,12 @@
-+/*
-+ * This header provides constants for the LM90 thermal bindings.
-+ */
-+
-+#ifndef _DT_BINDINGS_THERMAL_LM90_H_
-+#define _DT_BINDINGS_THERMAL_LM90_H_
-+
-+#define LM90_REMOTE_TEMPERATURE 0
-+#define LM90_LOCAL_TEMPERATURE 1
-+#define LM90_REMOTE2_TEMPERATURE 2
-+
-+#endif
--- 
-2.11.0
+> > 9) Highly reconfigurable hardware - Julien Beraud
+> >=20
+> > - 44 sub-devices connected with an interconnect.
+> > - As long as formats match, any sub-device could be connected to any
+> > - other sub-device through a link.
+> > - The result is 44 * 44 links at worst.
+> > - A switch sub-device proposed as the solution to model the
+> > - interconnect. The sub-devices are connected to the switch
+> > - sub-devices through the hardware links that connect to the
+> > - interconnect.
+> > - The switch would be controlled through new IOCTLs S_ROUTING and
+> > - G_ROUTING.
+> > - Patches available:
+> >  http://git.linuxtv.org/cgit.cgi/pinchartl/media.git/log/?h=3Dxilinx-wip
+> >=20
+> > but the patches are from 2005. So I guess I'll need some guidance here.=
+=2E.
+>=20
+> Yeah, that's where it began (2015?), but right now I can only suggest to
+> wait until there's more. My estimate is within next couple of weeks /
+> months. But it won't be years.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, week or two would be ok, couple of months is not. And all I need
+is single hook in common structure.
+
+So if g_endpoint_config hook looks sane to _you_, I suggest we simply
+proceed. Now, maybe Mauro Carvalho Chehab <mchehab@s-opensource.com>
+or Laurent or Julien will want a different solution, but
+then... they'll have to suggest something doable now, not in couple of
+months.
+
+Does that sound like a plan?
+
+Mauro added to cc list, so we can get some input.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--VbJkn9YxBvnuCH5J
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAliXlTMACgkQMOfwapXb+vLTZQCggprGTWZ/5OsMhTltzu8ZF21v
+WLkAn2JAtJn6Q1vTeHHnWS4tV1b0ysDb
+=efDg
+-----END PGP SIGNATURE-----
+
+--VbJkn9YxBvnuCH5J--
