@@ -1,133 +1,326 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 1/2] dt: emac: document device-tree based phy discovery and
- setup
-Date: Sun, 5 Feb 2017 14:33:44 -0800
-Message-ID: <23e29bef-4c49-8ff6-b156-3b028ed592c4@gmail.com>
+Subject: Re: [RFC 2/2] net: emac: add support for device-tree based PHY
+ discovery and setup
+Date: Sun, 5 Feb 2017 14:44:54 -0800
+Message-ID: <7143c86d-6a3c-5e55-70cd-7424f28e1d78@gmail.com>
 References: <f57a340f615991ed2771d8af4b1a908dec436a5e.1486333475.git.chunkeey@googlemail.com>
+ <710c7971cb7dcef54058b61dced03b5d27553380.1486333475.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f57a340f615991ed2771d8af4b1a908dec436a5e.1486333475.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <710c7971cb7dcef54058b61dced03b5d27553380.1486333475.git.chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ivan Mikhaylov <ivan-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Ivan Mikhaylov <ivan-tA70FqPdS9bQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Le 02/05/17 à 14:25, Christian Lamparter a écrit :
-> This patch adds documentation for a new "phy-handler" property
-> and "mdio" sub-node. These allows the enumeration of PHYs which
-> are supported by the phy library under drivers/net/phy.
+> From: Christian Lamparter <chunkeey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-> The EMAC ethernet controller in IBM and AMCC 4xx chips is
-> currently stuck with a few privately defined phy
-> implementations. It has no support for PHYs which
-> are supported by the generic phylib.
+> This patch adds glue-code that allows the EMAC driver to interface
+> with the existing dt-supported PHYs in drivers/net/phy.
+> 
+> Because currently, the emac driver maintains a small library of
+> supported phys for in a private phy.c file located in the drivers
+> directory.
+> 
+> The support is limited to mostly single ethernet transceiver like the:
+> CIS8201, BCM5248, ET1011C, Marvell 88E1111 and 88E1112, AR8035.
+> However, routers like the Netgear WNDR4700 and Cisco Meraki MX60(W)
+> have a 5-port switch (QCA8327N) attached to the MDIO of the EMAC.
+> The switch chip has already a proper phy-driver (qca8k) that uses
+> the generic phy library.
+
+Technically, it's a mdio_device in the upstream kernel that registers a
+switch with DSA (and a PHY device in the OpenWrt/LEDE downstream
+kernel). If your goal is to specifically support that device you should
+consider making the EMAC interface with a fixed link PHY to properly
+initialize the EMAC <=> CPU port of the switch link, and then declare
+the qca8k device as a child MDIO device (not a PHY), similar to what is
+done in arch/arm/boot/dts/vf610-zii-dev-rev-b.dts for instance.
+
 > 
 > Signed-off-by: Christian Lamparter <chunkeey-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../devicetree/bindings/powerpc/4xx/emac.txt       | 60 +++++++++++++++++++++-
->  1 file changed, 58 insertions(+), 2 deletions(-)
+>  drivers/net/ethernet/ibm/emac/core.c | 188 +++++++++++++++++++++++++++++++++++
+>  drivers/net/ethernet/ibm/emac/core.h |   4 +
+>  2 files changed, 192 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> index 712baf6c3e24..0572d053c35a 100644
-> --- a/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/4xx/emac.txt
-> @@ -71,6 +71,8 @@
->  			  For Axon it can be absent, though my current driver
->  			  doesn't handle phy-address yet so for now, keep
->  			  0x00ffffff in it.
-> +    - phy-handle	: See net/ethernet.txt file; used to describe
-> +			  configurations where a external PHY is used.
->      - rx-fifo-size-gige : 1 cell, Rx fifo size in bytes for 1000 Mb/sec
->  			  operations (if absent the value is the same as
->  			  rx-fifo-size).  For Axon, either absent or 2048.
-> @@ -82,7 +84,18 @@
->      - tah-channel       : 1 cell, optional. If appropriate, channel used on the
->  			  TAH engine.
+> diff --git a/drivers/net/ethernet/ibm/emac/core.c b/drivers/net/ethernet/ibm/emac/core.c
+> index 6ead2335a169..ea9234cdb227 100644
+> --- a/drivers/net/ethernet/ibm/emac/core.c
+> +++ b/drivers/net/ethernet/ibm/emac/core.c
+> @@ -42,6 +42,7 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_net.h>
+> +#include <linux/of_mdio.h>
+>  #include <linux/slab.h>
 >  
-> -    Example:
-> +    - mdio subnode	: When the EMAC has a phy connected to its local
-> +			  mdio, which us supported by the kernel's network
-> +			  PHY library in drivers/net/phy, there must be device
-> +			  tree subnode with the following required properties:
-> +				- #address-cells: Must be <1>.
-> +				- #size-cells: Must be <0>.
-> +
-> +			  For each phy on the mdio bus, there must be a node
-> +			  with the following fields:
-> +				- reg: phy id used to communicate to phy.
-> +				- device_type: Must be "ethernet-phy".
-
-Just provide a reference to
-Documentation/devicetree/bindings/net/phy.txt and
-Documentation/devicetree/bindings/net/ethernet.txt here. device_type is
-not required.
-
-> +    Examples:
+>  #include <asm/processor.h>
+> @@ -2420,6 +2421,179 @@ static int emac_read_uint_prop(struct device_node *np, const char *name,
+>  	return 0;
+>  }
 >  
->  	EMAC0: ethernet@40000800 {
->  		device_type = "network";
-> @@ -104,6 +117,50 @@
->  		zmii-channel = <0>;
->  	};
->  
-> +	EMAC1: ethernet@ef600c00 {
-> +		device_type = "network";
-> +		compatible = "ibm,emac-apm821xx", "ibm,emac4sync";
-> +		interrupt-parent = <&EMAC1>;
-> +		interrupts = <0 1>;
-> +		#interrupt-cells = <1>;
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
-> +		interrupt-map = <0 &UIC2 0x10 IRQ_TYPE_LEVEL_HIGH /* Status */
-> +				 1 &UIC2 0x14 IRQ_TYPE_LEVEL_HIGH /* Wake */>;
-> +		reg = <0xef600c00 0x000000c4>;
-> +		local-mac-address = [000000000000]; /* Filled in by U-Boot */
-> +		mal-device = <&MAL0>;
-> +		mal-tx-channel = <0>;
-> +		mal-rx-channel = <0>;
-> +		cell-index = <0>;
-> +		max-frame-size = <9000>;
-> +		rx-fifo-size = <16384>;
-> +		tx-fifo-size = <2048>;
-> +		fifo-entry-size = <10>;
-> +		phy-mode = "rgmii";
-> +		phy-map = <0x00000000>;
+> +static void emac_adjust_link(struct net_device *ndev)
+> +{
+> +	struct emac_instance *dev = netdev_priv(ndev);
+> +	struct phy_device *phy = dev->phy_dev;
+> +
+> +	mutex_lock(&dev->link_lock);
+> +	dev->phy.autoneg = phy->autoneg;
+> +	dev->phy.speed = phy->speed;
+> +	dev->phy.duplex = phy->duplex;
+> +	dev->phy.pause = phy->pause;
+> +	dev->phy.asym_pause = phy->asym_pause;
+> +	dev->phy.advertising = phy->advertising;
+> +	mutex_unlock(&dev->link_lock);
 
-If you have a proper mdio subnode, this property becomes irrelevant and
-should be unused.
+PHYLIB already executes grabbing the phy device's mutex, is this really
+needed here?
 
-> +		phy-handle = <&phy0>;
-> +		rgmii-device = <&RGMII0>;
-> +		rgmii-channel = <0>;
-> +		tah-device = <&TAH0>;
-> +		tah-channel = <0>;
-> +		has-inverted-stacr-oc;
-> +		has-new-stacr-staopc;
+> +}
 > +
-> +	        mdio {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
+> +static int emac_mii_bus_read(struct mii_bus *bus, int addr, int regnum)
+> +{
+> +	return emac_mdio_read(bus->priv, addr, regnum);
+> +}
 > +
-> +			phy0: ethernet-phy@0 {
-> +				device_type = "ethernet-phy";
-> +				reg = <0>;
+> +static int emac_mii_bus_write(struct mii_bus *bus, int addr, int regnum,
+> +			      u16 val)
+> +{
+> +	emac_mdio_write(bus->priv, addr, regnum, val);
+> +	return 0;
+> +}
 > +
-> +				qca,ar8327-initvals = <
-> +					0x0010 0x40000000>;
-> +		};
-> +	};
+> +static int emac_mii_bus_reset(struct mii_bus *bus)
+> +{
+> +	struct emac_instance *dev = netdev_priv(bus->priv);
 > +
+> +	emac_mii_reset_phy(&dev->phy);
+
+This seems wrong, emac_mii_reset_phy() does a BMCR software reset, which
+PHYLIB is already going to do (phy_init_hw), yet you do this here at the
+MDIO bus level towards a specify PHY, whereas this should be affecting
+the MDIO bus itself (and/or *all* PHY child devices for quirks).
+
+> +	return 0;
+> +}
 > +
->        ii) McMAL node
+> +static int emac_mdio_probe(struct emac_instance *dev)
+> +{
+> +	struct device_node *mii_np;
+> +	struct mii_bus *bus;
+> +	int res;
+> +
+> +	bus = mdiobus_alloc();
+> +	if (!bus)
+> +		return -ENOMEM;
+> +
+> +	mii_np = of_get_child_by_name(dev->ofdev->dev.of_node, "mdio");
+> +	if (!mii_np) {
+> +		dev_err(&dev->ndev->dev, "no mdio definition found.");
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (!of_device_is_available(mii_np))
+> +		return 0;
+> +
+> +	bus->priv = dev->ndev;
+> +	bus->parent = dev->ndev->dev.parent;
+> +	bus->name = "emac_mdio";
+> +	bus->read = &emac_mii_bus_read;
+> +	bus->write = &emac_mii_bus_write;
+> +	bus->reset = &emac_mii_bus_reset;
+> +
+> +	snprintf(bus->id, MII_BUS_ID_SIZE, "%s", bus->name);
+
+You should pick a more unique name here, if you ever have a second
+instance it would just clash with the previous one.
+
+> +
+> +	res = of_mdiobus_register(bus, mii_np);
+> +	if (res) {
+> +		dev_err(&dev->ndev->dev, "cannot register MDIO bus %s\n",
+> +			bus->name);
+> +		mdiobus_free(bus);
+> +	}
+> +
+> +	dev->mii_bus = bus;
+> +	return res;
+> +}
+> +
+> +static void emac_mdio_cleanup(struct emac_instance *dev)
+> +{
+> +	if (dev->mii_bus) {
+> +		if (dev->mii_bus->state == MDIOBUS_REGISTERED)
+> +			mdiobus_unregister(dev->mii_bus);
+
+If you need to make that kind of check, why not separate how the mdio
+bus structure's lifecycle is managed? This seems to be avoiding to hit
+the BUG_ON() in mdiobus_unregister..
+
+> +		mdiobus_free(dev->mii_bus);
+> +		dev->mii_bus = NULL;
+> +		kfree(dev->phy.def);
+> +	}
+> +}
+> +
+> +static int stub_setup_aneg(struct mii_phy *phy, u32 advertise)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int stub_setup_forced(struct mii_phy *phy, int speed, int fd)
+> +{
+> +	return 0;
+> +}
+> +
+> +static int stub_poll_link(struct mii_phy *phy)
+> +{
+> +	struct net_device *ndev = phy->dev;
+> +	struct emac_instance *dev = netdev_priv(ndev);
+> +
+> +	return dev->opened;
+> +}
+> +
+> +static int stub_read_link(struct mii_phy *phy)
+> +{
+> +	struct net_device *ndev = phy->dev;
+> +	struct emac_instance *dev = netdev_priv(ndev);
+> +
+> +	phy_start(dev->phy_dev);
+
+Are you sure the read_link function is supposed to start the PHY state
+machine? Either the name is confusing, or it's not the right thing to do
+here.
+
+> +	return 0;
+> +}
+> +
+> +static const struct mii_phy_ops emac_stub_phy_ops = {
+> +	.setup_aneg	= stub_setup_aneg,
+> +	.setup_forced	= stub_setup_forced,
+> +	.poll_link	= stub_poll_link,
+> +	.read_link	= stub_read_link,
+> +};
+> +
+> +static int emac_probe_dt_phy(struct emac_instance *dev)
+> +{
+> +	struct device_node *np = dev->ofdev->dev.of_node;
+> +	struct device_node *phy_handle;
+> +	struct net_device *ndev = dev->ndev;
+> +	int res;
+> +
+> +	phy_handle = of_parse_phandle(np, "phy-handle", 0);
+> +
+> +	if (phy_handle) {
+> +		res = emac_mdio_probe(dev);
+> +		if (res)
+> +			goto err_cleanup;
+> +
+> +		dev->phy.def = kzalloc(sizeof(*dev->phy.def), GFP_KERNEL);
+> +		if (!dev->phy.def) {
+> +			res = -ENOMEM;
+> +			goto err_cleanup;
+> +		}
+> +
+> +		dev->phy_dev = of_phy_connect(ndev, phy_handle,
+> +					      &emac_adjust_link, 0,
+> +					      PHY_INTERFACE_MODE_RGMII);
+
+You should call of_get_phy_mode() since there should be a proper
+"phy-mode" or "phy-connection-type" property describing how it's
+connected to the EMAC.
+
+> +		if (!dev->phy_dev) {
+> +			res = -ENODEV;
+> +			goto err_cleanup;
+> +		}
+> +
+> +		of_node_put(phy_handle);
+> +		dev->phy.def->phy_id = dev->phy_dev->drv->phy_id;
+> +		dev->phy.def->phy_id_mask = dev->phy_dev->drv->phy_id_mask;
+> +		dev->phy.def->name = dev->phy_dev->drv->name;
+> +		dev->phy.def->ops = &emac_stub_phy_ops;
+> +		/* Disable any PHY features not supported by the platform */
+> +		dev->phy.def->features =  dev->phy_dev->drv->features &
+> +					  ~dev->phy_feat_exc;
+> +		dev->phy.features = dev->phy.def->features;
+> +		dev->phy.address = dev->phy_dev->mdio.addr;
+> +		dev->phy.mode = dev->phy_dev->interface;
+> +		return 0;
+> +	}
+> +
+> +	/* if the device tree didn't specifiy the the phy, then
+> +	 * we simply fallback to the old emac_phy.c probe code
+> +	 * for compatibility reasons.
+> +	 */
+> +	return 1;
+> +
+> + err_cleanup:
+> +	of_node_put(phy_handle);
+> +	kfree(dev->phy.def);
+> +	return res;
+> +}
+> +
+>  static int emac_init_phy(struct emac_instance *dev)
+>  {
+>  	struct device_node *np = dev->ofdev->dev.of_node;
+> @@ -2490,6 +2664,13 @@ static int emac_init_phy(struct emac_instance *dev)
 >  
->      Required properties:
-> @@ -145,4 +202,3 @@
->      - revision           : as provided by the RGMII new version register if
->  			   available.
->  			   For Axon: 0x0000012a
-> -
+>  	emac_configure(dev);
+>  
+> +	if (emac_has_feature(dev, EMAC_FTR_HAS_RGMII)) {
+> +		int res = emac_probe_dt_phy(dev);
+> +
+> +		if (res <= 0)
+> +			return res;
+> +	}
+
+Why is this limited to EMAC_FTR_HAS_RGMII here?
+
+> +
+>  	if (dev->phy_address != 0xffffffff)
+>  		phy_map = ~(1 << dev->phy_address);
+>  
+> @@ -2938,6 +3119,8 @@ static int emac_probe(struct platform_device *ofdev)
+>  	/* I have a bad feeling about this ... */
+>  
+>   err_detach_tah:
+> +	emac_mdio_cleanup(dev);
+> +
+>  	if (emac_has_feature(dev, EMAC_FTR_HAS_TAH))
+>  		tah_detach(dev->tah_dev, dev->tah_port);
+>   err_detach_rgmii:
+> @@ -2988,6 +3171,11 @@ static int emac_remove(struct platform_device *ofdev)
+>  	if (emac_has_feature(dev, EMAC_FTR_HAS_ZMII))
+>  		zmii_detach(dev->zmii_dev, dev->zmii_port);
+>  
+> +	if (dev->phy_dev)
+> +		phy_disconnect(dev->phy_dev);
+> +
+> +	emac_mdio_cleanup(dev);
+> +
+>  	busy_phy_map &= ~(1 << dev->phy.address);
+>  	DBG(dev, "busy_phy_map now %#x" NL, busy_phy_map);
+>  
+> diff --git a/drivers/net/ethernet/ibm/emac/core.h b/drivers/net/ethernet/ibm/emac/core.h
+> index 93ae11494810..0710a6685489 100644
+> --- a/drivers/net/ethernet/ibm/emac/core.h
+> +++ b/drivers/net/ethernet/ibm/emac/core.h
+> @@ -199,6 +199,10 @@ struct emac_instance {
+>  	struct emac_instance		*mdio_instance;
+>  	struct mutex			mdio_lock;
+>  
+> +	/* Device-tree based phy configuration */
+> +	struct mii_bus			*mii_bus;
+> +	struct phy_device		*phy_dev;
+> +
+>  	/* ZMII infos if any */
+>  	u32				zmii_ph;
+>  	u32				zmii_port;
 > 
 
 
