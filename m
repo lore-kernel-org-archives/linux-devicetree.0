@@ -1,123 +1,62 @@
-From: Rask Ingemann Lambertsen <rask@formelder.dk>
-Subject: Re: [PATCH 5/5] ARM: dts: sun9i: Initial support for the Sunchip
- CX-A99 board
-Date: Sun, 5 Feb 2017 20:23:14 +0100
-Message-ID: <20170205192313.iik7fdcygltpjfwt@localhost>
-References: <cover.1485456003.git.rask@formelder.dk>
- <82617383a0739458d5c9c95dccaf479675fce593.1485456007.git.rask@formelder.dk>
- <CAGb2v65EAJBsNCDNSg=uNm3-h8xAKoiuS_rUdaWS8Be84WMvsQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65EAJBsNCDNSg=uNm3-h8xAKoiuS_rUdaWS8Be84WMvsQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Alban <albeu@free.fr>
+Subject: [PATCH v4 3/3] MIPS: ath79: Fix the USB PHY reset names
+Date: Sun,  5 Feb 2017 20:52:32 +0100
+Message-ID: <1486324352-15188-3-git-send-email-albeu@free.fr>
+References: <1486324352-15188-1-git-send-email-albeu@free.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486324352-15188-1-git-send-email-albeu@free.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Alban Bedel <albeu@free.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Antony Pavlov <antonynpavlov@gmail.com>, devicetree@vger.kernel.org, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 02, 2017 at 03:36:41PM +0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Fri, Jan 27, 2017 at 5:27 AM, Rask Ingemann Lambertsen
-> <rask@formelder.dk> wrote:
-[...]
-> > diff --git a/arch/arm/boot/dts/sun9i-a80-cx-a99.dts b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
-> > new file mode 100644
-> > index 0000000..8925093
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/sun9i-a80-cx-a99.dts
-[...]
-> > +       leds {
-> > +               compatible = "gpio-leds";
-> > +
-> > +               blue {
-> > +                       gpios = <&pio 6 10 GPIO_ACTIVE_HIGH>;   /* PG10 */
-> > +                       label = "cx-a99:blue:status";
-> > +                       default-state = "on";
-> 
-> Please add a note justifying default-state = "on".
+From: Alban Bedel <albeu@free.fr>
 
-I think I'll remove it instead. The device ships with a U-Boot and Android
-installation where blue means "on" and red means "stand-by" (which is simply
-implemented by blanking the screen, it seems), but I doubt many people want
-to run the rather old Android version available for this device. Instead,
-I was going to point to the quick setup guide, but it has no mention of the
-LEDs at all, so I guess the user won't expect the blue LED to turn on.
+The binding for the USB PHY went thru before the driver. However the
+new version of the driver now use the PHY core support for reset, and
+this expect the reset to be named "phy". So remove the "usb-" prefix
+from the the reset names.
 
-> > +       /* USB 3.0 OTG connector. For now, only Vbus is supported. */
-> > +       reg_usb0_vbus: regulator-usb0-vbus {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "usb0-vbus";
-> > +               regulator-min-microvolt = <5000000>;
-> > +               regulator-max-microvolt = <5000000>;
-> > +               gpio = <&pio 7 15 GPIO_ACTIVE_HIGH>;    /* PH15 */
-> > +               enable-active-high;
-> > +               regulator-always-on;
-> 
-> It's bad to leave VBUS for OTG connectors on. You never know
-> what is plugged in.
+Signed-off-by: Alban Bedel <albeu@free.fr>
+---
+ Documentation/devicetree/bindings/phy/phy-ath79-usb.txt | 4 ++--
+ arch/mips/boot/dts/qca/ar9132.dtsi                      | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-The comment is misleading as the connector is not an OTG one but just a
-standard-A receptacle wired to the SoC's OTG port. I'll change the comment.
-
-> > +/* SD card slot. */
-> > +&mmc0 {
-> > +       bus-width = <4>;
-> > +       cd-gpios = <&pio 7 17 GPIO_ACTIVE_LOW>; /* PH17 */
-> > +       broken-cd;                              /* Interrupts don't work. */
-> 
-> This should be handled by the driver.
-
-The MMC core, without broken-cd, requests the GPIO driver to enable
-interrupt delivery on the pin and will fall back to polling the GPIO pin
-if the GPIO driver refuses to enable interrupt delivery. What I see is
-that the GPIO driver accepts to deliver interrupts, but only the first
-interrupt is triggered (as evident from /proc/interrupts showing only 1).
-The vendor sys_config.fex also sets the GPIO pin to polled operation, so
-maybe there is a hardware bug.
-
-The sunxi-mmc driver doesn't really support operation with broken-cd only
-because it spams the console and dmesg with useless error messages, see
-https://www.mail-archive.com/linux-sunxi@googlegroups.com/msg19963.html
-for an example.
-
-The comment should probably read something like "GPIO pin delivers no
-interrupts, poll it".
-
-> > +                       /* 1.8 V (enabled). */
-> > +                       reg_bldo1: bldo1 {
-> > +                               regulator-boot-on;
-> > +                               regulator-always-on;    /* Hang if disabled */
-> 
-> If you specify always-on, you don't need to add boot-on.
-
-Ack.
-
-> > +                       /* 3.3 V (enabled). */
-> > +                       reg_dcdce: dcdce {
-> > +                               regulator-boot-on;
-> > +                               regulator-always-on;
-> > +                               regulator-min-microvolt = <3300000>;
-> > +                               regulator-max-microvolt = <3300000>;
-> > +                               regulator-name = "vcc-pb-pc-pd-pe-pf-ph-mmc-spdif";
-> 
-> This is probably vcc-io or something shorter.
-
-I'm verbose with the names of the regulators for documentation purposes
-because unlike some of the boards aimed at developers, documentation is on
-this device is scarse. I see that with -mmc now added after my latest round
-of probing with a multimeter, the line went above 80 characters. Will it be
-OK with vcc-pb,c,d,e,f,h-mmc-spdif?
-
+diff --git a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+index cafe219..c3a29c5 100644
+--- a/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
++++ b/Documentation/devicetree/bindings/phy/phy-ath79-usb.txt
+@@ -3,7 +3,7 @@
+ Required properties:
+ - compatible: "qca,ar7100-usb-phy"
+ - #phys-cells: should be 0
+-- reset-names: "usb-phy"[, "usb-suspend-override"]
++- reset-names: "phy"[, "suspend-override"]
+ - resets: references to the reset controllers
+ 
+ Example:
+@@ -11,7 +11,7 @@ Example:
+ 	usb-phy {
+ 		compatible = "qca,ar7100-usb-phy";
+ 
+-		reset-names = "usb-phy", "usb-suspend-override";
++		reset-names = "phy", "suspend-override";
+ 		resets = <&rst 4>, <&rst 3>;
+ 
+ 		#phy-cells = <0>;
+diff --git a/arch/mips/boot/dts/qca/ar9132.dtsi b/arch/mips/boot/dts/qca/ar9132.dtsi
+index 302f0a8..808c2bb 100644
+--- a/arch/mips/boot/dts/qca/ar9132.dtsi
++++ b/arch/mips/boot/dts/qca/ar9132.dtsi
+@@ -160,7 +160,7 @@
+ 	usb_phy: usb-phy {
+ 		compatible = "qca,ar7100-usb-phy";
+ 
+-		reset-names = "usb-phy", "usb-suspend-override";
++		reset-names = "phy", "suspend-override";
+ 		resets = <&rst 4>, <&rst 3>;
+ 
+ 		#phy-cells = <0>;
 -- 
-Rask Ingemann Lambertsen
+2.7.4
