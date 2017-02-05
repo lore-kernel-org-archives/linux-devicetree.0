@@ -1,117 +1,99 @@
-From: <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: patch "of: device: Support loading a module with OF based modalias" added to usb-next
-Date: Sun, 05 Feb 2017 08:32:29 +0100
-Message-ID: <1486279949105251@kroah.com>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Sun, 5 Feb 2017 08:42:16 +0100
+Message-ID: <20170205074216.GA314@kroah.com>
+References: <1486119324-9362-1-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486119324-9362-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, peter.chen-3arQi8VN3Tc@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Feb 03, 2017 at 11:55:24AM +0100, Richard Leitner wrote:
+> +/**
+> + * ascii2utf16le() - Helper routine for producing UTF-16LE string descriptors
+> + * @s: Null-terminated ASCII (actually ISO-8859-1) string
+> + * @buf: Buffer for UTF-16LE string
+> + * @len: Length (in bytes; may be odd) of UTF-16LE buffer.
+> + *
+> + * Return: The number of bytes filled in: 2*strlen(s) or @len, whichever is less
+> + *
+> + * Note:
+> + * The UTF-16LE USB String descriptors can contain at most 31 characters (as
+> + * specified in the datasheet); input strings longer than that are truncated.
+> + *
+> + * Based on ascii2desc from drivers/usb/core/hcd.c
+> + */
+> +static unsigned int ascii2utf16le(char const *s, u8 *buf, unsigned int len)
+> +{
+> +	unsigned int n, t = 2 * strlen(s);
+> +
+> +	if (t > USB251XB_STRING_BUFSIZE)
+> +		t = USB251XB_STRING_BUFSIZE;
+> +	if (len > t)
+> +		len = t;
+> +	n = len;
+> +	while (n--) {
+> +		t = (unsigned char)*s++;
+> +		*buf++ = t;
+> +		if (!n--)
+> +			break;
+> +		*buf++ = t >> 8;
+> +	}
+> +	return len;
+> +}
 
-This is a note to let you know that I've just added the patch titled
+Don't we have a kernel function for this already?  If we need to export
+ascii2desc() from the USB core, we can do that, or better yet, move both
+of them to a string library function in the core part of the kernel.  We
+shouldn't have to duplicate this type of thin in an individual driver.
 
-    of: device: Support loading a module with OF based modalias
+> --- /dev/null
+> +++ b/include/linux/platform_data/usb251xb.h
+> @@ -0,0 +1,33 @@
+> +#ifndef __USB251XB_H__
+> +#define __USB251XB_H__
+> +
+> +struct usb251xb_platform_data {
+> +	int gpio_reset;
+> +	u16 vendor_id;
+> +	u16 product_id;
+> +	u16 device_id;
+> +	u8 conf_data1;
+> +	u8 conf_data2;
+> +	u8 conf_data3;
+> +	u8 non_rem_dev;
+> +	u8 port_disable_sp;
+> +	u8 port_disable_bp;
+> +	u8 max_power_sp;
+> +	u8 max_power_bp;
+> +	u8 max_current_sp;
+> +	u8 max_current_bp;
+> +	u8 power_on_time;
+> +	u16 lang_id;
+> +	char manufacturer[31];	/* NULL terminated ASCII string */
+> +	char product[31];	/* NULL terminated ASCII string */
+> +	char serial[31];	/* NULL terminated ASCII string */
+> +	u8 bat_charge_en;
+> +	u8 boost_up;
+> +	u8 boost_x;
+> +	u8 port_swap;
+> +	u8 port_map12;
+> +	u8 port_map34;
+> +	u8 status;
+> +};
 
-to my usb git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-in the usb-next branch.
+Do you need a platform data structure here?  Shouldn't we be only using
+DT now?
 
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
+thanks,
 
-The patch will also be merged in the next major kernel release
-during the merge window.
-
-If you have any questions about this process, please let me know.
-
-
->From 9c829c097f2f1cbebcfff69a7254b1df9852fe4e Mon Sep 17 00:00:00 2001
-From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Wed, 28 Dec 2016 14:56:47 -0800
-Subject: of: device: Support loading a module with OF based modalias
-
-In the case of ULPI devices, we want to be able to load the
-driver before registering the device so that we don't get stuck
-in a loop waiting for the phy module to appear and failing usb
-controller probe. Currently we request the ulpi module via the
-ulpi ids, but in the DT case we might need to request it with the
-OF based modalias instead. Add a common function that allows
-anyone to request a module with the OF based modalias.
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Signed-off-by: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>
----
- drivers/of/device.c       | 23 +++++++++++++++++++++++
- include/linux/of_device.h |  6 ++++++
- 2 files changed, 29 insertions(+)
-
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index fd5cfad7c403..8a22a253a830 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -226,6 +226,29 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- 	return tsize;
- }
- 
-+int of_device_request_module(struct device *dev)
-+{
-+	char *str;
-+	ssize_t size;
-+	int ret;
-+
-+	size = of_device_get_modalias(dev, NULL, 0);
-+	if (size < 0)
-+		return size;
-+
-+	str = kmalloc(size + 1, GFP_KERNEL);
-+	if (!str)
-+		return -ENOMEM;
-+
-+	of_device_get_modalias(dev, str, size);
-+	str[size] = '\0';
-+	ret = request_module(str);
-+	kfree(str);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(of_device_request_module);
-+
- /**
-  * of_device_uevent - Display OF related uevent information
-  */
-diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-index cc7dd687a89d..e9afbcc8de12 100644
---- a/include/linux/of_device.h
-+++ b/include/linux/of_device.h
-@@ -37,6 +37,7 @@ extern const void *of_device_get_match_data(const struct device *dev);
- 
- extern ssize_t of_device_get_modalias(struct device *dev,
- 					char *str, ssize_t len);
-+extern int of_device_request_module(struct device *dev);
- 
- extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
- extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
-@@ -78,6 +79,11 @@ static inline int of_device_get_modalias(struct device *dev,
- 	return -ENODEV;
- }
- 
-+static inline int of_device_request_module(struct device *dev)
-+{
-+	return -ENODEV;
-+}
-+
- static inline int of_device_uevent_modalias(struct device *dev,
- 				   struct kobj_uevent_env *env)
- {
--- 
-2.11.1
-
-
+greg k-h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
