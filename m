@@ -1,100 +1,120 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v2] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Sun, 5 Feb 2017 08:42:16 +0100
-Message-ID: <20170205074216.GA314@kroah.com>
-References: <1486119324-9362-1-git-send-email-richard.leitner@skidata.com>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
+Date: Sun, 5 Feb 2017 15:42:22 +0800
+Message-ID: <5896D75E.5020501@rock-chips.com>
+References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
+ <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
+ <20170123174841.GB25789@trickycodes.roam.corp.google.com>
+ <5886BB8F.6040707@rock-chips.com> <20170201181218.GA8595@art_vandelay>
+ <58969F32.9010003@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486119324-9362-1-git-send-email-richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <58969F32.9010003@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>, Sean Paul <seanpaul@chromium.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, tfiga@chromium.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 11:55:24AM +0100, Richard Leitner wrote:
-> +/**
-> + * ascii2utf16le() - Helper routine for producing UTF-16LE string descriptors
-> + * @s: Null-terminated ASCII (actually ISO-8859-1) string
-> + * @buf: Buffer for UTF-16LE string
-> + * @len: Length (in bytes; may be odd) of UTF-16LE buffer.
-> + *
-> + * Return: The number of bytes filled in: 2*strlen(s) or @len, whichever is less
-> + *
-> + * Note:
-> + * The UTF-16LE USB String descriptors can contain at most 31 characters (as
-> + * specified in the datasheet); input strings longer than that are truncated.
-> + *
-> + * Based on ascii2desc from drivers/usb/core/hcd.c
-> + */
-> +static unsigned int ascii2utf16le(char const *s, u8 *buf, unsigned int len)
-> +{
-> +	unsigned int n, t = 2 * strlen(s);
-> +
-> +	if (t > USB251XB_STRING_BUFSIZE)
-> +		t = USB251XB_STRING_BUFSIZE;
-> +	if (len > t)
-> +		len = t;
-> +	n = len;
-> +	while (n--) {
-> +		t = (unsigned char)*s++;
-> +		*buf++ = t;
-> +		if (!n--)
-> +			break;
-> +		*buf++ = t >> 8;
-> +	}
-> +	return len;
-> +}
-
-Don't we have a kernel function for this already?  If we need to export
-ascii2desc() from the USB core, we can do that, or better yet, move both
-of them to a string library function in the core part of the kernel.  We
-shouldn't have to duplicate this type of thin in an individual driver.
-
-> --- /dev/null
-> +++ b/include/linux/platform_data/usb251xb.h
-> @@ -0,0 +1,33 @@
-> +#ifndef __USB251XB_H__
-> +#define __USB251XB_H__
-> +
-> +struct usb251xb_platform_data {
-> +	int gpio_reset;
-> +	u16 vendor_id;
-> +	u16 product_id;
-> +	u16 device_id;
-> +	u8 conf_data1;
-> +	u8 conf_data2;
-> +	u8 conf_data3;
-> +	u8 non_rem_dev;
-> +	u8 port_disable_sp;
-> +	u8 port_disable_bp;
-> +	u8 max_power_sp;
-> +	u8 max_power_bp;
-> +	u8 max_current_sp;
-> +	u8 max_current_bp;
-> +	u8 power_on_time;
-> +	u16 lang_id;
-> +	char manufacturer[31];	/* NULL terminated ASCII string */
-> +	char product[31];	/* NULL terminated ASCII string */
-> +	char serial[31];	/* NULL terminated ASCII string */
-> +	u8 bat_charge_en;
-> +	u8 boost_up;
-> +	u8 boost_x;
-> +	u8 port_swap;
-> +	u8 port_map12;
-> +	u8 port_map34;
-> +	u8 status;
-> +};
-
-Do you need a platform data structure here?  Shouldn't we be only using
-DT now?
-
-thanks,
-
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxN+W5tDAy5pyIMDXml6UgMTE6NDIsIENocmlzIFpob25nIHdyb3RlOgo+Cj4KPiBPbiAw
+Mi8wMi8yMDE3IDAyOjEyIEFNLCBTZWFuIFBhdWwgd3JvdGU6Cj4+IE9uIFR1ZSwgSmFuIDI0LCAy
+MDE3IGF0IDEwOjI3OjI3QU0gKzA4MDAsIENocmlzIFpob25nIHdyb3RlOgo+Pj4gSGkgU2Vhbgo+
+Pj4KPj4+IE9uIDAxLzI0LzIwMTcgMDE6NDggQU0sIFNlYW4gUGF1bCB3cm90ZToKPj4+PiBPbiBG
+cmksIEphbiAyMCwgMjAxNyBhdCAwNjoxMDo0OVBNICswODAwLCBDaHJpcyBaaG9uZyB3cm90ZToK
+Pj4+Pj4gVGhlIE1JUEkgRFNJIGRvIG5vdCBuZWVkIGNoZWNrIHRoZSB2YWxpZGl0eSBvZiByZXNv
+bHV0aW9uLCB0aGUgbWF4Cj4+Pj4+IHJlc29sdXRpb24gc2hvdWxkIGRlcGVuZCBWT1AuIEhlbmNl
+LCByZW1vdmUgCj4+Pj4+IHJrMzI4OF9taXBpX2RzaV9tb2RlX3ZhbGlkCj4+Pj4+IGhlcmUuCj4+
+Pj4gRG9lcyB2b3AgYWN0dWFsbHkgZW5mb3JjZSB0aGlzLCB0aG91Z2g/IEkgc2VlIHRoYXQgCj4+
+Pj4gbW9kZV9jb25maWcubWF4X3dpZHRoIGlzCj4+Pj4gNDA5NiwgYnV0IHRoZXJlIGlzIG5vIGJv
+dW5kcyBjaGVja2luZyBpbiBtb2RlX2ZpeHVwKCkuCj4+Pj4KPj4+PiBUaGUgY29ubmVjdG9yIGlz
+IGN1cnJlbnRseSByZWplY3RpbmcgZXZlcnl0aGluZyBncmVhdGVyIHRoYW4gMjA0Ny4gCj4+Pj4g
+U28gSSB0aGluawo+Pj4+IHlvdSdyZSBnb2luZyB0byByZWdyZXNzIGJlaGF2aW9yIGhlcmUuCj4+
+Pj4KPj4+PiBTZWFuCj4+PiBUaGUgbWlwaSBjb250cm9sbGVyIGhhcyBub3QgdGhpcyB3aWR0aCBs
+aW1pdCwgaXQgZGVwZW5kIHRoZSBWT1AsCj4+PiBzdWNoIGFzIFJLMzM5OSwgVk9QX0xJVCBvbmx5
+IHN1cHBvcnQgMjU2MCwKPj4+IGJ1dCBWT1BfQklHIHN1cHBvcnQgNEsuIFNvIHRoaXMgZHJpdmVy
+IHNob3VsZCBjaGVjayB0aGUgd2lkdGggaGVyZS4KPj4gSSBkb24ndCBzZWUgYW55dGhpbmcgaW4g
+dGhlIHZvcCBkcml2ZXIgdGhhdCByZWplY3RzIGxhcmdlIG1vZGVzIGZvciAKPj4gbGl0dGxlIHZv
+cC4KPj4gU28sIHdoaWxlIEkgYWdyZWUgdGhlIGNoZWNrIHNob3VsZG4ndCBiZSBoZXJlLCB5b3Ug
+c2hvdWxkIG1vdmUgaXQgdG8gCj4+IHdoZXJlIGl0Cj4+IHNob3VsZCBiZSBpbnN0ZWFkIG9mIHJl
+bW92aW5nIGl0IGVudGlyZWx5Lgo+Pgo+PiBTZWFuCj4KPiBkcm1fbW9kZV92YWxpZGF0ZV9zaXpl
+IHdpbGwgY2hlY2sgdGhlIGRldi0+bW9kZV9jb25maWcubWF4X3dpZHRoIGFuZAo+IGRldi0+bW9k
+ZV9jb25maWcubWF4X2hlaWdodCwgdGhlc2UgMiB2YWx1ZSBjb21lIGZyb20gCj4gcm9ja2NoaXBf
+ZHJtX21vZGVfY29uZmlnX2luaXQsCj4gY3VycmVudGx5LCB0aGV5IGFyZSBib3RoIDQwOTYuIFNv
+IHlvdSBhcmUgcmlnaHQsIGRybSBkcml2ZXIgZG9lcyBub3QgCj4gZGlzdGluZ3Vpc2gKPiBiZXR3
+ZWVuIHZvcCBsaXQgYW5kIGJpZy4KPgo+IEkgdGhpbmsgTWFyayBZYW8gYWxyZWFkeSBoYXZlIGEg
+bG9jYWwgc29sdXRpb24sIGFuZCBoZSB3aWxsIHBvc3QgaXQgc29vbi4KSGkKClNlZSBmb2xsb3cg
+cGF0Y2hlcywgc3VwcG9ydCBtb2RlIHZhbGlkIHdpdGggdm9wIGNhbGxiYWNrLgoKWzBdIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU1NTk0My8KWzFdIGh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU1NTk0NS8KCj4KPj4KPj4+Pgo+Pj4+PiBTaWduZWQtb2Zm
+LWJ5OiBDaHJpcyBaaG9uZyA8enl3QHJvY2stY2hpcHMuY29tPgo+Pj4+PiAtLS0KPj4+Pj4KPj4+
+Pj4gQ2hhbmdlcyBpbiB2MzogTm9uZQo+Pj4+Pgo+Pj4+PiAgIGRyaXZlcnMvZ3B1L2RybS9yb2Nr
+Y2hpcC9kdy1taXBpLWRzaS5jIHwgMzkgCj4+Pj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0KPj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMzkgZGVsZXRpb25zKC0pCj4+Pj4+Cj4+
+Pj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyAK
+Pj4+Pj4gYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+PiBpbmRl
+eCBhOTNjZTk3Li42ZjBlMjUyIDEwMDY0NAo+Pj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAv
+ZHctbWlwaS1kc2kuYwo+Pj4+PiBAQCAtMjc4LDggKzI3OCw2IEBAIHN0cnVjdCBkd19taXBpX2Rz
+aV9wbGF0X2RhdGEgewo+Pj4+PiAgICAgICB1MzIgZ3JmX2RzaTBfbW9kZTsKPj4+Pj4gICAgICAg
+dTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+Pj4+PiAgICAgICB1bnNpZ25lZCBpbnQgbWF4X2RhdGFf
+bGFuZXM7Cj4+Pj4+IC0gICAgZW51bSBkcm1fbW9kZV9zdGF0dXMgKCptb2RlX3ZhbGlkKShzdHJ1
+Y3QgZHJtX2Nvbm5lY3RvciAKPj4+Pj4gKmNvbm5lY3RvciwKPj4+Pj4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpOwo+Pj4+PiAgIH07Cj4+Pj4+
+ICAgc3RydWN0IGR3X21pcGlfZHNpIHsKPj4+Pj4gQEAgLTEwODEsMjMgKzEwNzksOCBAQCBzdGF0
+aWMgaW50IAo+Pj4+PiBkd19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVzKHN0cnVjdCBkcm1f
+Y29ubmVjdG9yICpjb25uZWN0b3IpCj4+Pj4+ICAgICAgIHJldHVybiBkcm1fcGFuZWxfZ2V0X21v
+ZGVzKGRzaS0+cGFuZWwpOwo+Pj4+PiAgIH0KPj4+Pj4gLXN0YXRpYyBlbnVtIGRybV9tb2RlX3N0
+YXR1cyBkd19taXBpX2RzaV9tb2RlX3ZhbGlkKAo+Pj4+PiAtICAgICAgICAgICAgICAgICAgICBz
+dHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+Pj4+PiAtICAgICAgICAgICAgICAgICAg
+ICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKPj4+Pj4gLXsKPj4+Pj4gLSAgICBzdHJ1
+Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGNvbl90b19kc2koY29ubmVjdG9yKTsKPj4+Pj4gLQo+Pj4+
+PiAtICAgIGVudW0gZHJtX21vZGVfc3RhdHVzIG1vZGVfc3RhdHVzID0gTU9ERV9PSzsKPj4+Pj4g
+LQo+Pj4+PiAtICAgIGlmIChkc2ktPnBkYXRhLT5tb2RlX3ZhbGlkKQo+Pj4+PiAtICAgICAgICBt
+b2RlX3N0YXR1cyA9IGRzaS0+cGRhdGEtPm1vZGVfdmFsaWQoY29ubmVjdG9yLCBtb2RlKTsKPj4+
+Pj4gLQo+Pj4+PiAtICAgIHJldHVybiBtb2RlX3N0YXR1czsKPj4+Pj4gLX0KPj4+Pj4gLQo+Pj4+
+PiAgIHN0YXRpYyBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgCj4+Pj4+IGR3X21p
+cGlfZHNpX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgPSB7Cj4+Pj4+ICAgICAgIC5nZXRfbW9kZXMg
+PSBkd19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVzLAo+Pj4+PiAtICAgIC5tb2RlX3ZhbGlk
+ID0gZHdfbWlwaV9kc2lfbW9kZV92YWxpZCwKPj4+Pj4gICB9Owo+Pj4+PiAgIHN0YXRpYyB2b2lk
+IGR3X21pcGlfZHNpX2RybV9jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3QgCj4+Pj4+IGRybV9jb25u
+ZWN0b3IgKmNvbm5lY3RvcikKPj4+Pj4gQEAgLTExNjgsMzMgKzExNTEsMTEgQEAgc3RhdGljIGlu
+dCByb2NrY2hpcF9taXBpX3BhcnNlX2R0KHN0cnVjdCAKPj4+Pj4gZHdfbWlwaV9kc2kgKmRzaSkK
+Pj4+Pj4gICAgICAgcmV0dXJuIDA7Cj4+Pj4+ICAgfQo+Pj4+PiAtc3RhdGljIGVudW0gZHJtX21v
+ZGVfc3RhdHVzIHJrMzI4OF9taXBpX2RzaV9tb2RlX3ZhbGlkKAo+Pj4+PiAtICAgICAgICAgICAg
+ICAgICAgICBzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+Pj4+PiAtICAgICAgICAg
+ICAgICAgICAgICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKPj4+Pj4gLXsKPj4+Pj4g
+LSAgICAvKgo+Pj4+PiAtICAgICAqIFRoZSBWSURfUEtUX1NJWkUgZmllbGQgaW4gdGhlIERTSV9W
+SURfUEtUX0NGRwo+Pj4+PiAtICAgICAqIHJlZ2lzdGVyIGlzIDExLWJpdC4KPj4+Pj4gLSAgICAg
+Ki8KPj4+Pj4gLSAgICBpZiAobW9kZS0+aGRpc3BsYXkgPiAweDdmZikKPj4+Pj4gLSAgICAgICAg
+cmV0dXJuIE1PREVfQkFEX0hWQUxVRTsKPj4+Pj4gLQo+Pj4+PiAtICAgIC8qCj4+Pj4+IC0gICAg
+ICogVGhlIFZfQUNUSVZFX0xJTkVTIGZpZWxkIGluIHRoZSBEU0lfVlRJTUlOR19DRkcKPj4+Pj4g
+LSAgICAgKiByZWdpc3RlciBpcyAxMS1iaXQuCj4+Pj4+IC0gICAgICovCj4+Pj4+IC0gICAgaWYg
+KG1vZGUtPnZkaXNwbGF5ID4gMHg3ZmYpCj4+Pj4+IC0gICAgICAgIHJldHVybiBNT0RFX0JBRF9W
+VkFMVUU7Cj4+Pj4+IC0KPj4+Pj4gLSAgICByZXR1cm4gTU9ERV9PSzsKPj4+Pj4gLX0KPj4+Pj4g
+LQo+Pj4+PiAgIHN0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHJrMzI4OF9taXBp
+X2RzaV9kcnZfZGF0YSA9IHsKPj4+Pj4gICAgICAgLmRzaTBfZW5fYml0ID0gUkszMjg4X0RTSTBf
+U0VMX1ZPUF9MSVQsCj4+Pj4+ICAgICAgIC5kc2kxX2VuX2JpdCA9IFJLMzI4OF9EU0kxX1NFTF9W
+T1BfTElULAo+Pj4+PiAgICAgICAuZ3JmX3N3aXRjaF9yZWcgPSBSSzMyODhfR1JGX1NPQ19DT042
+LAo+Pj4+PiAgICAgICAubWF4X2RhdGFfbGFuZXMgPSA0LAo+Pj4+PiAtICAgIC5tb2RlX3ZhbGlk
+ID0gcmszMjg4X21pcGlfZHNpX21vZGVfdmFsaWQsCj4+Pj4+ICAgfTsKPj4+Pj4gICBzdGF0aWMg
+c3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSByazMzOTlfbWlwaV9kc2lfZHJ2X2RhdGEgPSB7
+Cj4+Pj4+IC0tIAo+Pj4+PiAyLjYuMwo+Pj4+Pgo+Pj4+PiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+
+Pj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPj4+Pj4gaHR0cHM6Ly9saXN0cy5m
+cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPj4+Cj4+PiBfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+Pj4gZHJpLWRldmVsIG1h
+aWxpbmcgbGlzdAo+Pj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4gaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwKPgo+Cj4K
+PgoKCi0tIArvvK1hcmsgWWFvCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
