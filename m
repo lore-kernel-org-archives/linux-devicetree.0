@@ -1,108 +1,46 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: Re: [PATCH v3 3/5] drm/rockchip/dsi: remove mode_valid function
-Date: Sun, 5 Feb 2017 11:42:42 +0800
-Message-ID: <58969F32.9010003@rock-chips.com>
-References: <1484907051-7159-1-git-send-email-zyw@rock-chips.com>
- <1484907051-7159-4-git-send-email-zyw@rock-chips.com>
- <20170123174841.GB25789@trickycodes.roam.corp.google.com>
- <5886BB8F.6040707@rock-chips.com> <20170201181218.GA8595@art_vandelay>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v9 2/3] MAINTAINERS: add zx2967 watchdog controller
+ driver to ARM ZTE architecture
+Date: Sun, 5 Feb 2017 11:45:06 +0800
+Message-ID: <20170205034504.GD3407@dragon>
+References: <1486172055-13162-1-git-send-email-baoyou.xie@linaro.org>
+ <1486172055-13162-2-git-send-email-baoyou.xie@linaro.org>
+ <4cba1be6-ee85-7371-ea02-1bf8e7eb628e@roeck-us.net>
+ <CA+DQWkyOZPQORy-rVSqGY8Ht9xWttYt6Csp6pvShGG4OVA_2YQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170201181218.GA8595@art_vandelay>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sean Paul <seanpaul@chromium.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, dianders@chromium.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, tfiga@chromium.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+DQWkyOZPQORy-rVSqGY8Ht9xWttYt6Csp6pvShGG4OVA_2YQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, Jun Nie <jun.nie@linaro.org>, wim@iguana.be, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-watchdog@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwMi8wMi8yMDE3IDAyOjEyIEFNLCBTZWFuIFBhdWwgd3JvdGU6Cj4gT24gVHVlLCBKYW4g
-MjQsIDIwMTcgYXQgMTA6Mjc6MjdBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3JvdGU6Cj4+IEhpIFNl
-YW4KPj4KPj4gT24gMDEvMjQvMjAxNyAwMTo0OCBBTSwgU2VhbiBQYXVsIHdyb3RlOgo+Pj4gT24g
-RnJpLCBKYW4gMjAsIDIwMTcgYXQgMDY6MTA6NDlQTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3JvdGU6
-Cj4+Pj4gVGhlIE1JUEkgRFNJIGRvIG5vdCBuZWVkIGNoZWNrIHRoZSB2YWxpZGl0eSBvZiByZXNv
-bHV0aW9uLCB0aGUgbWF4Cj4+Pj4gcmVzb2x1dGlvbiBzaG91bGQgZGVwZW5kIFZPUC4gSGVuY2Us
-IHJlbW92ZSByazMyODhfbWlwaV9kc2lfbW9kZV92YWxpZAo+Pj4+IGhlcmUuCj4+PiBEb2VzIHZv
-cCBhY3R1YWxseSBlbmZvcmNlIHRoaXMsIHRob3VnaD8gSSBzZWUgdGhhdCBtb2RlX2NvbmZpZy5t
-YXhfd2lkdGggaXMKPj4+IDQwOTYsIGJ1dCB0aGVyZSBpcyBubyBib3VuZHMgY2hlY2tpbmcgaW4g
-bW9kZV9maXh1cCgpLgo+Pj4KPj4+IFRoZSBjb25uZWN0b3IgaXMgY3VycmVudGx5IHJlamVjdGlu
-ZyBldmVyeXRoaW5nIGdyZWF0ZXIgdGhhbiAyMDQ3LiBTbyBJIHRoaW5rCj4+PiB5b3UncmUgZ29p
-bmcgdG8gcmVncmVzcyBiZWhhdmlvciBoZXJlLgo+Pj4KPj4+IFNlYW4KPj4gVGhlIG1pcGkgY29u
-dHJvbGxlciBoYXMgbm90IHRoaXMgd2lkdGggbGltaXQsIGl0IGRlcGVuZCB0aGUgVk9QLAo+PiBz
-dWNoIGFzIFJLMzM5OSwgVk9QX0xJVCBvbmx5IHN1cHBvcnQgMjU2MCwKPj4gYnV0IFZPUF9CSUcg
-c3VwcG9ydCA0Sy4gU28gdGhpcyBkcml2ZXIgc2hvdWxkIGNoZWNrIHRoZSB3aWR0aCBoZXJlLgo+
-IEkgZG9uJ3Qgc2VlIGFueXRoaW5nIGluIHRoZSB2b3AgZHJpdmVyIHRoYXQgcmVqZWN0cyBsYXJn
-ZSBtb2RlcyBmb3IgbGl0dGxlIHZvcC4KPiBTbywgd2hpbGUgSSBhZ3JlZSB0aGUgY2hlY2sgc2hv
-dWxkbid0IGJlIGhlcmUsIHlvdSBzaG91bGQgbW92ZSBpdCB0byB3aGVyZSBpdAo+IHNob3VsZCBi
-ZSBpbnN0ZWFkIG9mIHJlbW92aW5nIGl0IGVudGlyZWx5Lgo+Cj4gU2VhbgoKZHJtX21vZGVfdmFs
-aWRhdGVfc2l6ZSB3aWxsIGNoZWNrIHRoZSBkZXYtPm1vZGVfY29uZmlnLm1heF93aWR0aCBhbmQK
-ZGV2LT5tb2RlX2NvbmZpZy5tYXhfaGVpZ2h0LCB0aGVzZSAyIHZhbHVlIGNvbWUgZnJvbSAKcm9j
-a2NoaXBfZHJtX21vZGVfY29uZmlnX2luaXQsCmN1cnJlbnRseSwgdGhleSBhcmUgYm90aCA0MDk2
-LiBTbyB5b3UgYXJlIHJpZ2h0LCBkcm0gZHJpdmVyIGRvZXMgbm90IApkaXN0aW5ndWlzaApiZXR3
-ZWVuIHZvcCBsaXQgYW5kIGJpZy4KCkkgdGhpbmsgTWFyayBZYW8gYWxyZWFkeSBoYXZlIGEgbG9j
-YWwgc29sdXRpb24sIGFuZCBoZSB3aWxsIHBvc3QgaXQgc29vbi4KCj4KPj4+Cj4+Pj4gU2lnbmVk
-LW9mZi1ieTogQ2hyaXMgWmhvbmcgPHp5d0Byb2NrLWNoaXBzLmNvbT4KPj4+PiAtLS0KPj4+Pgo+
-Pj4+IENoYW5nZXMgaW4gdjM6IE5vbmUKPj4+Pgo+Pj4+ICAgZHJpdmVycy9ncHUvZHJtL3JvY2tj
-aGlwL2R3LW1pcGktZHNpLmMgfCAzOSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMzkgZGVsZXRpb25zKC0pCj4+Pj4KPj4+PiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMgYi9kcml2ZXJzL2dw
-dS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+IGluZGV4IGE5M2NlOTcuLjZmMGUyNTIg
-MTAwNjQ0Cj4+Pj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMK
-Pj4+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYwo+Pj4+IEBA
-IC0yNzgsOCArMjc4LDYgQEAgc3RydWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSB7Cj4+Pj4gICAJ
-dTMyIGdyZl9kc2kwX21vZGU7Cj4+Pj4gICAJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+Pj4+ICAg
-CXVuc2lnbmVkIGludCBtYXhfZGF0YV9sYW5lczsKPj4+PiAtCWVudW0gZHJtX21vZGVfc3RhdHVz
-ICgqbW9kZV92YWxpZCkoc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm5lY3RvciwKPj4+PiAtCQkJ
-CQkgICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSk7Cj4+Pj4gICB9Owo+Pj4+ICAgc3Ry
-dWN0IGR3X21pcGlfZHNpIHsKPj4+PiBAQCAtMTA4MSwyMyArMTA3OSw4IEBAIHN0YXRpYyBpbnQg
-ZHdfbWlwaV9kc2lfY29ubmVjdG9yX2dldF9tb2RlcyhzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29u
-bmVjdG9yKQo+Pj4+ICAgCXJldHVybiBkcm1fcGFuZWxfZ2V0X21vZGVzKGRzaS0+cGFuZWwpOwo+
-Pj4+ICAgfQo+Pj4+IC1zdGF0aWMgZW51bSBkcm1fbW9kZV9zdGF0dXMgZHdfbWlwaV9kc2lfbW9k
-ZV92YWxpZCgKPj4+PiAtCQkJCQlzdHJ1Y3QgZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+Pj4+
-IC0JCQkJCXN0cnVjdCBkcm1fZGlzcGxheV9tb2RlICptb2RlKQo+Pj4+IC17Cj4+Pj4gLQlzdHJ1
-Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGNvbl90b19kc2koY29ubmVjdG9yKTsKPj4+PiAtCj4+Pj4g
-LQllbnVtIGRybV9tb2RlX3N0YXR1cyBtb2RlX3N0YXR1cyA9IE1PREVfT0s7Cj4+Pj4gLQo+Pj4+
-IC0JaWYgKGRzaS0+cGRhdGEtPm1vZGVfdmFsaWQpCj4+Pj4gLQkJbW9kZV9zdGF0dXMgPSBkc2kt
-PnBkYXRhLT5tb2RlX3ZhbGlkKGNvbm5lY3RvciwgbW9kZSk7Cj4+Pj4gLQo+Pj4+IC0JcmV0dXJu
-IG1vZGVfc3RhdHVzOwo+Pj4+IC19Cj4+Pj4gLQo+Pj4+ICAgc3RhdGljIHN0cnVjdCBkcm1fY29u
-bmVjdG9yX2hlbHBlcl9mdW5jcyBkd19taXBpX2RzaV9jb25uZWN0b3JfaGVscGVyX2Z1bmNzID0g
-ewo+Pj4+ICAgCS5nZXRfbW9kZXMgPSBkd19taXBpX2RzaV9jb25uZWN0b3JfZ2V0X21vZGVzLAo+
-Pj4+IC0JLm1vZGVfdmFsaWQgPSBkd19taXBpX2RzaV9tb2RlX3ZhbGlkLAo+Pj4+ICAgfTsKPj4+
-PiAgIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2RybV9jb25uZWN0b3JfZGVzdHJveShzdHJ1Y3Qg
-ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yKQo+Pj4+IEBAIC0xMTY4LDMzICsxMTUxLDExIEBAIHN0
-YXRpYyBpbnQgcm9ja2NoaXBfbWlwaV9wYXJzZV9kdChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkK
-Pj4+PiAgIAlyZXR1cm4gMDsKPj4+PiAgIH0KPj4+PiAtc3RhdGljIGVudW0gZHJtX21vZGVfc3Rh
-dHVzIHJrMzI4OF9taXBpX2RzaV9tb2RlX3ZhbGlkKAo+Pj4+IC0JCQkJCXN0cnVjdCBkcm1fY29u
-bmVjdG9yICpjb25uZWN0b3IsCj4+Pj4gLQkJCQkJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1v
-ZGUpCj4+Pj4gLXsKPj4+PiAtCS8qCj4+Pj4gLQkgKiBUaGUgVklEX1BLVF9TSVpFIGZpZWxkIGlu
-IHRoZSBEU0lfVklEX1BLVF9DRkcKPj4+PiAtCSAqIHJlZ2lzdGVyIGlzIDExLWJpdC4KPj4+PiAt
-CSAqLwo+Pj4+IC0JaWYgKG1vZGUtPmhkaXNwbGF5ID4gMHg3ZmYpCj4+Pj4gLQkJcmV0dXJuIE1P
-REVfQkFEX0hWQUxVRTsKPj4+PiAtCj4+Pj4gLQkvKgo+Pj4+IC0JICogVGhlIFZfQUNUSVZFX0xJ
-TkVTIGZpZWxkIGluIHRoZSBEU0lfVlRJTUlOR19DRkcKPj4+PiAtCSAqIHJlZ2lzdGVyIGlzIDEx
-LWJpdC4KPj4+PiAtCSAqLwo+Pj4+IC0JaWYgKG1vZGUtPnZkaXNwbGF5ID4gMHg3ZmYpCj4+Pj4g
-LQkJcmV0dXJuIE1PREVfQkFEX1ZWQUxVRTsKPj4+PiAtCj4+Pj4gLQlyZXR1cm4gTU9ERV9PSzsK
-Pj4+PiAtfQo+Pj4+IC0KPj4+PiAgIHN0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRh
-IHJrMzI4OF9taXBpX2RzaV9kcnZfZGF0YSA9IHsKPj4+PiAgIAkuZHNpMF9lbl9iaXQgPSBSSzMy
-ODhfRFNJMF9TRUxfVk9QX0xJVCwKPj4+PiAgIAkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9T
-RUxfVk9QX0xJVCwKPj4+PiAgIAkuZ3JmX3N3aXRjaF9yZWcgPSBSSzMyODhfR1JGX1NPQ19DT042
-LAo+Pj4+ICAgCS5tYXhfZGF0YV9sYW5lcyA9IDQsCj4+Pj4gLQkubW9kZV92YWxpZCA9IHJrMzI4
-OF9taXBpX2RzaV9tb2RlX3ZhbGlkLAo+Pj4+ICAgfTsKPj4+PiAgIHN0YXRpYyBzdHJ1Y3QgZHdf
-bWlwaV9kc2lfcGxhdF9kYXRhIHJrMzM5OV9taXBpX2RzaV9kcnZfZGF0YSA9IHsKPj4+PiAtLSAK
-Pj4+PiAyLjYuMwo+Pj4+Cj4+Pj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KPj4+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4+Pj4gZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwo+Pj4+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPj4gZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Baoyou,
+
+On Sun, Feb 05, 2017 at 10:36:38AM +0800, Baoyou Xie wrote:
+> On 5 February 2017 at 08:05, Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+> > On 02/03/2017 05:34 PM, Baoyou Xie wrote:
+> >
+> >> Add the zx2967 watchdog controller driver as maintained by ARM ZTE
+> >> architecture maintainers, as they're parts of the core IP.
+> >>
+> >> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> >>
+> >
+> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> >
+> > I assume you'll submit this patch through the arm tree ?
+> >
+> Could you please submit all three patches through your tree? Thanks a lot
+> :)
+
+Patch #2 is the only one that Guenter is concerned about, as there are
+other subsystem related updates on the file.  I think Guenter's
+suggestion is good, i.e. we have patch #1 and #3 go upstream through
+watchdog tree, and later we update MAINTAINERS as needed via arm-soc
+tree.
+
+Shawn
