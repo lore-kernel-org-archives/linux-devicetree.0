@@ -1,81 +1,100 @@
-From: Chris Zhong <zyw@rock-chips.com>
-Subject: [PATCH v5 6/6] drm/rockchip/dsi: add dw-mipi power domain support
-Date: Sun,  5 Feb 2017 11:54:14 +0800
-Message-ID: <1486266854-9887-7-git-send-email-zyw@rock-chips.com>
-References: <1486266854-9887-1-git-send-email-zyw@rock-chips.com>
+From: Guochun Mao <guochun.mao@mediatek.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: mt2701: add nor flash node
+Date: Sun, 5 Feb 2017 12:00:49 +0800
+Message-ID: <1486267249.10417.9.camel@mhfsdcap03>
+References: <1485315515-29942-1-git-send-email-guochun.mao@mediatek.com>
+ <1485315515-29942-3-git-send-email-guochun.mao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1486266854-9887-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1485315515-29942-3-git-send-email-guochun.mao@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, John Crispin <john@phrozen.org>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-UmVmZXJlbmNlIHRoZSBwb3dlciBkb21haW4gaW5jYXNlIGR3LW1pcGkgcG93ZXIgZG93biB3aGVu
-CmluIHVzZS4KClNpZ25lZC1vZmYtYnk6IENocmlzIFpob25nIDx6eXdAcm9jay1jaGlwcy5jb20+
-ClJldmlld2VkLWJ5OiBTZWFuIFBhdWwgPHNlYW5wYXVsQGNocm9taXVtLm9yZz4KLS0tCgpDaGFu
-Z2VzIGluIHY1OiBOb25lCkNoYW5nZXMgaW4gdjQ6IE5vbmUKQ2hhbmdlcyBpbiB2MzogTm9uZQoK
-IGRyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIHwgMTYgKysrKysrKysrKysr
-KysrKwogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2Nr
-Y2hpcC9kdy1taXBpLWRzaS5jCmluZGV4IDM1ZjIyYmMuLmQyNjMzNTIgMTAwNjQ0Ci0tLSBhL2Ry
-aXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jCkBAIC0xMiw2ICsxMiw3IEBACiAjaW5jbHVkZSA8bGlu
-dXgvbWF0aDY0Lmg+CiAjaW5jbHVkZSA8bGludXgvbW9kdWxlLmg+CiAjaW5jbHVkZSA8bGludXgv
-b2ZfZGV2aWNlLmg+CisjaW5jbHVkZSA8bGludXgvcG1fcnVudGltZS5oPgogI2luY2x1ZGUgPGxp
-bnV4L3JlZ21hcC5oPgogI2luY2x1ZGUgPGxpbnV4L3Jlc2V0Lmg+CiAjaW5jbHVkZSA8bGludXgv
-bWZkL3N5c2Nvbi5oPgpAQCAtMjkzLDYgKzI5NCw3IEBAIHN0cnVjdCBkd19taXBpX2RzaSB7CiAJ
-c3RydWN0IGNsayAqcGNsazsKIAlzdHJ1Y3QgY2xrICpwaHlfY2ZnX2NsazsKIAorCWludCBkcG1z
-X21vZGU7CiAJdW5zaWduZWQgaW50IGxhbmVfbWJwczsgLyogcGVyIGxhbmUgKi8KIAl1MzIgY2hh
-bm5lbDsKIAl1MzIgbGFuZXM7CkBAIC05NjksNiArOTcxLDkgQEAgc3RhdGljIHZvaWQgZHdfbWlw
-aV9kc2lfZW5jb2Rlcl9kaXNhYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIHsKIAlz
-dHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSA9IGVuY29kZXJfdG9fZHNpKGVuY29kZXIpOwogCisJaWYg
-KGRzaS0+ZHBtc19tb2RlICE9IERSTV9NT0RFX0RQTVNfT04pCisJCXJldHVybjsKKwogCWlmIChj
-bGtfcHJlcGFyZV9lbmFibGUoZHNpLT5wY2xrKSkgewogCQlkZXZfZXJyKGRzaS0+ZGV2LCAiJXM6
-IEZhaWxlZCB0byBlbmFibGUgcGNsa1xuIiwgX19mdW5jX18pOwogCQlyZXR1cm47CkBAIC05ODAs
-NyArOTg1LDkgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfZW5jb2Rlcl9kaXNhYmxlKHN0cnVj
-dCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIAlkcm1fcGFuZWxfdW5wcmVwYXJlKGRzaS0+cGFuZWwp
-OwogCiAJZHdfbWlwaV9kc2lfZGlzYWJsZShkc2kpOworCXBtX3J1bnRpbWVfcHV0KGRzaS0+ZGV2
-KTsKIAljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wY2xrKTsKKwlkc2ktPmRwbXNfbW9kZSA9
-IERSTV9NT0RFX0RQTVNfT0ZGOwogfQogCiBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVy
-X2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCkBAIC05OTAsMTEgKzk5NywxNSBA
-QCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29k
-ZXIgKmVuY29kZXIpCiAJaW50IG11eCA9IGRybV9vZl9lbmNvZGVyX2FjdGl2ZV9lbmRwb2ludF9p
-ZChkc2ktPmRldi0+b2Zfbm9kZSwgZW5jb2Rlcik7CiAJdTMyIHZhbDsKIAorCWlmIChkc2ktPmRw
-bXNfbW9kZSA9PSBEUk1fTU9ERV9EUE1TX09OKQorCQlyZXR1cm47CisKIAlpZiAoY2xrX3ByZXBh
-cmVfZW5hYmxlKGRzaS0+cGNsaykpIHsKIAkJZGV2X2Vycihkc2ktPmRldiwgIiVzOiBGYWlsZWQg
-dG8gZW5hYmxlIHBjbGtcbiIsIF9fZnVuY19fKTsKIAkJcmV0dXJuOwogCX0KIAorCXBtX3J1bnRp
-bWVfZ2V0X3N5bmMoZHNpLT5kZXYpOwogCWR3X21pcGlfZHNpX2luaXQoZHNpKTsKIAlkd19taXBp
-X2RzaV9kcGlfY29uZmlnKGRzaSk7CiAJZHdfbWlwaV9kc2lfcGFja2V0X2hhbmRsZXJfY29uZmln
-KGRzaSk7CkBAIC0xMDMwLDYgKzEwNDEsNyBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNv
-ZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCiAKIAlyZWdtYXBfd3JpdGUo
-ZHNpLT5ncmZfcmVnbWFwLCBwZGF0YS0+Z3JmX3N3aXRjaF9yZWcsIHZhbCk7CiAJZGV2X2RiZyhk
-c2ktPmRldiwgInZvcCAlcyBvdXRwdXQgdG8gZHNpMFxuIiwgKG11eCkgPyAiTElUIiA6ICJCSUci
-KTsKKwlkc2ktPmRwbXNfbW9kZSA9IERSTV9NT0RFX0RQTVNfT047CiB9CiAKIHN0YXRpYyBpbnQK
-QEAgLTExOTgsNiArMTIxMCw3IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfYmluZChzdHJ1Y3Qg
-ZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAogCWRzaS0+ZGV2ID0gZGV2Owog
-CWRzaS0+cGRhdGEgPSBwZGF0YTsKKwlkc2ktPmRwbXNfbW9kZSA9IERSTV9NT0RFX0RQTVNfT0ZG
-OwogCiAJcmV0ID0gcm9ja2NoaXBfbWlwaV9wYXJzZV9kdChkc2kpOwogCWlmIChyZXQpCkBAIC0x
-Mjc4LDYgKzEyOTEsOCBAQCBzdGF0aWMgaW50IGR3X21pcGlfZHNpX2JpbmQoc3RydWN0IGRldmlj
-ZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAKIAlkZXZfc2V0X2RydmRhdGEoZGV2LCBk
-c2kpOwogCisJcG1fcnVudGltZV9lbmFibGUoZGV2KTsKKwogCWRzaS0+ZHNpX2hvc3Qub3BzID0g
-JmR3X21pcGlfZHNpX2hvc3Rfb3BzOwogCWRzaS0+ZHNpX2hvc3QuZGV2ID0gZGV2OwogCXJldCA9
-IG1pcGlfZHNpX2hvc3RfcmVnaXN0ZXIoJmRzaS0+ZHNpX2hvc3QpOwpAQCAtMTMwMCw2ICsxMzE1
-LDcgQEAgc3RhdGljIHZvaWQgZHdfbWlwaV9kc2lfdW5iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwg
-c3RydWN0IGRldmljZSAqbWFzdGVyLAogCXN0cnVjdCBkd19taXBpX2RzaSAqZHNpID0gZGV2X2dl
-dF9kcnZkYXRhKGRldik7CiAKIAltaXBpX2RzaV9ob3N0X3VucmVnaXN0ZXIoJmRzaS0+ZHNpX2hv
-c3QpOworCXBtX3J1bnRpbWVfZGlzYWJsZShkZXYpOwogCWNsa19kaXNhYmxlX3VucHJlcGFyZShk
-c2ktPnBsbHJlZl9jbGspOwogfQogCi0tIAoyLjYuMwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Wed, 2017-01-25 at 11:38 +0800, Guochun Mao wrote:
+> Add Mediatek nor flash node.
+> 
+> Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+> ---
+>  arch/arm/boot/dts/mt2701-evb.dts |   25 +++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt2701.dtsi    |   12 ++++++++++++
+>  2 files changed, 37 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index 082ca88..85e5ae8 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> @@ -24,6 +24,31 @@
+>  	};
+>  };
+>  
+> +&nor_flash {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&nor_pins_default>;
+> +	status = "okay";
+> +	flash@0 {
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +	};
+> +};
+> +
+> +&pio {
+> +	nor_pins_default: nor {
+> +		pins1 {
+> +			pinmux = <MT2701_PIN_240_EXT_XCS__FUNC_EXT_XCS>,
+> +				 <MT2701_PIN_241_EXT_SCK__FUNC_EXT_SCK>,
+> +				 <MT2701_PIN_239_EXT_SDIO0__FUNC_EXT_SDIO0>,
+> +				 <MT2701_PIN_238_EXT_SDIO1__FUNC_EXT_SDIO1>,
+> +				 <MT2701_PIN_237_EXT_SDIO2__FUNC_EXT_SDIO2>,
+> +				 <MT2701_PIN_236_EXT_SDIO3__FUNC_EXT_SDIO3>;
+> +			drive-strength = <MTK_DRIVE_4mA>;
+> +			bias-pull-up;
+> +		};
+> +	};
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index bdf8954..1eefce4 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -227,6 +227,18 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	nor_flash: spi@11014000 {
+> +		compatible = "mediatek,mt2701-nor",
+> +			     "mediatek,mt8173-nor";
+> +		reg = <0 0x11014000 0 0xe0>;
+> +		clocks = <&pericfg CLK_PERI_FLASH>,
+> +			 <&topckgen CLK_TOP_FLASH_SEL>;
+> +		clock-names = "spi", "sf";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+>  	mmsys: syscon@14000000 {
+>  		compatible = "mediatek,mt2701-mmsys", "syscon";
+>  		reg = <0 0x14000000 0 0x1000>;
+
+Hi,
+mtk-quadspi.txt had been updated as suggested.
+Is there suggestion about this patch?
+Thanks.
+
+BR,
+Guochun
