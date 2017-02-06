@@ -1,49 +1,90 @@
-From: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker board
-Date: Mon, 6 Feb 2017 13:52:01 +0800
-Message-ID: <CAJrj+DPVw9uZ9VS_mS4U9t8rSKxoQJSzbQK=DgtuVecOoX3u8A@mail.gmail.com>
-References: <1486347287-31051-1-git-send-email-eddie.cai@rock-chips.com>
- <1486347287-31051-3-git-send-email-eddie.cai@rock-chips.com> <20170206025435.GA32506@lunn.ch>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH 2/6] usb: mtu3: add reference clock
+Date: Mon, 6 Feb 2017 15:03:41 +0800
+Message-ID: <1486364621.3750.4.camel@mhfsdcap03>
+References: <1484719707-12107-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1484719707-12107-2-git-send-email-chunfeng.yun@mediatek.com>
+ <7fc9de99-4bef-ddf2-c5fe-985f8d2348d2@gmail.com>
+ <1484878825.10292.58.camel@mhfsdcap03>
+ <60a7c32a-b7d9-5856-2a61-3670e266bea3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170206025435.GA32506-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eddie Cai <eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <60a7c32a-b7d9-5856-2a61-3670e266bea3@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew
+On Wed, 2017-01-25 at 00:23 +0100, Matthias Brugger wrote:
+> 
+> On 01/20/2017 03:20 AM, Chunfeng Yun wrote:
+> > On Thu, 2017-01-19 at 13:22 +0100, Matthias Brugger wrote:
+> >>
+> >> On 18/01/17 07:08, Chunfeng Yun wrote:
+> >>> usually, the reference clock comes from 26M oscillator directly,
+> >>> but some SoCs are not, add it for compatibility.
+> >>>
+> >>> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> >>> ---
+> >>>  drivers/usb/mtu3/mtu3.h      |    1 +
+> >>>  drivers/usb/mtu3/mtu3_plat.c |   21 +++++++++++++++++++--
+> >>>  2 files changed, 20 insertions(+), 2 deletions(-)
+> > [...]
+> >>> @@ -154,6 +162,7 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
+> >>>  static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
+> >>>  {
+> >>>  	clk_disable_unprepare(ssusb->sys_clk);
+> >>> +	clk_disable_unprepare(ssusb->ref_clk);
+> >>>  	regulator_disable(ssusb->vusb33);
+> >>>  	ssusb_phy_power_off(ssusb);
+> >>>  	ssusb_phy_exit(ssusb);
+> >>> @@ -216,6 +225,12 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+> >>>  		return PTR_ERR(ssusb->sys_clk);
+> >>>  	}
+> >>>
+> >>> +	ssusb->ref_clk = devm_clk_get(dev, "ref_ck");
+> >>> +	if (IS_ERR(ssusb->ref_clk)) {
+> >>> +		dev_err(dev, "failed to get ref clock\n");
+> >>> +		return PTR_ERR(ssusb->ref_clk);
+> >>> +	}
+> >>> +
+> >>
+> >> That would break older dts bindings, right?
+> > Yes, So I send a new patch for the related dts. Maybe it's not a
+> > problem, only one dts file need be updated currently.
+> >
+> >> ref_ck must be optional for the code.
+> > I tend to make it be optional for the dts, but not for the code.
+> > There are some "fixed-clock" which can be treated as dummy ones, and if
+> > a clock is really optional, we can use one fixed-clock in dts, and keep
+> > the code simple.
+> > In fact, the reference clock is essential for usb controller.
+> 
+> Well the thing is that there are devices in the field with an older dtb 
+> which would break on a newer kernel. That's why we need to make it work 
+> with the old dtb in the code as well.
+> 
+Happy Chinese New Year!
 
-2017-02-06 10:54 GMT+08:00 Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>:
-> Hi Eddie
->
->> +             button@0 {
->> +                     gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
->> +                     linux,code = <116>;
->
-> It is a good idea to use include/dt-bindings/input/input.h
->
-> and then you can replace <116> with < KEY_POWER > which is more
-> readable.
-Thanks, I will modify it in next version.
->
->> +                     label = "GPIO Key Power";
->> +                     linux,input-type = <1>;
->
-> < EV_KEY >
->
->> +                     gpio-key,wakeup = <1>;
->
-> This has been replace with wakeup-source.
-Thanks, I will modify it in next version
->
->> +                     debounce-interval = <100>;
->> +             };
->> +     };
->
->   Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, I will make it optional.
+
+Thanks and sorry for later reply.
+
+> Regards,
+> Matthias
+> 
+> >>
+> >> Regards,
+> >> Matthias
+> >
+> >
