@@ -1,63 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] of: introduce of_graph_get_remote_node
-Date: Mon, 6 Feb 2017 07:54:23 -0600
-Message-ID: <CAL_JsqJ2HO6WkSGccqGaxHPExnJGyRwrrL2wDOORO+auA=Jbrg@mail.gmail.com>
-References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-2-robh@kernel.org>
- <1486377167.3005.30.camel@pengutronix.de>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/3] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller Driver
+Date: Mon, 6 Feb 2017 15:03:37 +0100
+Message-ID: <cover.1486388711.git.richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486377167.3005.30.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 4:32 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> Hi Rob,
->
-> thanks for this clean-up series! I was not aware how far the duplication
-> has spread over time.
->
-> On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
->> The OF graph API leaves too much of the graph walking to clients when
->> in many cases the driver doesn't care about accessing the port or
->> endpoint nodes. The drivers typically just want the device connected via
->> a particular graph connection. of_graph_get_remote_node provides this
->> functionality.
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->>  drivers/of/base.c        | 28 ++++++++++++++++++++++++++++
->>  include/linux/of_graph.h |  8 ++++++++
->>  2 files changed, 36 insertions(+)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index d4bea3c797d6..ea18ab16b92c 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -2469,3 +2469,31 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
->>       return of_get_next_parent(np);
->>  }
->>  EXPORT_SYMBOL(of_graph_get_remote_port);
->> +
->> +struct device_node *of_graph_get_remote_node(const struct device_node *node,
->> +                                          int port, int endpoint)
->
-> I think this should have a documentation comment, similar to the
-> of_graph_get_endpoint_by_regs one, as it is not really clear from the
-> function name that the returned device node is the parent (or
-> grandparent) device node containing the remote port to the specified
-> node & port & endpoint.
-> Also it might be interesting to the user that -1 is a wildcard value for
-> port / endpoint.
+This patch series adds a driver for configuration of the Microchip USB251xB
+USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
+configuration interface and two to four USB 2.0 downstream ports.
 
-I really want to not allow using a wildcard here. Drivers should know
-what port they want (or iterate over all of them). It didn't look like
-any drivers were depending on the wildcard, but were just using -1 for
-"no reg property" when really that should 0. Of course, I may have
-missed something.
+CHANGES v3:
+	- move ascii2utf16le() to lib/string.c and also use it also for
+		ascii2desc in drivers/usb/core/hcd.c
+	- remove platform data support from usb251xb driver
 
-I guess I could enforce port/endpoint > 0 here as there's no existing users.
+CHANGES v2:
+	- fix max-{b,s}p-current property name
+	- add descriptor string handling from platform_data
+	- fix non-dt handling
 
-Rob
+Richard Leitner (3):
+  lib/string: introduce ascii2utf16le() helper
+  usb: core: hcd: use ascii2utf16le() in ascii2desc()
+  usb: misc: add USB251xB/xBi Hi-Speed Hub Controller Driver
+
+ Documentation/devicetree/bindings/usb/usb251xb.txt |  83 +++
+ MAINTAINERS                                        |   8 +
+ drivers/usb/core/hcd.c                             |  22 +-
+ drivers/usb/misc/Kconfig                           |   9 +
+ drivers/usb/misc/Makefile                          |   1 +
+ drivers/usb/misc/usb251xb.c                        | 664 +++++++++++++++++++++
+ include/linux/string.h                             |   1 +
+ lib/string.c                                       |  26 +
+ 8 files changed, 802 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/usb251xb.txt
+ create mode 100644 drivers/usb/misc/usb251xb.c
+
+-- 
+2.1.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
