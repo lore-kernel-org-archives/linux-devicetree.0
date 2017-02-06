@@ -1,147 +1,368 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/5] drm: convert drivers to use of_graph_get_remote_node
-Date: Mon, 6 Feb 2017 11:09:49 -0600
-Message-ID: <20170206170949.tmm4m2lm2rybm5dh@rob-hp-laptop>
-References: <20170204033635.10250-1-robh@kernel.org>
- <20170204033635.10250-4-robh@kernel.org>
- <20170206102933.GV3140@e110455-lin.cambridge.arm.com>
+From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 3/3] watchdog: zx2967: add watchdog controller driver
+ for ZTE's zx2967 family
+Date: Mon, 6 Feb 2017 10:13:58 -0700
+Message-ID: <20170206171358.GB11391@linaro.org>
+References: <1486172055-13162-1-git-send-email-baoyou.xie@linaro.org>
+ <1486172055-13162-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170206102933.GV3140-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
+In-Reply-To: <1486172055-13162-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 10:29:33AM +0000, Liviu Dudau wrote:
-> On Fri, Feb 03, 2017 at 09:36:33PM -0600, Rob Herring wrote:
-> > Convert drivers to use the new of_graph_get_remote_node() helper
-> > instead of parsing the endpoint node and then getting the remote device
-> > node. Now drivers can just specify the device node and which
-> > port/endpoint and get back the connected remote device node. The details
-> > of the graph binding are nicely abstracted into the core OF graph code.
-> > 
-> > This changes some error messages to debug messages (in the graph core).
-> > Graph connections are often "no connects" depending on the particular
-> > board, so we want to avoid spurious messages. Plus the kernel is not a
-> > DT validator.
-> > 
-> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/gpu/drm/arm/hdlcd_drv.c                 | 22 ++-------
-> >  drivers/gpu/drm/arm/malidp_drv.c                | 29 ++---------
-> >  drivers/gpu/drm/bridge/adv7511/adv7533.c        | 12 +----
-> >  drivers/gpu/drm/bridge/dumb-vga-dac.c           | 15 ++----
-> >  drivers/gpu/drm/bridge/ti-tfp410.c              | 15 ++----
-> >  drivers/gpu/drm/exynos/exynos_drm_dpi.c         | 16 +-----
-> >  drivers/gpu/drm/exynos/exynos_drm_dsi.c         | 13 ++---
-> >  drivers/gpu/drm/exynos/exynos_drm_mic.c         | 27 +---------
-> >  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 26 ++--------
-> >  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 30 +----------
-> >  drivers/gpu/drm/mediatek/mtk_dpi.c              | 12 ++---
-> >  drivers/gpu/drm/mediatek/mtk_hdmi.c             | 26 ++--------
-> >  drivers/gpu/drm/meson/meson_drv.c               | 12 ++---
-> >  drivers/gpu/drm/meson/meson_venc_cvbs.c         | 19 ++-----
-> >  drivers/gpu/drm/msm/dsi/dsi_host.c              |  3 +-
-> >  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         | 28 +----------
-> >  drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 18 +++----
-> >  drivers/gpu/drm/tilcdc/tilcdc_crtc.c            | 11 +----
-> >  drivers/gpu/drm/tilcdc/tilcdc_external.c        | 66 +++----------------------
-> >  drivers/gpu/drm/vc4/vc4_dpi.c                   | 15 ++----
-> >  20 files changed, 64 insertions(+), 351 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
-> > index e5f4f4a6546d..0f70f5fe9970 100644
-> > --- a/drivers/gpu/drm/arm/hdlcd_drv.c
-> > +++ b/drivers/gpu/drm/arm/hdlcd_drv.c
-> > @@ -430,29 +430,13 @@ static int compare_dev(struct device *dev, void *data)
-> >  
-> >  static int hdlcd_probe(struct platform_device *pdev)
-> >  {
-> > -	struct device_node *port, *ep;
-> > +	struct device_node *port;
-> >  	struct component_match *match = NULL;
-> >  
-> > -	if (!pdev->dev.of_node)
-> > -		return -ENODEV;
-> > -
-> >  	/* there is only one output port inside each device, find it */
-> > -	ep = of_graph_get_next_endpoint(pdev->dev.of_node, NULL);
-> > -	if (!ep)
-> > -		return -ENODEV;
-> > -
-> > -	if (!of_device_is_available(ep)) {
-> > -		of_node_put(ep);
-> > +	port = of_graph_get_remote_node(pdev->dev.of_node, 0, 0);
-> > +	if (!port)
-> >  		return -ENODEV;
-> > -	}
-> > -
-> > -	/* add the remote encoder port as component */
-> > -	port = of_graph_get_remote_port_parent(ep);
-> > -	of_node_put(ep);
-> > -	if (!port || !of_device_is_available(port)) {
-> > -		of_node_put(port);
-> > -		return -EAGAIN;
+On Sat, Feb 04, 2017 at 09:34:15AM +0800, Baoyou Xie wrote:
+> This patch adds watchdog controller driver for ZTE's zx2967 family.
+>
+
+Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+ 
+> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/watchdog/Kconfig      |  10 ++
+>  drivers/watchdog/Makefile     |   1 +
+>  drivers/watchdog/zx2967_wdt.c | 291 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 302 insertions(+)
+>  create mode 100644 drivers/watchdog/zx2967_wdt.c
 > 
-> The HDLCD change looks reasonable except for this -EAGAIN business. I'll have to
-> test your changes on my setup to see how this affects having the encoder as a module.
-
-What are you expecting to happen with -EAGAIN? This one was a bit of an 
-oddball. 
-
-This condition would only change if you had an overlay. That's a use 
-case that needs to be handled in a common way ('cause I don't want to 
-clean-up every driver doing overlays in their own way latter). Just 
-having "status" changing at runtime would have all sorts of implications 
-in the kernel.
-
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index acb00b5..05093a2 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -714,6 +714,16 @@ config ASPEED_WATCHDOG
+>  	  To compile this driver as a module, choose M here: the
+>  	  module will be called aspeed_wdt.
+>  
+> +config ZX2967_WATCHDOG
+> +	tristate "ZTE zx2967 SoCs watchdog support"
+> +	depends on ARCH_ZX
+> +	select WATCHDOG_CORE
+> +	help
+> +	  Say Y here to include support for the watchdog timer
+> +	  in ZTE zx2967 SoCs.
+> +	  To compile this driver as a module, choose M here: the
+> +	  module will be called zx2967_wdt.
+> +
+>  # AVR32 Architecture
+>  
+>  config AT32AP700X_WDT
+> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> index 0c3d35e..bf2d296 100644
+> --- a/drivers/watchdog/Makefile
+> +++ b/drivers/watchdog/Makefile
+> @@ -82,6 +82,7 @@ obj-$(CONFIG_BCM7038_WDT) += bcm7038_wdt.o
+>  obj-$(CONFIG_ATLAS7_WATCHDOG) += atlas7_wdt.o
+>  obj-$(CONFIG_RENESAS_WDT) += renesas_wdt.o
+>  obj-$(CONFIG_ASPEED_WATCHDOG) += aspeed_wdt.o
+> +obj-$(CONFIG_ZX2967_WATCHDOG) += zx2967_wdt.o
+>  
+>  # AVR32 Architecture
+>  obj-$(CONFIG_AT32AP700X_WDT) += at32ap700x_wdt.o
+> diff --git a/drivers/watchdog/zx2967_wdt.c b/drivers/watchdog/zx2967_wdt.c
+> new file mode 100644
+> index 0000000..e290d5a
+> --- /dev/null
+> +++ b/drivers/watchdog/zx2967_wdt.c
+> @@ -0,0 +1,291 @@
+> +/*
+> + * watchdog driver for ZTE's zx2967 family
+> + *
+> + * Copyright (C) 2017 ZTE Ltd.
+> + *
+> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> + *
+> + * License terms: GNU General Public License (GPL) version 2
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/watchdog.h>
+> +
+> +#define ZX2967_WDT_CFG_REG			0x4
+> +#define ZX2967_WDT_LOAD_REG			0x8
+> +#define ZX2967_WDT_REFRESH_REG			0x18
+> +#define ZX2967_WDT_START_REG			0x1c
+> +
+> +#define ZX2967_WDT_REFRESH_MASK			GENMASK(5, 0)
+> +
+> +#define ZX2967_WDT_CFG_DIV(n)			((((n) & 0xff) - 1) << 8)
+> +#define ZX2967_WDT_START_EN			0x1
+> +
+> +/*
+> + * Hardware magic number.
+> + * When watchdog reg is written, the lowest 16 bits are valid, but
+> + * the highest 16 bits should be always this number.
+> + */
+> +#define ZX2967_WDT_WRITEKEY			(0x1234 << 16)
+> +#define ZX2967_WDT_VAL_MASK			GENMASK(15, 0)
+> +
+> +#define ZX2967_WDT_DIV_DEFAULT			16
+> +#define ZX2967_WDT_DEFAULT_TIMEOUT		32
+> +#define ZX2967_WDT_MIN_TIMEOUT			1
+> +#define ZX2967_WDT_MAX_TIMEOUT			524
+> +#define ZX2967_WDT_MAX_COUNT			0xffff
+> +
+> +#define ZX2967_WDT_CLK_FREQ			0x8000
+> +
+> +#define ZX2967_WDT_FLAG_REBOOT_MON		BIT(0)
+> +
+> +struct zx2967_wdt {
+> +	struct watchdog_device	wdt_device;
+> +	void __iomem		*reg_base;
+> +	struct clk		*clock;
+> +};
+> +
+> +static inline u32 zx2967_wdt_readl(struct zx2967_wdt *wdt, u16 reg)
+> +{
+> +	return readl_relaxed(wdt->reg_base + reg);
+> +}
+> +
+> +static inline void zx2967_wdt_writel(struct zx2967_wdt *wdt, u16 reg, u32 val)
+> +{
+> +	writel_relaxed(val | ZX2967_WDT_WRITEKEY, wdt->reg_base + reg);
+> +}
+> +
+> +static void zx2967_wdt_refresh(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_REFRESH_REG);
+> +	/*
+> +	 * Bit 4-5, 1 and 2: refresh config info
+> +	 * Bit 2-3, 1 and 2: refresh counter
+> +	 * Bit 0-1, 1 and 2: refresh int-value
+> +	 * we shift each group value between 1 and 2 to refresh all data.
+> +	 */
+> +	val ^= ZX2967_WDT_REFRESH_MASK;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_REFRESH_REG,
+> +			  val & ZX2967_WDT_VAL_MASK);
+> +}
+> +
+> +static int
+> +zx2967_wdt_set_timeout(struct watchdog_device *wdd, unsigned int timeout)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +	unsigned int divisor = ZX2967_WDT_DIV_DEFAULT;
+> +	u32 count;
+> +
+> +	count = timeout * ZX2967_WDT_CLK_FREQ;
+> +	if (count > divisor * ZX2967_WDT_MAX_COUNT)
+> +		divisor = DIV_ROUND_UP(count, ZX2967_WDT_MAX_COUNT);
+> +	count = DIV_ROUND_UP(count, divisor);
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_CFG_REG,
+> +			ZX2967_WDT_CFG_DIV(divisor) & ZX2967_WDT_VAL_MASK);
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_LOAD_REG,
+> +			count & ZX2967_WDT_VAL_MASK);
+> +	zx2967_wdt_refresh(wdt);
+> +	wdd->timeout =  (count * divisor) / ZX2967_WDT_CLK_FREQ;
+> +
+> +	return 0;
+> +}
+> +
+> +static void __zx2967_wdt_start(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val |= ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG,
+> +			val & ZX2967_WDT_VAL_MASK);
+> +}
+> +
+> +static void __zx2967_wdt_stop(struct zx2967_wdt *wdt)
+> +{
+> +	u32 val;
+> +
+> +	val = zx2967_wdt_readl(wdt, ZX2967_WDT_START_REG);
+> +	val &= ~ZX2967_WDT_START_EN;
+> +	zx2967_wdt_writel(wdt, ZX2967_WDT_START_REG,
+> +			val & ZX2967_WDT_VAL_MASK);
+> +}
+> +
+> +static int zx2967_wdt_start(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_set_timeout(wdd, wdd->timeout);
+> +	__zx2967_wdt_start(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_stop(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	__zx2967_wdt_stop(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +static int zx2967_wdt_keepalive(struct watchdog_device *wdd)
+> +{
+> +	struct zx2967_wdt *wdt = watchdog_get_drvdata(wdd);
+> +
+> +	zx2967_wdt_refresh(wdt);
+> +
+> +	return 0;
+> +}
+> +
+> +#define ZX2967_WDT_OPTIONS \
+> +	(WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE)
+> +static const struct watchdog_info zx2967_wdt_ident = {
+> +	.options          =     ZX2967_WDT_OPTIONS,
+> +	.identity         =	"zx2967 watchdog",
+> +};
+> +
+> +static struct watchdog_ops zx2967_wdt_ops = {
+> +	.owner = THIS_MODULE,
+> +	.start = zx2967_wdt_start,
+> +	.stop = zx2967_wdt_stop,
+> +	.ping = zx2967_wdt_keepalive,
+> +	.set_timeout = zx2967_wdt_set_timeout,
+> +};
+> +
+> +static void zx2967_wdt_reset_sysctrl(struct device *dev)
+> +{
+> +	int ret;
+> +	void __iomem *regmap;
+> +	unsigned int offset, mask, config;
+> +	struct of_phandle_args out_args;
+> +
+> +	ret = of_parse_phandle_with_fixed_args(dev->of_node,
+> +			"zte,wdt-reset-sysctrl", 3, 0, &out_args);
+> +	if (ret)
+> +		return;
+> +
+> +	offset = out_args.args[0];
+> +	config = out_args.args[1];
+> +	mask = out_args.args[2];
+> +
+> +	regmap = syscon_node_to_regmap(out_args.np);
+> +	if (IS_ERR(regmap)) {
+> +		of_node_put(out_args.np);
+> +		return;
+> +	}
+> +
+> +	regmap_update_bits(regmap, offset, mask, config);
+> +	of_node_put(out_args.np);
+> +}
+> +
+> +static int zx2967_wdt_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct zx2967_wdt *wdt;
+> +	struct resource *base;
+> +	int ret;
+> +	struct reset_control *rstc;
+> +
+> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+> +	if (!wdt)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, wdt);
+> +
+> +	wdt->wdt_device.info = &zx2967_wdt_ident;
+> +	wdt->wdt_device.ops = &zx2967_wdt_ops;
+> +	wdt->wdt_device.timeout = ZX2967_WDT_DEFAULT_TIMEOUT;
+> +	wdt->wdt_device.max_timeout = ZX2967_WDT_MAX_TIMEOUT;
+> +	wdt->wdt_device.min_timeout = ZX2967_WDT_MIN_TIMEOUT;
+> +	wdt->wdt_device.parent = &pdev->dev;
+> +
+> +	base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	wdt->reg_base = devm_ioremap_resource(dev, base);
+> +	if (IS_ERR(wdt->reg_base)) {
+> +		dev_err(dev, "ioremap failed\n");
+> +		return PTR_ERR(wdt->reg_base);
+> +	}
+> +
+> +	zx2967_wdt_reset_sysctrl(dev);
+> +
+> +	wdt->clock = devm_clk_get(dev, NULL);
+> +	if (IS_ERR(wdt->clock)) {
+> +		dev_err(dev, "failed to find watchdog clock source\n");
+> +		return PTR_ERR(wdt->clock);
+> +	}
+> +
+> +	ret = clk_prepare_enable(wdt->clock);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to enable clock\n");
+> +		return ret;
+> +	}
+> +	clk_set_rate(wdt->clock, ZX2967_WDT_CLK_FREQ);
+> +
+> +	rstc = devm_reset_control_get(dev, NULL);
+> +	if (IS_ERR(rstc)) {
+> +		dev_err(dev, "failed to get rstc");
+> +		ret = PTR_ERR(rstc);
+> +		goto err;
+> +	}
+> +
+> +	reset_control_assert(rstc);
+> +	reset_control_deassert(rstc);
+> +
+> +	watchdog_set_drvdata(&wdt->wdt_device, wdt);
+> +	watchdog_init_timeout(&wdt->wdt_device,
+> +			ZX2967_WDT_DEFAULT_TIMEOUT, dev);
+> +	watchdog_set_nowayout(&wdt->wdt_device, WATCHDOG_NOWAYOUT);
+> +
+> +	ret = watchdog_register_device(&wdt->wdt_device);
+> +	if (ret)
+> +		goto err;
+> +
+> +	dev_info(dev, "watchdog enabled (timeout=%d sec, nowayout=%d)",
+> +		 wdt->wdt_device.timeout, WATCHDOG_NOWAYOUT);
+> +
+> +	return 0;
+> +
+> +err:
+> +	clk_disable_unprepare(wdt->clock);
+> +	return ret;
+> +}
+> +
+> +static int zx2967_wdt_remove(struct platform_device *pdev)
+> +{
+> +	struct zx2967_wdt *wdt = platform_get_drvdata(pdev);
+> +
+> +	watchdog_unregister_device(&wdt->wdt_device);
+> +	clk_disable_unprepare(wdt->clock);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id zx2967_wdt_match[] = {
+> +	{ .compatible = "zte,zx296718-wdt", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, zx2967_wdt_match);
+> +
+> +static struct platform_driver zx2967_wdt_driver = {
+> +	.probe		= zx2967_wdt_probe,
+> +	.remove		= zx2967_wdt_remove,
+> +	.driver		= {
+> +		.name	= "zx2967-wdt",
+> +		.of_match_table	= of_match_ptr(zx2967_wdt_match),
+> +	},
+> +};
+> +module_platform_driver(zx2967_wdt_driver);
+> +
+> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
+> +MODULE_DESCRIPTION("ZTE zx2967 Watchdog Device Driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> 2.7.4
 > 
-> > -	}
-> >  
-> >  	drm_of_component_match_add(&pdev->dev, &match, compare_dev, port);
-> >  	of_node_put(port);
-> > diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
-> > index 32f746e31379..bfa04be7f5de 100644
-> > --- a/drivers/gpu/drm/arm/malidp_drv.c
-> > +++ b/drivers/gpu/drm/arm/malidp_drv.c
-> > @@ -262,7 +262,6 @@ static int malidp_bind(struct device *dev)
-> >  {
-> >  	struct resource *res;
-> >  	struct drm_device *drm;
-> > -	struct device_node *ep;
-> >  	struct malidp_drm *malidp;
-> >  	struct malidp_hw_device *hwdev;
-> >  	struct platform_device *pdev = to_platform_device(dev);
-> > @@ -360,12 +359,7 @@ static int malidp_bind(struct device *dev)
-> >  		goto init_fail;
-> >  
-> >  	/* Set the CRTC's port so that the encoder component can find it */
-> > -	ep = of_graph_get_next_endpoint(dev->of_node, NULL);
-> > -	if (!ep) {
-> > -		ret = -EINVAL;
-> > -		goto port_fail;
-> > -	}
-> > -	malidp->crtc.port = of_get_next_parent(ep);
-> > +	malidp->crtc.port = of_graph_get_port_by_id(dev->of_node, 0);
-> >  
-> >  	ret = component_bind_all(dev, drm);
-> >  	if (ret) {
-> > @@ -418,9 +412,7 @@ static int malidp_bind(struct device *dev)
-> >  irq_init_fail:
-> >  	component_unbind_all(dev, drm);
-> >  bind_fail:
-> > -	of_node_put(malidp->crtc.port);
-> 
-> Why removing this line? AFAICT this is still needed, according to of_graph_get_port_by_id()
-> documentation.
-
-Yes, you are right.
-
-Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
