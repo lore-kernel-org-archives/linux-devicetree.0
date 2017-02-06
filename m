@@ -1,92 +1,80 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 2/2] drm/panel: Add driver for sitronix ST7789V panel
-Date: Mon, 6 Feb 2017 13:13:19 +0100
-Message-ID: <8096d309-d341-a3ba-8ddb-096a13967f64@tronnes.org>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
- <8194211279dd2d1b1c2e88a3c17d154c356bbbc7.1486115846.git-series.maxime.ripard@free-electrons.com>
- <6c4db243-59fc-f7a4-96e0-8fefef253bac@tronnes.org>
- <20170206105037.sxtx5o3tocfqq7tq@lukather>
+From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 00/10] Add Basic SoC support for MT6797
+Date: Mon, 6 Feb 2017 20:15:26 +0800
+Message-ID: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170206105037.sxtx5o3tocfqq7tq@lukather>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chieh-Jay Liu <Chieh-Jay.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAwNi4wMi4yMDE3IDExLjUwLCBza3JldiBNYXhpbWUgUmlwYXJkOgo+IEhpIE5vcmFsZiwK
-Pgo+IE9uIEZyaSwgRmViIDAzLCAyMDE3IGF0IDA3OjUzOjU4UE0gKzAxMDAsIE5vcmFsZiBUcsO4
-bm5lcyB3cm90ZToKPj4gRGVuIDAzLjAyLjIwMTcgMTAuNTksIHNrcmV2IE1heGltZSBSaXBhcmQ6
-Cj4+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxl
-Y3Ryb25zLmNvbT4KPj4+IC0tLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcg
-ICAgICAgICAgICAgICAgICB8ICAgNCArLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
-a2VmaWxlICAgICAgICAgICAgICAgICB8ICAgMSArLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3Bh
-bmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYuYyB8IDQzNSArKysrKysrKysrKysrKysrKystCj4+
-PiAgICAzIGZpbGVzIGNoYW5nZWQsIDQ0MCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+
-Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaXRy
-b25peC1zdDc3ODl2LmMKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVs
-L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZwo+Pj4gaW5kZXggNjJhYmE5
-NzZlNzQ0Li5kMDdiOTk2YTA3YjggMTAwNjQ0Cj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFu
-ZWwvS2NvbmZpZwo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcKPj4+IEBA
-IC04MSw0ICs4MSw4IEBAIGNvbmZpZyBEUk1fUEFORUxfU0hBUlBfTFMwNDNUMUxFMDEKPj4+ICAg
-IAkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIFNoYXJwIExT
-MDQzVDFMRTAxIHFIRAo+Pj4gICAgCSAgKDU0MHg5NjApIERTSSBwYW5lbCBhcyBmb3VuZCBvbiB0
-aGUgUXVhbGNvbW0gQVBRODA3NCBEcmFnb25ib2FyZAo+Pj4gK2NvbmZpZyBEUk1fUEFORUxfU0lU
-Uk9OSVhfU1Q3Nzg5Vgo+Pj4gKwl0cmlzdGF0ZSAiU2l0cm9ueCBTVDc3ODlWIHBhbmVsIgo+Pj4g
-KwlkZXBlbmRzIG9uIE9GICYmIFNQSQo+Pj4gKwo+Pj4gICAgZW5kbWVudQo+Pj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9wYW5l
-bC9NYWtlZmlsZQo+Pj4gaW5kZXggYTVjN2VjMDIzNmUwLi40MWIyNDVkMzk5ODQgMTAwNjQ0Cj4+
-PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKPj4+ICsrKyBiL2RyaXZlcnMv
-Z3B1L2RybS9wYW5lbC9NYWtlZmlsZQo+Pj4gQEAgLTYsMyArNiw0IEBAIG9iai0kKENPTkZJR19E
-Uk1fUEFORUxfU0FNU1VOR19MRDkwNDApICs9IHBhbmVsLXNhbXN1bmctbGQ5MDQwLm8KPj4+ICAg
-IG9iai0kKENPTkZJR19EUk1fUEFORUxfU0FNU1VOR19TNkU4QUEwKSArPSBwYW5lbC1zYW1zdW5n
-LXM2ZThhYTAubwo+Pj4gICAgb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFSUF9MUTEwMVIxU1gw
-MSkgKz0gcGFuZWwtc2hhcnAtbHExMDFyMXN4MDEubwo+Pj4gICAgb2JqLSQoQ09ORklHX0RSTV9Q
-QU5FTF9TSEFSUF9MUzA0M1QxTEUwMSkgKz0gcGFuZWwtc2hhcnAtbHMwNDN0MWxlMDEubwo+Pj4g
-K29iai0kKENPTkZJR19EUk1fUEFORUxfU0lUUk9OSVhfU1Q3Nzg5VikgKz0gcGFuZWwtc2l0cm9u
-aXgtc3Q3Nzg5di5vCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
-LXNpdHJvbml4LXN0Nzc4OXYuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaXRyb25p
-eC1zdDc3ODl2LmMKPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwMDAw
-MDAuLmFhYjgxN2I1NWFhNgo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL3BhbmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYuYwo+Pj4gQEAgLTAsMCArMSw0MzUgQEAK
-Pj4+ICsvKgo+Pj4gKyAqIENvcHlyaWdodCAoQykgMjAxNyBGcmVlIEVsZWN0cm9ucwo+Pj4gKyAq
-Cj4+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmli
-dXRlIGl0IGFuZC9vcgo+Pj4gKyAqIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
-VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24KPj4+ICsgKiAyIGFzIHB1Ymxpc2hlZCBi
-eSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgo+Pj4gKyAqLwo+Pj4gKwo+Pj4gKyNpbmNs
-dWRlIDxkcm0vZHJtUC5oPgo+Pj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4+PiArCj4+
-PiArI2luY2x1ZGUgPGxpbnV4L2dwaW8vY29uc3VtZXIuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgv
-c3BpL3NwaS5oPgo+Pj4gKwo+Pj4gKyNkZWZpbmUgU1Q3Nzg5Vl9TTFBJTl9DTUQJCTB4MTAKPj4+
-ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfU0xQT1VUX0NNRAkJMHgxMQo+Pj4gKwo+Pj4gKyNkZWZp
-bmUgU1Q3Nzg5Vl9JTlZPTl9DTUQJCTB4MjEKPj4+ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfRElT
-UE9GRl9DTUQJCTB4MjgKPj4+ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfRElTUE9OX0NNRAkJMHgy
-OQo+Pj4gKwo+Pj4gKyNkZWZpbmUgU1Q3Nzg5Vl9NQURDVExfQ01ECQkweDM2Cj4+PiArCj4+PiAr
-I2RlZmluZSBTVDc3ODlWX0NPTE1PRF9DTUQJCTB4M2EKPj4gWW91IGNhbiB1c2UgdGhlc2UgZnJv
-bSBpbmNsdWRlL3ZpZGVvL21pcGlfZGlzcGxheS5oOgo+Pgo+PiAgICAgICAgICBNSVBJX0RDU19F
-TlRFUl9TTEVFUF9NT0RFICAgICAgID0gMHgxMCwKPj4gICAgICAgICAgTUlQSV9EQ1NfRVhJVF9T
-TEVFUF9NT0RFICAgICAgICA9IDB4MTEsCj4+ICAgICAgICAgIE1JUElfRENTX0VOVEVSX0lOVkVS
-VF9NT0RFICAgICAgPSAweDIxLAo+PiAgICAgICAgICBNSVBJX0RDU19TRVRfRElTUExBWV9PRkYg
-ICAgICAgID0gMHgyOCwKPj4gICAgICAgICAgTUlQSV9EQ1NfU0VUX0RJU1BMQVlfT04gICAgICAg
-ICA9IDB4MjksCj4+ICAgICAgICAgIE1JUElfRENTX1NFVF9BRERSRVNTX01PREUgICAgICAgPSAw
-eDM2LAo+PiAgICAgICAgICBNSVBJX0RDU19TRVRfUElYRUxfRk9STUFUICAgICAgID0gMHgzQSwK
-PiBJIGRvbid0IGtub3csIHRoYXQgY29udHJvbGxlciBjYW5ub3QgZG8gTUlQSSBEU0kgYXQgYWxs
-LCBhbmQgd2Ugd291bGQKPiBoYXZlIHRvIGRlZmluZSBhbGwgdGhlIG90aGVyIGNvbW1hbmRzIGFu
-eXdheS4KCk1JUEkgRENTIGNvbW1hbmRzIGNhbiBiZSBzZW50IG92ZXIgYm90aCBEaXNwbGF5IFNl
-cmlhbCBJbnRlcmZhY2UgKERTSSkKYW5kIGluIHlvdXIgY2FzZSBEaXNwbGF5IEJ1cyBJbnRlcmZh
-Y2UgKERCSSkgKG5vdCBxdWl0ZSBzdXJlIGlmIHRoZQpDb250cm9sIEludGVyZmFjZSBjYW4gYmUg
-b3V0c2lkZSBvZiBEQkkpLiBTbyBEaXNwbGF5IENvbW1hbmQgU2V0IChEQ1MpCmlzIG5vdCBzcGVj
-aWZpYyB0byB0aGUgaW50ZXJmYWNlLCBidXQgdG8gdGhlIGNvbnRyb2xsZXIuCgpJdCdzIHVwIHRv
-IHlvdSBpZiB5b3Ugd2FudCB0byB1c2UgdGhlbSB0aG91Z2guCgoKTm9yYWxmLgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This patch set adds basic SoC support for mediatek's first 10-core
+chip, X20, also known as MT6797.
+
+- based on 4.10-rc2
+- support multiple base address for sysirq
+- support common clk
+
+Changes since v1:
+- add multiple base addresses support, v1 only allow 2 bases
+- clean up clk driver
+
+
+Kevin-CW Chen (2):
+  dt-bindings: arm: mediatek: document clk bindings for MT6797
+  clk: mediatek: add clk support for MT6797
+
+Mars Cheng (8):
+  Document: DT: mediatek: multiple base address support for sysirq
+  irqchip: mtk-sysirq: extend intpol base to arbitrary number
+  Document: DT: Add bindings for mediatek MT6797 SoC Platform
+  arm64: dts: mediatek: add mt6797 support
+  soc: mediatek: refine scysys for mediatek platforms
+  soc: mediatek: add MT6797 power dt-bindings
+  soc: mediatek: add MT6797 scysys support
+  arm64: dts: mediatek: add clk nodes for MT6797
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+ .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 +-
+ .../interrupt-controller/mediatek,sysirq.txt       |   14 +-
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +-
+ arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+ arch/arm64/boot/dts/mediatek/mt6797-evb.dts        |   36 +
+ arch/arm64/boot/dts/mediatek/mt6797.dtsi           |  250 +++++++
+ drivers/clk/mediatek/Kconfig                       |   33 +
+ drivers/clk/mediatek/Makefile                      |    5 +
+ drivers/clk/mediatek/clk-mt6797-img.c              |   76 +++
+ drivers/clk/mediatek/clk-mt6797-mm.c               |  136 ++++
+ drivers/clk/mediatek/clk-mt6797-vdec.c             |   93 +++
+ drivers/clk/mediatek/clk-mt6797-venc.c             |   78 +++
+ drivers/clk/mediatek/clk-mt6797.c                  |  716 ++++++++++++++++++++
+ drivers/irqchip/irq-mtk-sysirq.c                   |   71 +-
+ drivers/soc/mediatek/mtk-scpsys.c                  |  149 +++-
+ include/dt-bindings/clock/mt6797-clk.h             |  281 ++++++++
+ include/dt-bindings/power/mt6797-power.h           |   30 +
+ 25 files changed, 1956 insertions(+), 33 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6797.dtsi
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-img.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-mm.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-vdec.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797-venc.c
+ create mode 100644 drivers/clk/mediatek/clk-mt6797.c
+ create mode 100644 include/dt-bindings/clock/mt6797-clk.h
+ create mode 100644 include/dt-bindings/power/mt6797-power.h
+
+--
+1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
