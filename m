@@ -1,31 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/5] of: introduce of_graph_get_remote_node
-Date: Mon, 6 Feb 2017 07:41:35 -0600
-Message-ID: <CAL_JsqLEgY4RNKP6Z9vqVZWA0Chj7=Fr6rHudjxDJ+rAYURorg@mail.gmail.com>
-References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-2-robh@kernel.org>
- <20170206085023.onmsh5dcmn6ofpp5@phenom.ffwll.local>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/3] arm64: add THUNDER2 processor family
+Date: Mon, 6 Feb 2017 14:44:13 +0100
+Message-ID: <CAK8P3a1_dQZd3RRyavMKqBFcHsXTQ2oAUO5vaLhyTiH99XhqrQ@mail.gmail.com>
+References: <1486233461-2679-1-git-send-email-jnair@caviumnetworks.com>
+ <1486233461-2679-2-git-send-email-jnair@caviumnetworks.com> <20170206100608.GA8540@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170206085023.onmsh5dcmn6ofpp5@phenom.ffwll.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, Neil Armstrong <narmstrong@baylibre.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Frank Rowand <frowand.list@gmail.com>, Marek Vasut <marex@denx.de>, Kevin Hilman <khilman@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Krzysztof Kozlowski <krzk@kernel.org>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, Mali DP Maintainers <malidp@foss.arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Che
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170206100608.GA8540-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 2:50 AM, Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Fri, Feb 03, 2017 at 09:36:31PM -0600, Rob Herring wrote:
->> The OF graph API leaves too much of the graph walking to clients when
->> in many cases the driver doesn't care about accessing the port or
->> endpoint nodes. The drivers typically just want the device connected via
->> a particular graph connection. of_graph_get_remote_node provides this
->> functionality.
+On Mon, Feb 6, 2017 at 11:06 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Sat, Feb 04, 2017 at 06:37:39PM +0000, Jayachandran C wrote:
+>> Add support for ThunderX2 CN99XX arm64 server processors.
 >>
->> Signed-off-by: Rob Herring <robh@kernel.org>
+>> Introduce a new arm64 platform config option ARCH_THUNDER2 for these
+>> processors. Add device tree files boot/dts/cavium/thunder-99xx.dtsi for
+>> on-chip devices and boot/dts/cavium/thunder-99xx.dts for the evaluation
+>> board.
+>>
+>> Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm64/Kconfig.platforms                 |   7 ++
+>>  arch/arm64/boot/dts/cavium/Makefile          |   1 +
+>>  arch/arm64/boot/dts/cavium/thunder-99xx.dts  |  34 +++++++
+>>  arch/arm64/boot/dts/cavium/thunder-99xx.dtsi | 147 +++++++++++++++++++++++++++
 >
-> Just a quick procedural comment: drm-misc for 4.11 is closed already, but
-> if we can get this core patch into 4.11 still then that would avoid
-> cross-tree sync pains in 4.12 ...
+> This is basically identical to vulcan.dtsi. Do we really need both in the
+> tree?
 
-Right, I was thinking the same thing.
+Hmm, an alternative would be to add the new .dtsi file and start out with an
+#include of the existing file, with overrides for anything that needs changing.
+Similarly, the Kconfig symbol could just 'select ARCH_VULCAN' for now.
 
-Rob
+     Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
