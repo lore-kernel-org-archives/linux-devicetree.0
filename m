@@ -1,124 +1,160 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/5] drm: convert drivers to use of_graph_get_remote_node
-Date: Mon, 6 Feb 2017 11:17:00 +0100
-Message-ID: <53de6816-fcba-3142-650a-5a56c5631f5e@baylibre.com>
+From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/5] drm: of: introduce drm_of_find_panel_or_bridge
+Date: Mon, 6 Feb 2017 10:18:51 +0000
+Message-ID: <20170206101851.GU3140@e110455-lin.cambridge.arm.com>
 References: <20170204033635.10250-1-robh@kernel.org>
- <20170204033635.10250-4-robh@kernel.org>
+ <20170204033635.10250-3-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170204033635.10250-4-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170204033635.10250-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puc>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
 List-Id: devicetree@vger.kernel.org
 
-On 02/04/2017 04:36 AM, Rob Herring wrote:
-> Convert drivers to use the new of_graph_get_remote_node() helper
-> instead of parsing the endpoint node and then getting the remote device
-> node. Now drivers can just specify the device node and which
-> port/endpoint and get back the connected remote device node. The details
-> of the graph binding are nicely abstracted into the core OF graph code.
-> 
-> This changes some error messages to debug messages (in the graph core).
-> Graph connections are often "no connects" depending on the particular
-> board, so we want to avoid spurious messages. Plus the kernel is not a
-> DT validator.
+On Fri, Feb 03, 2017 at 09:36:32PM -0600, Rob Herring wrote:
+> Many drivers have a common pattern of searching the OF graph for either an
+> attached panel or bridge and then finding the DRM struct for the panel
+> or bridge. Also, most drivers need to handle deferred probing when the
+> DRM device is not yet instantiated. Create a common function,
+> drm_of_find_panel_or_bridge, to find the connected node and the
+> associated DRM panel or bridge device.
 > 
 > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  drivers/gpu/drm/arm/hdlcd_drv.c                 | 22 ++-------
->  drivers/gpu/drm/arm/malidp_drv.c                | 29 ++---------
->  drivers/gpu/drm/bridge/adv7511/adv7533.c        | 12 +----
->  drivers/gpu/drm/bridge/dumb-vga-dac.c           | 15 ++----
->  drivers/gpu/drm/bridge/ti-tfp410.c              | 15 ++----
->  drivers/gpu/drm/exynos/exynos_drm_dpi.c         | 16 +-----
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c         | 13 ++---
->  drivers/gpu/drm/exynos/exynos_drm_mic.c         | 27 +---------
->  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 26 ++--------
->  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 30 +----------
->  drivers/gpu/drm/mediatek/mtk_dpi.c              | 12 ++---
->  drivers/gpu/drm/mediatek/mtk_hdmi.c             | 26 ++--------
->  drivers/gpu/drm/meson/meson_drv.c               | 12 ++---
->  drivers/gpu/drm/meson/meson_venc_cvbs.c         | 19 ++-----
->  drivers/gpu/drm/msm/dsi/dsi_host.c              |  3 +-
->  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         | 28 +----------
->  drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 18 +++----
->  drivers/gpu/drm/tilcdc/tilcdc_crtc.c            | 11 +----
->  drivers/gpu/drm/tilcdc/tilcdc_external.c        | 66 +++----------------------
->  drivers/gpu/drm/vc4/vc4_dpi.c                   | 15 ++----
->  20 files changed, 64 insertions(+), 351 deletions(-)
+>  drivers/gpu/drm/drm_of.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/drm/drm_of.h     | 13 +++++++++++++
+>  2 files changed, 63 insertions(+)
 > 
-[...]
-> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
-> index ff1f6019b97b..37cb9c755ed7 100644
-> --- a/drivers/gpu/drm/meson/meson_drv.c
-> +++ b/drivers/gpu/drm/meson/meson_drv.c
-> @@ -163,14 +163,14 @@ static struct drm_driver meson_driver = {
+> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+> index 47848ed8ca48..b29ce2f52113 100644
+> --- a/drivers/gpu/drm/drm_of.c
+> +++ b/drivers/gpu/drm/drm_of.c
+> @@ -3,7 +3,9 @@
+>  #include <linux/list.h>
+>  #include <linux/of_graph.h>
+>  #include <drm/drmP.h>
+> +#include <drm/drm_bridge.h>
+>  #include <drm/drm_crtc.h>
+> +#include <drm/drm_panel.h>
+>  #include <drm/drm_of.h>
 >  
->  static bool meson_vpu_has_available_connectors(struct device *dev)
->  {
-> -	struct device_node *ep, *remote;
-> +	struct device_node *remote;
-> +	int i;
->  
-> -	/* Parses each endpoint and check if remote exists */
-> -	for_each_endpoint_of_node(dev->of_node, ep) {
-> -		/* If the endpoint node exists, consider it enabled */
-> -		remote = of_graph_get_remote_port(ep);
-> -		if (remote)
-> +	for_each_of_graph_remote_node(dev->of_node, remote, i, 2) {
-> +		if (remote) {
-> +			of_node_put(remote);
->  			return true;
-> +		}
->  	}
->  
->  	return false;
-> diff --git a/drivers/gpu/drm/meson/meson_venc_cvbs.c b/drivers/gpu/drm/meson/meson_venc_cvbs.c
-> index a2bcc70a03ef..8566de2edb62 100644
-> --- a/drivers/gpu/drm/meson/meson_venc_cvbs.c
-> +++ b/drivers/gpu/drm/meson/meson_venc_cvbs.c
-> @@ -217,25 +217,14 @@ static const struct drm_encoder_helper_funcs
->  
->  static bool meson_venc_cvbs_connector_is_available(struct meson_drm *priv)
->  {
-> -	struct device_node *ep, *remote;
-> +	struct device_node *remote;
->  
-> -	/* CVBS VDAC output is on the first port, first endpoint */
-> -	ep = of_graph_get_endpoint_by_regs(priv->dev->of_node, 0, 0);
-> -	if (!ep)
-> +	remote = of_graph_get_remote_node(priv->dev->of_node, 0, 0);
-> +	if (!remote)
->  		return false;
->  
-> -
-> -	/* If the endpoint node exists, consider it enabled */
-> -	remote = of_graph_get_remote_port(ep);
-> -	if (remote) {
-> -		of_node_put(ep);
-> -		return true;
-> -	}
-> -
-> -	of_node_put(ep);
->  	of_node_put(remote);
-> -
-> -	return false;
-> +	return true;
+>  static void drm_release_of(struct device *dev, void *data)
+> @@ -207,3 +209,51 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
+>  	return -EINVAL;
 >  }
+>  EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
+> +
+> +/*
+> + * drm_of_find_panel_or_bridge - return connected panel or bridge device
+> + * @np: device tree node containing encoder input ports
+> + * @panel: pointer to hold returned drm_panel
+> + * @bridge: pointer to hold returned drm_bridge
+> + *
+> + * Given a DT node's port and endpoint number, find the connected node and
+> + * return either the associated struct drm_panel or drm_bridge device.
+> + *
+> + * Returns zero if successful, or one of the standard error codes if it fails.
+> + */
+> +int drm_of_find_panel_or_bridge(const struct device_node *np,
+> +				int port, int endpoint,
+> +				struct drm_panel **panel,
+> +				struct drm_bridge **bridge)
+> +{
+> +	int ret = -ENODEV;
+
+Given that you never return 'ret' with -ENODEV can I suggest that you initialise 'ret'
+with -EPROBE_DEFER and then you can get rid of the two assignments further down?
+
+Otherwise, looks good to me.
+
+Best regards,
+Liviu
+
+> +	struct device_node *remote;
+> +
+> +	remote = of_graph_get_remote_node(np, port, endpoint);
+> +	if (!remote)
+> +		return -ENODEV;
+> +
+> +	if (bridge)
+> +		*bridge = NULL;
+> +
+> +	if (panel) {
+> +		*panel = of_drm_find_panel(remote);
+> +		if (*panel) {
+> +			ret = 0;
+> +			goto out_put;
+> +		}
+> +		ret = -EPROBE_DEFER;
+> +	}
+> +
+> +	if (bridge) {
+> +		*bridge = of_drm_find_bridge(remote);
+> +		if (*bridge)
+> +			ret = 0;
+> +		else
+> +			ret = -EPROBE_DEFER;
+> +	}
+> +out_put:
+> +	of_node_put(remote);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
+> diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
+> index 26a64805cc15..f86507f0599b 100644
+> --- a/include/drm/drm_of.h
+> +++ b/include/drm/drm_of.h
+> @@ -8,6 +8,8 @@ struct component_match;
+>  struct device;
+>  struct drm_device;
+>  struct drm_encoder;
+> +struct drm_panel;
+> +struct drm_bridge;
+>  struct device_node;
 >  
->  int meson_venc_cvbs_create(struct meson_drm *priv)
-[...]
+>  #ifdef CONFIG_OF
+> @@ -23,6 +25,10 @@ extern int drm_of_component_probe(struct device *dev,
+>  extern int drm_of_encoder_active_endpoint(struct device_node *node,
+>  					  struct drm_encoder *encoder,
+>  					  struct of_endpoint *endpoint);
+> +extern int drm_of_find_panel_or_bridge(const struct device_node *np,
+> +				       int port, int endpoint,
+> +				       struct drm_panel **panel,
+> +				       struct drm_bridge **bridge);
+>  #else
+>  static inline uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
+>  						  struct device_node *port)
+> @@ -52,6 +58,13 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
+>  {
+>  	return -EINVAL;
+>  }
+> +static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
+> +					      int port, int endpoint,
+> +					      struct drm_panel **panel,
+> +					      struct drm_bridge **bridge)
+> +{
+> +	return -EINVAL;
+> +}
+>  #endif
+>  
+>  static inline int drm_of_encoder_active_endpoint_id(struct device_node *node,
+> -- 
+> 2.10.1
+> 
 
-Hi Rob,
-
-For the meson changes :
-Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-
-Thanks !
-Neil
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
