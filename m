@@ -1,56 +1,76 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC 2/2] hwmon: lm90: add thermal_zone temperature sensor
- support
-Date: Mon, 6 Feb 2017 11:37:20 -0800
-Message-ID: <20170206193720.GA24834@roeck-us.net>
-References: <e2c150ce1312a524ea0a524f3d476f910333ae82.1486327509.git.chunkeey@googlemail.com>
- <0e28c2989f021bedaff3c8958ab8c1ef738182b7.1486327509.git.chunkeey@googlemail.com>
- <edca1928-6909-f353-3524-30546d715ed3@roeck-us.net>
- <6489282.5YPtSL3FNJ@debian64>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6489282.5YPtSL3FNJ@debian64>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Christian Lamparter <chunkeey@googlemail.com>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Wei Ni <wni@nvidia.com>
+From: eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+Subject: [PATCH linux v6 0/6] drivers: hwmon: Add On-Chip Controller driver
+Date: Mon,  6 Feb 2017 14:27:06 -0600
+Message-ID: <1486412832-21854-1-git-send-email-eajames@linux.vnet.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 05:01:31PM +0100, Christian Lamparter wrote:
-> On Sunday, February 5, 2017 7:10:53 PM CET Guenter Roeck wrote:
-> > On 02/05/2017 01:03 PM, Christian Lamparter wrote:
-> > > This patch adds thermal_zone temperature sensor support
-> > > to the lm90 module. The feature has to be enabled
-> > > separately via the Kconfig option:
-> > > 	CONFIG_SENSORS_LM90_THERMAL_DEVICE
-> > >
-> > > The LM90 supports two (three for MAX6695 and MAX6696)
-> > > temperature sensors. The local sensor is integrated
-> > > into the LM90 chip. The remote sensors are connected
-> > > to external temperature sensing diodes.
-> > >
-> > > Cc: Wei Ni <wni@nvidia.com>
-> > > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
-> > 
-> > Since the hwnmon core now supports thermal registration, and since the lm90
-> > driver has already been converted to using the new hwmon API, I would
-> > rather like to understand why using the hwmon core for this purpose is
-> > insufficient, and I would prefer to address the deficiencies in the hwmon
-> > core and not in the driver.
-> 
-> Hey, that's great, I completely missed that! Yes, this makes the changes
-> to lm90.c obsolete.
-> 
-> However, what about the device-tree updates in 1/2? I'm asking because
-> the hwmon device node still needs the #thermal-sensor-cells property
-> defined for thermal_zone_of_sensor_register(). Without it, the sensor
-> will be skipped and the thermal-zones will do nothing (no regulation).
-> I can respin the device-tree patch (local and remote need to trade 
-> places). What do you think?
-> 
-Sure, no problem with that. Does supporting this require changes in the hwmon
-core ?
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
-Thanks,
-Guenter
+This patchset adds a hwmon driver to support the OCC (On-Chip Controller)
+on the IBM POWER8 and POWER9 processors, from a BMC (Baseboard Management
+Controller). The OCC is an embedded processor that provides real time
+power and thermal monitoring.
+
+The driver provides an interface on a BMC to poll OCC sensor data, set
+user power caps, and perform some basic OCC error handling. It interfaces
+with userspace through hwmon.
+
+The driver is currently functional only for the OCC on POWER8 chips.
+Communicating with the POWER9 OCC requries FSI support.
+
+Edward A. James (6):
+  hwmon: Add core On-Chip Controller support for POWER CPUs
+  hwmon: occ: Add sysfs interface
+  hwmon: occ: Add I2C transport implementation for SCOM operations
+  hwmon: occ: Add callbacks for parsing P8 OCC datastructures
+  hwmon: occ: Add hwmon implementation for the P8 OCC
+  hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+
+ Documentation/devicetree/bindings/hwmon/occ.txt |  13 +
+ Documentation/hwmon/occ                         | 114 ++++++
+ MAINTAINERS                                     |   7 +
+ drivers/hwmon/Kconfig                           |   2 +
+ drivers/hwmon/Makefile                          |   1 +
+ drivers/hwmon/occ/Kconfig                       |  29 ++
+ drivers/hwmon/occ/Makefile                      |   2 +
+ drivers/hwmon/occ/occ.c                         | 450 ++++++++++++++++++++++++
+ drivers/hwmon/occ/occ.h                         |  81 +++++
+ drivers/hwmon/occ/occ_p8.c                      | 248 +++++++++++++
+ drivers/hwmon/occ/occ_p8.h                      |  30 ++
+ drivers/hwmon/occ/occ_p9.c                      | 309 ++++++++++++++++
+ drivers/hwmon/occ/occ_p9.h                      |  30 ++
+ drivers/hwmon/occ/occ_scom_i2c.c                |  77 ++++
+ drivers/hwmon/occ/occ_scom_i2c.h                |  26 ++
+ drivers/hwmon/occ/occ_sysfs.c                   | 251 +++++++++++++
+ drivers/hwmon/occ/occ_sysfs.h                   |  30 ++
+ drivers/hwmon/occ/p8_occ_i2c.c                  | 104 ++++++
+ drivers/hwmon/occ/scom.h                        |  47 +++
+ 19 files changed, 1851 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/hwmon/occ.txt
+ create mode 100644 Documentation/hwmon/occ
+ create mode 100644 drivers/hwmon/occ/Kconfig
+ create mode 100644 drivers/hwmon/occ/Makefile
+ create mode 100644 drivers/hwmon/occ/occ.c
+ create mode 100644 drivers/hwmon/occ/occ.h
+ create mode 100644 drivers/hwmon/occ/occ_p8.c
+ create mode 100644 drivers/hwmon/occ/occ_p8.h
+ create mode 100644 drivers/hwmon/occ/occ_p9.c
+ create mode 100644 drivers/hwmon/occ/occ_p9.h
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.c
+ create mode 100644 drivers/hwmon/occ/occ_scom_i2c.h
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.c
+ create mode 100644 drivers/hwmon/occ/occ_sysfs.h
+ create mode 100644 drivers/hwmon/occ/p8_occ_i2c.c
+ create mode 100644 drivers/hwmon/occ/scom.h
+
+-- 
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
