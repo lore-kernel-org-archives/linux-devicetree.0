@@ -1,153 +1,164 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] drm: of: introduce drm_of_find_panel_or_bridge
-Date: Mon, 06 Feb 2017 11:42:48 +0100
-Message-ID: <1486377768.3005.34.camel@pengutronix.de>
-References: <20170204033635.10250-1-robh@kernel.org>
-         <20170204033635.10250-3-robh@kernel.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add driver for sitronix ST7789V panel
+Date: Mon, 6 Feb 2017 11:50:37 +0100
+Message-ID: <20170206105037.sxtx5o3tocfqq7tq@lukather>
+References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+ <8194211279dd2d1b1c2e88a3c17d154c356bbbc7.1486115846.git-series.maxime.ripard@free-electrons.com>
+ <6c4db243-59fc-f7a4-96e0-8fefef253bac@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170204033635.10250-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
+Content-Type: multipart/mixed; boundary="===============1665316553=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <6c4db243-59fc-f7a4-96e0-8fefef253bac@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
-> Many drivers have a common pattern of searching the OF graph for either an
-> attached panel or bridge and then finding the DRM struct for the panel
-> or bridge. Also, most drivers need to handle deferred probing when the
-> DRM device is not yet instantiated. Create a common function,
-> drm_of_find_panel_or_bridge, to find the connected node and the
-> associated DRM panel or bridge device.
-> 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/gpu/drm/drm_of.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/drm/drm_of.h     | 13 +++++++++++++
->  2 files changed, 63 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-> index 47848ed8ca48..b29ce2f52113 100644
-> --- a/drivers/gpu/drm/drm_of.c
-> +++ b/drivers/gpu/drm/drm_of.c
-> @@ -3,7 +3,9 @@
->  #include <linux/list.h>
->  #include <linux/of_graph.h>
->  #include <drm/drmP.h>
-> +#include <drm/drm_bridge.h>
->  #include <drm/drm_crtc.h>
-> +#include <drm/drm_panel.h>
->  #include <drm/drm_of.h>
->  
->  static void drm_release_of(struct device *dev, void *data)
-> @@ -207,3 +209,51 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
->  	return -EINVAL;
->  }
->  EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
-> +
-> +/*
-> + * drm_of_find_panel_or_bridge - return connected panel or bridge device
-> + * @np: device tree node containing encoder input ports
-> + * @panel: pointer to hold returned drm_panel
-> + * @bridge: pointer to hold returned drm_bridge
-> + *
-> + * Given a DT node's port and endpoint number, find the connected node and
-> + * return either the associated struct drm_panel or drm_bridge device.
 
-Add a commend that at least one of panel, bridge must be set?
+--===============1665316553==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="nzrb3uwqzk56fugn"
+Content-Disposition: inline
 
-> + * Returns zero if successful, or one of the standard error codes if it fails.
-> + */
-> +int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +				int port, int endpoint,
-> +				struct drm_panel **panel,
-> +				struct drm_bridge **bridge)
-> +{
-> +	int ret = -ENODEV;
 
-This is only returned if !panel && !bridge. I'd consider this invalid
-usage of this function, so maybe use -EINVAL?
+--nzrb3uwqzk56fugn
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +	struct device_node *remote;
-> +
-> +	remote = of_graph_get_remote_node(np, port, endpoint);
-> +	if (!remote)
-> +		return -ENODEV;
-> +
-> +	if (bridge)
-> +		*bridge = NULL;
+Hi Noralf,
 
-I would move this ^ ...
+On Fri, Feb 03, 2017 at 07:53:58PM +0100, Noralf Tr=F8nnes wrote:
+>=20
+> Den 03.02.2017 10.59, skrev Maxime Ripard:
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > ---
+> >   drivers/gpu/drm/panel/Kconfig                  |   4 +-
+> >   drivers/gpu/drm/panel/Makefile                 |   1 +-
+> >   drivers/gpu/drm/panel/panel-sitronix-st7789v.c | 435 ++++++++++++++++=
+++-
+> >   3 files changed, 440 insertions(+), 0 deletions(-)
+> >   create mode 100644 drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+> >=20
+> > diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kcon=
+fig
+> > index 62aba976e744..d07b996a07b8 100644
+> > --- a/drivers/gpu/drm/panel/Kconfig
+> > +++ b/drivers/gpu/drm/panel/Kconfig
+> > @@ -81,4 +81,8 @@ config DRM_PANEL_SHARP_LS043T1LE01
+> >   	  Say Y here if you want to enable support for Sharp LS043T1LE01 qHD
+> >   	  (540x960) DSI panel as found on the Qualcomm APQ8074 Dragonboard
+> > +config DRM_PANEL_SITRONIX_ST7789V
+> > +	tristate "Sitronx ST7789V panel"
+> > +	depends on OF && SPI
+> > +
+> >   endmenu
+> > diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Mak=
+efile
+> > index a5c7ec0236e0..41b245d39984 100644
+> > --- a/drivers/gpu/drm/panel/Makefile
+> > +++ b/drivers/gpu/drm/panel/Makefile
+> > @@ -6,3 +6,4 @@ obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) +=3D panel-samsu=
+ng-ld9040.o
+> >   obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) +=3D panel-samsung-s6e8aa0.o
+> >   obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) +=3D panel-sharp-lq101r1sx0=
+1.o
+> >   obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) +=3D panel-sharp-ls043t1le0=
+1.o
+> > +obj-$(CONFIG_DRM_PANEL_SITRONIX_ST7789V) +=3D panel-sitronix-st7789v.o
+> > diff --git a/drivers/gpu/drm/panel/panel-sitronix-st7789v.c b/drivers/g=
+pu/drm/panel/panel-sitronix-st7789v.c
+> > new file mode 100644
+> > index 000000000000..aab817b55aa6
+> > --- /dev/null
+> > +++ b/drivers/gpu/drm/panel/panel-sitronix-st7789v.c
+> > @@ -0,0 +1,435 @@
+> > +/*
+> > + * Copyright (C) 2017 Free Electrons
+> > + *
+> > + * This program is free software; you can redistribute it and/or
+> > + * modify it under the terms of the GNU General Public License version
+> > + * 2 as published by the Free Software Foundation.
+> > + */
+> > +
+> > +#include <drm/drmP.h>
+> > +#include <drm/drm_panel.h>
+> > +
+> > +#include <linux/gpio/consumer.h>
+> > +#include <linux/spi/spi.h>
+> > +
+> > +#define ST7789V_SLPIN_CMD		0x10
+> > +
+> > +#define ST7789V_SLPOUT_CMD		0x11
+> > +
+> > +#define ST7789V_INVON_CMD		0x21
+> > +
+> > +#define ST7789V_DISPOFF_CMD		0x28
+> > +
+> > +#define ST7789V_DISPON_CMD		0x29
+> > +
+> > +#define ST7789V_MADCTL_CMD		0x36
+> > +
+> > +#define ST7789V_COLMOD_CMD		0x3a
+>=20
+> You can use these from include/video/mipi_display.h:
+>=20
+>         MIPI_DCS_ENTER_SLEEP_MODE       =3D 0x10,
+>         MIPI_DCS_EXIT_SLEEP_MODE        =3D 0x11,
+>         MIPI_DCS_ENTER_INVERT_MODE      =3D 0x21,
+>         MIPI_DCS_SET_DISPLAY_OFF        =3D 0x28,
+>         MIPI_DCS_SET_DISPLAY_ON         =3D 0x29,
+>         MIPI_DCS_SET_ADDRESS_MODE       =3D 0x36,
+>         MIPI_DCS_SET_PIXEL_FORMAT       =3D 0x3A,
 
-> +	if (panel) {
-> +		*panel = of_drm_find_panel(remote);
-> +		if (*panel) {
+I don't know, that controller cannot do MIPI DSI at all, and we would
+have to define all the other commands anyway.
 
-... here.
+Maxime
 
-> +			ret = 0;
-> +			goto out_put;
-> +		}
-> +		ret = -EPROBE_DEFER;
-> +	}
-> +
-> +	if (bridge) {
-> +		*bridge = of_drm_find_bridge(remote);
-> +		if (*bridge)
-> +			ret = 0;
-> +		else
-> +			ret = -EPROBE_DEFER;
-> +	}
-> +out_put:
-> +	of_node_put(remote);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
-> diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
-> index 26a64805cc15..f86507f0599b 100644
-> --- a/include/drm/drm_of.h
-> +++ b/include/drm/drm_of.h
-> @@ -8,6 +8,8 @@ struct component_match;
->  struct device;
->  struct drm_device;
->  struct drm_encoder;
-> +struct drm_panel;
-> +struct drm_bridge;
->  struct device_node;
->  
->  #ifdef CONFIG_OF
-> @@ -23,6 +25,10 @@ extern int drm_of_component_probe(struct device *dev,
->  extern int drm_of_encoder_active_endpoint(struct device_node *node,
->  					  struct drm_encoder *encoder,
->  					  struct of_endpoint *endpoint);
-> +extern int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +				       int port, int endpoint,
-> +				       struct drm_panel **panel,
-> +				       struct drm_bridge **bridge);
->  #else
->  static inline uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
->  						  struct device_node *port)
-> @@ -52,6 +58,13 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
->  {
->  	return -EINVAL;
->  }
-> +static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +					      int port, int endpoint,
-> +					      struct drm_panel **panel,
-> +					      struct drm_bridge **bridge)
-> +{
-> +	return -EINVAL;
-> +}
->  #endif
->  
->  static inline int drm_of_encoder_active_endpoint_id(struct device_node *node,
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-regards
-Philipp
+--nzrb3uwqzk56fugn
+Content-Type: application/pgp-signature; name="signature.asc"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYmFT5AAoJEBx+YmzsjxAgCm0P/j0KyDeYe0i32MbSubT4KGQO
+uQXfY/MFTHHEW9dH3cP7kloFsanblDhNhw5YbLTeHPYE6eFToyKDElzZdJIEWvNI
+9p704pBeyXU524lYKnapNRYfrPsdxrD2+JqiIPBcAmGpcfn+sF7LoBPVrBhHcIvf
+RpN5yo8icPaqrcl9GxdtjnLz4s4jDydNWDPIcpIozkQ3ugNW8rYYcIlTeV6fWQIf
++qNoUvIYFS53VEk4DgjdMOdT2TySuslw8eviz8/Z3HthNSyjDb+TY1deygyI0/oU
+gAZMsUOnBBlgWHz2fNIQ7DMGgKa4kqzj9opO+KDUcD2Ah1HdJLeAfNLA+Fv7tEvR
+xUC8P1wFXM5RbKwdXHj7mvsAtFGRtJ/fxyBteCZL+y5DZWBjcoxreQ5L6+lw85m4
+FAWrlRUba0r7ZWBtnZQVaPwJfH8KXv3yDOFJaMJCFOW91xPuUvRdKg6AibsAxUn3
+Dom7VnZhpj+GdX/9bXp/+xSpguBdfXCI2P2HIbuCVqwwHc5rS7Uj+i27ZuVZen86
+/m3POTYVr612QMLyfi//OD0JMhiPn2kt08D7KZi3r4d5Ljxo3BJWe9s9kCGpS3MG
+nF8R5ST88ARiB4dHNPSjFxXo7Rq5R1P/pD6hphFWP3y2T812FHi2lzCtIJk8Kf1Y
+50X1RENJh1dzjg3vgdQg
+=qWsV
+-----END PGP SIGNATURE-----
+
+--nzrb3uwqzk56fugn--
+
+--===============1665316553==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1665316553==--
