@@ -1,84 +1,38 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: shmobile: r7s72100: Enable L2 cache
-Date: Mon, 6 Feb 2017 16:30:38 +0100
-Message-ID: <CAMuHMdW0-KPEKS5wFRK7aRKwvvUcjQDa7Rmo0cDDwnfGAAmJ5w@mail.gmail.com>
-References: <20170202212000.10768-1-chris.brandt@renesas.com>
- <CAMuHMdU6kJDxGtjUT1S2JkQTLvzrgtF3mkqa5Xo08oF6d3tUbw@mail.gmail.com> <SG2PR06MB11657125A12CC1BDE6AD17748A400@SG2PR06MB1165.apcprd06.prod.outlook.com>
+From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] lib/string: introduce ascii2utf16le() helper
+Date: Mon, 6 Feb 2017 16:31:01 +0100
+Message-ID: <4730c4f2-6012-5267-90d3-bc447ec7963d@skidata.com>
+References: <Pine.LNX.4.44L0.1702061009590.2010-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <SG2PR06MB11657125A12CC1BDE6AD17748A400@SG2PR06MB1165.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1702061009590.2010-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
+On 02/06/2017 04:12 PM, Alan Stern wrote:
+> On Mon, 6 Feb 2017, Richard Leitner wrote:
+> 
+>> For USB string descriptors we need to convert ASCII strings to UTF16-LE.
+>> Therefore make a simple helper function (based on ascii2desc from
+>> drivers/usb/core/hcd.c) for that purpose.
+> 
+> You know, we already have utf8s_to_utf16s() in fs/nls/nls_base.c.  
+> Maybe it doesn't do exactly what you want, but it should be pretty 
+> close.  Adding another helper function to do essentially the same thing 
+> seems unnecessary.
 
-On Mon, Feb 6, 2017 at 3:58 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
-> On Monday, February 06, 2017, Geert Uytterhoeven wrote:
->> CC linux-arm-kernel
->>
->> On Thu, Feb 2, 2017 at 10:20 PM, Chris Brandt <chris.brandt@renesas.com>
->> wrote:
->> > This enables the 128KB L2 cache in the RZ/A1 (R7S72100).
->> >
->> > The 'Write full line of zeros mode' of this Cortex-A9 cannot be used
->> > because the sideband signals between the CA9 and PL310 are not connected.
->> > Since there is no option to disable this feature in the cache-l2x0
->> > driver, our only option is to specify a secure write function which
->> > will then cause the cache-l2x0 driver to not enable this feature.
->>
->> What about adding a DT property (e.g. "arm,pl310-broken-sideband", cfr.
->> "arm,pl330-broken-no-flushp"), and handling this in arch/arm/mm/cache-
->> l2x0.c instead?
->
-> Well, first I have to say that 'broken-sideband' is not actually "accurate"
-> in this case.
->
-> From the RZ/A1H Hardware Manual:
->
-> 4.  Secondary Cache
-> 4.1 Features
->
->   * Sideband signal from CA9: No
+Thanks for that pointer. I totally agree with you.
 
-OK.
+So it would be OK to include linux/nls.h and use utf8s_to_utf16s() in
+drivers/usb/{core/hcd.c,misc/usb251xb.c}?
 
-> So the chip designers knew the sideband signals were not connected.
-> If you have a look at the next chapter "5. LSI Internal Bus", you'll notice
-> that the CA9 is on the North bus (fig 5.2) but the PL310 is on the south
-> bus (fig 5.3) in between the AXI and the SDRAM/QSPI controller. So in this
-> in SoC, maybe the PL310 looks more like a L3 than an L2 cache???
-
-No, according to Figures 5.1 and 5.3, the CA9 is connected to both the
-North and South main buses.
-
-> So, I would say "arm,pl310-no-sideband" is a better name.
-
-OK.
-
-> I agree that faking out a secure write function just so the fill-zeros
-> sideband feature is not enabled is a bit of a hack, but I'm not sure if
-> modifying the cache-l2x0.c was an option.
-
-Given I've added "arm,shared-override" in the past, I'd say yes ;-)
-
-> If you think so, I can try the "arm,pl310-no-sideband" path first,
-> and if that doesn't get in I can fall back to what I'm doing now.
->
-> Thoughts???
-
-According to the "CoreLink Level 2 Cache Controller L2C-310" TRM,
-"no sideband signals" is even the default configuration?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Thanks & regards,
+Richard L
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
