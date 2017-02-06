@@ -1,129 +1,63 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v1 3/3] ASoC: zx-i2s: support zx296718 SoC for ZTE's i2s  controller driver
-Date: Mon,  6 Feb 2017 21:50:20 +0800
-Message-ID: <1486389020-29432-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486389020-29432-1-git-send-email-baoyou.xie@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/5] of: introduce of_graph_get_remote_node
+Date: Mon, 6 Feb 2017 07:54:23 -0600
+Message-ID: <CAL_JsqJ2HO6WkSGccqGaxHPExnJGyRwrrL2wDOORO+auA=Jbrg@mail.gmail.com>
+References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-2-robh@kernel.org>
+ <1486377167.3005.30.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486389020-29432-1-git-send-email-baoyou.xie@linaro.org>
+In-Reply-To: <1486377167.3005.30.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, baoyou.xie@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, perex@perex.cz, tiwai@suse.com, shawn.guo@linaro.org, vinod.koul@intel.com
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds zx296718 SoC support for ZTE's i2s controller driver.
+On Mon, Feb 6, 2017 at 4:32 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> Hi Rob,
+>
+> thanks for this clean-up series! I was not aware how far the duplication
+> has spread over time.
+>
+> On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
+>> The OF graph API leaves too much of the graph walking to clients when
+>> in many cases the driver doesn't care about accessing the port or
+>> endpoint nodes. The drivers typically just want the device connected via
+>> a particular graph connection. of_graph_get_remote_node provides this
+>> functionality.
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/of/base.c        | 28 ++++++++++++++++++++++++++++
+>>  include/linux/of_graph.h |  8 ++++++++
+>>  2 files changed, 36 insertions(+)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index d4bea3c797d6..ea18ab16b92c 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -2469,3 +2469,31 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>>       return of_get_next_parent(np);
+>>  }
+>>  EXPORT_SYMBOL(of_graph_get_remote_port);
+>> +
+>> +struct device_node *of_graph_get_remote_node(const struct device_node *node,
+>> +                                          int port, int endpoint)
+>
+> I think this should have a documentation comment, similar to the
+> of_graph_get_endpoint_by_regs one, as it is not really clear from the
+> function name that the returned device node is the parent (or
+> grandparent) device node containing the remote port to the specified
+> node & port & endpoint.
+> Also it might be interesting to the user that -1 is a wildcard value for
+> port / endpoint.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- sound/soc/zte/zx-i2s.c | 49 ++++++++++++++++++++++++++++++++++++++++---------
- 1 file changed, 40 insertions(+), 9 deletions(-)
+I really want to not allow using a wildcard here. Drivers should know
+what port they want (or iterate over all of them). It didn't look like
+any drivers were depending on the wildcard, but were just using -1 for
+"no reg property" when really that should 0. Of course, I may have
+missed something.
 
-diff --git a/sound/soc/zte/zx-i2s.c b/sound/soc/zte/zx-i2s.c
-index ed7a56d..68d590be 100644
---- a/sound/soc/zte/zx-i2s.c
-+++ b/sound/soc/zte/zx-i2s.c
-@@ -95,12 +95,13 @@
- struct zx_i2s_info {
- 	struct snd_dmaengine_dai_dma_data	dma_playback;
- 	struct snd_dmaengine_dai_dma_data	dma_capture;
--	struct clk				*dai_clk;
-+	struct clk				*dai_wclk, *dai_pclk;
- 	void __iomem				*reg_base;
- 	int					master;
- 	resource_size_t				mapbase;
- };
- 
-+
- static void zx_i2s_tx_en(void __iomem *base, bool on)
- {
- 	unsigned long val;
-@@ -218,6 +219,17 @@ static int zx_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 	return 0;
- }
- 
-+static void zx_i2s_set_clk(struct zx_i2s_info *i2s,
-+			   unsigned int ch_num, unsigned int sample_rate)
-+{
-+	unsigned long val = sample_rate * ch_num * CLK_RAT;
-+
-+	clk_set_rate(i2s->dai_wclk, val);
-+
-+	if (i2s->dai_pclk)
-+		clk_set_rate(i2s->dai_pclk, val);
-+}
-+
- static int zx_i2s_hw_params(struct snd_pcm_substream *substream,
- 			    struct snd_pcm_hw_params *params,
- 			    struct snd_soc_dai *socdai)
-@@ -275,8 +287,8 @@ static int zx_i2s_hw_params(struct snd_pcm_substream *substream,
- 	writel_relaxed(val, i2s->reg_base + ZX_I2S_TIMING_CTRL);
- 
- 	if (i2s->master)
--		ret = clk_set_rate(i2s->dai_clk,
--				   params_rate(params) * ch_num * CLK_RAT);
-+		zx_i2s_set_clk(i2s, ch_num, params_rate(params));
-+
- 	return ret;
- }
- 
-@@ -328,8 +340,19 @@ static int zx_i2s_startup(struct snd_pcm_substream *substream,
- 			  struct snd_soc_dai *dai)
- {
- 	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(zx_i2s->dai_wclk);
-+	if (ret)
-+		return ret;
- 
--	return clk_prepare_enable(zx_i2s->dai_clk);
-+	ret = clk_prepare_enable(zx_i2s->dai_pclk);
-+	if (ret) {
-+		clk_disable_unprepare(zx_i2s->dai_wclk);
-+		return ret;
-+	}
-+
-+	return ret;
- }
- 
- static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
-@@ -337,7 +360,8 @@ static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
- {
- 	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
- 
--	clk_disable_unprepare(zx_i2s->dai_clk);
-+	clk_disable_unprepare(zx_i2s->dai_wclk);
-+	clk_disable_unprepare(zx_i2s->dai_pclk);
- }
- 
- static struct snd_soc_dai_ops zx_i2s_dai_ops = {
-@@ -381,10 +405,16 @@ static int zx_i2s_probe(struct platform_device *pdev)
- 	if (!zx_i2s)
- 		return -ENOMEM;
- 
--	zx_i2s->dai_clk = devm_clk_get(&pdev->dev, "tx");
--	if (IS_ERR(zx_i2s->dai_clk)) {
--		dev_err(&pdev->dev, "Fail to get clk\n");
--		return PTR_ERR(zx_i2s->dai_clk);
-+	zx_i2s->dai_wclk = devm_clk_get(&pdev->dev, "tx");
-+	if (IS_ERR(zx_i2s->dai_wclk)) {
-+		dev_err(&pdev->dev, "Fail to get wclk\n");
-+		return PTR_ERR(zx_i2s->dai_wclk);
-+	}
-+
-+	zx_i2s->dai_pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(zx_i2s->dai_pclk)) {
-+		dev_info(&pdev->dev, "have no pclk\n");
-+		zx_i2s->dai_pclk = NULL;
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -414,6 +444,7 @@ static int zx_i2s_probe(struct platform_device *pdev)
- 
- static const struct of_device_id zx_i2s_dt_ids[] = {
- 	{ .compatible = "zte,zx296702-i2s", },
-+	{ .compatible = "zte,zx296718-i2s", },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, zx_i2s_dt_ids);
--- 
-2.7.4
+I guess I could enforce port/endpoint > 0 here as there's no existing users.
+
+Rob
