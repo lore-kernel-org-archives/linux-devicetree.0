@@ -1,149 +1,117 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/7] drm: Add DRM support for tiny LCD displays
-Date: Mon, 6 Feb 2017 10:17:43 +0100
-Message-ID: <20170206091743.GE27607@ulmo.ba.sec>
-References: <20170131160319.9695-1-noralf@tronnes.org>
- <20170131160319.9695-2-noralf@tronnes.org>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 2/6] usb: mtu3: add reference clock
+Date: Mon, 6 Feb 2017 17:28:57 +0800
+Message-ID: <1486373341-4399-2-git-send-email-chunfeng.yun@mediatek.com>
+References: <1486373341-4399-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0089377055=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170131160319.9695-2-noralf@tronnes.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Noralf =?utf-8?Q?Tr=C3=B8nnes?= <noralf@tronnes.org>
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486373341-4399-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+usually, the reference clock comes from 26M oscillator directly,
+but some SoCs are not, add it for compatibility.
 
---===============0089377055==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Lb0e7rgc7IsuDeGj"
-Content-Disposition: inline
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/usb/mtu3/mtu3.h      |    1 +
+ drivers/usb/mtu3/mtu3_plat.c |   28 ++++++++++++++++++++++++++--
+ 2 files changed, 27 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
+index ba9df71..aa6fd6a 100644
+--- a/drivers/usb/mtu3/mtu3.h
++++ b/drivers/usb/mtu3/mtu3.h
+@@ -225,6 +225,7 @@ struct ssusb_mtk {
+ 	/* common power & clock */
+ 	struct regulator *vusb33;
+ 	struct clk *sys_clk;
++	struct clk *ref_clk;
+ 	/* otg */
+ 	struct otg_switch_mtk otg_switch;
+ 	enum usb_dr_mode dr_mode;
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index 6344859..c3125da 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -123,7 +123,13 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
+ 	ret = clk_prepare_enable(ssusb->sys_clk);
+ 	if (ret) {
+ 		dev_err(ssusb->dev, "failed to enable sys_clk\n");
+-		goto clk_err;
++		goto sys_clk_err;
++	}
++
++	ret = clk_prepare_enable(ssusb->ref_clk);
++	if (ret) {
++		dev_err(ssusb->dev, "failed to enable ref_clk\n");
++		goto ref_clk_err;
+ 	}
+ 
+ 	ret = ssusb_phy_init(ssusb);
+@@ -143,8 +149,10 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
+ phy_err:
+ 	ssusb_phy_exit(ssusb);
+ phy_init_err:
++	clk_disable_unprepare(ssusb->ref_clk);
++ref_clk_err:
+ 	clk_disable_unprepare(ssusb->sys_clk);
+-clk_err:
++sys_clk_err:
+ 	regulator_disable(ssusb->vusb33);
+ vusb33_err:
+ 
+@@ -154,6 +162,7 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
+ static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
+ {
+ 	clk_disable_unprepare(ssusb->sys_clk);
++	clk_disable_unprepare(ssusb->ref_clk);
+ 	regulator_disable(ssusb->vusb33);
+ 	ssusb_phy_power_off(ssusb);
+ 	ssusb_phy_exit(ssusb);
+@@ -216,6 +225,19 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 		return PTR_ERR(ssusb->sys_clk);
+ 	}
+ 
++	/*
++	 * reference clock is usually a "fixed-clock", make it optional
++	 * for backward compatibility and ignore the error if it does
++	 * not exist.
++	 */
++	ssusb->ref_clk = devm_clk_get(dev, "ref_ck");
++	if (IS_ERR(ssusb->ref_clk)) {
++		if (PTR_ERR(ssusb->ref_clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		ssusb->ref_clk = NULL;
++	}
++
+ 	ssusb->num_phys = of_count_phandle_with_args(node,
+ 			"phys", "#phy-cells");
+ 	if (ssusb->num_phys > 0) {
+@@ -428,6 +450,7 @@ static int __maybe_unused mtu3_suspend(struct device *dev)
+ 	ssusb_host_disable(ssusb, true);
+ 	ssusb_phy_power_off(ssusb);
+ 	clk_disable_unprepare(ssusb->sys_clk);
++	clk_disable_unprepare(ssusb->ref_clk);
+ 	ssusb_wakeup_enable(ssusb);
+ 
+ 	return 0;
+@@ -445,6 +468,7 @@ static int __maybe_unused mtu3_resume(struct device *dev)
+ 
+ 	ssusb_wakeup_disable(ssusb);
+ 	clk_prepare_enable(ssusb->sys_clk);
++	clk_prepare_enable(ssusb->ref_clk);
+ 	ssusb_phy_power_on(ssusb);
+ 	ssusb_host_enable(ssusb);
+ 
+-- 
+1.7.9.5
 
---Lb0e7rgc7IsuDeGj
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 31, 2017 at 05:03:13PM +0100, Noralf Tr=C3=B8nnes wrote:
-> tinydrm provides helpers for very simple displays that can use
-> CMA backed framebuffers and need flushing on changes.
->=20
-> Signed-off-by: Noralf Tr=C3=B8nnes <noralf@tronnes.org>
-> Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> ---
->=20
-> Changes since version 2:
-> - Remove fbdev after drm unregister, not before.
->=20
-> Changes since version 1:
-> - Add tinydrm.rst
-> - Set tdev->fbdev_cma=3DNULL on unregister (lastclose is called after tha=
-t).
-> - Remove some DRM_DEBUG*()
->=20
->  Documentation/gpu/index.rst                 |   1 +
->  Documentation/gpu/tinydrm.rst               |  21 ++
->  drivers/gpu/drm/Kconfig                     |   2 +
->  drivers/gpu/drm/Makefile                    |   1 +
->  drivers/gpu/drm/tinydrm/Kconfig             |   8 +
->  drivers/gpu/drm/tinydrm/Makefile            |   1 +
->  drivers/gpu/drm/tinydrm/core/Makefile       |   3 +
->  drivers/gpu/drm/tinydrm/core/tinydrm-core.c | 377 ++++++++++++++++++++++=
-++++++
->  drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c | 234 +++++++++++++++++
->  include/drm/tinydrm/tinydrm.h               | 115 +++++++++
->  10 files changed, 763 insertions(+)
->  create mode 100644 Documentation/gpu/tinydrm.rst
->  create mode 100644 drivers/gpu/drm/tinydrm/Kconfig
->  create mode 100644 drivers/gpu/drm/tinydrm/Makefile
->  create mode 100644 drivers/gpu/drm/tinydrm/core/Makefile
->  create mode 100644 drivers/gpu/drm/tinydrm/core/tinydrm-core.c
->  create mode 100644 drivers/gpu/drm/tinydrm/core/tinydrm-pipe.c
->  create mode 100644 include/drm/tinydrm/tinydrm.h
-
-I realize this is totally subjective, but this feels somewhat too much
-of a separation. Given the helper nature of TinyDRM, I think it would be
-more appropriate to move the helpers themselves into drm_tiny.[ch] and
-then maybe add a subdirectory drivers/gpu/drm/tiny that contains all the
-drivers that use the helpers.
-
-The separation above further shows in subsequent patches where helpers
-are added to tinydrm that aren't specific to TinyDRM. So this make the
-new helpers appear as more of a subsystem in DRM rather than a helper
-library. It also makes things somewhat inconsistent with existing
-infrastructure.
-
-[...]
-> +static int tinydrm_register(struct tinydrm_device *tdev)
-> +{
-> +	struct drm_device *drm =3D tdev->drm;
-> +	int bpp =3D drm->mode_config.preferred_depth;
-> +	struct drm_fbdev_cma *fbdev;
-> +	int ret;
-> +
-> +	ret =3D drm_dev_register(tdev->drm, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	fbdev =3D drm_fbdev_cma_init_with_funcs(drm, bpp ? bpp : 32,
-
-Does this make sense? The helpers and the driver later in this series
-suggest that these panels will usually be 16-bit. Wouldn't that be a
-more sensible default?
-
-> +static enum drm_connector_status
-> +tinydrm_connector_detect(struct drm_connector *connector, bool force)
-> +{
-> +	if (drm_device_is_unplugged(connector->dev))
-> +		return connector_status_disconnected;
-
-Is this really what you wanted? drm_device_is_unplugged() returns true
-if the device is in the process of being removed. It only really makes
-sense if you also call drm_device_is_unplugged() somewhere in the
-driver, usually via drm_unplug_dev(), but I don't see that in the code
-which means this will always return false anyway.
-
-Thierry
-
---Lb0e7rgc7IsuDeGj
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliYPzQACgkQ3SOs138+
-s6EqjhAAjwjNONS6aO1oKqST0SlfSixwF7IRvGL2dRh5Vxk6Wp1aqu8QDdTUV3vC
-xYrYqMtaKcgbX0AFivdwwgyns35uJoM0sgkmT3b65Yy8ATGtY71sne9LQH4D0Fgk
-iS89ly+Ex0XSVxarBArK17DmvmlMhzbPqx8ix6I2go3ZJbEkOVk+XdYagfwmDQ4L
-xKcWJRqLqUNoBz2+HnqGRrLyOpTdyHbjBkS2Gcbd9PMoJG9QjdfIBV8yTuzlAE7r
-QzQgYoHUIx0deE8Ej4QPu07jG98PgsU93981NuOZOjCdLG2P1G56mEzv//DILdTi
-XfqngcsosTnIldQIqQwvI4ObKjmD3ouoDleRZN+nerVRJqAnW07+AwNTaktVIdTN
-KjQqvrunv5Ss5mky5E2paWdtp6plPrdytBp2l3/ar0VwjGa+F0K7ykVfiLwIoq+7
-R5OYnCR1kOc8+Yq+g/Lzou7sOnszGXg1IU5Z3aKCdSelhmj0iWBz+cWDi+kjnvzl
-WaRz+ndd4Xz2SrTw2y+nMBSgQ5ugqS3pFy5JvjVqPY5d/1LoGlHZiq0XDArLZtrL
-OWbuXCZYCWdIhZT9TuVmRU/f/sSaz5RRcSEGoYQmeN0UKBLC1udv9DogZfUKaXdl
-LKLMFZn3svLRizR9ZkQdR9RwHEEs9NZflofTi7ZHztRTGZ0ei6k=
-=tnsc
------END PGP SIGNATURE-----
-
---Lb0e7rgc7IsuDeGj--
-
---===============0089377055==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0089377055==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
