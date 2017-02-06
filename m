@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: [PATCH v2 09/10] soc: mediatek: add MT6797 scysys support
-Date: Mon, 6 Feb 2017 20:15:35 +0800
-Message-ID: <1486383336-16892-10-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v2 05/10] dt-bindings: arm: mediatek: document clk bindings for MT6797
+Date: Mon, 6 Feb 2017 20:15:31 +0800
+Message-ID: <1486383336-16892-6-git-send-email-mars.cheng@mediatek.com>
 References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,193 +9,111 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Chieh-Jay Liu <Chieh-Jay.Liu@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+Cc: CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Chieh-Jay Liu <Chieh-Jay.Liu@mediatek.com>, Kevin-CW Chen <kevin-cw.chen@mediatek.com>, Mars Cheng <mars.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds scysys support for MT6797
+From: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
 
-Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
+This patch adds the binding documentation for apmixedsys, imgsys,
+infracfg, mmsys, topckgen, vdecsys and vencsys for MT6797.
+
 Signed-off-by: Kevin-CW Chen <kevin-cw.chen@mediatek.com>
+Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 ---
- drivers/soc/mediatek/mtk-scpsys.c        |  114 ++++++++++++++++++++++++++++++
- include/dt-bindings/power/mt6797-power.h |   30 ++++++++
- 2 files changed, 144 insertions(+)
- create mode 100644 include/dt-bindings/power/mt6797-power.h
+ .../bindings/arm/mediatek/mediatek,apmixedsys.txt  |    1 +
+ .../bindings/arm/mediatek/mediatek,imgsys.txt      |    1 +
+ .../bindings/arm/mediatek/mediatek,infracfg.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,mmsys.txt       |    1 +
+ .../bindings/arm/mediatek/mediatek,topckgen.txt    |    1 +
+ .../bindings/arm/mediatek/mediatek,vdecsys.txt     |    1 +
+ .../bindings/arm/mediatek/mediatek,vencsys.txt     |    3 ++-
+ 7 files changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
-index a8ba800..fc7bf95 100644
---- a/drivers/soc/mediatek/mtk-scpsys.c
-+++ b/drivers/soc/mediatek/mtk-scpsys.c
-@@ -21,6 +21,7 @@
- #include <linux/soc/mediatek/infracfg.h>
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+index cb0054a..cd977db 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,apmixedsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-apmixedsys"
++	- "mediatek,mt6797-apmixedsys"
+ 	- "mediatek,mt8135-apmixedsys"
+ 	- "mediatek,mt8173-apmixedsys"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+index f6a9166..047b11a 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,imgsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-imgsys", "syscon"
++	- "mediatek,mt6797-imgsys", "syscon"
+ 	- "mediatek,mt8173-imgsys", "syscon"
+ - #clock-cells: Must be 1
  
- #include <dt-bindings/power/mt2701-power.h>
-+#include <dt-bindings/power/mt6797-power.h>
- #include <dt-bindings/power/mt8173-power.h>
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+index 1620ec2..58d58e2 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,infracfg.txt
+@@ -8,6 +8,7 @@ Required Properties:
  
- #define SPM_VDE_PWR_CON			0x0210
-@@ -585,6 +586,116 @@ static int __init scpsys_probe_mt2701(struct platform_device *pdev)
- }
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-infracfg", "syscon"
++	- "mediatek,mt6797-infracfg", "syscon"
+ 	- "mediatek,mt8135-infracfg", "syscon"
+ 	- "mediatek,mt8173-infracfg", "syscon"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+index 67dd2e4..70529e0 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,mmsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
  
- /*
-+ * MT6797 power domain support
-+ */
-+
-+static const struct scp_domain_data scp_domain_data_mt6797[] = {
-+	[MT6797_POWER_DOMAIN_VDEC] = {
-+		.name = "vdec",
-+		.sta_mask = BIT(7),
-+		.ctl_offs = 0x300,
-+		.sram_pdn_bits = GENMASK(8, 8),
-+		.sram_pdn_ack_bits = GENMASK(12, 12),
-+		.clk_id = {CLK_VDEC},
-+	},
-+	[MT6797_POWER_DOMAIN_VENC] = {
-+		.name = "venc",
-+		.sta_mask = BIT(21),
-+		.ctl_offs = 0x304,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(15, 12),
-+		.clk_id = {CLK_NONE},
-+	},
-+	[MT6797_POWER_DOMAIN_ISP] = {
-+		.name = "isp",
-+		.sta_mask = BIT(5),
-+		.ctl_offs = 0x308,
-+		.sram_pdn_bits = GENMASK(9, 8),
-+		.sram_pdn_ack_bits = GENMASK(13, 12),
-+		.clk_id = {CLK_NONE},
-+	},
-+	[MT6797_POWER_DOMAIN_MM] = {
-+		.name = "mm",
-+		.sta_mask = BIT(3),
-+		.ctl_offs = 0x30C,
-+		.sram_pdn_bits = GENMASK(8, 8),
-+		.sram_pdn_ack_bits = GENMASK(12, 12),
-+		.clk_id = {CLK_MM},
-+		.bus_prot_mask = (BIT(1) | BIT(2)),
-+	},
-+	[MT6797_POWER_DOMAIN_AUDIO] = {
-+		.name = "audio",
-+		.sta_mask = BIT(24),
-+		.ctl_offs = 0x314,
-+		.sram_pdn_bits = GENMASK(11, 8),
-+		.sram_pdn_ack_bits = GENMASK(15, 12),
-+		.clk_id = {CLK_NONE},
-+	},
-+	[MT6797_POWER_DOMAIN_MFG_ASYNC] = {
-+		.name = "mfg_async",
-+		.sta_mask = BIT(13),
-+		.ctl_offs = 0x334,
-+		.sram_pdn_bits = 0,
-+		.sram_pdn_ack_bits = 0,
-+		.clk_id = {CLK_MFG},
-+	},
-+	[MT6797_POWER_DOMAIN_MJC] = {
-+		.name = "mjc",
-+		.sta_mask = BIT(20),
-+		.ctl_offs = 0x310,
-+		.sram_pdn_bits = GENMASK(8, 8),
-+		.sram_pdn_ack_bits = GENMASK(12, 12),
-+		.clk_id = {CLK_NONE},
-+	},
-+};
-+
-+#define NUM_DOMAINS_MT6797	ARRAY_SIZE(scp_domain_data_mt6797)
-+#define SPM_PWR_STATUS_MT6797		0x0180
-+#define SPM_PWR_STATUS_2ND_MT6797	0x0184
-+
-+static int __init scpsys_probe_mt6797(struct platform_device *pdev)
-+{
-+	struct scp *scp;
-+	struct genpd_onecell_data *pd_data;
-+	int ret;
-+	struct scp_ctrl_reg scp_reg;
-+
-+	scp_reg.pwr_sta_offs = SPM_PWR_STATUS_MT6797;
-+	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND_MT6797;
-+
-+	scp = init_scp(pdev, scp_domain_data_mt6797, NUM_DOMAINS_MT6797,
-+		       &scp_reg);
-+	if (IS_ERR(scp))
-+		return PTR_ERR(scp);
-+
-+	mtk_register_power_domains(pdev, scp, NUM_DOMAINS_MT6797);
-+
-+	pd_data = &scp->pd_data;
-+
-+	ret = pm_genpd_add_subdomain(pd_data->domains[MT6797_POWER_DOMAIN_MM],
-+				pd_data->domains[MT6797_POWER_DOMAIN_VDEC]);
-+	if (ret && IS_ENABLED(CONFIG_PM))
-+		dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-+
-+	ret = pm_genpd_add_subdomain(pd_data->domains[MT6797_POWER_DOMAIN_MM],
-+				pd_data->domains[MT6797_POWER_DOMAIN_ISP]);
-+	if (ret && IS_ENABLED(CONFIG_PM))
-+		dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-+
-+	ret = pm_genpd_add_subdomain(pd_data->domains[MT6797_POWER_DOMAIN_MM],
-+				pd_data->domains[MT6797_POWER_DOMAIN_VENC]);
-+	if (ret && IS_ENABLED(CONFIG_PM))
-+		dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-+
-+	ret = pm_genpd_add_subdomain(pd_data->domains[MT6797_POWER_DOMAIN_MM],
-+		pd_data->domains[MT6797_POWER_DOMAIN_MJC]);
-+	if (ret && IS_ENABLED(CONFIG_PM))
-+		dev_err(&pdev->dev, "Failed to add subdomain: %d\n", ret);
-+
-+	return 0;
-+}
-+
-+/*
-  * MT8173 power domain support
-  */
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-mmsys", "syscon"
++	- "mediatek,mt6797-mmsys", "syscon"
+ 	- "mediatek,mt8173-mmsys", "syscon"
+ - #clock-cells: Must be 1
  
-@@ -721,6 +832,9 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
- 		.compatible = "mediatek,mt2701-scpsys",
- 		.data = scpsys_probe_mt2701,
- 	}, {
-+		.compatible = "mediatek,mt6797-scpsys",
-+		.data = scpsys_probe_mt6797,
-+	}, {
- 		.compatible = "mediatek,mt8173-scpsys",
- 		.data = scpsys_probe_mt8173,
- 	}, {
-diff --git a/include/dt-bindings/power/mt6797-power.h b/include/dt-bindings/power/mt6797-power.h
-new file mode 100644
-index 0000000..d54b377
---- /dev/null
-+++ b/include/dt-bindings/power/mt6797-power.h
-@@ -0,0 +1,30 @@
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Mars.C <mars.cheng@mediatek.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_POWER_MT6797_POWER_H
-+#define _DT_BINDINGS_POWER_MT6797_POWER_H
-+
-+#define MT6797_POWER_DOMAIN_VDEC		0
-+#define MT6797_POWER_DOMAIN_VENC		1
-+#define MT6797_POWER_DOMAIN_ISP		2
-+#define MT6797_POWER_DOMAIN_MM			3
-+#define MT6797_POWER_DOMAIN_AUDIO		4
-+#define MT6797_POWER_DOMAIN_MFG_ASYNC		5
-+#define MT6797_POWER_DOMAIN_MFG		6
-+#define MT6797_POWER_DOMAIN_MFG_CORE0		7
-+#define MT6797_POWER_DOMAIN_MFG_CORE1		8
-+#define MT6797_POWER_DOMAIN_MFG_CORE2		9
-+#define MT6797_POWER_DOMAIN_MFG_CORE3		10
-+#define MT6797_POWER_DOMAIN_MJC		11
-+
-+#endif /* _DT_BINDINGS_POWER_MT6797_POWER_H */
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+index 9f2fe78..ec93ecb 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,topckgen.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-topckgen"
++	- "mediatek,mt6797-topckgen"
+ 	- "mediatek,mt8135-topckgen"
+ 	- "mediatek,mt8173-topckgen"
+ - #clock-cells: Must be 1
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+index 2440f73..d150104 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vdecsys.txt
+@@ -7,6 +7,7 @@ Required Properties:
+ 
+ - compatible: Should be one of:
+ 	- "mediatek,mt2701-vdecsys", "syscon"
++	- "mediatek,mt6797-vdecsys", "syscon"
+ 	- "mediatek,mt8173-vdecsys", "syscon"
+ - #clock-cells: Must be 1
+ 
+diff --git a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+index 5bb2866..8a93be6 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek/mediatek,vencsys.txt
+@@ -5,7 +5,8 @@ The Mediatek vencsys controller provides various clocks to the system.
+ 
+ Required Properties:
+ 
+-- compatible: Should be:
++- compatible: Should be one of:
++	- "mediatek,mt6797-vencsys", "syscon"
+ 	- "mediatek,mt8173-vencsys", "syscon"
+ - #clock-cells: Must be 1
+ 
 -- 
 1.7.9.5
