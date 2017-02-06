@@ -1,82 +1,170 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 03/10] Document: DT: Add bindings for mediatek MT6797 SoC
- Platform
-Date: Mon, 6 Feb 2017 20:15:29 +0800
-Message-ID: <1486383336-16892-4-git-send-email-mars.cheng@mediatek.com>
-References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCHv2 08/16] atmel-isi: document device tree bindings
+Date: Mon, 6 Feb 2017 13:20:02 +0100
+Message-ID: <00bc695f-d412-7796-93a9-8d67a8f66370@xs4all.nl>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-9-hverkuil@xs4all.nl>
+ <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1486383336-16892-1-git-send-email-mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chieh-Jay Liu <Chieh-Jay.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170201165059.2qw3gnuyornvfl46@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds dt-binding documentation for Mediatek MT6797. Only
-include very basic items, gic, uart timer and cpu.
+On 02/01/2017 05:50 PM, Rob Herring wrote:
+> On Mon, Jan 30, 2017 at 03:06:20PM +0100, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>>
+>> Document the device tree bindings for this driver.
+> 
+> Bindings document h/w not drivers.
 
-Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/mediatek.txt |    4 ++++
- .../interrupt-controller/mediatek,sysirq.txt       |    1 +
- .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
- 3 files changed, 6 insertions(+)
+Fixed.
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index c860b24..2d3344d 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -12,6 +12,7 @@ compatible: Must contain one of
-    "mediatek,mt6592"
-    "mediatek,mt6755"
-    "mediatek,mt6795"
-+   "mediatek,mt6797"
-    "mediatek,mt7623"
-    "mediatek,mt8127"
-    "mediatek,mt8135"
-@@ -38,6 +39,9 @@ Supported boards:
- - Evaluation board for MT6795(Helio X10):
-     Required root node properties:
-       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
-+- Evaluation board for MT6797(Helio X20):
-+    Required root node properties:
-+      - compatible = "mediatek,mt6797-evb", "mediatek,mt6797";
- - Evaluation board for MT7623:
-     Required root node properties:
-       - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-index 1718454..9e537d6 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	"mediatek,mt8135-sysirq"
- 	"mediatek,mt8127-sysirq"
- 	"mediatek,mt6795-sysirq"
-+	"mediatek,mt6797-sysirq"
- 	"mediatek,mt6755-sysirq"
- 	"mediatek,mt6592-sysirq"
- 	"mediatek,mt6589-sysirq"
-diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-index 0015c72..5b8513d 100644
---- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-@@ -8,6 +8,7 @@ Required properties:
-   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
-   * "mediatek,mt6755-uart" for MT6755 compatible UARTS
-   * "mediatek,mt6795-uart" for MT6795 compatible UARTS
-+  * "mediatek,mt6797-uart" for MT6797 compatible UARTS
-   * "mediatek,mt7623-uart" for MT7623 compatible UARTS
-   * "mediatek,mt8127-uart" for MT8127 compatible UARTS
-   * "mediatek,mt8135-uart" for MT8135 compatible UARTS
--- 
-1.7.9.5
+> 
+>>
+>> Mostly copied from the atmel-isc bindings.
+>>
+>> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/media/atmel-isi.txt        | 91 +++++++++++++---------
+>>  1 file changed, 56 insertions(+), 35 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/atmel-isi.txt b/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> index 251f008..d1934b4 100644
+>> --- a/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> +++ b/Documentation/devicetree/bindings/media/atmel-isi.txt
+>> @@ -1,51 +1,72 @@
+>> -Atmel Image Sensor Interface (ISI) SoC Camera Subsystem
+>> -----------------------------------------------
+>> +Atmel Image Sensor Interface (ISI)
+>> +----------------------------------
+>>  
+>> -Required properties:
+>> -- compatible: must be "atmel,at91sam9g45-isi"
+>> -- reg: physical base address and length of the registers set for the device;
+>> -- interrupts: should contain IRQ line for the ISI;
+>> -- clocks: list of clock specifiers, corresponding to entries in
+>> -          the clock-names property;
+>> -- clock-names: must contain "isi_clk", which is the isi peripherial clock.
+>> +Required properties for ISI:
+>> +- compatible
+>> +	Must be "atmel,at91sam9g45-isi".
+>> +- reg
+>> +	Physical base address and length of the registers set for the device.
+>> +- interrupts
+>> +	Should contain IRQ line for the ISI.
+>> +- clocks
+>> +	List of clock specifiers, corresponding to entries in
+>> +	the clock-names property;
+>> +	Please refer to clock-bindings.txt.
+>> +- clock-names
+>> +	Required elements: "isi_clk".
+>> +- #clock-cells
+>> +	Should be 0.
+> 
+> This reformatting is unrelated and the old form was more standard for 
+> bindings (not that we have any real standard).
+
+OK, I went back to the old format.
+
+> 
+>> +- pinctrl-names, pinctrl-0
+>> +	Please refer to pinctrl-bindings.txt.
+>>  
+>>  ISI supports a single port node with parallel bus. It should contain one
+>>  'port' child node with child 'endpoint' node. Please refer to the bindings
+>>  defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+>>  
+>>  Example:
+>> -	isi: isi@f0034000 {
+>> -		compatible = "atmel,at91sam9g45-isi";
+>> -		reg = <0xf0034000 0x4000>;
+>> -		interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  
+>> -		clocks = <&isi_clk>;
+>> -		clock-names = "isi_clk";
+>> +isi: isi@f0034000 {
+>> +	compatible = "atmel,at91sam9g45-isi";
+>> +	reg = <0xf0034000 0x4000>;
+>> +	interrupts = <37 IRQ_TYPE_LEVEL_HIGH 5>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pinctrl_isi_data_0_7>;
+>> +	clocks = <&isi_clk>;
+>> +	clock-names = "isi_clk";
+>> +	status = "ok";
+>> +	port {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		isi_0: endpoint {
+>> +			reg = <0>;
+> 
+> Drop reg.
+
+Is that because that is the default?
+
+> 
+>> +			remote-endpoint = <&ov2640_0>;
+>> +			bus-width = <8>;
+>> +			vsync-active = <1>;
+>> +			hsync-active = <1>;
+> 
+> Which side of the connect is supposed to define these?
+
+The Atmel ISI side. In the v3 of this patch these properties are
+explicitly documented.
+
+> 
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +i2c1: i2c@f0018000 {
+>> +	status = "okay";
+>>  
+>> +	ov2640: camera@0x30 {
+> 
+> Drop the '0x'.
+
+Done.
+
+> 
+>> +		compatible = "ovti,ov2640";
+>> +		reg = <0x30>;
+>>  		pinctrl-names = "default";
+>> -		pinctrl-0 = <&pinctrl_isi>;
+>> +		pinctrl-0 = <&pinctrl_pck0_as_isi_mck &pinctrl_sensor_power &pinctrl_sensor_reset>;
+>> +		resetb-gpios = <&pioE 11 GPIO_ACTIVE_LOW>;
+>> +		pwdn-gpios = <&pioE 13 GPIO_ACTIVE_HIGH>;
+>> +		clocks = <&pck0>;
+>> +		clock-names = "xvclk";
+>> +		assigned-clocks = <&pck0>;
+>> +		assigned-clock-rates = <25000000>;
+>>  
+>>  		port {
+>> -			#address-cells = <1>;
+>> -			#size-cells = <0>;
+>> -
+>> -			isi_0: endpoint {
+>> -				remote-endpoint = <&ov2640_0>;
+>> +			ov2640_0: endpoint {
+>> +				remote-endpoint = <&isi_0>;
+>>  				bus-width = <8>;
+> 
+> It is pointless to define bus-width at both ends.
+
+No, this is separate for each end. See Sakari's reply.
+
+Thanks for the review!
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
