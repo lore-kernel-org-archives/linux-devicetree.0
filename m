@@ -1,38 +1,84 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] lib/string: introduce ascii2utf16le() helper
-Date: Mon, 6 Feb 2017 16:31:01 +0100
-Message-ID: <4730c4f2-6012-5267-90d3-bc447ec7963d@skidata.com>
-References: <Pine.LNX.4.44L0.1702061009590.2010-100000@iolanthe.rowland.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add code to support i.MX7D
+Date: Mon, 06 Feb 2017 16:33:37 +0100
+Message-ID: <1486395217.2275.38.camel@pengutronix.de>
+References: <20170206151716.10381-1-andrew.smirnov@gmail.com>
+         <20170206151716.10381-4-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1702061009590.2010-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170206151716.10381-4-andrew.smirnov@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: linux-pci@vger.kernel.org, yurovsky@gmail.com, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2017 04:12 PM, Alan Stern wrote:
-> On Mon, 6 Feb 2017, Richard Leitner wrote:
+Am Montag, den 06.02.2017, 07:17 -0800 schrieb Andrey Smirnov:
+> Add various bits of code needed to support i.MX7D variant of the IP.
 > 
->> For USB string descriptors we need to convert ASCII strings to UTF16-LE.
->> Therefore make a simple helper function (based on ascii2desc from
->> drivers/usb/core/hcd.c) for that purpose.
+> Cc: yurovsky@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+
+Two small comments inline, otherwise looks real good now.
+
+> ---
+>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
+>  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
+>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
+>  3 files changed, 105 insertions(+), 26 deletions(-)
 > 
-> You know, we already have utf8s_to_utf16s() in fs/nls/nls_base.c.  
-> Maybe it doesn't do exactly what you want, but it should be pretty 
-> close.  Adding another helper function to do essentially the same thing 
-> seems unnecessary.
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index 83aeb1f..9f57759 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
+>  and thus inherits all the common properties defined in designware-pcie.txt.
+>  
+>  Required properties:
+> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
+> +- compatible:
+> +	- "fsl,imx6q-pcie"
+> +	- "fsl,imx6sx-pcie",
+> +	- "fsl,imx6qp-pcie"
+> +	- "fsl,imx7d-pcie"
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
 
-Thanks for that pointer. I totally agree with you.
+This misses an "Additional required properties for imx7d-pcie" section
+listing the required reset handles.
 
-So it would be OK to include linux/nls.h and use utf8s_to_utf16s() in
-drivers/usb/{core/hcd.c,misc/usb251xb.c}?
+> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
+> index 3ef8093..34a21c9 100644
+> --- a/drivers/pci/host/pci-imx6.c
+> +++ b/drivers/pci/host/pci-imx6.c
 
-Thanks & regards,
-Richard L
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+>  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  {
+>  	struct pcie_port *pp = &imx6_pcie->pp;
+> @@ -381,6 +416,11 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+>  	}
+>  
+>  	switch (imx6_pcie->variant) {
+> +	case IMX7D:
+> +		reset_control_assert(imx6_pcie->apps_reset);
+
+Can this reset assertion be moved into imx6_pcie_assert_core_reset()?
+This may change the programming order slightly from the downstream
+driver, but I guess that won't hurt if this is the equivalent of the
+LTSSM enable signal.
+
+Regards,
+Lucas
