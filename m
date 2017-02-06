@@ -1,144 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/5] drm: convert drivers to use of_graph_get_remote_node
-Date: Mon, 6 Feb 2017 07:40:06 -0600
-Message-ID: <CAL_JsqLzMUFvbUkkGT07XBd3-_RGuKHJLgAm=Xeyw152goDA4w@mail.gmail.com>
-References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-4-robh@kernel.org>
- <1486378379.3005.43.camel@pengutronix.de>
+Subject: Re: [PATCH 1/5] of: introduce of_graph_get_remote_node
+Date: Mon, 6 Feb 2017 07:41:35 -0600
+Message-ID: <CAL_JsqLEgY4RNKP6Z9vqVZWA0Chj7=Fr6rHudjxDJ+rAYURorg@mail.gmail.com>
+References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-2-robh@kernel.org>
+ <20170206085023.onmsh5dcmn6ofpp5@phenom.ffwll.local>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486378379.3005.43.camel@pengutronix.de>
+In-Reply-To: <20170206085023.onmsh5dcmn6ofpp5@phenom.ffwll.local>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>
+To: Rob Herring <robh@kernel.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, Neil Armstrong <narmstrong@baylibre.com>, Liviu Dudau <liviu.dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Frank Rowand <frowand.list@gmail.com>, Marek Vasut <marex@denx.de>, Kevin Hilman <khilman@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Krzysztof Kozlowski <krzk@kernel.org>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Javier Martinez Canillas <javier@osg.samsung.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Kukjin Kim <kgene@kernel.org>, Mali DP Maintainers <malidp@foss.arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>Che
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 4:52 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
->> Convert drivers to use the new of_graph_get_remote_node() helper
->> instead of parsing the endpoint node and then getting the remote device
->> node. Now drivers can just specify the device node and which
->> port/endpoint and get back the connected remote device node. The details
->> of the graph binding are nicely abstracted into the core OF graph code.
->>
->> This changes some error messages to debug messages (in the graph core).
->> Graph connections are often "no connects" depending on the particular
->> board, so we want to avoid spurious messages. Plus the kernel is not a
->> DT validator.
+On Mon, Feb 6, 2017 at 2:50 AM, Daniel Vetter <daniel@ffwll.ch> wrote:
+> On Fri, Feb 03, 2017 at 09:36:31PM -0600, Rob Herring wrote:
+>> The OF graph API leaves too much of the graph walking to clients when
+>> in many cases the driver doesn't care about accessing the port or
+>> endpoint nodes. The drivers typically just want the device connected via
+>> a particular graph connection. of_graph_get_remote_node provides this
+>> functionality.
 >>
 >> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->>  drivers/gpu/drm/arm/hdlcd_drv.c                 | 22 ++-------
->>  drivers/gpu/drm/arm/malidp_drv.c                | 29 ++---------
->>  drivers/gpu/drm/bridge/adv7511/adv7533.c        | 12 +----
->>  drivers/gpu/drm/bridge/dumb-vga-dac.c           | 15 ++----
->>  drivers/gpu/drm/bridge/ti-tfp410.c              | 15 ++----
->>  drivers/gpu/drm/exynos/exynos_drm_dpi.c         | 16 +-----
->>  drivers/gpu/drm/exynos/exynos_drm_dsi.c         | 13 ++---
->>  drivers/gpu/drm/exynos/exynos_drm_mic.c         | 27 +---------
->>  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 26 ++--------
->>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 30 +----------
->>  drivers/gpu/drm/mediatek/mtk_dpi.c              | 12 ++---
->>  drivers/gpu/drm/mediatek/mtk_hdmi.c             | 26 ++--------
->>  drivers/gpu/drm/meson/meson_drv.c               | 12 ++---
->>  drivers/gpu/drm/meson/meson_venc_cvbs.c         | 19 ++-----
->>  drivers/gpu/drm/msm/dsi/dsi_host.c              |  3 +-
->>  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         | 28 +----------
->>  drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 18 +++----
->>  drivers/gpu/drm/tilcdc/tilcdc_crtc.c            | 11 +----
->>  drivers/gpu/drm/tilcdc/tilcdc_external.c        | 66 +++----------------------
->>  drivers/gpu/drm/vc4/vc4_dpi.c                   | 15 ++----
->>  20 files changed, 64 insertions(+), 351 deletions(-)
->>
-> [...]
->> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
->> index 90fb831ef031..dbd554c09a39 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
->> @@ -661,7 +661,7 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->>       struct device *dev = &pdev->dev;
->>       struct mtk_dpi *dpi;
->>       struct resource *mem;
->> -     struct device_node *ep, *bridge_node = NULL;
->> +     struct device_node *bridge_node;
->>       int comp_id;
->>       int ret;
->>
->> @@ -706,15 +706,9 @@ static int mtk_dpi_probe(struct platform_device *pdev)
->>               return -EINVAL;
->>       }
->>
->> -     ep = of_graph_get_next_endpoint(dev->of_node, NULL);
->> -     if (ep) {
->> -             bridge_node = of_graph_get_remote_port_parent(ep);
->> -             of_node_put(ep);
->> -     }
->> -     if (!bridge_node) {
->> -             dev_err(dev, "Failed to find bridge node\n");
->> +     bridge_node = of_graph_get_remote_node(dev->of_node, 0, 0);
 >
-> Note that before this change, of_graph_get_next_endpoint would just
-> choose the first port/endpoint without restrictions to their reg
-> properties, whereas the new code requires reg to be either not set or
-> set to zero.
-> As the former is the case for the mt8173 dpi->hdmi link, which is the
-> only use of this driver, this should be fine.
+> Just a quick procedural comment: drm-misc for 4.11 is closed already, but
+> if we can get this core patch into 4.11 still then that would avoid
+> cross-tree sync pains in 4.12 ...
 
-Yes, that is on purpose. A given node should have known port numbering
-and know what type of port each port is. The binding doc should
-outline the ports and endpoints.
-
->
-> [...]
->> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> index 0e8c4d9af340..f14e472812ce 100644
->> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
->> @@ -1433,7 +1433,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
->>  {
->>       struct device *dev = &pdev->dev;
->>       struct device_node *np = dev->of_node;
->> -     struct device_node *cec_np, *port, *ep, *remote, *i2c_np;
->> +     struct device_node *cec_np, *remote, *i2c_np;
->>       struct platform_device *cec_pdev;
->>       struct regmap *regmap;
->>       struct resource *mem;
->> @@ -1485,29 +1485,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
->>       if (IS_ERR(hdmi->regs))
->>               return PTR_ERR(hdmi->regs);
->>
->> -     port = of_graph_get_port_by_id(np, 1);
->> -     if (!port) {
->> -             dev_err(dev, "Missing output port node\n");
->> +     remote = of_graph_get_remote_node(np, 1, 0);
->> +     if (!remote)
->>               return -EINVAL;
->> -     }
->> -
->> -     ep = of_get_child_by_name(port, "endpoint");
->> -     if (!ep) {
->> -             dev_err(dev, "Missing endpoint node in port %s\n",
->> -                     port->full_name);
->> -             of_node_put(port);
->> -             return -EINVAL;
->> -     }
->> -     of_node_put(port);
->> -
->> -     remote = of_graph_get_remote_port_parent(ep);
->> -     if (!remote) {
->> -             dev_err(dev, "Missing connector/bridge node for endpoint %s\n",
->> -                     ep->full_name);
->> -             of_node_put(ep);
->> -             return -EINVAL;
->> -     }
->> -     of_node_put(ep);
->
-> Same as above. TMDS links reasonably have only one endpoint in the
-> source port, and the mt8173-evb DT has no reg property set.
->
-> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
-> for the mediatek changes.
-
-Thanks.
+Right, I was thinking the same thing.
 
 Rob
