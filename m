@@ -1,119 +1,104 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] drm: of: introduce drm_of_find_panel_or_bridge
-Date: Mon, 6 Feb 2017 10:53:23 -0600
-Message-ID: <20170206165323.255ltzlzmpfx4vl7@rob-hp-laptop>
-References: <20170204033635.10250-1-robh@kernel.org>
- <20170204033635.10250-3-robh@kernel.org>
- <1486377768.3005.34.camel@pengutronix.de>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 5/6] dmaengine: Add Broadcom SBA RAID driver
+Date: Mon, 6 Feb 2017 22:24:00 +0530
+Message-ID: <20170206165400.GD19244@localhost>
+References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com>
+ <1486010836-25228-6-git-send-email-anup.patel@broadcom.com>
+ <20170205060657.GV19244@localhost>
+ <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1486377768.3005.34.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
+In-Reply-To: <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 11:42:48AM +0100, Philipp Zabel wrote:
-> On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
-> > Many drivers have a common pattern of searching the OF graph for either an
-> > attached panel or bridge and then finding the DRM struct for the panel
-> > or bridge. Also, most drivers need to handle deferred probing when the
-> > DRM device is not yet instantiated. Create a common function,
-> > drm_of_find_panel_or_bridge, to find the connected node and the
-> > associated DRM panel or bridge device.
+On Mon, Feb 06, 2017 at 05:31:15PM +0530, Anup Patel wrote:
 
-[...]
-
-> > +int drm_of_find_panel_or_bridge(const struct device_node *np,
-> > +				int port, int endpoint,
-> > +				struct drm_panel **panel,
-> > +				struct drm_bridge **bridge)
-> > +{
-> > +	int ret = -ENODEV;
+> >> +
+> >> +/* SBA C_MDATA helper macros */
+> >> +#define SBA_C_MDATA_LOAD_VAL(__bnum0)                ((__bnum0) & 0x3)
+> >> +#define SBA_C_MDATA_WRITE_VAL(__bnum0)               ((__bnum0) & 0x3)
+> >> +#define SBA_C_MDATA_XOR_VAL(__bnum1, __bnum0)                        \
+> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
+> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
+> >> +                             __v;                            \
+> >> +                     })
+> >> +#define SBA_C_MDATA_PQ_VAL(__dnum, __bnum1, __bnum0)         \
+> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
+> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
+> >> +                             __v |= ((__dnum) & 0x1f) << 5;  \
+> >> +                             __v;                            \
+> >> +                     })
+> >
+> > ah why are we usig complex macros, why can't these be simple functions..
 > 
-> This is only returned if !panel && !bridge. I'd consider this invalid
-> usage of this function, so maybe use -EINVAL?
+> "static inline functions" seemed too complicated here because most of
+> these macros are two lines of c-code.
 
-Yes.
+and thats where I have an issue with this. Macros for simple things is fine
+but not for couple of line of logic!
 
-> > +	struct device_node *remote;
-> > +
-> > +	remote = of_graph_get_remote_node(np, port, endpoint);
-> > +	if (!remote)
-> > +		return -ENODEV;
-> > +
-> > +	if (bridge)
-> > +		*bridge = NULL;
 > 
-> I would move this ^ ...
+> Do you still insist on using "static inline functions"?
+
+Yes
+
 > 
-> > +	if (panel) {
-> > +		*panel = of_drm_find_panel(remote);
-> > +		if (*panel) {
+> >
+> >> +#define SBA_C_MDATA_LS(__c_mdata_val)        ((__c_mdata_val) & 0xff)
+> >> +#define SBA_C_MDATA_MS(__c_mdata_val)        (((__c_mdata_val) >> 8) & 0x3)
+> >> +
+> >> +/* Driver helper macros */
+> >> +#define to_sba_request(tx)           \
+> >> +     container_of(tx, struct sba_request, tx)
+> >> +#define to_sba_device(dchan)         \
+> >> +     container_of(dchan, struct sba_device, dma_chan)
+> >> +
+> >> +enum sba_request_state {
+> >> +     SBA_REQUEST_STATE_FREE = 1,
+> >> +     SBA_REQUEST_STATE_ALLOCED = 2,
+> >> +     SBA_REQUEST_STATE_PENDING = 3,
+> >> +     SBA_REQUEST_STATE_ACTIVE = 4,
+> >> +     SBA_REQUEST_STATE_COMPLETED = 5,
+> >> +     SBA_REQUEST_STATE_ABORTED = 6,
+> >
+> > whats up with a very funny indentation setting, we use 8 chars.
+> >
+> > Please re-read the Documentation/process/coding-style.rst
 > 
-> ... here.
+> I have double checked this enum. The indentation is fine
+> and as-per coding style. Am I missing anything else?
 
-Okay.
+Somehow the initial indent doesnt seem to be 8 chars to me.
 
-> > +			ret = 0;
-> > +			goto out_put;
-> > +		}
-> > +		ret = -EPROBE_DEFER;
-> > +	}
-> > +
-> > +	if (bridge) {
-> > +		*bridge = of_drm_find_bridge(remote);
-> > +		if (*bridge)
-> > +			ret = 0;
-> > +		else
-> > +			ret = -EPROBE_DEFER;
-> > +	}
-> > +out_put:
-> > +	of_node_put(remote);
-> > +	return ret;
-> > +}
+> >> +static enum dma_status sba_tx_status(struct dma_chan *dchan,
+> >> +                                  dma_cookie_t cookie,
+> >> +                                  struct dma_tx_state *txstate)
+> >> +{
+> >> +     int mchan_idx;
+> >> +     enum dma_status ret;
+> >> +     struct sba_device *sba = to_sba_device(dchan);
+> >> +
+> >> +     ret = dma_cookie_status(dchan, cookie, txstate);
+> >> +     if (ret == DMA_COMPLETE)
+> >> +             return ret;
+> >> +
+> >> +     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
+> >> +             mbox_client_peek_data(sba->mchans[mchan_idx]);
+> >
+> > what is this achieving?
+> 
+> The mbox_client_peek_data() is a hint to mailbox controller driver
+> to check for available messages.
+> 
+> This gives good performance improvement when some DMA client
+> code is polling using tx_status() callback.
 
-I've ended up re-writing things a bit getting rid of the goto and the 
-result looks like this:
+Then why do it before and then check status.
 
-int drm_of_find_panel_or_bridge(const struct device_node *np,
-				int port, int endpoint,
-				struct drm_panel **panel,
-				struct drm_bridge **bridge)
-{
-	int ret = -EPROBE_DEFER;
-	struct device_node *remote;
-
-	if (!panel && !bridge)
-		return -EINVAL;
-
-	remote = of_graph_get_remote_node(np, port, endpoint);
-	if (!remote)
-		return -ENODEV;
-
-	if (panel) {
-		*panel = of_drm_find_panel(remote);
-		if (*panel) {
-			if (bridge)
-				*bridge = NULL;
-			ret = 0;
-		}
-	}
-
-	/* No panel found yet, check for a bridge next. */
-	if (ret && bridge) {
-		*bridge = of_drm_find_bridge(remote);
-		if (*bridge)
-			ret = 0;
-	}
-
-	of_node_put(remote);
-	return ret;
-}
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+~Vinod
