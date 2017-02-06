@@ -1,117 +1,64 @@
-From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/6] usb: mtu3: add reference clock
-Date: Mon, 6 Feb 2017 17:28:57 +0800
-Message-ID: <1486373341-4399-2-git-send-email-chunfeng.yun@mediatek.com>
-References: <1486373341-4399-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Subject: [PATCH v2 1/6] usb: mtu3: get resources that cause deferred probe earlier
+Date: Mon, 6 Feb 2017 17:28:56 +0800
+Message-ID: <1486373341-4399-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486373341-4399-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-usually, the reference clock comes from 26M oscillator directly,
-but some SoCs are not, add it for compatibility.
+Some resources such as regulator, clock usually cause deferred
+probe, get them earlier to avoid more ineffective processing.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- drivers/usb/mtu3/mtu3.h      |    1 +
- drivers/usb/mtu3/mtu3_plat.c |   28 ++++++++++++++++++++++++++--
- 2 files changed, 27 insertions(+), 2 deletions(-)
+ drivers/usb/mtu3/mtu3_plat.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/usb/mtu3/mtu3.h b/drivers/usb/mtu3/mtu3.h
-index ba9df71..aa6fd6a 100644
---- a/drivers/usb/mtu3/mtu3.h
-+++ b/drivers/usb/mtu3/mtu3.h
-@@ -225,6 +225,7 @@ struct ssusb_mtk {
- 	/* common power & clock */
- 	struct regulator *vusb33;
- 	struct clk *sys_clk;
-+	struct clk *ref_clk;
- 	/* otg */
- 	struct otg_switch_mtk otg_switch;
- 	enum usb_dr_mode dr_mode;
 diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
-index 6344859..c3125da 100644
+index 7833678..6344859 100644
 --- a/drivers/usb/mtu3/mtu3_plat.c
 +++ b/drivers/usb/mtu3/mtu3_plat.c
-@@ -123,7 +123,13 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
- 	ret = clk_prepare_enable(ssusb->sys_clk);
- 	if (ret) {
- 		dev_err(ssusb->dev, "failed to enable sys_clk\n");
--		goto clk_err;
-+		goto sys_clk_err;
+@@ -204,6 +204,18 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 	int i;
+ 	int ret;
+ 
++	ssusb->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
++	if (IS_ERR(ssusb->vusb33)) {
++		dev_err(dev, "failed to get vusb33\n");
++		return PTR_ERR(ssusb->vusb33);
 +	}
 +
-+	ret = clk_prepare_enable(ssusb->ref_clk);
-+	if (ret) {
-+		dev_err(ssusb->dev, "failed to enable ref_clk\n");
-+		goto ref_clk_err;
- 	}
- 
- 	ret = ssusb_phy_init(ssusb);
-@@ -143,8 +149,10 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
- phy_err:
- 	ssusb_phy_exit(ssusb);
- phy_init_err:
-+	clk_disable_unprepare(ssusb->ref_clk);
-+ref_clk_err:
- 	clk_disable_unprepare(ssusb->sys_clk);
--clk_err:
-+sys_clk_err:
- 	regulator_disable(ssusb->vusb33);
- vusb33_err:
- 
-@@ -154,6 +162,7 @@ static int ssusb_rscs_init(struct ssusb_mtk *ssusb)
- static void ssusb_rscs_exit(struct ssusb_mtk *ssusb)
- {
- 	clk_disable_unprepare(ssusb->sys_clk);
-+	clk_disable_unprepare(ssusb->ref_clk);
- 	regulator_disable(ssusb->vusb33);
- 	ssusb_phy_power_off(ssusb);
- 	ssusb_phy_exit(ssusb);
-@@ -216,6 +225,19 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
- 		return PTR_ERR(ssusb->sys_clk);
- 	}
- 
-+	/*
-+	 * reference clock is usually a "fixed-clock", make it optional
-+	 * for backward compatibility and ignore the error if it does
-+	 * not exist.
-+	 */
-+	ssusb->ref_clk = devm_clk_get(dev, "ref_ck");
-+	if (IS_ERR(ssusb->ref_clk)) {
-+		if (PTR_ERR(ssusb->ref_clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		ssusb->ref_clk = NULL;
++	ssusb->sys_clk = devm_clk_get(dev, "sys_ck");
++	if (IS_ERR(ssusb->sys_clk)) {
++		dev_err(dev, "failed to get sys clock\n");
++		return PTR_ERR(ssusb->sys_clk);
 +	}
 +
  	ssusb->num_phys = of_count_phandle_with_args(node,
  			"phys", "#phy-cells");
  	if (ssusb->num_phys > 0) {
-@@ -428,6 +450,7 @@ static int __maybe_unused mtu3_suspend(struct device *dev)
- 	ssusb_host_disable(ssusb, true);
- 	ssusb_phy_power_off(ssusb);
- 	clk_disable_unprepare(ssusb->sys_clk);
-+	clk_disable_unprepare(ssusb->ref_clk);
- 	ssusb_wakeup_enable(ssusb);
+@@ -230,18 +242,6 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 		return PTR_ERR(ssusb->ippc_base);
+ 	}
  
- 	return 0;
-@@ -445,6 +468,7 @@ static int __maybe_unused mtu3_resume(struct device *dev)
- 
- 	ssusb_wakeup_disable(ssusb);
- 	clk_prepare_enable(ssusb->sys_clk);
-+	clk_prepare_enable(ssusb->ref_clk);
- 	ssusb_phy_power_on(ssusb);
- 	ssusb_host_enable(ssusb);
- 
+-	ssusb->vusb33 = devm_regulator_get(&pdev->dev, "vusb33");
+-	if (IS_ERR(ssusb->vusb33)) {
+-		dev_err(dev, "failed to get vusb33\n");
+-		return PTR_ERR(ssusb->vusb33);
+-	}
+-
+-	ssusb->sys_clk = devm_clk_get(dev, "sys_ck");
+-	if (IS_ERR(ssusb->sys_clk)) {
+-		dev_err(dev, "failed to get sys clock\n");
+-		return PTR_ERR(ssusb->sys_clk);
+-	}
+-
+ 	ssusb->dr_mode = usb_get_dr_mode(dev);
+ 	if (ssusb->dr_mode == USB_DR_MODE_UNKNOWN) {
+ 		dev_err(dev, "dr_mode is error\n");
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
