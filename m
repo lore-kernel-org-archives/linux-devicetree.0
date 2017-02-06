@@ -1,96 +1,145 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for
- brcmstb-cpu-clk-div
-Date: Mon, 6 Feb 2017 14:59:14 -0800
-Message-ID: <20170206225914.GJ25384@codeaurora.org>
-References: <20170119002933.7529-1-code@mmayer.net>
- <20170119002933.7529-2-code@mmayer.net>
- <20170121005202.GB8801@codeaurora.org>
- <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
- <20170203200652.GD25384@codeaurora.org>
- <d56c827e-41cf-fcb3-42e0-792e8bf37871@gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Mon, 6 Feb 2017 15:10:46 -0800
+Message-ID: <bd64a86e-d90c-f4aa-6f22-1c832e0b563f@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <2258037.UCXsIYbtGD@avalon> <f6bfb9ec-1ea3-8477-4933-cf655acd3e0f@xs4all.nl>
+ <2038922.a1tReKKdaL@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d56c827e-41cf-fcb3-42e0-792e8bf37871@gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Markus Mayer <markus.mayer@broadcom.com>, Markus Mayer <code@mmayer.net>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux Clock List <linux-clk@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <2038922.a1tReKKdaL@avalon>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gma
 List-Id: devicetree@vger.kernel.org
 
-On 02/03, Florian Fainelli wrote:
-> On 02/03/2017 12:06 PM, Stephen Boyd wrote:
-> > On 02/01, Markus Mayer wrote:
-> >> On 20 January 2017 at 16:52, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> >>>
-> >>> Are these properties used? Please don't put these types of
-> >>> details in DT.
-> >>
-> >> Yeah, unfortunately they are. Luckily, I think the issue can be
-> >> resolved quite easily, because the user of those properties isn't
-> >> involved in this series.
-> >>
-> >> They are currently being used by a clock driver
-> >> ("drivers/clk/clk-brcmstb.c") that hasn't been upstreamed yet. I
-> >> performed some code archeology. While I wasn't 100% successful in
-> >> tracking down the origins of this interface, it looks like it was
-> >> designed this way a while back (4+ years or so), probably before
-> >> device tree best practices were developed or, at least, before they
-> >> were widely known.
-> >>
-> >> So, what I can do is to remove the properties from the official
-> >> binding. (I'll send an update to that effect shortly.) Once the
-> >> binding is accepted upstream, we can work on fixing up the design of
-> >> clk-brcmstb.c, so it doesn't rely on these properties anymore (and
-> >> derives them from the compatible string instead), and then proceed to
-> >> upstream that, as well.
-> > 
-> > Ok. Sounds like some cleanup needs to be done on the way
-> > upstream.
-> > 
-> >>> This register really looks like some offset in something larger.
-> >>> Is there some clock controller? What's the hw block at
-> >>> 0xf03e2000? Maybe I already asked this.
-> >>
-> >> It looks this way, but in this case, looks are deceiving. The address
-> >> and the length are really correct the way they are.
-> >>
-> >> This memory area holds a range of only loosely related configuration
-> >> registers. It's called the Bus Interface Unit Register Set and deals
-> >> with configuring the CPU in general. At address 0xf03e257c, there
-> >> happens to be the clock divider register we need, and it's really just
-> >> one register, i.e. 4 bytes.
-> > 
-> > We've seen this style of hardware design before. I'd prefer we
-> > make the "Bus Interface Unit Register Set" into one device node
-> > and have a driver probe for it that registers this clock. If
-> > other things need to be controlled in there then the driver will
-> > do more than just register one clock, possibly hooking into
-> > multiple frameworks. The compatible string can indicate which SoC
-> > it is if the divider register offset changes or if the register
-> > layout is a total free for all.
-> 
-> We already have another piece of drive code that manipulates registers
-> in the Bus Interface Unit located in drivers/soc/bcm/brcmstb/biuctrl.c
-> and which has little to nothing to do with the CPU's clock ratio. And
-> actually another one being submitted that deals with the CPU's
-> read-ahead cache. I would very much prefer we keep all of them separate
-> and dealing with just the register offset they need to do, but that does
-> not mean the Device Tree binding has to look that way though.
-> 
-> The binding for the BIUCTRL register made it here:
-> 
-> Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
-> 
-> so we should re-use that, and have a small piece of clock provided that
-> just uses the relevant register range within that larger register space
-> and provide the CLOCK_RATIO. Does that work?
-> 
 
-Ok. That's fine. The existing binding will be updated to include
-this new subnode then for the clock component?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 02/06/2017 02:33 PM, Laurent Pinchart wrote:
+> Hi Hans,
+>
+> (CC'ing Sakari)
+>
+> On Monday 06 Feb 2017 10:50:22 Hans Verkuil wrote:
+>> On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
+>>> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
+>>>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
+>>>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
+>>>>>>> +
+>>>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct
+>>>>>>> v4l2_mbus_config
+>>>>>>> *cfg)
+>>>>>>> +{
+>>>>>>> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+>>>>>>> +	struct media_pad *pad;
+>>>>>>> +	int ret;
+>>>>>>> +
+>>>>>>> +	if (vidsw->active == -1) {
+>>>>>>> +		dev_err(sd->dev, "no configuration for inactive
+> mux\n");
+>>>>>>> +		return -EINVAL;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	/*
+>>>>>>> +	 * Retrieve media bus configuration from the entity connected
+> to the
+>>>>>>> +	 * active input
+>>>>>>> +	 */
+>>>>>>> +	pad = media_entity_remote_pad(&vidsw->pads[vidsw->active]);
+>>>>>>> +	if (pad) {
+>>>>>>> +		sd = media_entity_to_v4l2_subdev(pad->entity);
+>>>>>>> +		ret = v4l2_subdev_call(sd, video, g_mbus_config, cfg);
+>>>>>>> +		if (ret == -ENOIOCTLCMD)
+>>>>>>> +			pad = NULL;
+>>>>>>> +		else if (ret < 0) {
+>>>>>>> +			dev_err(sd->dev, "failed to get source
+>>>>>>> configuration\n");
+>>>>>>> +			return ret;
+>>>>>>> +		}
+>>>>>>> +	}
+>>>>>>> +	if (!pad) {
+>>>>>>> +		/* Mirror the input side on the output side */
+>>>>>>> +		cfg->type = vidsw->endpoint[vidsw->active].bus_type;
+>>>>>>> +		if (cfg->type == V4L2_MBUS_PARALLEL ||
+>>>>>>> +		    cfg->type == V4L2_MBUS_BT656)
+>>>>>>> +			cfg->flags = vidsw->endpoint[vidsw-
+>>>>>>> active].bus.parallel.flags;
+>>>>>>> +	}
+>>>>>>> +
+>>>>>>> +	return 0;
+>>>>>>> +}
+>>>>>> I am not certain this op is needed at all. In the current kernel this
+>>>>>> op is only used by soc_camera, pxa_camera and omap3isp (somewhat
+>>>>>> dubious). Normally this information should come from the device tree
+>>>>>> and there should be no need for this op.
+>>>>>>
+>>>>>> My (tentative) long-term plan was to get rid of this op.
+>>>>>>
+>>>>>> If you don't need it, then I recommend it is removed.
+>>>> Hi Hans, the imx-media driver was only calling g_mbus_config to the
+>>>> camera sensor, and it was doing that to determine the sensor's bus type.
+>>>> This info was already available from parsing a v4l2_of_endpoint from the
+>>>> sensor node. So it was simple to remove the g_mbus_config calls, and
+>>>> instead rely on the parsed sensor v4l2_of_endpoint.
+>>> That's not a good point.
+> (mea culpa, s/point/idea/)
+>
+>>> The imx-media driver must not parse the sensor DT node as it is not aware
+>>> of what bindings the sensor is compatible with.
+
+Hi Laurent,
+
+I don't really understand this argument. The sensor node has been found
+by parsing the OF graph, so it is known to be a camera sensor node at
+that point.
+
+
+>>>   Information must instead
+>>> be queried from the sensor subdev at runtime, through the g_mbus_config()
+>>> operation.
+>>>
+>>> Of course, if you can get the information from the imx-media DT node,
+>>> that's certainly an option. It's only information provided by the sensor
+>>> driver that you have no choice but query using a subdev operation.
+>> Shouldn't this come from the imx-media DT node? BTW, why is omap3isp using
+>> this?
+> It all depends on what type of information needs to be retrieved, and whether
+> it can change at runtime or is fixed. Adding properties to the imx-media DT
+> node is certainly fine as long as those properties describe the i.MX side.
+
+In this case the info needed is the media bus type. That info is most easily
+available by calling v4l2_of_parse_endpoint() on the sensor's endpoint node.
+
+The media bus type is not something that can be added to the
+imx-media node since it contains no endpoint nodes.
+
+
+> In the omap3isp case, we use the operation to query whether parallel data
+> contains embedded sync (BT.656) or uses separate h/v sync signals.
+>
+>> The reason I am suspicious about this op is that it came from soc-camera and
+>> predates the DT. The contents of v4l2_mbus_config seems very much like a HW
+>> description to me, i.e. something that belongs in the DT.
+> Part of it is possibly outdated, but for buses that support multiple modes of
+> operation (such as the parallel bus case described above) we need to make that
+> information discoverable at runtime. Maybe this should be considered as
+> related to Sakari's efforts to support VC/DT for CSI-2, and supported through
+> the API he is working on.
+
+That sounds interesting, can you point me to some info on this effort?
+I've been thinking the DT should contain virtual channel info for CSI-2
+buses.
+
+Steve
+
+>
