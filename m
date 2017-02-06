@@ -1,160 +1,112 @@
-From: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/5] drm: of: introduce drm_of_find_panel_or_bridge
-Date: Mon, 6 Feb 2017 10:18:51 +0000
-Message-ID: <20170206101851.GU3140@e110455-lin.cambridge.arm.com>
-References: <20170204033635.10250-1-robh@kernel.org>
- <20170204033635.10250-3-robh@kernel.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 12/24] add mux and video interface bridge entity
+ functions
+Date: Mon, 06 Feb 2017 11:27:20 +0100
+Message-ID: <1486376840.3005.28.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1483755102-24785-13-git-send-email-steve_longerbeam@mentor.com>
+         <6948005.DnfziI9GIJ@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170204033635.10250-3-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <6948005.DnfziI9GIJ@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 09:36:32PM -0600, Rob Herring wrote:
-> Many drivers have a common pattern of searching the OF graph for either an
-> attached panel or bridge and then finding the DRM struct for the panel
-> or bridge. Also, most drivers need to handle deferred probing when the
-> DRM device is not yet instantiated. Create a common function,
-> drm_of_find_panel_or_bridge, to find the connected node and the
-> associated DRM panel or bridge device.
+On Sun, 2017-02-05 at 17:36 +0200, Laurent Pinchart wrote:
+> Hi Steve,
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/gpu/drm/drm_of.c | 50 ++++++++++++++++++++++++++++++++++++++++++++++++
->  include/drm/drm_of.h     | 13 +++++++++++++
->  2 files changed, 63 insertions(+)
+> Thank you for the patch
 > 
-> diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-> index 47848ed8ca48..b29ce2f52113 100644
-> --- a/drivers/gpu/drm/drm_of.c
-> +++ b/drivers/gpu/drm/drm_of.c
-> @@ -3,7 +3,9 @@
->  #include <linux/list.h>
->  #include <linux/of_graph.h>
->  #include <drm/drmP.h>
-> +#include <drm/drm_bridge.h>
->  #include <drm/drm_crtc.h>
-> +#include <drm/drm_panel.h>
->  #include <drm/drm_of.h>
->  
->  static void drm_release_of(struct device *dev, void *data)
-> @@ -207,3 +209,51 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
->  	return -EINVAL;
->  }
->  EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
-> +
-> +/*
-> + * drm_of_find_panel_or_bridge - return connected panel or bridge device
-> + * @np: device tree node containing encoder input ports
-> + * @panel: pointer to hold returned drm_panel
-> + * @bridge: pointer to hold returned drm_bridge
-> + *
-> + * Given a DT node's port and endpoint number, find the connected node and
-> + * return either the associated struct drm_panel or drm_bridge device.
-> + *
-> + * Returns zero if successful, or one of the standard error codes if it fails.
-> + */
-> +int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +				int port, int endpoint,
-> +				struct drm_panel **panel,
-> +				struct drm_bridge **bridge)
-> +{
-> +	int ret = -ENODEV;
-
-Given that you never return 'ret' with -ENODEV can I suggest that you initialise 'ret'
-with -EPROBE_DEFER and then you can get rid of the two assignments further down?
-
-Otherwise, looks good to me.
-
-Best regards,
-Liviu
-
-> +	struct device_node *remote;
-> +
-> +	remote = of_graph_get_remote_node(np, port, endpoint);
-> +	if (!remote)
-> +		return -ENODEV;
-> +
-> +	if (bridge)
-> +		*bridge = NULL;
-> +
-> +	if (panel) {
-> +		*panel = of_drm_find_panel(remote);
-> +		if (*panel) {
-> +			ret = 0;
-> +			goto out_put;
-> +		}
-> +		ret = -EPROBE_DEFER;
-> +	}
-> +
-> +	if (bridge) {
-> +		*bridge = of_drm_find_bridge(remote);
-> +		if (*bridge)
-> +			ret = 0;
-> +		else
-> +			ret = -EPROBE_DEFER;
-> +	}
-> +out_put:
-> +	of_node_put(remote);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
-> diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
-> index 26a64805cc15..f86507f0599b 100644
-> --- a/include/drm/drm_of.h
-> +++ b/include/drm/drm_of.h
-> @@ -8,6 +8,8 @@ struct component_match;
->  struct device;
->  struct drm_device;
->  struct drm_encoder;
-> +struct drm_panel;
-> +struct drm_bridge;
->  struct device_node;
->  
->  #ifdef CONFIG_OF
-> @@ -23,6 +25,10 @@ extern int drm_of_component_probe(struct device *dev,
->  extern int drm_of_encoder_active_endpoint(struct device_node *node,
->  					  struct drm_encoder *encoder,
->  					  struct of_endpoint *endpoint);
-> +extern int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +				       int port, int endpoint,
-> +				       struct drm_panel **panel,
-> +				       struct drm_bridge **bridge);
->  #else
->  static inline uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
->  						  struct device_node *port)
-> @@ -52,6 +58,13 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
->  {
->  	return -EINVAL;
->  }
-> +static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
-> +					      int port, int endpoint,
-> +					      struct drm_panel **panel,
-> +					      struct drm_bridge **bridge)
-> +{
-> +	return -EINVAL;
-> +}
->  #endif
->  
->  static inline int drm_of_encoder_active_endpoint_id(struct device_node *node,
-> -- 
-> 2.10.1
+> On Friday 06 Jan 2017 18:11:30 Steve Longerbeam wrote:
+> > From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  Documentation/media/uapi/mediactl/media-types.rst | 22 ++++++++++++++++++++
+> >  include/uapi/linux/media.h                        |  6 ++++++
+> >  2 files changed, 28 insertions(+)
+> > 
+> > diff --git a/Documentation/media/uapi/mediactl/media-types.rst
+> > b/Documentation/media/uapi/mediactl/media-types.rst index 3e03dc2..023be29
+> > 100644
+> > --- a/Documentation/media/uapi/mediactl/media-types.rst
+> > +++ b/Documentation/media/uapi/mediactl/media-types.rst
+> > @@ -298,6 +298,28 @@ Types and flags used to represent the media graph
+> > elements received on its sink pad and outputs the statistics data on
+> >  	  its source pad.
+> > 
+> > +    -  ..  row 29
+> > +
+> > +       ..  _MEDIA-ENT-F-MUX:
+> > +
+> > +       -  ``MEDIA_ENT_F_MUX``
+> > +
+> > +       - Video multiplexer. An entity capable of multiplexing must have at
+> > +         least two sink pads and one source pad, and must pass the video
+> > +         frame(s) received from the active sink pad to the source pad.
+> > Video
+> > +         frame(s) from the inactive sink pads are discarded.
 > 
+> Apart from the comment made by Hans regarding the macro name, this looks good 
+> to me.
+> 
+> > +    -  ..  row 30
+> > +
+> > +       ..  _MEDIA-ENT-F-VID-IF-BRIDGE:
+> > +
+> > +       -  ``MEDIA_ENT_F_VID_IF_BRIDGE``
+> > +
+> > +       - Video interface bridge. A video interface bridge entity must have
+> > at
+> > +         least one sink pad and one source pad. It receives video frame(s)
+> > on
+> > +         its sink pad in one bus format (HDMI, eDP, MIPI CSI-2, ...) and
+> > +         converts them and outputs them on its source pad in another bus
+> > format
+> > +         (eDP, MIPI CSI-2, parallel, ...).
+> 
+> 
+> The first sentence mentions *at least* one sink pad and one source pad, and 
+> the second one refers to "its sink pad" and "its source pad". This is a bit 
+> confusing. An easy option would be to require a single sink and a single 
+> source pad, but that would exclude bridges that combine a multiplexer.
 
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+Would it be enough to just switch to plural?
+
+"It receives video frame(s) on its sink pads in one bus format and
+converts them and outputs them on its source pads in another bus
+format"?
+
+I fear if this is made too specific to single-input single-output
+devices, a whole lot of multi-input devices will have to be split up
+unnecessarily. Although in cases of freely configurable multiplexers, it
+might also make sense to describe them as multiple entities. Especially
+if they can run in parallel with different configurations.
+
+> I also wonder whether "bridge" is the appropriate word here. Transceiver might 
+> be a better choice, to insist on the fact that one of the two pads corresponds 
+> to a physical interface that has special electrical properties (such as HDMI, 
+> eDP, or CSI-2 that all require PHYs).
+
+What media entity function would you suggest to use for the IPU CSI,
+which basically is
+ - a video interface bridge, because it converts media bus formats from
+   an external (up to) 20-bit parallel bus to an internal 128-bit bus,
+   with the option to either expand/compand/pack >8-bit per component
+   pixel formats (so parts of a write pixel formatter)
+ - also a video scaler, because it can crop and reduce width and/or
+   height to 1/2 the original size
+
+I wouldn't call it a transceiver, as it is completely contained inside
+the SoC.
+
+regards
+Philipp
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
