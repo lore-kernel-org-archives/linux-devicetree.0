@@ -1,134 +1,167 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] ARM: shmobile: r7s72100: Enable L2 cache
-Date: Mon, 6 Feb 2017 09:50:51 +0100
-Message-ID: <CAMuHMdU6kJDxGtjUT1S2JkQTLvzrgtF3mkqa5Xo08oF6d3tUbw@mail.gmail.com>
-References: <20170202212000.10768-1-chris.brandt@renesas.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] nvmem: sunxi-sid: add support for
+ H3's SID controller
+Date: Mon, 6 Feb 2017 09:54:16 +0100
+Message-ID: <20170206085416.4qtd3wfhtinp42xv@lukather>
+References: <20170202131338.20234-1-icenowy@aosc.xyz>
+ <20170202131338.20234-2-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170202212000.10768-1-chris.brandt@renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Brandt <chris.brandt@renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="stlvygp37kektter"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOPT4DCAKGQE7ED4UAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170202131338.20234-2-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris,
 
-CC linux-arm-kernel
+--stlvygp37kektter
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-On Thu, Feb 2, 2017 at 10:20 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
-> This enables the 128KB L2 cache in the RZ/A1 (R7S72100).
->
-> The 'Write full line of zeros mode' of this Cortex-A9 cannot be used
-> because the sideband signals between the CA9 and PL310 are not connected.
-> Since there is no option to disable this feature in the cache-l2x0 driver,
-> our only option is to specify a secure write function which will then cause
-> the cache-l2x0 driver to not enable this feature.
-
-What about adding a DT property (e.g. "arm,pl310-broken-sideband", cfr.
-"arm,pl330-broken-no-flushp"), and handling this in arch/arm/mm/cache-l2x0.c
-instead?
-
-> If you do not override a l2c_write_sec function which causes the line of
-> zeros mode to be enabled, then the system will crash pretty quickly after
-> the L2C is enabled.
->
-> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
+On Thu, Feb 02, 2017 at 09:13:37PM +0800, Icenowy Zheng wrote:
+> The H3 SoC have a bigger SID controller, which has its direct read
+> address at 0x200 position in the SID block, not 0x0.
+> 
+> Also, H3 SID controller has some silicon bug that makes the direct read
+> value wrong at cold boot, add code to workaround the bug. (This bug has
+> already been fixed on A64 and later SoCs)
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
->  arch/arm/boot/dts/r7s72100.dtsi         |  9 +++++++++
->  arch/arm/mach-shmobile/setup-r7s72100.c | 21 +++++++++++++++++++++
->  2 files changed, 30 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/r7s72100.dtsi b/arch/arm/boot/dts/r7s72100.dtsi
-> index 74e684f..08aaaff 100644
-> --- a/arch/arm/boot/dts/r7s72100.dtsi
-> +++ b/arch/arm/boot/dts/r7s72100.dtsi
-> @@ -177,6 +177,7 @@
->                         compatible = "arm,cortex-a9";
->                         reg = <0>;
->                         clock-frequency = <400000000>;
-> +                       next-level-cache = <&L2>;
->                 };
->         };
->
-> @@ -368,6 +369,14 @@
->                         <0xe8202000 0x1000>;
->         };
->
-> +       L2: cache-controller@3ffff000 {
-> +               compatible = "arm,pl310-cache";
-> +               reg = <0x3ffff000 0x1000>;
-> +               interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
-> +               cache-unified;
-> +               cache-level = <2>;
-> +       };
+> This patch is the part of [PATCH v2 1/1] that adds support for H3 SID
+> controller.
+> 
+>  .../bindings/nvmem/allwinner,sunxi-sid.txt         | 12 +++-
+>  drivers/nvmem/sunxi_sid.c                          | 72 +++++++++++++++++++++-
+>  2 files changed, 82 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> index d543ed3f5363..9ab9e75a6351 100644
+> --- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> +++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+> @@ -1,7 +1,11 @@
+>  Allwinner sunxi-sid
+>  
+>  Required properties:
+> -- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20-sid"
+> +- compatible: Should be one of the following (depending on your SoC):
+> +  "allwinner,sun4i-a10-sid"
+> +  "allwinner,sun7i-a20-sid"
+> +  "allwinner,sun8i-h3-sid"
 > +
->         i2c0: i2c@fcfee000 {
->                 #address-cells = <1>;
->                 #size-cells = <0>;
-> diff --git a/arch/arm/mach-shmobile/setup-r7s72100.c b/arch/arm/mach-shmobile/setup-r7s72100.c
-> index d46639f..655deba 100644
-> --- a/arch/arm/mach-shmobile/setup-r7s72100.c
-> +++ b/arch/arm/mach-shmobile/setup-r7s72100.c
-> @@ -15,6 +15,7 @@
->   */
->
->  #include <linux/kernel.h>
-> +#include <linux/io.h>
->
->  #include <asm/mach/arch.h>
->
-> @@ -25,7 +26,27 @@ static const char *const r7s72100_boards_compat_dt[] __initconst = {
->         NULL,
+>  - reg: Should contain registers location and length
+>  
+>  = Data cells =
+> @@ -19,3 +23,9 @@ Example for sun7i:
+>  		compatible = "allwinner,sun7i-a20-sid";
+>  		reg = <0x01c23800 0x200>
+>  	};
+> +
+> +Example for sun8i-h3:
+> +	sid@01c14000 {
+> +		compatible = "allwinner,sun8i-h3-sid";
+> +		reg = <0x01c14000 0x400>;
+> +	};
+> diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid.c
+> index 69524b67007f..476a161ff23a 100644
+> --- a/drivers/nvmem/sunxi_sid.c
+> +++ b/drivers/nvmem/sunxi_sid.c
+> @@ -25,6 +25,16 @@
+>  #include <linux/slab.h>
+>  #include <linux/random.h>
+>  
+> +/* Registers and special values for doing register-based SID readout on H3 */
+> +#define SUN8I_SID_PRCTL		0x40
+> +#define SUN8I_SID_RDKEY		0x60
+> +
+> +#define SUN8I_SID_OP_LOCK	0xAC
+> +#define SUN8I_SID_OFFSET_MASK	0x1FF
+> +#define SUN8I_SID_OFFSET_SHIFT	16
+> +#define SUN8I_SID_LOCK_SHIFT	8
+> +#define SUN8I_SID_READ		BIT(1)
+> +
+>  static struct nvmem_config econfig = {
+>  	.name = "sunxi-sid",
+>  	.read_only = true,
+> @@ -34,11 +44,14 @@ static struct nvmem_config econfig = {
 >  };
->
-> +/*
-> + * The 'Write full line of zeros mode' of this Cortex-A9 cannot be used because
-> + * the sideband signals between the CA9 and PL310 are not connected. Since there
-> + * is no option to disable this feature in the cache-l2x0 driver, our only
-> + * option is to specify a secure write function which will then cause the
-> + * cache-l2x0 driver to not enable this feature.
-> + */
-> +static void r7s72100_l2c_write_sec(unsigned long val, unsigned int reg)
+>  
+>  struct sunxi_sid_cfg {
+> +	u32	value_offset;
+>  	u32	size;
+> +	bool	need_register_readout;
+>  };
+>  
+>  struct sunxi_sid {
+>  	void __iomem		*base;
+> +	u32			value_offset;
+>  };
+>  
+>  /* We read the entire key, due to a 32 bit read alignment requirement. Since we
+> @@ -51,7 +64,8 @@ static u8 sunxi_sid_read_byte(const struct sunxi_sid *sid,
+>  {
+>  	u32 sid_key;
+>  
+> -	sid_key = ioread32be(sid->base + round_down(offset, 4));
+> +	sid_key = ioread32be(sid->base + sid->value_offset +
+> +			     round_down(offset, 4));
+
+This would probably be more logical to have this in sunxi_sid_read.
+
+>  	sid_key >>= (offset % 4) * 8;
+>  
+>  	return sid_key; /* Only return the last byte */
+> @@ -69,6 +83,33 @@ static int sunxi_sid_read(void *context, unsigned int offset,
+>  	return 0;
+>  }
+>  
+> +static int sun8i_sid_register_readout(const struct sunxi_sid *sid,
+> +				      const unsigned int word,
+> +				      u32 *out)
 > +{
-> +       static void __iomem *base;
+> +	u32 reg_val;
+> +	unsigned long expire = jiffies + msecs_to_jiffies(250);
 > +
-> +       if (!base)
-> +               base = ioremap_nocache(0x3ffff000, SZ_4K);
+> +	/* Set word, lock access, and set read command */
+> +	reg_val = (word & SUN8I_SID_OFFSET_MASK)
+> +		  << SUN8I_SID_OFFSET_SHIFT;
+> +	reg_val |= SUN8I_SID_OP_LOCK << SUN8I_SID_LOCK_SHIFT;
 
-FWIW, plain ioremap() is fine.
+You're not using those mask and shifts anywhere else, why not just
+define the value / macro you need directly?
 
+> +	reg_val |= SUN8I_SID_READ;
+> +	writel(reg_val, sid->base + SUN8I_SID_PRCTL);
 > +
-> +       writel_relaxed(val, base + reg);
-> +}
+> +	do {
+> +		reg_val = readl(sid->base + SUN8I_SID_PRCTL);
+> +	} while (time_before(jiffies, expire) && (reg_val & SUN8I_SID_READ));
+
+readl_poll_timeout?
+
+> +	if (reg_val & SUN8I_SID_READ)
+> +		return -EIO;
 > +
->  DT_MACHINE_START(R7S72100_DT, "Generic R7S72100 (Flattened Device Tree)")
-> +       .l2c_aux_val    = 0,
-> +       .l2c_aux_mask   = ~0,
-> +       .l2c_write_sec  = r7s72100_l2c_write_sec,
->         .init_early     = shmobile_init_delay,
->         .init_late      = shmobile_init_late,
->         .dt_compat      = r7s72100_boards_compat_dt,
+> +	if (out)
+> +		*out = readl(sid->base + SUN8I_SID_RDKEY);
 
-Gr{oetje,eeting}s,
+Why do you need that out parameter?
 
-                        Geert
+Thanks,
+Maxime
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--stlvygp37kektter--
