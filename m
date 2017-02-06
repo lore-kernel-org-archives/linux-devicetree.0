@@ -1,50 +1,68 @@
-From: Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 0/3] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller Driver
-Date: Mon, 6 Feb 2017 15:03:37 +0100
-Message-ID: <cover.1486388711.git.richard.leitner@skidata.com>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: [PATCH v3 2/3] usb: core: hcd: use ascii2utf16le() in ascii2desc()
+Date: Mon, 6 Feb 2017 15:03:39 +0100
+Message-ID: <7bab6fef9bd50794ae1d0635b8f11f7befa922b4.1486388711.git.richard.leitner@skidata.com>
+References: <cover.1486388711.git.richard.leitner@skidata.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1486388711.git.richard.leitner@skidata.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com, keescook@chromium.org, dev@g0hl1n.net, Richard Leitner <richard.leitner@skidata.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds a driver for configuration of the Microchip USB251xB
-USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
-configuration interface and two to four USB 2.0 downstream ports.
+As string.c now provides ascii2utf16le() use it in ascii2desc() for
+converting the string descriptor.
 
-CHANGES v3:
-	- move ascii2utf16le() to lib/string.c and also use it also for
-		ascii2desc in drivers/usb/core/hcd.c
-	- remove platform data support from usb251xb driver
+Furthermore fix checkpatch.pl issues in ascii2desc().
 
-CHANGES v2:
-	- fix max-{b,s}p-current property name
-	- add descriptor string handling from platform_data
-	- fix non-dt handling
+Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+---
+ drivers/usb/core/hcd.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-Richard Leitner (3):
-  lib/string: introduce ascii2utf16le() helper
-  usb: core: hcd: use ascii2utf16le() in ascii2desc()
-  usb: misc: add USB251xB/xBi Hi-Speed Hub Controller Driver
-
- Documentation/devicetree/bindings/usb/usb251xb.txt |  83 +++
- MAINTAINERS                                        |   8 +
- drivers/usb/core/hcd.c                             |  22 +-
- drivers/usb/misc/Kconfig                           |   9 +
- drivers/usb/misc/Makefile                          |   1 +
- drivers/usb/misc/usb251xb.c                        | 664 +++++++++++++++++++++
- include/linux/string.h                             |   1 +
- lib/string.c                                       |  26 +
- 8 files changed, 802 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/usb251xb.txt
- create mode 100644 drivers/usb/misc/usb251xb.c
-
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 479e223..9f84548 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -407,27 +407,25 @@ MODULE_PARM_DESC(authorized_default,
+  * USB String descriptors can contain at most 126 characters; input
+  * strings longer than that are truncated.
+  */
+-static unsigned
+-ascii2desc(char const *s, u8 *buf, unsigned len)
++static unsigned int
++ascii2desc(char const *s, u8 *buf, unsigned int len)
+ {
+-	unsigned n, t = 2 + 2*strlen(s);
++	unsigned int t = 2 + 2 * strlen(s);
+ 
+ 	if (t > 254)
+ 		t = 254;	/* Longest possible UTF string descriptor */
+ 	if (len > t)
+ 		len = t;
++	if (!len)
++		return 0;
+ 
+ 	t += USB_DT_STRING << 8;	/* Now t is first 16 bits to store */
++	*buf++ = t;
++	if (len < 2)
++		return len;
++	*buf++ = t >> 8;
+ 
+-	n = len;
+-	while (n--) {
+-		*buf++ = t;
+-		if (!n--)
+-			break;
+-		*buf++ = t >> 8;
+-		t = (unsigned char)*s++;
+-	}
+-	return len;
++	return ascii2utf16le(s, buf, (len - 2)) + 2;
+ }
+ 
+ /**
 -- 
 2.1.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
