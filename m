@@ -1,65 +1,179 @@
-From: Smitha T Murthy <smitha.t@samsung.com>
-Subject: Re: [PATCH 02/11] [media] s5p-mfc: Adding initial support for MFC
- v10.10
-Date: Mon, 06 Feb 2017 14:07:02 +0530
-Message-ID: <1486370223.16927.76.camel@smitha-fedora>
-References: <1484733729-25371-1-git-send-email-smitha.t@samsung.com>
- <CGME20170118100723epcas5p132e0ebfad38261bed95cffc47334f9dc@epcas5p1.samsung.com>
- <1484733729-25371-3-git-send-email-smitha.t@samsung.com>
- <20170121202852.pxxfxpqwjxewjoj5@rob-hp-laptop>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 2/7] drm/tinydrm: Add helper functions
+Date: Mon, 6 Feb 2017 10:09:18 +0100
+Message-ID: <20170206090918.6rqr6l7pd62znl5j@phenom.ffwll.local>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-3-noralf@tronnes.org>
+ <20170206085629.GD27607@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20170121202852.pxxfxpqwjxewjoj5@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, kyungmin.park@samsung.com, kamil@wypas.org, jtp.park@samsung.com, a.hajda@samsung.com, mchehab@kernel.org, pankaj.dubey@samsung.com, krzk@kernel.org, m.szyprowski@samsung.com, s.nawrocki@samsung.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170206085629.GD27607@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-01-21 at 14:28 -0600, Rob Herring wrote:
-> On Wed, Jan 18, 2017 at 03:32:00PM +0530, Smitha T Murthy wrote:
-> > Adding the support for MFC v10.10, with new register file and
-> > necessary hw control, decoder, encoder and structural changes.
-> > 
-> > CC: Rob Herring <robh+dt@kernel.org>
-> > CC: devicetree@vger.kernel.org 
-> > Signed-off-by: Smitha T Murthy <smitha.t@samsung.com>
-> > ---
-> >  .../devicetree/bindings/media/s5p-mfc.txt          |    1 +
-> >  drivers/media/platform/s5p-mfc/regs-mfc-v10.h      |   36 ++++++++++++++++
-> >  drivers/media/platform/s5p-mfc/s5p_mfc.c           |   30 +++++++++++++
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_common.h    |    4 +-
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_ctrl.c      |    4 ++
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_dec.c       |   44 +++++++++++---------
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_enc.c       |   21 +++++----
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.c    |    9 +++-
-> >  drivers/media/platform/s5p-mfc/s5p_mfc_opr_v6.h    |    2 +
-> >  9 files changed, 118 insertions(+), 33 deletions(-)
-> >  create mode 100644 drivers/media/platform/s5p-mfc/regs-mfc-v10.h
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/s5p-mfc.txt b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > index 2c90128..b70c613 100644
-> > --- a/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > +++ b/Documentation/devicetree/bindings/media/s5p-mfc.txt
-> > @@ -13,6 +13,7 @@ Required properties:
-> >  	(c) "samsung,mfc-v7" for MFC v7 present in Exynos5420 SoC
-> >  	(d) "samsung,mfc-v8" for MFC v8 present in Exynos5800 SoC
-> >  	(e) "samsung,exynos5433-mfc" for MFC v8 present in Exynos5433 SoC
-> > +	(f) "samsung,mfc-v10" for MFC v10 present in a variant of Exynos7 SoC
-> 
-> You are up to v10 in how many SoCs? Please stop with versions and use 
-> SoC numbers. It's one thing to use versions when you have many SoCs per 
-> version, but that doesn't seem to be happening here.
-> 
-> Rob
-MFCv10.10 is used in Exynos7880. There are other variants of MFCv10 used
-in Exynos8890 and Exynos7870. I will mention in the next version of
-patches the SoC name Exynos7880 using MFCv10 on which I have tested.
- 
-Thank you for the review.
-
-Regards,
-Smitha
-> 
-> 
+T24gTW9uLCBGZWIgMDYsIDIwMTcgYXQgMDk6NTY6MjlBTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gVHVlLCBKYW4gMzEsIDIwMTcgYXQgMDU6MDM6MTRQTSArMDEwMCwgTm9yYWxm
+IFRyw7hubmVzIHdyb3RlOgo+ID4gQWRkIGNvbW1vbiBmdW5jdGlvbmFsaXR5IG5lZWRlZCBieSBt
+YW55IHRpbnlkcm0gZHJpdmVycy4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogTm9yYWxmIFRyw7hu
+bmVzIDxub3JhbGZAdHJvbm5lcy5vcmc+Cj4gPiBBY2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFu
+aWVsLnZldHRlckBmZndsbC5jaD4KPiA+IC0tLQo+ID4gIERvY3VtZW50YXRpb24vZ3B1L3Rpbnlk
+cm0ucnN0ICAgICAgICAgICAgICAgICAgfCAgIDkgKwo+ID4gIGRyaXZlcnMvZ3B1L2RybS90aW55
+ZHJtL2NvcmUvTWFrZWZpbGUgICAgICAgICAgfCAgIDIgKy0KPiA+ICBkcml2ZXJzL2dwdS9kcm0v
+dGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jIHwgNDYyICsrKysrKysrKysrKysrKysrKysr
+KysrKysKPiA+ICBpbmNsdWRlL2RybS90aW55ZHJtL3Rpbnlkcm0taGVscGVycy5oICAgICAgICAg
+IHwgMTAwICsrKysrKwo+ID4gIDQgZmlsZXMgY2hhbmdlZCwgNTcyIGluc2VydGlvbnMoKyksIDEg
+ZGVsZXRpb24oLSkKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlk
+cm0vY29yZS90aW55ZHJtLWhlbHBlcnMuYwo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRl
+L2RybS90aW55ZHJtL3Rpbnlkcm0taGVscGVycy5oCj4gPiAKPiA+IGRpZmYgLS1naXQgYS9Eb2N1
+bWVudGF0aW9uL2dwdS90aW55ZHJtLnJzdCBiL0RvY3VtZW50YXRpb24vZ3B1L3Rpbnlkcm0ucnN0
+Cj4gPiBpbmRleCBlYzRhMjBkLi5mYjI1NmQyIDEwMDY0NAo+ID4gLS0tIGEvRG9jdW1lbnRhdGlv
+bi9ncHUvdGlueWRybS5yc3QKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZ3B1L3Rpbnlkcm0ucnN0
+Cj4gPiBAQCAtMTksMyArMTksMTIgQEAgQ29yZSBmdW5jdGlvbmFsaXR5Cj4gPiAgCj4gPiAgLi4g
+a2VybmVsLWRvYzo6IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1waXBlLmMK
+PiA+ICAgICA6ZXhwb3J0Ogo+ID4gKwo+ID4gK0FkZGl0aW9uYWwgaGVscGVycwo+ID4gKz09PT09
+PT09PT09PT09PT09PQo+ID4gKwo+ID4gKy4uIGtlcm5lbC1kb2M6OiBpbmNsdWRlL2RybS90aW55
+ZHJtL3Rpbnlkcm0taGVscGVycy5oCj4gPiArICAgOmludGVybmFsOgo+ID4gKwo+ID4gKy4uIGtl
+cm5lbC1kb2M6OiBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5j
+Cj4gPiArICAgOmV4cG9ydDoKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vdGlueWRy
+bS9jb3JlL01ha2VmaWxlIGIvZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS9NYWtlZmlsZQo+
+ID4gaW5kZXggNGYxNGEwZi4uZmIyMjFlNiAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS90aW55ZHJtL2NvcmUvTWFrZWZpbGUKPiA+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L2NvcmUvTWFrZWZpbGUKPiA+IEBAIC0xLDMgKzEsMyBAQAo+ID4gLXRpbnlkcm0teSA6PSB0aW55
+ZHJtLWNvcmUubyB0aW55ZHJtLXBpcGUubwo+ID4gK3Rpbnlkcm0teSA6PSB0aW55ZHJtLWNvcmUu
+byB0aW55ZHJtLXBpcGUubyB0aW55ZHJtLWhlbHBlcnMubwo+ID4gIAo+ID4gIG9iai0kKENPTkZJ
+R19EUk1fVElOWURSTSkgKz0gdGlueWRybS5vCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL3Rpbnlkcm0vY29yZS90aW55ZHJtLWhlbHBlcnMuYyBiL2RyaXZlcnMvZ3B1L2RybS90aW55
+ZHJtL2NvcmUvdGlueWRybS1oZWxwZXJzLmMKPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBp
+bmRleCAwMDAwMDAwLi43NWU0ZTU0Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysgYi9kcml2ZXJz
+L2dwdS9kcm0vdGlueWRybS9jb3JlL3Rpbnlkcm0taGVscGVycy5jCj4gPiBAQCAtMCwwICsxLDQ2
+MiBAQAo+ID4gKy8qCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE2IE5vcmFsZiBUcsO4bm5lcwo+
+ID4gKyAqCj4gPiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVk
+aXN0cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPiA+ICsgKiBpdCB1bmRlciB0aGUgdGVybXMgb2Yg
+dGhlIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIGFzIHB1Ymxpc2hlZCBieQo+ID4gKyAqIHRo
+ZSBGcmVlIFNvZnR3YXJlIEZvdW5kYXRpb247IGVpdGhlciB2ZXJzaW9uIDIgb2YgdGhlIExpY2Vu
+c2UsIG9yCj4gPiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KPiA+ICsg
+Ki8KPiA+ICsKPiA+ICsjaW5jbHVkZSA8ZHJtL3Rpbnlkcm0vdGlueWRybS5oPgo+ID4gKyNpbmNs
+dWRlIDxkcm0vdGlueWRybS90aW55ZHJtLWhlbHBlcnMuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgv
+YmFja2xpZ2h0Lmg+Cj4gPiArI2luY2x1ZGUgPGxpbnV4L3BtLmg+Cj4gPiArI2luY2x1ZGUgPGxp
+bnV4L3NwaS9zcGkuaD4KPiA+ICsjaW5jbHVkZSA8bGludXgvc3dhYi5oPgo+ID4gKwo+ID4gK3N0
+YXRpYyB1bnNpZ25lZCBpbnQgc3BpX21heDsKPiA+ICttb2R1bGVfcGFyYW0oc3BpX21heCwgdWlu
+dCwgMDQwMCk7Cj4gPiArTU9EVUxFX1BBUk1fREVTQyhzcGlfbWF4LCAiU2V0IGEgbG93ZXIgU1BJ
+IG1heCB0cmFuc2ZlciBzaXplIik7Cj4gPiArCj4gPiArLyoqCj4gPiArICogdGlueWRybV9tZXJn
+ZV9jbGlwcyAtIE1lcmdlIGNsaXAgcmVjdGFuZ2xlcwo+ID4gKyAqIEBkc3Q6IERlc3RpbmF0aW9u
+IGNsaXAgcmVjdGFuZ2xlCj4gPiArICogQHNyYzogU291cmNlIGNsaXAgcmVjdGFuZ2xlKHMpCj4g
+PiArICogQG51bV9jbGlwczogTnVtYmVyIG9mIEBzcmMgY2xpcCByZWN0YW5nbGVzCj4gPiArICog
+QGZsYWdzOiBEaXJ0eSBmYiBpb2N0bCBmbGFncwo+ID4gKyAqIEBtYXhfd2lkdGg6IE1heGltdW0g
+d2lkdGggb2YgQGRzdAo+ID4gKyAqIEBtYXhfaGVpZ2h0OiBNYXhpbXVtIGhlaWdodCBvZiBAZHN0
+Cj4gPiArICoKPiA+ICsgKiBUaGlzIGZ1bmN0aW9uIG1lcmdlcyBAc3JjIGNsaXAgcmVjdGFuZ2xl
+KHMpIGludG8gQGRzdC4gSWYgQHNyYyBpcyBOVUxMLAo+ID4gKyAqIEBtYXhfd2lkdGggYW5kIEBt
+aW5fd2lkdGggaXMgdXNlZCB0byBzZXQgYSBmdWxsIEBkc3QgY2xpcCByZWN0YW5nbGUuCj4gPiAr
+ICoKPiA+ICsgKiBSZXR1cm5zOgo+ID4gKyAqIHRydWUgaWYgaXQncyBhIGZ1bGwgY2xpcCwgZmFs
+c2Ugb3RoZXJ3aXNlCj4gPiArICovCj4gPiArYm9vbCB0aW55ZHJtX21lcmdlX2NsaXBzKHN0cnVj
+dCBkcm1fY2xpcF9yZWN0ICpkc3QsCj4gPiArCQkJIHN0cnVjdCBkcm1fY2xpcF9yZWN0ICpzcmMs
+IHVuc2lnbmVkIGludCBudW1fY2xpcHMsCj4gPiArCQkJIHVuc2lnbmVkIGludCBmbGFncywgdTMy
+IG1heF93aWR0aCwgdTMyIG1heF9oZWlnaHQpCj4gPiArewo+ID4gKwl1bnNpZ25lZCBpbnQgaTsK
+PiA+ICsKPiA+ICsJaWYgKCFzcmMgfHwgIW51bV9jbGlwcykgewo+ID4gKwkJZHN0LT54MSA9IDA7
+Cj4gPiArCQlkc3QtPngyID0gbWF4X3dpZHRoOwo+ID4gKwkJZHN0LT55MSA9IDA7Cj4gPiArCQlk
+c3QtPnkyID0gbWF4X2hlaWdodDsKPiA+ICsJCXJldHVybiB0cnVlOwo+ID4gKwl9Cj4gPiArCj4g
+PiArCWRzdC0+eDEgPSB+MDsKPiA+ICsJZHN0LT55MSA9IH4wOwo+ID4gKwlkc3QtPngyID0gMDsK
+PiA+ICsJZHN0LT55MiA9IDA7Cj4gPiArCj4gPiArCWZvciAoaSA9IDA7IGkgPCBudW1fY2xpcHM7
+IGkrKykgewo+ID4gKwkJaWYgKGZsYWdzICYgRFJNX01PREVfRkJfRElSVFlfQU5OT1RBVEVfQ09Q
+WSkKPiA+ICsJCQlpKys7Cj4gPiArCQlkc3QtPngxID0gbWluKGRzdC0+eDEsIHNyY1tpXS54MSk7
+Cj4gPiArCQlkc3QtPngyID0gbWF4KGRzdC0+eDIsIHNyY1tpXS54Mik7Cj4gPiArCQlkc3QtPnkx
+ID0gbWluKGRzdC0+eTEsIHNyY1tpXS55MSk7Cj4gPiArCQlkc3QtPnkyID0gbWF4KGRzdC0+eTIs
+IHNyY1tpXS55Mik7Cj4gPiArCX0KPiA+ICsKPiA+ICsJaWYgKGRzdC0+eDIgPiBtYXhfd2lkdGgg
+fHwgZHN0LT55MiA+IG1heF9oZWlnaHQgfHwKPiA+ICsJICAgIGRzdC0+eDEgPj0gZHN0LT54MiB8
+fCBkc3QtPnkxID49IGRzdC0+eTIpIHsKPiA+ICsJCURSTV9ERUJVR19LTVMoIklsbGVnYWwgY2xp
+cDogeDE9JXUsIHgyPSV1LCB5MT0ldSwgeTI9JXVcbiIsCj4gPiArCQkJICAgICAgZHN0LT54MSwg
+ZHN0LT54MiwgZHN0LT55MSwgZHN0LT55Mik7Cj4gPiArCQlkc3QtPngxID0gMDsKPiA+ICsJCWRz
+dC0+eTEgPSAwOwo+ID4gKwkJZHN0LT54MiA9IG1heF93aWR0aDsKPiA+ICsJCWRzdC0+eTIgPSBt
+YXhfaGVpZ2h0Owo+ID4gKwl9Cj4gPiArCj4gPiArCXJldHVybiAoZHN0LT54MiAtIGRzdC0+eDEp
+ID09IG1heF93aWR0aCAmJgo+ID4gKwkgICAgICAgKGRzdC0+eTIgLSBkc3QtPnkxKSA9PSBtYXhf
+aGVpZ2h0Owo+ID4gK30KPiA+ICtFWFBPUlRfU1lNQk9MKHRpbnlkcm1fbWVyZ2VfY2xpcHMpOwo+
+IAo+IFNob3VsZCB0aGlzIHBlcmhhcHMgYmUgcGFydCBvZiBkcm1fcmVjdC5jPwoKZHJtX3JlY3Qg
+aXMgYWJvdXQgc3RydWN0IGRybV9yZWN0LCB0aGlzIGhlcmUgaXMgc3RydWN0IGRybV9jbGlwX3Jl
+Y3QuIEkKdGhpbmsgZml4aW5nIHRoaXMgdXAgaXMgYSBsb3QgYmlnZ2VyIHBhdGNoIHNlcmllcywg
+YW5kIHdlJ3ZlIHBvc3Rwb25lZCBpdAphbHJlYWR5IHdpdGggdGhlIGRpcnR5ZmIgdHJha2Npbmcg
+cGF0Y2hlcyBmb3IgdGhlIGZiZGV2IGhlbHBlcnMuIEkgdGhpbmsKcG9zdHBvbmluZyBvbmNlIG1v
+cmUgaXMgb2suCgo+ID4gKyNpZmRlZiBDT05GSUdfQkFDS0xJR0hUX0NMQVNTX0RFVklDRQo+ID4g
+Ky8qKgo+ID4gKyAqIHRpbnlkcm1fb2ZfZmluZF9iYWNrbGlnaHQgLSBGaW5kIGJhY2tsaWdodCBk
+ZXZpY2UgaW4gZGV2aWNlLXRyZWUKPiA+ICsgKiBAZGV2OiBEZXZpY2UKPiA+ICsgKgo+ID4gKyAq
+IFRoaXMgZnVuY3Rpb24gbG9va3MgZm9yIGEgRFQgbm9kZSBwb2ludGVkIHRvIGJ5IGEgcHJvcGVy
+dHkgbmFtZWQgJ2JhY2tsaWdodCcKPiA+ICsgKiBhbmQgdXNlcyBvZl9maW5kX2JhY2tsaWdodF9i
+eV9ub2RlKCkgdG8gZ2V0IHRoZSBiYWNrbGlnaHQgZGV2aWNlLgo+ID4gKyAqIEFkZGl0aW9uYWxs
+eSBpZiB0aGUgYnJpZ2h0bmVzcyBwcm9wZXJ0eSBpcyB6ZXJvLCBpdCBpcyBzZXQgdG8KPiA+ICsg
+KiBtYXhfYnJpZ2h0bmVzcy4KPiA+ICsgKgo+ID4gKyAqIFJldHVybnM6Cj4gPiArICogTlVMTCBp
+ZiB0aGVyZSdzIG5vIGJhY2tsaWdodCBwcm9wZXJ0eS4KPiA+ICsgKiBFcnJvciBwb2ludGVyIC1F
+UFJPQkVfREVGRVIgaWYgdGhlIERUIG5vZGUgaXMgZm91bmQsIGJ1dCBubyBiYWNrbGlnaHQgZGV2
+aWNlCj4gPiArICogaXMgZm91bmQuCj4gPiArICogSWYgdGhlIGJhY2tsaWdodCBkZXZpY2UgaXMg
+Zm91bmQsIGEgcG9pbnRlciB0byB0aGUgc3RydWN0dXJlIGlzIHJldHVybmVkLgo+ID4gKyAqLwo+
+ID4gK3N0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICp0aW55ZHJtX29mX2ZpbmRfYmFja2xpZ2h0KHN0
+cnVjdCBkZXZpY2UgKmRldikKPiA+ICt7Cj4gPiArCXN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpi
+YWNrbGlnaHQ7Cj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7Cj4gPiArCj4gPiArCW5wID0g
+b2ZfcGFyc2VfcGhhbmRsZShkZXYtPm9mX25vZGUsICJiYWNrbGlnaHQiLCAwKTsKPiA+ICsJaWYg
+KCFucCkKPiA+ICsJCXJldHVybiBOVUxMOwo+ID4gKwo+ID4gKwliYWNrbGlnaHQgPSBvZl9maW5k
+X2JhY2tsaWdodF9ieV9ub2RlKG5wKTsKPiA+ICsJb2Zfbm9kZV9wdXQobnApOwo+ID4gKwo+ID4g
+KwlpZiAoIWJhY2tsaWdodCkKPiA+ICsJCXJldHVybiBFUlJfUFRSKC1FUFJPQkVfREVGRVIpOwo+
+ID4gKwo+ID4gKwlpZiAoIWJhY2tsaWdodC0+cHJvcHMuYnJpZ2h0bmVzcykgewo+ID4gKwkJYmFj
+a2xpZ2h0LT5wcm9wcy5icmlnaHRuZXNzID0gYmFja2xpZ2h0LT5wcm9wcy5tYXhfYnJpZ2h0bmVz
+czsKPiA+ICsJCURSTV9ERUJVR19LTVMoIkJhY2tsaWdodCBicmlnaHRuZXNzIHNldCB0byAlZFxu
+IiwKPiA+ICsJCQkgICAgICBiYWNrbGlnaHQtPnByb3BzLmJyaWdodG5lc3MpOwo+ID4gKwl9Cj4g
+PiArCj4gPiArCXJldHVybiBiYWNrbGlnaHQ7Cj4gPiArfQo+ID4gK0VYUE9SVF9TWU1CT0wodGlu
+eWRybV9vZl9maW5kX2JhY2tsaWdodCk7Cj4gPiArCj4gPiArLyoqCj4gPiArICogdGlueWRybV9l
+bmFibGVfYmFja2xpZ2h0IC0gRW5hYmxlIGJhY2tsaWdodCBoZWxwZXIKPiA+ICsgKiBAYmFja2xp
+Z2h0OiBCYWNrbGlnaHQgZGV2aWNlCj4gPiArICoKPiA+ICsgKiBSZXR1cm5zOgo+ID4gKyAqIFpl
+cm8gb24gc3VjY2VzcywgbmVnYXRpdmUgZXJyb3IgY29kZSBvbiBmYWlsdXJlLgo+ID4gKyAqLwo+
+ID4gK2ludCB0aW55ZHJtX2VuYWJsZV9iYWNrbGlnaHQoc3RydWN0IGJhY2tsaWdodF9kZXZpY2Ug
+KmJhY2tsaWdodCkKPiA+ICt7Cj4gPiArCXVuc2lnbmVkIGludCBvbGRfc3RhdGU7Cj4gPiArCWlu
+dCByZXQ7Cj4gPiArCj4gPiArCWlmICghYmFja2xpZ2h0KQo+ID4gKwkJcmV0dXJuIDA7Cj4gPiAr
+Cj4gPiArCW9sZF9zdGF0ZSA9IGJhY2tsaWdodC0+cHJvcHMuc3RhdGU7Cj4gPiArCWJhY2tsaWdo
+dC0+cHJvcHMuc3RhdGUgJj0gfkJMX0NPUkVfRkJCTEFOSzsKPiA+ICsJRFJNX0RFQlVHX0tNUygi
+QmFja2xpZ2h0IHN0YXRlOiAweCV4IC0+IDB4JXhcbiIsIG9sZF9zdGF0ZSwKPiA+ICsJCSAgICAg
+IGJhY2tsaWdodC0+cHJvcHMuc3RhdGUpOwo+ID4gKwo+ID4gKwlyZXQgPSBiYWNrbGlnaHRfdXBk
+YXRlX3N0YXR1cyhiYWNrbGlnaHQpOwo+ID4gKwlpZiAocmV0KQo+ID4gKwkJRFJNX0VSUk9SKCJG
+YWlsZWQgdG8gZW5hYmxlIGJhY2tsaWdodCAlZFxuIiwgcmV0KTsKPiA+ICsKPiA+ICsJcmV0dXJu
+IHJldDsKPiA+ICt9Cj4gPiArRVhQT1JUX1NZTUJPTCh0aW55ZHJtX2VuYWJsZV9iYWNrbGlnaHQp
+Owo+ID4gKwo+ID4gKy8qKgo+ID4gKyAqIHRpbnlkcm1fZGlzYWJsZV9iYWNrbGlnaHQgLSBEaXNh
+YmxlIGJhY2tsaWdodCBoZWxwZXIKPiA+ICsgKiBAYmFja2xpZ2h0OiBCYWNrbGlnaHQgZGV2aWNl
+Cj4gPiArICoKPiA+ICsgKiBSZXR1cm5zOgo+ID4gKyAqIFplcm8gb24gc3VjY2VzcywgbmVnYXRp
+dmUgZXJyb3IgY29kZSBvbiBmYWlsdXJlLgo+ID4gKyAqLwo+ID4gK2ludCB0aW55ZHJtX2Rpc2Fi
+bGVfYmFja2xpZ2h0KHN0cnVjdCBiYWNrbGlnaHRfZGV2aWNlICpiYWNrbGlnaHQpCj4gPiArewo+
+ID4gKwl1bnNpZ25lZCBpbnQgb2xkX3N0YXRlOwo+ID4gKwlpbnQgcmV0Owo+ID4gKwo+ID4gKwlp
+ZiAoIWJhY2tsaWdodCkKPiA+ICsJCXJldHVybiAwOwo+ID4gKwo+ID4gKwlvbGRfc3RhdGUgPSBi
+YWNrbGlnaHQtPnByb3BzLnN0YXRlOwo+ID4gKwliYWNrbGlnaHQtPnByb3BzLnN0YXRlIHw9IEJM
+X0NPUkVfRkJCTEFOSzsKPiA+ICsJRFJNX0RFQlVHX0tNUygiQmFja2xpZ2h0IHN0YXRlOiAweCV4
+IC0+IDB4JXhcbiIsIG9sZF9zdGF0ZSwKPiA+ICsJCSAgICAgIGJhY2tsaWdodC0+cHJvcHMuc3Rh
+dGUpOwo+ID4gKwlyZXQgPSBiYWNrbGlnaHRfdXBkYXRlX3N0YXR1cyhiYWNrbGlnaHQpOwo+ID4g
+KwlpZiAocmV0KQo+ID4gKwkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gZGlzYWJsZSBiYWNrbGlnaHQg
+JWRcbiIsIHJldCk7Cj4gPiArCj4gPiArCXJldHVybiByZXQ7Cj4gPiArfQo+ID4gK0VYUE9SVF9T
+WU1CT0wodGlueWRybV9kaXNhYmxlX2JhY2tsaWdodCk7Cj4gPiArI2VuZGlmCj4gCj4gVGhlc2Ug
+bG9vayBsaWtlIHRoZXkgcmVhbGx5IHNob3VsZCBiZSBwYXJ0IG9mIHRoZSBiYWNrbGlnaHQgc3Vi
+c3lzdGVtLiBJCj4gZG9uJ3Qgc2VlIGFueXRoaW5nIERSTSBzcGVjaWZpYyBhYm91dCB0aGVtLiBX
+ZWxsLCBleGNlcHQgZm9yIHRoZSBlcnJvcgo+IG1lc3NhZ2VzLgoKU28gdGhpcyBpcyBhIGJpdCBh
+biB1bnBvcHVsYXIgb3BpbmlvbiB3aXRoIHNvbWUgZm9sa3MsIGJ1dCBJIGRvbid0IHJlcXVpcmUK
+YW55b25lIHRvIHN1Ym1pdCBuZXcgY29kZSB0byBzdWJzeXN0ZW1zIG91dHNpZGUgb2YgZHJtIGZv
+ciBuZXcgZHJpdmVycy4KU2ltcGx5IGJlY2F1c2UgaXQgdGFrZXMgbW9udGhzIHRvIGdldCBzdHVm
+ZiBsYW5kZWQsIGFuZCBpbiBnZW5lcmFsIGl0J3MKbm90IHdvcnRoIHRoZSB0cm91YmxlLgoKV2Ug
+aGF2ZSBwaWxlcyBvZiBzdHVmZiBpbiBkcm0gYW5kIGRybSBkcml2ZXJzIHRoYXQgc2hvdWxkIGJl
+IGluIGNvcmUgYnV0Cmlzbid0LgoKSW1vIHRoZSBvbmx5IHJlYXNvbmFibGUgd2F5IGlzIHRvIG1l
+cmdlIGFzLWlzLCB0aGVuIGZvbGxvdy11cCB3aXRoIGEgcGF0Y2gKc2VyaWVzIHRvIG1vdmUgdGhl
+IGhlbHBlciBpbnRvIHRoZSByaWdodCBzdWJzeXN0ZW0uIE1vc3Qgb2Z0ZW4KdW5mb3J0dW5hdGVs
+eSB0aGF0IGZvbGxvdy11cCBwYXRjaCBzZXJpZXMgd2lsbCBqdXN0IGRpZS4KLURhbmllbAotLSAK
+RGFuaWVsIFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDov
+L2Jsb2cuZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
+dmVsCg==
