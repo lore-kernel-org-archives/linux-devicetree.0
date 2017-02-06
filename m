@@ -1,90 +1,92 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Mon, 6 Feb 2017 11:18:18 -0800
-Message-ID: <CAHQ1cqHD=h-aQbiOsPeS5BQdD_CHPBgA3VsBUPGtF7hWdObmxw@mail.gmail.com>
-References: <20170206151716.10381-1-andrew.smirnov@gmail.com>
- <20170206151716.10381-4-andrew.smirnov@gmail.com> <1486395217.2275.38.camel@pengutronix.de>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH v3 1/7] drm: Add DRM support for tiny LCD displays
+Date: Mon, 6 Feb 2017 20:23:36 +0100
+Message-ID: <aad2920e-1492-3862-d977-96c40ced493d@tronnes.org>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-2-noralf@tronnes.org>
+ <20170206091743.GE27607@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486395217.2275.38.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: linux-pci@vger.kernel.org, Andrey Yurovsky <yurovsky@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170206091743.GE27607@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 7:33 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
-> Am Montag, den 06.02.2017, 07:17 -0800 schrieb Andrey Smirnov:
->> Add various bits of code needed to support i.MX7D variant of the IP.
->>
->> Cc: yurovsky@gmail.com
->> Cc: Lucas Stach <l.stach@pengutronix.de>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Fabio Estevam <fabio.estevam@nxp.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Lee Jones <lee.jones@linaro.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->
-> Two small comments inline, otherwise looks real good now.
->
->> ---
->>  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
->>  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
->>  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
->>  3 files changed, 105 insertions(+), 26 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> index 83aeb1f..9f57759 100644
->> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
->> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
->>  and thus inherits all the common properties defined in designware-pcie.txt.
->>
->>  Required properties:
->> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
->> +- compatible:
->> +     - "fsl,imx6q-pcie"
->> +     - "fsl,imx6sx-pcie",
->> +     - "fsl,imx6qp-pcie"
->> +     - "fsl,imx7d-pcie"
->>  - reg: base address and length of the PCIe controller
->>  - interrupts: A list of interrupt outputs of the controller. Must contain an
->>    entry for each entry in the interrupt-names property.
->
-> This misses an "Additional required properties for imx7d-pcie" section
-> listing the required reset handles.
-
-Darn! Forgot to update this part. Will fix in v4.
-
->
->> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
->> index 3ef8093..34a21c9 100644
->> --- a/drivers/pci/host/pci-imx6.c
->> +++ b/drivers/pci/host/pci-imx6.c
->
-> [...]
->
->>  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->>  {
->>       struct pcie_port *pp = &imx6_pcie->pp;
->> @@ -381,6 +416,11 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->>       }
->>
->>       switch (imx6_pcie->variant) {
->> +     case IMX7D:
->> +             reset_control_assert(imx6_pcie->apps_reset);
->
-> Can this reset assertion be moved into imx6_pcie_assert_core_reset()?
-> This may change the programming order slightly from the downstream
-> driver, but I guess that won't hurt if this is the equivalent of the
-> LTSSM enable signal.
-
-I don't see why it wouldn't be possible to move it. I'll give it a try
-on a real HW and update v4 accordingly.
-
-Thanks,
-Andrey Smirnov
+CkRlbiAwNi4wMi4yMDE3IDEwLjE3LCBza3JldiBUaGllcnJ5IFJlZGluZzoKPiBPbiBUdWUsIEph
+biAzMSwgMjAxNyBhdCAwNTowMzoxM1BNICswMTAwLCBOb3JhbGYgVHLDuG5uZXMgd3JvdGU6Cj4+
+IHRpbnlkcm0gcHJvdmlkZXMgaGVscGVycyBmb3IgdmVyeSBzaW1wbGUgZGlzcGxheXMgdGhhdCBj
+YW4gdXNlCj4+IENNQSBiYWNrZWQgZnJhbWVidWZmZXJzIGFuZCBuZWVkIGZsdXNoaW5nIG9uIGNo
+YW5nZXMuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25u
+ZXMub3JnPgo+PiBBY2tlZC1ieTogRGFuaWVsIFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5j
+aD4KPj4gLS0tCj4+Cj4+IENoYW5nZXMgc2luY2UgdmVyc2lvbiAyOgo+PiAtIFJlbW92ZSBmYmRl
+diBhZnRlciBkcm0gdW5yZWdpc3Rlciwgbm90IGJlZm9yZS4KPj4KPj4gQ2hhbmdlcyBzaW5jZSB2
+ZXJzaW9uIDE6Cj4+IC0gQWRkIHRpbnlkcm0ucnN0Cj4+IC0gU2V0IHRkZXYtPmZiZGV2X2NtYT1O
+VUxMIG9uIHVucmVnaXN0ZXIgKGxhc3RjbG9zZSBpcyBjYWxsZWQgYWZ0ZXIgdGhhdCkuCj4+IC0g
+UmVtb3ZlIHNvbWUgRFJNX0RFQlVHKigpCj4+Cj4+ICAgRG9jdW1lbnRhdGlvbi9ncHUvaW5kZXgu
+cnN0ICAgICAgICAgICAgICAgICB8ICAgMSArCj4+ICAgRG9jdW1lbnRhdGlvbi9ncHUvdGlueWRy
+bS5yc3QgICAgICAgICAgICAgICB8ICAyMSArKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9LY29uZmln
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS9NYWtlZmls
+ZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L0tjb25maWcgICAgICAgICAgICAgfCAgIDggKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L01ha2VmaWxlICAgICAgICAgICAgfCAgIDEgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L2NvcmUvTWFrZWZpbGUgICAgICAgfCAgIDMgKwo+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJt
+L2NvcmUvdGlueWRybS1jb3JlLmMgfCAzNzcgKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+
+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1waXBlLmMgfCAyMzQgKysr
+KysrKysrKysrKysrKysKPj4gICBpbmNsdWRlL2RybS90aW55ZHJtL3Rpbnlkcm0uaCAgICAgICAg
+ICAgICAgIHwgMTE1ICsrKysrKysrKwo+PiAgIDEwIGZpbGVzIGNoYW5nZWQsIDc2MyBpbnNlcnRp
+b25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZ3B1L3Rpbnlkcm0u
+cnN0Cj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL0tjb25m
+aWcKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vTWFrZWZp
+bGUKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS9N
+YWtlZmlsZQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9j
+b3JlL3Rpbnlkcm0tY29yZS5jCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS90aW55ZHJtL2NvcmUvdGlueWRybS1waXBlLmMKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5j
+bHVkZS9kcm0vdGlueWRybS90aW55ZHJtLmgKPiBJIHJlYWxpemUgdGhpcyBpcyB0b3RhbGx5IHN1
+YmplY3RpdmUsIGJ1dCB0aGlzIGZlZWxzIHNvbWV3aGF0IHRvbyBtdWNoCj4gb2YgYSBzZXBhcmF0
+aW9uLiBHaXZlbiB0aGUgaGVscGVyIG5hdHVyZSBvZiBUaW55RFJNLCBJIHRoaW5rIGl0IHdvdWxk
+IGJlCj4gbW9yZSBhcHByb3ByaWF0ZSB0byBtb3ZlIHRoZSBoZWxwZXJzIHRoZW1zZWx2ZXMgaW50
+byBkcm1fdGlueS5bY2hdIGFuZAo+IHRoZW4gbWF5YmUgYWRkIGEgc3ViZGlyZWN0b3J5IGRyaXZl
+cnMvZ3B1L2RybS90aW55IHRoYXQgY29udGFpbnMgYWxsIHRoZQo+IGRyaXZlcnMgdGhhdCB1c2Ug
+dGhlIGhlbHBlcnMuCj4KPiBUaGUgc2VwYXJhdGlvbiBhYm92ZSBmdXJ0aGVyIHNob3dzIGluIHN1
+YnNlcXVlbnQgcGF0Y2hlcyB3aGVyZSBoZWxwZXJzCj4gYXJlIGFkZGVkIHRvIHRpbnlkcm0gdGhh
+dCBhcmVuJ3Qgc3BlY2lmaWMgdG8gVGlueURSTS4gU28gdGhpcyBtYWtlIHRoZQo+IG5ldyBoZWxw
+ZXJzIGFwcGVhciBhcyBtb3JlIG9mIGEgc3Vic3lzdGVtIGluIERSTSByYXRoZXIgdGhhbiBhIGhl
+bHBlcgo+IGxpYnJhcnkuIEl0IGFsc28gbWFrZXMgdGhpbmdzIHNvbWV3aGF0IGluY29uc2lzdGVu
+dCB3aXRoIGV4aXN0aW5nCj4gaW5mcmFzdHJ1Y3R1cmUuCgpXaGF0IEkgaGF2ZSBkb25lIHdpdGgg
+dGlueWRybSBpcyB0byBkbyBhcyBsaXR0bGUgYXMgcG9zc2libGUgaW4gdGhlCmNvcmUgaGVscGVy
+LiBUaGUgbWluaW11bSByZXF1aXJlZCB0byBwdWxsIHRvZ2V0aGVyCmRybV9zaW1wbGVfZGlzcGxh
+eV9waXBlLCBjbWEgaGVscGVyICsgZmJkZXYgYW5kIGZyYW1lYnVmZmVyIGZsdXNoaW5nLgoKVGhl
+biBJIGhhdmUgYWRkZWQgYSBzZXQgb2YgZnVuY3Rpb25zIHRoYXQgZWFzZSB0aGUgd3JpdGluZyBv
+ZiBkcml2ZXJzCmZvciBSR0I1NjUgZGlzcGxheXMgd2l0aCBvcHRpb25hbCBiYWNrbGlnaHQgYW5k
+IHJlZ3VsYXRvci4KCkFkZGVkIHRvIHRoYXQgaXMgYSBjb250cm9sbGVyIGxpYnJhcnkgdGhhdCBo
+YW5kbGVzIHJlZ2lzdGVyIGFjY2VzcyAod2lsbAp1c2UgcmVnbWFwIGZvciBub24tbWlwaSkgYW5k
+IGZyYW1lYnVmZmVyIGZsdXNoaW5nIChzZXQgdGhlIHdpbmRvd2luZwpyZWdpc3RlcnMgYW5kIHdy
+aXRlIHRoZSBidWZmZXIgdG8gdGhlIHBpeGVsIHJlZ2lzdGVyKS4KCkFuZCBhdCBsYXN0IHRoZXJl
+J3MgdGhlIGRpc3BsYXkgZHJpdmVyIHRoYXQgaW5pdGlhbGl6ZXMgdGhlIGNvbnRyb2xsZXIKdG8g
+bWF0Y2ggYSBwYXJ0aWN1bGFyIHBhbmVsLgoKTWF5YmUgSSBzaG91bGQgbmFycm93IHRpbnlkcm0g
+dG8gX2p1c3RfIHN1cHBvcnQgIlJHQjU2NSBkaXNwbGF5cyB3aXRoCm9wdGlvbmFsIGJhY2tsaWdo
+dCBhbmQgcmVndWxhdG9yIi4gSXQgbG9va3MgbGlrZSBJIHNwbGl0IGl0IHVwIHRvIG11Y2gsCnVu
+bGVzcyBzb21lb25lIHNlZXMgYSBuZWVkIGZvciB0aGUgY29yZSBvZiB0aW55ZHJtIGVsc2V3aGVy
+ZS4KCkkgdGhpbmsgaXQncyBoYXJkIHRvIGF2b2lkIHRoZSBzdWJzeXN0ZW0gc21lbGwgaGVyZS4g
+VGhlc2UgZGlzcGxheXMgYXJlCnJlYWxseSBzaW1wbGUsIGZiZGV2IGlzIG1vcmUgdGhhbiBlbm91
+Z2ggdG8gY292ZXIgdGhlaXIgbmVlZHMuCkJ1dCBmYmRldiBpcyBjbG9zZWQuCgpJJ20gZ2xhZCB5
+b3UgcGljayBvbiB0aGlzLCBhcyBnZXR0aW5nIHRoZSBhcmNoaXRlY3R1cmUgcmlnaHQgd2lsbCBz
+YXZlCm1lIG1haW50ZW5hbmNlIGRvd24gdGhlIGxpbmUuIEkgZGlkIHBhaW50IG1lIGludG8gYSBj
+b3JuZXIgd2l0aApzdGFnaW5nL2ZidGZ0IGFuZCBJJ20gbm90IGtlZW4gb24gcmVwZWF0aW5nIHRo
+YXQgKHRvIG15IGRlZmVuY2UgaXQgd2FzCm15IGZpcnN0IEMgY29kZSBzaW5jZSB1bml2ZXJzaXR5
+IGFuZCBJIGhhZCAyIGRpc3BsYXlzIHRoYXQgaGFkIHNvbWUKc2ltaWxhcml0aWVzIHdoaWNoIGVu
+ZGVkIHVwIGFzIGZidGZ0KS4KCgpOb3JhbGYuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
