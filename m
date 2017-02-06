@@ -1,61 +1,55 @@
-From: eajames@linux.vnet.ibm.com
-Subject: [PATCH linux v6 4/6] hwmon: occ: Add callbacks for parsing P8 OCC datastructures
-Date: Mon,  6 Feb 2017 14:27:10 -0600
-Message-ID: <1486412832-21854-5-git-send-email-eajames@linux.vnet.ibm.com>
+From: eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org
+Subject: [PATCH linux v6 6/6] hwmon: occ: Add callbacks for parsing P9 OCC datastructures
+Date: Mon,  6 Feb 2017 14:27:12 -0600
+Message-ID: <1486412832-21854-7-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1486412832-21854-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486412832-21854-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486412832-21854-1-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, corbet-T1hC0tSOHrs@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 
 Add functions to parse the data structures that are specific to the OCC on
-the POWER8 processor. These are the sensor data structures, including
+the POWER9 processor. These are the sensor data structures, including
 temperature, frequency, power, and "caps."
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 ---
- Documentation/hwmon/occ    |   9 ++
- drivers/hwmon/occ/occ_p8.c | 248 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ_p8.h |  30 ++++++
- 3 files changed, 287 insertions(+)
- create mode 100644 drivers/hwmon/occ/occ_p8.c
- create mode 100644 drivers/hwmon/occ/occ_p8.h
+ Documentation/hwmon/occ    |   3 +
+ drivers/hwmon/occ/occ_p9.c | 309 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/hwmon/occ/occ_p9.h |  30 +++++
+ 3 files changed, 342 insertions(+)
+ create mode 100644 drivers/hwmon/occ/occ_p9.c
+ create mode 100644 drivers/hwmon/occ/occ_p9.h
 
 diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-index d0bdf06..143951e 100644
+index 143951e..6cea853 100644
 --- a/Documentation/hwmon/occ
 +++ b/Documentation/hwmon/occ
-@@ -25,6 +25,15 @@ Currently, all versions of the OCC support four types of sensor data: power,
- temperature, frequency, and "caps," which indicate limits and thresholds used
- internally on the OCC.
+@@ -34,6 +34,9 @@ number of data structures, such as command format, response headers, and the
+ like, are also defined in this specification, and are common to both POWER8 and
+ POWER9 OCCs.
  
-+The format for the POWER8 OCC sensor data can be found in the P8 OCC
-+specification:
-+github.com/open-power/docs/blob/master/occ/OCC_OpenPwr_FW_Interfaces.pdf
-+This document provides the details of the OCC sensors: power, frequency,
-+temperature, and caps. These sensor formats are specific to the POWER8 OCC. A
-+number of data structures, such as command format, response headers, and the
-+like, are also defined in this specification, and are common to both POWER8 and
-+POWER9 OCCs.
++There is currently no public P9 OCC specification, and the data structures
++defined in the POWER9 OCC driver are subject to change.
 +
  sysfs Entries
  -------------
  
-diff --git a/drivers/hwmon/occ/occ_p8.c b/drivers/hwmon/occ/occ_p8.c
+diff --git a/drivers/hwmon/occ/occ_p9.c b/drivers/hwmon/occ/occ_p9.c
 new file mode 100644
-index 0000000..5c61fc4
+index 0000000..3ef0284
 --- /dev/null
-+++ b/drivers/hwmon/occ/occ_p8.c
-@@ -0,0 +1,248 @@
++++ b/drivers/hwmon/occ/occ_p9.c
+@@ -0,0 +1,309 @@
 +/*
-+ * occ_p8.c - OCC hwmon driver
++ * occ_p9.c - OCC hwmon driver
 + *
-+ * This file contains the Power8-specific methods and data structures for
++ * This file contains the Power9-specific methods and data structures for
 + * the OCC hwmon driver.
 + *
 + * Copyright 2016 IBM Corp.
@@ -82,72 +76,97 @@ index 0000000..5c61fc4
 +#include <linux/platform_device.h>
 +#include <linux/slab.h>
 +#include "occ.h"
-+#include "occ_p8.h"
++#include "occ_p9.h"
 +
-+/* P8 OCC sensor data format */
-+struct p8_occ_sensor {
-+	u16 sensor_id;
++/* P9 OCC sensor data format */
++struct p9_temp_sensor {
++	u32 sensor_id;
++	u8 fru_type;
++	u8 value;
++};
++
++struct p9_freq_sensor {
++	u32 sensor_id;
 +	u16 value;
 +};
 +
-+struct p8_power_sensor {
-+	u16 sensor_id;
++struct p9_power_sensor {
++	u32 sensor_id;
++	u8 function_id;
++	u8 apss_channel;
++	u16 reserved;
 +	u32 update_tag;
-+	u32 accumulator;
++	u64 accumulator;
 +	u16 value;
 +};
 +
-+struct p8_caps_sensor {
++struct p9_caps_sensor {
 +	u16 curr_powercap;
 +	u16 curr_powerreading;
 +	u16 norm_powercap;
 +	u16 max_powercap;
 +	u16 min_powercap;
 +	u16 user_powerlimit;
++	u8 user_powerlimit_source;
 +};
 +
-+static const u32 p8_sensor_hwmon_configs[MAX_OCC_SENSOR_TYPE] = {
++static const u32 p9_sensor_hwmon_configs[MAX_OCC_SENSOR_TYPE] = {
 +	HWMON_I_INPUT | HWMON_I_LABEL,	/* freq: value | label */
-+	HWMON_T_INPUT | HWMON_T_LABEL,	/* temp: value | label */
-+	/* power: value | label | accumulator | update_tag */
-+	HWMON_P_INPUT | HWMON_P_LABEL | HWMON_P_AVERAGE |
-+		HWMON_P_AVERAGE_INTERVAL,
-+	/* caps: curr | max | min | norm | user */
++	/* temp: value | label | fru_type */
++	HWMON_T_INPUT | HWMON_T_LABEL | HWMON_T_TYPE,
++	/* power: value | label | accum[0] | accum[1] | update_tag |
++	 *	 (function_id | (apss_channel << 8))
++	 */
++	HWMON_P_INPUT | HWMON_P_LABEL | HWMON_P_AVERAGE_MIN |
++		HWMON_P_AVERAGE_MAX | HWMON_P_AVERAGE_INTERVAL |
++		HWMON_P_RESET_HISTORY,
++	/* caps: curr | max | min | norm | user | source */
 +	HWMON_P_CAP | HWMON_P_CAP_MAX | HWMON_P_CAP_MIN | HWMON_P_MAX |
-+		HWMON_P_ALARM,
++		HWMON_P_ALARM | HWMON_P_CAP_ALARM,
 +};
 +
-+void p8_parse_sensor(u8 *data, void *sensor, int sensor_type, int off,
++void p9_parse_sensor(u8 *data, void *sensor, int sensor_type, int off,
 +		     int snum)
 +{
 +	switch (sensor_type) {
 +	case FREQ:
++	{
++		struct p9_freq_sensor *fs =
++			&(((struct p9_freq_sensor *)sensor)[snum]);
++
++		fs->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
++		fs->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 4]));
++	}
++		break;
 +	case TEMP:
 +	{
-+		struct p8_occ_sensor *os =
-+			&(((struct p8_occ_sensor *)sensor)[snum]);
++		struct p9_temp_sensor *ts =
++			&(((struct p9_temp_sensor *)sensor)[snum]);
 +
-+		os->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
-+		os->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 2]));
++		ts->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
++		fs->fru_type = data[off + 4];
++		fs->value = data[off + 5];
 +	}
 +		break;
 +	case POWER:
 +	{
-+		struct p8_power_sensor *ps =
-+			&(((struct p8_power_sensor *)sensor)[snum]);
++		struct p9_power_sensor *ps =
++			&(((struct p9_power_sensor *)sensor)[snum]);
 +
-+		ps->sensor_id = be16_to_cpu(get_unaligned((u16 *)&data[off]));
++		ps->sensor_id = be32_to_cpu(get_unaligned((u32 *)&data[off]));
++		ps->function_id = data[off + 4];
++		ps->apss_channel = data[off + 5];
 +		ps->update_tag =
-+			be32_to_cpu(get_unaligned((u32 *)&data[off + 2]));
++			be32_to_cpu(get_unaligned((u32 *)&data[off + 8]));
 +		ps->accumulator =
-+			be32_to_cpu(get_unaligned((u32 *)&data[off + 6]));
-+		ps->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
++			be64_to_cpu(get_unaligned((u64 *)&data[off + 12]));
++		ps->value = be16_to_cpu(get_unaligned((u16 *)&data[off + 20]));
 +	}
 +		break;
 +	case CAPS:
 +	{
-+		struct p8_caps_sensor *cs =
-+			&(((struct p8_caps_sensor *)sensor)[snum]);
++		struct p9_caps_sensor *cs =
++			&(((struct p9_caps_sensor *)sensor)[snum]);
 +
 +		cs->curr_powercap =
 +			be16_to_cpu(get_unaligned((u16 *)&data[off]));
@@ -161,31 +180,34 @@ index 0000000..5c61fc4
 +			be16_to_cpu(get_unaligned((u16 *)&data[off + 8]));
 +		cs->user_powerlimit =
 +			be16_to_cpu(get_unaligned((u16 *)&data[off + 10]));
++		cs->user_powerlimit_source = data[off + 12];
 +	}
 +		break;
 +	};
 +}
 +
-+void *p8_alloc_sensor(struct device *dev, int sensor_type, int num_sensors)
++void *p9_alloc_sensor(struct device *dev, int sensor_type, int num_sensors)
 +{
 +	switch (sensor_type) {
 +	case FREQ:
++		return devm_kzalloc(dev, num_sensors *
++				    sizeof(struct p9_freq_sensor), GFP_KERNEL);
 +	case TEMP:
 +		return devm_kzalloc(dev, num_sensors *
-+				    sizeof(struct p8_occ_sensor), GFP_KERNEL);
++				    sizeof(struct p9_temp_sensor), GFP_KERNEL);
 +	case POWER:
 +		return devm_kzalloc(dev, num_sensors *
-+				    sizeof(struct p8_power_sensor),
++				    sizeof(struct p9_power_sensor),
 +				    GFP_KERNEL);
 +	case CAPS:
 +		return devm_kzalloc(dev, num_sensors *
-+				    sizeof(struct p8_caps_sensor), GFP_KERNEL);
++				    sizeof(struct p9_caps_sensor), GFP_KERNEL);
 +	default:
 +		return NULL;
 +	}
 +}
 +
-+int p8_get_sensor(struct occ *driver, int sensor_type, int sensor_num,
++int p9_get_sensor(struct occ *driver, int sensor_type, int sensor_num,
 +		  u32 hwmon, long *val)
 +{
 +	int rc = 0;
@@ -194,7 +216,8 @@ index 0000000..5c61fc4
 +	if (sensor_type == POWER) {
 +		if (hwmon == hwmon_power_cap || hwmon == hwmon_power_cap_max ||
 +		    hwmon == hwmon_power_cap_min || hwmon == hwmon_power_max ||
-+		    hwmon == hwmon_power_alarm)
++		    hwmon == hwmon_power_alarm ||
++		    hwmon == hwmon_power_cap_alarm)
 +			sensor_type = CAPS;
 +	}
 +
@@ -204,23 +227,46 @@ index 0000000..5c61fc4
 +
 +	switch (sensor_type) {
 +	case FREQ:
++	{
++		struct p9_freq_sensor *fs =
++			&(((struct p9_freq_sensor *)sensor)[sensor_num]);
++
++		switch (hwmon) {
++		case hwmon_in_input:
++			*val = fs->value;
++			break;
++		case hwmon_in_label:
++			*val = fs->sensor_id;
++			break;
++		default:
++			rc = -EOPNOTSUPP;
++		}
++	}
++		break;
 +	case TEMP:
 +	{
-+		struct p8_occ_sensor *os =
-+			&(((struct p8_occ_sensor *)sensor)[sensor_num]);
++		struct p9_temp_sensor *ts =
++			&(((struct p9_temp_sensor *)sensor)[sensor_num]);
 +
-+		if (hwmon == hwmon_in_input || hwmon == hwmon_temp_input)
-+			*val = os->value;
-+		else if (hwmon == hwmon_in_label || hwmon == hwmon_temp_label)
-+			*val = os->sensor_id;
-+		else
++		switch (hwmon) {
++		case hwmon_temp_input:
++			*val = ts->value;
++			break;
++		case hwmon_temp_type:
++			*val = ts->fru_type;
++			break;
++		case hwmon_temp_label:
++			*val = ts->sensor_id;
++			break;
++		default:
 +			rc = -EOPNOTSUPP;
++		}
 +	}
 +		break;
 +	case POWER:
 +	{
-+		struct p8_power_sensor *ps =
-+			&(((struct p8_power_sensor *)sensor)[sensor_num]);
++		struct p9_power_sensor *ps =
++			&(((struct p9_power_sensor *)sensor)[sensor_num]);
 +
 +		switch (hwmon) {
 +		case hwmon_power_input:
@@ -229,11 +275,17 @@ index 0000000..5c61fc4
 +		case hwmon_power_label:
 +			*val = ps->sensor_id;
 +			break;
-+		case hwmon_power_average:
-+			*val = ps->accumulator;
++		case hwmon_power_average_min:
++			*val = ((u32 *)(&ps->accumulator))[0];
++			break;
++		case hwmon_power_average_max:
++			*val = ((u32 *)(&ps->accumulator))[1];
 +			break;
 +		case hwmon_power_average_interval:
 +			*val = ps->update_tag;
++			break;
++		case hwmon_power_reset_history:
++			*val = ps->function_id | (ps->apss_channel << 8);
 +			break;
 +		default:
 +			rc = -EOPNOTSUPP;
@@ -242,8 +294,8 @@ index 0000000..5c61fc4
 +		break;
 +	case CAPS:
 +	{
-+		struct p8_caps_sensor *cs =
-+			&(((struct p8_caps_sensor *)sensor)[sensor_num]);
++		struct p9_caps_sensor *cs =
++			&(((struct p9_caps_sensor *)sensor)[sensor_num]);
 +
 +		switch (hwmon) {
 +		case hwmon_power_cap:
@@ -261,6 +313,9 @@ index 0000000..5c61fc4
 +		case hwmon_power_alarm:
 +			*val = cs->user_powerlimit;
 +			break;
++		case hwmon_power_cap_alarm:
++			*val = cs->user_powerlimit_source;
++			break;
 +		default:
 +			rc = -EOPNOTSUPP;
 +		}
@@ -273,43 +328,43 @@ index 0000000..5c61fc4
 +	return rc;
 +}
 +
-+static const struct occ_ops p8_ops = {
-+	.parse_sensor = p8_parse_sensor,
-+	.alloc_sensor = p8_alloc_sensor,
-+	.get_sensor = p8_get_sensor,
++static const struct occ_ops p9_ops = {
++	.parse_sensor = p9_parse_sensor,
++	.alloc_sensor = p9_alloc_sensor,
++	.get_sensor = p9_get_sensor,
 +};
 +
-+static const struct occ_config p8_config = {
-+	.command_addr = 0xFFFF6000,
-+	.response_addr = 0xFFFF7000,
++static const struct occ_config p9_config = {
++	.command_addr = 0xFFFBE000,
++	.response_addr = 0xFFFBF000,
 +};
 +
-+const u32 *p8_get_sensor_hwmon_configs()
++const u32 *p9_get_sensor_hwmon_configs()
 +{
-+	return p8_sensor_hwmon_configs;
++	return p9_sensor_hwmon_configs;
 +}
-+EXPORT_SYMBOL(p8_get_sensor_hwmon_configs);
++EXPORT_SYMBOL(p9_get_sensor_hwmon_configs);
 +
-+struct occ *p8_occ_start(struct device *dev, void *bus,
++struct occ *p9_occ_start(struct device *dev, void *bus,
 +			 struct occ_bus_ops *bus_ops)
 +{
-+	return occ_start(dev, bus, bus_ops, &p8_ops, &p8_config);
++	return occ_start(dev, bus, bus_ops, &p9_ops, &p9_config);
 +}
-+EXPORT_SYMBOL(p8_occ_start);
++EXPORT_SYMBOL(p9_occ_start);
 +
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("P8 OCC sensors");
++MODULE_AUTHOR("Eddie James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>");
++MODULE_DESCRIPTION("P9 OCC sensors");
 +MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ_p8.h b/drivers/hwmon/occ/occ_p8.h
+diff --git a/drivers/hwmon/occ/occ_p9.h b/drivers/hwmon/occ/occ_p9.h
 new file mode 100644
-index 0000000..3fe6417
+index 0000000..18ca16a
 --- /dev/null
-+++ b/drivers/hwmon/occ/occ_p8.h
++++ b/drivers/hwmon/occ/occ_p9.h
 @@ -0,0 +1,30 @@
 +/*
-+ * occ_p8.h - OCC hwmon driver
++ * occ_p9.h - OCC hwmon driver
 + *
-+ * This file contains Power8-specific function prototypes
++ * This file contains Power9-specific function prototypes
 + *
 + * Copyright 2016 IBM Corp.
 + *
@@ -324,17 +379,22 @@ index 0000000..3fe6417
 + * GNU General Public License for more details.
 + */
 +
-+#ifndef __OCC_P8_H__
-+#define __OCC_P8_H__
++#ifndef __OCC_P9_H__
++#define __OCC_P9_H__
 +
 +#include "scom.h"
 +
 +struct device;
 +
-+const u32 *p8_get_sensor_hwmon_configs(void);
-+struct occ *p8_occ_start(struct device *dev, void *bus,
++const u32 *p9_get_sensor_hwmon_configs(void);
++struct occ *p9_occ_start(struct device *dev, void *bus,
 +			 struct occ_bus_ops *bus_ops);
 +
-+#endif /* __OCC_P8_H__ */
++#endif /* __OCC_P9_H__ */
 -- 
 1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
