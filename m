@@ -1,324 +1,178 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH v8 3/3] thermal: zx2967: add thermal driver for ZTE's
- zx2967 family
-Date: Mon, 6 Feb 2017 10:23:53 -0700
-Message-ID: <20170206172353.GC11391@linaro.org>
-References: <1486179597-30953-1-git-send-email-baoyou.xie@linaro.org>
- <1486179597-30953-3-git-send-email-baoyou.xie@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/5] drm: convert drivers to use
+ drm_of_find_panel_or_bridge
+Date: Mon, 6 Feb 2017 11:32:01 -0600
+Message-ID: <20170206173201.wkv5snwhvkrjruwi@rob-hp-laptop>
+References: <20170204033635.10250-1-robh@kernel.org>
+ <20170204033635.10250-5-robh@kernel.org>
+ <20170206100301.fatil7cvasuyhnqw@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486179597-30953-3-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+In-Reply-To: <20170206100301.fatil7cvasuyhnqw@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 04, 2017 at 11:39:57AM +0800, Baoyou Xie wrote:
-> This patch adds thermal driver for ZTE's zx2967 family.
+On Mon, Feb 06, 2017 at 11:03:01AM +0100, Maxime Ripard wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-> ---
->  drivers/thermal/Kconfig          |   8 ++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/zx2967_thermal.c | 255 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 264 insertions(+)
->  create mode 100644 drivers/thermal/zx2967_thermal.c
+> On Fri, Feb 03, 2017 at 09:36:34PM -0600, Rob Herring wrote:
+> > Similar to the previous commit, convert drivers open coding OF graph
+> > parsing to use drm_of_find_panel_or_bridge instead.
+> > 
+> > This changes some error messages to debug messages (in the graph core).
+> > Graph connections are often "no connects" depending on the particular
+> > board, so we want to avoid spurious messages. Plus the kernel is not a
+> > DT validator.
+> > 
+> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
 > 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 18f2de6..f64bd50 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -444,4 +444,12 @@ config BCM2835_THERMAL
->  	help
->  	  Support for thermal sensors on Broadcom bcm2835 SoCs.
->  
-> +config ZX2967_THERMAL
-> +	tristate "Thermal sensors on zx2967 SoC"
-> +	depends on ARCH_ZX || COMPILE_TEST
-> +	help
-> +	  Enable the zx2967 thermal sensors driver, which supports
-> +	  the primitive temperature sensor embedded in zx2967 SoCs.
-> +	  This sensor generates the real time die temperature.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 677c6d9..c00c05e 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
->  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
->  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
->  obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
-> +obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
-> diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
-> new file mode 100644
-> index 0000000..d177238
-> --- /dev/null
-> +++ b/drivers/thermal/zx2967_thermal.c
-> @@ -0,0 +1,255 @@
-> +/*
-> + * ZTE's zx2967 family thermal sensor driver
-> + *
-> + * Copyright (C) 2017 ZTE Ltd.
-> + *
-> + * Author: Baoyou Xie <baoyou.xie@linaro.org>
-> + *
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +
-> +/* Power Mode: 0->low 1->high */
-> +#define ZX2967_THERMAL_POWER_MODE	0
-> +#define ZX2967_POWER_MODE_LOW		0
-> +#define ZX2967_POWER_MODE_HIGH		1
-> +
-> +/* DCF Control Register */
-> +#define ZX2967_THERMAL_DCF		0x4
-> +#define ZX2967_DCF_EN			BIT(1)
-> +#define ZX2967_DCF_FREEZE		BIT(0)
-> +
-> +/* Selection Register */
-> +#define ZX2967_THERMAL_SEL		0x8
-> +
-> +/* Control Register */
-> +#define ZX2967_THERMAL_CTRL		0x10
-> +
-> +#define ZX2967_THERMAL_READY		BIT(12)
-> +#define ZX2967_THERMAL_TEMP_MASK	GENMASK(11, 0)
-> +#define ZX2967_THERMAL_ID_MASK		0x18
-> +#define ZX2967_THERMAL_ID		0x10
-> +
-> +#define ZX2967_GET_TEMP_TIMEOUT_US	(100 * 1024)
-> +
-> +/* zx2967 Thermal Sensor Private Structure */
-> +struct zx2967_thermal_priv {
-> +	/* struct thermal_zone_device where the sensor is registered */
-> +	struct thermal_zone_device	*tzd;
-> +	/* prevents reads sensor in parallel */
-> +	struct mutex			lock;
-> +	/* topcrm clk structure */
-> +	struct clk			*clk_topcrm;
-> +	/* apb clk structure */
-> +	struct clk			*clk_apb;
-> +	/* pointer to base address of the thermal sensor */
-> +	void __iomem			*regs;
-> +	struct device			*dev;
-> +};
-
-Apologies for not being clearer before.  The proper way to document a structure
-can be found here [1].
-
-[1]. http://lxr.free-electrons.com/source/drivers/thermal/of-thermal.c#L39
-
-> +
-> +static int zx2967_thermal_get_temp(void *data, int *temp)
-> +{
-> +	void __iomem *regs;
-> +	struct zx2967_thermal_priv *priv = data;
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (!priv->tzd)
-> +		return -EAGAIN;
-> +
-> +	regs = priv->regs;
-> +	mutex_lock(&priv->lock);
-> +	writel_relaxed(ZX2967_POWER_MODE_LOW,
-> +		       regs + ZX2967_THERMAL_POWER_MODE);
-> +	writel_relaxed(ZX2967_DCF_EN, regs + ZX2967_THERMAL_DCF);
-> +
-> +	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
-> +	val &= ~ZX2967_THERMAL_ID_MASK;
-> +	val |= ZX2967_THERMAL_ID;
-> +	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
-> +
-> +	/*
-> +	 * Must wait for a while, surely it's a bit odd.
-> +	 * otherwise temperature value we got has a few deviation, even if
-> +	 * the THERMAL_READY bit is set.
-> +	 */
-> +	usleep_range(100, 300);
-> +	ret = readx_poll_timeout(readl, regs + ZX2967_THERMAL_CTRL,
-> +				 val, val & ZX2967_THERMAL_READY, 300,
-> +				 ZX2967_GET_TEMP_TIMEOUT_US);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Thermal sensor data timeout\n");
-> +		goto unlock;
-> +	}
-> +
-> +	writel_relaxed(ZX2967_DCF_FREEZE | ZX2967_DCF_EN,
-> +		       regs + ZX2967_THERMAL_DCF);
-> +	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
-> +			 & ZX2967_THERMAL_TEMP_MASK;
-> +	writel_relaxed(ZX2967_POWER_MODE_HIGH,
-> +		       regs + ZX2967_THERMAL_POWER_MODE);
-> +
-> +	/*
-> +	 * Calculate temperature
-> +	 * In dts, slope is multiplied by 1000.
-> +	 */
-> +	*temp = DIV_ROUND_CLOSEST(((s32)val + priv->tzd->tzp->offset) * 1000,
-> +				  priv->tzd->tzp->slope);
-> +
-> +unlock:
-> +	mutex_unlock(&priv->lock);
-> +	return ret;
-> +}
-> +
-> +static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
-> +	.get_temp = zx2967_thermal_get_temp,
-> +};
-> +
-> +static int zx2967_thermal_probe(struct platform_device *pdev)
-> +{
-> +	struct zx2967_thermal_priv *priv;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(priv->regs))
-> +		return PTR_ERR(priv->regs);
-> +
-> +	priv->clk_topcrm = devm_clk_get(&pdev->dev, "topcrm");
-> +	if (IS_ERR(priv->clk_topcrm)) {
-> +		ret = PTR_ERR(priv->clk_topcrm);
-> +		dev_err(&pdev->dev, "failed to get topcrm clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_topcrm);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable topcrm clock: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->clk_apb = devm_clk_get(&pdev->dev, "apb");
-> +	if (IS_ERR(priv->clk_apb)) {
-> +		ret = PTR_ERR(priv->clk_apb);
-> +		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
-> +		goto disable_clk_topcrm;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_apb);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable apb clock: %d\n",
-> +			ret);
-> +		goto disable_clk_topcrm;
-> +	}
-> +
-> +	mutex_init(&priv->lock);
-> +	priv->tzd = thermal_zone_of_sensor_register(&pdev->dev,
-> +					0, priv, &zx2967_of_thermal_ops);
-> +
-> +	if (IS_ERR(priv->tzd)) {
-> +		ret = PTR_ERR(priv->tzd);
-> +		dev_err(&pdev->dev, "failed to register sensor: %d\n", ret);
-> +		goto disable_clk_all;
-> +	}
-> +
-> +	if (priv->tzd->tzp->slope == 0) {
-> +		thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-> +		dev_err(&pdev->dev, "coefficients of sensor is invalid\n");
-> +		ret = -EINVAL;
-> +		goto disable_clk_all;
-> +	}
-> +
-> +	priv->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +
-> +disable_clk_all:
-> +	clk_disable_unprepare(priv->clk_apb);
-> +disable_clk_topcrm:
-> +	clk_disable_unprepare(priv->clk_topcrm);
-> +	return ret;
-> +}
-> +
-> +static int zx2967_thermal_exit(struct platform_device *pdev)
-> +{
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-> +	clk_disable_unprepare(priv->clk_topcrm);
-> +	clk_disable_unprepare(priv->clk_apb);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id zx2967_thermal_id_table[] = {
-> +	{ .compatible = "zte,zx296718-thermal" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int zx2967_thermal_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	if (priv && priv->clk_topcrm)
-> +		clk_disable_unprepare(priv->clk_topcrm);
-> +
-> +	if (priv && priv->clk_apb)
-> +		clk_disable_unprepare(priv->clk_apb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int zx2967_thermal_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +	int error;
-> +
-> +	error = clk_prepare_enable(priv->clk_topcrm);
-> +	if (error)
-> +		return error;
-> +
-> +	error = clk_prepare_enable(priv->clk_apb);
-> +	if (error) {
-> +		clk_disable_unprepare(priv->clk_topcrm);
-> +		return error;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
-> +			 zx2967_thermal_suspend, zx2967_thermal_resume);
-> +
-> +static struct platform_driver zx2967_thermal_driver = {
-> +	.probe = zx2967_thermal_probe,
-> +	.remove = zx2967_thermal_exit,
-> +	.driver = {
-> +		.name = "zx2967_thermal",
-> +		.of_match_table = zx2967_thermal_id_table,
-> +		.pm = &zx2967_thermal_pm_ops,
-> +	},
-> +};
-> +module_platform_driver(zx2967_thermal_driver);
-> +
-> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-> +MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.7.4
+> [..]
 > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_rgb.c b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > index f5e86fe7750e..4720725b0fb0 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_rgb.c
+> > @@ -15,6 +15,7 @@
+> >  #include <drm/drmP.h>
+> >  #include <drm/drm_atomic_helper.h>
+> >  #include <drm/drm_crtc_helper.h>
+> > +#include <drm/drm_of.h>
+> >  #include <drm/drm_panel.h>
+> >  
+> >  #include "sun4i_drv.h"
+> > @@ -217,12 +218,10 @@ int sun4i_rgb_init(struct drm_device *drm)
+> >  	rgb->drv = drv;
+> >  	encoder = &rgb->encoder;
+> >  
+> > -	tcon->panel = sun4i_tcon_find_panel(tcon->dev->of_node);
+> > -	encoder->bridge = sun4i_tcon_find_bridge(tcon->dev->of_node);
+> > -	if (IS_ERR(tcon->panel) && IS_ERR(encoder->bridge)) {
+> > -		dev_info(drm->dev, "No panel or bridge found... RGB output disabled\n");
+> > -		return 0;
+> > -	}
+> > +	ret = drm_of_find_panel_or_bridge(tcon->dev->of_node, 1, 0,
+> > +					  &tcon->panel, &encoder->bridge);
+> > +	if (ret)
+> > +		return ret;
+> 
+> It used to ignore the error if it couldn't find the bridge. This will
+> break the probe.
+
+Well, I got it half right. :) The probe does that, but this needs to 
+too.
+
+> >  
+> >  	drm_encoder_helper_add(&rgb->encoder,
+> >  			       &sun4i_rgb_enc_helper_funcs);
+> > @@ -239,7 +238,7 @@ int sun4i_rgb_init(struct drm_device *drm)
+> >  	/* The RGB encoder can only work with the TCON channel 0 */
+> >  	rgb->encoder.possible_crtcs = BIT(0);
+> >  
+> > -	if (!IS_ERR(tcon->panel)) {
+> > +	if (tcon->panel) {
+> >  		drm_connector_helper_add(&rgb->connector,
+> >  					 &sun4i_rgb_con_helper_funcs);
+> >  		ret = drm_connector_init(drm, &rgb->connector,
+> > @@ -260,7 +259,7 @@ int sun4i_rgb_init(struct drm_device *drm)
+> >  		}
+> >  	}
+> >  
+> > -	if (!IS_ERR(encoder->bridge)) {
+> > +	if (encoder->bridge) {
+> >  		encoder->bridge->encoder = &rgb->encoder;
+> >  
+> >  		ret = drm_bridge_attach(drm, encoder->bridge);
+> > @@ -268,8 +267,6 @@ int sun4i_rgb_init(struct drm_device *drm)
+> >  			dev_err(drm->dev, "Couldn't attach our bridge\n");
+> >  			goto err_cleanup_connector;
+> >  		}
+> > -	} else {
+> > -		encoder->bridge = NULL;
+> >  	}
+> >  
+> >  	return 0;
+> > diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > index ea2906f87cb9..2e4e365cecf9 100644
+> > --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+> > @@ -15,13 +15,12 @@
+> >  #include <drm/drm_crtc.h>
+> >  #include <drm/drm_crtc_helper.h>
+> >  #include <drm/drm_modes.h>
+> > -#include <drm/drm_panel.h>
+> > +#include <drm/drm_of.h>
+> >  
+> >  #include <linux/component.h>
+> >  #include <linux/ioport.h>
+> >  #include <linux/of_address.h>
+> >  #include <linux/of_device.h>
+> > -#include <linux/of_graph.h>
+> >  #include <linux/of_irq.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/reset.h>
+> > @@ -405,74 +404,6 @@ static int sun4i_tcon_init_regmap(struct device *dev,
+> >  	return 0;
+> >  }
+> >  
+> > -struct drm_panel *sun4i_tcon_find_panel(struct device_node *node)
+> > -{
+> > -	struct device_node *port, *remote, *child;
+> > -	struct device_node *end_node = NULL;
+> > -
+> > -	/* Inputs are listed first, then outputs */
+> > -	port = of_graph_get_port_by_id(node, 1);
+> > -
+> > -	/*
+> > -	 * Our first output is the RGB interface where the panel will
+> > -	 * be connected.
+> > -	 */
+> > -	for_each_child_of_node(port, child) {
+> > -		u32 reg;
+> > -
+> > -		of_property_read_u32(child, "reg", &reg);
+> > -		if (reg == 0)
+> > -			end_node = child;
+> > -	}
+> > -
+> > -	if (!end_node) {
+> > -		DRM_DEBUG_DRIVER("Missing panel endpoint\n");
+> > -		return ERR_PTR(-ENODEV);
+> > -	}
+> > -
+> > -	remote = of_graph_get_remote_port_parent(end_node);
+> > -	if (!remote) {
+> > -		DRM_DEBUG_DRIVER("Unable to parse remote node\n");
+> > -		return ERR_PTR(-EINVAL);
+> > -	}
+> > -
+> > -	return of_drm_find_panel(remote) ?: ERR_PTR(-EPROBE_DEFER);
+> 
+> And the panel is only one of our endpoints, which is optional, while
+> other endpoints are mandatory. This means that we might very well have
+> an endpoint that is not a panel or a bridge. In this case, I think
+> your function will return an error and will be treated as such, while
+> it's really the expected behaviour.
+> 
+> I think it's better to leave this driver alone for now, it's not as
+> trivial as it looks, and will require some testing to get things
+> right. I'll try to get my head around how to use your new (very
+> welcome) helpers.
+
+Well, certainly it needs testing. But this is one of the easier examples 
+because you are requesting a specific port/endpoint number. It's the 
+drivers that just loop over all the endpoints that give me more 
+problems.
+
+Anyway, this is 4.12 material, so I'll make the fix above and want 
+to leave this in for now. 
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
