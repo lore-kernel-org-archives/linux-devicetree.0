@@ -1,95 +1,144 @@
-From: Jan Glauber <jglauber@cavium.com>
-Subject: [PATCH v11 1/9] dt-bindings: mmc: Add Cavium SOCs MMC bindings
-Date: Mon,  6 Feb 2017 14:39:44 +0100
-Message-ID: <20170206133953.8390-2-jglauber@cavium.com>
-References: <20170206133953.8390-1-jglauber@cavium.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/5] drm: convert drivers to use of_graph_get_remote_node
+Date: Mon, 6 Feb 2017 07:40:06 -0600
+Message-ID: <CAL_JsqLzMUFvbUkkGT07XBd3-_RGuKHJLgAm=Xeyw152goDA4w@mail.gmail.com>
+References: <20170204033635.10250-1-robh@kernel.org> <20170204033635.10250-4-robh@kernel.org>
+ <1486378379.3005.43.camel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170206133953.8390-1-jglauber@cavium.com>
+In-Reply-To: <1486378379.3005.43.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, David Daney <ddaney@caviumnetworks.com>, "Steven J . Hill" <Steven.Hill@cavium.com>, Jan Glauber <jglauber@cavium.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, "Steven J . Hill" <steven.hill@cavium.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-Add description of Cavium Octeon and ThunderX SOC device tree bindings.
+On Mon, Feb 6, 2017 at 4:52 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
+>> Convert drivers to use the new of_graph_get_remote_node() helper
+>> instead of parsing the endpoint node and then getting the remote device
+>> node. Now drivers can just specify the device node and which
+>> port/endpoint and get back the connected remote device node. The details
+>> of the graph binding are nicely abstracted into the core OF graph code.
+>>
+>> This changes some error messages to debug messages (in the graph core).
+>> Graph connections are often "no connects" depending on the particular
+>> board, so we want to avoid spurious messages. Plus the kernel is not a
+>> DT validator.
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/gpu/drm/arm/hdlcd_drv.c                 | 22 ++-------
+>>  drivers/gpu/drm/arm/malidp_drv.c                | 29 ++---------
+>>  drivers/gpu/drm/bridge/adv7511/adv7533.c        | 12 +----
+>>  drivers/gpu/drm/bridge/dumb-vga-dac.c           | 15 ++----
+>>  drivers/gpu/drm/bridge/ti-tfp410.c              | 15 ++----
+>>  drivers/gpu/drm/exynos/exynos_drm_dpi.c         | 16 +-----
+>>  drivers/gpu/drm/exynos/exynos_drm_dsi.c         | 13 ++---
+>>  drivers/gpu/drm/exynos/exynos_drm_mic.c         | 27 +---------
+>>  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 26 ++--------
+>>  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 30 +----------
+>>  drivers/gpu/drm/mediatek/mtk_dpi.c              | 12 ++---
+>>  drivers/gpu/drm/mediatek/mtk_hdmi.c             | 26 ++--------
+>>  drivers/gpu/drm/meson/meson_drv.c               | 12 ++---
+>>  drivers/gpu/drm/meson/meson_venc_cvbs.c         | 19 ++-----
+>>  drivers/gpu/drm/msm/dsi/dsi_host.c              |  3 +-
+>>  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         | 28 +----------
+>>  drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 18 +++----
+>>  drivers/gpu/drm/tilcdc/tilcdc_crtc.c            | 11 +----
+>>  drivers/gpu/drm/tilcdc/tilcdc_external.c        | 66 +++----------------------
+>>  drivers/gpu/drm/vc4/vc4_dpi.c                   | 15 ++----
+>>  20 files changed, 64 insertions(+), 351 deletions(-)
+>>
+> [...]
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_dpi.c b/drivers/gpu/drm/mediatek/mtk_dpi.c
+>> index 90fb831ef031..dbd554c09a39 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_dpi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_dpi.c
+>> @@ -661,7 +661,7 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+>>       struct device *dev = &pdev->dev;
+>>       struct mtk_dpi *dpi;
+>>       struct resource *mem;
+>> -     struct device_node *ep, *bridge_node = NULL;
+>> +     struct device_node *bridge_node;
+>>       int comp_id;
+>>       int ret;
+>>
+>> @@ -706,15 +706,9 @@ static int mtk_dpi_probe(struct platform_device *pdev)
+>>               return -EINVAL;
+>>       }
+>>
+>> -     ep = of_graph_get_next_endpoint(dev->of_node, NULL);
+>> -     if (ep) {
+>> -             bridge_node = of_graph_get_remote_port_parent(ep);
+>> -             of_node_put(ep);
+>> -     }
+>> -     if (!bridge_node) {
+>> -             dev_err(dev, "Failed to find bridge node\n");
+>> +     bridge_node = of_graph_get_remote_node(dev->of_node, 0, 0);
+>
+> Note that before this change, of_graph_get_next_endpoint would just
+> choose the first port/endpoint without restrictions to their reg
+> properties, whereas the new code requires reg to be either not set or
+> set to zero.
+> As the former is the case for the mt8173 dpi->hdmi link, which is the
+> only use of this driver, this should be fine.
 
-CC: Ulf Hansson <ulf.hansson@linaro.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
+Yes, that is on purpose. A given node should have known port numbering
+and know what type of port each port is. The binding doc should
+outline the ports and endpoints.
 
-Signed-off-by: Jan Glauber <jglauber@cavium.com>
-Signed-off-by: David Daney <david.daney@cavium.com>
-Signed-off-by: Steven J. Hill <steven.hill@cavium.com>
----
- .../devicetree/bindings/mmc/cavium-mmc.txt         | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mmc/cavium-mmc.txt
+>
+> [...]
+>> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi.c b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> index 0e8c4d9af340..f14e472812ce 100644
+>> --- a/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi.c
+>> @@ -1433,7 +1433,7 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+>>  {
+>>       struct device *dev = &pdev->dev;
+>>       struct device_node *np = dev->of_node;
+>> -     struct device_node *cec_np, *port, *ep, *remote, *i2c_np;
+>> +     struct device_node *cec_np, *remote, *i2c_np;
+>>       struct platform_device *cec_pdev;
+>>       struct regmap *regmap;
+>>       struct resource *mem;
+>> @@ -1485,29 +1485,9 @@ static int mtk_hdmi_dt_parse_pdata(struct mtk_hdmi *hdmi,
+>>       if (IS_ERR(hdmi->regs))
+>>               return PTR_ERR(hdmi->regs);
+>>
+>> -     port = of_graph_get_port_by_id(np, 1);
+>> -     if (!port) {
+>> -             dev_err(dev, "Missing output port node\n");
+>> +     remote = of_graph_get_remote_node(np, 1, 0);
+>> +     if (!remote)
+>>               return -EINVAL;
+>> -     }
+>> -
+>> -     ep = of_get_child_by_name(port, "endpoint");
+>> -     if (!ep) {
+>> -             dev_err(dev, "Missing endpoint node in port %s\n",
+>> -                     port->full_name);
+>> -             of_node_put(port);
+>> -             return -EINVAL;
+>> -     }
+>> -     of_node_put(port);
+>> -
+>> -     remote = of_graph_get_remote_port_parent(ep);
+>> -     if (!remote) {
+>> -             dev_err(dev, "Missing connector/bridge node for endpoint %s\n",
+>> -                     ep->full_name);
+>> -             of_node_put(ep);
+>> -             return -EINVAL;
+>> -     }
+>> -     of_node_put(ep);
+>
+> Same as above. TMDS links reasonably have only one endpoint in the
+> source port, and the mt8173-evb DT has no reg property set.
+>
+> Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+> for the mediatek changes.
 
-diff --git a/Documentation/devicetree/bindings/mmc/cavium-mmc.txt b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-new file mode 100644
-index 0000000..b79e356
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/cavium-mmc.txt
-@@ -0,0 +1,60 @@
-+* Cavium Octeon & ThunderX MMC controller
-+
-+The highspeed MMC host controller on Caviums SoCs provides an interface
-+for MMC and SD types of memory cards.
-+
-+Supported maximum speeds are the ones of the eMMC standard 4.41 as well
-+as the speed of SD standard 4.0. Only 3.3 Volt is supported.
-+
-+Required properties:
-+ - compatible : should be one of:
-+   cavium,octeon-6130-mmc
-+   cavium,octeon-6130-mmc-slot
-+   cavium,octeon-7890-mmc
-+   cavium,octeon-7890-mmc-slot
-+   cavium,thunder-8190-mmc
-+   cavium,thunder-8190-mmc-slot
-+   cavium,thunder-8390-mmc
-+   cavium,thunder-8390-mmc-slot
-+ - reg : mmc controller base registers
-+ - clocks : phandle
-+
-+Optional properties:
-+ - for cd, bus-width and additional generic mmc parameters
-+   please refer to mmc.txt within this directory
-+ - cavium,cmd-clk-skew : number of coprocessor clocks before sampling command
-+ - cavium,dat-clk-skew : number of coprocessor clocks before sampling data
-+
-+Deprecated properties:
-+- spi-max-frequency : use max-frequency instead
-+- cavium,bus-max-width : use bus-width instead
-+
-+Examples:
-+	mmc_1_4: mmc@1,4 {
-+		compatible = "cavium,thunder-8390-mmc";
-+		reg = <0x0c00 0 0 0 0>;	/* DEVFN = 0x0c (1:4) */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		clocks = <&sclk>;
-+
-+		mmc-slot@0 {
-+			compatible = "cavium,thunder-8390-mmc-slot";
-+			reg = <0>;
-+			voltage-ranges = <3300 3300>;
-+			vmmc-supply = <&mmc_supply_3v3>;
-+			max-frequency = <42000000>;
-+			bus-width = <4>;
-+			cap-sd-highspeed;
-+		};
-+
-+		mmc-slot@1 {
-+			compatible = "cavium,thunder-8390-mmc-slot";
-+			reg = <1>;
-+			voltage-ranges = <3300 3300>;
-+			vmmc-supply = <&mmc_supply_3v3>;
-+			max-frequency = <42000000>;
-+			bus-width = <8>;
-+			cap-mmc-highspeed;
-+			non-removable;
-+		};
-+	};
--- 
-2.9.0.rc0.21.g7777322
+Thanks.
+
+Rob
