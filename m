@@ -1,7 +1,7 @@
 From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 10/10] arm64: dts: mediatek: add clk nodes for MT6797
-Date: Mon, 6 Feb 2017 20:15:36 +0800
-Message-ID: <1486383336-16892-11-git-send-email-mars.cheng@mediatek.com>
+Subject: [PATCH v2 07/10] soc: mediatek: refine scysys for mediatek platforms
+Date: Mon, 6 Feb 2017 20:15:33 +0800
+Message-ID: <1486383336-16892-8-git-send-email-mars.cheng@mediatek.com>
 References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,133 +21,115 @@ To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chieh-Jay Liu <Chieh-Jay.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds clk nodes for MT6797
+This adds 2 refinements: avoid fixed spm power statue and add vdec item
 
 Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/mediatek/mt6797.dtsi |   71 ++++++++++++++++++++++++++++--
- 1 file changed, 67 insertions(+), 4 deletions(-)
+ drivers/soc/mediatek/mtk-scpsys.c |   35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-index da3a6ff..eca2376 100644
---- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-@@ -11,6 +11,8 @@
-  * GNU General Public License for more details.
-  */
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index beb7916..a8ba800 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -71,6 +71,7 @@ enum clk_id {
+ 	CLK_VENC,
+ 	CLK_VENC_LT,
+ 	CLK_ETHIF,
++	CLK_VDEC,
+ 	CLK_MAX,
+ };
  
-+#include <dt-bindings/clock/mt6797-clk.h>
-+#include <dt-bindings/power/mt6797-power.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -81,6 +82,7 @@ enum clk_id {
+ 	"venc",
+ 	"venc_lt",
+ 	"ethif",
++	"vdec",
+ 	NULL,
+ };
  
-@@ -127,6 +129,35 @@
- 			     (GIC_CPU_MASK_SIMPLE(10) | IRQ_TYPE_LEVEL_LOW)>;
- 	};
+@@ -107,21 +109,28 @@ struct scp_domain {
+ 	struct regulator *supply;
+ };
  
-+	topckgen: topckgen@10000000 {
-+		compatible = "mediatek,mt6797-topckgen";
-+		reg = <0 0x10000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
++struct scp_ctrl_reg {
++	int pwr_sta_offs;
++	int pwr_sta2nd_offs;
++};
 +
-+	infrasys: infracfg_ao@10001000 {
-+		compatible = "mediatek,mt6797-infracfg", "syscon";
-+		reg = <0 0x10001000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
-+	scpsys: scpsys@10006000 {
-+		compatible = "mediatek,mt6797-scpsys";
-+		#power-domain-cells = <1>;
-+		reg = <0 0x10006000 0 0x1000>;
-+		clocks = <&topckgen CLK_TOP_MUX_MFG>,
-+			 <&topckgen CLK_TOP_MUX_MM>,
-+			 <&topckgen CLK_TOP_MUX_VDEC>;
-+		clock-names = "mfg", "mm", "vdec";
-+		infracfg = <&infrasys>;
-+	};
-+
-+	apmixedsys: apmixed@1000c000 {
-+		compatible = "mediatek,mt6797-apmixedsys";
-+		reg = <0 0x1000c000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
- 	sysirq: intpol-controller@10200620 {
- 		compatible = "mediatek,mt6797-sysirq",
- 			     "mediatek,mt6577-sysirq";
-@@ -143,7 +174,9 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11002000 0 0x400>;
- 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&clk26m>;
-+		clocks = <&infrasys CLK_INFRA_UART0>,
-+			 <&infrasys CLK_INFRA_AP_DMA>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
+ struct scp {
+ 	struct scp_domain *domains;
+ 	struct genpd_onecell_data pd_data;
+ 	struct device *dev;
+ 	void __iomem *base;
+ 	struct regmap *infracfg;
++	struct scp_ctrl_reg ctrl_reg;
+ };
  
-@@ -152,7 +185,9 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11003000 0 0x400>;
- 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&clk26m>;
-+		clocks = <&infrasys CLK_INFRA_UART1>,
-+			 <&infrasys CLK_INFRA_AP_DMA>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
+ static int scpsys_domain_is_on(struct scp_domain *scpd)
+ {
+ 	struct scp *scp = scpd->scp;
  
-@@ -161,7 +196,9 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11004000 0 0x400>;
- 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&clk26m>;
-+		clocks = <&infrasys CLK_INFRA_UART2>,
-+			 <&infrasys CLK_INFRA_AP_DMA>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
+-	u32 status = readl(scp->base + SPM_PWR_STATUS) & scpd->data->sta_mask;
+-	u32 status2 = readl(scp->base + SPM_PWR_STATUS_2ND) &
+-				scpd->data->sta_mask;
++	u32 status = readl(scp->base + scp->ctrl_reg.pwr_sta_offs) &
++						scpd->data->sta_mask;
++	u32 status2 = readl(scp->base + scp->ctrl_reg.pwr_sta2nd_offs) &
++						scpd->data->sta_mask;
  
-@@ -170,10 +207,36 @@
- 			     "mediatek,mt6577-uart";
- 		reg = <0 0x11005000 0 0x400>;
- 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
--		clocks = <&clk26m>;
-+		clocks = <&infrasys CLK_INFRA_UART3>,
-+			 <&infrasys CLK_INFRA_AP_DMA>;
-+		clock-names = "baud", "bus";
- 		status = "disabled";
- 	};
+ 	/*
+ 	 * A domain is on when both status bits are set. If only one is set
+@@ -346,7 +355,8 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
+ }
  
-+	mmsys: mmsys_config@14000000 {
-+		compatible = "mediatek,mt6797-mmsys", "syscon";
-+		reg = <0 0x14000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
+ static struct scp *init_scp(struct platform_device *pdev,
+-			const struct scp_domain_data *scp_domain_data, int num)
++			const struct scp_domain_data *scp_domain_data, int num,
++			struct scp_ctrl_reg *scp_ctrl_reg)
+ {
+ 	struct genpd_onecell_data *pd_data;
+ 	struct resource *res;
+@@ -358,6 +368,9 @@ static struct scp *init_scp(struct platform_device *pdev,
+ 	if (!scp)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	scp->ctrl_reg.pwr_sta_offs = scp_ctrl_reg->pwr_sta_offs;
++	scp->ctrl_reg.pwr_sta2nd_offs = scp_ctrl_reg->pwr_sta2nd_offs;
 +
-+	imgsys: imgsys_config@15000000  {
-+		compatible = "mediatek,mt6797-imgsys", "syscon";
-+		reg = <0 0x15000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
+ 	scp->dev = &pdev->dev;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -556,8 +569,13 @@ static void mtk_register_power_domains(struct platform_device *pdev,
+ static int __init scpsys_probe_mt2701(struct platform_device *pdev)
+ {
+ 	struct scp *scp;
++	struct scp_ctrl_reg scp_reg;
+ 
+-	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701);
++	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
++	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
 +
-+	vdecsys: vdec_gcon@16000000 {
-+		compatible = "mediatek,mt6797-vdecsys", "syscon";
-+		reg = <0 0x16000000 0 0x10000>;
-+		#clock-cells = <1>;
-+	};
++	scp = init_scp(pdev, scp_domain_data_mt2701, NUM_DOMAINS_MT2701,
++		       &scp_reg);
+ 	if (IS_ERR(scp))
+ 		return PTR_ERR(scp);
+ 
+@@ -667,8 +685,13 @@ static int __init scpsys_probe_mt8173(struct platform_device *pdev)
+ 	struct scp *scp;
+ 	struct genpd_onecell_data *pd_data;
+ 	int ret;
++	struct scp_ctrl_reg scp_reg;
 +
-+	vencsys: venc_gcon@17000000 {
-+		compatible = "mediatek,mt6797-vencsys", "syscon";
-+		reg = <0 0x17000000 0 0x1000>;
-+		#clock-cells = <1>;
-+	};
-+
- 	gic: interrupt-controller@19000000 {
- 		compatible = "arm,gic-v3";
- 		#interrupt-cells = <3>;
++	scp_reg.pwr_sta_offs = SPM_PWR_STATUS;
++	scp_reg.pwr_sta2nd_offs = SPM_PWR_STATUS_2ND;
+ 
+-	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173);
++	scp = init_scp(pdev, scp_domain_data_mt8173, NUM_DOMAINS_MT8173,
++		       &scp_reg);
+ 	if (IS_ERR(scp))
+ 		return PTR_ERR(scp);
+ 
 -- 
 1.7.9.5
