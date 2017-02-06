@@ -1,753 +1,547 @@
-From: eajames@linux.vnet.ibm.com
-Subject: [PATCH linux v6 1/6] hwmon: Add core On-Chip Controller support for POWER CPUs
-Date: Mon,  6 Feb 2017 14:27:07 -0600
-Message-ID: <1486412832-21854-2-git-send-email-eajames@linux.vnet.ibm.com>
-References: <1486412832-21854-1-git-send-email-eajames@linux.vnet.ibm.com>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <1486412832-21854-1-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: linux@roeck-us.net
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org, "Edward A. James" <eajames@us.ibm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 2/8] mmc: bcm2835: Add new driver for the sdhost
+ controller.
+Date: Mon, 6 Feb 2017 21:34:00 +0100 (CET)
+Message-ID: <1708749883.208474.1486413240581@email.1und1.de>
+References: <1486123913-31705-1-git-send-email-kraxel@redhat.com>
+ <1486123913-31705-3-git-send-email-kraxel@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486123913-31705-3-git-send-email-kraxel@redhat.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Edward A. James" <eajames@us.ibm.com>
+Hi Gerd,
 
-Add core support for polling the OCC for it's sensor data and parsing that
-data into sensor-specific information.
+first of all here my wishlist for the next round of this driver:
+* compile test the series with ARM and ARM64
+* add me in CC for all patches of the series
+* run checkpatch.pl before submission
+* apply the patch series to your cgit repo
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
-Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
----
- Documentation/hwmon/occ    |  40 ++++
- MAINTAINERS                |   7 +
- drivers/hwmon/Kconfig      |   2 +
- drivers/hwmon/Makefile     |   1 +
- drivers/hwmon/occ/Kconfig  |  15 ++
- drivers/hwmon/occ/Makefile |   1 +
- drivers/hwmon/occ/occ.c    | 450 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/hwmon/occ/occ.h    |  81 ++++++++
- drivers/hwmon/occ/scom.h   |  47 +++++
- 9 files changed, 644 insertions(+)
- create mode 100644 Documentation/hwmon/occ
- create mode 100644 drivers/hwmon/occ/Kconfig
- create mode 100644 drivers/hwmon/occ/Makefile
- create mode 100644 drivers/hwmon/occ/occ.c
- create mode 100644 drivers/hwmon/occ/occ.h
- create mode 100644 drivers/hwmon/occ/scom.h
+> Gerd Hoffmann <kraxel@redhat.com> hat am 3. Februar 2017 um 13:11 geschrieben:
+> 
+> 
+> From: Eric Anholt <eric@anholt.net>
+> 
+> The 2835 has two SD controllers: The Arasan sdhci controller (supported
+> by the iproc driver) and a custom sdhost controller.  This patch adds a
+> driver for the latter.
+> 
+> The sdhci controller supports both sdcard and sdio.  The sdhost
+> controller supports the sdcard only, but has better performance.  Also
 
-diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ
-new file mode 100644
-index 0000000..79d1642
---- /dev/null
-+++ b/Documentation/hwmon/occ
-@@ -0,0 +1,40 @@
-+Kernel driver occ
-+=================
-+
-+Supported chips:
-+ * ASPEED AST2400
-+ * ASPEED AST2500
-+
-+Please note that the chip must be connected to a POWER8 or POWER9 processor
-+(see the BMC - Host Communications section).
-+
-+Author: Eddie James <eajames@us.ibm.com>
-+
-+Description
-+-----------
-+
-+This driver implements support for the OCC (On-Chip Controller) on the IBM
-+POWER8 and POWER9 processors, from a BMC (Baseboard Management Controller). The
-+OCC is an embedded processor that provides real time power and thermal
-+monitoring.
-+
-+This driver provides an interface on a BMC to poll OCC sensor data, set user
-+power caps, and perform some basic OCC error handling.
-+
-+Currently, all versions of the OCC support four types of sensor data: power,
-+temperature, frequency, and "caps," which indicate limits and thresholds used
-+internally on the OCC.
-+
-+BMC - Host Communications
-+-------------------------
-+
-+For the POWER8 application, the BMC can communicate with the P8 over I2C bus.
-+However, to access the OCC register space, any data transfer must use a SCOM
-+operation. SCOM is a procedure to initiate a data transfer, typically of 8
-+bytes. SCOMs consist of writing a 32-bit command register and then
-+reading/writing two 32-bit data registers. This driver implements these
-+SCOM operations over I2C bus in order to communicate with the OCC.
-+
-+For the POWER9 application, the BMC can communicate with the P9 over FSI bus
-+and SBE engine. Once again, SCOM operations are required. This driver will
-+implement SCOM ops over FSI/SBE. This will require the FSI driver.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5f10c28..193a13b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9128,6 +9128,13 @@ T:	git git://linuxtv.org/media_tree.git
- S:	Maintained
- F:	drivers/media/i2c/ov7670.c
- 
-+ON-CHIP CONTROLLER HWMON DRIVER
-+M:	Eddie James <eajames@us.ibm.com>
-+L:	linux-hwmon@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/hwmon/occ
-+F:	drivers/hwmon/occ/
-+
- ONENAND FLASH DRIVER
- M:	Kyungmin Park <kyungmin.park@samsung.com>
- L:	linux-mtd@lists.infradead.org
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 190d270..e80ca81 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1240,6 +1240,8 @@ config SENSORS_NSA320
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nsa320-hwmon.
- 
-+source drivers/hwmon/occ/Kconfig
-+
- config SENSORS_PCF8591
- 	tristate "Philips PCF8591 ADC/DAC"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index d2cb7e8..c7ec5d4 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -169,6 +169,7 @@ obj-$(CONFIG_SENSORS_WM831X)	+= wm831x-hwmon.o
- obj-$(CONFIG_SENSORS_WM8350)	+= wm8350-hwmon.o
- obj-$(CONFIG_SENSORS_XGENE)	+= xgene-hwmon.o
- 
-+obj-$(CONFIG_SENSORS_PPC_OCC)	+= occ/
- obj-$(CONFIG_PMBUS)		+= pmbus/
- 
- ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
-new file mode 100644
-index 0000000..cdb64a7
---- /dev/null
-+++ b/drivers/hwmon/occ/Kconfig
-@@ -0,0 +1,15 @@
-+#
-+# On Chip Controller configuration
-+#
-+
-+menuconfig SENSORS_PPC_OCC
-+	bool "PPC On-Chip Controller"
-+	help
-+	  If you say yes here you get support to monitor Power CPU
-+	  sensors via the On-Chip Controller (OCC).
-+
-+	  Generally this is used by management controllers such as a BMC
-+	  on an OpenPower system.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called occ.
-diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
-new file mode 100644
-index 0000000..93cb52f
---- /dev/null
-+++ b/drivers/hwmon/occ/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_SENSORS_PPC_OCC) += occ.o
-diff --git a/drivers/hwmon/occ/occ.c b/drivers/hwmon/occ/occ.c
-new file mode 100644
-index 0000000..06e4bde
---- /dev/null
-+++ b/drivers/hwmon/occ/occ.c
-@@ -0,0 +1,450 @@
-+/*
-+ * occ.c - OCC hwmon driver
-+ *
-+ * This file contains the methods and data structures for the OCC hwmon driver.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <asm/unaligned.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/jiffies.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/slab.h>
-+#include "occ.h"
-+
-+#define OCC_DATA_MAX		4096
-+#define OCC_DATA_MIN		40
-+#define OCC_BMC_TIMEOUT_MS	20000
-+
-+/* To generate attn to OCC */
-+#define ATTN_DATA		0x0006B035
-+
-+/* For BMC to read/write SRAM */
-+#define OCB_ADDRESS		0x0006B070
-+#define OCB_DATA		0x0006B075
-+#define OCB_STATUS_CONTROL_AND	0x0006B072
-+#define OCB_STATUS_CONTROL_OR	0x0006B073
-+
-+/* To init OCB */
-+#define OCB_AND_INIT0		0xFBFFFFFF
-+#define OCB_AND_INIT1		0xFFFFFFFF
-+#define OCB_OR_INIT0		0x08000000
-+#define OCB_OR_INIT1		0x00000000
-+
-+/* To generate attention on OCC */
-+#define ATTN0			0x01010000
-+#define ATTN1			0x00000000
-+
-+/* OCC return status */
-+#define RESP_RETURN_CMD_IN_PRG	0xFF
-+#define RESP_RETURN_SUCCESS	0
-+#define RESP_RETURN_CMD_INVAL	0x11
-+#define RESP_RETURN_CMD_LEN	0x12
-+#define RESP_RETURN_DATA_INVAL	0x13
-+#define RESP_RETURN_CHKSUM	0x14
-+#define RESP_RETURN_OCC_ERR	0x15
-+#define RESP_RETURN_STATE	0x16
-+
-+/* time interval to retry on "command in progress" return status */
-+#define CMD_IN_PRG_INT_MS	100
-+#define CMD_IN_PRG_RETRIES	(OCC_BMC_TIMEOUT_MS / CMD_IN_PRG_INT_MS)
-+
-+/* OCC command definitions */
-+#define OCC_POLL		0
-+#define OCC_SET_USER_POWR_CAP	0x22
-+
-+/* OCC poll command data */
-+#define OCC_POLL_STAT_SENSOR	0x10
-+
-+/* OCC response data offsets */
-+#define RESP_RETURN_STATUS		2
-+#define RESP_DATA_LENGTH		3
-+#define RESP_HEADER_OFFSET		5
-+#define SENSOR_STR_OFFSET		37
-+#define NUM_SENSOR_BLOCKS_OFFSET	43
-+#define SENSOR_BLOCK_OFFSET		45
-+
-+/* occ_poll_header
-+ * structure to match the raw occ poll response data
-+ */
-+struct occ_poll_header {
-+	u8 status;
-+	u8 ext_status;
-+	u8 occs_present;
-+	u8 config;
-+	u8 occ_state;
-+	u8 mode;
-+	u8 ips_status;
-+	u8 error_log_id;
-+	u32 error_log_addr_start;
-+	u16 error_log_length;
-+	u8 reserved2;
-+	u8 reserved3;
-+	u8 occ_code_level[16];
-+	u8 sensor_eye_catcher[6];
-+	u8 num_sensor_blocks;
-+	u8 sensor_data_version;
-+} __attribute__((packed, aligned(4)));
-+
-+struct occ_response {
-+	struct occ_poll_header header;
-+	struct occ_blocks data;
-+};
-+
-+struct occ {
-+	struct device *dev;
-+	void *bus;
-+	struct occ_bus_ops bus_ops;
-+	struct occ_ops ops;
-+	struct occ_config config;
-+	unsigned long last_updated;
-+	struct mutex update_lock;
-+	struct occ_response response;
-+	bool valid;
-+	u8 *raw_data;
-+};
-+
-+static int parse_occ_response(struct occ *driver, u16 num_bytes)
-+{
-+	int b;
-+	int s;
-+	int rc;
-+	unsigned int offset = SENSOR_BLOCK_OFFSET;
-+	int sensor_type;
-+	u8 num_sensor_blocks;
-+	struct sensor_data_block_header *block;
-+	void *sensors;
-+	struct device *dev = driver->dev;
-+	u8 *data = driver->raw_data;
-+	struct occ_response *resp = &driver->response;
-+
-+	/* check if the data is valid */
-+	if (strncmp(&data[SENSOR_STR_OFFSET], "SENSOR", 6) != 0) {
-+		dev_err(dev, "no SENSOR string in response\n");
-+		return -ENODATA;
-+	}
-+
-+	num_sensor_blocks = data[NUM_SENSOR_BLOCKS_OFFSET];
-+	if (num_sensor_blocks == 0) {
-+		dev_warn(dev, "no sensor blocks available\n");
-+		return -ENODATA;
-+	}
-+
-+	memcpy(&resp->header, &data[RESP_HEADER_OFFSET],
-+	       sizeof(struct occ_poll_header));
-+
-+	/* data length starts at actual data */
-+	num_bytes += RESP_HEADER_OFFSET;
-+
-+	/* translate fields > 1 byte */
-+	resp->header.error_log_addr_start =
-+		be32_to_cpu(resp->header.error_log_addr_start);
-+	resp->header.error_log_length =
-+		be16_to_cpu(resp->header.error_log_length);
-+
-+	for (b = 0; b < num_sensor_blocks && b < MAX_OCC_SENSOR_TYPE; b++) {
-+		if (offset + sizeof(struct sensor_data_block_header) >
-+		    num_bytes) {
-+			dev_warn(dev, "exceeded data length\n");
-+			return 0;
-+		}
-+
-+		block = (struct sensor_data_block_header *)&data[offset];
-+		offset += sizeof(struct sensor_data_block_header);
-+
-+		if (strncmp(block->sensor_type, "FREQ", 4) == 0)
-+			sensor_type = FREQ;
-+		else if (strncmp(block->sensor_type, "TEMP", 4) == 0)
-+			sensor_type = TEMP;
-+		else if (strncmp(block->sensor_type, "POWR", 4) == 0)
-+			sensor_type = POWER;
-+		else if (strncmp(block->sensor_type, "CAPS", 4) == 0)
-+			sensor_type = CAPS;
-+		else {
-+			dev_warn(dev, "sensor type not supported %.4s\n",
-+				block->sensor_type);
-+			continue;
-+		}
-+
-+		sensors = &resp->data.blocks[b].sensors;
-+		if (!sensors) {
-+			/* first poll response */
-+			sensors = driver->ops.alloc_sensor(dev, sensor_type,
-+							   block->num_sensors);
-+			if (!sensors)
-+				return -ENOMEM;
-+
-+			resp->data.blocks[b].sensors = sensors;
-+			resp->data.sensor_block_id[sensor_type] = b;
-+			resp->data.blocks[b].header = *block;
-+		}
-+		else if (block->sensor_length !=
-+			 resp->data.blocks[b].header.sensor_length) {
-+			dev_warn(dev,
-+				 "different sensor length than first poll\n");
-+			continue;
-+		}
-+
-+		for (s = 0; s < block->num_sensors &&
-+		     s < resp->data.blocks[b].header.num_sensors; s++) {
-+			if (offset + block->sensor_length > num_bytes) {
-+				dev_warn(dev, "exceeded data length\n");
-+				return 0;
-+			}
-+
-+			driver->ops.parse_sensor(data, sensors, sensor_type,
-+						 offset, s);
-+			offset += block->sensor_length;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static u8 occ_send_cmd(struct occ *driver, u8 seq, u8 type, u16 length,
-+		       const u8 *data, u8 *resp)
-+{
-+	u32 cmd1, cmd2 = 0;
-+	u16 checksum = 0;
-+	bool retry = false;
-+	int i, rc, tries = 0;
-+
-+	cmd1 = (seq << 24) | (type << 16) | length;
-+	memcpy(&cmd2, data, length);
-+	cmd2 <<= ((4 - length) * 8);
-+
-+	/* checksum: sum of every bytes of cmd1, cmd2 */
-+	for (i = 0; i < 4; i++) {
-+		checksum += (cmd1 >> (i * 8)) & 0xFF;
-+		checksum += (cmd2 >> (i * 8)) & 0xFF;
-+	}
-+
-+	cmd2 |= checksum << ((2 - length) * 8);
-+
-+	/* Init OCB */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_OR,
-+				     OCB_OR_INIT0, OCB_OR_INIT1);
-+	if (rc)
-+		goto err;
-+
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_STATUS_CONTROL_AND,
-+				     OCB_AND_INIT0, OCB_AND_INIT1);
-+	if (rc)
-+		goto err;
-+
-+	/* Send command, 2nd half of the 64-bit addr is unused (write 0) */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_ADDRESS,
-+				     driver->config.command_addr, 0);
-+	if (rc)
-+		goto err;
-+
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_DATA, cmd1, cmd2);
-+	if (rc)
-+		goto err;
-+
-+	/* Trigger attention */
-+	rc = driver->bus_ops.putscom(driver->bus, ATTN_DATA, ATTN0, ATTN1);
-+	if (rc)
-+		goto err;
-+
-+	/* Get response data */
-+	rc = driver->bus_ops.putscom(driver->bus, OCB_ADDRESS,
-+				     driver->config.response_addr, 0);
-+	if (rc)
-+		goto err;
-+
-+	do {
-+		if (retry) {
-+			set_current_state(TASK_INTERRUPTIBLE);
-+			schedule_timeout(msecs_to_jiffies(CMD_IN_PRG_INT_MS));
-+		}
-+
-+		rc = driver->bus_ops.getscom(driver->bus, OCB_DATA,
-+					     (u64 *)resp);
-+		if (rc)
-+			goto err;
-+
-+		/* retry if we get "command in progress" return status */
-+		retry = resp[RESP_RETURN_STATUS] == RESP_RETURN_CMD_IN_PRG &&
-+			tries++ < CMD_IN_PRG_RETRIES;
-+	} while (retry);
-+
-+	/* check the occ response */
-+	switch (resp[RESP_RETURN_STATUS]) {
-+	case RESP_RETURN_CMD_IN_PRG:
-+		rc = -EALREADY;
-+		break;
-+	case RESP_RETURN_SUCCESS:
-+		rc = 0;
-+		break;
-+	case RESP_RETURN_CMD_INVAL:
-+	case RESP_RETURN_CMD_LEN:
-+	case RESP_RETURN_DATA_INVAL:
-+	case RESP_RETURN_CHKSUM:
-+		rc = -EINVAL;
-+		break;
-+	case RESP_RETURN_OCC_ERR:
-+		rc = -EREMOTE;
-+		break;
-+	default:
-+		rc = -EFAULT;
-+	}
-+
-+	if (rc < 0)
-+		dev_warn(driver->dev, "occ bad response:%d\n",
-+			 resp[RESP_RETURN_STATUS]);
-+
-+	return rc;
-+
-+err:
-+	dev_err(driver->dev, "scom op failed rc:%d\n", rc);
-+	return rc;
-+}
-+
-+static int occ_get_all(struct occ *driver)
-+{
-+	int i = 0, rc;
-+	u8 *occ_data = driver->raw_data;
-+	u16 num_bytes;
-+	const u8 poll_cmd_data = OCC_POLL_STAT_SENSOR;
-+	struct device *dev = driver->dev;
-+
-+	memset(occ_data, 0, OCC_DATA_MAX);
-+
-+	rc = occ_send_cmd(driver, 0, OCC_POLL, 1, &poll_cmd_data, occ_data);
-+	if (rc)
-+		return rc;
-+
-+	num_bytes = get_unaligned((u16 *)&occ_data[RESP_DATA_LENGTH]);
-+	num_bytes = be16_to_cpu(num_bytes);
-+
-+	if (num_bytes > OCC_DATA_MAX || num_bytes < OCC_DATA_MIN) {
-+		dev_err(dev, "bad OCC data length:%d\n", num_bytes);
-+		return -EINVAL;
-+	}
-+
-+	/* read remaining data, 8 byte scoms at a time */
-+	for (i = 8; i < num_bytes + 8; i += 8) {
-+		rc = driver->bus_ops.getscom(driver->bus, OCB_DATA,
-+					     (u64 *)&occ_data[i]);
-+		if (rc) {
-+			dev_err(dev, "getscom op failed rc:%d\n", rc);
-+			return rc;
-+		}
-+	}
-+
-+	/* don't need more sanity checks; buffer is alloc'd for max response
-+	 * size so we just check for valid data in parse_occ_response
-+	 */
-+	rc = parse_occ_response(driver, num_bytes);
-+
-+	return rc;
-+}
-+
-+int occ_update_device(struct occ *driver)
-+{
-+	int rc = 0;
-+
-+	mutex_lock(&driver->update_lock);
-+
-+	if (time_after(jiffies, driver->last_updated + HZ) || !driver->valid) {
-+		driver->valid = true;
-+
-+		rc = occ_get_all(driver);
-+		if (rc)
-+			driver->valid = false;
-+
-+		driver->last_updated = jiffies;
-+	}
-+
-+	mutex_unlock(&driver->update_lock);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL(occ_update_device);
-+
-+void *occ_get_sensor(struct occ *driver, int sensor_type)
-+{
-+	int rc;
-+	int type_id;
-+
-+	/* occ_update_device locks the update lock */
-+	rc = occ_update_device(driver);
-+	if (rc)
-+		return ERR_PTR(rc);
-+
-+	type_id = driver->response.data.sensor_block_id[sensor_type];
-+	if (type_id == -1)
-+		return ERR_PTR(-ENODATA);
-+
-+	return driver->response.data.blocks[type_id].sensors;
-+}
-+EXPORT_SYMBOL(occ_get_sensor);
-+
-+int occ_get_sensor_field(struct occ *occ, int sensor_type, int sensor_num,
-+			 u32 hwmon, long *val)
-+{
-+	return occ->ops.get_sensor(occ, sensor_type, sensor_num, hwmon, val);
-+}
-+EXPORT_SYMBOL(occ_get_sensor_field);
-+
-+void occ_get_response_blocks(struct occ *occ, struct occ_blocks **blocks)
-+{
-+	*blocks = &occ->response.data;
-+}
-+EXPORT_SYMBOL(occ_get_response_blocks);
-+
-+int occ_set_user_powercap(struct occ *occ, u16 cap)
-+{
-+	u8 resp[8];
-+
-+	cap = cpu_to_be16(cap);
-+
-+	return occ_send_cmd(occ, 0, OCC_SET_USER_POWR_CAP, 2, (const u8 *)&cap,
-+			    resp);
-+}
-+EXPORT_SYMBOL(occ_set_user_powercap);
-+
-+struct occ *occ_start(struct device *dev, void *bus,
-+		      struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
-+		      const struct occ_config *config)
-+{
-+	struct occ *driver = devm_kzalloc(dev, sizeof(struct occ), GFP_KERNEL);
-+
-+	if (!driver)
-+		return ERR_PTR(-ENOMEM);
-+
-+	driver->dev = dev;
-+	driver->bus = bus;
-+	driver->bus_ops = *bus_ops;
-+	driver->ops = *ops;
-+	driver->config = *config;
-+	driver->raw_data = devm_kzalloc(dev, OCC_DATA_MAX, GFP_KERNEL);
-+	if (!driver->raw_data)
-+		return ERR_PTR(-ENOMEM);
-+
-+	mutex_init(&driver->update_lock);
-+
-+	return driver;
-+}
-+EXPORT_SYMBOL(occ_start);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("OCC hwmon core driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/occ.h b/drivers/hwmon/occ/occ.h
-new file mode 100644
-index 0000000..2f9e3c8
---- /dev/null
-+++ b/drivers/hwmon/occ/occ.h
-@@ -0,0 +1,81 @@
-+/*
-+ * occ.h - hwmon OCC driver
-+ *
-+ * This file contains data structures and function prototypes for common access
-+ * between different bus protocols and host systems.
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __OCC_H__
-+#define __OCC_H__
-+
-+#include "scom.h"
-+
-+struct device;
-+struct occ;
-+
-+/* sensor_data_block_header
-+ * structure to match the raw occ sensor block header
-+ */
-+struct sensor_data_block_header {
-+	u8 sensor_type[4];
-+	u8 reserved0;
-+	u8 sensor_format;
-+	u8 sensor_length;
-+	u8 num_sensors;
-+} __attribute__((packed, aligned(4)));
-+
-+struct sensor_data_block {
-+	struct sensor_data_block_header header;
-+	void *sensors;
-+};
-+
-+enum sensor_type {
-+	FREQ = 0,
-+	TEMP,
-+	POWER,
-+	CAPS,
-+	MAX_OCC_SENSOR_TYPE
-+};
-+
-+struct occ_ops {
-+	void (*parse_sensor)(u8 *data, void *sensor, int sensor_type, int off,
-+			     int snum);
-+	void *(*alloc_sensor)(struct device *dev, int sensor_type,
-+			      int num_sensors);
-+	int (*get_sensor)(struct occ *driver, int sensor_type, int sensor_num,
-+			  u32 hwmon, long *val);
-+};
-+
-+struct occ_config {
-+	u32 command_addr;
-+	u32 response_addr;
-+};
-+
-+struct occ_blocks {
-+	int sensor_block_id[MAX_OCC_SENSOR_TYPE];
-+	struct sensor_data_block blocks[MAX_OCC_SENSOR_TYPE];
-+};
-+
-+struct occ *occ_start(struct device *dev, void *bus,
-+		      struct occ_bus_ops *bus_ops, const struct occ_ops *ops,
-+		      const struct occ_config *config);
-+void *occ_get_sensor(struct occ *occ, int sensor_type);
-+int occ_get_sensor_field(struct occ *occ, int sensor_type, int sensor_num,
-+			 u32 hwmon, long *val);
-+void occ_get_response_blocks(struct occ *occ, struct occ_blocks **blocks);
-+int occ_update_device(struct occ *driver);
-+int occ_set_user_powercap(struct occ *occ, u16 cap);
-+
-+#endif /* __OCC_H__ */
-diff --git a/drivers/hwmon/occ/scom.h b/drivers/hwmon/occ/scom.h
-new file mode 100644
-index 0000000..b0691f3
---- /dev/null
-+++ b/drivers/hwmon/occ/scom.h
-@@ -0,0 +1,47 @@
-+/*
-+ * scom.h - hwmon OCC driver
-+ *
-+ * This file contains data structures for scom operations to the OCC
-+ *
-+ * Copyright 2016 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __SCOM_H__
-+#define __SCOM_H__
-+
-+/*
-+ * occ_bus_ops - represent the low-level transfer methods to communicate with
-+ * the OCC.
-+ *
-+ * getscom - OCC scom read
-+ * @bus: handle to slave device
-+ * @address: address
-+ * @data: where to store data read from slave; buffer size must be at least
-+ * eight bytes.
-+ *
-+ * Returns 0 on success or a negative errno on error
-+ *
-+ * putscom - OCC scom write
-+ * @bus: handle to slave device
-+ * @address: address
-+ * @data0: first data word to write
-+ * @data1: second data word to write
-+ *
-+ * Returns 0 on success or a negative errno on error
-+ */
-+struct occ_bus_ops {
-+	int (*getscom)(void *bus, u32 address, u64 *data);
-+	int (*putscom)(void *bus, u32 address, u32 data0, u32 data1);
-+};
-+
-+#endif /* __SCOM_H__ */
--- 
-1.8.3.1
+Sorry, for the confusion. I was wrong. According to the registers the SDHOST should also support SDIO. It's a feature we could implement later.
 
+> note that the rpi3 has sdio wifi, so driving the sdcard with the sdhost
+> controller allows to use the sdhci controller for wifi support.
+> 
+> The configuration is done by devicetree via pin muxing.  Both SD
+> controller are available on the same pins (2 pin groups = pin 22 to 27 +
+> pin 48 to 53).  So it's possible to use both SD controllers at the same
+> time with different pin groups.
+> 
+> The code was originally written by Phil Elwell in the downstream
+> Rasbperry Pi tree, and I did a major cleanup on it (+319, -707 lines
+> out of the original 2055) for inclusion.
+
+I think it would be helpful to known the downstream commit, because this commit [1]
+doesn't seem to be included.
+
+[1] - https://github.com/raspberrypi/linux/commit/ea4b1c5c2ddbb6caba43ab9b0103542a4ca7e1f0
+
+I've found and fixed a lot of issues in this version and i think it would be better if i send you the patches for squashing them all together. Here is the preview for my patch series:
+
+Stefan Wahren (15):
+  mmc: bcm2835: Add missing include for threaded irq
+  mmc: bcm2835: Remove CMD_DALLY_US
+  mmc: bcm2835: Fix pio_timeout handling
+  mmc: bcm2835: Remove unnecessary return in bcm2835_data_irq
+  mmc: bcm2835: Handle error cases during probe
+  mmc: bcm2835: Print clk_max as decimal
+  mmc: bcm2835: Downrate message in case of PIO fallback
+  mmc: bcm2835: Don't unveil the data pointer
+  mmc: bcm2835: remove unused host members
+  mmc: bcm2835: Avoid unnecessary linebreaks
+  mmc: bcm2835: Add leading zero to register dumps
+  mmc: bcm2835: Align struct members with tabs
+  mmc: bcm2835: Rearrange bcm2835_finish_request()
+  mmc: bcm2835: Rearrange bcm2835_dma_complete_work()
+  mmc: bcm2835: Rename Kconfig switch
+
+I'll send it after my tests. In the following review i will mention only the issues which aren't fixed in my patch series.
+
+> diff --git a/drivers/mmc/host/bcm2835.c b/drivers/mmc/host/bcm2835.c
+> new file mode 100644
+> index 0000000..5ea8bd6
+> --- /dev/null
+> +++ b/drivers/mmc/host/bcm2835.c
+> @@ -0,0 +1,1521 @@
+> +/*
+> + * bcm2835 sdhost driver.
+> + *
+> + * The 2835 has two SD controllers: The Arasan sdhci controller
+> + * (supported by the iproc driver) and a custom sdhost controller
+> + * (supported by this driver).
+> + *
+> + * The sdhci controller supports both sdcard and sdio.  The sdhost
+> + * controller supports the sdcard only, but has better performance.
+> + * Also note that the rpi3 has sdio wifi, so driving the sdcard with
+> + * the sdhost controller allows to use the sdhci controller for wifi
+> + * support.
+> + *
+> + * The configuration is done by devicetree via pin muxing.  Both
+> + * SD controller are available on the same pins (2 pin groups = pin 22
+> + * to 27 + pin 48 to 53).  So it's possible to use both SD controllers
+> + * at the same time with different pin groups.
+> + *
+> + * Author:      Phil Elwell <phil@raspberrypi.org>
+> + *              Copyright (C) 2015-2016 Raspberry Pi (Trading) Ltd.
+> + *
+> + * Based on
+> + *  mmc-bcm2835.c by Gellert Weisz
+> + * which is, in turn, based on
+> + *  sdhci-bcm2708.c by Broadcom
+> + *  sdhci-bcm2835.c by Stephen Warren and Oleksandr Tymoshenko
+> + *  sdhci.c and sdhci-pci.c by Pierre Ossman
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/dmaengine.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/err.h>
+> +#include <linux/highmem.h>
+> +#include <linux/io.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/scatterlist.h>
+> +#include <linux/time.h>
+> +#include <linux/workqueue.h>
+> +
+> +#include <linux/mmc/host.h>
+> +#include <linux/mmc/mmc.h>
+> +#include <linux/mmc/sd.h>
+> +
+> +#define SDCMD  0x00 /* Command to SD card              - 16 R/W */
+> +#define SDARG  0x04 /* Argument to SD card             - 32 R/W */
+> +#define SDTOUT 0x08 /* Start value for timeout counter - 32 R/W */
+> +#define SDCDIV 0x0c /* Start value for clock divider   - 11 R/W */
+> +#define SDRSP0 0x10 /* SD card response (31:0)         - 32 R   */
+> +#define SDRSP1 0x14 /* SD card response (63:32)        - 32 R   */
+> +#define SDRSP2 0x18 /* SD card response (95:64)        - 32 R   */
+> +#define SDRSP3 0x1c /* SD card response (127:96)       - 32 R   */
+> +#define SDHSTS 0x20 /* SD host status                  - 11 R   */
+> +#define SDVDD  0x30 /* SD card power control           -  1 R/W */
+> +#define SDEDM  0x34 /* Emergency Debug Mode            - 13 R/W */
+> +#define SDHCFG 0x38 /* Host configuration              -  2 R/W */
+> +#define SDHBCT 0x3c /* Host byte count (debug)         - 32 R/W */
+> +#define SDDATA 0x40 /* Data to/from SD card            - 32 R/W */
+> +#define SDHBLC 0x50 /* Host block count (SDIO/SDHC)    -  9 R/W */
+> +
+> +#define SDCMD_NEW_FLAG			0x8000
+> +#define SDCMD_FAIL_FLAG			0x4000
+> +#define SDCMD_BUSYWAIT			0x800
+> +#define SDCMD_NO_RESPONSE		0x400
+> +#define SDCMD_LONG_RESPONSE		0x200
+> +#define SDCMD_WRITE_CMD			0x80
+> +#define SDCMD_READ_CMD			0x40
+> +#define SDCMD_CMD_MASK			0x3f
+> +
+> +#define SDCDIV_MAX_CDIV			0x7ff
+> +
+> +#define SDHSTS_BUSY_IRPT		0x400
+> +#define SDHSTS_BLOCK_IRPT		0x200
+> +#define SDHSTS_SDIO_IRPT		0x100
+> +#define SDHSTS_REW_TIME_OUT		0x80
+> +#define SDHSTS_CMD_TIME_OUT		0x40
+> +#define SDHSTS_CRC16_ERROR		0x20
+> +#define SDHSTS_CRC7_ERROR		0x10
+> +#define SDHSTS_FIFO_ERROR		0x08
+> +/* Reserved */
+> +/* Reserved */
+> +#define SDHSTS_DATA_FLAG		0x01
+> +
+> +#define SDHSTS_TRANSFER_ERROR_MASK	(SDHSTS_CRC7_ERROR | \
+> +					 SDHSTS_CRC16_ERROR | \
+> +					 SDHSTS_REW_TIME_OUT | \
+> +					 SDHSTS_FIFO_ERROR)
+> +
+> +#define SDHSTS_ERROR_MASK		(SDHSTS_CMD_TIME_OUT | \
+> +					 SDHSTS_TRANSFER_ERROR_MASK)
+> +
+> +#define SDHCFG_BUSY_IRPT_EN	BIT(10)
+> +#define SDHCFG_BLOCK_IRPT_EN	BIT(8)
+> +#define SDHCFG_SDIO_IRPT_EN	BIT(5)
+> +#define SDHCFG_DATA_IRPT_EN	BIT(4)
+> +#define SDHCFG_SLOW_CARD	BIT(3)
+> +#define SDHCFG_WIDE_EXT_BUS	BIT(2)
+> +#define SDHCFG_WIDE_INT_BUS	BIT(1)
+> +#define SDHCFG_REL_CMD_LINE	BIT(0)
+> +
+> +#define SDVDD_POWER_OFF		0
+> +#define SDVDD_POWER_ON		1
+> +
+> +#define SDEDM_FORCE_DATA_MODE	BIT(19)
+> +#define SDEDM_CLOCK_PULSE	BIT(20)
+> +#define SDEDM_BYPASS		BIT(21)
+> +
+> +#define SDEDM_WRITE_THRESHOLD_SHIFT	9
+> +#define SDEDM_READ_THRESHOLD_SHIFT	14
+> +#define SDEDM_THRESHOLD_MASK		0x1f
+> +
+> +#define SDEDM_FSM_MASK		0xf
+> +#define SDEDM_FSM_IDENTMODE	0x0
+> +#define SDEDM_FSM_DATAMODE	0x1
+> +#define SDEDM_FSM_READDATA	0x2
+> +#define SDEDM_FSM_WRITEDATA	0x3
+> +#define SDEDM_FSM_READWAIT	0x4
+> +#define SDEDM_FSM_READCRC	0x5
+> +#define SDEDM_FSM_WRITECRC	0x6
+> +#define SDEDM_FSM_WRITEWAIT1	0x7
+> +#define SDEDM_FSM_POWERDOWN	0x8
+> +#define SDEDM_FSM_POWERUP	0x9
+> +#define SDEDM_FSM_WRITESTART1	0xa
+> +#define SDEDM_FSM_WRITESTART2	0xb
+> +#define SDEDM_FSM_GENPULSES	0xc
+> +#define SDEDM_FSM_WRITEWAIT2	0xd
+> +#define SDEDM_FSM_STARTPOWDOWN	0xf
+> +
+> +#define SDDATA_FIFO_WORDS	16
+> +
+> +#define FIFO_READ_THRESHOLD	4
+> +#define FIFO_WRITE_THRESHOLD	4
+> +#define SDDATA_FIFO_PIO_BURST	8
+> +#define CMD_DALLY_US		1
+> +
+> +struct bcm2835_host {
+> +	spinlock_t		lock;
+> +	struct mutex            mutex;
+
+Would be nice to have a comment for the lock and mutex.
+
+> +
+> +	void __iomem		*ioaddr;
+> +	u32			phys_addr;
+> +
+> +	struct mmc_host		*mmc;
+> +	struct platform_device	*pdev;
+> +
+> +	u32			pio_timeout;	/* In jiffies */
+> +	int			clock;		/* Current clock speed */
+> +	unsigned int		max_clk;	/* Max possible freq */
+> +	struct work_struct      dma_work;
+> +	struct delayed_work     timeout_work;   /* Timer for timeouts */
+> +	struct sg_mapping_iter	sg_miter;	/* SG state for PIO */
+> +	unsigned int		blocks;		/* remaining PIO blocks */
+> +	int			irq;		/* Device IRQ */
+> +
+> +	u32			ns_per_fifo_word;
+> +
+> +	/* cached registers */
+> +	u32			hcfg;
+> +	u32			cdiv;
+> +
+> +	struct mmc_request	*mrq;		/* Current request */
+> +	struct mmc_command	*cmd;		/* Current command */
+> +	struct mmc_data		*data;		/* Current data request */
+> +	bool			data_complete:1;/* Data finished before cmd */
+> +	bool			flush_fifo:1;	/* Drain the fifo when finish */
+> +	bool			use_busy:1;	/* Wait for busy interrupt */
+> +	bool			use_sbc:1;	/* Send CMD23 */
+
+It would be nice to get the rid off use_busy and use_sbc. Do you see any chance for use_busy?
+
+> +
+> +	/* for threaded irq handler */
+> +	bool                    irq_block;
+> +	bool                    irq_busy;
+> +	bool                    irq_data;
+> +
+> +	/* DMA part */
+> +	struct dma_chan		*dma_chan_rx;
+> +	struct dma_chan		*dma_chan_tx;
+> +	struct dma_chan		*dma_chan;
+> +	struct dma_async_tx_descriptor	*dma_desc;
+> +	u32			dma_dir;
+> +	u32			drain_words;
+> +	struct page		*drain_page;
+> +	u32			drain_offset;
+> +	bool			use_dma;
+> +
+> +	int	max_delay;	/* maximum length of time spent waiting */
+> +	u32	pio_limit;	/* Maximum block count for PIO (0 = DMA) */
+> +};
+> +
+> +static void bcm2835_dumpcmd(struct bcm2835_host *host,
+> +			    struct mmc_command *cmd,
+> +			    const char *label)
+> +{
+> +	struct device *dev = &host->pdev->dev;
+> +
+> +	if (!cmd)
+> +		return;
+> +
+> +	dev_dbg(dev, "%c%s op %d arg 0x%x flags 0x%x - resp %08x %08x %08x %08x, err %d\n",
+> +		(cmd == host->cmd) ? '>' : ' ',
+> +		label, cmd->opcode, cmd->arg, cmd->flags,
+> +		cmd->resp[0], cmd->resp[1], cmd->resp[2], cmd->resp[3],
+> +		cmd->error);
+> +}
+> +
+> +static void bcm2835_dumpregs(struct bcm2835_host *host)
+> +{
+> +	struct mmc_request *mrq = host->mrq;
+> +	struct device *dev = &host->pdev->dev;
+> +
+> +	if (mrq) {
+> +		bcm2835_dumpcmd(host, mrq->sbc, "sbc");
+> +		bcm2835_dumpcmd(host, mrq->cmd, "cmd");
+> +		if (mrq->data) {
+> +			dev_dbg(dev, "data blocks %x blksz %x - err %d\n",
+> +				mrq->data->blocks,
+> +				mrq->data->blksz,
+> +				mrq->data->error);
+> +		}
+> +		bcm2835_dumpcmd(host, mrq->stop, "stop");
+> +	}
+> +
+> +	dev_dbg(dev, "=========== REGISTER DUMP ===========\n");
+> +	dev_dbg(dev, "SDCMD  0x%08x\n", readl(host->ioaddr + SDCMD));
+> +	dev_dbg(dev, "SDARG  0x%08x\n", readl(host->ioaddr + SDARG));
+> +	dev_dbg(dev, "SDTOUT 0x%08x\n", readl(host->ioaddr + SDTOUT));
+> +	dev_dbg(dev, "SDCDIV 0x%08x\n", readl(host->ioaddr + SDCDIV));
+> +	dev_dbg(dev, "SDRSP0 0x%08x\n", readl(host->ioaddr + SDRSP0));
+> +	dev_dbg(dev, "SDRSP1 0x%08x\n", readl(host->ioaddr + SDRSP1));
+> +	dev_dbg(dev, "SDRSP2 0x%08x\n", readl(host->ioaddr + SDRSP2));
+> +	dev_dbg(dev, "SDRSP3 0x%08x\n", readl(host->ioaddr + SDRSP3));
+> +	dev_dbg(dev, "SDHSTS 0x%08x\n", readl(host->ioaddr + SDHSTS));
+> +	dev_dbg(dev, "SDVDD  0x%08x\n", readl(host->ioaddr + SDVDD));
+> +	dev_dbg(dev, "SDEDM  0x%08x\n", readl(host->ioaddr + SDEDM));
+> +	dev_dbg(dev, "SDHCFG 0x%08x\n", readl(host->ioaddr + SDHCFG));
+> +	dev_dbg(dev, "SDHBCT 0x%08x\n", readl(host->ioaddr + SDHBCT));
+> +	dev_dbg(dev, "SDHBLC 0x%08x\n", readl(host->ioaddr + SDHBLC));
+> +	dev_dbg(dev, "===========================================\n");
+> +}
+> +
+> +static void bcm2835_reset_internal(struct bcm2835_host *host)
+> +{
+> +	u32 temp;
+> +
+> +	writel(SDVDD_POWER_OFF, host->ioaddr + SDVDD);
+> +	writel(0, host->ioaddr + SDCMD);
+> +	writel(0, host->ioaddr + SDARG);
+> +	writel(0xf00000, host->ioaddr + SDTOUT);
+> +	writel(0, host->ioaddr + SDCDIV);
+> +	writel(0x7f8, host->ioaddr + SDHSTS); /* Write 1s to clear */
+
+Any chance to eliminate the bit magic for SDTOUT and SDHSTS?
+
+> +	writel(0, host->ioaddr + SDHCFG);
+> +	writel(0, host->ioaddr + SDHBCT);
+> +	writel(0, host->ioaddr + SDHBLC);
+> +
+> +	/* Limit fifo usage due to silicon bug */
+> +	temp = readl(host->ioaddr + SDEDM);
+> +	temp &= ~((SDEDM_THRESHOLD_MASK << SDEDM_READ_THRESHOLD_SHIFT) |
+> +		  (SDEDM_THRESHOLD_MASK << SDEDM_WRITE_THRESHOLD_SHIFT));
+> +	temp |= (FIFO_READ_THRESHOLD << SDEDM_READ_THRESHOLD_SHIFT) |
+> +		(FIFO_WRITE_THRESHOLD << SDEDM_WRITE_THRESHOLD_SHIFT);
+> +	writel(temp, host->ioaddr + SDEDM);
+> +	msleep(20);
+> +	writel(SDVDD_POWER_ON, host->ioaddr + SDVDD);
+> +	msleep(20);
+> +	host->clock = 0;
+> +	writel(host->hcfg, host->ioaddr + SDHCFG);
+> +	writel(host->cdiv, host->ioaddr + SDCDIV);
+> +}
+> +
+> ...
+> +
+> +static void bcm2835_finish_data(struct bcm2835_host *host)
+> +{
+> +	struct device *dev = &host->pdev->dev;
+> +	struct mmc_data *data;
+> +
+> +	data = host->data;
+> +
+> +	dev_dbg(dev, "finish_data(error %d, stop %d, sbc %d)\n",
+> +		data->error, data->stop ? 1 : 0,
+> +		host->mrq->sbc ? 1 : 0);
+> +
+> +	host->hcfg &= ~(SDHCFG_DATA_IRPT_EN | SDHCFG_BLOCK_IRPT_EN);
+> +	writel(host->hcfg, host->ioaddr + SDHCFG);
+> +
+> +	data->bytes_xfered = data->error ? 0 : (data->blksz * data->blocks);
+> +
+> +	host->data_complete = true;
+> +
+> +	if (host->cmd) {
+> +		/* Data managed to finish before the
+> +		 * command completed. Make sure we do
+> +		 * things in the proper order.
+> +		 */
+> +		dev_dbg(dev, "Finished early - HSTS %x\n",
+> +			readl(host->ioaddr + SDHSTS));
+> +	} else {
+> +		bcm2835_transfer_complete(host);
+> +	}
+> +}
+> +
+> +static void bcm2835_finish_command(struct bcm2835_host *host)
+> +{
+> +	struct device *dev = &host->pdev->dev;
+> +	struct mmc_command *cmd = host->cmd;
+> +	u32 sdcmd;
+> +
+> +	dev_dbg(dev, "finish_command(%x)\n", readl(host->ioaddr + SDCMD));
+> +
+> +	sdcmd = bcm2835_read_wait_sdcmd(host, 100, true);
+> +
+> +	/* Check for errors */
+> +	if (sdcmd & SDCMD_NEW_FLAG) {
+> +		dev_err(dev, "command never completed.\n");
+> +		bcm2835_dumpregs(host);
+> +		host->cmd->error = -EIO;
+> +		bcm2835_finish_request(host);
+> +		return;
+> +	} else if (sdcmd & SDCMD_FAIL_FLAG) {
+> +		u32 sdhsts = readl(host->ioaddr + SDHSTS);
+> +
+> +		/* Clear the errors */
+> +		writel(SDHSTS_ERROR_MASK, host->ioaddr + SDHSTS);
+> +
+> +		if (!(sdhsts & SDHSTS_CRC7_ERROR) ||
+> +		    (host->cmd->opcode != MMC_SEND_OP_COND)) {
+> +			if (sdhsts & SDHSTS_CMD_TIME_OUT) {
+> +				host->cmd->error = -ETIMEDOUT;
+> +			} else {
+> +				dev_err(dev, "unexpected command %d error\n",
+> +					host->cmd->opcode);
+> +				bcm2835_dumpregs(host);
+> +				host->cmd->error = -EILSEQ;
+> +			}
+> +			bcm2835_finish_request(host);
+> +			return;
+> +		}
+> +	}
+> +
+> +	if (cmd->flags & MMC_RSP_PRESENT) {
+> +		if (cmd->flags & MMC_RSP_136) {
+> +			int i;
+> +
+> +			for (i = 0; i < 4; i++) {
+> +				cmd->resp[3 - i] =
+> +					readl(host->ioaddr + SDRSP0 + i * 4);
+> +			}
+> +
+> +			dev_dbg(dev, "finish_command %08x %08x %08x %08x\n",
+> +				cmd->resp[0], cmd->resp[1],
+> +				cmd->resp[2], cmd->resp[3]);
+> +		} else {
+> +			cmd->resp[0] = readl(host->ioaddr + SDRSP0);
+> +			dev_dbg(dev, "finish_command %08x\n", cmd->resp[0]);
+> +		}
+> +	}
+> +
+> +	if (cmd == host->mrq->sbc) {
+> +		/* Finished CMD23, now send actual command. */
+> +		host->cmd = NULL;
+> +		if (bcm2835_send_command(host, host->mrq->cmd)) {
+> +			if (host->data && host->dma_desc)
+> +				/* DMA transfer starts now, PIO starts
+> +				 * after irq
+> +				 */
+> +				bcm2835_start_dma(host);
+> +
+> +			if (!host->use_busy)
+> +				bcm2835_finish_command(host);
+
+Recursion?
+
+> +		}
+> +	} else if (cmd == host->mrq->stop) {
+> +		/* Finished CMD12 */
+> +		bcm2835_finish_request(host);
+> +	} else {
+> +		/* Processed actual command. */
+> +		host->cmd = NULL;
+> +		if (!host->data)
+> +			bcm2835_finish_request(host);
+> +		else if (host->data_complete)
+> +			bcm2835_transfer_complete(host);
+
+bcm2835_finish_command() calls bcm2835_transfer_complete()
+bcm2835_transfer_complete() calls bcm2835_finish_command()
+
+This should be avoided.
+
+> ...
+> +int bcm2835_add_host(struct bcm2835_host *host)
+> +{
+> +	struct mmc_host *mmc = host->mmc;
+> +	struct device *dev = &host->pdev->dev;
+> +	struct dma_slave_config cfg;
+> +	char pio_limit_string[20];
+> +	int ret;
+> +
+> +	bcm2835_reset_internal(host);
+> +
+> +	mmc->f_max = host->max_clk;
+> +	mmc->f_min = host->max_clk / SDCDIV_MAX_CDIV;
+> +
+> +	mmc->max_busy_timeout = ~0 / (mmc->f_max / 1000);
+> +
+> +	dev_dbg(dev, "f_max %d, f_min %d, max_busy_timeout %d\n",
+> +		mmc->f_max, mmc->f_min, mmc->max_busy_timeout);
+> +
+> +	/* host controller capabilities */
+> +	mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
+> +		     MMC_CAP_NEEDS_POLL | MMC_CAP_HW_RESET | MMC_CAP_ERASE |
+> +		     MMC_CAP_CMD23;
+> +
+> +	spin_lock_init(&host->lock);
+> +	mutex_init(&host->mutex);
+> +
+> +	if (IS_ERR_OR_NULL(host->dma_chan_tx) ||
+> +	    IS_ERR_OR_NULL(host->dma_chan_rx)) {
+> +		dev_err(dev, "unable to initialise DMA channels. Falling back to PIO\n");
+> +		host->use_dma = false;
+> +	} else {
+> +		host->use_dma = true;
+> +
+> +		cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +		cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +		cfg.slave_id = 13;		/* DREQ channel */
+
+Is this the same value which is also defined in the DT?
+
+Thanks
+Stefan
