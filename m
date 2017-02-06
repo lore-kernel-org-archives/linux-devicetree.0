@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH 12/13] dt-bindings: auxdisplay: Add bindings for Hitachi HD44780
-Date: Mon,  6 Feb 2017 15:38:14 +0100
-Message-ID: <1486391895-9554-13-git-send-email-geert@linux-m68k.org>
+Subject: [PATCH 13/13] auxdisplay: Add HD44780 Character LCD support
+Date: Mon,  6 Feb 2017 15:38:15 +0100
+Message-ID: <1486391895-9554-14-git-send-email-geert@linux-m68k.org>
 References: <1486391895-9554-1-git-send-email-geert@linux-m68k.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1486391895-9554-1-git-send-email-geert@linux-m68k.org>
@@ -10,69 +10,387 @@ To: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Greg Kroah-Hartman 
 Cc: linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings for an Hitachi HD44780 Character LCD Controller where
-its M6800 bus interface is connected to GPIOs.
+The Hitachi HD44780 Character LCD Controller is commonly used on
+character LCDs that can display one or more lines of text.
 
-Memory-mapped configurations are not yet supported.
+This driver supports character LCDs connected to GPIOs, using either a
+4-bit or 8-bit data bus, and provides access through the charlcd core
+and /dev/lcd.
 
 Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: devicetree@vger.kernel.org
 ---
- .../devicetree/bindings/auxdisplay/hit,hd44780.txt | 44 ++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+ drivers/auxdisplay/Kconfig   |  11 ++
+ drivers/auxdisplay/Makefile  |   1 +
+ drivers/auxdisplay/hd44780.c | 326 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 338 insertions(+)
+ create mode 100644 drivers/auxdisplay/hd44780.c
 
-diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
+diff --git a/drivers/auxdisplay/Kconfig b/drivers/auxdisplay/Kconfig
+index b4686380d4e3cca9..2964128b6046882d 100644
+--- a/drivers/auxdisplay/Kconfig
++++ b/drivers/auxdisplay/Kconfig
+@@ -18,6 +18,17 @@ config CHARLCD
+ 
+ if AUXDISPLAY
+ 
++config HD44780
++	tristate "HD44780 Character LCD support"
++	depends on OF
++	select CHARLCD
++	---help---
++	  Enable support for Character LCDs using a HD44780 controller.
++	  The LCD is accessible through the /dev/lcd char device (10, 156).
++	  This code can either be compiled as a module, or linked into the
++	  kernel and started at boot.
++	  If you don't understand what all this is about, say N.
++
+ config KS0108
+ 	tristate "KS0108 LCD Controller"
+ 	depends on PARPORT_PC
+diff --git a/drivers/auxdisplay/Makefile b/drivers/auxdisplay/Makefile
+index f56f45dcc78e332e..fcefa686be0fea9b 100644
+--- a/drivers/auxdisplay/Makefile
++++ b/drivers/auxdisplay/Makefile
+@@ -6,4 +6,5 @@ obj-$(CONFIG_CHARLCD)		+= charlcd.o
+ obj-$(CONFIG_KS0108)		+= ks0108.o
+ obj-$(CONFIG_CFAG12864B)	+= cfag12864b.o cfag12864bfb.o
+ obj-$(CONFIG_IMG_ASCII_LCD)	+= img-ascii-lcd.o
++obj-$(CONFIG_HD44780)		+= hd44780.o
+ obj-$(CONFIG_HT16K33)		+= ht16k33.o
+diff --git a/drivers/auxdisplay/hd44780.c b/drivers/auxdisplay/hd44780.c
 new file mode 100644
-index 0000000000000000..ee4054da458d412f
+index 0000000000000000..36aa5942d9374f88
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.txt
-@@ -0,0 +1,44 @@
-+DT bindings for the Hitachi HD44780 Character LCD Controller
++++ b/drivers/auxdisplay/hd44780.c
+@@ -0,0 +1,326 @@
++/*
++ * HD44780 Character LCD driver for Linux
++ *
++ * Copyright (C) 2000-2008, Willy Tarreau <w@1wt.eu>
++ * Copyright (C) 2016-2017 Glider bvba
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * as published by the Free Software Foundation; either version
++ * 2 of the License, or (at your option) any later version.
++ */
 +
-+The Hitachi HD44780 Character LCD Controller is commonly used on character LCDs
-+that can display one or more lines of text. It exposes an M6800 bus interface,
-+which can be used in either 4-bit or 8-bit mode.
++#include <linux/delay.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
 +
-+Required properties:
-+  - compatible: Must contain "hit,hd44780",
-+  - data-gpios: Must contain an array of either 4 or 8 GPIO specifiers,
-+    referring to the GPIO pins connected to the data signal lines DB0-DB7
-+    (8-bit mode) or DB4-DB7 (4-bit mode) of the LCD Controller's bus interface,
-+  - enable-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-+    connected to the "E" (Enable) signal line of the LCD Controller's bus
-+    interface,
-+  - rs-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-+    connected to the "RS" (Register Select) signal line of the LCD Controller's
-+    bus interface,
-+  - display-height: Height of the display, in character cells,
-+  - display-width: Width of the display, in character cells.
++#include <misc/charlcd.h>
 +
-+Optional properties:
-+  - rw-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-+    connected to the "RW" (Read/Write) signal line of the LCD Controller's bus
-+    interface,
-+  - backlight-gpios: Must contain a GPIO specifier, referring to the GPIO pin
-+    used for enabling the LCD's backlight,
-+  - internal-buffer-width: Internal buffer width (default is 40 for displays
-+    with 1 or 2 lines, and display-width for displays with more than 2 lines).
 +
-+Example:
++enum hd44780_pin {
++	/* Order does matter due to writing to GPIO array subsets! */
++	PIN_DATA0,	/* Optional */
++	PIN_DATA1,	/* Optional */
++	PIN_DATA2,	/* Optional */
++	PIN_DATA3,	/* Optional */
++	PIN_DATA4,
++	PIN_DATA5,
++	PIN_DATA6,
++	PIN_DATA7,
++	PIN_CTRL_RS,
++	PIN_CTRL_RW,	/* Optional */
++	PIN_CTRL_E,
++	PIN_CTRL_BL,   /* Optional */
++	PIN_NUM
++};
 +
-+	auxdisplay {
-+		compatible = "hit,hd44780";
++struct hd44780 {
++	struct gpio_desc *pins[PIN_NUM];
++};
 +
-+		data-gpios = <&hc595 0 GPIO_ACTIVE_HIGH>,
-+			     <&hc595 1 GPIO_ACTIVE_HIGH>,
-+			     <&hc595 2 GPIO_ACTIVE_HIGH>,
-+			     <&hc595 3 GPIO_ACTIVE_HIGH>;
-+		enable-gpios = <&hc595 4 GPIO_ACTIVE_HIGH>;
-+		rs-gpios = <&hc595 5 GPIO_ACTIVE_HIGH>;
++static void hd44780_backlight(struct charlcd *lcd, int on)
++{
++	struct hd44780 *hd = lcd->drvdata;
 +
-+		display-height = <2>;
-+		display-width = <16>;
-+	};
++	if (hd->pins[PIN_CTRL_BL])
++		gpiod_set_value_cansleep(hd->pins[PIN_CTRL_BL], on);
++}
++
++static void hd44780_strobe_gpio(struct hd44780 *hd)
++{
++	/* Maintain the data during 20 us before the strobe */
++	udelay(20);
++
++	gpiod_set_value_cansleep(hd->pins[PIN_CTRL_E], 1);
++
++	/* Maintain the strobe during 40 us */
++	udelay(40);
++
++	gpiod_set_value_cansleep(hd->pins[PIN_CTRL_E], 0);
++}
++
++/* write to an LCD panel register in 8 bit GPIO mode */
++static void hd44780_write_gpio8(struct hd44780 *hd, u8 val, unsigned int rs)
++{
++	int values[10];	/* for DATA[0-7], RS, RW */
++	unsigned int i, n;
++
++	for (i = 0; i < 8; i++)
++		values[PIN_DATA0 + i] = !!(val & BIT(i));
++	values[PIN_CTRL_RS] = rs;
++	n = 9;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA0], values);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* write to an LCD panel register in 4 bit GPIO mode */
++static void hd44780_write_gpio4(struct hd44780 *hd, u8 val, unsigned int rs)
++{
++	int values[10];	/* for DATA[0-7], RS, RW, but DATA[0-3] is unused */
++	unsigned int i, n;
++
++	/* High nibble + RS, RW */
++	for (i = 4; i < 8; i++)
++		values[PIN_DATA0 + i] = !!(val & BIT(i));
++	values[PIN_CTRL_RS] = rs;
++	n = 5;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++
++	/* Low nibble */
++	for (i = 0; i < 4; i++)
++		values[PIN_DATA4 + i] = !!(val & BIT(i));
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* Send a command to the LCD panel in 8 bit GPIO mode */
++static void hd44780_write_cmd_gpio8(struct charlcd *lcd, int cmd)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio8(hd, cmd, 0);
++
++	/* The shortest command takes at least 120 us */
++	udelay(120);
++}
++
++/* Send data to the LCD panel in 8 bit GPIO mode */
++static void hd44780_write_data_gpio8(struct charlcd *lcd, int data)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio8(hd, data, 1);
++
++	/* The shortest data takes at least 45 us */
++	udelay(45);
++}
++
++static const struct charlcd_ops hd44780_ops_gpio8 = {
++	.write_cmd	= hd44780_write_cmd_gpio8,
++	.write_data	= hd44780_write_data_gpio8,
++	.backlight	= hd44780_backlight,
++};
++
++/* Send a command to the LCD panel in 4 bit GPIO mode */
++static void hd44780_write_cmd_gpio4(struct charlcd *lcd, int cmd)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio4(hd, cmd, 0);
++
++	/* The shortest command takes at least 120 us */
++	udelay(120);
++}
++
++/* Send 4-bits of a command to the LCD panel in raw 4 bit GPIO mode */
++static void hd44780_write_cmd_raw_gpio4(struct charlcd *lcd, int cmd)
++{
++	int values[10];	/* for DATA[0-7], RS, RW, but DATA[0-3] is unused */
++	struct hd44780 *hd = lcd->drvdata;
++	unsigned int i, n;
++
++	/* Command nibble + RS, RW */
++	for (i = 0; i < 4; i++)
++		values[PIN_DATA4 + i] = !!(cmd & BIT(i));
++	values[PIN_CTRL_RS] = 0;
++	n = 5;
++	if (hd->pins[PIN_CTRL_RW]) {
++		values[PIN_CTRL_RW] = 0;
++		n++;
++	}
++
++	/* Present the data to the port */
++	gpiod_set_array_value_cansleep(n, &hd->pins[PIN_DATA4],
++				       &values[PIN_DATA4]);
++
++	hd44780_strobe_gpio(hd);
++}
++
++/* Send data to the LCD panel in 4 bit GPIO mode */
++static void hd44780_write_data_gpio4(struct charlcd *lcd, int data)
++{
++	struct hd44780 *hd = lcd->drvdata;
++
++	hd44780_write_gpio4(hd, data, 1);
++
++	/* The shortest data takes at least 45 us */
++	udelay(45);
++}
++
++static const struct charlcd_ops hd44780_ops_gpio4 = {
++	.write_cmd	= hd44780_write_cmd_gpio4,
++	.write_cmd_raw4	= hd44780_write_cmd_raw_gpio4,
++	.write_data	= hd44780_write_data_gpio4,
++	.backlight	= hd44780_backlight,
++};
++
++static int hd44780_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	unsigned int i, base;
++	struct charlcd *lcd;
++	struct hd44780 *hd;
++	int ifwidth, ret;
++
++	/* Required pins */
++	ifwidth = of_gpio_named_count(np, "data-gpios");
++	if (ifwidth < 0)
++		return ifwidth;
++
++	switch (ifwidth) {
++	case 4:
++		base = PIN_DATA4;
++		break;
++	case 8:
++		base = PIN_DATA0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	lcd = charlcd_alloc(sizeof(struct hd44780));
++	if (!lcd)
++		return -ENOMEM;
++
++	hd = lcd->drvdata;
++
++	for (i = 0; i < ifwidth; i++) {
++		hd->pins[base + i] = devm_gpiod_get_index(dev, "data", i,
++							  GPIOD_OUT_LOW);
++		if (IS_ERR(hd->pins[base + i])) {
++			ret = PTR_ERR(hd->pins[base + i]);
++			goto fail;
++		}
++	}
++
++	hd->pins[PIN_CTRL_E] = devm_gpiod_get(dev, "enable", GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_E])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_E]);
++		goto fail;
++	}
++
++	hd->pins[PIN_CTRL_RS] = devm_gpiod_get(dev, "rs", GPIOD_OUT_HIGH);
++	if (IS_ERR(hd->pins[PIN_CTRL_RS])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_RS]);
++		goto fail;
++	}
++
++	/* Optional pins */
++	hd->pins[PIN_CTRL_RW] = devm_gpiod_get_optional(dev, "rw",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_RW])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_RW]);
++		goto fail;
++	}
++
++	hd->pins[PIN_CTRL_BL] = devm_gpiod_get_optional(dev, "backlight",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(hd->pins[PIN_CTRL_BL])) {
++		ret = PTR_ERR(hd->pins[PIN_CTRL_BL]);
++		goto fail;
++	}
++
++	/* Required properties */
++	ret = of_property_read_u32(np, "display-height", &lcd->height);
++	if (ret)
++		goto fail;
++	ret = of_property_read_u32(np, "display-width", &lcd->width);
++	if (ret)
++		goto fail;
++
++	/*
++	 * On displays with more than two rows, the internal buffer width is
++	 * usually equal to the display width
++	 */
++	if (lcd->height > 2)
++		lcd->bwidth = lcd->width;
++
++	/* Optional properties */
++	of_property_read_u32(np, "internal-buffer-width", &lcd->bwidth);
++
++	lcd->ifwidth = ifwidth;
++	lcd->ops = ifwidth == 8 ? &hd44780_ops_gpio8 : &hd44780_ops_gpio4;
++
++	ret = charlcd_register(lcd);
++	if (ret)
++		goto fail;
++
++	platform_set_drvdata(pdev, lcd);
++	return 0;
++
++fail:
++	kfree(lcd);
++	return ret;
++}
++
++static int hd44780_remove(struct platform_device *pdev)
++{
++	struct charlcd *lcd = platform_get_drvdata(pdev);
++
++	charlcd_unregister(lcd);
++	return 0;
++}
++
++static const struct of_device_id hd44780_of_match[] = {
++	{ .compatible = "hit,hd44780" },
++	{ /* sentinel */ }
++};
++MODULE_DEVICE_TABLE(of, hd44780_of_match);
++
++static struct platform_driver hd44780_driver = {
++	.probe = hd44780_probe,
++	.remove = hd44780_remove,
++	.driver		= {
++		.name	= "hd44780",
++		.of_match_table = hd44780_of_match,
++	},
++};
++
++module_platform_driver(hd44780_driver);
++MODULE_DESCRIPTION("HD44780 Character LCD driver");
++MODULE_AUTHOR("Geert Uytterhoeven <geert@linux-m68k.org>");
++MODULE_LICENSE("GPL");
 -- 
 1.9.1
