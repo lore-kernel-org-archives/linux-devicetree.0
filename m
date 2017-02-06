@@ -1,57 +1,63 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 0/2] drm/panel: Add support for the Sitronix ST7789V
-Date: Mon, 6 Feb 2017 12:29:31 +0100
-Message-ID: <a4634b34-ee70-449e-74c3-2ede4ea8c569@tronnes.org>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
- <2db19e6e-9857-1c92-dc77-c6b862cc771f@tronnes.org>
- <20170206103938.3yghvugiwpzkij6r@lukather>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v2] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Mon, 6 Feb 2017 12:19:40 +0100
+Message-ID: <686ee231-57b2-036f-f97a-dad508e94e39@skidata.com>
+References: <1486119324-9362-1-git-send-email-richard.leitner@skidata.com>
+ <20170205074216.GA314@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170206103938.3yghvugiwpzkij6r@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170205074216.GA314@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
+On 02/05/2017 08:42 AM, Greg KH wrote:
+> On Fri, Feb 03, 2017 at 11:55:24AM +0100, Richard Leitner wrote:
+>> +/**
+>> + * ascii2utf16le() - Helper routine for producing UTF-16LE string descriptors
+>> + * @s: Null-terminated ASCII (actually ISO-8859-1) string
+>> + * @buf: Buffer for UTF-16LE string
+>> + * @len: Length (in bytes; may be odd) of UTF-16LE buffer.
+>> + *
+>> + * Return: The number of bytes filled in: 2*strlen(s) or @len, whichever is less
+>> + *
+>> + * Note:
+>> + * The UTF-16LE USB String descriptors can contain at most 31 characters (as
+>> + * specified in the datasheet); input strings longer than that are truncated.
+>> + *
+>> + * Based on ascii2desc from drivers/usb/core/hcd.c
+>> + */
+> 
+> Don't we have a kernel function for this already?  If we need to export
+> ascii2desc() from the USB core, we can do that, or better yet, move both
+> of them to a string library function in the core part of the kernel.  We
+> shouldn't have to duplicate this type of thin in an individual driver.
 
-Den 06.02.2017 11.39, skrev Maxime Ripard:
-> Hi Noralf,
->
-> On Fri, Feb 03, 2017 at 07:48:51PM +0100, Noralf Trønnes wrote:
->> Den 03.02.2017 10.59, skrev Maxime Ripard:
->>> Hi,
->>>
->>> Here is an attempt at supporting the ST7789V LCD controller from Sitronix.
->> What happens if there's another panel driven by ST7789V that needs
->> a different controller initialization?
-> You know those panels / controllers much better than I do, but why
-> would that be the case?
->
->> Maybe it's better to name it after the panel, not the controller.
-> I guess you could also use that panel directly without the controller?
+Ok. So I'll move the ascii2utf16le function to lib/string.c (?) and call
+it from ascii2desc in drivers/usb/core/hcd.c (due to the fact ascii2desc
+also prepends 2 bytes) and the USB251xB driver? Would that be OK?
 
-A controller can drive many different panels that can require different
-initializations. I faced that with staging/fbtft, when I wrote
-controller drivers having initialization code, and then came across
-displays with the same controller but with a different initialization.
+> 
+>> --- /dev/null
+>> +++ b/include/linux/platform_data/usb251xb.h
+>> @@ -0,0 +1,33 @@
+> 
+> Do you need a platform data structure here?  Shouldn't we be only using
+> DT now?
 
-Trying to write controller drivers for these controllers is very
-difficult with all the possible permutations. On top of that we have
-those undocumented commands/registers.
+I don't need the platform data support at all. I just added it because
+it is also available in the USB3503 driver. So if it's OK for you I'd be
+glad to remove it.
 
-Some panels come with embedded controllers, in which case it makes
-sense to write a driver for the panel.
+Thank you for your feedback, Greg!
 
-But if the panel and controller are separate, then I don't know. Maybe
-the chance of coming across two uncompatible ST7789V and panel
-combinations in drm/panel is extremly low.
+regards,
+Richard L
 
-
-Noralf.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+P.S.: A mainline-contribution-beginner question on the process:
+Should I send a v3 with those changes applied now or wait for some more
+feedback?
