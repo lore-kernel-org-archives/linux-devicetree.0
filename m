@@ -1,100 +1,100 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Mon, 6 Feb 2017 10:49:57 +0100
-Message-ID: <20170206094956.GA17974@amd>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Mon, 6 Feb 2017 10:50:22 +0100
+Message-ID: <f6bfb9ec-1ea3-8477-4933-cf655acd3e0f@xs4all.nl>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1485259368.3600.126.camel@pengutronix.de>
+ <651d7b40-e87d-05ce-ae4d-256b0c1b28f7@gmail.com> <2258037.UCXsIYbtGD@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="9jxsPFA5p3P2qPhR"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170111225335.GA21553@amd>
+In-Reply-To: <2258037.UCXsIYbtGD@avalon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.orgSascha Hauer <s.h>
 List-Id: devicetree@vger.kernel.org
 
+On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
+> Hi Steve,
+> 
+> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
+>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
+>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
+>>>>> +
+>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct v4l2_mbus_config
+>>>>> *cfg)
+>>>>> +{
+>>>>> +	struct vidsw *vidsw = v4l2_subdev_to_vidsw(sd);
+>>>>> +	struct media_pad *pad;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	if (vidsw->active == -1) {
+>>>>> +		dev_err(sd->dev, "no configuration for inactive mux\n");
+>>>>> +		return -EINVAL;
+>>>>> +	}
+>>>>> +
+>>>>> +	/*
+>>>>> +	 * Retrieve media bus configuration from the entity connected to the
+>>>>> +	 * active input
+>>>>> +	 */
+>>>>> +	pad = media_entity_remote_pad(&vidsw->pads[vidsw->active]);
+>>>>> +	if (pad) {
+>>>>> +		sd = media_entity_to_v4l2_subdev(pad->entity);
+>>>>> +		ret = v4l2_subdev_call(sd, video, g_mbus_config, cfg);
+>>>>> +		if (ret == -ENOIOCTLCMD)
+>>>>> +			pad = NULL;
+>>>>> +		else if (ret < 0) {
+>>>>> +			dev_err(sd->dev, "failed to get source 
+> configuration\n");
+>>>>> +			return ret;
+>>>>> +		}
+>>>>> +	}
+>>>>> +	if (!pad) {
+>>>>> +		/* Mirror the input side on the output side */
+>>>>> +		cfg->type = vidsw->endpoint[vidsw->active].bus_type;
+>>>>> +		if (cfg->type == V4L2_MBUS_PARALLEL ||
+>>>>> +		    cfg->type == V4L2_MBUS_BT656)
+>>>>> +			cfg->flags = vidsw->endpoint[vidsw-
+>> active].bus.parallel.flags;
+>>>>> +	}
+>>>>> +
+>>>>> +	return 0;
+>>>>> +}
+>>>>
+>>>> I am not certain this op is needed at all. In the current kernel this op
+>>>> is only used by soc_camera, pxa_camera and omap3isp (somewhat dubious).
+>>>> Normally this information should come from the device tree and there
+>>>> should be no need for this op.
+>>>>
+>>>> My (tentative) long-term plan was to get rid of this op.
+>>>>
+>>>> If you don't need it, then I recommend it is removed.
+>>
+>> Hi Hans, the imx-media driver was only calling g_mbus_config to the camera
+>> sensor, and it was doing that to determine the sensor's bus type. This info
+>> was already available from parsing a v4l2_of_endpoint from the sensor node.
+>> So it was simple to remove the g_mbus_config calls, and instead rely on the
+>> parsed sensor v4l2_of_endpoint.
+> 
+> That's not a good point. The imx-media driver must not parse the sensor DT 
+> node as it is not aware of what bindings the sensor is compatible with. 
+> Information must instead be queried from the sensor subdev at runtime, through 
+> the g_mbus_config() operation.
+> 
+> Of course, if you can get the information from the imx-media DT node, that's 
+> certainly an option. It's only information provided by the sensor driver that 
+> you have no choice but query using a subdev operation.
 
---9jxsPFA5p3P2qPhR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Shouldn't this come from the imx-media DT node? BTW, why is omap3isp using this?
 
-=46rom: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+The reason I am suspicious about this op is that it came from soc-camera and
+predates the DT. The contents of v4l2_mbus_config seems very much like a HW
+description to me, i.e. something that belongs in the DT.
 
-In the vast majority of cases the bus type is known to the driver(s)
-since a receiver or transmitter can only support a single one. There
-are cases however where different options are possible.
+Regards,
 
-The existing V4L2 OF support tries to figure out the bus type and
-parse the bus parameters based on that. This does not scale too well
-as there are multiple serial busses that share common properties.
-
-Some hardware also supports multiple types of busses on the same
-interfaces.
-
-Document the CSI1/CCP2 property strobe. It signifies the clock or
-strobe mode.
-=20
-Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b=
-/Documentation/devicetree/bindings/media/video-interfaces.txt
-index 9cd2a36..6986fde 100644
---- a/Documentation/devicetree/bindings/media/video-interfaces.txt
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -76,6 +76,12 @@ Optional endpoint properties
-   mode horizontal and vertical synchronization signals are provided to the
-   slave device (data source) by the master device (data sink). In the mast=
-er
-   mode the data source device is also the source of the synchronization si=
-gnals.
-+- bus-type: data bus type. Possible values are:
-+  0 - autodetect based on other properties (MIPI CSI-2 D-PHY, parallel or =
-Bt656)
-+  1 - MIPI CSI-2 C-PHY
-+  2 - MIPI CSI1
-+  3 - CCP2
-+  Autodetection is default, and bus-type property may be omitted in that c=
-ase.
- - bus-width: number of data lines actively used, valid for the parallel bu=
-sses.
- - data-shift: on the parallel data busses, if bus-width is used to specify=
- the
-   number of data lines, data-shift can be used to specify which data lines=
- are
-@@ -112,7 +118,8 @@ Optional endpoint properties
-   should be the combined length of data-lanes and clock-lanes properties.
-   If the lane-polarities property is omitted, the value must be interpreted
-   as 0 (normal). This property is valid for serial busses only.
--
-+- strobe: Whether the clock signal is used as clock or strobe. Used
-+  with CCP2, for instance.
-=20
- Example
- -------
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9jxsPFA5p3P2qPhR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAliYRsQACgkQMOfwapXb+vJhwgCfbWUGyUdgwuV2PsWZUgRPCkqP
-9jsAn2DTrcYhKR3fjy3MbpUl4xBXMnwj
-=VXYd
------END PGP SIGNATURE-----
-
---9jxsPFA5p3P2qPhR--
+	Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
