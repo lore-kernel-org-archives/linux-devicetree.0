@@ -1,84 +1,68 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Mon, 06 Feb 2017 16:33:37 +0100
-Message-ID: <1486395217.2275.38.camel@pengutronix.de>
-References: <20170206151716.10381-1-andrew.smirnov@gmail.com>
-         <20170206151716.10381-4-andrew.smirnov@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/3] arm64: add THUNDER2 processor family
+Date: Mon, 6 Feb 2017 16:38:24 +0100
+Message-ID: <CAK8P3a1BTV4ZH9eQHwhyZ4AVVSwxsM_MD+iuByfdXDbE3M_szg@mail.gmail.com>
+References: <1486233461-2679-1-git-send-email-jnair@caviumnetworks.com>
+ <1486233461-2679-2-git-send-email-jnair@caviumnetworks.com>
+ <20170206100608.GA8540@arm.com> <CAK8P3a1_dQZd3RRyavMKqBFcHsXTQ2oAUO5vaLhyTiH99XhqrQ@mail.gmail.com>
+ <20170206152140.GA2001@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170206151716.10381-4-andrew.smirnov@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: linux-pci@vger.kernel.org, yurovsky@gmail.com, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170206152140.GA2001@localhost>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 06.02.2017, 07:17 -0800 schrieb Andrey Smirnov:
-> Add various bits of code needed to support i.MX7D variant of the IP.
-> 
-> Cc: yurovsky@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+On Mon, Feb 6, 2017 at 4:21 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Feb 06, 2017 at 02:44:13PM +0100, Arnd Bergmann wrote:
+>> On Mon, Feb 6, 2017 at 11:06 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+> The Vulcan architecture has been discontinued by Broadcom, so the platform
+> and device tree files should go away soon. Renames are going to be messy, it
+> will be better to keep Vulcan around until the transition is complete, and
+> then delete it.
 
-Two small comments inline, otherwise looks real good now.
+What are the disadvantages of a rename in your opinion? Are you mainly
+worried about merge conflicts or something else?
 
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |   6 +-
->  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
->  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
->  3 files changed, 105 insertions(+), 26 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 83aeb1f..9f57759 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
->  and thus inherits all the common properties defined in designware-pcie.txt.
->  
->  Required properties:
-> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
-> +- compatible:
-> +	- "fsl,imx6q-pcie"
-> +	- "fsl,imx6sx-pcie",
-> +	- "fsl,imx6qp-pcie"
-> +	- "fsl,imx7d-pcie"
->  - reg: base address and length of the PCIe controller
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
+>> Hmm, an alternative would be to add the new .dtsi file and start out with an
+>> #include of the existing file, with overrides for anything that needs changing.
+>> Similarly, the Kconfig symbol could just 'select ARCH_VULCAN' for now.
+>
+> Even in this case, we will need to copy the files from boot/dts/broadcom to
+> boot/dts/cavium along the way. The current patchset is (in my opinion) the
+> least messy way to accomplish the transition. But it is the maintainer's call,
+> so if you think it has to be done differently, I can update the patchset and
+> post again.
 
-This misses an "Additional required properties for imx7d-pcie" section
-listing the required reset handles.
+I don't see the need to copy if we can do an #include and later move the
+file into the new place. I also see only three references to ARCH_VULCAN
+at all aside from the dts file.
 
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index 3ef8093..34a21c9 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
+arch/arm64/configs/defconfig:CONFIG_ARCH_VULCAN=y
+drivers/gpio/Kconfig:   depends on OF_GPIO && (CPU_XLP || ARCH_VULCAN
+|| COMPILE_TEST)
+drivers/i2c/busses/Kconfig:     depends on CPU_XLP || ARCH_VULCAN ||
+COMPILE_TEST
+drivers/spi/Kconfig:    depends on CPU_XLP || ARCH_VULCAN || COMPILE_TEST
 
-[...]
+We can probably manage to have a single patch to rename them all at
+the same time, or we do the add+remove over two merge windows.
 
->  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
->  	struct pcie_port *pp = &imx6_pcie->pp;
-> @@ -381,6 +416,11 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	}
->  
->  	switch (imx6_pcie->variant) {
-> +	case IMX7D:
-> +		reset_control_assert(imx6_pcie->apps_reset);
+I also noticed now that you dropped the vulcan "compatible" strings in
+the .dtsi files, I think we should keep those as a fallback, and to avoid
+having interdependencies with the driver updates, e.g. the top-level
+compatible string should be
 
-Can this reset assertion be moved into imx6_pcie_assert_core_reset()?
-This may change the programming order slightly from the downstream
-driver, but I guess that won't hurt if this is the equivalent of the
-LTSSM enable signal.
+compatible = "cavium,thunder-9900", "brcm,vulcan-soc";
 
-Regards,
-Lucas
+for the SoC, plus of course the board specific identifier in front of that.
+Same for the CPU, the i2c, gpio, and pmu.
+
+    Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
