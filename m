@@ -1,78 +1,46 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH 1/5] drm/exynos: dsi: Fix the parse_dt function
-Date: Mon, 06 Feb 2017 11:19:40 +0900
-Message-ID: <1486347584-6762-2-git-send-email-hoegeun.kwon@samsung.com>
-References: <1486347584-6762-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170206021950epcas1p36b27f17497f0dcb0be8050db64828abc@epcas1p3.samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1486347584-6762-1-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: inki.dae@samsung.com, robh+dt@kernel.org, krzk@kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker
+ board
+Date: Mon, 6 Feb 2017 03:54:35 +0100
+Message-ID: <20170206025435.GA32506@lunn.ch>
+References: <1486347287-31051-1-git-send-email-eddie.cai@rock-chips.com>
+ <1486347287-31051-3-git-send-email-eddie.cai@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486347287-31051-3-git-send-email-eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eddie Cai <eddie.cai.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eddie.cai-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The bridge_node may or may not be required.
-For example, mic and dsi are connected to OF graph, but fimd and dsi
-are not connected. Also the OF graph is not needed because the panel
-is a child of dsi. So not have to go to the endpoint and parse the
-burst, esc clock-frequency.
+Hi Eddie
 
-Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
----
- drivers/gpu/drm/exynos/exynos_drm_dsi.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+> +		button@0 {
+> +			gpios = <&gpio0 5 GPIO_ACTIVE_LOW>;
+> +			linux,code = <116>;
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-index e07cb1f..214d486 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-@@ -1652,39 +1652,23 @@ static int exynos_dsi_parse_dt(struct exynos_dsi *dsi)
- 	if (ret < 0)
- 		return ret;
- 
--	ep = of_graph_get_endpoint_by_regs(node, DSI_PORT_OUT, 0);
--	if (!ep) {
--		dev_err(dev, "no output port with endpoint specified\n");
--		return -EINVAL;
--	}
--
--	ret = exynos_dsi_of_read_u32(ep, "samsung,burst-clock-frequency",
-+	ret = exynos_dsi_of_read_u32(node, "samsung,burst-clock-frequency",
- 				     &dsi->burst_clk_rate);
- 	if (ret < 0)
--		goto end;
-+		return ret;
- 
--	ret = exynos_dsi_of_read_u32(ep, "samsung,esc-clock-frequency",
-+	ret = exynos_dsi_of_read_u32(node, "samsung,esc-clock-frequency",
- 				     &dsi->esc_clk_rate);
- 	if (ret < 0)
--		goto end;
--
--	of_node_put(ep);
-+		return ret;
- 
- 	ep = of_graph_get_next_endpoint(node, NULL);
--	if (!ep) {
--		ret = -EINVAL;
--		goto end;
--	}
--
--	dsi->bridge_node = of_graph_get_remote_port_parent(ep);
--	if (!dsi->bridge_node) {
--		ret = -EINVAL;
--		goto end;
-+	if (ep) {
-+		dsi->bridge_node = of_graph_get_remote_port_parent(ep);
-+		of_node_put(ep);
- 	}
--end:
--	of_node_put(ep);
- 
--	return ret;
-+	return 0;
- }
- 
- static int exynos_dsi_bind(struct device *dev, struct device *master,
--- 
-1.9.1
+It is a good idea to use include/dt-bindings/input/input.h
+
+and then you can replace <116> with < KEY_POWER > which is more
+readable.
+
+> +			label = "GPIO Key Power";
+> +			linux,input-type = <1>;
+
+< EV_KEY >
+
+> +			gpio-key,wakeup = <1>;
+
+This has been replace with wakeup-source.
+
+> +			debounce-interval = <100>;
+> +		};
+> +	};
+
+  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
