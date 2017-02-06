@@ -1,193 +1,228 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/4] PCI: add DT bindings for Cortina Gemini PCI Host Bridge
-Date: Mon, 6 Feb 2017 17:05:57 +0100
-Message-ID: <CAK8P3a0qouN9F-kxsaJe31TK_gUh=_JAZVOuvKj1ghbpNtit=w@mail.gmail.com>
-References: <20170128204839.18330-1-linus.walleij@linaro.org>
- <17693846.Edk12xXofc@wuerfel> <CACRpkdYpBYaeTo2SJ55=cwKcZ5Y7A1k-wy1N3UuR6u3L3RdNoA@mail.gmail.com>
+From: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 10/10] iommu: Remove iommu_register_instance interface
+Date: Mon,  6 Feb 2017 17:10:29 +0100
+Message-ID: <1486397429-29327-11-git-send-email-joro@8bytes.org>
+References: <1486397429-29327-1-git-send-email-joro@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdYpBYaeTo2SJ55=cwKcZ5Y7A1k-wy1N3UuR6u3L3RdNoA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1486397429-29327-1-git-send-email-joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Alex Williamson <alex.williamson-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 5, 2017 at 3:56 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Feb 1, 2017 at 12:19 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> On Saturday, January 28, 2017 9:48:36 PM CET Linus Walleij wrote:
->>> +       interrupt-map-mask = <0xff00 0 0 7>;
->>> +       interrupt-map = <0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
->>> +                       <0x4900 0 0 2 &pci_intc 1>,
->>> +                       <0x4a00 0 0 3 &pci_intc 2>,
->>> +                       <0x4b00 0 0 4 &pci_intc 3>,
->>> +                       <0x5000 0 0 1 &pci_intc 0>, /* Slot 10 */
->>> +                       <0x5100 0 0 2 &pci_intc 1>,
->>> +                       <0x5200 0 0 3 &pci_intc 2>,
->>> +                       <0x5300 0 0 4 &pci_intc 3>,
->>> +                       <0x5800 0 0 1 &pci_intc 0>, /* Slot 11 */
->>> +                       <0x5900 0 0 2 &pci_intc 1>,
->>> +                       <0x5a00 0 0 3 &pci_intc 2>,
->>> +                       <0x5b00 0 0 4 &pci_intc 3>,
->>> +                       <0x6000 0 0 1 &pci_intc 0>, /* Slot 12 */
->>> +                       <0x6100 0 0 2 &pci_intc 1>,
->>> +                       <0x6200 0 0 3 &pci_intc 2>,
->>> +                       <0x6300 0 0 4 &pci_intc 3>;
->>>
->>
+From: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
 
->> For this particular board, the interrupt lines appear to have been badly
->> configured so all slots use the same interrupt 0 for IntA. IIRC This also
->> means you can probably use <0 0 0 7> as the mask and just specify each of
->> the four interrupts once. A properly wired board would swizzle the
->> interrupts so that each slot has a different IRQ for its IntA line.
->
-> They are swizzled, I just have very bad hardware docs. (Only
-> code.) It turns out when I'm browsing through old board support
-> code that there is a comment followed by a piece of code like this:
->
-> /*
->  *      No swizzle on SL2312
->  */
-> static u8 __init sl2312_pci_swizzle(struct pci_dev *dev, u8 *pinp)
-> {
->         return PCI_SLOT(dev->devfn);
-> }
->
-> /*
->  * map the specified device/slot/pin to an IRQ.  This works out such
->  * that slot 9 pin 1 is INT0, pin 2 is INT1, and slot 10 pin 1 is INT1.
->  */
-> static int __init sl2312_pci_map_irq(struct pci_dev *dev, u8 slot, u8 pin)
-> {
->         int intnr = ((slot  + (pin - 1)) & 3) + 4;  /* the IRQ number
-> of PCI bridge */
->
->         printk("%s : slot = %d  pin = %d \n",__func__,slot,pin);
->     switch (slot)
->     {
->         case 12:
->                 if (pin==1)
->                 {
->                         intnr = 3;
->                     }
->                     else
->                     {
->                         intnr = 0;
->                     }
-> #ifdef CONFIG_DUAL_PCI
->                     return IRQ_PCI_INTD;
-> #endif
->             break;
->         case 11:
->                     intnr = (2 + (pin - 1)) & 3;
-> #ifdef CONFIG_DUAL_PCI
->                     return IRQ_PCI_INTC;
-> #endif
->             break;
->         case 10:
->                     intnr = (1 + (pin - 1)) & 3;
-> #ifdef CONFIG_DUAL_PCI
->                     return IRQ_PCI_INTB;
-> #endif
->             break;
->         case  9:
->                     intnr = (pin - 1) & 3;
->             break;
->     }
-> //      if (slot == 10)
-> //              intnr = (1 + (pin - 1)) & 3;
-> //      else if (slot == 9)
-> //              intnr = (pin - 1) & 3;
->         return (IRQ_PCI_INTA + intnr);
-> }
->
-> If I understand correctly they say that the IRQs are not swizzled
-> on the PCI bridge side but on the IRQ handler side.
+And also move its remaining functionality to
+iommu_device_register() and 'struct iommu_device'.
 
-That depends on whether CONFIG_DUAL_PCI is set or not:
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Signed-off-by: Joerg Roedel <jroedel-l3A5Bk7waGM@public.gmane.org>
+---
+ drivers/iommu/arm-smmu-v3.c  |  3 +--
+ drivers/iommu/arm-smmu.c     |  4 ++--
+ drivers/iommu/exynos-iommu.c |  2 --
+ drivers/iommu/iommu.c        | 37 ++++++-------------------------------
+ drivers/iommu/msm_iommu.c    |  2 --
+ drivers/iommu/mtk_iommu.c    |  1 -
+ include/linux/iommu.h        |  8 +-------
+ include/linux/of_iommu.h     |  6 ------
+ 8 files changed, 10 insertions(+), 53 deletions(-)
 
-It seems that slot 12 is hardwired to have hwirq 3 on IntA and
-hwirq 0 on all others by default, but have hwirq on IntA through
-IntD on boards that use CONFIG_DUAL_PCI.
-
-Slot 10/11 use the default swizzling without CONFIG_DUAL_PCI but
-uses hwirq 1 or 2 for all four pins with CONFIG_DUAL_PCI.
-
-Slot 9 seems to always use the default swizzling, so it has all
-four IRQ pins connected to the four hwirqs of the SoC.
-
-This is still an awful wiring, but not unthinkable, as board
-designers may have had a specific usage for the four interrupts
-in mind, to spread the devices that are actually present across
-the available hwirqs.
-
-> So if I put it in the device tree like so:
->
-> +                         interrupt-map =
-> +                               <0x4800 0 0 1 &pci_intc 0>, /* Slot 9 */
-> +                               <0x4800 0 0 2 &pci_intc 1>,
-> +                               <0x4800 0 0 3 &pci_intc 2>,
-> +                               <0x4800 0 0 4 &pci_intc 3>,
-> +                               <0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
-> +                               <0x5000 0 0 2 &pci_intc 2>,
-> +                               <0x5000 0 0 3 &pci_intc 3>,
-> +                               <0x5000 0 0 4 &pci_intc 0>,
-> +                               <0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
-> +                               <0x5800 0 0 2 &pci_intc 3>,
-> +                               <0x5800 0 0 3 &pci_intc 0>,
-> +                               <0x5800 0 0 4 &pci_intc 1>,
-
-For boards that require CONFIG_DUAL_PCI, this would be
-
-                               <0x5000 0 0 1 &pci_intc 1>, /* Slot 10 */
-                               <0x5000 0 0 2 &pci_intc 1>,
-                               <0x5000 0 0 3 &pci_intc 1>,
-                               <0x5000 0 0 4 &pci_intc 1>,
-                               <0x5800 0 0 1 &pci_intc 2>, /* Slot 11 */
-                               <0x5800 0 0 2 &pci_intc 2>,
-                               <0x5800 0 0 3 &pci_intc 2>,
-                               <0x5800 0 0 4 &pci_intc 2>,
-
-It probably works either way if you put just one device in there,
-as almost everything uses just IntA, but you'd notice the difference
-if there is ever a PCI bridge behind that slot.
-
-> +                               <0x6000 0 0 1 &pci_intc 3>, /* Slot 12 */
-> +                               <0x6000 0 0 2 &pci_intc 0>,
-> +                               <0x6000 0 0 3 &pci_intc 1>,
-> +                               <0x6000 0 0 4 &pci_intc 2>;
-
-The last two have to be
-
-                               <0x6000 0 0 3 &pci_intc 0>, /* [sic] */
-                               <0x6000 0 0 4 &pci_intc 0>; /* [sic] */
-
-> So the IRQs on the right side are swizzled instead
-> of the pins being swizzled.
->
-> ...but that looks a bit insane.
->
-> Isn't that exactly the same thing just exposed in some
-> inverse way?
-
-I don't understand your question. The mapping that you list
-is the default swizzling, right? I think if you have a board with
-sane wiring, you could write that as
-
-                      interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-                      interrupt-map =
-                              <0x0 0x0 0x0 0x1 &pci_intc 0>, /* int A */
-                              <0x0 0x0 0x0 0x2 &pci_intc 1>, /* int B */
-                              <0x0 0x0 0x0 0x3 &pci_intc 2>, /* int C */
-                              <0x0 0x0 0x0 0x4 &pci_intc 3>; /* int D */
-
-meaning that the IRQs are wired correctly to the root bus, and
-all slots are connected one would normally do with the standard
-swizzling.
-
-    Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 37094b5..3b00a2e 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2698,10 +2698,9 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	smmu->iommu.ops = &arm_smmu_ops;
++	smmu->iommu.fwnode = dev->fwnode;
+ 	ret = iommu_device_register(&smmu->iommu);
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+-
+ #ifdef CONFIG_PCI
+ 	if (pci_bus_type.iommu_ops != &arm_smmu_ops) {
+ 		pci_request_acs();
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 827e778..dbbd2f2 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -2112,7 +2112,8 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	smmu->iommu.ops = &arm_smmu_ops;
++	smmu->iommu.ops    = &arm_smmu_ops;
++	smmu->iommu.fwnode = dev->fwnode;
+ 
+ 	err = iommu_device_register(&smmu->iommu);
+ 	if (err) {
+@@ -2120,7 +2121,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+ 	platform_set_drvdata(pdev, smmu);
+ 	arm_smmu_device_reset(smmu);
+ 
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 90f0f52..839f6c1 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -644,8 +644,6 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_enable(dev);
+ 
+-	of_iommu_set_ops(dev->of_node, &exynos_iommu_ops);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 21061da..a7e14b4 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1647,43 +1647,18 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	return ret;
+ }
+ 
+-struct iommu_instance {
+-	struct list_head list;
+-	struct fwnode_handle *fwnode;
+-	const struct iommu_ops *ops;
+-};
+-static LIST_HEAD(iommu_instance_list);
+-static DEFINE_SPINLOCK(iommu_instance_lock);
+-
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops)
+-{
+-	struct iommu_instance *iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
+-
+-	if (WARN_ON(!iommu))
+-		return;
+-
+-	of_node_get(to_of_node(fwnode));
+-	INIT_LIST_HEAD(&iommu->list);
+-	iommu->fwnode = fwnode;
+-	iommu->ops = ops;
+-	spin_lock(&iommu_instance_lock);
+-	list_add_tail(&iommu->list, &iommu_instance_list);
+-	spin_unlock(&iommu_instance_lock);
+-}
+-
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct iommu_instance *instance;
+ 	const struct iommu_ops *ops = NULL;
++	struct iommu_device *iommu;
+ 
+-	spin_lock(&iommu_instance_lock);
+-	list_for_each_entry(instance, &iommu_instance_list, list)
+-		if (instance->fwnode == fwnode) {
+-			ops = instance->ops;
++	spin_lock(&iommu_device_lock);
++	list_for_each_entry(iommu, &iommu_device_list, list)
++		if (iommu->fwnode == fwnode) {
++			ops = iommu->ops;
+ 			break;
+ 		}
+-	spin_unlock(&iommu_instance_lock);
++	spin_unlock(&iommu_device_lock);
+ 	return ops;
+ }
+ 
+diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+index 38d19f9..b89b47e 100644
+--- a/drivers/iommu/msm_iommu.c
++++ b/drivers/iommu/msm_iommu.c
+@@ -810,8 +810,6 @@ static int msm_iommu_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
+ 
+-	of_iommu_set_ops(pdev->dev.of_node, &msm_iommu_ops);
+-
+ 	pr_info("device mapped at %p, irq %d with %d ctx banks\n",
+ 		iommu->base, iommu->irq, iommu->ncb);
+ 
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index 9fb7258..f0612aa 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -681,7 +681,6 @@ static int mtk_iommu_init_fn(struct device_node *np)
+ 		return ret;
+ 	}
+ 
+-	of_iommu_set_ops(np, &mtk_iommu_ops);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 7e2ba06..b1d3e3c 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -214,6 +214,7 @@ struct iommu_ops {
+ struct iommu_device {
+ 	struct list_head list;
+ 	const struct iommu_ops *ops;
++	struct fwnode_handle *fwnode;
+ 	struct device dev;
+ };
+ 
+@@ -369,8 +370,6 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 		      const struct iommu_ops *ops);
+ void iommu_fwspec_free(struct device *dev);
+ int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops);
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+ 
+ #else /* CONFIG_IOMMU_API */
+@@ -613,11 +612,6 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
+ 	return -ENODEV;
+ }
+ 
+-static inline void iommu_register_instance(struct fwnode_handle *fwnode,
+-					   const struct iommu_ops *ops)
+-{
+-}
+-
+ static inline
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+index 66fcbc9..fc4add3 100644
+--- a/include/linux/of_iommu.h
++++ b/include/linux/of_iommu.h
+@@ -31,12 +31,6 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 
+ #endif	/* CONFIG_OF_IOMMU */
+ 
+-static inline void of_iommu_set_ops(struct device_node *np,
+-				    const struct iommu_ops *ops)
+-{
+-	iommu_register_instance(&np->fwnode, ops);
+-}
+-
+ static inline const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+ {
+ 	return iommu_ops_from_fwnode(&np->fwnode);
+-- 
+1.9.1
