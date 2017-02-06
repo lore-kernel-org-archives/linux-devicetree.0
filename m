@@ -1,334 +1,92 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCHv2 10/16] ov2640: enable clock and fix power/reset
-Date: Mon, 6 Feb 2017 13:02:24 +0100
-Message-ID: <46b21977-6bc0-46a0-586c-c575241870db@xs4all.nl>
-References: <20170130140628.18088-1-hverkuil@xs4all.nl>
- <20170130140628.18088-11-hverkuil@xs4all.nl>
- <20170131102020.GT7139@valkosipuli.retiisi.org.uk>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH 2/2] drm/panel: Add driver for sitronix ST7789V panel
+Date: Mon, 6 Feb 2017 13:13:19 +0100
+Message-ID: <8096d309-d341-a3ba-8ddb-096a13967f64@tronnes.org>
+References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+ <8194211279dd2d1b1c2e88a3c17d154c356bbbc7.1486115846.git-series.maxime.ripard@free-electrons.com>
+ <6c4db243-59fc-f7a4-96e0-8fefef253bac@tronnes.org>
+ <20170206105037.sxtx5o3tocfqq7tq@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170131102020.GT7139-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170206105037.sxtx5o3tocfqq7tq@lukather>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2017 11:20 AM, Sakari Ailus wrote:
-> Hi Hans,
-> 
-> Thank you for the patchset!
-> 
-> On Mon, Jan 30, 2017 at 03:06:22PM +0100, Hans Verkuil wrote:
->> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->>
->> Convert v4l2_clk to normal clk, enable the clock and fix the power/reset
->> handling.
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
->> ---
->>  drivers/media/i2c/ov2640.c | 80 +++++++++++++++++-----------------------------
->>  1 file changed, 29 insertions(+), 51 deletions(-)
->>
->> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
->> index 83f88ef..565742b 100644
->> --- a/drivers/media/i2c/ov2640.c
->> +++ b/drivers/media/i2c/ov2640.c
->> @@ -16,15 +16,14 @@
->>  #include <linux/init.h>
->>  #include <linux/module.h>
->>  #include <linux/i2c.h>
->> +#include <linux/clk.h>
->>  #include <linux/slab.h>
->>  #include <linux/delay.h>
->>  #include <linux/gpio.h>
->>  #include <linux/gpio/consumer.h>
->> -#include <linux/of_gpio.h>
->>  #include <linux/v4l2-mediabus.h>
->>  #include <linux/videodev2.h>
->>  
->> -#include <media/v4l2-clk.h>
->>  #include <media/v4l2-device.h>
->>  #include <media/v4l2-subdev.h>
->>  #include <media/v4l2-ctrls.h>
->> @@ -284,7 +283,7 @@ struct ov2640_priv {
->>  	struct v4l2_subdev		subdev;
->>  	struct v4l2_ctrl_handler	hdl;
->>  	u32	cfmt_code;
->> -	struct v4l2_clk			*clk;
->> +	struct clk			*clk;
-> 
-> Nice!
-> 
->>  	const struct ov2640_win_size	*win;
->>  
->>  	struct gpio_desc *resetb_gpio;
->> @@ -656,8 +655,9 @@ static int ov2640_mask_set(struct i2c_client *client,
->>  	return i2c_smbus_write_byte_data(client, reg, val);
->>  }
->>  
->> -static int ov2640_reset(struct i2c_client *client)
->> +static int ov2640_reset(struct v4l2_subdev *sd, u32 val)
->>  {
->> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>  	int ret;
->>  	const struct regval_list reset_seq[] = {
->>  		{BANK_SEL, BANK_SEL_SENS},
->> @@ -735,21 +735,6 @@ static int ov2640_s_register(struct v4l2_subdev *sd,
->>  }
->>  #endif
->>  
->> -static int ov2640_s_power(struct v4l2_subdev *sd, int on)
->> -{
->> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
->> -	struct ov2640_priv *priv = to_ov2640(client);
->> -
->> -	gpiod_direction_output(priv->pwdn_gpio, !on);
->> -	if (on && priv->resetb_gpio) {
->> -		/* Active the resetb pin to perform a reset pulse */
->> -		gpiod_direction_output(priv->resetb_gpio, 1);
->> -		usleep_range(3000, 5000);
->> -		gpiod_direction_output(priv->resetb_gpio, 0);
-> 
-> Do you still perform the reset sequence somewhere? This could be crucial for
-> reliability.
-
-All I can go with is what soc_camera did, and there the reset is performed only
-once, when the sensor driver is bound to soc_camera. This is the equivalent of
-that. The reset is now performed in ov2640_init_gpio although it doesn't do a
-full reset there. See more about this below.
-
-> 
->> -	}
->> -	return 0;
->> -}
->> -
->>  /* Select the nearest higher resolution for capture */
->>  static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
->>  {
->> @@ -769,9 +754,10 @@ static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
->>  	return &ov2640_supported_win_sizes[default_size];
->>  }
->>  
->> -static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
->> +static int ov2640_set_params(struct v4l2_subdev *sd, u32 *width, u32 *height,
->>  			     u32 code)
->>  {
->> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>  	struct ov2640_priv       *priv = to_ov2640(client);
->>  	const struct regval_list *selected_cfmt_regs;
->>  	int ret;
->> @@ -802,7 +788,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
->>  	}
->>  
->>  	/* reset hardware */
->> -	ov2640_reset(client);
->> +	ov2640_reset(sd, 0);
->>  
->>  	/* initialize the sensor with default data */
->>  	dev_dbg(&client->dev, "%s: Init default", __func__);
->> @@ -840,7 +826,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
->>  
->>  err:
->>  	dev_err(&client->dev, "%s: Error %d", __func__, ret);
->> -	ov2640_reset(client);
->> +	ov2640_reset(sd, 0);
->>  	priv->win = NULL;
->>  
->>  	return ret;
->> @@ -877,7 +863,6 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
->>  		struct v4l2_subdev_format *format)
->>  {
->>  	struct v4l2_mbus_framefmt *mf = &format->format;
->> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>  
->>  	if (format->pad)
->>  		return -EINVAL;
->> @@ -902,7 +887,7 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
->>  	}
->>  
->>  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
->> -		return ov2640_set_params(client, &mf->width,
->> +		return ov2640_set_params(sd, &mf->width,
->>  					 &mf->height, mf->code);
->>  	cfg->try_fmt = *mf;
->>  	return 0;
->> @@ -947,10 +932,6 @@ static int ov2640_video_probe(struct i2c_client *client)
->>  	const char *devname;
->>  	int ret;
->>  
->> -	ret = ov2640_s_power(&priv->subdev, 1);
->> -	if (ret < 0)
->> -		return ret;
->> -
->>  	/*
->>  	 * check and show product ID and manufacturer ID
->>  	 */
->> @@ -978,7 +959,6 @@ static int ov2640_video_probe(struct i2c_client *client)
->>  	ret = v4l2_ctrl_handler_setup(&priv->hdl);
->>  
->>  done:
->> -	ov2640_s_power(&priv->subdev, 0);
->>  	return ret;
->>  }
->>  
->> @@ -991,7 +971,7 @@ static struct v4l2_subdev_core_ops ov2640_subdev_core_ops = {
->>  	.g_register	= ov2640_g_register,
->>  	.s_register	= ov2640_s_register,
->>  #endif
->> -	.s_power	= ov2640_s_power,
->> +	.reset		= ov2640_reset,
-> 
-> Why?
-> 
-> We have s_power() callback. Shouldn't you run the reset sequence when the
-> device is powered on?
-> 
-> Few if any bridge / ISP drivers will use the reset op. It should rather be
-> removed.
-
-Good point. I'm not sure why I did this.
-
-I will restore the s_power callback. I seem to remember that I had problems
-with s_power, but I will have to retest this.
-
-> 
->>  };
->>  
->>  static const struct v4l2_subdev_pad_ops ov2640_subdev_pad_ops = {
->> @@ -1006,9 +986,17 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
->>  	.pad	= &ov2640_subdev_pad_ops,
->>  };
->>  
->> -static int ov2640_probe_dt(struct i2c_client *client,
->> -		struct ov2640_priv *priv)
->> +static int ov2640_init_gpio(struct i2c_client *client,
->> +			    struct ov2640_priv *priv)
->>  {
->> +	/* Request the power down GPIO deasserted */
->> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
->> +			GPIOD_OUT_LOW);
->> +	if (!priv->pwdn_gpio)
->> +		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
-> 
-> I'm pretty sure not finding a GPIO using devm_gpiod_get_optional() already
-> produces at least one line of output elsewhere.
-
-No, it doesn't. It's optional, after all.
-
-> 
->> +	else if (IS_ERR(priv->pwdn_gpio))
->> +		return PTR_ERR(priv->pwdn_gpio);
->> +
->>  	/* Request the reset GPIO deasserted */
->>  	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
->>  			GPIOD_OUT_LOW);
->> @@ -1017,14 +1005,6 @@ static int ov2640_probe_dt(struct i2c_client *client,
->>  	else if (IS_ERR(priv->resetb_gpio))
->>  		return PTR_ERR(priv->resetb_gpio);
->>  
->> -	/* Request the power down GPIO asserted */
->> -	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
->> -			GPIOD_OUT_HIGH);
->> -	if (!priv->pwdn_gpio)
->> -		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
-> 
-> Same here.
-> 
->> -	else if (IS_ERR(priv->pwdn_gpio))
->> -		return PTR_ERR(priv->pwdn_gpio);
->> -
->>  	return 0;
->>  }
->>  
->> @@ -1051,9 +1031,10 @@ static int ov2640_probe(struct i2c_client *client,
->>  		return -ENOMEM;
->>  	}
->>  
->> -	priv->clk = v4l2_clk_get(&client->dev, "xvclk");
->> +	priv->clk = clk_get(&client->dev, "xvclk");
->>  	if (IS_ERR(priv->clk))
->>  		return -EPROBE_DEFER;
->> +	clk_prepare_enable(priv->clk);
-> 
-> I wonder V4L2 clock framework did this. This should be done in the s_power()
-> callback, not here.
-
-Yeah, I'll need to revisit this.
-
-> 
->>  
->>  	if (!client->dev.of_node) {
->>  		dev_err(&client->dev, "Missing platform_data for driver\n");
->> @@ -1061,9 +1042,9 @@ static int ov2640_probe(struct i2c_client *client,
->>  		goto err_clk;
->>  	}
->>  
->> -	ret = ov2640_probe_dt(client, priv);
->> +	ret = ov2640_init_gpio(client, priv);
->>  	if (ret)
->> -		goto err_clk;
->> +		return ret;
->>  
->>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
->>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
->> @@ -1074,25 +1055,23 @@ static int ov2640_probe(struct i2c_client *client,
->>  	priv->subdev.ctrl_handler = &priv->hdl;
->>  	if (priv->hdl.error) {
->>  		ret = priv->hdl.error;
->> -		goto err_clk;
->> +		goto err_hdl;
->>  	}
->>  
->>  	ret = ov2640_video_probe(client);
->>  	if (ret < 0)
->> -		goto err_videoprobe;
->> +		goto err_hdl;
->>  
->>  	ret = v4l2_async_register_subdev(&priv->subdev);
->>  	if (ret < 0)
->> -		goto err_videoprobe;
->> +		goto err_hdl;
->>  
->>  	dev_info(&adapter->dev, "OV2640 Probed\n");
->>  
->>  	return 0;
->>  
->> -err_videoprobe:
->> +err_hdl:
->>  	v4l2_ctrl_handler_free(&priv->hdl);
->> -err_clk:
->> -	v4l2_clk_put(priv->clk);
->>  	return ret;
->>  }
->>  
->> @@ -1101,9 +1080,8 @@ static int ov2640_remove(struct i2c_client *client)
->>  	struct ov2640_priv       *priv = to_ov2640(client);
->>  
->>  	v4l2_async_unregister_subdev(&priv->subdev);
->> -	v4l2_clk_put(priv->clk);
->> -	v4l2_device_unregister_subdev(&priv->subdev);
->>  	v4l2_ctrl_handler_free(&priv->hdl);
-> 
-> Shouldn't you free the control handler afterwards? I'm not sure if this
-> makes a lot of difference though.
-
-The order makes no difference here.
-
-Regards,
-
-	Hans
-
-> 
->> +	v4l2_device_unregister_subdev(&priv->subdev);
->>  	return 0;
->>  }
->>  
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkRlbiAwNi4wMi4yMDE3IDExLjUwLCBza3JldiBNYXhpbWUgUmlwYXJkOgo+IEhpIE5vcmFsZiwK
+Pgo+IE9uIEZyaSwgRmViIDAzLCAyMDE3IGF0IDA3OjUzOjU4UE0gKzAxMDAsIE5vcmFsZiBUcsO4
+bm5lcyB3cm90ZToKPj4gRGVuIDAzLjAyLjIwMTcgMTAuNTksIHNrcmV2IE1heGltZSBSaXBhcmQ6
+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBNYXhpbWUgUmlwYXJkIDxtYXhpbWUucmlwYXJkQGZyZWUtZWxl
+Y3Ryb25zLmNvbT4KPj4+IC0tLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcg
+ICAgICAgICAgICAgICAgICB8ICAgNCArLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01h
+a2VmaWxlICAgICAgICAgICAgICAgICB8ICAgMSArLQo+Pj4gICAgZHJpdmVycy9ncHUvZHJtL3Bh
+bmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYuYyB8IDQzNSArKysrKysrKysrKysrKysrKystCj4+
+PiAgICAzIGZpbGVzIGNoYW5nZWQsIDQ0MCBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+
+Pj4gICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaXRy
+b25peC1zdDc3ODl2LmMKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVs
+L0tjb25maWcgYi9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvS2NvbmZpZwo+Pj4gaW5kZXggNjJhYmE5
+NzZlNzQ0Li5kMDdiOTk2YTA3YjggMTAwNjQ0Cj4+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFu
+ZWwvS2NvbmZpZwo+Pj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3BhbmVsL0tjb25maWcKPj4+IEBA
+IC04MSw0ICs4MSw4IEBAIGNvbmZpZyBEUk1fUEFORUxfU0hBUlBfTFMwNDNUMUxFMDEKPj4+ICAg
+IAkgIFNheSBZIGhlcmUgaWYgeW91IHdhbnQgdG8gZW5hYmxlIHN1cHBvcnQgZm9yIFNoYXJwIExT
+MDQzVDFMRTAxIHFIRAo+Pj4gICAgCSAgKDU0MHg5NjApIERTSSBwYW5lbCBhcyBmb3VuZCBvbiB0
+aGUgUXVhbGNvbW0gQVBRODA3NCBEcmFnb25ib2FyZAo+Pj4gK2NvbmZpZyBEUk1fUEFORUxfU0lU
+Uk9OSVhfU1Q3Nzg5Vgo+Pj4gKwl0cmlzdGF0ZSAiU2l0cm9ueCBTVDc3ODlWIHBhbmVsIgo+Pj4g
+KwlkZXBlbmRzIG9uIE9GICYmIFNQSQo+Pj4gKwo+Pj4gICAgZW5kbWVudQo+Pj4gZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9NYWtlZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9NYWtlZmlsZQo+Pj4gaW5kZXggYTVjN2VjMDIzNmUwLi40MWIyNDVkMzk5ODQgMTAwNjQ0Cj4+
+PiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vcGFuZWwvTWFrZWZpbGUKPj4+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9wYW5lbC9NYWtlZmlsZQo+Pj4gQEAgLTYsMyArNiw0IEBAIG9iai0kKENPTkZJR19E
+Uk1fUEFORUxfU0FNU1VOR19MRDkwNDApICs9IHBhbmVsLXNhbXN1bmctbGQ5MDQwLm8KPj4+ICAg
+IG9iai0kKENPTkZJR19EUk1fUEFORUxfU0FNU1VOR19TNkU4QUEwKSArPSBwYW5lbC1zYW1zdW5n
+LXM2ZThhYTAubwo+Pj4gICAgb2JqLSQoQ09ORklHX0RSTV9QQU5FTF9TSEFSUF9MUTEwMVIxU1gw
+MSkgKz0gcGFuZWwtc2hhcnAtbHExMDFyMXN4MDEubwo+Pj4gICAgb2JqLSQoQ09ORklHX0RSTV9Q
+QU5FTF9TSEFSUF9MUzA0M1QxTEUwMSkgKz0gcGFuZWwtc2hhcnAtbHMwNDN0MWxlMDEubwo+Pj4g
+K29iai0kKENPTkZJR19EUk1fUEFORUxfU0lUUk9OSVhfU1Q3Nzg5VikgKz0gcGFuZWwtc2l0cm9u
+aXgtc3Q3Nzg5di5vCj4+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVs
+LXNpdHJvbml4LXN0Nzc4OXYuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaXRyb25p
+eC1zdDc3ODl2LmMKPj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+PiBpbmRleCAwMDAwMDAwMDAw
+MDAuLmFhYjgxN2I1NWFhNgo+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4gKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL3BhbmVsL3BhbmVsLXNpdHJvbml4LXN0Nzc4OXYuYwo+Pj4gQEAgLTAsMCArMSw0MzUgQEAK
+Pj4+ICsvKgo+Pj4gKyAqIENvcHlyaWdodCAoQykgMjAxNyBGcmVlIEVsZWN0cm9ucwo+Pj4gKyAq
+Cj4+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmli
+dXRlIGl0IGFuZC9vcgo+Pj4gKyAqIG1vZGlmeSBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdO
+VSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIHZlcnNpb24KPj4+ICsgKiAyIGFzIHB1Ymxpc2hlZCBi
+eSB0aGUgRnJlZSBTb2Z0d2FyZSBGb3VuZGF0aW9uLgo+Pj4gKyAqLwo+Pj4gKwo+Pj4gKyNpbmNs
+dWRlIDxkcm0vZHJtUC5oPgo+Pj4gKyNpbmNsdWRlIDxkcm0vZHJtX3BhbmVsLmg+Cj4+PiArCj4+
+PiArI2luY2x1ZGUgPGxpbnV4L2dwaW8vY29uc3VtZXIuaD4KPj4+ICsjaW5jbHVkZSA8bGludXgv
+c3BpL3NwaS5oPgo+Pj4gKwo+Pj4gKyNkZWZpbmUgU1Q3Nzg5Vl9TTFBJTl9DTUQJCTB4MTAKPj4+
+ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfU0xQT1VUX0NNRAkJMHgxMQo+Pj4gKwo+Pj4gKyNkZWZp
+bmUgU1Q3Nzg5Vl9JTlZPTl9DTUQJCTB4MjEKPj4+ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfRElT
+UE9GRl9DTUQJCTB4MjgKPj4+ICsKPj4+ICsjZGVmaW5lIFNUNzc4OVZfRElTUE9OX0NNRAkJMHgy
+OQo+Pj4gKwo+Pj4gKyNkZWZpbmUgU1Q3Nzg5Vl9NQURDVExfQ01ECQkweDM2Cj4+PiArCj4+PiAr
+I2RlZmluZSBTVDc3ODlWX0NPTE1PRF9DTUQJCTB4M2EKPj4gWW91IGNhbiB1c2UgdGhlc2UgZnJv
+bSBpbmNsdWRlL3ZpZGVvL21pcGlfZGlzcGxheS5oOgo+Pgo+PiAgICAgICAgICBNSVBJX0RDU19F
+TlRFUl9TTEVFUF9NT0RFICAgICAgID0gMHgxMCwKPj4gICAgICAgICAgTUlQSV9EQ1NfRVhJVF9T
+TEVFUF9NT0RFICAgICAgICA9IDB4MTEsCj4+ICAgICAgICAgIE1JUElfRENTX0VOVEVSX0lOVkVS
+VF9NT0RFICAgICAgPSAweDIxLAo+PiAgICAgICAgICBNSVBJX0RDU19TRVRfRElTUExBWV9PRkYg
+ICAgICAgID0gMHgyOCwKPj4gICAgICAgICAgTUlQSV9EQ1NfU0VUX0RJU1BMQVlfT04gICAgICAg
+ICA9IDB4MjksCj4+ICAgICAgICAgIE1JUElfRENTX1NFVF9BRERSRVNTX01PREUgICAgICAgPSAw
+eDM2LAo+PiAgICAgICAgICBNSVBJX0RDU19TRVRfUElYRUxfRk9STUFUICAgICAgID0gMHgzQSwK
+PiBJIGRvbid0IGtub3csIHRoYXQgY29udHJvbGxlciBjYW5ub3QgZG8gTUlQSSBEU0kgYXQgYWxs
+LCBhbmQgd2Ugd291bGQKPiBoYXZlIHRvIGRlZmluZSBhbGwgdGhlIG90aGVyIGNvbW1hbmRzIGFu
+eXdheS4KCk1JUEkgRENTIGNvbW1hbmRzIGNhbiBiZSBzZW50IG92ZXIgYm90aCBEaXNwbGF5IFNl
+cmlhbCBJbnRlcmZhY2UgKERTSSkKYW5kIGluIHlvdXIgY2FzZSBEaXNwbGF5IEJ1cyBJbnRlcmZh
+Y2UgKERCSSkgKG5vdCBxdWl0ZSBzdXJlIGlmIHRoZQpDb250cm9sIEludGVyZmFjZSBjYW4gYmUg
+b3V0c2lkZSBvZiBEQkkpLiBTbyBEaXNwbGF5IENvbW1hbmQgU2V0IChEQ1MpCmlzIG5vdCBzcGVj
+aWZpYyB0byB0aGUgaW50ZXJmYWNlLCBidXQgdG8gdGhlIGNvbnRyb2xsZXIuCgpJdCdzIHVwIHRv
+IHlvdSBpZiB5b3Ugd2FudCB0byB1c2UgdGhlbSB0aG91Z2guCgoKTm9yYWxmLgoKX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
