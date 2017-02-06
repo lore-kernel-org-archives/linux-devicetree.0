@@ -1,35 +1,80 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] ARM: shmobile: r7s72100: Enable L2 cache
-Date: Mon, 6 Feb 2017 14:13:09 +0000
-Message-ID: <SG2PR06MB1165ABE474EDB227522FCF148A400@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170202212000.10768-1-chris.brandt@renesas.com>
- <20170206082525.GB13441@verge.net.au>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH] Documentation: devicetree: Add PHY no lane swap binding
+Date: Mon, 6 Feb 2017 15:15:24 +0100
+Message-ID: <20170206151524.2ff0f799@jawa>
+References: <1486223267-11875-1-git-send-email-lukma@denx.de>
+        <20170204172329.GA8364@lunn.ch>
+        <509fadc4-164c-7333-1871-fd6e615e57c9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170206082525.GB13441@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <509fadc4-164c-7333-1871-fd6e615e57c9@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, jbrunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jon Mason <jon.mason@broadcom.com>, Fabio Estevam <fabio.estevam@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hi Florian, Andrew,
 
-On Monday, February 06, 2017, Simon Horman wrote:
-> is it possible to apply the .dtsi and .c portions of this change
-> separately and still get sane behaviour at each step?
->=20
-> If so I would like to request that this patch be split into two patches,
-> one for .c and one for .dtsi. This will allow me to apply the patches to
-> separate branches which will in turn make it easier for me to get the
-> change accepted.
+> Le 02/04/17 à 09:23, Andrew Lunn a écrit :
+> > On Sat, Feb 04, 2017 at 04:47:47PM +0100, Lukasz Majewski wrote:
+> >> Add the documentation to avoid PHY lane swapping. This is a boolean
+> >> entry to notify the phy device drivers that the TX/RX lanes NO need
+> > 
+> > that the TX/RX lanes should not be swapped.
+> > 
+> >> to be swapped.
+> >> The use case for this binding mostly happens after wrong HW
+> >> configuration of PHY IC during bootstrap.
+> >>
+> >> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+> >> ---
+> >>  Documentation/devicetree/bindings/net/phy.txt | 4 ++++
+> >>  1 file changed, 4 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/phy.txt
+> >> b/Documentation/devicetree/bindings/net/phy.txt index
+> >> fb5056b..5e25bc9 100644 ---
+> >> a/Documentation/devicetree/bindings/net/phy.txt +++
+> >> b/Documentation/devicetree/bindings/net/phy.txt @@ -39,6 +39,10 @@
+> >> Optional Properties:
+> >>  - enet-phy-lane-swap: If set, indicates the PHY will swap the
+> >> TX/RX lanes to compensate for the board being designed with the
+> >> lanes swapped. 
+> >> +- enet-phy-lane-no-swap: If set, indicates that PHY will disable
+> >> swap of the
+> >> +  TX/RX lanes. This binding allows the PHY to work correcly after
+> >> e.g. wrong
+> >> +  bootstrap configuration caused by issues in PCB layout design.
+> 
+> s/binding/property/
+> 
+> >> +
+> > 
+> > We are leaving it undefined what it means if neither
+> > enet-phy-lane-no-swap nor enet-phy-lane-swap properties are present.
+> > Do we want to define this? That the swap should be left untouched by
+> > the driver?
+> 
+> Since this is a description of the hardware, absence of a properties
+> should mean that the driver is at freedom to either keep the hardware
+> defaults, or come up with its own settings that are sensible for that
+> particular PHY device.
+> 
+> What would you see clarified here?
 
-OK, no problem.
+Any more comments to this patch?
 
-I tried thinking about which way you guys would want it...I had a 50/50
-shot...I picked the wrong one ;)
+Is the explanation informative enough?
 
 
-Chris
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-10 Fax: (+49)-8142-66989-80 Email: wd@denx.de
