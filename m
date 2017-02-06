@@ -1,289 +1,334 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH 5/6] dmaengine: Add Broadcom SBA RAID driver
-Date: Mon, 6 Feb 2017 17:31:15 +0530
-Message-ID: <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
-References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com>
- <1486010836-25228-6-git-send-email-anup.patel@broadcom.com> <20170205060657.GV19244@localhost>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCHv2 10/16] ov2640: enable clock and fix power/reset
+Date: Mon, 6 Feb 2017 13:02:24 +0100
+Message-ID: <46b21977-6bc0-46a0-586c-c575241870db@xs4all.nl>
+References: <20170130140628.18088-1-hverkuil@xs4all.nl>
+ <20170130140628.18088-11-hverkuil@xs4all.nl>
+ <20170131102020.GT7139@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-raid-owner@vger.kernel.org>
-In-Reply-To: <20170205060657.GV19244@localhost>
-Sender: linux-raid-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170131102020.GT7139-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <guennadi.liakhovetski-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Songjun Wu <songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 5, 2017 at 11:36 AM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Thu, Feb 02, 2017 at 10:17:15AM +0530, Anup Patel wrote:
->> +config BCM_SBA_RAID
->> +        tristate "Broadcom SBA RAID engine support"
->> +        depends on (ARM64 && MAILBOX && RAID6_PQ) || COMPILE_TEST
->> +        select DMA_ENGINE
->> +        select DMA_ENGINE_RAID
->> +     select ASYNC_TX_ENABLE_CHANNEL_SWITCH
->> +     default ARCH_BCM_IPROC
->
-> whats with the funny alignement?
+On 01/31/2017 11:20 AM, Sakari Ailus wrote:
+> Hi Hans,
+> 
+> Thank you for the patchset!
+> 
+> On Mon, Jan 30, 2017 at 03:06:22PM +0100, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>>
+>> Convert v4l2_clk to normal clk, enable the clock and fix the power/reset
+>> handling.
+>>
+>> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/media/i2c/ov2640.c | 80 +++++++++++++++++-----------------------------
+>>  1 file changed, 29 insertions(+), 51 deletions(-)
+>>
+>> diff --git a/drivers/media/i2c/ov2640.c b/drivers/media/i2c/ov2640.c
+>> index 83f88ef..565742b 100644
+>> --- a/drivers/media/i2c/ov2640.c
+>> +++ b/drivers/media/i2c/ov2640.c
+>> @@ -16,15 +16,14 @@
+>>  #include <linux/init.h>
+>>  #include <linux/module.h>
+>>  #include <linux/i2c.h>
+>> +#include <linux/clk.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/delay.h>
+>>  #include <linux/gpio.h>
+>>  #include <linux/gpio/consumer.h>
+>> -#include <linux/of_gpio.h>
+>>  #include <linux/v4l2-mediabus.h>
+>>  #include <linux/videodev2.h>
+>>  
+>> -#include <media/v4l2-clk.h>
+>>  #include <media/v4l2-device.h>
+>>  #include <media/v4l2-subdev.h>
+>>  #include <media/v4l2-ctrls.h>
+>> @@ -284,7 +283,7 @@ struct ov2640_priv {
+>>  	struct v4l2_subdev		subdev;
+>>  	struct v4l2_ctrl_handler	hdl;
+>>  	u32	cfmt_code;
+>> -	struct v4l2_clk			*clk;
+>> +	struct clk			*clk;
+> 
+> Nice!
+> 
+>>  	const struct ov2640_win_size	*win;
+>>  
+>>  	struct gpio_desc *resetb_gpio;
+>> @@ -656,8 +655,9 @@ static int ov2640_mask_set(struct i2c_client *client,
+>>  	return i2c_smbus_write_byte_data(client, reg, val);
+>>  }
+>>  
+>> -static int ov2640_reset(struct i2c_client *client)
+>> +static int ov2640_reset(struct v4l2_subdev *sd, u32 val)
+>>  {
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>>  	int ret;
+>>  	const struct regval_list reset_seq[] = {
+>>  		{BANK_SEL, BANK_SEL_SENS},
+>> @@ -735,21 +735,6 @@ static int ov2640_s_register(struct v4l2_subdev *sd,
+>>  }
+>>  #endif
+>>  
+>> -static int ov2640_s_power(struct v4l2_subdev *sd, int on)
+>> -{
+>> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>> -	struct ov2640_priv *priv = to_ov2640(client);
+>> -
+>> -	gpiod_direction_output(priv->pwdn_gpio, !on);
+>> -	if (on && priv->resetb_gpio) {
+>> -		/* Active the resetb pin to perform a reset pulse */
+>> -		gpiod_direction_output(priv->resetb_gpio, 1);
+>> -		usleep_range(3000, 5000);
+>> -		gpiod_direction_output(priv->resetb_gpio, 0);
+> 
+> Do you still perform the reset sequence somewhere? This could be crucial for
+> reliability.
 
-Sure, I will use tabs here.
+All I can go with is what soc_camera did, and there the reset is performed only
+once, when the sensor driver is bound to soc_camera. This is the equivalent of
+that. The reset is now performed in ov2640_init_gpio although it doesn't do a
+full reset there. See more about this below.
 
->
->> +/* SBA command related defines */
->> +#define SBA_TYPE_SHIFT                                       48
->> +#define SBA_TYPE_MASK                                        0x3
->> +#define SBA_TYPE_A                                   0x0
->> +#define SBA_TYPE_B                                   0x2
->> +#define SBA_TYPE_C                                   0x3
->> +#define SBA_USER_DEF_SHIFT                           32
->> +#define SBA_USER_DEF_MASK                            0xffff
->> +#define SBA_R_MDATA_SHIFT                            24
->> +#define SBA_R_MDATA_MASK                             0xff
->> +#define SBA_C_MDATA_MS_SHIFT                         18
->> +#define SBA_C_MDATA_MS_MASK                          0x3
->> +#define SBA_INT_SHIFT                                        17
->> +#define SBA_INT_MASK                                 0x1
->> +#define SBA_RESP_SHIFT                                       16
->> +#define SBA_RESP_MASK                                        0x1
->> +#define SBA_C_MDATA_SHIFT                            8
->> +#define SBA_C_MDATA_MASK                             0xff
->> +#define SBA_CMD_SHIFT                                        0
->> +#define SBA_CMD_MASK                                 0xf
->> +#define SBA_CMD_ZERO_ALL_BUFFERS                     0x8
->> +#define SBA_CMD_LOAD_BUFFER                          0x9
->> +#define SBA_CMD_XOR                                  0xa
->> +#define SBA_CMD_GALOIS_XOR                           0xb
->> +#define SBA_CMD_ZERO_BUFFER                          0x4
->> +#define SBA_CMD_WRITE_BUFFER                         0xc
->
-> Try using BIT and GENMAST for hardware descriptions
+> 
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>>  /* Select the nearest higher resolution for capture */
+>>  static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
+>>  {
+>> @@ -769,9 +754,10 @@ static const struct ov2640_win_size *ov2640_select_win(u32 *width, u32 *height)
+>>  	return &ov2640_supported_win_sizes[default_size];
+>>  }
+>>  
+>> -static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>> +static int ov2640_set_params(struct v4l2_subdev *sd, u32 *width, u32 *height,
+>>  			     u32 code)
+>>  {
+>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>>  	struct ov2640_priv       *priv = to_ov2640(client);
+>>  	const struct regval_list *selected_cfmt_regs;
+>>  	int ret;
+>> @@ -802,7 +788,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>>  	}
+>>  
+>>  	/* reset hardware */
+>> -	ov2640_reset(client);
+>> +	ov2640_reset(sd, 0);
+>>  
+>>  	/* initialize the sensor with default data */
+>>  	dev_dbg(&client->dev, "%s: Init default", __func__);
+>> @@ -840,7 +826,7 @@ static int ov2640_set_params(struct i2c_client *client, u32 *width, u32 *height,
+>>  
+>>  err:
+>>  	dev_err(&client->dev, "%s: Error %d", __func__, ret);
+>> -	ov2640_reset(client);
+>> +	ov2640_reset(sd, 0);
+>>  	priv->win = NULL;
+>>  
+>>  	return ret;
+>> @@ -877,7 +863,6 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>>  		struct v4l2_subdev_format *format)
+>>  {
+>>  	struct v4l2_mbus_framefmt *mf = &format->format;
+>> -	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>>  
+>>  	if (format->pad)
+>>  		return -EINVAL;
+>> @@ -902,7 +887,7 @@ static int ov2640_set_fmt(struct v4l2_subdev *sd,
+>>  	}
+>>  
+>>  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+>> -		return ov2640_set_params(client, &mf->width,
+>> +		return ov2640_set_params(sd, &mf->width,
+>>  					 &mf->height, mf->code);
+>>  	cfg->try_fmt = *mf;
+>>  	return 0;
+>> @@ -947,10 +932,6 @@ static int ov2640_video_probe(struct i2c_client *client)
+>>  	const char *devname;
+>>  	int ret;
+>>  
+>> -	ret = ov2640_s_power(&priv->subdev, 1);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+>>  	/*
+>>  	 * check and show product ID and manufacturer ID
+>>  	 */
+>> @@ -978,7 +959,6 @@ static int ov2640_video_probe(struct i2c_client *client)
+>>  	ret = v4l2_ctrl_handler_setup(&priv->hdl);
+>>  
+>>  done:
+>> -	ov2640_s_power(&priv->subdev, 0);
+>>  	return ret;
+>>  }
+>>  
+>> @@ -991,7 +971,7 @@ static struct v4l2_subdev_core_ops ov2640_subdev_core_ops = {
+>>  	.g_register	= ov2640_g_register,
+>>  	.s_register	= ov2640_s_register,
+>>  #endif
+>> -	.s_power	= ov2640_s_power,
+>> +	.reset		= ov2640_reset,
+> 
+> Why?
+> 
+> We have s_power() callback. Shouldn't you run the reset sequence when the
+> device is powered on?
+> 
+> Few if any bridge / ISP drivers will use the reset op. It should rather be
+> removed.
 
-Sure, will do.
+Good point. I'm not sure why I did this.
 
->
+I will restore the s_power callback. I seem to remember that I had problems
+with s_power, but I will have to retest this.
+
+> 
+>>  };
+>>  
+>>  static const struct v4l2_subdev_pad_ops ov2640_subdev_pad_ops = {
+>> @@ -1006,9 +986,17 @@ static struct v4l2_subdev_ops ov2640_subdev_ops = {
+>>  	.pad	= &ov2640_subdev_pad_ops,
+>>  };
+>>  
+>> -static int ov2640_probe_dt(struct i2c_client *client,
+>> -		struct ov2640_priv *priv)
+>> +static int ov2640_init_gpio(struct i2c_client *client,
+>> +			    struct ov2640_priv *priv)
+>>  {
+>> +	/* Request the power down GPIO deasserted */
+>> +	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+>> +			GPIOD_OUT_LOW);
+>> +	if (!priv->pwdn_gpio)
+>> +		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
+> 
+> I'm pretty sure not finding a GPIO using devm_gpiod_get_optional() already
+> produces at least one line of output elsewhere.
+
+No, it doesn't. It's optional, after all.
+
+> 
+>> +	else if (IS_ERR(priv->pwdn_gpio))
+>> +		return PTR_ERR(priv->pwdn_gpio);
 >> +
->> +/* SBA C_MDATA helper macros */
->> +#define SBA_C_MDATA_LOAD_VAL(__bnum0)                ((__bnum0) & 0x3)
->> +#define SBA_C_MDATA_WRITE_VAL(__bnum0)               ((__bnum0) & 0x3)
->> +#define SBA_C_MDATA_XOR_VAL(__bnum1, __bnum0)                        \
->> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
->> +                             __v |= ((__bnum1) & 0x3) << 2;  \
->> +                             __v;                            \
->> +                     })
->> +#define SBA_C_MDATA_PQ_VAL(__dnum, __bnum1, __bnum0)         \
->> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
->> +                             __v |= ((__bnum1) & 0x3) << 2;  \
->> +                             __v |= ((__dnum) & 0x1f) << 5;  \
->> +                             __v;                            \
->> +                     })
->
-> ah why are we usig complex macros, why can't these be simple functions..
+>>  	/* Request the reset GPIO deasserted */
+>>  	priv->resetb_gpio = devm_gpiod_get_optional(&client->dev, "resetb",
+>>  			GPIOD_OUT_LOW);
+>> @@ -1017,14 +1005,6 @@ static int ov2640_probe_dt(struct i2c_client *client,
+>>  	else if (IS_ERR(priv->resetb_gpio))
+>>  		return PTR_ERR(priv->resetb_gpio);
+>>  
+>> -	/* Request the power down GPIO asserted */
+>> -	priv->pwdn_gpio = devm_gpiod_get_optional(&client->dev, "pwdn",
+>> -			GPIOD_OUT_HIGH);
+>> -	if (!priv->pwdn_gpio)
+>> -		dev_dbg(&client->dev, "pwdn gpio is not assigned!\n");
+> 
+> Same here.
+> 
+>> -	else if (IS_ERR(priv->pwdn_gpio))
+>> -		return PTR_ERR(priv->pwdn_gpio);
+>> -
+>>  	return 0;
+>>  }
+>>  
+>> @@ -1051,9 +1031,10 @@ static int ov2640_probe(struct i2c_client *client,
+>>  		return -ENOMEM;
+>>  	}
+>>  
+>> -	priv->clk = v4l2_clk_get(&client->dev, "xvclk");
+>> +	priv->clk = clk_get(&client->dev, "xvclk");
+>>  	if (IS_ERR(priv->clk))
+>>  		return -EPROBE_DEFER;
+>> +	clk_prepare_enable(priv->clk);
+> 
+> I wonder V4L2 clock framework did this. This should be done in the s_power()
+> callback, not here.
 
-"static inline functions" seemed too complicated here because most of
-these macros are two lines of c-code.
+Yeah, I'll need to revisit this.
 
-Do you still insist on using "static inline functions"?
+> 
+>>  
+>>  	if (!client->dev.of_node) {
+>>  		dev_err(&client->dev, "Missing platform_data for driver\n");
+>> @@ -1061,9 +1042,9 @@ static int ov2640_probe(struct i2c_client *client,
+>>  		goto err_clk;
+>>  	}
+>>  
+>> -	ret = ov2640_probe_dt(client, priv);
+>> +	ret = ov2640_init_gpio(client, priv);
+>>  	if (ret)
+>> -		goto err_clk;
+>> +		return ret;
+>>  
+>>  	v4l2_i2c_subdev_init(&priv->subdev, client, &ov2640_subdev_ops);
+>>  	v4l2_ctrl_handler_init(&priv->hdl, 2);
+>> @@ -1074,25 +1055,23 @@ static int ov2640_probe(struct i2c_client *client,
+>>  	priv->subdev.ctrl_handler = &priv->hdl;
+>>  	if (priv->hdl.error) {
+>>  		ret = priv->hdl.error;
+>> -		goto err_clk;
+>> +		goto err_hdl;
+>>  	}
+>>  
+>>  	ret = ov2640_video_probe(client);
+>>  	if (ret < 0)
+>> -		goto err_videoprobe;
+>> +		goto err_hdl;
+>>  
+>>  	ret = v4l2_async_register_subdev(&priv->subdev);
+>>  	if (ret < 0)
+>> -		goto err_videoprobe;
+>> +		goto err_hdl;
+>>  
+>>  	dev_info(&adapter->dev, "OV2640 Probed\n");
+>>  
+>>  	return 0;
+>>  
+>> -err_videoprobe:
+>> +err_hdl:
+>>  	v4l2_ctrl_handler_free(&priv->hdl);
+>> -err_clk:
+>> -	v4l2_clk_put(priv->clk);
+>>  	return ret;
+>>  }
+>>  
+>> @@ -1101,9 +1080,8 @@ static int ov2640_remove(struct i2c_client *client)
+>>  	struct ov2640_priv       *priv = to_ov2640(client);
+>>  
+>>  	v4l2_async_unregister_subdev(&priv->subdev);
+>> -	v4l2_clk_put(priv->clk);
+>> -	v4l2_device_unregister_subdev(&priv->subdev);
+>>  	v4l2_ctrl_handler_free(&priv->hdl);
+> 
+> Shouldn't you free the control handler afterwards? I'm not sure if this
+> makes a lot of difference though.
 
->
->> +#define SBA_C_MDATA_LS(__c_mdata_val)        ((__c_mdata_val) & 0xff)
->> +#define SBA_C_MDATA_MS(__c_mdata_val)        (((__c_mdata_val) >> 8) & 0x3)
->> +
->> +/* Driver helper macros */
->> +#define to_sba_request(tx)           \
->> +     container_of(tx, struct sba_request, tx)
->> +#define to_sba_device(dchan)         \
->> +     container_of(dchan, struct sba_device, dma_chan)
->> +
->> +enum sba_request_state {
->> +     SBA_REQUEST_STATE_FREE = 1,
->> +     SBA_REQUEST_STATE_ALLOCED = 2,
->> +     SBA_REQUEST_STATE_PENDING = 3,
->> +     SBA_REQUEST_STATE_ACTIVE = 4,
->> +     SBA_REQUEST_STATE_COMPLETED = 5,
->> +     SBA_REQUEST_STATE_ABORTED = 6,
->
-> whats up with a very funny indentation setting, we use 8 chars.
->
-> Please re-read the Documentation/process/coding-style.rst
-
-I have double checked this enum. The indentation is fine
-and as-per coding style. Am I missing anything else?
-
->
->> +static int sba_alloc_chan_resources(struct dma_chan *dchan)
->> +{
->> +     /*
->> +      * We only have one channel so we have pre-alloced
->> +      * channel resources. Over here we just return number
->> +      * of free request.
->> +      */
->> +     return sba_free_request_count(to_sba_device(dchan));
->> +}
->
-> essentially you are not doing much, so you can skip it. Its an optional
-> call.
-
-Sure, will do.
-
->
->> +static void sba_free_chan_resources(struct dma_chan *dchan)
->> +{
->> +     /*
->> +      * Channel resources are pre-alloced so we just free-up
->> +      * whatever we can so that we can re-use pre-alloced
->> +      * channel resources next time.
->> +      */
->> +     sba_cleanup_inflight_requests(to_sba_device(dchan));
->
-> well this one checks for pending requests as well, which shouldn't be there
-> when freeing a channel, something seems not quite right here..
->
->> +static int sba_send_mbox_request(struct sba_device *sba,
->> +                              struct sba_request *req)
->> +{
->> +     int mchans_idx, ret = 0;
->> +
->> +     /* Select mailbox channel in round-robin fashion */
->> +     mchans_idx = atomic_inc_return(&sba->mchans_current);
->> +     mchans_idx = mchans_idx % sba->mchans_count;
->> +
->> +     /* Send batch message for the request */
->> +     req->bmsg.batch.msgs_queued = 0;
->> +     ret = mbox_send_message(sba->mchans[mchans_idx], &req->bmsg);
->> +     if (ret < 0) {
->> +             dev_info(sba->dev, "channel %d message %d (total %d)",
->> +                      mchans_idx, req->bmsg.batch.msgs_queued,
->> +                      req->bmsg.batch.msgs_count);
->
-> dev_err?
-
-Sure, will use dev_err.
-
->
->> +             dev_err(sba->dev, "send message failed with error %d", ret);
->> +             return ret;
->> +     }
->> +     ret = req->bmsg.error;
->> +     if (ret < 0) {
->> +             dev_info(sba->dev,
->> +                      "mbox channel %d message %d (total %d)",
->> +                      mchans_idx, req->bmsg.batch.msgs_queued,
->> +                      req->bmsg.batch.msgs_count);
->
-> same here
-
-OK.
-
->
->> +static dma_cookie_t sba_tx_submit(struct dma_async_tx_descriptor *tx)
->> +{
->> +     unsigned long flags;
->> +     dma_cookie_t cookie;
->> +     struct sba_request *req;
->> +     struct sba_device *sba;
->> +
->> +     if (unlikely(!tx))
->> +             return -EINVAL;
->> +
->> +     sba = to_sba_device(tx->chan);
->> +     req = to_sba_request(tx);
->> +
->> +     /* Assign cookie and mark request pending */
->> +     spin_lock_irqsave(&sba->reqs_lock, flags);
->> +     cookie = dma_cookie_assign(tx);
->> +     _sba_pending_request(sba, req);
->> +     spin_unlock_irqrestore(&sba->reqs_lock, flags);
->> +
->> +     /* Try to submit pending request */
->> +     sba_issue_pending(&sba->dma_chan);
->
-> Nope, thats wrong, caller needs to call .issue_pending for that
-
-This was giving minor performance improvement but I will
-remove this since its against API usage.
-
->
->> +static enum dma_status sba_tx_status(struct dma_chan *dchan,
->> +                                  dma_cookie_t cookie,
->> +                                  struct dma_tx_state *txstate)
->> +{
->> +     int mchan_idx;
->> +     enum dma_status ret;
->> +     struct sba_device *sba = to_sba_device(dchan);
->> +
->> +     ret = dma_cookie_status(dchan, cookie, txstate);
->> +     if (ret == DMA_COMPLETE)
->> +             return ret;
->> +
->> +     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
->> +             mbox_client_peek_data(sba->mchans[mchan_idx]);
->
-> what is this achieving?
-
-The mbox_client_peek_data() is a hint to mailbox controller driver
-to check for available messages.
-
-This gives good performance improvement when some DMA client
-code is polling using tx_status() callback.
-
->
->> +static struct dma_async_tx_descriptor *
->> +sba_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
->> +                 size_t len, unsigned long flags)
->> +{
->> +     size_t msg_len;
->> +     dma_addr_t msg_offset = 0;
->> +     unsigned int msgs_count = 0, cmds_count, cmds_idx = 0;
->> +     struct sba_device *sba = to_sba_device(dchan);
->> +     struct sba_request *req = NULL;
->> +
->> +     /* Sanity checks */
->> +     if (unlikely(len > sba->req_size))
->> +             return NULL;
->
-> why is that an error, you can create multiple txn of max length
-
-Sure, I will extend driver to create multiple txn when
-"len > req->size"
-
->
->> +static int sba_async_register(struct sba_device *sba)
->> +{
->> +     int ret;
->> +     struct dma_device *dma_dev = &sba->dma_dev;
->> +
->> +     /* Initialize DMA channel cookie */
->> +     sba->dma_chan.device = dma_dev;
->> +     dma_cookie_init(&sba->dma_chan);
->> +
->> +     /* Initialize DMA device capability mask */
->> +     dma_cap_zero(dma_dev->cap_mask);
->> +     dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
->> +     dma_cap_set(DMA_XOR, dma_dev->cap_mask);
->> +     dma_cap_set(DMA_PQ, dma_dev->cap_mask);
->> +
->> +     /*
->> +      * Set mailbox channel device as the base device of
->> +      * our dma_device because the actual memory accesses
->> +      * will be done by mailbox controller
->> +      */
->> +     dma_dev->dev = sba->mbox_dev;
->> +
->> +     /* Set base prep routines */
->> +     dma_dev->device_alloc_chan_resources = sba_alloc_chan_resources;
->> +     dma_dev->device_free_chan_resources = sba_free_chan_resources;
->> +     dma_dev->device_issue_pending = sba_issue_pending;
->> +     dma_dev->device_tx_status = sba_tx_status;
->
-> Please add terminate callback support, also add the capabilities, we need to
-> advertise that and use in clients
-
-OK, I will add terminate callback.
-
->
-> Also you can simplify bunch of code by using virt-chan support for managing
-> channels and descriptors
-
-OK, I will surely explore virt-chan.
+The order makes no difference here.
 
 Regards,
-Anup
+
+	Hans
+
+> 
+>> +	v4l2_device_unregister_subdev(&priv->subdev);
+>>  	return 0;
+>>  }
+>>  
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
