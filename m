@@ -1,41 +1,60 @@
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCHv2 net-next 05/16] net: mvpp2: introduce PPv2.2 HW
- descriptors and adapt accessors
-Date: Mon, 6 Feb 2017 12:43:17 +0000
-Message-ID: <063D6719AE5E284EB5DD2968C1650D6DB027C728@AcuExch.aculab.com>
-References: <1482943592-12556-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1482943592-12556-6-git-send-email-thomas.petazzoni@free-electrons.com>
-        <20170106142901.GC14217@n2100.armlinux.org.uk>
-        <113811b6-79a4-9c66-d302-add9fb0c5b1a@arm.com>
-        <20170203142446.2ee517a7@free-electrons.com>
-        <231514f4-2e35-8bde-4469-aada833635aa@arm.com>
-        <20170203155449.GC27312@n2100.armlinux.org.uk>
- <20170204145938.6e6380d9@free-electrons.com>
+From: Dick Middleton <dick-HMexRZvHHsesTnJN9+BGXg@public.gmane.org>
+Subject: arm sun8i h3 nanopineo no ethernet device
+Date: Mon, 6 Feb 2017 12:49:21 +0000
+Message-ID: <7a9a1813-abff-7888-130f-c222c0d4c6a0@fouter.net>
+Reply-To: dick-HMexRZvHHsesTnJN9+BGXg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170204145938.6e6380d9@free-electrons.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: Robin Murphy <robin.murphy@arm.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, Hanna Hawa <hannah@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Stefan Chulski <stefanc@marvell.com>, Marcin Wojtas <mw@semihalf.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni
-> Sent: 04 February 2017 14:00
-...
-> This makes complete sense. We use the cookie to store the phys_addr_t
-> rather than the virtual address. I might be missing something, but it
-> seems like a very good solution. Thanks for the suggestion, I'll try
-> this!
+Hi,
 
-Why not just store an array index for the buffer info?
-That would save you having to regenerate kernel virtual
-addresses from limited info.
+	I've just installed sun8i-h3-nanopineo.dtb from kernel 4.10.rc7 and notice a
+couple of things, I wondered if anybody else had too:
 
-Or realise that the low bits (page offset) of the dma address
-and kernel virtual address (and kernel physical for that matter)
-will always match. 50 bits might be enough for a kernel virtual address.
+1)  There's no ethernet interface (eth0)
+2)  htop shows only 1 cpu. It's supposed to be quad core.
 
-	David
+Here's /proc/cpuinfo:
+
+ processor       : 0
+model name      : ARMv7 Processor rev 5 (v7l)
+BogoMIPS        : 48.00
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva
+idivt vfpd32 lpae evtstrm
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x0
+CPU part        : 0xc07
+CPU revision    : 5
+
+Hardware        : Allwinner sun8i Family
+Revision        : 0000
+Serial          : 02c000814bd6d978
+
+
+Much the same from lscpu:
+
+Architecture:          armv7l
+Byte Order:            Little Endian
+CPU(s):                4
+On-line CPU(s) list:   0
+Off-line CPU(s) list:  1-3
+Thread(s) per core:    1
+Core(s) per socket:    1
+Socket(s):             1
+Model:                 5
+Model name:            ARMv7 Processor rev 5 (v7l)
+BogoMIPS:              48.00
+Flags:                 half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 idiva
+idivt vfpd32 lpae evtstrm
+
+Dick
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
