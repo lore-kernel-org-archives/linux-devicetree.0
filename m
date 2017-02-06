@@ -1,59 +1,49 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/8] Documentation: dt: Add new compatible to STM32
- pinctrl driver bindings
-Date: Mon, 6 Feb 2017 09:46:53 +0100
-Message-ID: <CACRpkdb=U+UMRqR2GKGwDzk9X_nLv0tf2dZ8LhDGceAD83LKag@mail.gmail.com>
-References: <1485533721-9019-1-git-send-email-alexandre.torgue@st.com>
- <1485533721-9019-7-git-send-email-alexandre.torgue@st.com>
- <20170201150609.cbhwon76m6igmhyh@rob-hp-laptop> <abee01c1-da4f-97b4-258a-3ab937f620eb@st.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] nvmem: sunxi-sid: read NVMEM size
+ from device compatible
+Date: Mon, 6 Feb 2017 09:48:28 +0100
+Message-ID: <20170206084828.s33k4fg6n7mcivb2@lukather>
+References: <20170202131338.20234-1-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <abee01c1-da4f-97b4-258a-3ab937f620eb-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="jiqshnfefqtew2i4"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBXPQ4DCAKGQEG6ECI6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170202131338.20234-1-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2017 at 4:58 PM, Alexandre Torgue
-<alexandre.torgue-qxv4g6HH51o@public.gmane.org> wrote:
-> On 02/01/2017 04:06 PM, Rob Herring wrote:
->>
->> On Fri, Jan 27, 2017 at 05:15:19PM +0100, Alexandre TORGUE wrote:
->>>
->>> Add new compatible for stm32f469 MCU.
->>>
->>> Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
->>>
->>> diff --git
->>> a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->>> b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->>> index 25d9809..4f0487d 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->>> +++ b/Documentation/devicetree/bindings/pinctrl/st,stm32-pinctrl.txt
->>> @@ -9,7 +9,8 @@ Pin controller node:
->>>  Required properies:
->>>   - compatible: value should be one of the following:
->>>     (a) "st,stm32f429-pinctrl"
->>> -   (b) "st,stm32f746-pinctrl"
->>> +   (b) "st,stm32f469-pinctrl"
->>> +   (c) "st,stm32f746-pinctrl"
->>
->>
->> Drop the a,b,c. Otherwise, you'll be changing a bunch of lines every
->> time.
->
->
-> I completely agree.
->
-> Linus, Do i need to send a v2 for this patch ?
 
-Nopes, applied the amended v1 patch already with these
-changes, check the result.
+--jiqshnfefqtew2i4
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Feb 02, 2017 at 09:13:36PM +0800, Icenowy Zheng wrote:
+> Sometimes the SID device have more memory address space than the real
+> NVMEM size (for the registers used to read/write the SID).
+> 
+> Fetch the NVMEM size from device compatible, rather than the memory
+> address space's length, in order to prepare for adding some
+> registers-based read support.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--jiqshnfefqtew2i4--
