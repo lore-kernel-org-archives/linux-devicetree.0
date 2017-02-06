@@ -1,15 +1,24 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2 6/6] dt-bindings: mt8173-mtu3: add reference clock
-Date: Mon, 6 Feb 2017 17:29:01 +0800
-Message-ID: <1486373341-4399-6-git-send-email-chunfeng.yun@mediatek.com>
+From: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 5/6] dt-bindings: mt8173-xhci: add reference clock
+Date: Mon, 6 Feb 2017 17:29:00 +0800
+Message-ID: <1486373341-4399-5-git-send-email-chunfeng.yun@mediatek.com>
 References: <1486373341-4399-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486373341-4399-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1486373341-4399-1-git-send-email-chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Due to the reference clock comes from 26M oscillator directly
@@ -18,27 +27,27 @@ on, we ignore it before. But on some platforms, it comes
 from PLL, and need be controlled, so here add it, no matter
 it is a fixed-clock or not.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Signed-off-by: Chunfeng Yun <chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- .../devicetree/bindings/usb/mt8173-mtu3.txt        |   10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/usb/mt8173-xhci.txt        |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-index e049d19..8c976cd 100644
---- a/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-+++ b/Documentation/devicetree/bindings/usb/mt8173-mtu3.txt
-@@ -10,7 +10,7 @@ Required properties:
-  - vusb33-supply : regulator of USB avdd3.3v
-  - clocks : a list of phandle + clock-specifier pairs, one for each
+diff --git a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+index 2a930bd..ab8bb27 100644
+--- a/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/mt8173-xhci.txt
+@@ -23,6 +23,7 @@ Required properties:
  	entry in clock-names
-- - clock-names : must contain "sys_ck" for clock of controller;
-+ - clock-names : must contain "sys_ck" and "ref_ck" for clock of controller;
- 	"wakeup_deb_p0" and "wakeup_deb_p1" are optional, they are
- 	depends on "mediatek,enable-wakeup"
-  - phys : a list of phandle + phy specifier pairs
-@@ -56,10 +56,10 @@ ssusb: usb@11271000 {
- 	phys = <&phy_port0 PHY_TYPE_USB3>,
- 	       <&phy_port1 PHY_TYPE_USB2>;
+  - clock-names : must contain
+ 	"sys_ck": for clock of xHCI MAC
++	"ref_ck": for reference clock of xHCI MAC
+ 	"wakeup_deb_p0": for USB wakeup debounce clock of port0
+ 	"wakeup_deb_p1": for USB wakeup debounce clock of port1
+ 
+@@ -47,10 +48,10 @@ usb30: usb@11270000 {
+ 	reg-names = "mac", "ippc";
+ 	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
  	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
 -	clocks = <&topckgen CLK_TOP_USB30_SEL>,
 +	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>,
@@ -48,17 +57,25 @@ index e049d19..8c976cd 100644
 +	clock-names = "sys_ck", "ref_ck",
  		      "wakeup_deb_p0",
  		      "wakeup_deb_p1";
+ 	phys = <&phy_port0 PHY_TYPE_USB3>,
+@@ -82,6 +83,7 @@ Required properties:
+ 	entry in clock-names
+  - clock-names : must be
+ 	"sys_ck": for clock of xHCI MAC
++	"ref_ck": for reference clock of xHCI MAC
+ 
+ Optional properties:
+  - vbus-supply : reference to the VBUS regulator;
+@@ -94,8 +96,8 @@ usb30: usb@11270000 {
+ 	reg-names = "mac";
+ 	interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
+ 	power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
+-	clocks = <&topckgen CLK_TOP_USB30_SEL>;
+-	clock-names = "sys_ck";
++	clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
++	clock-names = "sys_ck", "ref_ck";
  	vusb33-supply = <&mt6397_vusb_reg>;
-@@ -79,8 +79,8 @@ ssusb: usb@11271000 {
- 		reg-names = "mac";
- 		interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
- 		power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
--		clocks = <&topckgen CLK_TOP_USB30_SEL>;
--		clock-names = "sys_ck";
-+		clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
-+		clock-names = "sys_ck", "ref_ck";
- 		vusb33-supply = <&mt6397_vusb_reg>;
- 		status = "disabled";
- 	};
+ 	usb3-lpm-capable;
+ };
 -- 
 1.7.9.5
