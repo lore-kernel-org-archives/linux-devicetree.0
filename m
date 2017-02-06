@@ -1,242 +1,115 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCHv4 8/9] stih-cec: add HPD notifier support
-Date: Mon,  6 Feb 2017 11:29:50 +0100
-Message-ID: <20170206102951.12623-9-hverkuil@xs4all.nl>
-References: <20170206102951.12623-1-hverkuil@xs4all.nl>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] of: introduce of_graph_get_remote_node
+Date: Mon, 06 Feb 2017 11:32:47 +0100
+Message-ID: <1486377167.3005.30.camel@pengutronix.de>
+References: <20170204033635.10250-1-robh@kernel.org>
+         <20170204033635.10250-2-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170206102951.12623-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <20170204033635.10250-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
 List-Id: devicetree@vger.kernel.org
 
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Hi Rob,
 
-By using the HPD notifier framework there is no longer any reason
-to manually set the physical address. This was the one blocking
-issue that prevented this driver from going out of staging, so do
-this move as well.
+thanks for this clean-up series! I was not aware how far the duplication
+has spread over time.
 
-Update the bindings documentation the new hdmi phandle.
+On Fri, 2017-02-03 at 21:36 -0600, Rob Herring wrote:
+> The OF graph API leaves too much of the graph walking to clients when
+> in many cases the driver doesn't care about accessing the port or
+> endpoint nodes. The drivers typically just want the device connected via
+> a particular graph connection. of_graph_get_remote_node provides this
+> functionality.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/of/base.c        | 28 ++++++++++++++++++++++++++++
+>  include/linux/of_graph.h |  8 ++++++++
+>  2 files changed, 36 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index d4bea3c797d6..ea18ab16b92c 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -2469,3 +2469,31 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+>  	return of_get_next_parent(np);
+>  }
+>  EXPORT_SYMBOL(of_graph_get_remote_port);
+> +
+> +struct device_node *of_graph_get_remote_node(const struct device_node *node,
+> +					     int port, int endpoint)
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/media/stih-cec.txt         |  2 ++
- drivers/media/platform/Kconfig                     | 10 +++++++
- drivers/media/platform/Makefile                    |  1 +
- .../st-cec => media/platform/sti/cec}/Makefile     |  0
- .../st-cec => media/platform/sti/cec}/stih-cec.c   | 31 +++++++++++++++++++---
- drivers/staging/media/Kconfig                      |  2 --
- drivers/staging/media/Makefile                     |  1 -
- drivers/staging/media/st-cec/Kconfig               |  8 ------
- drivers/staging/media/st-cec/TODO                  |  7 -----
- 9 files changed, 41 insertions(+), 21 deletions(-)
- rename drivers/{staging/media/st-cec => media/platform/sti/cec}/Makefile (100%)
- rename drivers/{staging/media/st-cec => media/platform/sti/cec}/stih-cec.c (93%)
- delete mode 100644 drivers/staging/media/st-cec/Kconfig
- delete mode 100644 drivers/staging/media/st-cec/TODO
+I think this should have a documentation comment, similar to the
+of_graph_get_endpoint_by_regs one, as it is not really clear from the
+function name that the returned device node is the parent (or
+grandparent) device node containing the remote port to the specified
+node & port & endpoint.
+Also it might be interesting to the user that -1 is a wildcard value for
+port / endpoint.
 
-diff --git a/Documentation/devicetree/bindings/media/stih-cec.txt b/Documentation/devicetree/bindings/media/stih-cec.txt
-index 71c4b2f4bcef..7d82121d148a 100644
---- a/Documentation/devicetree/bindings/media/stih-cec.txt
-+++ b/Documentation/devicetree/bindings/media/stih-cec.txt
-@@ -9,6 +9,7 @@ Required properties:
-  - pinctrl-names: Contains only one value - "default"
-  - pinctrl-0: Specifies the pin control groups used for CEC hardware.
-  - resets: Reference to a reset controller
-+ - st,hdmi-handle: Phandle to the HMDI controller
- 
- Example for STIH407:
- 
-@@ -22,4 +23,5 @@ sti-cec@094a087c {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_cec0_default>;
- 	resets = <&softreset STIH407_LPM_SOFTRESET>;
-+	st,hdmi-handle = <&hdmi>;
- };
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 9920726f14d2..46db8a32a931 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -422,6 +422,16 @@ config VIDEO_SAMSUNG_S5P_CEC
-          CEC bus is present in the HDMI connector and enables communication
-          between compatible devices.
- 
-+config VIDEO_STI_HDMI_CEC
-+       tristate "STMicroelectronics STiH4xx HDMI CEC driver"
-+       depends on VIDEO_DEV && MEDIA_CEC_SUPPORT && (ARCH_STI || COMPILE_TEST)
-+       select HPD_NOTIFIER
-+       ---help---
-+         This is a driver for STIH4xx HDMI CEC interface. It uses the
-+         generic CEC framework interface.
-+         CEC bus is present in the HDMI connector and enables communication
-+         between compatible devices.
-+
- endif #V4L_CEC_DRIVERS
- 
- menuconfig V4L_TEST_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index ad3bf22bfeae..01b689c10f69 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS_GSC)	+= exynos-gsc/
- obj-$(CONFIG_VIDEO_STI_BDISP)		+= sti/bdisp/
- obj-$(CONFIG_VIDEO_STI_HVA)		+= sti/hva/
- obj-$(CONFIG_DVB_C8SECTPFE)		+= sti/c8sectpfe/
-+obj-$(CONFIG_VIDEO_STI_HDMI_CEC) 	+= sti/cec/
- 
- obj-$(CONFIG_BLACKFIN)                  += blackfin/
- 
-diff --git a/drivers/staging/media/st-cec/Makefile b/drivers/media/platform/sti/cec/Makefile
-similarity index 100%
-rename from drivers/staging/media/st-cec/Makefile
-rename to drivers/media/platform/sti/cec/Makefile
-diff --git a/drivers/staging/media/st-cec/stih-cec.c b/drivers/media/platform/sti/cec/stih-cec.c
-similarity index 93%
-rename from drivers/staging/media/st-cec/stih-cec.c
-rename to drivers/media/platform/sti/cec/stih-cec.c
-index 3c25638a9610..e50e916837fd 100644
---- a/drivers/staging/media/st-cec/stih-cec.c
-+++ b/drivers/media/platform/sti/cec/stih-cec.c
-@@ -1,6 +1,4 @@
- /*
-- * drivers/staging/media/st-cec/stih-cec.c
-- *
-  * STIH4xx CEC driver
-  * Copyright (C) STMicroelectronic SA 2016
-  *
-@@ -10,11 +8,13 @@
-  * (at your option) any later version.
-  */
- #include <linux/clk.h>
-+#include <linux/hpd-notifier.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_platform.h>
- #include <linux/platform_device.h>
- 
- #include <media/cec.h>
-@@ -129,6 +129,7 @@ struct stih_cec {
- 	void __iomem		*regs;
- 	int			irq;
- 	u32			irq_status;
-+	struct hpd_notifier	*notifier;
- };
- 
- static int stih_cec_adap_enable(struct cec_adapter *adap, bool enable)
-@@ -303,12 +304,29 @@ static int stih_cec_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct resource *res;
- 	struct stih_cec *cec;
-+	struct device_node *np;
-+	struct platform_device *hdmi_dev;
- 	int ret;
- 
- 	cec = devm_kzalloc(dev, sizeof(*cec), GFP_KERNEL);
- 	if (!cec)
- 		return -ENOMEM;
- 
-+	np = of_parse_phandle(pdev->dev.of_node, "st,hdmi-handle", 0);
-+
-+	if (!np) {
-+		dev_err(&pdev->dev, "Failed to find hdmi node in device tree\n");
-+		return -ENODEV;
-+	}
-+
-+	hdmi_dev = of_find_device_by_node(np);
-+	if (!hdmi_dev)
-+		return -EPROBE_DEFER;
-+
-+	cec->notifier = hpd_notifier_get(&hdmi_dev->dev);
-+	if (!cec->notifier)
-+		return -ENOMEM;
-+
- 	cec->dev = dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -335,7 +353,7 @@ static int stih_cec_probe(struct platform_device *pdev)
- 	cec->adap = cec_allocate_adapter(&sti_cec_adap_ops, cec,
- 			CEC_NAME,
- 			CEC_CAP_LOG_ADDRS | CEC_CAP_PASSTHROUGH |
--			CEC_CAP_PHYS_ADDR | CEC_CAP_TRANSMIT, 1);
-+			CEC_CAP_TRANSMIT, 1);
- 	ret = PTR_ERR_OR_ZERO(cec->adap);
- 	if (ret)
- 		return ret;
-@@ -346,12 +364,19 @@ static int stih_cec_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	cec_register_hpd_notifier(cec->adap, cec->notifier);
-+
- 	platform_set_drvdata(pdev, cec);
- 	return 0;
- }
- 
- static int stih_cec_remove(struct platform_device *pdev)
- {
-+	struct stih_cec *cec = platform_get_drvdata(pdev);
-+
-+	cec_unregister_adapter(cec->adap);
-+	hpd_notifier_put(cec->notifier);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/staging/media/Kconfig b/drivers/staging/media/Kconfig
-index 1b7804cf4c51..d4f50f02c76e 100644
---- a/drivers/staging/media/Kconfig
-+++ b/drivers/staging/media/Kconfig
-@@ -30,6 +30,4 @@ source "drivers/staging/media/omap4iss/Kconfig"
- # Keep LIRC at the end, as it has sub-menus
- source "drivers/staging/media/lirc/Kconfig"
- 
--source "drivers/staging/media/st-cec/Kconfig"
--
- endif
-diff --git a/drivers/staging/media/Makefile b/drivers/staging/media/Makefile
-index e11afbf99452..4c9bb23c9628 100644
---- a/drivers/staging/media/Makefile
-+++ b/drivers/staging/media/Makefile
-@@ -3,4 +3,3 @@ obj-$(CONFIG_DVB_CXD2099)	+= cxd2099/
- obj-$(CONFIG_LIRC_STAGING)	+= lirc/
- obj-$(CONFIG_VIDEO_DM365_VPFE)	+= davinci_vpfe/
- obj-$(CONFIG_VIDEO_OMAP4)	+= omap4iss/
--obj-$(CONFIG_VIDEO_STI_HDMI_CEC) += st-cec/
-diff --git a/drivers/staging/media/st-cec/Kconfig b/drivers/staging/media/st-cec/Kconfig
-deleted file mode 100644
-index c04283db58d6..000000000000
---- a/drivers/staging/media/st-cec/Kconfig
-+++ /dev/null
-@@ -1,8 +0,0 @@
--config VIDEO_STI_HDMI_CEC
--       tristate "STMicroelectronics STiH4xx HDMI CEC driver"
--       depends on VIDEO_DEV && MEDIA_CEC_SUPPORT && (ARCH_STI || COMPILE_TEST)
--       ---help---
--         This is a driver for STIH4xx HDMI CEC interface. It uses the
--         generic CEC framework interface.
--         CEC bus is present in the HDMI connector and enables communication
--         between compatible devices.
-diff --git a/drivers/staging/media/st-cec/TODO b/drivers/staging/media/st-cec/TODO
-deleted file mode 100644
-index c61289742c5c..000000000000
---- a/drivers/staging/media/st-cec/TODO
-+++ /dev/null
-@@ -1,7 +0,0 @@
--This driver requires that userspace sets the physical address.
--However, this should be passed on from the corresponding
--ST HDMI driver.
--
--We have to wait until the HDMI notifier framework has been merged
--in order to handle this gracefully, until that time this driver
--has to remain in staging.
--- 
-2.11.0
+> +{
+> +	struct device_node *endpoint_node, *remote;
+> +
+> +	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
+> +	if (!endpoint_node) {
+> +		pr_debug("no valid endpoint (%d, %d) for node %s\n",
+> +			 port, endpoint, node->full_name);
+> +		return NULL;
+> +	}
+> +
+> +	remote = of_graph_get_remote_port_parent(endpoint_node);
+> +	of_node_put(endpoint);
+
+Vladimir pointed this out already. With that fixed and the missing doc
+comment added,
+Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+
+> +	if (!remote) {
+> +		pr_debug("no valid remote node\n");
+> +		return NULL;
+> +	}
+> +
+> +	if (!of_device_is_available(remote)) {
+> +		pr_debug("not available for remote node\n");
+> +		return NULL;
+> +	}
+> +
+> +	return remote;
+> +}
+> +EXPORT_SYMBOL(of_graph_get_remote_node);
+> diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+> index bb3a5a2cd570..7b71d3e09209 100644
+> --- a/include/linux/of_graph.h
+> +++ b/include/linux/of_graph.h
+> @@ -51,6 +51,8 @@ struct device_node *of_graph_get_endpoint_by_regs(
+>  struct device_node *of_graph_get_remote_port_parent(
+>  					const struct device_node *node);
+>  struct device_node *of_graph_get_remote_port(const struct device_node *node);
+> +struct device_node *of_graph_get_remote_node(const struct device_node *node,
+> +					     int port, int endpoint);
+>  #else
+>  
+>  static inline int of_graph_parse_endpoint(const struct device_node *node,
+> @@ -89,6 +91,12 @@ static inline struct device_node *of_graph_get_remote_port(
+>  {
+>  	return NULL;
+>  }
+> +static inline struct device_node *of_graph_get_remote_node(
+> +					const struct device_node *node,
+> +					int port, int endpoint)
+> +{
+> +	return NULL;
+> +}
+>  
+>  #endif /* CONFIG_OF */
+
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
