@@ -1,104 +1,147 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 5/6] dmaengine: Add Broadcom SBA RAID driver
-Date: Mon, 6 Feb 2017 22:24:00 +0530
-Message-ID: <20170206165400.GD19244@localhost>
-References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com>
- <1486010836-25228-6-git-send-email-anup.patel@broadcom.com>
- <20170205060657.GV19244@localhost>
- <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/5] drm: convert drivers to use of_graph_get_remote_node
+Date: Mon, 6 Feb 2017 11:09:49 -0600
+Message-ID: <20170206170949.tmm4m2lm2rybm5dh@rob-hp-laptop>
+References: <20170204033635.10250-1-robh@kernel.org>
+ <20170204033635.10250-4-robh@kernel.org>
+ <20170206102933.GV3140@e110455-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+In-Reply-To: <20170206102933.GV3140-A/Nd4k6kWRHZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang@hisi>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 05:31:15PM +0530, Anup Patel wrote:
-
-> >> +
-> >> +/* SBA C_MDATA helper macros */
-> >> +#define SBA_C_MDATA_LOAD_VAL(__bnum0)                ((__bnum0) & 0x3)
-> >> +#define SBA_C_MDATA_WRITE_VAL(__bnum0)               ((__bnum0) & 0x3)
-> >> +#define SBA_C_MDATA_XOR_VAL(__bnum1, __bnum0)                        \
-> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
-> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
-> >> +                             __v;                            \
-> >> +                     })
-> >> +#define SBA_C_MDATA_PQ_VAL(__dnum, __bnum1, __bnum0)         \
-> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
-> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
-> >> +                             __v |= ((__dnum) & 0x1f) << 5;  \
-> >> +                             __v;                            \
-> >> +                     })
-> >
-> > ah why are we usig complex macros, why can't these be simple functions..
+On Mon, Feb 06, 2017 at 10:29:33AM +0000, Liviu Dudau wrote:
+> On Fri, Feb 03, 2017 at 09:36:33PM -0600, Rob Herring wrote:
+> > Convert drivers to use the new of_graph_get_remote_node() helper
+> > instead of parsing the endpoint node and then getting the remote device
+> > node. Now drivers can just specify the device node and which
+> > port/endpoint and get back the connected remote device node. The details
+> > of the graph binding are nicely abstracted into the core OF graph code.
+> > 
+> > This changes some error messages to debug messages (in the graph core).
+> > Graph connections are often "no connects" depending on the particular
+> > board, so we want to avoid spurious messages. Plus the kernel is not a
+> > DT validator.
+> > 
+> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/gpu/drm/arm/hdlcd_drv.c                 | 22 ++-------
+> >  drivers/gpu/drm/arm/malidp_drv.c                | 29 ++---------
+> >  drivers/gpu/drm/bridge/adv7511/adv7533.c        | 12 +----
+> >  drivers/gpu/drm/bridge/dumb-vga-dac.c           | 15 ++----
+> >  drivers/gpu/drm/bridge/ti-tfp410.c              | 15 ++----
+> >  drivers/gpu/drm/exynos/exynos_drm_dpi.c         | 16 +-----
+> >  drivers/gpu/drm/exynos/exynos_drm_dsi.c         | 13 ++---
+> >  drivers/gpu/drm/exynos/exynos_drm_mic.c         | 27 +---------
+> >  drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c    | 26 ++--------
+> >  drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c | 30 +----------
+> >  drivers/gpu/drm/mediatek/mtk_dpi.c              | 12 ++---
+> >  drivers/gpu/drm/mediatek/mtk_hdmi.c             | 26 ++--------
+> >  drivers/gpu/drm/meson/meson_drv.c               | 12 ++---
+> >  drivers/gpu/drm/meson/meson_venc_cvbs.c         | 19 ++-----
+> >  drivers/gpu/drm/msm/dsi/dsi_host.c              |  3 +-
+> >  drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c         | 28 +----------
+> >  drivers/gpu/drm/rockchip/rockchip_drm_drv.c     | 18 +++----
+> >  drivers/gpu/drm/tilcdc/tilcdc_crtc.c            | 11 +----
+> >  drivers/gpu/drm/tilcdc/tilcdc_external.c        | 66 +++----------------------
+> >  drivers/gpu/drm/vc4/vc4_dpi.c                   | 15 ++----
+> >  20 files changed, 64 insertions(+), 351 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/arm/hdlcd_drv.c b/drivers/gpu/drm/arm/hdlcd_drv.c
+> > index e5f4f4a6546d..0f70f5fe9970 100644
+> > --- a/drivers/gpu/drm/arm/hdlcd_drv.c
+> > +++ b/drivers/gpu/drm/arm/hdlcd_drv.c
+> > @@ -430,29 +430,13 @@ static int compare_dev(struct device *dev, void *data)
+> >  
+> >  static int hdlcd_probe(struct platform_device *pdev)
+> >  {
+> > -	struct device_node *port, *ep;
+> > +	struct device_node *port;
+> >  	struct component_match *match = NULL;
+> >  
+> > -	if (!pdev->dev.of_node)
+> > -		return -ENODEV;
+> > -
+> >  	/* there is only one output port inside each device, find it */
+> > -	ep = of_graph_get_next_endpoint(pdev->dev.of_node, NULL);
+> > -	if (!ep)
+> > -		return -ENODEV;
+> > -
+> > -	if (!of_device_is_available(ep)) {
+> > -		of_node_put(ep);
+> > +	port = of_graph_get_remote_node(pdev->dev.of_node, 0, 0);
+> > +	if (!port)
+> >  		return -ENODEV;
+> > -	}
+> > -
+> > -	/* add the remote encoder port as component */
+> > -	port = of_graph_get_remote_port_parent(ep);
+> > -	of_node_put(ep);
+> > -	if (!port || !of_device_is_available(port)) {
+> > -		of_node_put(port);
+> > -		return -EAGAIN;
 > 
-> "static inline functions" seemed too complicated here because most of
-> these macros are two lines of c-code.
+> The HDLCD change looks reasonable except for this -EAGAIN business. I'll have to
+> test your changes on my setup to see how this affects having the encoder as a module.
 
-and thats where I have an issue with this. Macros for simple things is fine
-but not for couple of line of logic!
+What are you expecting to happen with -EAGAIN? This one was a bit of an 
+oddball. 
+
+This condition would only change if you had an overlay. That's a use 
+case that needs to be handled in a common way ('cause I don't want to 
+clean-up every driver doing overlays in their own way latter). Just 
+having "status" changing at runtime would have all sorts of implications 
+in the kernel.
 
 > 
-> Do you still insist on using "static inline functions"?
-
-Yes
-
+> > -	}
+> >  
+> >  	drm_of_component_match_add(&pdev->dev, &match, compare_dev, port);
+> >  	of_node_put(port);
+> > diff --git a/drivers/gpu/drm/arm/malidp_drv.c b/drivers/gpu/drm/arm/malidp_drv.c
+> > index 32f746e31379..bfa04be7f5de 100644
+> > --- a/drivers/gpu/drm/arm/malidp_drv.c
+> > +++ b/drivers/gpu/drm/arm/malidp_drv.c
+> > @@ -262,7 +262,6 @@ static int malidp_bind(struct device *dev)
+> >  {
+> >  	struct resource *res;
+> >  	struct drm_device *drm;
+> > -	struct device_node *ep;
+> >  	struct malidp_drm *malidp;
+> >  	struct malidp_hw_device *hwdev;
+> >  	struct platform_device *pdev = to_platform_device(dev);
+> > @@ -360,12 +359,7 @@ static int malidp_bind(struct device *dev)
+> >  		goto init_fail;
+> >  
+> >  	/* Set the CRTC's port so that the encoder component can find it */
+> > -	ep = of_graph_get_next_endpoint(dev->of_node, NULL);
+> > -	if (!ep) {
+> > -		ret = -EINVAL;
+> > -		goto port_fail;
+> > -	}
+> > -	malidp->crtc.port = of_get_next_parent(ep);
+> > +	malidp->crtc.port = of_graph_get_port_by_id(dev->of_node, 0);
+> >  
+> >  	ret = component_bind_all(dev, drm);
+> >  	if (ret) {
+> > @@ -418,9 +412,7 @@ static int malidp_bind(struct device *dev)
+> >  irq_init_fail:
+> >  	component_unbind_all(dev, drm);
+> >  bind_fail:
+> > -	of_node_put(malidp->crtc.port);
 > 
-> >
-> >> +#define SBA_C_MDATA_LS(__c_mdata_val)        ((__c_mdata_val) & 0xff)
-> >> +#define SBA_C_MDATA_MS(__c_mdata_val)        (((__c_mdata_val) >> 8) & 0x3)
-> >> +
-> >> +/* Driver helper macros */
-> >> +#define to_sba_request(tx)           \
-> >> +     container_of(tx, struct sba_request, tx)
-> >> +#define to_sba_device(dchan)         \
-> >> +     container_of(dchan, struct sba_device, dma_chan)
-> >> +
-> >> +enum sba_request_state {
-> >> +     SBA_REQUEST_STATE_FREE = 1,
-> >> +     SBA_REQUEST_STATE_ALLOCED = 2,
-> >> +     SBA_REQUEST_STATE_PENDING = 3,
-> >> +     SBA_REQUEST_STATE_ACTIVE = 4,
-> >> +     SBA_REQUEST_STATE_COMPLETED = 5,
-> >> +     SBA_REQUEST_STATE_ABORTED = 6,
-> >
-> > whats up with a very funny indentation setting, we use 8 chars.
-> >
-> > Please re-read the Documentation/process/coding-style.rst
-> 
-> I have double checked this enum. The indentation is fine
-> and as-per coding style. Am I missing anything else?
+> Why removing this line? AFAICT this is still needed, according to of_graph_get_port_by_id()
+> documentation.
 
-Somehow the initial indent doesnt seem to be 8 chars to me.
+Yes, you are right.
 
-> >> +static enum dma_status sba_tx_status(struct dma_chan *dchan,
-> >> +                                  dma_cookie_t cookie,
-> >> +                                  struct dma_tx_state *txstate)
-> >> +{
-> >> +     int mchan_idx;
-> >> +     enum dma_status ret;
-> >> +     struct sba_device *sba = to_sba_device(dchan);
-> >> +
-> >> +     ret = dma_cookie_status(dchan, cookie, txstate);
-> >> +     if (ret == DMA_COMPLETE)
-> >> +             return ret;
-> >> +
-> >> +     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
-> >> +             mbox_client_peek_data(sba->mchans[mchan_idx]);
-> >
-> > what is this achieving?
-> 
-> The mbox_client_peek_data() is a hint to mailbox controller driver
-> to check for available messages.
-> 
-> This gives good performance improvement when some DMA client
-> code is polling using tx_status() callback.
-
-Then why do it before and then check status.
-
--- 
-~Vinod
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
