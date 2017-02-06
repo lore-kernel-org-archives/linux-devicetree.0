@@ -1,56 +1,561 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH] ARM: shmobile: r7s72100: Enable L2 cache
-Date: Mon, 6 Feb 2017 14:58:59 +0000
-Message-ID: <SG2PR06MB11657125A12CC1BDE6AD17748A400@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170202212000.10768-1-chris.brandt@renesas.com>
- <CAMuHMdU6kJDxGtjUT1S2JkQTLvzrgtF3mkqa5Xo08oF6d3tUbw@mail.gmail.com>
+From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] soc/imx: Add GPCv2 power gating driver
+Date: Mon,  6 Feb 2017 07:05:29 -0800
+Message-ID: <20170206150529.9697-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU6kJDxGtjUT1S2JkQTLvzrgtF3mkqa5Xo08oF6d3tUbw@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCk9uIE1vbmRheSwgRmVicnVhcnkgMDYsIDIwMTcsIEdlZXJ0IFV5dHRlcmhv
-ZXZlbiB3cm90ZToNCj4gQ0MgbGludXgtYXJtLWtlcm5lbA0KPiANCj4gT24gVGh1LCBGZWIgMiwg
-MjAxNyBhdCAxMDoyMCBQTSwgQ2hyaXMgQnJhbmR0IDxjaHJpcy5icmFuZHRAcmVuZXNhcy5jb20+
-DQo+IHdyb3RlOg0KPiA+IFRoaXMgZW5hYmxlcyB0aGUgMTI4S0IgTDIgY2FjaGUgaW4gdGhlIFJa
-L0ExIChSN1M3MjEwMCkuDQo+ID4NCj4gPiBUaGUgJ1dyaXRlIGZ1bGwgbGluZSBvZiB6ZXJvcyBt
-b2RlJyBvZiB0aGlzIENvcnRleC1BOSBjYW5ub3QgYmUgdXNlZA0KPiA+IGJlY2F1c2UgdGhlIHNp
-ZGViYW5kIHNpZ25hbHMgYmV0d2VlbiB0aGUgQ0E5IGFuZCBQTDMxMCBhcmUgbm90IGNvbm5lY3Rl
-ZC4NCj4gPiBTaW5jZSB0aGVyZSBpcyBubyBvcHRpb24gdG8gZGlzYWJsZSB0aGlzIGZlYXR1cmUg
-aW4gdGhlIGNhY2hlLWwyeDANCj4gPiBkcml2ZXIsIG91ciBvbmx5IG9wdGlvbiBpcyB0byBzcGVj
-aWZ5IGEgc2VjdXJlIHdyaXRlIGZ1bmN0aW9uIHdoaWNoDQo+ID4gd2lsbCB0aGVuIGNhdXNlIHRo
-ZSBjYWNoZS1sMngwIGRyaXZlciB0byBub3QgZW5hYmxlIHRoaXMgZmVhdHVyZS4NCj4gDQo+IFdo
-YXQgYWJvdXQgYWRkaW5nIGEgRFQgcHJvcGVydHkgKGUuZy4gImFybSxwbDMxMC1icm9rZW4tc2lk
-ZWJhbmQiLCBjZnIuDQo+ICJhcm0scGwzMzAtYnJva2VuLW5vLWZsdXNocCIpLCBhbmQgaGFuZGxp
-bmcgdGhpcyBpbiBhcmNoL2FybS9tbS9jYWNoZS0NCj4gbDJ4MC5jIGluc3RlYWQ/DQoNCldlbGws
-IGZpcnN0IEkgaGF2ZSB0byBzYXkgdGhhdCAnYnJva2VuLXNpZGViYW5kJyBpcyBub3QgYWN0dWFs
-bHkgImFjY3VyYXRlIg0KaW4gdGhpcyBjYXNlLg0KDQpGcm9tIHRoZSBSWi9BMUggSGFyZHdhcmUg
-TWFudWFsOg0KDQo0LiAgU2Vjb25kYXJ5IENhY2hlDQo0LjEgRmVhdHVyZXMNCg0KICAqIFNpZGVi
-YW5kIHNpZ25hbCBmcm9tIENBOTogTm8NCg0KDQpTbyB0aGUgY2hpcCBkZXNpZ25lcnMga25ldyB0
-aGUgc2lkZWJhbmQgc2lnbmFscyB3ZXJlIG5vdCBjb25uZWN0ZWQuDQpJZiB5b3UgaGF2ZSBhIGxv
-b2sgYXQgdGhlIG5leHQgY2hhcHRlciAiNS4gTFNJIEludGVybmFsIEJ1cyIsIHlvdSdsbCBub3Rp
-Y2UNCnRoYXQgdGhlIENBOSBpcyBvbiB0aGUgTm9ydGggYnVzIChmaWcgNS4yKSBidXQgdGhlIFBM
-MzEwIGlzIG9uIHRoZSBzb3V0aA0KYnVzIChmaWcgNS4zKSBpbiBiZXR3ZWVuIHRoZSBBWEkgYW5k
-IHRoZSBTRFJBTS9RU1BJIGNvbnRyb2xsZXIuIFNvIGluIHRoaXMNCmluIFNvQywgbWF5YmUgdGhl
-IFBMMzEwIGxvb2tzIG1vcmUgbGlrZSBhIEwzIHRoYW4gYW4gTDIgY2FjaGU/Pz8NCg0KU28sIEkg
-d291bGQgc2F5ICJhcm0scGwzMTAtbm8tc2lkZWJhbmQiIGlzIGEgYmV0dGVyIG5hbWUuDQoNCg0K
-SSBhZ3JlZSB0aGF0IGZha2luZyBvdXQgYSBzZWN1cmUgd3JpdGUgZnVuY3Rpb24ganVzdCBzbyB0
-aGUgZmlsbC16ZXJvcw0Kc2lkZWJhbmQgZmVhdHVyZSBpcyBub3QgZW5hYmxlZCBpcyBhIGJpdCBv
-ZiBhIGhhY2ssIGJ1dCBJJ20gbm90IHN1cmUgaWYNCm1vZGlmeWluZyB0aGUgY2FjaGUtbDJ4MC5j
-IHdhcyBhbiBvcHRpb24uDQoNCg0KSWYgeW91IHRoaW5rIHNvLCBJIGNhbiB0cnkgdGhlICJhcm0s
-cGwzMTAtbm8tc2lkZWJhbmQiIHBhdGggZmlyc3QsDQphbmQgaWYgdGhhdCBkb2Vzbid0IGdldCBp
-biBJIGNhbiBmYWxsIGJhY2sgdG8gd2hhdCBJJ20gZG9pbmcgbm93Lg0KDQpUaG91Z2h0cz8/Pw0K
-DQoNCg0KPiA+ICtzdGF0aWMgdm9pZCByN3M3MjEwMF9sMmNfd3JpdGVfc2VjKHVuc2lnbmVkIGxv
-bmcgdmFsLCB1bnNpZ25lZCBpbnQNCj4gPiArcmVnKSB7DQo+ID4gKyAgICAgICBzdGF0aWMgdm9p
-ZCBfX2lvbWVtICpiYXNlOw0KPiA+ICsNCj4gPiArICAgICAgIGlmICghYmFzZSkNCj4gPiArICAg
-ICAgICAgICAgICAgYmFzZSA9IGlvcmVtYXBfbm9jYWNoZSgweDNmZmZmMDAwLCBTWl80Syk7DQo+
-IA0KPiBGV0lXLCBwbGFpbiBpb3JlbWFwKCkgaXMgZmluZS4NCg0KT2YgY291cnNlIHRoZXkgYm90
-aCBnbyB0byB0aGUgc2FtZSB0aGluZyBmb3IgQVJNLCBidXQgSSB0aG91Z2h0IHRoZSAiX25vY2Fj
-aGUiDQp2ZXJzaW9uIHNob3VsZCBiZSB1c2VkIGZvciBzYW5pdHkgcHVycG9zZXMgKGFzIGllLCAi
-eWVzLCBJIGtub3cgd2hhdCBJJ20NCmRvaW5nIikuDQoNCg0KVGhhbmtzLA0KQ2hyaXMNCg0K
+Add code allowing for control of various power domains managed by GPCv2
+IP block found in i.MX7 series of SoCs. Power domains covered by this
+patch are:
+
+    - PCIE PHY
+    - MIPI PHY
+    - USB HSIC PHY
+    - USB OTG1/2 PHY
+
+Support for any other power domain controlled by GPC is not present, and
+can be added at some later point.
+
+Testing of this code was done against a PCIe driver.
+
+Cc: yurovsky-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+
+Shawn:
+
+Since this driver was modlelled after analogous driver for i.MX6 from
+Lucas Stach 
+
+https://www.spinics.net/lists/arm-kernel/msg558548.html
+
+I made this patch to be applied on top of his. Please let me know if
+that was a bad idea.
+
+
+ .../devicetree/bindings/power/fsl,imx-gpcv2.txt    |  73 ++++
+ drivers/soc/imx/Makefile                           |   2 +-
+ drivers/soc/imx/gpcv2.c                            | 380 +++++++++++++++++++++
+ include/dt-bindings/power/imx7-power.h             |  18 +
+ 4 files changed, 472 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+ create mode 100644 drivers/soc/imx/gpcv2.c
+ create mode 100644 include/dt-bindings/power/imx7-power.h
+
+diff --git a/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+new file mode 100644
+index 0000000..949e190
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/fsl,imx-gpcv2.txt
+@@ -0,0 +1,73 @@
++Freescale i.MX General Power Controller v2
++==========================================
++
++The i.MX7S/D General Power Control (GPC) block contains Power Gating
++Control (PGC) for various power domains.
++
++Required properties:
++
++- compatible: Should be "fsl,imx7d-gpc"
++
++- reg: should be register base and length as documented in the
++  datasheet
++
++- interrupts: Should contain GPC interrupt request 1
++
++- #power-domain-cells: Should be 1, see below:
++
++Power domains contained within GPC node are generic power domain
++providers, documented in
++Documentation/devicetree/bindings/power/power_domain.txt, which are
++described as subnoded of the power gating controller 'pgc' node,
++which, in turn, is expected to conatine the following:
++
++Required properties:
++
++- reg: Power domain index. Valid values are defined in
++  include/dt-bindings/power/imx7-power.h
++
++- #power-domain-cells: Should be 0
++
++Optional properties:
++
++- power-supply: Power supply used to power the domain
++
++Example:
++
++	gpc: gpc@303a0000 {
++		compatible = "fsl,imx7d-gpc";
++		reg = <0x303a0000 0x10000>;
++		interrupt-controller;
++		interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&intc>;
++
++		pgc {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			pgc_pcie_phy: pgc-pcie-phy-domain {
++				#power-domain-cells = <0>;
++
++				reg = <IMX7_POWER_DOMAIN_PCIE_PHY>;
++				power-supply = <&reg_1p0d>;
++			};
++		};
++	};
++
++
++Specifying power domain for IP modules
++======================================
++
++IP cores belonging to a power domain should contain a 'power-domains'
++property that is a phandle for PGC node representing the domain.
++
++Example of a device that is part of the PCIE_PHY power domain:
++
++	pcie: pcie@0x33800000 {
++	      reg = <0x33800000 0x4000>,
++	            <0x4ff00000 0x80000>;
++		/* ... */
++		power-domains = <&pgc_pcie_phy>;
++		/* ... */
++	};
+diff --git a/drivers/soc/imx/Makefile b/drivers/soc/imx/Makefile
+index 35861f5..7bcc933 100644
+--- a/drivers/soc/imx/Makefile
++++ b/drivers/soc/imx/Makefile
+@@ -1 +1 @@
+-obj-y += gpc.o
++obj-y += gpc.o gpcv2.o
+diff --git a/drivers/soc/imx/gpcv2.c b/drivers/soc/imx/gpcv2.c
+new file mode 100644
+index 0000000..e4a5d16
+--- /dev/null
++++ b/drivers/soc/imx/gpcv2.c
+@@ -0,0 +1,380 @@
++/*
++ * Copyright 2017 Impinj, Inc
++ *
++ * Based on the code of analogus driver:
++ *
++ * Copyright 2015-2017 Pengutronix, Lucas Stach <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_domain.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <dt-bindings/power/imx7-power.h>
++
++#define GPC_PGC_CPU_MAPPING	0xec
++#define USB_HSIC_PHY_A7_DOMAIN	BIT(6)
++#define USB_OTG2_PHY_A7_DOMAIN	BIT(5)
++#define USB_OTG1_PHY_A7_DOMAIN	BIT(4)
++#define PCIE_PHY_A7_DOMAIN	BIT(3)
++#define MIPI_PHY_A7_DOMAIN	BIT(2)
++
++#define GPC_PU_PGC_SW_PUP_REQ	0xf8
++#define GPC_PU_PGC_SW_PDN_REQ	0x104
++#define USB_HSIC_PHY_SW_Pxx_REQ	BIT(4)
++#define USB_OTG2_PHY_SW_Pxx_REQ	BIT(3)
++#define USB_OTG1_PHY_SW_Pxx_REQ	BIT(2)
++#define PCIE_PHY_SW_Pxx_REQ	BIT(1)
++#define MIPI_PHY_SW_Pxx_REQ	BIT(0)
++
++#define GPC_MAX_REGISTER	GPC_PU_PGC_SW_PDN_REQ
++
++struct imx7_pgc_domain {
++	struct generic_pm_domain genpd;
++	struct regmap *regmap;
++	struct regulator *regulator;
++
++	const struct {
++		u32 pxx;
++		u32 map;
++	} bits;
++
++	const int voltage;
++
++	struct device *dev;
++};
++
++static int imx7_gpc_pu_pgc_sw_pxx_req(struct generic_pm_domain *genpd,
++				      bool on)
++{
++	int ret = 0;
++	unsigned long deadline;
++	struct imx7_pgc_domain *domain = container_of(genpd,
++						      struct imx7_pgc_domain,
++						      genpd);
++	unsigned int offset = (on) ?
++		GPC_PU_PGC_SW_PUP_REQ : GPC_PU_PGC_SW_PDN_REQ;
++
++	const bool has_regulator = !IS_ERR(domain->regulator);
++
++	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
++			   domain->bits.map, domain->bits.map);
++	if (has_regulator && on) {
++		ret = regulator_enable(domain->regulator);
++		if (ret) {
++			dev_err(domain->dev, "failed to enable regulator\n");
++			goto unmap;
++		}
++	}
++
++	regmap_update_bits(domain->regmap, offset,
++			   domain->bits.pxx, domain->bits.pxx);
++	/*
++	 * As per "5.5.9.4 Example Code 4" in IMX7DRM.pdf wait
++	 * for PUP_REQ/PDN_REQ bit to be cleared
++	 */
++	deadline = jiffies + msecs_to_jiffies(1);
++	while (true) {
++		u32 pxx_req;
++
++		regmap_read(domain->regmap, offset, &pxx_req);
++
++		if (pxx_req & domain->bits.pxx)
++			break;
++
++		if (time_after(jiffies, deadline)) {
++			dev_err(domain->dev, "falied to command PGC\n");
++			ret = -ETIMEDOUT;
++			/*
++			 * If we were in a process of enabling a
++			 * domain and failed we might as well disable
++			 * the regulator we just enabled. And if it
++			 * was the opposite situation and we failed to
++			 * power down -- keep the regulator on
++			 */
++			on  = !on;
++			break;
++		}
++
++		cpu_relax();
++	}
++
++	if (has_regulator && !on) {
++		int err;
++
++		err = regulator_disable(domain->regulator);
++		if (err)
++			dev_err(domain->dev,
++				"failed to disable regulator: %d\n", ret);
++		/*
++		 * Preserve earlier error code
++		 */
++		ret = ret ?: err;
++	}
++unmap:
++	regmap_update_bits(domain->regmap, GPC_PGC_CPU_MAPPING,
++			   domain->bits.map, 0);
++	return ret;
++}
++
++static int imx7_gpc_pu_pgc_sw_pup_req(struct generic_pm_domain *genpd)
++{
++	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, true);
++}
++
++static int imx7_gpc_pu_pgc_sw_pdn_req(struct generic_pm_domain *genpd)
++{
++	return imx7_gpc_pu_pgc_sw_pxx_req(genpd, false);
++}
++
++static struct imx7_pgc_domain imx7_pgc_domains[] = {
++	[IMX7_POWER_DOMAIN_USB_HSIC_PHY] = {
++		.genpd = {
++			.name      = "usb-hsic-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_HSIC_PHY_SW_Pxx_REQ,
++			.map = USB_HSIC_PHY_A7_DOMAIN,
++		},
++		.voltage = 1200000,
++	},
++
++	[IMX7_POWER_DOMAIN_USB_OTG2_PHY] = {
++		.genpd = {
++			.name      = "usb-otg2-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_OTG2_PHY_SW_Pxx_REQ,
++			.map = USB_OTG2_PHY_A7_DOMAIN,
++		},
++	},
++
++	[IMX7_POWER_DOMAIN_USB_OTG1_PHY] = {
++		.genpd = {
++			.name      = "usb-otg1-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = USB_OTG1_PHY_SW_Pxx_REQ,
++			.map = USB_OTG1_PHY_A7_DOMAIN,
++		},
++	},
++
++	[IMX7_POWER_DOMAIN_PCIE_PHY] = {
++		.genpd = {
++			.name      = "pcie-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = PCIE_PHY_SW_Pxx_REQ,
++			.map = PCIE_PHY_A7_DOMAIN,
++		},
++		.voltage = 1000000,
++	},
++
++	[IMX7_POWER_DOMAIN_MIPI_PHY] = {
++		.genpd = {
++			.name      = "mipi-phy",
++			.power_on  = imx7_gpc_pu_pgc_sw_pup_req,
++			.power_off = imx7_gpc_pu_pgc_sw_pdn_req,
++		},
++		.bits  = {
++			.pxx = MIPI_PHY_SW_Pxx_REQ,
++			.map = MIPI_PHY_A7_DOMAIN,
++		},
++		.voltage = 1000000,
++	},
++};
++
++static int imx7_pgc_domain_probe(struct platform_device *pdev)
++{
++	int ret;
++	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
++
++	if (!IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS))
++		return 0;
++
++	domain->dev = &pdev->dev;
++
++	ret = pm_genpd_init(&domain->genpd, NULL, true);
++	if (ret) {
++		dev_err(domain->dev, "Failed to init power domain\n");
++		return ret;
++	}
++
++	domain->regulator = devm_regulator_get_optional(domain->dev, "power");
++	if (IS_ERR(domain->regulator)  &&
++	    PTR_ERR(domain->regulator) != -ENODEV) {
++		dev_err(domain->dev, "Failed to get domain's regulator\n");
++		return PTR_ERR(domain->regulator);
++	}
++
++	if (!IS_ERR(domain->regulator)) {
++		WARN_ON(!domain->voltage);
++		regulator_set_voltage(domain->regulator,
++				      domain->voltage, domain->voltage);
++	}
++
++	ret = of_genpd_add_provider_simple(domain->dev->of_node,
++					   &domain->genpd);
++	if (ret) {
++		dev_err(domain->dev, "Failed to add genpd provider\n");
++		pm_genpd_remove(&domain->genpd);
++	}
++
++	return ret;
++}
++
++static int imx7_pgc_domain_remove(struct platform_device *pdev)
++{
++	struct imx7_pgc_domain *domain = pdev->dev.platform_data;
++
++	if (IS_ENABLED(CONFIG_PM_GENERIC_DOMAINS)) {
++		of_genpd_del_provider(domain->dev->of_node);
++		pm_genpd_remove(&domain->genpd);
++	}
++
++	return 0;
++}
++
++static const struct platform_device_id imx7_pgc_domain_id[] = {
++	{ "imx7-pgc-domain", },
++	{ },
++};
++
++static struct platform_driver imx7_pgc_domain_driver = {
++	.driver = {
++		.name = "imx7-pgc",
++	},
++	.probe    = imx7_pgc_domain_probe,
++	.remove   = imx7_pgc_domain_remove,
++	.id_table = imx7_pgc_domain_id,
++};
++builtin_platform_driver(imx7_pgc_domain_driver)
++
++static bool imx_gpcv2_readable_reg(struct device *dev, unsigned int reg)
++{
++	return reg % 4 == 0 &&
++	       reg <= GPC_MAX_REGISTER;
++}
++
++static bool imx_gpcv2_volatile_reg(struct device *dev, unsigned int reg)
++{
++	return reg == GPC_PU_PGC_SW_PUP_REQ ||
++	       reg == GPC_PU_PGC_SW_PDN_REQ;
++}
++
++static int imx_gpcv2_probe(struct platform_device *pdev)
++{
++	int ret;
++	void __iomem *base;
++	struct resource *res;
++	struct regmap *regmap;
++	struct device *dev = &pdev->dev;
++	struct device_node *pgc_np, *np;
++
++	static const struct regmap_config regmap_config = {
++		.cache_type	= REGCACHE_FLAT,
++		.reg_bits	= 32,
++		.val_bits	= 32,
++		.reg_stride	= 4,
++
++		.readable_reg	= imx_gpcv2_readable_reg,
++		.volatile_reg	= imx_gpcv2_volatile_reg,
++
++		.max_register	= GPC_MAX_REGISTER,
++	};
++
++	pgc_np = of_get_child_by_name(dev->of_node, "pgc");
++	if (!pgc_np) {
++		dev_err(dev, "No power domains specified in DT\n");
++		return -EINVAL;
++	}
++
++	res  = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++
++	regmap = devm_regmap_init_mmio_clk(dev, NULL, base, &regmap_config);
++	if (IS_ERR(regmap)) {
++		ret = PTR_ERR(regmap);
++		dev_err(dev, "failed to init regmap\n");
++		return ret;
++	}
++
++	for_each_child_of_node(pgc_np, np) {
++		u32 domain_index;
++		struct platform_device *pd_pdev;
++		struct imx7_pgc_domain *domain;
++
++		ret = of_property_read_u32(np, "reg", &domain_index);
++		if (ret) {
++			dev_err(dev, "Failed to read 'reg' property\n");
++			of_node_put(np);
++			return ret;
++		}
++
++		if (domain_index >= ARRAY_SIZE(imx7_pgc_domains)) {
++			dev_warn(dev,
++				 "Domain index %d is out of bounds\n",
++				 domain_index);
++			continue;
++		}
++
++		domain = &imx7_pgc_domains[domain_index];
++		domain->regmap = regmap;
++
++		pd_pdev = platform_device_alloc("imx7-pgc-domain",
++						domain_index);
++		if (!pd_pdev) {
++			dev_err(dev, "Failed to allocate platform device\n");
++			of_node_put(np);
++			return -ENOMEM;
++		}
++
++		pd_pdev->dev.platform_data = domain;
++		pd_pdev->dev.parent = dev;
++		pd_pdev->dev.of_node = np;
++
++		ret = platform_device_add(pd_pdev);
++		if (ret) {
++			platform_device_put(pd_pdev);
++			of_node_put(np);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++static const struct of_device_id imx_gpcv2_dt_ids[] = {
++	{ .compatible = "fsl,imx7d-gpc" },
++	{ }
++};
++
++static struct platform_driver imx_gpc_driver = {
++	.driver = {
++		.name = "imx-gpcv2",
++		.of_match_table = imx_gpcv2_dt_ids,
++	},
++	.probe = imx_gpcv2_probe,
++};
++builtin_platform_driver(imx_gpc_driver)
+diff --git a/include/dt-bindings/power/imx7-power.h b/include/dt-bindings/power/imx7-power.h
+new file mode 100644
+index 0000000..24dde62
+--- /dev/null
++++ b/include/dt-bindings/power/imx7-power.h
+@@ -0,0 +1,18 @@
++/*
++ *  Copyright © 2017 Impinj
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#ifndef __DT_BINDINGS_ARM_IMX7_POWER_H__
++#define __DT_BINDINGS_ARM_IMX7_POWER_H__
++
++#define IMX7_POWER_DOMAIN_USB_HSIC_PHY	0
++#define IMX7_POWER_DOMAIN_USB_OTG2_PHY	1
++#define IMX7_POWER_DOMAIN_USB_OTG1_PHY	2
++#define IMX7_POWER_DOMAIN_PCIE_PHY	3
++#define IMX7_POWER_DOMAIN_MIPI_PHY	4
++
++#endif
+-- 
+2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
