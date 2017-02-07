@@ -1,31 +1,151 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 1/3] Documentation: devicetree: Add PHY no lane swap
- binding
-Date: Tue, 7 Feb 2017 14:02:18 +0100
-Message-ID: <20170207130218.GB31560@lunn.ch>
-References: <1486444894-12841-1-git-send-email-lukma@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1486444894-12841-1-git-send-email-lukma@denx.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Majewski <lukma@denx.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, jbrunet <jbrunet@baylibre.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jon Mason <jon.mason@broadcom.com>, Fabio Estevam <fabio.estevam@nxp.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm video driver
+Date: Tue,  7 Feb 2017 15:10:17 +0200
+Message-ID: <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
+References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 06:21:34AM +0100, Lukasz Majewski wrote:
-> Add the documentation to avoid PHY lane swapping. This is a boolean
-> entry to notify the phy device drivers that the TX/RX lanes NO need
-> to be swapped.
-> The use case for this binding mostly happens after wrong HW
-> configuration of PHY IC during bootstrap.
+Add binding document for Venus video encoder/decoder driver
 
-Ah! O.K. Something odd going on with the threading of the patches. 1/3
-seems to be last!
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+Changes since previous v5:
+ * dropped rproc phandle (remoteproc is not used anymore)
+ * added subnodes paragraph with descrition of three subnodes:
+    - video-decoder and video-encoder - describes decoder (core0) and
+    encoder (core1) power-domains and clocks (applicable for msm8996
+    Venus core).
+    - video-firmware - needed to get reserved memory region where the
+    firmware is stored.
 
-> Signed-off-by: Lukasz Majewski <lukma@denx.de>
+ .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
+ 1 file changed, 112 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-
-    Andrew
+diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
+new file mode 100644
+index 000000000000..4427af3ca5a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
+@@ -0,0 +1,112 @@
++* Qualcomm Venus video encode/decode accelerator
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain one of:
++		- "qcom,msm8916-venus"
++		- "qcom,msm8996-venus"
++- reg:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Register base address and length of the register map.
++- interrupts:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: Should contain interrupt line number.
++- clocks:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A List of phandle and clock specifier pairs as listed
++		    in clock-names property.
++- clock-names:
++	Usage: required for msm8916
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++- clock-names:
++	Usage: required for msm8996
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Core video accelerator clock
++		- "iface"	Video accelerator AHB clock
++		- "bus"		Video accelerator AXI clock
++		- "mbus"	Video MAXI clock
++- power-domains:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A phandle and power domain specifier pairs to the
++		    power domain which is responsible for collapsing
++		    and restoring power to the peripheral.
++- iommus:
++	Usage: required
++	Value type: <prop-encoded-array>
++	Definition: A list of phandle and IOMMU specifier pairs.
++
++* Subnodes
++The Venus node must contain three subnodes representing video-decoder,
++video-encoder and video-firmware.
++
++Every of video-encoder or video-decoder subnode should have:
++
++- compatible:
++	Usage: required
++	Value type: <stringlist>
++	Definition: Value should contain "venus-decoder" or "venus-encoder"
++- clocks:
++	Usage: required for msm8996
++	Value type: <prop-encoded-array>
++	Definition: A List of phandle and clock specifier pairs as listed
++		    in clock-names property.
++- clock-names:
++	Usage: required for msm8996
++	Value type: <stringlist>
++	Definition: Should contain the following entries:
++		- "core"	Subcore video accelerator clock
++
++- power-domains:
++	Usage: required for msm8996
++	Value type: <prop-encoded-array>
++	Definition: A phandle and power domain specifier pairs to the
++		    power domain which is responsible for collapsing
++		    and restoring power to the subcore.
++
++The video-firmware subnode should contain:
++
++- memory-region:
++	Usage: required
++	Value type: <phandle>
++	Definition: reference to the reserved-memory for the memory region
++
++* An Example
++	video-codec@1d00000 {
++		compatible = "qcom,msm8916-venus";
++		reg = <0x01d00000 0xff000>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
++			 <&gcc GCC_VENUS0_AHB_CLK>,
++			 <&gcc GCC_VENUS0_AXI_CLK>;
++		clock-names = "core", "iface", "bus";
++		power-domains = <&gcc VENUS_GDSC>;
++		iommus = <&apps_iommu 5>;
++
++		video-decoder {
++			compatible = "venus-decoder";
++			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
++			clock-names = "core";
++			power-domains = <&mmcc VENUS_CORE0_GDSC>;
++		};
++
++		video-encoder {
++			compatible = "venus-encoder";
++			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
++			clock-names = "core";
++			power-domains = <&mmcc VENUS_CORE1_GDSC>;
++		};
++
++		video-firmware {
++			memory-region = <&venus_mem>;
++		};
++	};
+-- 
+2.7.4
