@@ -1,99 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt: pwm: lpc32xx: add description of clocks and
- #pwm-cells properties
-Date: Tue, 7 Feb 2017 17:22:03 -0600
-Message-ID: <CAL_JsqJ_g1jGuzE5m9=2iNSPDt2nDFYTXZJOpqPzrtw8kH-qQw@mail.gmail.com>
-References: <20161205014237.1689-1-vz@mleia.com> <20161205014237.1689-2-vz@mleia.com>
- <20161209214137.2hdugl5rmnwjrus4@rob-hp-laptop> <015305d5-c22f-52da-9605-f2c19e3108b1@mleia.com>
- <5a865e27-e673-2f45-6c71-ca1e7d92a346@mleia.com> <1483456920.7643.1.camel@localhost>
- <1486494208.32098.3.camel@localhost>
+Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
+Date: Tue, 7 Feb 2017 17:36:38 -0600
+Message-ID: <CAL_Jsq+Fu6XRbPEO2OWvpGHuRk9w+k=X3tT+P-UUqiu2r+F12Q@mail.gmail.com>
+References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
+ <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop>
+ <CAOMZO5Bv2gHa3O_6dbAgKePcZDfMeueeYptRb4r=WLTHYYS8uA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1486494208.32098.3.camel@localhost>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Sylvain Lemieux <slemieux.tyco@gmail.com>
-Cc: Vladimir Zapolskiy <vz@mleia.com>, Thierry Reding <thierry.reding@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAOMZO5Bv2gHa3O_6dbAgKePcZDfMeueeYptRb4r=WLTHYYS8uA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Breno Lima <breno.lima@nxp.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Breno Matheus Lima <brenomatheus@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 7, 2017 at 1:03 PM, Sylvain Lemieux <slemieux.tyco@gmail.com> wrote:
-> Hi Rob,
->
-> On Tue, 2017-01-03 at 10:22 -0500, Sylvain Lemieux wrote:
->> Hi Rob,
->>
->> On Wed, 2016-12-21 at 05:30 +0200, Vladimir Zapolskiy wrote:
->> > On 12/10/2016 01:51 AM, Vladimir Zapolskiy wrote:
->> > > Hi Rob,
->> > >
->> > > On 12/09/2016 11:41 PM, Rob Herring wrote:
->> > >> On Mon, Dec 05, 2016 at 03:42:37AM +0200, Vladimir Zapolskiy wrote:
->> > >>> NXP LPC32xx SoCs have two simple independent PWM controllers with a single
->> > >>> output each, in this case there is no need to specify PWM channel argument
->> > >>> on client side, one cell for setting PWM output frequency is sufficient.
->> > >>>
->> > >>> Another added to the description property 'clocks' has a standard meaning
->> > >>> of a controller supply clock, in the LPC32xx User's Manual the clock is
->> > >>> denoted as PWM1_CLK or PWM2_CLK clock.
->> > >>>
->> > >>> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
->> > >>> ---
->> > >>>  Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt | 7 +++++++
->> > >>>  1 file changed, 7 insertions(+)
->> > >>>
->> > >>> diff --git a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
->> > >>> index 74b5bc5..523d796 100644
->> > >>> --- a/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
->> > >>> +++ b/Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
->> > >>> @@ -3,15 +3,22 @@ LPC32XX PWM controller
->> > >>>  Required properties:
->> > >>>  - compatible: should be "nxp,lpc3220-pwm"
->> > >>>  - reg: physical base address and length of the controller's registers
->> > >>> +- clocks: clock phandle and clock specifier pair
->> > >>> +- #pwm-cells: should be 1, the cell is used to specify the period in
->> > >>> +  nanoseconds.
->> > >>
->> > >> This use of the cell is a bit odd as the period is s/w config and this
->> > >> would typically be a channel selection or such.
->> > >
->> > > this is a classic PWM channel configuration property for PWM consumers
->> > > described in DT, for instance PWM frequency for display panel backlight
->> > > on boot.
->> > >
->> > > I think >90% of PWM controllers with device tree bindings have this
->> > > argument in #pwm-cells, from bindings/pwm/pwm.txt :
->> > >
->> > >     pwm-specifier typically encodes the chip-relative PWM number and
->> > >     the PWM period in nanoseconds.
->> > >
->> > > You also may skim through phandle arguments of 'pwms' property,
->> > > commonly the second argument is the requested frequency.
->> > >
->> > > In this particular case I just drop PWM channel number, because
->> > > the LPC32xx PWM controller has a single output channel.
->> > >
->> > >> What if I want user specified/changed periods?
->> > >>
->> > >
->> > > The preset period still can be changed over sysfs in runtime.
->> >
->> > Rob, have I managed to answer your questions?
->> >
->> > If you accept my clarification, could you please ack the change?
->> >
->> > --
->> > With best wishes,
->> > Vladimir
->> >
->> ping
->>
->> Sylvain
->>
-> Can you provide feedback; I think your questions were answered
-> by Vladimir.
-
-Yes. Sorry for the delay. It's best to resend if you want to be sure I see it.
-
-Acked-by: Rob Herring <robh@kernel.org>
-
-Rob
+T24gVHVlLCBGZWIgNywgMjAxNyBhdCAxMjo1NSBQTSwgRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1A
+Z21haWwuY29tPiB3cm90ZToKPiBIaSBSb2IsCj4KPiBPbiBUdWUsIEZlYiA3LCAyMDE3IGF0IDQ6
+NDkgUE0sIFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+IHdyb3RlOgo+Cj4+IE5vIHBvd2Vy
+IHN1cHBseShpZXMpIGZvciB0aGlzIHBhbmVsPwo+Cj4gcG93ZXItc3VwcGx5IGlzIG1lbnRpb25l
+ZCBpbiAgc2ltcGxlLXBhbmVsLnR4dC4KPgo+Pj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxl
+IHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPj4+ICtp
+biBzaW1wbGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5Lgo+Cj4gYW5kIHRoaXMgZG9jIHJl
+ZmVycyB0byBzaW1wbGUtcGFuZWwudHh0LiBJc24ndCB0aGF0IGVub3VnaD8KCkV4Y2VwdCBJIGhh
+dmUgbm8gd2F5IG9mIGtub3dpbmcgd2hldGhlcjogYSkgeW91IG9taXR0ZWQgYSBzdXBwbHkKYmVj
+YXVzZSB5b3UgZG9uJ3QgKHlldCkgY2FyZSwgYikgdGhlIHBhbmVsIGhhcyBhIHNpbmdsZSBzdXBw
+bHkgYW5kIHlvdQphcmUgdXNpbmcgcG93ZXItc3VwcGx5IG9yIGMpIHRoZSBwYW5lbCBoYXMgbXVs
+dGlwbGUgc3VwcGxpZXMgYW5kIHlvdXIKYmluZGluZyBpcyB3cm9uZy4KCkkgY2FuIG9ubHkgZWxp
+bWluYXRlIEEgaWYgeW91IGxpc3QgdGhlIHN1cHBsaWVzLiBKdXN0IG5lZWQgc29tZXRoaW5nCmxp
+a2UgInBvd2VyLXN1cHBseSA6IHNlZSBzaW1wbGUtcGFuZWwudHh0Ii4gSSd2ZSBzdGlsbCBnb3Qg
+dG8gZ28gcmVhZAp0aGUgcGFuZWwgc3BlYyBpZiBJIHJlYWxseSB3YW50IHRvIGNoZWNrIHRoZSBi
+aW5kaW5nLgoKPiBTZWVtcyBsaWtlIGEgY29tbW9uIHBhdHRlcm4gZm9yIHRoZSBvdGhlciBzaW1w
+bGUgcGFuZWwgYmluZGluZyBkb2MuCgpXZSd2ZSBnb3R0ZW4gc3RyaWN0ZXIgYWJvdXQgdGhpcy4K
+ClJvYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
+ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
