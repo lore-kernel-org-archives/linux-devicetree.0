@@ -1,93 +1,59 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH] Make EN2 pin optional in the TRF7970A driver
-Date: Tue,  7 Feb 2017 06:22:04 +0100
-Message-ID: <1486444924-18444-1-git-send-email-hs@denx.de>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, Heiko Schocher <hs@denx.de>, devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lauro Ramos Venancio <lauro.venancio@openbossa.org>, Aloisio Almeida Jr <aloisio.almeida@openbossa.org>, Mark Rutland <mark.rutland@arm.com>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: dts: qcom: msm8974: Add RPMCC DT node
+Date: Mon, 6 Feb 2017 21:35:38 -0800
+Message-ID: <20170207053538.GE27837@minitux>
+References: <20170203183614.28135-1-georgi.djakov@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170203183614.28135-1-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Guan Ben <ben.guan@cn.bosch.com>
+On Fri 03 Feb 10:36 PST 2017, Georgi Djakov wrote:
 
-Make the EN2 pin optional. This is useful for boards,
-which have this pin fix wired, for example to ground.
+> Add the RPM Clock Controller DT node for msm8974-based platforms, so that
+> drivers can use the clocks provided by the RPM processor.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
-Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Reviewed-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
----
+Regards,
+Bjorn
 
- .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ++--
- drivers/nfc/trf7970a.c                             | 26 ++++++++++++----------
- 2 files changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-index 32b35a0..5889a3d 100644
---- a/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/trf7970a.txt
-@@ -5,8 +5,8 @@ Required properties:
- - spi-max-frequency: Maximum SPI frequency (<= 2000000).
- - interrupt-parent: phandle of parent interrupt handler.
- - interrupts: A single interrupt specifier.
--- ti,enable-gpios: Two GPIO entries used for 'EN' and 'EN2' pins on the
--  TRF7970A.
-+- ti,enable-gpios: One or two GPIO entries used for 'EN' and 'EN2' pins on the
-+  TRF7970A. EN2 is optional.
- - vin-supply: Regulator for supply voltage to VIN pin
- 
- Optional SoC Specific Properties:
-diff --git a/drivers/nfc/trf7970a.c b/drivers/nfc/trf7970a.c
-index 26c9dbb..75079fb 100644
---- a/drivers/nfc/trf7970a.c
-+++ b/drivers/nfc/trf7970a.c
-@@ -1885,8 +1885,10 @@ static int trf7970a_power_up(struct trf7970a *trf)
- 	usleep_range(5000, 6000);
- 
- 	if (!(trf->quirks & TRF7970A_QUIRK_EN2_MUST_STAY_LOW)) {
--		gpio_set_value(trf->en2_gpio, 1);
--		usleep_range(1000, 2000);
-+		if (gpio_is_valid(trf->en2_gpio)) {
-+			gpio_set_value(trf->en2_gpio, 1);
-+			usleep_range(1000, 2000);
-+		}
- 	}
- 
- 	gpio_set_value(trf->en_gpio, 1);
-@@ -1914,7 +1916,8 @@ static int trf7970a_power_down(struct trf7970a *trf)
- 	}
- 
- 	gpio_set_value(trf->en_gpio, 0);
--	gpio_set_value(trf->en2_gpio, 0);
-+	if (gpio_is_valid(trf->en2_gpio))
-+		gpio_set_value(trf->en2_gpio, 0);
- 
- 	ret = regulator_disable(trf->regulator);
- 	if (ret)
-@@ -2032,15 +2035,14 @@ static int trf7970a_probe(struct spi_device *spi)
- 
- 	trf->en2_gpio = of_get_named_gpio(np, "ti,enable-gpios", 1);
- 	if (!gpio_is_valid(trf->en2_gpio)) {
--		dev_err(trf->dev, "No EN2 GPIO property\n");
--		return trf->en2_gpio;
--	}
--
--	ret = devm_gpio_request_one(trf->dev, trf->en2_gpio,
--			GPIOF_DIR_OUT | GPIOF_INIT_LOW, "trf7970a EN2");
--	if (ret) {
--		dev_err(trf->dev, "Can't request EN2 GPIO: %d\n", ret);
--		return ret;
-+		dev_info(trf->dev, "No EN2 GPIO property\n");
-+	} else {
-+		ret = devm_gpio_request_one(trf->dev, trf->en2_gpio,
-+				GPIOF_DIR_OUT | GPIOF_INIT_LOW, "trf7970a EN2");
-+		if (ret) {
-+			dev_err(trf->dev, "Can't request EN2 GPIO: %d\n", ret);
-+			return ret;
-+		}
- 	}
- 
- 	if (of_property_read_bool(np, "en2-rf-quirk"))
--- 
-2.7.4
+> ---
+>  arch/arm/boot/dts/qcom-msm8974.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> index d3e1a61b8671..4b4c61e2ee35 100644
+> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+> @@ -2,6 +2,7 @@
+>  
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/clock/qcom,gcc-msm8974.h>
+> +#include <dt-bindings/clock/qcom,rpmcc.h>
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/reset/qcom,gcc-msm8974.h>
+>  #include "skeleton.dtsi"
+> @@ -760,6 +761,11 @@
+>  				compatible = "qcom,rpm-msm8974";
+>  				qcom,smd-channels = "rpm_requests";
+>  
+> +				rpmcc: clock-controller {
+> +					compatible = "qcom,rpmcc-msm8974", "qcom,rpmcc";
+> +					#clock-cells = <1>;
+> +				};
+> +
+>  				pm8841-regulators {
+>  					compatible = "qcom,rpm-pm8841-regulators";
+>  
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
