@@ -1,55 +1,39 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: [PATCH v5 0/4] cpufreq: Introduce TI CPUFreq/OPP Driver
-Date: Tue, 7 Feb 2017 10:51:03 -0600
-Message-ID: <20170207165107.29394-1-d-gerlach@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pm-owner@vger.kernel.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, Dave Gerlach <d-gerlach@ti.com>, Lukasz Majewski <lukma@denx.de>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v2 2/3] ARM: shmobile: r7s72100: Enable L2 cache
+Date: Tue,  7 Feb 2017 12:09:28 -0500
+Message-ID: <20170207170929.29525-3-chris.brandt@renesas.com>
+References: <20170207170929.29525-1-chris.brandt@renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170207170929.29525-1-chris.brandt@renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Brad Mouring <brad.mouring@ni.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Richard Cochran <rcochran@linutronix.de>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Brandt <chris.brandt@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-This is v5 of the series to introduce the ti-cpufreq driver
-which parses SoC data and provides opp-supported-hw data to the
-OPP core in order to enable the proper OPPs for the silicon in use.
+Even though L2C is specified in the DT, you still need to add the aux
+settings in the machine_desc.
 
-History:
-v4: http://www.spinics.net/lists/linux-omap/msg134629.html
-v3: http://www.spinics.net/lists/linux-omap/msg132733.html
-v2: http://www.spinics.net/lists/linux-omap/msg131601.html
-v1: http://www.spinics.net/lists/linux-omap/msg129089.html
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+* removed dummy l2c_write_sec function
+---
+ arch/arm/mach-shmobile/setup-r7s72100.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Very minor changes from v4:
-	* In patch 2 change "opp_table0" to "opp_table" in example
-	* Add acks on all patches (he approved change in patch 2) from Viresh
-
-DT patches to enable this driver will follow after the DT binding is merged.
-Branch for testing, with updated DT nodes, pushed here [1].
-
-Regards,
-Dave
-
-[1] https://github.com/dgerlach/linux-pm/commits/upstream/ti-cpufreq-driver-new-v5
-
-Dave Gerlach (4):
-  PM / OPP: Expose _of_get_opp_desc_node as dev_pm_opp API
-  Documentation: dt: add bindings for ti-cpufreq
-  cpufreq: ti: Add cpufreq driver to determine available OPPs at runtime
-  cpufreq: dt: Don't use generic platdev driver for ti-cpufreq platforms
-
- .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 128 ++++++++++
- drivers/base/power/opp/of.c                        |   9 +-
- drivers/cpufreq/Kconfig.arm                        |  11 +
- drivers/cpufreq/Makefile                           |   1 +
- drivers/cpufreq/cpufreq-dt-platdev.c               |   2 -
- drivers/cpufreq/ti-cpufreq.c                       | 272 +++++++++++++++++++++
- include/linux/pm_opp.h                             |   6 +
- 7 files changed, 423 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
- create mode 100644 drivers/cpufreq/ti-cpufreq.c
-
+diff --git a/arch/arm/mach-shmobile/setup-r7s72100.c b/arch/arm/mach-shmobile/setup-r7s72100.c
+index d46639f..319ca95 100644
+--- a/arch/arm/mach-shmobile/setup-r7s72100.c
++++ b/arch/arm/mach-shmobile/setup-r7s72100.c
+@@ -26,6 +26,8 @@ static const char *const r7s72100_boards_compat_dt[] __initconst = {
+ };
+ 
+ DT_MACHINE_START(R7S72100_DT, "Generic R7S72100 (Flattened Device Tree)")
++	.l2c_aux_val    = 0,
++	.l2c_aux_mask   = ~0,
+ 	.init_early	= shmobile_init_delay,
+ 	.init_late	= shmobile_init_late,
+ 	.dt_compat	= r7s72100_boards_compat_dt,
 -- 
-2.11.0
-
+2.10.1
