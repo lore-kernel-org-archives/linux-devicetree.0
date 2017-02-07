@@ -1,199 +1,113 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] nvmem: sunxi-sid: add support for
- H3's SID controller
-Date: Tue, 7 Feb 2017 10:25:03 +0100
-Message-ID: <20170207092503.3nh2g6orkgjgdi7q@lukather>
-References: <20170202131338.20234-1-icenowy@aosc.xyz>
- <20170202131338.20234-2-icenowy@aosc.xyz>
- <20170206085416.4qtd3wfhtinp42xv@lukather>
- <5119511486371415@web15m.yandex.ru>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/3] arm64: add THUNDER2 processor family
+Date: Tue, 7 Feb 2017 09:41:07 +0000
+Message-ID: <20170207094106.GA2194@localhost>
+References: <1486233461-2679-1-git-send-email-jnair@caviumnetworks.com>
+ <1486233461-2679-2-git-send-email-jnair@caviumnetworks.com>
+ <20170206100608.GA8540@arm.com>
+ <CAK8P3a1_dQZd3RRyavMKqBFcHsXTQ2oAUO5vaLhyTiH99XhqrQ@mail.gmail.com>
+ <20170206152140.GA2001@localhost>
+ <CAK8P3a1BTV4ZH9eQHwhyZ4AVVSwxsM_MD+iuByfdXDbE3M_szg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="iwyjrfcyo6bvx4a6"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4FE43CAKGQEJAELZKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5119511486371415-pc6iqGSXq09xpj1cXAZ9Bg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Cc: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAK8P3a1BTV4ZH9eQHwhyZ4AVVSwxsM_MD+iuByfdXDbE3M_szg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---iwyjrfcyo6bvx4a6
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Feb 06, 2017 at 04:56:55PM +0800, Icenowy Zheng wrote:
-> 06.02.2017, 16:54, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> > On Thu, Feb 02, 2017 at 09:13:37PM +0800, Icenowy Zheng wrote:
-> >> =C2=A0The H3 SoC have a bigger SID controller, which has its direct re=
-ad
-> >> =C2=A0address at 0x200 position in the SID block, not 0x0.
-> >>
-> >> =C2=A0Also, H3 SID controller has some silicon bug that makes the dire=
-ct read
-> >> =C2=A0value wrong at cold boot, add code to workaround the bug. (This =
-bug has
-> >> =C2=A0already been fixed on A64 and later SoCs)
-> >>
-> >> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> >> =C2=A0---
-> >> =C2=A0This patch is the part of [PATCH v2 1/1] that adds support for H=
-3 SID
-> >> =C2=A0controller.
-> >>
-> >> =C2=A0=C2=A0.../bindings/nvmem/allwinner,sunxi-sid.txt | 12 +++-
-> >> =C2=A0=C2=A0drivers/nvmem/sunxi_sid.c | 72 +++++++++++++++++++++-
-> >> =C2=A0=C2=A02 files changed, 82 insertions(+), 2 deletions(-)
-> >>
-> >> =C2=A0diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,s=
-unxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.=
-txt
-> >> =C2=A0index d543ed3f5363..9ab9e75a6351 100644
-> >> =C2=A0--- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-si=
-d.txt
-> >> =C2=A0+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-si=
-d.txt
-> >> =C2=A0@@ -1,7 +1,11 @@
-> >> =C2=A0=C2=A0Allwinner sunxi-sid
-> >>
-> >> =C2=A0=C2=A0Required properties:
-> >> =C2=A0-- compatible: "allwinner,sun4i-a10-sid" or "allwinner,sun7i-a20=
--sid"
-> >> =C2=A0+- compatible: Should be one of the following (depending on your=
- SoC):
-> >> =C2=A0+ "allwinner,sun4i-a10-sid"
-> >> =C2=A0+ "allwinner,sun7i-a20-sid"
-> >> =C2=A0+ "allwinner,sun8i-h3-sid"
-> >> =C2=A0+
-> >> =C2=A0=C2=A0- reg: Should contain registers location and length
-> >>
-> >> =C2=A0=C2=A0=3D Data cells =3D
-> >> =C2=A0@@ -19,3 +23,9 @@ Example for sun7i:
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "allwinner,sun7i-a20-=
-sid";
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0reg =3D <0x01c23800 0x200>
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
-> >> =C2=A0+
-> >> =C2=A0+Example for sun8i-h3:
-> >> =C2=A0+ sid@01c14000 {
-> >> =C2=A0+ compatible =3D "allwinner,sun8i-h3-sid";
-> >> =C2=A0+ reg =3D <0x01c14000 0x400>;
-> >> =C2=A0+ };
-> >> =C2=A0diff --git a/drivers/nvmem/sunxi_sid.c b/drivers/nvmem/sunxi_sid=
-.c
-> >> =C2=A0index 69524b67007f..476a161ff23a 100644
-> >> =C2=A0--- a/drivers/nvmem/sunxi_sid.c
-> >> =C2=A0+++ b/drivers/nvmem/sunxi_sid.c
-> >> =C2=A0@@ -25,6 +25,16 @@
-> >> =C2=A0=C2=A0#include <linux/slab.h>
-> >> =C2=A0=C2=A0#include <linux/random.h>
-> >>
-> >> =C2=A0+/* Registers and special values for doing register-based SID re=
-adout on H3 */
-> >> =C2=A0+#define SUN8I_SID_PRCTL 0x40
-> >> =C2=A0+#define SUN8I_SID_RDKEY 0x60
-> >> =C2=A0+
-> >> =C2=A0+#define SUN8I_SID_OP_LOCK 0xAC
-> >> =C2=A0+#define SUN8I_SID_OFFSET_MASK 0x1FF
-> >> =C2=A0+#define SUN8I_SID_OFFSET_SHIFT 16
-> >> =C2=A0+#define SUN8I_SID_LOCK_SHIFT 8
-> >> =C2=A0+#define SUN8I_SID_READ BIT(1)
-> >> =C2=A0+
-> >> =C2=A0=C2=A0static struct nvmem_config econfig =3D {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.name =3D =
-"sunxi-sid",
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.read_only=
- =3D true,
-> >> =C2=A0@@ -34,11 +44,14 @@ static struct nvmem_config econfig =3D {
-> >> =C2=A0=C2=A0};
-> >>
-> >> =C2=A0=C2=A0struct sunxi_sid_cfg {
-> >> =C2=A0+ u32 value_offset;
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 size;
-> >> =C2=A0+ bool need_register_readout;
-> >> =C2=A0=C2=A0};
-> >>
-> >> =C2=A0=C2=A0struct sunxi_sid {
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0void __iom=
-em *base;
-> >> =C2=A0+ u32 value_offset;
-> >> =C2=A0=C2=A0};
-> >>
-> >> =C2=A0=C2=A0/* We read the entire key, due to a 32 bit read alignment =
-requirement. Since we
-> >> =C2=A0@@ -51,7 +64,8 @@ static u8 sunxi_sid_read_byte(const struct sun=
-xi_sid *sid,
-> >> =C2=A0=C2=A0{
-> >> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0u32 sid_ke=
-y;
-> >>
-> >> =C2=A0- sid_key =3D ioread32be(sid->base + round_down(offset, 4));
-> >> =C2=A0+ sid_key =3D ioread32be(sid->base + sid->value_offset +
-> >> =C2=A0+ round_down(offset, 4));
+On Mon, Feb 06, 2017 at 04:38:24PM +0100, Arnd Bergmann wrote:
+> On Mon, Feb 6, 2017 at 4:21 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> > On Mon, Feb 06, 2017 at 02:44:13PM +0100, Arnd Bergmann wrote:
+> >> On Mon, Feb 6, 2017 at 11:06 AM, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote:
 > >
-> > This would probably be more logical to have this in sunxi_sid_read.
->=20
-> But it's here which really access the memory...
+> > The Vulcan architecture has been discontinued by Broadcom, so the platform
+> > and device tree files should go away soon. Renames are going to be messy, it
+> > will be better to keep Vulcan around until the transition is complete, and
+> > then delete it.
+> 
+> What are the disadvantages of a rename in your opinion? Are you mainly
+> worried about merge conflicts or something else?
 
-This function is made to read a single register. What you want is to
-offset all reads, and all the reads are made in sunxi_sid_read.
+Ok, we are talking about 2 renames,
+1. ARCH_VULCAN -> ARCH_THUNDER2,  please see below, but I think there is
+board agreement on steps:
+  - add ARCH_THUNDER2 in a patchset in a dev cycle
+  - when it is mainline, replace ARCH_VULCAN with ARCH_THUNDER2 in the
+    next cycle for drivers
 
-> >> =C2=A0+ if (reg_val & SUN8I_SID_READ)
-> >> =C2=A0+ return -EIO;
-> >> =C2=A0+
-> >> =C2=A0+ if (out)
-> >> =C2=A0+ *out =3D readl(sid->base + SUN8I_SID_RDKEY);
+2.  boot/dts/broadcom/vulcan* -> boot/dts/cavium/thunder-99* 
+If I understand correctly, the main sticking point here is the
+duplication of the dtsi file for SoC, instead of just including
+vulcan.dtsi in thunder-99xx board file.
+
+It is not so bad in my view to have the duplication in a kernel version
+until vulcan is removed. I think you would prefer something like this:
+  - have a patchset in this dev cycle to include vulcan.dtsi in
+    thunder-99xx.dts (the 99xx name to match 88xx already there)
+  - patchset in an upcoming dev cycle to:
+     * remove ARCH_VULCAN
+     * move vulcan.dtsi -> thunder-99xx.dtsi, drop vulcan ids which are
+       removed.
+
+This seems reasonable to me, I will send out a patch to do this (if you
+do not have any further comments)
+
+> >> Hmm, an alternative would be to add the new .dtsi file and start out with an
+> >> #include of the existing file, with overrides for anything that needs changing.
+> >> Similarly, the Kconfig symbol could just 'select ARCH_VULCAN' for now.
 > >
-> > Why do you need that out parameter?
->=20
-> The read operation by registers can really return a value --
-> in fact, the fix to the pre-read value is a side effect.
+> > Even in this case, we will need to copy the files from boot/dts/broadcom to
+> > boot/dts/cavium along the way. The current patchset is (in my opinion) the
+> > least messy way to accomplish the transition. But it is the maintainer's call,
+> > so if you think it has to be done differently, I can update the patchset and
+> > post again.
+> 
+> I don't see the need to copy if we can do an #include and later move the
+> file into the new place. I also see only three references to ARCH_VULCAN
+> at all aside from the dts file.
+> 
+> arch/arm64/configs/defconfig:CONFIG_ARCH_VULCAN=y
+> drivers/gpio/Kconfig:   depends on OF_GPIO && (CPU_XLP || ARCH_VULCAN
+> || COMPILE_TEST)
+> drivers/i2c/busses/Kconfig:     depends on CPU_XLP || ARCH_VULCAN ||
+> COMPILE_TEST
+> drivers/spi/Kconfig:    depends on CPU_XLP || ARCH_VULCAN || COMPILE_TEST
+> 
+> We can probably manage to have a single patch to rename them all at
+> the same time, or we do the add+remove over two merge windows.
 
-Yet, you're not using it at all, so this is dead code.
+Doing it in a single patch has to be acked by 3 maintainers, and
+merged thru the arm-soc tree.
 
-Maxime
+The simpler solution is to change these in 3 different patches, and
+then remove ARCH_VULCAN Kconfig entry and defconfig entry when all
+the references in the tree is gone.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> I also noticed now that you dropped the vulcan "compatible" strings in
+> the .dtsi files, I think we should keep those as a fallback, and to avoid
+> having interdependencies with the driver updates, e.g. the top-level
+> compatible string should be
+> 
+> compatible = "cavium,thunder-9900", "brcm,vulcan-soc";
+> 
+> for the SoC, plus of course the board specific identifier in front of that.
+> Same for the CPU, the i2c, gpio, and pmu.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+The board, SoC, and cpu compat strings will go away with the platform,
+so I did not add them here. With the updated plan above, I think we can
+take care of this while deleting vulcan.
 
---iwyjrfcyo6bvx4a6
-Content-Type: application/pgp-signature; name="signature.asc"
+There is no plan to change compat properties in drivers, we can add
+cavium compat properties when necessary. PMU is a slightly special
+case, but we can be compatible with vulcan there too, until things
+change.
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBCAAGBQJYmZJrAAoJEBx+YmzsjxAgqYwP/1gnSJ3CrPzRYx0XLDVDEfF/
-6n9CiW+gyvO8foRQ7cEmuSqd8paasimLy4jpV21cjlPxly7TAARPYMrHZGUUMBqE
-+kaLzK78/YfXNgaHddu+ltfz3OSWzt7Vm0UR+BlPqA7gqu6bWp+F4zuKOKhPhVJo
-N6jh6Z7evt1hKAWbDi8eOITO0p05Ct1vwWMRoJjx5fP0I2TN+0AFpwSsRkQX2kBD
-vRrg1ThfnRILsf9w2pAI7tyB8OYAlH0r/poKsq666HC0VyfFSGO2Ze/PjickZ0mM
-E3HQ8eBoENBSmfN6C0IP/9l6WuULaol7Fu2k1n+81CK5s2P8Xg156JGrsDLI9T1M
-dkzZtlIx42/d2kbG3pRcN9C0jSb+kIb0G/CpvuEZ+GhAm9hvR0SVPfR7/kdmWtLk
-2ZpXov14VKM/TleU8d7WkP2QNvq+3i2y53Iyw3ylXVusfCp7S3825C7AVmLwu/sx
-IjJaiVKyvypPgOBdQ1JIms8mFHwxrU6Mf6zR1aN2d8bhBQ5T0sXUaQlQf4tAgpl9
-rLQ9zLHIkIr7fgRf2zr/HgMiU4x+KNsDHj2Eoa/9/SjVXqumEd8QLCfEzdlRvRjA
-rcwxPsMqmkNHL0Wybr8U2gc5H6rXz8eDcG5KfvMzj026R0QDRkCIN7S0eDAsv7du
-/oJ1/O+r0PzWFFUO0ZKN
-=Sw7h
------END PGP SIGNATURE-----
-
---iwyjrfcyo6bvx4a6--
+Thanks,
+JC.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
