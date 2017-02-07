@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 06/10] ARM: davinci_all_defconfig: enable VPIF display modules
-Date: Tue,  7 Feb 2017 17:41:19 +0100
-Message-ID: <1486485683-11427-7-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 03/10] media: dt-bindings: vpif: extend the example with an output port
+Date: Tue,  7 Feb 2017 17:41:16 +0100
+Message-ID: <1486485683-11427-4-git-send-email-bgolaszewski@baylibre.com>
 References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1486485683-11427-1-git-send-email-bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
@@ -10,30 +10,81 @@ To: Kevin Hilman <khilman-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori 
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable the VPIF display module and the video encoder present on the
-da850-evm UI board.
+This makes the example more or less correspond with the da850-evm
+hardware setup.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/configs/davinci_all_defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ .../devicetree/bindings/media/ti,da850-vpif.txt    | 35 ++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index 7815a52..e188b02 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -137,9 +137,11 @@ CONFIG_DRM_DUMB_VGA_DAC=m
- CONFIG_MEDIA_SUPPORT=m
- CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_V4L_PLATFORM_DRIVERS=y
-+CONFIG_VIDEO_DAVINCI_VPIF_DISPLAY=m
- CONFIG_VIDEO_DAVINCI_VPIF_CAPTURE=m
- # CONFIG_MEDIA_SUBDRV_AUTOSELECT is not set
- CONFIG_VIDEO_TVP514X=m
-+CONFIG_VIDEO_ADV7343=m
- CONFIG_FB=y
- CONFIG_FIRMWARE_EDID=y
- CONFIG_FB_DA8XX=y
+diff --git a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+index 9c7510b..543f6f3 100644
+--- a/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
++++ b/Documentation/devicetree/bindings/media/ti,da850-vpif.txt
+@@ -28,19 +28,27 @@ I2C-connected TVP5147 decoder:
+ 		reg = <0x217000 0x1000>;
+ 		interrupts = <92>;
+ 
+-		port {
+-			vpif_ch0: endpoint@0 {
++		port@0 {
++			vpif_input_ch0: endpoint@0 {
+ 				reg = <0>;
+ 				bus-width = <8>;
+-				remote-endpoint = <&composite>;
++				remote-endpoint = <&composite_in>;
+ 			};
+ 
+-			vpif_ch1: endpoint@1 {
++			vpif_input_ch1: endpoint@1 {
+ 				reg = <1>;
+ 				bus-width = <8>;
+ 				data-shift = <8>;
+ 			};
+ 		};
++
++		port@1 {
++			vpif_output_ch0: endpoint@0 {
++				reg = <0>;
++				bus-width = <8>;
++				remote-endpoint = <&composite_out>;
++			};
++		};
+ 	};
+ 
+ [ ... ]
+@@ -53,13 +61,28 @@ I2C-connected TVP5147 decoder:
+ 		status = "okay";
+ 
+ 		port {
+-			composite: endpoint {
++			composite_in: endpoint {
+ 				hsync-active = <1>;
+ 				vsync-active = <1>;
+ 				pclk-sample = <0>;
+ 
+ 				/* VPIF channel 0 (lower 8-bits) */
+-				remote-endpoint = <&vpif_ch0>;
++				remote-endpoint = <&vpif_input_ch0>;
++				bus-width = <8>;
++			};
++		};
++	};
++
++	adv7343@2a {
++		compatible = "adi,adv7343";
++		reg = <0x2a>;
++
++		port {
++			composite_out: endpoint {
++				adi,dac-enable = <1 1 1>;
++				adi,sd-dac-enable = <1>;
++
++				remote-endpoint = <&vpif_output_ch0>;
+ 				bus-width = <8>;
+ 			};
+ 		};
 -- 
 2.9.3
 
