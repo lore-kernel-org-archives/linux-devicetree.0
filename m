@@ -1,35 +1,98 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
-Date: Tue, 7 Feb 2017 16:55:22 -0200
-Message-ID: <CAOMZO5Bv2gHa3O_6dbAgKePcZDfMeueeYptRb4r=WLTHYYS8uA@mail.gmail.com>
-References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
- <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop>
+From: Al Stone <ahs3@redhat.com>
+Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
+Date: Tue, 7 Feb 2017 11:57:55 -0700
+Message-ID: <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1486052546-19257-16-git-send-email-sakari.ailus@linux.intel.com>
+Reply-To: ahs3@redhat.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Breno Lima <breno.lima@nxp.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Breno Matheus Lima <brenomatheus@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1486052546-19257-16-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVHVlLCBGZWIgNywgMjAxNyBhdCA0OjQ5IFBNLCBSb2IgSGVycmluZyA8cm9i
-aEBrZXJuZWwub3JnPiB3cm90ZToKCj4gTm8gcG93ZXIgc3VwcGx5KGllcykgZm9yIHRoaXMgcGFu
-ZWw/Cgpwb3dlci1zdXBwbHkgaXMgbWVudGlvbmVkIGluICBzaW1wbGUtcGFuZWwudHh0LgoKPj4g
-K1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5kaW5n
-LCB3aGljaCBpcyBzcGVjaWZpZWQKPj4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJl
-Y3RvcnkuCgphbmQgdGhpcyBkb2MgcmVmZXJzIHRvIHNpbXBsZS1wYW5lbC50eHQuIElzbid0IHRo
-YXQgZW5vdWdoPwoKU2VlbXMgbGlrZSBhIGNvbW1vbiBwYXR0ZXJuIGZvciB0aGUgb3RoZXIgc2lt
-cGxlIHBhbmVsIGJpbmRpbmcgZG9jLgoKVGhhbmtzCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 02/02/2017 09:22 AM, Sakari Ailus wrote:
+> In order to differentiate the functionality between dropping a reference
+> to the node (or not) for the benefit of OF, introduce
+> fwnode_get_next_parent().
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> ---
+>  drivers/base/property.c  | 29 +++++++++++++++++++++++++++++
+>  include/linux/property.h |  1 +
+>  2 files changed, 30 insertions(+)
+> 
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 28125a5..8e4398f 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -868,6 +868,35 @@ int device_add_properties(struct device *dev, struct property_entry *properties)
+>  EXPORT_SYMBOL_GPL(device_add_properties);
+>  
+>  /**
+> + * fwnode_get_next_parent - Iterate to the node's parent
+> + * @fwnode: Firmware whose parent is retrieved
+> + *
+> + * This is like fwnode_get_parent() except that it drops the refcount
+> + * on the passed node, making it suitable for iterating through a
+> + * node's parents.
+> + *
+> + * Returns a node pointer with refcount incremented, use
+> + * fwnode_handle_node() on it when done.
+> + */
+> +struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+> +{
+> +	struct fwnode_handle *parent = NULL;
+> +
+> +	if (is_of_node(fwnode)) {
+> +		struct device_node *node;
+> +
+> +		node = of_get_next_parent(to_of_node(fwnode));
+> +		if (node)
+> +			parent = &node->fwnode;
+> +	} else if (is_acpi_node(fwnode)) {
+> +		parent = acpi_node_get_parent(fwnode);
+> +	}
+> +
+> +	return parent;
+> +}
+> +EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+
+I think I agree with Rob's prior comments about making an ops struct for DT
+vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
+patch all end up using the same construct.  Maybe it needs to be a separate
+refactoring effort, but if it's happening this often just in this patch set,
+it seems like it's getting time to clean things up.
+
+> +/**
+>   * fwnode_get_parent - Return parent firwmare node
+>   * @fwnode: Firmware whose parent is retrieved
+>   *
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index eb7ba73..760df98 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -73,6 +73,7 @@ int fwnode_property_match_string(struct fwnode_handle *fwnode,
+>  				 const char *propname, const char *string);
+>  
+>  struct fwnode_handle *fwnode_get_parent(struct fwnode_handle *fwnode);
+> +struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode);
+>  struct fwnode_handle *fwnode_get_next_child_node(struct fwnode_handle *fwnode,
+>  						 struct fwnode_handle *child);
+>  
+> 
+
+
+-- 
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3@redhat.com
+-----------------------------------
