@@ -1,152 +1,28 @@
-From: Benoit Parrot <bparrot@ti.com>
-Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
-Date: Tue, 7 Feb 2017 07:36:48 -0600
-Message-ID: <20170207133648.GA27065@ti.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <2038922.a1tReKKdaL@avalon>
- <bd64a86e-d90c-f4aa-6f22-1c832e0b563f@gmail.com>
- <3823958.XNLmIv7GEv@avalon>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PULL v2] ARM: DTS: Fix broken GICv2 register maps
+Date: Tue, 7 Feb 2017 15:07:34 +0100
+Message-ID: <CAK8P3a24sZHmEUFrqXO1khSTtGgsqO73f37RXaiqMjj_f=Nypg@mail.gmail.com>
+References: <1485766389-30811-1-git-send-email-marc.zyngier@arm.com>
+ <20170131050648.GB16560@localhost> <86zii77eib.fsf@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <3823958.XNLmIv7GEv@avalon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, arnd@arndb.de, mchehab@kernel.org, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.defa
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <86zii77eib.fsf@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Beno??t Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio
 List-Id: devicetree@vger.kernel.org
 
-Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote on Tue [2017-Feb-07 12:26:32 +0200]:
-> Hi Steve,
-> 
-> On Monday 06 Feb 2017 15:10:46 Steve Longerbeam wrote:
-> > On 02/06/2017 02:33 PM, Laurent Pinchart wrote:
-> > > On Monday 06 Feb 2017 10:50:22 Hans Verkuil wrote:
-> > >> On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
-> > >>> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
-> > >>>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
-> > >>>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
-> > >>>>>>> +
-> > >>>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct
-> > >>>>>>> v4l2_mbus_config *cfg)
-> 
-> [snip]
-> 
-> > >>>>>> I am not certain this op is needed at all. In the current kernel this
-> > >>>>>> op is only used by soc_camera, pxa_camera and omap3isp (somewhat
-> > >>>>>> dubious). Normally this information should come from the device tree
-> > >>>>>> and there should be no need for this op.
-> > >>>>>> 
-> > >>>>>> My (tentative) long-term plan was to get rid of this op.
-> > >>>>>> 
-> > >>>>>> If you don't need it, then I recommend it is removed.
-> > >>>> 
-> > >>>> Hi Hans, the imx-media driver was only calling g_mbus_config to the
-> > >>>> camera sensor, and it was doing that to determine the sensor's bus
-> > >>>> type. This info was already available from parsing a v4l2_of_endpoint
-> > >>>> from the sensor node. So it was simple to remove the g_mbus_config
-> > >>>> calls, and instead rely on the parsed sensor v4l2_of_endpoint.
-> > >>> 
-> > >>> That's not a good point.
-> > > 
-> > > (mea culpa, s/point/idea/)
-> > > 
-> > >>> The imx-media driver must not parse the sensor DT node as it is not
-> > >>> aware of what bindings the sensor is compatible with.
-> > 
-> > Hi Laurent,
-> > 
-> > I don't really understand this argument. The sensor node has been found
-> > by parsing the OF graph, so it is known to be a camera sensor node at
-> > that point.
-> 
-> All you know in the i.MX6 driver is that the remote node is a video source. 
-> You can rely on the fact that it implements the OF graph bindings to locate 
-> other ports in that DT node, but that's more or less it.
-> 
-> DT properties are defined by DT bindings and thus qualified by a compatible 
-> string. Unless you match on sensor compat strings in the i.MX6 driver (which 
-> you shouldn't do, to keep the driver generic) you can't know for certain how 
-> to parse the sensor node DT properties. For all you know, the video source 
-> could be a bridge such as an HDMI to CSI-2 converter for instance, so you 
-> can't even rely on the fact that it's a sensor.
-> 
-> > >>> Information must instead be queried from the sensor subdev at runtime,
-> > >>> through the g_mbus_config() operation.
-> > >>> 
-> > >>> Of course, if you can get the information from the imx-media DT node,
-> > >>> that's certainly an option. It's only information provided by the sensor
-> > >>> driver that you have no choice but query using a subdev operation.
-> > >> 
-> > >> Shouldn't this come from the imx-media DT node? BTW, why is omap3isp
-> > >> using this?
-> > > 
-> > > It all depends on what type of information needs to be retrieved, and
-> > > whether it can change at runtime or is fixed. Adding properties to the
-> > > imx-media DT node is certainly fine as long as those properties describe
-> > > the i.MX side.
-> >
-> > In this case the info needed is the media bus type. That info is most easily
-> > available by calling v4l2_of_parse_endpoint() on the sensor's endpoint
-> > node.
-> 
-> I haven't had time to check the code in details yet, so I can't really comment 
-> on what you need and how it should be implemented exactly.
-> 
-> > The media bus type is not something that can be added to the
-> > imx-media node since it contains no endpoint nodes.
-> 
-> Agreed. You have endpoints in the CSI nodes though.
-> 
-> > > In the omap3isp case, we use the operation to query whether parallel data
-> > > contains embedded sync (BT.656) or uses separate h/v sync signals.
-> > > 
-> > >> The reason I am suspicious about this op is that it came from soc-camera
-> > >> and predates the DT. The contents of v4l2_mbus_config seems very much
-> > >> like a HW description to me, i.e. something that belongs in the DT.
-> > > 
-> > > Part of it is possibly outdated, but for buses that support multiple modes
-> > > of operation (such as the parallel bus case described above) we need to
-> > > make that information discoverable at runtime. Maybe this should be
-> > > considered as related to Sakari's efforts to support VC/DT for CSI-2, and
-> > > supported through the API he is working on.
-> > 
-> > That sounds interesting, can you point me to some info on this effort?
-> 
-> Sure.
-> 
-> http://git.retiisi.org.uk/?p=~sailus/linux.git;a=shortlog;h=refs/heads/vc
-> 
-> > I've been thinking the DT should contain virtual channel info for CSI-2
-> > buses.
-> 
-> I don't think it should. CSI-2 virtual channels and data types should be 
-> handled as a software concept, and thus supported through driver code without 
-> involving DT.
+On Tue, Jan 31, 2017 at 10:41 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> On Tue, Jan 31 2017 at 05:06:48 AM, Olof Johansson <olof@lixom.net> wrote:
+>
+>> Care to respin? Or I can just pick over the patches, as long as you
+>> don't need them as a stable base somewhere else.
+>
+> If that works for you, please cherry pick the patches. I don't need them
+> to be based on anything in particular.
+>
 
-Laurent,
+Applied both to next/dt now, thanks for the cleanup!
 
-So when you have a CSI2 port aggregator for instance where traffic from up
-to 4 CSI2 sources where each source is now assigned its own VC by the
-aggregator and interleaved into a single CSI2 Receiver. I was hoping that
-in this case the VC would be DT discoverable as a specicic source identifier.
-So the CSI-RX side could associate a specific source and create its own
-video device. I am guessing that no such thing exist today?
-
-Benoit
-
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
+     Arnd
