@@ -1,85 +1,100 @@
-From: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/3] ARM: l2c: add pl310-no-sideband option
-Date: Tue,  7 Feb 2017 12:09:27 -0500
-Message-ID: <20170207170929.29525-2-chris.brandt@renesas.com>
-References: <20170207170929.29525-1-chris.brandt@renesas.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 15/18] drivers/fsi: Add FSI bus documentation
+Date: Tue, 7 Feb 2017 11:23:32 -0600
+Message-ID: <20170207172332.abzx5efwpdecy3ko@rob-hp-laptop>
+References: <20170201165358.45415-1-cbostic@linux.vnet.ibm.com>
+ <20170201165358.45415-16-cbostic@linux.vnet.ibm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170207170929.29525-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170201165358.45415-16-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Brad Mouring <brad.mouring-acOepvfBmUk@public.gmane.org>, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Richard Cochran <rcochran-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If a PL310 is added to a system, but the sideband signals are not
-connected, some Cortex A9 optimizations cannot be used. In particular,
-enabling Full Line Zeros in the CA9 without sidebands connected will
-crash the system since the CA9 will expect the L2C to perform operations,
-yet the L2C never gets the commands.
+On Wed, Feb 01, 2017 at 10:53:55AM -0600, Christopher Bostic wrote:
+> From: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> 
+> Add details on the basic functions of the FSI serial bus.
+> 
+> Signed-off-by: Chris Bostic <cbostic-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/fsi/fsi.txt | 54 +++++++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/fsi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/fsi/fsi.txt b/Documentation/devicetree/bindings/fsi/fsi.txt
+> new file mode 100644
+> index 0000000..7fa2394
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/fsi.txt
+> @@ -0,0 +1,54 @@
+> +FSI: Flexible Support processor Interface
+> +
+> +FSI is a two line serial bus capable of running at speeds up to 166 MHz.
+> +The lines consist of a clock responsible for synchronizing the target device
+> +(slave) with the master which is responsible for all transactions on the bus.
+> +The master owns the clock line and is the only side allowed to change its
+> +state. The second line, SDA, is a data line that conveys information to/from
+> +the slave who samples based on the clock line.  The data line is
+> +bi-directional.
+> +
+> +The master initiates communication by sending a command to the slave and
+> +depending on the type of command will allow the slave to control the bus
+> +to return requested data.  All commands are CRC protected.  The slave upon
+> +receipt of a command will determine if the CRC is correct and discard
+> +the data if noise has corrupted the line.  In the same manner the master
+> +will verify the CRC received from the slave.
+> +
+> +Types of commands:
+> +Read 32 bit:  Read a 32 bit word from a specified address on the slave.
+> +Read 16 bit:  Read a 16 bit 'half word' from a specified address on the slave.
+> +read 8 bit:   Read a byte from a specified address on the slave.
+> +Write 32,16,8 bit: Write to a specified address on the slave with the provided
+> +		data.
+> +BREAK:		Initialize the slave's logic to receive commands.
+> +TERM:		Terminate the slave's error lockout to resume communications
+> +		after an error on the bus is detected.
+> +D-POLL:		Poll the slave to determine when it is no longer buy processing
+> +		a previous command.
+> +I-POLL:		Interrupt signal check.  Master queries slave to see if any
+> +		interrupts are asserting.
+> +
+> +High fanout capability:
+> +FSI buses can be chained together in 'hub' configurations to expand the
+> +available communications channels and thus allow connetion to more slaves.
+> +
+> +
+> +Typical implementation
+> +
+> + FSI master ----- slave with local FSI master (hub) ------- downstream slave
+> +
+> +
+> +Each two line combination of a clock and data line is collectively referred
+> +to as a 'FSI link'.   Depending on hardware the primary FSI master may support
+> +up to 64 links.  Hub FSI masters can support at most 8 links.  Total number
+> +of supported slaves can grow exponentially depending on how many hubs are
+> +placed in the path.  Presently only two hubs in the chain are allowed but
+> +in the future this may be expanded.
 
-Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/l2c2x0.txt | 2 ++
- arch/arm/mm/cache-l2x0.c                         | 9 +++++++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+This document now isn't really more that a description of FSI. You need 
+to define how the above bus structure gets reflected in DT. I assume the 
+root is the FSI master, each child node is a link, a child can be a hub 
+with its children being more links. What is the format of reg property 
+is another thing to define.
 
-diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-index 917199f..85046d2 100644
---- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
-+++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
-@@ -90,6 +90,8 @@ Optional properties:
- - arm,standby-mode: L2 standby mode enable. Value <0> (forcibly disable),
-   <1> (forcibly enable), property absent (OS specific behavior,
-   preferably retain firmware settings)
-+- arm,pl310-no-sideband : disable all features that require sideband signals to
-+  be connected between the CPU and L2 (PL310 only).
- 
- Example:
- 
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 2290be3..c744ac4 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -57,6 +57,8 @@ static unsigned long sync_reg_offset = L2X0_CACHE_SYNC;
- 
- struct l2x0_regs l2x0_saved_regs;
- 
-+static bool l2x0_no_sideband;
-+
- /*
-  * Common code for all cache controllers.
-  */
-@@ -620,7 +622,7 @@ static void __init l2c310_enable(void __iomem *base, unsigned num_lock)
- 	u32 aux = l2x0_saved_regs.aux_ctrl;
- 
- 	if (rev >= L310_CACHE_ID_RTL_R2P0) {
--		if (cortex_a9) {
-+		if (cortex_a9 && !l2x0_no_sideband) {
- 			aux |= L310_AUX_CTRL_EARLY_BRESP;
- 			pr_info("L2C-310 enabling early BRESP for Cortex-A9\n");
- 		} else if (aux & L310_AUX_CTRL_EARLY_BRESP) {
-@@ -629,7 +631,7 @@ static void __init l2c310_enable(void __iomem *base, unsigned num_lock)
- 		}
- 	}
- 
--	if (cortex_a9) {
-+	if (cortex_a9 && !l2x0_no_sideband) {
- 		u32 aux_cur = readl_relaxed(base + L2X0_AUX_CTRL);
- 		u32 acr = get_auxcr();
- 
-@@ -1200,6 +1202,9 @@ static void __init l2c310_of_parse(const struct device_node *np,
- 		*aux_mask &= ~L2C_AUX_CTRL_PARITY_ENABLE;
- 	}
- 
-+	if (of_property_read_bool(np, "arm,pl310-no-sideband"))
-+		l2x0_no_sideband = true;
-+
- 	prefetch = l2x0_saved_regs.prefetch_ctrl;
- 
- 	ret = of_property_read_u32(np, "arm,double-linefill", &val);
--- 
-2.10.1
-
-
+> +
+> +The slave hardware logic responsible for decoding FSI master commands is
+> +contained in a CFAM (Common Field replaceable unit Access Macro).  Up to
+> +4 slaves or CFAMs can be connected on each FSI link.  CFAMs in addition
+> +to the slave logic (or engine) can contain other functions that allow access
+> +via FSI.  Common additional functionality includes I2C masters, GPIO
+> +controllers, UARTs, etc...
+> -- 
+> 1.8.2.2
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
