@@ -1,128 +1,47 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 12/22 v3] ARM: dts: add top-level DT bindings for Cortina Gemini
-Date: Tue,  7 Feb 2017 22:48:12 +0100
-Message-ID: <20170207214812.27365-1-linus.walleij@linaro.org>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform documentation
+Date: Tue, 7 Feb 2017 16:35:24 -0600
+Message-ID: <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
+References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com> <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486502399-2950-5-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openwrt-devel-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the top level SoC bindings for Cortina systems Gemini
-platforms.
+On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> Add documentation for Cavium ThunderX2 CN99XX ARM64 processor family.
+> The the SoC will use the ID "cavium,thunder-99xx".
+>
+> Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+> ---
+>
+> All marketing material refers to the chip as CN99XX (like CN88XX before)
+> that is why I have used the wildcard-like 99xx here.
+>
+>  Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+> new file mode 100644
+> index 0000000..82276a2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+> @@ -0,0 +1,5 @@
+> +Cavium Thunder2 Family device tree bindings
+> +-------------------------------------------
+> +
+> +Boards with Cavium ThunderX2 CN99XX shall have the root property:
+> +  compatible = "cavium,thunder-99xx";
 
-Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-ChangeLog v2->v3:
-- Fix soc bus node and references.
-- Fix spelling of interrupt-controller
-ChangeLog v1->v2:
-- Rename required property "intcon" to "interrupt-controller"
-- Elaborate a bit on the SoC origins
-- Put the example DTS SoC nodes in a soc {} node
----
- Documentation/devicetree/bindings/arm/gemini.txt | 84 ++++++++++++++++++++++++
- 1 file changed, 84 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/gemini.txt
+Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
+string. There's a lot of inconsistencies here.
 
-diff --git a/Documentation/devicetree/bindings/arm/gemini.txt b/Documentation/devicetree/bindings/arm/gemini.txt
-new file mode 100644
-index 000000000000..c3e8430202ef
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/gemini.txt
-@@ -0,0 +1,84 @@
-+Cortina systems Gemini platforms
-+
-+The Gemini SoC is the project name for an ARMv4 FA525-based SoC originally
-+produced by Storlink Semiconductor around 2005. The company was renamed
-+later renamed Storm Semiconductor. The chip product name is Storlink SL3516.
-+It was derived from earlier products from Storm named SL3316 (Centroid) and
-+SL3512.
-+
-+Storm Semiconductor was acquired by Cortina Systems in 2008 and the SoC was
-+produced and used for NAS and similar usecases. In 2014 Cortina Systems was
-+in turn acquired by Inphi, who seem to have discontinued this product family.
-+
-+Required properties (in root node):
-+	compatible = "cortina,gemini";
-+
-+Required nodes:
-+
-+- soc: the SoC should be represented by a simple bus encompassing all the
-+  onchip devices, this is referred to as the soc bus node.
-+
-+- syscon: the soc bus node must have a system controller node pointing to the
-+  global control registers, with the compatible string
-+  "cortina,gemini-syscon", "syscon";
-+
-+- timer: the soc bus node must have a timer node pointing to the SoC timer
-+  block, with the compatible string "cortina,gemini-timer"
-+  See: clocksource/cortina,gemini-timer.txt
-+
-+- interrupt-controller: the sob bus node must have an interrupt controller
-+  node pointing to the SoC interrupt controller block, with the compatible
-+  string "cortina,gemini-interrupt-controller"
-+  See interrupt-controller/cortina,gemini-interrupt-controller.txt
-+
-+Example:
-+
-+/ {
-+	model = "Foo Gemini Machine";
-+	compatible = "cortina,gemini";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x8000000>;
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		compatible = "simple-bus";
-+		interrupt-parent = <&intcon>;
-+
-+		syscon: syscon@40000000 {
-+			compatible = "cortina,gemini-syscon", "syscon";
-+			reg = <0x40000000 0x1000>;
-+		};
-+
-+		uart0: serial@42000000 {
-+			compatible = "ns16550a";
-+			reg = <0x42000000 0x100>;
-+			clock-frequency = <48000000>;
-+			interrupts = <18 IRQ_TYPE_LEVEL_HIGH>;
-+			reg-shift = <2>;
-+		};
-+
-+		timer@43000000 {
-+			compatible = "cortina,gemini-timer";
-+			reg = <0x43000000 0x1000>;
-+			interrupt-parent = <&intcon>;
-+			interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
-+				     <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
-+				     <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
-+			syscon = <&syscon>;
-+		};
-+
-+		intcon: interrupt-controller@48000000 {
-+			compatible = "cortina,gemini-interrupt-controller";
-+			reg = <0x48000000 0x1000>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+	};
-+};
--- 
-2.9.3
-
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
