@@ -1,113 +1,42 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v3 1/3] Documentation: devicetree: Add PHY no lane swap binding
 Date: Tue,  7 Feb 2017 06:21:34 +0100
-Message-ID: <1486444894-18321-1-git-send-email-hs@denx.de>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, Heiko Schocher <hs@denx.de>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
+Message-ID: <1486444894-12841-1-git-send-email-lukma@denx.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, jbrunet <jbrunet@baylibre.com>, Andrew Lunn <andrew@lunn.ch>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, netdev@vger.kernel.org, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jon Mason <jon.mason@broadcom.com>, Fabio Estevam <fabio.estevam@nxp.com>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Guan Ben <ben.guan@cn.bosch.com>
+Add the documentation to avoid PHY lane swapping. This is a boolean
+entry to notify the phy device drivers that the TX/RX lanes NO need
+to be swapped.
+The use case for this binding mostly happens after wrong HW
+configuration of PHY IC during bootstrap.
 
-extend the pwm-beeper driver to support customized frequency
-for SND_BELL from device tree.
-
-Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
-Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
-[hs@denx.de: adapted to 4.10-rc7]
-Signed-off-by: Heiko Schocher <hs@denx.de>
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 
 ---
+Changes for v3:
+- Change binding to property
+---
+ Documentation/devicetree/bindings/net/phy.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
- .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
- drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
- 2 files changed, 30 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-index be332ae..438c6e0 100644
---- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
-+++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
-@@ -5,3 +5,6 @@ Registers a PWM device as beeper.
- Required properties:
- - compatible: should be "pwm-beeper"
- - pwms: phandle to the physical PWM device
+diff --git a/Documentation/devicetree/bindings/net/phy.txt b/Documentation/devicetree/bindings/net/phy.txt
+index fb5056b..b558576 100644
+--- a/Documentation/devicetree/bindings/net/phy.txt
++++ b/Documentation/devicetree/bindings/net/phy.txt
+@@ -39,6 +39,10 @@ Optional Properties:
+ - enet-phy-lane-swap: If set, indicates the PHY will swap the TX/RX lanes to
+   compensate for the board being designed with the lanes swapped.
+ 
++- enet-phy-lane-no-swap: If set, indicates that PHY will disable swap of the
++  TX/RX lanes. This property allows the PHY to work correcly after e.g. wrong
++  bootstrap configuration caused by issues in PCB layout design.
 +
-+optional properties:
-+- bell-frequency:  bell frequency in Hz
-diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
-index 5f9655d..99591d5 100644
---- a/drivers/input/misc/pwm-beeper.c
-+++ b/drivers/input/misc/pwm-beeper.c
-@@ -27,6 +27,7 @@ struct pwm_beeper {
- 	struct pwm_device *pwm;
- 	struct work_struct work;
- 	unsigned long period;
-+	unsigned int bell_frequency;
- };
- 
- #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
-@@ -58,20 +59,17 @@ static int pwm_beeper_event(struct input_dev *input,
- 	if (type != EV_SND || value < 0)
- 		return -EINVAL;
- 
--	switch (code) {
--	case SND_BELL:
--		value = value ? 1000 : 0;
--		break;
--	case SND_TONE:
--		break;
--	default:
-+	if (code != SND_BELL && code != SND_TONE)
- 		return -EINVAL;
--	}
- 
- 	if (value == 0)
- 		beeper->period = 0;
--	else
-+	else {
-+		if (code == SND_BELL)
-+			value = beeper->bell_frequency;
-+
- 		beeper->period = HZ_TO_NANOSECONDS(value);
-+	}
- 
- 	schedule_work(&beeper->work);
- 
-@@ -93,6 +91,25 @@ static void pwm_beeper_close(struct input_dev *input)
- 	pwm_beeper_stop(beeper);
- }
- 
-+static void pwm_beeper_init_bell_frequency(struct device *dev,
-+					   struct pwm_beeper *beeper)
-+{
-+	struct device_node *node;
-+	unsigned int bell_frequency = 1000;
-+	int error;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		node = dev->of_node;
-+		error = of_property_read_u32(node, "bell-frequency",
-+					     &bell_frequency);
-+		if (error < 0)
-+			dev_dbg(dev, "Failed to read bell-frequency, using default: %u Hz\n",
-+				bell_frequency);
-+	}
-+
-+	beeper->bell_frequency = bell_frequency;
-+}
-+
- static int pwm_beeper_probe(struct platform_device *pdev)
- {
- 	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
-@@ -122,6 +139,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
- 	pwm_apply_args(beeper->pwm);
- 
- 	INIT_WORK(&beeper->work, pwm_beeper_work);
-+	pwm_beeper_init_bell_frequency(&pdev->dev, beeper);
- 
- 	beeper->input = input_allocate_device();
- 	if (!beeper->input) {
+ - eee-broken-100tx:
+ - eee-broken-1000t:
+ - eee-broken-10gt:
 -- 
-2.7.4
-
+2.1.4
