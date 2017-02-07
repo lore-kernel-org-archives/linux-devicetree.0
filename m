@@ -1,182 +1,106 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: Re: [PATCH v2, 6/6] dt-bindings: phy-mt65xx-usb: add support for
- new version phy
-Date: Tue, 7 Feb 2017 14:30:21 +0800
-Message-ID: <1486449021.3750.25.camel@mhfsdcap03>
-References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
- <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
- <20170127200702.biyvgzgoq3yxx7yx@rob-hp-laptop>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 1/7] drm: Add DRM support for tiny LCD displays
+Date: Tue, 7 Feb 2017 07:58:52 +0100
+Message-ID: <20170207065852.2gxdtye74jg4ydws@phenom.ffwll.local>
+References: <20170131160319.9695-1-noralf@tronnes.org>
+ <20170131160319.9695-2-noralf@tronnes.org>
+ <20170206091743.GE27607@ulmo.ba.sec>
+ <aad2920e-1492-3862-d977-96c40ced493d@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170127200702.biyvgzgoq3yxx7yx@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <aad2920e-1492-3862-d977-96c40ced493d@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-01-27 at 14:07 -0600, Rob Herring wrote:
-> On Fri, Jan 20, 2017 at 04:18:41PM +0800, Chunfeng Yun wrote:
-> > add a new compatible string for "mt2712", and move reference clock
-> > into each port node;
-> > 
-> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   91 +++++++++++++++++---
-> >  1 file changed, 77 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> > index 33a2b1e..1d06604 100644
-> > --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> > +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
-> > @@ -6,21 +6,27 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
-> >  Required properties (controller (parent) node):
-> >   - compatible	: should be one of
-> >  		  "mediatek,mt2701-u3phy"
-> > +		  "mediatek,mt2712-u3phy"
-> >  		  "mediatek,mt8173-u3phy"
-> > - - reg		: offset and length of register for phy, exclude port's
-> > -		  register.
-> > - - clocks	: a list of phandle + clock-specifier pairs, one for each
-> > -		  entry in clock-names
-> > - - clock-names	: must contain
-> > -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
-> >  
-> >  Required nodes	: a sub-node is required for each port the controller
-> >  		  provides. Address range information including the usual
-> >  		  'reg' property is used inside these nodes to describe
-> >  		  the controller's topology.
-> >  
-> > +Optional properties (controller (parent) node):
-> > + - reg		: offset and length of register shared by multiple ports,
-> 
-> How is this optional?
-I put register shared by ports in parent node, but no shared register
-for new phy, so change it as optional.
-
-> 
-> > +		  exclude port's private register. It is needed on mt2701
-> > +		  and mt8173, but not on mt2712.
-> > +
-> >  Required properties (port (child) node):
-> >  - reg		: address and length of the register set for the port.
-> > +- clocks	: a list of phandle + clock-specifier pairs, one for each
-> > +		  entry in clock-names
-> > +- clock-names	: must contain
-> > +		  "ref_clk": 48M reference clock for HighSpeed analog phy; and
-> 
-> _clk is redundant. Just "ref"
-Ok
-> 
-> > +			26M reference clock for SuperSpeed analog phy, sometimes is
-> > +			24M, 25M or 27M, depended on platform.
-> >  - #phy-cells	: should be 1 (See second example)
-> >  		  cell after port phandle is phy type from:
-> >  			- PHY_TYPE_USB2
-> > @@ -31,21 +37,31 @@ Example:
-> >  u3phy: usb-phy@11290000 {
-> >  	compatible = "mediatek,mt8173-u3phy";
-> >  	reg = <0 0x11290000 0 0x800>;
-> > -	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> > -	clock-names = "u3phya_ref";
-> >  	#address-cells = <2>;
-> >  	#size-cells = <2>;
-> >  	ranges;
-> >  	status = "okay";
-> >  
-> > -	phy_port0: port@11290800 {
-> > -		reg = <0 0x11290800 0 0x800>;
-> > +	u2port0: port@11290800 {
-> > +		reg = <0 0x11290800 0 0x100>;
-> > +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> > +		clock-names = "ref_clk";
-> >  		#phy-cells = <1>;
-> >  		status = "okay";
-> >  	};
-> >  
-> > -	phy_port1: port@11291000 {
-> > -		reg = <0 0x11291000 0 0x800>;
-> > +	u3port0: port@11290900 {
-> > +		reg = <0 0x11290800 0 0x700>;
-> > +		clocks = <&clk26m>;
-> > +		clock-names = "ref_clk";
-> > +		#phy-cells = <1>;
-> > +		status = "okay";
-> > +	};
-> > +
-> > +	u2port1: port@11291000 {
-> > +		reg = <0 0x11291000 0 0x100>;
-> > +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
-> > +		clock-names = "ref_clk";
-> >  		#phy-cells = <1>;
-> >  		status = "okay";
-> >  	};
-> > @@ -64,7 +80,54 @@ Example:
-> >  
-> >  usb30: usb@11270000 {
-> >  	...
-> > -	phys = <&phy_port0 PHY_TYPE_USB3>;
-> > -	phy-names = "usb3-0";
-> > +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
-> > +	phy-names = "usb2-0", "usb3-0";
-> >  	...
-> >  };
-> > +
-> > +
-> > +Layout differences of banks between mt8173/mt2701 and mt2712
-> > +-------------------------------------------------------------
-> > +mt8173 and mt2701:
-> > +port        offset    bank
-> > +shared      0x0000    SPLLC
-> > +            0x0100    FMREG
-> > +u2 port0    0x0800    U2PHY_COM
-> > +u3 port0    0x0900    U3PHYD
-> > +            0x0a00    U3PHYD_BANK2
-> > +            0x0b00    U3PHYA
-> > +            0x0c00    U3PHYA_DA
-> > +u2 port1    0x1000    U2PHY_COM
-> > +u3 port1    0x1100    U3PHYD
-> > +            0x1200    U3PHYD_BANK2
-> > +            0x1300    U3PHYA
-> > +            0x1400    U3PHYA_DA
-> > +u2 port2    0x1800    U2PHY_COM
-> > +            ...
-> > +
-> > +mt2712:
-> > +port        offset    bank
-> > +u2 port0    0x0000    MISC
-> > +            0x0100    FMREG
-> > +            0x0300    U2PHY_COM
-> > +u3 port0    0x0700    SPLLC
-> > +            0x0800    CHIP
-> > +            0x0900    U3PHYD
-> > +            0x0a00    U3PHYD_BANK2
-> > +            0x0b00    U3PHYA
-> > +            0x0c00    U3PHYA_DA
-> > +u2 port1    0x1000    MISC
-> > +            0x1100    FMREG
-> > +            0x1300    U2PHY_COM
-> > +u3 port1    0x1700    SPLLC
-> > +            0x1800    CHIP
-> > +            0x1900    U3PHYD
-> > +            0x1a00    U3PHYD_BANK2
-> > +            0x1b00    U3PHYA
-> > +            0x1c00    U3PHYA_DA
-> > +u2 port2    0x2000    MISC
-> > +            ...
-> > +
-> > +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
-> > +mt8173/mt2701 are put back into each port; a new bank MISC for
-> > +u2 ports and CHIP for u3 ports are added on mt2712.
-> > -- 
-> > 1.7.9.5
-> > 
+T24gTW9uLCBGZWIgMDYsIDIwMTcgYXQgMDg6MjM6MzZQTSArMDEwMCwgTm9yYWxmIFRyw7hubmVz
+IHdyb3RlOgo+IAo+IERlbiAwNi4wMi4yMDE3IDEwLjE3LCBza3JldiBUaGllcnJ5IFJlZGluZzoK
+PiA+IE9uIFR1ZSwgSmFuIDMxLCAyMDE3IGF0IDA1OjAzOjEzUE0gKzAxMDAsIE5vcmFsZiBUcsO4
+bm5lcyB3cm90ZToKPiA+ID4gdGlueWRybSBwcm92aWRlcyBoZWxwZXJzIGZvciB2ZXJ5IHNpbXBs
+ZSBkaXNwbGF5cyB0aGF0IGNhbiB1c2UKPiA+ID4gQ01BIGJhY2tlZCBmcmFtZWJ1ZmZlcnMgYW5k
+IG5lZWQgZmx1c2hpbmcgb24gY2hhbmdlcy4KPiA+ID4gCj4gPiA+IFNpZ25lZC1vZmYtYnk6IE5v
+cmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPgo+ID4gPiBBY2tlZC1ieTogRGFuaWVs
+IFZldHRlciA8ZGFuaWVsLnZldHRlckBmZndsbC5jaD4KPiA+ID4gLS0tCj4gPiA+IAo+ID4gPiBD
+aGFuZ2VzIHNpbmNlIHZlcnNpb24gMjoKPiA+ID4gLSBSZW1vdmUgZmJkZXYgYWZ0ZXIgZHJtIHVu
+cmVnaXN0ZXIsIG5vdCBiZWZvcmUuCj4gPiA+IAo+ID4gPiBDaGFuZ2VzIHNpbmNlIHZlcnNpb24g
+MToKPiA+ID4gLSBBZGQgdGlueWRybS5yc3QKPiA+ID4gLSBTZXQgdGRldi0+ZmJkZXZfY21hPU5V
+TEwgb24gdW5yZWdpc3RlciAobGFzdGNsb3NlIGlzIGNhbGxlZCBhZnRlciB0aGF0KS4KPiA+ID4g
+LSBSZW1vdmUgc29tZSBEUk1fREVCVUcqKCkKPiA+ID4gCj4gPiA+ICAgRG9jdW1lbnRhdGlvbi9n
+cHUvaW5kZXgucnN0ICAgICAgICAgICAgICAgICB8ICAgMSArCj4gPiA+ICAgRG9jdW1lbnRhdGlv
+bi9ncHUvdGlueWRybS5yc3QgICAgICAgICAgICAgICB8ICAyMSArKwo+ID4gPiAgIGRyaXZlcnMv
+Z3B1L2RybS9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4gPiAgIGRyaXZl
+cnMvZ3B1L2RybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgIDEgKwo+ID4gPiAgIGRy
+aXZlcnMvZ3B1L2RybS90aW55ZHJtL0tjb25maWcgICAgICAgICAgICAgfCAgIDggKwo+ID4gPiAg
+IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL01ha2VmaWxlICAgICAgICAgICAgfCAgIDEgKwo+ID4g
+PiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvTWFrZWZpbGUgICAgICAgfCAgIDMgKwo+
+ID4gPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL2NvcmUvdGlueWRybS1jb3JlLmMgfCAzNzcg
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gPiAgIGRyaXZlcnMvZ3B1L2RybS90aW55
+ZHJtL2NvcmUvdGlueWRybS1waXBlLmMgfCAyMzQgKysrKysrKysrKysrKysrKysKPiA+ID4gICBp
+bmNsdWRlL2RybS90aW55ZHJtL3Rpbnlkcm0uaCAgICAgICAgICAgICAgIHwgMTE1ICsrKysrKysr
+Kwo+ID4gPiAgIDEwIGZpbGVzIGNoYW5nZWQsIDc2MyBpbnNlcnRpb25zKCspCj4gPiA+ICAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZ3B1L3Rpbnlkcm0ucnN0Cj4gPiA+ICAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS90aW55ZHJtL0tjb25maWcKPiA+ID4gICBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vTWFrZWZpbGUKPiA+ID4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL3Rpbnlkcm0vY29yZS9NYWtlZmls
+ZQo+ID4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vdGlueWRybS9jb3Jl
+L3Rpbnlkcm0tY29yZS5jCj4gPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2Ry
+bS90aW55ZHJtL2NvcmUvdGlueWRybS1waXBlLmMKPiA+ID4gICBjcmVhdGUgbW9kZSAxMDA2NDQg
+aW5jbHVkZS9kcm0vdGlueWRybS90aW55ZHJtLmgKPiA+IEkgcmVhbGl6ZSB0aGlzIGlzIHRvdGFs
+bHkgc3ViamVjdGl2ZSwgYnV0IHRoaXMgZmVlbHMgc29tZXdoYXQgdG9vIG11Y2gKPiA+IG9mIGEg
+c2VwYXJhdGlvbi4gR2l2ZW4gdGhlIGhlbHBlciBuYXR1cmUgb2YgVGlueURSTSwgSSB0aGluayBp
+dCB3b3VsZCBiZQo+ID4gbW9yZSBhcHByb3ByaWF0ZSB0byBtb3ZlIHRoZSBoZWxwZXJzIHRoZW1z
+ZWx2ZXMgaW50byBkcm1fdGlueS5bY2hdIGFuZAo+ID4gdGhlbiBtYXliZSBhZGQgYSBzdWJkaXJl
+Y3RvcnkgZHJpdmVycy9ncHUvZHJtL3RpbnkgdGhhdCBjb250YWlucyBhbGwgdGhlCj4gPiBkcml2
+ZXJzIHRoYXQgdXNlIHRoZSBoZWxwZXJzLgo+ID4gCj4gPiBUaGUgc2VwYXJhdGlvbiBhYm92ZSBm
+dXJ0aGVyIHNob3dzIGluIHN1YnNlcXVlbnQgcGF0Y2hlcyB3aGVyZSBoZWxwZXJzCj4gPiBhcmUg
+YWRkZWQgdG8gdGlueWRybSB0aGF0IGFyZW4ndCBzcGVjaWZpYyB0byBUaW55RFJNLiBTbyB0aGlz
+IG1ha2UgdGhlCj4gPiBuZXcgaGVscGVycyBhcHBlYXIgYXMgbW9yZSBvZiBhIHN1YnN5c3RlbSBp
+biBEUk0gcmF0aGVyIHRoYW4gYSBoZWxwZXIKPiA+IGxpYnJhcnkuIEl0IGFsc28gbWFrZXMgdGhp
+bmdzIHNvbWV3aGF0IGluY29uc2lzdGVudCB3aXRoIGV4aXN0aW5nCj4gPiBpbmZyYXN0cnVjdHVy
+ZS4KPiAKPiBXaGF0IEkgaGF2ZSBkb25lIHdpdGggdGlueWRybSBpcyB0byBkbyBhcyBsaXR0bGUg
+YXMgcG9zc2libGUgaW4gdGhlCj4gY29yZSBoZWxwZXIuIFRoZSBtaW5pbXVtIHJlcXVpcmVkIHRv
+IHB1bGwgdG9nZXRoZXIKPiBkcm1fc2ltcGxlX2Rpc3BsYXlfcGlwZSwgY21hIGhlbHBlciArIGZi
+ZGV2IGFuZCBmcmFtZWJ1ZmZlciBmbHVzaGluZy4KPiAKPiBUaGVuIEkgaGF2ZSBhZGRlZCBhIHNl
+dCBvZiBmdW5jdGlvbnMgdGhhdCBlYXNlIHRoZSB3cml0aW5nIG9mIGRyaXZlcnMKPiBmb3IgUkdC
+NTY1IGRpc3BsYXlzIHdpdGggb3B0aW9uYWwgYmFja2xpZ2h0IGFuZCByZWd1bGF0b3IuCj4gCj4g
+QWRkZWQgdG8gdGhhdCBpcyBhIGNvbnRyb2xsZXIgbGlicmFyeSB0aGF0IGhhbmRsZXMgcmVnaXN0
+ZXIgYWNjZXNzICh3aWxsCj4gdXNlIHJlZ21hcCBmb3Igbm9uLW1pcGkpIGFuZCBmcmFtZWJ1ZmZl
+ciBmbHVzaGluZyAoc2V0IHRoZSB3aW5kb3dpbmcKPiByZWdpc3RlcnMgYW5kIHdyaXRlIHRoZSBi
+dWZmZXIgdG8gdGhlIHBpeGVsIHJlZ2lzdGVyKS4KPiAKPiBBbmQgYXQgbGFzdCB0aGVyZSdzIHRo
+ZSBkaXNwbGF5IGRyaXZlciB0aGF0IGluaXRpYWxpemVzIHRoZSBjb250cm9sbGVyCj4gdG8gbWF0
+Y2ggYSBwYXJ0aWN1bGFyIHBhbmVsLgo+IAo+IE1heWJlIEkgc2hvdWxkIG5hcnJvdyB0aW55ZHJt
+IHRvIF9qdXN0XyBzdXBwb3J0ICJSR0I1NjUgZGlzcGxheXMgd2l0aAo+IG9wdGlvbmFsIGJhY2ts
+aWdodCBhbmQgcmVndWxhdG9yIi4gSXQgbG9va3MgbGlrZSBJIHNwbGl0IGl0IHVwIHRvIG11Y2gs
+Cj4gdW5sZXNzIHNvbWVvbmUgc2VlcyBhIG5lZWQgZm9yIHRoZSBjb3JlIG9mIHRpbnlkcm0gZWxz
+ZXdoZXJlLgo+IAo+IEkgdGhpbmsgaXQncyBoYXJkIHRvIGF2b2lkIHRoZSBzdWJzeXN0ZW0gc21l
+bGwgaGVyZS4gVGhlc2UgZGlzcGxheXMgYXJlCj4gcmVhbGx5IHNpbXBsZSwgZmJkZXYgaXMgbW9y
+ZSB0aGFuIGVub3VnaCB0byBjb3ZlciB0aGVpciBuZWVkcy4KPiBCdXQgZmJkZXYgaXMgY2xvc2Vk
+Lgo+IAo+IEknbSBnbGFkIHlvdSBwaWNrIG9uIHRoaXMsIGFzIGdldHRpbmcgdGhlIGFyY2hpdGVj
+dHVyZSByaWdodCB3aWxsIHNhdmUKPiBtZSBtYWludGVuYW5jZSBkb3duIHRoZSBsaW5lLiBJIGRp
+ZCBwYWludCBtZSBpbnRvIGEgY29ybmVyIHdpdGgKPiBzdGFnaW5nL2ZidGZ0IGFuZCBJJ20gbm90
+IGtlZW4gb24gcmVwZWF0aW5nIHRoYXQgKHRvIG15IGRlZmVuY2UgaXQgd2FzCj4gbXkgZmlyc3Qg
+QyBjb2RlIHNpbmNlIHVuaXZlcnNpdHkgYW5kIEkgaGFkIDIgZGlzcGxheXMgdGhhdCBoYWQgc29t
+ZQo+IHNpbWlsYXJpdGllcyB3aGljaCBlbmRlZCB1cCBhcyBmYnRmdCkuCgp0YmggSSdtIG5vdCBz
+dXJlIGVpdGhlciB3aGV0aGVyIHRoZSB0aW55ZHJtIG1pZGxheWVyIGlzIGdvb2Qgb3Igbm90LiBC
+dXQKdGhlbiBpdCBpcyB3aGF0IGl0IHNheXMgb24gdGhlIHRpbiwgaS5lLiB0aW55LCBzbyBub3Qg
+bXVjaCB3b3JrIHRvCmRlbWlkbGF5ZXIgaWYgd2Ugbm90aWNlIGEgY2xlYXIgbmVlZCBmb3IgdGhh
+dCBjaGFuZ2UuIEkgd291bGRuJ3Qgd29ycnkKYWJvdXQgdGhpcyBmb3Igbm93LCBidXQgZ29vZCB0
+byBrZWVwIGluIG1pbmQuIEluIHRoZSBlbmQsIGdvb2QgZGVzaWduIGlzCmRlc2lnbiB0aGF0IGNh
+biBiZSBjaGFuZ2VkLCBiZWNhdXNlIHlvdSdsbCBvbmx5IGdldCBpdCByaWdodCB1bnRpbCB0aGUK
+bmV4dCB1bmZvcnNlZW4gdGhpbmcgaGFwcGVucyA6LSkKLURhbmllbAotLSAKRGFuaWVsIFZldHRl
+cgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3bGwu
+Y2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
