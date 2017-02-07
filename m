@@ -1,84 +1,70 @@
-From: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] arm64: dts: Enable ir-spi in the tm2 and tm2e boards
-Date: Tue, 07 Feb 2017 17:13:25 +0900
-Message-ID: <20170207081325.9769-1-andi.shyti@samsung.com>
-References: <CGME20170207081338epcas5p23530ff8663c58f8868a0f9dfa2e19f7a@epcas5p2.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andi Shyti <andi-ahk0KpmfxKRAfugRpC6u6w@public.gmane.org>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: [PATCH v2 0/5] Broadcom SBA RAID support
+Date: Tue,  7 Feb 2017 13:46:41 +0530
+Message-ID: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-raid@vger.kernel.org, Anup Patel <anup.patel@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree node for the ir-spi driver which enable the
-ir led for remote controlling.
+The Broadcom SBA RAID is a stream-based device which provides
+RAID5/6 offload.
 
-This patch sets first the GPR3[3] gpio line as a regulator-fixed
-for enabling an external regulator which powers the IR LED.
+It requires a SoC specific ring manager (such as Broadcom FlexRM
+ring manager) to provide ring-based programming interface. Due to
+this, the Broadcom SBA RAID driver (mailbox client) implements
+DMA device having one DMA channel using a set of mailbox channels
+provided by Broadcom SoC specific ring manager driver (mailbox
+controller).
 
-Removes also the default assignment of the GPG3[5] and GPG3[7]
-related to the SPI3 line.
+Important limitations of Broadcom SBA RAID hardware are:
+1. Requires disk position instead of disk coefficient 
+2. Supports only 30 PQ disk coefficients
 
-Signed-off-by: Andi Shyti <andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 27 ++++++++++++++++++++--
- 1 file changed, 25 insertions(+), 2 deletions(-)
+To address limitation #1, we have added raid_gflog table which
+will help driver convert disk coefficient to disk position. To
+address limitation #2, we have extended Linux Async Tx APIs to
+check for available PQ coefficients before doing PQ offload.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-index 098ad557fee3..c61df2318d8b 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-@@ -106,6 +106,13 @@
- 		};
- 	};
- 
-+	irda_regulator: irda-regulator {
-+		compatible = "regulator-fixed";
-+		enable-active-high;
-+		gpio = <&gpr3 3 0>;
-+		regulator-name = "irda_regulator";
-+	};
-+
- 	sound {
- 		compatible = "samsung,tm2-audio";
- 		audio-codec = <&wm5110>;
-@@ -1073,8 +1080,6 @@
- 
- 		PIN(INPUT, gpg3-0, DOWN, FAST_SR1);
- 		PIN(INPUT, gpg3-1, DOWN, FAST_SR1);
--		PIN(INPUT, gpg3-5, DOWN, FAST_SR1);
--		PIN(INPUT, gpg3-7, DOWN, FAST_SR1);
- 	};
- };
- 
-@@ -1152,6 +1157,24 @@
- 	};
- };
- 
-+&spi_3 {
-+	status = "okay";
-+	no-cs-readback;
-+
-+	irled@0 {
-+		compatible = "ir-spi-led";
-+		reg = <0x0>;
-+		spi-max-frequency = <5000000>;
-+		power-supply = <&irda_regulator>;
-+		duty-cycle = <60>;
-+		led-active-low;
-+
-+		controller-data {
-+			samsung,spi-feedback-delay = <0>;
-+		};
-+	};
-+};
-+
- &timer {
- 	clock-frequency = <24000000>;
- };
+This patchset is based on Linux-4.10-rc2 and depends on patchset
+"[PATCH v4 0/2] Broadcom FlexRM ring manager support"
+
+It is also available at sba-raid-v2 branch of
+https://github.com/Broadcom/arm64-linux.git
+
+Changes since v1:
+ - Droped patch to add mbox_channel_device() API
+ - Used GENMASK and BIT macros wherever possible in bcm-sba-raid driver
+ - Replaced C_MDATA macros with static inline functions in
+   bcm-sba-raid driver
+ - Removed sba_alloc_chan_resources() callback in bcm-sba-raid driver
+ - Used dev_err() instead of dev_info() wherever applicable
+ - Removed call to sba_issue_pending() from sba_tx_submit() in
+   bcm-sba-raid driver
+ - Implemented SBA request chaning for handling (len > sba->req_size)
+   in bcm-sba-raid driver
+ - Implemented device_terminate_all() callback in bcm-sba-raid driver
+
+Anup Patel (5):
+  lib/raid6: Add log-of-2 table for RAID6 HW requiring disk position
+  async_tx: Handle DMA devices having support for fewer PQ coefficients
+  async_tx: Fix DMA_PREP_FENCE usage in do_async_gen_syndrome()
+  dmaengine: Add Broadcom SBA RAID driver
+  dt-bindings: Add DT bindings document for Broadcom SBA RAID driver
+
+ .../devicetree/bindings/dma/brcm,iproc-sba.txt     |   29 +
+ crypto/async_tx/async_pq.c                         |    8 +-
+ crypto/async_tx/async_raid6_recov.c                |   12 +-
+ drivers/dma/Kconfig                                |   13 +
+ drivers/dma/Makefile                               |    1 +
+ drivers/dma/bcm-sba-raid.c                         | 1470 ++++++++++++++++++++
+ include/linux/dmaengine.h                          |   19 +
+ include/linux/raid/pq.h                            |    4 +
+ lib/raid6/mktables.c                               |   20 +
+ 9 files changed, 1571 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/brcm,iproc-sba.txt
+ create mode 100644 drivers/dma/bcm-sba-raid.c
+
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
