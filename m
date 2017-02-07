@@ -1,318 +1,143 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v4 3/3] PCI: imx6: Add code to support i.MX7D
-Date: Tue, 07 Feb 2017 17:04:14 +0100
-Message-ID: <1486483454.15745.7.camel@pengutronix.de>
-References: <20170207155027.7734-1-andrew.smirnov@gmail.com>
- <20170207155027.7734-4-andrew.smirnov@gmail.com>
+From: Sean Paul <seanpaul@chromium.org>
+Subject: Re: [PATCH v5 2/6] drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
+Date: Tue, 7 Feb 2017 11:15:25 -0500
+Message-ID: <20170207161525.GH15150@art_vandelay>
+References: <1486266854-9887-1-git-send-email-zyw@rock-chips.com>
+ <1486266854-9887-3-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170207155027.7734-4-andrew.smirnov@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, yurovsky@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1486266854-9887-3-git-send-email-zyw@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chris Zhong <zyw@rock-chips.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 07.02.2017, 07:50 -0800 schrieb Andrey Smirnov:
-> Add various bits of code needed to support i.MX7D variant of the IP.
-> 
-> Cc: yurovsky@gmail.com
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Lee Jones <lee.jones@linaro.org>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  13 ++-
->  drivers/pci/host/pci-imx6.c                        | 121 ++++++++++++++++-----
->  include/linux/mfd/syscon/imx7-iomuxc-gpr.h         |   4 +
->  3 files changed, 112 insertions(+), 26 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index 83aeb1f..11db2ab 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -4,7 +4,11 @@ This PCIe host controller is based on the Synopsis Designware PCIe IP
->  and thus inherits all the common properties defined in designware-pcie.txt.
->  
->  Required properties:
-> -- compatible: "fsl,imx6q-pcie", "fsl,imx6sx-pcie", "fsl,imx6qp-pcie"
-> +- compatible:
-> +	- "fsl,imx6q-pcie"
-> +	- "fsl,imx6sx-pcie",
-> +	- "fsl,imx6qp-pcie"
-> +	- "fsl,imx7d-pcie"
->  - reg: base address and length of the PCIe controller
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> @@ -34,6 +38,13 @@ Additional required properties for imx6sx-pcie:
->  - clock names: Must include the following additional entries:
->  	- "pcie_inbound_axi"
->  
-> +Additional required properties for imx7d-pcie:
-> +- power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
-> +- resets: Must contain phandles to PCIE related reset lines exposed by SRC IP block
-> +- reset-names: Must contain the following entires:
-> +  	       - "pciephy"
-> +	       - "apps"
-> +
->  Example:
->  
->  	pcie@0x01000000 {
-> diff --git a/drivers/pci/host/pci-imx6.c b/drivers/pci/host/pci-imx6.c
-> index 3ef8093..723805c 100644
-> --- a/drivers/pci/host/pci-imx6.c
-> +++ b/drivers/pci/host/pci-imx6.c
-> @@ -17,6 +17,7 @@
->  #include <linux/kernel.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
-> +#include <linux/mfd/syscon/imx7-iomuxc-gpr.h>
->  #include <linux/module.h>
->  #include <linux/of_gpio.h>
->  #include <linux/of_device.h>
-> @@ -27,6 +28,7 @@
->  #include <linux/signal.h>
->  #include <linux/types.h>
->  #include <linux/interrupt.h>
-> +#include <linux/reset.h>
->  
->  #include "pcie-designware.h"
->  
-> @@ -36,6 +38,7 @@ enum imx6_pcie_variants {
->  	IMX6Q,
->  	IMX6SX,
->  	IMX6QP,
-> +	IMX7D,
->  };
->  
->  struct imx6_pcie {
-> @@ -47,6 +50,8 @@ struct imx6_pcie {
->  	struct clk		*pcie_inbound_axi;
->  	struct clk		*pcie;
->  	struct regmap		*iomuxc_gpr;
-> +	struct reset_control	*pciephy_reset;
-> +	struct reset_control	*apps_reset;
->  	enum imx6_pcie_variants variant;
->  	u32			tx_deemph_gen1;
->  	u32			tx_deemph_gen2_3p5db;
-> @@ -56,6 +61,11 @@ struct imx6_pcie {
->  	int			link_gen;
->  };
->  
-> +/* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> +#define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
-> +#define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
-> +#define PHY_PLL_LOCK_WAIT_USLEEP_MAX	200
-> +
->  /* PCIe Root Complex registers (memory-mapped) */
->  #define PCIE_RC_LCR				0x7c
->  #define PCIE_RC_LCR_MAX_LINK_SPEEDS_GEN1	0x1
-> @@ -251,6 +261,10 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  	u32 val, gpr1, gpr12;
->  
->  	switch (imx6_pcie->variant) {
-> +	case IMX7D:
-> +		reset_control_assert(imx6_pcie->pciephy_reset);
-> +		reset_control_assert(imx6_pcie->apps_reset);
-> +		break;
->  	case IMX6SX:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_TEST_POWERDOWN,
-> @@ -333,11 +347,33 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR1,
->  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 1 << 16);
->  		break;
-> +	case IMX7D:
-> +		break;
->  	}
->  
->  	return ret;
->  }
->  
-> +static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
-> +{
-> +	u32 val;
-> +	unsigned int retries;
-> +	struct pcie_port *pp = &imx6_pcie->pp;
-> +	struct device *dev = pp->dev;
-> +
-> +	for (retries = 0; retries < PHY_PLL_LOCK_WAIT_MAX_RETRIES; retries++) {
-> +		regmap_read(imx6_pcie->iomuxc_gpr, IOMUXC_GPR22, &val);
-> +
-> +		if (val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED)
-> +			return;
-> +
-> +		usleep_range(PHY_PLL_LOCK_WAIT_USLEEP_MIN,
-> +			     PHY_PLL_LOCK_WAIT_USLEEP_MAX);
-> +	}
-> +
-> +	dev_err(dev, "PCIe PLL lock timeout\n");
-> +}
-> +
->  static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  {
->  	struct pcie_port *pp = &imx6_pcie->pp;
-> @@ -381,6 +417,10 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	}
->  
->  	switch (imx6_pcie->variant) {
-> +	case IMX7D:
-> +		reset_control_deassert(imx6_pcie->pciephy_reset);
-> +		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
-> +		break;
->  	case IMX6SX:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR5,
->  				   IMX6SX_GPR5_PCIE_BTNRST_RESET, 0);
-> @@ -407,35 +447,44 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  
->  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
->  {
-> -	if (imx6_pcie->variant == IMX6SX)
-> +	switch (imx6_pcie->variant) {
-> +	case IMX7D:
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> +				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
-> +		break;
-> +	case IMX6SX:
->  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_MASK,
->  				   IMX6SX_GPR12_PCIE_RX_EQ_2);
-> +		/* FALLTHROUGH */
-> +	default:
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> +				   IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
->  
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> -			IMX6Q_GPR12_PCIE_CTL_2, 0 << 10);
-> +		/* configure constant input signal to the pcie ctrl and phy */
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> +				   IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
-> +
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> +				   IMX6Q_GPR8_TX_DEEMPH_GEN1,
-> +				   imx6_pcie->tx_deemph_gen1 << 0);
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> +				   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
-> +				   imx6_pcie->tx_deemph_gen2_3p5db << 6);
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> +				   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
-> +				   imx6_pcie->tx_deemph_gen2_6db << 12);
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> +				   IMX6Q_GPR8_TX_SWING_FULL,
-> +				   imx6_pcie->tx_swing_full << 18);
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> +				   IMX6Q_GPR8_TX_SWING_LOW,
-> +				   imx6_pcie->tx_swing_low << 25);
-> +		break;
-> +	}
->  
-> -	/* configure constant input signal to the pcie ctrl and phy */
->  	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
->  			IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> -			IMX6Q_GPR12_LOS_LEVEL, 9 << 4);
-> -
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> -			   IMX6Q_GPR8_TX_DEEMPH_GEN1,
-> -			   imx6_pcie->tx_deemph_gen1 << 0);
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> -			   IMX6Q_GPR8_TX_DEEMPH_GEN2_3P5DB,
-> -			   imx6_pcie->tx_deemph_gen2_3p5db << 6);
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> -			   IMX6Q_GPR8_TX_DEEMPH_GEN2_6DB,
-> -			   imx6_pcie->tx_deemph_gen2_6db << 12);
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> -			   IMX6Q_GPR8_TX_SWING_FULL,
-> -			   imx6_pcie->tx_swing_full << 18);
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR8,
-> -			   IMX6Q_GPR8_TX_SWING_LOW,
-> -			   imx6_pcie->tx_swing_low << 25);
->  }
->  
->  static int imx6_pcie_wait_for_link(struct imx6_pcie *imx6_pcie)
-> @@ -498,8 +547,11 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
->  	dw_pcie_writel_rc(pp, PCIE_RC_LCR, tmp);
->  
->  	/* Start LTSSM. */
-> -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> -			IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
-> +	if (imx6_pcie->variant == IMX7D)
-> +		reset_control_deassert(imx6_pcie->apps_reset);
-> +	else
-> +		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> +				   IMX6Q_GPR12_PCIE_CTL_2, 1 << 10);
->  
->  	ret = imx6_pcie_wait_for_link(imx6_pcie);
->  	if (ret) {
-> @@ -676,13 +728,31 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  		return PTR_ERR(imx6_pcie->pcie);
->  	}
->  
-> -	if (imx6_pcie->variant == IMX6SX) {
-> +	switch (imx6_pcie->variant) {
-> +	case IMX6SX:
->  		imx6_pcie->pcie_inbound_axi = devm_clk_get(dev,
->  							   "pcie_inbound_axi");
->  		if (IS_ERR(imx6_pcie->pcie_inbound_axi)) {
->  			dev_err(dev, "pcie_inbound_axi clock missing or invalid\n");
->  			return PTR_ERR(imx6_pcie->pcie_inbound_axi);
->  		}
-> +		break;
-> +	case IMX7D:
-> +		imx6_pcie->pciephy_reset = devm_reset_control_get(dev,
-> +								  "pciephy");
-> +		if (IS_ERR(imx6_pcie->pciephy_reset)) {
-> +			dev_err(dev, "Failed to get PCIEPHY reset contol\n");
-> +			return PTR_ERR(imx6_pcie->pciephy_reset);
-> +		}
-> +
-> +		imx6_pcie->apps_reset = devm_reset_control_get(dev, "apps");
-> +		if (IS_ERR(imx6_pcie->apps_reset)) {
-> +			dev_err(dev, "Failed to get PCIE APPS reset contol\n");
-> +			return PTR_ERR(imx6_pcie->apps_reset);
-> +		}
-> +		break;
-> +	default:
-> +		break;
->  	}
->  
->  	/* Grab GPR config register range */
-> @@ -740,6 +810,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
->  	{ .compatible = "fsl,imx6q-pcie",  .data = (void *)IMX6Q,  },
->  	{ .compatible = "fsl,imx6sx-pcie", .data = (void *)IMX6SX, },
->  	{ .compatible = "fsl,imx6qp-pcie", .data = (void *)IMX6QP, },
-> +	{ .compatible = "fsl,imx7d-pcie",  .data = (void *)IMX7D,  },
->  	{},
->  };
->  
-> diff --git a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
-> index 4585d61..abbd524 100644
-> --- a/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
-> +++ b/include/linux/mfd/syscon/imx7-iomuxc-gpr.h
-> @@ -44,4 +44,8 @@
->  
->  #define IMX7D_GPR5_CSI_MUX_CONTROL_MIPI		(0x1 << 4)
->  
-> +#define IMX7D_GPR12_PCIE_PHY_REFCLK_SEL		BIT(5)
-> +
-> +#define IMX7D_GPR22_PCIE_PHY_PLL_LOCKED		BIT(31)
-> +
->  #endif /* __LINUX_IMX7_IOMUXC_GPR_H */
+T24gU3VuLCBGZWIgMDUsIDIwMTcgYXQgMTE6NTQ6MTBBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
+dGU6Cj4gVGhlIHZvcGIvdm9wbCBzd2l0Y2ggcmVnaXN0ZXIgb2YgUkszMzk5IG1pcGkgaXMgZGlm
+ZmVyZW50IGZyb20gUkszMjg4LAo+IHRoZSBkZWZhdWx0IHNldHRpbmcgZm9yIG1pcGkgZHNpIG1v
+ZGUgaXMgZGlmZmVyZW50IHRvbywgc28gYWRkIGEKPiBvZl9kZXZpY2VfaWQgc3RydWN0dXJlIHRv
+IGRpc3Rpbmd1aXNoIHRoZW0sIGFuZCBtYWtlIHN1cmUgc2V0IHRoZQo+IGNvcnJlY3QgbW9kZSBi
+ZWZvcmUgbWlwaSBwaHkgaW5pdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3
+QHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2Nr
+LWNoaXBzLmNvbT4KPiAKPiAtLS0KPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gY2hlY2sgdGhlIGVy
+cm9yIG9mIHBoeV9jZmdfY2xrIGluIGR3X21pcGlfZHNpX2JpbmQKPiAKPiBDaGFuZ2VzIGluIHY0
+Ogo+IC0gcmVtb3ZlIHRoZSB1bnJlbGF0ZWQgY2hhbmdlCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAt
+IGJhc2Ugb24gSm9obiBLZWVwaW5nJ3MgcGF0Y2ggc2VyaWVzCj4gCj4gIGRyaXZlcnMvZ3B1L2Ry
+bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIHwgNzUgKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25z
+KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRz
+aS5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKPiBpbmRleCA0NWFm
+ODkwLi43ZDMzN2UyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
+aXBpLWRzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMK
+PiBAQCAtMjksOSArMjksMTcgQEAKPiAgCj4gICNkZWZpbmUgRFJJVkVSX05BTUUgICAgImR3LW1p
+cGktZHNpIgo+ICAKPiAtI2RlZmluZSBHUkZfU09DX0NPTjYgICAgICAgICAgICAgICAgICAgIDB4
+MDI1Ywo+IC0jZGVmaW5lIERTSTBfU0VMX1ZPUF9MSVQgICAgICAgICAgICAgICAgKDEgPDwgNikK
+PiAtI2RlZmluZSBEU0kxX1NFTF9WT1BfTElUICAgICAgICAgICAgICAgICgxIDw8IDkpCj4gKyNk
+ZWZpbmUgUkszMjg4X0dSRl9TT0NfQ09ONgkJMHgwMjVjCj4gKyNkZWZpbmUgUkszMjg4X0RTSTBf
+U0VMX1ZPUF9MSVQJCUJJVCg2KQo+ICsjZGVmaW5lIFJLMzI4OF9EU0kxX1NFTF9WT1BfTElUCQlC
+SVQoOSkKPiArCj4gKyNkZWZpbmUgUkszMzk5X0dSRl9TT0NfQ09OMTkJCTB4NjI1MAo+ICsjZGVm
+aW5lIFJLMzM5OV9EU0kwX1NFTF9WT1BfTElUCQlCSVQoMCkKPiArI2RlZmluZSBSSzMzOTlfRFNJ
+MV9TRUxfVk9QX0xJVAkJQklUKDQpCj4gKwo+ICsvKiBkaXNhYmxlIHR1cm5yZXF1ZXN0LCB0dXJu
+ZGlzYWJsZSwgZm9yY2V0eHN0b3Btb2RlLCBmb3JjZXJ4bW9kZSAqLwo+ICsjZGVmaW5lIFJLMzM5
+OV9HUkZfU09DX0NPTjIyCQkweDYyNTgKPiArI2RlZmluZSBSSzMzOTlfR1JGX0RTSV9NT0RFCQkw
+eGZmZmYwMDAwCj4gIAo+ICAjZGVmaW5lIERTSV9WRVJTSU9OCQkJMHgwMAo+ICAjZGVmaW5lIERT
+SV9QV1JfVVAJCQkweDA0Cj4gQEAgLTI2NSw2ICsyNzMsMTEgQEAgZW51bSB7Cj4gIH07Cj4gIAo+
+ICBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHsKPiArCXUzMiBkc2kwX2VuX2JpdDsKPiAr
+CXUzMiBkc2kxX2VuX2JpdDsKPiArCXUzMiBncmZfc3dpdGNoX3JlZzsKPiArCXUzMiBncmZfZHNp
+MF9tb2RlOwo+ICsJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+ICAJdW5zaWduZWQgaW50IG1heF9k
+YXRhX2xhbmVzOwo+ICAJZW51bSBkcm1fbW9kZV9zdGF0dXMgKCptb2RlX3ZhbGlkKShzdHJ1Y3Qg
+ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+ICAJCQkJCSAgIHN0cnVjdCBkcm1fZGlzcGxheV9t
+b2RlICptb2RlKTsKPiBAQCAtMjgxLDYgKzI5NCw3IEBAIHN0cnVjdCBkd19taXBpX2RzaSB7Cj4g
+IAo+ICAJc3RydWN0IGNsayAqcGxscmVmX2NsazsKPiAgCXN0cnVjdCBjbGsgKnBjbGs7Cj4gKwlz
+dHJ1Y3QgY2xrICpwaHlfY2ZnX2NsazsKPiAgCj4gIAl1bnNpZ25lZCBpbnQgbGFuZV9tYnBzOyAv
+KiBwZXIgbGFuZSAqLwo+ICAJdTMyIGNoYW5uZWw7Cj4gQEAgLTQyNiw2ICs0NDAsMTQgQEAgc3Rh
+dGljIGludCBkd19taXBpX2RzaV9waHlfaW5pdChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKPiAg
+CWRzaV93cml0ZShkc2ksIERTSV9QSFlfVFNUX0NUUkwwLCBQSFlfVEVTVENMUik7Cj4gIAlkc2lf
+d3JpdGUoZHNpLCBEU0lfUEhZX1RTVF9DVFJMMCwgUEhZX1VOVEVTVENMUik7Cj4gIAo+ICsJaWYg
+KGRzaS0+cGh5X2NmZ19jbGspIHsKCllvdSBkb24ndCBuZWVkIHRoaXMgY2hlY2sgYW55IGxvbmdl
+ci4KCj4gKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGh5X2NmZ19jbGspOwo+ICsJ
+CWlmIChyZXQpIHsKPiArCQkJZGV2X2Vycihkc2ktPmRldiwgIkZhaWxlZCB0byBlbmFibGUgcGh5
+X2NmZ19jbGtcbiIpOwo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJCX0KPiArCX0KPiArCj4gIAlkd19t
+aXBpX2RzaV9waHlfd3JpdGUoZHNpLCAweDEwLCBCWVBBU1NfVkNPX1JBTkdFIHwKPiAgCQkJCQkg
+VkNPX1JBTkdFX0NPTl9TRUwodmNvKSB8Cj4gIAkJCQkJIFZDT19JTl9DQVBfQ09OX0xPVyB8Cj4g
+QEAgLTQ3OSwxNyArNTAxLDE5IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfcGh5X2luaXQoc3Ry
+dWN0IGR3X21pcGlfZHNpICpkc2kpCj4gIAkJCQkgdmFsLCB2YWwgJiBMT0NLLCAxMDAwLCBQSFlf
+U1RBVFVTX1RJTUVPVVRfVVMpOwo+ICAJaWYgKHJldCA8IDApIHsKPiAgCQlkZXZfZXJyKGRzaS0+
+ZGV2LCAiZmFpbGVkIHRvIHdhaXQgZm9yIHBoeSBsb2NrIHN0YXRlXG4iKTsKPiAtCQlyZXR1cm4g
+cmV0Owo+ICsJCWdvdG8gcGh5X2luaXRfZW5kOwo+ICAJfQo+ICAKPiAgCXJldCA9IHJlYWRsX3Bv
+bGxfdGltZW91dChkc2ktPmJhc2UgKyBEU0lfUEhZX1NUQVRVUywKPiAgCQkJCSB2YWwsIHZhbCAm
+IFNUT1BfU1RBVEVfQ0xLX0xBTkUsIDEwMDAsCj4gIAkJCQkgUEhZX1NUQVRVU19USU1FT1VUX1VT
+KTsKPiAtCWlmIChyZXQgPCAwKSB7Cj4gKwlpZiAocmV0IDwgMCkKPiAgCQlkZXZfZXJyKGRzaS0+
+ZGV2LAo+ICAJCQkiZmFpbGVkIHRvIHdhaXQgZm9yIHBoeSBjbGsgbGFuZSBzdG9wIHN0YXRlXG4i
+KTsKPiAtCQlyZXR1cm4gcmV0Owo+IC0JfQo+ICsKPiArcGh5X2luaXRfZW5kOgo+ICsJaWYgKGRz
+aS0+cGh5X2NmZ19jbGspCgpPciB0aGlzCgo+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2kt
+PnBoeV9jZmdfY2xrKTsKPiAgCj4gIAlyZXR1cm4gcmV0Owo+ICB9Cj4gQEAgLTk2NSw2ICs5ODks
+NyBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9l
+bmNvZGVyICplbmNvZGVyKQo+ICBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2VuYWJs
+ZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIHsKPiAgCXN0cnVjdCBkd19taXBpX2Rz
+aSAqZHNpID0gZW5jb2Rlcl90b19kc2koZW5jb2Rlcik7Cj4gKwljb25zdCBzdHJ1Y3QgZHdfbWlw
+aV9kc2lfcGxhdF9kYXRhICpwZGF0YSA9IGRzaS0+cGRhdGE7Cj4gIAlpbnQgbXV4ID0gZHJtX29m
+X2VuY29kZXJfYWN0aXZlX2VuZHBvaW50X2lkKGRzaS0+ZGV2LT5vZl9ub2RlLCBlbmNvZGVyKTsK
+PiAgCXUzMiB2YWw7Cj4gIAo+IEBAIC05ODUsNiArMTAxMCwxMCBAQCBzdGF0aWMgdm9pZCBkd19t
+aXBpX2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIAlk
+d19taXBpX2RzaV9kcGh5X2ludGVyZmFjZV9jb25maWcoZHNpKTsKPiAgCWR3X21pcGlfZHNpX2Ns
+ZWFyX2Vycihkc2kpOwo+ICAKPiArCWlmIChwZGF0YS0+Z3JmX2RzaTBfbW9kZV9yZWcpCj4gKwkJ
+cmVnbWFwX3dyaXRlKGRzaS0+Z3JmX3JlZ21hcCwgcGRhdGEtPmdyZl9kc2kwX21vZGVfcmVnLAo+
+ICsJCQkgICAgIHBkYXRhLT5ncmZfZHNpMF9tb2RlKTsKPiArCj4gIAlkd19taXBpX2RzaV9waHlf
+aW5pdChkc2kpOwo+ICAJZHdfbWlwaV9kc2lfd2FpdF9mb3JfdHdvX2ZyYW1lcyhkc2kpOwo+ICAK
+PiBAQCAtOTk4LDExICsxMDI3LDExIEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJf
+ZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgCWNsa19kaXNhYmxlX3VucHJl
+cGFyZShkc2ktPnBjbGspOwo+ICAKPiAgCWlmIChtdXgpCj4gLQkJdmFsID0gRFNJMF9TRUxfVk9Q
+X0xJVCB8IChEU0kwX1NFTF9WT1BfTElUIDw8IDE2KTsKPiArCQl2YWwgPSBwZGF0YS0+ZHNpMF9l
+bl9iaXQgfCAocGRhdGEtPmRzaTBfZW5fYml0IDw8IDE2KTsKPiAgCWVsc2UKPiAtCQl2YWwgPSBE
+U0kwX1NFTF9WT1BfTElUIDw8IDE2Owo+ICsJCXZhbCA9IHBkYXRhLT5kc2kwX2VuX2JpdCA8PCAx
+NjsKPiAgCj4gLQlyZWdtYXBfd3JpdGUoZHNpLT5ncmZfcmVnbWFwLCBHUkZfU09DX0NPTjYsIHZh
+bCk7Cj4gKwlyZWdtYXBfd3JpdGUoZHNpLT5ncmZfcmVnbWFwLCBwZGF0YS0+Z3JmX3N3aXRjaF9y
+ZWcsIHZhbCk7Cj4gIAlkZXZfZGJnKGRzaS0+ZGV2LCAidm9wICVzIG91dHB1dCB0byBkc2kwXG4i
+LCAobXV4KSA/ICJMSVQiIDogIkJJRyIpOwo+ICB9Cj4gIAo+IEBAIC0xMTYyLDE0ICsxMTkxLDI5
+IEBAIHN0YXRpYyBlbnVtIGRybV9tb2RlX3N0YXR1cyByazMyODhfbWlwaV9kc2lfbW9kZV92YWxp
+ZCgKPiAgfQo+ICAKPiAgc3RhdGljIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgcmszMjg4
+X21pcGlfZHNpX2Rydl9kYXRhID0gewo+ICsJLmRzaTBfZW5fYml0ID0gUkszMjg4X0RTSTBfU0VM
+X1ZPUF9MSVQsCj4gKwkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJVCwKPiAr
+CS5ncmZfc3dpdGNoX3JlZyA9IFJLMzI4OF9HUkZfU09DX0NPTjYsCj4gIAkubWF4X2RhdGFfbGFu
+ZXMgPSA0LAo+ICAJLm1vZGVfdmFsaWQgPSByazMyODhfbWlwaV9kc2lfbW9kZV92YWxpZCwKPiAg
+fTsKPiAgCj4gK3N0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHJrMzM5OV9taXBp
+X2RzaV9kcnZfZGF0YSA9IHsKPiArCS5kc2kwX2VuX2JpdCA9IFJLMzM5OV9EU0kwX1NFTF9WT1Bf
+TElULAo+ICsJLmRzaTFfZW5fYml0ID0gUkszMzk5X0RTSTFfU0VMX1ZPUF9MSVQsCj4gKwkuZ3Jm
+X3N3aXRjaF9yZWcgPSBSSzMzOTlfR1JGX1NPQ19DT04xOSwKPiArCS5ncmZfZHNpMF9tb2RlID0g
+UkszMzk5X0dSRl9EU0lfTU9ERSwKPiArCS5ncmZfZHNpMF9tb2RlX3JlZyA9IFJLMzM5OV9HUkZf
+U09DX0NPTjIyLAo+ICsJLm1heF9kYXRhX2xhbmVzID0gNCwKPiArfTsKPiArCj4gIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGR3X21pcGlfZHNpX2R0X2lkc1tdID0gewo+ICAJewo+
+ICAJIC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1taXBpLWRzaSIsCj4gIAkgLmRhdGEg
+PSAmcmszMjg4X21pcGlfZHNpX2Rydl9kYXRhLAo+ICsJfSwgewo+ICsJIC5jb21wYXRpYmxlID0g
+InJvY2tjaGlwLHJrMzM5OS1taXBpLWRzaSIsCj4gKwkgLmRhdGEgPSAmcmszMzk5X21pcGlfZHNp
+X2Rydl9kYXRhLAo+ICAJfSwKPiAgCXsgLyogc2VudGluZWwgKi8gfQo+ICB9Owo+IEBAIC0xMjQ5
+LDYgKzEyOTMsMTcgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2Ug
+KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShk
+c2ktPnBjbGspOwo+ICAJfQo+ICAKPiArCWRzaS0+cGh5X2NmZ19jbGsgPSBkZXZtX2Nsa19nZXQo
+ZGV2LCAicGh5X2NmZyIpOwo+ICsJaWYgKElTX0VSUihkc2ktPnBoeV9jZmdfY2xrKSkgewo+ICsJ
+CXJldCA9IFBUUl9FUlIoZHNpLT5waHlfY2ZnX2Nsayk7Cj4gKwkJaWYgKHJldCAhPSAtRU5PRU5U
+KSB7Cj4gKwkJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIGdldCBwaHlfY2ZnX2NsazogJWRcbiIs
+IHJldCk7Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJfQo+ICsJCWRzaS0+cGh5X2NmZ19jbGsgPSBO
+VUxMOwo+ICsJCWRldl9kYmcoZGV2LCAiaGF2ZSBub3QgcGh5X2NmZ19jbGtcbiIpOwo+ICsJfQo+
+ICsKPiAgCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBsbHJlZl9jbGspOwo+ICAJaWYg
+KHJldCkgewo+ICAJCWRldl9lcnIoZGV2LCAiJXM6IEZhaWxlZCB0byBlbmFibGUgcGxscmVmX2Ns
+a1xuIiwgX19mdW5jX18pOwo+IC0tIAo+IDIuNi4zCj4gCj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJp
+LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBF
+bmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
