@@ -1,151 +1,62 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: [PATCH v6 2/9] doc: DT: venus: binding document for Qualcomm video driver
-Date: Tue,  7 Feb 2017 15:10:17 +0200
-Message-ID: <1486473024-21705-3-git-send-email-stanimir.varbanov@linaro.org>
-References: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1486473024-21705-1-git-send-email-stanimir.varbanov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 net-next] net: phy: Add LED mode driver for Microsemi
+ PHYs.
+Date: Tue, 7 Feb 2017 14:12:23 +0100
+Message-ID: <20170207131223.GE31560@lunn.ch>
+References: <1485953626-25780-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <1485953626-25780-2-git-send-email-Raju.Lakkaraju@microsemi.com>
+ <20170201135555.GE4967@lunn.ch>
+ <20170207091737.GA24582@microsemi.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170207091737.GA24582-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding document for Venus video encoder/decoder driver
+> > > +- vsc8531,led-1-mode : LED mode. Specify how the LED[1] should behave.
+> > > +                       Allowed values are define in
+> > > +     int rc;
+> > > +
+> > > +     if (!of_node)
+> > > +             return -ENODEV;
+> > > +
+> > > +     rc = of_property_read_u8(of_node, led, &led_mode);
+> > > +     if ((rc == 0) &&
+> > > +         ((led_mode > 15) || (led_mode == 7) || (led_mode == 11))) {
+> > > +             phydev_err(phydev, "DT %s invalid\n", led);
+> > > +             return -EINVAL;
+> > > +     } else if (rc == -EINVAL) {
+> > > +             return default_mode;
+> > > +     }
+> > 
+> > I don't think you understood my comment about of_property_read_u8()
+> > not modifying &led_mode on error. Please read the comment again, and
+> > simplify this.
+> > 
+> 
+> If i understand your comment correctly
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
----
-Changes since previous v5:
- * dropped rproc phandle (remoteproc is not used anymore)
- * added subnodes paragraph with descrition of three subnodes:
-    - video-decoder and video-encoder - describes decoder (core0) and
-    encoder (core1) power-domains and clocks (applicable for msm8996
-    Venus core).
-    - video-firmware - needed to get reserved memory region where the
-    firmware is stored.
+Nope, you don't.
 
- .../devicetree/bindings/media/qcom,venus.txt       | 112 +++++++++++++++++++++
- 1 file changed, 112 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/qcom,venus.txt
+     rc = of_property_read_u8(of_node, led, &led_mode);
 
-diff --git a/Documentation/devicetree/bindings/media/qcom,venus.txt b/Documentation/devicetree/bindings/media/qcom,venus.txt
-new file mode 100644
-index 000000000000..4427af3ca5a5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/qcom,venus.txt
-@@ -0,0 +1,112 @@
-+* Qualcomm Venus video encode/decode accelerator
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain one of:
-+		- "qcom,msm8916-venus"
-+		- "qcom,msm8996-venus"
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Register base address and length of the register map.
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: Should contain interrupt line number.
-+- clocks:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required for msm8916
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Core video accelerator clock
-+		- "iface"	Video accelerator AHB clock
-+		- "bus"		Video accelerator AXI clock
-+		- "mbus"	Video MAXI clock
-+- power-domains:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the peripheral.
-+- iommus:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of phandle and IOMMU specifier pairs.
-+
-+* Subnodes
-+The Venus node must contain three subnodes representing video-decoder,
-+video-encoder and video-firmware.
-+
-+Every of video-encoder or video-decoder subnode should have:
-+
-+- compatible:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: Value should contain "venus-decoder" or "venus-encoder"
-+- clocks:
-+	Usage: required for msm8996
-+	Value type: <prop-encoded-array>
-+	Definition: A List of phandle and clock specifier pairs as listed
-+		    in clock-names property.
-+- clock-names:
-+	Usage: required for msm8996
-+	Value type: <stringlist>
-+	Definition: Should contain the following entries:
-+		- "core"	Subcore video accelerator clock
-+
-+- power-domains:
-+	Usage: required for msm8996
-+	Value type: <prop-encoded-array>
-+	Definition: A phandle and power domain specifier pairs to the
-+		    power domain which is responsible for collapsing
-+		    and restoring power to the subcore.
-+
-+The video-firmware subnode should contain:
-+
-+- memory-region:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to the reserved-memory for the memory region
-+
-+* An Example
-+	video-codec@1d00000 {
-+		compatible = "qcom,msm8916-venus";
-+		reg = <0x01d00000 0xff000>;
-+		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&gcc GCC_VENUS0_VCODEC0_CLK>,
-+			 <&gcc GCC_VENUS0_AHB_CLK>,
-+			 <&gcc GCC_VENUS0_AXI_CLK>;
-+		clock-names = "core", "iface", "bus";
-+		power-domains = <&gcc VENUS_GDSC>;
-+		iommus = <&apps_iommu 5>;
-+
-+		video-decoder {
-+			compatible = "venus-decoder";
-+			clocks = <&mmcc VIDEO_SUBCORE0_CLK>;
-+			clock-names = "core";
-+			power-domains = <&mmcc VENUS_CORE0_GDSC>;
-+		};
-+
-+		video-encoder {
-+			compatible = "venus-encoder";
-+			clocks = <&mmcc VIDEO_SUBCORE1_CLK>;
-+			clock-names = "core";
-+			power-domains = <&mmcc VENUS_CORE1_GDSC>;
-+		};
-+
-+		video-firmware {
-+			memory-region = <&venus_mem>;
-+		};
-+	};
--- 
-2.7.4
+If rc indicates an error, led_mode is not touched. Read the
+documentation for this function. So you can simplifiy the code:
+
+	led_mode = default_mode;
+	err = of_property_read_u8(of_node, led, &led_mode);
+	if (!err && (led_mode > 15 || led_mode == 7) | (led_mode == 11) {
+             phydev_err(phydev, "DT %s invalid\n", led);
+             return -EINVAL;
+	}
+	return led_mode;
+
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
