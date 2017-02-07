@@ -1,11 +1,15 @@
-From: <christopher.spinrath@rwth-aachen.de>
-Subject: [PATCH] ARM: dts: imx6q-cm-fx6: add analog audio support
-Date: Tue, 7 Feb 2017 21:31:43 +0100
-Message-ID: <b6776a0aa8484faf816a238705ed6d22@rwthex-s1-b.rwth-ad.de>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Tue, 7 Feb 2017 22:46:17 +0200
+Message-ID: <20170207204617.GD13854@valkosipuli.retiisi.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,151 +19,142 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, Valentin Raevsky <valentin@compulab.co.il>, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-From: Valentin Raevsky <valentin@compulab.co.il>
+Hi Steve,
 
-The cm-fx6 module has an onboard Wolfson wm8731 codec which is muxed
-to the ssi2 controller. Unlike most (all?) supported i.MX6 board/codec
-combinations the wm8731 is operated in slave mode and the clock setup
-is static.
+On Fri, Jan 06, 2017 at 06:11:31PM -0800, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> This driver can handle SoC internal and external video bus multiplexers,
+> controlled either by register bit fields or by a GPIO. The subdevice
+> passes through frame interval and mbus configuration of the active input
+> to the output side.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> 
+> --
+> 
+> - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
+>   should be unregister.
+> 
+> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
+>   to vidsw_remove().
+> 
+> - there was a line left over from a previous iteration that negated
+>   the new way of determining the pad count just before it which
+>   has been removed (num_pads = of_get_child_count(np)).
+> 
+> - Philipp Zabel has developed a set of patches that allow adding
+>   to the subdev async notifier waiting list using a chaining method
+>   from the async registered callbacks (v4l2_of_subdev_registered()
+>   and the prep patches for that). For now, I've removed the use of
+>   v4l2_of_subdev_registered() for the vidmux driver's registered
+>   callback. This doesn't affect the functionality of this driver,
+>   but allows for it to be merged now, before adding the chaining
+>   support.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> ---
+>  .../bindings/media/video-multiplexer.txt           |  59 +++
+>  drivers/media/platform/Kconfig                     |   8 +
+>  drivers/media/platform/Makefile                    |   2 +
+>  drivers/media/platform/video-multiplexer.c         | 472 +++++++++++++++++++++
+>  4 files changed, 541 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
+>  create mode 100644 drivers/media/platform/video-multiplexer.c
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> new file mode 100644
+> index 0000000..9d133d9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
+> @@ -0,0 +1,59 @@
+> +Video Multiplexer
+> +=================
+> +
+> +Video multiplexers allow to select between multiple input ports. Video received
+> +on the active input port is passed through to the output port. Muxes described
+> +by this binding may be controlled by a syscon register bitfield or by a GPIO.
+> +
+> +Required properties:
+> +- compatible : should be "video-multiplexer"
+> +- reg: should be register base of the register containing the control bitfield
+> +- bit-mask: bitmask of the control bitfield in the control register
+> +- bit-shift: bit offset of the control bitfield in the control register
+> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
+> +  may be given to switch between two inputs
+> +- #address-cells: should be <1>
+> +- #size-cells: should be <0>
+> +- port@*: at least three port nodes containing endpoints connecting to the
+> +  source and sink devices according to of_graph bindings. The last port is
+> +  the output port, all others are inputs.
+> +
+> +Example:
+> +
+> +syscon {
+> +	compatible = "syscon", "simple-mfd";
+> +
+> +	mux {
 
-Add support for it.
+Could you use standardised properties for this, i.e. ones defined in
+Documentation/devicetree/bindings/media/video-interfaces.txt ?
 
-Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
-[christopher.spinrath@rwth-aachen.de: enhanced commit message, ported
-  to upstream and some cleanup]
-Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
----
- arch/arm/boot/dts/imx6q-cm-fx6.dts | 83 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 83 insertions(+)
+This is very similar to another patch "[PATCH] devicetree: Add video bus
+switch" posted by Pavel Machek recently. The problem with that is also
+similar than with this one: how to pass the CSI-2 bus configuration to the
+receiver.
 
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index d8a5789..8a85862 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -43,6 +43,7 @@
- 
- /dts-v1/;
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/sound/fsl-imx-audmux.h>
- #include "imx6q.dtsi"
- 
- / {
-@@ -90,6 +91,34 @@
- 		enable-active-high;
- 	};
- 
-+	sound-analog {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "On-board analog audio";
-+		simple-audio-card,widgets =
-+			"Headphone", "Headphone Jack",
-+			"Line", "Line Out",
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In";
-+		simple-audio-card,routing =
-+			"Headphone Jack", "RHPOUT",
-+			"Headphone Jack", "LHPOUT",
-+			"MICIN", "Mic Bias",
-+			"Mic Bias", "Mic Jack";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&sound_master>;
-+		simple-audio-card,frame-master = <&sound_master>;
-+		simple-audio-card,bitclock-inversion;
-+
-+		sound_master: simple-audio-card,cpu {
-+			sound-dai = <&ssi2>;
-+			system-clock-frequency = <2822400>;
-+		};
-+
-+		simple-audio-card,codec {
-+			sound-dai = <&wm8731>;
-+		};
-+        };
-+
- 	sound-spdif {
- 		compatible = "fsl,imx-audio-spdif";
- 		model = "imx-spdif";
-@@ -99,6 +128,36 @@
- 	};
- };
- 
-+&audmux {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_audmux>;
-+	status = "okay";
-+
-+	ssi2 {
-+		fsl,audmux-port = <1>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_RCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_RCSEL(3 | 0x8) |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(3))
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(3)
-+		>;
-+	};
-+
-+	pins5 {
-+		fsl,audmux-port = <3>;
-+		fsl,port-config = <
-+			(IMX_AUDMUX_V2_PTCR_TFSDIR |
-+			IMX_AUDMUX_V2_PTCR_TFSEL(1) |
-+			IMX_AUDMUX_V2_PTCR_RCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_RCSEL(1 | 0x8) |
-+			IMX_AUDMUX_V2_PTCR_TCLKDIR |
-+			IMX_AUDMUX_V2_PTCR_TCSEL(1))
-+			IMX_AUDMUX_V2_PDCR_RXDSEL(1)
-+		>;
-+	};
-+};
-+
- &cpu0 {
- 	/*
- 	 * Although the imx6q fuse indicates that 1.2GHz operation is possible,
-@@ -160,9 +219,25 @@
- 		reg = <0x50>;
- 		pagesize = <16>;
- 	};
-+
-+	wm8731: codec@1a {
-+		#sound-dai-cells = <0>;
-+		compatible = "wlf,wm8731";
-+		reg = <0x1a>;
-+	};
- };
- 
- &iomuxc {
-+	pinctrl_audmux: audmuxgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD2_CMD__AUD4_RXC   0x17059
-+			MX6QDL_PAD_SD2_DAT0__AUD4_RXD  0x17059
-+			MX6QDL_PAD_SD2_DAT3__AUD4_TXC  0x17059
-+			MX6QDL_PAD_SD2_DAT2__AUD4_TXD  0x17059
-+			MX6QDL_PAD_SD2_DAT1__AUD4_TXFS 0x17059
-+		>;
-+	};
-+
- 	pinctrl_ecspi1: ecspi1grp {
- 		fsl,pins = <
- 			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK	0x100b1
-@@ -279,6 +354,14 @@
- 	status = "okay";
- };
- 
-+&ssi2 {
-+	assigned-clocks = <&clks IMX6QDL_CLK_SSI2_SEL>,
-+			<&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>;
-+	assigned-clock-rates = <0>, <786432000>;
-+	status = "okay";
-+};
-+
- &uart4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_uart4>;
+There's some discussion here:
+
+<URL:http://www.spinics.net/lists/linux-media/msg109493.html>
+
+As Laurent already suggested, I think we should have a common solution for
+the problem that, besides conveying the bus parameters to the receiver, also
+encompasses CSI-2 virtual channels and data types.
+
+That would mean finishing the series of patches in the branch I believe
+Laurent already quoted here.
+
+> +		compatible = "video-multiplexer";
+> +		/* Single bit (1 << 19) in syscon register 0x04: */
+> +		reg = <0x04>;
+> +		bit-mask = <1>;
+> +		bit-shift = <19>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			mux_in0: endpoint {
+> +				remote-endpoint = <&video_source0_out>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			mux_in1: endpoint {
+> +				remote-endpoint = <&video_source1_out>;
+> +			};
+> +		};
+> +
+> +		port@2 {
+> +			reg = <2>;
+> +
+> +			mux_out: endpoint {
+> +				remote-endpoint = <&capture_interface_in>;
+> +			};
+> +		};
+> +	};
+> +};
+
 -- 
-2.10.2
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
