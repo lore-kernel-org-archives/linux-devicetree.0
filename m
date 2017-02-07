@@ -1,54 +1,59 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
-Date: Mon, 6 Feb 2017 17:03:08 -0800
-Message-ID: <20170207010308.GN25384@codeaurora.org>
-References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
- <20170203034012.29399-5-chris.packham@alliedtelesis.co.nz>
- <20170206231400.GM25384@codeaurora.org>
- <9974653ab84040c3b12fad075790c123@svr-chch-ex1.atlnz.lc>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v5 1/2] dt-bindings: brcm: clocks: add binding for
+ brcmstb-cpu-clk-div
+Date: Mon, 6 Feb 2017 17:04:26 -0800
+Message-ID: <20170207010426.GO25384@codeaurora.org>
+References: <20170119002933.7529-1-code@mmayer.net>
+ <20170119002933.7529-2-code@mmayer.net>
+ <20170121005202.GB8801@codeaurora.org>
+ <CAGt4E5sGScHp83ufKcX3Q74vW0fo=L0FHM7tCptvqJfchHAweg@mail.gmail.com>
+ <20170203200652.GD25384@codeaurora.org>
+ <d56c827e-41cf-fcb3-42e0-792e8bf37871@gmail.com>
+ <20170206225914.GJ25384@codeaurora.org>
+ <a1a11072-908b-352e-a49f-49240d430df9@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9974653ab84040c3b12fad075790c123-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a1a11072-908b-352e-a49f-49240d430df9@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, Markus Mayer <markus.mayer@broadcom.com>, Markus Mayer <code@mmayer.net>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Arnd Bergmann <arnd@arndb.de>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Linux Clock List <linux-clk@vger.kernel.org>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06, Chris Packham wrote:
-> On 07/02/17 12:14, Stephen Boyd wrote:
-> > On 02/03, Chris Packham wrote:
-> >> The initial implementation in commit e120c17a70e5 ("clk: mvebu: support
-> >> for 98DX3236 SoC") hardcoded a fixed value for the main PLL frequency.
-> >> Port code from the Marvell supplied Linux kernel to support different
-> >> PLL frequencies and provide clock gating support.
+On 02/06, Florian Fainelli wrote:
+> On 02/06/2017 02:59 PM, Stephen Boyd wrote:
+> > On 02/03, Florian Fainelli wrote:
 > >>
-> >> Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   7 +
-> >>  .../bindings/clock/mvebu-gated-clock.txt           |  11 ++
-> >>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi          |  14 +-
-> >>  drivers/clk/mvebu/Makefile                         |   2 +-
-> >>  drivers/clk/mvebu/armada-xp.c                      |  13 --
-> >>  drivers/clk/mvebu/mv98dx3236.c                     | 144 +++++++++++++++++++++
-> >
-> > This mixes dts and clk driver changes. Any chance it can be split
-> > up and just have the clk part go through clk tree? Otherwise, I
-> > can ack this if you want to take it all through arm-soc?
+> >> We already have another piece of drive code that manipulates registers
+> >> in the Bus Interface Unit located in drivers/soc/bcm/brcmstb/biuctrl.c
+> >> and which has little to nothing to do with the CPU's clock ratio. And
+> >> actually another one being submitted that deals with the CPU's
+> >> read-ahead cache. I would very much prefer we keep all of them separate
+> >> and dealing with just the register offset they need to do, but that does
+> >> not mean the Device Tree binding has to look that way though.
+> >>
+> >> The binding for the BIUCTRL register made it here:
+> >>
+> >> Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt
+> >>
+> >> so we should re-use that, and have a small piece of clock provided that
+> >> just uses the relevant register range within that larger register space
+> >> and provide the CLOCK_RATIO. Does that work?
+> >>
+> > 
+> > Ok. That's fine. The existing binding will be updated to include
+> > this new subnode then for the clock component?
 > 
-> I'm happy to split it if it will make life easier.
-> 
+> Humm, I suppose we could do that yes, my original thought was to just
+> have this CPU clock provider remap the entire BIUCTRL register range
+> (of_iomap() etc.) and manipulate just the relevant register range of
+> interest (CPU_CLOCK_CONFIG_REG), but if you want a sub-node to appear,
+> we could probably do that as well.
 
-Well do things keep booting if the clk driver parts merge without
-the associated dts changes? It's nice to maintain backwards
-compatibility even for a short time to make the merge path
-easier.
+One node is fine as well. I thought the plan was many subnodes
+based on the binding document you mentioned earlier.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
