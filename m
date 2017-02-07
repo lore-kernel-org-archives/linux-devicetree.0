@@ -1,30 +1,55 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
- fewer PQ coefficients
-Date: Tue, 7 Feb 2017 00:27:23 -0800
-Message-ID: <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
-References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com> <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt: ASoC: zx-i2s: Document for the ZTE zx296718
+ I2S controller
+Date: Tue, 7 Feb 2017 16:30:37 +0800
+Message-ID: <20170207083036.GI3407@dragon>
+References: <1486436571-8682-1-git-send-email-baoyou.xie@linaro.org>
+ <1486436571-8682-2-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486436571-8682-2-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, perex@perex.cz, tiwai@suse.com, shawn.guo@linaro.org, vinod.koul@intel.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
-> The DMAENGINE framework assumes that if PQ offload is supported by a
-> DMA device then all 256 PQ coefficients are supported. This assumption
-> does not hold anymore because we now have BCM-SBA-RAID offload engine
-> which supports PQ offload with limited number of PQ coefficients.
->
-> This patch extends async_tx APIs to handle DMA devices with support
-> for fewer PQ coefficients.
->
-> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+On Tue, Feb 07, 2017 at 11:02:50AM +0800, Baoyou Xie wrote:
+> This patch documents the devicetree for the ZTE's zx296718
+> I2S audio controller.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/sound/zte,zx-i2s.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/zte,zx-i2s.txt b/Documentation/devicetree/bindings/sound/zte,zx-i2s.txt
+> index 7e5aa6f..c405561 100644
+> --- a/Documentation/devicetree/bindings/sound/zte,zx-i2s.txt
+> +++ b/Documentation/devicetree/bindings/sound/zte,zx-i2s.txt
+> @@ -1,10 +1,12 @@
+>  ZTE ZX296702 I2S controller
+>  
+>  Required properties:
+> - - compatible : Must be "zte,zx296702-i2s"
+> + - compatible : Should include one of the following strings:
+> +	"zte,zx296702-i2s","zte,zx296718-i2s".
+>   - reg : Must contain I2S core's registers location and length
+>   - clocks : Pairs of phandle and specifier referencing the controller's clocks.
+> - - clock-names: "tx" for the clock to the I2S interface.
+> + - clock-names: "tx" for the wclk, "pclk" for the pclk to the I2S interface.
+> +	must contain pclk for zx296718 SoC.
 
-I don't like this approach. Define an interface for md to query the
-offload engine once at the beginning of time. We should not be adding
-any new extensions to async_tx.
+The 'pclk' is really required for zx296702-i2s as well.  The driver may
+happen to work on zx296702 only because 'pclk' is already enabled by
+someone else before I2S driver starts working.
+
+Shawn
+
+>   - dmas: Pairs of phandle and specifier for the DMA channel that is used by
+>     the core. The core expects two dma channels for transmit.
+>   - dma-names : Must be "tx" and "rx"
+> -- 
+> 2.7.4
+> 
