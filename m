@@ -1,71 +1,30 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v3 2/7] drm/tinydrm: Add helper functions
-Date: Tue, 7 Feb 2017 12:21:28 +0100
-Message-ID: <20170207112128.gzgxmry3ttkcud7y@phenom.ffwll.local>
-References: <20170131160319.9695-1-noralf@tronnes.org>
- <20170131160319.9695-3-noralf@tronnes.org>
- <20170206085629.GD27607@ulmo.ba.sec>
- <20170206090918.6rqr6l7pd62znl5j@phenom.ffwll.local>
- <20170206093556.GF27607@ulmo.ba.sec>
- <CAKMK7uHgW15EPpPSU2se7r89JCGD_oTvn9ZJptYaNJAWMKb9Fg@mail.gmail.com>
- <20170206110847.GH27607@ulmo.ba.sec>
- <20170206155303.2fwihmlh6ln4eskt@phenom.ffwll.local>
- <CAPM=9tywXAt8v4VwjHA7OhsW6Xg=w8gDeY5s+fHjhdmuUUG7gg@mail.gmail.com>
- <20170207111128.GE29507@ulmo.ba.sec>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 13/13] auxdisplay: Add HD44780 Character LCD support
+Date: Tue, 7 Feb 2017 13:23:35 +0200
+Message-ID: <CAHp75VcvkcO-6N59fMtr8xRogQxhicifTMaNVipmTccj078Baw@mail.gmail.com>
+References: <1486391895-9554-1-git-send-email-geert@linux-m68k.org> <1486391895-9554-14-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170207111128.GE29507@ulmo.ba.sec>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486391895-9554-14-git-send-email-geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Willy Tarreau <willy@haproxy.com>, Ksenija Stanojevic <ksenija.stanojevic@gmail.com>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMDcsIDIwMTcgYXQgMTI6MTE6MjhQTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
-d3JvdGU6Cj4gT24gVHVlLCBGZWIgMDcsIDIwMTcgYXQgMDg6Mjg6MTZBTSArMTAwMCwgRGF2ZSBB
-aXJsaWUgd3JvdGU6Cj4gPiA+Cj4gPiA+IEkgZGVmaW5pdGVseSBkb24ndCB3YW50IHRoYXQgd2Ug
-ZG9uJ3QgYXR0ZW1wdCB0aGlzLiBCdXQgYnJvdWdodCBmcm9tIHllYXJzCj4gPiA+IG9mIGV4cGVy
-aWVuY2UsIEkgcmVjb21tZW5kIHRvIG1lcmdlIGZpcnN0ICh3aXRoIHByZS1yZWZhY3RvcmluZyBh
-bHJlYWR5Cj4gPiA+IGFwcGxpZWQsIGJ1dCBoZWxwZXJzIG9ubHkgZXh0cmFjdGVkLCBub3QgeWV0
-IGF0IHRoZSByaWdodCBzcG90KSwgYW5kIHRoZW4KPiA+ID4gZm9sbG93IHVwIHdpdGguIEJlY2F1
-c2Ugb24gYXZlcmFnZSwgdGhlcmUncyB3YXkgdG9vIG1hbnkgdHJlZXMgd2l0aAo+ID4gPiBvdmVy
-bG9hZGVkIG1haW50YWluZXJzIHdobyBtYXliZSBsb29rIGF0IHlvdXIgcGF0Y2ggb25jZSBwZXIg
-a2VybmVsCj4gPiA+IHJlbGVhc2UgY3ljbGUuCj4gPiA+Cj4gPiA+IElmIHlvdSBrbm93IHRoYXQg
-YmFja2xpZ2h0IGFuZCBzcGkgaXNuJ3Qgb25lIG9mIHRoZXNlIGFyZWFzIChhbnl0aGluZyB0aGF0
-Cj4gPiA+IGdvZXMgdGhyb3VnaCB0YWthc2hpL3NvdW5kIGlzIGEgc2ltaWxhciBnb29kIGV4cGVy
-aWVuY2UgZm9yIHVzIG9uIHRoZSBpOTE1Cj4gPiA+IHNpZGUpLCB0aGVuIEkgZ3Vlc3Mgd2UgY2Fu
-IHRyeS4gQnV0IHRoZW4gTm9yYWxmIGhhcyBhbHJlYWR5IHdyaXR0ZW4gYSBmZXcKPiA+ID4gbW9u
-dGhzIHdvcnRoIG9mIHJlYWxseSBncmVhdCByZWZhY3RvcmluZywgYW5kIEknbSBzZXJpb3VzbHkg
-c3RhcnRpbmcgdG8KPiA+ID4gZmVlbCBndWlsdHkgZm9yIHZvbHVudGVlcmluZyBoaW0gZm9yIGFs
-bCBvZiB0aGlzLiBFdmVuIHRob3VnaCBoZSBzZWVtcyB0bwo+ID4gPiBiZSByZWFsbHkgZ29vZCBh
-dCBpdCwgYW5kIHNlZW1zIHRvIG5vdCBtaW5kLCBpdCdzIGdldHRpbmcgYSBiaXQgc2lsbHkuCj4g
-PiA+IEdpdmVuIHRoYXQgSSdkIHNheSB1cCB0byBOb3JhbGYuCj4gPiA+Cj4gPiA+IEluIHNob3J0
-LCB0aGVyZSdzIGFsd2F5cyBhIGJhbGFuY2UuCj4gPiAKPiA+IEkgZG9uJ3QgdGhpbmsgd2UgY2Fu
-IG1ha2UgYSBydWxlIGZvciB0aGlzLCBpdCB3aWxsIGFsd2F5cyBkZXBlbmQgb24gdGhlCj4gPiBj
-b2RlLiBUaGVyZSBpcyBhbHdheXMgZ29pbmcgdG8gYmUgc3R1ZmYgd2UgcHV0IGluIGRybSB0aGF0
-IHNob3VsZCBnbwo+ID4gZWxzZXdoZXJlLCBhbmQgc3R1ZmYgdGhhdCBpcyBlbHNld2hlcmUgdGhh
-dCBkcm0gc2hvdWxkIHVzZS4KPiA+IAo+ID4gSSB0aGluayBob3dldmVyIGlmIHdlIGRvIGFkZCBz
-dHVmZiBsaWtlIHRoaXMsIHNvbWVvbmUgc2hvdWxkIGtlZXAgdHJhY2sKPiA+IG9mIHRoZW0gYW5k
-IHRyeSB0byBtYWtlIHRoZW0gZ2V0IGZ1cnRoZXIgaW50byB0aGUga2VybmVsLgo+IAo+IFllcywg
-SSB0aGluayBoYXZpbmcgc29tZSBzb3J0IG9mIFRPRE8gaW4gZHJpdmVycy9ncHUvZHJtIGNvdWxk
-IGhlbHAKPiB0cmFjayB0aGluZ3MgdGhhdCB3ZSBrbm93IHNob3VsZCBldmVudHVhbGx5IGJlIG1v
-dmVkIG91dC4gSXQgY291bGQgc2VydmUKPiBhcyBhIGxpc3Qgb2YgamFuaXRvcmlhbCB0YXNrcyBm
-b3IgbmV3Y29tZXJzIHRoYXQgd2FudCB0byBnZXQgdGhlaXIgaGFuZHMKPiBkaXJ0eSBhbmQgdGFj
-a2xlIHJlbGF0aXZlbHkgdHJpdmlhbCB0YXNrcy4KCldlIGhhdmUgdGhpcyBsaXN0IGFscmVhZHks
-IGl0J3MgYXQ6IGh0dHA6Ly93d3cueC5vcmcvd2lraS9EUk1KYW5pdG9ycy8KCkkgZ3Vlc3MgSSBz
-aG91bGQgaGlnaGxpZ2h0IGl0IG1vcmUsIG1heWJlIGV2ZW4gYWRkIGl0IHRvIHRoZSBkb2NzPyBF
-cmljCmp1c3QgYXNrZWQgYWJvdXQgaXQgbGFzdCB3ZWVrIHRvby4KLURhbmllbAotLSAKRGFuaWVs
-IFZldHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cu
-ZmZ3bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Mon, Feb 6, 2017 at 4:38 PM, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> The Hitachi HD44780 Character LCD Controller is commonly used on
+> character LCDs that can display one or more lines of text.
+>
+> This driver supports character LCDs connected to GPIOs, using either a
+> 4-bit or 8-bit data bus, and provides access through the charlcd core
+> and /dev/lcd.
+
+Can we not limit this to OF? I can easily imagine use case with
+x86/ACPI enabled platform.
+
+On the first glance of_property-* -> device_property_* is enough.
+
+-- 
+With Best Regards,
+Andy Shevchenko
