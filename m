@@ -1,147 +1,101 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
-Date: Tue, 07 Feb 2017 16:11:58 +0200
-Message-ID: <1697893.vOtUuelROR@avalon>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com> <3823958.XNLmIv7GEv@avalon> <1486464090.2277.60.camel@pengutronix.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
+Date: Tue, 7 Feb 2017 15:57:36 +0100
+Message-ID: <20170207145736.vtwkzovmxjcgwncq@pengutronix.de>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+ <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
+ <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
+ <20170207143031.4700300a@ipc1.ka-ro>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486464090.2277.60.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel@dr
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170207143031.4700300a@ipc1.ka-ro>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Alexandre Courbot <gnurou@gmail.com>, chrisrfq@gmail.com, Arun Bharadwaj <arun@gumstix.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
+Hello Lothar,
 
-On Tuesday 07 Feb 2017 11:41:30 Philipp Zabel wrote:
-> On Tue, 2017-02-07 at 12:26 +0200, Laurent Pinchart wrote:
-> > On Monday 06 Feb 2017 15:10:46 Steve Longerbeam wrote:
-> >> On 02/06/2017 02:33 PM, Laurent Pinchart wrote:
-> >>> On Monday 06 Feb 2017 10:50:22 Hans Verkuil wrote:
-> >>>> On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
-> >>>>> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
-> >>>>>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
-> >>>>>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
-> >>>>>>>>> +
-> >>>>>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct
-> >>>>>>>>> v4l2_mbus_config *cfg)
+On Tue, Feb 07, 2017 at 02:30:31PM +0100, Lothar Waßmann wrote:
+> On Tue, 7 Feb 2017 12:09:50 +0100 Uwe Kleine-König wrote:
+> >  a)
+> >  	/*
+> > 	 * initially configured as low output. Consumer can do
+> > 	 * gpio_set_value(..., 1); but not gpio_direction_input(...);
+> > 	 */
+> >  	nodename {
+> > 		gpio-hog;
+> > 		gpios = <...>;
+> > 		output-low-init;
+> > 	};
 > > 
-> > [snip]
+> >  b)
+> >  	/*
+> > 	 * initially configured as low output. Consumer can do
+> > 	 * gpio_set_value(..., 1); and gpio_direction_input(...);
+> > 	 */
+> >  	nodename {
+> > 		gpio-hog;
+> > 		gpios = <...>;
+> > 		output-init-low;
+> > 	};
 > > 
-> >>>>>>>> I am not certain this op is needed at all. In the current kernel
-> >>>>>>>> this op is only used by soc_camera, pxa_camera and omap3isp
-> >>>>>>>> (somewhat dubious). Normally this information should come from the
-> >>>>>>>> device tree and there should be no need for this op.
-> >>>>>>>> 
-> >>>>>>>> My (tentative) long-term plan was to get rid of this op.
-> >>>>>>>> 
-> >>>>>>>> If you don't need it, then I recommend it is removed.
-> >>>>>> 
-> >>>>>> Hi Hans, the imx-media driver was only calling g_mbus_config to the
-> >>>>>> camera sensor, and it was doing that to determine the sensor's bus
-> >>>>>> type. This info was already available from parsing a
-> >>>>>> v4l2_of_endpoint from the sensor node. So it was simple to remove the
-> >>>>>> g_mbus_config calls, and instead rely on the parsed sensor
-> >>>>>> v4l2_of_endpoint.
-> >>>>> 
-> >>>>> That's not a good point.
-> >>> 
-> >>> (mea culpa, s/point/idea/)
-> >>> 
-> >>>>> The imx-media driver must not parse the sensor DT node as it is not
-> >>>>> aware of what bindings the sensor is compatible with.
-> >> 
-> >> Hi Laurent,
-> >> 
-> >> I don't really understand this argument. The sensor node has been found
-> >> by parsing the OF graph, so it is known to be a camera sensor node at
-> >> that point.
+> >  c)
+> >  	/*
+> > 	 * initially configured as input. Consumer can do
+> > 	 * gpio_direction_output(..., ...) and then set the value
+> > 	 * freely.
+> > 	 */
+> > 	 nodename {
+> > 	 	gpio-hog;
+> > 		gpios = <...>;
+> > 		input-init;
+> > 	};
 > > 
-> > All you know in the i.MX6 driver is that the remote node is a video
-> > source. You can rely on the fact that it implements the OF graph bindings
-> > to locate other ports in that DT node, but that's more or less it.
+> > I don't like that "output-low-init" and "output-init-low" are so
+> > similar, so if someone suggests a better naming scheme, that would be
+> > great.
 > > 
-> > DT properties are defined by DT bindings and thus qualified by a
-> > compatible string. Unless you match on sensor compat strings in the i.MX6
-> > driver (which you shouldn't do, to keep the driver generic) you can't know
-> > for certain how to parse the sensor node DT properties. For all you know,
-> > the video source could be a bridge such as an HDMI to CSI-2 converter for
-> > instance, so you can't even rely on the fact that it's a sensor.
-> > 
-> >>>>> Information must instead be queried from the sensor subdev at
-> >>>>> runtime, through the g_mbus_config() operation.
-> >>>>> 
-> >>>>> Of course, if you can get the information from the imx-media DT
-> >>>>> node, that's certainly an option. It's only information provided by
-> >>>>> the sensor driver that you have no choice but query using a subdev
-> >>>>> operation.
-> >>>> 
-> >>>> Shouldn't this come from the imx-media DT node? BTW, why is omap3isp
-> >>>> using this?
-> >>> 
-> >>> It all depends on what type of information needs to be retrieved, and
-> >>> whether it can change at runtime or is fixed. Adding properties to the
-> >>> imx-media DT node is certainly fine as long as those properties
-> >>> describe the i.MX side.
-> >> 
-> >> In this case the info needed is the media bus type. That info is most
-> >> easily available by calling v4l2_of_parse_endpoint() on the sensor's
-> >> endpoint node.
-> > 
-> > I haven't had time to check the code in details yet, so I can't really
-> > comment on what you need and how it should be implemented exactly.
-> > 
-> >> The media bus type is not something that can be added to the
-> >> imx-media node since it contains no endpoint nodes.
-> > 
-> > Agreed. You have endpoints in the CSI nodes though.
-> > 
-> >>> In the omap3isp case, we use the operation to query whether parallel
-> >>> data contains embedded sync (BT.656) or uses separate h/v sync signals.
-> >>> 
-> >>>> The reason I am suspicious about this op is that it came from
-> >>>> soc-camera and predates the DT. The contents of v4l2_mbus_config seems
-> >>>> very much like a HW description to me, i.e. something that belongs in
-> >>>> the DT.
-> >>> 
-> >>> Part of it is possibly outdated, but for buses that support multiple
-> >>> modes of operation (such as the parallel bus case described above) we
-> >>> need to make that information discoverable at runtime. Maybe this should
-> >>> be considered as related to Sakari's efforts to support VC/DT for CSI-2,
-> >>> and supported through the API he is working on.
-> >>
-> >> That sounds interesting, can you point me to some info on this effort?
-> > 
-> > Sure.
-> > 
-> > http://git.retiisi.org.uk/?p=~sailus/linux.git;a=shortlog;h=refs/heads/vc
-> > 
-> >> I've been thinking the DT should contain virtual channel info for CSI-2
-> >> buses.
-> > 
-> > I don't think it should. CSI-2 virtual channels and data types should be
-> > handled as a software concept, and thus supported through driver code
-> > without involving DT.
-> 
-> I agree. The CSI2IPU gasket is a bit special in that it distributes its
-> input data to four different parallel buses depending on the input's VC,
-> but upstream of the MIPI CSI-2 receiver, any virtual channel information
-> is purely a matter of the data sent over the CSI-2 link, and not board
-> specific hardware description.
+> The position of the 'output' or 'input' within the word could
+> imply whether the direction can be changed lateron or not. E.g.:
+> output-init-low => an output whose state is initially low, but can be
+>                    reconfigured to high lateron.
 
-If the CSI2IPU gasket has four physical output buses then it can be modelled 
-as an entity with four source pads. Only when VC/DT are multiplexed on the 
-same physical bus do I think they should be handled without involving the 
-device tree and the media controller graph.
+That's your a) which I called output-low-init
+
+> init-low-output => a gpio that is initially configured as output low,  
+>                    but can subsequently be reconfigured as input or to
+>                    a different state
+
+That's your b) which I called output-init-low.
+ 
+> init-input      => your case c)
+... which I called input-init.
+
+> input           => a GPIO input that cannot be reconfigured
+
+This is just a permutation of words, and so doesn't fix the problem that
+a) and b) use similar words. For you it's "init" before the stuff
+that can be changed. For me it's "init" is after the stuff that can be
+changed. 
+I slightly prefer my naming here because we already have "output-low"
+and "output-high" and my names also use direction-before-value.
+
+But I interpret your reply as interest and general confirmation that the
+idea is fine.
+
+> This would also allow an 'output-low' as a GPIO that is permanently
+> grounded...
+
+That works already today.
+
+Best regards
+Uwe
 
 -- 
-Regards,
-
-Laurent Pinchart
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
