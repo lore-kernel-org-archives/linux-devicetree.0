@@ -1,82 +1,59 @@
-From: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v32 13/13] Documentation: dt: chosen properties for arm64 kdump
-Date: Tue,  7 Feb 2017 17:10:10 +0900
-Message-ID: <20170207081010.6079-1-takahiro.akashi@linaro.org>
-References: <20170207080601.5816-1-takahiro.akashi@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170207080601.5816-1-takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: james.morse-5wv7dgnIgG8@public.gmane.org, geoff-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bauerman-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, dyoung-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, kexec-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 1/3] clk: zte: add i2s clocks for
+	zx296718
+Date: Tue, 7 Feb 2017 16:09:49 +0800
+Message-ID: <20170207080947.GG3407@dragon>
+References: <1486436571-8682-1-git-send-email-baoyou.xie@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <1486436571-8682-1-git-send-email-baoyou.xie@linaro.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, xie.baoyou@zte.com.cn, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, robh+dt@kernel.org, broonie@kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, jun.nie@linaro.org, shawn.guo@linaro.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
+On Tue, Feb 07, 2017 at 11:02:49AM +0800, Baoyou Xie wrote:
+> The i2s related clock support is missing from the existing zx296718
+> clock driver. This patch adds it, so that the upstream ZX I2S driver
+> can work out.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  drivers/clk/zte/clk-zx296718.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/clk/zte/clk-zx296718.c b/drivers/clk/zte/clk-zx296718.c
+> index ad5d1df..f106d40 100644
+> --- a/drivers/clk/zte/clk-zx296718.c
+> +++ b/drivers/clk/zte/clk-zx296718.c
+> @@ -941,6 +941,10 @@ static struct zx_clk_gate audio_gate_clk[] = {
+>  	GATE(AUDIO_SPDIF1_WCLK, "spdif1_wclk", "spdif1_wclk_div", AUDIO_SPDIF1_CLK, 9, CLK_SET_RATE_PARENT, 0),
+>  	GATE(AUDIO_TDM_WCLK, "tdm_wclk", "tdm_wclk_div", AUDIO_TDM_CLK, 17, CLK_SET_RATE_PARENT, 0),
+>  	GATE(AUDIO_TS_PCLK, "tempsensor_pclk", "clk49m5", AUDIO_TS_CLK, 1, 0, 0),
+> +	GATE(AUDIO_I2S0_PCLK, "i2s0_pclk", "clk49m5", AUDIO_I2S0_CLK, 8, 0, 0),
+> +	GATE(AUDIO_I2S1_PCLK, "i2s1_pclk", "clk49m5", AUDIO_I2S1_CLK, 8, 0, 0),
+> +	GATE(AUDIO_I2S2_PCLK, "i2s2_pclk", "clk49m5", AUDIO_I2S2_CLK, 8, 0, 0),
+> +	GATE(AUDIO_I2S3_PCLK, "i2s3_pclk", "clk49m5", AUDIO_I2S3_CLK, 8, 0, 0),
 
-Add documentation for DT properties:
-	linux,usable-memory-range
-	linux,elfcorehdr
-used by arm64 kdump. Those are, respectively, a usable memory range
-allocated to crash dump kernel and the elfcorehdr's location within it.
+I would suggest we put these clocks together with AUDIO_I2S_WCLK, so
+that we can find I2S clocks in one place.
 
-Signed-off-by: James Morse <james.morse-5wv7dgnIgG8@public.gmane.org>
-[takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org: update the text due to recent changes ]
-Signed-off-by: AKASHI Takahiro <takahiro.akashi-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/chosen.txt | 37 ++++++++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
+Shawn
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 6ae9d82d4c37..8dc82431acc1 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -52,3 +52,40 @@ This property is set (currently only on PowerPC, and only needed on
- book3e) by some versions of kexec-tools to tell the new kernel that it
- is being booted by kexec, as the booting environment may differ (e.g.
- a different secondary CPU release mechanism)
-+
-+linux,usable-memory-range
-+-------------------------
-+
-+This property (arm64 only) holds a base address and size, describing a
-+limited region in which memory may be considered available for use by
-+the kernel. Memory outside of this range is not available for use.
-+
-+This property describes a limitation: memory within this range is only
-+valid when also described through another mechanism that the kernel
-+would otherwise use to determine available memory (e.g. memory nodes
-+or the EFI memory map). Valid memory may be sparse within the range.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,usable-memory-range = <0x9 0xf0000000 0x0 0x10000000>;
-+	};
-+};
-+
-+The main usage is for crash dump kernel to identify its own usable
-+memory and exclude, at its boot time, any other memory areas that are
-+part of the panicked kernel's memory.
-+
-+linux,elfcorehdr
-+----------------
-+
-+This property (currently used only on arm64) holds the memory range,
-+the address and the size, of the elf core header which mainly describes
-+the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+e.g.
-+
-+/ {
-+	chosen {
-+		linux,elfcorehdr = <0x9 0xfffff000 0x0 0x800>;
-+	};
-+};
--- 
-2.11.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  };
+>  
+>  static struct clk_hw_onecell_data audio_hw_onecell_data = {
+> -- 
+> 2.7.4
+> 
