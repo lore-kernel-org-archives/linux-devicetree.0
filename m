@@ -1,83 +1,113 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
-Date: Tue, 7 Feb 2017 03:07:37 +0000
-Message-ID: <6149d4126a214ac8b0b0184bd818bea6@svr-chch-ex1.atlnz.lc>
-References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
- <20170203034012.29399-5-chris.packham@alliedtelesis.co.nz>
- <20170206231400.GM25384@codeaurora.org>
- <9974653ab84040c3b12fad075790c123@svr-chch-ex1.atlnz.lc>
- <20170207010308.GN25384@codeaurora.org>
- <ebe243d06f3542318e5365c560e6cf79@svr-chch-ex1.atlnz.lc>
- <5a974d9d7260432087619486bf5d79ed@svr-chch-ex1.atlnz.lc>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
+Date: Tue,  7 Feb 2017 06:21:34 +0100
+Message-ID: <1486444894-18321-1-git-send-email-hs@denx.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Guan Ben <ben.guan@cn.bosch.com>, Mark Jonas <mark.jonas@de.bosch.com>, Heiko Schocher <hs@denx.de>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/17 14:25, Chris Packham wrote:=0A=
-> On 07/02/17 14:13, Chris Packham wrote:=0A=
->> On 07/02/17 14:03, Stephen Boyd wrote:=0A=
->>> On 02/06, Chris Packham wrote:=0A=
->>>> On 07/02/17 12:14, Stephen Boyd wrote:=0A=
->>>>> On 02/03, Chris Packham wrote:=0A=
->>>>>> The initial implementation in commit e120c17a70e5 ("clk: mvebu: supp=
-ort=0A=
->>>>>> for 98DX3236 SoC") hardcoded a fixed value for the main PLL frequenc=
-y.=0A=
->>>>>> Port code from the Marvell supplied Linux kernel to support differen=
-t=0A=
->>>>>> PLL frequencies and provide clock gating support.=0A=
->>>>>>=0A=
->>>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->>>>>> ---=0A=
->>>>>>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   7 +=0A=
->>>>>>  .../bindings/clock/mvebu-gated-clock.txt           |  11 ++=0A=
->>>>>>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi          |  14 +-=0A=
->>>>>>  drivers/clk/mvebu/Makefile                         |   2 +-=0A=
->>>>>>  drivers/clk/mvebu/armada-xp.c                      |  13 --=0A=
->>>>>>  drivers/clk/mvebu/mv98dx3236.c                     | 144 ++++++++++=
-+++++++++++=0A=
->>>>>=0A=
->>>>> This mixes dts and clk driver changes. Any chance it can be split=0A=
->>>>> up and just have the clk part go through clk tree? Otherwise, I=0A=
->>>>> can ack this if you want to take it all through arm-soc?=0A=
->>>>=0A=
->>>> I'm happy to split it if it will make life easier.=0A=
->>>>=0A=
->>>=0A=
->>> Well do things keep booting if the clk driver parts merge without=0A=
->>> the associated dts changes? It's nice to maintain backwards=0A=
->>> compatibility even for a short time to make the merge path=0A=
->>> easier.=0A=
->>>=0A=
->>=0A=
->> Unfortunately not. I could put the clk changes first (then I'd just have=
-=0A=
->> checkpatch.pl complaining about new compatible strings). But if the clk=
-=0A=
->> patches don't land before the dts changes the boards won't boot. However=
-=0A=
->> that affects 1 person that we know of (me).=0A=
->>=0A=
->=0A=
-> Actually I wonder if I can try a bit harder to keep a system booting.=0A=
-> The following might work=0A=
-> 1) add the compatible strings to the existing armada clock drivers.=0A=
-> 2) update the dts to use the new compatible strings.=0A=
-> 3) add the new driver and remove the compatible strings from the armada=
-=0A=
-> drivers.=0A=
->=0A=
-> #1 would still upset checkpatch.pl because the documentation would only=
-=0A=
-> arrive in #2.=0A=
-=0A=
-Actually upon testing #1 is unnecessary. I lose some of the gated clocks =
-=0A=
-but nothing that prevents booting.=0A=
-=0A=
+From: Guan Ben <ben.guan@cn.bosch.com>
+
+extend the pwm-beeper driver to support customized frequency
+for SND_BELL from device tree.
+
+Signed-off-by: Guan Ben <ben.guan@cn.bosch.com>
+Signed-off-by: Mark Jonas <mark.jonas@de.bosch.com>
+[hs@denx.de: adapted to 4.10-rc7]
+Signed-off-by: Heiko Schocher <hs@denx.de>
+
+---
+
+ .../devicetree/bindings/input/pwm-beeper.txt       |  3 ++
+ drivers/input/misc/pwm-beeper.c                    | 36 ++++++++++++++++------
+ 2 files changed, 30 insertions(+), 9 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/input/pwm-beeper.txt b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+index be332ae..438c6e0 100644
+--- a/Documentation/devicetree/bindings/input/pwm-beeper.txt
++++ b/Documentation/devicetree/bindings/input/pwm-beeper.txt
+@@ -5,3 +5,6 @@ Registers a PWM device as beeper.
+ Required properties:
+ - compatible: should be "pwm-beeper"
+ - pwms: phandle to the physical PWM device
++
++optional properties:
++- bell-frequency:  bell frequency in Hz
+diff --git a/drivers/input/misc/pwm-beeper.c b/drivers/input/misc/pwm-beeper.c
+index 5f9655d..99591d5 100644
+--- a/drivers/input/misc/pwm-beeper.c
++++ b/drivers/input/misc/pwm-beeper.c
+@@ -27,6 +27,7 @@ struct pwm_beeper {
+ 	struct pwm_device *pwm;
+ 	struct work_struct work;
+ 	unsigned long period;
++	unsigned int bell_frequency;
+ };
+ 
+ #define HZ_TO_NANOSECONDS(x) (1000000000UL/(x))
+@@ -58,20 +59,17 @@ static int pwm_beeper_event(struct input_dev *input,
+ 	if (type != EV_SND || value < 0)
+ 		return -EINVAL;
+ 
+-	switch (code) {
+-	case SND_BELL:
+-		value = value ? 1000 : 0;
+-		break;
+-	case SND_TONE:
+-		break;
+-	default:
++	if (code != SND_BELL && code != SND_TONE)
+ 		return -EINVAL;
+-	}
+ 
+ 	if (value == 0)
+ 		beeper->period = 0;
+-	else
++	else {
++		if (code == SND_BELL)
++			value = beeper->bell_frequency;
++
+ 		beeper->period = HZ_TO_NANOSECONDS(value);
++	}
+ 
+ 	schedule_work(&beeper->work);
+ 
+@@ -93,6 +91,25 @@ static void pwm_beeper_close(struct input_dev *input)
+ 	pwm_beeper_stop(beeper);
+ }
+ 
++static void pwm_beeper_init_bell_frequency(struct device *dev,
++					   struct pwm_beeper *beeper)
++{
++	struct device_node *node;
++	unsigned int bell_frequency = 1000;
++	int error;
++
++	if (IS_ENABLED(CONFIG_OF)) {
++		node = dev->of_node;
++		error = of_property_read_u32(node, "bell-frequency",
++					     &bell_frequency);
++		if (error < 0)
++			dev_dbg(dev, "Failed to read bell-frequency, using default: %u Hz\n",
++				bell_frequency);
++	}
++
++	beeper->bell_frequency = bell_frequency;
++}
++
+ static int pwm_beeper_probe(struct platform_device *pdev)
+ {
+ 	unsigned long pwm_id = (unsigned long)dev_get_platdata(&pdev->dev);
+@@ -122,6 +139,7 @@ static int pwm_beeper_probe(struct platform_device *pdev)
+ 	pwm_apply_args(beeper->pwm);
+ 
+ 	INIT_WORK(&beeper->work, pwm_beeper_work);
++	pwm_beeper_init_bell_frequency(&pdev->dev, beeper);
+ 
+ 	beeper->input = input_allocate_device();
+ 	if (!beeper->input) {
+-- 
+2.7.4
+
