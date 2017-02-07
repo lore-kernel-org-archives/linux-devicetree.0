@@ -1,58 +1,67 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] power: supply: Add driver for TI BQ2416X battery charger
-Date: Tue, 7 Feb 2017 13:08:21 +0200
-Message-ID: <CAHp75VfWNd8p7eg9TU2SNC1dqBMf0fmkbEVmkWOWcDqHrDgOLQ@mail.gmail.com>
-References: <1486429749-12973-1-git-send-email-wojciech.ziemba@verifone.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: move trivial devices out of i2c subdir
+Date: Tue, 7 Feb 2017 12:08:47 +0100
+Message-ID: <20170207110847.iwikyplurumqi6qq@ninjato>
+References: <20170126225544.5431-1-wsa@the-dreams.de>
+ <20170126225544.5431-3-wsa@the-dreams.de>
+ <20170201135045.yass267eakmlpyru@rob-hp-laptop>
+ <20170201183539.GB2557@tetsubishi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="tmqntnaublfzx4ua"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486429749-12973-1-git-send-email-wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170201183539.GB2557@tetsubishi>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wojciech Ziemba <wo.ziemba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 7, 2017 at 3:09 AM, Wojciech Ziemba <wo.ziemba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> There is interest in adding a Linux driver for TI BQ2416X battery
-> charger. The driver supports BQ24160 chip, thus can be easily extended
-> for other BQ2416X family chargers.
-> Device exposes 'POWER_SUPPLY_PROP_*' properties and a number of knobs
-> for controlling the charging process as well as sends power supply change
-> notification via power-supply subsystem.
 
-Some style related comments
+--tmqntnaublfzx4ua
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-0. Less lines of code -> better! (but not be too eager)
-1. Use GENMASK()
-2.
-int ret = -EINVAL;
+On Wed, Feb 01, 2017 at 07:35:40PM +0100, Wolfram Sang wrote:
+>=20
+> > >  .../bindings/{i2c/trivial-devices.txt =3D> i2c-trivial-devices.txt} =
+        | 0
+> > >  1 file changed, 0 insertions(+), 0 deletions(-)
+> > >  rename Documentation/devicetree/bindings/{i2c/trivial-devices.txt =
+=3D> i2c-trivial-devices.txt} (100%)
+> >=20
+> > Just keep the same name. We can use it for SPI too at least.
+>=20
+> OK, will resend with your requested changes.
 
-if (a)
- ret = x;
-else if (b)
- ret = y;
+Thinking about it some more:
 
->> else
->> ret = -EINVAL;
+Shall I resend now or won't it be easier if I resend at the end of the
+next merge window to reduce merge conflicts?
 
-Those are redundant.
 
-if (ret)
- return ret;
+--tmqntnaublfzx4ua
+Content-Type: application/pgp-signature; name="signature.asc"
 
-3. #ifdef:s are ugly.
-For CONFIG_PM_SLEEP functions just use
-__maybe_unused attribute.
+-----BEGIN PGP SIGNATURE-----
 
-4. Try to avoid #ifdef CONFIG_OF (this will limit driver for OF case
-when it might be used elsewhere, e.g. ACPI case)
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAliZqr8ACgkQFA3kzBSg
+KbbvlA/+MFRQfiSsj5kIlfEdvGG2d0GCmompox0hao3oog83E6e7MJEoNoHfJjHu
+t3nvDkyOSgWMudTagOgP2wR7Baof8OPk3xAqEaiNgAsvhV44nX5Kyc3FyTno04vz
+K3LhzpyPA65PqAxeNAXBoxyxE9sdVFqd9Uj+pUaVTbMFRG2yTXdPOmVEyp+1dbt4
+I7Rnquq2h0PnWk+ZveT1n+WIilnoCqT3YhpoqVpwzM8VNBNaDomWKPvsh3NClGCm
+sOGoxM5gsbieUmEZByDXhqtt2vP7vdOV7SZTgQ+LvcWMinFvuPvDjYdnrV46nzSX
+H77Szyt/biYooCz+zlyvI6GrltCcWFsnVILeSn8r5cSNs9uBdDvuOEzZ36W1wH+B
+wPA8uvIfpPIw4TpEd24e/+ENcNoCb6nglkH3O2sha3thk+AHxRuPEyZlaEkQNZ9O
+1k66yJV2WHh5xvJVnOFawP4DwBYBzI52s2qZ+SZ2zH1jj3QgYsTnZ87UVqMPqryf
+iICEtjpHO45nLO3rfyIxIt75uKlaN7M3PxXjAL2V4IPhnCRB0dRU7g67qI8vVUVe
+vDTWZTIvYBKUOjjsdM2wgkCYR6v6a0O3bhJhMADOMYwVuPk5t4Z3mUQE4XRrxrJ9
+f7Uyavlo0O2655PijOmRISNIjHrmlGjhCiFkkRbQCSErg1DNuDw=
+=FPVS
+-----END PGP SIGNATURE-----
 
-5. Check headers and library for existing helpers. I believe some of
-your bit operations and such already have nice helpers in kernel.
-
--- 
-With Best Regards,
-Andy Shevchenko
+--tmqntnaublfzx4ua--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
