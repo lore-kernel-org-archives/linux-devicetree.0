@@ -1,56 +1,63 @@
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH 00/10] ARM: davinci: add vpif display support
-Date: Tue,  7 Feb 2017 17:41:13 +0100
-Message-ID: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+Subject: [PATCH 09/10] media: vpif: use a configurable i2c_adapter_id for vpif display
+Date: Tue,  7 Feb 2017 17:41:22 +0100
+Message-ID: <1486485683-11427-10-git-send-email-bgolaszewski@baylibre.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-The following series adds support for v4l2 display on da850-evm with
-a UI board in device tree boot mode.
+The vpif display driver uses a static i2c adapter ID of 1 but on the
+da850-evm board in DT boot mode the i2c adapter ID is actually 0.
 
-Patches 1/10 - 5/10 deal with the device tree: we fix whitespace
-errors in dts files and bindings, extend the example and the dts for
-da850-evm with the output port and address the pinmuxing.
+Make the adapter ID configurable like it already is for vpif capture.
 
-Patch 6/10 enables the relevant modules in the defconfig file.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/board-da850-evm.c       | 1 +
+ drivers/media/platform/davinci/vpif_display.c | 2 +-
+ include/media/davinci/vpif_types.h            | 1 +
+ 3 files changed, 3 insertions(+), 1 deletion(-)
 
-Patches 7/10 and 8/10 fix two already existing bugs encountered
-during development.
-
-Patch 9/10 make it possible to use a different i2c adapter in the
-vpif display driver.
-
-The last patch adds the pdata quirks necessary to enable v4l2 display.
-
-Tested with a modified version of yavta[1] as gstreamer support for
-v4l2 seems to be broken and results in picture artifacts.
-
-[1] https://github.com/brgl/yavta davinci/vpif-display
-
-Bartosz Golaszewski (10):
-  media: dt-bindings: vpif: fix whitespace errors
-  ARM: dts: da850-evm: fix whitespace errors
-  media: dt-bindings: vpif: extend the example with an output port
-  ARM: dts: da850-evm: add the output port to the vpif node
-  ARM: dts: da850: add vpif video display pins
-  ARM: davinci_all_defconfig: enable VPIF display modules
-  ARM: davinci: fix a whitespace error
-  ARM: davinci: fix the DT boot on da850-evm
-  media: vpif: use a configurable i2c_adapter_id for vpif display
-  ARM: davinci: add pdata-quirks for da850-evm vpif display
-
- .../devicetree/bindings/media/ti,da850-vpif.txt    | 45 ++++++++---
- arch/arm/boot/dts/da850-evm.dts                    | 26 +++---
- arch/arm/boot/dts/da850.dtsi                       | 25 +++++-
- arch/arm/configs/davinci_all_defconfig             |  2 +
- arch/arm/mach-davinci/board-da850-evm.c            |  1 +
- arch/arm/mach-davinci/pdata-quirks.c               | 92 ++++++++++++++++++++--
- drivers/media/platform/davinci/vpif_display.c      |  2 +-
- include/media/davinci/vpif_types.h                 |  1 +
- 8 files changed, 164 insertions(+), 30 deletions(-)
-
+diff --git a/arch/arm/mach-davinci/board-da850-evm.c b/arch/arm/mach-davinci/board-da850-evm.c
+index e5d4ded..fe0bfa7 100644
+--- a/arch/arm/mach-davinci/board-da850-evm.c
++++ b/arch/arm/mach-davinci/board-da850-evm.c
+@@ -1290,6 +1290,7 @@ static struct vpif_display_config da850_vpif_display_config = {
+ 		.output_count = ARRAY_SIZE(da850_ch0_outputs),
+ 	},
+ 	.card_name    = "DA850/OMAP-L138 Video Display",
++	.i2c_adapter_id = 1,
+ };
+ 
+ static __init void da850_vpif_init(void)
+diff --git a/drivers/media/platform/davinci/vpif_display.c b/drivers/media/platform/davinci/vpif_display.c
+index 50c3073..7e5cf99 100644
+--- a/drivers/media/platform/davinci/vpif_display.c
++++ b/drivers/media/platform/davinci/vpif_display.c
+@@ -1287,7 +1287,7 @@ static __init int vpif_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (!vpif_obj.config->asd_sizes) {
+-		i2c_adap = i2c_get_adapter(1);
++		i2c_adap = i2c_get_adapter(vpif_obj.config->i2c_adapter_id);
+ 		for (i = 0; i < subdev_count; i++) {
+ 			vpif_obj.sd[i] =
+ 				v4l2_i2c_new_subdev_board(&vpif_obj.v4l2_dev,
+diff --git a/include/media/davinci/vpif_types.h b/include/media/davinci/vpif_types.h
+index 4282a7d..0c72b46 100644
+--- a/include/media/davinci/vpif_types.h
++++ b/include/media/davinci/vpif_types.h
+@@ -57,6 +57,7 @@ struct vpif_display_config {
+ 	int (*set_clock)(int, int);
+ 	struct vpif_subdev_info *subdevinfo;
+ 	int subdev_count;
++	int i2c_adapter_id;
+ 	struct vpif_display_chan_config chan_config[VPIF_DISPLAY_MAX_CHANNELS];
+ 	const char *card_name;
+ 	struct v4l2_async_subdev **asd;	/* Flat array, arranged in groups */
 -- 
 2.9.3
