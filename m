@@ -1,143 +1,90 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v5 2/6] drm/rockchip/dsi: dw-mipi: support RK3399 mipi dsi
-Date: Tue, 7 Feb 2017 11:15:25 -0500
-Message-ID: <20170207161525.GH15150@art_vandelay>
-References: <1486266854-9887-1-git-send-email-zyw@rock-chips.com>
- <1486266854-9887-3-git-send-email-zyw@rock-chips.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH] media: imx: csi: fix crop rectangle reset in sink set_fmt
+Date: Tue, 07 Feb 2017 17:18:39 +0100
+Message-ID: <1486484319.2277.78.camel@pengutronix.de>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+         <1483755102-24785-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1486266854-9887-3-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1483755102-24785-18-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@me>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMDUsIDIwMTcgYXQgMTE6NTQ6MTBBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gVGhlIHZvcGIvdm9wbCBzd2l0Y2ggcmVnaXN0ZXIgb2YgUkszMzk5IG1pcGkgaXMgZGlm
-ZmVyZW50IGZyb20gUkszMjg4LAo+IHRoZSBkZWZhdWx0IHNldHRpbmcgZm9yIG1pcGkgZHNpIG1v
-ZGUgaXMgZGlmZmVyZW50IHRvbywgc28gYWRkIGEKPiBvZl9kZXZpY2VfaWQgc3RydWN0dXJlIHRv
-IGRpc3Rpbmd1aXNoIHRoZW0sIGFuZCBtYWtlIHN1cmUgc2V0IHRoZQo+IGNvcnJlY3QgbW9kZSBi
-ZWZvcmUgbWlwaSBwaHkgaW5pdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBaaG9uZyA8enl3
-QHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2Nr
-LWNoaXBzLmNvbT4KPiAKPiAtLS0KPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gY2hlY2sgdGhlIGVy
-cm9yIG9mIHBoeV9jZmdfY2xrIGluIGR3X21pcGlfZHNpX2JpbmQKPiAKPiBDaGFuZ2VzIGluIHY0
-Ogo+IC0gcmVtb3ZlIHRoZSB1bnJlbGF0ZWQgY2hhbmdlCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAt
-IGJhc2Ugb24gSm9obiBLZWVwaW5nJ3MgcGF0Y2ggc2VyaWVzCj4gCj4gIGRyaXZlcnMvZ3B1L2Ry
-bS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jIHwgNzUgKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygrKSwgMTAgZGVsZXRpb25z
-KC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1taXBpLWRz
-aS5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMKPiBpbmRleCA0NWFm
-ODkwLi43ZDMzN2UyIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kdy1t
-aXBpLWRzaS5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3LW1pcGktZHNpLmMK
-PiBAQCAtMjksOSArMjksMTcgQEAKPiAgCj4gICNkZWZpbmUgRFJJVkVSX05BTUUgICAgImR3LW1p
-cGktZHNpIgo+ICAKPiAtI2RlZmluZSBHUkZfU09DX0NPTjYgICAgICAgICAgICAgICAgICAgIDB4
-MDI1Ywo+IC0jZGVmaW5lIERTSTBfU0VMX1ZPUF9MSVQgICAgICAgICAgICAgICAgKDEgPDwgNikK
-PiAtI2RlZmluZSBEU0kxX1NFTF9WT1BfTElUICAgICAgICAgICAgICAgICgxIDw8IDkpCj4gKyNk
-ZWZpbmUgUkszMjg4X0dSRl9TT0NfQ09ONgkJMHgwMjVjCj4gKyNkZWZpbmUgUkszMjg4X0RTSTBf
-U0VMX1ZPUF9MSVQJCUJJVCg2KQo+ICsjZGVmaW5lIFJLMzI4OF9EU0kxX1NFTF9WT1BfTElUCQlC
-SVQoOSkKPiArCj4gKyNkZWZpbmUgUkszMzk5X0dSRl9TT0NfQ09OMTkJCTB4NjI1MAo+ICsjZGVm
-aW5lIFJLMzM5OV9EU0kwX1NFTF9WT1BfTElUCQlCSVQoMCkKPiArI2RlZmluZSBSSzMzOTlfRFNJ
-MV9TRUxfVk9QX0xJVAkJQklUKDQpCj4gKwo+ICsvKiBkaXNhYmxlIHR1cm5yZXF1ZXN0LCB0dXJu
-ZGlzYWJsZSwgZm9yY2V0eHN0b3Btb2RlLCBmb3JjZXJ4bW9kZSAqLwo+ICsjZGVmaW5lIFJLMzM5
-OV9HUkZfU09DX0NPTjIyCQkweDYyNTgKPiArI2RlZmluZSBSSzMzOTlfR1JGX0RTSV9NT0RFCQkw
-eGZmZmYwMDAwCj4gIAo+ICAjZGVmaW5lIERTSV9WRVJTSU9OCQkJMHgwMAo+ICAjZGVmaW5lIERT
-SV9QV1JfVVAJCQkweDA0Cj4gQEAgLTI2NSw2ICsyNzMsMTEgQEAgZW51bSB7Cj4gIH07Cj4gIAo+
-ICBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHsKPiArCXUzMiBkc2kwX2VuX2JpdDsKPiAr
-CXUzMiBkc2kxX2VuX2JpdDsKPiArCXUzMiBncmZfc3dpdGNoX3JlZzsKPiArCXUzMiBncmZfZHNp
-MF9tb2RlOwo+ICsJdTMyIGdyZl9kc2kwX21vZGVfcmVnOwo+ICAJdW5zaWduZWQgaW50IG1heF9k
-YXRhX2xhbmVzOwo+ICAJZW51bSBkcm1fbW9kZV9zdGF0dXMgKCptb2RlX3ZhbGlkKShzdHJ1Y3Qg
-ZHJtX2Nvbm5lY3RvciAqY29ubmVjdG9yLAo+ICAJCQkJCSAgIHN0cnVjdCBkcm1fZGlzcGxheV9t
-b2RlICptb2RlKTsKPiBAQCAtMjgxLDYgKzI5NCw3IEBAIHN0cnVjdCBkd19taXBpX2RzaSB7Cj4g
-IAo+ICAJc3RydWN0IGNsayAqcGxscmVmX2NsazsKPiAgCXN0cnVjdCBjbGsgKnBjbGs7Cj4gKwlz
-dHJ1Y3QgY2xrICpwaHlfY2ZnX2NsazsKPiAgCj4gIAl1bnNpZ25lZCBpbnQgbGFuZV9tYnBzOyAv
-KiBwZXIgbGFuZSAqLwo+ICAJdTMyIGNoYW5uZWw7Cj4gQEAgLTQyNiw2ICs0NDAsMTQgQEAgc3Rh
-dGljIGludCBkd19taXBpX2RzaV9waHlfaW5pdChzdHJ1Y3QgZHdfbWlwaV9kc2kgKmRzaSkKPiAg
-CWRzaV93cml0ZShkc2ksIERTSV9QSFlfVFNUX0NUUkwwLCBQSFlfVEVTVENMUik7Cj4gIAlkc2lf
-d3JpdGUoZHNpLCBEU0lfUEhZX1RTVF9DVFJMMCwgUEhZX1VOVEVTVENMUik7Cj4gIAo+ICsJaWYg
-KGRzaS0+cGh5X2NmZ19jbGspIHsKCllvdSBkb24ndCBuZWVkIHRoaXMgY2hlY2sgYW55IGxvbmdl
-ci4KCj4gKwkJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGh5X2NmZ19jbGspOwo+ICsJ
-CWlmIChyZXQpIHsKPiArCQkJZGV2X2Vycihkc2ktPmRldiwgIkZhaWxlZCB0byBlbmFibGUgcGh5
-X2NmZ19jbGtcbiIpOwo+ICsJCQlyZXR1cm4gcmV0Owo+ICsJCX0KPiArCX0KPiArCj4gIAlkd19t
-aXBpX2RzaV9waHlfd3JpdGUoZHNpLCAweDEwLCBCWVBBU1NfVkNPX1JBTkdFIHwKPiAgCQkJCQkg
-VkNPX1JBTkdFX0NPTl9TRUwodmNvKSB8Cj4gIAkJCQkJIFZDT19JTl9DQVBfQ09OX0xPVyB8Cj4g
-QEAgLTQ3OSwxNyArNTAxLDE5IEBAIHN0YXRpYyBpbnQgZHdfbWlwaV9kc2lfcGh5X2luaXQoc3Ry
-dWN0IGR3X21pcGlfZHNpICpkc2kpCj4gIAkJCQkgdmFsLCB2YWwgJiBMT0NLLCAxMDAwLCBQSFlf
-U1RBVFVTX1RJTUVPVVRfVVMpOwo+ICAJaWYgKHJldCA8IDApIHsKPiAgCQlkZXZfZXJyKGRzaS0+
-ZGV2LCAiZmFpbGVkIHRvIHdhaXQgZm9yIHBoeSBsb2NrIHN0YXRlXG4iKTsKPiAtCQlyZXR1cm4g
-cmV0Owo+ICsJCWdvdG8gcGh5X2luaXRfZW5kOwo+ICAJfQo+ICAKPiAgCXJldCA9IHJlYWRsX3Bv
-bGxfdGltZW91dChkc2ktPmJhc2UgKyBEU0lfUEhZX1NUQVRVUywKPiAgCQkJCSB2YWwsIHZhbCAm
-IFNUT1BfU1RBVEVfQ0xLX0xBTkUsIDEwMDAsCj4gIAkJCQkgUEhZX1NUQVRVU19USU1FT1VUX1VT
-KTsKPiAtCWlmIChyZXQgPCAwKSB7Cj4gKwlpZiAocmV0IDwgMCkKPiAgCQlkZXZfZXJyKGRzaS0+
-ZGV2LAo+ICAJCQkiZmFpbGVkIHRvIHdhaXQgZm9yIHBoeSBjbGsgbGFuZSBzdG9wIHN0YXRlXG4i
-KTsKPiAtCQlyZXR1cm4gcmV0Owo+IC0JfQo+ICsKPiArcGh5X2luaXRfZW5kOgo+ICsJaWYgKGRz
-aS0+cGh5X2NmZ19jbGspCgpPciB0aGlzCgo+ICsJCWNsa19kaXNhYmxlX3VucHJlcGFyZShkc2kt
-PnBoeV9jZmdfY2xrKTsKPiAgCj4gIAlyZXR1cm4gcmV0Owo+ICB9Cj4gQEAgLTk2NSw2ICs5ODks
-NyBAQCBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2Rpc2FibGUoc3RydWN0IGRybV9l
-bmNvZGVyICplbmNvZGVyKQo+ICBzdGF0aWMgdm9pZCBkd19taXBpX2RzaV9lbmNvZGVyX2VuYWJs
-ZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIHsKPiAgCXN0cnVjdCBkd19taXBpX2Rz
-aSAqZHNpID0gZW5jb2Rlcl90b19kc2koZW5jb2Rlcik7Cj4gKwljb25zdCBzdHJ1Y3QgZHdfbWlw
-aV9kc2lfcGxhdF9kYXRhICpwZGF0YSA9IGRzaS0+cGRhdGE7Cj4gIAlpbnQgbXV4ID0gZHJtX29m
-X2VuY29kZXJfYWN0aXZlX2VuZHBvaW50X2lkKGRzaS0+ZGV2LT5vZl9ub2RlLCBlbmNvZGVyKTsK
-PiAgCXUzMiB2YWw7Cj4gIAo+IEBAIC05ODUsNiArMTAxMCwxMCBAQCBzdGF0aWMgdm9pZCBkd19t
-aXBpX2RzaV9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gIAlk
-d19taXBpX2RzaV9kcGh5X2ludGVyZmFjZV9jb25maWcoZHNpKTsKPiAgCWR3X21pcGlfZHNpX2Ns
-ZWFyX2Vycihkc2kpOwo+ICAKPiArCWlmIChwZGF0YS0+Z3JmX2RzaTBfbW9kZV9yZWcpCj4gKwkJ
-cmVnbWFwX3dyaXRlKGRzaS0+Z3JmX3JlZ21hcCwgcGRhdGEtPmdyZl9kc2kwX21vZGVfcmVnLAo+
-ICsJCQkgICAgIHBkYXRhLT5ncmZfZHNpMF9tb2RlKTsKPiArCj4gIAlkd19taXBpX2RzaV9waHlf
-aW5pdChkc2kpOwo+ICAJZHdfbWlwaV9kc2lfd2FpdF9mb3JfdHdvX2ZyYW1lcyhkc2kpOwo+ICAK
-PiBAQCAtOTk4LDExICsxMDI3LDExIEBAIHN0YXRpYyB2b2lkIGR3X21pcGlfZHNpX2VuY29kZXJf
-ZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgCWNsa19kaXNhYmxlX3VucHJl
-cGFyZShkc2ktPnBjbGspOwo+ICAKPiAgCWlmIChtdXgpCj4gLQkJdmFsID0gRFNJMF9TRUxfVk9Q
-X0xJVCB8IChEU0kwX1NFTF9WT1BfTElUIDw8IDE2KTsKPiArCQl2YWwgPSBwZGF0YS0+ZHNpMF9l
-bl9iaXQgfCAocGRhdGEtPmRzaTBfZW5fYml0IDw8IDE2KTsKPiAgCWVsc2UKPiAtCQl2YWwgPSBE
-U0kwX1NFTF9WT1BfTElUIDw8IDE2Owo+ICsJCXZhbCA9IHBkYXRhLT5kc2kwX2VuX2JpdCA8PCAx
-NjsKPiAgCj4gLQlyZWdtYXBfd3JpdGUoZHNpLT5ncmZfcmVnbWFwLCBHUkZfU09DX0NPTjYsIHZh
-bCk7Cj4gKwlyZWdtYXBfd3JpdGUoZHNpLT5ncmZfcmVnbWFwLCBwZGF0YS0+Z3JmX3N3aXRjaF9y
-ZWcsIHZhbCk7Cj4gIAlkZXZfZGJnKGRzaS0+ZGV2LCAidm9wICVzIG91dHB1dCB0byBkc2kwXG4i
-LCAobXV4KSA/ICJMSVQiIDogIkJJRyIpOwo+ICB9Cj4gIAo+IEBAIC0xMTYyLDE0ICsxMTkxLDI5
-IEBAIHN0YXRpYyBlbnVtIGRybV9tb2RlX3N0YXR1cyByazMyODhfbWlwaV9kc2lfbW9kZV92YWxp
-ZCgKPiAgfQo+ICAKPiAgc3RhdGljIHN0cnVjdCBkd19taXBpX2RzaV9wbGF0X2RhdGEgcmszMjg4
-X21pcGlfZHNpX2Rydl9kYXRhID0gewo+ICsJLmRzaTBfZW5fYml0ID0gUkszMjg4X0RTSTBfU0VM
-X1ZPUF9MSVQsCj4gKwkuZHNpMV9lbl9iaXQgPSBSSzMyODhfRFNJMV9TRUxfVk9QX0xJVCwKPiAr
-CS5ncmZfc3dpdGNoX3JlZyA9IFJLMzI4OF9HUkZfU09DX0NPTjYsCj4gIAkubWF4X2RhdGFfbGFu
-ZXMgPSA0LAo+ICAJLm1vZGVfdmFsaWQgPSByazMyODhfbWlwaV9kc2lfbW9kZV92YWxpZCwKPiAg
-fTsKPiAgCj4gK3N0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGxhdF9kYXRhIHJrMzM5OV9taXBp
-X2RzaV9kcnZfZGF0YSA9IHsKPiArCS5kc2kwX2VuX2JpdCA9IFJLMzM5OV9EU0kwX1NFTF9WT1Bf
-TElULAo+ICsJLmRzaTFfZW5fYml0ID0gUkszMzk5X0RTSTFfU0VMX1ZPUF9MSVQsCj4gKwkuZ3Jm
-X3N3aXRjaF9yZWcgPSBSSzMzOTlfR1JGX1NPQ19DT04xOSwKPiArCS5ncmZfZHNpMF9tb2RlID0g
-UkszMzk5X0dSRl9EU0lfTU9ERSwKPiArCS5ncmZfZHNpMF9tb2RlX3JlZyA9IFJLMzM5OV9HUkZf
-U09DX0NPTjIyLAo+ICsJLm1heF9kYXRhX2xhbmVzID0gNCwKPiArfTsKPiArCj4gIHN0YXRpYyBj
-b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIGR3X21pcGlfZHNpX2R0X2lkc1tdID0gewo+ICAJewo+
-ICAJIC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1taXBpLWRzaSIsCj4gIAkgLmRhdGEg
-PSAmcmszMjg4X21pcGlfZHNpX2Rydl9kYXRhLAo+ICsJfSwgewo+ICsJIC5jb21wYXRpYmxlID0g
-InJvY2tjaGlwLHJrMzM5OS1taXBpLWRzaSIsCj4gKwkgLmRhdGEgPSAmcmszMzk5X21pcGlfZHNp
-X2Rydl9kYXRhLAo+ICAJfSwKPiAgCXsgLyogc2VudGluZWwgKi8gfQo+ICB9Owo+IEBAIC0xMjQ5
-LDYgKzEyOTMsMTcgQEAgc3RhdGljIGludCBkd19taXBpX2RzaV9iaW5kKHN0cnVjdCBkZXZpY2Ug
-KmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+ICAJCWNsa19kaXNhYmxlX3VucHJlcGFyZShk
-c2ktPnBjbGspOwo+ICAJfQo+ICAKPiArCWRzaS0+cGh5X2NmZ19jbGsgPSBkZXZtX2Nsa19nZXQo
-ZGV2LCAicGh5X2NmZyIpOwo+ICsJaWYgKElTX0VSUihkc2ktPnBoeV9jZmdfY2xrKSkgewo+ICsJ
-CXJldCA9IFBUUl9FUlIoZHNpLT5waHlfY2ZnX2Nsayk7Cj4gKwkJaWYgKHJldCAhPSAtRU5PRU5U
-KSB7Cj4gKwkJCWRldl9lcnIoZGV2LCAiVW5hYmxlIHRvIGdldCBwaHlfY2ZnX2NsazogJWRcbiIs
-IHJldCk7Cj4gKwkJCXJldHVybiByZXQ7Cj4gKwkJfQo+ICsJCWRzaS0+cGh5X2NmZ19jbGsgPSBO
-VUxMOwo+ICsJCWRldl9kYmcoZGV2LCAiaGF2ZSBub3QgcGh5X2NmZ19jbGtcbiIpOwo+ICsJfQo+
-ICsKPiAgCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShkc2ktPnBsbHJlZl9jbGspOwo+ICAJaWYg
-KHJldCkgewo+ICAJCWRldl9lcnIoZGV2LCAiJXM6IEZhaWxlZCB0byBlbmFibGUgcGxscmVmX2Ns
-a1xuIiwgX19mdW5jX18pOwo+IC0tIAo+IDIuNi4zCj4gCj4gX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJp
-LWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBF
-bmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+The csi_try_crop call in set_fmt should compare the cropping rectangle
+to the currently set input format, not to the previous input format.
+
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+This is a patch against the current imx-media-staging-md-wip branch.
+S_FMT wouldn't update the cropping rectangle during the first time it is
+called, since the csi_try_crop call would compare to the input frame
+format returned by __csi_get_fmt, which still contains the old value.
+---
+ drivers/staging/media/imx/imx-media-csi.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/media/imx/imx-media-csi.c
+b/drivers/staging/media/imx/imx-media-csi.c
+index 637d0f137938a..7c590bf94fad5 100644
+--- a/drivers/staging/media/imx/imx-media-csi.c
++++ b/drivers/staging/media/imx/imx-media-csi.c
+@@ -820,15 +820,13 @@ __csi_get_fmt(struct csi_priv *priv, struct
+v4l2_subdev_pad_config *cfg,
+ static int csi_try_crop(struct csi_priv *priv,
+ 			struct v4l2_rect *crop,
+ 			struct v4l2_subdev_pad_config *cfg,
+-			enum v4l2_subdev_format_whence which,
++			struct v4l2_mbus_framefmt *infmt,
+ 			struct imx_media_subdev *sensor)
+ {
+ 	struct v4l2_of_endpoint *sensor_ep;
+-	struct v4l2_mbus_framefmt *infmt;
+ 	v4l2_std_id std;
+ 	int ret;
+ 
+-	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, which);
+ 	sensor_ep = &sensor->sensor_ep;
+ 
+ 	crop->width = min_t(__u32, infmt->width, crop->width);
+@@ -1023,8 +1021,7 @@ static int csi_set_fmt(struct v4l2_subdev *sd,
+ 		crop.top = 0;
+ 		crop.width = sdformat->format.width;
+ 		crop.height = sdformat->format.height;
+-		ret = csi_try_crop(priv, &crop, cfg,
+-				   sdformat->which, sensor);
++		ret = csi_try_crop(priv, &crop, cfg, &sdformat->format, sensor);
+ 		if (ret)
+ 			return ret;
+ 
+@@ -1104,6 +1101,7 @@ static int csi_set_selection(struct v4l2_subdev
+*sd,
+ 			     struct v4l2_subdev_selection *sel)
+ {
+ 	struct csi_priv *priv = v4l2_get_subdevdata(sd);
++	struct v4l2_mbus_framefmt *infmt;
+ 	struct imx_media_subdev *sensor;
+ 	int ret;
+ 
+@@ -1133,7 +1131,8 @@ static int csi_set_selection(struct v4l2_subdev
+*sd,
+ 		return 0;
+ 	}
+ 
+-	ret = csi_try_crop(priv, &sel->r, cfg, sel->which, sensor);
++	infmt = __csi_get_fmt(priv, cfg, CSI_SINK_PAD, sel->which);
++	ret = csi_try_crop(priv, &sel->r, cfg, infmt, sensor);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.11.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
