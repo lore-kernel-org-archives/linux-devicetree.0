@@ -1,100 +1,127 @@
-From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 4/4] drivers/mailbox: Add ASpeed mailbox driver
-Date: Tue, 07 Feb 2017 16:44:26 +1100
-Message-ID: <1486446266.4850.129.camel@kernel.crashing.org>
-References: <20170112002910.3650-1-cyrilbur@gmail.com>
-         <20170112002910.3650-5-cyrilbur@gmail.com>
-         <CACPK8XcsScjrit-7VHh4oL=zPiMeEAB5_R550U0uPsuQ4WF1mg@mail.gmail.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH 5/6] dmaengine: Add Broadcom SBA RAID driver
+Date: Tue, 7 Feb 2017 11:32:23 +0530
+Message-ID: <CAALAos8W13Xcxw+VpkvJWNNEiO6_6Hri0EheASHqOzCKagDYzA@mail.gmail.com>
+References: <1486010836-25228-1-git-send-email-anup.patel@broadcom.com>
+ <1486010836-25228-6-git-send-email-anup.patel@broadcom.com>
+ <20170205060657.GV19244@localhost> <CAALAos9FxwKuF+qtqViybZ8APZNYt-PWLnTfJs64xtoyYB5NZQ@mail.gmail.com>
+ <20170206165400.GD19244@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACPK8XcsScjrit-7VHh4oL=zPiMeEAB5_R550U0uPsuQ4WF1mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170206165400.GD19244@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, dmaengine@vger.kernel.org, Device Tree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-02-07 at 16:10 +1030, Joel Stanley wrote:
+On Mon, Feb 6, 2017 at 10:24 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Mon, Feb 06, 2017 at 05:31:15PM +0530, Anup Patel wrote:
+>
+>> >> +
+>> >> +/* SBA C_MDATA helper macros */
+>> >> +#define SBA_C_MDATA_LOAD_VAL(__bnum0)                ((__bnum0) & 0x3)
+>> >> +#define SBA_C_MDATA_WRITE_VAL(__bnum0)               ((__bnum0) & 0x3)
+>> >> +#define SBA_C_MDATA_XOR_VAL(__bnum1, __bnum0)                        \
+>> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
+>> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
+>> >> +                             __v;                            \
+>> >> +                     })
+>> >> +#define SBA_C_MDATA_PQ_VAL(__dnum, __bnum1, __bnum0)         \
+>> >> +                     ({      u32 __v = ((__bnum0) & 0x3);    \
+>> >> +                             __v |= ((__bnum1) & 0x3) << 2;  \
+>> >> +                             __v |= ((__dnum) & 0x1f) << 5;  \
+>> >> +                             __v;                            \
+>> >> +                     })
+>> >
+>> > ah why are we usig complex macros, why can't these be simple functions..
+>>
+>> "static inline functions" seemed too complicated here because most of
+>> these macros are two lines of c-code.
+>
+> and thats where I have an issue with this. Macros for simple things is fine
+> but not for couple of line of logic!
+>
+>>
+>> Do you still insist on using "static inline functions"?
+>
+> Yes
 
-> > +static ssize_t aspeed_mbox_read(struct file *file, char __user *buf,
-> > +                               size_t count, loff_t *ppos)
-> > +{
-> > +       struct aspeed_mbox *mbox = file_mbox(file);
-> > +       char __user *p = buf;
-> > +       ssize_t ret;
-> > +       int i;
-> > +
-> > +       if (!access_ok(VERIFY_WRITE, buf, count))
-> > +               return -EFAULT;
-> 
-> As discussed in the LPC driver review:
-> 
->  "And don't call access_ok(), it's racy and no driver should ever do that."
-> 
-> Make sure all of the things you fixed in that driver are fixed in this one.
+Sure, will use "static inline functions" instead these macros.
 
-Well... I don't entirely agree with Greg on that one :-) In this specific
-case, since he's using __put_user() below, he must use access_ok() first.
+>
+>>
+>> >
+>> >> +#define SBA_C_MDATA_LS(__c_mdata_val)        ((__c_mdata_val) & 0xff)
+>> >> +#define SBA_C_MDATA_MS(__c_mdata_val)        (((__c_mdata_val) >> 8) & 0x3)
+>> >> +
+>> >> +/* Driver helper macros */
+>> >> +#define to_sba_request(tx)           \
+>> >> +     container_of(tx, struct sba_request, tx)
+>> >> +#define to_sba_device(dchan)         \
+>> >> +     container_of(dchan, struct sba_device, dma_chan)
+>> >> +
+>> >> +enum sba_request_state {
+>> >> +     SBA_REQUEST_STATE_FREE = 1,
+>> >> +     SBA_REQUEST_STATE_ALLOCED = 2,
+>> >> +     SBA_REQUEST_STATE_PENDING = 3,
+>> >> +     SBA_REQUEST_STATE_ACTIVE = 4,
+>> >> +     SBA_REQUEST_STATE_COMPLETED = 5,
+>> >> +     SBA_REQUEST_STATE_ABORTED = 6,
+>> >
+>> > whats up with a very funny indentation setting, we use 8 chars.
+>> >
+>> > Please re-read the Documentation/process/coding-style.rst
+>>
+>> I have double checked this enum. The indentation is fine
+>> and as-per coding style. Am I missing anything else?
+>
+> Somehow the initial indent doesnt seem to be 8 chars to me.
+>
+>> >> +static enum dma_status sba_tx_status(struct dma_chan *dchan,
+>> >> +                                  dma_cookie_t cookie,
+>> >> +                                  struct dma_tx_state *txstate)
+>> >> +{
+>> >> +     int mchan_idx;
+>> >> +     enum dma_status ret;
+>> >> +     struct sba_device *sba = to_sba_device(dchan);
+>> >> +
+>> >> +     ret = dma_cookie_status(dchan, cookie, txstate);
+>> >> +     if (ret == DMA_COMPLETE)
+>> >> +             return ret;
+>> >> +
+>> >> +     for (mchan_idx = 0; mchan_idx < sba->mchans_count; mchan_idx++)
+>> >> +             mbox_client_peek_data(sba->mchans[mchan_idx]);
+>> >
+>> > what is this achieving?
+>>
+>> The mbox_client_peek_data() is a hint to mailbox controller driver
+>> to check for available messages.
+>>
+>> This gives good performance improvement when some DMA client
+>> code is polling using tx_status() callback.
+>
+> Then why do it before and then check status.
 
-The "alternate" option is to bounce everything via a local memory array,
-copy_to/from_user (to/from that array) and then do the loop of inb/outb,
-but in the grand scheme of things, what is written here is correct *and*
-more efficient than the alternate approach. On such a slow SoC, those
-cycles do count.
+If there was a work completed when mbox_client_peek_data()
+is called then sba_receive_message() will be called immediately
+by mailbox controller driver.
 
-> > +
-> > +       if (count + *ppos > ASPEED_MBOX_NUM_REGS)
-> > +               return -EINVAL;
-> > +
-> > +       if (file->f_flags & O_NONBLOCK) {
-> > +               if (!(aspeed_mbox_inb(mbox, ASPEED_MBOX_BMC_CTRL) &
-> > +                               ASPEED_MBOX_CTRL_RECV))
-> > +                       return -EAGAIN;
-> > +       } else if (wait_event_interruptible(mbox->queue,
-> > +                               aspeed_mbox_inb(mbox, ASPEED_MBOX_BMC_CTRL) &
-> > +                               ASPEED_MBOX_CTRL_RECV)) {
-> > +               return -ERESTARTSYS;
-> > +       }
-> > +
-> > +       mutex_lock(&mbox->mutex);
-> > +
-> > +       for (i = *ppos; count > 0 && i < ASPEED_MBOX_NUM_REGS; i++) {
-> > +               uint8_t reg = aspeed_mbox_inb(mbox, ASPEED_MBOX_DATA_0 + (i * 4));
-> > +
-> > +               ret = __put_user(reg, p);
-> > +               if (ret)
-> > +                       goto out_unlock;
-> > +
-> > +               p++;
-> > +               count--;
-> > +       }
-> > +
-> > +       /* ASPEED_MBOX_CTRL_RECV bit is W1C, this also unmasks in 1 step */
-> 
-> W1C? Write to clear?
-> 
-> > +       aspeed_mbox_outb(mbox, ASPEED_MBOX_CTRL_RECV, ASPEED_MBOX_BMC_CTRL);
-> > +       ret = p - buf;
-> > +
-> > +out_unlock:
-> > +       mutex_unlock(&mbox->mutex);
-> > +       return ret;
-> > +}
-> > +
-> > +module_platform_driver(aspeed_mbox_driver);
-> > +
-> > +MODULE_DEVICE_TABLE(of, aspeed_mbox_match);
-> > +MODULE_LICENSE("GPL");
-> > > > +MODULE_AUTHOR("Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
-> > +MODULE_DESCRIPTION("ASpeed mailbox device driver");
-> 
-> ASPEED or Aspeed.
-> 
-> > --
-> > 2.11.0
-> > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+We are doing dma_cookie_complete() in sba_receive_message()
+so if mbox_client_peek_data() is called before dma_cookie_status()
+then dma_cookie_status() will see correct state of cookie.
+
+Also, I explored virt-dma APIs for BCM-SBA-RAID driver. The virt-dma
+implements tasklet based bottom-half for each virt-dma-channel. This
+bottom-half is not required for BCM-FS4-RAID driver because its a
+mailbox client driver and the mailbox controller driver already implements
+bottom-half for each mailbox channel.
+
+If we still go ahead and use virt-dma in BCM-FS4-RAID driver then we
+will have two bottom-halfs in-action one in mailbox controller driver and
+another in BCM-FS4-RAID driver which in-turn will add bottom-half
+scheduling overhead thereby reducing performance of BCM-FS4-RAID
+driver.
+
+Regards,
+Anup
