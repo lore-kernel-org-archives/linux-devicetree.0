@@ -1,28 +1,147 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PULL v2] ARM: DTS: Fix broken GICv2 register maps
-Date: Tue, 7 Feb 2017 15:07:34 +0100
-Message-ID: <CAK8P3a24sZHmEUFrqXO1khSTtGgsqO73f37RXaiqMjj_f=Nypg@mail.gmail.com>
-References: <1485766389-30811-1-git-send-email-marc.zyngier@arm.com>
- <20170131050648.GB16560@localhost> <86zii77eib.fsf@arm.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Tue, 07 Feb 2017 16:11:58 +0200
+Message-ID: <1697893.vOtUuelROR@avalon>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com> <3823958.XNLmIv7GEv@avalon> <1486464090.2277.60.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86zii77eib.fsf@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Olof Johansson <olof@lixom.net>, arm-soc <arm@kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tsahee Zidenberg <tsahee@annapurnalabs.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Russell King <linux@armlinux.org.uk>, Beno??t Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486464090.2277.60.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel@dr
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 31, 2017 at 10:41 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
-> On Tue, Jan 31 2017 at 05:06:48 AM, Olof Johansson <olof@lixom.net> wrote:
->
->> Care to respin? Or I can just pick over the patches, as long as you
->> don't need them as a stable base somewhere else.
->
-> If that works for you, please cherry pick the patches. I don't need them
-> to be based on anything in particular.
->
+Hi Philipp,
 
-Applied both to next/dt now, thanks for the cleanup!
+On Tuesday 07 Feb 2017 11:41:30 Philipp Zabel wrote:
+> On Tue, 2017-02-07 at 12:26 +0200, Laurent Pinchart wrote:
+> > On Monday 06 Feb 2017 15:10:46 Steve Longerbeam wrote:
+> >> On 02/06/2017 02:33 PM, Laurent Pinchart wrote:
+> >>> On Monday 06 Feb 2017 10:50:22 Hans Verkuil wrote:
+> >>>> On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
+> >>>>> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
+> >>>>>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
+> >>>>>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
+> >>>>>>>>> +
+> >>>>>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct
+> >>>>>>>>> v4l2_mbus_config *cfg)
+> > 
+> > [snip]
+> > 
+> >>>>>>>> I am not certain this op is needed at all. In the current kernel
+> >>>>>>>> this op is only used by soc_camera, pxa_camera and omap3isp
+> >>>>>>>> (somewhat dubious). Normally this information should come from the
+> >>>>>>>> device tree and there should be no need for this op.
+> >>>>>>>> 
+> >>>>>>>> My (tentative) long-term plan was to get rid of this op.
+> >>>>>>>> 
+> >>>>>>>> If you don't need it, then I recommend it is removed.
+> >>>>>> 
+> >>>>>> Hi Hans, the imx-media driver was only calling g_mbus_config to the
+> >>>>>> camera sensor, and it was doing that to determine the sensor's bus
+> >>>>>> type. This info was already available from parsing a
+> >>>>>> v4l2_of_endpoint from the sensor node. So it was simple to remove the
+> >>>>>> g_mbus_config calls, and instead rely on the parsed sensor
+> >>>>>> v4l2_of_endpoint.
+> >>>>> 
+> >>>>> That's not a good point.
+> >>> 
+> >>> (mea culpa, s/point/idea/)
+> >>> 
+> >>>>> The imx-media driver must not parse the sensor DT node as it is not
+> >>>>> aware of what bindings the sensor is compatible with.
+> >> 
+> >> Hi Laurent,
+> >> 
+> >> I don't really understand this argument. The sensor node has been found
+> >> by parsing the OF graph, so it is known to be a camera sensor node at
+> >> that point.
+> > 
+> > All you know in the i.MX6 driver is that the remote node is a video
+> > source. You can rely on the fact that it implements the OF graph bindings
+> > to locate other ports in that DT node, but that's more or less it.
+> > 
+> > DT properties are defined by DT bindings and thus qualified by a
+> > compatible string. Unless you match on sensor compat strings in the i.MX6
+> > driver (which you shouldn't do, to keep the driver generic) you can't know
+> > for certain how to parse the sensor node DT properties. For all you know,
+> > the video source could be a bridge such as an HDMI to CSI-2 converter for
+> > instance, so you can't even rely on the fact that it's a sensor.
+> > 
+> >>>>> Information must instead be queried from the sensor subdev at
+> >>>>> runtime, through the g_mbus_config() operation.
+> >>>>> 
+> >>>>> Of course, if you can get the information from the imx-media DT
+> >>>>> node, that's certainly an option. It's only information provided by
+> >>>>> the sensor driver that you have no choice but query using a subdev
+> >>>>> operation.
+> >>>> 
+> >>>> Shouldn't this come from the imx-media DT node? BTW, why is omap3isp
+> >>>> using this?
+> >>> 
+> >>> It all depends on what type of information needs to be retrieved, and
+> >>> whether it can change at runtime or is fixed. Adding properties to the
+> >>> imx-media DT node is certainly fine as long as those properties
+> >>> describe the i.MX side.
+> >> 
+> >> In this case the info needed is the media bus type. That info is most
+> >> easily available by calling v4l2_of_parse_endpoint() on the sensor's
+> >> endpoint node.
+> > 
+> > I haven't had time to check the code in details yet, so I can't really
+> > comment on what you need and how it should be implemented exactly.
+> > 
+> >> The media bus type is not something that can be added to the
+> >> imx-media node since it contains no endpoint nodes.
+> > 
+> > Agreed. You have endpoints in the CSI nodes though.
+> > 
+> >>> In the omap3isp case, we use the operation to query whether parallel
+> >>> data contains embedded sync (BT.656) or uses separate h/v sync signals.
+> >>> 
+> >>>> The reason I am suspicious about this op is that it came from
+> >>>> soc-camera and predates the DT. The contents of v4l2_mbus_config seems
+> >>>> very much like a HW description to me, i.e. something that belongs in
+> >>>> the DT.
+> >>> 
+> >>> Part of it is possibly outdated, but for buses that support multiple
+> >>> modes of operation (such as the parallel bus case described above) we
+> >>> need to make that information discoverable at runtime. Maybe this should
+> >>> be considered as related to Sakari's efforts to support VC/DT for CSI-2,
+> >>> and supported through the API he is working on.
+> >>
+> >> That sounds interesting, can you point me to some info on this effort?
+> > 
+> > Sure.
+> > 
+> > http://git.retiisi.org.uk/?p=~sailus/linux.git;a=shortlog;h=refs/heads/vc
+> > 
+> >> I've been thinking the DT should contain virtual channel info for CSI-2
+> >> buses.
+> > 
+> > I don't think it should. CSI-2 virtual channels and data types should be
+> > handled as a software concept, and thus supported through driver code
+> > without involving DT.
+> 
+> I agree. The CSI2IPU gasket is a bit special in that it distributes its
+> input data to four different parallel buses depending on the input's VC,
+> but upstream of the MIPI CSI-2 receiver, any virtual channel information
+> is purely a matter of the data sent over the CSI-2 link, and not board
+> specific hardware description.
 
-     Arnd
+If the CSI2IPU gasket has four physical output buses then it can be modelled 
+as an entity with four source pads. Only when VC/DT are multiplexed on the 
+same physical bus do I think they should be handled without involving the 
+device tree and the media controller graph.
+
+-- 
+Regards,
+
+Laurent Pinchart
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
