@@ -1,75 +1,54 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
-Date: Tue, 7 Feb 2017 01:25:47 +0000
-Message-ID: <5a974d9d7260432087619486bf5d79ed@svr-chch-ex1.atlnz.lc>
-References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
- <20170203034012.29399-5-chris.packham@alliedtelesis.co.nz>
- <20170206231400.GM25384@codeaurora.org>
- <9974653ab84040c3b12fad075790c123@svr-chch-ex1.atlnz.lc>
- <20170207010308.GN25384@codeaurora.org>
- <ebe243d06f3542318e5365c560e6cf79@svr-chch-ex1.atlnz.lc>
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 20/24] media: imx: Add Camera Interface subdev driver
+Date: Mon, 6 Feb 2017 17:52:48 -0800
+Message-ID: <b836f8c6-f166-261e-a989-414a5b56af70@gmail.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-21-git-send-email-steve_longerbeam@mentor.com>
+ <20170202223528.GX27312@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170202223528.GX27312-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam@m>
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/17 14:13, Chris Packham wrote:=0A=
-> On 07/02/17 14:03, Stephen Boyd wrote:=0A=
->> On 02/06, Chris Packham wrote:=0A=
->>> On 07/02/17 12:14, Stephen Boyd wrote:=0A=
->>>> On 02/03, Chris Packham wrote:=0A=
->>>>> The initial implementation in commit e120c17a70e5 ("clk: mvebu: suppo=
-rt=0A=
->>>>> for 98DX3236 SoC") hardcoded a fixed value for the main PLL frequency=
-.=0A=
->>>>> Port code from the Marvell supplied Linux kernel to support different=
-=0A=
->>>>> PLL frequencies and provide clock gating support.=0A=
->>>>>=0A=
->>>>> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
->>>>> ---=0A=
->>>>>  .../devicetree/bindings/clock/mvebu-core-clock.txt |   7 +=0A=
->>>>>  .../bindings/clock/mvebu-gated-clock.txt           |  11 ++=0A=
->>>>>  arch/arm/boot/dts/armada-xp-98dx3236.dtsi          |  14 +-=0A=
->>>>>  drivers/clk/mvebu/Makefile                         |   2 +-=0A=
->>>>>  drivers/clk/mvebu/armada-xp.c                      |  13 --=0A=
->>>>>  drivers/clk/mvebu/mv98dx3236.c                     | 144 +++++++++++=
-++++++++++=0A=
->>>>=0A=
->>>> This mixes dts and clk driver changes. Any chance it can be split=0A=
->>>> up and just have the clk part go through clk tree? Otherwise, I=0A=
->>>> can ack this if you want to take it all through arm-soc?=0A=
->>>=0A=
->>> I'm happy to split it if it will make life easier.=0A=
->>>=0A=
->>=0A=
->> Well do things keep booting if the clk driver parts merge without=0A=
->> the associated dts changes? It's nice to maintain backwards=0A=
->> compatibility even for a short time to make the merge path=0A=
->> easier.=0A=
->>=0A=
->=0A=
-> Unfortunately not. I could put the clk changes first (then I'd just have=
-=0A=
-> checkpatch.pl complaining about new compatible strings). But if the clk=
-=0A=
-> patches don't land before the dts changes the boards won't boot. However=
-=0A=
-> that affects 1 person that we know of (me).=0A=
->=0A=
-=0A=
-Actually I wonder if I can try a bit harder to keep a system booting. =0A=
-The following might work=0A=
-1) add the compatible strings to the existing armada clock drivers.=0A=
-2) update the dts to use the new compatible strings.=0A=
-3) add the new driver and remove the compatible strings from the armada =0A=
-drivers.=0A=
-=0A=
-#1 would still upset checkpatch.pl because the documentation would only =0A=
-arrive in #2.=0A=
-=0A=
+
+On 02/02/2017 02:35 PM, Russell King - ARM Linux wrote:
+> <snip>
+> However, "*vfd" contains a struct device, and you _correctly_ set the
+> release function for "*vfd" to video_device_release via camif_videodev.
+>
+> However, if you try to rmmod imx-media, then you end up with a kernel
+> warning that you're freeing memory containing a held lock, and later
+> chaos ensues because kmalloc has been corrupted.
+>
+> The root cause of this is embedding the device structure within the
+> video_device into the driver's private data.  *Any* structure what so
+> ever that contains a kref is reference counted, and that includes
+> struct device, and therefore also includes struct video_device.  What
+> that means is that its lifetime is _not_ under _your_ control, and
+> you may not free it except through its release function (which is
+> video_device_release().)  However, that also tries to kfree (with an
+> offset of 4) your private data, which results in the warning and the
+> corrupted kmalloc free lists.
+>
+> The solution is simple, make "vfd" a pointer in your private data
+> structure and kmalloc() it separately, letting video_device_release()
+> kfree() that data when it needs to.
+
+Thanks Russell for tracking this down. I remember doing this
+when I was reviewing the code for opportunities to "optimize" :-/,
+and carelessly caused this bug by not reviewing how video_device
+is freed.
+
+Fixed.
+
+Steve
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
