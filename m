@@ -1,44 +1,106 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH v3 1/7] media: v4l2-ctrls: Reserve controls for MAX217X
-Date: Tue,  7 Feb 2017 15:02:31 +0000
-Message-ID: <1486479757-32128-2-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v3 2/7] dt-bindings: media: Add MAX2175 binding description
+Date: Tue,  7 Feb 2017 15:02:32 +0000
+Message-ID: <1486479757-32128-3-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
 References: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org
-Cc: chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1486479757-32128-1-git-send-email-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Reserve controls for MAX217X RF to Bits tuner family. These hybrid
-radio receiver chips are highly programmable and hence reserving 32
-controls.
+Add device tree binding documentation for MAX2175 Rf to bits tuner
+device.
 
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
- include/uapi/linux/v4l2-controls.h | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/media/i2c/max2175.txt      | 61 ++++++++++++++++++++++
+ .../devicetree/bindings/property-units.txt         |  1 +
+ 2 files changed, 62 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
 
-diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
-index 0d2e1e0..83b28b4 100644
---- a/include/uapi/linux/v4l2-controls.h
-+++ b/include/uapi/linux/v4l2-controls.h
-@@ -180,6 +180,11 @@ enum v4l2_colorfx {
-  * We reserve 16 controls for this driver. */
- #define V4L2_CID_USER_TC358743_BASE		(V4L2_CID_USER_BASE + 0x1080)
- 
-+/* The base for the max217x driver controls.
-+ * We reserve 32 controls for this driver
-+ */
-+#define V4L2_CID_USER_MAX217X_BASE		(V4L2_CID_USER_BASE + 0x1090)
+diff --git a/Documentation/devicetree/bindings/media/i2c/max2175.txt b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+new file mode 100644
+index 0000000..f591ab4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/max2175.txt
+@@ -0,0 +1,61 @@
++Maxim Integrated MAX2175 RF to Bits tuner
++-----------------------------------------
 +
- /* MPEG-class control IDs */
- /* The MPEG controls are applicable to all codec controls
-  * and the 'MPEG' part of the define is historical */
++The MAX2175 IC is an advanced analog/digital hybrid-radio receiver with
++RF to Bits® front-end designed for software-defined radio solutions.
++
++Required properties:
++--------------------
++- compatible: "maxim,max2175" for MAX2175 RF-to-bits tuner.
++- clocks: phandle to the fixed xtal clock.
++- clock-names: name of the fixed xtal clock.
++- port: child port node of a tuner that defines the local and remote
++  endpoints. The remote endpoint is assumed to be an SDR device
++  that is capable of receiving the digital samples from the tuner.
++
++Optional properties:
++--------------------
++- maxim,slave	      : phandle to the master tuner if it is a slave. This
++			is used to define two tuners in diversity mode
++			(1 master, 1 slave). By default each tuner is an
++			individual master.
++- maxim,refout-load-pF: load capacitance value (in pF) on reference
++			output drive level. The possible load values are
++			 0 (default - refout disabled)
++			10
++			20
++			30
++			40
++			60
++			70
++- maxim,am-hiz	      : empty property indicates AM Hi-Z filter path is
++			selected for AM antenna input. By default this
++			filter path is not used.
++
++Example:
++--------
++
++Board specific DTS file
++
++/* Fixed XTAL clock node */
++maxim_xtal: clock {
++	compatible = "fixed-clock";
++	#clock-cells = <0>;
++	clock-frequency = <36864000>;
++};
++
++/* A tuner device instance under i2c bus */
++max2175_0: tuner@60 {
++	compatible = "maxim,max2175";
++	reg = <0x60>;
++	clocks = <&maxim_xtal>;
++	clock-names = "xtal";
++	maxim,refout-load-pF = <10>;
++
++	port {
++		max2175_0_ep: endpoint {
++			remote-endpoint = <&slave_rx_device>;
++		};
++	};
++
++};
+diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
+index 12278d7..f1f1c22 100644
+--- a/Documentation/devicetree/bindings/property-units.txt
++++ b/Documentation/devicetree/bindings/property-units.txt
+@@ -28,6 +28,7 @@ Electricity
+ -ohms		: Ohms
+ -micro-ohms	: micro Ohms
+ -microvolt	: micro volts
++-pF		: pico farads
+ 
+ Temperature
+ ----------------------------------------
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
