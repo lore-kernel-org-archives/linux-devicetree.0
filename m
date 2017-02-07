@@ -1,314 +1,160 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v9 3/3] thermal: zx2967: add thermal driver for ZTE's zx2967  family
-Date: Tue,  7 Feb 2017 08:56:41 +0800
-Message-ID: <1486429001-31940-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486429001-31940-1-git-send-email-baoyou.xie@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486429001-31940-1-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mathieu.poirier@linaro.org, jun.nie@linaro.org, rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawnguo@kernel.org, baoyou.xie@linaro.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v5 0/2] Add rockchip serial flash controller support
+Date: Tue,  7 Feb 2017 08:59:19 +0800
+Message-ID: <1486429161-33764-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds thermal driver for ZTE's zx2967 family.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- drivers/thermal/Kconfig          |   8 ++
- drivers/thermal/Makefile         |   1 +
- drivers/thermal/zx2967_thermal.c | 258 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 267 insertions(+)
- create mode 100644 drivers/thermal/zx2967_thermal.c
+This is another try for adding serial flash controller found on
+Rockchip platforms.
 
-diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-index 18f2de6..f64bd50 100644
---- a/drivers/thermal/Kconfig
-+++ b/drivers/thermal/Kconfig
-@@ -444,4 +444,12 @@ config BCM2835_THERMAL
- 	help
- 	  Support for thermal sensors on Broadcom bcm2835 SoCs.
- 
-+config ZX2967_THERMAL
-+	tristate "Thermal sensors on zx2967 SoC"
-+	depends on ARCH_ZX || COMPILE_TEST
-+	help
-+	  Enable the zx2967 thermal sensors driver, which supports
-+	  the primitive temperature sensor embedded in zx2967 SoCs.
-+	  This sensor generates the real time die temperature.
-+
- endif
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index 677c6d9..c00c05e 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
- obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
- obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
- obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
-+obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
-diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
-new file mode 100644
-index 0000000..a5670ad
---- /dev/null
-+++ b/drivers/thermal/zx2967_thermal.c
-@@ -0,0 +1,258 @@
-+/*
-+ * ZTE's zx2967 family thermal sensor driver
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie@linaro.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/thermal.h>
-+
-+/* Power Mode: 0->low 1->high */
-+#define ZX2967_THERMAL_POWER_MODE	0
-+#define ZX2967_POWER_MODE_LOW		0
-+#define ZX2967_POWER_MODE_HIGH		1
-+
-+/* DCF Control Register */
-+#define ZX2967_THERMAL_DCF		0x4
-+#define ZX2967_DCF_EN			BIT(1)
-+#define ZX2967_DCF_FREEZE		BIT(0)
-+
-+/* Selection Register */
-+#define ZX2967_THERMAL_SEL		0x8
-+
-+/* Control Register */
-+#define ZX2967_THERMAL_CTRL		0x10
-+
-+#define ZX2967_THERMAL_READY		BIT(12)
-+#define ZX2967_THERMAL_TEMP_MASK	GENMASK(11, 0)
-+#define ZX2967_THERMAL_ID_MASK		0x18
-+#define ZX2967_THERMAL_ID		0x10
-+
-+#define ZX2967_GET_TEMP_TIMEOUT_US	(100 * 1024)
-+
-+/**
-+ * struct zx2967_thermal_priv - zx2967 thermal sensor private structure
-+ * @tzd: struct thermal_zone_device where the sensor is registered
-+ * @lock: prevents read sensor in parallel
-+ * @clk_topcrm: topcrm clk structure
-+ * @clk_apb: apb clk structure
-+ * @regs: pointer to base address of the thermal sensor
-+ */
-+
-+struct zx2967_thermal_priv {
-+	struct thermal_zone_device	*tzd;
-+	struct mutex			lock;
-+	struct clk			*clk_topcrm;
-+	struct clk			*clk_apb;
-+	void __iomem			*regs;
-+	struct device			*dev;
-+};
-+
-+static int zx2967_thermal_get_temp(void *data, int *temp)
-+{
-+	void __iomem *regs;
-+	struct zx2967_thermal_priv *priv = data;
-+	u32 val;
-+	int ret;
-+
-+	if (!priv->tzd)
-+		return -EAGAIN;
-+
-+	regs = priv->regs;
-+	mutex_lock(&priv->lock);
-+	writel_relaxed(ZX2967_POWER_MODE_LOW,
-+		       regs + ZX2967_THERMAL_POWER_MODE);
-+	writel_relaxed(ZX2967_DCF_EN, regs + ZX2967_THERMAL_DCF);
-+
-+	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
-+	val &= ~ZX2967_THERMAL_ID_MASK;
-+	val |= ZX2967_THERMAL_ID;
-+	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
-+
-+	/*
-+	 * Must wait for a while, surely it's a bit odd.
-+	 * otherwise temperature value we got has a few deviation, even if
-+	 * the THERMAL_READY bit is set.
-+	 */
-+	usleep_range(100, 300);
-+	ret = readx_poll_timeout(readl, regs + ZX2967_THERMAL_CTRL,
-+				 val, val & ZX2967_THERMAL_READY, 300,
-+				 ZX2967_GET_TEMP_TIMEOUT_US);
-+	if (ret) {
-+		dev_err(priv->dev, "Thermal sensor data timeout\n");
-+		goto unlock;
-+	}
-+
-+	writel_relaxed(ZX2967_DCF_FREEZE | ZX2967_DCF_EN,
-+		       regs + ZX2967_THERMAL_DCF);
-+	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
-+			 & ZX2967_THERMAL_TEMP_MASK;
-+	writel_relaxed(ZX2967_POWER_MODE_HIGH,
-+		       regs + ZX2967_THERMAL_POWER_MODE);
-+
-+	/*
-+	 * Calculate temperature
-+	 * In dts, slope is multiplied by 1000.
-+	 */
-+	*temp = DIV_ROUND_CLOSEST(((s32)val + priv->tzd->tzp->offset) * 1000,
-+				  priv->tzd->tzp->slope);
-+
-+unlock:
-+	mutex_unlock(&priv->lock);
-+	return ret;
-+}
-+
-+static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
-+	.get_temp = zx2967_thermal_get_temp,
-+};
-+
-+static int zx2967_thermal_probe(struct platform_device *pdev)
-+{
-+	struct zx2967_thermal_priv *priv;
-+	struct resource *res;
-+	int ret;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(priv->regs))
-+		return PTR_ERR(priv->regs);
-+
-+	priv->clk_topcrm = devm_clk_get(&pdev->dev, "topcrm");
-+	if (IS_ERR(priv->clk_topcrm)) {
-+		ret = PTR_ERR(priv->clk_topcrm);
-+		dev_err(&pdev->dev, "failed to get topcrm clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk_topcrm);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable topcrm clock: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	priv->clk_apb = devm_clk_get(&pdev->dev, "apb");
-+	if (IS_ERR(priv->clk_apb)) {
-+		ret = PTR_ERR(priv->clk_apb);
-+		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
-+		goto disable_clk_topcrm;
-+	}
-+
-+	ret = clk_prepare_enable(priv->clk_apb);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable apb clock: %d\n",
-+			ret);
-+		goto disable_clk_topcrm;
-+	}
-+
-+	mutex_init(&priv->lock);
-+	priv->tzd = thermal_zone_of_sensor_register(&pdev->dev,
-+					0, priv, &zx2967_of_thermal_ops);
-+
-+	if (IS_ERR(priv->tzd)) {
-+		ret = PTR_ERR(priv->tzd);
-+		dev_err(&pdev->dev, "failed to register sensor: %d\n", ret);
-+		goto disable_clk_all;
-+	}
-+
-+	if (priv->tzd->tzp->slope == 0) {
-+		thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-+		dev_err(&pdev->dev, "coefficients of sensor is invalid\n");
-+		ret = -EINVAL;
-+		goto disable_clk_all;
-+	}
-+
-+	priv->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, priv);
-+
-+	return 0;
-+
-+disable_clk_all:
-+	clk_disable_unprepare(priv->clk_apb);
-+disable_clk_topcrm:
-+	clk_disable_unprepare(priv->clk_topcrm);
-+	return ret;
-+}
-+
-+static int zx2967_thermal_exit(struct platform_device *pdev)
-+{
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+
-+	thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-+	clk_disable_unprepare(priv->clk_topcrm);
-+	clk_disable_unprepare(priv->clk_apb);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id zx2967_thermal_id_table[] = {
-+	{ .compatible = "zte,zx296718-thermal" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int zx2967_thermal_suspend(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+
-+	if (priv && priv->clk_topcrm)
-+		clk_disable_unprepare(priv->clk_topcrm);
-+
-+	if (priv && priv->clk_apb)
-+		clk_disable_unprepare(priv->clk_apb);
-+
-+	return 0;
-+}
-+
-+static int zx2967_thermal_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-+	int error;
-+
-+	error = clk_prepare_enable(priv->clk_topcrm);
-+	if (error)
-+		return error;
-+
-+	error = clk_prepare_enable(priv->clk_apb);
-+	if (error) {
-+		clk_disable_unprepare(priv->clk_topcrm);
-+		return error;
-+	}
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
-+			 zx2967_thermal_suspend, zx2967_thermal_resume);
-+
-+static struct platform_driver zx2967_thermal_driver = {
-+	.probe = zx2967_thermal_probe,
-+	.remove = zx2967_thermal_exit,
-+	.driver = {
-+		.name = "zx2967_thermal",
-+		.of_match_table = zx2967_thermal_id_table,
-+		.pm = &zx2967_thermal_pm_ops,
-+	},
-+};
-+module_platform_driver(zx2967_thermal_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
-+MODULE_LICENSE("GPL v2");
+Feature:
+(1) Support x1, x2, x4 data bits mode
+(2) Support up to 4 chip select
+(3) Support two independent clock domain: AHB clock and SPI clock
+(4) Support DMA master up to 16KB/transfer
+
+Test environment:
+This patchset was tested on RV1108 evb boards with Winboud flash
+(w25q256) and working fine with PIO or DMA mode.
+
+How-to:
+Any rockchip guys who are interested in testing it could refer to
+the following steps:
+(1) enable CONFIG_MTD_M25P80
+(2) enable CONFIG_SPI_ROCKCHIP_SFC
+(3) enable CONFIG_MTD_CMDLINE_PARTS
+(4) enable CONFIG_SQUASHFS
+(4) CONFIG_CMDLINE="root=/dev/mtdblock2
+	mtdparts=spi-nor:256k@0(loader)ro,8m(kernel)ro,7m(rootfs),-(freedisk)"
+	Of course, you should check the partition layout if you modify it. Also
+	you could pass it from your loader to the kernel's cmdline.
+(5) Add dts support:
+nor_flash: sfc@301c0000 {
+	compatible = "rockchip,rk1108-sfc", "rockchip,sfc";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clocks = <&cru SCLK_SFC>, <&cru HCLK_SFC>;
+	clock-names = "sfc", "hsfc";
+	interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+	reg = <0x301c0000 0x1000>;
+	/* If you want to use PIO mode, activate this */
+	#rockchip,sfc-no-dma;
+	spi-nor@0 {
+		compatible = "jedec,spi-nor";
+		spi-max-frequency = <12000000>;
+		reg = <0>;
+	}
+};
+
+please make sure your DT's mdtid matchs what you assgin to the
+mdtparts(cmdline), namely they are both *spi-nor* here.
+
+With enabling DBG for cmdlinepart.c, you could get following log and
+boot kernel and rootfs successfully.
+
+[    0.481420] rockchip-sfc 301c0000.sfc: w25q256 (32768 Kbytes)
+[    0.481962] DEBUG-CMDLINE-PART: parsing
+<256k@0(loader)ro,8m(kernel)ro,7m(rootfs)ro,-(freedisk)>
+[    0.482897] DEBUG-CMDLINE-PART: partition 3: name
+<freedisk>, offset ffffffffffffffff, size ffffffffffffffff, mask flags 0
+[    0.484021] DEBUG-CMDLINE-PART: partition 2: name
+<rootfs>, offset ffffffffffffffff, size 700000, mask flags 400
+[    0.485066] DEBUG-CMDLINE-PART: partition 1: name
+<kernel>, offset ffffffffffffffff, size 800000, mask flags 400
+[    0.486108] DEBUG-CMDLINE-PART: partition 0: name
+<loader>, offset 0, size 40000, mask flags 400
+[    0.487152] DEBUG-CMDLINE-PART: mtdid=<spi-nor> num_parts=<4>
+[    0.487827] 4 cmdlinepart partitions found on MTD device spi-nor
+[    0.488370] Creating 4 MTD partitions on "spi-nor":
+[    0.488826] 0x000000000000-0x000000040000 : "loader"
+[    0.492340] 0x000000040000-0x000000840000 : "kernel"
+[    0.495679] 0x000000840000-0x000000f40000 : "rootfs"
+[    0.499241] 0x000000f40000-0x000002000000 : "freedisk"
+
+[root@arm-linux]#
+[root@arm-linux]#mount
+/dev/root on / type squashfs (ro,relatime)
+devtmpfs on /dev type devtmpfs
+(rw,relatime,size=26124k,nr_inodes=6531,mode=755)
+proc on /proc type proc (rw,relatime)
+none on /tmp type ramfs (rw,relatime)
+none on /var type ramfs (rw,relatime)
+sysfs on /sys type sysfs (rw,relatime)
+debug on /sys/kernel/debug type debugfs (rw,relatime)
+none on /dev/pts type devpts (rw,relatime,mode=600,ptmxmode=000)
+
+
+Changes in v5:
+- check if the buf is aligned to 32bit
+- check if the buf for dma comes from vmalloc
+- fix to use 1-1-n according to the current framework
+- avoid bytes cnt overflow
+
+Changes in v4:
+- use uppercase DMA for description
+- simplify the code of get_if_type
+- use dma_dir to simplify the code
+- simplify the rockchip_sfc_do_rd_wr
+- some minor improvements
+- add reset controller when doing resume
+
+Changes in v3:
+- use io{read32,write32}_rep to simplify the corner cases
+- remove more unnecessary bit definitions
+- some minor comment fixes and improvement
+- fix wrong unregister function
+- unify more code
+- use nor to avoid constantly replicating the whole
+  sfc->flash[sfc->num_chip].nor
+- add email for MODULE_AUTHOR
+- remove #if 1 --- #endif
+- extract DMA code to imporve the code structure
+- reset all when failing to do dma
+- pass sfc to get_if_type
+- rename sfc-no-dma to sfc-no-DMA
+
+Changes in v2:
+- fix typos
+- add some comment for buffer and others operations
+- rename SFC_MAX_CHIP_NUM to MAX_CHIPSELECT_NUM
+- use u8 for cs
+- return -EINVAL for default case of get_if_type
+- use readl_poll_*() to check timeout cases
+- simplify and clarify some condition checks
+- rework the bitshifts to simplify the code
+- define SFC_CMD_DUMMY(x)
+- fix ummap for dma read path and finish all the
+  cache maintenance.
+- rename to rockchip_sfc_chip_priv and embed struct spi_nor
+  in it.
+- add MODULE_AUTHOR
+- add runtime PM and general PM support.
+- Thanks for Marek's comments. Link:
+  http://lists.infradead.org/pipermail/linux-mtd/2016-November/070321.html
+
+Shawn Lin (2):
+  mtd: spi-nor: Bindings for Rockchip serial flash controller
+  mtd: spi-nor: add rockchip serial flash controller driver
+
+ .../devicetree/bindings/mtd/rockchip-sfc.txt       |  31 +
+ MAINTAINERS                                        |   8 +
+ drivers/mtd/spi-nor/Kconfig                        |   7 +
+ drivers/mtd/spi-nor/Makefile                       |   1 +
+ drivers/mtd/spi-nor/rockchip-sfc.c                 | 949 +++++++++++++++++++++
+ 5 files changed, 996 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/rockchip-sfc.txt
+ create mode 100644 drivers/mtd/spi-nor/rockchip-sfc.c
+
 -- 
-2.7.4
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
