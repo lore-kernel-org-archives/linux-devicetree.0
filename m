@@ -1,42 +1,147 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-cm-fx6: add analog audio support
-Date: Tue, 7 Feb 2017 20:39:46 -0200
-Message-ID: <CAOMZO5BqkEQ5=rJpufuiqethOtRFqnm7pyoBR7hkS=e6iUsQAw@mail.gmail.com>
-References: <b6776a0aa8484faf816a238705ed6d22@rwthex-s1-b.rwth-ad.de>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers property
+Date: Tue, 7 Feb 2017 16:57:04 -0600
+Message-ID: <CAL_JsqKn6BS5NoTYn=+7Psy2dgJ84h8rXKe8JBdvMmi+89QxTA@mail.gmail.com>
+References: <20170120215605.15728-1-zajec5@gmail.com> <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
+ <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
+ <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com> <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
+ <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com> <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
+ <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com> <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
+ <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com> <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b6776a0aa8484faf816a238705ed6d22-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 7, 2017 at 6:31 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+On Wed, Feb 1, 2017 at 3:55 PM, Rafał Miłecki <zajec5@gmail.com> wrote:
+> On 02/01/2017 10:26 PM, Jacek Anaszewski wrote:
+>>
+>> On 02/01/2017 04:56 PM, Rafał Miłecki wrote:
+>>>
+>>> On 01/31/2017 10:34 PM, Jacek Anaszewski wrote:
+>>>>
+>>>> On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
+>>>>>
+>>>>> Thanks a lot Jacek for this explanation (and sorry but I needed a bit
+>>>>> of
+>>>>> time to
+>>>>> think about this). I can finally see your point, I think we're on the
+>>>>> same page
+>>>>> now.
+>>>>>
+>>>>> I think that for all this time I was thinking from the pure DT
+>>>>> perspective. If
+>>>>> you ignore fact that Linux has multiple LED trigger drivers, then
+>>>>> "led-triggers"
+>>>>> may not sound that bad.
+>>>>>
+>>>>> After reading your description however I can see this property can be
+>>>>> misleading
+>>>>> as Linux people may think "drivers" when seeing "triggers".
+>>>>>
+>>>>> I still think this is a useful property and I hope we can still find a
+>>>>> way to
+>>>>> name it in a sane way: to be nice from DT PoV and march Linux LEDs
+>>>>> subsystem.
+>>>>
+>>>>
+>>>> I also see the need for this property.
+>>>>
+>>>>> I think we should still work on some generic property (without linux,
+>>>>> prefix) as
+>>>>> this seems to be something generic, not really specific to Linux
+>>>>> implementation.
+>>>>> Specifying relation between LED and devices is something than AFAICS
+>>>>> can be
+>>>>> reused by other systems as well.
+>>>>>
+>>>>> So my suggestion is to try some new name & leave linux,default-trigger
+>>>>> to allow
+>>>>> specifying one single trigger driver as required by current Linux
+>>>>> implementation.
+>>>>>
+>>>>> What do you think about this?
+>>>>>
+>>>>> There are few suggestions to came to my mind:
+>>>>> "trigger-sources"
+>>>>> "trigger-devices"
+>>>>> "led-trigger-devices"
+>>>>> "led-related-devices"
+>>>>> "led-event-devices"
+>>>>
+>>>>
+>>>> trigger-devices would work in this specific use case,
+>>>> where we can give phandles to usb ports. Nonetheless, we
+>>>> have also other kernel based events serving as trigger
+>>>> sources - e.g. timer.
+>>>>
+>>>> In this case I'd go for trigger-sources, but we'd need
+>>>> to have some generic way of defining the source like timer.
 
-> +&audmux {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_audmux>;
-> +       status = "okay";
-> +
-> +       ssi2 {
-> +               fsl,audmux-port = <1>;
-> +               fsl,port-config = <
-> +                       (IMX_AUDMUX_V2_PTCR_RCLKDIR |
-> +                       IMX_AUDMUX_V2_PTCR_RCSEL(3 | 0x8) |
-> +                       IMX_AUDMUX_V2_PTCR_TCLKDIR |
-> +                       IMX_AUDMUX_V2_PTCR_TCSEL(3))
-> +                       IMX_AUDMUX_V2_PDCR_RXDSEL(3)
-> +               >;
-> +       };
-> +
-> +       pins5 {
++1 for the name.
 
-Just one minor nit: maybe pins4 since you are using AUD4 pins. Or
-maybe 'audmux4' as pins4 is too vague ?
+>>>
+>>>
+>>> I'd leave timer for later discussion but I'm glad you brought this
+>>> problem.
+>>> Maybe we could discuss this on another example that is more supported
+>>> like
+>>> GPIOs?
+>>>
+>>> We know this property allows specifying USB ports and we want it to
+>>> support
+>>> mixing various sources. So a very simple sample case seems to be using
+>>> it for
+>>> specifying GPIO as trigger source.
+>>>
+>>> Is this possible to mix various entries in a list assigned to single
+>>> property?
+>>> Let's say:
+>>> trigger-sources =
+>>>     <&ohci_port1>,
+>>>     <&ehci_port1>,
+>>>     <&gpio 1 GPIO_ACTIVE_HIGH>;
+>>
+>>
+>> According to my knowledge all elements in the list are elements
+>> of one array, no matter if they are comma separated or space separated
+>> in "<>" brackets. DT maintainer would have to confirm that though.
+>
+>
+> This matches my knowledge as well.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It is a bit problematic, but this could work as long as you know the
+possible arg types and a given node only has 1 match (nodes with
+interrupt and gpio being likely). You look up the phandle, iterate
+thru possible "#*-cells" properties for that phandle, then parse the
+cells. You could define rules of what is the required cell type (e.g.
+must use gpio cells if a phandle has both gpio and interrupt cells
+defined.).
+
+Another, simpler approach would be defining #trigger-cells in each
+source. This is probably the better option as all the infrastructure
+is there and could handle unforeseen cases.
+
+>>> Is this possible to support this? If so, which function I can use to
+>>> detect
+>>> what is pointed by a phandle?
+>>> I'm not that familiar with DT and I'm not sure how to handle this.
+>>
+>>
+>> I wonder if this is correct way to go. Maybe we should think of
+>> creating entirely new trigger mechanism that would allow for having
+>> multiple active triggers at a time.
+>
+>
+> I'm OK with reworking Linux's triggers if it need be. I think we should
+> agree
+> on binding(s) first though.
+
+Yes, they are separate problems.
+
+Rob
