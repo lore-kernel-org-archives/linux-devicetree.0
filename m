@@ -1,49 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
-Date: Tue, 7 Feb 2017 12:49:35 -0600
-Message-ID: <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop>
-References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
+Subject: Re: [PATCH] Documentation: powerpc/fsl: Update compatible for
+ l2cache binding
+Date: Tue, 7 Feb 2017 12:52:17 -0600
+Message-ID: <20170207185217.b3vtbzomipn2lowm@rob-hp-laptop>
+References: <20170203004316.25291-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 Content-Disposition: inline
-In-Reply-To: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Breno Lima <breno.lima@nxp.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, fabio.estevam@nxp.com, shawnguo@kernel.org, brenomatheus@gmail.com
+In-Reply-To: <20170203004316.25291-1-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBGZWIgMDIsIDIwMTcgYXQgMDY6MDQ6MDBQTSAtMDIwMCwgQnJlbm8gTGltYSB3cm90
-ZToKPiBBZGQgc3VwcG9ydCBmb3IgU2Vpa28gSW5zdHJ1bWVudHMgSW5jLiA0LjMiIFdWR0EgKDgw
-MCB4IFJHQiB4IDQ4MCkKPiBURlQgd2l0aCBUb3VjaC1QYW5lbCwgd2hpY2ggY2FuIGJlIHN1cHBv
-cnRlZCBieSB0aGUgc2ltcGxlIHBhbmVsIGRyaXZlci4KPiAKPiBEYXRhLXNoZWV0IGF2YWlsYWJs
-ZSBhdDoKPiBodHRwOi8vd3d3LmdseW4uZGUvZGF0YS9nbHluL21lZGlhL2RvYy80M3d2ZjFnLTAu
-cGRmCj4gCj4gU2lnbmVkLW9mZi1ieTogQnJlbm8gTGltYSA8YnJlbm8ubGltYUBueHAuY29tPgo+
-IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaWksNDN3dmYxZy50eHQgICAgICAg
-ICB8ICA3ICsrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2ltcGxlLmMgICAg
-ICAgICAgICAgICB8IDI4ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMiBmaWxlcyBjaGFuZ2Vk
-LCAzNSBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zaWksNDN3dmYxZy50eHQKPiAKPiBkaWZm
-IC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-c2lpLDQzd3ZmMWcudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcGFuZWwvc2lpLDQzd3ZmMWcudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
-MDAwMDAwLi5iYmJjNDlmCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NpaSw0M3d2ZjFnLnR4dAo+IEBAIC0wLDAg
-KzEsNyBAQAo+ICtTZWlrbyBJbnN0cnVtZW50cyBJbmMuIDQuMyIgV1ZHQSAoODAwIHggUkdCIHgg
-NDgwKSBURlQgd2l0aCBUb3VjaC1QYW5lbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiAr
-LSBjb21wYXRpYmxlOiBzaG91bGQgYmUgInNpaSw0M3d2ZjFnIgo+ICsKCk5vIHBvd2VyIHN1cHBs
-eShpZXMpIGZvciB0aGlzIHBhbmVsPwoKPiArVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0
-aCB0aGUgc2ltcGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAo+ICtpbiBzaW1w
-bGUtcGFuZWwudHh0IGluIHRoaXMgZGlyZWN0b3J5LgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBs
-aXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, Feb 03, 2017 at 01:43:16PM +1300, Chris Packham wrote:
+> List all the current valid compatible strings for the l2cache binding.
+> This should stop checkpatch.pl from complaining and will hopefully save
+> someone from having to debug a typo in their dts.
+> 
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/l2cache.txt    | 42 ++++++++++++++++++++--
+>  1 file changed, 40 insertions(+), 2 deletions(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
