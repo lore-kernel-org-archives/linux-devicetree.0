@@ -1,54 +1,38 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
- fewer PQ coefficients
-Date: Tue, 7 Feb 2017 22:12:08 +0530
-Message-ID: <20170207164207.GI19244@localhost>
-References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
- <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
- <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
- <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH 08/10] ARM: davinci: fix the DT boot on da850-evm
+Date: Tue,  7 Feb 2017 17:41:21 +0100
+Message-ID: <1486485683-11427-9-git-send-email-bgolaszewski@baylibre.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Kevin Hilman <khilman@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Patrick Titiano <ptitiano@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Alexandre Bailon <abailon@baylibre.com>, David Lechner <david@lechnology.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 02:32:15PM +0530, Anup Patel wrote:
-> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams@intel.com> wrote:
-> > On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
-> >> The DMAENGINE framework assumes that if PQ offload is supported by a
-> >> DMA device then all 256 PQ coefficients are supported. This assumption
-> >> does not hold anymore because we now have BCM-SBA-RAID offload engine
-> >> which supports PQ offload with limited number of PQ coefficients.
-> >>
-> >> This patch extends async_tx APIs to handle DMA devices with support
-> >> for fewer PQ coefficients.
-> >>
-> >> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-> >> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> >
-> > I don't like this approach. Define an interface for md to query the
-> > offload engine once at the beginning of time. We should not be adding
-> > any new extensions to async_tx.
-> 
-> Even if we do capability checks in Linux MD, we still need a way
-> for DMAENGINE drivers to advertise number of PQ coefficients
-> handled by the HW.
+When we enable vpif capture on the da850-evm we hit a BUG_ON() because
+the i2c adapter can't be found. The board file boot uses i2c adapter 1
+but in the DT mode it's actually adapter 0. Drop the problematic lines.
 
-If the question is only for advertising caps, then why not do as done
-for dma_get_slave_caps(). you can add dma_get_pq_caps() so that clients (md)
-in this case would know the HW capability.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ arch/arm/mach-davinci/pdata-quirks.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-> I agree capability checks should be done once in Linux MD but I don't
-> see why this has to be part of BCM-SBA-RAID driver patches. We need
-> separate patchsets to address limitations of async_tx framework.
-> 
-> Regards,
-> Anup
-
+diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
+index 94948c1..09f62ac 100644
+--- a/arch/arm/mach-davinci/pdata-quirks.c
++++ b/arch/arm/mach-davinci/pdata-quirks.c
+@@ -116,10 +116,6 @@ static void __init da850_vpif_legacy_init(void)
+ 	if (of_machine_is_compatible("ti,da850-lcdk"))
+ 		da850_vpif_capture_config.subdev_count = 1;
+ 
+-	/* EVM (UI card) uses i2c adapter 1 (not default: zero) */
+-	if (of_machine_is_compatible("ti,da850-evm"))
+-		da850_vpif_capture_config.i2c_adapter_id = 1;
+-
+ 	ret = da850_register_vpif_capture(&da850_vpif_capture_config);
+ 	if (ret)
+ 		pr_warn("%s: VPIF capture setup failed: %d\n",
 -- 
-~Vinod
+2.9.3
