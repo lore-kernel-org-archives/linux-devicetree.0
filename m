@@ -1,256 +1,152 @@
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
-Subject: [PATCH v3 net-next] net: phy: Add LED mode driver for Microsemi PHYs.
-Date: Tue, 7 Feb 2017 19:10:26 +0530
-Message-ID: <1486474826-29426-1-git-send-email-Raju.Lakkaraju@microsemi.com>
+From: Benoit Parrot <bparrot@ti.com>
+Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
+Date: Tue, 7 Feb 2017 07:36:48 -0600
+Message-ID: <20170207133648.GA27065@ti.com>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <2038922.a1tReKKdaL@avalon>
+ <bd64a86e-d90c-f4aa-6f22-1c832e0b563f@gmail.com>
+ <3823958.XNLmIv7GEv@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: f.fainelli@gmail.com, Allan.Nielsen@microsemi.com, andrew@lunn.ch, Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <3823958.XNLmIv7GEv@avalon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, arnd@arndb.de, mchehab@kernel.org, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, kernel@pengutronix.defa
 List-Id: devicetree@vger.kernel.org
 
-From: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
+Laurent Pinchart <laurent.pinchart@ideasonboard.com> wrote on Tue [2017-Feb-07 12:26:32 +0200]:
+> Hi Steve,
+> 
+> On Monday 06 Feb 2017 15:10:46 Steve Longerbeam wrote:
+> > On 02/06/2017 02:33 PM, Laurent Pinchart wrote:
+> > > On Monday 06 Feb 2017 10:50:22 Hans Verkuil wrote:
+> > >> On 02/05/2017 04:48 PM, Laurent Pinchart wrote:
+> > >>> On Tuesday 24 Jan 2017 18:07:55 Steve Longerbeam wrote:
+> > >>>> On 01/24/2017 04:02 AM, Philipp Zabel wrote:
+> > >>>>> On Fri, 2017-01-20 at 15:03 +0100, Hans Verkuil wrote:
+> > >>>>>>> +
+> > >>>>>>> +int vidsw_g_mbus_config(struct v4l2_subdev *sd, struct
+> > >>>>>>> v4l2_mbus_config *cfg)
+> 
+> [snip]
+> 
+> > >>>>>> I am not certain this op is needed at all. In the current kernel this
+> > >>>>>> op is only used by soc_camera, pxa_camera and omap3isp (somewhat
+> > >>>>>> dubious). Normally this information should come from the device tree
+> > >>>>>> and there should be no need for this op.
+> > >>>>>> 
+> > >>>>>> My (tentative) long-term plan was to get rid of this op.
+> > >>>>>> 
+> > >>>>>> If you don't need it, then I recommend it is removed.
+> > >>>> 
+> > >>>> Hi Hans, the imx-media driver was only calling g_mbus_config to the
+> > >>>> camera sensor, and it was doing that to determine the sensor's bus
+> > >>>> type. This info was already available from parsing a v4l2_of_endpoint
+> > >>>> from the sensor node. So it was simple to remove the g_mbus_config
+> > >>>> calls, and instead rely on the parsed sensor v4l2_of_endpoint.
+> > >>> 
+> > >>> That's not a good point.
+> > > 
+> > > (mea culpa, s/point/idea/)
+> > > 
+> > >>> The imx-media driver must not parse the sensor DT node as it is not
+> > >>> aware of what bindings the sensor is compatible with.
+> > 
+> > Hi Laurent,
+> > 
+> > I don't really understand this argument. The sensor node has been found
+> > by parsing the OF graph, so it is known to be a camera sensor node at
+> > that point.
+> 
+> All you know in the i.MX6 driver is that the remote node is a video source. 
+> You can rely on the fact that it implements the OF graph bindings to locate 
+> other ports in that DT node, but that's more or less it.
+> 
+> DT properties are defined by DT bindings and thus qualified by a compatible 
+> string. Unless you match on sensor compat strings in the i.MX6 driver (which 
+> you shouldn't do, to keep the driver generic) you can't know for certain how 
+> to parse the sensor node DT properties. For all you know, the video source 
+> could be a bridge such as an HDMI to CSI-2 converter for instance, so you 
+> can't even rely on the fact that it's a sensor.
+> 
+> > >>> Information must instead be queried from the sensor subdev at runtime,
+> > >>> through the g_mbus_config() operation.
+> > >>> 
+> > >>> Of course, if you can get the information from the imx-media DT node,
+> > >>> that's certainly an option. It's only information provided by the sensor
+> > >>> driver that you have no choice but query using a subdev operation.
+> > >> 
+> > >> Shouldn't this come from the imx-media DT node? BTW, why is omap3isp
+> > >> using this?
+> > > 
+> > > It all depends on what type of information needs to be retrieved, and
+> > > whether it can change at runtime or is fixed. Adding properties to the
+> > > imx-media DT node is certainly fine as long as those properties describe
+> > > the i.MX side.
+> >
+> > In this case the info needed is the media bus type. That info is most easily
+> > available by calling v4l2_of_parse_endpoint() on the sensor's endpoint
+> > node.
+> 
+> I haven't had time to check the code in details yet, so I can't really comment 
+> on what you need and how it should be implemented exactly.
+> 
+> > The media bus type is not something that can be added to the
+> > imx-media node since it contains no endpoint nodes.
+> 
+> Agreed. You have endpoints in the CSI nodes though.
+> 
+> > > In the omap3isp case, we use the operation to query whether parallel data
+> > > contains embedded sync (BT.656) or uses separate h/v sync signals.
+> > > 
+> > >> The reason I am suspicious about this op is that it came from soc-camera
+> > >> and predates the DT. The contents of v4l2_mbus_config seems very much
+> > >> like a HW description to me, i.e. something that belongs in the DT.
+> > > 
+> > > Part of it is possibly outdated, but for buses that support multiple modes
+> > > of operation (such as the parallel bus case described above) we need to
+> > > make that information discoverable at runtime. Maybe this should be
+> > > considered as related to Sakari's efforts to support VC/DT for CSI-2, and
+> > > supported through the API he is working on.
+> > 
+> > That sounds interesting, can you point me to some info on this effort?
+> 
+> Sure.
+> 
+> http://git.retiisi.org.uk/?p=~sailus/linux.git;a=shortlog;h=refs/heads/vc
+> 
+> > I've been thinking the DT should contain virtual channel info for CSI-2
+> > buses.
+> 
+> I don't think it should. CSI-2 virtual channels and data types should be 
+> handled as a software concept, and thus supported through driver code without 
+> involving DT.
 
-LED Mode:
-Microsemi PHY support 2 LEDs (LED[0] and LED[1]) to display different
-status information that can be selected by setting LED mode.
+Laurent,
 
-LED Mode parameter (vsc8531, led-0-mode) and (vsc8531, led-1-mode) get
-from Device Tree.
+So when you have a CSI2 port aggregator for instance where traffic from up
+to 4 CSI2 sources where each source is now assigned its own VC by the
+aggregator and interleaved into a single CSI2 Receiver. I was hoping that
+in this case the VC would be DT discoverable as a specicic source identifier.
+So the CSI-RX side could associate a specific source and create its own
+video device. I am guessing that no such thing exist today?
 
-Signed-off-by: Raju Lakkaraju <Raju.Lakkaraju@microsemi.com>
----
-Change set:
-v0:
-- Initial version of LED driver for Microsemi PHYs.
-v1:
-- Update all review comments given by Andrew.
-- Add new header file "mscc-phy-vsc8531.h" to define DT macros.
-- Add error/range check for DT LED mode input
-v2:
-- Fixed x86_64 build error.
-v3:
-- Update all review comments.
-- Fix the error check condition.
+Benoit
 
- .../devicetree/bindings/net/mscc-phy-vsc8531.txt   | 10 +++
- drivers/net/phy/mscc.c                             | 85 +++++++++++++++++++++-
- include/dt-bindings/net/mscc-phy-vsc8531.h         | 29 ++++++++
- 3 files changed, 123 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/net/mscc-phy-vsc8531.h
-
-diff --git a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-index bdefefc6..0eedabe 100644
---- a/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-+++ b/Documentation/devicetree/bindings/net/mscc-phy-vsc8531.txt
-@@ -27,6 +27,14 @@ Optional properties:
- 			  'vddmac'.
- 			  Default value is 0%.
- 			  Ref: Table:1 - Edge rate change (below).
-+- vsc8531,led-0-mode	: LED mode. Specify how the LED[0] should behave.
-+			  Allowed values are define in
-+			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
-+			  Default value is VSC8531_LINK_1000_ACTIVITY (1).
-+- vsc8531,led-1-mode	: LED mode. Specify how the LED[1] should behave.
-+			  Allowed values are define in
-+			  "include/dt-bindings/net/mscc-phy-vsc8531.h".
-+			  Default value is VSC8531_LINK_100_ACTIVITY (2).
- 
- Table: 1 - Edge rate change
- ----------------------------------------------------------------|
-@@ -60,4 +68,6 @@ Example:
-                 compatible = "ethernet-phy-id0007.0570";
-                 vsc8531,vddmac		= <3300>;
-                 vsc8531,edge-slowdown	= <7>;
-+                vsc8531,led-0-mode	= <LINK_1000_ACTIVITY>;
-+                vsc8531,led-1-mode	= <LINK_100_ACTIVITY>;
-         };
-diff --git a/drivers/net/phy/mscc.c b/drivers/net/phy/mscc.c
-index e03ead8..650c266 100644
---- a/drivers/net/phy/mscc.c
-+++ b/drivers/net/phy/mscc.c
-@@ -13,6 +13,7 @@
- #include <linux/phy.h>
- #include <linux/of.h>
- #include <linux/netdevice.h>
-+#include <dt-bindings/net/mscc-phy-vsc8531.h>
- 
- enum rgmii_rx_clock_delay {
- 	RGMII_RX_CLK_DELAY_0_2_NS = 0,
-@@ -52,6 +53,11 @@ enum rgmii_rx_clock_delay {
- #define MSCC_PHY_DEV_AUX_CNTL		  28
- #define HP_AUTO_MDIX_X_OVER_IND_MASK	  0x2000
- 
-+#define MSCC_PHY_LED_MODE_SEL		  29
-+#define LED_1_MODE_SEL_MASK		  0x00F0
-+#define LED_0_MODE_SEL_MASK		  0x000F
-+#define LED_1_MODE_SEL_POS		  4
-+
- #define MSCC_EXT_PAGE_ACCESS		  31
- #define MSCC_PHY_PAGE_STANDARD		  0x0000 /* Standard registers */
- #define MSCC_PHY_PAGE_EXTENDED		  0x0001 /* Extended registers */
-@@ -99,6 +105,8 @@ enum rgmii_rx_clock_delay {
- 
- struct vsc8531_private {
- 	int rate_magic;
-+	u8 led_0_mode;
-+	u8 led_1_mode;
- };
- 
- #ifdef CONFIG_OF_MDIO
-@@ -123,6 +131,29 @@ static int vsc85xx_phy_page_set(struct phy_device *phydev, u8 page)
- 	return rc;
- }
- 
-+static int vsc85xx_led_cntl_set(struct phy_device *phydev,
-+				u8 led_num,
-+				u8 mode)
-+{
-+	int rc;
-+	u16 reg_val;
-+
-+	mutex_lock(&phydev->lock);
-+	reg_val = phy_read(phydev, MSCC_PHY_LED_MODE_SEL);
-+	if (led_num) {
-+		reg_val &= ~LED_1_MODE_SEL_MASK;
-+		reg_val |= (((u16)mode << LED_1_MODE_SEL_POS) &
-+			    LED_1_MODE_SEL_MASK);
-+	} else {
-+		reg_val &= ~LED_0_MODE_SEL_MASK;
-+		reg_val |= ((u16)mode & LED_0_MODE_SEL_MASK);
-+	}
-+	rc = phy_write(phydev, MSCC_PHY_LED_MODE_SEL, reg_val);
-+	mutex_unlock(&phydev->lock);
-+
-+	return rc;
-+}
-+
- static int vsc85xx_mdix_get(struct phy_device *phydev, u8 *mdix)
- {
- 	u16 reg_val;
-@@ -370,11 +401,41 @@ static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- 
- 	return -EINVAL;
- }
-+
-+static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
-+				   char *led,
-+				   u8 default_mode)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	struct device_node *of_node = dev->of_node;
-+	u8 led_mode;
-+	int err;
-+
-+	if (!of_node)
-+		return -ENODEV;
-+
-+	led_mode = default_mode;
-+	err = of_property_read_u8(of_node, led, &led_mode);
-+	if (!err && (led_mode > 15 || led_mode == 7 || led_mode == 11)) {
-+		phydev_err(phydev, "DT %s invalid\n", led);
-+		return -EINVAL;
-+	}
-+
-+	return led_mode;
-+}
-+
- #else
- static int vsc85xx_edge_rate_magic_get(struct phy_device *phydev)
- {
- 	return 0;
- }
-+
-+static int vsc85xx_dt_led_mode_get(struct phy_device *phydev,
-+				   char *led,
-+				   u8 default_mode)
-+{
-+	return default_mode;
-+}
- #endif /* CONFIG_OF_MDIO */
- 
- static int vsc85xx_edge_rate_cntl_set(struct phy_device *phydev, u8 edge_rate)
-@@ -499,6 +560,14 @@ static int vsc85xx_config_init(struct phy_device *phydev)
- 	if (rc)
- 		return rc;
- 
-+	rc = vsc85xx_led_cntl_set(phydev, 1, vsc8531->led_1_mode);
-+	if (rc)
-+		return rc;
-+
-+	rc = vsc85xx_led_cntl_set(phydev, 0, vsc8531->led_0_mode);
-+	if (rc)
-+		return rc;
-+
- 	rc = genphy_config_init(phydev);
- 
- 	return rc;
-@@ -555,8 +624,9 @@ static int vsc85xx_read_status(struct phy_device *phydev)
- 
- static int vsc85xx_probe(struct phy_device *phydev)
- {
--	int rate_magic;
- 	struct vsc8531_private *vsc8531;
-+	int rate_magic;
-+	int led_mode;
- 
- 	rate_magic = vsc85xx_edge_rate_magic_get(phydev);
- 	if (rate_magic < 0)
-@@ -570,6 +640,19 @@ static int vsc85xx_probe(struct phy_device *phydev)
- 
- 	vsc8531->rate_magic = rate_magic;
- 
-+	/* LED[0] and LED[1] mode */
-+	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-0-mode",
-+					   VSC8531_LINK_1000_ACTIVITY);
-+	if (led_mode < 0)
-+		return led_mode;
-+	vsc8531->led_0_mode = led_mode;
-+
-+	led_mode = vsc85xx_dt_led_mode_get(phydev, "vsc8531,led-1-mode",
-+					   VSC8531_LINK_100_ACTIVITY);
-+	if (led_mode < 0)
-+		return led_mode;
-+	vsc8531->led_1_mode = led_mode;
-+
- 	return 0;
- }
- 
-diff --git a/include/dt-bindings/net/mscc-phy-vsc8531.h b/include/dt-bindings/net/mscc-phy-vsc8531.h
-new file mode 100644
-index 0000000..697161f
---- /dev/null
-+++ b/include/dt-bindings/net/mscc-phy-vsc8531.h
-@@ -0,0 +1,29 @@
-+/*
-+ * Device Tree constants for Microsemi VSC8531 PHY
-+ *
-+ * Author: Nagaraju Lakkaraju
-+ *
-+ * License: Dual MIT/GPL
-+ * Copyright (c) 2017 Microsemi Corporation
-+ */
-+
-+#ifndef _DT_BINDINGS_MSCC_VSC8531_H
-+#define _DT_BINDINGS_MSCC_VSC8531_H
-+
-+/* PHY LED Modes */
-+#define VSC8531_LINK_ACTIVITY           0
-+#define VSC8531_LINK_1000_ACTIVITY      1
-+#define VSC8531_LINK_100_ACTIVITY       2
-+#define VSC8531_LINK_10_ACTIVITY        3
-+#define VSC8531_LINK_100_1000_ACTIVITY  4
-+#define VSC8531_LINK_10_1000_ACTIVITY   5
-+#define VSC8531_LINK_10_100_ACTIVITY    6
-+#define VSC8531_DUPLEX_COLLISION        8
-+#define VSC8531_COLLISION               9
-+#define VSC8531_ACTIVITY                10
-+#define VSC8531_AUTONEG_FAULT           12
-+#define VSC8531_SERIAL_MODE             13
-+#define VSC8531_FORCE_LED_OFF           14
-+#define VSC8531_FORCE_LED_ON            15
-+
-+#endif
--- 
-2.7.4
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
