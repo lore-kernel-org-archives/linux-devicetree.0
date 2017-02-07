@@ -1,68 +1,102 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH 2/2] dt-bindings: move trivial devices out of i2c subdir
-Date: Tue, 7 Feb 2017 12:08:47 +0100
-Message-ID: <20170207110847.iwikyplurumqi6qq@ninjato>
-References: <20170126225544.5431-1-wsa@the-dreams.de>
- <20170126225544.5431-3-wsa@the-dreams.de>
- <20170201135045.yass267eakmlpyru@rob-hp-laptop>
- <20170201183539.GB2557@tetsubishi>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 3/3] gpiolib: Add GPIO initialization
+Date: Tue, 7 Feb 2017 12:09:50 +0100
+Message-ID: <20170207110950.zy5pzo2hq6hrvmr5@pengutronix.de>
+References: <1440920686-6892-1-git-send-email-mpa@pengutronix.de>
+ <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tmqntnaublfzx4ua"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170201183539.GB2557@tetsubishi>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1440920686-6892-4-git-send-email-mpa@pengutronix.de>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, chrisrfq@gmail.com, Arun Bharadwaj <arun@gumstix.com>, devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, linux-gpio@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---tmqntnaublfzx4ua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+(Markus left Pengutronix, so I dropped his non-working address from the
+recipients and pick up his discussion.)
 
-On Wed, Feb 01, 2017 at 07:35:40PM +0100, Wolfram Sang wrote:
->=20
-> > >  .../bindings/{i2c/trivial-devices.txt =3D> i2c-trivial-devices.txt} =
-        | 0
-> > >  1 file changed, 0 insertions(+), 0 deletions(-)
-> > >  rename Documentation/devicetree/bindings/{i2c/trivial-devices.txt =
-=3D> i2c-trivial-devices.txt} (100%)
-> >=20
-> > Just keep the same name. We can use it for SPI too at least.
->=20
-> OK, will resend with your requested changes.
+as far as I see, this topic isn't closed yet. I want something similar,
+maybe even a bit more than this patch achieves:
 
-Thinking about it some more:
+Some gpios should get a fixed direction. If such a gpio is configured as
+output, a value should be specified. This is already working today with
+gpio-hogs.
 
-Shall I resend now or won't it be easier if I resend at the end of the
-next merge window to reduce merge conflicts?
+Now additionally I want to initialize some gpios but allow them to be
+grabbed later. IMHO there are the following new cases:
 
+It should be possible to:
 
---tmqntnaublfzx4ua
-Content-Type: application/pgp-signature; name="signature.asc"
+ a) change the value of a gpio initially configured as output
+ b) change the direction of a gpio initially configured as output
+ c) change the direction of a gpio initially configured as input
 
------BEGIN PGP SIGNATURE-----
+IMHO the dts should describe which case should be applied to a given
+gpio.
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAliZqr8ACgkQFA3kzBSg
-KbbvlA/+MFRQfiSsj5kIlfEdvGG2d0GCmompox0hao3oog83E6e7MJEoNoHfJjHu
-t3nvDkyOSgWMudTagOgP2wR7Baof8OPk3xAqEaiNgAsvhV44nX5Kyc3FyTno04vz
-K3LhzpyPA65PqAxeNAXBoxyxE9sdVFqd9Uj+pUaVTbMFRG2yTXdPOmVEyp+1dbt4
-I7Rnquq2h0PnWk+ZveT1n+WIilnoCqT3YhpoqVpwzM8VNBNaDomWKPvsh3NClGCm
-sOGoxM5gsbieUmEZByDXhqtt2vP7vdOV7SZTgQ+LvcWMinFvuPvDjYdnrV46nzSX
-H77Szyt/biYooCz+zlyvI6GrltCcWFsnVILeSn8r5cSNs9uBdDvuOEzZ36W1wH+B
-wPA8uvIfpPIw4TpEd24e/+ENcNoCb6nglkH3O2sha3thk+AHxRuPEyZlaEkQNZ9O
-1k66yJV2WHh5xvJVnOFawP4DwBYBzI52s2qZ+SZ2zH1jj3QgYsTnZ87UVqMPqryf
-iICEtjpHO45nLO3rfyIxIt75uKlaN7M3PxXjAL2V4IPhnCRB0dRU7g67qI8vVUVe
-vDTWZTIvYBKUOjjsdM2wgkCYR6v6a0O3bhJhMADOMYwVuPk5t4Z3mUQE4XRrxrJ9
-f7Uyavlo0O2655PijOmRISNIjHrmlGjhCiFkkRbQCSErg1DNuDw=
-=FPVS
------END PGP SIGNATURE-----
+Is it a valid assumption that a gpio that can change direction is also
+allowed to change value when configured as output? I assume this in the
+following discussion, some details need to change if this shouldn't be
+implied. (I think we need a d) then, not sure how this should look
+though.)
 
---tmqntnaublfzx4ua--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd suggest the following description for these cases:
+
+ a)
+ 	/*
+	 * initially configured as low output. Consumer can do
+	 * gpio_set_value(..., 1); but not gpio_direction_input(...);
+	 */
+ 	nodename {
+		gpio-hog;
+		gpios = <...>;
+		output-low-init;
+	};
+
+ b)
+ 	/*
+	 * initially configured as low output. Consumer can do
+	 * gpio_set_value(..., 1); and gpio_direction_input(...);
+	 */
+ 	nodename {
+		gpio-hog;
+		gpios = <...>;
+		output-init-low;
+	};
+
+ c)
+ 	/*
+	 * initially configured as input. Consumer can do
+	 * gpio_direction_output(..., ...) and then set the value
+	 * freely.
+	 */
+	 nodename {
+	 	gpio-hog;
+		gpios = <...>;
+		input-init;
+	};
+
+I don't like that "output-low-init" and "output-init-low" are so
+similar, so if someone suggests a better naming scheme, that would be
+great.
+
+Does the idea (maybe apart from the naming) look good in general and/or
+compared to Markus' suggestion?
+
+(For those not having Markus' suggestion in mind any more. There we
+could use "gpio-initval" instead of "gpio-hog" and then this had the
+semantic of b) or c) using "input", "output-low" and "output-high". a)
+wasn't possible to formalize.)
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
