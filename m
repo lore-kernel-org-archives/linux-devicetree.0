@@ -1,62 +1,103 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 net-next] net: phy: Add LED mode driver for Microsemi
- PHYs.
-Date: Tue, 7 Feb 2017 14:12:23 +0100
-Message-ID: <20170207131223.GE31560@lunn.ch>
-References: <1485953626-25780-1-git-send-email-Raju.Lakkaraju@microsemi.com>
- <1485953626-25780-2-git-send-email-Raju.Lakkaraju@microsemi.com>
- <20170201135555.GE4967@lunn.ch>
- <20170207091737.GA24582@microsemi.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v3 2/7] drm/tinydrm: Add helper functions
+Date: Tue, 7 Feb 2017 14:23:53 +0100
+Message-ID: <20170207132353.rzeohwum2w6gehdy@phenom.ffwll.local>
+References: <20170206085629.GD27607@ulmo.ba.sec>
+ <20170206090918.6rqr6l7pd62znl5j@phenom.ffwll.local>
+ <20170206093556.GF27607@ulmo.ba.sec>
+ <CAKMK7uHgW15EPpPSU2se7r89JCGD_oTvn9ZJptYaNJAWMKb9Fg@mail.gmail.com>
+ <20170206110847.GH27607@ulmo.ba.sec>
+ <20170206155303.2fwihmlh6ln4eskt@phenom.ffwll.local>
+ <CAPM=9tywXAt8v4VwjHA7OhsW6Xg=w8gDeY5s+fHjhdmuUUG7gg@mail.gmail.com>
+ <20170207111128.GE29507@ulmo.ba.sec>
+ <20170207112128.gzgxmry3ttkcud7y@phenom.ffwll.local>
+ <20170207114419.GG29507@ulmo.ba.sec>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170207091737.GA24582-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raju Lakkaraju <Raju.Lakkaraju-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Allan.Nielsen-dzo6w/eZyo2tG0bUXCXiUA@public.gmane.org
+In-Reply-To: <20170207114419.GG29507@ulmo.ba.sec>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > +- vsc8531,led-1-mode : LED mode. Specify how the LED[1] should behave.
-> > > +                       Allowed values are define in
-> > > +     int rc;
-> > > +
-> > > +     if (!of_node)
-> > > +             return -ENODEV;
-> > > +
-> > > +     rc = of_property_read_u8(of_node, led, &led_mode);
-> > > +     if ((rc == 0) &&
-> > > +         ((led_mode > 15) || (led_mode == 7) || (led_mode == 11))) {
-> > > +             phydev_err(phydev, "DT %s invalid\n", led);
-> > > +             return -EINVAL;
-> > > +     } else if (rc == -EINVAL) {
-> > > +             return default_mode;
-> > > +     }
-> > 
-> > I don't think you understood my comment about of_property_read_u8()
-> > not modifying &led_mode on error. Please read the comment again, and
-> > simplify this.
-> > 
-> 
-> If i understand your comment correctly
-
-Nope, you don't.
-
-     rc = of_property_read_u8(of_node, led, &led_mode);
-
-If rc indicates an error, led_mode is not touched. Read the
-documentation for this function. So you can simplifiy the code:
-
-	led_mode = default_mode;
-	err = of_property_read_u8(of_node, led, &led_mode);
-	if (!err && (led_mode > 15 || led_mode == 7) | (led_mode == 11) {
-             phydev_err(phydev, "DT %s invalid\n", led);
-             return -EINVAL;
-	}
-	return led_mode;
-
-	Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCBGZWIgMDcsIDIwMTcgYXQgMTI6NDQ6MTlQTSArMDEwMCwgVGhpZXJyeSBSZWRpbmcg
+d3JvdGU6Cj4gT24gVHVlLCBGZWIgMDcsIDIwMTcgYXQgMTI6MjE6MjhQTSArMDEwMCwgRGFuaWVs
+IFZldHRlciB3cm90ZToKPiA+IE9uIFR1ZSwgRmViIDA3LCAyMDE3IGF0IDEyOjExOjI4UE0gKzAx
+MDAsIFRoaWVycnkgUmVkaW5nIHdyb3RlOgo+ID4gPiBPbiBUdWUsIEZlYiAwNywgMjAxNyBhdCAw
+ODoyODoxNkFNICsxMDAwLCBEYXZlIEFpcmxpZSB3cm90ZToKPiA+ID4gPiA+Cj4gPiA+ID4gPiBJ
+IGRlZmluaXRlbHkgZG9uJ3Qgd2FudCB0aGF0IHdlIGRvbid0IGF0dGVtcHQgdGhpcy4gQnV0IGJy
+b3VnaHQgZnJvbSB5ZWFycwo+ID4gPiA+ID4gb2YgZXhwZXJpZW5jZSwgSSByZWNvbW1lbmQgdG8g
+bWVyZ2UgZmlyc3QgKHdpdGggcHJlLXJlZmFjdG9yaW5nIGFscmVhZHkKPiA+ID4gPiA+IGFwcGxp
+ZWQsIGJ1dCBoZWxwZXJzIG9ubHkgZXh0cmFjdGVkLCBub3QgeWV0IGF0IHRoZSByaWdodCBzcG90
+KSwgYW5kIHRoZW4KPiA+ID4gPiA+IGZvbGxvdyB1cCB3aXRoLiBCZWNhdXNlIG9uIGF2ZXJhZ2Us
+IHRoZXJlJ3Mgd2F5IHRvbyBtYW55IHRyZWVzIHdpdGgKPiA+ID4gPiA+IG92ZXJsb2FkZWQgbWFp
+bnRhaW5lcnMgd2hvIG1heWJlIGxvb2sgYXQgeW91ciBwYXRjaCBvbmNlIHBlciBrZXJuZWwKPiA+
+ID4gPiA+IHJlbGVhc2UgY3ljbGUuCj4gPiA+ID4gPgo+ID4gPiA+ID4gSWYgeW91IGtub3cgdGhh
+dCBiYWNrbGlnaHQgYW5kIHNwaSBpc24ndCBvbmUgb2YgdGhlc2UgYXJlYXMgKGFueXRoaW5nIHRo
+YXQKPiA+ID4gPiA+IGdvZXMgdGhyb3VnaCB0YWthc2hpL3NvdW5kIGlzIGEgc2ltaWxhciBnb29k
+IGV4cGVyaWVuY2UgZm9yIHVzIG9uIHRoZSBpOTE1Cj4gPiA+ID4gPiBzaWRlKSwgdGhlbiBJIGd1
+ZXNzIHdlIGNhbiB0cnkuIEJ1dCB0aGVuIE5vcmFsZiBoYXMgYWxyZWFkeSB3cml0dGVuIGEgZmV3
+Cj4gPiA+ID4gPiBtb250aHMgd29ydGggb2YgcmVhbGx5IGdyZWF0IHJlZmFjdG9yaW5nLCBhbmQg
+SSdtIHNlcmlvdXNseSBzdGFydGluZyB0bwo+ID4gPiA+ID4gZmVlbCBndWlsdHkgZm9yIHZvbHVu
+dGVlcmluZyBoaW0gZm9yIGFsbCBvZiB0aGlzLiBFdmVuIHRob3VnaCBoZSBzZWVtcyB0bwo+ID4g
+PiA+ID4gYmUgcmVhbGx5IGdvb2QgYXQgaXQsIGFuZCBzZWVtcyB0byBub3QgbWluZCwgaXQncyBn
+ZXR0aW5nIGEgYml0IHNpbGx5Lgo+ID4gPiA+ID4gR2l2ZW4gdGhhdCBJJ2Qgc2F5IHVwIHRvIE5v
+cmFsZi4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBJbiBzaG9ydCwgdGhlcmUncyBhbHdheXMgYSBiYWxh
+bmNlLgo+ID4gPiA+IAo+ID4gPiA+IEkgZG9uJ3QgdGhpbmsgd2UgY2FuIG1ha2UgYSBydWxlIGZv
+ciB0aGlzLCBpdCB3aWxsIGFsd2F5cyBkZXBlbmQgb24gdGhlCj4gPiA+ID4gY29kZS4gVGhlcmUg
+aXMgYWx3YXlzIGdvaW5nIHRvIGJlIHN0dWZmIHdlIHB1dCBpbiBkcm0gdGhhdCBzaG91bGQgZ28K
+PiA+ID4gPiBlbHNld2hlcmUsIGFuZCBzdHVmZiB0aGF0IGlzIGVsc2V3aGVyZSB0aGF0IGRybSBz
+aG91bGQgdXNlLgo+ID4gPiA+IAo+ID4gPiA+IEkgdGhpbmsgaG93ZXZlciBpZiB3ZSBkbyBhZGQg
+c3R1ZmYgbGlrZSB0aGlzLCBzb21lb25lIHNob3VsZCBrZWVwIHRyYWNrCj4gPiA+ID4gb2YgdGhl
+bSBhbmQgdHJ5IHRvIG1ha2UgdGhlbSBnZXQgZnVydGhlciBpbnRvIHRoZSBrZXJuZWwuCj4gPiA+
+IAo+ID4gPiBZZXMsIEkgdGhpbmsgaGF2aW5nIHNvbWUgc29ydCBvZiBUT0RPIGluIGRyaXZlcnMv
+Z3B1L2RybSBjb3VsZCBoZWxwCj4gPiA+IHRyYWNrIHRoaW5ncyB0aGF0IHdlIGtub3cgc2hvdWxk
+IGV2ZW50dWFsbHkgYmUgbW92ZWQgb3V0LiBJdCBjb3VsZCBzZXJ2ZQo+ID4gPiBhcyBhIGxpc3Qg
+b2YgamFuaXRvcmlhbCB0YXNrcyBmb3IgbmV3Y29tZXJzIHRoYXQgd2FudCB0byBnZXQgdGhlaXIg
+aGFuZHMKPiA+ID4gZGlydHkgYW5kIHRhY2tsZSByZWxhdGl2ZWx5IHRyaXZpYWwgdGFza3MuCj4g
+PiAKPiA+IFdlIGhhdmUgdGhpcyBsaXN0IGFscmVhZHksIGl0J3MgYXQ6IGh0dHA6Ly93d3cueC5v
+cmcvd2lraS9EUk1KYW5pdG9ycy8KPiA+IAo+ID4gSSBndWVzcyBJIHNob3VsZCBoaWdobGlnaHQg
+aXQgbW9yZSwgbWF5YmUgZXZlbiBhZGQgaXQgdG8gdGhlIGRvY3M/IEVyaWMKPiA+IGp1c3QgYXNr
+ZWQgYWJvdXQgaXQgbGFzdCB3ZWVrIHRvby4KPiAKPiBZZWFoLCBJJ20gYXdhcmUgb2YgdGhhdCBs
+aXN0LiBJIHRoaW5rIGl0J3MgYSBsaXR0bGUgcHJvYmxlbWF0aWMgdGhhdAo+IGl0J3MgaW4gYSB3
+aWtpIGFuZCBmYXIgcmVtb3ZlZCBmcm9tIHdoZXJlIHRoZSBhY3R1YWwgd29yayBpcyBoYXBwZW5p
+bmcuCj4gSSB0aGluayB3ZSBzaG91bGQganVzdCB0YWtlIHRoYXQgbGlzdCBhbmQgYWRkIGl0IGFz
+IGEgVE9ETyBpbgo+IGRyaXZlcnMvZ3B1L2RybSwgb3IgYWx0ZXJuYXRpdmVseSBrZWVwIGl0IGFz
+IHBhcnQgb2YgdGhlIEdQVQo+IGRvY3VtZW50YXRpb24uIFRoYXQgd2F5IHdlIGNhbiBtb3JlIGVh
+c2lseSBtYXJrIHRoaW5ncyBhcyBkb25lIG9yIGFkZAo+IG5ldyBzdHVmZiBhcyB3b3JrIGdldHMg
+ZG9uZS4KPiAKPiBGb3IgY2FzZXMgbGlrZSB0aGlzIEkgdGhpbmsgd2UgY291bGQganVzdCBhZGQg
+bmV3IGl0ZW1zIGFzIHRoZXkgYXJlCj4gcG9pbnRlZCBvdXQgZHVyaW5nIHJldmlldy4gRm9yIHRo
+aW5ncyB0aGF0IGFyZSBhbHJlYWR5IG1lcmdlZCB3ZSBjYW4KPiBhZGQgaXRlbXMgc2VwYXJhdGVs
+eS4gT25jZSB0aGUgcmVmYWN0b3JpbmcgaXMgZG9uZSwgdGhlIHBhdGNoIHNlcmllcwo+IGNhbiBj
+b250YWluIGEgZmluYWwgcGF0Y2ggdGhhdCBzaW1wbHkgcmVtb3ZlcyB0aGUgaXRlbXMgYWdhaW4u
+IEkgdGhpbmsKPiB0aGF0IGhhcyBtdWNoIGxlc3MgcG90ZW50aWFsIHRvIGJlY29tZSBvdXQtZGF0
+ZWQgdGhhbiBhIHNlcGFyYXRlIHdpa2kKPiBwYWdlLgo+IAo+IEZXSVcsIEknbGwgdm9sdW50ZWVy
+IHRvIG1vdmUgdGhlIGxpc3QgdG8gZ2l0IGlmIHdlIGRlY2lkZSB0byBnbyBhaGVhZAo+IHdpdGgg
+dGhhdC4KCk9uZSB1cHNpZGUgb2YgYSB3aWtpIGlzIHRoYXQgaXQncyBxdWlja2VyIHRvIGVkaXQs
+IGlmIHNvbWVvbmUgc3BvdHMgYQpkcml2ZS1ieSByZWZhY3RvcmluZyB0aGV5IG1pZ2h0IG5vdCBi
+b3RoZXIgd2l0aCB0aGUgZm9ybWFsIHJlcXVpcmVtZW50cyBvZgphIGZ1bGwgcGF0Y2guIE90b2gs
+IGhhdmluZyBpdCBpbi1zb3VyY2UtdHJlZSBkZWZpbml0ZWx5IGhhcyBiZW5lZml0cywgdG9vLgoK
+SWYgeW91IGRvIHRoZSBjb252ZXJzaW9uIEknZCB2b3RlIGZvciBEb2N1bWVudGF0aW9uL2dwdS9U
+T0RPLnJzdCwgYW5kCmxpbmtpbmcgaXQgaW50byBvdXIgZG9jdW1lbnRhdGlvbiAobWF5YmUgZXZl
+biBjcm9zcy1saW5rIGZyb20KaW50cm9kdWN0aW9uLnJzdCB1bmRlciBhICJHZXR0aW5nIFN0YXJ0
+ZWQiIGhlYWRpbmcsIGFzIHJlYXNvbmFibGUgcmFtcC11cAp0YXNrcyBhZnRlciBzb21lIGNoZWNr
+cGF0Y2ggcGF0Y2hlcykuIEkgdGhpbmsgdGhhdCB3b3VsZCBoZWxwIGhpZ2hsaWdodCBpdAphIGJp
+dC4gQW5kIG9mIGNvdXJzZSB0aGUgd2lraSBwYWdlIG5lZWRzIHRvIGJlIHJlbW92ZWQgYW5kIHJl
+cGxhY2VkIHdpdGggYQpsaW5rIHRvIHRoZSBuZXcgY2Fub25pY2FsIHRoaW5nIChwcm9iYWJseSBi
+ZXN0IHRvIHBvaW50IGF0IHRoZSBzb3VyY2UtZmlsZQppbiBkcm0tdGlwLmdpdCwgdGhhdCBzaG91
+bGQgYmUgdGhlIG1vc3QgdXAtdG8tZGF0ZSkuCgpUaGFua3MsIERhbmllbAotLSAKRGFuaWVsIFZl
+dHRlcgpTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KaHR0cDovL2Jsb2cuZmZ3
+bGwuY2gKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
