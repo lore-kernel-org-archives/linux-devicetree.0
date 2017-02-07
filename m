@@ -1,7 +1,7 @@
 From: David Lechner <david@lechnology.com>
-Subject: [PATCH 2/3] ARM: davinci_all_defconfig: Enable TI ADS7950
-Date: Tue,  7 Feb 2017 13:22:08 -0600
-Message-ID: <1486495329-2789-3-git-send-email-david@lechnology.com>
+Subject: [PATCH 3/3] ARM: da850-lego-ev3: Add device tree node for sound
+Date: Tue,  7 Feb 2017 13:22:09 -0600
+Message-ID: <1486495329-2789-4-git-send-email-david@lechnology.com>
 References: <1486495329-2789-1-git-send-email-david@lechnology.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,32 +21,81 @@ To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables the TI ADS7950 IIO driver. This is used on LEGO MINDSTORMS
-EV3. The other IIO configs removed in this patch are selected by
-CONFIG_TI_ADS7950, so they are not actually being desabled.
+This adds a device tree node for sound on LEGO MINDSTORMS EV3. The EV3
+uses one of the SoC PWMs connected to an amplifier to create sound from
+a speaker.
+
+The PWM is passed through a low-pass filter, so it is actually possible
+to do PCM playback, but there is no existing driver, so just using
+pwm-beeper for now, since it is also a compatible mode of operation.
 
 Signed-off-by: David Lechner <david@lechnology.com>
 ---
- arch/arm/configs/davinci_all_defconfig | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm/boot/dts/da850-lego-ev3.dts | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/arch/arm/configs/davinci_all_defconfig b/arch/arm/configs/davinci_all_defconfig
-index c8663ea..0a95fc4 100644
---- a/arch/arm/configs/davinci_all_defconfig
-+++ b/arch/arm/configs/davinci_all_defconfig
-@@ -204,12 +204,10 @@ CONFIG_MEMORY=y
- CONFIG_TI_AEMIF=m
- CONFIG_DA8XX_DDRCTL=y
- CONFIG_IIO=m
--CONFIG_IIO_BUFFER=y
- CONFIG_IIO_BUFFER_CB=m
--CONFIG_IIO_KFIFO_BUF=m
--CONFIG_IIO_TRIGGER=y
- CONFIG_IIO_SW_DEVICE=m
- CONFIG_IIO_SW_TRIGGER=m
-+CONFIG_TI_ADS7950=m
- CONFIG_IIO_HRTIMER_TRIGGER=m
- CONFIG_IIO_SYSFS_TRIGGER=m
- CONFIG_PWM=y
+diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
+index 0309537..c20580a 100644
+--- a/arch/arm/boot/dts/da850-lego-ev3.dts
++++ b/arch/arm/boot/dts/da850-lego-ev3.dts
+@@ -123,6 +123,14 @@
+ 		pinctrl-0 = <&system_power_pin>;
+ 	};
+ 
++	sound {
++		compatible = "pwm-beeper";
++		pinctrl-names = "default";
++		pinctrl-0 = <&ehrpwm0b_pins>;
++		pwms = <&ehrpwm0 1 1000000 0>;
++		amp-supply = <&amp>;
++	};
++
+ 	/*
+ 	 * This is a 5V current limiting regulator that is shared by USB,
+ 	 * the sensor (input) ports, the motor (output) ports and the A/DC.
+@@ -152,6 +160,18 @@
+ 		regulator-boot-on;
+ 		vin-supply = <&vcc5v>;
+ 	};
++
++	/*
++	 * This is the amplifier for the speaker.
++	 */
++	amp: regulator3 {
++		pinctrl-names = "default";
++		pinctrl-0 = <&amp_pins>;
++		compatible = "regulator-fixed";
++		regulator-name = "amp";
++		gpio = <&gpio 111 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &pmx_core {
+@@ -208,6 +228,13 @@
+ 			0x4c 0x00008000 0x0000f000
+ 		>;
+ 	};
++
++	amp_pins: pinmux_amp_pins {
++		pinctrl-single,bits = <
++			/* GP6[15] */
++			0x34 0x00000008 0x0000000f
++		>;
++	};
+ };
+ 
+ &pinconf {
+@@ -316,6 +343,10 @@
+ 	};
+ };
+ 
++&ehrpwm0 {
++	status = "okay";
++};
++
+ &gpio {
+ 	status = "okay";
+ };
 -- 
 2.7.4
