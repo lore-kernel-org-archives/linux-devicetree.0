@@ -1,85 +1,50 @@
-From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] arm64: dts: exynos: Move the clock-frequency property
-Date: Tue, 7 Feb 2017 22:13:35 +0200
-Message-ID: <20170207201335.lyc7yvwed7cm25nj@kozik-lap>
-References: <1486347584-6762-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170206021951epcas1p365db9f08f22cc223ca45538b0dbc86d6@epcas1p3.samsung.com>
- <1486347584-6762-3-git-send-email-hoegeun.kwon@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486347584-6762-3-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+Subject: [PATCH v5 1/3] Documentation: dt: net: add mt76 wireless device binding
+Date: Tue,  7 Feb 2017 21:20:33 +0100
+Message-ID: <20170207202035.64224-2-nbd@nbd.name>
+References: <20170207202035.64224-1-nbd@nbd.name>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170207202035.64224-1-nbd-Vt+b4OUoWG0@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sgruszka-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Felix Fietkau <nbd-Vt+b4OUoWG0@public.gmane.org>
+---
+ .../bindings/net/wireless/mediatek,mt76.txt        | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
 
-I think the subject is not really matching the real work. You are rather
-removing the OF graph from DSI node.
-
-On Mon, Feb 06, 2017 at 11:19:41AM +0900, Hoegeun Kwon wrote:
-> The OF graph is not needed because the panel is a child of dsi. So
-> removed the ports and moved burst, esc clock-frequency property to the
-> top.
-
-Keep the commit style and tense - imperative mode (see
-submitting-patches.rstsubmitting-patches.rst), so last sentence could
-look like:
-
-"Remove the ports node abd move burst and esc clock frequency properties
-to the parent (DSI node)."
-
-The information which is missing is the answer for WHY? Why are you
-doing this?
-
-Does the patch depends on 1/5?
-
-Best regards,
-Krzysztof
-
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 16 ++--------------
->  1 file changed, 2 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> index 6ce93a3..77ba238 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
-> @@ -298,23 +298,11 @@
->  	status = "okay";
->  	vddcore-supply = <&ldo6_reg>;
->  	vddio-supply = <&ldo7_reg>;
-> +	samsung,burst-clock-frequency = <512000000>;
-> +	samsung,esc-clock-frequency = <16000000>;
->  	samsung,pll-clock-frequency = <24000000>;
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&te_irq>;
-> -
-> -	ports {
-> -		#address-cells = <1>;
-> -		#size-cells = <0>;
-> -
-> -		port@1 {
-> -			reg = <1>;
-> -
-> -			dsi_out: endpoint {
-> -				samsung,burst-clock-frequency = <512000000>;
-> -				samsung,esc-clock-frequency = <16000000>;
-> -			};
-> -		};
-> -	};
->  };
->  
->  &hdmi {
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+new file mode 100644
+index 000000000000..19522ab97d62
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/mediatek,mt76.txt
+@@ -0,0 +1,24 @@
++* MediaTek mt76xx devices
++
++This node provides properties for configuring the MediaTek mt76xx wireless
++device. The node is expected to be specified as a child node of the PCI
++controller to which the wireless chip is connected.
++
++Optional properties:
++
++- mac-address: See ethernet.txt in the parent directory
++- local-mac-address: See ethernet.txt in the parent directory
++- ieee80211-freq-limit: See ieee80211.txt
++- mediatek,mtd-eeprom: Specify a MTD partition + offset containing EEPROM data
++
++&pcie {
++	status = "okay";
++
++	pcie0 {
++		wifi@0,0 {
++			reg = <0x0000 0 0 0 0>;
++			ieee80211-freq-limit = <5000000 6000000>;
++			mediatek,mtd-eeprom = <&factory 0x8000>;
++		};
++	};
++};
+-- 
+2.11.0
