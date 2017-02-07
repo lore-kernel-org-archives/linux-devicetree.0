@@ -1,147 +1,164 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: leds: document new led-triggers property
-Date: Tue, 7 Feb 2017 16:57:04 -0600
-Message-ID: <CAL_JsqKn6BS5NoTYn=+7Psy2dgJ84h8rXKe8JBdvMmi+89QxTA@mail.gmail.com>
-References: <20170120215605.15728-1-zajec5@gmail.com> <29f27028-20f3-3eb9-502f-1b51958640f9@gmail.com>
- <CACna6rx-qJ5eLMOUbMcaAxaOp9avrj1sa-8zZo2m+rVvY+Kvjw@mail.gmail.com>
- <46084d98-fddb-1b92-e9ca-d55957a442ae@gmail.com> <CACna6rx5HsSb=rXCjVth_2ed87tUSBJEZHHxTC_S1YOztLjp1A@mail.gmail.com>
- <ccc870b2-5857-507a-9c54-9a14ea60d3e5@gmail.com> <f9bda1d6-4265-8fe6-58ba-d6da5b462a0c@milecki.pl>
- <c4f1d3c4-d972-e305-abb9-a5c6e9e184e9@gmail.com> <d3535c2c-2a7c-4e8d-552c-666f76043b7d@gmail.com>
- <93896405-5ee0-ea85-72b1-5774c13a0c36@gmail.com> <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
+From: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] drivers/mailbox: Add ASpeed mailbox driver
+Date: Wed, 08 Feb 2017 09:57:09 +1100
+Message-ID: <1486508229.3824.1.camel@gmail.com>
+References: <20170112002910.3650-1-cyrilbur@gmail.com>
+         <20170112002910.3650-5-cyrilbur@gmail.com>
+         <CACPK8XcsScjrit-7VHh4oL=zPiMeEAB5_R550U0uPsuQ4WF1mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <438140b2-896f-6a58-2529-9d30db6d4fde@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACPK8XcsScjrit-7VHh4oL=zPiMeEAB5_R550U0uPsuQ4WF1mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 1, 2017 at 3:55 PM, Rafał Miłecki <zajec5@gmail.com> wrote:
-> On 02/01/2017 10:26 PM, Jacek Anaszewski wrote:
->>
->> On 02/01/2017 04:56 PM, Rafał Miłecki wrote:
->>>
->>> On 01/31/2017 10:34 PM, Jacek Anaszewski wrote:
->>>>
->>>> On 01/31/2017 05:11 PM, Rafał Miłecki wrote:
->>>>>
->>>>> Thanks a lot Jacek for this explanation (and sorry but I needed a bit
->>>>> of
->>>>> time to
->>>>> think about this). I can finally see your point, I think we're on the
->>>>> same page
->>>>> now.
->>>>>
->>>>> I think that for all this time I was thinking from the pure DT
->>>>> perspective. If
->>>>> you ignore fact that Linux has multiple LED trigger drivers, then
->>>>> "led-triggers"
->>>>> may not sound that bad.
->>>>>
->>>>> After reading your description however I can see this property can be
->>>>> misleading
->>>>> as Linux people may think "drivers" when seeing "triggers".
->>>>>
->>>>> I still think this is a useful property and I hope we can still find a
->>>>> way to
->>>>> name it in a sane way: to be nice from DT PoV and march Linux LEDs
->>>>> subsystem.
->>>>
->>>>
->>>> I also see the need for this property.
->>>>
->>>>> I think we should still work on some generic property (without linux,
->>>>> prefix) as
->>>>> this seems to be something generic, not really specific to Linux
->>>>> implementation.
->>>>> Specifying relation between LED and devices is something than AFAICS
->>>>> can be
->>>>> reused by other systems as well.
->>>>>
->>>>> So my suggestion is to try some new name & leave linux,default-trigger
->>>>> to allow
->>>>> specifying one single trigger driver as required by current Linux
->>>>> implementation.
->>>>>
->>>>> What do you think about this?
->>>>>
->>>>> There are few suggestions to came to my mind:
->>>>> "trigger-sources"
->>>>> "trigger-devices"
->>>>> "led-trigger-devices"
->>>>> "led-related-devices"
->>>>> "led-event-devices"
->>>>
->>>>
->>>> trigger-devices would work in this specific use case,
->>>> where we can give phandles to usb ports. Nonetheless, we
->>>> have also other kernel based events serving as trigger
->>>> sources - e.g. timer.
->>>>
->>>> In this case I'd go for trigger-sources, but we'd need
->>>> to have some generic way of defining the source like timer.
+On Tue, 2017-02-07 at 16:10 +1030, Joel Stanley wrote:
+> On Thu, Jan 12, 2017 at 10:59 AM, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > This provides access to the mbox registers on the ast2400 and ast2500
+> > boards.
+> 
 
-+1 for the name.
+Hey Joel,
 
->>>
->>>
->>> I'd leave timer for later discussion but I'm glad you brought this
->>> problem.
->>> Maybe we could discuss this on another example that is more supported
->>> like
->>> GPIOs?
->>>
->>> We know this property allows specifying USB ports and we want it to
->>> support
->>> mixing various sources. So a very simple sample case seems to be using
->>> it for
->>> specifying GPIO as trigger source.
->>>
->>> Is this possible to mix various entries in a list assigned to single
->>> property?
->>> Let's say:
->>> trigger-sources =
->>>     <&ohci_port1>,
->>>     <&ehci_port1>,
->>>     <&gpio 1 GPIO_ACTIVE_HIGH>;
->>
->>
->> According to my knowledge all elements in the list are elements
->> of one array, no matter if they are comma separated or space separated
->> in "<>" brackets. DT maintainer would have to confirm that though.
->
->
-> This matches my knowledge as well.
+Thanks for review, just one thing, I'll fixup the rest.
 
-It is a bit problematic, but this could work as long as you know the
-possible arg types and a given node only has 1 match (nodes with
-interrupt and gpio being likely). You look up the phandle, iterate
-thru possible "#*-cells" properties for that phandle, then parse the
-cells. You could define rules of what is the required cell type (e.g.
-must use gpio cells if a phandle has both gpio and interrupt cells
-defined.).
+Cyril
 
-Another, simpler approach would be defining #trigger-cells in each
-source. This is probably the better option as all the infrastructure
-is there and could handle unforeseen cases.
+> s/boards/SoCs/
+> 
+> > 
+> > This driver allows arbitrary reads and writes to the 16 data registers as
+> > the other end may have configured the mbox hardware to provide an
+> > interrupt when a specific register gets written to.
+> > 
+> > Signed-off-by: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> Send this to lkml as well next time you submit.
+> 
+> > ---
+> >  drivers/mailbox/Kconfig       |   9 ++
+> >  drivers/mailbox/Makefile      |   2 +
+> >  drivers/mailbox/aspeed-mbox.c | 334 ++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 345 insertions(+)
+> >  create mode 100644 drivers/mailbox/aspeed-mbox.c
+> > 
+> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
+> > index ceff415f201c..10a7f3f2765c 100644
+> > --- a/drivers/mailbox/Kconfig
+> > +++ b/drivers/mailbox/Kconfig
+> > @@ -152,4 +152,13 @@ config BCM_PDC_MBOX
+> >           Mailbox implementation for the Broadcom PDC ring manager,
+> >           which provides access to various offload engines on Broadcom
+> >           SoCs. Say Y here if you want to use the Broadcom PDC.
+> > +
+> > +config ASPEED_MBOX
+> 
+> Call this ASPEED_LPC_MAILBOX, as it's a in the LPC IP block.
+> 
 
->>> Is this possible to support this? If so, which function I can use to
->>> detect
->>> what is pointed by a phandle?
->>> I'm not that familiar with DT and I'm not sure how to handle this.
->>
->>
->> I wonder if this is correct way to go. Maybe we should think of
->> creating entirely new trigger mechanism that would allow for having
->> multiple active triggers at a time.
->
->
-> I'm OK with reworking Linux's triggers if it need be. I think we should
-> agree
-> on binding(s) first though.
+I think I'll stick with ASPEED_LPC_MBOX, the rest of the file uses MBOX
+more widely when talking about controllers.
 
-Yes, they are separate problems.
-
-Rob
+> > +       depends on (ARCH_ASPEED || COMPILE_TEST) && REGMAP && MFD_SYSCON
+> > +       bool "Aspeed ast2400/2500 Mailbox Controller"
+> 
+> Call this Aspeed LPC Mailbox Controller, as the layout is shared by
+> SoCs other than the 2500 and 2400.
+> 
+> > +       default "y"
+> > +       ---help---
+> > +         Provides a driver for the MBOX registers found on Aspeed SOCs
+> > +         (AST2400 and AST2500). This driver provides a device for aspeed
+> > +         mbox registers
+> >  endif
+> > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> > index 7dde4f609ae8..db5b4f3f29e0 100644
+> > --- a/drivers/mailbox/Makefile
+> > +++ b/drivers/mailbox/Makefile
+> > @@ -31,3 +31,5 @@ obj-$(CONFIG_HI6220_MBOX)     += hi6220-mailbox.o
+> >  obj-$(CONFIG_BCM_PDC_MBOX)     += bcm-pdc-mailbox.o
+> > 
+> >  obj-$(CONFIG_TEGRA_HSP_MBOX)   += tegra-hsp.o
+> > +
+> > +obj-$(CONFIG_ASPEED_MBOX)      += aspeed-mbox.o
+> > diff --git a/drivers/mailbox/aspeed-mbox.c b/drivers/mailbox/aspeed-mbox.c
+> > new file mode 100644
+> > index 000000000000..c4ee6ba228ea
+> > --- /dev/null
+> > +++ b/drivers/mailbox/aspeed-mbox.c
+> > +
+> > +static ssize_t aspeed_mbox_read(struct file *file, char __user *buf,
+> > +                               size_t count, loff_t *ppos)
+> > +{
+> > +       struct aspeed_mbox *mbox = file_mbox(file);
+> > +       char __user *p = buf;
+> > +       ssize_t ret;
+> > +       int i;
+> > +
+> > +       if (!access_ok(VERIFY_WRITE, buf, count))
+> > +               return -EFAULT;
+> 
+> As discussed in the LPC driver review:
+> 
+>  "And don't call access_ok(), it's racy and no driver should ever do that."
+> 
+> Make sure all of the things you fixed in that driver are fixed in this one.
+> 
+> > +
+> > +       if (count + *ppos > ASPEED_MBOX_NUM_REGS)
+> > +               return -EINVAL;
+> > +
+> > +       if (file->f_flags & O_NONBLOCK) {
+> > +               if (!(aspeed_mbox_inb(mbox, ASPEED_MBOX_BMC_CTRL) &
+> > +                               ASPEED_MBOX_CTRL_RECV))
+> > +                       return -EAGAIN;
+> > +       } else if (wait_event_interruptible(mbox->queue,
+> > +                               aspeed_mbox_inb(mbox, ASPEED_MBOX_BMC_CTRL) &
+> > +                               ASPEED_MBOX_CTRL_RECV)) {
+> > +               return -ERESTARTSYS;
+> > +       }
+> > +
+> > +       mutex_lock(&mbox->mutex);
+> > +
+> > +       for (i = *ppos; count > 0 && i < ASPEED_MBOX_NUM_REGS; i++) {
+> > +               uint8_t reg = aspeed_mbox_inb(mbox, ASPEED_MBOX_DATA_0 + (i * 4));
+> > +
+> > +               ret = __put_user(reg, p);
+> > +               if (ret)
+> > +                       goto out_unlock;
+> > +
+> > +               p++;
+> > +               count--;
+> > +       }
+> > +
+> > +       /* ASPEED_MBOX_CTRL_RECV bit is W1C, this also unmasks in 1 step */
+> 
+> W1C? Write to clear?
+> 
+> > +       aspeed_mbox_outb(mbox, ASPEED_MBOX_CTRL_RECV, ASPEED_MBOX_BMC_CTRL);
+> > +       ret = p - buf;
+> > +
+> > +out_unlock:
+> > +       mutex_unlock(&mbox->mutex);
+> > +       return ret;
+> > +}
+> > +
+> > +module_platform_driver(aspeed_mbox_driver);
+> > +
+> > +MODULE_DEVICE_TABLE(of, aspeed_mbox_match);
+> > +MODULE_LICENSE("GPL");
+> > +MODULE_AUTHOR("Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> > +MODULE_DESCRIPTION("ASpeed mailbox device driver");
+> 
+> ASPEED or Aspeed.
+> 
+> > --
+> > 2.11.0
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
