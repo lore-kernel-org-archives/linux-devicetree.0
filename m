@@ -1,7 +1,8 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 5/6] ARM: dts: mvebu: Move mv98dx3236 clock bindings
-Date: Wed,  8 Feb 2017 09:28:14 +1300
-Message-ID: <20170207202815.20226-6-chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 3/6] ARM: dts: Use armada-370-xp as a base for
+ armada-xp-98dx3236
+Date: Wed,  8 Feb 2017 09:28:12 +1300
+Message-ID: <20170207202815.20226-4-chris.packham@alliedtelesis.co.nz>
 References: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,115 +19,353 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory Clement <gregory.clement@free-electrons.com>, linux-clk@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This moves the coreclk binding for the 98dx3236 SoC to the DFX block
-where the sampled at reset register is located and switches to using the
-correct gating clock compatible string.
+The Marvell datasheets refer to the integrated CPU as "Armada-XP". In
+reality there are a number of differences to the actual Armada-XP so
+rather than including armada-xp.dtsi and disabling many of the IP
+blocks. Include armada-370-xp.dtsi and add the required nodes.
 
 Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 ---
 
 Notes:
     Changes in v2:
-    - New. Split out from "clk: mvebu: Expand mv98dx3236-core-clock support"
+    - Update root compatible strings in armada-xp-98dx3336.dtsi,
+      armada-xp-98dx4251.dtsi, armada-xp-db-dxbc2.dts and
+      armada-xp-db-xc3-24g4xg.dts
 
- .../devicetree/bindings/clock/mvebu-core-clock.txt         |  7 +++++++
- .../devicetree/bindings/clock/mvebu-gated-clock.txt        | 11 +++++++++++
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  | 14 +++++++-------
- 3 files changed, 25 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi     | 194 ++++++++++++++++++++------
+ arch/arm/boot/dts/armada-xp-98dx3336.dtsi     |   2 +-
+ arch/arm/boot/dts/armada-xp-98dx4251.dtsi     |   2 +-
+ arch/arm/boot/dts/armada-xp-db-dxbc2.dts      |   2 +-
+ arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts |   2 +-
+ 5 files changed, 155 insertions(+), 47 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
-index eb985a633d59..796c260c183d 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
-@@ -31,6 +31,12 @@ The following is a list of provided IDs and clock names on Armada 39x:
-  4 = dclk    (SDRAM Interface Clock)
-  5 = refclk  (Reference Clock)
- 
-+The following is a list of provided IDs and clock names on 98dx3236:
-+ 0 = tclk    (Internal Bus clock)
-+ 1 = cpuclk  (CPU clock)
-+ 2 = ddrclk   (DDR clock)
-+ 3 = mpll    (MPLL Clock)
-+
- The following is a list of provided IDs and clock names on Kirkwood and Dove:
-  0 = tclk   (Internal Bus clock)
-  1 = cpuclk (CPU0 clock)
-@@ -49,6 +55,7 @@ Required properties:
- 	"marvell,armada-380-core-clock" - For Armada 380/385 SoC core clocks
- 	"marvell,armada-390-core-clock" - For Armada 39x SoC core clocks
- 	"marvell,armada-xp-core-clock" - For Armada XP SoC core clocks
-+	"marvell,mv98dx3236-core-clock" - For 98dx3236 family SoC core clocks
- 	"marvell,dove-core-clock" - for Dove SoC core clocks
- 	"marvell,kirkwood-core-clock" - for Kirkwood SoC (except mv88f6180)
- 	"marvell,mv88f6180-core-clock" - for Kirkwood MV88f6180 SoC
-diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-index 5142efc8099d..de562da2ae77 100644
---- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
-@@ -119,6 +119,16 @@ ID	Clock	Peripheral
- 29	sata1lnk
- 30	sata1	SATA Host 1
- 
-+The following is a list of provided IDs for 98dx3236:
-+ID	Clock	Peripheral
-+-----------------------------------
-+3	ge1	Gigabit Ethernet 1
-+4	ge0	Gigabit Ethernet 0
-+5	pex0	PCIe Cntrl 0
-+17	sdio	SDHCI Host
-+18	usb0	USB Host 0
-+22	xor0	XOR DMA 0
-+
- The following is a list of provided IDs for Dove:
- ID	Clock	Peripheral
- -----------------------------------
-@@ -169,6 +179,7 @@ Required properties:
- 	"marvell,armada-380-gating-clock" - for Armada 380/385 SoC clock gating
- 	"marvell,armada-390-gating-clock" - for Armada 39x SoC clock gating
- 	"marvell,armada-xp-gating-clock" - for Armada XP SoC clock gating
-+	"marvell,mv98dx3236-gating-clock" - for 98dx3236 SoC clock gating
- 	"marvell,dove-gating-clock" - for Dove SoC clock gating
- 	"marvell,kirkwood-gating-clock" - for Kirkwood SoC clock gating
- - reg : shall be the register address of the Clock Gating Control register
 diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-index e4baa97836e7..e80a5ee835e5 100644
+index bd8261fdec81..cbf5cd0c6429 100644
 --- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
 +++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
-@@ -176,18 +176,12 @@
- 			};
+@@ -45,11 +45,14 @@
+  * common to all Armada XP SoCs.
+  */
  
- 			gateclk: clock-gating-control@18220 {
--				compatible = "marvell,armada-xp-gating-clock";
-+				compatible = "marvell,mv98dx3236-gating-clock";
- 				reg = <0x18220 0x4>;
- 				clocks = <&coreclk 0>;
- 				#clock-cells = <1>;
- 			};
+-#include "armada-xp.dtsi"
++#include "armada-370-xp.dtsi"
  
--			coreclk: mvebu-sar@18230 {
--				compatible = "marvell,mv98dx3236-core-clock";
--				reg = <0x18230 0x08>;
--				#clock-cells = <1>;
--			};
--
- 			cpuclk: clock-complex@18700 {
- 				#clock-cells = <1>;
- 				compatible = "marvell,mv98dx3236-cpu-clock";
-@@ -264,6 +258,12 @@
- 			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
- 			reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ / {
++	#address-cells = <2>;
++	#size-cells = <2>;
++
+ 	model = "Marvell 98DX3236 SoC";
+-	compatible = "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
  
-+			coreclk: mvebu-sar@f8204 {
-+				compatible = "marvell,mv98dx3236-core-clock";
-+				reg = <0xf8204 0x4>;
+ 	aliases {
+ 		gpio0 = &gpio0;
+@@ -72,12 +75,19 @@
+ 	};
+ 
+ 	soc {
++		compatible = "marvell,armadaxp-mbus", "simple-bus";
++
+ 		ranges = <MBUS_ID(0xf0, 0x01) 0 0 0xf1000000 0x100000
+ 			  MBUS_ID(0x01, 0x1d) 0 0 0xfff00000 0x100000
+ 			  MBUS_ID(0x01, 0x2f) 0 0 0xf0000000 0x1000000
+ 			  MBUS_ID(0x03, 0x00) 0 0 0xa8000000 0x4000000
+ 			  MBUS_ID(0x08, 0x00) 0 0 0xac000000 0x100000>;
+ 
++		bootrom {
++			compatible = "marvell,bootrom";
++			reg = <MBUS_ID(0x01, 0x1d) 0 0x100000>;
++		};
++
+ 		/*
+ 		 * 98DX3236 has 1 x1 PCIe unit Gen2.0
+ 		 */
+@@ -117,31 +127,92 @@
+ 		};
+ 
+ 		internal-regs {
++			sdramc@1400 {
++				compatible = "marvell,armada-xp-sdram-controller";
++				reg = <0x1400 0x500>;
++			};
++
++			L2: l2-cache@8000 {
++				compatible = "marvell,aurora-system-cache";
++				reg = <0x08000 0x1000>;
++				cache-id-part = <0x100>;
++				cache-level = <2>;
++				cache-unified;
++				wt-override;
++			};
++
++			gpio0: gpio@18100 {
++				compatible = "marvell,orion-gpio";
++				reg = <0x18100 0x40>;
++				ngpios = <32>;
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <82>, <83>, <84>, <85>;
++			};
++
++			/* does not exist */
++			gpio1: gpio@18140 {
++				compatible = "marvell,orion-gpio";
++				reg = <0x18140 0x40>;
++				status = "disabled";
++			};
++
++			gpio2: gpio@18180 { /* rework some properties */
++				compatible = "marvell,orion-gpio";
++				reg = <0x18180 0x40>;
++				ngpios = <1>; /* only gpio #32 */
++				gpio-controller;
++				#gpio-cells = <2>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <87>;
++			};
++
++			systemc: system-controller@18200 {
++				compatible = "marvell,armada-370-xp-system-controller";
++				reg = <0x18200 0x500>;
++			};
++
++			gateclk: clock-gating-control@18220 {
++				compatible = "marvell,armada-xp-gating-clock";
++				reg = <0x18220 0x4>;
++				clocks = <&coreclk 0>;
 +				#clock-cells = <1>;
 +			};
 +
- 			soc-id@f8244 {
- 				compatible = "marvell,mv98dx3236-soc-id";
- 				reg = <0xf8244 0x4>;
+ 			coreclk: mvebu-sar@18230 {
+ 				compatible = "marvell,mv98dx3236-core-clock";
++				reg = <0x18230 0x08>;
++				#clock-cells = <1>;
+ 			};
+ 
+ 			cpuclk: clock-complex@18700 {
++				#clock-cells = <1>;
+ 				compatible = "marvell,mv98dx3236-cpu-clock";
++				reg = <0x18700 0x24>, <0x1c054 0x10>;
++				clocks = <&coreclk 1>;
+ 			};
+ 
+ 			corediv-clock@18740 {
+ 				status = "disabled";
+ 			};
+ 
+-			xor@60900 {
+-				status = "disabled";
++			cpu-config@21000 {
++				compatible = "marvell,armada-xp-cpu-config";
++				reg = <0x21000 0x8>;
+ 			};
+ 
+-			crypto@90000 {
+-				status = "disabled";
++			ethernet@70000 {
++				compatible = "marvell,armada-xp-neta";
+ 			};
+ 
+-			xor@f0900 {
+-				status = "disabled";
++			ethernet@74000 {
++				compatible = "marvell,armada-xp-neta";
+ 			};
+ 
+-			xor@f0800 {
++			xor1: xor@f0800 {
+ 				compatible = "marvell,orion-xor";
+ 				reg = <0xf0800 0x100
+ 				       0xf0a00 0x100>;
+@@ -161,37 +232,28 @@
+ 				};
+ 			};
+ 
+-			gpio0: gpio@18100 {
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18100 0x40>;
+-				ngpios = <32>;
+-				gpio-controller;
+-				#gpio-cells = <2>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-				interrupts = <82>, <83>, <84>, <85>;
+-			};
+-
+-			/* does not exist */
+-			gpio1: gpio@18140 {
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18140 0x40>;
+-				status = "disabled";
++			nand: nand@d0000 {
++				clocks = <&dfx_coredivclk 0>;
+ 			};
+ 
+-			gpio2: gpio@18180 { /* rework some properties */
+-				compatible = "marvell,orion-gpio";
+-				reg = <0x18180 0x40>;
+-				ngpios = <1>; /* only gpio #32 */
+-				gpio-controller;
+-				#gpio-cells = <2>;
+-				interrupt-controller;
+-				#interrupt-cells = <2>;
+-				interrupts = <87>;
+-			};
++			xor0: xor@f0900 {
++				compatible = "marvell,orion-xor";
++				reg = <0xF0900 0x100
++				       0xF0B00 0x100>;
++				clocks = <&gateclk 28>;
++				status = "okay";
+ 
+-			nand: nand@d0000 {
+-				clocks = <&dfx_coredivclk 0>;
++				xor00 {
++					interrupts = <94>;
++					dmacap,memcpy;
++					dmacap,xor;
++				};
++				xor01 {
++					interrupts = <95>;
++					dmacap,memcpy;
++					dmacap,xor;
++					dmacap,memset;
++				};
+ 			};
+ 		};
+ 
+@@ -225,6 +287,53 @@
+ 			};
+ 		};
+ 	};
++
++	clocks {
++		/* 25 MHz reference crystal */
++		refclk: oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <25000000>;
++		};
++	};
++};
++
++&i2c0 {
++	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
++	reg = <0x11000 0x100>;
++};
++
++&i2c1 {
++	compatible = "marvell,mv78230-i2c", "marvell,mv64xxx-i2c";
++	reg = <0x11100 0x100>;
++};
++
++&mpic {
++	reg = <0x20a00 0x2d0>, <0x21070 0x58>;
++};
++
++&timer {
++	compatible = "marvell,armada-xp-timer";
++	clocks = <&coreclk 2>, <&refclk>;
++	clock-names = "nbclk", "fixed";
++};
++
++&watchdog {
++	compatible = "marvell,armada-xp-wdt";
++	clocks = <&coreclk 2>, <&refclk>;
++	clock-names = "nbclk", "fixed";
++};
++
++&cpurst {
++	reg = <0x20800 0x20>;
++};
++
++&usb0 {
++	clocks = <&gateclk 18>;
++};
++
++&usb1 {
++	clocks = <&gateclk 19>;
+ };
+ 
+ &pinctrl {
+@@ -237,14 +346,13 @@
+ 	};
+ };
+ 
+-&sdio {
+-	status = "disabled";
++&spi0 {
++	compatible = "marvell,armada-xp-spi", "marvell,orion-spi";
++	pinctrl-0 = <&spi0_pins>;
++	pinctrl-names = "default";
+ };
+ 
+-&crypto_sram0 {
++&sdio {
+ 	status = "disabled";
+ };
+ 
+-&crypto_sram1 {
+-	status = "disabled";
+-};
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
+index e1580afdc260..a0d81bd7312b 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3336.dtsi
+@@ -49,7 +49,7 @@
+ 
+ / {
+ 	model = "Marvell 98DX3336 SoC";
+-	compatible = "marvell,armadaxp-98dx3336", "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,armadaxp-98dx3336", "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
+ 
+ 	cpus {
+ 		cpu@1 {
+diff --git a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
+index b9d9b269efb4..51de91b31a9d 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx4251.dtsi
+@@ -49,7 +49,7 @@
+ 
+ / {
+ 	model = "Marvell 98DX4251 SoC";
+-	compatible = "marvell,armadaxp-98dx4251", "marvell,armadaxp-98dx3236", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,armadaxp-98dx4251", "marvell,armadaxp-98dx3236", "marvell,armada-370-xp";
+ 
+ 	cpus {
+ 		cpu@1 {
+diff --git a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
+index 605d855b0147..f624894c2ab6 100644
+--- a/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
++++ b/arch/arm/boot/dts/armada-xp-db-dxbc2.dts
+@@ -58,7 +58,7 @@
+ 
+ / {
+ 	model = "Marvell Bobcat2 Evaluation Board";
+-	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,db-dxbc2", "marvell,armadaxp-98dx4251", "marvell,armada-370-xp";
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
+diff --git a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+index 4e07cb6ed800..06fce35d7491 100644
+--- a/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
++++ b/arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts
+@@ -58,7 +58,7 @@
+ 
+ / {
+ 	model = "DB-XC3-24G4XG";
+-	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armadaxp", "marvell,armada-370-xp";
++	compatible = "marvell,db-xc3-24g4xg", "marvell,armadaxp-98dx3336", "marvell,armada-370-xp";
+ 
+ 	chosen {
+ 		bootargs = "console=ttyS0,115200 earlyprintk";
 -- 
 2.11.0.24.ge6920cf
