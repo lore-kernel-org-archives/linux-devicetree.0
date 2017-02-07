@@ -1,28 +1,92 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 3/3] i2c: zx2967: add i2c controller driver for ZTE's
- zx2967 family
-Date: Tue, 7 Feb 2017 15:11:45 +0800
-Message-ID: <20170207071143.GF3407@dragon>
-References: <1486351569-4814-1-git-send-email-baoyou.xie@linaro.org>
- <1486351569-4814-3-git-send-email-baoyou.xie@linaro.org>
- <CA+DQWkw70=cJUW4xbj91gMTpnfk4bOSgv9u9bv8427GjEVQoYA@mail.gmail.com>
+From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] [media] mtk-vcodec: fix build errors without DEBUG
+Date: Tue, 7 Feb 2017 15:40:44 +0800
+Message-ID: <1486453244-26094-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CA+DQWkw70=cJUW4xbj91gMTpnfk4bOSgv9u9bv8427GjEVQoYA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Jun Nie <jun.nie@linaro.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "xie.baoyou" <xie.baoyou@zte.com.cn>, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 11:28:20AM +0800, Baoyou Xie wrote:
-> + Shawn
-> 
-> On 6 February 2017 at 11:26, Baoyou Xie <baoyou.xie@linaro.org> wrote:
-> 
-> > This patch adds i2c controller driver for ZTE's zx2967 family.
-> >
-> > Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Fix build errors after removing DEBUG definition.
 
-Reviewed-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 9 ++++-----
+ drivers/media/platform/mtk-vcodec/vdec_vpu_if.c    | 5 ++---
+ drivers/media/platform/mtk-vcodec/venc_vpu_if.c    | 4 +---
+ 3 files changed, 7 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+index 0746592..6219c7d 100644
+--- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
++++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+@@ -1126,15 +1126,14 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+ 		 * if there is no SPS header or picture info
+ 		 * in bs
+ 		 */
+-		int log_level = ret ? 0 : 1;
+ 
+ 		src_buf = v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
+ 		v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf),
+ 					VB2_BUF_STATE_DONE);
+-		mtk_v4l2_debug(log_level,
+-				"[%d] vdec_if_decode() src_buf=%d, size=%zu, fail=%d, res_chg=%d",
+-				ctx->id, src_buf->index,
+-				src_mem.size, ret, res_chg);
++		mtk_v4l2_debug(ret ? 0 : 1,
++			       "[%d] vdec_if_decode() src_buf=%d, size=%zu, fail=%d, res_chg=%d",
++			       ctx->id, src_buf->index,
++			       src_mem.size, ret, res_chg);
+ 		return;
+ 	}
+ 
+diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+index 5a24c51..1abd14e 100644
+--- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
++++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+@@ -70,9 +70,8 @@ void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
+ static int vcodec_vpu_send_msg(struct vdec_vpu_inst *vpu, void *msg, int len)
+ {
+ 	int err;
+-	uint32_t msg_id = *(uint32_t *)msg;
+ 
+-	mtk_vcodec_debug(vpu, "id=%X", msg_id);
++	mtk_vcodec_debug(vpu, "id=%X", *(uint32_t *)msg);
+ 
+ 	vpu->failure = 0;
+ 	vpu->signaled = 0;
+@@ -80,7 +79,7 @@ static int vcodec_vpu_send_msg(struct vdec_vpu_inst *vpu, void *msg, int len)
+ 	err = vpu_ipi_send(vpu->dev, vpu->id, msg, len);
+ 	if (err) {
+ 		mtk_vcodec_err(vpu, "send fail vpu_id=%d msg_id=%X status=%d",
+-			       vpu->id, msg_id, err);
++			       vpu->id, *(uint32_t *)msg, err);
+ 		return err;
+ 	}
+ 
+diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+index a01c759..0d882ac 100644
+--- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
++++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+@@ -79,10 +79,8 @@ static int vpu_enc_send_msg(struct venc_vpu_inst *vpu, void *msg,
+ 
+ 	status = vpu_ipi_send(vpu->dev, vpu->id, msg, len);
+ 	if (status) {
+-		uint32_t msg_id = *(uint32_t *)msg;
+-
+ 		mtk_vcodec_err(vpu, "vpu_ipi_send msg_id %x len %d fail %d",
+-			       msg_id, len, status);
++			       *(uint32_t *)msg, len, status);
+ 		return -EINVAL;
+ 	}
+ 	if (vpu->failure)
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
