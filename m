@@ -1,114 +1,148 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v2 2/8] mmc: bcm2835: Add new driver for the sdhost
- controller.
-Date: Tue, 7 Feb 2017 09:24:03 +0100
-Message-ID: <f495e10a-bb9b-ab23-e3af-47a000b28783@i2se.com>
-References: <1486123913-31705-1-git-send-email-kraxel@redhat.com>
- <1486123913-31705-3-git-send-email-kraxel@redhat.com>
- <1708749883.208474.1486413240581@email.1und1.de>
- <1486454575.24589.29.camel@redhat.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 3/3] ASoC: zx-i2s: support zx296718 SoC for ZTE's i2s
+ controller driver
+Date: Tue, 7 Feb 2017 16:26:35 +0800
+Message-ID: <20170207082633.GH3407@dragon>
+References: <1486436571-8682-1-git-send-email-baoyou.xie@linaro.org>
+ <1486436571-8682-3-git-send-email-baoyou.xie@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486454575.24589.29.camel@redhat.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gerd Hoffmann <kraxel@redhat.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486436571-8682-3-git-send-email-baoyou.xie@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Baoyou Xie <baoyou.xie@linaro.org>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, perex@perex.cz, tiwai@suse.com, shawn.guo@linaro.org, vinod.koul@intel.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
 List-Id: devicetree@vger.kernel.org
 
-Hi Gerd,
+On Tue, Feb 07, 2017 at 11:02:51AM +0800, Baoyou Xie wrote:
+> This patch adds zx296718 SoC support for ZTE's i2s controller driver.
+> 
+> Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+> ---
+>  sound/soc/zte/zx-i2s.c | 45 +++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 35 insertions(+), 10 deletions(-)
+> 
+> diff --git a/sound/soc/zte/zx-i2s.c b/sound/soc/zte/zx-i2s.c
+> index ed7a56d..2afac69 100644
+> --- a/sound/soc/zte/zx-i2s.c
+> +++ b/sound/soc/zte/zx-i2s.c
+> @@ -95,12 +95,13 @@
+>  struct zx_i2s_info {
+>  	struct snd_dmaengine_dai_dma_data	dma_playback;
+>  	struct snd_dmaengine_dai_dma_data	dma_capture;
+> -	struct clk				*dai_clk;
+> +	struct clk				*dai_wclk, *dai_pclk;
+>  	void __iomem				*reg_base;
+>  	int					master;
+>  	resource_size_t				mapbase;
+>  };
+>  
+> +
 
-Am 07.02.2017 um 09:02 schrieb Gerd Hoffmann:
-> On Mo, 2017-02-06 at 21:34 +0100, Stefan Wahren wrote:
->> Hi Gerd,
->>
->> first of all here my wishlist for the next round of this driver:
->> * compile test the series with ARM and ARM64
-> It is tested on both arm and arm64 (rpi2 + rpi3).
+This newline is unnecessary.
 
-i got implicite declaration for request_threaded_irq() and free_irq().
-After including linux/interrupt.h the issue is fixed (patch #1 of my
-series).
+>  static void zx_i2s_tx_en(void __iomem *base, bool on)
+>  {
+>  	unsigned long val;
+> @@ -274,9 +275,14 @@ static int zx_i2s_hw_params(struct snd_pcm_substream *substream,
+>  	val |= ZX_I2S_TIMING_CHN(ch_num);
+>  	writel_relaxed(val, i2s->reg_base + ZX_I2S_TIMING_CTRL);
+>  
+> -	if (i2s->master)
+> -		ret = clk_set_rate(i2s->dai_clk,
+> -				   params_rate(params) * ch_num * CLK_RAT);
+> +	if (i2s->master) {
+> +		unsigned long rate = params_rate(params) * ch_num * CLK_RAT;
+> +
+> +		ret = clk_set_rate(i2s->dai_wclk, rate);
+> +		if (!ret && i2s->dai_pclk)
+> +			ret = clk_set_rate(i2s->dai_pclk, rate);
 
->
->> * add me in CC for all patches of the series
-> Oops.  /me should be more careful when reading names.  I thought I had
-> you on Cc:  Double-checked.  Turned out that was Stephen Warren ...
+The 'pclk' is APB bus clock fed into I2S controller.  I don't think we
+need to set its frequency per audio frequency.
 
-No problem
+> +	}
+> +
+>  	return ret;
+>  }
+>  
+> @@ -328,8 +334,19 @@ static int zx_i2s_startup(struct snd_pcm_substream *substream,
+>  			  struct snd_soc_dai *dai)
+>  {
+>  	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
+> +	int ret;
+> +
+> +	ret = clk_prepare_enable(zx_i2s->dai_wclk);
+> +	if (ret)
+> +		return ret;
+>  
+> -	return clk_prepare_enable(zx_i2s->dai_clk);
+> +	ret = clk_prepare_enable(zx_i2s->dai_pclk);
+> +	if (ret) {
+> +		clk_disable_unprepare(zx_i2s->dai_wclk);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
+> @@ -337,7 +354,8 @@ static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
+>  {
+>  	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
+>  
+> -	clk_disable_unprepare(zx_i2s->dai_clk);
+> +	clk_disable_unprepare(zx_i2s->dai_wclk);
+> +	clk_disable_unprepare(zx_i2s->dai_pclk);
+>  }
+>  
+>  static struct snd_soc_dai_ops zx_i2s_dai_ops = {
+> @@ -381,10 +399,16 @@ static int zx_i2s_probe(struct platform_device *pdev)
+>  	if (!zx_i2s)
+>  		return -ENOMEM;
+>  
+> -	zx_i2s->dai_clk = devm_clk_get(&pdev->dev, "tx");
+> -	if (IS_ERR(zx_i2s->dai_clk)) {
+> -		dev_err(&pdev->dev, "Fail to get clk\n");
+> -		return PTR_ERR(zx_i2s->dai_clk);
+> +	zx_i2s->dai_wclk = devm_clk_get(&pdev->dev, "tx");
+> +	if (IS_ERR(zx_i2s->dai_wclk)) {
+> +		dev_err(&pdev->dev, "Fail to get wclk\n");
+> +		return PTR_ERR(zx_i2s->dai_wclk);
+> +	}
+> +
+> +	zx_i2s->dai_pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(zx_i2s->dai_pclk)) {
+> +		dev_info(&pdev->dev, "have no pclk\n");
+> +		zx_i2s->dai_pclk = NULL;
+>  	}
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -414,6 +438,7 @@ static int zx_i2s_probe(struct platform_device *pdev)
+>  
+>  static const struct of_device_id zx_i2s_dt_ids[] = {
+>  	{ .compatible = "zte,zx296702-i2s", },
+> +	{ .compatible = "zte,zx296718-i2s", },
 
->
->> * run checkpatch.pl before submission
-> Hmm?  Are there any issues?  /me has a pre-commit hook running
-> checkpatch to avoid anything slipping though.
+The I2S controller on ZX296702 actually has both wclk and pclk too, same
+as ZX296718 I2S.  The problem is that the driver currently doesn't
+handle pclk.  This is something we need to fix, regardless of ZX296718
+support.
 
-Just a single issue about a unnecessary return at the end of
-bcm2835_data_irq() (patch #4 of my series). Maybe this was a new rule.
+That said, ZX296718 I2S is compatible with ZX296702 one, and we do not
+need to introduce new compatible string.  Instead, we can code the
+compatible string on ZX296718 like below.
 
->
->> * apply the patch series to your cgit repo
-> Branch pushed now: bcm2837-sdhost-squashed-v2
+  compatible = "zte,zx296718-i2s", "zte,zx296702-i2s";
 
-Thanks
+With the pclk handling added, the driver should just work for ZX296718.
 
->
->>> The sdhci controller supports both sdcard and sdio.  The sdhost
->>> controller supports the sdcard only, but has better performance.  Also
->> Sorry, for the confusion. I was wrong. According to the registers the SDHOST should also support SDIO. It's a feature we could implement later.
-> Ok.
->
->>> note that the rpi3 has sdio wifi, so driving the sdcard with the sdhost
->>> controller allows to use the sdhci controller for wifi support.
->>>
->>> The configuration is done by devicetree via pin muxing.  Both SD
->>> controller are available on the same pins (2 pin groups = pin 22 to 27 +
->>> pin 48 to 53).  So it's possible to use both SD controllers at the same
->>> time with different pin groups.
->>>
->>> The code was originally written by Phil Elwell in the downstream
->>> Rasbperry Pi tree, and I did a major cleanup on it (+319, -707 lines
->>> out of the original 2055) for inclusion.
->> I think it would be helpful to known the downstream commit, because this commit [1]
->> doesn't seem to be included.
->>
->> [1] - https://github.com/raspberrypi/linux/commit/ea4b1c5c2ddbb6caba43ab9b0103542a4ca7e1f0
+Shawn
 
-Sorry wrong link, this must be the right one
-
-https://github.com/raspberrypi/linux/commit/1131510a589ae7262b8861af8d2f4a000710d59c
-
->>
->> I've found and fixed a lot of issues in this version and i think it would be better if i send you the patches for squashing them all together. Here is the preview for my patch series:
->>
->> Stefan Wahren (15):
->>   mmc: bcm2835: Add missing include for threaded irq
->>   mmc: bcm2835: Remove CMD_DALLY_US
->>   mmc: bcm2835: Fix pio_timeout handling
->>   mmc: bcm2835: Remove unnecessary return in bcm2835_data_irq
->>   mmc: bcm2835: Handle error cases during probe
->>   mmc: bcm2835: Print clk_max as decimal
->>   mmc: bcm2835: Downrate message in case of PIO fallback
->>   mmc: bcm2835: Don't unveil the data pointer
->>   mmc: bcm2835: remove unused host members
->>   mmc: bcm2835: Avoid unnecessary linebreaks
->>   mmc: bcm2835: Add leading zero to register dumps
->>   mmc: bcm2835: Align struct members with tabs
->>   mmc: bcm2835: Rearrange bcm2835_finish_request()
->>   mmc: bcm2835: Rearrange bcm2835_dma_complete_work()
->>   mmc: bcm2835: Rename Kconfig switch
->>
->> I'll send it after my tests. In the following review i will mention only the issues which aren't fixed in my patch series.
-> I'll pick up the patches and look at the remaining issues, new version
-> later this week (i hope).
->
-> thanks,
->   Gerd
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, zx_i2s_dt_ids);
+> -- 
+> 2.7.4
+> 
