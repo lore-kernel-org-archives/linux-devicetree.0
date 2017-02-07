@@ -1,49 +1,106 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt: ASoC: zx-i2s: Document for the ZTE zx296718
- I2S controller
-Date: Tue, 7 Feb 2017 12:02:12 +0000
-Message-ID: <20170207120212.uggkwhdeep5o2uxb@sirena.org.uk>
-References: <1486436571-8682-1-git-send-email-baoyou.xie@linaro.org>
- <1486436571-8682-2-git-send-email-baoyou.xie@linaro.org>
+From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] [media] mtk-vcodec: fix build errors without DEBUG
+Date: Tue, 7 Feb 2017 20:17:15 +0800
+Message-ID: <CAGS+omAU7UohsUkXwwHyhNh_dSX=R9tLKYvSV5767m81sTf_RA@mail.gmail.com>
+References: <1486453244-26094-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="muj55hqq6n2fpcsq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1486436571-8682-2-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, perex@perex.cz, tiwai@suse.com, shawn.guo@linaro.org, vinod.koul@intel.com, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, shawnguo@kernel.org, xie.baoyou@zte.com.cn, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486453244-26094-1-git-send-email-minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Feb 7, 2017 at 3:40 PM, Minghsiu Tsai
+<minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> Fix build errors after removing DEBUG definition.
 
---muj55hqq6n2fpcsq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It would be useful to specify which build errors were fixed by this
+patch, and a brief description of why - namely because when DEBUG is
+not defined, mtk_v4l2_debug() is an empty macros, and therefore the
+arguments are unused.
 
-On Tue, Feb 07, 2017 at 11:02:50AM +0800, Baoyou Xie wrote:
-> This patch documents the devicetree for the ZTE's zx296718
-> I2S audio controller.
+With an updated commit message, this patch is:
 
-Please submit patches using subject lines reflecting the style for the
-subsystem.  This makes it easier for people to identify relevant
-patches.  Look at what existing commits in the area you're changing are
-doing and make sure your subject lines visually resemble what they're
-doing.
+Reviewed-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
---muj55hqq6n2fpcsq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAliZt0AACgkQJNaLcl1U
-h9AdGgf+JxXigVa6NICI/W5LSLwfjqAz2eOErmw198FTl9hvT47oIVUKQmCM6NVd
-xwqaofijbPx+hYHv0DMadTxAnz/R2EosZgIS103L5fkqLtCBVK4ss//7O2p5yiZz
-5L7aa7oB82usANtIhNmn+lDeiYTcobakRHTuJ5rRnuNAJKhc9aAkHGCrV4Cq11AR
-N6o897Mt6iY/WL9ZEkYXpBcueTtFGup0rJBuh2qjy9UVsKLdAdU7zVSH4a+km8f/
-kbOrVnNcEfOSDKj/tXyQp/t147FKXXOG3e/AB/SMAB2+PoJt/u0VM3P92ekZXU39
-ecq+20PeFW3lx5P2PgpN2W1yme90AQ==
-=IiK0
------END PGP SIGNATURE-----
-
---muj55hqq6n2fpcsq--
+>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c | 9 ++++-----
+>  drivers/media/platform/mtk-vcodec/vdec_vpu_if.c    | 5 ++---
+>  drivers/media/platform/mtk-vcodec/venc_vpu_if.c    | 4 +---
+>  3 files changed, 7 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> index 0746592..6219c7d 100644
+> --- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> +++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec.c
+> @@ -1126,15 +1126,14 @@ static void vb2ops_vdec_buf_queue(struct vb2_buffer *vb)
+>                  * if there is no SPS header or picture info
+>                  * in bs
+>                  */
+> -               int log_level = ret ? 0 : 1;
+>
+>                 src_buf = v4l2_m2m_src_buf_remove(ctx->m2m_ctx);
+>                 v4l2_m2m_buf_done(to_vb2_v4l2_buffer(src_buf),
+>                                         VB2_BUF_STATE_DONE);
+> -               mtk_v4l2_debug(log_level,
+> -                               "[%d] vdec_if_decode() src_buf=%d, size=%zu, fail=%d, res_chg=%d",
+> -                               ctx->id, src_buf->index,
+> -                               src_mem.size, ret, res_chg);
+> +               mtk_v4l2_debug(ret ? 0 : 1,
+> +                              "[%d] vdec_if_decode() src_buf=%d, size=%zu, fail=%d, res_chg=%d",
+> +                              ctx->id, src_buf->index,
+> +                              src_mem.size, ret, res_chg);
+>                 return;
+>         }
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+> index 5a24c51..1abd14e 100644
+> --- a/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/vdec_vpu_if.c
+> @@ -70,9 +70,8 @@ void vpu_dec_ipi_handler(void *data, unsigned int len, void *priv)
+>  static int vcodec_vpu_send_msg(struct vdec_vpu_inst *vpu, void *msg, int len)
+>  {
+>         int err;
+> -       uint32_t msg_id = *(uint32_t *)msg;
+>
+> -       mtk_vcodec_debug(vpu, "id=%X", msg_id);
+> +       mtk_vcodec_debug(vpu, "id=%X", *(uint32_t *)msg);
+>
+>         vpu->failure = 0;
+>         vpu->signaled = 0;
+> @@ -80,7 +79,7 @@ static int vcodec_vpu_send_msg(struct vdec_vpu_inst *vpu, void *msg, int len)
+>         err = vpu_ipi_send(vpu->dev, vpu->id, msg, len);
+>         if (err) {
+>                 mtk_vcodec_err(vpu, "send fail vpu_id=%d msg_id=%X status=%d",
+> -                              vpu->id, msg_id, err);
+> +                              vpu->id, *(uint32_t *)msg, err);
+>                 return err;
+>         }
+>
+> diff --git a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+> index a01c759..0d882ac 100644
+> --- a/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+> +++ b/drivers/media/platform/mtk-vcodec/venc_vpu_if.c
+> @@ -79,10 +79,8 @@ static int vpu_enc_send_msg(struct venc_vpu_inst *vpu, void *msg,
+>
+>         status = vpu_ipi_send(vpu->dev, vpu->id, msg, len);
+>         if (status) {
+> -               uint32_t msg_id = *(uint32_t *)msg;
+> -
+>                 mtk_vcodec_err(vpu, "vpu_ipi_send msg_id %x len %d fail %d",
+> -                              msg_id, len, status);
+> +                              *(uint32_t *)msg, len, status);
+>                 return -EINVAL;
+>         }
+>         if (vpu->failure)
+> --
+> 1.9.1
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
