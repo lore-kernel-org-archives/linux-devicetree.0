@@ -1,45 +1,45 @@
-From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform documentation
-Date: Tue, 7 Feb 2017 21:19:58 +0000
-Message-ID: <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
+From: Jayachandran C <jnair@caviumnetworks.com>
+Subject: [PATCH v3 5/5] arm64: add ARCH_THUNDER2 to defconfig
+Date: Tue, 7 Feb 2017 21:19:59 +0000
+Message-ID: <1486502399-2950-6-git-send-email-jnair@caviumnetworks.com>
 References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486502399-2950-1-git-send-email-jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for Cavium ThunderX2 CN99XX ARM64 processor family.
-The the SoC will use the ID "cavium,thunder-99xx".
+This will allow the default kernel build to boot on Cavium ThunderX2
+CN99XX processors.
 
-Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
 ---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-All marketing material refers to the chip as CN99XX (like CN88XX before)
-that is why I have used the wildcard-like 99xx here.
-
- Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 5 +++++
- 1 file changed, 5 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-new file mode 100644
-index 0000000..82276a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-@@ -0,0 +1,5 @@
-+Cavium Thunder2 Family device tree bindings
-+-------------------------------------------
-+
-+Boards with Cavium ThunderX2 CN99XX shall have the root property:
-+  compatible = "cavium,thunder-99xx";
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 33b744d..7a9c262 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -53,6 +53,7 @@ CONFIG_ARCH_STRATIX10=y
+ CONFIG_ARCH_TEGRA=y
+ CONFIG_ARCH_SPRD=y
+ CONFIG_ARCH_THUNDER=y
++CONFIG_ARCH_THUNDER2=y
+ CONFIG_ARCH_UNIPHIER=y
+ CONFIG_ARCH_VEXPRESS=y
+ CONFIG_ARCH_VULCAN=y
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
