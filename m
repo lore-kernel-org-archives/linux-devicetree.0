@@ -1,328 +1,115 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v9 3/3] thermal: zx2967: add thermal driver for ZTE's
- zx2967 family
-Date: Tue, 7 Feb 2017 08:25:40 -0700
-Message-ID: <20170207152540.GA3903@linaro.org>
-References: <1486429001-31940-1-git-send-email-baoyou.xie@linaro.org>
- <1486429001-31940-3-git-send-email-baoyou.xie@linaro.org>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/2] drm/panel: Add support for the Sitronix ST7789V
+Date: Tue, 7 Feb 2017 16:34:44 +0100
+Message-ID: <20170207153444.yc7znfkje7hm4em6@lukather>
+References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
+ <2db19e6e-9857-1c92-dc77-c6b862cc771f@tronnes.org>
+ <20170206103938.3yghvugiwpzkij6r@lukather>
+ <a4634b34-ee70-449e-74c3-2ede4ea8c569@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486429001-31940-3-git-send-email-baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1043674174=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <a4634b34-ee70-449e-74c3-2ede4ea8c569@tronnes.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Noralf =?iso-8859-1?Q?Tr=F8nnes?= <noralf@tronnes.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 08:56:41AM +0800, Baoyou Xie wrote:
-> This patch adds thermal driver for ZTE's zx2967 family.
-> 
-> Signed-off-by: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--===============1043674174==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="weq2r653steeqr54"
+Content-Disposition: inline
 
-> ---
->  drivers/thermal/Kconfig          |   8 ++
->  drivers/thermal/Makefile         |   1 +
->  drivers/thermal/zx2967_thermal.c | 258 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 267 insertions(+)
->  create mode 100644 drivers/thermal/zx2967_thermal.c
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 18f2de6..f64bd50 100644
-> --- a/drivers/thermal/Kconfig
-> +++ b/drivers/thermal/Kconfig
-> @@ -444,4 +444,12 @@ config BCM2835_THERMAL
->  	help
->  	  Support for thermal sensors on Broadcom bcm2835 SoCs.
->  
-> +config ZX2967_THERMAL
-> +	tristate "Thermal sensors on zx2967 SoC"
-> +	depends on ARCH_ZX || COMPILE_TEST
-> +	help
-> +	  Enable the zx2967 thermal sensors driver, which supports
-> +	  the primitive temperature sensor embedded in zx2967 SoCs.
-> +	  This sensor generates the real time die temperature.
-> +
->  endif
-> diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-> index 677c6d9..c00c05e 100644
-> --- a/drivers/thermal/Makefile
-> +++ b/drivers/thermal/Makefile
-> @@ -57,3 +57,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
->  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
->  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
->  obj-$(CONFIG_BCM2835_THERMAL)	+= bcm2835_thermal.o
-> +obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
-> diff --git a/drivers/thermal/zx2967_thermal.c b/drivers/thermal/zx2967_thermal.c
-> new file mode 100644
-> index 0000000..a5670ad
-> --- /dev/null
-> +++ b/drivers/thermal/zx2967_thermal.c
-> @@ -0,0 +1,258 @@
-> +/*
-> + * ZTE's zx2967 family thermal sensor driver
-> + *
-> + * Copyright (C) 2017 ZTE Ltd.
-> + *
-> + * Author: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> + *
-> + * License terms: GNU General Public License (GPL) version 2
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/thermal.h>
-> +
-> +/* Power Mode: 0->low 1->high */
-> +#define ZX2967_THERMAL_POWER_MODE	0
-> +#define ZX2967_POWER_MODE_LOW		0
-> +#define ZX2967_POWER_MODE_HIGH		1
-> +
-> +/* DCF Control Register */
-> +#define ZX2967_THERMAL_DCF		0x4
-> +#define ZX2967_DCF_EN			BIT(1)
-> +#define ZX2967_DCF_FREEZE		BIT(0)
-> +
-> +/* Selection Register */
-> +#define ZX2967_THERMAL_SEL		0x8
-> +
-> +/* Control Register */
-> +#define ZX2967_THERMAL_CTRL		0x10
-> +
-> +#define ZX2967_THERMAL_READY		BIT(12)
-> +#define ZX2967_THERMAL_TEMP_MASK	GENMASK(11, 0)
-> +#define ZX2967_THERMAL_ID_MASK		0x18
-> +#define ZX2967_THERMAL_ID		0x10
-> +
-> +#define ZX2967_GET_TEMP_TIMEOUT_US	(100 * 1024)
-> +
-> +/**
-> + * struct zx2967_thermal_priv - zx2967 thermal sensor private structure
-> + * @tzd: struct thermal_zone_device where the sensor is registered
-> + * @lock: prevents read sensor in parallel
-> + * @clk_topcrm: topcrm clk structure
-> + * @clk_apb: apb clk structure
-> + * @regs: pointer to base address of the thermal sensor
-> + */
-> +
-> +struct zx2967_thermal_priv {
-> +	struct thermal_zone_device	*tzd;
-> +	struct mutex			lock;
-> +	struct clk			*clk_topcrm;
-> +	struct clk			*clk_apb;
-> +	void __iomem			*regs;
-> +	struct device			*dev;
-> +};
-> +
-> +static int zx2967_thermal_get_temp(void *data, int *temp)
-> +{
-> +	void __iomem *regs;
-> +	struct zx2967_thermal_priv *priv = data;
-> +	u32 val;
-> +	int ret;
-> +
-> +	if (!priv->tzd)
-> +		return -EAGAIN;
-> +
-> +	regs = priv->regs;
-> +	mutex_lock(&priv->lock);
-> +	writel_relaxed(ZX2967_POWER_MODE_LOW,
-> +		       regs + ZX2967_THERMAL_POWER_MODE);
-> +	writel_relaxed(ZX2967_DCF_EN, regs + ZX2967_THERMAL_DCF);
-> +
-> +	val = readl_relaxed(regs + ZX2967_THERMAL_SEL);
-> +	val &= ~ZX2967_THERMAL_ID_MASK;
-> +	val |= ZX2967_THERMAL_ID;
-> +	writel_relaxed(val, regs + ZX2967_THERMAL_SEL);
-> +
-> +	/*
-> +	 * Must wait for a while, surely it's a bit odd.
-> +	 * otherwise temperature value we got has a few deviation, even if
-> +	 * the THERMAL_READY bit is set.
-> +	 */
-> +	usleep_range(100, 300);
-> +	ret = readx_poll_timeout(readl, regs + ZX2967_THERMAL_CTRL,
-> +				 val, val & ZX2967_THERMAL_READY, 300,
-> +				 ZX2967_GET_TEMP_TIMEOUT_US);
-> +	if (ret) {
-> +		dev_err(priv->dev, "Thermal sensor data timeout\n");
-> +		goto unlock;
-> +	}
-> +
-> +	writel_relaxed(ZX2967_DCF_FREEZE | ZX2967_DCF_EN,
-> +		       regs + ZX2967_THERMAL_DCF);
-> +	val = readl_relaxed(regs + ZX2967_THERMAL_CTRL)
-> +			 & ZX2967_THERMAL_TEMP_MASK;
-> +	writel_relaxed(ZX2967_POWER_MODE_HIGH,
-> +		       regs + ZX2967_THERMAL_POWER_MODE);
-> +
-> +	/*
-> +	 * Calculate temperature
-> +	 * In dts, slope is multiplied by 1000.
-> +	 */
-> +	*temp = DIV_ROUND_CLOSEST(((s32)val + priv->tzd->tzp->offset) * 1000,
-> +				  priv->tzd->tzp->slope);
-> +
-> +unlock:
-> +	mutex_unlock(&priv->lock);
-> +	return ret;
-> +}
-> +
-> +static struct thermal_zone_of_device_ops zx2967_of_thermal_ops = {
-> +	.get_temp = zx2967_thermal_get_temp,
-> +};
-> +
-> +static int zx2967_thermal_probe(struct platform_device *pdev)
-> +{
-> +	struct zx2967_thermal_priv *priv;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->regs = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(priv->regs))
-> +		return PTR_ERR(priv->regs);
-> +
-> +	priv->clk_topcrm = devm_clk_get(&pdev->dev, "topcrm");
-> +	if (IS_ERR(priv->clk_topcrm)) {
-> +		ret = PTR_ERR(priv->clk_topcrm);
-> +		dev_err(&pdev->dev, "failed to get topcrm clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_topcrm);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable topcrm clock: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	priv->clk_apb = devm_clk_get(&pdev->dev, "apb");
-> +	if (IS_ERR(priv->clk_apb)) {
-> +		ret = PTR_ERR(priv->clk_apb);
-> +		dev_err(&pdev->dev, "failed to get apb clock: %d\n", ret);
-> +		goto disable_clk_topcrm;
-> +	}
-> +
-> +	ret = clk_prepare_enable(priv->clk_apb);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to enable apb clock: %d\n",
-> +			ret);
-> +		goto disable_clk_topcrm;
-> +	}
-> +
-> +	mutex_init(&priv->lock);
-> +	priv->tzd = thermal_zone_of_sensor_register(&pdev->dev,
-> +					0, priv, &zx2967_of_thermal_ops);
-> +
-> +	if (IS_ERR(priv->tzd)) {
-> +		ret = PTR_ERR(priv->tzd);
-> +		dev_err(&pdev->dev, "failed to register sensor: %d\n", ret);
-> +		goto disable_clk_all;
-> +	}
-> +
-> +	if (priv->tzd->tzp->slope == 0) {
-> +		thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-> +		dev_err(&pdev->dev, "coefficients of sensor is invalid\n");
-> +		ret = -EINVAL;
-> +		goto disable_clk_all;
-> +	}
-> +
-> +	priv->dev = &pdev->dev;
-> +	platform_set_drvdata(pdev, priv);
-> +
-> +	return 0;
-> +
-> +disable_clk_all:
-> +	clk_disable_unprepare(priv->clk_apb);
-> +disable_clk_topcrm:
-> +	clk_disable_unprepare(priv->clk_topcrm);
-> +	return ret;
-> +}
-> +
-> +static int zx2967_thermal_exit(struct platform_device *pdev)
-> +{
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	thermal_zone_of_sensor_unregister(&pdev->dev, priv->tzd);
-> +	clk_disable_unprepare(priv->clk_topcrm);
-> +	clk_disable_unprepare(priv->clk_apb);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id zx2967_thermal_id_table[] = {
-> +	{ .compatible = "zte,zx296718-thermal" },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, zx2967_thermal_id_table);
-> +
-> +#ifdef CONFIG_PM_SLEEP
-> +static int zx2967_thermal_suspend(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +
-> +	if (priv && priv->clk_topcrm)
-> +		clk_disable_unprepare(priv->clk_topcrm);
-> +
-> +	if (priv && priv->clk_apb)
-> +		clk_disable_unprepare(priv->clk_apb);
-> +
-> +	return 0;
-> +}
-> +
-> +static int zx2967_thermal_resume(struct device *dev)
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct zx2967_thermal_priv *priv = platform_get_drvdata(pdev);
-> +	int error;
-> +
-> +	error = clk_prepare_enable(priv->clk_topcrm);
-> +	if (error)
-> +		return error;
-> +
-> +	error = clk_prepare_enable(priv->clk_apb);
-> +	if (error) {
-> +		clk_disable_unprepare(priv->clk_topcrm);
-> +		return error;
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(zx2967_thermal_pm_ops,
-> +			 zx2967_thermal_suspend, zx2967_thermal_resume);
-> +
-> +static struct platform_driver zx2967_thermal_driver = {
-> +	.probe = zx2967_thermal_probe,
-> +	.remove = zx2967_thermal_exit,
-> +	.driver = {
-> +		.name = "zx2967_thermal",
-> +		.of_match_table = zx2967_thermal_id_table,
-> +		.pm = &zx2967_thermal_pm_ops,
-> +	},
-> +};
-> +module_platform_driver(zx2967_thermal_driver);
-> +
-> +MODULE_AUTHOR("Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>");
-> +MODULE_DESCRIPTION("ZTE zx2967 thermal driver");
-> +MODULE_LICENSE("GPL v2");
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--weq2r653steeqr54
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Feb 06, 2017 at 12:29:31PM +0100, Noralf Tr=F8nnes wrote:
+>=20
+> Den 06.02.2017 11.39, skrev Maxime Ripard:
+> > Hi Noralf,
+> >=20
+> > On Fri, Feb 03, 2017 at 07:48:51PM +0100, Noralf Tr=F8nnes wrote:
+> > > Den 03.02.2017 10.59, skrev Maxime Ripard:
+> > > > Hi,
+> > > >=20
+> > > > Here is an attempt at supporting the ST7789V LCD controller from Si=
+tronix.
+> > > What happens if there's another panel driven by ST7789V that needs
+> > > a different controller initialization?
+> > You know those panels / controllers much better than I do, but why
+> > would that be the case?
+> >=20
+> > > Maybe it's better to name it after the panel, not the controller.
+> > I guess you could also use that panel directly without the controller?
+>=20
+> A controller can drive many different panels that can require different
+> initializations. I faced that with staging/fbtft, when I wrote
+> controller drivers having initialization code, and then came across
+> displays with the same controller but with a different initialization.
+>=20
+> Trying to write controller drivers for these controllers is very
+> difficult with all the possible permutations. On top of that we have
+> those undocumented commands/registers.
+>=20
+> Some panels come with embedded controllers, in which case it makes
+> sense to write a driver for the panel.
+>=20
+> But if the panel and controller are separate, then I don't know. Maybe
+> the chance of coming across two uncompatible ST7789V and panel
+> combinations in drm/panel is extremly low.
+
+Hmm, I see. If we ever come across that case, I guess we could just
+add new optional properties to override the current sequence.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--weq2r653steeqr54
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJYmekPAAoJEBx+YmzsjxAgwcoQALhFnTQ5JPZhF8o1onXRvZLq
+K9dn0OhbjzOx0ZeKcz3UpJ4SXA+rr8gJ7fcQAqdtyw6uagVZMObDVV6HGJZqTImz
+Em3RXvI90tZaIxpFsEf3BBW1eymyJlNoy93DINVDVJ9H58zGUJDLOYLVVibsSkBf
+Pcl+4SVDTEN/httdl8mVNS2XJaGNKB35mLX8UUIs76g1HRnobZx9mnEsZhayNtZa
+12eef01liSwXUwAyldiI1n4ppOAVhrCNxDtvpL3L7/ka0cisblxqnxZnW2REG3xu
+dAP6KVHBKzXrwWNRRjX4spmS+fJC1T8IJnvhrAAqabHFoChxFe7vvl/x8qAkVxY9
+EaSVhTiPQGo67oIyedHsh5TvoaIFhXqGIJiQc92kKkaoLA7GEe02UF9QVVgN4Ogu
+GGb3C1wQbqhTdZrdKNYKJOhJQml66W7gzX/ByO3os35cQNiNr9fqLdw0JJ2d7UTa
+MI0pJNXVrnBRZpS5Bg1L8SohUss4FZSY5ld0tZMpRDT+3s1qyGCu3yr7F5g+Yy5K
+27sPEz9+NJIhjZCDQMJIcBsGsu3+XzlST9P9fuDXPdKgkB1QzRkRLmQg04seWLOD
+IeHZqzCCESRSSmXy9f0QZlwbUIdK60TSWcI2vDm/+JdTSmNjpRBYhcx+DGK9OGLk
+lnCruFRhpJXKVW44Zf6P
+=vSGe
+-----END PGP SIGNATURE-----
+
+--weq2r653steeqr54--
+
+--===============1043674174==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1043674174==--
