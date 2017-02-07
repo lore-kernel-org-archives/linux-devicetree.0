@@ -1,72 +1,86 @@
-From: David Lechner <david@lechnology.com>
-Subject: [PATCH 1/3] ARM: da850-lego-ev3: Add device tree node for A/DC
-Date: Tue,  7 Feb 2017 13:22:07 -0600
-Message-ID: <1486495329-2789-2-git-send-email-david@lechnology.com>
-References: <1486495329-2789-1-git-send-email-david@lechnology.com>
+From: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] bindings: rtc: correct wrong reference in
+ required properties
+Date: Wed,  8 Feb 2017 04:36:53 +0900
+Message-ID: <1486496213-11790-1-git-send-email-akinobu.mita@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486495329-2789-1-git-send-email-david@lechnology.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, David Lechner <david@lechnology.com>, Kevin Hilman <khilman@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <rtc-linux+bncBCPM5SUWUYIRB3GD5DCAKGQEPRHHISQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a node for the TI ADS7957 analog/digital converter on LEGO
-MINDSTORMS EV3 as well as a regulator node that is used by the A/DC node.
+There are currently two broken bindings descriptions for RTC:
 
-Signed-off-by: David Lechner <david@lechnology.com>
+maxim,ds3231.txt
+pcf8563.txt
+
+They broke because of a improper RST documentation conversion with
+commit 8c27ceff3604b2 ("docs: fix locations of several documents that got
+moved") and now reference to a non-existing file:
+
+Documentation/devicetree/bindings/i2c/trivial-admin-guide/devices.rst
+
+However, the original reference to i2c/trivial-devices should have never
+been made in the first place.
+
+This change fixes this issue by replacing with correct descriptions.
+
+Reported-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Akinobu Mita <akinobu.mita-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/da850-lego-ev3.dts | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ Documentation/devicetree/bindings/rtc/maxim,ds3231.txt | 3 ++-
+ Documentation/devicetree/bindings/rtc/pcf8563.txt      | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850-lego-ev3.dts b/arch/arm/boot/dts/da850-lego-ev3.dts
-index 112ec92..0309537 100644
---- a/arch/arm/boot/dts/da850-lego-ev3.dts
-+++ b/arch/arm/boot/dts/da850-lego-ev3.dts
-@@ -139,6 +139,19 @@
- 		enable-active-high;
- 		regulator-boot-on;
- 	};
-+
-+	/*
-+	 * This is a simple voltage divider on VCC5V to provide a 2.5V
-+	 * reference signal to the ADC.
-+	 */
-+	adc_ref: regulator2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "adc ref";
-+		regulator-min-microvolt = <2500000>;
-+		regulator-max-microvolt = <2500000>;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v>;
-+	};
- };
+diff --git a/Documentation/devicetree/bindings/rtc/maxim,ds3231.txt b/Documentation/devicetree/bindings/rtc/maxim,ds3231.txt
+index 1ad4c1c..85be53a 100644
+--- a/Documentation/devicetree/bindings/rtc/maxim,ds3231.txt
++++ b/Documentation/devicetree/bindings/rtc/maxim,ds3231.txt
+@@ -1,7 +1,8 @@
+ * Maxim DS3231 Real Time Clock
  
- &pmx_core {
-@@ -293,6 +306,14 @@
- 			};
- 		};
- 	};
-+
-+	adc: adc@3 {
-+		compatible = "ti,ads7957";
-+		reg = <3>;
-+		#io-channel-cells = <1>;
-+		spi-max-frequency = <10000000>;
-+		vref-supply = <&adc_ref>;
-+	};
- };
+ Required properties:
+-see: Documentation/devicetree/bindings/i2c/trivial-admin-guide/devices.rst
++- compatible: Should contain "maxim,ds3231".
++- reg: I2C address for chip.
  
- &gpio {
+ Optional property:
+ - #clock-cells: Should be 1.
+diff --git a/Documentation/devicetree/bindings/rtc/pcf8563.txt b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+index 086c998..36984ac 100644
+--- a/Documentation/devicetree/bindings/rtc/pcf8563.txt
++++ b/Documentation/devicetree/bindings/rtc/pcf8563.txt
+@@ -3,7 +3,8 @@
+ Philips PCF8563/Epson RTC8564 Real Time Clock
+ 
+ Required properties:
+-see: Documentation/devicetree/bindings/i2c/trivial-admin-guide/devices.rst
++- compatible: Should contain "nxp,pcf8563".
++- reg: I2C address for chip.
+ 
+ Optional property:
+ - #clock-cells: Should be 0.
 -- 
 2.7.4
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
