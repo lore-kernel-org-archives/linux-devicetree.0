@@ -1,87 +1,81 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v3 16/24] media: Add i.MX media core driver
-Date: Mon, 6 Feb 2017 17:54:31 -0800
-Message-ID: <681b06c9-48b9-7336-ae89-c8816fe8033a@gmail.com>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <1483755102-24785-17-git-send-email-steve_longerbeam@mentor.com>
- <20170202225004.GZ27312@n2100.armlinux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170202225004.GZ27312@n2100.armlinux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
+From: Liam Breck <liam-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org>
+Subject: Re: [PATCH] power: supply: Add driver for TI BQ2416X battery charger
+Date: Mon,  6 Feb 2017 19:00:22 -0800
+Message-ID: <20170207030022.27031-1-liam@networkimprov.net>
+References: <1486429749-12973-1-git-send-email-wojciech.ziemba@verifone.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486429749-12973-1-git-send-email-wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wojciech Ziemba <wo.ziemba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+G'day,
 
+On 7 Feb 2017 at 01:09:09, Wojciech Ziemba wrote:
+> diff --git a/Documentation/devicetree/bindings/power/supply/bq2416x.txt 
+> b/Documentation/devicetree/bindings/power/supply/bq2416x.txt
+> new file mode 100644
+> index 0000000..8f4b814
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/bq2416x.txt
 
-On 02/02/2017 02:50 PM, Russell King - ARM Linux wrote:
-> On Fri, Jan 06, 2017 at 06:11:34PM -0800, Steve Longerbeam wrote:
->> +/* register an internal subdev as a platform device */
->> +static struct imx_media_subdev *
->> +add_internal_subdev(struct imx_media_dev *imxmd,
->> +		    const struct internal_subdev *isd,
->> +		    int ipu_id)
->> +{
->> +	struct imx_media_internal_sd_platformdata pdata;
->> +	struct platform_device_info pdevinfo = {0};
->> +	struct imx_media_subdev *imxsd;
->> +	struct platform_device *pdev;
->> +
->> +	switch (isd->id->grp_id) {
->> +	case IMX_MEDIA_GRP_ID_CAMIF0...IMX_MEDIA_GRP_ID_CAMIF1:
->> +		pdata.grp_id = isd->id->grp_id +
->> +			((2 * ipu_id) << IMX_MEDIA_GRP_ID_CAMIF_BIT);
->> +		break;
->> +	default:
->> +		pdata.grp_id = isd->id->grp_id;
->> +		break;
->> +	}
->> +
->> +	/* the id of IPU this subdev will control */
->> +	pdata.ipu_id = ipu_id;
->> +
->> +	/* create subdev name */
->> +	imx_media_grp_id_to_sd_name(pdata.sd_name, sizeof(pdata.sd_name),
->> +				    pdata.grp_id, ipu_id);
->> +
->> +	pdevinfo.name = isd->id->name;
->> +	pdevinfo.id = ipu_id * num_isd + isd->id->index;
->> +	pdevinfo.parent = imxmd->dev;
->> +	pdevinfo.data = &pdata;
->> +	pdevinfo.size_data = sizeof(pdata);
->> +	pdevinfo.dma_mask = DMA_BIT_MASK(32);
->> +
->> +	pdev = platform_device_register_full(&pdevinfo);
->> +	if (IS_ERR(pdev))
->> +		return ERR_CAST(pdev);
->> +
->> +	imxsd = imx_media_add_async_subdev(imxmd, NULL, dev_name(&pdev->dev));
->> +	if (IS_ERR(imxsd))
->> +		return imxsd;
->> +
->> +	imxsd->num_sink_pads = isd->num_sink_pads;
->> +	imxsd->num_src_pads = isd->num_src_pads;
->> +
->> +	return imxsd;
->> +}
-> You seem to create platform devices here, but I see nowhere that you
-> ever remove them - so if you get to the lucky point of being able to
-> rmmod imx-media and then try to re-insert it, you end up with a load
-> of kernel warnings, one for each device created this way, and
-> platform_device_register_full() fails:
+DT docs are usually added/amended in a separate patch.
 
-Right, I never free the platform devices for the internal subdevs.
-Fixed.
+> @@ -0,0 +1,71 @@ 
+> +Binding for TI bq2416x Li-Ion Charger
+> ...
+> +Optional properties:
+> +===================
+> +- interrupt-names:		Meanigfull irq name.
+> +- ti,charge-voltage:		Charge volatge [mV].
+> +- ti,charge-current:		Charge current [mA].
+> +- ti,termination-current:	Termination current [mA}.
+> +- ti,in-current-limit:		IN source current limit. enum:
+> +				- IN_CURR_LIM_1500MA (0)
+> +				- IN_CURR_LIM_2500MA (1)
+> +
+> +- ti,usb-current-limit:		USB source current limit. enum:
+> +				- USB_CURR_LIM_100MA (0)
+> +				- USB_CURR_LIM_150MA (1)
+> +				- USB_CURR_LIM_500MA (2)
+> +				- USB_CURR_LIM_800MA (3)
+> +				- USB_CURR_LIM_900MA (4)
+> +				- USB_CURR_LIM_1500MA (5)
 
-Steve
+DT values are usually uA, uV, uAh, etc.
+DT properties usually get a unit suffix, e.g. -microamp.
+See Documentation/devicetree/bindings/property-units.txt
+and https://patchwork.kernel.org/patch/9555541/
+
+> +- ti,status-pin-enable:		0 or 1. Enable charge status output STAT pin.
+> +- ti,current-termination-enable:0 or 1. Enable charge current termination.
+> +- ti,usb-dpm-voltage:		USB dpm voltage [mV]. Refer to datasheet.
+> +- ti,in-dpm-voltage:		IN dpm voltage [mV].
+> +- ti,safety-timer:		Safety timer. enum:
+> +			- TMR_27MIN (0)
+> +			- TMR_6H (1)
+> +			- TMR_9H (2)
+> +			- TMR_OFF (3)
+> +
+> +- ti,supplied-to:	string array: max 4. Names of devices to which
+> +			the charger supplies.
+
+You might want to use and/or add to power_supply_battery_info, which
+Sebastian asked for, see:
+https://patchwork.kernel.org/patch/9555539/
+https://patchwork.kernel.org/patch/9555545/
+https://patchwork.kernel.org/patch/9555547/
+https://patchwork.kernel.org/patch/9555549/
+
+I'm also at work on a patch for BQ24190 which adds:
+  battery:precharge-current-microamp -> info.precharge_current_ua ->
+    POWER_SUPPLY_PROP_PRECHARGE_CURRENT
+  battery:endcharge-current-microamp -> info.endcharge_current_ua ->
+    POWER_SUPPLY_PROP_ENDCHARGE_CURRENT
+
+Hope that helps!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
