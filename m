@@ -1,42 +1,82 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 4/4] drivers/mailbox: Add ASpeed mailbox driver
-Date: Wed, 8 Feb 2017 09:29:58 +1030
-Message-ID: <CACPK8XfxgUvvTYNxJTaUC3yAuiF=Wznr9e1AL_gc0P3SVUUAvg@mail.gmail.com>
-References: <20170112002910.3650-1-cyrilbur@gmail.com> <20170112002910.3650-5-cyrilbur@gmail.com>
- <CACPK8XcsScjrit-7VHh4oL=zPiMeEAB5_R550U0uPsuQ4WF1mg@mail.gmail.com> <1486508229.3824.1.camel@gmail.com>
+From: eajames <eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH linux v6 1/6] hwmon: Add core On-Chip Controller support
+ for POWER CPUs
+Date: Tue, 07 Feb 2017 17:11:25 -0600
+Message-ID: <20a5cf57f31190f76db1dbdf018c86ed@linux.vnet.ibm.com>
+References: <201702070705.HAlnLg64%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486508229.3824.1.camel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Xo Wang <xow-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <201702070705.HAlnLg64%fengguang.wu@intel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Edward A. James" <eajames@us.ibm.com>
+Cc: linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, jdelvare@suse.com, corbet@lwn.net, mark.rutland@arm.com, robh+dt@kernel.org, wsa@the-dreams.de, andrew@aj.id.au, joel@jms.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 9:27 AM, Cyril Bur <cyrilbur-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
->> > index ceff415f201c..10a7f3f2765c 100644
->> > --- a/drivers/mailbox/Kconfig
->> > +++ b/drivers/mailbox/Kconfig
->> > @@ -152,4 +152,13 @@ config BCM_PDC_MBOX
->> >           Mailbox implementation for the Broadcom PDC ring manager,
->> >           which provides access to various offload engines on Broadcom
->> >           SoCs. Say Y here if you want to use the Broadcom PDC.
->> > +
->> > +config ASPEED_MBOX
->>
->> Call this ASPEED_LPC_MAILBOX, as it's a in the LPC IP block.
->>
->
-> I think I'll stick with ASPEED_LPC_MBOX, the rest of the file uses MBOX
-> more widely when talking about controllers.
+Pushing up v7 to fix this compile warning. No other changes.
 
-No worries. I just wanted the _LPC bit added.
+On 2017-02-06 17:21, kbuild test robot wrote:
+> Hi Edward,
+> 
+> [auto build test WARNING on hwmon/hwmon-next]
+> [also build test WARNING on v4.10-rc7 next-20170206]
+> [cannot apply to linux/master]
+> [if your patch is applied to the wrong git tree, please drop us a note
+> to help improve the system]
+> 
+> url:
+> https://github.com/0day-ci/linux/commits/eajames-linux-vnet-ibm-com/drivers-hwmon-Add-On-Chip-Controller-driver/20170207-043353
+> base:
+> https://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git
+> hwmon-next
+> config: openrisc-allyesconfig (attached as .config)
+> compiler: or32-linux-gcc (GCC) 4.5.1-or32-1.0rc1
+> reproduce:
+>         wget
+> https://git.kernel.org/cgit/linux/kernel/git/wfg/lkp-tests.git/plain/sbin/make.cross
+> -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=openrisc
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/hwmon/occ/occ.c: In function 'parse_occ_response':
+>>> drivers/hwmon/occ/occ.c:127:6: warning: unused variable 'rc'
+> 
+> vim +/rc +127 drivers/hwmon/occ/occ.c
+> 
+>    111		struct device *dev;
+>    112		void *bus;
+>    113		struct occ_bus_ops bus_ops;
+>    114		struct occ_ops ops;
+>    115		struct occ_config config;
+>    116		unsigned long last_updated;
+>    117		struct mutex update_lock;
+>    118		struct occ_response response;
+>    119		bool valid;
+>    120		u8 *raw_data;
+>    121	};
+>    122
+>    123	static int parse_occ_response(struct occ *driver, u16 num_bytes)
+>    124	{
+>    125		int b;
+>    126		int s;
+>  > 127		int rc;
+>    128		unsigned int offset = SENSOR_BLOCK_OFFSET;
+>    129		int sensor_type;
+>    130		u8 num_sensor_blocks;
+>    131		struct sensor_data_block_header *block;
+>    132		void *sensors;
+>    133		struct device *dev = driver->dev;
+>    134		u8 *data = driver->raw_data;
+>    135		struct occ_response *resp = &driver->response;
+> 
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology 
+> Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel 
+> Corporation
 
-Cheers,
-
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
