@@ -1,120 +1,68 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 0/2] drm/panel: Add support for the Sitronix ST7789V
-Date: Tue, 7 Feb 2017 17:46:21 +0100
-Message-ID: <20170207164621.GB28522@ulmo.ba.sec>
-References: <cover.d573d2c400f1a8ef8d2696fda74f3e860bff50ca.1486115846.git-series.maxime.ripard@free-electrons.com>
- <2db19e6e-9857-1c92-dc77-c6b862cc771f@tronnes.org>
- <20170206103938.3yghvugiwpzkij6r@lukather>
- <a4634b34-ee70-449e-74c3-2ede4ea8c569@tronnes.org>
- <20170207153444.yc7znfkje7hm4em6@lukather>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 0/4] cpufreq: Introduce TI CPUFreq/OPP Driver
+Date: Tue, 7 Feb 2017 10:52:35 -0600
+Message-ID: <4900edde-02b9-cba4-4b89-45c20cfc5571@ti.com>
+References: <20170207165107.29394-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0327441170=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170207153444.yc7znfkje7hm4em6@lukather>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170207165107.29394-1-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J . Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Lukasz Majewski <lukma-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/07/2017 10:51 AM, Dave Gerlach wrote:
+> Hi,
+> This is v5 of the series to introduce the ti-cpufreq driver
+> which parses SoC data and provides opp-supported-hw data to the
+> OPP core in order to enable the proper OPPs for the silicon in use.
+>
 
---===============0327441170==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="UHN/qo2QbUvPLonB"
-Content-Disposition: inline
+Sorry for the noise, already sent this as a proper series, just accidentally 
+resent the cover letter.
 
+Regards,
+Dave
 
---UHN/qo2QbUvPLonB
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> History:
+> v4: http://www.spinics.net/lists/linux-omap/msg134629.html
+> v3: http://www.spinics.net/lists/linux-omap/msg132733.html
+> v2: http://www.spinics.net/lists/linux-omap/msg131601.html
+> v1: http://www.spinics.net/lists/linux-omap/msg129089.html
+>
+> Very minor changes from v4:
+> 	* In patch 2 change "opp_table0" to "opp_table" in example
+> 	* Add acks on all patches (he approved change in patch 2) from Viresh
+>
+> DT patches to enable this driver will follow after the DT binding is merged.
+> Branch for testing, with updated DT nodes, pushed here [1].
+>
+> Regards,
+> Dave
+>
+> [1] https://github.com/dgerlach/linux-pm/commits/upstream/ti-cpufreq-driver-new-v5
+>
+> Dave Gerlach (4):
+>   PM / OPP: Expose _of_get_opp_desc_node as dev_pm_opp API
+>   Documentation: dt: add bindings for ti-cpufreq
+>   cpufreq: ti: Add cpufreq driver to determine available OPPs at runtime
+>   cpufreq: dt: Don't use generic platdev driver for ti-cpufreq platforms
+>
+>  .../devicetree/bindings/cpufreq/ti-cpufreq.txt     | 128 ++++++++++
+>  drivers/base/power/opp/of.c                        |   9 +-
+>  drivers/cpufreq/Kconfig.arm                        |  11 +
+>  drivers/cpufreq/Makefile                           |   1 +
+>  drivers/cpufreq/cpufreq-dt-platdev.c               |   2 -
+>  drivers/cpufreq/ti-cpufreq.c                       | 272 +++++++++++++++++++++
+>  include/linux/pm_opp.h                             |   6 +
+>  7 files changed, 423 insertions(+), 6 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/ti-cpufreq.txt
+>  create mode 100644 drivers/cpufreq/ti-cpufreq.c
+>
 
-On Tue, Feb 07, 2017 at 04:34:44PM +0100, Maxime Ripard wrote:
-> On Mon, Feb 06, 2017 at 12:29:31PM +0100, Noralf Tr=C3=B8nnes wrote:
-> >=20
-> > Den 06.02.2017 11.39, skrev Maxime Ripard:
-> > > Hi Noralf,
-> > >=20
-> > > On Fri, Feb 03, 2017 at 07:48:51PM +0100, Noralf Tr=C3=B8nnes wrote:
-> > > > Den 03.02.2017 10.59, skrev Maxime Ripard:
-> > > > > Hi,
-> > > > >=20
-> > > > > Here is an attempt at supporting the ST7789V LCD controller from =
-Sitronix.
-> > > > What happens if there's another panel driven by ST7789V that needs
-> > > > a different controller initialization?
-> > > You know those panels / controllers much better than I do, but why
-> > > would that be the case?
-> > >=20
-> > > > Maybe it's better to name it after the panel, not the controller.
-> > > I guess you could also use that panel directly without the controller?
-> >=20
-> > A controller can drive many different panels that can require different
-> > initializations. I faced that with staging/fbtft, when I wrote
-> > controller drivers having initialization code, and then came across
-> > displays with the same controller but with a different initialization.
-> >=20
-> > Trying to write controller drivers for these controllers is very
-> > difficult with all the possible permutations. On top of that we have
-> > those undocumented commands/registers.
-> >=20
-> > Some panels come with embedded controllers, in which case it makes
-> > sense to write a driver for the panel.
-> >=20
-> > But if the panel and controller are separate, then I don't know. Maybe
-> > the chance of coming across two uncompatible ST7789V and panel
-> > combinations in drm/panel is extremly low.
->=20
-> Hmm, I see. If we ever come across that case, I guess we could just
-> add new optional properties to override the current sequence.
-
-I think if that ever happens it's probably best to split out ST7789V
-code into a helper library that has functions which take parameters.
-Then we can simply call those functions with parameters specific to
-a panel from a panel-specific driver.
-
-Trying to fit all that into device tree properties is likely going to
-end up being really messy.
-
-Thierry
-
---UHN/qo2QbUvPLonB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAliZ+d0ACgkQ3SOs138+
-s6Es3xAAom4HErxHZY8f+7s+BvUIKZ1b91ndc+0bCS81NnDWfvc90j4/cP+YQ8VZ
-npT/Fnu/AKc7E7MK6Q3pZmVTVLFXg7rjpWQQS7J8z+JuxUUfB/d/Ae957znT8YOb
-jaFegiPellW19RmRPHncGn67yHjt27O4FrhuX4ljnm0cx4OwisPMCjnl6AEWZg0F
-2SB3q9GOhL+ksn0YoQdmgrV0j1AHvKx8OFQp1QOQ5b/eXUeJOZT0DU8HIm+3IHAJ
-VMrlggbKnmiRu8NGcXzKhiFQa90fkBQRmhLD2mGw81SQNWHcuMTm17kX1dO2Z0Da
-dhC/bKENVxushZLlRXB69LERtrDEkDEl+WirY1+zj/KhZ6JR38rc2xmivkZwmLk5
-kuHJ8evCfJpD3IFAj6d2F6LsaMidO8cRZfxnNlABzuD/eWAOz7WilkUv/+P9RftR
-moiEVhDDkBS5lwMmMDrOr+6khHc6KYOs2f3Aq+jkB6OY3L/ctSQzH21tmcKI9oL3
-TLhwAvoBP9sbXaSCp/Y/N5ZIt57DYDPpD4PtuRS39l2kedhpbf3qAII66GZ4K/9N
-Kd/0DW5FOfJdRP3Cd+eadOJhOh91zi4hTcxZ50ZEyd+8SNc2b8GxZDQO3yB0k1on
-3B97vRKNBaV9peUHcL+omWhcEOkqvug/BECQdcChnG0Tq3Iwr5o=
-=sToh
------END PGP SIGNATURE-----
-
---UHN/qo2QbUvPLonB--
-
---===============0327441170==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0327441170==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
