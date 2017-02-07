@@ -1,48 +1,182 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH -next 3/3] usb: xhci-mtk: make the reference clock optional
-Date: Tue, 7 Feb 2017 14:13:33 +0800
-Message-ID: <1486448013-8784-3-git-send-email-chunfeng.yun@mediatek.com>
-References: <1486448013-8784-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: Re: [PATCH v2, 6/6] dt-bindings: phy-mt65xx-usb: add support for
+ new version phy
+Date: Tue, 7 Feb 2017 14:30:21 +0800
+Message-ID: <1486449021.3750.25.camel@mhfsdcap03>
+References: <1484900321-26933-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1484900321-26933-6-git-send-email-chunfeng.yun@mediatek.com>
+ <20170127200702.biyvgzgoq3yxx7yx@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486448013-8784-1-git-send-email-chunfeng.yun@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170127200702.biyvgzgoq3yxx7yx@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Felipe Balbi <felipe.balbi@linux.intel.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Make the reference clock optional for DTS backward compatibility
-and ignore the error if it does not exist.
+On Fri, 2017-01-27 at 14:07 -0600, Rob Herring wrote:
+> On Fri, Jan 20, 2017 at 04:18:41PM +0800, Chunfeng Yun wrote:
+> > add a new compatible string for "mt2712", and move reference clock
+> > into each port node;
+> > 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/phy/phy-mt65xx-usb.txt     |   91 +++++++++++++++++---
+> >  1 file changed, 77 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> > index 33a2b1e..1d06604 100644
+> > --- a/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> > +++ b/Documentation/devicetree/bindings/phy/phy-mt65xx-usb.txt
+> > @@ -6,21 +6,27 @@ This binding describes a usb3.0 phy for mt65xx platforms of Medaitek SoC.
+> >  Required properties (controller (parent) node):
+> >   - compatible	: should be one of
+> >  		  "mediatek,mt2701-u3phy"
+> > +		  "mediatek,mt2712-u3phy"
+> >  		  "mediatek,mt8173-u3phy"
+> > - - reg		: offset and length of register for phy, exclude port's
+> > -		  register.
+> > - - clocks	: a list of phandle + clock-specifier pairs, one for each
+> > -		  entry in clock-names
+> > - - clock-names	: must contain
+> > -		  "u3phya_ref": for reference clock of usb3.0 analog phy.
+> >  
+> >  Required nodes	: a sub-node is required for each port the controller
+> >  		  provides. Address range information including the usual
+> >  		  'reg' property is used inside these nodes to describe
+> >  		  the controller's topology.
+> >  
+> > +Optional properties (controller (parent) node):
+> > + - reg		: offset and length of register shared by multiple ports,
+> 
+> How is this optional?
+I put register shared by ports in parent node, but no shared register
+for new phy, so change it as optional.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/host/xhci-mtk.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 4d75ac5..75bae8e 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -559,10 +559,17 @@ static int xhci_mtk_probe(struct platform_device *pdev)
- 		return PTR_ERR(mtk->sys_clk);
- 	}
- 
-+	/*
-+	 * reference clock is usually a "fixed-clock", make it optional
-+	 * for backward compatibility and ignore the error if it does
-+	 * not exist.
-+	 */
- 	mtk->ref_clk = devm_clk_get(dev, "ref_ck");
- 	if (IS_ERR(mtk->ref_clk)) {
--		dev_err(dev, "fail to get ref_ck\n");
--		return PTR_ERR(mtk->ref_clk);
-+		if (PTR_ERR(mtk->ref_clk) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+
-+		mtk->ref_clk = NULL;
- 	}
- 
- 	mtk->lpm_support = of_property_read_bool(node, "usb3-lpm-capable");
--- 
-1.7.9.5
+> 
+> > +		  exclude port's private register. It is needed on mt2701
+> > +		  and mt8173, but not on mt2712.
+> > +
+> >  Required properties (port (child) node):
+> >  - reg		: address and length of the register set for the port.
+> > +- clocks	: a list of phandle + clock-specifier pairs, one for each
+> > +		  entry in clock-names
+> > +- clock-names	: must contain
+> > +		  "ref_clk": 48M reference clock for HighSpeed analog phy; and
+> 
+> _clk is redundant. Just "ref"
+Ok
+> 
+> > +			26M reference clock for SuperSpeed analog phy, sometimes is
+> > +			24M, 25M or 27M, depended on platform.
+> >  - #phy-cells	: should be 1 (See second example)
+> >  		  cell after port phandle is phy type from:
+> >  			- PHY_TYPE_USB2
+> > @@ -31,21 +37,31 @@ Example:
+> >  u3phy: usb-phy@11290000 {
+> >  	compatible = "mediatek,mt8173-u3phy";
+> >  	reg = <0 0x11290000 0 0x800>;
+> > -	clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> > -	clock-names = "u3phya_ref";
+> >  	#address-cells = <2>;
+> >  	#size-cells = <2>;
+> >  	ranges;
+> >  	status = "okay";
+> >  
+> > -	phy_port0: port@11290800 {
+> > -		reg = <0 0x11290800 0 0x800>;
+> > +	u2port0: port@11290800 {
+> > +		reg = <0 0x11290800 0 0x100>;
+> > +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> > +		clock-names = "ref_clk";
+> >  		#phy-cells = <1>;
+> >  		status = "okay";
+> >  	};
+> >  
+> > -	phy_port1: port@11291000 {
+> > -		reg = <0 0x11291000 0 0x800>;
+> > +	u3port0: port@11290900 {
+> > +		reg = <0 0x11290800 0 0x700>;
+> > +		clocks = <&clk26m>;
+> > +		clock-names = "ref_clk";
+> > +		#phy-cells = <1>;
+> > +		status = "okay";
+> > +	};
+> > +
+> > +	u2port1: port@11291000 {
+> > +		reg = <0 0x11291000 0 0x100>;
+> > +		clocks = <&apmixedsys CLK_APMIXED_REF2USB_TX>;
+> > +		clock-names = "ref_clk";
+> >  		#phy-cells = <1>;
+> >  		status = "okay";
+> >  	};
+> > @@ -64,7 +80,54 @@ Example:
+> >  
+> >  usb30: usb@11270000 {
+> >  	...
+> > -	phys = <&phy_port0 PHY_TYPE_USB3>;
+> > -	phy-names = "usb3-0";
+> > +	phys = <&u2port0 PHY_TYPE_USB2>, <&u3port0 PHY_TYPE_USB3>;
+> > +	phy-names = "usb2-0", "usb3-0";
+> >  	...
+> >  };
+> > +
+> > +
+> > +Layout differences of banks between mt8173/mt2701 and mt2712
+> > +-------------------------------------------------------------
+> > +mt8173 and mt2701:
+> > +port        offset    bank
+> > +shared      0x0000    SPLLC
+> > +            0x0100    FMREG
+> > +u2 port0    0x0800    U2PHY_COM
+> > +u3 port0    0x0900    U3PHYD
+> > +            0x0a00    U3PHYD_BANK2
+> > +            0x0b00    U3PHYA
+> > +            0x0c00    U3PHYA_DA
+> > +u2 port1    0x1000    U2PHY_COM
+> > +u3 port1    0x1100    U3PHYD
+> > +            0x1200    U3PHYD_BANK2
+> > +            0x1300    U3PHYA
+> > +            0x1400    U3PHYA_DA
+> > +u2 port2    0x1800    U2PHY_COM
+> > +            ...
+> > +
+> > +mt2712:
+> > +port        offset    bank
+> > +u2 port0    0x0000    MISC
+> > +            0x0100    FMREG
+> > +            0x0300    U2PHY_COM
+> > +u3 port0    0x0700    SPLLC
+> > +            0x0800    CHIP
+> > +            0x0900    U3PHYD
+> > +            0x0a00    U3PHYD_BANK2
+> > +            0x0b00    U3PHYA
+> > +            0x0c00    U3PHYA_DA
+> > +u2 port1    0x1000    MISC
+> > +            0x1100    FMREG
+> > +            0x1300    U2PHY_COM
+> > +u3 port1    0x1700    SPLLC
+> > +            0x1800    CHIP
+> > +            0x1900    U3PHYD
+> > +            0x1a00    U3PHYD_BANK2
+> > +            0x1b00    U3PHYA
+> > +            0x1c00    U3PHYA_DA
+> > +u2 port2    0x2000    MISC
+> > +            ...
+> > +
+> > +    SPLLC shared by u3 ports and FMREG shared by u2 ports on
+> > +mt8173/mt2701 are put back into each port; a new bank MISC for
+> > +u2 ports and CHIP for u3 ports are added on mt2712.
+> > -- 
+> > 1.7.9.5
+> > 
