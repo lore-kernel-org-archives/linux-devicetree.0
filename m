@@ -1,71 +1,132 @@
 From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 0/6] Updates for Marvell Switch SoCs
-Date: Wed,  8 Feb 2017 09:28:09 +1300
-Message-ID: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
+Subject: [PATCH v2 5/6] ARM: dts: mvebu: Move mv98dx3236 clock bindings
+Date: Wed,  8 Feb 2017 09:28:14 +1300
+Message-ID: <20170207202815.20226-6-chris.packham@alliedtelesis.co.nz>
+References: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170207202815.20226-1-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Chris Packham <chris.packham@alliedtelesis.co.nz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, netdev@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Gregory Clement <gregory.clement@free-electrons.com>, linux-clk@vger.kernel.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Shortly after I posted my last series I got access to a more recent
-Marvell SDK which had some device tree support for the switch SoCs I'd
-been wanting. It was still based on an older kernel but it was a huge
-improvement over what came before.
+This moves the coreclk binding for the 98dx3236 SoC to the DFX block
+where the sampled at reset register is located and switches to using the
+correct gating clock compatible string.
 
-Patch 1/6 is a typo I noticed after my initial series was applied.
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
 
-Patch 2/6 is a bit of a cleanup. I did initially struggle with how to
-access individual parts of the DFX block as well as retaining a handle on
-the entire thing for the switch driver to use.
-
-Patch 3/6 is a re-jig of the dtsi files which is needed by 5/6. This is
-required because I need to use the coreclk label on a different node. It
-also means I don't have to disable nodes for blocks that only exist on
-the Armada-XP.
-
-Patch 4/6, 5/6 and 6/6 are ported from the Marvell Linux kernel. I've tested
-them on the hardware I have access to and things look pretty good.
-
-Chris Packham (6):
-  ARM: dts: Fix typo in armada-xp-98dx4251
-    Changes in v2:
-    - new
-  ARM: dts: armada-xp-98dx3236: combine dfx server nodes
-    Changes in v2:
-    - none
-  ARM: dts: Use armada-370-xp as a base for armada-xp-98dx3236
-    Changes in v2:
-    - Update root compatible strings in armada-xp-98dx3336.dtsi,
-      armada-xp-98dx4251.dtsi, armada-xp-db-dxbc2.dts and
-      armada-xp-db-xc3-24g4xg.dts
-  ARM: mvebu: Add mv98dx3236-soc-id
-    Changes in v2:
-    - none
-  ARM: dts: mvebu: Move mv98dx3236 clock bindings
+Notes:
     Changes in v2:
     - New. Split out from "clk: mvebu: Expand mv98dx3236-core-clock support"
-  clk: mvebu: Expand mv98dx3236-core-clock support
-    Changes in v2:
-    - split dts updates into separate patch
-    - add 98DX4251 specific support
 
- .../bindings/arm/marvell/mv98dx3236-soc-id.txt     |  14 ++
- .../devicetree/bindings/clock/mvebu-core-clock.txt |   7 +
- .../bindings/clock/mvebu-gated-clock.txt           |  11 ++
- .../devicetree/bindings/net/marvell,prestera.txt   |  13 +-
- arch/arm/boot/dts/armada-xp-98dx3236.dtsi          | 211 ++++++++++++++++-----
- arch/arm/boot/dts/armada-xp-98dx3336.dtsi          |   2 +-
- arch/arm/boot/dts/armada-xp-98dx4251.dtsi          |   2 +-
- arch/arm/boot/dts/armada-xp-db-dxbc2.dts           |   2 +-
- arch/arm/boot/dts/armada-xp-db-xc3-24g4xg.dts      |   2 +-
- arch/arm/mach-mvebu/mvebu-soc-id.c                 |  43 ++++-
- drivers/clk/mvebu/Makefile                         |   2 +-
- drivers/clk/mvebu/armada-xp.c                      |  13 --
- drivers/clk/mvebu/mv98dx3236.c                     | 180 ++++++++++++++++++
- 13 files changed, 422 insertions(+), 80 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell/mv98dx3236-soc-id.txt
- create mode 100644 drivers/clk/mvebu/mv98dx3236.c
+ .../devicetree/bindings/clock/mvebu-core-clock.txt         |  7 +++++++
+ .../devicetree/bindings/clock/mvebu-gated-clock.txt        | 11 +++++++++++
+ arch/arm/boot/dts/armada-xp-98dx3236.dtsi                  | 14 +++++++-------
+ 3 files changed, 25 insertions(+), 7 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+index eb985a633d59..796c260c183d 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+@@ -31,6 +31,12 @@ The following is a list of provided IDs and clock names on Armada 39x:
+  4 = dclk    (SDRAM Interface Clock)
+  5 = refclk  (Reference Clock)
+ 
++The following is a list of provided IDs and clock names on 98dx3236:
++ 0 = tclk    (Internal Bus clock)
++ 1 = cpuclk  (CPU clock)
++ 2 = ddrclk   (DDR clock)
++ 3 = mpll    (MPLL Clock)
++
+ The following is a list of provided IDs and clock names on Kirkwood and Dove:
+  0 = tclk   (Internal Bus clock)
+  1 = cpuclk (CPU0 clock)
+@@ -49,6 +55,7 @@ Required properties:
+ 	"marvell,armada-380-core-clock" - For Armada 380/385 SoC core clocks
+ 	"marvell,armada-390-core-clock" - For Armada 39x SoC core clocks
+ 	"marvell,armada-xp-core-clock" - For Armada XP SoC core clocks
++	"marvell,mv98dx3236-core-clock" - For 98dx3236 family SoC core clocks
+ 	"marvell,dove-core-clock" - for Dove SoC core clocks
+ 	"marvell,kirkwood-core-clock" - for Kirkwood SoC (except mv88f6180)
+ 	"marvell,mv88f6180-core-clock" - for Kirkwood MV88f6180 SoC
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
+index 5142efc8099d..de562da2ae77 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-gated-clock.txt
+@@ -119,6 +119,16 @@ ID	Clock	Peripheral
+ 29	sata1lnk
+ 30	sata1	SATA Host 1
+ 
++The following is a list of provided IDs for 98dx3236:
++ID	Clock	Peripheral
++-----------------------------------
++3	ge1	Gigabit Ethernet 1
++4	ge0	Gigabit Ethernet 0
++5	pex0	PCIe Cntrl 0
++17	sdio	SDHCI Host
++18	usb0	USB Host 0
++22	xor0	XOR DMA 0
++
+ The following is a list of provided IDs for Dove:
+ ID	Clock	Peripheral
+ -----------------------------------
+@@ -169,6 +179,7 @@ Required properties:
+ 	"marvell,armada-380-gating-clock" - for Armada 380/385 SoC clock gating
+ 	"marvell,armada-390-gating-clock" - for Armada 39x SoC clock gating
+ 	"marvell,armada-xp-gating-clock" - for Armada XP SoC clock gating
++	"marvell,mv98dx3236-gating-clock" - for 98dx3236 SoC clock gating
+ 	"marvell,dove-gating-clock" - for Dove SoC clock gating
+ 	"marvell,kirkwood-gating-clock" - for Kirkwood SoC clock gating
+ - reg : shall be the register address of the Clock Gating Control register
+diff --git a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+index e4baa97836e7..e80a5ee835e5 100644
+--- a/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
++++ b/arch/arm/boot/dts/armada-xp-98dx3236.dtsi
+@@ -176,18 +176,12 @@
+ 			};
+ 
+ 			gateclk: clock-gating-control@18220 {
+-				compatible = "marvell,armada-xp-gating-clock";
++				compatible = "marvell,mv98dx3236-gating-clock";
+ 				reg = <0x18220 0x4>;
+ 				clocks = <&coreclk 0>;
+ 				#clock-cells = <1>;
+ 			};
+ 
+-			coreclk: mvebu-sar@18230 {
+-				compatible = "marvell,mv98dx3236-core-clock";
+-				reg = <0x18230 0x08>;
+-				#clock-cells = <1>;
+-			};
+-
+ 			cpuclk: clock-complex@18700 {
+ 				#clock-cells = <1>;
+ 				compatible = "marvell,mv98dx3236-cpu-clock";
+@@ -264,6 +258,12 @@
+ 			ranges = <0 MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 			reg = <MBUS_ID(0x08, 0x00) 0 0x100000>;
+ 
++			coreclk: mvebu-sar@f8204 {
++				compatible = "marvell,mv98dx3236-core-clock";
++				reg = <0xf8204 0x4>;
++				#clock-cells = <1>;
++			};
++
+ 			soc-id@f8244 {
+ 				compatible = "marvell,mv98dx3236-soc-id";
+ 				reg = <0xf8244 0x4>;
 -- 
 2.11.0.24.ge6920cf
