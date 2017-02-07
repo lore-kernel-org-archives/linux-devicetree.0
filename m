@@ -1,208 +1,59 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 3/3] i2c: zx2967: add i2c controller driver for ZTE's
- zx2967 family
-Date: Tue, 7 Feb 2017 12:47:20 +0200
-Message-ID: <CAHp75Ve+J+ECRpsCCoV_87nHH+AALQpgrygiy0qSOFMK22yABw@mail.gmail.com>
-References: <1486351569-4814-1-git-send-email-baoyou.xie@linaro.org> <1486351569-4814-3-git-send-email-baoyou.xie@linaro.org>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] power: supply: Add driver for TI BQ2416X battery charger
+Date: Tue, 7 Feb 2017 13:08:21 +0200
+Message-ID: <CAHp75VfWNd8p7eg9TU2SNC1dqBMf0fmkbEVmkWOWcDqHrDgOLQ@mail.gmail.com>
+References: <1486429749-12973-1-git-send-email-wojciech.ziemba@verifone.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1486351569-4814-3-git-send-email-baoyou.xie@linaro.org>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Baoyou Xie <baoyou.xie@linaro.org>
-Cc: jun.nie@linaro.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486429749-12973-1-git-send-email-wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wojciech Ziemba <wo.ziemba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, wojciech.ziemba-VFDYytZz4I1Wk0Htik3J/w@public.gmane.org, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 6, 2017 at 5:26 AM, Baoyou Xie <baoyou.xie@linaro.org> wrote:
-> This patch adds i2c controller driver for ZTE's zx2967 family.
+On Tue, Feb 7, 2017 at 3:09 AM, Wojciech Ziemba <wo.ziemba-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> There is interest in adding a Linux driver for TI BQ2416X battery
+> charger. The driver supports BQ24160 chip, thus can be easily extended
+> for other BQ2416X family chargers.
+> Device exposes 'POWER_SUPPLY_PROP_*' properties and a number of knobs
+> for controlling the charging process as well as sends power supply change
+> notification via power-supply subsystem.
 
-> +#define I2C_STOP                       0
-> +#define I2C_MASTER                     BIT(0)
-> +#define I2C_ADDR_MODE_TEN              BIT(1)
-> +#define I2C_IRQ_MSK_ENABLE             BIT(3)
-> +#define I2C_RW_READ                    BIT(4)
-> +#define I2C_CMB_RW_EN                  BIT(5)
-> +#define I2C_START                      BIT(6)
+Some style related comments
 
-> +#define I2C_ADDR_MODE_TEN              BIT(1)
+0. Less lines of code -> better! (but not be too eager)
+1. Use GENMASK()
+2.
+int ret = -EINVAL;
 
-I'm not sure you have to repeat this.
+if (a)
+ ret = x;
+else if (b)
+ ret = y;
 
-> +#define I2C_WFIFO_RESET                        BIT(7)
-> +#define I2C_RFIFO_RESET                        BIT(7)
+>> else
+>> ret = -EINVAL;
 
-Hmm... Are they applied to the same register?
+Those are redundant.
 
-> +struct zx2967_i2c_info {
-> +       spinlock_t              lock;
+if (ret)
+ return ret;
 
-> +       struct device           *dev;
-> +       struct i2c_adapter      adap;
+3. #ifdef:s are ugly.
+For CONFIG_PM_SLEEP functions just use
+__maybe_unused attribute.
 
-I'm pretty sure you may access *dev from adap. Or they are different devices?
+4. Try to avoid #ifdef CONFIG_OF (this will limit driver for OF case
+when it might be used elsewhere, e.g. ACPI case)
 
-> +       struct clk              *clk;
-> +       struct completion       complete;
-> +       u32                     clk_freq;
-> +       void __iomem            *reg_base;
-> +       size_t                  residue;
-> +       int                     irq;
-> +       int                     msg_rd;
-> +       u8                      *buf;
-> +       u8                      access_cnt;
-> +       bool                    is_suspended;
-> +};
-
-
-> +static void zx2967_i2c_flush_fifos(struct zx2967_i2c_info *zx_i2c)
-> +{
-
-> +       u32 val;
-> +       u32 offset;
-
-Reversed tree?
-
-> +
-> +       if (zx_i2c->msg_rd) {
-> +               offset = REG_RDCONF;
-> +               val = I2C_RFIFO_RESET;
-> +       } else {
-> +               offset = REG_WRCONF;
-> +               val = I2C_WFIFO_RESET;
-> +       }
-> +
-> +       val |= zx2967_i2c_readl(zx_i2c, offset);
-> +       zx2967_i2c_writel(zx_i2c, val, offset);
-> +}
-
-> +       zx2967_i2c_readsb(zx_i2c, val, REG_DATA, size);
-> +       for (i = 0; i < size; i++) {
-
-> +               *(zx_i2c->buf++) = val[i];
-
-Do you need parens? I guess *p++ = x; is quite understandable pattern.
-
-> +               zx_i2c->residue--;
-> +               if (zx_i2c->residue <= 0)
-> +                       break;
-> +       }
-> +
-> +       barrier();
-> +
-> +       return 0;
-> +}
-
-> +static int zx2967_i2c_fill_tx_fifo(struct zx2967_i2c_info *zx_i2c)
-> +{
-
-> +       u8 *buf = zx_i2c->buf;
-> +       size_t residue = zx_i2c->residue;
-
-Reversed tree?
-
-> +
-> +       if (residue == 0) {
-> +               dev_err(zx_i2c->dev, "residue is %d\n", (int)residue);
-> +               return -EINVAL;
-> +       }
-
-> +static void zx2967_enable_tenbit(struct zx2967_i2c_info *zx_i2c, __u16 addr)
-> +{
-> +       u16 val = (addr >> 7) & 0x7;
-
-Magic values.
-
-> +       if (val > 0) {
-
-It can't be negative ->
-
-if (val) {
-
-> +               zx2967_i2c_writel(zx_i2c, val, REG_DEVADDR_H);
-> +               val = (zx2967_i2c_readl(zx_i2c, REG_CMD)) | I2C_ADDR_MODE_TEN;
-> +               zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-> +       }
-> +}
-
-> +static int zx2967_i2c_xfer(struct i2c_adapter *adap,
-> +                          struct i2c_msg *msgs, int num)
-> +{
-> +       struct zx2967_i2c_info *zx_i2c = i2c_get_adapdata(adap);
-> +       int ret;
-> +       int i;
-> +
-> +       if (zx_i2c->is_suspended)
-> +               return -EBUSY;
-> +
-> +       zx2967_i2c_writel(zx_i2c, (msgs->addr & 0x7f), REG_DEVADDR_L);
-> +       zx2967_i2c_writel(zx_i2c, (msgs->addr >> 7) & 0x7, REG_DEVADDR_H);
-> +       if (zx2967_i2c_readl(zx_i2c, REG_DEVADDR_H) > 0)
-> +               zx2967_enable_tenbit(zx_i2c, msgs->addr);
-> +
-> +       for (i = 0; i < num; i++) {
-> +               ret = zx2967_i2c_xfer_msg(zx_i2c, &msgs[i]);
-> +               if (ret)
-> +                       return ret;
-
-> +               if (num > 1)
-
-Would it be drastic performance impact if you remove this condition
-and do sleep unconditionally?
-
-> +                       usleep_range(1000, 2000);
-
-Why do you need this in any case? Comment, please. Do this for every
-non-commented *sleep() call in this driver.
-(You may define minimum sleep range, put comment there and use it in
-those *sleep() calls)
-
-> +       }
-> +
-> +       return num;
-> +}
-
-> +#ifdef CONFIG_PM
-> +static const struct dev_pm_ops zx2967_i2c_dev_pm_ops = {
-> +       .suspend        = zx2967_i2c_suspend,
-> +       .resume         = zx2967_i2c_resume,
-> +};
-> +#define ZX2967_I2C_DEV_PM_OPS  (&zx2967_i2c_dev_pm_ops)
-> +#else
-> +#define        ZX2967_I2C_DEV_PM_OPS   NULL
-> +#endif
-
-Remove these ugly #ifdef:s There are suitable macros are available in
-pm.h. Like SIMPLE_PM_OPS().
-
-> +static int zx2967_i2c_probe(struct platform_device *pdev)
-> +{
-> +       struct zx2967_i2c_info *zx_i2c;
-> +       void __iomem *reg_base;
-> +       struct resource *res;
-> +       struct clk *clk;
-> +       int ret;
-
-> +       ret = device_property_read_u32(&pdev->dev, "clock-frequency",
-> +                                      &zx_i2c->clk_freq);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "missing clock-frequency");
-> +               return ret;
-> +       }
-
-How is it used? You enabled clock before this and that clock
-apparently has to have frequency > 0. Isn't the same frequency we are
-considering here?
-
-> +       zx_i2c->reg_base = reg_base;
-> +       zx_i2c->clk = clk;
-> +       zx_i2c->dev = &pdev->dev;
-
-> +       i2c_set_adapdata(&zx_i2c->adap, zx_i2c);
-
-> +       zx_i2c->adap.owner = THIS_MODULE;
-
-Is it still needed?
+5. Check headers and library for existing helpers. I believe some of
+your bit operations and such already have nice helpers in kernel.
 
 -- 
 With Best Regards,
 Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
