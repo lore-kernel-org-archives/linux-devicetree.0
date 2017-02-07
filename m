@@ -1,52 +1,48 @@
 From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH -next 1/3] arm64: dts: mt8173: add reference clock for usb
-Date: Tue, 7 Feb 2017 14:13:31 +0800
-Message-ID: <1486448013-8784-1-git-send-email-chunfeng.yun@mediatek.com>
+Subject: [PATCH -next 3/3] usb: xhci-mtk: make the reference clock optional
+Date: Tue, 7 Feb 2017 14:13:33 +0800
+Message-ID: <1486448013-8784-3-git-send-email-chunfeng.yun@mediatek.com>
+References: <1486448013-8784-1-git-send-email-chunfeng.yun@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486448013-8784-1-git-send-email-chunfeng.yun@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Mathias Nyman <mathias.nyman@intel.com>, Felipe Balbi <felipe.balbi@linux.intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Due to the reference clock comes from 26M oscillator directly
-on mt8173, and it is a fixed-clock in DTS which always turned
-on, we ignore it before. But on some platforms, it comes
-from PLL, and need be controlled, so here add it, no matter
-it is a fixed-clock or not.
+Make the reference clock optional for DTS backward compatibility
+and ignore the error if it does not exist.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/host/xhci-mtk.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 07fd2eb..e2862b6 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -729,9 +729,11 @@
- 			       <&u2port1 PHY_TYPE_USB2>;
- 			power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
- 			clocks = <&topckgen CLK_TOP_USB30_SEL>,
-+				 <&clk26m>,
- 				 <&pericfg CLK_PERI_USB0>,
- 				 <&pericfg CLK_PERI_USB1>;
- 			clock-names = "sys_ck",
-+				      "ref_ck",
- 				      "wakeup_deb_p0",
- 				      "wakeup_deb_p1";
- 			mediatek,syscon-wakeup = <&pericfg>;
-@@ -746,8 +748,8 @@
- 				reg-names = "mac";
- 				interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_LOW>;
- 				power-domains = <&scpsys MT8173_POWER_DOMAIN_USB>;
--				clocks = <&topckgen CLK_TOP_USB30_SEL>;
--				clock-names = "sys_ck";
-+				clocks = <&topckgen CLK_TOP_USB30_SEL>, <&clk26m>;
-+				clock-names = "sys_ck", "ref_ck";
- 				status = "disabled";
- 			};
- 		};
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 4d75ac5..75bae8e 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -559,10 +559,17 @@ static int xhci_mtk_probe(struct platform_device *pdev)
+ 		return PTR_ERR(mtk->sys_clk);
+ 	}
+ 
++	/*
++	 * reference clock is usually a "fixed-clock", make it optional
++	 * for backward compatibility and ignore the error if it does
++	 * not exist.
++	 */
+ 	mtk->ref_clk = devm_clk_get(dev, "ref_ck");
+ 	if (IS_ERR(mtk->ref_clk)) {
+-		dev_err(dev, "fail to get ref_ck\n");
+-		return PTR_ERR(mtk->ref_clk);
++		if (PTR_ERR(mtk->ref_clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++
++		mtk->ref_clk = NULL;
+ 	}
+ 
+ 	mtk->lpm_support = of_property_read_bool(node, "usb3-lpm-capable");
 -- 
 1.7.9.5
