@@ -1,7 +1,7 @@
 From: Jayachandran C <jnair@caviumnetworks.com>
-Subject: [PATCH v3 1/5] arm64: add THUNDER2 processor family
-Date: Tue, 7 Feb 2017 21:19:55 +0000
-Message-ID: <1486502399-2950-2-git-send-email-jnair@caviumnetworks.com>
+Subject: [PATCH v3 2/5] MAINTAINERS: Add Cavium ThunderX2 entry
+Date: Tue, 7 Feb 2017 21:19:56 +0000
+Message-ID: <1486502399-2950-3-git-send-email-jnair@caviumnetworks.com>
 References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,35 +21,31 @@ To: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>
 Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Jayachandran C <jnair@caviumnetworks.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for ThunderX2 CN99XX arm64 server processors. Introduce a
-new arm64 platform config option ARCH_THUNDER2 for these processors.
-
-ARCH_THUNDER2 has the same on-chip devices as ARCH_VULCAN, so select
-ARCH_VULCAN for now, until the driver dependencies are updated.
+Add maintainer information for Cavium ThunderX2 ARM64 processor
+family.
 
 Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
 ---
- arch/arm64/Kconfig.platforms | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 715ef12..1ee377d 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -190,6 +190,14 @@ config ARCH_THUNDER
- 	help
- 	  This enables support for Cavium's Thunder Family of SoCs.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 187b961..4f788ad 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2972,6 +2972,13 @@ S:	Maintained
+ F:	drivers/iio/light/cm*
+ F:	Documentation/devicetree/bindings/i2c/trivial-admin-guide/devices.rst
  
-+config ARCH_THUNDER2
-+	bool "Cavium ThunderX2 Server Processors"
-+	select ARCH_VULCAN
-+	select GPIOLIB
-+	help
-+	  This enables support for Cavium's ThunderX2 CN99XX family of
-+	  server processors.
++CAVIUM THUNDERX2 ARM64 SOC
++M:	Jayachandran C <jnair@caviumnetworks.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	arch/arm64/boot/dts/cavium/thunder-99xx*
++F:	Documentation/devicetree/bindings/arm/cavium-thunder2.txt
 +
- config ARCH_UNIPHIER
- 	bool "Socionext UniPhier SoC Family"
- 	select ARCH_HAS_RESET_CONTROLLER
+ CAVIUM I2C DRIVER
+ M:	Jan Glauber <jglauber@cavium.com>
+ M:	David Daney <david.daney@cavium.com>
 -- 
 2.7.4
