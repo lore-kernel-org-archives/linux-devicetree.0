@@ -1,79 +1,51 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for GPU
-Date: Wed, 08 Feb 2017 11:50:57 -0800
-Message-ID: <87lgtgea1q.fsf@eliezer.anholt.net>
-References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org> <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com> <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com> <20170208041929.GA6809@localhost.localdomain> <20170208042351.GB6809@localhost.localdomain> <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
+Date: Wed, 8 Feb 2017 20:00:15 +0000
+Message-ID: <aabc6853d7934507a4507b0ad4354b72@svr-chch-ex1.atlnz.lc>
+References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
+ <5a974d9d7260432087619486bf5d79ed@svr-chch-ex1.atlnz.lc>
+ <6149d4126a214ac8b0b0184bd818bea6@svr-chch-ex1.atlnz.lc>
+ <9294933.cXSW0amFbE@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Stefan Wahren <stefan.wahren@i2se.com> writes:
-
-> Am 08.02.2017 um 05:23 schrieb Eduardo Valentin:
->> On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
->>> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
->>>> As suggested by Eduardo Valentin this adds the thermal zone for
->>>> the bcm2835 SoC. Since we currently don't have any cooling devices
->>>> leave this section empty.
->>>>
->>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->>>> ---
->>>>  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
->>>>  1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283=
-x.dtsi
->>>> index 9c7ec7e..359da9d 100644
->>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
->>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
->>>> @@ -19,6 +19,25 @@
->>>>  		bootargs =3D "earlyprintk console=3DttyAMA0";
->>>>  	};
->>>>=20=20
->>>> +	thermal-zones {
->>>> +		gpu_thermal: gpu-thermal {
->>>> +			polling-delay-passive =3D <0>;
->>>> +			polling-delay =3D <1000>;
->>>> +
->>>> +			thermal-sensors =3D <&thermal>;
->> Just came to my mind, dont you need to have an id to specify with sensor
->> points to gpu?
+On 08/02/17 23:53, Arnd Bergmann wrote:
+> On Tuesday, February 7, 2017 3:07:37 AM CET Chris Packham wrote:
+>>>
+>>> Actually I wonder if I can try a bit harder to keep a system booting.
+>>> The following might work
+>>> 1) add the compatible strings to the existing armada clock drivers.
+>>> 2) update the dts to use the new compatible strings.
+>>> 3) add the new driver and remove the compatible strings from the armada
+>>> drivers.
+>>>
+>>> #1 would still upset checkpatch.pl because the documentation would only
+>>> arrive in #2.
+>>
+>> Actually upon testing #1 is unnecessary. I lose some of the gated clocks
+>> but nothing that prevents booting.
 >
-> Sorry, i don't know the exact setup of the single thermal sensor on the
-> SoC (datasheet doesn't provide any helpful information). I adapted the
-> Renesas R-Car thermal binding because i think it would be the best match.
+> Just to be sure: this means we can merge 2) and 3) independently and
+> having just one of them will not cause regressions over what we have
+> today?
 >
-> @Eric: What's your opinion?
 
-I don't understand the question.
+Correct. And that's what I sent out as v2.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlibdqEACgkQtdYpNtH8
-nuhuuxAAgofsfFPGnonSUy9c5aa04RKiN0tjelAVdR9qu57WlCQzs06K/vYrBadM
-ZsPv3hK9NcjItIhebV3WhV/G90pVoS3aRm3vI5XDJnoDl3hvkBUKYb6C715T1NuK
-9yqR+DCjPPaaP/tDNeWl8Lj+OuqgwziR5DfsCogeT3XHVzxxdhloq7weWuY9LWzI
-9Apmld4hwWdGKnXDWFMjtwwRelKeg5Qs05q4EilBzolgNEqbyqyc2+7LwuSDQ9NI
-4UjWsgU+Gi5Tr0C1ubaaZQhIdoXkXeffEaFdSAMH1yFOKk/Tz79IVf6xIhbuuPFD
-Gbs68jKcYfwvaAMgW6a4rCDoST3L8IK2UcFzY/gbEBvatsbgXVSF6QJsaKMyi6yr
-f6eOyxfv7GI/cXwPhzi2KM5HP0QppqfoW/EkTGcItaABY8QubWIeYtMZkGFeKkSE
-L+hNgYiseXMZ7LGf6TDR4xe4dpVYV8fOX2HhrTsgqxlbdmBoCrggkJNCYtaF6CPi
-WOO/UUZ1Kpq8PTjCtLiiMJn2/dLRMeESyk3I/6eQExC+szkOWDPnQWQLcUyTw8QK
-cTPUuHNf/+RbuBH0FNwzbYmcGsJWnIm8MghtZpnvdwBnG8lumdPE4izkH7ozXYvz
-Z4khDCzEY30zFs/OSp01+V/fDZ5EW1otXcEypwbD9I4nRuUeMJc=
-=PRVb
------END PGP SIGNATURE-----
---=-=-=--
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486467.html
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486471.html
