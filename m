@@ -1,11 +1,13 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for Broadcom NSP SoC"
-Date: Thu,  9 Feb 2017 00:30:22 +0100
-Message-ID: <20170208233023.31922-1-zajec5@gmail.com>
+Subject: [PATCH for-4.11 2/2] Revert "dt-bindings: phy: Add documentation for NSP USB3 PHY"
+Date: Thu,  9 Feb 2017 00:30:23 +0100
+Message-ID: <20170208233023.31922-2-zajec5@gmail.com>
+References: <20170208233023.31922-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170208233023.31922-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
@@ -13,234 +15,64 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-This reverts commit d7bc1a7d41bf ("phy: Add USB3 PHY support for
-Broadcom NSP SoC") as we already have driver for this PHY (shared by NS
-and NSP). It was added in commit e5666281d9ea ("phy: bcm-ns-usb3: new
-driver for USB 3.0 PHY on Northstar").
+This reverts commit c8ca631f9480 ("dt-bindings: phy: Add documentation
+for NSP USB3 PHY") to match reverting commit adding the new PHY driver.
+Please note we revert this commit before it reached stable release.
 
-Instead of adding separated driver & duplicating code we should work on
-improving existing (old) one. Thanks to work done by Broadcom we know
-there is MDIO bus we weren't aware of & we know register names which
-makes initialization more clear. This is very valuable info and we
-should work on using it in existing driver afterwards.
+If new compatible string is needed it should be added to the existing
+bcm-ns-usb3-phy.txt which already describes this PHY.
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
- drivers/phy/Kconfig            |   8 --
- drivers/phy/Makefile           |   1 -
- drivers/phy/phy-bcm-nsp-usb3.c | 177 -----------------------------------------
- 3 files changed, 186 deletions(-)
- delete mode 100644 drivers/phy/phy-bcm-nsp-usb3.c
+ .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ----------------------
+ 1 file changed, 39 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index bb5cf6f49b06..c49a914d6409 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -502,12 +502,4 @@ config PHY_MESON8B_USB2
- 	  and GXBB SoCs.
- 	  If unsure, say N.
- 
--config PHY_NSP_USB3
--	tristate "Broadcom NorthStar plus USB3 PHY driver"
--	depends on OF && (ARCH_BCM_NSP || COMPILE_TEST)
--	select GENERIC_PHY
--	default ARCH_BCM_NSP
--	help
--	  Enable this to support the Broadcom Northstar plus USB3 PHY.
--	  If unsure, say N.
- endmenu
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index 9f008004f75d..0e4259473d28 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -61,4 +61,3 @@ obj-$(CONFIG_PHY_CYGNUS_PCIE)		+= phy-bcm-cygnus-pcie.o
- obj-$(CONFIG_ARCH_TEGRA) += tegra/
- obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
- obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
--obj-$(CONFIG_PHY_NSP_USB3)		+= phy-bcm-nsp-usb3.o
-diff --git a/drivers/phy/phy-bcm-nsp-usb3.c b/drivers/phy/phy-bcm-nsp-usb3.c
+diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 deleted file mode 100644
-index 49024eaa5545..000000000000
---- a/drivers/phy/phy-bcm-nsp-usb3.c
+index e68ae5dec9c9..000000000000
+--- a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 +++ /dev/null
-@@ -1,177 +0,0 @@
--/*
-- * Copyright (C) 2016 Broadcom
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
+@@ -1,39 +0,0 @@
+-Broadcom USB3 phy binding for northstar plus SoC
+-The USB3 phy is internal to the SoC and is accessed using mdio interface.
 -
--#include <linux/delay.h>
--#include <linux/io.h>
--#include <linux/kernel.h>
--#include <linux/mfd/syscon.h>
--#include <linux/mdio.h>
--#include <linux/module.h>
--#include <linux/of.h>
--#include <linux/of_address.h>
--#include <linux/phy/phy.h>
--#include <linux/regmap.h>
+-Required mdio bus properties:
+-- reg: Should be 0x0 for SoC internal USB3 phy
+-- #address-cells: must be 1
+-- #size-cells: must be 0
 -
--#define NSP_USB3_RST_CTRL_OFFSET	0x3f8
+-Required USB3 PHY properties:
+-- compatible: should be "brcm,nsp-usb3-phy"
+-- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.
+-- usb3-ctrl-syscon: handler of syscon node defining physical address
+-  of usb3 control register.
+-- #phy-cells: must be 0
 -
--/* mdio reg access */
--#define NSP_USB3_PHY_BASE_ADDR_REG	0x1f
+-Required usb3 control properties:
+-- compatible: should be "brcm,nsp-usb3-ctrl"
+-- reg: offset and length of the control registers
 -
--#define NSP_USB3_PHY_PLL30_BLOCK	0x8000
--#define NSP_USB3_PLL_CONTROL		0x01
--#define NSP_USB3_PLLA_CONTROL0		0x0a
--#define NSP_USB3_PLLA_CONTROL1		0x0b
+-Example:
 -
--#define NSP_USB3_PHY_TX_PMD_BLOCK	0x8040
--#define NSP_USB3_TX_PMD_CONTROL1	0x01
+-	mdio@0 {
+-		reg = <0x0>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
 -
--#define NSP_USB3_PHY_PIPE_BLOCK		0x8060
--#define NSP_USB3_LFPS_CMP		0x02
--#define NSP_USB3_LFPS_DEGLITCH		0x03
+-		usb3_phy: usb-phy@10 {
+-			compatible = "brcm,nsp-usb3-phy";
+-			reg = <0x10>;
+-			usb3-ctrl-syscon = <&usb3_ctrl>;
+-			#phy-cells = <0>;
+-			status = "disabled";
+-		};
+-	};
 -
--struct nsp_usb3_phy {
--	struct regmap *usb3_ctrl;
--	struct phy *phy;
--	struct mdio_device *mdiodev;
--};
--
--static int nsp_usb3_phy_init(struct phy *phy)
--{
--	struct nsp_usb3_phy *iphy = phy_get_drvdata(phy);
--	struct mii_bus *bus = iphy->mdiodev->bus;
--	int addr = iphy->mdiodev->addr;
--	u32 data;
--	int rc;
--
--	rc = regmap_read(iphy->usb3_ctrl, 0, &data);
--	if (rc)
--		return rc;
--	data |= 1;
--	rc = regmap_write(iphy->usb3_ctrl, 0, data);
--	if (rc)
--		return rc;
--
--	rc = regmap_write(iphy->usb3_ctrl, NSP_USB3_RST_CTRL_OFFSET, 1);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
--			   NSP_USB3_PHY_PLL30_BLOCK);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PLL_CONTROL, 0x1000);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL0, 0x6400);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL1, 0xc000);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PLLA_CONTROL1, 0x8000);
--	if (rc)
--		return rc;
--
--	rc = regmap_write(iphy->usb3_ctrl, NSP_USB3_RST_CTRL_OFFSET, 0);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PLL_CONTROL, 0x9000);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
--			   NSP_USB3_PHY_PIPE_BLOCK);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_LFPS_CMP, 0xf30d);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_LFPS_DEGLITCH, 0x6302);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_PHY_BASE_ADDR_REG,
--			   NSP_USB3_PHY_TX_PMD_BLOCK);
--	if (rc)
--		return rc;
--
--	rc = mdiobus_write(bus, addr, NSP_USB3_TX_PMD_CONTROL1, 0x1003);
--
--	return rc;
--}
--
--static struct phy_ops nsp_usb3_phy_ops = {
--	.init	= nsp_usb3_phy_init,
--	.owner	= THIS_MODULE,
--};
--
--static int nsp_usb3_phy_probe(struct mdio_device *mdiodev)
--{
--	struct device *dev = &mdiodev->dev;
--	struct phy_provider *provider;
--	struct nsp_usb3_phy *iphy;
--
--	iphy = devm_kzalloc(dev, sizeof(*iphy), GFP_KERNEL);
--	if (!iphy)
--		return -ENOMEM;
--	iphy->mdiodev = mdiodev;
--
--	iphy->usb3_ctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
--						 "usb3-ctrl-syscon");
--	if (IS_ERR(iphy->usb3_ctrl))
--		return PTR_ERR(iphy->usb3_ctrl);
--
--	iphy->phy = devm_phy_create(dev, dev->of_node, &nsp_usb3_phy_ops);
--	if (IS_ERR(iphy->phy)) {
--		dev_err(dev, "failed to create PHY\n");
--		return PTR_ERR(iphy->phy);
--	}
--
--	phy_set_drvdata(iphy->phy, iphy);
--
--	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
--	if (IS_ERR(provider)) {
--		dev_err(dev, "could not register PHY provider\n");
--		return PTR_ERR(provider);
--	}
--
--	return 0;
--}
--
--static const struct of_device_id nsp_usb3_phy_of_match[] = {
--	{.compatible = "brcm,nsp-usb3-phy",},
--	{ /* sentinel */ }
--};
--
--static struct mdio_driver nsp_usb3_phy_driver = {
--	.mdiodrv = {
--		.driver = {
--			.name = "nsp-usb3-phy",
--			.of_match_table = nsp_usb3_phy_of_match,
--		},
--	},
--	.probe = nsp_usb3_phy_probe,
--};
--
--mdio_module_driver(nsp_usb3_phy_driver);
--
--MODULE_DESCRIPTION("Broadcom NSP USB3 PHY driver");
--MODULE_LICENSE("GPL v2");
--MODULE_AUTHOR("Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org");
+-	usb3_ctrl: syscon@104408 {
+-		compatible = "brcm,nsp-usb3-ctrl", "syscon";
+-		reg = <0x104408 0x3fc>;
+-	};
 -- 
 2.11.0
 
