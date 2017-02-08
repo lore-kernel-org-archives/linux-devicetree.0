@@ -1,123 +1,79 @@
-From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Wed, 8 Feb 2017 19:45:31 +0100
-Message-ID: <80e533b6-4eb3-0019-fe18-82dd0d7aaa1c@g0hl1n.net>
-References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
- <1486560068.2133.395.camel@linux.intel.com> <20170208135957.GA916@kroah.com>
- <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
- <1486572009.2133.406.camel@linux.intel.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for GPU
+Date: Wed, 08 Feb 2017 11:50:57 -0800
+Message-ID: <87lgtgea1q.fsf@eliezer.anholt.net>
+References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org> <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com> <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com> <20170208041929.GA6809@localhost.localdomain> <20170208042351.GB6809@localhost.localdomain> <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486572009.2133.406.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, kernel@martin.sperl.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2017 05:40 PM, Andy Shevchenko wrote:
-> On Wed, 2017-02-08 at 16:17 +0100, Richard Leitner wrote:
->> On 02/08/2017 02:59 PM, Greg KH wrote:
->>> On Wed, Feb 08, 2017 at 03:21:08PM +0200, Andy Shevchenko wrote:
->>>> On Wed, 2017-02-08 at 09:52 +0100, Richard Leitner wrote:
->>>>> From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
->>>>> +#define DRIVER_NAME "usb251xb"
->>>>> +#define DRIVER_DESC "Microchip USB 2.0 Hi-Speed Hub Controller"
->>>>> +#define DRIVER_VERSION "1.0"
+Stefan Wahren <stefan.wahren@i2se.com> writes:
+
+> Am 08.02.2017 um 05:23 schrieb Eduardo Valentin:
+>> On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
+>>> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
+>>>> As suggested by Eduardo Valentin this adds the thermal zone for
+>>>> the bcm2835 SoC. Since we currently don't have any cooling devices
+>>>> leave this section empty.
 >>>>
->>>> Is it my MUA, or all above indentations are broken?
->>>
->>> What do you mean?
->>
->> Should the strings be aligned, like the following?
->> #define DRIVER_NAME     "usb251xb"
->> #define DRIVER_DESC     "Microchip USB .."
->> #define DRIVER_VERSION	"1.0"
->
-> Yep, tab vs. space indentation.
-
-Ok, will do that for v5.
-
->>>> Above doesn't make much sense. Why not to use
+>>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
+>>>>  1 file changed, 19 insertions(+)
 >>>>
->>>>> BIT(bit)
->>>>
->>>> and
->>>>
->>>> & ~BIT(bit)
->>>>
->>>> in place?
->>>
->>> I thought we already had functions to do this for you.  Don't write
->>> new
->>> ones "by hand" either wya.
->>
->> Which functions do you mean? I only found set_bit() and clear_bit()
->> from
->> atomic_ops. But those operate on "unsigned long" variables. From the
->> documentation:
->> 	Native atomic bit operations are defined to operate
->> 	on objects aligned to the size of an "unsigned long"
->> 	C data type, and are least of that size.
+>>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283=
+x.dtsi
+>>>> index 9c7ec7e..359da9d 100644
+>>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+>>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+>>>> @@ -19,6 +19,25 @@
+>>>>  		bootargs =3D "earlyprintk console=3DttyAMA0";
+>>>>  	};
+>>>>=20=20
+>>>> +	thermal-zones {
+>>>> +		gpu_thermal: gpu-thermal {
+>>>> +			polling-delay-passive =3D <0>;
+>>>> +			polling-delay =3D <1000>;
+>>>> +
+>>>> +			thermal-sensors =3D <&thermal>;
+>> Just came to my mind, dont you need to have an id to specify with sensor
+>> points to gpu?
 >
-> __set_bit(), __clear_bit() -- non-atomic variants, but you are right,
-> that (unsigned long) exactly the point I didn't propose them.
-
-So the preferred solution is the BIT() stuff?
-
->>>>> +		/* the first data byte transferred tells the
->>>>> hub how
->>>>> many data
->>>>> +		 * bytes will follow (byte count)
->>>>> +		 */
->>>>
->>>> I'm not sure this is good formatted comment for USB subsystem.
->>>
->>> Looks fine to me, why do you think it is incorrect?
+> Sorry, i don't know the exact setup of the single thermal sensor on the
+> SoC (datasheet doesn't provide any helpful information). I adapted the
+> Renesas R-Car thermal binding because i think it would be the best match.
 >
-> I would do like
->
-> /*
->  * The multi-line
->  * comment.
->  */
->
-> Capital letter, period at the end, first empty line (unlike in net
-> subsystem).
+> @Eric: What's your opinion?
 
-So what's the preferred format? Empty line at the beginning or not?
+I don't understand the question.
 
-The captital letter and period looks fine. I'll apply that for v5.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->>>
->>>>> +#else /* CONFIG_OF */
->>>>> +static int usb251xb_get_ofdata(struct usb251xb *hub,
->>>>> +			       struct usb251xb_data *data)
->>>>> +{
->>>>> +	return 0;
->>>>> +}
->>>>> +#endif /* CONFIG_OF */
->>>>
->>>> I don't think it's a good idea to have those ugly #ifdef.
->>>
->>> How can it be removed?
->
-> __maybe_unused for function, device_property_*() instead of
-> of_property_*() calls.
->
-> Something like that. But if you are insisting this is *only* OF
-> available hardware or we don't care, I'll not object.
+-----BEGIN PGP SIGNATURE-----
 
-In usb3503.c and usb4604.c we have that #ifdef CONFIG_OF too. IMHO those 
-drivers should use the same solution here. But you guys are the ones 
-with tons of kernel coding experience, so just say how it should be done :-)
-
-Thanks & regards,
-Richard L
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlibdqEACgkQtdYpNtH8
+nuhuuxAAgofsfFPGnonSUy9c5aa04RKiN0tjelAVdR9qu57WlCQzs06K/vYrBadM
+ZsPv3hK9NcjItIhebV3WhV/G90pVoS3aRm3vI5XDJnoDl3hvkBUKYb6C715T1NuK
+9yqR+DCjPPaaP/tDNeWl8Lj+OuqgwziR5DfsCogeT3XHVzxxdhloq7weWuY9LWzI
+9Apmld4hwWdGKnXDWFMjtwwRelKeg5Qs05q4EilBzolgNEqbyqyc2+7LwuSDQ9NI
+4UjWsgU+Gi5Tr0C1ubaaZQhIdoXkXeffEaFdSAMH1yFOKk/Tz79IVf6xIhbuuPFD
+Gbs68jKcYfwvaAMgW6a4rCDoST3L8IK2UcFzY/gbEBvatsbgXVSF6QJsaKMyi6yr
+f6eOyxfv7GI/cXwPhzi2KM5HP0QppqfoW/EkTGcItaABY8QubWIeYtMZkGFeKkSE
+L+hNgYiseXMZ7LGf6TDR4xe4dpVYV8fOX2HhrTsgqxlbdmBoCrggkJNCYtaF6CPi
+WOO/UUZ1Kpq8PTjCtLiiMJn2/dLRMeESyk3I/6eQExC+szkOWDPnQWQLcUyTw8QK
+cTPUuHNf/+RbuBH0FNwzbYmcGsJWnIm8MghtZpnvdwBnG8lumdPE4izkH7ozXYvz
+Z4khDCzEY30zFs/OSp01+V/fDZ5EW1otXcEypwbD9I4nRuUeMJc=
+=PRVb
+-----END PGP SIGNATURE-----
+--=-=-=--
