@@ -1,231 +1,80 @@
-From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Subject: Re: [PATCH RESEND v7 2/2] Add support for OV5647 sensor.
-Date: Wed, 8 Feb 2017 09:56:12 +0000
-Message-ID: <e4ce5644-4f44-4c46-219a-cac2126dc8ba@synopsys.com>
-References: <cover.1486136893.git.roliveir@synopsys.com>
- <26e5a587f1ba9e2fbbc04284408305bc8cf8c5c0.1486136893.git.roliveir@synopsys.com>
- <20170203201729.GA18086@kekkonen.localdomain>
- <f23e76ff-326a-c4df-601d-6b12b644bff7@synopsys.com>
- <20170207173116.GC13854@valkosipuli.retiisi.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
+Date: Wed, 8 Feb 2017 11:40:02 +0000
+Message-ID: <20170208114002.GD15459@leverpostej>
+References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
+	<1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
+	<20170202174218.GO31394@leverpostej>
+	<017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170207173116.GC13854@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari
-
-On 2/7/2017 5:31 PM, Sakari Ailus wrote:
-> Hi Ramiro,
+On Wed, Feb 08, 2017 at 04:23:17PM +0530, Sricharan wrote:
+> >On Thu, Feb 02, 2017 at 10:40:18PM +0530, Sricharan R wrote:
+> >> +- clock-names:    Should be a pair of "smmu_iface_clk" and "smmu_bus_clk"
+> >> +                  required for smmu's register group access and interface
+> >> +                  clk for the smmu's underlying bus access.
+> >> +
+> >> +- clocks:         Phandles for respective clocks described by clock-names.
+> >
+> >Which SMMU implementations are those clock-names valid for?
+> >
+> >The SMMU architecture specifications do not architect the clocks, which
+> >are implemementation-specific.
+> >
+> >AFAICT, this doesn't match MMU-400 or MMU-500.
 > 
-> On Mon, Feb 06, 2017 at 11:38:28AM +0000, Ramiro Oliveira wrote:
-> ...
->>>> +	ret = ov5647_write_array(sd, ov5647_640x480,
->>>> +					ARRAY_SIZE(ov5647_640x480));
->>>> +	if (ret < 0) {
->>>> +		dev_err(&client->dev, "write sensor_default_regs error\n");
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	ov5647_set_virtual_channel(sd, 0);
->>>> +
->>>> +	ov5647_read(sd, 0x0100, &resetval);
->>>> +	if (!(resetval & 0x01)) {
->>>
->>> Can this ever happen? Streaming start is at the end of the register list.
->>>
->>
->> I'm not sure it can happen. It was just a safeguard, but I can remove it if you
->> think it's not necessary
-> 
-> You're not reading back the other registers either, albeit I'd check that
-> the I2C accesses actually succeed. Generally the return values are ignored.
-> 
+> Ok, should be more specific. Infact QCOM has MMU-500 and also
+> a smmu v2 implementation which is fully compatible with
+> "arm,smmu-v2", with the clocks being controlled by the soc's
+> clock controller. i was trying to define these clock bindings
+> so that its works across socs.
 
-So you're recommending I perform a random I2C access after power on to check the
-system, and discard the read value? Or just drop this piece of code entirely?
+I don't think we can do that, if we don't know precisely what those
+clocks are used for.
 
+i.e. we'd need a compatible string for the QCOM SMMUv2 variant, which
+would imply the set of clocks.
 
->>
->>>> +		dev_err(&client->dev, "Device was in SW standby");
->>>> +		ov5647_write(sd, 0x0100, 0x01);
->>>> +	}
->>>> +
->>>> +	ov5647_write(sd, 0x4800, 0x04);
->>>> +	ov5647_stream_on(sd);
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +/**
->>>> + * @short Control sensor power state
->>>> + * @param[in] sd v4l2 subdev
->>>> + * @param[in] on Sensor power
->>>> + * @return Error code
->>>> + */
->>>> +static int sensor_power(struct v4l2_subdev *sd, int on)
->>>> +{
->>>> +	int ret;
->>>> +	struct ov5647 *ov5647 = to_state(sd);
->>>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
->>>> +
->>>> +	ret = 0;
->>>> +	mutex_lock(&ov5647->lock);
->>>> +
->>>> +	if (on && !ov5647->power_count)	{
->>>> +		dev_dbg(&client->dev, "OV5647 power on\n");
->>>> +
->>>> +		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
->>>> +
->>>> +		ret = clk_prepare_enable(ov5647->xclk);
->>>> +		if (ret < 0) {
->>>> +			dev_err(ov5647->dev, "clk prepare enable failed\n");
->>>> +			goto out;
->>>> +		}
->>>> +
->>>> +		ret = ov5647_write_array(sd, sensor_oe_enable_regs,
->>>> +				ARRAY_SIZE(sensor_oe_enable_regs));
->>>> +		if (ret < 0) {
->>>> +			clk_disable_unprepare(ov5647->xclk);
->>>> +			dev_err(&client->dev,
->>>> +				"write sensor_oe_enable_regs error\n");
->>>> +			goto out;
->>>> +		}
->>>> +
->>>> +		ret = __sensor_init(sd);
->>>> +		if (ret < 0) {
->>>> +			clk_disable_unprepare(ov5647->xclk);
->>>> +			dev_err(&client->dev,
->>>> +				"Camera not available, check Power\n");
->>>> +			goto out;
->>>> +		}
->>>> +	} else if (!on && ov5647->power_count == 1) {
->>>> +		dev_dbg(&client->dev, "OV5647 power off\n");
->>>> +
->>>> +		dev_dbg(&client->dev, "disable oe\n");
->>>> +		ret = ov5647_write_array(sd, sensor_oe_disable_regs,
->>>> +				ARRAY_SIZE(sensor_oe_disable_regs));
->>>> +
->>>> +		if (ret < 0)
->>>> +			dev_dbg(&client->dev, "disable oe failed\n");
->>>> +
->>>> +		ret = set_sw_standby(sd, true);
->>>> +
->>>> +		if (ret < 0)
->>>> +			dev_dbg(&client->dev, "soft stby failed\n");
->>>> +
->>>> +		clk_disable_unprepare(ov5647->xclk);
->>>> +	}
->>>> +
->>>> +	/* Update the power count. */
->>>> +	ov5647->power_count += on ? 1 : -1;
->>>> +	WARN_ON(ov5647->power_count < 0);
->>>> +
->>>> +out:
->>>> +	mutex_unlock(&ov5647->lock);
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +#ifdef CONFIG_VIDEO_ADV_DEBUG
->>>> +/**
->>>> + * @short Get register value
->>>> + * @param[in] sd v4l2 subdev
->>>> + * @param[in] reg register struct
->>>> + * @return Error code
->>>> + */
->>>> +static int sensor_get_register(struct v4l2_subdev *sd,
->>>> +				struct v4l2_dbg_register *reg)
->>>> +{
->>>> +	unsigned char val = 0;
->>>> +	int ret;
->>>> +
->>>> +	ret = ov5647_read(sd, reg->reg & 0xff, &val);
->>>> +	if (ret != 0)
->>>> +		return ret;
->>>> +
->>>> +	reg->val = val;
->>>> +	reg->size = 1;
->>>> +
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +/**
->>>> + * @short Set register value
->>>> + * @param[in] sd v4l2 subdev
->>>> + * @param[in] reg register struct
->>>> + * @return Error code
->>>> + */
->>>> +static int sensor_set_register(struct v4l2_subdev *sd,
->>>> +				const struct v4l2_dbg_register *reg)
->>>> +{
->>>> +	return ov5647_write(sd, reg->reg & 0xff, reg->val & 0xff);
->>>> +}
->>>> +#endif
->>>> +
->>>> +/**
->>>> + * @short Subdev core operations registration
->>>> + */
->>>> +static const struct v4l2_subdev_core_ops sensor_core_ops = {
->>>> +	.s_power		= sensor_power,
->>>> +#ifdef CONFIG_VIDEO_ADV_DEBUG
->>>> +	.g_register		= sensor_get_register,
->>>> +	.s_register		= sensor_set_register,
->>>> +#endif
->>>> +};
->>>> +
->>>> +static int enum_mbus_code(struct v4l2_subdev *sd,
->>>> +				struct v4l2_subdev_pad_config *cfg,
->>>> +				struct v4l2_subdev_mbus_code_enum *code)
->>>> +{
->>>> +	if (code->index > 0)
->>>> +		return -EINVAL;
->>>> +
->>>> +	code->code = MEDIA_BUS_FMT_SBGGR8_1X8;
->>>> +
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static const struct v4l2_subdev_pad_ops subdev_pad_ops = {
->>>> +	.enum_mbus_code = enum_mbus_code,
->>>> +};
->>>> +
->>>> +
->>>> +/**
->>>> + * @short Subdev operations registration
->>>> + *
->>>> + */
->>>> +static const struct v4l2_subdev_ops subdev_ops = {
->>>> +	.core		= &sensor_core_ops,
->>>> +	.pad		= &subdev_pad_ops,
->>>
->>> You should implement s_stream() in video ops to control the streaming state.
->>>
->>> I don't know about this particular sensor, but on SMIA compliant sensors
->>> the SW standby means streaming is disabled. There seem to be additional
->>> registers as well; my educated guess is that writing all those to control
->>> streaming would be the right thing to do.
->>>
->>> The CSI-2 bus initialisation could fail if you start streaming right away
->>> when the sensor is powered on.
->>>
->>
->> I haven't had any error yet, but I'll add set_stream() and start streaming video
->> there, just to be sure.
-> 
-> It depends on the receiver. Some might work whereas some definitely don't.
-> 
-> Please see Documentation/media/kapi/csi2.rst .
-> 
+> So there are one or more interface clocks which are required for the
+> smmu's interface or the configuration access and one or more clocks
+> required for smmu's downstream bus access. That was the reason i was
+> trying to iterate over the list of clocks down below.  But agree that
+> the bindings should define each of the clocks required separately.
 
-Thanks for the documentation, I'll implement s_stream as indicated.
+As above, I don't think the code should do this. It should only touch
+the clocks it knows about.
 
--- 
-Best Regards
+> So one way here is, define a separate compatible for QCOM's SMMU
+> implementation and define all the clock bindings as a part of it
+> and handle it in the same way in the driver.
 
-Ramiro Oliveira
-Ramiro.Oliveira@synopsys.com
+That would be my preference.
+
+> But just thinking if it would scale well for any other soc that is
+> compatible with arm,smmu-v2 driver and wants to handle clocks in the
+> future ?
+
+I don't think we can have our cake and eat it here. Either we handle the
+clock management for each variant, or we don't do it at all. We have no
+idea what requirements a future variant might have w.r.t. the management
+of clocks we don't know about yet.
+
+Thanks,
+Mark.
