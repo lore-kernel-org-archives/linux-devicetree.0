@@ -1,62 +1,92 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH v4 1/8] ASoC: sun4i-i2s: Update binding
- documentation to include A31
-Date: Wed, 8 Feb 2017 11:10:47 +0100
-Message-ID: <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
-References: <20170202092422.5588-1-mylene.josserand@free-electrons.com>
- <20170202092422.5588-2-mylene.josserand@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/8] arm64: dts: allwinner: add R_PIO node
+Date: Wed, 8 Feb 2017 11:14:58 +0100
+Message-ID: <20170208101458.du6ybqsw52ypzhzw@lukather>
+References: <20170208100009.29362-1-icenowy@aosc.xyz>
+ <20170208100009.29362-5-icenowy@aosc.xyz>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170202092422.5588-2-mylene.josserand@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: broonie@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="fds4xpmbfshxzxzd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBI675PCAKGQE5B2JOIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170208100009.29362-5-icenowy-ymACFijhrKM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gTWFyayBCcm93biwKClRoYW5rIHlvdSB0byBoYXZlIGFwcGxpZWQgbXkgcGF0Y2hlcyEK
-Ck9uIDAyLzAyLzIwMTcgMTA6MjQsIE15bMOobmUgSm9zc2VyYW5kIHdyb3RlOgo+IEFkZCBhIG5l
-dyBjb21wYXRpYmxlIGZvciBzdW40aS1pMnMgZHJpdmVyIHRvIGhhbmRsZSBzb21lCj4gU29DcyB0
-aGF0IGhhdmUgYSByZXNldCBsaW5lIHRoYXQgbXVzdCBiZSBhc3NlcnRlZC9kZWFzc2VydGVkLgo+
-Cj4gVGhpcyBuZXcgY29tcGF0aWJsZSwgImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIiwgcmVxdWly
-ZXMgdGhlCj4gcHJvcGVydHkgInJlc2V0cyIgd2hpY2ggc2hvdWxkIGJlIGEgcGhhbmRsZSB0byB0
-aGUgcmVzZXQgbGluZS4KPiBFeGNlcHQgdGhlc2UgZGlmZmVyZW5jZXMsIHRoZSBjb21wYXRpYmxl
-IGlzIGlkZW50aWNhbCB0byBwcmV2aW91cyBvbmUKPiB3aGljaCB3aWxsIG5vdCBoYW5kbGUgYSBy
-ZXNldCBsaW5lLgo+Cj4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5q
-b3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IEFja2VkLWJ5OiBNYXhpbWUgUmlwYXJkIDxt
-YXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcg
-PHJvYmhAa2VybmVsLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3NvdW5kL3N1bjRpLWkycy50eHQgfCA1ICsrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
-c2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc291bmQvc3VuNGktaTJzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9zb3VuZC9zdW40aS1pMnMudHh0Cj4gaW5kZXggN2I1MjZlYzY0OTkxLi5mNGFkYzU4Zjgy
-YmEgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5k
-L3N1bjRpLWkycy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-c291bmQvc3VuNGktaTJzLnR4dAo+IEBAIC03LDYgKzcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
-Ogo+Cj4gIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5ncwo+ICAg
-ICAtICJhbGx3aW5uZXIsc3VuNGktYTEwLWkycyIKPiArICAgLSAiYWxsd2lubmVyLHN1bjZpLWEz
-MS1pMnMiCj4gIC0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIg
-YW5kIGxlbmd0aCBvZiBtZW1vcnkgbWFwcGVkCj4gICAgcmVnaW9uLgo+ICAtIGludGVycnVwdHM6
-IHNob3VsZCBjb250YWluIHRoZSBJMlMgaW50ZXJydXB0Lgo+IEBAIC0xOSw2ICsyMCwxMCBAQCBS
-ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICAtICJtb2QiIDogbW9kdWxlIGNsb2NrIGZvciB0aGUg
-STJTIGNvbnRyb2xsZXIKPiAgLSAjc291bmQtZGFpLWNlbGxzIDogTXVzdCBiZSBlcXVhbCB0byAw
-Cj4KPiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIGZvbGxvd2luZyBjb21wYXRpYmxlczoK
-PiArCS0gImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIgo+ICstIHJlc2V0czogcGhhbmRsZSB0byB0
-aGUgcmVzZXQgbGluZSBmb3IgdGhpcyBjb2RlYwo+ICsKPiAgRXhhbXBsZToKPgo+ICBpMnMwOiBp
-MnNAMDFjMjI0MDAgewo+CgpGb3IgYWxsIG15IHNlcmllcywgeW91IGRpZCBub3QgcGljay11cCB0
-aGlzIHBhdGNoLiBJIHdhcyB3b25kZXJpbmcgaWYgCnlvdSBoYXZlIGFueSBjb21tZW50IG9uIGl0
-PyBJcyB0aGVyZSBzb21ldGhpbmcgd3Jvbmc/CgpUaGFuayB5b3UgaW4gYWR2YW5jZSwKCkJlc3Qg
-cmVnYXJkcywKCi0tIApNeWzDqG5lIEpvc3NlcmFuZCwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQg
-TGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwg
-bWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5h
-bHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
+
+--fds4xpmbfshxzxzd
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
+
+On Wed, Feb 08, 2017 at 06:00:06PM +0800, Icenowy Zheng wrote:
+> Allwinner A64 SoC has a R_PIO node like the one in H3.
+> 
+> Add the node as well as needed clocks and resets.
+> 
+> As there's no document for apb0_gates, I only added the R_PIO bit here.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 40 +++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index 1c64ea2d23f9..4b0baa79554c 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -98,6 +98,15 @@
+>  		clock-output-names = "osc32k";
+>  	};
+>  
+> +	apb0: apb0_clk {
+> +		compatible = "fixed-factor-clock";
+> +		#clock-cells = <0>;
+> +		clock-div = <1>;
+> +		clock-mult = <1>;
+> +		clocks = <&osc24M>;
+> +		clock-output-names = "apb0";
+> +	};
+> +
+>  	psci {
+>  		compatible = "arm,psci-0.2";
+>  		method = "smc";
+> @@ -392,5 +401,36 @@
+>  			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+>  				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+>  		};
+> +
+> +		apb0_gates: clk@1f01428 {
+> +			compatible = "allwinner,sun50i-a64-apb0-gates-clk",
+> +				     "allwinner,sun4i-a10-gates-clk";
+> +			reg = <0x01f01428 0x4>;
+> +			#clock-cells = <1>;
+> +			clocks = <&apb0>;
+> +			clock-indices = <0>;
+> +			clock-output-names = "apb0_pio";
+> +		};
+> +
+> +		apb0_rst: reset@1f014b0 {
+> +			reg = <0x01f014b0 0x4>;
+> +			compatible = "allwinner,sun6i-a31-clock-reset";
+> +			#reset-cells = <1>;
+> +		};
+
+Please make a sunxi-ng driver for those clocks.
+
+Thanks,
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--fds4xpmbfshxzxzd--
