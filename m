@@ -1,51 +1,71 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH 4/4] clk: mvebu: Expand mv98dx3236-core-clock support
-Date: Wed, 8 Feb 2017 20:00:15 +0000
-Message-ID: <aabc6853d7934507a4507b0ad4354b72@svr-chch-ex1.atlnz.lc>
-References: <20170203034012.29399-1-chris.packham@alliedtelesis.co.nz>
- <5a974d9d7260432087619486bf5d79ed@svr-chch-ex1.atlnz.lc>
- <6149d4126a214ac8b0b0184bd818bea6@svr-chch-ex1.atlnz.lc>
- <9294933.cXSW0amFbE@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Russell King <linux@armlinux.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH 1/3] usb: host: fotg2: add devicetree probing
+Date: Wed,  8 Feb 2017 21:00:08 +0100
+Message-ID: <20170208200010.21522-2-ulli.kroll@googlemail.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170208200010.21522-1-ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/17 23:53, Arnd Bergmann wrote:
-> On Tuesday, February 7, 2017 3:07:37 AM CET Chris Packham wrote:
->>>
->>> Actually I wonder if I can try a bit harder to keep a system booting.
->>> The following might work
->>> 1) add the compatible strings to the existing armada clock drivers.
->>> 2) update the dts to use the new compatible strings.
->>> 3) add the new driver and remove the compatible strings from the armada
->>> drivers.
->>>
->>> #1 would still upset checkpatch.pl because the documentation would only
->>> arrive in #2.
->>
->> Actually upon testing #1 is unnecessary. I lose some of the gated clocks
->> but nothing that prevents booting.
->
-> Just to be sure: this means we can merge 2) and 3) independently and
-> having just one of them will not cause regressions over what we have
-> today?
->
+Signed-off-by: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ drivers/usb/host/fotg210-hcd.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-Correct. And that's what I sent out as v2.
+diff --git a/drivers/usb/host/fotg210-hcd.c b/drivers/usb/host/fotg210-hcd.c
+index 9d0b0518290a..2acc51b0be5a 100644
+--- a/drivers/usb/host/fotg210-hcd.c
++++ b/drivers/usb/host/fotg210-hcd.c
+@@ -23,6 +23,7 @@
+  * Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+  */
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/device.h>
+ #include <linux/dmapool.h>
+ #include <linux/kernel.h>
+@@ -5600,6 +5601,15 @@ static int fotg210_hcd_probe(struct platform_device *pdev)
+ 	if (usb_disabled())
+ 		return -ENODEV;
+ 
++	/* Right now device-tree probed devices don't get dma_mask set.
++	 * Since shared usb code relies on it, set it here for now.
++	 * Once we have dma capability bindings this can go away.
++	 */
++
++	retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
++	if (retval)
++		goto fail_create_hcd;
++
+ 	pdev->dev.power.power_state = PMSG_ON;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+@@ -5676,9 +5686,18 @@ static int fotg210_hcd_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id fotg210_ehci_match[] = {
++	{ .compatible = "faraday,fotg210-hcd" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, exynos_ehci_match);
++#endif
++
+ static struct platform_driver fotg210_hcd_driver = {
+ 	.driver = {
+ 		.name   = "fotg210-hcd",
++		.of_match_table = of_match_ptr(fotg210_ehci_match),
+ 	},
+ 	.probe  = fotg210_hcd_probe,
+ 	.remove = fotg210_hcd_remove,
+-- 
+2.11.0
 
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486467.html
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-February/486471.html
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
