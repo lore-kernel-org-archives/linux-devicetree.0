@@ -1,78 +1,94 @@
-From: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 8 Feb 2017 14:30:46 +0000
-Message-ID: <db9bc01c-635d-1a57-8a6c-9be19a0cda16@arm.com>
-References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
-	<1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
-	<20170202174218.GO31394@leverpostej>
-	<017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
-	<20170208114002.GD15459@leverpostej>
-	<018401d28207$34db60a0$9e9221e0$@codeaurora.org>
-	<b55359d8-2665-aef0-3215-53a0e8f21bcd@arm.com>
-	<000301d28211$a5233a90$ef69afb0$@codeaurora.org>
-	<20170208135252.GF15459@leverpostej>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/9] Documentation: DT: add entries for I2SE boards
+Date: Wed, 8 Feb 2017 08:37:09 -0600
+Message-ID: <CAL_JsqJYymQLuuujWyMYqZR0hYWAMAc7uV-eqMhrCXK_6b=k=Q@mail.gmail.com>
+References: <1485845475-3129-1-git-send-email-michael.heimpold@i2se.com>
+ <1485845475-3129-6-git-send-email-michael.heimpold@i2se.com>
+ <20170201171838.vihswvpdro54aqiq@rob-hp-laptop> <769dba11-e290-50e0-d894-9f4ea08eb652@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170208135252.GF15459@leverpostej>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <769dba11-e290-50e0-d894-9f4ea08eb652-eS4NqCHxEME@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Heimpold <michael.heimpold-eS4NqCHxEME@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/17 13:52, Mark Rutland wrote:
-> On Wed, Feb 08, 2017 at 07:15:37PM +0530, Sricharan wrote:
->>> Clocks are not architectural, so it only makes sense to associate them
->>> with an implementation-specific compatible string. There's also no
+On Wed, Feb 8, 2017 at 12:43 AM, Michael Heimpold
+<michael.heimpold-eS4NqCHxEME@public.gmane.org> wrote:
+> Hi Rob,
+>
+> thanks for your review. Some questions below:
+>
+>
+> Am 01.02.2017 um 18:18 schrieb Rob Herring:
 >>
->> ok, it for this the QCOM specific implementation binding is tried(going to).
->>
->>> guarantee that different microarchitectures have equivalent internal
->>> clock domains - I'm not sure if "the SMMU's underlying bus access" is
->>> meant to refer to accesses *by* the SMMU, i.e. page table walks,
->>> accesses *through* the SMMU by upstream masters, or both
->>
->> In the above QCOM case, it is actually both. Its the same path for both the
->> page table walker and upstream masters.
-
-Right, that's what I feared. As far as I can make out the current ARM
-implementations, transactions passing through will require at least
-TBUn_BCLK for the appropriate TBU, but would also need the page table
-walker clocked with CCLK to resolve TLB misses. But then the programming
-interface is also in the CCLK domain (not counting the incoming APB or
-AXI clock for the actual slave port itself). Thus this 'generic' clock
-binding already isn't compatible with MMU-40x/500.
-
->>> differences are rather significant. I'd also note that an MMU-500
->>> configuration may have up to *33* clocks.
+>> On Tue, Jan 31, 2017 at 07:51:11AM +0100, Michael Heimpold wrote:
 >>>
->>> Either way, the QCOM implementation deserves its own compatible if only
->>> for the sake of the imp-def gaps in the architecture (e.g. FSR.SS
->>> behaviour WRT to IRQs as touched upon in the other thread).
->>>
+>>> From: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
 >>
->> Ok, slightly unclear, so you mean then *clocks* are not good enough reason
->> to have a new compatible ?
-> 
-> I beleive Robin's point was even if the clocks didn't matter, there are
-> other reasons we should have the QCOM-specific compatible string.
-> 
-> So we should have one regardless.
+>> "dt-bindings: arm:" is preferred subject prefix.
+>
+> Will change it in next round.
+>
+>>> This patch adds the missing devicetree binding documentation for I2SE's
+>>> Duckbill and Duckbill 2 series boards.
+>>>
+>>> Signed-off-by: Michael Heimpold <mhei-Z/Lg1yOAjpkb1SvskN2V4Q@public.gmane.org>
+>>> Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>>> ---
+>>>   Documentation/devicetree/bindings/arm/i2se.txt | 22
+>>> ++++++++++++++++++++++
+>>>   1 file changed, 22 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/i2se.txt
+>>> b/Documentation/devicetree/bindings/arm/i2se.txt
+>>> new file mode 100644
+>>> index 0000000..9954d86
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/arm/i2se.txt
+>>> @@ -0,0 +1,22 @@
+>>> +I2SE Device Tree Bindings
+>>> +-------------------------
+>>> +
+>>> +Duckbill Board
+>>> +Required root node properties:
+>>> +    - compatible = "i2se,duckbill", "fsl,imx28";
+>>> +
+>>> +Duckbill 2 Board
+>>> +Required root node properties:
+>>> +    - compatible = "i2se,duckbill", "fsl,imx28";
+>>> +
+>>> +Duckbill 2 485 Board
+>>> +Required root node properties:
+>>> +    - compatible = "i2se,duckbill", "fsl,imx28";
+>>> +
+>>> +Duckbill 2 EnOcean Board
+>>> +Required root node properties:
+>>> +    - compatible = "i2se,duckbill", "fsl,imx28";
+>>> +
+>>> +Duckbill 2 SPI Board
+>>> +Required root node properties:
+>>> +    - compatible = "i2se,duckbill", "fsl,imx28";
+>>
+>> It's kind of pointless to have "i2se,duckbill" if you use the same one
+>> for all these boards.
+>
+> At the moment, this is only used to fix-up the MAC address' OUI part
+> in mxs_machine_init. So my proposal would be to use
+> compatible = "i2se,duckbill-2", "fsl,imx28";
+> for the Duckbill 2 board and something like
+> compatible = "i2se,duckbill-2-485", "i2se,duckbill-2", "fsl,imx28";
+> for the rest. This way we need to add only one additional check in
+> mxs_machine_init check.
+>
+> Would this be a way to go?
 
-Exactly.
+Yes, that is fine.
 
-Robin.
-
-> 
-> Thanks,
-> Mark.
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
