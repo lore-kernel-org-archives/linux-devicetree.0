@@ -1,12 +1,15 @@
 From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: [PATCH 1/8] dt-bindings: fix for Allwinner H5 pinctrl's compatible
-Date: Wed,  8 Feb 2017 18:00:02 +0800
-Message-ID: <20170208100009.29362-1-icenowy@aosc.xyz>
+Subject: [PATCH 2/8] dt: bindings: add binding for Allwinner A64
+ R_PIO pinctrl
+Date: Wed,  8 Feb 2017 18:00:03 +0800
+Message-ID: <20170208100009.29362-2-icenowy@aosc.xyz>
+References: <20170208100009.29362-1-icenowy@aosc.xyz>
 Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBS6Y5PCAKGQEVPKXHFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBWGY5PCAKGQEZ4J4W7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170208100009.29362-1-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -17,29 +20,27 @@ To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob H
 Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The compatible for Allwinner H5 pin controller is wrong written as
-allwinner,sun50i-h5-r-pinctrl, however, it's really a generic pinctrl
-rather than a "r" one.
+Allwinner A64 SoC has also a dedicated pin controller for Port L GPIOs,
+which is called "Port Controller (CPUs-PORT)" in SoC User Manual.
 
-Fix this compatible string.
+Add a binding for this pin controller, like the ones in A23/33 and H3.
 
 Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-index 2fd688c8dbdb..8177bb4d5f53 100644
+index 8177bb4d5f53..b53224473672 100644
 --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
 +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
-@@ -23,7 +23,7 @@ Required properties:
+@@ -23,6 +23,7 @@ Required properties:
    "allwinner,sun8i-h3-pinctrl"
    "allwinner,sun8i-h3-r-pinctrl"
    "allwinner,sun50i-a64-pinctrl"
--  "allwinner,sun50i-h5-r-pinctrl"
-+  "allwinner,sun50i-h5-pinctrl"
++  "allwinner,sun50i-a64-r-pinctrl"
+   "allwinner,sun50i-h5-pinctrl"
    "nextthing,gr8-pinctrl"
  
- - reg: Should contain the register physical address and length for the
 -- 
 2.11.0
