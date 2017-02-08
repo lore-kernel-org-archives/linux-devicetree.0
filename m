@@ -1,84 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Wed, 8 Feb 2017 15:36:09 -0600
-Message-ID: <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
-References: <20161023200355.GA5391@amd>
- <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
- <20161214122451.GB27011@amd>
- <20161222100104.GA30917@amd>
- <20161222133938.GA30259@amd>
- <20161224152031.GA8420@amd>
- <20170203123508.GA10286@amd>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] MIPS: ath79: Fix the USB PHY reset names
+Date: Wed, 8 Feb 2017 16:11:47 -0600
+Message-ID: <20170208221147.rwoirkib23s6wuzz@rob-hp-laptop>
+References: <1486324352-15188-1-git-send-email-albeu@free.fr>
+ <1486324352-15188-3-git-send-email-albeu@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170203123508.GA10286@amd>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
+In-Reply-To: <1486324352-15188-3-git-send-email-albeu-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban <albeu-GANU6spQydw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
+On Sun, Feb 05, 2017 at 08:52:32PM +0100, Alban wrote:
+> From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
 > 
-> N900 contains front and back camera, with a switch between the
-> two. This adds support for the switch component, and it is now
-> possible to select between front and back cameras during runtime.
+> The binding for the USB PHY went thru before the driver. However the
+> new version of the driver now use the PHY core support for reset, and
+> this expect the reset to be named "phy". So remove the "usb-" prefix
+> from the the reset names.
 > 
-> This adds documentation for the devicetree binding.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> 
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> new file mode 100644
-> index 0000000..1b9f8e0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> @@ -0,0 +1,63 @@
-> +Video Bus Switch Binding
-> +========================
+> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/phy/phy-ath79-usb.txt | 4 ++--
+>  arch/mips/boot/dts/qca/ar9132.dtsi                      | 2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-I'd call it a mux rather than switch.
-
-BTW, there's a new mux-controller binding under review you might look 
-at. It would only be needed here if the mux ctrl also controls other 
-things.
-
-> +
-> +This is a binding for a gpio controlled switch for camera interfaces. Such a
-> +device is used on some embedded devices to connect two cameras to the same
-> +interface of a image signal processor.
-> +
-> +Required properties
-> +===================
-> +
-> +compatible	: must contain "video-bus-switch"
-
-video-bus-gpio-mux
-
-> +switch-gpios	: GPIO specifier for the gpio, which can toggle the
-
-mux-gpios to align with existing GPIO controlled muxes.
-
-> +		  selected camera. The GPIO should be configured, so
-> +		  that a disabled GPIO means, that the first port is
-> +		  selected.
-> +
-> +Required Port nodes
-> +===================
-> +
-> +More documentation on these bindings is available in
-> +video-interfaces.txt in the same directory.
-> +
-> +reg		: The interface:
-> +		  0 - port for image signal processor
-> +		  1 - port for first camera sensor
-> +		  2 - port for second camera sensor
-
-This could be used for display side as well. So describe these just as 
-inputs and outputs.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
