@@ -1,35 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: add Asus Tinker board
-Date: Wed, 8 Feb 2017 17:01:07 -0600
-Message-ID: <20170208230107.e6cz2isoglw7iem2@rob-hp-laptop>
-References: <1486347287-31051-1-git-send-email-eddie.cai@rock-chips.com>
- <1486347287-31051-2-git-send-email-eddie.cai@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
+Date: Wed, 8 Feb 2017 17:03:43 -0600
+Message-ID: <20170208230343.iobyx6axfd3nn3gh@rob-hp-laptop>
+References: <20161228183036.GA13139@amd>
+ <20170111225335.GA21553@amd>
+ <20170206094956.GA17974@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1486347287-31051-2-git-send-email-eddie.cai@rock-chips.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Eddie Cai <eddie.cai.linux@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, heiko@sntech.de, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, eddie.cai@rock-chips.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170206094956.GA17974@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sakari.ailus-X3B1VOXEql0@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 10:14:46AM +0800, Eddie Cai wrote:
-> Tinker board is a credit card size develop board designed by Asus.
-> Powered by RK3288.
+On Mon, Feb 06, 2017 at 10:49:57AM +0100, Pavel Machek wrote:
+> From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
 > 
-> Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/arm/rockchip.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> In the vast majority of cases the bus type is known to the driver(s)
+> since a receiver or transmitter can only support a single one. There
+> are cases however where different options are possible.
+> 
+> The existing V4L2 OF support tries to figure out the bus type and
+> parse the bus parameters based on that. This does not scale too well
+> as there are multiple serial busses that share common properties.
+> 
+> Some hardware also supports multiple types of busses on the same
+> interfaces.
+> 
+> Document the CSI1/CCP2 property strobe. It signifies the clock or
+> strobe mode.
+>  
+> Signed-off-by: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> Reviewed-By: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
