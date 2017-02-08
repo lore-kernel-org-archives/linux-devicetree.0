@@ -1,68 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v4 1/8] ASoC: sun4i-i2s: Update binding
- documentation to include A31
-Date: Wed, 8 Feb 2017 10:33:18 +0000
-Message-ID: <20170208103318.ttqkvddlpyw6pwo6@sirena.org.uk>
-References: <20170202092422.5588-1-mylene.josserand@free-electrons.com>
- <20170202092422.5588-2-mylene.josserand@free-electrons.com>
- <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
+From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] arm64: dts: exynos: Move the clock-frequency property
+Date: Wed, 08 Feb 2017 19:09:05 +0900
+Message-ID: <dceb0f53-9737-744b-db44-b2105e13816d@samsung.com>
+References: <1486347584-6762-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170206021951epcas1p365db9f08f22cc223ca45538b0dbc86d6@epcas1p3.samsung.com>
+ <1486347584-6762-3-git-send-email-hoegeun.kwon@samsung.com>
+ <20170207201335.lyc7yvwed7cm25nj@kozik-lap>
+ <8c4f2a21-152d-eb41-3f26-44bb69f831c7@samsung.com>
+ <CAJKOXPe9Bjpobw1chuhG3vdt6sWZ69AcQbqYD9rRoMRyO1-cMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6307466263802831192=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mylene Josserand <mylene.josserand@free-electrons.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAJKOXPe9Bjpobw1chuhG3vdt6sWZ69AcQbqYD9rRoMRyO1-cMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/08/2017 04:32 PM, Krzysztof Kozlowski wrote:
+> On Wed, Feb 8, 2017 at 9:24 AM, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> "Remove the ports node abd move burst and esc clock frequency properties
+>>> to the parent (DSI node)."
+>>>
+>>> The information which is missing is the answer for WHY? Why are you
+>>> doing this?
+>>
+>> The current mipi-dsi must have at least one OF graph.
+>> However, for example, dsi and panel are parent-child relationships,
+>> so OF graph is not needed, and fimd and dsi are not connected to the OF
+>> graph.
+>> In this case, an error occurred in dsi_parse in the code before patch (1/5).
+> The error occurred in case of DSI + FIMD? I do not get it whether you
+> are removing the something which is not needed or fixing something.
+>
+>> So I modified dsi_parse_dt.
+>>
+>>> Does the patch depends on 1/5?
+>>
+>> Yes, it is.
+>> The 2/5 to 5/5 patches depend on the 1/5 patch.
+> So that's a break of DT ABI for no clear (yet) reasons. Please mention
+> this in 1/5 patch and explain what is really fixed.
 
---===============6307466263802831192==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="h2iy6oxcawviqapi"
-Content-Disposition: inline
+I would like to post the s6e63j0x03 panel driver for exynos3250.
+However, as Rob Herring noted, dsi + panel is a parental relationship,
+so OF grpah is not needed.
+Therefore, the current dsi_parse_dt function will throw an error,
+because there is no linked OF graph for case such as fimd + dsi + panel.
+I think that the OF graph of dsi should be deleted even if it is not
+the purpose of the s6e63j0x03 panel driver.
 
+So the 1/5 patch parse the Pll, burst and esc clock frequency properties
+in dsi_parse_dt and modified to create a bridge_node only if there is
+an OF graph associated with dsi.
 
---h2iy6oxcawviqapi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Best Regards,
+Hoegeun
 
-On Wed, Feb 08, 2017 at 11:10:47AM +0100, Mylene Josserand wrote:
+>
+> Best regards,
+> Krzysztof
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
 
-> For all my series, you did not pick-up this patch. I was wondering if you
-> have any comment on it? Is there something wrong?
-
-Please resend any patches you think are missing.
-
---h2iy6oxcawviqapi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlia8+4ACgkQJNaLcl1U
-h9BmNggAhHlylceIltKhIBjd/F2gGnmE56p9rP2n9gb+O8nVtGQpdH4jkH65zeL1
-RlZ8/dXRGQfjcOCfCsr6D4Cjsm370y7k6Vyw5Ne+oyswd3kDBtZEQE9eIfNWGvEw
-rH0AwXsodKBpxmBlF5tVIYlgRuI1b6WLQi0UKwC6w2/QbylvqWUFejwdijc0gIyM
-joEvRrYTubpNV2M+MpjOTgG26aOjjvevEmL62upbTZNpRamExTHOzVVubFb+bGhv
-hmDy/Ci4uV3XxjJoxyaa5sUHlMdDeb/IRTTBC9/wNo/pmCtT8wnYQ1Onx+4s7ypT
-o6sxJUOr1AeJ8RguKBBPnbFNrCz82g==
-=vNpT
------END PGP SIGNATURE-----
-
---h2iy6oxcawviqapi--
-
---===============6307466263802831192==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6307466263802831192==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
