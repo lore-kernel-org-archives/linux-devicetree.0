@@ -1,79 +1,106 @@
-From: Sean Paul <seanpaul@chromium.org>
-Subject: Re: [PATCH v6 0/6] Rockchip dw-mipi-dsi driver
-Date: Wed, 8 Feb 2017 11:14:40 -0500
-Message-ID: <20170208161440.GD14321@art_vandelay>
-References: <1486520722-8853-1-git-send-email-zyw@rock-chips.com>
+From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Subject: [PATCH v9 09/10] dt-bindings: mux-adg792a: document devicetree bindings for ADG792A/G mux
+Date: Wed, 8 Feb 2017 16:41:56 +0100
+Message-ID: <1486568517-6997-10-git-send-email-peda@axentia.se>
+References: <1486568517-6997-1-git-send-email-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1486520722-8853-1-git-send-email-zyw@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chris Zhong <zyw@rock-chips.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, yzq@rock-chips.com, linux-kernel@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, tfiga@chromium.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486568517-6997-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBGZWIgMDgsIDIwMTcgYXQgMTA6MjU6MTZBTSArMDgwMCwgQ2hyaXMgWmhvbmcgd3Jv
-dGU6Cj4gSGkgYWxsCj4gCj4gVGhpcyBwYXRjaCBzZXJpYWwgaXMgZm9yIFJLMzM5OSBNSVBJIERT
-SS4gVGhlIE1JUEkgRFNJIGNvbnRyb2xsZXIgb2YKPiBSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1l
-IGFzIFJLMzI4OCwgZXhjZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCj4gaW4gcGh5IGNs
-b2NrIGNvbnRyb2xsaW5nIGFuZCBwb3J0IGlkIHNlbGVjdGlvbiByZWdpc3Rlci4gVGhlc2UgcGF0
-Y2hlcwo+IGFkZCBSSzMzOTkgc3VwcG9ydCBhbmQgdGhlIHBvd2VyIGRvbWFpbiBzdXBwb3J0Lgo+
-IAo+IEFuZCB0aGVzZSBwYXRjaGVzIGJhc2Ugb24gSm9obiBLZWVwaW5nJ3MgdjMgcGF0Y2hlc1sw
-XSwgaXQgZml4ZXMgbWFueSBidWdzLAo+IHRoZXkgaGF2ZSBiZWVuIHRlc3RlZCBvbiByazMyODgg
-ZXZiIGJvYXJkLgo+IAoKSGkgQ2hyaXMsClRoZSBzZXQgbG9va3MgZ29vZCB3aXRoIHRoZSBleGNl
-cHRpb24gb2YgNC82LCBzaW5jZSB3ZSBkb24ndCBoYXZlIGFueSBib3VuZHMKY2hlY2tpbmcgaW4g
-dm9wIHlldC4gCgpPbmNlIHRoZSBib3VuZHMgY2hlY2tpbmcgaXMgaW4gcGxhY2UgYW5kIEpvaG4n
-cyBzZXQgaXMgbWVyZ2VkLCB0aGlzIHNldCBjYW4gYmUKcHVsbGVkIGludG8gLW1pc2MuCgpUaGFu
-a3MsCgpTZWFuCgoKPiBbMF06Cj4gWzAxLzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
-L3BhdGNoLzk1NDQwODkKPiBbMDIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
-Y2gvOTU0NDA2MQo+IFswMy8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85
-NTQ0MDY1Cj4gWzA0LzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQw
-NzcKPiBbMDUvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMwo+
-IFswNi8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDM3Cj4gWzA3
-LzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwMjkKPiBbMDgvMjRd
-IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDAzMQo+IFswOS8yNF0gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDgzCj4gWzEwLzI0XSBodHRwczov
-L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwNjMKPiBbMTEvMjRdIGh0dHBzOi8vcGF0
-Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA4NQo+IFsxMi8yNF0gaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDkzCj4gWzEzLzI0XSBodHRwczovL3BhdGNod29yay5r
-ZXJuZWwub3JnL3BhdGNoLzk1NDQwODEKPiBbMTQvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
-bC5vcmcvcGF0Y2gvOTU0NDA1Nwo+IFsxNS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
-Zy9wYXRjaC85NTQ0MDc5Cj4gWzE2LzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Bh
-dGNoLzk1NDQwMzUKPiBbMTcvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-OTU0NDEwNQo+IFsxOC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0
-MDU5Cj4gWzIxLzI0XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQwMDkK
-PiBbMjIvMjRdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvOTU0NDA0OQo+IFsy
-My8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDU1Cj4gWzI0LzI0
-XSBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzk1NDQxMDkKPiAKPiAKPiBDaGFu
-Z2VzIGluIHY2Ogo+IC0gbm8gbmVlZCBjaGVjayBwaHlfY2ZnX2NsayBiZWZvcmUgZW5hYmxlL2Rp
-c2FibGUKPiAKPiBDaGFuZ2VzIGluIHY1Ogo+IC0gY2hlY2sgdGhlIGVycm9yIG9mIHBoeV9jZmdf
-Y2xrIGluIGR3X21pcGlfZHNpX2JpbmQKPiAKPiBDaGFuZ2VzIGluIHY0Ogo+IC0gcmVtb3ZlIHRo
-ZSB1bnJlbGF0ZWQgY2hhbmdlCj4gCj4gQ2hhbmdlcyBpbiB2MzoKPiAtIGJhc2Ugb24gSm9obiBL
-ZWVwaW5nJ3MgcGF0Y2ggc2VyaWVzCj4gCj4gQ2hyaXMgWmhvbmcgKDYpOgo+ICAgZHQtYmluZGlu
-Z3M6IGFkZCByazMzOTkgc3VwcG9ydCBmb3IgZHctbWlwaS1yb2NrY2hpcAo+ICAgZHJtL3JvY2tj
-aGlwL2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkgbWlwaSBkc2kKPiAgIGRybS9yb2NrY2hp
-cC9kc2k6IGR3LW1pcGk6IGNvcnJlY3QgdGhlIGNvZGluZyBzdHlsZQo+ICAgZHJtL3JvY2tjaGlw
-L2RzaTogcmVtb3ZlIG1vZGVfdmFsaWQgZnVuY3Rpb24KPiAgIGR0LWJpbmRpbmdzOiBhZGQgcG93
-ZXIgZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAKPiAgIGRybS9yb2NrY2hpcC9kc2k6
-IGFkZCBkdy1taXBpIHBvd2VyIGRvbWFpbiBzdXBwb3J0Cj4gCj4gIC4uLi9kaXNwbGF5L3JvY2tj
-aGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAgICAgIHwgICA3ICstCj4gIGRyaXZlcnMvZ3B1
-L2RybS9yb2NrY2hpcC9kdy1taXBpLWRzaS5jICAgICAgICAgICAgIHwgMTU2ICsrKysrKysrKysr
-Ky0tLS0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDk4IGluc2VydGlvbnMoKyksIDY1IGRlbGV0
-aW9ucygtKQo+IAo+IC0tIAo+IDIuNi4zCj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4gZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVl
-ciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZHJpLWRldmVsCg==
+Analog Devices ADG792A/G is a triple 4:1 mux.
+
+Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
+---
+ .../devicetree/bindings/mux/adi,adg792a.txt        | 75 ++++++++++++++++++++++
+ 1 file changed, 75 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mux/adi,adg792a.txt
+
+diff --git a/Documentation/devicetree/bindings/mux/adi,adg792a.txt b/Documentation/devicetree/bindings/mux/adi,adg792a.txt
+new file mode 100644
+index 000000000000..96b787a69f50
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mux/adi,adg792a.txt
+@@ -0,0 +1,75 @@
++Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
++
++Required properties:
++- compatible : "adi,adg792a" or "adi,adg792g"
++- #mux-control-cells : <0> if parallel (the three muxes are bound together
++  with a single mux controller controlling all three muxes), or <1> if
++  not (one mux controller for each mux).
++* Standard mux-controller bindings as described in mux-controller.txt
++
++Optional properties for ADG792G:
++- gpio-controller : if present, #gpio-cells below is required.
++- #gpio-cells : should be <2>
++			  - First cell is the GPO line number, i.e. 0 or 1
++			  - Second cell is used to specify active high (0)
++			    or active low (1)
++
++Optional properties:
++- idle-state : if present, array of states that the mux controllers will have
++  when idle. The special state MUX_IDLE_AS_IS is the default and
++  MUX_IDLE_DISCONNECT is also supported.
++
++States 0 through 3 correspond to signals A through D in the datasheet.
++
++Example:
++
++	/*
++	 * Three independent mux controllers (of which one is used).
++	 * Mux 0 is disconnected when idle, mux 1 idles in the previously
++	 * selected state and mux 2 idles with signal B.
++	 */
++	&i2c0 {
++		mux: mux-controller@50 {
++			compatible = "adi,adg792a";
++			reg = <0x50>;
++			#mux-control-cells = <1>;
++
++			idle-state = <MUX_IDLE_DISCONNECT MUX_IDLE_AS_IS 1>;
++		};
++	};
++
++	adc-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 0>;
++		io-channel-names = "parent";
++
++		mux-controls = <&mux 2>;
++
++		channels = "sync-1", "", "out";
++	};
++
++
++	/*
++	 * Three parallel muxes with one mux controller, useful e.g. if
++	 * the adc is differential, thus needing two signals to be muxed
++	 * simultaneously for correct operation.
++	 */
++	&i2c0 {
++		pmux: mux-controller@50 {
++			compatible = "adi,adg792a";
++			reg = <0x50>;
++			#mux-control-cells = <0>;
++
++			idle-state = <1>;
++		};
++	};
++
++	diff-adc-mux {
++		compatible = "io-channel-mux";
++		io-channels = <&adc 0>;
++		io-channel-names = "parent";
++
++		mux-controls = <&pmux>;
++
++		channels = "sync-1", "", "out";
++	};
+-- 
+2.1.4
