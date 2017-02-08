@@ -1,37 +1,33 @@
-From: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 0/3] usb: add device tree support for fotg2-hcd driver
-Date: Wed,  8 Feb 2017 21:00:07 +0100
-Message-ID: <20170208200010.21522-1-ulli.kroll@googlemail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Subject: [PATCH 3/3] DT: add Faraday Tec. as vendor
+Date: Wed,  8 Feb 2017 21:00:10 +0100
+Message-ID: <20170208200010.21522-4-ulli.kroll@googlemail.com>
+References: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170208200010.21522-1-ulli.kroll@googlemail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding and DT driver support for fotg2-hcd controller
-The device is used on Gemini SoC.
+add Faraday Technology Corporation as vendor faraday for DT
 
-striped down dmesg
+Signed-off-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-fotg210_hcd: FOTG210 Host Controller (EHCI) Driver
-fotg210-hcd 68000000.usb: Faraday USB2.0 Host Controller
-fotg210-hcd 68000000.usb: new USB bus registered, assigned bus number 1
-fotg210-hcd 68000000.usb: irq 27, io mem 0x68000000
-fotg210-hcd 68000000.usb: USB 2.0 started, EHCI 1.00
-hub 1-0:1.0: USB hub found
-hub 1-0:1.0: 1 port detected
-fotg210-hcd 69000000.usb: Faraday USB2.0 Host Controller
-fotg210-hcd 69000000.usb: new USB bus registered, assigned bus number 2
-fotg210-hcd 69000000.usb: irq 28, io mem 0x69000000
-fotg210-hcd 69000000.usb: USB 2.0 started, EHCI 1.00
-hub 2-0:1.0: USB hub found
-hub 2-0:1.0: 1 port detected
-
-Greetings
-Hans Ulli Kroll
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e7f5d1..489c336e8f80 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -102,6 +102,7 @@ everest	Everest Semiconductor Co. Ltd.
+ everspin	Everspin Technologies, Inc.
+ excito	Excito
+ ezchip	EZchip Semiconductor
++faraday	Faraday Technology Corporation
+ fcs	Fairchild Semiconductor
+ firefly	Firefly
+ focaltech	FocalTech Systems Co.,Ltd
+-- 
+2.11.0
