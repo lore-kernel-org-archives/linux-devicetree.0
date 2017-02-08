@@ -1,70 +1,63 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 8/9] stih-cec: add HPD notifier support
-Date: Wed, 8 Feb 2017 17:17:08 -0600
-Message-ID: <20170208231708.gei5j5jmus4rsham@rob-hp-laptop>
-References: <20170206102951.12623-1-hverkuil@xs4all.nl>
- <20170206102951.12623-9-hverkuil@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170206102951.12623-9-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, Daniel Vetter <daniel.vetter@intel.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-media@vger.kernel.org
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 05/10] clocksource/drivers/ostm: Document renesas-ostm timer DT bindings
+Date: Thu,  9 Feb 2017 00:14:39 +0100
+Message-ID: <1486595685-10232-5-git-send-email-daniel.lezcano@linaro.org>
+References: <20170208231208.GB12695@mai>
+ <1486595685-10232-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1486595685-10232-1-git-send-email-daniel.lezcano@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tglx@linutronix.de
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBGZWIgMDYsIDIwMTcgYXQgMTE6Mjk6NTBBTSArMDEwMCwgSGFucyBWZXJrdWlsIHdy
-b3RlOgo+IEZyb206IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8u
-b3JnPgo+IAo+IEJ5IHVzaW5nIHRoZSBIUEQgbm90aWZpZXIgZnJhbWV3b3JrIHRoZXJlIGlzIG5v
-IGxvbmdlciBhbnkgcmVhc29uCj4gdG8gbWFudWFsbHkgc2V0IHRoZSBwaHlzaWNhbCBhZGRyZXNz
-LiBUaGlzIHdhcyB0aGUgb25lIGJsb2NraW5nCj4gaXNzdWUgdGhhdCBwcmV2ZW50ZWQgdGhpcyBk
-cml2ZXIgZnJvbSBnb2luZyBvdXQgb2Ygc3RhZ2luZywgc28gZG8KPiB0aGlzIG1vdmUgYXMgd2Vs
-bC4KPiAKPiBVcGRhdGUgdGhlIGJpbmRpbmdzIGRvY3VtZW50YXRpb24gdGhlIG5ldyBoZG1pIHBo
-YW5kbGUuCj4gCj4gU2lnbmVkLW9mZi1ieTogQmVuamFtaW4gR2FpZ25hcmQgPGJlbmphbWluLmdh
-aWduYXJkQGxpbmFyby5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogSGFucyBWZXJrdWlsIDxoYW5zLnZl
-cmt1aWxAY2lzY28uY29tPgo+IENDOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IC0tLQo+
-ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdGloLWNlYy50eHQgICAgICAgICB8ICAy
-ICsrCj4gIGRyaXZlcnMvbWVkaWEvcGxhdGZvcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAg
-IHwgMTAgKysrKysrKwo+ICBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL01ha2VmaWxlICAgICAgICAg
-ICAgICAgICAgICB8ICAxICsKPiAgLi4uL3N0LWNlYyA9PiBtZWRpYS9wbGF0Zm9ybS9zdGkvY2Vj
-fS9NYWtlZmlsZSAgICAgfCAgMAo+ICAuLi4vc3QtY2VjID0+IG1lZGlhL3BsYXRmb3JtL3N0aS9j
-ZWN9L3N0aWgtY2VjLmMgICB8IDMxICsrKysrKysrKysrKysrKysrKystLS0KPiAgZHJpdmVycy9z
-dGFnaW5nL21lZGlhL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgfCAgMiAtLQo+ICBkcml2
-ZXJzL3N0YWdpbmcvbWVkaWEvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICB8ICAxIC0KPiAg
-ZHJpdmVycy9zdGFnaW5nL21lZGlhL3N0LWNlYy9LY29uZmlnICAgICAgICAgICAgICAgfCAgOCAt
-LS0tLS0KPiAgZHJpdmVycy9zdGFnaW5nL21lZGlhL3N0LWNlYy9UT0RPICAgICAgICAgICAgICAg
-ICAgfCAgNyAtLS0tLQo+ICA5IGZpbGVzIGNoYW5nZWQsIDQxIGluc2VydGlvbnMoKyksIDIxIGRl
-bGV0aW9ucygtKQo+ICByZW5hbWUgZHJpdmVycy97c3RhZ2luZy9tZWRpYS9zdC1jZWMgPT4gbWVk
-aWEvcGxhdGZvcm0vc3RpL2NlY30vTWFrZWZpbGUgKDEwMCUpCj4gIHJlbmFtZSBkcml2ZXJzL3tz
-dGFnaW5nL21lZGlhL3N0LWNlYyA9PiBtZWRpYS9wbGF0Zm9ybS9zdGkvY2VjfS9zdGloLWNlYy5j
-ICg5MyUpCj4gIGRlbGV0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3N0YWdpbmcvbWVkaWEvc3QtY2Vj
-L0tjb25maWcKPiAgZGVsZXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvc3RhZ2luZy9tZWRpYS9zdC1j
-ZWMvVE9ETwo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvc3RpaC1jZWMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL3N0aWgtY2VjLnR4dAo+IGluZGV4IDcxYzRiMmY0YmNlZi4uN2Q4MjEyMWQxNDhhIDEw
-MDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zdGlo
-LWNlYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
-c3RpaC1jZWMudHh0Cj4gQEAgLTksNiArOSw3IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gICAt
-IHBpbmN0cmwtbmFtZXM6IENvbnRhaW5zIG9ubHkgb25lIHZhbHVlIC0gImRlZmF1bHQiCj4gICAt
-IHBpbmN0cmwtMDogU3BlY2lmaWVzIHRoZSBwaW4gY29udHJvbCBncm91cHMgdXNlZCBmb3IgQ0VD
-IGhhcmR3YXJlLgo+ICAgLSByZXNldHM6IFJlZmVyZW5jZSB0byBhIHJlc2V0IGNvbnRyb2xsZXIK
-PiArIC0gc3QsaGRtaS1oYW5kbGU6IFBoYW5kbGUgdG8gdGhlIEhNREkgY29udHJvbGxlcgoKMiBj
-YXNlcyBpbiB0aGlzIHNlcmllcy4gSnVzdCBkcm9wIHRoZSB2ZW5kb3IgcHJlZml4IG9uIGJvdGgu
-CgpzL0hNREkvSERNSS8KCj4gIAo+ICBFeGFtcGxlIGZvciBTVElINDA3Ogo+ICAKPiBAQCAtMjIs
-NCArMjMsNSBAQCBzdGktY2VjQDA5NGEwODdjIHsKPiAgCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVs
-dCI7Cj4gIAlwaW5jdHJsLTAgPSA8JnBpbmN0cmxfY2VjMF9kZWZhdWx0PjsKPiAgCXJlc2V0cyA9
-IDwmc29mdHJlc2V0IFNUSUg0MDdfTFBNX1NPRlRSRVNFVD47Cj4gKwlzdCxoZG1pLWhhbmRsZSA9
-IDwmaGRtaT47Cj4gIH07Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+From: Chris Brandt <chris.brandt@renesas.com>
+
+Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ .../devicetree/bindings/timer/renesas,ostm.txt     | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/renesas,ostm.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/renesas,ostm.txt b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+new file mode 100644
+index 0000000..be3ae0f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,ostm.txt
+@@ -0,0 +1,30 @@
++* Renesas OS Timer (OSTM)
++
++The OSTM is a multi-channel 32-bit timer/counter with fixed clock
++source that can operate in either interval count down timer or free-running
++compare match mode.
++
++Channels are independent from each other.
++
++Required Properties:
++
++  - compatible: must be one or more of the following:
++    - "renesas,r7s72100-ostm" for the r7s72100 OSTM
++    - "renesas,ostm" for any OSTM
++		This is a fallback for the above renesas,*-ostm entries
++
++  - reg: base address and length of the register block for a timer channel.
++
++  - interrupts: interrupt specifier for the timer channel.
++
++  - clocks: clock specifier for the timer channel.
++
++Example: R7S72100 (RZ/A1H) OSTM node
++
++	ostm0: timer@fcfec000 {
++		compatible = "renesas,r7s72100-ostm", "renesas,ostm";
++		reg = <0xfcfec000 0x30>;
++		interrupts = <GIC_SPI 102 IRQ_TYPE_EDGE_RISING>;
++		clocks = <&mstp5_clks R7S72100_CLK_OSTM0>;
++		power-domains = <&cpg_clocks>;
++	};
+-- 
+2.7.4
