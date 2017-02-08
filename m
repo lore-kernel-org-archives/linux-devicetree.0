@@ -1,16 +1,17 @@
-From: Markus Mayer <markus.mayer@broadcom.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: brcm: clocks: add binding for
- brcmstb-cpu-clk-div
-Date: Wed, 8 Feb 2017 09:29:20 -0800
-Message-ID: <CAGt4E5t8rtgCgCTMcU1m0Gq9BgHckTUus3h8=j03NF0k4icwzg@mail.gmail.com>
-References: <20170201232638.74396-1-code@mmayer.net>
- <20170201232638.74396-2-code@mmayer.net>
- <20170207184145.32brcgfvl66p5qtm@rob-hp-laptop>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v2 2/8] mmc: bcm2835: Add new driver for the sdhost
+ controller.
+Date: Wed, 8 Feb 2017 19:08:26 +0100 (CET)
+Message-ID: <2084617651.273763.1486577306244@email.1und1.de>
+References: <1486123913-31705-1-git-send-email-kraxel@redhat.com>
+ <1486123913-31705-3-git-send-email-kraxel@redhat.com>
+ <1708749883.208474.1486413240581@email.1und1.de>
+ <1486454575.24589.29.camel@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170207184145.32brcgfvl66p5qtm@rob-hp-laptop>
+In-Reply-To: <1486454575.24589.29.camel@redhat.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,30 +21,24 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree List <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Power Management List <linux-pm@vger.kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Viresh Kumar <viresh.kumar@linaro.org>, Markus Mayer <code@mmayer.net>, Linux Clock List <linux-clk@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, ulf.hansson@linaro.org, f.fainelli@gmail.com, sbranden@broadcom.com, swarren@wwwdotorg.org, rjui@broadcom.com, lee@kernel.org, will.deacon@arm.com, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, eric@anholt.net, robh+dt@kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, catalin.marinas@arm.com, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 7 February 2017 at 10:41, Rob Herring <robh@kernel.org> wrote:
-> On Wed, Feb 01, 2017 at 03:26:37PM -0800, Markus Mayer wrote:
->> From: Markus Mayer <mmayer@broadcom.com>
->>
->> Add binding document for brcm,brcmstb-cpu-clk-div.
->>
->> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
->> ---
->>  .../bindings/clock/brcm,brcmstb-cpu-clk-div.txt    | 22 ++++++++++++++++++++++
->>  MAINTAINERS                                        |  1 +
->>  2 files changed, 23 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/brcm,brcmstb-cpu-clk-div.txt
+
+> Gerd Hoffmann <kraxel@redhat.com> hat am 7. Februar 2017 um 09:02 geschrieben:
+> ...
+> > 
+> > I'll send it after my tests. In the following review i will mention only the issues which aren't fixed in my patch series.
+> 
+> I'll pick up the patches and look at the remaining issues, new version
+> later this week (i hope).
+
+No need to hurry. The merge window opens soon.
+
+Do you take care of the missing downstream patch ( bcm2835-sdhost: Only claim one DMA channel ) which affects most of your patch series?
+
+> 
+> thanks,
+>   Gerd
 >
-> Acked-by: Rob Herring <robh@kernel.org>
-
-Actually, Stephen wasn't liking this too much.
-
-See [1] for the conclusion of the ensuing discussion.
-
-Regards,
--Markus
-
-[1] https://lkml.org/lkml/2017/2/6/982
