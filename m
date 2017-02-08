@@ -1,157 +1,108 @@
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Wed, 08 Feb 2017 18:40:09 +0200
-Message-ID: <1486572009.2133.406.camel@linux.intel.com>
-References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
-         <1486560068.2133.395.camel@linux.intel.com>
-         <20170208135957.GA916@kroah.com>
-         <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
+From: Al Stone <ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
+Date: Wed, 8 Feb 2017 09:49:09 -0700
+Message-ID: <cbeeac53-a4e7-56b4-b69c-e2106671c721@redhat.com>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com>
+ <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com>
+ <6293579.fEEljmGD4Z@aspire.rjw.lan> <7605668.5ZxNsBFnEG@aspire.rjw.lan>
+Reply-To: ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>, Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, stern@rowland.harvard.edu, dev@g0hl1n.net
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7605668.5ZxNsBFnEG-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-08 at 16:17 +0100, Richard Leitner wrote:
-> On 02/08/2017 02:59 PM, Greg KH wrote:
-> > On Wed, Feb 08, 2017 at 03:21:08PM +0200, Andy Shevchenko wrote:
-> > > On Wed, 2017-02-08 at 09:52 +0100, Richard Leitner wrote:
-> > > > From: Richard Leitner <dev@g0hl1n.net>
-> > > 
-> > > If you want to fix the above you have to fix your Git
-> > > configuration.
+On 02/08/2017 05:19 AM, Rafael J. Wysocki wrote:
+> On Wednesday, February 08, 2017 12:50:25 PM Rafael J. Wysocki wrote:
+>> On Tuesday, February 07, 2017 11:57:55 AM Al Stone wrote:
+>>> On 02/02/2017 09:22 AM, Sakari Ailus wrote:
+>>>> In order to differentiate the functionality between dropping a reference
+>>>> to the node (or not) for the benefit of OF, introduce
+>>>> fwnode_get_next_parent().
+>>>>
+>>>> Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>> ---
+>>>>  drivers/base/property.c  | 29 +++++++++++++++++++++++++++++
+>>>>  include/linux/property.h |  1 +
+>>>>  2 files changed, 30 insertions(+)
+>>>>
+>>>> diff --git a/drivers/base/property.c b/drivers/base/property.c
+>>>> index 28125a5..8e4398f 100644
+>>>> --- a/drivers/base/property.c
+>>>> +++ b/drivers/base/property.c
+>>>> @@ -868,6 +868,35 @@ int device_add_properties(struct device *dev, struct property_entry *properties)
+>>>>  EXPORT_SYMBOL_GPL(device_add_properties);
+>>>>  
+>>>>  /**
+>>>> + * fwnode_get_next_parent - Iterate to the node's parent
+>>>> + * @fwnode: Firmware whose parent is retrieved
+>>>> + *
+>>>> + * This is like fwnode_get_parent() except that it drops the refcount
+>>>> + * on the passed node, making it suitable for iterating through a
+>>>> + * node's parents.
+>>>> + *
+>>>> + * Returns a node pointer with refcount incremented, use
+>>>> + * fwnode_handle_node() on it when done.
+>>>> + */
+>>>> +struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+>>>> +{
+>>>> +	struct fwnode_handle *parent = NULL;
+>>>> +
+>>>> +	if (is_of_node(fwnode)) {
+>>>> +		struct device_node *node;
+>>>> +
+>>>> +		node = of_get_next_parent(to_of_node(fwnode));
+>>>> +		if (node)
+>>>> +			parent = &node->fwnode;
+>>>> +	} else if (is_acpi_node(fwnode)) {
+>>>> +		parent = acpi_node_get_parent(fwnode);
+>>>> +	}
+>>>> +
+>>>> +	return parent;
+>>>> +}
+>>>> +EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+>>>
+>>> I think I agree with Rob's prior comments about making an ops struct for DT
+>>> vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
+>>> patch all end up using the same construct.  Maybe it needs to be a separate
+>>> refactoring effort, but if it's happening this often just in this patch set,
+>>> it seems like it's getting time to clean things up.
+>>
+>> As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
+>> really make things simpler and it would make the code more difficult to
+>> follow.
+>>
+>> But we do have a third case (static or built-in properties) and it doesn't
+>> seem to be covered at all.
 > 
-> My git config is fine, just cherry-picked it from a remote and forgot
-> I
-> committed it from another computer with another git config ;-)
-> Will fix that in v5 for sure!
+> That said the ops struct could be introduced on top of this series just fine.
+> It even might be cleaner to do it this way, so I'm not asking for a redesign
+> here.
 
-OK!
+Right.  I don't think it necessarily needs to be covered in this series, but it
+sure does feel like the time has come.  The number of "if (dt) then x else if
+(acpi) then y;" really stood out for me in this series.
 
-> > > > +++ b/drivers/usb/misc/usb251xb.c
-> > > > @@ -0,0 +1,674 @@
-> > > > +#include <linux/i2c.h>
-> > > > +#include <linux/gpio.h>
-> > > > +#include <linux/delay.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/of_gpio.h>
-> > > > +#include <linux/of_device.h>
-> > > > +#include <linux/nls.h>
-> > > 
-> > > Alphabetical order?
-> > 
-> > Ick, no, who cares, really.  It's whatever order the author wants,
-> > don't
-> > be so picky.
+> I'd like the built-in properties to be covered too, however.
 
-That's why question mark. If author thinks it's good idea (our case,
-btw) then it takes, otherwise I'm okay with it.
+Yeah, good point.  I was focused on ACPI and DT, and forgot about those.
 
-> 
-> Ok :-)
-> But somehow you're right Andy, alphabetical order seems to look better
-> here (will do that in v5).
-> 
-
-> > 
-> > > > +#define DRIVER_NAME "usb251xb"
-> > > > +#define DRIVER_DESC "Microchip USB 2.0 Hi-Speed Hub Controller"
-> > > > +#define DRIVER_VERSION "1.0"
-> > > 
-> > > Is it my MUA, or all above indentations are broken?
-> > 
-> > What do you mean?
-> 
-> Should the strings be aligned, like the following?
-> #define DRIVER_NAME     "usb251xb"
-> #define DRIVER_DESC     "Microchip USB .."
-> #define DRIVER_VERSION	"1.0"
-
-Yep, tab vs. space indentation.
-
-
-
-> > > Above doesn't make much sense. Why not to use
-> > > 
-> > > > BIT(bit) 
-> > > 
-> > > and
-> > > 
-> > > & ~BIT(bit)
-> > > 
-> > > in place?
-> > 
-> > I thought we already had functions to do this for you.  Don't write
-> > new
-> > ones "by hand" either wya.
-> 
-> Which functions do you mean? I only found set_bit() and clear_bit()
-> from
-> atomic_ops. But those operate on "unsigned long" variables. From the
-> documentation:
-> 	Native atomic bit operations are defined to operate
-> 	on objects aligned to the size of an "unsigned long"
-> 	C data type, and are least of that size.
-
-__set_bit(), __clear_bit() -- non-atomic variants, but you are right,
-that (unsigned long) exactly the point I didn't propose them.
-
-
-> > > > +		/* the first data byte transferred tells the
-> > > > hub how
-> > > > many data
-> > > > +		 * bytes will follow (byte count)
-> > > > +		 */
-> > > 
-> > > I'm not sure this is good formatted comment for USB subsystem.
-> > 
-> > Looks fine to me, why do you think it is incorrect?
-
-I would do like
-
-/*
- * The multi-line
- * comment.
- */
-
-Capital letter, period at the end, first empty line (unlike in net
-subsystem).
-
-> > 
-> > > > +	/* the following parameters are currently not exposed
-> > > > to
-> > > > devicetree, but
-> > > > +	 * may be as soon as needed
-> > > > +	 */
-> > > 
-> > > Style of multi-line comment.
-> > 
-> > Nope, it's fine.
-> > 
-> > > > +#else /* CONFIG_OF */
-> > > > +static int usb251xb_get_ofdata(struct usb251xb *hub,
-> > > > +			       struct usb251xb_data *data)
-> > > > +{
-> > > > +	return 0;
-> > > > +}
-> > > > +#endif /* CONFIG_OF */
-> > > 
-> > > I don't think it's a good idea to have those ugly #ifdef.
-> > 
-> > How can it be removed?
-
-__maybe_unused for function, device_property_*() instead of
-of_property_*() calls.
-
-Something like that. But if you are insisting this is *only* OF
-available hardware or we don't care, I'll not object.
+Not sure if I have time, but I can start looking into this.
 
 -- 
-Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Intel Finland Oy
+ciao,
+al
+-----------------------------------
+Al Stone
+Software Engineer
+Red Hat, Inc.
+ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+-----------------------------------
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
