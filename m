@@ -1,133 +1,157 @@
-From: Lina Iyer <lina.iyer@linaro.org>
-Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
-Date: Wed, 8 Feb 2017 09:42:42 -0700
-Message-ID: <20170208164242.GC2564@linaro.org>
-References: <1486571692-33212-1-git-send-email-lina.iyer@linaro.org>
- <1486571692-33212-2-git-send-email-lina.iyer@linaro.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Wed, 08 Feb 2017 18:40:09 +0200
+Message-ID: <1486572009.2133.406.camel@linux.intel.com>
+References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
+         <1486560068.2133.395.camel@linux.intel.com>
+         <20170208135957.GA916@kroah.com>
+         <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1486571692-33212-2-git-send-email-lina.iyer@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Leitner <richard.leitner@skidata.com>, Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, stern@rowland.harvard.edu, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08 2017 at 09:35 -0700, Lina Iyer wrote:
->Re-using idle state definition provided by arm,idle-state for domain
->idle states creates a lot of confusion and limits further evolution of
->the domain idle definition. To keep things clear and simple, define a
->idle states for domain using a new compatible "domain-idle-state".
->
->Fix existing PM domains code to look for the newly defined compatible.
->
->Cc: <devicetree@vger.kernel.org>
->Cc: Rob Herring <robh@kernel.org>
->Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+On Wed, 2017-02-08 at 16:17 +0100, Richard Leitner wrote:
+> On 02/08/2017 02:59 PM, Greg KH wrote:
+> > On Wed, Feb 08, 2017 at 03:21:08PM +0200, Andy Shevchenko wrote:
+> > > On Wed, 2017-02-08 at 09:52 +0100, Richard Leitner wrote:
+> > > > From: Richard Leitner <dev@g0hl1n.net>
+> > > 
+> > > If you want to fix the above you have to fix your Git
+> > > configuration.
+> 
+> My git config is fine, just cherry-picked it from a remote and forgot
+> I
+> committed it from another computer with another git config ;-)
+> Will fix that in v5 for sure!
 
-Sorry, this has already been applied. Got tagged along with the email.
-Kindly ignore.
+OK!
 
-Thanks,
-Lina
+> > > > +++ b/drivers/usb/misc/usb251xb.c
+> > > > @@ -0,0 +1,674 @@
+> > > > +#include <linux/i2c.h>
+> > > > +#include <linux/gpio.h>
+> > > > +#include <linux/delay.h>
+> > > > +#include <linux/slab.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of_gpio.h>
+> > > > +#include <linux/of_device.h>
+> > > > +#include <linux/nls.h>
+> > > 
+> > > Alphabetical order?
+> > 
+> > Ick, no, who cares, really.  It's whatever order the author wants,
+> > don't
+> > be so picky.
 
->---
-> .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
-> .../devicetree/bindings/power/power_domain.txt     |  8 +++---
-> drivers/base/power/domain.c                        |  2 +-
-> 3 files changed, 38 insertions(+), 5 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
->
->diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
->new file mode 100644
->index 0000000..eefc7ed
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
->@@ -0,0 +1,33 @@
->+PM Domain Idle State Node:
->+
->+A domain idle state node represents the state parameters that will be used to
->+select the state when there are no active components in the domain.
->+
->+The state node has the following parameters -
->+
->+- compatible:
->+	Usage: Required
->+	Value type: <string>
->+	Definition: Must be "domain-idle-state".
->+
->+- entry-latency-us
->+	Usage: Required
->+	Value type: <prop-encoded-array>
->+	Definition: u32 value representing worst case latency in
->+		    microseconds required to enter the idle state.
->+		    The exit-latency-us duration may be guaranteed
->+		    only after entry-latency-us has passed.
->+
->+- exit-latency-us
->+	Usage: Required
->+	Value type: <prop-encoded-array>
->+	Definition: u32 value representing worst case latency
->+		    in microseconds required to exit the idle state.
->+
->+- min-residency-us
->+	Usage: Required
->+	Value type: <prop-encoded-array>
->+	Definition: u32 value representing minimum residency duration
->+		    in microseconds after which the idle state will yield
->+		    power benefits after overcoming the overhead in entering
->+i		    the idle state.
->diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->index e165036..723e1ad 100644
->--- a/Documentation/devicetree/bindings/power/power_domain.txt
->+++ b/Documentation/devicetree/bindings/power/power_domain.txt
->@@ -31,7 +31,7 @@ Optional properties:
->
-> - domain-idle-states : A phandle of an idle-state that shall be soaked into a
->                 generic domain power state. The idle state definitions are
->-                compatible with arm,idle-state specified in [1].
->+                compatible with domain-idle-state specified in [1].
->   The domain-idle-state property reflects the idle state of this PM domain and
->   not the idle states of the devices or sub-domains in the PM domain. Devices
->   and sub-domains have their own idle-states independent of the parent
->@@ -85,7 +85,7 @@ Example 3:
-> 	};
->
-> 	DOMAIN_RET: state@0 {
->-		compatible = "arm,idle-state";
->+		compatible = "domain-idle-state";
-> 		reg = <0x0>;
-> 		entry-latency-us = <1000>;
-> 		exit-latency-us = <2000>;
->@@ -93,7 +93,7 @@ Example 3:
-> 	};
->
-> 	DOMAIN_PWR_DN: state@1 {
->-		compatible = "arm,idle-state";
->+		compatible = "domain-idle-state";
-> 		reg = <0x1>;
-> 		entry-latency-us = <5000>;
-> 		exit-latency-us = <8000>;
->@@ -118,4 +118,4 @@ The node above defines a typical PM domain consumer device, which is located
-> inside a PM domain with index 0 of a power controller represented by a node
-> with the label "power".
->
->-[1]. Documentation/devicetree/bindings/arm/idle-states.txt
->+[1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
->diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
->index 661737c..f0bc672 100644
->--- a/drivers/base/power/domain.c
->+++ b/drivers/base/power/domain.c
->@@ -2048,7 +2048,7 @@ int genpd_dev_pm_attach(struct device *dev)
-> EXPORT_SYMBOL_GPL(genpd_dev_pm_attach);
->
-> static const struct of_device_id idle_state_match[] = {
->-	{ .compatible = "arm,idle-state", },
->+	{ .compatible = "domain-idle-state", },
-> 	{ }
-> };
->
->-- 
->2.7.4
->
+That's why question mark. If author thinks it's good idea (our case,
+btw) then it takes, otherwise I'm okay with it.
+
+> 
+> Ok :-)
+> But somehow you're right Andy, alphabetical order seems to look better
+> here (will do that in v5).
+> 
+
+> > 
+> > > > +#define DRIVER_NAME "usb251xb"
+> > > > +#define DRIVER_DESC "Microchip USB 2.0 Hi-Speed Hub Controller"
+> > > > +#define DRIVER_VERSION "1.0"
+> > > 
+> > > Is it my MUA, or all above indentations are broken?
+> > 
+> > What do you mean?
+> 
+> Should the strings be aligned, like the following?
+> #define DRIVER_NAME     "usb251xb"
+> #define DRIVER_DESC     "Microchip USB .."
+> #define DRIVER_VERSION	"1.0"
+
+Yep, tab vs. space indentation.
+
+
+
+> > > Above doesn't make much sense. Why not to use
+> > > 
+> > > > BIT(bit) 
+> > > 
+> > > and
+> > > 
+> > > & ~BIT(bit)
+> > > 
+> > > in place?
+> > 
+> > I thought we already had functions to do this for you.  Don't write
+> > new
+> > ones "by hand" either wya.
+> 
+> Which functions do you mean? I only found set_bit() and clear_bit()
+> from
+> atomic_ops. But those operate on "unsigned long" variables. From the
+> documentation:
+> 	Native atomic bit operations are defined to operate
+> 	on objects aligned to the size of an "unsigned long"
+> 	C data type, and are least of that size.
+
+__set_bit(), __clear_bit() -- non-atomic variants, but you are right,
+that (unsigned long) exactly the point I didn't propose them.
+
+
+> > > > +		/* the first data byte transferred tells the
+> > > > hub how
+> > > > many data
+> > > > +		 * bytes will follow (byte count)
+> > > > +		 */
+> > > 
+> > > I'm not sure this is good formatted comment for USB subsystem.
+> > 
+> > Looks fine to me, why do you think it is incorrect?
+
+I would do like
+
+/*
+ * The multi-line
+ * comment.
+ */
+
+Capital letter, period at the end, first empty line (unlike in net
+subsystem).
+
+> > 
+> > > > +	/* the following parameters are currently not exposed
+> > > > to
+> > > > devicetree, but
+> > > > +	 * may be as soon as needed
+> > > > +	 */
+> > > 
+> > > Style of multi-line comment.
+> > 
+> > Nope, it's fine.
+> > 
+> > > > +#else /* CONFIG_OF */
+> > > > +static int usb251xb_get_ofdata(struct usb251xb *hub,
+> > > > +			       struct usb251xb_data *data)
+> > > > +{
+> > > > +	return 0;
+> > > > +}
+> > > > +#endif /* CONFIG_OF */
+> > > 
+> > > I don't think it's a good idea to have those ugly #ifdef.
+> > 
+> > How can it be removed?
+
+__maybe_unused for function, device_property_*() instead of
+of_property_*() calls.
+
+Something like that. But if you are insisting this is *only* OF
+available hardware or we don't care, I'll not object.
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
