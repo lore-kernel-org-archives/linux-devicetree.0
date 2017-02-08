@@ -1,103 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Wed, 8 Feb 2017 23:30:18 +0100
-Message-ID: <20170208223017.GA18807@amd>
-References: <20161023200355.GA5391@amd>
- <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
- <20161214122451.GB27011@amd>
- <20161222100104.GA30917@amd>
- <20161222133938.GA30259@amd>
- <20161224152031.GA8420@amd>
- <20170203123508.GA10286@amd>
- <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 1/2] devicetree: add lm90 thermal_zone sensor support
+Date: Wed, 8 Feb 2017 16:30:34 -0600
+Message-ID: <20170208223034.om75tphg277l2ink@rob-hp-laptop>
+References: <e2c150ce1312a524ea0a524f3d476f910333ae82.1486327509.git.chunkeey@googlemail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
+In-Reply-To: <e2c150ce1312a524ea0a524f3d476f910333ae82.1486327509.git.chunkeey@googlemail.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Wei Ni <wni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On Sun, Feb 05, 2017 at 10:03:15PM +0100, Christian Lamparter wrote:
+> This patch updates the LM90's devicetree definition to
+> include the #thermal-sensor-cells property as well as
+> the sensor constants in include/dt-bindings/thermal/lm90.h.
+> 
+> Cc: Wei Ni <wni@nvidia.com>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> ---
+> I'm aware that there was atleast one previous attempt to add
+> thermal_zone temperature sensors for the LM90 module. This was
+> discussed on:
+> <http://www.gossamer-threads.com/lists/linux/kernel/1992853>
+> <https://lkml.org/lkml/2014/3/4/194>
+> 
+> This RFC is meant to get it going again. As I would really
+> like to have this functionality for the Netgear WNDR4700.
+> This router uses a G781 to measure the SoCs temperature
+> in order to regulate a TC654 fan-controller.
+> <https://git.lede-project.org/?p=source.git;a=commit;h=9e0fd1b52ad1f805a308bf6a5a13236f352fd962>
+> ---
+>  Documentation/devicetree/bindings/hwmon/lm90.txt |  6 ++++++
+>  MAINTAINERS                                      |  1 +
+>  include/dt-bindings/thermal/lm90.h               | 12 ++++++++++++
+>  3 files changed, 19 insertions(+)
+>  create mode 100644 include/dt-bindings/thermal/lm90.h
 
---ReaqsoxgOBHFXBhH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Rob Herring <robh@kernel.org>
 
-On Wed 2017-02-08 15:36:09, Rob Herring wrote:
-> On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
-> >=20
-> > N900 contains front and back camera, with a switch between the
-> > two. This adds support for the switch component, and it is now
-> > possible to select between front and back cameras during runtime.
-> >=20
-> > This adds documentation for the devicetree binding.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
-> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
-> >=20
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.t=
-xt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> > new file mode 100644
-> > index 0000000..1b9f8e0
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
-> > @@ -0,0 +1,63 @@
-> > +Video Bus Switch Binding
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
->=20
-> I'd call it a mux rather than switch.
-
-It is a switch, not a multiplexor (
-https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
-operate at a time.
-
-> BTW, there's a new mux-controller binding under review you might look=20
-> at. It would only be needed here if the mux ctrl also controls other=20
-> things.
-
-Do you have a pointer?
-
-> > +Required Port nodes
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +More documentation on these bindings is available in
-> > +video-interfaces.txt in the same directory.
-> > +
-> > +reg		: The interface:
-> > +		  0 - port for image signal processor
-> > +		  1 - port for first camera sensor
-> > +		  2 - port for second camera sensor
->=20
-> This could be used for display side as well. So describe these just as=20
-> inputs and outputs.
-
-I'd prefer not to confuse people. I guess that would be 0 -- output
-port, 1, 2 -- input ports... But this is media data, are you sure it
-is good idea to change this?
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---ReaqsoxgOBHFXBhH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlibm/kACgkQMOfwapXb+vICSwCgmlj2icghfhg3FyPhVYj6YgLO
-r2cAnieWslJV+DG14qFtG7j6lYQRsfyB
-=wQnK
------END PGP SIGNATURE-----
-
---ReaqsoxgOBHFXBhH--
