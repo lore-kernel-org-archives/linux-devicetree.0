@@ -1,42 +1,65 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 4/4] mfd: mt6397: Add MT6323 LED support into MT6397 driver
-Date: Wed, 8 Feb 2017 10:19:17 +0800
-Message-ID: <1486520357-13096-5-git-send-email-sean.wang@mediatek.com>
-References: <1486520357-13096-1-git-send-email-sean.wang@mediatek.com>
+From: Chris Zhong <zyw@rock-chips.com>
+Subject: [PATCH v6 0/6] Rockchip dw-mipi-dsi driver
+Date: Wed,  8 Feb 2017 10:25:16 +0800
+Message-ID: <1486520722-8853-1-git-send-email-zyw@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1486520357-13096-1-git-send-email-sean.wang@mediatek.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: rpurdie@rpsys.net, jacek.anaszewski@gmail.com, lee.jones@linaro.org, matthias.bgg@gmail.com, pavel@ucw.cz, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-leds@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: john@metanate.com, dianders@chromium.org, tfiga@chromium.org, heiko@sntech.de, yzq@rock-chips.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, pawel.moll@arm.com, seanpaul@chromium.org
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Chris Zhong <zyw@rock-chips.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
-
-Add compatible string as "mt6323-led" that will make
-the OF core spawn child devices for the LED subnode
-of that MT6323 MFD device.
-
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- drivers/mfd/mt6397-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
-index e14d8b0..8e601c8 100644
---- a/drivers/mfd/mt6397-core.c
-+++ b/drivers/mfd/mt6397-core.c
-@@ -48,6 +48,10 @@
- 		.name = "mt6323-regulator",
- 		.of_compatible = "mediatek,mt6323-regulator"
- 	},
-+	{
-+		.name = "mt6323-led",
-+		.of_compatible = "mediatek,mt6323-led"
-+	},
- };
- 
- static const struct mfd_cell mt6397_devs[] = {
--- 
-1.9.1
+SGkgYWxsCgpUaGlzIHBhdGNoIHNlcmlhbCBpcyBmb3IgUkszMzk5IE1JUEkgRFNJLiBUaGUgTUlQ
+SSBEU0kgY29udHJvbGxlciBvZgpSSzMzOTkgaXMgYWxtb3N0IHRoZSBzYW1lIGFzIFJLMzI4OCwg
+ZXhjZXB0IGEgbGl0dGxlIGJpdCBvZiBkaWZmZXJlbmNlCmluIHBoeSBjbG9jayBjb250cm9sbGlu
+ZyBhbmQgcG9ydCBpZCBzZWxlY3Rpb24gcmVnaXN0ZXIuIFRoZXNlIHBhdGNoZXMKYWRkIFJLMzM5
+OSBzdXBwb3J0IGFuZCB0aGUgcG93ZXIgZG9tYWluIHN1cHBvcnQuCgpBbmQgdGhlc2UgcGF0Y2hl
+cyBiYXNlIG9uIEpvaG4gS2VlcGluZydzIHYzIHBhdGNoZXNbMF0sIGl0IGZpeGVzIG1hbnkgYnVn
+cywKdGhleSBoYXZlIGJlZW4gdGVzdGVkIG9uIHJrMzI4OCBldmIgYm9hcmQuCgpbMF06ClswMS8y
+NF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDg5ClswMi8yNF0gaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDYxClswMy8yNF0gaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDY1ClswNC8yNF0gaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDc3ClswNS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9wYXRjaC85NTQ0MDMzClswNi8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9y
+Zy9wYXRjaC85NTQ0MDM3ClswNy8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRj
+aC85NTQ0MDI5ClswOC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0
+MDMxClswOS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDgzClsx
+MC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDYzClsxMS8yNF0g
+aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDg1ClsxMi8yNF0gaHR0cHM6
+Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDkzClsxMy8yNF0gaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDgxClsxNC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsu
+a2VybmVsLm9yZy9wYXRjaC85NTQ0MDU3ClsxNS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC85NTQ0MDc5ClsxNi8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC85NTQ0MDM1ClsxNy8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85
+NTQ0MTA1ClsxOC8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDU5
+ClsyMS8yNF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDA5ClsyMi8y
+NF0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDQ5ClsyMy8yNF0gaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MDU1ClsyNC8yNF0gaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85NTQ0MTA5CgoKQ2hhbmdlcyBpbiB2NjoKLSBubyBu
+ZWVkIGNoZWNrIHBoeV9jZmdfY2xrIGJlZm9yZSBlbmFibGUvZGlzYWJsZQoKQ2hhbmdlcyBpbiB2
+NToKLSBjaGVjayB0aGUgZXJyb3Igb2YgcGh5X2NmZ19jbGsgaW4gZHdfbWlwaV9kc2lfYmluZAoK
+Q2hhbmdlcyBpbiB2NDoKLSByZW1vdmUgdGhlIHVucmVsYXRlZCBjaGFuZ2UKCkNoYW5nZXMgaW4g
+djM6Ci0gYmFzZSBvbiBKb2huIEtlZXBpbmcncyBwYXRjaCBzZXJpZXMKCkNocmlzIFpob25nICg2
+KToKICBkdC1iaW5kaW5nczogYWRkIHJrMzM5OSBzdXBwb3J0IGZvciBkdy1taXBpLXJvY2tjaGlw
+CiAgZHJtL3JvY2tjaGlwL2RzaTogZHctbWlwaTogc3VwcG9ydCBSSzMzOTkgbWlwaSBkc2kKICBk
+cm0vcm9ja2NoaXAvZHNpOiBkdy1taXBpOiBjb3JyZWN0IHRoZSBjb2Rpbmcgc3R5bGUKICBkcm0v
+cm9ja2NoaXAvZHNpOiByZW1vdmUgbW9kZV92YWxpZCBmdW5jdGlvbgogIGR0LWJpbmRpbmdzOiBh
+ZGQgcG93ZXIgZG9tYWluIG5vZGUgZm9yIGR3LW1pcGktcm9ja2NoaXAKICBkcm0vcm9ja2NoaXAv
+ZHNpOiBhZGQgZHctbWlwaSBwb3dlciBkb21haW4gc3VwcG9ydAoKIC4uLi9kaXNwbGF5L3JvY2tj
+aGlwL2R3X21pcGlfZHNpX3JvY2tjaGlwLnR4dCAgICAgIHwgICA3ICstCiBkcml2ZXJzL2dwdS9k
+cm0vcm9ja2NoaXAvZHctbWlwaS1kc2kuYyAgICAgICAgICAgICB8IDE1NiArKysrKysrKysrKyst
+LS0tLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgOTggaW5zZXJ0aW9ucygrKSwgNjUgZGVsZXRpb25z
+KC0pCgotLSAKMi42LjMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
