@@ -1,104 +1,90 @@
-From: "Sricharan" <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: RE: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 8 Feb 2017 18:00:53 +0530
-Message-ID: <018401d28207$34db60a0$9e9221e0$@codeaurora.org>
-References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
-	<1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
-	<20170202174218.GO31394@leverpostej>
-	<017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
-	<20170208114002.GD15459@leverpostej>
+From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
+Date: Wed, 08 Feb 2017 13:19:57 +0100
+Message-ID: <7605668.5ZxNsBFnEG@aspire.rjw.lan>
+References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com> <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com> <6293579.fEEljmGD4Z@aspire.rjw.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20170208114002.GD15459@leverpostej>
-Content-Language: en-us
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6293579.fEEljmGD4Z-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Wednesday, February 08, 2017 12:50:25 PM Rafael J. Wysocki wrote:
+> On Tuesday, February 07, 2017 11:57:55 AM Al Stone wrote:
+> > On 02/02/2017 09:22 AM, Sakari Ailus wrote:
+> > > In order to differentiate the functionality between dropping a reference
+> > > to the node (or not) for the benefit of OF, introduce
+> > > fwnode_get_next_parent().
+> > > 
+> > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > > ---
+> > >  drivers/base/property.c  | 29 +++++++++++++++++++++++++++++
+> > >  include/linux/property.h |  1 +
+> > >  2 files changed, 30 insertions(+)
+> > > 
+> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > index 28125a5..8e4398f 100644
+> > > --- a/drivers/base/property.c
+> > > +++ b/drivers/base/property.c
+> > > @@ -868,6 +868,35 @@ int device_add_properties(struct device *dev, struct property_entry *properties)
+> > >  EXPORT_SYMBOL_GPL(device_add_properties);
+> > >  
+> > >  /**
+> > > + * fwnode_get_next_parent - Iterate to the node's parent
+> > > + * @fwnode: Firmware whose parent is retrieved
+> > > + *
+> > > + * This is like fwnode_get_parent() except that it drops the refcount
+> > > + * on the passed node, making it suitable for iterating through a
+> > > + * node's parents.
+> > > + *
+> > > + * Returns a node pointer with refcount incremented, use
+> > > + * fwnode_handle_node() on it when done.
+> > > + */
+> > > +struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
+> > > +{
+> > > +	struct fwnode_handle *parent = NULL;
+> > > +
+> > > +	if (is_of_node(fwnode)) {
+> > > +		struct device_node *node;
+> > > +
+> > > +		node = of_get_next_parent(to_of_node(fwnode));
+> > > +		if (node)
+> > > +			parent = &node->fwnode;
+> > > +	} else if (is_acpi_node(fwnode)) {
+> > > +		parent = acpi_node_get_parent(fwnode);
+> > > +	}
+> > > +
+> > > +	return parent;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
+> > 
+> > I think I agree with Rob's prior comments about making an ops struct for DT
+> > vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
+> > patch all end up using the same construct.  Maybe it needs to be a separate
+> > refactoring effort, but if it's happening this often just in this patch set,
+> > it seems like it's getting time to clean things up.
+> 
+> As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
+> really make things simpler and it would make the code more difficult to
+> follow.
+> 
+> But we do have a third case (static or built-in properties) and it doesn't
+> seem to be covered at all.
 
->On Wed, Feb 08, 2017 at 04:23:17PM +0530, Sricharan wrote:
->> >On Thu, Feb 02, 2017 at 10:40:18PM +0530, Sricharan R wrote:
->> >> +- clock-names:    Should be a pair of "smmu_iface_clk" and "smmu_bus_clk"
->> >> +                  required for smmu's register group access and interface
->> >> +                  clk for the smmu's underlying bus access.
->> >> +
->> >> +- clocks:         Phandles for respective clocks described by clock-names.
->> >
->> >Which SMMU implementations are those clock-names valid for?
->> >
->> >The SMMU architecture specifications do not architect the clocks, which
->> >are implemementation-specific.
->> >
->> >AFAICT, this doesn't match MMU-400 or MMU-500.
->>
->> Ok, should be more specific. Infact QCOM has MMU-500 and also
->> a smmu v2 implementation which is fully compatible with
->> "arm,smmu-v2", with the clocks being controlled by the soc's
->> clock controller. i was trying to define these clock bindings
->> so that its works across socs.
->
->I don't think we can do that, if we don't know precisely what those
->clocks are used for.
->
->i.e. we'd need a compatible string for the QCOM SMMUv2 variant, which
->would imply the set of clocks.
->
+That said the ops struct could be introduced on top of this series just fine.
+It even might be cleaner to do it this way, so I'm not asking for a redesign
+here.
 
-Ok, this was what i was trying to do for V3 and will actually put it
-this way.
+I'd like the built-in properties to be covered too, however.
 
->> So there are one or more interface clocks which are required for the
->> smmu's interface or the configuration access and one or more clocks
->> required for smmu's downstream bus access. That was the reason i was
->> trying to iterate over the list of clocks down below.  But agree that
->> the bindings should define each of the clocks required separately.
->
->As above, I don't think the code should do this. It should only touch
->the clocks it knows about.
->
+Thanks,
+Rafael
 
-ok, after defining QCOM specific SMMU bindings, this would be become 
-handling clocks specific to QCOM implementation as per its clock
-bindings, which as i understand is what you suggest.
-
->> So one way here is, define a separate compatible for QCOM's SMMU
->> implementation and define all the clock bindings as a part of it
->> and handle it in the same way in the driver.
->
->That would be my preference.
->
-
-ok.
-
->> But just thinking if it would scale well for any other soc that is
->> compatible with arm,smmu-v2 driver and wants to handle clocks in the
->> future ?
->
->I don't think we can have our cake and eat it here. Either we handle the
->clock management for each variant, or we don't do it at all. We have no
->idea what requirements a future variant might have w.r.t. the management
->of clocks we don't know about yet.
->
-
-Right, at this point, this is first soc which adds the clocks in to the driver.
-Feels if the clocks are initialized and enabled/disabled as a part of some
-implementation specific callbacks, that would help always because that is
-the part which is going to different for each implementation and patches 2,3
-would remain common. Finally, as you have suggested will introduce new
-SMMU binding in the case of QCOM and will try to handle clocks specifically for that
-implementation and see how it looks.
-
-Regards,
- Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
