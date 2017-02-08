@@ -1,594 +1,113 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/2] backlight arcxcnn add support for ArcticSand
- devices
-Date: Wed, 8 Feb 2017 12:54:38 +0000
-Message-ID: <20170208125438.ndul7lseivqmgxf2@dell>
-References: <1485530358-6171-1-git-send-email-olimpiu@arcticsand.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
+Date: Wed, 8 Feb 2017 12:54:42 +0000
+Message-ID: <b55359d8-2665-aef0-3215-53a0e8f21bcd@arm.com>
+References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
+ <1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
+ <20170202174218.GO31394@leverpostej>
+ <017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
+ <20170208114002.GD15459@leverpostej>
+ <018401d28207$34db60a0$9e9221e0$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1485530358-6171-1-git-send-email-olimpiu@arcticsand.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Olimpiu Dejeu <olimpiu@arcticsand.com>, daniel.thompson@linaro.org
-Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, medasaro@arcticsand.com
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <018401d28207$34db60a0$9e9221e0$@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Sricharan <sricharan@codeaurora.org>, 'Mark Rutland' <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Cc'ing Daniel Thompson, the new Maintainer.
-
-On Fri, 27 Jan 2017, Olimpiu Dejeu wrote:
-
-> backlight: Add support for Arctic Sand LED backlight driver chips
-> This driver provides support for the Arctic Sand arc2c0608 chip, 
->     and provides a framework to support future devices.
-> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
-> ---
+On 08/02/17 12:30, Sricharan wrote:
+> Hi Mark,
 > 
-> v3 => v4:
-> - Code style changes per Joe Perches and Jingoo Han
-> v2 => v3:
-> - Renamed variables to comply with conventions on naming
-> - Corrected device name in arcxcnn.h
-> v1 => v2:
-> - Removed "magic numbers" to initialize registers
-> - Cleaned up device tree bindings
-> - Fixed code style to address comments and pass "checkpatch"
-> - Removed unneeded debug and testing code
+>> On Wed, Feb 08, 2017 at 04:23:17PM +0530, Sricharan wrote:
+>>>> On Thu, Feb 02, 2017 at 10:40:18PM +0530, Sricharan R wrote:
+>>>>> +- clock-names:    Should be a pair of "smmu_iface_clk" and "smmu_bus_clk"
+>>>>> +                  required for smmu's register group access and interface
+>>>>> +                  clk for the smmu's underlying bus access.
+>>>>> +
+>>>>> +- clocks:         Phandles for respective clocks described by clock-names.
+>>>>
+>>>> Which SMMU implementations are those clock-names valid for?
+>>>>
+>>>> The SMMU architecture specifications do not architect the clocks, which
+>>>> are implemementation-specific.
+>>>>
+>>>> AFAICT, this doesn't match MMU-400 or MMU-500.
+>>>
+>>> Ok, should be more specific. Infact QCOM has MMU-500 and also
+>>> a smmu v2 implementation which is fully compatible with
+>>> "arm,smmu-v2", with the clocks being controlled by the soc's
+>>> clock controller. i was trying to define these clock bindings
+>>> so that its works across socs.
+>>
+>> I don't think we can do that, if we don't know precisely what those
+>> clocks are used for.
+>>
+>> i.e. we'd need a compatible string for the QCOM SMMUv2 variant, which
+>> would imply the set of clocks.
+>>
 > 
->  drivers/video/backlight/Kconfig      |   7 +
->  drivers/video/backlight/Makefile     |   1 +
->  drivers/video/backlight/arcxcnn_bl.c | 452 +++++++++++++++++++++++++++++++++++
->  include/linux/i2c/arcxcnn.h          |  51 ++++
->  4 files changed, 511 insertions(+)
->  create mode 100644 drivers/video/backlight/arcxcnn_bl.c
->  create mode 100644 include/linux/i2c/arcxcnn.h
-> 
-> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
-> index 5ffa4b4..4e1d2ad 100644
-> --- a/drivers/video/backlight/Kconfig
-> +++ b/drivers/video/backlight/Kconfig
-> @@ -460,6 +460,13 @@ config BACKLIGHT_BD6107
->  	help
->  	  If you have a Rohm BD6107 say Y to enable the backlight driver.
->  
-> +config BACKLIGHT_ARCXCNN
-> +	tristate "Backlight driver for the Arctic Sands ARCxCnnnn family"
-> +	depends on I2C
-> +	help
-> +	  If you have an ARCxCnnnn family backlight say Y to enable
-> +	  the backlight driver.
-> +
->  endif # BACKLIGHT_CLASS_DEVICE
->  
->  endif # BACKLIGHT_LCD_SUPPORT
-> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
-> index 16ec534..8905129 100644
-> --- a/drivers/video/backlight/Makefile
-> +++ b/drivers/video/backlight/Makefile
-> @@ -55,3 +55,4 @@ obj-$(CONFIG_BACKLIGHT_SKY81452)	+= sky81452-backlight.o
->  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
->  obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
->  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
-> +obj-$(CONFIG_BACKLIGHT_ARCXCNN) 	+= arcxcnn_bl.o
-> diff --git a/drivers/video/backlight/arcxcnn_bl.c b/drivers/video/backlight/arcxcnn_bl.c
-> new file mode 100644
-> index 0000000..284df08
-> --- /dev/null
-> +++ b/drivers/video/backlight/arcxcnn_bl.c
-> @@ -0,0 +1,452 @@
-> +/*
-> + * Backlight driver for ArcticSand ARC_X_C_0N_0N Devices
-> + *
-> + * Copyright 2016 ArcticSand, Inc.
-> + * Author : Brian Dodge <bdodge@arcticsand.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/backlight.h>
-> +#include <linux/err.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
-> +
-> +#include "linux/i2c/arcxcnn.h"
-> +
-> +#define ARCXCNN_CMD		0x00	/* Command Register */
-> +#define ARCXCNN_CMD_STDBY	0x80	/*   I2C Standby */
-> +#define ARCXCNN_CMD_RESET	0x40	/*   Reset */
-> +#define ARCXCNN_CMD_BOOST	0x10	/*   Boost */
-> +#define ARCXCNN_CMD_OVP_MASK	0x0C	/*   --- Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_XXV	0x0C	/*   <rsvrd> Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_20V	0x08	/*   20v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_24V	0x04	/*   24v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_OVP_31V	0x00	/*   31.4v Over Voltage Threshold */
-> +#define ARCXCNN_CMD_EXT_COMP	0x01	/*   part (0) or full (1) ext. comp */
-> +
-> +#define ARCXCNN_CONFIG		0x01	/* Configuration */
-> +#define ARCXCNN_STATUS1		0x02	/* Status 1 */
-> +#define ARCXCNN_STATUS2		0x03	/* Status 2 */
-> +#define ARCXCNN_FADECTRL	0x04	/* Fading Control */
-> +#define ARCXCNN_ILED_CONFIG	0x05	/* ILED Configuration */
-> +#define ARCXCNN_ILED_DIM_PWM	0x00	/*   config dim mode pwm */
-> +#define ARCXCNN_ILED_DIM_INT	0x04	/*   config dim mode internal */
-> +#define ARCXCNN_LEDEN		0x06	/* LED Enable Register */
-> +#define ARCXCNN_LEDEN_ISETEXT	0x80	/*   Full-scale current set extern */
-> +#define ARCXCNN_LEDEN_MASK	0x3F	/*   LED string enables mask */
-> +#define ARCXCNN_LEDEN_BITS	0x06	/*   Bits of LED string enables */
-> +#define ARCXCNN_LEDEN_LED1	0x01
-> +#define ARCXCNN_LEDEN_LED2	0x02
-> +#define ARCXCNN_LEDEN_LED3	0x04
-> +#define ARCXCNN_LEDEN_LED4	0x08
-> +#define ARCXCNN_LEDEN_LED5	0x10
-> +#define ARCXCNN_LEDEN_LED6	0x20
-> +
-> +#define ARCXCNN_WLED_ISET_LSB	0x07	/* LED ISET LSB (in upper nibble) */
-> +#define ARCXCNN_WLED_ISET_LSB_SHIFT 0x04  /* ISET LSB Left Shift */
-> +#define ARCXCNN_WLED_ISET_MSB	0x08	/* LED ISET MSB (8 bits) */
-> +
-> +#define ARCXCNN_DIMFREQ		0x09
-> +#define ARCXCNN_COMP_CONFIG	0x0A
-> +#define ARCXCNN_FILT_CONFIG	0x0B
-> +#define ARCXCNN_IMAXTUNE	0x0C
-> +#define ARCXCNN_ID_MSB		0x1E
-> +#define ARCXCNN_ID_LSB		0x1F
-> +
-> +#define MAX_BRIGHTNESS		4095
-> +
-> +static int s_no_reset_on_remove;
-> +module_param_named(noreset, s_no_reset_on_remove, int, 0644);
-> +MODULE_PARM_DESC(noreset, "No reset on module removal");
-> +
-> +static int s_ibright = 60;
-> +module_param_named(ibright, s_ibright, int, 0644);
-> +MODULE_PARM_DESC(ibright, "Initial brightness (when no plat data)");
-> +
-> +static int s_ileden = ARCXCNN_LEDEN_MASK;
-> +module_param_named(ileden, s_ileden, int, 0644);
-> +MODULE_PARM_DESC(ileden, "Initial LED String Enables (when no plat data)");
-> +
-> +struct arcxcnn {
-> +	char chipname[64];
-> +	struct i2c_client *client;
-> +	struct backlight_device *bl;
-> +	struct device *dev;
-> +	struct arcxcnn_platform_data *pdata;
-> +};
-> +
-> +static int arcxcnn_update_bit(struct arcxcnn *lp, u8 reg, u8 mask, u8 data)
-> +{
-> +	int ret;
-> +	u8 tmp;
-> +
-> +	ret = i2c_smbus_read_byte_data(lp->client, reg);
-> +	if (ret < 0) {
-> +		dev_err(lp->dev, "failed to read 0x%.2x\n", reg);
-> +		return ret;
-> +	}
-> +
-> +	tmp = (u8)ret;
-> +	tmp &= ~mask;
-> +	tmp |= data & mask;
-> +
-> +	return i2c_smbus_write_byte_data(lp->client, reg, tmp);
-> +}
-> +
-> +static int arcxcnn_set_brightness(struct arcxcnn *lp, u32 brightness)
-> +{
-> +	int ret;
-> +	u8 val;
-> +
-> +	/* lower nibble of brightness goes in upper nibble of LSB register */
-> +	val = (brightness & 0xF) << ARCXCNN_WLED_ISET_LSB_SHIFT;
-> +	ret = i2c_smbus_write_byte_data(lp->client, ARCXCNN_WLED_ISET_LSB, val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* remaining 8 bits of brightness go in MSB register */
-> +	val = (brightness >> 4);
-> +	ret = i2c_smbus_write_byte_data(lp->client, ARCXCNN_WLED_ISET_MSB, val);
-> +
-> +	return ret;
-> +}
-> +
-> +static int arcxcnn_bl_update_status(struct backlight_device *bl)
-> +{
-> +	struct arcxcnn *lp = bl_get_data(bl);
-> +	u32 brightness = bl->props.brightness;
-> +
-> +	if (bl->props.state & (BL_CORE_SUSPENDED | BL_CORE_FBBLANK))
-> +		brightness = 0;
-> +
-> +	arcxcnn_set_brightness(lp, brightness);
-> +
-> +	/* set power-on/off/save modes */
-> +	arcxcnn_update_bit(lp, ARCXCNN_CMD, ARCXCNN_CMD_STDBY,
-> +		(bl->props.power == 0) ? 0 : ARCXCNN_CMD_STDBY);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct backlight_ops arcxcnn_bl_ops = {
-> +	.options = BL_CORE_SUSPENDRESUME,
-> +	.update_status = arcxcnn_bl_update_status,
-> +};
-> +
-> +static int arcxcnn_backlight_register(struct arcxcnn *lp)
-> +{
-> +	struct backlight_properties *props;
-> +	const char *name = lp->pdata->name ? : "arctic_bl";
-> +
-> +	props = devm_kzalloc(lp->dev, sizeof(*props), GFP_KERNEL);
-> +	if (!props)
-> +		return -ENOMEM;
-> +
-> +	props->type = BACKLIGHT_PLATFORM;
-> +	props->max_brightness = MAX_BRIGHTNESS;
-> +
-> +	if (lp->pdata->initial_brightness > props->max_brightness)
-> +		lp->pdata->initial_brightness = props->max_brightness;
-> +
-> +	props->brightness = lp->pdata->initial_brightness;
-> +
-> +	lp->bl = devm_backlight_device_register(lp->dev, name, lp->dev, lp,
-> +				       &arcxcnn_bl_ops, props);
-> +	if (IS_ERR(lp->bl))
-> +		return PTR_ERR(lp->bl);
-> +
-> +	return 0;
-> +}
-> +
-> +static ssize_t arcxcnn_chip_id_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%s\n", lp->chipname);
-> +}
-> +
-> +static ssize_t arcxcnn_leden_show(struct device *dev,
-> +		struct device_attribute *attr, char *buf)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +
-> +	return scnprintf(buf, PAGE_SIZE, "%02X\n", lp->pdata->leden);
-> +}
-> +
-> +static ssize_t arcxcnn_leden_store(struct device *dev,
-> +		struct device_attribute *attr, const char *buf, size_t len)
-> +{
-> +	struct arcxcnn *lp = dev_get_drvdata(dev);
-> +	unsigned long leden;
-> +
-> +	if (kstrtoul(buf, 0, &leden))
-> +		return 0;
-> +
-> +	if (leden != lp->pdata->leden) {
-> +		/* don't allow 0 for leden, use power to turn all off */
-> +		if (leden == 0)
-> +			return -EINVAL;
-> +		lp->pdata->leden = leden & ARCXCNN_LEDEN_MASK;
-> +		arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
-> +			ARCXCNN_LEDEN_MASK, lp->pdata->leden);
-> +	}
-> +
-> +	return len;
-> +}
-> +
-> +static DEVICE_ATTR(chip_id, 0444, arcxcnn_chip_id_show, NULL);
-> +static DEVICE_ATTR(leden, 0664, arcxcnn_leden_show, arcxcnn_leden_store);
-> +
-> +static struct attribute *arcxcnn_attributes[] = {
-> +	&dev_attr_chip_id.attr,
-> +	&dev_attr_leden.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group arcxcnn_attr_group = {
-> +	.attrs = arcxcnn_attributes,
-> +};
-> +
-> +static void arcxcnn_parse_dt(struct arcxcnn *lp)
-> +{
-> +	struct device *dev = lp->dev;
-> +	struct device_node *node = dev->of_node;
-> +	u32 prog_val, num_entry, entry, sources[ARCXCNN_LEDEN_BITS];
-> +	int ret;
-> +
-> +	/* device tree entry isn't required, defaults are OK */
-> +	if (!node)
-> +		return;
-> +
-> +	ret = of_property_read_string(node, "label", &lp->pdata->name);
-> +	if (ret < 0)
-> +		lp->pdata->name = NULL;
-> +
-> +	ret = of_property_read_u32(node, "default-brightness", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->initial_brightness = prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,led-config-0", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->led_config_0 = (u8)prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,led-config-1", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->led_config_1 = (u8)prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,dim-freq", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->dim_freq = (u8)prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,comp-config", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->comp_config = (u8)prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,filter-config", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->filter_config = (u8)prog_val;
-> +
-> +	ret = of_property_read_u32(node, "arcticsand,trim-config", &prog_val);
-> +	if (ret == 0)
-> +		lp->pdata->trim_config = (u8)prog_val;
-> +
-> +	ret = of_property_count_u32_elems(node, "led-sources");
-> +	if (ret < 0) {
-> +		lp->pdata->leden = ARCXCNN_LEDEN_MASK; /* all on is default */
-> +	} else {
-> +		num_entry = ret;
-> +		if (num_entry > ARCXCNN_LEDEN_BITS)
-> +			num_entry = ARCXCNN_LEDEN_BITS;
-> +
-> +		ret = of_property_read_u32_array(node, "led-sources", sources,
-> +					num_entry);
-> +		if (ret < 0) {
-> +			dev_err(dev, "led-sources node is invalid.\n");
-> +			return;
-> +		}
-> +
-> +		lp->pdata->leden = 0;
-> +
-> +		/* for each enable in source, set bit in led enable */
-> +		for (entry = 0; entry < num_entry; entry++) {
-> +			u8 onbit = 1 << sources[entry];
-> +
-> +			lp->pdata->leden |= onbit;
-> +		}
-> +	}
-> +}
-> +
-> +static int arcxcnn_probe(struct i2c_client *cl, const struct i2c_device_id *id)
-> +{
-> +	struct arcxcnn *lp;
-> +	int ret;
-> +	u8 regval;
-> +	u16 chipid;
-> +
-> +	if (!i2c_check_functionality(cl->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
-> +		return -EIO;
-> +
-> +	lp = devm_kzalloc(&cl->dev, sizeof(*lp), GFP_KERNEL);
-> +	if (!lp)
-> +		return -ENOMEM;
-> +
-> +	lp->client = cl;
-> +	lp->dev = &cl->dev;
-> +	lp->pdata = dev_get_platdata(&cl->dev);
-> +
-> +	/* reset the device */
-> +	i2c_smbus_write_byte_data(lp->client,
-> +		ARCXCNN_CMD, ARCXCNN_CMD_RESET);
-> +
-> +	/* read device ID */
-> +	regval = i2c_smbus_read_byte_data(lp->client, ARCXCNN_ID_MSB);
-> +	chipid = regval;
-> +	chipid <<= 8;
-> +
-> +	regval = i2c_smbus_read_byte_data(lp->client, ARCXCNN_ID_LSB);
-> +	chipid |= regval;
-> +
-> +	snprintf(lp->chipname, sizeof(lp->chipname),
-> +		"%s-%04X", id->name, chipid);
-> +
-> +	if (!lp->pdata) {
-> +		lp->pdata = devm_kzalloc(lp->dev,
-> +				sizeof(*lp->pdata), GFP_KERNEL);
-> +		if (!lp->pdata)
-> +			return -ENOMEM;
-> +
-> +		/* Setup defaults based on power-on defaults */
-> +		lp->pdata->name = NULL;
-> +		lp->pdata->initial_brightness = s_ibright;
-> +		lp->pdata->leden = s_ileden;
-> +
-> +		lp->pdata->led_config_0 = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_FADECTRL);
-> +
-> +		lp->pdata->led_config_1 = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_ILED_CONFIG);
-> +		/* insure dim mode is not default pwm */
-> +		lp->pdata->led_config_1 |= ARCXCNN_ILED_DIM_INT;
-> +
-> +		lp->pdata->dim_freq = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_DIMFREQ);
-> +
-> +		lp->pdata->comp_config = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_COMP_CONFIG);
-> +
-> +		lp->pdata->filter_config = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_FILT_CONFIG);
-> +
-> +		lp->pdata->trim_config = i2c_smbus_read_byte_data(
-> +			lp->client, ARCXCNN_IMAXTUNE);
-> +
-> +		if (IS_ENABLED(CONFIG_OF))
-> +			arcxcnn_parse_dt(lp);
-> +	}
-> +
-> +	i2c_set_clientdata(cl, lp);
-> +
-> +	/* constrain settings to what is possible */
-> +	if (lp->pdata->initial_brightness > MAX_BRIGHTNESS)
-> +		lp->pdata->initial_brightness = MAX_BRIGHTNESS;
-> +
-> +	/* set initial brightness */
-> +	arcxcnn_set_brightness(lp, lp->pdata->initial_brightness);
-> +
-> +	/* set other register values directly */
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_FADECTRL,
-> +		lp->pdata->led_config_0);
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_ILED_CONFIG,
-> +		lp->pdata->led_config_1);
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_DIMFREQ,
-> +		lp->pdata->dim_freq);
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_COMP_CONFIG,
-> +		lp->pdata->comp_config);
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_FILT_CONFIG,
-> +		lp->pdata->filter_config);
-> +	i2c_smbus_write_byte_data(lp->client, ARCXCNN_IMAXTUNE,
-> +		lp->pdata->trim_config);
-> +
-> +	/* set initial LED Enables */
-> +	arcxcnn_update_bit(lp, ARCXCNN_LEDEN,
-> +		ARCXCNN_LEDEN_MASK, lp->pdata->leden);
-> +
-> +	ret = arcxcnn_backlight_register(lp);
-> +	if (ret) {
-> +		dev_err(lp->dev,
-> +			"failed to register backlight. err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	ret = sysfs_create_group(&lp->dev->kobj, &arcxcnn_attr_group);
-> +	if (ret) {
-> +		dev_err(lp->dev, "failed to register sysfs. err: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	backlight_update_status(lp->bl);
-> +
-> +	return 0;
-> +}
-> +
-> +static int arcxcnn_remove(struct i2c_client *cl)
-> +{
-> +	struct arcxcnn *lp = i2c_get_clientdata(cl);
-> +
-> +	if (!s_no_reset_on_remove) {
-> +		/* disable all strings */
-> +		i2c_smbus_write_byte_data(lp->client,
-> +			ARCXCNN_LEDEN, 0x00);
-> +		/* reset the device */
-> +		i2c_smbus_write_byte_data(lp->client,
-> +			ARCXCNN_CMD, ARCXCNN_CMD_RESET);
-> +	}
-> +	lp->bl->props.brightness = 0;
-> +
-> +	backlight_update_status(lp->bl);
-> +
-> +	sysfs_remove_group(&lp->dev->kobj, &arcxcnn_attr_group);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id arcxcnn_dt_ids[] = {
-> +	{ .compatible = "arc,arc2c0608" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, arcxcnn_dt_ids);
-> +
-> +static const struct i2c_device_id arcxcnn_ids[] = {
-> +	{"arc2c0608", ARC2C0608},
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, arcxcnn_ids);
-> +
-> +static struct i2c_driver arcxcnn_driver = {
-> +	.driver = {
-> +		.name = "arcxcnn_bl",
-> +		.of_match_table = of_match_ptr(arcxcnn_dt_ids),
-> +	},
-> +	.probe = arcxcnn_probe,
-> +	.remove = arcxcnn_remove,
-> +	.id_table = arcxcnn_ids,
-> +};
-> +module_i2c_driver(arcxcnn_driver);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_AUTHOR("Brian Dodge <bdodge@arcticsand.com>");
-> +MODULE_DESCRIPTION("ARCXCNN Backlight driver");
-> diff --git a/include/linux/i2c/arcxcnn.h b/include/linux/i2c/arcxcnn.h
-> new file mode 100644
-> index 0000000..e378d63
-> --- /dev/null
-> +++ b/include/linux/i2c/arcxcnn.h
-> @@ -0,0 +1,51 @@
-> +/*
-> + * Backlight driver for ArcticSand ARC_X_C_0N_0N Devices
-> + *
-> + * Copyright 2016 ArcticSand, Inc.
-> + * Author : Brian Dodge <bdodge@arcticsand.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful, but
-> + * WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-> + * General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef _ARCXCNN_H
-> +#define _ARCXCNN_H
-> +
-> +enum arcxcnn_chip_id {
-> +	ARC2C0608
-> +};
-> +
-> +/**
-> + * struct arcxcnn_platform_data
-> + * @name		: Backlight driver name (NULL will use default)
-> + * @initial_brightness	: initial value of backlight brightness
-> + * @leden		: initial LED string enables, upper bit is global on/off
-> + * @led_config_0	: fading speed (period between intensity steps)
-> + * @led_config_1	: misc settings, see datasheet
-> + * @dim_freq		: pwm dimming frequency if in pwm mode
-> + * @comp_config		: misc config, see datasheet
-> + * @filter_config	: RC/PWM filter config, see datasheet
-> + * @trim_config		: full scale current trim, see datasheet
-> + */
-> +struct arcxcnn_platform_data {
-> +	const char *name;
-> +	u16 initial_brightness;
-> +	u8	leden;
-> +	u8	led_config_0;
-> +	u8	led_config_1;
-> +	u8	dim_freq;
-> +	u8	comp_config;
-> +	u8	filter_config;
-> +	u8	trim_config;
-> +};
-> +
-> +#endif
+> Ok, this was what i was trying to do for V3 and will actually put it
+> this way.
 
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Clocks are not architectural, so it only makes sense to associate them
+with an implementation-specific compatible string. There's also no
+guarantee that different microarchitectures have equivalent internal
+clock domains - I'm not sure if "the SMMU's underlying bus access" is
+meant to refer to accesses *by* the SMMU, i.e. page table walks,
+accesses *through* the SMMU by upstream masters, or both, and the
+differences are rather significant. I'd also note that an MMU-500
+configuration may have up to *33* clocks.
+
+>>> So there are one or more interface clocks which are required for the
+>>> smmu's interface or the configuration access and one or more clocks
+>>> required for smmu's downstream bus access. That was the reason i was
+>>> trying to iterate over the list of clocks down below.  But agree that
+>>> the bindings should define each of the clocks required separately.
+>>
+>> As above, I don't think the code should do this. It should only touch
+>> the clocks it knows about.
+>>
+> 
+> ok, after defining QCOM specific SMMU bindings, this would be become 
+> handling clocks specific to QCOM implementation as per its clock
+> bindings, which as i understand is what you suggest.
+> 
+>>> So one way here is, define a separate compatible for QCOM's SMMU
+>>> implementation and define all the clock bindings as a part of it
+>>> and handle it in the same way in the driver.
+>>
+>> That would be my preference.
+>>
+> 
+> ok.
+
+Either way, the QCOM implementation deserves its own compatible if only
+for the sake of the imp-def gaps in the architecture (e.g. FSR.SS
+behaviour WRT to IRQs as touched upon in the other thread).
+
+Robin.
+
+>>> But just thinking if it would scale well for any other soc that is
+>>> compatible with arm,smmu-v2 driver and wants to handle clocks in the
+>>> future ?
+>>
+>> I don't think we can have our cake and eat it here. Either we handle the
+>> clock management for each variant, or we don't do it at all. We have no
+>> idea what requirements a future variant might have w.r.t. the management
+>> of clocks we don't know about yet.
+>>
+> 
+> Right, at this point, this is first soc which adds the clocks in to the driver.
+> Feels if the clocks are initialized and enabled/disabled as a part of some
+> implementation specific callbacks, that would help always because that is
+> the part which is going to different for each implementation and patches 2,3
+> would remain common. Finally, as you have suggested will introduce new
+> SMMU binding in the case of QCOM and will try to handle clocks specifically for that
+> implementation and see how it looks.
+> 
+> Regards,
+>  Sricharan
+> 
