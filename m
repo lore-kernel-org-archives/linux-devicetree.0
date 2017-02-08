@@ -1,90 +1,82 @@
-From: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
-Subject: Re: [PATCH v2 15/16] device property: Add fwnode_get_next_parent()
-Date: Wed, 08 Feb 2017 13:19:57 +0100
-Message-ID: <7605668.5ZxNsBFnEG@aspire.rjw.lan>
-References: <1486052546-19257-1-git-send-email-sakari.ailus@linux.intel.com> <9a481aec-92e6-ac01-b825-167bf73dfb11@redhat.com> <6293579.fEEljmGD4Z@aspire.rjw.lan>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 2/2] backlight arcxcnn devicetree bindings for
+ ArcticSand
+Date: Wed, 8 Feb 2017 12:53:24 +0000
+Message-ID: <20170208125324.w3udiu2jxrwf2rld@dell>
+References: <1485530378-6217-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6293579.fEEljmGD4Z-yvgW3jdyMHm1GS7QM15AGw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ahs3-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, rafael-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1485530378-6217-1-git-send-email-olimpiu@arcticsand.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Olimpiu Dejeu <olimpiu@arcticsand.com>, daniel.thompson@linaro.org
+Cc: robh@kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, jingoohan1@gmail.com, bdodge@arcticsand.com, joe@perches.com, medasaro@arcticsand.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, February 08, 2017 12:50:25 PM Rafael J. Wysocki wrote:
-> On Tuesday, February 07, 2017 11:57:55 AM Al Stone wrote:
-> > On 02/02/2017 09:22 AM, Sakari Ailus wrote:
-> > > In order to differentiate the functionality between dropping a reference
-> > > to the node (or not) for the benefit of OF, introduce
-> > > fwnode_get_next_parent().
-> > > 
-> > > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > > ---
-> > >  drivers/base/property.c  | 29 +++++++++++++++++++++++++++++
-> > >  include/linux/property.h |  1 +
-> > >  2 files changed, 30 insertions(+)
-> > > 
-> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
-> > > index 28125a5..8e4398f 100644
-> > > --- a/drivers/base/property.c
-> > > +++ b/drivers/base/property.c
-> > > @@ -868,6 +868,35 @@ int device_add_properties(struct device *dev, struct property_entry *properties)
-> > >  EXPORT_SYMBOL_GPL(device_add_properties);
-> > >  
-> > >  /**
-> > > + * fwnode_get_next_parent - Iterate to the node's parent
-> > > + * @fwnode: Firmware whose parent is retrieved
-> > > + *
-> > > + * This is like fwnode_get_parent() except that it drops the refcount
-> > > + * on the passed node, making it suitable for iterating through a
-> > > + * node's parents.
-> > > + *
-> > > + * Returns a node pointer with refcount incremented, use
-> > > + * fwnode_handle_node() on it when done.
-> > > + */
-> > > +struct fwnode_handle *fwnode_get_next_parent(struct fwnode_handle *fwnode)
-> > > +{
-> > > +	struct fwnode_handle *parent = NULL;
-> > > +
-> > > +	if (is_of_node(fwnode)) {
-> > > +		struct device_node *node;
-> > > +
-> > > +		node = of_get_next_parent(to_of_node(fwnode));
-> > > +		if (node)
-> > > +			parent = &node->fwnode;
-> > > +	} else if (is_acpi_node(fwnode)) {
-> > > +		parent = acpi_node_get_parent(fwnode);
-> > > +	}
-> > > +
-> > > +	return parent;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(fwnode_get_next_parent);
-> > 
-> > I think I agree with Rob's prior comments about making an ops struct for DT
-> > vs ACPI.  Out of the 16 patches, 2/16, 3/16, 5/16 (multiple times), and this
-> > patch all end up using the same construct.  Maybe it needs to be a separate
-> > refactoring effort, but if it's happening this often just in this patch set,
-> > it seems like it's getting time to clean things up.
+Cc'ing Daniel Thompson, the new Maintainer.
+
+On Fri, 27 Jan 2017, Olimpiu Dejeu wrote:
+
+> backlight: Add devicetree bindings for the Arctic Sand backlight driver
+> This patch provides devicetree bindings for the Arctic Sand
+>     driver submitted in the previous patch
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Olimpiu Dejeu <olimpiu@arcticsand.com>
+> ---
 > 
-> As long as there are two cases only (ACPI vs DT), an ops struct wouldn't
-> really make things simpler and it would make the code more difficult to
-> follow.
+> v3 => v4:
+> - Added spaces for increased readability per Lee Jones
+> v2 => v3:
+> - Version updated to match other patch in set. No other changes.
+> v1 => v2:
+> - Version updated to match other patch in set. No other changes.
 > 
-> But we do have a third case (static or built-in properties) and it doesn't
-> seem to be covered at all.
+>  .../bindings/leds/backlight/arcxcnn_bl.txt         | 31 ++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> new file mode 100644
+> index 0000000..ecb7731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/arcxcnn_bl.txt
+> @@ -0,0 +1,31 @@
+> +Binding for ArcticSand arc2c0608 LED driver
+> +
+> +Required properties:
+> +- compatible:		should be "arc,arc2c0608"
+> +- reg:			slave address
+> +
+> +Optional properties:
+> +- default-brightness:	brightness value on boot, value from: 0-4095
+> +- label:		The name of the backlight device
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +- led-sources:		List of enabled channels from 0 to 5.
+> +			See Documentation/devicetree/bindings/leds/common.txt
+> +
+> +- arc,led-config-0:	setting for register ILED_CONFIG_0
+> +- arc,led-config-1:	setting for register ILED_CONFIG_1
+> +- arc,dim-freq:		PWM mode frequence setting (bits [3:0] used)
+> +- arc,comp-config:	setting for register CONFIG_COMP
+> +- arc,filter-config:	setting for register FILTER_CONFIG
+> +- arc,trim-config:	setting for register IMAXTUNE
+> +
+> +Example:
+> +
+> +arc2c0608@30 {
+> +	compatible = "arc,arc2c0608";
+> +	reg = <0x30>;
+> +	default-brightness = <500>;
+> +	label = "lcd-backlight";
+> +	linux,default-trigger = "backlight";
+> +	led-sources = <0 1 2 5>;
+> +};
+> +
 
-That said the ops struct could be introduced on top of this series just fine.
-It even might be cleaner to do it this way, so I'm not asking for a redesign
-here.
-
-I'd like the built-in properties to be covered too, however.
-
-Thanks,
-Rafael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
