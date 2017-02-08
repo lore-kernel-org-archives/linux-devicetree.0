@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/8] arm64: dts: allwinner: add device node
- for R_PWM
-Date: Wed, 8 Feb 2017 11:17:06 +0100
-Message-ID: <20170208101706.332djd3fw6tbenqx@lukather>
+Subject: Re: [PATCH 8/8] arm64: dts: allwinner: add PWM node to
+ A64 dtsi
+Date: Wed, 8 Feb 2017 11:17:40 +0100
+Message-ID: <20170208101740.l6az2ck3zm4kaplq@lukather>
 References: <20170208100009.29362-1-icenowy@aosc.xyz>
- <20170208100009.29362-6-icenowy@aosc.xyz>
+ <20170208100009.29362-8-icenowy@aosc.xyz>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j7fex3yqge4ngjh5"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBI7A5PCAKGQEAMLWLJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="l3ic2mctqgkb6aoc"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRPA5PCAKGQEMCXZEQI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170208100009.29362-6-icenowy-ymACFijhrKM@public.gmane.org>
+In-Reply-To: <20170208100009.29362-8-icenowy-ymACFijhrKM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -24,15 +24,16 @@ Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob H
 List-Id: devicetree@vger.kernel.org
 
 
---j7fex3yqge4ngjh5
+--l3ic2mctqgkb6aoc
 Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
 
-On Wed, Feb 08, 2017 at 06:00:07PM +0800, Icenowy Zheng wrote:
-> Allwinner A64 SoC has two PWM controller, both are similar to the
-> controller in H3 SoC.
+On Wed, Feb 08, 2017 at 06:00:09PM +0800, Icenowy Zheng wrote:
+> Allwinner A64 has also a PWM controller on PD22 (not available on
+> Pine64, because it's muxed with EMAC, but it's used on Olimex TERES
+> laptop kit to adjust the screen backlight).
 > 
-> Add one of the controllers which lies in the "CPUs" part of the SoC.
+> Add a device node for it.
 > 
 > Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
@@ -40,22 +41,18 @@ On Wed, Feb 08, 2017 at 06:00:07PM +0800, Icenowy Zheng wrote:
 >  1 file changed, 8 insertions(+)
 > 
 > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 4b0baa79554c..6204aee5c6f4 100644
+> index 6e34f5adcf06..078322fb5d58 100644
 > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -432,5 +432,13 @@
->  			#size-cells = <0>;
->  			#gpio-cells = <3>;
+> @@ -296,6 +296,14 @@
+>  			};
 >  		};
-> +
-> +		r_pwm: pwm@01f03800 {
+>  
+> +		pwm: pwm@1c21400 {
 > +			compatible = "allwinner,sun8i-h3-pwm";
+> +			reg = <0x01c21400 0x8>;
 
-Please add an a64 compatible there too.
-
-> +			reg = <0x01f03800 0x8>;
-
-The size is 0x400
+Same thing here, the size is wrong, and you need a new compatible.
 
 Thanks,
 Maxime
@@ -64,4 +61,4 @@ Maxime
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---j7fex3yqge4ngjh5--
+--l3ic2mctqgkb6aoc--
