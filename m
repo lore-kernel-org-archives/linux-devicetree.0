@@ -1,80 +1,60 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 8 Feb 2017 11:40:02 +0000
-Message-ID: <20170208114002.GD15459@leverpostej>
-References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
-	<1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
-	<20170202174218.GO31394@leverpostej>
-	<017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
+Date: Wed, 8 Feb 2017 17:27:31 +0530
+Message-ID: <CAFp+6iEtFetHY6FEAYD2Ymjr+BKyVKjaum_F8v4e8wapnFcK8w@mail.gmail.com>
+References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
+ <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Sricharan <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, gary.bisson@boundarydevices.com, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, Arnd Bergmann <arnd@arndb.de>, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mail@maciej.szmigiero.name, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt <robh+dt@kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hans Verkuil <hverkuil@xs>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08, 2017 at 04:23:17PM +0530, Sricharan wrote:
-> >On Thu, Feb 02, 2017 at 10:40:18PM +0530, Sricharan R wrote:
-> >> +- clock-names:    Should be a pair of "smmu_iface_clk" and "smmu_bus_clk"
-> >> +                  required for smmu's register group access and interface
-> >> +                  clk for the smmu's underlying bus access.
-> >> +
-> >> +- clocks:         Phandles for respective clocks described by clock-names.
-> >
-> >Which SMMU implementations are those clock-names valid for?
-> >
-> >The SMMU architecture specifications do not architect the clocks, which
-> >are implemementation-specific.
-> >
-> >AFAICT, this doesn't match MMU-400 or MMU-500.
-> 
-> Ok, should be more specific. Infact QCOM has MMU-500 and also
-> a smmu v2 implementation which is fully compatible with
-> "arm,smmu-v2", with the clocks being controlled by the soc's
-> clock controller. i was trying to define these clock bindings
-> so that its works across socs.
+Hi,
 
-I don't think we can do that, if we don't know precisely what those
-clocks are used for.
 
-i.e. we'd need a compatible string for the QCOM SMMUv2 variant, which
-would imply the set of clocks.
+On Mon, Feb 6, 2017 at 2:43 PM, Peter Chen <peter.chen@nxp.com> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> For xhci-hcd platform device, all the DMA parameters are not
+> configured properly, notably dma ops for dwc3 devices. So, set
+> the dma for xhci from sysdev. sysdev is pointing to device that
+> is known to the system firmware or hardware.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+> Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+> ---
 
-> So there are one or more interface clocks which are required for the
-> smmu's interface or the configuration access and one or more clocks
-> required for smmu's downstream bus access. That was the reason i was
-> trying to iterate over the list of clocks down below.  But agree that
-> the bindings should define each of the clocks required separately.
+This patch doesn't work for me anymore on db820c target [1].
+While the same kernel with reverts of patches [2] [3] and an older
+patch [4] by Grygorii Strashko works [5].
 
-As above, I don't think the code should do this. It should only touch
-the clocks it knows about.
+[1] https://github.com/vivekgautam1/linux/tree/linux-v4.10-rc7-usb-db820c-nonworking
+[2] 8c9f2de459c7 usb: dwc3: Do not set dma coherent mask
+[3] d64ff406e51e usb: dwc3: use bus->sysdev for DMA configuration
+[4] https://lkml.org/lkml/2016/4/25/813
+[5] https://github.com/vivekgautam1/linux/tree/linux-v4.10-rc7-usb-db820c
 
-> So one way here is, define a separate compatible for QCOM's SMMU
-> implementation and define all the clock bindings as a part of it
-> and handle it in the same way in the driver.
 
-That would be my preference.
+regards
+Vivek
 
-> But just thinking if it would scale well for any other soc that is
-> compatible with arm,smmu-v2 driver and wants to handle clocks in the
-> future ?
-
-I don't think we can have our cake and eat it here. Either we handle the
-clock management for each variant, or we don't do it at all. We have no
-idea what requirements a future variant might have w.r.t. the management
-of clocks we don't know about yet.
-
-Thanks,
-Mark.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
