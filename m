@@ -1,88 +1,50 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH 10/10] ARM: davinci: add pdata-quirks for da850-evm vpif
- display
-Date: Wed, 8 Feb 2017 14:26:06 +0100
-Message-ID: <CAMpxmJUEH4-bP-x06fvYSy-6ViVMr3++txBQmtm5bEENR1yqnw@mail.gmail.com>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
- <1486485683-11427-11-git-send-email-bgolaszewski@baylibre.com>
- <m2k291kglb.fsf@baylibre.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 13/13] auxdisplay: Add HD44780 Character LCD support
+Date: Wed, 8 Feb 2017 15:38:13 +0200
+Message-ID: <CAHp75Ve0SmQg+oaDU7zJ3zpi2GHJJkQ9HFJk-CuxR5Woq4x7rQ@mail.gmail.com>
+References: <1486391895-9554-1-git-send-email-geert@linux-m68k.org>
+ <1486391895-9554-14-git-send-email-geert@linux-m68k.org> <CAHp75VcvkcO-6N59fMtr8xRogQxhicifTMaNVipmTccj078Baw@mail.gmail.com>
+ <CAMuHMdXav5kyuSENYwKH0iVwT=Z25TfL=di-nbHb0zjHXdyY=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2k291kglb.fsf@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-devicetree <devicetree@vger.kernel.org>, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, LKML <linux-kernel@vger.kernel.org>, Lad Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, arm-soc <linux-arm-kernel@lists.infradead.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXav5kyuSENYwKH0iVwT=Z25TfL=di-nbHb0zjHXdyY=w@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Willy Tarreau <willy-W4YR9g1X7EZBDgjK7y7TUQ@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-02-07 19:20 GMT+01:00 Kevin Hilman <khilman@baylibre.com>:
-> Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+On Wed, Feb 8, 2017 at 3:18 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Andy,
 >
->> Similarly to vpif capture: we need to register the vpif display driver
->> and the corresponding adv7343 encoder in pdata-quirks as the DT
->> support is not complete.
->
-> To add a bit more detail to the changelog:  DT support is not complete
-> since there isn't currently a way to define the output_routing in the
-> V4L2 drivers (c.f. s_routing) via DT.
->
-
-I'll add this in v2.
-
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> minor nit below, otherwise
->
-> Reviewed-by: Kevin Hilman <khilman@baylibre.com>
->
->> ---
->>  arch/arm/mach-davinci/pdata-quirks.c | 86 +++++++++++++++++++++++++++++++++++-
->>  1 file changed, 85 insertions(+), 1 deletion(-)
+> On Tue, Feb 7, 2017 at 12:23 PM, Andy Shevchenko
+> <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Mon, Feb 6, 2017 at 4:38 PM, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>>> The Hitachi HD44780 Character LCD Controller is commonly used on
+>>> character LCDs that can display one or more lines of text.
+>>>
+>>> This driver supports character LCDs connected to GPIOs, using either a
+>>> 4-bit or 8-bit data bus, and provides access through the charlcd core
+>>> and /dev/lcd.
 >>
->> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
->> index 09f62ac..0a55546 100644
->> --- a/arch/arm/mach-davinci/pdata-quirks.c
->> +++ b/arch/arm/mach-davinci/pdata-quirks.c
->> @@ -9,13 +9,17 @@
->>   */
->>  #include <linux/kernel.h>
->>  #include <linux/of_platform.h>
->> +#include <linux/gpio.h>
->>
->>  #include <media/i2c/tvp514x.h>
->> +#include <media/i2c/adv7343.h>
->>
->>  #include <mach/common.h>
->>  #include <mach/da8xx.h>
->>  #include <mach/mux.h>
->>
->> +#define DA850_EVM_UI_EXP_SEL_VPIF_DISP 5
->> +
->>  struct pdata_init {
->>       const char *compatible;
->>       void (*fn)(void);
->> @@ -107,7 +111,78 @@ static struct vpif_capture_config da850_vpif_capture_config = {
->>       },
->>       .card_name = "DA850/OMAP-L138 Video Capture",
->>  };
->> +#endif /* IS_ENABLED(CONFIG_VIDEO_DAVINCI_VPIF_CAPTURE) */
->> +
->> +#if defined(CONFIG_DA850_UI_SD_VIDEO_PORT)
+>> Can we not limit this to OF? I can easily imagine use case with
+>> x86/ACPI enabled platform.
 >
-> Why not IS_ENABLED(CONFIG_VIDEO_DAVINCI_VPIF_CAPTURE) also here?
+> Sure!
+>
+>> On the first glance of_property-* -> device_property_* is enough.
+>
+> And of_gpio_named_count() -> gpiod_count().
 
-Just a reflex ;)
+Indeed.
 
-I'll fix this too.
+Btw, have you any plans to make an order among spreaded LCD drivers in
+kernel? Perhaps we may gather them under auxdisplay hood?
 
-Thanks,
-Bartosz
+-- 
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
