@@ -1,45 +1,37 @@
-From: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Subject: [PATCH v2 1/5] dts: mfd: axp20x: Add AXP806 to list of current AXP20x
- family members
-Date: Thu,  9 Feb 2017 00:30:05 +0100 (CET)
-Message-ID: <fd2101870941430d82798cdde64644d5e3d49f70.1486592471.git.rask@formelder.dk>
-References: <cover.1486592470.git.rask@formelder.dk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1486592470.git.rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [RFC 1/2] dt: emac: document device-tree based phy discovery and
+ setup
+Date: Wed, 8 Feb 2017 17:00:30 -0600
+Message-ID: <20170208230030.3mzhe4e7kj6k6xdh@rob-hp-laptop>
+References: <f57a340f615991ed2771d8af4b1a908dec436a5e.1486333475.git.chunkeey@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <f57a340f615991ed2771d8af4b1a908dec436a5e.1486333475.git.chunkeey@googlemail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Christian Lamparter <chunkeey@googlemail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, Ivan Mikhaylov <ivan@de.ibm.com>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-An entry for the AXP806 was forgotten, so add one.
+On Sun, Feb 05, 2017 at 11:25:05PM +0100, Christian Lamparter wrote:
+> This patch adds documentation for a new "phy-handler" property
 
-Fixes: 204ae2963e10 ("mfd: axp20x: Add bindings for AXP806 PMIC")
-Signed-off-by: Rask Ingemann Lambertsen <rask-SivP7zSAdNDZaaYASwVUlg@public.gmane.org>
-Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
+s/phy-handler/phy-handle/
 
-No changes in v2.
+> and "mdio" sub-node. These allows the enumeration of PHYs which
+> are supported by the phy library under drivers/net/phy.
+> 
+> The EMAC ethernet controller in IBM and AMCC 4xx chips is
+> currently stuck with a few privately defined phy
+> implementations. It has no support for PHYs which
+> are supported by the generic phylib.
+> 
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> ---
+>  .../devicetree/bindings/powerpc/4xx/emac.txt       | 60 +++++++++++++++++++++-
+>  1 file changed, 58 insertions(+), 2 deletions(-)
 
- Documentation/devicetree/bindings/mfd/axp20x.txt | 1 +
- 1 file changed, 1 insertion(+)
+Otherwise,
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index 8f3ad9a..86ae540 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -6,6 +6,7 @@ axp202 (X-Powers)
- axp209 (X-Powers)
- axp221 (X-Powers)
- axp223 (X-Powers)
-+axp806 (X-Powers)
- axp809 (X-Powers)
- 
- Required properties:
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
