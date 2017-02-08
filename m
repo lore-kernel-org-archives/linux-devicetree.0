@@ -1,50 +1,50 @@
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
- Broadcom NSP SoC"
-Date: Thu, 09 Feb 2017 00:39:08 +0100
-Message-ID: <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
-References: <20170208233023.31922-1-zajec5@gmail.com>
- <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 21/24] media: imx: Add MIPI CSI-2 Receiver subdev driver
+Date: Wed, 8 Feb 2017 23:42:35 +0000
+Message-ID: <20170208234235.GA27312@n2100.armlinux.org.uk>
+References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
+ <1483755102-24785-22-git-send-email-steve_longerbeam@mentor.com>
+ <1486036237.2289.37.camel@pengutronix.de>
+ <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <ca0a2eb3-21b6-d312-c8e0-61da48c4c700@gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, Philipp Zabel <p.zabel@pengutronix.de>, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNy0wMi0wOSAwMDozMiwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwMi8wOC8y
-MDE3IDAzOjMwIFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IEZyb206IFJhZmHFgiBNacWC
-ZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4gCj4+IFRoaXMgcmV2ZXJ0cyBjb21taXQgZDdiYzFh
-N2Q0MWJmICgicGh5OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IKPj4gQnJvYWRjb20gTlNQIFNv
-QyIpIGFzIHdlIGFscmVhZHkgaGF2ZSBkcml2ZXIgZm9yIHRoaXMgUEhZIChzaGFyZWQgYnkgCj4+
-IE5TCj4+IGFuZCBOU1ApLiBJdCB3YXMgYWRkZWQgaW4gY29tbWl0IGU1NjY2MjgxZDllYSAoInBo
-eTogYmNtLW5zLXVzYjM6IG5ldwo+PiBkcml2ZXIgZm9yIFVTQiAzLjAgUEhZIG9uIE5vcnRoc3Rh
-ciIpLgo+PiAKPj4gSW5zdGVhZCBvZiBhZGRpbmcgc2VwYXJhdGVkIGRyaXZlciAmIGR1cGxpY2F0
-aW5nIGNvZGUgd2Ugc2hvdWxkIHdvcmsgCj4+IG9uCj4+IGltcHJvdmluZyBleGlzdGluZyAob2xk
-KSBvbmUuIFRoYW5rcyB0byB3b3JrIGRvbmUgYnkgQnJvYWRjb20gd2Uga25vdwo+PiB0aGVyZSBp
-cyBNRElPIGJ1cyB3ZSB3ZXJlbid0IGF3YXJlIG9mICYgd2Uga25vdyByZWdpc3RlciBuYW1lcyB3
-aGljaAo+PiBtYWtlcyBpbml0aWFsaXphdGlvbiBtb3JlIGNsZWFyLiBUaGlzIGlzIHZlcnkgdmFs
-dWFibGUgaW5mbyBhbmQgd2UKPj4gc2hvdWxkIHdvcmsgb24gdXNpbmcgaXQgaW4gZXhpc3Rpbmcg
-ZHJpdmVyIGFmdGVyd2FyZHMuCj4gCj4gU2hvdWxkIG5vdCB3ZSBmaXJzdCBleHRlbmQgdGhlIG9s
-ZCBkcml2ZXIgdG8gc3VwcG9ydCBOU1AgYW5kIHRoZW4gCj4gcmV2ZXJ0Cj4gZDdiYzFhN2Q0MWJm
-ICgicGh5OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IgQnJvYWRjb20gTlNQIFNvQyIpPwoKU291
-bmRzIGxpa2UgYSB3ZWlyZCAvIGRpcnR5IGRldmVsb3BtZW50IG1ldGhvZCB0byBtZTogYWRkaW5n
-IGR1cGxpY2F0ZWQgCmNvZGUKZmlyc3QgdGhlbiB3b3JraW5nIG9uIGNsZWFuaW5nIGl0LiBVbmxl
-c3MgeW91IG1lYW4gZHJpdmVycy9zdGFnaW5nLy4KCldlIGFsc28gc2hvdWxkIG5ldmVyIGRyb3Ag
-c3VwcG9ydCBmb3Igc3VwcG9ydGVkIERUIGJpbmRpbmdzLCBzbyBJIHJlYWxseSAKdGhpbmsKaXQn
-cyB0aGUgY2xlYW5lc3QgdG8gcmV2ZXJ0IGl0IG5vdy4KCkkgdGhpbmsgSm9uIHdhcyBhbHNvIE9L
-IHdpdGggdGhpcyBzb2x1dGlvbi4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, Feb 08, 2017 at 03:23:53PM -0800, Steve Longerbeam wrote:
+> >Actually, this exact function already exists as dw_mipi_dsi_phy_write in
+> >drivers/gpu/drm/rockchip/dw-mipi-dsi.c, and it looks like the D-PHY
+> >register 0x44 might contain a field called HSFREQRANGE_SEL.
+> 
+> Thanks for pointing out drivers/gpu/drm/rockchip/dw-mipi-dsi.c.
+> It's clear from that driver that there probably needs to be a fuller
+> treatment of the D-PHY programming here, but I don't know where
+> to find the MIPI CSI-2 D-PHY documentation for the i.MX6. The code
+> in imxcsi2_reset() was also pulled from FSL, and that's all I really have
+> to go on for the D-PHY programming. I assume the D-PHY is also a
+> Synopsys core, like the host controller, but the i.MX6 manual doesn't
+> cover it.
+
+Why exactly?  What problems are you seeing that would necessitate a
+more detailed programming of the D-PHY?  From my testing, I can wind
+a 2-lane MIPI bus on iMX6D from 912Mbps per lane down to (eg) 308Mbps
+per lane with your existing code without any issues.
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
