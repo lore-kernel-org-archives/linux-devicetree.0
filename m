@@ -1,106 +1,61 @@
-From: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Subject: [PATCH v9 09/10] dt-bindings: mux-adg792a: document devicetree bindings for ADG792A/G mux
-Date: Wed, 8 Feb 2017 16:41:56 +0100
-Message-ID: <1486568517-6997-10-git-send-email-peda@axentia.se>
-References: <1486568517-6997-1-git-send-email-peda@axentia.se>
+From: Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
+ fewer PQ coefficients
+Date: Wed, 8 Feb 2017 08:24:59 -0800
+Message-ID: <CAPcyv4iFJXxvJFrUs2jtwP9GX5NcJ8LiEDHeZ5b1fwjCAToe5w@mail.gmail.com>
+References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
+ <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
+ <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
+ <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com>
+ <CAPcyv4hK_1f8bryq6smPQy7vTnP+QEzmT9wnAEE1xpxq7EAnjQ@mail.gmail.com> <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1486568517-6997-1-git-send-email-peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-raid-owner@vger.kernel.org>
+In-Reply-To: <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com>
+Sender: linux-raid-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Analog Devices ADG792A/G is a triple 4:1 mux.
+On Wed, Feb 8, 2017 at 12:57 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+> On Tue, Feb 7, 2017 at 11:46 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+>> On Tue, Feb 7, 2017 at 1:02 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+>>>> On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>>>>> The DMAENGINE framework assumes that if PQ offload is supported by a
+>>>>> DMA device then all 256 PQ coefficients are supported. This assumption
+>>>>> does not hold anymore because we now have BCM-SBA-RAID offload engine
+>>>>> which supports PQ offload with limited number of PQ coefficients.
+>>>>>
+>>>>> This patch extends async_tx APIs to handle DMA devices with support
+>>>>> for fewer PQ coefficients.
+>>>>>
+>>>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>>>>
+>>>> I don't like this approach. Define an interface for md to query the
+>>>> offload engine once at the beginning of time. We should not be adding
+>>>> any new extensions to async_tx.
+>>>
+>>> Even if we do capability checks in Linux MD, we still need a way
+>>> for DMAENGINE drivers to advertise number of PQ coefficients
+>>> handled by the HW.
+>>>
+>>> I agree capability checks should be done once in Linux MD but I don't
+>>> see why this has to be part of BCM-SBA-RAID driver patches. We need
+>>> separate patchsets to address limitations of async_tx framework.
+>>
+>> Right, separate enabling before we pile on new hardware support to a
+>> known broken framework.
+>
+> Linux Async Tx not broken framework. The issue is:
+> 1. Its not complete enough
+> 2. Its not optimized for very high through-put offload engines
 
-Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
----
- .../devicetree/bindings/mux/adi,adg792a.txt        | 75 ++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mux/adi,adg792a.txt
-
-diff --git a/Documentation/devicetree/bindings/mux/adi,adg792a.txt b/Documentation/devicetree/bindings/mux/adi,adg792a.txt
-new file mode 100644
-index 000000000000..96b787a69f50
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mux/adi,adg792a.txt
-@@ -0,0 +1,75 @@
-+Bindings for Analog Devices ADG792A/G Triple 4:1 Multiplexers
-+
-+Required properties:
-+- compatible : "adi,adg792a" or "adi,adg792g"
-+- #mux-control-cells : <0> if parallel (the three muxes are bound together
-+  with a single mux controller controlling all three muxes), or <1> if
-+  not (one mux controller for each mux).
-+* Standard mux-controller bindings as described in mux-controller.txt
-+
-+Optional properties for ADG792G:
-+- gpio-controller : if present, #gpio-cells below is required.
-+- #gpio-cells : should be <2>
-+			  - First cell is the GPO line number, i.e. 0 or 1
-+			  - Second cell is used to specify active high (0)
-+			    or active low (1)
-+
-+Optional properties:
-+- idle-state : if present, array of states that the mux controllers will have
-+  when idle. The special state MUX_IDLE_AS_IS is the default and
-+  MUX_IDLE_DISCONNECT is also supported.
-+
-+States 0 through 3 correspond to signals A through D in the datasheet.
-+
-+Example:
-+
-+	/*
-+	 * Three independent mux controllers (of which one is used).
-+	 * Mux 0 is disconnected when idle, mux 1 idles in the previously
-+	 * selected state and mux 2 idles with signal B.
-+	 */
-+	&i2c0 {
-+		mux: mux-controller@50 {
-+			compatible = "adi,adg792a";
-+			reg = <0x50>;
-+			#mux-control-cells = <1>;
-+
-+			idle-state = <MUX_IDLE_DISCONNECT MUX_IDLE_AS_IS 1>;
-+		};
-+	};
-+
-+	adc-mux {
-+		compatible = "io-channel-mux";
-+		io-channels = <&adc 0>;
-+		io-channel-names = "parent";
-+
-+		mux-controls = <&mux 2>;
-+
-+		channels = "sync-1", "", "out";
-+	};
-+
-+
-+	/*
-+	 * Three parallel muxes with one mux controller, useful e.g. if
-+	 * the adc is differential, thus needing two signals to be muxed
-+	 * simultaneously for correct operation.
-+	 */
-+	&i2c0 {
-+		pmux: mux-controller@50 {
-+			compatible = "adi,adg792a";
-+			reg = <0x50>;
-+			#mux-control-cells = <0>;
-+
-+			idle-state = <1>;
-+		};
-+	};
-+
-+	diff-adc-mux {
-+		compatible = "io-channel-mux";
-+		io-channels = <&adc 0>;
-+		io-channel-names = "parent";
-+
-+		mux-controls = <&pmux>;
-+
-+		channels = "sync-1", "", "out";
-+	};
--- 
-2.1.4
+I'm not understanding your point. I'm nak'ing this change to add yet
+more per-transaction capability checking to async_tx. I don't like the
+DMA_HAS_FEWER_PQ_COEF flag, especially since it is equal to
+DMA_HAS_PQ_CONTINUE. I'm not asking for all of async_tx's problems to
+be fixed before this new hardware support, I'm simply saying we should
+start the process of moving offload-engine capability checking to the
+raid code.
