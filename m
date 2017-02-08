@@ -1,73 +1,284 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [RFC 1/2] devicetree: add lm90 thermal_zone sensor support
-Date: Thu, 09 Feb 2017 00:01:55 +0100
-Message-ID: <2979642.2YCYMDeKdL@debian64>
-References: <e2c150ce1312a524ea0a524f3d476f910333ae82.1486327509.git.chunkeey@googlemail.com> <20170208223034.om75tphg277l2ink@rob-hp-laptop>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH V2 2/2] ARM: dts: rockchip: add dts for RK3288-Tinker board
+Date: Thu, 09 Feb 2017 00:07:29 +0100
+Message-ID: <10145131.LBiDzV4T0q@phil>
+References: <1486347287-31051-1-git-send-email-eddie.cai@rock-chips.com>
+ <1486347287-31051-3-git-send-email-eddie.cai@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <20170208223034.om75tphg277l2ink@rob-hp-laptop>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Wei Ni <wni@nvidia.com>, Guenter Roeck <linux@roeck-us.net>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486347287-31051-3-git-send-email-eddie.cai@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Eddie Cai <eddie.cai.linux@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, robh+dt@kernel.org, eddie.cai@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, February 8, 2017 4:30:34 PM CET Rob Herring wrote:
-> On Sun, Feb 05, 2017 at 10:03:15PM +0100, Christian Lamparter wrote:
-> > This patch updates the LM90's devicetree definition to
-> > include the #thermal-sensor-cells property as well as
-> > the sensor constants in include/dt-bindings/thermal/lm90.h.
-> > 
-> > Cc: Wei Ni <wni@nvidia.com>
-> > Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
-> > ---
-> > I'm aware that there was atleast one previous attempt to add
-> > thermal_zone temperature sensors for the LM90 module. This was
-> > discussed on:
-> > <http://www.gossamer-threads.com/lists/linux/kernel/1992853>
-> > <https://lkml.org/lkml/2014/3/4/194>
-> > 
-> > This RFC is meant to get it going again. As I would really
-> > like to have this functionality for the Netgear WNDR4700.
-> > This router uses a G781 to measure the SoCs temperature
-> > in order to regulate a TC654 fan-controller.
-> > <https://git.lede-project.org/?p=source.git;a=commit;h=9e0fd1b52ad1f805a308bf6a5a13236f352fd962>
-> > ---
-> >  Documentation/devicetree/bindings/hwmon/lm90.txt |  6 ++++++
-> >  MAINTAINERS                                      |  1 +
-> >  include/dt-bindings/thermal/lm90.h               | 12 ++++++++++++
-> >  3 files changed, 19 insertions(+)
-> >  create mode 100644 include/dt-bindings/thermal/lm90.h
+Hi Eddie
+
+Am Montag, 6. Februar 2017, 10:14:47 CET schrieb Eddie Cai:
+> This patch add basic support for RK3288-Tinker board. We can boot in to
+> rootfs with this patch.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-Ok thanks. Just a quick note: Don't apply this yet. I'm working
-on a patch, but this has to wait for the weekend.
+> Signed-off-by: Eddie Cai <eddie.cai@rock-chips.com>
+> ---
 
-OnT: From Guenter Roeck:
-> Sure, no problem with that. Does supporting this require changes in the hwmon
-> core ?
-No changes to hwmon's core are required. It's basically this 1/1 patch with
-+#define LM90_LOCAL_TEMPERATURE 1 (updated to 0)
-+#define LM90_REMOTE_TEMPERATURE 0 (updated to 1)
+[...]
 
-swapped and a small update to lm90.c. This way the
-defines are doing something in the driver [0]:
+> +&hdmi {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	#sound-dai-cells = <0>;
 
-static const u8 lm90_temp_index[3] = {
-        LOCAL_TEMP, REMOTE_TEMP, REMOTE2_TEMP
-};
+why are these needed. More importantly if they are needed, they should be in 
+rk3288.dtsi instead and not here.
 
-will become something like:
 
-static const u8 lm90_temp_index[3] = {
-	[LM90_LOCAL_TEMPERATURE] = LOCAL_TEMP,
-	[LM90_REMOTE_TEMPERATURE] = REMOTE_TEMP,
-	[LM90_REMOTE2_TEMPERATURE] = REMOTE2_TEMP
-};
+> +	ddc-i2c-bus = <&i2c5>;
+> +	status = "okay";
+> +	/* Don't use vopl for HDMI */
+> +	ports {
+> +		hdmi_in: port {
+> +			/delete-node/ endpoint@1;
+> +		};
+> +	};
 
-Regards,
-Christian
+See comment in previous iteration, about the link to vopl being there in 
+hardware and not wanting to use it for hdmi being a driver issue.
+No working around driver issues in the devicetree, so leave the vop <-> hdmi 
+links intact please :-)
 
-[0] <http://lxr.free-electrons.com/source/drivers/hwmon/lm90.c#L1018>
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +
+> +	rk808: pmic@1b {
+> +		compatible = "rockchip,rk808";
+> +		reg = <0x1b>;
+> +		interrupt-parent = <&gpio0>;
+> +		interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pmic_int &global_pwroff &dvs_1 &dvs_2>;
+> +		dvs-gpios = <&gpio0 11 GPIO_ACTIVE_HIGH>,
+> +				<&gpio0 12 GPIO_ACTIVE_HIGH>;
+> +
+> +		rockchip,system-power-controller;
+> +		wakeup-source;
+> +		#clock-cells = <1>;
+> +		clock-output-names = "xin32k", "rk808-clkout2";
+> +
+> +		vcc1-supply = <&vcc_sys>;
+> +		vcc2-supply = <&vcc_sys>;
+> +		vcc3-supply = <&vcc_sys>;
+> +		vcc4-supply = <&vcc_sys>;
+> +		vcc6-supply = <&vcc_sys>;
+> +		vcc7-supply = <&vcc_sys>;
+> +		vcc8-supply = <&vcc_io>;
+> +		vcc9-supply = <&vcc_io>;
+> +		vcc10-supply = <&vcc_io>;
+> +		vcc11-supply = <&vcc_sys>;
+> +		vcc12-supply = <&vcc_io>;
+> +		vddio-supply = <&vcc_io>;
+> +
+> +		regulators {
+> +			vdd_cpu: DCDC_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <750000>;
+> +				regulator-max-microvolt = <1350000>;
+> +				regulator-name = "vdd_arm";
+> +				regulator-ramp-delay = <6000>;
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_gpu: DCDC_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <850000>;
+> +				regulator-max-microvolt = <1250000>;
+> +				regulator-name = "vdd_gpu";
+> +				regulator-ramp-delay = <6000>;
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vcc_ddr: DCDC_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc_ddr";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc_io: DCDC_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc_io";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vcc18_ldo1: LDO_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "vcc18_ldo1";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc33_mipi: LDO_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <3300000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vcc33_mipi";
+> +				regulator-state-mem {
+> +					regulator-off-in-suspend;
+> +				};
+> +			};
+> +
+> +			vdd_10: LDO_REG3 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "vdd_10";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vcc18_codec: LDO_REG4 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "vcc18_codec";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vccio_sd: LDO_REG5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-name = "vccio_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <3300000>;
+> +				};
+> +			};
+> +
+> +			vdd10_lcd: LDO_REG6 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <1000000>;
+> +				regulator-name = "vdd10_lcd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1000000>;
+> +				};
+> +			};
+> +
+> +			vcc_18: LDO_REG7 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "vcc_18";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc18_lcd: LDO_REG8 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <1800000>;
+> +				regulator-name = "vcc18_lcd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +					regulator-suspend-microvolt = <1800000>;
+> +				};
+> +			};
+> +
+> +			vcc33_sd: SWITCH_REG1 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc33_sd";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +
+> +			vcc33_lan: SWITCH_REG2 {
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-name = "vcc33_lan";
+> +				regulator-state-mem {
+> +					regulator-on-in-suspend;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&i2c2 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c5 {
+> +	status = "okay";
+> +};
+> +
+> +&i2s {
+> +	#sound-dai-cells = <0>;
+> +	status = "okay";
+> +};
+> +&vopb {
+> +	status = "okay";
+> +};
+> +
+> +&vopb_mmu {
+> +	status = "okay";
+> +};
+> +
+> +&vopl {
+> +	status = "okay";
+> +	/* Don't use vopl for HDMI */
+> +	vopl_out: port {
+> +		/delete-node/ endpoint@0;
+> +	};
+
+same here
+
+> +};
+> +
