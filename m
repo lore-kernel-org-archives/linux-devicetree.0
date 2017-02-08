@@ -1,146 +1,123 @@
-From: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: sun8i: Add dts file for NanoPi NEO Air
-Date: Wed,  8 Feb 2017 20:44:44 +0100
-Message-ID: <20170208194444.14595-1-jelle@vdwaa.nl>
-Reply-To: jelle-oJJ1AqDjjO4@public.gmane.org
+From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Wed, 8 Feb 2017 19:45:31 +0100
+Message-ID: <80e533b6-4eb3-0019-fe18-82dd0d7aaa1c@g0hl1n.net>
+References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
+ <1486560068.2133.395.camel@linux.intel.com> <20170208135957.GA916@kroah.com>
+ <96c8a6f9-3b93-8ba0-22b1-502e22dac31c@skidata.com>
+ <1486572009.2133.406.camel@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDYIFONAQMORBRHK5XCAKGQEMZEQ5HQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486572009.2133.406.camel-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Richard Leitner <richard.leitner-WcANXNA0UjBBDgjK7y7TUQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-add support for the NanoPi NEO Air H3 board from friendlyarm.com . This
-board contains WiFi, Bluetooth, 8GB eMMC storage and 512 MB DDR3 ram.
+On 02/08/2017 05:40 PM, Andy Shevchenko wrote:
+> On Wed, 2017-02-08 at 16:17 +0100, Richard Leitner wrote:
+>> On 02/08/2017 02:59 PM, Greg KH wrote:
+>>> On Wed, Feb 08, 2017 at 03:21:08PM +0200, Andy Shevchenko wrote:
+>>>> On Wed, 2017-02-08 at 09:52 +0100, Richard Leitner wrote:
+>>>>> From: Richard Leitner <dev-M/VWbR8SM2SsTnJN9+BGXg@public.gmane.org>
 
-Signed-off-by: Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                    |  1 +
- arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts | 97 +++++++++++++++++++++++++++
- 2 files changed, 98 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
+>>>>> +#define DRIVER_NAME "usb251xb"
+>>>>> +#define DRIVER_DESC "Microchip USB 2.0 Hi-Speed Hub Controller"
+>>>>> +#define DRIVER_VERSION "1.0"
+>>>>
+>>>> Is it my MUA, or all above indentations are broken?
+>>>
+>>> What do you mean?
+>>
+>> Should the strings be aligned, like the following?
+>> #define DRIVER_NAME     "usb251xb"
+>> #define DRIVER_DESC     "Microchip USB .."
+>> #define DRIVER_VERSION	"1.0"
+>
+> Yep, tab vs. space indentation.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index f10fe8526239..5e1361e704f5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -848,6 +848,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-h3-bananapi-m2-plus.dtb \
- 	sun8i-h3-nanopi-m1.dtb	\
- 	sun8i-h3-nanopi-neo.dtb \
-+	sun8i-h3-nanopi-neo-air.dtb \
- 	sun8i-h3-orangepi-2.dtb \
- 	sun8i-h3-orangepi-lite.dtb \
- 	sun8i-h3-orangepi-one.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
-new file mode 100644
-index 000000000000..3ba081c1f555
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-h3-nanopi-neo-air.dts
-@@ -0,0 +1,97 @@
-+/*
-+ * Copyright (C) 2017 Jelle van der Waa <jelle-oJJ1AqDjjO4@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-h3.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi NEO Air";
-+	compatible = "friendlyarm,nanopi-neo-air", "allwinner,sun8i-h3";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		pwr {
-+			label = "nanopi:green:pwr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-+			default-state = "on";
-+		};
-+
-+		status {
-+			label = "nanopi:blue:status";
-+			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>; /* PA10 */
-+		};
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	/* USB VBUS is always on */
-+	status = "okay";
-+};
--- 
-2.11.1
+Ok, will do that for v5.
+
+>>>> Above doesn't make much sense. Why not to use
+>>>>
+>>>>> BIT(bit)
+>>>>
+>>>> and
+>>>>
+>>>> & ~BIT(bit)
+>>>>
+>>>> in place?
+>>>
+>>> I thought we already had functions to do this for you.  Don't write
+>>> new
+>>> ones "by hand" either wya.
+>>
+>> Which functions do you mean? I only found set_bit() and clear_bit()
+>> from
+>> atomic_ops. But those operate on "unsigned long" variables. From the
+>> documentation:
+>> 	Native atomic bit operations are defined to operate
+>> 	on objects aligned to the size of an "unsigned long"
+>> 	C data type, and are least of that size.
+>
+> __set_bit(), __clear_bit() -- non-atomic variants, but you are right,
+> that (unsigned long) exactly the point I didn't propose them.
+
+So the preferred solution is the BIT() stuff?
+
+>>>>> +		/* the first data byte transferred tells the
+>>>>> hub how
+>>>>> many data
+>>>>> +		 * bytes will follow (byte count)
+>>>>> +		 */
+>>>>
+>>>> I'm not sure this is good formatted comment for USB subsystem.
+>>>
+>>> Looks fine to me, why do you think it is incorrect?
+>
+> I would do like
+>
+> /*
+>  * The multi-line
+>  * comment.
+>  */
+>
+> Capital letter, period at the end, first empty line (unlike in net
+> subsystem).
+
+So what's the preferred format? Empty line at the beginning or not?
+
+The captital letter and period looks fine. I'll apply that for v5.
+
+>>>
+>>>>> +#else /* CONFIG_OF */
+>>>>> +static int usb251xb_get_ofdata(struct usb251xb *hub,
+>>>>> +			       struct usb251xb_data *data)
+>>>>> +{
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +#endif /* CONFIG_OF */
+>>>>
+>>>> I don't think it's a good idea to have those ugly #ifdef.
+>>>
+>>> How can it be removed?
+>
+> __maybe_unused for function, device_property_*() instead of
+> of_property_*() calls.
+>
+> Something like that. But if you are insisting this is *only* OF
+> available hardware or we don't care, I'll not object.
+
+In usb3503.c and usb4604.c we have that #ifdef CONFIG_OF too. IMHO those 
+drivers should use the same solution here. But you guys are the ones 
+with tons of kernel coding experience, so just say how it should be done :-)
+
+Thanks & regards,
+Richard L
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
