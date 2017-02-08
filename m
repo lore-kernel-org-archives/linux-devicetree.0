@@ -1,57 +1,66 @@
-From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v5 2/4] Documentation: dt: add bindings for ti-cpufreq
-Date: Thu, 09 Feb 2017 01:02:53 +0100
-Message-ID: <5995162.mH49F4H7nS@aspire.rjw.lan>
-References: <20170203172929.23940-1-d-gerlach@ti.com>
- <CAL_Jsq+955fra0P8FFWd4-f2rLyJVMwo-FBRfeqqeO=a8m0NnA@mail.gmail.com>
- <2aba1159-9a48-329f-2a54-8079b32b06e2@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2aba1159-9a48-329f-2a54-8079b32b06e2@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Gerlach <d-gerlach@ti.com>
-Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Viresh Kumar <viresh.kumar@linaro.org>, Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 02/10] clocksource: add DT bindings for Cortina Gemini
+Date: Thu,  9 Feb 2017 00:14:36 +0100
+Message-ID: <1486595685-10232-2-git-send-email-daniel.lezcano@linaro.org>
+References: <20170208231208.GB12695@mai>
+ <1486595685-10232-1-git-send-email-daniel.lezcano@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486595685-10232-1-git-send-email-daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, February 08, 2017 08:45:55 AM Dave Gerlach wrote:
-> On 02/08/2017 08:44 AM, Rob Herring wrote:
-> > On Fri, Feb 3, 2017 at 11:29 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
-> >> Add the device tree bindings document for the TI CPUFreq/OPP driver
-> >> on AM33xx, AM43xx, DRA7xx, and AM57xx SoCs. The operating-points-v2
-> >> binding allows us to provide an opp-supported-hw property for each OPP
-> >> to define when it is available. This driver is responsible for reading
-> >> and parsing registers to determine which OPPs can be selectively enabled
-> >> based on the specific SoC in use by matching against the opp-supported-hw
-> >> data.
-> >>
-> >> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> >> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
-> >> ---
-> >
-> > [...]
-> >
-> >> +/*
-> >> + * cpu0 has different OPPs depending on SoC revision and some on revisions
-> >> + * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
-> >> + */
-> >> +cpu0_opp_table: opp_table {
-> >
-> > One step closer, but as I showed last time, use a '-', not '_'.
-> 
-> I apologize I thought the comment was only about the 0, completely missed the 
-> underscore, you are correct, thanks.
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Please send an update of this patch, then.
+This adds device tree bindings for the Cortina Systems Gemini
+timer block used in these SoCs.
 
-Thanks,
-Rafael
+Cc: Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../bindings/timer/cortina,gemini-timer.txt        | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt b/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
+new file mode 100644
+index 0000000..16ea1d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/cortina,gemini-timer.txt
+@@ -0,0 +1,22 @@
++Cortina Systems Gemini timer
++
++This timer is embedded in the Cortina Systems Gemini SoCs.
++
++Required properties:
++
++- compatible : Must be "cortina,gemini-timer"
++- reg : Should contain registers location and length
++- interrupts : Should contain the three timer interrupts with
++  flags for rising edge
++- syscon : a phandle to the global Gemini system controller
++
++Example:
++
++timer@43000000 {
++	compatible = "cortina,gemini-timer";
++	reg = <0x43000000 0x1000>;
++	interrupts = <14 IRQ_TYPE_EDGE_RISING>, /* Timer 1 */
++		   <15 IRQ_TYPE_EDGE_RISING>, /* Timer 2 */
++		   <16 IRQ_TYPE_EDGE_RISING>; /* Timer 3 */
++	syscon = <&syscon>;
++};
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
