@@ -1,82 +1,76 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH for-4.11 2/2] Revert "dt-bindings: phy: Add documentation for NSP USB3 PHY"
-Date: Thu,  9 Feb 2017 00:30:23 +0100
-Message-ID: <20170208233023.31922-2-zajec5@gmail.com>
-References: <20170208233023.31922-1-zajec5@gmail.com>
+From: Rask Ingemann Lambertsen <rask@formelder.dk>
+Subject: [PATCH v2 2/5] dts: mfd: axp20x: Add binding for the AXP808
+Date: Thu,  9 Feb 2017 00:31:05 +0100 (CET)
+Message-ID: <6c4741c2cf30693bd204ac71d76bae2734eeead1.1486592471.git.rask@formelder.dk>
+References: <cover.1486592470.git.rask@formelder.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170208233023.31922-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1486592470.git.rask@formelder.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+The AXP808 does not support address space extension, but is otherwise
+identical to the AXP806, including the chip ID, so add a compatible
+string for it to the binding.
 
-This reverts commit c8ca631f9480 ("dt-bindings: phy: Add documentation
-for NSP USB3 PHY") to match reverting commit adding the new PHY driver.
-Please note we revert this commit before it reached stable release.
-
-If new compatible string is needed it should be added to the existing
-bcm-ns-usb3-phy.txt which already describes this PHY.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Signed-off-by: Rask Ingemann Lambertsen <rask@formelder.dk>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 ---
- .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ----------------------
- 1 file changed, 39 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-deleted file mode 100644
-index e68ae5dec9c9..000000000000
---- a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-+++ /dev/null
-@@ -1,39 +0,0 @@
--Broadcom USB3 phy binding for northstar plus SoC
--The USB3 phy is internal to the SoC and is accessed using mdio interface.
--
--Required mdio bus properties:
--- reg: Should be 0x0 for SoC internal USB3 phy
--- #address-cells: must be 1
--- #size-cells: must be 0
--
--Required USB3 PHY properties:
--- compatible: should be "brcm,nsp-usb3-phy"
--- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.
--- usb3-ctrl-syscon: handler of syscon node defining physical address
--  of usb3 control register.
--- #phy-cells: must be 0
--
--Required usb3 control properties:
--- compatible: should be "brcm,nsp-usb3-ctrl"
--- reg: offset and length of the control registers
--
--Example:
--
--	mdio@0 {
--		reg = <0x0>;
--		#address-cells = <1>;
--		#size-cells = <0>;
--
--		usb3_phy: usb-phy@10 {
--			compatible = "brcm,nsp-usb3-phy";
--			reg = <0x10>;
--			usb3-ctrl-syscon = <&usb3_ctrl>;
--			#phy-cells = <0>;
--			status = "disabled";
--		};
--	};
--
--	usb3_ctrl: syscon@104408 {
--		compatible = "brcm,nsp-usb3-ctrl", "syscon";
--		reg = <0x104408 0x3fc>;
--	};
+No changes in v2.
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
+index 86ae540..8195b06 100644
+--- a/Documentation/devicetree/bindings/mfd/axp20x.txt
++++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
+@@ -7,12 +7,13 @@ axp209 (X-Powers)
+ axp221 (X-Powers)
+ axp223 (X-Powers)
+ axp806 (X-Powers)
++axp808 (X-Powers)
+ axp809 (X-Powers)
+ 
+ Required properties:
+ - compatible: "x-powers,axp152", "x-powers,axp202", "x-powers,axp209",
+ 	      "x-powers,axp221", "x-powers,axp223", "x-powers,axp806",
+-	      "x-powers,axp809"
++	      "x-powers,axp808", "x-powers,axp809"
+ - reg: The I2C slave address or RSB hardware address for the AXP chip
+ - interrupt-parent: The parent interrupt controller
+ - interrupts: SoC NMI / GPIO interrupt connected to the PMIC's IRQ pin
+@@ -87,7 +88,7 @@ LDO_IO1		: LDO		: ips-supply		: GPIO 1
+ RTC_LDO		: LDO		: ips-supply		: always on
+ DRIVEVBUS	: Enable output	: drivevbus-supply	: external regulator
+ 
+-AXP806 regulators, type, and corresponding input supply names:
++AXP806/AXP808 regulators, type, and corresponding input supply names:
+ 
+ Regulator	  Type		  Supply Name		  Notes
+ ---------	  ----		  -----------		  -----
+@@ -108,7 +109,7 @@ CLDO2		: LDO		: cldoin-supply		: shared supply
+ CLDO3		: LDO		: cldoin-supply		: shared supply
+ SW		: On/Off Switch : swin-supply
+ 
+-Additionally, the AXP806 DC-DC regulators support poly-phase arrangements
++Additionally, the AXP806/AXP808 DC-DC regulators support poly-phase arrangements
+ for higher output current. The possible groupings are: A+B, A+B+C, D+E.
+ 
+ AXP809 regulators, type, and corresponding input supply names:
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.2
