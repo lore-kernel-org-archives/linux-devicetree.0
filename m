@@ -1,98 +1,71 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v2 1/2] mtd: name the mtd device with an optional label
- property
-Date: Wed, 8 Feb 2017 14:38:59 -0800
-Message-ID: <20170208223859.GK94627@google.com>
-References: <1485368255-12038-1-git-send-email-clg@kaod.org>
- <1485368255-12038-2-git-send-email-clg@kaod.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [RESENT PATCH] ARM: bcm2835: Add devicetree for the Raspberry Pi 3, for arm (32)
+Date: Wed, 08 Feb 2017 14:40:56 -0800
+Message-ID: <87y3xgs3uv.fsf@eliezer.anholt.net>
+References: <1484845444-4617-1-git-send-email-kraxel@redhat.com> <87fukcgsqp.fsf@eliezer.anholt.net> <878tpqki0k.fsf@eliezer.anholt.net> <1485944672.1076.50.camel@redhat.com> <1485951653.1076.54.camel@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1485368255-12038-2-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1485951653.1076.54.camel@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gerd Hoffmann <kraxel@redhat.com>
+Cc: linux-rpi-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 25, 2017 at 07:17:34PM +0100, C=E9dric Le Goater wrote:
-> This can be used to easily identify a specific chip on a system with
-> multiple chips.
-> =
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> Drivers wanting to support this new label property will benefit from
-> it without a change. They might want to check in the future that
-> mtd->name is NULL before assigning a default name to the mtd device.
-> Other drivers will keep the current behavior, which is to override
-> mtd->name with their own value.
-> =
+Gerd Hoffmann <kraxel@redhat.com> writes:
 
-> Suggested-by: Boris Brezillon <boris.brezillon@free-electrons.com>
-> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
-> ---
-> =
+>> > I think just having links from
+>> > arch/arm64/boot/dts/broadcom/bcm2837*.dts* to arch/arm/boot/dts/ would
+>> > be the solution, then this Makefile could just reference
+>> > bcm2837-rpi-3-b.dtb.
+>>=20
+>> I suspect it is not that easy, last time I tried it didn't work.
+>> Will try again though.
+>
+> Yep, dtbs_install fails:
+>
+> [ ... ]
+>   INSTALL arch/arm/boot/dts/bcm2835-rpi-b-plus.dtb
+>   INSTALL arch/arm/boot/dts/bcm2835-rpi-a-plus.dtb
+>   INSTALL arch/arm/boot/dts/bcm2836-rpi-2-b.dtb
+>   INSTALL=20
+> cp: missing destination file operand after '/boot/dtbs/4.10.0-rc5+'
+> Try 'cp --help' for more information.
+> /root/linux/scripts/Makefile.dtbinst:41: recipe for target
+> 'bcm2837-rpi-3-b.dts' failed
+> make[3]: *** [bcm2837-rpi-3-b.dts] Error 1
+> arch/arm/Makefile:348: recipe for target 'dtbs_install' failed
+> make[2]: *** [dtbs_install] Error 2
+> Makefile:150: recipe for target 'sub-make' failed
+> make[1]: *** [sub-make] Error 2
+> Makefile:24: recipe for target '__sub-make' failed
+> make: *** [__sub-make] Error 2
 
->  Changes since v1:
-> =
+Huh, I didn't see this when I tried it.  I just sent out that version of
+the patch.
 
->  - moved the use of the "label" property from mtd_set_dev_defaults()
->    to mtd_set_of_node() to let drivers keep control on how mtd->name
->    is set and allocated.
-> =
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
->  include/linux/mtd/mtd.h | 2 ++
->  1 file changed, 2 insertions(+)
-> =
+-----BEGIN PGP SIGNATURE-----
 
-> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> index 13f8052b9ff9..f4fe15517295 100644
-> --- a/include/linux/mtd/mtd.h
-> +++ b/include/linux/mtd/mtd.h
-> @@ -24,6 +24,7 @@
->  #include <linux/uio.h>
->  #include <linux/notifier.h>
->  #include <linux/device.h>
-> +#include <linux/of.h>
->  =
-
->  #include <mtd/mtd-abi.h>
->  =
-
-> @@ -385,6 +386,7 @@ static inline void mtd_set_of_node(struct mtd_info *m=
-td,
->  				   struct device_node *np)
->  {
->  	mtd->dev.of_node =3D np;
-> +	of_property_read_string(np, "label", &mtd->name);
-
-Seems like this could be done only if '!mtd->name'?
-
-As it stands, you're still clobbering some names, e.g. ones from
-physmap_of.c. Notably, this driver already supports a "linux,mtd-name"
-(which your new property should probably supersede), but it seems like
-you're breaking compatibility.
-
-Brian
-
->  }
->  =
-
->  static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
-> -- =
-
-> 2.7.4
-> =
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlibnngACgkQtdYpNtH8
+nug3QQ/+OApQ0gC3Db76U/KsAfDTHsyVqQQizjed6CM1j13X+WHyo+jXhS4ypIj6
+jdZjAQlO188A+4svDeW00ZOvsYElTLwiDh1gqUfCBsVayKk6m//HLAegTUAuZkdX
+XenO5ySu+xGX8Tv/uxqUFceR2eVrtr8I99KfpHcG5oqc8QK7/TfFlPeH3+uz9U5D
+7CUE7GSZRlRpZ8JKCnP8BVk4cI+pz422kuKJfaEQUnVoQKqP+PRV/hYZfWLbrrHl
+4Xg7C/6e2XzxoDisxq+V2sllCfcBHYtamvfmHp+cF/R5567vIeRsRFQEzgNes0Wq
+3ddI8flEJfbCVKculm1UxecWZyauVAZndRxMyr4rfV3J0Epf5b4UPNWa5d8XX2/t
+UeVICFH50Bv0l0B/7WS+82VFho3hqUmbqdQTHC96SkzMe85VTm8/I4UlbEoH/94Z
+ksj4AxTwQOEW3SByQd3XGQhqZDpRSK9/pTsxszxNro6Vs/XACiEisNyepHhv6Boo
+Fh5tuj3JKYiZosioPm36jNQ0sOWaMqG4z1h810qCchWDvKwv6PiMNM067UJJedhA
+PZWG+nRdDkzG5a3BWBp/TTIcKH/qR8RZj8KDXaTAfcNo3oEHNkeIWCeGXbwCaD0b
+P2qTyoetr5uAoH/L5kdMcOZcCiojEyPqsFdkITB9jVGJ1MfDKdA=
+=CyM9
+-----END PGP SIGNATURE-----
+--=-=-=--
