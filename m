@@ -1,71 +1,76 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
- documentation
-Date: Wed, 8 Feb 2017 09:42:38 +0100
-Message-ID: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
-References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
- <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
- <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
- <20170208053234.GA3102@localhost>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v3 1/3] lib/string: introduce ascii2utf16le() helper
+Date: Wed, 8 Feb 2017 09:33:31 +0100
+Message-ID: <9316678a-0257-e761-c9b7-758cc492da0c@skidata.com>
+References: <cover.1486388711.git.richard.leitner@skidata.com>
+ <a2874c07d68aa29354154ce1961aa17e6468d40f.1486388711.git.richard.leitner@skidata.com>
+ <29ff4981-ed4d-d87b-f6e2-112234f6a10a@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170208053234.GA3102@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jayachandran C <jnair@caviumnetworks.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <29ff4981-ed4d-d87b-f6e2-112234f6a10a@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com, keescook@chromium.org, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 6:32 AM, Jayachandran C <jnair@caviumnetworks.com> wrote:
-> On Tue, Feb 07, 2017 at 04:35:24PM -0600, Rob Herring wrote:
->> On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair@caviumnetworks.com> wrote:
->> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
->> > new file mode 100644
->> > index 0000000..82276a2
->> > --- /dev/null
->> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
->> > @@ -0,0 +1,5 @@
->> > +Cavium Thunder2 Family device tree bindings
->> > +-------------------------------------------
->> > +
->> > +Boards with Cavium ThunderX2 CN99XX shall have the root property:
->> > +  compatible = "cavium,thunder-99xx";
+On 02/06/2017 05:48 PM, Sergei Shtylyov wrote:
+> Hello!
+> 
+> On 02/06/2017 05:03 PM, Richard Leitner wrote:
+> 
+>> For USB string descriptors we need to convert ASCII strings to UTF16-LE.
+>> Therefore make a simple helper function (based on ascii2desc from
+>> drivers/usb/core/hcd.c) for that purpose.
 >>
->> Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
->> string. There's a lot of inconsistencies here.
->
-> I have followed the exiting Thunder naming as well as general DT
-> conventions, Basically:
->
-> Platform - ARCH_THUNDER2  (for ThunderX2 CN99XX, ARCH_THUNDER is
->            for ThunderX CN8?XX)
+>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+> [...]
+>> diff --git a/lib/string.c b/lib/string.c
+>> index ed83562..a113e3e 100644
+>> --- a/lib/string.c
+>> +++ b/lib/string.c
+>> @@ -952,3 +952,29 @@ char *strreplace(char *s, char old, char new)
+>>      return s;
+>>  }
+>>  EXPORT_SYMBOL(strreplace);
+>> +
+>> +/**
+>> + * ascii2utf16le() - Helper routine for producing UTF-16LE string
+>> descriptors
+>> + * @s: Null-terminated ASCII (actually ISO-8859-1) string
+>> + * @buf: Buffer for UTF-16LE string
+>> + * @len: Length (in bytes; may be odd) of UTF-16LE buffer.
+>> + *
+>> + * Return: The number of bytes filled in: 2*strlen(s) or @len,
+>> whichever is less
+>> + */
+>> +unsigned int ascii2utf16le(char const *s, u8 *buf, unsigned int len)
+>> +{
+>> +    unsigned int n, t = 2 * strlen(s);
+>> +
+>> +    if (len > t)
+>> +        len = t;
+>> +    n = len;
+>> +    while (n--) {
+>> +        t = (unsigned char)*s++;
+>> +        *buf++ = t;
+>> +        if (!n--)
+>> +            break;
+>> +        *buf++ = t >> 8;
+> 
+>    Isn't it always 0?
 
-The platform name is fine, we don't care too much about that as it is
-easily changed
-if necessary.
+As I will remove this function and use utf8s_to_utf16s() instead (as
+suggested by Alan Stern) IMHO this issue needs no more attention.
 
-> Core - cavium,thunder2 (ThunderX2 cpu core, "cavium,thunder" is ThunderX core)
-> Board/SoC - cavium,thunder-99xx (for ThunderX2, "cavium,thunder-88xx"
->           is existing ThunderX board)
->
-> Thunder2 because it is based on the next generation Thunder core, and
-> processor family is ThunderX2 CN99XX.
->
-> I had thought thru other possibilities as well, this seems the best I
-> could come up with.
+Nonetheless, thank you for your feedback!
 
-We should really avoid having the 'xx' placeholder in there but instead put
-actual chip names in the compatible string, preferably the real ID such as
-"cn8890" for the older chip. I see that we got it wrong for thunder-88xx.dts,
-but that is no reason to duplicate the mistake.
+> 
+>> +    }
+>> +    return len;
+>> +}
+>> +EXPORT_SYMBOL(ascii2utf16le);
 
-     Arnd
+regards,
+Richard L
