@@ -1,61 +1,98 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH] ARM: dts: Add devicetree for the Raspberry Pi 3, for arm32 (v3)
-Date: Wed,  8 Feb 2017 14:40:24 -0800
-Message-ID: <20170208224024.30415-1-eric@anholt.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, Lee Jones <lee@kernel.org>, bcm-kernel-feedback-list@broadcom.com, Gerd Hoffmann <kraxel@redhat.com>, Eric Anholt <eric@anholt.net>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v2 1/2] mtd: name the mtd device with an optional label
+ property
+Date: Wed, 8 Feb 2017 14:38:59 -0800
+Message-ID: <20170208223859.GK94627@google.com>
+References: <1485368255-12038-1-git-send-email-clg@kaod.org>
+ <1485368255-12038-2-git-send-email-clg@kaod.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1485368255-12038-2-git-send-email-clg@kaod.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Raspbian and Fedora have decided to support the Pi3 in 32-bit mode for
-now, so it's useful to be able to test that mode on an upstream
-kernel.  It's also been useful for me to use the same board for 32-bit
-and 64-bit development.
+On Wed, Jan 25, 2017 at 07:17:34PM +0100, C=E9dric Le Goater wrote:
+> This can be used to easily identify a specific chip on a system with
+> multiple chips.
+> =
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
+> Drivers wanting to support this new label property will benefit from
+> it without a change. They might want to check in the future that
+> mtd->name is NULL before assigning a default name to the mtd device.
+> Other drivers will keep the current behavior, which is to override
+> mtd->name with their own value.
+> =
 
-v1: Gerd's patch that put the ../../../arm64/... link in the Makefile
-v2: Michael's patch that #included from ../../../arm64/... in a new
-    bcm2837-rpi-3-b.dts.
-v3: Mine, using symlinks to make sure that we don't break the split DT
-    tree.
+> Suggested-by: Boris Brezillon <boris.brezillon@free-electrons.com>
+> Signed-off-by: C=E9dric Le Goater <clg@kaod.org>
+> ---
+> =
 
- arch/arm/boot/dts/Makefile            | 1 +
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 1 +
- arch/arm/boot/dts/bcm2837.dtsi        | 1 +
- 3 files changed, 3 insertions(+)
- create mode 120000 arch/arm/boot/dts/bcm2837-rpi-3-b.dts
- create mode 120000 arch/arm/boot/dts/bcm2837.dtsi
+>  Changes since v1:
+> =
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 6576e3f000c9..416fdcedf5a1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -70,6 +70,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
- 	bcm2835-rpi-b-plus.dtb \
- 	bcm2835-rpi-a-plus.dtb \
- 	bcm2836-rpi-2-b.dtb \
-+	bcm2837-rpi-3-b.dtb \
- 	bcm2835-rpi-zero.dtb
- dtb-$(CONFIG_ARCH_BCM_5301X) += \
- 	bcm4708-asus-rt-ac56u.dtb \
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-new file mode 120000
-index 000000000000..ceebc0e163fb
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -0,0 +1 @@
-+../../../arm64/boot/dts/broadcom/bcm2837-rpi-3-b.dts
-\ No newline at end of file
-diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
-new file mode 120000
-index 000000000000..53f1cd2bba47
---- /dev/null
-+++ b/arch/arm/boot/dts/bcm2837.dtsi
-@@ -0,0 +1 @@
-+../../../arm64/boot/dts/broadcom/bcm2837.dtsi
-\ No newline at end of file
--- 
-2.11.0
+>  - moved the use of the "label" property from mtd_set_dev_defaults()
+>    to mtd_set_of_node() to let drivers keep control on how mtd->name
+>    is set and allocated.
+> =
+
+>  include/linux/mtd/mtd.h | 2 ++
+>  1 file changed, 2 insertions(+)
+> =
+
+> diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+> index 13f8052b9ff9..f4fe15517295 100644
+> --- a/include/linux/mtd/mtd.h
+> +++ b/include/linux/mtd/mtd.h
+> @@ -24,6 +24,7 @@
+>  #include <linux/uio.h>
+>  #include <linux/notifier.h>
+>  #include <linux/device.h>
+> +#include <linux/of.h>
+>  =
+
+>  #include <mtd/mtd-abi.h>
+>  =
+
+> @@ -385,6 +386,7 @@ static inline void mtd_set_of_node(struct mtd_info *m=
+td,
+>  				   struct device_node *np)
+>  {
+>  	mtd->dev.of_node =3D np;
+> +	of_property_read_string(np, "label", &mtd->name);
+
+Seems like this could be done only if '!mtd->name'?
+
+As it stands, you're still clobbering some names, e.g. ones from
+physmap_of.c. Notably, this driver already supports a "linux,mtd-name"
+(which your new property should probably supersede), but it seems like
+you're breaking compatibility.
+
+Brian
+
+>  }
+>  =
+
+>  static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+> -- =
+
+> 2.7.4
+> =
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
