@@ -1,68 +1,90 @@
-From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
- documentation
-Date: Wed, 8 Feb 2017 05:32:35 +0000
-Message-ID: <20170208053234.GA3102@localhost>
-References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
- <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
- <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
+From: Anup Patel <anup.patel@broadcom.com>
+Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
+ fewer PQ coefficients
+Date: Wed, 8 Feb 2017 12:07:23 +0530
+Message-ID: <CAALAos__1XVv-=CitWfWLsXUt7nYC5bN6qaVUBWY7fiLA1UtGg@mail.gmail.com>
+References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
+ <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
+ <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
+ <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com> <20170207164207.GI19244@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170207164207.GI19244@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 07, 2017 at 04:35:24PM -0600, Rob Herring wrote:
-> On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> > Add documentation for Cavium ThunderX2 CN99XX ARM64 processor family.
-> > The the SoC will use the ID "cavium,thunder-99xx".
-> >
-> > Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-> > ---
-> >
-> > All marketing material refers to the chip as CN99XX (like CN88XX before)
-> > that is why I have used the wildcard-like 99xx here.
-> >
-> >  Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-> > new file mode 100644
-> > index 0000000..82276a2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-> > @@ -0,0 +1,5 @@
-> > +Cavium Thunder2 Family device tree bindings
-> > +-------------------------------------------
-> > +
-> > +Boards with Cavium ThunderX2 CN99XX shall have the root property:
-> > +  compatible = "cavium,thunder-99xx";
-> 
-> Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
-> string. There's a lot of inconsistencies here.
+On Tue, Feb 7, 2017 at 10:12 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Tue, Feb 07, 2017 at 02:32:15PM +0530, Anup Patel wrote:
+>> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams@intel.com> wrote:
+>> > On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
+>> >> The DMAENGINE framework assumes that if PQ offload is supported by a
+>> >> DMA device then all 256 PQ coefficients are supported. This assumption
+>> >> does not hold anymore because we now have BCM-SBA-RAID offload engine
+>> >> which supports PQ offload with limited number of PQ coefficients.
+>> >>
+>> >> This patch extends async_tx APIs to handle DMA devices with support
+>> >> for fewer PQ coefficients.
+>> >>
+>> >> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
+>> >> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> >
+>> > I don't like this approach. Define an interface for md to query the
+>> > offload engine once at the beginning of time. We should not be adding
+>> > any new extensions to async_tx.
+>>
+>> Even if we do capability checks in Linux MD, we still need a way
+>> for DMAENGINE drivers to advertise number of PQ coefficients
+>> handled by the HW.
+>
+> If the question is only for advertising caps, then why not do as done
+> for dma_get_slave_caps(). you can add dma_get_pq_caps() so that clients (md)
+> in this case would know the HW capability.
 
-I have followed the exiting Thunder naming as well as general DT
-conventions, Basically:
+We have large number of possible capabilities for
+DMA slave such as src_addr_widths, dst_addr_widths,
+directions, max_burst, residue_granularity, and
+descriptor_resue.
 
-Platform - ARCH_THUNDER2  (for ThunderX2 CN99XX, ARCH_THUNDER is
-           for ThunderX CN8?XX)
-Core - cavium,thunder2 (ThunderX2 cpu core, "cavium,thunder" is ThunderX core)
-Board/SoC - cavium,thunder-99xx (for ThunderX2, "cavium,thunder-88xx"
-          is existing ThunderX board)
+The possible capabilities of PQ offload are:
+1. Number of PQ sources handled by PQ offload
+(Represented by "max_pq" member of "struct dma_device")
+2. Number of PQ coefficients handled by PQ offload
 
-Thunder2 because it is based on the next generation Thunder core, and
-processor family is ThunderX2 CN99XX.
+The above two PQ capabilities are good enough for
+current PQ HW and future PQ HW so we just need a
+way to specify number of PQ coefficients.
 
-I had thought thru other possibilities as well, this seems the best I
-could come up with.
+Till now all of the PQ HW always supported all 256
+PQ coefficients so we never felt the need of capability
+to specify PQ coefficients. The BCM-SBA-RAID is the
+only HW (as far as I know) which does not support all
+256 PQ coefficients.
 
-JC.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Currently, DMAENGINE drivers use dma_set_maxpq() to
+specify number of PQ sources handled by PQ HW and
+Linux Async Tx uses dma_maxpq() to get number of
+PQ sources.
+
+On similar lines, we added dma_set_maxpqcoef() to
+specify number of PQ coefficients and Linux Async Tx
+uses dma_maxpqcoef() to get number of PQ coefficients.
+If DMAENGINE driver does not specify PQ coefficients
+then dma_maxpqcoef() will return 256 assuming all
+PQ coefficients are supported. This approach is
+backward compatible to existing DMAENGINE APIs
+and will not break existing DMAENGINE drivers.
+
+If we add dma_get_pq_caps() similar to the
+dma_get_slave_caps() for PQ capabilities then we
+will have to use this new method for both of the above
+PQ capabilities and we have to change all DMAENGINE
+drivers to use new method of specifying PQ capabilities.
+I think this is too intrusive and bit overkill because its
+very very unlikely to see anymore additions to
+PQ capabilities.
+
+Regards,
+Anup
