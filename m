@@ -1,160 +1,62 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice driver
-Date: Wed, 08 Feb 2017 12:05:22 +0200
-Message-ID: <1926971.xYB9S1PcjC@avalon>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
- <20170207204617.GD13854@valkosipuli.retiisi.org.uk>
- <1486547235.2309.15.camel@pengutronix.de>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH v4 1/8] ASoC: sun4i-i2s: Update binding
+ documentation to include A31
+Date: Wed, 8 Feb 2017 11:10:47 +0100
+Message-ID: <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
+References: <20170202092422.5588-1-mylene.josserand@free-electrons.com>
+ <20170202092422.5588-2-mylene.josserand@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1486547235.2309.15.camel@pengutronix.de>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Sakari Ailus <sakari.ailus@iki.fi>, jean-christophe.trotin@st.com, kernel@pengutronix.de, Sebastian Reichel <sre@kernel.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170202092422.5588-2-mylene.josserand@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: broonie@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
-
-On Wednesday 08 Feb 2017 10:47:15 Philipp Zabel wrote:
-> On Tue, 2017-02-07 at 22:46 +0200, Sakari Ailus wrote:
-> > On Fri, Jan 06, 2017 at 06:11:31PM -0800, Steve Longerbeam wrote:
-> >> From: Philipp Zabel <p.zabel@pengutronix.de>
-> >> 
-> >> This driver can handle SoC internal and external video bus multiplexers,
-> >> controlled either by register bit fields or by a GPIO. The subdevice
-> >> passes through frame interval and mbus configuration of the active input
-> >> to the output side.
-> >> 
-> >> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> >> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> >> 
-> >> --
-> >> 
-> >> - fixed a cut&paste error in vidsw_remove():
-> >> v4l2_async_register_subdev()
-> >>   should be unregister.
-> >> 
-> >> - added media_entity_cleanup() and v4l2_device_unregister_subdev()
-> >>   to vidsw_remove().
-> >> 
-> >> - there was a line left over from a previous iteration that negated
-> >>   the new way of determining the pad count just before it which
-> >>   has been removed (num_pads = of_get_child_count(np)).
-> >> 
-> >> - Philipp Zabel has developed a set of patches that allow adding
-> >>   to the subdev async notifier waiting list using a chaining method
-> >>   from the async registered callbacks (v4l2_of_subdev_registered()
-> >>   and the prep patches for that). For now, I've removed the use of
-> >>   v4l2_of_subdev_registered() for the vidmux driver's registered
-> >>   callback. This doesn't affect the functionality of this driver,
-> >>   but allows for it to be merged now, before adding the chaining
-> >>   support.
-> >> 
-> >> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >> ---
-> >> 
-> >>  .../bindings/media/video-multiplexer.txt           |  59 +++
-> >>  drivers/media/platform/Kconfig                     |   8 +
-> >>  drivers/media/platform/Makefile                    |   2 +
-> >>  drivers/media/platform/video-multiplexer.c         | 472 ++++++++++++++
-> >>  4 files changed, 541 insertions(+)
-> >>  create mode 100644
-> >>  Documentation/devicetree/bindings/media/video-multiplexer.txt create
-> >>  mode 100644 drivers/media/platform/video-multiplexer.c
-> >> 
-> >> diff --git
-> >> a/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> >> b/Documentation/devicetree/bindings/media/video-multiplexer.txt new
-> >> file mode 100644
-> >> index 0000000..9d133d9
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> >> @@ -0,0 +1,59 @@
-> >> +Video Multiplexer
-> >> +=================
-> >> +
-> >> +Video multiplexers allow to select between multiple input ports. Video
-> >> received
-> >> +on the active input port is passed through to the output port. Muxes
-> >> described
-> >> +by this binding may be controlled by a syscon register bitfield or by a
-> >> GPIO.
-> >> +
-> >> +Required properties:
-> >> +- compatible : should be "video-multiplexer"
-> >> +- reg: should be register base of the register containing the control
-> >> bitfield
-> >> +- bit-mask: bitmask of the control bitfield in the control register
-> >> +- bit-shift: bit offset of the control bitfield in the control register
-> >> +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO
-> >> phandle
-> >> +  may be given to switch between two inputs
-> >> +- #address-cells: should be <1>
-> >> +- #size-cells: should be <0>
-> >> +- port@*: at least three port nodes containing endpoints connecting to
-> >> the
-> >> +  source and sink devices according to of_graph bindings. The last port
-> >> is
-> >> +  the output port, all others are inputs.
-> >> +
-> >> +Example:
-> >> +
-> >> +syscon {
-> >> +	compatible = "syscon", "simple-mfd";
-> >> +
-> >> +	mux {
-> > 
-> > Could you use standardised properties for this, i.e. ones defined in
-> > Documentation/devicetree/bindings/media/video-interfaces.txt ?
-> 
-> What do you mean? Should we add the optional bus-width property to
-> describe the bit width of the parallel bus even though the driver
-> doesn't care about any of the properties?
-> 
-> > This is very similar to another patch "[PATCH] devicetree: Add video bus
-> > switch" posted by Pavel Machek recently. The problem with that is also
-> > similar than with this one: how to pass the CSI-2 bus configuration to the
-> > receiver.
-> > 
-> > There's some discussion here:
-> > 
-> > <URL:http://www.spinics.net/lists/linux-media/msg109493.html>
-> 
-> [Added Sebastian do Cc:]
-> 
-> Yes, this is essentially the same driver, except that this driver also
-> handles MMIO-bitfield controlled muxes, and that the actual physical bus
-> (which the drivers currently don't care about) is MIPI CSI-2 in the
-> other case, and parallel this one.
-> They should probably be combined, or maybe split into two separate
-> drivers (MMIO controlled mux, GPIO controlled switch), possibly using
-> the same v4l2_subdev boilerplate.
-
-I'd split the bindings in two with two separate compat strings, but we can 
-handle both in a single driver as most of the code would be identical 
-otherwise.
-
-> > As Laurent already suggested, I think we should have a common solution for
-> > the problem that, besides conveying the bus parameters to the receiver,
-> > also encompasses CSI-2 virtual channels and data types.
-> 
-> Yes, that seems to be necessary, as certainly we can't configure the mux
-> output bus parameters in DT to a fixed setting.
-> 
-> > That would mean finishing the series of patches in the branch I believe
-> > Laurent already quoted here.
-
--- 
-Regards,
-
-Laurent Pinchart
+SGVsbG8gTWFyayBCcm93biwKClRoYW5rIHlvdSB0byBoYXZlIGFwcGxpZWQgbXkgcGF0Y2hlcyEK
+Ck9uIDAyLzAyLzIwMTcgMTA6MjQsIE15bMOobmUgSm9zc2VyYW5kIHdyb3RlOgo+IEFkZCBhIG5l
+dyBjb21wYXRpYmxlIGZvciBzdW40aS1pMnMgZHJpdmVyIHRvIGhhbmRsZSBzb21lCj4gU29DcyB0
+aGF0IGhhdmUgYSByZXNldCBsaW5lIHRoYXQgbXVzdCBiZSBhc3NlcnRlZC9kZWFzc2VydGVkLgo+
+Cj4gVGhpcyBuZXcgY29tcGF0aWJsZSwgImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIiwgcmVxdWly
+ZXMgdGhlCj4gcHJvcGVydHkgInJlc2V0cyIgd2hpY2ggc2hvdWxkIGJlIGEgcGhhbmRsZSB0byB0
+aGUgcmVzZXQgbGluZS4KPiBFeGNlcHQgdGhlc2UgZGlmZmVyZW5jZXMsIHRoZSBjb21wYXRpYmxl
+IGlzIGlkZW50aWNhbCB0byBwcmV2aW91cyBvbmUKPiB3aGljaCB3aWxsIG5vdCBoYW5kbGUgYSBy
+ZXNldCBsaW5lLgo+Cj4gU2lnbmVkLW9mZi1ieTogTXlsw6huZSBKb3NzZXJhbmQgPG15bGVuZS5q
+b3NzZXJhbmRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IEFja2VkLWJ5OiBNYXhpbWUgUmlwYXJkIDxt
+YXhpbWUucmlwYXJkQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiBBY2tlZC1ieTogUm9iIEhlcnJpbmcg
+PHJvYmhAa2VybmVsLm9yZz4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL3NvdW5kL3N1bjRpLWkycy50eHQgfCA1ICsrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA1IGlu
+c2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc291bmQvc3VuNGktaTJzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9zb3VuZC9zdW40aS1pMnMudHh0Cj4gaW5kZXggN2I1MjZlYzY0OTkxLi5mNGFkYzU4Zjgy
+YmEgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5k
+L3N1bjRpLWkycy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+c291bmQvc3VuNGktaTJzLnR4dAo+IEBAIC03LDYgKzcsNyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVz
+Ogo+Cj4gIC0gY29tcGF0aWJsZTogc2hvdWxkIGJlIG9uZSBvZiB0aGUgZm9sbG93aW5ncwo+ICAg
+ICAtICJhbGx3aW5uZXIsc3VuNGktYTEwLWkycyIKPiArICAgLSAiYWxsd2lubmVyLHN1bjZpLWEz
+MS1pMnMiCj4gIC0gcmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3Mgb2YgdGhlIGNvbnRyb2xsZXIg
+YW5kIGxlbmd0aCBvZiBtZW1vcnkgbWFwcGVkCj4gICAgcmVnaW9uLgo+ICAtIGludGVycnVwdHM6
+IHNob3VsZCBjb250YWluIHRoZSBJMlMgaW50ZXJydXB0Lgo+IEBAIC0xOSw2ICsyMCwxMCBAQCBS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICAtICJtb2QiIDogbW9kdWxlIGNsb2NrIGZvciB0aGUg
+STJTIGNvbnRyb2xsZXIKPiAgLSAjc291bmQtZGFpLWNlbGxzIDogTXVzdCBiZSBlcXVhbCB0byAw
+Cj4KPiArUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgdGhlIGZvbGxvd2luZyBjb21wYXRpYmxlczoK
+PiArCS0gImFsbHdpbm5lcixzdW42aS1hMzEtaTJzIgo+ICstIHJlc2V0czogcGhhbmRsZSB0byB0
+aGUgcmVzZXQgbGluZSBmb3IgdGhpcyBjb2RlYwo+ICsKPiAgRXhhbXBsZToKPgo+ICBpMnMwOiBp
+MnNAMDFjMjI0MDAgewo+CgpGb3IgYWxsIG15IHNlcmllcywgeW91IGRpZCBub3QgcGljay11cCB0
+aGlzIHBhdGNoLiBJIHdhcyB3b25kZXJpbmcgaWYgCnlvdSBoYXZlIGFueSBjb21tZW50IG9uIGl0
+PyBJcyB0aGVyZSBzb21ldGhpbmcgd3Jvbmc/CgpUaGFuayB5b3UgaW4gYWR2YW5jZSwKCkJlc3Qg
+cmVnYXJkcywKCi0tIApNeWzDqG5lIEpvc3NlcmFuZCwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQg
+TGludXggYW5kIEtlcm5lbCBlbmdpbmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkFsc2EtZGV2ZWwg
+bWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5h
+bHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxzYS1kZXZlbAo=
