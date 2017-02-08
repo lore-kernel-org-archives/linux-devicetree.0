@@ -1,15 +1,11 @@
-From: Jack Pham <jackp@codeaurora.org>
-Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
-Date: Wed, 8 Feb 2017 12:43:00 -0800
-Message-ID: <20170208204300.GC8068@usblab-sd-06.qualcomm.com>
-References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
- <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
+From: <christopher.spinrath@rwth-aachen.de>
+Subject: [PATCH v2] ARM: dts: imx6q-cm-fx6: add analog audio support
+Date: Wed, 8 Feb 2017 21:44:04 +0100
+Message-ID: <c53afd927fae4a1dbd84ab8122e6c794@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,63 +15,158 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: mark.rutland@arm.com, ulf.hansson@linaro.org, heiko@sntech.de, stephen.boyd@linaro.org, linux-kernel@vger.kernel.org, gary.bisson@boundarydevices.com, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, stern@rowland.harvard.edu, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt@kernel.org, Mathias Nyman <mathias.nyman@linux.intel.com>, linux-arm-kernel@lists.infradead.org, Roger Quadros <rogerq@ti.com>, hverkuil@xs4all.nl, oscar@naiandei.net, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, rjw@rjwysocki.net, sre@kernel.org, broonie@kernel.org, p.zabel@pengutronix.de, shawnguo@kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, Valentin Raevsky <valentin@compulab.co.il>, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter, Sriram, Arnd,
+From: Valentin Raevsky <valentin@compulab.co.il>
 
-On Mon, Feb 06, 2017 at 05:13:38PM +0800, Peter Chen wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> For xhci-hcd platform device, all the DMA parameters are not
-> configured properly, notably dma ops for dwc3 devices. So, set
-> the dma for xhci from sysdev. sysdev is pointing to device that
-> is known to the system firmware or hardware.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> Tested-by: Baolin Wang <baolin.wang@linaro.org>
-> Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-> ---
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 6d33b42..7a9c860 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
+The cm-fx6 module has an onboard Wolfson wm8731 codec which is muxed
+to the ssi2 controller. Unlike most (all?) supported i.MX6 board/codec
+combinations the wm8731 is operated in slave mode and the clock setup
+is static.
 
-> -	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
-> +	hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
-> +			       dev_name(&pdev->dev), NULL);
+Add support for it.
 
-As mentioned already in [1], usb_create_shared_hcd() is called to create
-the second bus, however it also needs to be converted.
+Signed-off-by: Valentin Raevsky <valentin@compulab.co.il>
+[christopher.spinrath@rwth-aachen.de: enhanced commit message, ported
+  to upstream and some cleanup]
+Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+Reviewed-by: Fabio Estevam <fabio.estevam@nxp.com>
+---
 
-Not exactly as Roger's suggestion but this worked for me:
+Notes:
+    Changes since v1:
+     - rename audmux child node pins5 --> audmux4
+       (the new node name corresponds to the port configured by the node)
 
--       xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
-+       xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
-                        dev_name(&pdev->dev), hcd);
-        if (!xhci->shared_hcd) {
-                ret = -ENOMEM;
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 83 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 83 insertions(+)
 
-Without this, SuperSpeed devices fail to enumerate:
-
- usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
- usb 2-1: device descriptor read/8, error -11
- usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
- usb 2-1: device descriptor read/8, error -11
- usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
- usb 2-1: device descriptor read/8, error -11
- usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
- usb 2-1: device descriptor read/8, error -11
- <and continues...>
-
-Thanks,
-Jack
-
-[1] https://lkml.org/lkml/2016/12/9/240
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index d8a5789..66cac53 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -43,6 +43,7 @@
+ 
+ /dts-v1/;
+ #include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/sound/fsl-imx-audmux.h>
+ #include "imx6q.dtsi"
+ 
+ / {
+@@ -90,6 +91,34 @@
+ 		enable-active-high;
+ 	};
+ 
++	sound-analog {
++		compatible = "simple-audio-card";
++		simple-audio-card,name = "On-board analog audio";
++		simple-audio-card,widgets =
++			"Headphone", "Headphone Jack",
++			"Line", "Line Out",
++			"Microphone", "Mic Jack",
++			"Line", "Line In";
++		simple-audio-card,routing =
++			"Headphone Jack", "RHPOUT",
++			"Headphone Jack", "LHPOUT",
++			"MICIN", "Mic Bias",
++			"Mic Bias", "Mic Jack";
++		simple-audio-card,format = "i2s";
++		simple-audio-card,bitclock-master = <&sound_master>;
++		simple-audio-card,frame-master = <&sound_master>;
++		simple-audio-card,bitclock-inversion;
++
++		sound_master: simple-audio-card,cpu {
++			sound-dai = <&ssi2>;
++			system-clock-frequency = <2822400>;
++		};
++
++		simple-audio-card,codec {
++			sound-dai = <&wm8731>;
++		};
++	};
++
+ 	sound-spdif {
+ 		compatible = "fsl,imx-audio-spdif";
+ 		model = "imx-spdif";
+@@ -99,6 +128,36 @@
+ 	};
+ };
+ 
++&audmux {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_audmux>;
++	status = "okay";
++
++	ssi2 {
++		fsl,audmux-port = <1>;
++		fsl,port-config = <
++			(IMX_AUDMUX_V2_PTCR_RCLKDIR |
++			IMX_AUDMUX_V2_PTCR_RCSEL(3 | 0x8) |
++			IMX_AUDMUX_V2_PTCR_TCLKDIR |
++			IMX_AUDMUX_V2_PTCR_TCSEL(3))
++			IMX_AUDMUX_V2_PDCR_RXDSEL(3)
++		>;
++	};
++
++	audmux4 {
++		fsl,audmux-port = <3>;
++		fsl,port-config = <
++			(IMX_AUDMUX_V2_PTCR_TFSDIR |
++			IMX_AUDMUX_V2_PTCR_TFSEL(1) |
++			IMX_AUDMUX_V2_PTCR_RCLKDIR |
++			IMX_AUDMUX_V2_PTCR_RCSEL(1 | 0x8) |
++			IMX_AUDMUX_V2_PTCR_TCLKDIR |
++			IMX_AUDMUX_V2_PTCR_TCSEL(1))
++			IMX_AUDMUX_V2_PDCR_RXDSEL(1)
++		>;
++	};
++};
++
+ &cpu0 {
+ 	/*
+ 	 * Although the imx6q fuse indicates that 1.2GHz operation is possible,
+@@ -160,9 +219,25 @@
+ 		reg = <0x50>;
+ 		pagesize = <16>;
+ 	};
++
++	wm8731: codec@1a {
++		#sound-dai-cells = <0>;
++		compatible = "wlf,wm8731";
++		reg = <0x1a>;
++	};
+ };
+ 
+ &iomuxc {
++	pinctrl_audmux: audmuxgrp {
++		fsl,pins = <
++			MX6QDL_PAD_SD2_CMD__AUD4_RXC   0x17059
++			MX6QDL_PAD_SD2_DAT0__AUD4_RXD  0x17059
++			MX6QDL_PAD_SD2_DAT3__AUD4_TXC  0x17059
++			MX6QDL_PAD_SD2_DAT2__AUD4_TXD  0x17059
++			MX6QDL_PAD_SD2_DAT1__AUD4_TXFS 0x17059
++		>;
++	};
++
+ 	pinctrl_ecspi1: ecspi1grp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_EIM_D16__ECSPI1_SCLK	0x100b1
+@@ -279,6 +354,14 @@
+ 	status = "okay";
+ };
+ 
++&ssi2 {
++	assigned-clocks = <&clks IMX6QDL_CLK_SSI2_SEL>,
++			<&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>;
++	assigned-clock-parents = <&clks IMX6QDL_CLK_PLL4_AUDIO_DIV>;
++	assigned-clock-rates = <0>, <786432000>;
++	status = "okay";
++};
++
+ &uart4 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart4>;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.10.2
