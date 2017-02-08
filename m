@@ -1,117 +1,231 @@
-From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-Subject: Re: [PATCH 5/8] arm64: dts: allwinner: add R_PIO node
-Date: Wed, 08 Feb 2017 19:08:46 +0800
-Message-ID: <39431486552126@web41j.yandex.ru>
-References: <20170208100009.29362-1-icenowy@aosc.xyz>
-	 <20170208100009.29362-5-icenowy@aosc.xyz> <20170208101458.du6ybqsw52ypzhzw@lukather>
-Reply-To: icenowy-ymACFijhrKM@public.gmane.org
+From: Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Subject: Re: [PATCH RESEND v7 2/2] Add support for OV5647 sensor.
+Date: Wed, 8 Feb 2017 09:56:12 +0000
+Message-ID: <e4ce5644-4f44-4c46-219a-cac2126dc8ba@synopsys.com>
+References: <cover.1486136893.git.roliveir@synopsys.com>
+ <26e5a587f1ba9e2fbbc04284408305bc8cf8c5c0.1486136893.git.roliveir@synopsys.com>
+ <20170203201729.GA18086@kekkonen.localdomain>
+ <f23e76ff-326a-c4df-601d-6b12b644bff7@synopsys.com>
+ <20170207173116.GC13854@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBQPY5PCAKGQE56KCKDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170208101458.du6ybqsw52ypzhzw@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170207173116.GC13854@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, CARLOS.PALMINHA@synopsys.com, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guenter Roeck <linux@roeck-us.net>, Hans Verkuil <hans.verkuil@cisco.com>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Pavel Machek <pavel@ucw.cz>, Robert Jarzmik <robert.jarzmik@free.fr>, Rob Herring <robh+dt@kernel.org>, Steve Longerbeam <slongerbeam@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Sakari
 
-
-08.02.2017, 18:15, "Maxime Ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Wed, Feb 08, 2017 at 06:00:06PM +0800, Icenowy Zheng wrote:
->> =C2=A0Allwinner A64 SoC has a R_PIO node like the one in H3.
+On 2/7/2017 5:31 PM, Sakari Ailus wrote:
+> Hi Ramiro,
+> 
+> On Mon, Feb 06, 2017 at 11:38:28AM +0000, Ramiro Oliveira wrote:
+> ...
+>>>> +	ret = ov5647_write_array(sd, ov5647_640x480,
+>>>> +					ARRAY_SIZE(ov5647_640x480));
+>>>> +	if (ret < 0) {
+>>>> +		dev_err(&client->dev, "write sensor_default_regs error\n");
+>>>> +		return ret;
+>>>> +	}
+>>>> +
+>>>> +	ov5647_set_virtual_channel(sd, 0);
+>>>> +
+>>>> +	ov5647_read(sd, 0x0100, &resetval);
+>>>> +	if (!(resetval & 0x01)) {
+>>>
+>>> Can this ever happen? Streaming start is at the end of the register list.
+>>>
 >>
->> =C2=A0Add the node as well as needed clocks and resets.
+>> I'm not sure it can happen. It was just a safeguard, but I can remove it if you
+>> think it's not necessary
+> 
+> You're not reading back the other registers either, albeit I'd check that
+> the I2C accesses actually succeed. Generally the return values are ignored.
+> 
+
+So you're recommending I perform a random I2C access after power on to check the
+system, and discard the read value? Or just drop this piece of code entirely?
+
+
 >>
->> =C2=A0As there's no document for apb0_gates, I only added the R_PIO bit =
-here.
+>>>> +		dev_err(&client->dev, "Device was in SW standby");
+>>>> +		ov5647_write(sd, 0x0100, 0x01);
+>>>> +	}
+>>>> +
+>>>> +	ov5647_write(sd, 0x4800, 0x04);
+>>>> +	ov5647_stream_on(sd);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +/**
+>>>> + * @short Control sensor power state
+>>>> + * @param[in] sd v4l2 subdev
+>>>> + * @param[in] on Sensor power
+>>>> + * @return Error code
+>>>> + */
+>>>> +static int sensor_power(struct v4l2_subdev *sd, int on)
+>>>> +{
+>>>> +	int ret;
+>>>> +	struct ov5647 *ov5647 = to_state(sd);
+>>>> +	struct i2c_client *client = v4l2_get_subdevdata(sd);
+>>>> +
+>>>> +	ret = 0;
+>>>> +	mutex_lock(&ov5647->lock);
+>>>> +
+>>>> +	if (on && !ov5647->power_count)	{
+>>>> +		dev_dbg(&client->dev, "OV5647 power on\n");
+>>>> +
+>>>> +		clk_set_rate(ov5647->xclk, ov5647->xclk_freq);
+>>>> +
+>>>> +		ret = clk_prepare_enable(ov5647->xclk);
+>>>> +		if (ret < 0) {
+>>>> +			dev_err(ov5647->dev, "clk prepare enable failed\n");
+>>>> +			goto out;
+>>>> +		}
+>>>> +
+>>>> +		ret = ov5647_write_array(sd, sensor_oe_enable_regs,
+>>>> +				ARRAY_SIZE(sensor_oe_enable_regs));
+>>>> +		if (ret < 0) {
+>>>> +			clk_disable_unprepare(ov5647->xclk);
+>>>> +			dev_err(&client->dev,
+>>>> +				"write sensor_oe_enable_regs error\n");
+>>>> +			goto out;
+>>>> +		}
+>>>> +
+>>>> +		ret = __sensor_init(sd);
+>>>> +		if (ret < 0) {
+>>>> +			clk_disable_unprepare(ov5647->xclk);
+>>>> +			dev_err(&client->dev,
+>>>> +				"Camera not available, check Power\n");
+>>>> +			goto out;
+>>>> +		}
+>>>> +	} else if (!on && ov5647->power_count == 1) {
+>>>> +		dev_dbg(&client->dev, "OV5647 power off\n");
+>>>> +
+>>>> +		dev_dbg(&client->dev, "disable oe\n");
+>>>> +		ret = ov5647_write_array(sd, sensor_oe_disable_regs,
+>>>> +				ARRAY_SIZE(sensor_oe_disable_regs));
+>>>> +
+>>>> +		if (ret < 0)
+>>>> +			dev_dbg(&client->dev, "disable oe failed\n");
+>>>> +
+>>>> +		ret = set_sw_standby(sd, true);
+>>>> +
+>>>> +		if (ret < 0)
+>>>> +			dev_dbg(&client->dev, "soft stby failed\n");
+>>>> +
+>>>> +		clk_disable_unprepare(ov5647->xclk);
+>>>> +	}
+>>>> +
+>>>> +	/* Update the power count. */
+>>>> +	ov5647->power_count += on ? 1 : -1;
+>>>> +	WARN_ON(ov5647->power_count < 0);
+>>>> +
+>>>> +out:
+>>>> +	mutex_unlock(&ov5647->lock);
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +#ifdef CONFIG_VIDEO_ADV_DEBUG
+>>>> +/**
+>>>> + * @short Get register value
+>>>> + * @param[in] sd v4l2 subdev
+>>>> + * @param[in] reg register struct
+>>>> + * @return Error code
+>>>> + */
+>>>> +static int sensor_get_register(struct v4l2_subdev *sd,
+>>>> +				struct v4l2_dbg_register *reg)
+>>>> +{
+>>>> +	unsigned char val = 0;
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = ov5647_read(sd, reg->reg & 0xff, &val);
+>>>> +	if (ret != 0)
+>>>> +		return ret;
+>>>> +
+>>>> +	reg->val = val;
+>>>> +	reg->size = 1;
+>>>> +
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +/**
+>>>> + * @short Set register value
+>>>> + * @param[in] sd v4l2 subdev
+>>>> + * @param[in] reg register struct
+>>>> + * @return Error code
+>>>> + */
+>>>> +static int sensor_set_register(struct v4l2_subdev *sd,
+>>>> +				const struct v4l2_dbg_register *reg)
+>>>> +{
+>>>> +	return ov5647_write(sd, reg->reg & 0xff, reg->val & 0xff);
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>> +/**
+>>>> + * @short Subdev core operations registration
+>>>> + */
+>>>> +static const struct v4l2_subdev_core_ops sensor_core_ops = {
+>>>> +	.s_power		= sensor_power,
+>>>> +#ifdef CONFIG_VIDEO_ADV_DEBUG
+>>>> +	.g_register		= sensor_get_register,
+>>>> +	.s_register		= sensor_set_register,
+>>>> +#endif
+>>>> +};
+>>>> +
+>>>> +static int enum_mbus_code(struct v4l2_subdev *sd,
+>>>> +				struct v4l2_subdev_pad_config *cfg,
+>>>> +				struct v4l2_subdev_mbus_code_enum *code)
+>>>> +{
+>>>> +	if (code->index > 0)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	code->code = MEDIA_BUS_FMT_SBGGR8_1X8;
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct v4l2_subdev_pad_ops subdev_pad_ops = {
+>>>> +	.enum_mbus_code = enum_mbus_code,
+>>>> +};
+>>>> +
+>>>> +
+>>>> +/**
+>>>> + * @short Subdev operations registration
+>>>> + *
+>>>> + */
+>>>> +static const struct v4l2_subdev_ops subdev_ops = {
+>>>> +	.core		= &sensor_core_ops,
+>>>> +	.pad		= &subdev_pad_ops,
+>>>
+>>> You should implement s_stream() in video ops to control the streaming state.
+>>>
+>>> I don't know about this particular sensor, but on SMIA compliant sensors
+>>> the SW standby means streaming is disabled. There seem to be additional
+>>> registers as well; my educated guess is that writing all those to control
+>>> streaming would be the right thing to do.
+>>>
+>>> The CSI-2 bus initialisation could fail if you start streaming right away
+>>> when the sensor is powered on.
+>>>
 >>
->> =C2=A0Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->> =C2=A0---
->> =C2=A0=C2=A0arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 40 +++++++++=
-++++++++++++++++++
->> =C2=A0=C2=A01 file changed, 40 insertions(+)
->>
->> =C2=A0diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/=
-arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> =C2=A0index 1c64ea2d23f9..4b0baa79554c 100644
->> =C2=A0--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> =C2=A0+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
->> =C2=A0@@ -98,6 +98,15 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0clock-output-names =3D "osc32k";
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
->>
->> =C2=A0+ apb0: apb0_clk {
->> =C2=A0+ compatible =3D "fixed-factor-clock";
->> =C2=A0+ #clock-cells =3D <0>;
->> =C2=A0+ clock-div =3D <1>;
->> =C2=A0+ clock-mult =3D <1>;
->> =C2=A0+ clocks =3D <&osc24M>;
->> =C2=A0+ clock-output-names =3D "apb0";
->> =C2=A0+ };
->> =C2=A0+
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0psci {
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0compatible =3D "arm,psci-0.2";
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0method =3D "smc";
->> =C2=A0@@ -392,5 +401,36 @@
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0interrupts =3D <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0<GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0};
->> =C2=A0+
->> =C2=A0+ apb0_gates: clk@1f01428 {
->> =C2=A0+ compatible =3D "allwinner,sun50i-a64-apb0-gates-clk",
->> =C2=A0+ "allwinner,sun4i-a10-gates-clk";
->> =C2=A0+ reg =3D <0x01f01428 0x4>;
->> =C2=A0+ #clock-cells =3D <1>;
->> =C2=A0+ clocks =3D <&apb0>;
->> =C2=A0+ clock-indices =3D <0>;
->> =C2=A0+ clock-output-names =3D "apb0_pio";
->> =C2=A0+ };
->> =C2=A0+
->> =C2=A0+ apb0_rst: reset@1f014b0 {
->> =C2=A0+ reg =3D <0x01f014b0 0x4>;
->> =C2=A0+ compatible =3D "allwinner,sun6i-a31-clock-reset";
->> =C2=A0+ #reset-cells =3D <1>;
->> =C2=A0+ };
->
-> Please make a sunxi-ng driver for those clocks.
+>> I haven't had any error yet, but I'll add set_stream() and start streaming video
+>> there, just to be sure.
+> 
+> It depends on the receiver. Some might work whereas some definitely don't.
+> 
+> Please see Documentation/media/kapi/csi2.rst .
+> 
 
-We have no enough materials to make such a CCU driver.
+Thanks for the documentation, I'll implement s_stream as indicated.
 
-Clocks in CPUs are usually undocumented, and difficult to
-be collected -- even the clk-sun50iw1.c in BSP do not have
-all clocks in CPUs.
+-- 
+Best Regards
 
-We should only make it sunxi-ng until it's fully discovered
-(all functions in CPUs are functional).
-
->
-> Thanks,
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Ramiro Oliveira
+Ramiro.Oliveira@synopsys.com
