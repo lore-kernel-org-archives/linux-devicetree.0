@@ -1,58 +1,68 @@
-From: "Jonas Mark (ST-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
-Subject: AW: [PATCH] Input: pwm-beeper: support customized freq for SND_BELL
-Date: Wed, 8 Feb 2017 10:11:21 +0000
-Message-ID: <850c2508720a41b3bfb95cd7093433a4@SI-MBX1030.de.bosch.com>
-References: <1486444894-18321-1-git-send-email-hs@denx.de>
- <20170207181309.GC38092@dtor-ws>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 1/8] ASoC: sun4i-i2s: Update binding
+ documentation to include A31
+Date: Wed, 8 Feb 2017 10:33:18 +0000
+Message-ID: <20170208103318.ttqkvddlpyw6pwo6@sirena.org.uk>
+References: <20170202092422.5588-1-mylene.josserand@free-electrons.com>
+ <20170202092422.5588-2-mylene.josserand@free-electrons.com>
+ <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170207181309.GC38092@dtor-ws>
-Content-Language: de-DE
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Heiko Schocher <hs@denx.de>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "GUAN Ben (ST-FIR/ENG1-Zhu)" <Ben.Guan@cn.bosch.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Manfred Schlaegl <manfred.schlaegl@gmx.at>, Mark Rutland <mark.rutland@arm.com>, "Jonas Mark (ST-FIR/ENG1)" <Mark.Jonas@de.bosch.com>
+Content-Type: multipart/mixed; boundary="===============6307466263802831192=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <39416532-9020-6e5c-e6ce-4e4264612ac1@free-electrons.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mylene Josserand <mylene.josserand@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, tiwai@suse.com, lgirdwood@gmail.com, wens@csie.org, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, maxime.ripard@free-electrons.com, thomas.petazzoni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Dmitry,
 
-> > extend the pwm-beeper driver to support customized frequency
-> > for SND_BELL from device tree.
->=20
-> No, SND_BELL is literally SND_TONE @1000Hz. There should be no
-> customizing. If applications want to use different frequency then should
-> be using SND_TONE.
+--===============6307466263802831192==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="h2iy6oxcawviqapi"
+Content-Disposition: inline
 
-We are not aiming for an application shortcut here. Instead, changing the b=
-ell frequency shall be a system setting. That is, every application which w=
-ants to make a bell sound shall use the alternative frequency.
 
-The reason why we are deviating from the default 1000 Hz is that on our har=
-dware we are using a loudspeaker which is rated for 2.7 kHz. That is, it wi=
-ll only sound at the specified volume and frequency if you feed it with a 2=
-.7 kHz square wave. If you deviate from it, e.g. by using 1000 Hz, the outp=
-ut will be dim and squeaky. Worst case, SND_BELL would be completely silent=
- on our system. So the only bell sound we can reliably generate on our syst=
-em has 2.7 kHz.
+--h2iy6oxcawviqapi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The good news for everybody else's systems is that the patch does not chang=
-e the default behavior. If not specified in the DT, the frequency will stil=
-l be 1000 Hz. But other systems which are similarly challenged could now of=
-fer a reasonable bell sound, too.
+On Wed, Feb 08, 2017 at 11:10:47AM +0100, Mylene Josserand wrote:
 
-Can you point me to a specification or standard which defines that SND_BELL=
- has to be 1000 Hz without any exception?
+> For all my series, you did not pick-up this patch. I was wondering if you
+> have any comment on it? Is there something wrong?
 
-I did some research on that topic and was not able to discover such a speci=
-fication or standard. What I did find though was that the ASCII or Unicode =
-BEL character is most likely very closely related to SND_BELL. And for BEL =
-there is no frequency specified. Historically it once was a real bell which=
- was rung. The intention was to notify the human on the other end of a tele=
-type to have a look at it. And that is guaranteed with 1000 Hz as well as w=
-ith 2.7 kHz as long as the sound is perceptible to the human ear.
+Please resend any patches you think are missing.
 
-https://en.wikipedia.org/wiki/Bell_character
+--h2iy6oxcawviqapi
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Regards,
-Mark
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlia8+4ACgkQJNaLcl1U
+h9BmNggAhHlylceIltKhIBjd/F2gGnmE56p9rP2n9gb+O8nVtGQpdH4jkH65zeL1
+RlZ8/dXRGQfjcOCfCsr6D4Cjsm370y7k6Vyw5Ne+oyswd3kDBtZEQE9eIfNWGvEw
+rH0AwXsodKBpxmBlF5tVIYlgRuI1b6WLQi0UKwC6w2/QbylvqWUFejwdijc0gIyM
+joEvRrYTubpNV2M+MpjOTgG26aOjjvevEmL62upbTZNpRamExTHOzVVubFb+bGhv
+hmDy/Ci4uV3XxjJoxyaa5sUHlMdDeb/IRTTBC9/wNo/pmCtT8wnYQ1Onx+4s7ypT
+o6sxJUOr1AeJ8RguKBBPnbFNrCz82g==
+=vNpT
+-----END PGP SIGNATURE-----
+
+--h2iy6oxcawviqapi--
+
+--===============6307466263802831192==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6307466263802831192==--
