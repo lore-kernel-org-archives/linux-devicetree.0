@@ -1,56 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] iio: chemical: add dsm501 particle sensor driver
- bindings
-Date: Wed, 8 Feb 2017 16:10:10 -0600
-Message-ID: <20170208221010.hr27zpt5qfuz2cnm@rob-hp-laptop>
-References: <20170205150344.11000-1-tduszyns@gmail.com>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Wed, 8 Feb 2017 15:36:09 -0600
+Message-ID: <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+References: <20161023200355.GA5391@amd>
+ <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170205150344.11000-1-tduszyns@gmail.com>
+In-Reply-To: <20170203123508.GA10286@amd>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Duszynski <tduszyns@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 05, 2017 at 04:03:44PM +0100, Tomasz Duszynski wrote:
-> This patch adds bindings for dsm501 particle sensor driver.
+On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
 > 
-> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
-> ---
->  .../devicetree/bindings/iio/chemical/dsm501.txt          | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/dsm501.txt
+> N900 contains front and back camera, with a switch between the
+> two. This adds support for the switch component, and it is now
+> possible to select between front and back cameras during runtime.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/chemical/dsm501.txt b/Documentation/devicetree/bindings/iio/chemical/dsm501.txt
+> This adds documentation for the devicetree binding.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> 
+> 
+> diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
 > new file mode 100644
-> index 000000000000..918c55c4c401
+> index 0000000..1b9f8e0
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/chemical/dsm501.txt
-> @@ -0,0 +1,16 @@
-> +* DSM501 particle sensor
-> +
-> +Required properties:
-> +
-> +- compatible: should be one of:
-> +	      "samyoung,dsm501"
-> +	      "shinyei,ppd42ns"
-> +- gpios: should specify the GPIO connected to the sensor's data line, see
-> +  	 "gpios property" in Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+> @@ -0,0 +1,63 @@
+> +Video Bus Switch Binding
+> +========================
 
-data-gpios would be preferred. With that,
+I'd call it a mux rather than switch.
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+BTW, there's a new mux-controller binding under review you might look 
+at. It would only be needed here if the mux ctrl also controls other 
+things.
 
 > +
-> +Example:
+> +This is a binding for a gpio controlled switch for camera interfaces. Such a
+> +device is used on some embedded devices to connect two cameras to the same
+> +interface of a image signal processor.
 > +
-> +dsm501 {
-> +	compatible = "samyoung,dsm501";
-> +	gpios = <&gpio1 28 0>;
-> +};
-> -- 
-> 2.11.1
-> 
+> +Required properties
+> +===================
+> +
+> +compatible	: must contain "video-bus-switch"
+
+video-bus-gpio-mux
+
+> +switch-gpios	: GPIO specifier for the gpio, which can toggle the
+
+mux-gpios to align with existing GPIO controlled muxes.
+
+> +		  selected camera. The GPIO should be configured, so
+> +		  that a disabled GPIO means, that the first port is
+> +		  selected.
+> +
+> +Required Port nodes
+> +===================
+> +
+> +More documentation on these bindings is available in
+> +video-interfaces.txt in the same directory.
+> +
+> +reg		: The interface:
+> +		  0 - port for image signal processor
+> +		  1 - port for first camera sensor
+> +		  2 - port for second camera sensor
+
+This could be used for display side as well. So describe these just as 
+inputs and outputs.
+
+Rob
