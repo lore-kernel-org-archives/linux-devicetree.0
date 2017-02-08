@@ -1,54 +1,62 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
- fewer PQ coefficients
-Date: Wed, 8 Feb 2017 14:27:23 +0530
-Message-ID: <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com>
-References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
- <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
- <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
- <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com> <CAPcyv4hK_1f8bryq6smPQy7vTnP+QEzmT9wnAEE1xpxq7EAnjQ@mail.gmail.com>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
+ Driver
+Date: Wed, 8 Feb 2017 09:58:48 +0100
+Message-ID: <ade53079-b4ac-5290-6d05-0d71ddc62ad0@skidata.com>
+References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPcyv4hK_1f8bryq6smPQy7vTnP+QEzmT9wnAEE1xpxq7EAnjQ@mail.gmail.com>
+In-Reply-To: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+To: linux-usb@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, stern@rowland.harvard.edu, dev@g0hl1n.net
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 7, 2017 at 11:46 PM, Dan Williams <dan.j.williams@intel.com> wrote:
-> On Tue, Feb 7, 2017 at 1:02 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams@intel.com> wrote:
->>> On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->>>> The DMAENGINE framework assumes that if PQ offload is supported by a
->>>> DMA device then all 256 PQ coefficients are supported. This assumption
->>>> does not hold anymore because we now have BCM-SBA-RAID offload engine
->>>> which supports PQ offload with limited number of PQ coefficients.
->>>>
->>>> This patch extends async_tx APIs to handle DMA devices with support
->>>> for fewer PQ coefficients.
->>>>
->>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>
->>> I don't like this approach. Define an interface for md to query the
->>> offload engine once at the beginning of time. We should not be adding
->>> any new extensions to async_tx.
->>
->> Even if we do capability checks in Linux MD, we still need a way
->> for DMAENGINE drivers to advertise number of PQ coefficients
->> handled by the HW.
->>
->> I agree capability checks should be done once in Linux MD but I don't
->> see why this has to be part of BCM-SBA-RAID driver patches. We need
->> separate patchsets to address limitations of async_tx framework.
->
-> Right, separate enabling before we pile on new hardware support to a
-> known broken framework.
+On 02/08/2017 09:52 AM, Richard Leitner wrote:
+> From: Richard Leitner <dev@g0hl1n.net>
 
-Linux Async Tx not broken framework. The issue is:
-1. Its not complete enough
-2. Its not optimized for very high through-put offload engines
+Please drop/ignore that "From". This patch is from:
+	Richard Leitner <richard.leitner@skidata.com>
 
-Regards,
-Anup
+> 
+> This patch adds a driver for configuration of the Microchip USB251xB/xBi
+> USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
+> configuration interface and two to four USB 2.0 downstream ports.
+> 
+> Furthermore add myself as a maintainer for this driver.
+> 
+> The datasheet can be found at the manufacturers website, see [1]. All
+> device-tree exposed configuration features have been tested on a i.MX6
+> platform with a USB2512B hub.
+> 
+> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
+> 
+> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+> ---
+> CHANGES v4:
+> 	- use utf8s_to_utf16s() instead of ascii2utf16le()
+> 	- remove ascii2utf16le() in lib/string.c again
+> 	- remove changes in drivers/usb/core/hcd.c again
+> 	  (I will post a separate patch for using utf8s_to_utf16s()
+> 	  in there too)
+> 
+> CHANGES v3:
+> 	- move ascii2utf16le() to lib/string.c and also use it also for
+> 		ascii2desc in drivers/usb/core/hcd.c
+> 	- remove platform data support from usb251xb driver
+> 
+> CHANGES v2:
+> 	- fix max-{b,s}p-current property name
+> 	- add descriptor string handling from platform_data
+> 	- fix non-dt handling
+> ---
+>  Documentation/devicetree/bindings/usb/usb251xb.txt |  83 +++
+>  MAINTAINERS                                        |   8 +
+>  drivers/usb/misc/Kconfig                           |   9 +
+>  drivers/usb/misc/Makefile                          |   1 +
+>  drivers/usb/misc/usb251xb.c                        | 674 +++++++++++++++++++++
+>  5 files changed, 775 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb251xb.txt
+>  create mode 100644 drivers/usb/misc/usb251xb.c
