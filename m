@@ -1,47 +1,36 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] drm/panel: simple: Add support for Seiko 43WVF1G
-Date: Tue, 7 Feb 2017 22:48:16 -0200
-Message-ID: <CAOMZO5C+7v=ppVpSYwKEiprCSVSM1z0wVVOwSmbuEPaO3618Wg@mail.gmail.com>
-References: <1486065840-13575-1-git-send-email-breno.lima@nxp.com>
- <20170207184935.7shhx5pqtprucmgc@rob-hp-laptop>
- <CAOMZO5Bv2gHa3O_6dbAgKePcZDfMeueeYptRb4r=WLTHYYS8uA@mail.gmail.com>
- <CAL_Jsq+Fu6XRbPEO2OWvpGHuRk9w+k=X3tT+P-UUqiu2r+F12Q@mail.gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 0/9] arm64: dts: rockchip: support Google Kevin
+Date: Wed, 08 Feb 2017 02:01:42 +0100
+Message-ID: <1779025.vjYEOhejf3@phil>
+References: <1480645653-36943-1-git-send-email-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_Jsq+Fu6XRbPEO2OWvpGHuRk9w+k=X3tT+P-UUqiu2r+F12Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Breno Lima <breno.lima@nxp.com>, DRI mailing list <dri-devel@lists.freedesktop.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Breno Matheus Lima <brenomatheus@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1480645653-36943-1-git-send-email-briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgNywgMjAxNyBhdCA5OjM2IFBNLCBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
-b3JnPiB3cm90ZToKCj4gRXhjZXB0IEkgaGF2ZSBubyB3YXkgb2Yga25vd2luZyB3aGV0aGVyOiBh
-KSB5b3Ugb21pdHRlZCBhIHN1cHBseQo+IGJlY2F1c2UgeW91IGRvbid0ICh5ZXQpIGNhcmUsIGIp
-IHRoZSBwYW5lbCBoYXMgYSBzaW5nbGUgc3VwcGx5IGFuZCB5b3UKPiBhcmUgdXNpbmcgcG93ZXIt
-c3VwcGx5IG9yIGMpIHRoZSBwYW5lbCBoYXMgbXVsdGlwbGUgc3VwcGxpZXMgYW5kIHlvdXIKPiBi
-aW5kaW5nIGlzIHdyb25nLgo+Cj4gSSBjYW4gb25seSBlbGltaW5hdGUgQSBpZiB5b3UgbGlzdCB0
-aGUgc3VwcGxpZXMuIEp1c3QgbmVlZCBzb21ldGhpbmcKPiBsaWtlICJwb3dlci1zdXBwbHkgOiBz
-ZWUgc2ltcGxlLXBhbmVsLnR4dCIuIEkndmUgc3RpbGwgZ290IHRvIGdvIHJlYWQKPiB0aGUgcGFu
-ZWwgc3BlYyBpZiBJIHJlYWxseSB3YW50IHRvIGNoZWNrIHRoZSBiaW5kaW5nLgoKSnVzdCBjaGVj
-a2VkIHRoZSBwYW5lbCBkYXRhc2hlZXQgYXQKaHR0cDovL3d3dy5nbHluLmRlL2RhdGEvZ2x5bi9t
-ZWRpYS9kb2MvNDN3dmYxZy0wLnBkZiBhbmQgaXQgbGlzdHMgdHdvCnN1cHBsaWVzOgpEVkREIChE
-aWdpdGFsIHBvd2VyIHN1cHBseSkgYW5kIEFWREQgKEFuYWxvZyBwb3dlciBzdXBwbHkpLgoKT3Vy
-IGR0cyB3YXMganVzdCBwcm92aWRpbmcgYSBzaW5nbGUgJ3Bvd2VyLXN1cHBseScgd2hpY2ggcmVm
-ZXJyZWQgdG8gYQpHUElPIGVuYWJsZWQgcmVndWxhdG9yIHRoYXQgZHJpdmVzIERWREQuCgpTbyBp
-dCBzZWVtcyB3ZSBtaXNzZWQgdG8gcGFzcyBBVkREIChub3Qgc29mdHdhcmUgY29udHJvbGxlZCBp
-biBvdXIKY2FzZSwgYnV0IHdlIG5lZWQgdG8gZGVzY3JpYmUgaXQgaW4gZHRzIGFueXdheSkuCgpE
-b2VzIHRoaXMgbWVhbiB3ZSBjYW5ub3QgdXNlIHNpbXBsZS1wYW5lbCBmb3IgdGhpcyBwYXJ0aWN1
-bGFyIHBhbmVsCmFuZCB3ZSBzaG91bGQgYWRkIGEgc2VwYXJhdGUgZHJpdmVyIGZvciBpdD8KClRo
-YW5rcwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Brian,
+
+Am Donnerstag, 1. Dezember 2016, 18:27:24 CET schrieb Brian Norris:
+> This series adds basic support for Google Kevin, a board in the Gru device
+> family. I do not add a leaf .dts board file for Gru, but I have retained the
+> split between "things that apply to the Gru family" (rk3399-gru.dtsi) and
+> "things that apply to Kevin only" (rk3399-gru-kevin.dtsi).
+
+do you plan on refreshing these patches against the current kernel and the 
+comments received at some point?
+
+
+Heiko
