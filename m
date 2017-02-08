@@ -1,106 +1,133 @@
-From: =?UTF-8?B?0JLQvtC70LrQvtCyINCh0LXRgNCz0LXQuQ==?= <lis8215-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM: pwm: sun4i: unification of
- register operations for support sun6i.
-Date: Wed, 8 Feb 2017 19:41:55 +0300
-Message-ID: <CAKNVLfaYoPf-b-mGc0eSmmAk0QPhMCRt5aT5Z3JBcfKhridWDA@mail.gmail.com>
-References: <1486489846-662-1-git-send-email-lis8215@gmail.com>
- <1486489846-662-2-git-send-email-lis8215@gmail.com> <20170208075219.oo234d5zartzmzsg@lukather>
-Reply-To: lis8215-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: Re: [PATCH] PM / Domains: Fix compatible for domain idle state
+Date: Wed, 8 Feb 2017 09:42:42 -0700
+Message-ID: <20170208164242.GC2564@linaro.org>
+References: <1486571692-33212-1-git-send-email-lina.iyer@linaro.org>
+ <1486571692-33212-2-git-send-email-lina.iyer@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary=001a114d88bc00cb4a0548078be9
-Return-path: <linux-sunxi+bncBDJLROMN3MJRBVMU5XCAKGQE4FOX33Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170208075219.oo234d5zartzmzsg@lukather>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1486571692-33212-2-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---001a114d88bc00cb4a0548078be9
-Content-Type: text/plain; charset=UTF-8
-
-Hello all,
-
->> This patch not introduce new features, just prepare code for
->> adding sun6i PWM driver in next commits.
->>
->> A31 SoC have a different map of PWM registers than others ASoCs,
->> but register bits purposes are very similar.
->>
->> This patch introduce set of register access routines, which
->> are common for existing in driver ASoCs:
->>  - ctl_rdy   - checks the ready bit of specified PWM channel,
->>  - ctl_read  - reads value from control register of specified PWM
-channel,
->>  - ctl_write - writes significant bits to control register of specified
-PWM channel,
->>  - prd_read  - reads value from period register of specified PWM channel,
->>  - prd_write - writes value to period register of specified PWM channel.
->> Driver code redesigned to use the new routines.
+On Wed, Feb 08 2017 at 09:35 -0700, Lina Iyer wrote:
+>Re-using idle state definition provided by arm,idle-state for domain
+>idle states creates a lot of confusion and limits further evolution of
+>the domain idle definition. To keep things clear and simple, define a
+>idle states for domain using a new compatible "domain-idle-state".
 >
-> Why don't you use regmap for that?
+>Fix existing PM domains code to look for the newly defined compatible.
+>
+>Cc: <devicetree@vger.kernel.org>
+>Cc: Rob Herring <robh@kernel.org>
+>Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
 
-First of all, i'm newbie and its my first patchset. I just remake what i
-see in the driver. I even don't suspect about use regmap here.
-
-Second thing - i can't test these driver on all existing sunxi SoCs, i have
-only A31 and A20 based boards where only pwm0 is accessible. Huge redesign
-cause bigger chance to make a mistake.
-
-If you think regmap solution is a must, then i will do that. This will be a
-good experience for me.
+Sorry, this has already been applied. Got tagged along with the email.
+Kindly ignore.
 
 Thanks,
-Siarhei
+Lina
 
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---001a114d88bc00cb4a0548078be9
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr">Hello all,<div><br></div><div><div>&gt;&gt; This patch not=
- introduce new features, just prepare code for</div><div>&gt;&gt; adding su=
-n6i PWM driver in next commits.</div><div>&gt;&gt;</div><div>&gt;&gt; A31 S=
-oC have a different map of PWM registers than others ASoCs,</div><div>&gt;&=
-gt; but register bits purposes are very similar.</div><div>&gt;&gt;</div><d=
-iv>&gt;&gt; This patch introduce set of register access routines, which</di=
-v><div>&gt;&gt; are common for existing in driver ASoCs:</div><div>&gt;&gt;=
- =C2=A0- ctl_rdy =C2=A0 - checks the ready bit of specified PWM channel,</d=
-iv><div>&gt;&gt; =C2=A0- ctl_read =C2=A0- reads value from control register=
- of specified PWM channel,</div><div>&gt;&gt; =C2=A0- ctl_write - writes si=
-gnificant bits to control register of specified PWM channel,</div><div>&gt;=
-&gt; =C2=A0- prd_read =C2=A0- reads value from period register of specified=
- PWM channel,</div><div>&gt;&gt; =C2=A0- prd_write - writes value to period=
- register of specified PWM channel.</div><div>&gt;&gt; Driver code redesign=
-ed to use the new routines.</div><div>&gt;</div><div>&gt; Why don&#39;t you=
- use regmap for that?</div><div><br></div><div>First of all, i&#39;m newbie=
- and its my first patchset. I just remake what i see in the driver. I even =
-don&#39;t suspect about use regmap here.</div><div><br></div><div>Second th=
-ing - i can&#39;t test these driver on all existing sunxi SoCs, i have only=
- A31 and A20 based boards where only pwm0 is accessible. Huge redesign caus=
-e bigger chance to make a mistake.</div><div><br></div><div>If you think re=
-gmap solution is a must, then i will do that. This will be a good experienc=
-e for me.</div><div><br></div><div>Thanks,</div><div>Siarhei</div></div></d=
-iv>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
---001a114d88bc00cb4a0548078be9--
+>---
+> .../bindings/power/domain-idle-state.txt           | 33 ++++++++++++++++++++++
+> .../devicetree/bindings/power/power_domain.txt     |  8 +++---
+> drivers/base/power/domain.c                        |  2 +-
+> 3 files changed, 38 insertions(+), 5 deletions(-)
+> create mode 100644 Documentation/devicetree/bindings/power/domain-idle-state.txt
+>
+>diff --git a/Documentation/devicetree/bindings/power/domain-idle-state.txt b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>new file mode 100644
+>index 0000000..eefc7ed
+>--- /dev/null
+>+++ b/Documentation/devicetree/bindings/power/domain-idle-state.txt
+>@@ -0,0 +1,33 @@
+>+PM Domain Idle State Node:
+>+
+>+A domain idle state node represents the state parameters that will be used to
+>+select the state when there are no active components in the domain.
+>+
+>+The state node has the following parameters -
+>+
+>+- compatible:
+>+	Usage: Required
+>+	Value type: <string>
+>+	Definition: Must be "domain-idle-state".
+>+
+>+- entry-latency-us
+>+	Usage: Required
+>+	Value type: <prop-encoded-array>
+>+	Definition: u32 value representing worst case latency in
+>+		    microseconds required to enter the idle state.
+>+		    The exit-latency-us duration may be guaranteed
+>+		    only after entry-latency-us has passed.
+>+
+>+- exit-latency-us
+>+	Usage: Required
+>+	Value type: <prop-encoded-array>
+>+	Definition: u32 value representing worst case latency
+>+		    in microseconds required to exit the idle state.
+>+
+>+- min-residency-us
+>+	Usage: Required
+>+	Value type: <prop-encoded-array>
+>+	Definition: u32 value representing minimum residency duration
+>+		    in microseconds after which the idle state will yield
+>+		    power benefits after overcoming the overhead in entering
+>+i		    the idle state.
+>diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+>index e165036..723e1ad 100644
+>--- a/Documentation/devicetree/bindings/power/power_domain.txt
+>+++ b/Documentation/devicetree/bindings/power/power_domain.txt
+>@@ -31,7 +31,7 @@ Optional properties:
+>
+> - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+>                 generic domain power state. The idle state definitions are
+>-                compatible with arm,idle-state specified in [1].
+>+                compatible with domain-idle-state specified in [1].
+>   The domain-idle-state property reflects the idle state of this PM domain and
+>   not the idle states of the devices or sub-domains in the PM domain. Devices
+>   and sub-domains have their own idle-states independent of the parent
+>@@ -85,7 +85,7 @@ Example 3:
+> 	};
+>
+> 	DOMAIN_RET: state@0 {
+>-		compatible = "arm,idle-state";
+>+		compatible = "domain-idle-state";
+> 		reg = <0x0>;
+> 		entry-latency-us = <1000>;
+> 		exit-latency-us = <2000>;
+>@@ -93,7 +93,7 @@ Example 3:
+> 	};
+>
+> 	DOMAIN_PWR_DN: state@1 {
+>-		compatible = "arm,idle-state";
+>+		compatible = "domain-idle-state";
+> 		reg = <0x1>;
+> 		entry-latency-us = <5000>;
+> 		exit-latency-us = <8000>;
+>@@ -118,4 +118,4 @@ The node above defines a typical PM domain consumer device, which is located
+> inside a PM domain with index 0 of a power controller represented by a node
+> with the label "power".
+>
+>-[1]. Documentation/devicetree/bindings/arm/idle-states.txt
+>+[1]. Documentation/devicetree/bindings/power/domain-idle-state.txt
+>diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+>index 661737c..f0bc672 100644
+>--- a/drivers/base/power/domain.c
+>+++ b/drivers/base/power/domain.c
+>@@ -2048,7 +2048,7 @@ int genpd_dev_pm_attach(struct device *dev)
+> EXPORT_SYMBOL_GPL(genpd_dev_pm_attach);
+>
+> static const struct of_device_id idle_state_match[] = {
+>-	{ .compatible = "arm,idle-state", },
+>+	{ .compatible = "domain-idle-state", },
+> 	{ }
+> };
+>
+>-- 
+>2.7.4
+>
