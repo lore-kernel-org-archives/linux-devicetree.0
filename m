@@ -1,61 +1,91 @@
-From: Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
- fewer PQ coefficients
-Date: Wed, 8 Feb 2017 08:24:59 -0800
-Message-ID: <CAPcyv4iFJXxvJFrUs2jtwP9GX5NcJ8LiEDHeZ5b1fwjCAToe5w@mail.gmail.com>
-References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
- <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
- <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
- <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com>
- <CAPcyv4hK_1f8bryq6smPQy7vTnP+QEzmT9wnAEE1xpxq7EAnjQ@mail.gmail.com> <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-raid-owner@vger.kernel.org>
-In-Reply-To: <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com>
-Sender: linux-raid-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Jassi Brar <jassisinghbrar@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Rob Rice <rob.rice@broadcom.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Device Tree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-crypto@vger.kernel.org, linux-raid <linux-raid@vger.kernel.org>
+From: Lina Iyer <lina.iyer@linaro.org>
+Subject: [PATCH 1/2] PM / Domains: Ignore domain-idle-states that are not compatible
+Date: Wed,  8 Feb 2017 08:34:51 -0800
+Message-ID: <1486571692-33212-3-git-send-email-lina.iyer@linaro.org>
+References: <1486571692-33212-1-git-send-email-lina.iyer@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1486571692-33212-1-git-send-email-lina.iyer@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: ulf.hansson@linaro.org, khilman@kernel.org, rjw@rjwysocki.net, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: andy.gross@linaro.org, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, brendan.jackman@arm.com, lorenzo.pieralisi@arm.com, sudeep.holla@arm.com, Juri.Lelli@arm.com, Lina Iyer <lina.iyer@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 12:57 AM, Anup Patel <anup.patel@broadcom.com> wrote:
-> On Tue, Feb 7, 2017 at 11:46 PM, Dan Williams <dan.j.williams@intel.com> wrote:
->> On Tue, Feb 7, 2017 at 1:02 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->>> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams@intel.com> wrote:
->>>> On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel@broadcom.com> wrote:
->>>>> The DMAENGINE framework assumes that if PQ offload is supported by a
->>>>> DMA device then all 256 PQ coefficients are supported. This assumption
->>>>> does not hold anymore because we now have BCM-SBA-RAID offload engine
->>>>> which supports PQ offload with limited number of PQ coefficients.
->>>>>
->>>>> This patch extends async_tx APIs to handle DMA devices with support
->>>>> for fewer PQ coefficients.
->>>>>
->>>>> Signed-off-by: Anup Patel <anup.patel@broadcom.com>
->>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>>
->>>> I don't like this approach. Define an interface for md to query the
->>>> offload engine once at the beginning of time. We should not be adding
->>>> any new extensions to async_tx.
->>>
->>> Even if we do capability checks in Linux MD, we still need a way
->>> for DMAENGINE drivers to advertise number of PQ coefficients
->>> handled by the HW.
->>>
->>> I agree capability checks should be done once in Linux MD but I don't
->>> see why this has to be part of BCM-SBA-RAID driver patches. We need
->>> separate patchsets to address limitations of async_tx framework.
->>
->> Right, separate enabling before we pile on new hardware support to a
->> known broken framework.
->
-> Linux Async Tx not broken framework. The issue is:
-> 1. Its not complete enough
-> 2. Its not optimized for very high through-put offload engines
+domain-idle-states property may have phandles to idle state bindings
+that may not be compatible with idle state definition defined in [1].
+Such phandles would just be ignored and not throw and error when read by
+the domain core.
 
-I'm not understanding your point. I'm nak'ing this change to add yet
-more per-transaction capability checking to async_tx. I don't like the
-DMA_HAS_FEWER_PQ_COEF flag, especially since it is equal to
-DMA_HAS_PQ_CONTINUE. I'm not asking for all of async_tx's problems to
-be fixed before this new hardware support, I'm simply saying we should
-start the process of moving offload-engine capability checking to the
-raid code.
+Cc: <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>
+Signed-off-by: Lina Iyer <lina.iyer@linaro.org>
+---
+ Documentation/devicetree/bindings/power/power_domain.txt |  4 +++-
+ drivers/base/power/domain.c                              | 16 +++++++++-------
+ 2 files changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
+index 723e1ad..940707d 100644
+--- a/Documentation/devicetree/bindings/power/power_domain.txt
++++ b/Documentation/devicetree/bindings/power/power_domain.txt
+@@ -31,7 +31,9 @@ Optional properties:
+ 
+ - domain-idle-states : A phandle of an idle-state that shall be soaked into a
+                 generic domain power state. The idle state definitions are
+-                compatible with domain-idle-state specified in [1].
++                compatible with domain-idle-state specified in [1]. phandles
++                that are not compatible with domain-idle-state will be
++                ignored.
+   The domain-idle-state property reflects the idle state of this PM domain and
+   not the idle states of the devices or sub-domains in the PM domain. Devices
+   and sub-domains have their own idle-states independent of the parent
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 6b23d82..3825bb9 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -2065,11 +2065,6 @@ static int genpd_parse_state(struct genpd_power_state *genpd_state,
+ 	int err;
+ 	u32 residency;
+ 	u32 entry_latency, exit_latency;
+-	const struct of_device_id *match_id;
+-
+-	match_id = of_match_node(idle_state_match, state_node);
+-	if (!match_id)
+-		return -EINVAL;
+ 
+ 	err = of_property_read_u32(state_node, "entry-latency-us",
+ 						&entry_latency);
+@@ -2118,6 +2113,7 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+ 	int err, ret;
+ 	int count;
+ 	struct of_phandle_iterator it;
++	const struct of_device_id *match_id;
+ 
+ 	count = of_count_phandle_with_args(dn, "domain-idle-states", NULL);
+ 	if (count <= 0)
+@@ -2130,6 +2126,9 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+ 	/* Loop over the phandles until all the requested entry is found */
+ 	of_for_each_phandle(&it, err, dn, "domain-idle-states", NULL, 0) {
+ 		np = it.node;
++		match_id = of_match_node(idle_state_match, np);
++		if (!match_id)
++			continue;
+ 		ret = genpd_parse_state(&st[i++], np);
+ 		if (ret) {
+ 			pr_err
+@@ -2141,8 +2140,11 @@ int of_genpd_parse_idle_states(struct device_node *dn,
+ 		}
+ 	}
+ 
+-	*n = count;
+-	*states = st;
++	*n = i;
++	if (!i)
++		kfree(st);
++	else
++		*states = st;
+ 
+ 	return 0;
+ }
+-- 
+2.7.4
+
