@@ -1,16 +1,14 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
 Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
  Broadcom NSP SoC"
-Date: Wed, 8 Feb 2017 15:44:20 -0800
-Message-ID: <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+Date: Wed, 8 Feb 2017 15:32:20 -0800
+Message-ID: <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
 References: <20170208233023.31922-1-zajec5@gmail.com>
- <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
- <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
+In-Reply-To: <20170208233023.31922-1-zajec5@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,48 +18,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, linux-arm-kernel@lists.infradead.org, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDgvMjAxNyAwMzozOSBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDIwMTct
-MDItMDkgMDA6MzIsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+IE9uIDAyLzA4LzIwMTcgMDM6
-MzAgUE0sIFJhZmHFgiBNacWCZWNraSB3cm90ZToKPj4+IEZyb206IFJhZmHFgiBNacWCZWNraSA8
-cmFmYWxAbWlsZWNraS5wbD4KPj4+Cj4+PiBUaGlzIHJldmVydHMgY29tbWl0IGQ3YmMxYTdkNDFi
-ZiAoInBoeTogQWRkIFVTQjMgUEhZIHN1cHBvcnQgZm9yCj4+PiBCcm9hZGNvbSBOU1AgU29DIikg
-YXMgd2UgYWxyZWFkeSBoYXZlIGRyaXZlciBmb3IgdGhpcyBQSFkgKHNoYXJlZCBieSBOUwo+Pj4g
-YW5kIE5TUCkuIEl0IHdhcyBhZGRlZCBpbiBjb21taXQgZTU2NjYyODFkOWVhICgicGh5OiBiY20t
-bnMtdXNiMzogbmV3Cj4+PiBkcml2ZXIgZm9yIFVTQiAzLjAgUEhZIG9uIE5vcnRoc3RhciIpLgo+
-Pj4KPj4+IEluc3RlYWQgb2YgYWRkaW5nIHNlcGFyYXRlZCBkcml2ZXIgJiBkdXBsaWNhdGluZyBj
-b2RlIHdlIHNob3VsZCB3b3JrIG9uCj4+PiBpbXByb3ZpbmcgZXhpc3RpbmcgKG9sZCkgb25lLiBU
-aGFua3MgdG8gd29yayBkb25lIGJ5IEJyb2FkY29tIHdlIGtub3cKPj4+IHRoZXJlIGlzIE1ESU8g
-YnVzIHdlIHdlcmVuJ3QgYXdhcmUgb2YgJiB3ZSBrbm93IHJlZ2lzdGVyIG5hbWVzIHdoaWNoCj4+
-PiBtYWtlcyBpbml0aWFsaXphdGlvbiBtb3JlIGNsZWFyLiBUaGlzIGlzIHZlcnkgdmFsdWFibGUg
-aW5mbyBhbmQgd2UKPj4+IHNob3VsZCB3b3JrIG9uIHVzaW5nIGl0IGluIGV4aXN0aW5nIGRyaXZl
-ciBhZnRlcndhcmRzLgo+Pgo+PiBTaG91bGQgbm90IHdlIGZpcnN0IGV4dGVuZCB0aGUgb2xkIGRy
-aXZlciB0byBzdXBwb3J0IE5TUCBhbmQgdGhlbiByZXZlcnQKPj4gZDdiYzFhN2Q0MWJmICgicGh5
-OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IgQnJvYWRjb20gTlNQIFNvQyIpPwo+IAo+IFNvdW5k
-cyBsaWtlIGEgd2VpcmQgLyBkaXJ0eSBkZXZlbG9wbWVudCBtZXRob2QgdG8gbWU6IGFkZGluZyBk
-dXBsaWNhdGVkCj4gY29kZQo+IGZpcnN0IHRoZW4gd29ya2luZyBvbiBjbGVhbmluZyBpdC4gVW5s
-ZXNzIHlvdSBtZWFuIGRyaXZlcnMvc3RhZ2luZy8uCgpUaGVyZSB3YXMgY2xlYXJseSBhIG1pc3Rh
-a2UgaW4gc3VibWl0dGluZyB0aGlzIE5TUCBVU0IgUEhZIGRyaXZlciwgYW5kCml0IHNob3VsZCBo
-YXZlIGJlZW4gYSBwYXRjaCBhZ2FpbnN0IHRoZSBleGlzdGluZyBOUyBVU0IgUEhZIGRyaXZlciwg
-YnV0Cml0IHdhcyBub3QsIG9rYXkgZmFpciBlbm91Z2guCgpJdCdzIG9uZSB0aGluZyB0byBhZGRy
-ZXNzIHRoYXQgaW4gdGhlIGZ1dHVyZSwgYW5kIGl0J3MgYW5vdGhlciB0aGluZyB0bwpmbGF0IG91
-dCByZXZlcnQgdGhlIGRyaXZlciBqdXN0IGJlY2F1c2UgeW91IGRvbid0IGxpa2UgdGhlIGR1cGxp
-Y2F0aW9uLgoKSSBkb24ndCBsaWtlIHRoYXQgZWl0aGVyLCBhbmQgd2UgY2FuIGRpc2N1c3Mgb24g
-aG93IHRvIGltcHJvdmUgdGhpbmdzCihsaWtlIGhhdmUgdGhlIG1haW50YWluZXIgcmV2aWV3IHRo
-YXQgdG9vKSwgYnV0IGR1cGxpY2F0aW9uIGlzIGEgbGVzc2VyCmV2aWwgdGhhbiBub3QgaGF2aW5n
-IHRoZSBoYXJkd2FyZSBzdXBwb3J0ZWQgYXQgYWxsLCBhbmQgZXZlbiBtb3JlIHNvLApwdXJwb3Nl
-bHkgcmV2ZXJ0aW5nIGluIHRoZSBuYW1lIG9mIHJlbW92aW5nIHRoYXQgZHVwbGljYXRpb24sIHRo
-YXQncwppbnRlbnRpb25hbGx5IGJyZWFraW5nIHdvcmtpbmcgaGFyZHdhcmUhCgo+IAo+IFdlIGFs
-c28gc2hvdWxkIG5ldmVyIGRyb3Agc3VwcG9ydCBmb3Igc3VwcG9ydGVkIERUIGJpbmRpbmdzLCBz
-byBJIHJlYWxseQo+IHRoaW5rCj4gaXQncyB0aGUgY2xlYW5lc3QgdG8gcmV2ZXJ0IGl0IG5vdy4K
-ClRoZSBiaW5kaW5nIGRvY3VtZW50IHNlZW1zIGZpbmUsIGFuZCBkb2VzIG5vdCBwcmVjbHVkZSBh
-ZGRpbmcgTlNQCnN1cHBvcnQgdG8gdGhlIGV4aXN0aW5nIFBIWSBkcml2ZXIuIEJpbmRpbmcgYWlu
-J3QgZHJpdmVyIGNvZGUsIHRoZQpiaW5kaW5nIGNvdWxkIHN0YXkgYW5kIGlzIGNlcnRhaW5seSBh
-IG1vcmUgYWNjdXJhdGUgZGVzY3JpcHRpb24gb2YgdGhlCkhXIG9uIE5TUC4KCj4gCj4gSSB0aGlu
-ayBKb24gd2FzIGFsc28gT0sgd2l0aCB0aGlzIHNvbHV0aW9uLgoKLS0gCkZsb3JpYW4KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+T24gMDIvMDgvMjAxNyAwMzozMCBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IEZyb206IFJh
+ZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPiAKPiBUaGlzIHJldmVydHMgY29tbWl0
+IGQ3YmMxYTdkNDFiZiAoInBoeTogQWRkIFVTQjMgUEhZIHN1cHBvcnQgZm9yCj4gQnJvYWRjb20g
+TlNQIFNvQyIpIGFzIHdlIGFscmVhZHkgaGF2ZSBkcml2ZXIgZm9yIHRoaXMgUEhZIChzaGFyZWQg
+YnkgTlMKPiBhbmQgTlNQKS4gSXQgd2FzIGFkZGVkIGluIGNvbW1pdCBlNTY2NjI4MWQ5ZWEgKCJw
+aHk6IGJjbS1ucy11c2IzOiBuZXcKPiBkcml2ZXIgZm9yIFVTQiAzLjAgUEhZIG9uIE5vcnRoc3Rh
+ciIpLgo+IAo+IEluc3RlYWQgb2YgYWRkaW5nIHNlcGFyYXRlZCBkcml2ZXIgJiBkdXBsaWNhdGlu
+ZyBjb2RlIHdlIHNob3VsZCB3b3JrIG9uCj4gaW1wcm92aW5nIGV4aXN0aW5nIChvbGQpIG9uZS4g
+VGhhbmtzIHRvIHdvcmsgZG9uZSBieSBCcm9hZGNvbSB3ZSBrbm93Cj4gdGhlcmUgaXMgTURJTyBi
+dXMgd2Ugd2VyZW4ndCBhd2FyZSBvZiAmIHdlIGtub3cgcmVnaXN0ZXIgbmFtZXMgd2hpY2gKPiBt
+YWtlcyBpbml0aWFsaXphdGlvbiBtb3JlIGNsZWFyLiBUaGlzIGlzIHZlcnkgdmFsdWFibGUgaW5m
+byBhbmQgd2UKPiBzaG91bGQgd29yayBvbiB1c2luZyBpdCBpbiBleGlzdGluZyBkcml2ZXIgYWZ0
+ZXJ3YXJkcy4KClNob3VsZCBub3Qgd2UgZmlyc3QgZXh0ZW5kIHRoZSBvbGQgZHJpdmVyIHRvIHN1
+cHBvcnQgTlNQIGFuZCB0aGVuIHJldmVydApkN2JjMWE3ZDQxYmYgKCJwaHk6IEFkZCBVU0IzIFBI
+WSBzdXBwb3J0IGZvciBCcm9hZGNvbSBOU1AgU29DIik/Ci0tIApGbG9yaWFuCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1h
+aWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
