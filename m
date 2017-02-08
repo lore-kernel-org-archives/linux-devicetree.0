@@ -1,136 +1,81 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v3 13/24] platform: add video-multiplexer subdevice
- driver
-Date: Wed, 08 Feb 2017 10:47:15 +0100
-Message-ID: <1486547235.2309.15.camel@pengutronix.de>
-References: <1483755102-24785-1-git-send-email-steve_longerbeam@mentor.com>
-         <1483755102-24785-14-git-send-email-steve_longerbeam@mentor.com>
-         <20170207204617.GD13854@valkosipuli.retiisi.org.uk>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for GPU
+Date: Wed, 8 Feb 2017 10:56:56 +0100
+Message-ID: <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
+References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
+ <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com>
+ <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com>
+ <20170208041929.GA6809@localhost.localdomain>
+ <20170208042351.GB6809@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170207204617.GD13854@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170208042351.GB6809-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+Am 08.02.2017 um 05:23 schrieb Eduardo Valentin:
+> On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
+>> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
+>>> As suggested by Eduardo Valentin this adds the thermal zone for
+>>> the bcm2835 SoC. Since we currently don't have any cooling devices
+>>> leave this section empty.
+>>>
+>>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
+>>>  1 file changed, 19 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+>>> index 9c7ec7e..359da9d 100644
+>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+>>> @@ -19,6 +19,25 @@
+>>>  		bootargs = "earlyprintk console=ttyAMA0";
+>>>  	};
+>>>  
+>>> +	thermal-zones {
+>>> +		gpu_thermal: gpu-thermal {
+>>> +			polling-delay-passive = <0>;
+>>> +			polling-delay = <1000>;
+>>> +
+>>> +			thermal-sensors = <&thermal>;
+> Just came to my mind, dont you need to have an id to specify with sensor
+> points to gpu?
 
-On Tue, 2017-02-07 at 22:46 +0200, Sakari Ailus wrote:
-> Hi Steve,
-> 
-> On Fri, Jan 06, 2017 at 06:11:31PM -0800, Steve Longerbeam wrote:
-> > From: Philipp Zabel <p.zabel@pengutronix.de>
-> > 
-> > This driver can handle SoC internal and external video bus multiplexers,
-> > controlled either by register bit fields or by a GPIO. The subdevice
-> > passes through frame interval and mbus configuration of the active input
-> > to the output side.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > 
-> > --
-> > 
-> > - fixed a cut&paste error in vidsw_remove(): v4l2_async_register_subdev()
-> >   should be unregister.
-> > 
-> > - added media_entity_cleanup() and v4l2_device_unregister_subdev()
-> >   to vidsw_remove().
-> > 
-> > - there was a line left over from a previous iteration that negated
-> >   the new way of determining the pad count just before it which
-> >   has been removed (num_pads = of_get_child_count(np)).
-> > 
-> > - Philipp Zabel has developed a set of patches that allow adding
-> >   to the subdev async notifier waiting list using a chaining method
-> >   from the async registered callbacks (v4l2_of_subdev_registered()
-> >   and the prep patches for that). For now, I've removed the use of
-> >   v4l2_of_subdev_registered() for the vidmux driver's registered
-> >   callback. This doesn't affect the functionality of this driver,
-> >   but allows for it to be merged now, before adding the chaining
-> >   support.
-> > 
-> > Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> > ---
-> >  .../bindings/media/video-multiplexer.txt           |  59 +++
-> >  drivers/media/platform/Kconfig                     |   8 +
-> >  drivers/media/platform/Makefile                    |   2 +
-> >  drivers/media/platform/video-multiplexer.c         | 472 +++++++++++++++++++++
-> >  4 files changed, 541 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/media/video-multiplexer.txt
-> >  create mode 100644 drivers/media/platform/video-multiplexer.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/video-multiplexer.txt b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> > new file mode 100644
-> > index 0000000..9d133d9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/media/video-multiplexer.txt
-> > @@ -0,0 +1,59 @@
-> > +Video Multiplexer
-> > +=================
-> > +
-> > +Video multiplexers allow to select between multiple input ports. Video received
-> > +on the active input port is passed through to the output port. Muxes described
-> > +by this binding may be controlled by a syscon register bitfield or by a GPIO.
-> > +
-> > +Required properties:
-> > +- compatible : should be "video-multiplexer"
-> > +- reg: should be register base of the register containing the control bitfield
-> > +- bit-mask: bitmask of the control bitfield in the control register
-> > +- bit-shift: bit offset of the control bitfield in the control register
-> > +- gpios: alternatively to reg, bit-mask, and bit-shift, a single GPIO phandle
-> > +  may be given to switch between two inputs
-> > +- #address-cells: should be <1>
-> > +- #size-cells: should be <0>
-> > +- port@*: at least three port nodes containing endpoints connecting to the
-> > +  source and sink devices according to of_graph bindings. The last port is
-> > +  the output port, all others are inputs.
-> > +
-> > +Example:
-> > +
-> > +syscon {
-> > +	compatible = "syscon", "simple-mfd";
-> > +
-> > +	mux {
-> 
-> Could you use standardised properties for this, i.e. ones defined in
-> Documentation/devicetree/bindings/media/video-interfaces.txt ?
+Sorry, i don't know the exact setup of the single thermal sensor on the
+SoC (datasheet doesn't provide any helpful information). I adapted the
+Renesas R-Car thermal binding because i think it would be the best match.
 
-What do you mean? Should we add the optional bus-width property to
-describe the bit width of the parallel bus even though the driver
-doesn't care about any of the properties?
+@Eric: What's your opinion?
 
-> This is very similar to another patch "[PATCH] devicetree: Add video bus
-> switch" posted by Pavel Machek recently. The problem with that is also
-> similar than with this one: how to pass the CSI-2 bus configuration to the
-> receiver.
 >
-> There's some discussion here:
-> 
-> <URL:http://www.spinics.net/lists/linux-media/msg109493.html>
+>>> +
+>>> +			trips {
+>>> +				cpu-crit {
+>>> +					temperature	= <80000>;
+>>> +					hysteresis	= <0>;
+>>> +					type		= "critical";
+>>> +				};
+>>> +			};
+>>> +			cooling-maps {
+>>> +			};
+>>> +		};
+>>> +	};
+>>> +
+>> This is fine with me. Checking the other patches in the series.
+>>
+>>>  	soc {
+>>>  		compatible = "simple-bus";
+>>>  		#address-cells = <1>;
+>>> -- 
+>>> 1.7.9.5
+>>>
 
-[Added Sebastian do Cc:]
-
-Yes, this is essentially the same driver, except that this driver also
-handles MMIO-bitfield controlled muxes, and that the actual physical bus
-(which the drivers currently don't care about) is MIPI CSI-2 in the
-other case, and parallel this one.
-They should probably be combined, or maybe split into two separate
-drivers (MMIO controlled mux, GPIO controlled switch), possibly using
-the same v4l2_subdev boilerplate.
-
-> As Laurent already suggested, I think we should have a common solution for
-> the problem that, besides conveying the bus parameters to the receiver, also
-> encompasses CSI-2 virtual channels and data types.
-
-Yes, that seems to be necessary, as certainly we can't configure the mux
-output bus parameters in DT to a fixed setting.
-
-> That would mean finishing the series of patches in the branch I believe
-> Laurent already quoted here.
-
-regards
-Philipp
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
