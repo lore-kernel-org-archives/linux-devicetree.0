@@ -1,81 +1,45 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for GPU
-Date: Wed, 8 Feb 2017 10:56:56 +0100
-Message-ID: <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
-References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
- <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com>
- <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com>
- <20170208041929.GA6809@localhost.localdomain>
- <20170208042351.GB6809@localhost.localdomain>
+From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Subject: [PATCH 1/8] dt-bindings: fix for Allwinner H5 pinctrl's compatible
+Date: Wed,  8 Feb 2017 18:00:02 +0800
+Message-ID: <20170208100009.29362-1-icenowy@aosc.xyz>
+Reply-To: icenowy-ymACFijhrKM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170208042351.GB6809-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCZLPFN5Q4OBBS6Y5PCAKGQEVPKXHFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 08.02.2017 um 05:23 schrieb Eduardo Valentin:
-> On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
->> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
->>> As suggested by Eduardo Valentin this adds the thermal zone for
->>> the bcm2835 SoC. Since we currently don't have any cooling devices
->>> leave this section empty.
->>>
->>> Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
->>>  1 file changed, 19 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
->>> index 9c7ec7e..359da9d 100644
->>> --- a/arch/arm/boot/dts/bcm283x.dtsi
->>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
->>> @@ -19,6 +19,25 @@
->>>  		bootargs = "earlyprintk console=ttyAMA0";
->>>  	};
->>>  
->>> +	thermal-zones {
->>> +		gpu_thermal: gpu-thermal {
->>> +			polling-delay-passive = <0>;
->>> +			polling-delay = <1000>;
->>> +
->>> +			thermal-sensors = <&thermal>;
-> Just came to my mind, dont you need to have an id to specify with sensor
-> points to gpu?
+The compatible for Allwinner H5 pin controller is wrong written as
+allwinner,sun50i-h5-r-pinctrl, however, it's really a generic pinctrl
+rather than a "r" one.
 
-Sorry, i don't know the exact setup of the single thermal sensor on the
-SoC (datasheet doesn't provide any helpful information). I adapted the
-Renesas R-Car thermal binding because i think it would be the best match.
+Fix this compatible string.
 
-@Eric: What's your opinion?
+Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+---
+ Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->
->>> +
->>> +			trips {
->>> +				cpu-crit {
->>> +					temperature	= <80000>;
->>> +					hysteresis	= <0>;
->>> +					type		= "critical";
->>> +				};
->>> +			};
->>> +			cooling-maps {
->>> +			};
->>> +		};
->>> +	};
->>> +
->> This is fine with me. Checking the other patches in the series.
->>
->>>  	soc {
->>>  		compatible = "simple-bus";
->>>  		#address-cells = <1>;
->>> -- 
->>> 1.7.9.5
->>>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index 2fd688c8dbdb..8177bb4d5f53 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -23,7 +23,7 @@ Required properties:
+   "allwinner,sun8i-h3-pinctrl"
+   "allwinner,sun8i-h3-r-pinctrl"
+   "allwinner,sun50i-a64-pinctrl"
+-  "allwinner,sun50i-h5-r-pinctrl"
++  "allwinner,sun50i-h5-pinctrl"
+   "nextthing,gr8-pinctrl"
+ 
+ - reg: Should contain the register physical address and length for the
+-- 
+2.11.0
