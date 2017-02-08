@@ -1,35 +1,103 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] MIPS: ath79: Fix the USB PHY reset names
-Date: Wed, 8 Feb 2017 16:11:47 -0600
-Message-ID: <20170208221147.rwoirkib23s6wuzz@rob-hp-laptop>
-References: <1486324352-15188-1-git-send-email-albeu@free.fr>
- <1486324352-15188-3-git-send-email-albeu@free.fr>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Wed, 8 Feb 2017 23:30:18 +0100
+Message-ID: <20170208223017.GA18807@amd>
+References: <20161023200355.GA5391@amd>
+ <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd>
+ <20161222100104.GA30917@amd>
+ <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd>
+ <20170203123508.GA10286@amd>
+ <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1486324352-15188-3-git-send-email-albeu-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alban <albeu-GANU6spQydw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Antony Pavlov <antonynpavlov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+In-Reply-To: <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org, galak@codeaurora.org, mchehab@osg.samsung.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 05, 2017 at 08:52:32PM +0100, Alban wrote:
-> From: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> 
-> The binding for the USB PHY went thru before the driver. However the
-> new version of the driver now use the PHY core support for reset, and
-> this expect the reset to be named "phy". So remove the "usb-" prefix
-> from the the reset names.
-> 
-> Signed-off-by: Alban Bedel <albeu-GANU6spQydw@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/phy/phy-ath79-usb.txt | 4 ++--
->  arch/mips/boot/dts/qca/ar9132.dtsi                      | 2 +-
->  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2017-02-08 15:36:09, Rob Herring wrote:
+> On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
+> >=20
+> > N900 contains front and back camera, with a switch between the
+> > two. This adds support for the switch component, and it is now
+> > possible to select between front and back cameras during runtime.
+> >=20
+> > This adds documentation for the devicetree binding.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.t=
+xt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+> > new file mode 100644
+> > index 0000000..1b9f8e0
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+> > @@ -0,0 +1,63 @@
+> > +Video Bus Switch Binding
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+>=20
+> I'd call it a mux rather than switch.
+
+It is a switch, not a multiplexor (
+https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
+operate at a time.
+
+> BTW, there's a new mux-controller binding under review you might look=20
+> at. It would only be needed here if the mux ctrl also controls other=20
+> things.
+
+Do you have a pointer?
+
+> > +Required Port nodes
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +More documentation on these bindings is available in
+> > +video-interfaces.txt in the same directory.
+> > +
+> > +reg		: The interface:
+> > +		  0 - port for image signal processor
+> > +		  1 - port for first camera sensor
+> > +		  2 - port for second camera sensor
+>=20
+> This could be used for display side as well. So describe these just as=20
+> inputs and outputs.
+
+I'd prefer not to confuse people. I guess that would be 0 -- output
+port, 1, 2 -- input ports... But this is media data, are you sure it
+is good idea to change this?
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlibm/kACgkQMOfwapXb+vICSwCgmlj2icghfhg3FyPhVYj6YgLO
+r2cAnieWslJV+DG14qFtG7j6lYQRsfyB
+=wQnK
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
