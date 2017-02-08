@@ -1,49 +1,71 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCHv2] dt: bindings: Add support for CSI1 bus
-Date: Wed, 8 Feb 2017 10:38:14 +0200
-Message-ID: <20170208083813.GG13854@valkosipuli.retiisi.org.uk>
-References: <20161228183036.GA13139@amd>
- <20170111225335.GA21553@amd>
- <20170206094956.GA17974@amd>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
+ documentation
+Date: Wed, 8 Feb 2017 09:42:38 +0100
+Message-ID: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
+References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
+ <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
+ <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
+ <20170208053234.GA3102@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170206094956.GA17974@amd>
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, ivo.g.dimitrov.75@gmail.com, sre@kernel.org, pali.rohar@gmail.com, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170208053234.GA3102@localhost>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jayachandran C <jnair@caviumnetworks.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arm@kernel.org" <arm@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Wed, Feb 8, 2017 at 6:32 AM, Jayachandran C <jnair@caviumnetworks.com> wrote:
+> On Tue, Feb 07, 2017 at 04:35:24PM -0600, Rob Herring wrote:
+>> On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair@caviumnetworks.com> wrote:
+>> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>> > new file mode 100644
+>> > index 0000000..82276a2
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+>> > @@ -0,0 +1,5 @@
+>> > +Cavium Thunder2 Family device tree bindings
+>> > +-------------------------------------------
+>> > +
+>> > +Boards with Cavium ThunderX2 CN99XX shall have the root property:
+>> > +  compatible = "cavium,thunder-99xx";
+>>
+>> Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
+>> string. There's a lot of inconsistencies here.
+>
+> I have followed the exiting Thunder naming as well as general DT
+> conventions, Basically:
+>
+> Platform - ARCH_THUNDER2  (for ThunderX2 CN99XX, ARCH_THUNDER is
+>            for ThunderX CN8?XX)
 
-On Mon, Feb 06, 2017 at 10:49:57AM +0100, Pavel Machek wrote:
-> From: Sakari Ailus <sakari.ailus@iki.fi>
-> 
-> In the vast majority of cases the bus type is known to the driver(s)
-> since a receiver or transmitter can only support a single one. There
-> are cases however where different options are possible.
-> 
-> The existing V4L2 OF support tries to figure out the bus type and
-> parse the bus parameters based on that. This does not scale too well
-> as there are multiple serial busses that share common properties.
-> 
-> Some hardware also supports multiple types of busses on the same
-> interfaces.
-> 
-> Document the CSI1/CCP2 property strobe. It signifies the clock or
-> strobe mode.
+The platform name is fine, we don't care too much about that as it is
+easily changed
+if necessary.
 
-Thanks. I split this into two (bus type + strobe). The result is in here:
+> Core - cavium,thunder2 (ThunderX2 cpu core, "cavium,thunder" is ThunderX core)
+> Board/SoC - cavium,thunder-99xx (for ThunderX2, "cavium,thunder-88xx"
+>           is existing ThunderX board)
+>
+> Thunder2 because it is based on the next generation Thunder core, and
+> processor family is ThunderX2 CN99XX.
+>
+> I had thought thru other possibilities as well, this seems the best I
+> could come up with.
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/commit/?h=ccp2>
+We should really avoid having the 'xx' placeholder in there but instead put
+actual chip names in the compatible string, preferably the real ID such as
+"cn8890" for the older chip. I see that we got it wrong for thunder-88xx.dts,
+but that is no reason to duplicate the mistake.
 
-How about the rest? :-) I guess we could get the CCP2 support in omap3isp
-without the video bus switch. It'd be nice to have this in a single
-patchset.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+     Arnd
