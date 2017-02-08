@@ -1,62 +1,52 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH v4] usb: misc: add USB251xB/xBi Hi-Speed Hub Controller
- Driver
-Date: Wed, 8 Feb 2017 09:58:48 +0100
-Message-ID: <ade53079-b4ac-5290-6d05-0d71ddc62ad0@skidata.com>
-References: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+From: Baoyou Xie <baoyou.xie@linaro.org>
+Subject: [PATCH v5 1/3] dt: bindings: add documentation for zx2967 family i2c controller
+Date: Wed,  8 Feb 2017 17:11:05 +0800
+Message-ID: <1486545067-4688-1-git-send-email-baoyou.xie@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486543976-28006-1-git-send-email-richard.leitner@skidata.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, mark.rutland@arm.com, andriy.shevchenko@linux.intel.com, stern@rowland.harvard.edu, dev@g0hl1n.net
+To: shawnguo@kernel.org, andy.shevchenko@gmail.com, jun.nie@linaro.org, baoyou.xie@linaro.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2017 09:52 AM, Richard Leitner wrote:
-> From: Richard Leitner <dev@g0hl1n.net>
+This patch adds dt-binding documentation for zx2967 family
+i2c controller.
 
-Please drop/ignore that "From". This patch is from:
-	Richard Leitner <richard.leitner@skidata.com>
+Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/i2c/i2c-zx2967.txt         | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
 
-> 
-> This patch adds a driver for configuration of the Microchip USB251xB/xBi
-> USB 2.0 hub controller series with USB 2.0 upstream connectivity, SMBus
-> configuration interface and two to four USB 2.0 downstream ports.
-> 
-> Furthermore add myself as a maintainer for this driver.
-> 
-> The datasheet can be found at the manufacturers website, see [1]. All
-> device-tree exposed configuration features have been tested on a i.MX6
-> platform with a USB2512B hub.
-> 
-> [1] http://ww1.microchip.com/downloads/en/DeviceDoc/00001692C.pdf
-> 
-> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
-> ---
-> CHANGES v4:
-> 	- use utf8s_to_utf16s() instead of ascii2utf16le()
-> 	- remove ascii2utf16le() in lib/string.c again
-> 	- remove changes in drivers/usb/core/hcd.c again
-> 	  (I will post a separate patch for using utf8s_to_utf16s()
-> 	  in there too)
-> 
-> CHANGES v3:
-> 	- move ascii2utf16le() to lib/string.c and also use it also for
-> 		ascii2desc in drivers/usb/core/hcd.c
-> 	- remove platform data support from usb251xb driver
-> 
-> CHANGES v2:
-> 	- fix max-{b,s}p-current property name
-> 	- add descriptor string handling from platform_data
-> 	- fix non-dt handling
-> ---
->  Documentation/devicetree/bindings/usb/usb251xb.txt |  83 +++
->  MAINTAINERS                                        |   8 +
->  drivers/usb/misc/Kconfig                           |   9 +
->  drivers/usb/misc/Makefile                          |   1 +
->  drivers/usb/misc/usb251xb.c                        | 674 +++++++++++++++++++++
->  5 files changed, 775 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb251xb.txt
->  create mode 100644 drivers/usb/misc/usb251xb.c
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+new file mode 100644
+index 0000000..a528374
+--- /dev/null
++++ b/Documentation/devicetree/bindings/i2c/i2c-zx2967.txt
+@@ -0,0 +1,24 @@
++ZTE zx2967 I2C controller
++
++Required properties:
++ - compatible: must be "zte,zx296718-i2c"
++ - reg: physical address and length of the device registers
++ - interrupts: a single interrupt specifier
++ - clocks: clock for the device
++ - #address-cells: should be <1>
++ - #size-cells: should be <0>
++ - clock-frequency: the desired I2C bus clock frequency.
++
++Examples:
++
++	i2c@112000 {
++		compatible = "zte,zx296718-i2c";
++		reg = <0x00112000 0x1000>;
++		interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&osc24m>;
++		#address-cells = <1>
++		#size-cells = <0>;
++		clock-frequency = <1600000>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c_global_pin>;
++	};
+-- 
+2.7.4
