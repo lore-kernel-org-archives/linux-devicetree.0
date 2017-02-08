@@ -1,113 +1,209 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH V2 1/3] iommu/arm-smmu: Add pm_runtime/sleep ops
-Date: Wed, 8 Feb 2017 12:54:42 +0000
-Message-ID: <b55359d8-2665-aef0-3215-53a0e8f21bcd@arm.com>
-References: <1486055420-19671-1-git-send-email-sricharan@codeaurora.org>
- <1486055420-19671-2-git-send-email-sricharan@codeaurora.org>
- <20170202174218.GO31394@leverpostej>
- <017701d281f9$927c5fb0$b7751f10$@codeaurora.org>
- <20170208114002.GD15459@leverpostej>
- <018401d28207$34db60a0$9e9221e0$@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v6 3/5] backlight: lm3533: Support initialization from
+ Device Tree
+Date: Wed, 8 Feb 2017 12:54:57 +0000
+Message-ID: <20170208125457.awatbckyqrx3xpzj@dell>
+References: <20170130211719.31017-1-bjorn.andersson@linaro.org>
+ <20170130211719.31017-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <018401d28207$34db60a0$9e9221e0$@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Sricharan <sricharan@codeaurora.org>, 'Mark Rutland' <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, mathieu.poirier@linaro.org, linux-arm-msm@vger.kernel.org, joro@8bytes.org, will.deacon@arm.com, iommu@lists.linux-foundation.org, robh+dt@kernel.org, sboyd@codeaurora.org, linux-arm-kernel@lists.infradead.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170130211719.31017-3-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, daniel.thompson@linaro.org
+Cc: Jingoo Han <jingoohan1@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/02/17 12:30, Sricharan wrote:
-> Hi Mark,
-> 
->> On Wed, Feb 08, 2017 at 04:23:17PM +0530, Sricharan wrote:
->>>> On Thu, Feb 02, 2017 at 10:40:18PM +0530, Sricharan R wrote:
->>>>> +- clock-names:    Should be a pair of "smmu_iface_clk" and "smmu_bus_clk"
->>>>> +                  required for smmu's register group access and interface
->>>>> +                  clk for the smmu's underlying bus access.
->>>>> +
->>>>> +- clocks:         Phandles for respective clocks described by clock-names.
->>>>
->>>> Which SMMU implementations are those clock-names valid for?
->>>>
->>>> The SMMU architecture specifications do not architect the clocks, which
->>>> are implemementation-specific.
->>>>
->>>> AFAICT, this doesn't match MMU-400 or MMU-500.
->>>
->>> Ok, should be more specific. Infact QCOM has MMU-500 and also
->>> a smmu v2 implementation which is fully compatible with
->>> "arm,smmu-v2", with the clocks being controlled by the soc's
->>> clock controller. i was trying to define these clock bindings
->>> so that its works across socs.
->>
->> I don't think we can do that, if we don't know precisely what those
->> clocks are used for.
->>
->> i.e. we'd need a compatible string for the QCOM SMMUv2 variant, which
->> would imply the set of clocks.
->>
-> 
-> Ok, this was what i was trying to do for V3 and will actually put it
-> this way.
+Cc'ing Daniel Thompson, the new Maintainer.
 
-Clocks are not architectural, so it only makes sense to associate them
-with an implementation-specific compatible string. There's also no
-guarantee that different microarchitectures have equivalent internal
-clock domains - I'm not sure if "the SMMU's underlying bus access" is
-meant to refer to accesses *by* the SMMU, i.e. page table walks,
-accesses *through* the SMMU by upstream masters, or both, and the
-differences are rather significant. I'd also note that an MMU-500
-configuration may have up to *33* clocks.
+On Mon, 30 Jan 2017, Bjorn Andersson wrote:
 
->>> So there are one or more interface clocks which are required for the
->>> smmu's interface or the configuration access and one or more clocks
->>> required for smmu's downstream bus access. That was the reason i was
->>> trying to iterate over the list of clocks down below.  But agree that
->>> the bindings should define each of the clocks required separately.
->>
->> As above, I don't think the code should do this. It should only touch
->> the clocks it knows about.
->>
+> From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > 
-> ok, after defining QCOM specific SMMU bindings, this would be become 
-> handling clocks specific to QCOM implementation as per its clock
-> bindings, which as i understand is what you suggest.
+> Implement support for initialization of the lm3533 backlight from Device
+> Tree.
 > 
->>> So one way here is, define a separate compatible for QCOM's SMMU
->>> implementation and define all the clock bindings as a part of it
->>> and handle it in the same way in the driver.
->>
->> That would be my preference.
->>
+> Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> ok.
+> Note that this patch can be merged independently of the other patches in the
+> series.
+> 
+> Changes since v5:
+> - None
+> 
+> Changes since v4:
+> - Acks from Pavel and Jingoo
+> 
+> Changes since v3:
+> - Moved backlight DT parsing from mfd driver
+> - Gave driver its own compatible
+> 
+>  drivers/video/backlight/lm3533_bl.c | 98 +++++++++++++++++++++++++++++++++++--
+>  1 file changed, 95 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/lm3533_bl.c b/drivers/video/backlight/lm3533_bl.c
+> index 0e2337f367b6..2f132199e604 100644
+> --- a/drivers/video/backlight/lm3533_bl.c
+> +++ b/drivers/video/backlight/lm3533_bl.c
+> @@ -22,6 +22,7 @@
+>  
+>  
+>  #define LM3533_HVCTRLBANK_COUNT		2
+> +#define LM3533_BL_DEFAULT_BRIGHTNESS	200
+>  #define LM3533_BL_MAX_BRIGHTNESS	255
+>  
+>  #define LM3533_REG_CTRLBANK_AB_BCONF	0x1a
+> @@ -269,6 +270,86 @@ static int lm3533_bl_setup(struct lm3533_bl *bl,
+>  	return lm3533_ctrlbank_set_pwm(&bl->cb, pdata->pwm);
+>  }
+>  
+> +static int lm3533_of_parse_pwm_zones(struct device_node *node)
+> +{
+> +	const char *propname = "ti,pwm-zones";
+> +	u32 zones[5];
+> +	int count;
+> +	int ret;
+> +	int i;
+> +
+> +	count = of_property_count_u32_elems(node, propname);
+> +	if (count == -EINVAL)
+> +		return 0;
+> +	if (count <= 0)
+> +		return count;
+> +	if (count >= ARRAY_SIZE(zones))
+> +		return -EINVAL;
+> +
+> +	ret = of_property_read_u32_array(node, propname, zones, count);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Enable pwm input, and enable the selected zones */
+> +	ret = BIT(0);
+> +	for (i = 0; i < count; i++)
+> +		ret |= BIT(zones[i] + 1);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct lm3533_bl_platform_data *lm3533_bl_of_parse(struct device *dev,
+> +							  int *id)
+> +{
+> +	struct lm3533_bl_platform_data *bl_pdata;
+> +	struct device_node *node = dev->of_node;
+> +	int ret;
+> +	u32 reg;
+> +	u32 val;
+> +
+> +	bl_pdata = devm_kzalloc(dev, sizeof(*bl_pdata), GFP_KERNEL);
+> +	if (!bl_pdata)
+> +		return NULL;
+> +
+> +	ret = of_property_read_u32(node, "reg", &reg);
+> +	if (ret < 0) {
+> +		dev_err(dev, "invalid reg property\n");
+> +		return NULL;
+> +	}
+> +	*id = reg;
+> +
+> +	ret = of_property_read_string(node, "label",
+> +				      (const char **)&bl_pdata->name);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse label\n");
+> +		return NULL;
+> +	}
+> +
+> +	ret = of_property_read_u32(node, "led-max-microamp", &val);
+> +	if (ret < 0) {
+> +		dev_err(dev, "unable to parse led-max-microamp\n");
+> +		return NULL;
+> +	}
+> +	bl_pdata->max_current = val;
+> +
+> +	val = LM3533_BL_DEFAULT_BRIGHTNESS;
+> +	ret = of_property_read_u32(node, "default-brightness", &val);
+> +	if (ret < 0 && ret != -EINVAL) {
+> +		dev_err(dev, "unable to parse default-brightness\n");
+> +		return NULL;
+> +	}
+> +	bl_pdata->default_brightness = val;
+> +
+> +	ret = lm3533_of_parse_pwm_zones(node);
+> +	if (ret < 0) {
+> +		dev_err(dev, "failed to parse ti,pwm-zones\n");
+> +		return NULL;
+> +	}
+> +	bl_pdata->pwm = ret;
+> +
+> +	return bl_pdata;
+> +}
+> +
+>  static int lm3533_bl_probe(struct platform_device *pdev)
+>  {
+>  	struct lm3533 *lm3533;
+> @@ -277,6 +358,7 @@ static int lm3533_bl_probe(struct platform_device *pdev)
+>  	struct backlight_device *bd;
+>  	struct backlight_properties props;
+>  	int ret;
+> +	int id;
+>  
+>  	dev_dbg(&pdev->dev, "%s\n", __func__);
+>  
+> @@ -284,14 +366,17 @@ static int lm3533_bl_probe(struct platform_device *pdev)
+>  	if (!lm3533)
+>  		return -EINVAL;
+>  
+> +	id = pdev->id;
+>  	pdata = dev_get_platdata(&pdev->dev);
+> +	if (!pdata)
+> +		pdata = lm3533_bl_of_parse(&pdev->dev, &id);
+>  	if (!pdata) {
+>  		dev_err(&pdev->dev, "no platform data\n");
+>  		return -EINVAL;
+>  	}
+>  
+> -	if (pdev->id < 0 || pdev->id >= LM3533_HVCTRLBANK_COUNT) {
+> -		dev_err(&pdev->dev, "illegal backlight id %d\n", pdev->id);
+> +	if (id < 0 || id >= LM3533_HVCTRLBANK_COUNT) {
+> +		dev_err(&pdev->dev, "illegal backlight id %d\n", id);
+>  		return -EINVAL;
+>  	}
+>  
+> @@ -300,7 +385,7 @@ static int lm3533_bl_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	bl->lm3533 = lm3533;
+> -	bl->id = pdev->id;
+> +	bl->id = id;
+>  
+>  	bl->cb.lm3533 = lm3533;
+>  	bl->cb.id = lm3533_bl_get_ctrlbank_id(bl);
+> @@ -394,10 +479,17 @@ static void lm3533_bl_shutdown(struct platform_device *pdev)
+>  	lm3533_ctrlbank_disable(&bl->cb);
+>  }
+>  
+> +static const struct of_device_id lm3533_bl_of_match[] = {
+> +	{ .compatible = "ti,lm3533-backlight", },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, lm3533_bl_of_match);
+> +
+>  static struct platform_driver lm3533_bl_driver = {
+>  	.driver = {
+>  		.name	= "lm3533-backlight",
+>  		.pm	= &lm3533_bl_pm_ops,
+> +		.of_match_table = lm3533_bl_of_match,
+>  	},
+>  	.probe		= lm3533_bl_probe,
+>  	.remove		= lm3533_bl_remove,
 
-Either way, the QCOM implementation deserves its own compatible if only
-for the sake of the imp-def gaps in the architecture (e.g. FSR.SS
-behaviour WRT to IRQs as touched upon in the other thread).
-
-Robin.
-
->>> But just thinking if it would scale well for any other soc that is
->>> compatible with arm,smmu-v2 driver and wants to handle clocks in the
->>> future ?
->>
->> I don't think we can have our cake and eat it here. Either we handle the
->> clock management for each variant, or we don't do it at all. We have no
->> idea what requirements a future variant might have w.r.t. the management
->> of clocks we don't know about yet.
->>
-> 
-> Right, at this point, this is first soc which adds the clocks in to the driver.
-> Feels if the clocks are initialized and enabled/disabled as a part of some
-> implementation specific callbacks, that would help always because that is
-> the part which is going to different for each implementation and patches 2,3
-> would remain common. Finally, as you have suggested will introduce new
-> SMMU binding in the case of QCOM and will try to handle clocks specifically for that
-> implementation and see how it looks.
-> 
-> Regards,
->  Sricharan
-> 
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
