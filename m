@@ -1,116 +1,73 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v3 3/3] ASoC: zx-i2s: introduce pclk for zx2967
-	family
-Date: Wed,  8 Feb 2017 11:02:35 +0800
-Message-ID: <1486522955-14528-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
+From: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for GPU
+Date: Tue, 7 Feb 2017 20:23:54 -0800
+Message-ID: <20170208042351.GB6809@localhost.localdomain>
+References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
+ <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com>
+ <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com>
+ <20170208041929.GA6809@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, jun.nie@linaro.org, baoyou.xie@linaro.org, mturquette@baylibre.com, sboyd@codeaurora.org, perex@perex.cz, tiwai@suse.com, shawn.guo@linaro.org, vinod.koul@intel.com
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, mathieu.poirier@linaro.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, wang.qiang01@zte.com.cn, shawnguo@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170208041929.GA6809-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, kernel-TqfNSX0MhmxHKSADF0wUEw@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The pclk is necessary for zx2967 I2S controller. the driver
-currently doesn't handle it. This is something we need to fix.
+On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
+> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
+> > As suggested by Eduardo Valentin this adds the thermal zone for
+> > the bcm2835 SoC. Since we currently don't have any cooling devices
+> > leave this section empty.
+> > 
+> > Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
+> >  1 file changed, 19 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> > index 9c7ec7e..359da9d 100644
+> > --- a/arch/arm/boot/dts/bcm283x.dtsi
+> > +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> > @@ -19,6 +19,25 @@
+> >  		bootargs = "earlyprintk console=ttyAMA0";
+> >  	};
+> >  
+> > +	thermal-zones {
+> > +		gpu_thermal: gpu-thermal {
+> > +			polling-delay-passive = <0>;
+> > +			polling-delay = <1000>;
+> > +
+> > +			thermal-sensors = <&thermal>;
 
-In turn, the driver supports zx296718's I2S controller.
+Just came to my mind, dont you need to have an id to specify with sensor
+points to gpu?
 
-By the way, this patch also change the clock name from tx to wclk
-to make it clear.
-
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
----
- sound/soc/zte/zx-i2s.c | 37 ++++++++++++++++++++++++++++---------
- 1 file changed, 28 insertions(+), 9 deletions(-)
-
-diff --git a/sound/soc/zte/zx-i2s.c b/sound/soc/zte/zx-i2s.c
-index ed7a56d..2d486ea 100644
---- a/sound/soc/zte/zx-i2s.c
-+++ b/sound/soc/zte/zx-i2s.c
-@@ -95,7 +95,7 @@
- struct zx_i2s_info {
- 	struct snd_dmaengine_dai_dma_data	dma_playback;
- 	struct snd_dmaengine_dai_dma_data	dma_capture;
--	struct clk				*dai_clk;
-+	struct clk				*dai_wclk, *dai_pclk;
- 	void __iomem				*reg_base;
- 	int					master;
- 	resource_size_t				mapbase;
-@@ -275,8 +275,9 @@ static int zx_i2s_hw_params(struct snd_pcm_substream *substream,
- 	writel_relaxed(val, i2s->reg_base + ZX_I2S_TIMING_CTRL);
- 
- 	if (i2s->master)
--		ret = clk_set_rate(i2s->dai_clk,
--				   params_rate(params) * ch_num * CLK_RAT);
-+		ret = clk_set_rate(i2s->dai_wclk,
-+				params_rate(params) * ch_num * CLK_RAT);
-+
- 	return ret;
- }
- 
-@@ -328,8 +329,19 @@ static int zx_i2s_startup(struct snd_pcm_substream *substream,
- 			  struct snd_soc_dai *dai)
- {
- 	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
-+	int ret;
-+
-+	ret = clk_prepare_enable(zx_i2s->dai_wclk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(zx_i2s->dai_pclk);
-+	if (ret) {
-+		clk_disable_unprepare(zx_i2s->dai_wclk);
-+		return ret;
-+	}
- 
--	return clk_prepare_enable(zx_i2s->dai_clk);
-+	return ret;
- }
- 
- static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
-@@ -337,7 +349,8 @@ static void zx_i2s_shutdown(struct snd_pcm_substream *substream,
- {
- 	struct zx_i2s_info *zx_i2s = dev_get_drvdata(dai->dev);
- 
--	clk_disable_unprepare(zx_i2s->dai_clk);
-+	clk_disable_unprepare(zx_i2s->dai_wclk);
-+	clk_disable_unprepare(zx_i2s->dai_pclk);
- }
- 
- static struct snd_soc_dai_ops zx_i2s_dai_ops = {
-@@ -381,10 +394,16 @@ static int zx_i2s_probe(struct platform_device *pdev)
- 	if (!zx_i2s)
- 		return -ENOMEM;
- 
--	zx_i2s->dai_clk = devm_clk_get(&pdev->dev, "tx");
--	if (IS_ERR(zx_i2s->dai_clk)) {
--		dev_err(&pdev->dev, "Fail to get clk\n");
--		return PTR_ERR(zx_i2s->dai_clk);
-+	zx_i2s->dai_wclk = devm_clk_get(&pdev->dev, "wclk");
-+	if (IS_ERR(zx_i2s->dai_wclk)) {
-+		dev_err(&pdev->dev, "Fail to get wclk\n");
-+		return PTR_ERR(zx_i2s->dai_wclk);
-+	}
-+
-+	zx_i2s->dai_pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(zx_i2s->dai_pclk)) {
-+		dev_info(&pdev->dev, "have no pclk\n");
-+		zx_i2s->dai_pclk = NULL;
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--- 
-2.7.4
+> > +
+> > +			trips {
+> > +				cpu-crit {
+> > +					temperature	= <80000>;
+> > +					hysteresis	= <0>;
+> > +					type		= "critical";
+> > +				};
+> > +			};
+> > +			cooling-maps {
+> > +			};
+> > +		};
+> > +	};
+> > +
+> 
+> This is fine with me. Checking the other patches in the series.
+> 
+> >  	soc {
+> >  		compatible = "simple-bus";
+> >  		#address-cells = <1>;
+> > -- 
+> > 1.7.9.5
+> > 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
