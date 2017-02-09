@@ -1,89 +1,90 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/6] DRM OF graph clean-up
-Date: Thu,  9 Feb 2017 13:05:52 -0600
-Message-ID: <20170209190558.4784-1-robh@kernel.org>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 3/5] arm64: dts: add device tree for ARCH_THUNDER2
+Date: Thu,  9 Feb 2017 19:12:56 +0000
+Message-ID: <1486667576-8122-1-git-send-email-jnair@caviumnetworks.com>
+References: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel.vetter-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xinliang Liu <z.liuxinliang-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Rongrong Zou <zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puc>
+To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I've been unhappy with the OF graph API for some time and decided to
-do something about it. The problem is drivers have to do too much of the
-graph parsing and walking themselves. This has led to the same pattern
-duplicated over and over. This series adds 2 new helpers and adapts DRM
-drivers to use them. It only adds one new graph helper, but reduces the
-use of the others which I hope to remove at some point. But we're not
-there yet.
+Add a device tree file for boards using the Cavium's ThunderX2 CN99XX
+ARM64 processors. The SoC is compatible with the discontinued Broadcom
+Vulcan ARM64 SoC.
 
-I plan to apply patch #1 to the DT tree for v4.11. The rest I will respin
-for 4.12 after -rc1 to avoid any cross tree dependencies.
+Update the Makefile to build the thunder-99xx.dtb when ARCH_THUNDER2
+option is selected.
 
-The build coverage should be a bit better than v1. Testing appreciated. A
-git branch is here[1].
+Signed-off-by: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+---
 
-Rob
+Patches 1,2,5 of this series have been applied, sending this with
+suggested changes to compat string.
 
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git of-graph-helpers
+v3->v4
+ * compat ID updated to follow convention.
 
-Rob Herring (6):
-  of: introduce of_graph_get_remote_node
-  drm: make of_drm_find_panel also depend on CONFIG_DRM_PANEL
-  drm: of: introduce drm_of_find_panel_or_bridge
-  drm: convert drivers to use of_graph_get_remote_node
-  drm: convert drivers to use drm_of_find_panel_or_bridge
-  drm: omap: use common OF graph helpers
+ arch/arm64/boot/dts/cavium/Makefile         |  1 +
+ arch/arm64/boot/dts/cavium/thunder-99xx.dts | 34 +++++++++++++++++++++++++++++
+ 2 files changed, 35 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/cavium/thunder-99xx.dts
 
- drivers/gpu/drm/arm/hdlcd_drv.c                  |  22 +----
- drivers/gpu/drm/arm/malidp_drv.c                 |  28 +------
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_output.c |  64 +++-----------
- drivers/gpu/drm/bridge/adv7511/adv7533.c         |  12 +--
- drivers/gpu/drm/bridge/dumb-vga-dac.c            |  15 +---
- drivers/gpu/drm/bridge/nxp-ptn3460.c             |  16 +---
- drivers/gpu/drm/bridge/parade-ps8622.c           |  16 +---
- drivers/gpu/drm/bridge/tc358767.c                |  27 +-----
- drivers/gpu/drm/bridge/ti-tfp410.c               |  15 ++--
- drivers/gpu/drm/drm_of.c                         |  52 ++++++++++++
- drivers/gpu/drm/exynos/exynos_dp.c               |  35 +++-----
- drivers/gpu/drm/exynos/exynos_drm_dpi.c          |  16 +---
- drivers/gpu/drm/exynos/exynos_drm_dsi.c          |  13 +--
- drivers/gpu/drm/exynos/exynos_drm_mic.c          |  27 +-----
- drivers/gpu/drm/fsl-dcu/fsl_dcu_drm_rgb.c        |  49 ++++-------
- drivers/gpu/drm/hisilicon/kirin/dw_drm_dsi.c     |  27 +-----
- drivers/gpu/drm/hisilicon/kirin/kirin_drm_drv.c  |  30 +------
- drivers/gpu/drm/imx/imx-ldb.c                    |  27 ++----
- drivers/gpu/drm/imx/parallel-display.c           |  36 +-------
- drivers/gpu/drm/mediatek/mtk_dpi.c               |  12 +--
- drivers/gpu/drm/mediatek/mtk_dsi.c               |  23 ++---
- drivers/gpu/drm/mediatek/mtk_hdmi.c              |  26 +-----
- drivers/gpu/drm/meson/meson_venc_cvbs.c          |  19 +----
- drivers/gpu/drm/msm/dsi/dsi_host.c               |   3 +-
- drivers/gpu/drm/msm/mdp/mdp4/mdp4_kms.c          |  28 +------
- drivers/gpu/drm/mxsfb/mxsfb_out.c                |  36 ++------
- drivers/gpu/drm/omapdrm/dss/dpi.c                |   2 +-
- drivers/gpu/drm/omapdrm/dss/dsi.c                |   3 +-
- drivers/gpu/drm/omapdrm/dss/dss-of.c             | 102 +----------------------
- drivers/gpu/drm/omapdrm/dss/dss.c                |  61 +++-----------
- drivers/gpu/drm/omapdrm/dss/hdmi4.c              |   3 +-
- drivers/gpu/drm/omapdrm/dss/hdmi5.c              |   3 +-
- drivers/gpu/drm/omapdrm/dss/omapdss.h            |  11 ---
- drivers/gpu/drm/omapdrm/dss/sdi.c                |   2 +-
- drivers/gpu/drm/omapdrm/dss/venc.c               |   3 +-
- drivers/gpu/drm/rockchip/analogix_dp-rockchip.c  |  26 +-----
- drivers/gpu/drm/rockchip/rockchip_drm_drv.c      |  18 ++--
- drivers/gpu/drm/sun4i/sun4i_rgb.c                |  13 ++-
- drivers/gpu/drm/sun4i/sun4i_tcon.c               |  90 ++------------------
- drivers/gpu/drm/tilcdc/tilcdc_crtc.c             |  12 +--
- drivers/gpu/drm/tilcdc/tilcdc_external.c         |  68 ++-------------
- drivers/gpu/drm/vc4/vc4_dpi.c                    |  15 +---
- drivers/of/base.c                                |  37 ++++++++
- include/drm/drm_of.h                             |  13 +++
- include/drm/drm_panel.h                          |   2 +-
- include/linux/of_graph.h                         |   8 ++
- 46 files changed, 280 insertions(+), 886 deletions(-)
-
---
-2.10.1
+diff --git a/arch/arm64/boot/dts/cavium/Makefile b/arch/arm64/boot/dts/cavium/Makefile
+index e34f89d..557c8be 100644
+--- a/arch/arm64/boot/dts/cavium/Makefile
++++ b/arch/arm64/boot/dts/cavium/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_THUNDER) += thunder-88xx.dtb
++dtb-$(CONFIG_ARCH_THUNDER2) += thunder-99xx.dtb
+ 
+ always		:= $(dtb-y)
+ subdir-y	:= $(dts-dirs)
+diff --git a/arch/arm64/boot/dts/cavium/thunder-99xx.dts b/arch/arm64/boot/dts/cavium/thunder-99xx.dts
+new file mode 100644
+index 0000000..6d6e8af
+--- /dev/null
++++ b/arch/arm64/boot/dts/cavium/thunder-99xx.dts
+@@ -0,0 +1,34 @@
++/*
++ * dts file for Cavium ThunderX2 CN99XX based Evaluation Boards
++ *
++ * Copyright (c) 2017 Cavium Inc.
++ * Copyright (c) 2013-2016 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation; either version 2 of
++ * the License, or (at your option) any later version.
++ */
++
++/dts-v1/;
++
++#include "../broadcom/vulcan.dtsi"
++
++/ {
++	model = "Cavium ThunderX2 CN99XX";
++	compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
++
++	memory {
++		device_type = "memory";
++		reg = <0x00000000 0x80000000 0x0 0x80000000>,  /* 2G @ 2G  */
++		      <0x00000008 0x80000000 0x0 0x80000000>;  /* 2G @ 34G */
++	};
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++};
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
