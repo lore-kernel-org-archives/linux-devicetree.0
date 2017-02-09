@@ -1,88 +1,73 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
-Date: Thu, 9 Feb 2017 18:56:18 +0000
-Message-ID: <20170209185618.GA1792@arm.com>
-References: <20170201195732-mutt-send-email-mst@kernel.org>
-	<20170201182659.GM8177@arm.com>
-	<20170201210648-mutt-send-email-mst@kernel.org>
-	<20170202112614.GB30577@arm.com>
-	<bb041fbe-3fde-0dc1-ae28-cca5acfe9dc5@arm.com>
-	<20170202182224-mutt-send-email-mst@kernel.org>
-	<20170202164049.GI13839@arm.com>
-	<20170209201341-mutt-send-email-mst@kernel.org>
-	<20170209183118.GI19397@arm.com>
-	<20170209203752-mutt-send-email-mst@kernel.org>
+From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
+ documentation
+Date: Thu, 9 Feb 2017 19:05:23 +0000
+Message-ID: <20170209190523.GA6791@localhost>
+References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
+ <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
+ <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
+ <20170208053234.GA3102@localhost>
+ <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170209203752-mutt-send-email-mst@kernel.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
-List-Post: <mailto:virtualization@lists.linux-foundation.org>
-List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
-	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
-Sender: virtualization-bounces@lists.linux-foundation.org
-Errors-To: virtualization-bounces@lists.linux-foundation.org
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, pawel.moll@arm.com, virtualization@lists.linux-foundation.org, robh+dt@kernel.org, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 08:49:41PM +0200, Michael S. Tsirkin wrote:
-> On Thu, Feb 09, 2017 at 06:31:18PM +0000, Will Deacon wrote:
-> > On Thu, Feb 09, 2017 at 08:17:16PM +0200, Michael S. Tsirkin wrote:
-> > > On Thu, Feb 02, 2017 at 04:40:49PM +0000, Will Deacon wrote:
-> > > > On Thu, Feb 02, 2017 at 06:30:28PM +0200, Michael S. Tsirkin wrote:
-> > > > > I am inclined to say, for 4.10 let's revert
-> > > > > c7070619f3408d9a0dffbed9149e6f00479cf43b since what it fixes is not a
-> > > > > regression in 4.10.
-> > > > 
-> > > > No complaints there, as long as we can keep working to fix this for 4.11
-> > > > and onwards. You'll also need to cc stable on the revert.
-> > > > 
-> > > > > So I think we can defer the fix to 4.11.
-> > > > > I think we still want f7f6634d23830ff74335734fbdb28ea109c1f349
-> > > > > for hosts with virtio 1 support.
-> > > > > 
-> > > > > All this will hopefully push hosts to just implement virtio 1.
-> > > > > For mmio the changes are very small: several new registers,
-> > > > > that's all. You want this for proper 64 bit dma mask anyway.
-> > > > 
-> > > > As I've said, virtio 1 will have exactly the same issue unless we start
-> > > > requiring firmware to advertise dma-coherent/_CCA for virtio-mmio
-> > > > devices correctly.
-> > > > 
-> > > 
-> > > OK I read up on _CCA in ACPI spec. It says:
-> > > The _CCA object returns whether or not a bus-master device supports
-> > > hardware managed cache coherency. Expected values are 0 to indicate it
-> > > is not supported, and 1 to indicate that it is supported.
-> > > 
-> > > So if host is cache coherent, and guest thinks it isn't, we incur
-> > > unnecessary overhead by wasting coherent memory.
-> > > I get that but you said it actually breaks - why does it?
-> > 
-> > It breaks because QEMU doesn't set _CCA for virtio-mmio devices, and that
-> > only becomes a problem when we use the DMA API, because that results in the
-> > guest taking out a non-cacheable mapping. On ARM (and other archs such as
-> > Power), having a mismatch between a cacheable and a non-cacheable mapping
-> > can result in a loss of coherency between the two (for example, if the
-> > non-cacheable gues accesses bypass the cache, but the cacheable host
-> > accesses allocate in the cache).
-> > 
-> I see. And I guess using a cacheable mapping is significantly faster.
-> I would say we want to typically use cacheable for virtio then,
-> whether we bypass the IOMMU or not. I guess this is why we always set
-> _CCA/DT correctly, right?
+On Wed, Feb 08, 2017 at 09:42:38AM +0100, Arnd Bergmann wrote:
+> On Wed, Feb 8, 2017 at 6:32 AM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> > On Tue, Feb 07, 2017 at 04:35:24PM -0600, Rob Herring wrote:
+> >> On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
+> >> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+> >> > new file mode 100644
+> >> > index 0000000..82276a2
+> >> > --- /dev/null
+> >> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
+> >> > @@ -0,0 +1,5 @@
+> >> > +Cavium Thunder2 Family device tree bindings
+> >> > +-------------------------------------------
+> >> > +
+> >> > +Boards with Cavium ThunderX2 CN99XX shall have the root property:
+> >> > +  compatible = "cavium,thunder-99xx";
+> >>
+> >> Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
+> >> string. There's a lot of inconsistencies here.
+> >
+> > I have followed the exiting Thunder naming as well as general DT
+> > conventions, Basically:
+> >
+> > Platform - ARCH_THUNDER2  (for ThunderX2 CN99XX, ARCH_THUNDER is
+> >            for ThunderX CN8?XX)
+> 
+> The platform name is fine, we don't care too much about that as it is
+> easily changed
+> if necessary.
+> 
+> > Core - cavium,thunder2 (ThunderX2 cpu core, "cavium,thunder" is ThunderX core)
+> > Board/SoC - cavium,thunder-99xx (for ThunderX2, "cavium,thunder-88xx"
+> >           is existing ThunderX board)
+> >
+> > Thunder2 because it is based on the next generation Thunder core, and
+> > processor family is ThunderX2 CN99XX.
+> >
+> > I had thought thru other possibilities as well, this seems the best I
+> > could come up with.
+> 
+> We should really avoid having the 'xx' placeholder in there but instead put
+> actual chip names in the compatible string, preferably the real ID such as
+> "cn8890" for the older chip. I see that we got it wrong for thunder-88xx.dts,
+> but that is no reason to duplicate the mistake.
 
-At the moment, _CCA/DT is pretty much never set correctly for virtio-mmio
-(that is, it isn't set even though the device is cache coherent). If it
-*was* set correctly, then we wouldn't have needed to revert my patch.
+Ok. Looks like 1,2,5 of the patchset is already applied. Thanks!
 
-Robin's patch to only use the DMA API if _CCA/DT is present would work
-(although the thing that he posted was buggy iirc).
+I will follow up with v4 of 3,4 with a better ID.
 
-Will
+JC.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
