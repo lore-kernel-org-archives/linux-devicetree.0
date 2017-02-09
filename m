@@ -1,47 +1,127 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH v3 0/2] Add a "label" property to the mtd device
-Date: Thu, 9 Feb 2017 21:25:32 +0100
-Message-ID: <ceb3ad29-a5fc-86d5-a2f3-dd2c1620fc57@gmail.com>
-References: <1486632068-14894-1-git-send-email-clg@kaod.org>
+From: "Michael S. Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH] virtio: Try to untangle DMA coherency
+Date: Thu, 9 Feb 2017 22:57:03 +0200
+Message-ID: <20170209225635-mutt-send-email-mst@kernel.org>
+References: <8a6494f6409c20b4609cd6bdcdd751f68b5c0564.1485951731.git.robin.murphy@arm.com>
+	<20170201195732-mutt-send-email-mst@kernel.org>
+	<20170201182659.GM8177@arm.com>
+	<20170201210648-mutt-send-email-mst@kernel.org>
+	<d6ded13e-aa48-023b-3a71-1c40aa5fced0@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1486632068-14894-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>, linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <virtualization-bounces@lists.linux-foundation.org>
+Content-Disposition: inline
+In-Reply-To: <d6ded13e-aa48-023b-3a71-1c40aa5fced0@suse.de>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/virtualization/>
+List-Post: <mailto:virtualization@lists.linux-foundation.org>
+List-Help: <mailto:virtualization-request@lists.linux-foundation.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/virtualization>,
+	<mailto:virtualization-request@lists.linux-foundation.org?subject=subscribe>
+Sender: virtualization-bounces@lists.linux-foundation.org
+Errors-To: virtualization-bounces@lists.linux-foundation.org
+To: Alexander Graf <agraf@suse.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, rob.herring@linaro.org, devicetree@vger.kernel.org, Will Deacon <Will.Deacon@arm.com>, virtualization@lists.linux-foundation.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDkvMjAxNyAxMDoyMSBBTSwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3JvdGU6Cj4gSGVsbG8s
-Cj4gCj4gSGVyZXIgYXJlIGEgY291cGxlIG9mIHBhdGNoZXMgYWRkaW5nIGEgImxhYmVsIiBwcm9w
-ZXJ0eSB0byB0aGUgbXRkCj4gZGV2aWNlLCB3aGljaCBjYW4gYmUgdXNlZCB0byBpZGVudGlmeSBh
-IHNwZWNpZmljIGNoaXAgb24gYSBzeXN0ZW0gd2l0aAo+IG11bHRpcGxlIGNoaXBzLiBUaGlzIGlz
-IGNvbW1vbiBvbiB0aGUgT3BlblBvd2VyIGJvYXJkcywgdGhlcmUgY2FuIGJlCj4gZm91ciBjaGlw
-cyBob2xkaW5nIHRoZSBmaXJtd2FyZSBmb3IgdGhlIEJNQyBhbmQgdGhlIGZpcm13YXJlIGZvciB0
-aGUKPiBob3N0LCBwbHVzIGNoaXBzIHdpdGggZ29sZGVuIGltYWdlcyBmb3IgcmVjb3ZlcnkuCgpT
-ZXJpZXMgaXMKUmV2aWV3ZWQtYnk6IE1hcmVrIFZhc3V0IDxtYXJlay52YXN1dEBnbWFpbC5jb20+
-Cgo+IFRoYW5rcywKPiAKPiBDLgo+IAo+ICBDaGFuZ2VzIHNpbmNlIHYyOgo+IAo+ICAtIG9ubHkg
-YXNzaWduIGRldmljZSBuYW1lIGZyb20gbGFiZWwgaWYgbXRkLT5uYW1lIGlzIHVuZGVmaW5lZAo+
-IAo+ICBDaGFuZ2VzIHNpbmNlIHYxOgo+IAo+ICAtIG1vdmVkIHRoZSB1c2Ugb2YgdGhlICJsYWJl
-bCIgcHJvcGVydHkgZnJvbSBtdGRfc2V0X2Rldl9kZWZhdWx0cygpCj4gICAgdG8gbXRkX3NldF9v
-Zl9ub2RlKCkgdG8gbGV0IGRyaXZlcnMga2VlcCBjb250cm9sIG9uIGhvdyBtdGQtPm5hbWUKPiAg
-ICBpcyBzZXQgYW5kIGFsbG9jYXRlZC4KPiAKPiBDw6lkcmljIExlIEdvYXRlciAoMik6Cj4gICBt
-dGQ6IG5hbWUgdGhlIG10ZCBkZXZpY2Ugd2l0aCBhbiBvcHRpb25hbCBsYWJlbCBwcm9wZXJ0eQo+
-ICAgZHQtYmluZGluZ3M6IG10ZDogYWRkIGEgY29tbW9uIGxhYmVsIHByb3BlcnR5IHRvIGFsbCBt
-dGQgZGV2aWNlcwo+IAo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2Nv
-bW1vbi50eHQgfCAxNSArKysrKysrKysrKysrKysKPiAgaW5jbHVkZS9saW51eC9tdGQvbXRkLmgg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHwgIDMgKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMTgg
-aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL210ZC9jb21tb24udHh0Cj4gCgoKLS0gCkJlc3QgcmVnYXJkcywKTWFyZWsg
-VmFzdXQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+On Wed, Feb 08, 2017 at 01:58:10PM +0100, Alexander Graf wrote:
+> On 02/01/2017 08:19 PM, Michael S. Tsirkin wrote:
+> > On Wed, Feb 01, 2017 at 06:27:09PM +0000, Will Deacon wrote:
+> > > On Wed, Feb 01, 2017 at 08:09:21PM +0200, Michael S. Tsirkin wrote:
+> > > > On Wed, Feb 01, 2017 at 12:25:57PM +0000, Robin Murphy wrote:
+> > > > > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > > > > index 7e38ed79c3fc..961af25b385c 100644
+> > > > > --- a/drivers/virtio/virtio_ring.c
+> > > > > +++ b/drivers/virtio/virtio_ring.c
+> > > > > @@ -20,6 +20,7 @@
+> > > > >  #include <linux/virtio_ring.h>
+> > > > >  #include <linux/virtio_config.h>
+> > > > >  #include <linux/device.h>
+> > > > > +#include <linux/property.h>
+> > > > >  #include <linux/slab.h>
+> > > > >  #include <linux/module.h>
+> > > > >  #include <linux/hrtimer.h>
+> > > > > @@ -160,10 +161,14 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> > > > >  		return true;
+> > > > > 
+> > > > >  	/*
+> > > > > -	 * On ARM-based machines, the DMA ops will do the right thing,
+> > > > > -	 * so always use them with legacy devices.
+> > > > > +	 * On ARM-based machines, the coherent DMA ops will do the right
+> > > > > +	 * thing, so always use them with legacy devices. However, using
+> > > > > +	 * non-coherent DMA when the host *is* actually coherent, but has
+> > > > > +	 * forgotten to tell us, is going to break badly; since this situation
+> > > > > +	 * already exists in the wild, maintain the old behaviour there.
+> > > > >  	 */
+> > > > > -	if (IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64))
+> > > > > +	if ((IS_ENABLED(CONFIG_ARM) || IS_ENABLED(CONFIG_ARM64)) &&
+> > > > > +	    device_get_dma_attr(&vdev->dev) == DEV_DMA_COHERENT)
+> > > > >  		return !virtio_has_feature(vdev, VIRTIO_F_VERSION_1);
+> > > > > 
+> > > > >  	return false;
+> > > > 
+> > > > This is exactly what I feared.
+> > > 
+> > > Yes, sorry about this. It works fine for virtio-pci (where "dma-coherent"
+> > > is used) and it also works on the fastmodel if you disable cache-modelling
+> > > (which is needed to make the thing run at a usable pace) so we didn't spot
+> > > this in testing.
+> > > 
+> > > > Could we identify fastboot and do the special dance just for it?
+> > > 
+> > > [assuming you mean fastmodel instead of fastboot]
+> > > 
+> > > > I'd like to do that instead. It's fastboot doing the unreasonable thing
+> > > > here and deviating from what every other legacy device without exception
+> > > > did for years. If this means fastboot will need to update to virtio 1,
+> > > > all the better.
+> > > 
+> > > The problem still exists with virtio 1, unless we require that the
+> > > "dma-coherent" property is set/unset correctly when VIRTIO_F_IOMMU_PLATFORM
+> > > is advertised by the device (which is what I suggested in my reply).
+> > 
+> > I'm not ignoring that, but I need to understand that part a bit better.
+> > I'll reply to that patch in a day or two after looking at how _CCA is
+> > supposed to work.
+> > 
+> > > We can't detect the fastmodel,
+> > 
+> > Surely, it puts a hardware id somewhere? I think you mean
+> > fastmodel isn't always affected, right?
+> > 
+> > > but we could implicitly treat virtio-mmio
+> > > devices as cache-coherent regardless of the "dma-coherent" flag. I already
+> > > prototyped this, but I suspect the devicetree people will push back (and
+> > > there's a similar patch needed for ACPI).
+> > > 
+> > > See below. Do you prefer this approach?
+> > > 
+> > > Will
+> > > 
+> > > --->8
+> > 
+> > I'd like to see basically
+> > 
+> > if (fastmodel)
+> > 	a pile of special work-arounds
+> > else
+> > 	not less hacky but more common virtio work-arounds
+> > 
+> > :)
+> > 
+> > And then I can apply whatever comes from @arm.com and not
+> > worry about breaking actual hardware.
+> 
+> I'm actually seeing the exact same breakage in QEMU right now, so it's not
+> fast model related at all. In QEMU we also don't properly set the
+> dma-coherent flag, so we run into cache coherency problems.
+> 
+> 
+> Alex
+
+But with latest revert QEMU should now work, right?
+
+-- 
+MST
