@@ -1,47 +1,45 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH] ARM: dts: armada-385-linksys: fix DSA compatible property
-Date: Thu,  9 Feb 2017 16:27:02 +0100
-Message-ID: <20170209152702.23036-1-ralph.sennhauser@gmail.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists
+ through a nexus node
+Date: Thu, 9 Feb 2017 15:31:01 +0000
+Message-ID: <20170209153101.GE27312@n2100.armlinux.org.uk>
+References: <20170123204851.12808-1-stephen.boyd@linaro.org>
+ <20170123204851.12808-2-stephen.boyd@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, open list <linux-kernel@vger.kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, "moderated list:ARM/Marvell Kirkwood and Armada 370, 375, 38x,
- ..." <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170123204851.12808-2-stephen.boyd@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <stephen.boyd@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The switch to the new DSA binding used "marvell,mv88e6095" for the
-compatible property which doesn't exist, use "marvell,mv88e6085"
-instead.
+On Mon, Jan 23, 2017 at 12:48:49PM -0800, Stephen Boyd wrote:
+> 	connector: connector {
+> 		#gpio-cells = <2>;
+> 		gpio-map = <0 0 &soc_gpio1 1 0>,
+> 			   <1 0 &soc_gpio2 4 0>,
+> 			   <2 0 &soc_gpio1 3 0>,
+> 			   <3 0 &soc_gpio2 2 0>;
+> 		gpio-map-mask = <0xf 0x0>;
+> 		gpio-map-pass-thru = <0x0 0x1>
 
-Fixes: 455b82f03f52 ("ARM: dts: armada-385-linksys: Utilize new DSA binding")
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
----
- arch/arm/boot/dts/armada-385-linksys.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This -map-mask and -map-pass-thru mechanism needs documentation in
+Documentation/devicetree.  There's a bunch of users of -map-mask
+(eg, interrupt-map-mask) but there's nothing that actually describes
+how this works.
 
-diff --git a/arch/arm/boot/dts/armada-385-linksys.dtsi b/arch/arm/boot/dts/armada-385-linksys.dtsi
-index 20d5e8b..df47bf1 100644
---- a/arch/arm/boot/dts/armada-385-linksys.dtsi
-+++ b/arch/arm/boot/dts/armada-385-linksys.dtsi
-@@ -107,7 +107,7 @@
- 				status = "okay";
- 
- 				switch@0 {
--					compatible = "marvell,mv88e6095";
-+					compatible = "marvell,mv88e6085";
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <0>;
+The "-map-pass-thru" thing also seems to be a new, undocumented idea.
+
+So, NAK until this stuff goes through the same level of review WRT
+DT documentation as other bindings are required to.
+
+I'm not saying that it's a bad idea, but it's important for consistency
+that this stuff is well documented, and people don't end up having to
+interpret the code when writing their DT descriptions.
+
 -- 
-2.10.2
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
