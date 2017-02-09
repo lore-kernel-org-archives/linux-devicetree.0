@@ -1,118 +1,114 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
-Date: Thu, 9 Feb 2017 17:40:50 +0530
-Message-ID: <CAFp+6iHQb9hUow99+vJ9TWYfZBFLd+ZAeqeRqMN-U_y=g9sRGQ@mail.gmail.com>
-References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
- <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
- <20170208204300.GC8068@usblab-sd-06.qualcomm.com>
- <85873d69-5664-0603-8cbd-a250d29ac335@ti.com>
- <6f131f15-d2f0-c8ac-c6af-accd23afab62@ti.com>
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: qcom: Add msm8974 CoreSight components
+Date: Thu, 9 Feb 2017 14:59:51 +0200
+Message-ID: <814b788c-ce2f-5b44-c49e-e4e211a4f926@linaro.org>
+References: <20170203183628.28198-1-georgi.djakov@linaro.org>
+ <20170206165238.GA11391@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6f131f15-d2f0-c8ac-c6af-accd23afab62@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, mail@maciej.szmigiero.name, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Sriram Dash <sriram.dash@nxp.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, krzk@kernel.org, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jack Pham <jackp@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt <robh+dt@kerne>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170206165238.GA11391-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iivanov.xz-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 9, 2017 at 5:24 PM, Roger Quadros <rogerq@ti.com> wrote:
+On 02/06/2017 06:52 PM, Mathieu Poirier wrote:
+> Hello Georgi,
 >
+> Looks good to me, just a cosmetic comment below...
 >
-> On 09/02/17 13:53, Roger Quadros wrote:
+> On Fri, Feb 03, 2017 at 08:36:28PM +0200, Georgi Djakov wrote:
+>> From: "Ivan T. Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 >>
+>> Add initial set of CoreSight components found on Qualcomm
+>> msm8974 and apq8074 based platforms, including the APQ8074
+>> Dragonboard board.
 >>
->> On 08/02/17 22:43, Jack Pham wrote:
->>> Hi Peter, Sriram, Arnd,
->>>
->>> On Mon, Feb 06, 2017 at 05:13:38PM +0800, Peter Chen wrote:
->>>> From: Arnd Bergmann <arnd@arndb.de>
->>>>
->>>> For xhci-hcd platform device, all the DMA parameters are not
->>>> configured properly, notably dma ops for dwc3 devices. So, set
->>>> the dma for xhci from sysdev. sysdev is pointing to device that
->>>> is known to the system firmware or hardware.
->>>>
->>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>>> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
->>>> Tested-by: Baolin Wang <baolin.wang@linaro.org>
->>>> Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
->>>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
->>>> ---
->>>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->>>> index 6d33b42..7a9c860 100644
->>>> --- a/drivers/usb/host/xhci-plat.c
->>>> +++ b/drivers/usb/host/xhci-plat.c
->>>
->>>> -   hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
->>>> +   hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
->>>> +                          dev_name(&pdev->dev), NULL);
->>>
->>> As mentioned already in [1], usb_create_shared_hcd() is called to create
->>> the second bus, however it also needs to be converted.
->>>
->>> Not exactly as Roger's suggestion but this worked for me:
->>>
->>> -       xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
->>> +       xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
->>>                         dev_name(&pdev->dev), hcd);
+>> Signed-off-by: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/qcom-msm8974.dtsi | 280 +++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 276 insertions(+), 4 deletions(-)
 >>
->> But we're creating a shared_hcd and there is an API for that so why not use it
->> instead of calling __usb_create_hcd()?
->>
+>> diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> index 4b4c61e2ee35..ab766a36a461 100644
+>> --- a/arch/arm/boot/dts/qcom-msm8974.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
+[..]
+>> +		replicator@fc31c000 {
+>> +			compatible = "qcom,coresight-replicator1x", "arm,primecell";
+>> +			reg = <0xfc31c000 0x1000>;
+>> +
+>> +			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+>> +			clock-names = "apb_pclk", "atclk";
+>> +
+>> +			ports {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				port@0 {
+>> +					reg = <0>;
+>> +					replicator_out0: endpoint {
+>> +						remote-endpoint = <&etr_in>;
+>> +					};
+>> +				};
+>> +				port@1 {
+>> +					reg = <1>;
+>> +					replicator_out1: endpoint {
+>> +						remote-endpoint = <&tpiu_in>;
+>> +					};
+>> +				};
+>> +				port@2 {
+>> +					reg = <0>;
+>> +					replicator_in: endpoint {
+>> +						slave-mode;
+>> +						remote-endpoint = <&etf_out>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +
+>> +		etf@fc307000 {
+>> +			compatible = "arm,coresight-tmc", "arm,primecell";
+>> +			reg = <0xfc307000 0x1000>;
+>> +
+>> +			clocks = <&rpmcc RPM_SMD_QDSS_CLK>, <&rpmcc RPM_SMD_QDSS_A_CLK>;
+>> +			clock-names = "apb_pclk", "atclk";
+>> +
+>> +			ports {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				port@0 {
+>> +					reg = <0>;
+>> +					etf_out: endpoint {
+>> +						remote-endpoint = <&replicator_in>;
+>> +					};
+>> +				};
+>> +				port@1 {
+>> +					reg = <0>;
+>> +					etf_in: endpoint {
+>> +						slave-mode;
+>> +						remote-endpoint = <&merger_out>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
 >
-> Just realized after I pressed send that there is no sysdev parameter
-> for create_shared_hcd().
-
-That's right. The create_shared_hcd() makes use of only pdev->dev,
-and we need to configure dma for shared_hcd as well though sysdev.
-
-Sorry my mail client didn't show this mail in time. Please ignore my
-earlier comment.
-
+> For the replicator and ETF above, output ports are listed before input
+> ports, while the rest of the components below do the opposite.  As such
+> picturing the topology of the CS components is a little more difficult but has
+> no ramification on functionality.  I would suggest revising that but either way:
 >
->>>         if (!xhci->shared_hcd) {
->>>                 ret = -ENOMEM;
->>>
->>> Without this, SuperSpeed devices fail to enumerate:
->>>
->>>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
->>>  usb 2-1: device descriptor read/8, error -11
->>>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
->>>  usb 2-1: device descriptor read/8, error -11
->>>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
->>>  usb 2-1: device descriptor read/8, error -11
->>>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
->>>  usb 2-1: device descriptor read/8, error -11
->>>  <and continues...>
->>>
->>> Thanks,
->>> Jack
->>>
->>> [1] https://lkml.org/lkml/2016/12/9/240
->>>
->>
->
-> --
-> cheers,
-> -roger
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
+Ok, thanks! Will update it.
 
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+BR,
+Georgi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
