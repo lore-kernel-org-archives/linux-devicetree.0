@@ -1,45 +1,66 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists
- through a nexus node
-Date: Thu, 9 Feb 2017 15:35:26 +0000
-Message-ID: <20170209153526.GF27312@n2100.armlinux.org.uk>
-References: <20170123204851.12808-1-stephen.boyd@linaro.org>
- <20170123204851.12808-2-stephen.boyd@linaro.org>
- <5886F5ED.3030509@gmail.com>
- <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
- <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v5 2/4] Documentation: dt: add bindings for ti-cpufreq
+Date: Thu, 9 Feb 2017 09:36:45 -0600
+Message-ID: <804ab315-3202-8c6d-3954-97a452892aa8@ti.com>
+References: <20170203172929.23940-1-d-gerlach@ti.com>
+ <CAL_Jsq+955fra0P8FFWd4-f2rLyJVMwo-FBRfeqqeO=a8m0NnA@mail.gmail.com>
+ <2aba1159-9a48-329f-2a54-8079b32b06e2@ti.com>
+ <5995162.mH49F4H7nS@aspire.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5995162.mH49F4H7nS@aspire.rjw.lan>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Viresh Kumar <viresh.kumar@linaro.org>, Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 09, 2017 at 09:17:58AM -0600, Rob Herring wrote:
-> Frank, any more comments on this? If not, I plan to apply this series.
+On 02/08/2017 06:02 PM, Rafael J. Wysocki wrote:
+> On Wednesday, February 08, 2017 08:45:55 AM Dave Gerlach wrote:
+>> On 02/08/2017 08:44 AM, Rob Herring wrote:
+>>> On Fri, Feb 3, 2017 at 11:29 AM, Dave Gerlach <d-gerlach@ti.com> wrote:
+>>>> Add the device tree bindings document for the TI CPUFreq/OPP driver
+>>>> on AM33xx, AM43xx, DRA7xx, and AM57xx SoCs. The operating-points-v2
+>>>> binding allows us to provide an opp-supported-hw property for each OPP
+>>>> to define when it is available. This driver is responsible for reading
+>>>> and parsing registers to determine which OPPs can be selectively enabled
+>>>> based on the specific SoC in use by matching against the opp-supported-hw
+>>>> data.
+>>>>
+>>>> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+>>>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>>>> ---
+>>>
+>>> [...]
+>>>
+>>>> +/*
+>>>> + * cpu0 has different OPPs depending on SoC revision and some on revisions
+>>>> + * 0x2 and 0x4 have eFuse bits that indicate if they are available or not
+>>>> + */
+>>>> +cpu0_opp_table: opp_table {
+>>>
+>>> One step closer, but as I showed last time, use a '-', not '_'.
+>>
+>> I apologize I thought the comment was only about the 0, completely missed the
+>> underscore, you are correct, thanks.
+>
+> Please send an update of this patch, then.
 
-Well, I find that a little annoying, because DT has the requirement
-that new bindings are properly documented in Documentation, and it
-appears that this comes with no documentation what so ever, despite
-introducing new properties (like the -map-mask-passthru thing).
+Yes, sent an update of just this patch in reply to the original patch email, thanks.
 
-So I'm NAKing it until there's some documentation of how this
-mechanism is supposed to work.
+Regards,
+Dave
 
-Merely providing an example in a commit log is (IMHO) insufficient.
-An example doesn't explain how it was created, or how to create an
-implementation.
-
-Remember, we expect people to do exactly that, so we need to give
-them this information so that they can make use of it.
-
-I did try to work out from the code how the -map-mask thing worked,
-but eventually gave up.
-
--- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+>
+> Thanks,
+> Rafael
+>
