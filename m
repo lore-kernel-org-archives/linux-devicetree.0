@@ -1,238 +1,88 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
- a nexus node
-Date: Thu, 9 Feb 2017 14:54:57 -0800
-Message-ID: <589CF341.70403@gmail.com>
-References: <20170123204851.12808-1-stephen.boyd@linaro.org>
- <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
- <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
- <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
- <589CBA5F.9000101@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] devicetree: Add video bus switch
+Date: Thu, 9 Feb 2017 17:03:03 -0600
+Message-ID: <CAL_JsqLfbAxBbXOyK0QOCc=wPe6=a+qyrAwtdbt3DtspK6oiaw@mail.gmail.com>
+References: <20161023200355.GA5391@amd> <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
+ <20161214122451.GB27011@amd> <20161222100104.GA30917@amd> <20161222133938.GA30259@amd>
+ <20161224152031.GA8420@amd> <20170203123508.GA10286@amd> <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
+ <20170208223017.GA18807@amd> <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <589CBA5F.9000101@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/17 10:52, Frank Rowand wrote:
-> On 02/09/17 07:17, Rob Herring wrote:
->> On Tue, Jan 24, 2017 at 12:05 PM, Rob Herring <robh+dt@kernel.org> wrote:
->>> On Tue, Jan 24, 2017 at 12:36 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->>>> Hi Stephen,
->>>>
->>>> Sorry I did not get to v1 and v2 in a timely manner.
->>>>
->>>>
->>>> On 01/23/17 12:48, Stephen Boyd wrote:
->>>>> Platforms like 96boards have a standardized connector/expansion
->>>>> slot that exposes signals like GPIOs to expansion boards in an
->>>>> SoC agnostic way. We'd like the DT overlays for the expansion
->>>>> boards to be written once without knowledge of the SoC on the
->>>>> other side of the connector. This avoids the unscalable
->>>>> combinatorial explosion of a different DT overlay for each
->>>>> expansion board and SoC pair.
->>>>>
->>>>> We need a way to describe the GPIOs routed through the connector
->>>>> in an SoC agnostic way. Let's introduce nexus property parsing
->>>>> into the OF core to do this. This is largely based on the
->>>>> interrupt nexus support we already have. This allows us to remap
->>>>> a phandle list in a consumer node (e.g. reset-gpios) through a
->>>>> connector in a generic way (e.g. via gpio-map). Do this in a
->>>>> generic routine so that we can remap any sort of variable length
->>>>> phandle list.
->>>>>
->>>>> Taking GPIOs as an example, the connector would be a GPIO nexus,
->>>>> supporting the remapping of a GPIO specifier space to multiple
->>>>> GPIO providers on the SoC. DT would look as shown below, where
->>>>> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
->>>>> expansion port where boards can be plugged in, and
->>>>> 'expansion_device' is a device on the expansion board.
->>>>>
->>>>>       soc {
->>>>>               soc_gpio1: gpio-controller1 {
->>>>>                       #gpio-cells = <2>;
->>>>>               };
->>>>>
->>>>>               soc_gpio2: gpio-controller2 {
->>>>>                       #gpio-cells = <2>;
->>>>>               };
->>>>>       };
->>>>>
->>>>>       connector: connector {
->>>>>               #gpio-cells = <2>;
->>>>>               gpio-map = <0 0 &soc_gpio1 1 0>,
->>>>>                          <1 0 &soc_gpio2 4 0>,
->>>>>                          <2 0 &soc_gpio1 3 0>,
->>>>>                          <3 0 &soc_gpio2 2 0>;
->>>>>               gpio-map-mask = <0xf 0x0>;
->>>>>               gpio-map-pass-thru = <0x0 0x1>
->>>>>       };
->>>>>
->>>>>       expansion_device {
->>>>>               reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
->>>>>       };
->>>>
->>>> The how to architect connectors and plugs threads fell asleep before
->>>> coming to a resolution.  We need to revive that discussion.
->>>>
->>>> One of the concepts of the plug and connector architecture is that
->>>> a main board may contain multiple connectors of the same type (or
->>>> different types, but the same type is sufficient for this discussion).
->>>>
->>>> The node describing the card that plugs into one of the connectors
->>>> does not know the phandle of the connector it is going to be
->>>> connected to.  Some other mechanism is provided to allow a card
->>>> to be plugged into any of the available connectors.  If there are
->>>> two identical cards plugged into two connectors, then both cards
->>>> have the same exact device tree node.  But some mechanism will
->>>> exist to resolve (or "link") the two card nodes to the different
->>>> connector nodes.
->>>>
->>>> As a result of this, in the above example the reset-gpios property
->>>> in the node 'expansion_device' can not contain '&connector'.  The
->>>> concept of &connector belongs to the entire expansion_device node,
->>>> not to individual properties within the node.
+On Thu, Feb 9, 2017 at 5:02 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, Feb 8, 2017 at 4:30 PM, Pavel Machek <pavel@ucw.cz> wrote:
+>> On Wed 2017-02-08 15:36:09, Rob Herring wrote:
+>>> On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
+>>> >
+>>> > N900 contains front and back camera, with a switch between the
+>>> > two. This adds support for the switch component, and it is now
+>>> > possible to select between front and back cameras during runtime.
+>>> >
+>>> > This adds documentation for the devicetree binding.
+>>> >
+>>> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+>>> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+>>> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>>> >
+>>> >
+>>> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+>>> > new file mode 100644
+>>> > index 0000000..1b9f8e0
+>>> > --- /dev/null
+>>> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+>>> > @@ -0,0 +1,63 @@
+>>> > +Video Bus Switch Binding
+>>> > +========================
 >>>
->>> I think this is easily solved with a connector having 2 halves and
->>> that we need to search parents for *-map properties. Inheriting from
->>> parents is a common pattern in DT though perhaps not walking the
->>> parents of a phandle. So we'd have something like this:
->>>
->>> base-connector-1 {
->>>   gpio-map = ...
->>>   connector {
->>>     child {
->>>       some-gpios = <&connector 1>;
->>>     };
->>>   };
->>> };
->>>
->>> base-connector-2 {
->>>   gpio-map = ...
->>>   connector {
->>>     child {
->>>       some-gpios = <&connector 1>;
->>>     };
->>>   };
->>> };
->>>
->>> Now, how we resolve that /connector from an overlay targets
->>> /base-connector-1 and /base-connector-2 is an orthogonal issue and one
->>> that's going to be connector specific (at least for probe-able
->>> connectors).
+>>> I'd call it a mux rather than switch.
 >>
->> Frank, any more comments on this? If not, I plan to apply this series.
+>> It is a switch, not a multiplexor (
+>> https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
+>> operate at a time.
+>
+> It's no different than an i2c mux. It's one at a time.
+>
 >>
->> Rob
-> 
-> Yes, how we resolve which connector a plug goes into is orthogonal.
-> 
-> My objection is that the original example has a property in the
-> plug node (that is, on the expansion board), directly referencing
-> the connector node, instead of referencing a resource inside the
-> connector node.
-> 
-> In the original example, it would make more sense for the first
-> item in the reset-gpios property to be &gpio-map or "gpio-map"
-> instead of &connector.
+>>> BTW, there's a new mux-controller binding under review you might look
+>>> at. It would only be needed here if the mux ctrl also controls other
+>>> things.
+>>
+>> Do you have a pointer?
+>
+> Let me Google that for you:
 
-My suggestion of &gpio-map or "gpio-map" was just shooting from
-the hip.  After going back to the DT connector thread, I have
-a different answer of &gpio1 instead of &connector:
+https://lwn.net/Articles/713971/
 
-    reset-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-
-The full answer in more than changing &connector to &gpio1, see
-below for the fuller dts.
-
-
-I took David Gibson's initial socket / plug proposal[1], and added
-in the gpios from Stephen's proposal.
-
-[1] https://lkml.org/lkml/2016/7/18/332
-
-
------  Socket:
-
-/dts-v1/;
-
-/ {
-	compatible = "foo,oldboard";
-	ranges;
-	soc@... {
-		ranges;
-		mmio: mmio-bus@... {
-			#address-cells = <2>;
-			#size-cells = <2>;
-			ranges;
-		};
-		i2c: i2c@... {
-		};
-		intc: intc@... {
-			#interrupt-cells = <2>;
-		};
-	};
-
-	connectors {
-		widget1 {
-			compatible = "foo,widget-socket";
-			w1_irqs: irqs {
-				interrupt-controller;
-				#address-cells = <0>;
-				#interrupt-cells = <1>;
-				interrupt-map-mask = <0xffffffff>;
-				interrupt-map = <
-					0 &intc 7 0
-					1 &intc 8 0
-				>;
-			};
-			w1_gpio1: gpio1 {
-				#gpio-cells = <1>;
-				gpio-map = <0 &soc_gpio1 1 0>,
-				<1 &soc_gpio2 4 0>,
-				<2 &soc_gpio1 3 0>,
-				<3 &soc_gpio2 2 0>;
-				gpio-map-mask = <0xf>;
-			};
-			aliases = {
-				i2c = &i2c;
-				intc = &w1_irqs;
-				mmio = &mmio;
-				gpio1 = &w1_gpios1;
-			};
-		};
-	};
-};
-
-
------  Expansion board:
-
-/dts-v1/;
-
-/plugin/ foo,widget-socket {
-	compatible = "foo,whirligig-widget";
-};
-
-expansion_device {
-	reset-gpios = <&gpio1 2 GPIO_ACTIVE_LOW>;
-};
-
-&i2c {
-	whirligig-controller@... {
-		...
-		interrupt-parent = <&widget-irqs>;
-		interrupts = <0>;
-	};
-};
+>
+>>
+>>> > +Required Port nodes
+>>> > +===================
+>>> > +
+>>> > +More documentation on these bindings is available in
+>>> > +video-interfaces.txt in the same directory.
+>>> > +
+>>> > +reg                : The interface:
+>>> > +             0 - port for image signal processor
+>>> > +             1 - port for first camera sensor
+>>> > +             2 - port for second camera sensor
+>>>
+>>> This could be used for display side as well. So describe these just as
+>>> inputs and outputs.
+>>
+>> I'd prefer not to confuse people. I guess that would be 0 -- output
+>> port, 1, 2 -- input ports... But this is media data, are you sure it
+>> is good idea to change this?
+>
+> And I'd prefer something that can be reused by others.
+>
+>>
+>>                                                                         Pavel
+>> --
+>> (english) http://www.livejournal.com/~pavelmachek
+>> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
