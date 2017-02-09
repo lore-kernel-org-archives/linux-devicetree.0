@@ -1,65 +1,86 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
-Date: Thu, 9 Feb 2017 09:45:07 +0800
-Message-ID: <20170209014507.GA565@b29397-desktop>
-References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
- <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
- <CAFp+6iEtFetHY6FEAYD2Ymjr+BKyVKjaum_F8v4e8wapnFcK8w@mail.gmail.com>
+From: Mars Cheng <mars.cheng@mediatek.com>
+Subject: Re: [PATCH v2 01/10] Document: DT: mediatek: multiple base address
+ support for sysirq
+Date: Thu, 9 Feb 2017 09:47:57 +0800
+Message-ID: <1486604877.29572.9.camel@mtkswgap22>
+References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
+         <1486383336-16892-2-git-send-email-mars.cheng@mediatek.com>
+         <20170208232039.p7ljh4krndtn2edy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iEtFetHY6FEAYD2Ymjr+BKyVKjaum_F8v4e8wapnFcK8w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Peter Chen <peter.chen@nxp.com>, Ulf Hansson <ulf.hansson@linaro.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, gary.bisson@boundarydevices.com, Sriram Dash <sriram.dash@nxp.com>, festevam@gmail.com, stillcompiling@gmail.com, Arnd Bergmann <arnd@arndb.de>, dbaryshkov@gmail.com, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, mail@maciej.szmigiero.name, Pawel Moll <pawel.moll@arm.com>, linux-pm@vger.kernel.org, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, robh+dt <robh+dt@kernel.org>, Mathias Nyman <mathias.nyman@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrad>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170208232039.p7ljh4krndtn2edy@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Chieh-Jay Liu <Chieh-Jay.Liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08, 2017 at 05:27:31PM +0530, Vivek Gautam wrote:
-> Hi,
-> 
-> 
-> On Mon, Feb 6, 2017 at 2:43 PM, Peter Chen <peter.chen@nxp.com> wrote:
-> > From: Arnd Bergmann <arnd@arndb.de>
-> >
-> > For xhci-hcd platform device, all the DMA parameters are not
-> > configured properly, notably dma ops for dwc3 devices. So, set
-> > the dma for xhci from sysdev. sysdev is pointing to device that
-> > is known to the system firmware or hardware.
-> >
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
-> > Tested-by: Baolin Wang <baolin.wang@linaro.org>
-> > Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-> > Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Hi Rob,
+
+On Wed, 2017-02-08 at 17:20 -0600, Rob Herring wrote:
+> On Mon, Feb 06, 2017 at 08:15:27PM +0800, Mars Cheng wrote:
+> > This describes how to specify multiple base addresses for sysirq
+> > in mediatek platforms.
+> > 
+> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
 > > ---
+> >  .../interrupt-controller/mediatek,sysirq.txt       |   13 +++++++++----
+> >  1 file changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > index 9d1d72c..1718454 100644
+> > --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+> > @@ -18,16 +18,21 @@ Required properties:
+> >  	"mediatek,mt2701-sysirq"
+> >  - interrupt-controller : Identifies the node as an interrupt controller
+> >  - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+> > +- #intpol-bases: Indicate how many base addresses to be used, default is 1.
 > 
-> This patch doesn't work for me anymore on db820c target [1].
-> While the same kernel with reverts of patches [2] [3] and an older
-> patch [4] by Grygorii Strashko works [5].
-> 
-> [1] https://github.com/vivekgautam1/linux/tree/linux-v4.10-rc7-usb-db820c-nonworking
-> [2] 8c9f2de459c7 usb: dwc3: Do not set dma coherent mask
-> [3] d64ff406e51e usb: dwc3: use bus->sysdev for DMA configuration
-> [4] https://lkml.org/lkml/2016/4/25/813
-> [5] https://github.com/vivekgautam1/linux/tree/linux-v4.10-rc7-usb-db820c
-> 
+> There is no point in this. It can either be implied by the compatible 
+> string or you just try to get the resource for the 2nd region. (Or in DT 
+> terms, get the size of reg.)
 > 
 
-The [2] and [3] have already at mainline, you may talk with Felipe about
-it.
+Originally I try to mimic #redistributor-regions in
+Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt.
 
--- 
+But I think you are right since irq-gic-v3 has several kinds of bases in
+reg so that they need an indicator to decode. For irq-mtk-sysirq, we can
+just try 2nd region and increment a counter to get the number of bases.
 
-Best Regards,
-Peter Chen
+Will fix this in v3.
+
+Thanks.
+
+> >  - interrupt-parent: phandle of irq parent for sysirq. The parent must
+> >    use the same interrupt-cells format as GIC.
+> >  - reg: Physical base address of the intpol registers and length of memory
+> > -  mapped region.
+> > +  mapped region. Could be multiple bases here. Ex: mt6797 needs 2 reg, others
+> > +  need 1. If not set, the default is 1.
+> >  
+> >  Example:
+> > -	sysirq: interrupt-controller@10200100 {
+> > -		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
+> > +	sysirq: intpol-controller@10200620 {
+> > +		compatible = "mediatek,mt6797-sysirq",
+> > +			     "mediatek,mt6577-sysirq";
+> >  		interrupt-controller;
+> >  		#interrupt-cells = <3>;
+> > +		#intpol-bases = <2>;
+> >  		interrupt-parent = <&gic>;
+> > -		reg = <0 0x10200100 0 0x1c>;
+> > +		reg = <0 0x10220620 0 0x20>,
+> > +		      <0 0x10220690 0 0x10>;
+> >  	};
+> > -- 
+> > 1.7.9.5
+> > 
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
