@@ -1,46 +1,55 @@
-From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>
-Subject: [PATCH v3 2/2] dt-bindings: mtd: add a common label property to all
- mtd devices
-Date: Thu,  9 Feb 2017 10:21:08 +0100
-Message-ID: <1486632068-14894-3-git-send-email-clg@kaod.org>
-References: <1486632068-14894-1-git-send-email-clg@kaod.org>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [PATCH v2 1/9] Documentation: arm: fix wrong reference number in DT
+ definition
+Date: Thu,  9 Feb 2017 09:25:17 +0000
+Message-ID: <20170209092525.6654-2-juri.lelli@arm.com>
+References: <20170209092525.6654-1-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1486632068-14894-1-git-send-email-clg@kaod.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170209092525.6654-1-juri.lelli@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, juri.lelli@arm.com, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBjYW4gYmUgdXNlZCB0byBlYXNpbHkgaWRlbnRpZnkgYSBzcGVjaWZpYyBjaGlwIG9uIGEg
-c3lzdGVtIHdpdGgKbXVsdGlwbGUgY2hpcHMuCgpTaWduZWQtb2ZmLWJ5OiBDw6lkcmljIExlIEdv
-YXRlciA8Y2xnQGthb2Qub3JnPgpBY2tlZC1ieTogQm9yaXMgQnJlemlsbG9uIDxib3Jpcy5icmV6
-aWxsb25AZnJlZS1lbGVjdHJvbnMuY29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
-bmVsLm9yZz4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2NvbW1v
-bi50eHQgfCAxNSArKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxNSBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L210ZC9jb21tb24udHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL210ZC9jb21tb24udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L210ZC9jb21tb24udHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4u
-ZmMwNjhiOTIzZDdhCi0tLSAvZGV2L251bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL210ZC9jb21tb24udHh0CkBAIC0wLDAgKzEsMTUgQEAKKyogQ29tbW9uIHByb3Bl
-cnRpZXMgb2YgYWxsIE1URCBkZXZpY2VzCisKK09wdGlvbmFsIHByb3BlcnRpZXM6CistIGxhYmVs
-OiB1c2VyLWRlZmluZWQgTVREIGRldmljZSBuYW1lLiBDYW4gYmUgdXNlZCB0byBhc3NpZ24gdXNl
-cgorICBmcmllbmRseSBuYW1lcyB0byBNVEQgZGV2aWNlcyAoaW5zdGVhZCBvZiB0aGUgZmxhc2gg
-bW9kZWwgb3IgZmxhc2gKKyAgY29udHJvbGxlciBiYXNlZCBuYW1lKSBpbiBvcmRlciB0byBlYXNl
-IGZsYXNoIGRldmljZSBpZGVudGlmaWNhdGlvbgorICBhbmQvb3IgZGVzY3JpYmUgd2hhdCB0aGV5
-IGFyZSB1c2VkIGZvci4KKworRXhhbXBsZToKKworCWZsYXNoQDAgeworCQlsYWJlbCA9ICJTeXN0
-ZW0tZmlybXdhcmUiOworCisJCS8qIGZsYXNoIHR5cGUgc3BlY2lmaWMgcHJvcGVydGllcyAqLwor
-CX07Ci0tIAoyLjcuNAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpMaW51eCBNVEQgZGlzY3Vzc2lvbiBtYWlsaW5nIGxpc3QKaHR0cDovL2xp
-c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1tdGQvCg==
+Reference to cpu capacity binding has a wrong number. Fix it.
+
+Reported-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index a1bcfeed5f24..c27376a27a92 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -246,7 +246,7 @@ nodes to be present and contain the properties described below.
+ 		Usage: Optional
+ 		Value type: <u32>
+ 		Definition:
+-			# u32 value representing CPU capacity [3] in
++			# u32 value representing CPU capacity [4] in
+ 			  DMIPS/MHz, relative to highest capacity-dmips-mhz
+ 			  in the system.
+ 
+@@ -473,5 +473,5 @@ cpus {
+ [2] arm/msm/qcom,kpss-acc.txt
+ [3] ARM Linux kernel documentation - idle states bindings
+     Documentation/devicetree/bindings/arm/idle-states.txt
+-[3] ARM Linux kernel documentation - cpu capacity bindings
++[4] ARM Linux kernel documentation - cpu capacity bindings
+     Documentation/devicetree/bindings/arm/cpu-capacity.txt
+-- 
+2.10.0
