@@ -1,50 +1,45 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3 04/14] GPIO: Add gpio-ingenic driver
-Date: Thu, 09 Feb 2017 18:14:32 +0100
-Message-ID: <b032ad924ae905ce4fd11535d08c29a8@mail.crapouillou.net>
-References: <27071da2f01d48141e8ac3dfaa13255d@mail.crapouillou.net>
- <20170125185207.23902-1-paul@crapouillou.net>
- <20170125185207.23902-5-paul@crapouillou.net>
- <CACRpkdaqQ2==B1_o-Ru81Nbu_kUF+Kxn=XFYms-1e=nAtHiJ4A@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <CACRpkdaqQ2==B1_o-Ru81Nbu_kUF+Kxn=XFYms-1e=nAtHiJ4A@mail.gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Ulf Hansson <ulf.hansson@linaro.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Thierry Reding <thierry.reding@gmail.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Maarten ter Huurne <maarten@treewalker.org>, Lars-Peter Clausen <lars@metafoo.de>, Paul Burton <paul.burton@imgtec.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Linux MIPS <linux-mips@linux-mips.org>, linux-mmc@vger.kernel.org, linux-mtd@lists.infradead.org, linux-pwm@vger.kernel.org, linux-fbdev@vger.kernel.org, James Hogan <james.hogan@imgtec.com>
+From: Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 4/4] iio: chemical: add dsm501 particle sensor driver bindings
+Date: Thu,  9 Feb 2017 18:12:52 +0100
+Message-ID: <20170209171252.4802-1-tduszyns@gmail.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds bindings for dsm501 particle sensor driver.
 
-> What some drivers do when they just get/set a bit in a register
-> to get/set or set the direction of a GPIO, is to select GPIO_GENERIC
-> and just bgpio_init() with the right iomem pointers, then the core
-> will register handlers for get, set, set_direcition callback and
-> get_direction and your driver can just focus on the remainders.
+Signed-off-by: Tomasz Duszynski <tduszyns-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ Changes in v2:
+  o add 'data' prefix to gpios property
 
-GPIO_GENERIC and bgpio_init() would work for my .set() / .get() 
-callbacks,
-not for my .direction_input() / .direction_output() callbacks which need
-to set more than one register.
+ .../devicetree/bindings/iio/chemical/dsm501.txt          | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/chemical/dsm501.txt
 
-> If you're not just replacing these with GPIO_GENERIC, please also
-> include a .get_direction() callback.
-
-My .direction_input() and .direction_output() callbacks just call into
-the pinctrl driver, using pinctrl_gpio_direction_[in,out]put().
-I didn't find a way to get the direction info from the pinctrl driver,
-is that something that the core should provide?
-
-Thanks,
--Paul
+diff --git a/Documentation/devicetree/bindings/iio/chemical/dsm501.txt b/Documentation/devicetree/bindings/iio/chemical/dsm501.txt
+new file mode 100644
+index 000000000000..126ce528f5eb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/chemical/dsm501.txt
+@@ -0,0 +1,16 @@
++* DSM501 particle sensor
++
++Required properties:
++
++- compatible: should be one of:
++	      "samyoung,dsm501"
++	      "shinyei,ppd42ns"
++- data-gpios: should specify the GPIO connected to the sensor's data line, see
++	      "gpios property" in Documentation/devicetree/bindings/gpio/gpio.txt
++
++Example:
++
++dsm501 {
++	compatible = "samyoung,dsm501";
++	data-gpios = <&gpio1 28 0>;
++};
+--
+2.11.1
