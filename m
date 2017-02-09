@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 6/8] dt-bindings: gpu: mali: Add optional OPPs
-Date: Thu,  9 Feb 2017 17:39:20 +0100
-Message-ID: <29cb6b892a6e7002d2f6271157a5efa648b0dd9b.1486655917.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH 7/8] ARM: sunxi: Select PM_OPP
+Date: Thu,  9 Feb 2017 17:39:21 +0100
+Message-ID: <e1424c55f3f8b1176f24a446936d189b00383a4c.1486655917.git-series.maxime.ripard@free-electrons.com>
 References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
 Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
@@ -12,28 +12,27 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The operating-points-v2 binding gives a way to provide the OPP of the GPU.
-Let's use it.
+Device frequency scaling is implemented through devfreq in the kernel,
+which requires CONFIG_PM_OPP.
+
+Let's select it.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
- 1 file changed, 4 insertions(+), 0 deletions(-)
+ arch/arm/mach-sunxi/Kconfig | 1 +
+ 1 file changed, 1 insertion(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-index 88df4a276607..2b6243e730f6 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-@@ -39,6 +39,10 @@ Optional properties:
-     Memory region to allocate from, as defined in
-     Documentation/devicetree/bindi/reserved-memory/reserved-memory.txt
- 
-+  - operating-points-v2:
-+    Operating Points for the GPU, as defined in
-+    Documentation/devicetree/bindings/opp/opp.txt
-+
- Vendor-specific bindings
- ------------------------
+diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
+index b9863f9a35fa..58153cdf025b 100644
+--- a/arch/arm/mach-sunxi/Kconfig
++++ b/arch/arm/mach-sunxi/Kconfig
+@@ -6,6 +6,7 @@ menuconfig ARCH_SUNXI
+ 	select GENERIC_IRQ_CHIP
+ 	select GPIOLIB
+ 	select PINCTRL
++	select PM_OPP
+ 	select SUN4I_TIMER
+ 	select RESET_CONTROLLER
  
 -- 
 git-series 0.8.11
