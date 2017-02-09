@@ -1,51 +1,71 @@
-From: <yuantian.tang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: added ecc register address to sata node on
- ls1046a
-Date: Thu, 9 Feb 2017 14:29:15 +0800
-Message-ID: <1486621755-6567-2-git-send-email-yuantian.tang@nxp.com>
-References: <1486621755-6567-1-git-send-email-yuantian.tang@nxp.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 1/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Thu, 09 Feb 2017 07:57:40 +0100
+Message-ID: <8afdbdea-5675-fd55-5195-47c6aded4202@samsung.com>
+References: <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170209012716epcas1p33915757c95d5defb88c7d2c54cee3582@epcas1p3.samsung.com>
+ <1486603601-26826-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486621755-6567-1-git-send-email-yuantian.tang@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, catalin.marinas@arm.com, will.deacon@arm.com, Tang Yuantian <yuantian.tang@nxp.com>, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1486603601-26826-2-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, inki.dae@samsung.com, robh+dt@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-From: Tang Yuantian <Yuantian.Tang@nxp.com>
-
-For ls1046 sata, ecc should be disabled due to a erratum.
-Provide the ecc register address for driver to use.
-
-Signed-off-by: Tang Yuantian <yuantian.tang@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 38806ca..ee19d74 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -507,7 +507,9 @@
- 
- 		sata: sata@3200000 {
- 			compatible = "fsl,ls1046a-ahci";
--			reg = <0x0 0x3200000 0x0 0x10000>;
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+				<0x0 0x20140520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clockgen 4 1>;
- 		};
--- 
-2.1.0.27.g96db324
+T24gMDkuMDIuMjAxNyAwMjoyNiwgSG9lZ2V1biBLd29uIHdyb3RlOgo+IFRoZSBkc2kgKyBwYW5l
+bCBpcyBhIHBhcmVudGFsIHJlbGF0aW9uc2hpcCwgc28gT0YgZ3JwYWggaXMgbm90IG5lZWRlZC4K
+PiBUaGVyZWZvcmUsIHRoZSBjdXJyZW50IGRzaV9wYXJzZV9kdCBmdW5jdGlvbiB3aWxsIHRocm93
+IGFuIGVycm9yLAo+IGJlY2F1c2UgdGhlcmUgaXMgbm8gbGlua2VkIE9GIGdyYXBoIGZvciBjYXNl
+IHN1Y2ggYXMgZmltZCArIGRzaSArCj4gcGFuZWwuIFNvIHRoaXMgcGF0Y2ggcGFyc2UgdGhlIFBs
+bCwgYnVyc3QgYW5kIGVzYyBjbG9jayBmcmVxdWVuY3kKPiBwcm9wZXJ0aWVzIGluIGRzaV9wYXJz
+ZV9kdCBhbmQgbW9kaWZpZWQgdG8gY3JlYXRlIGEgYnJpZGdlX25vZGUgb25seQo+IGlmIHRoZXJl
+IGlzIGFuIE9GIGdyYXBoIGFzc29jaWF0ZWQgd2l0aCBkc2kuCj4gU28gSSB0aGluayB0aGUgQUJJ
+IGJyZWFrYWdlIGlzIG5lZWRlZC4KPgo+IFNpZ25lZC1vZmYtYnk6IEhvZWdldW4gS3dvbiA8aG9l
+Z2V1bi5rd29uQHNhbXN1bmcuY29tPgoKTmljZSBkaWZmc3RhdCwgbW9yZSBpbXBvcnRhbnRseSBp
+dCBmaXhlcyBiYWQgZGVzaWduIG9mIGVhcmx5IGRheXMgb2YKb2ZfZ3JhcGguCgpSZXZpZXdlZC1i
+eTogQW5kcnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4KCk9uZSBjb21tZW50IGJlbG93
+LgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIHwgMzIg
+KysrKysrKystLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDggaW5z
+ZXJ0aW9ucygrKSwgMjQgZGVsZXRpb25zKC0pCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlu
+b3NfZHJtX2RzaS5jCj4gaW5kZXggZTA3Y2IxZi4uMjE0ZDQ4NiAxMDA2NDQKPiAtLS0gYS9kcml2
+ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiArKysgYi9kcml2ZXJzL2dwdS9k
+cm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPiBAQCAtMTY1MiwzOSArMTY1MiwyMyBAQCBzdGF0
+aWMgaW50IGV4eW5vc19kc2lfcGFyc2VfZHQoc3RydWN0IGV4eW5vc19kc2kgKmRzaSkKPiAgCWlm
+IChyZXQgPCAwKQo+ICAJCXJldHVybiByZXQ7Cj4gIAo+IC0JZXAgPSBvZl9ncmFwaF9nZXRfZW5k
+cG9pbnRfYnlfcmVncyhub2RlLCBEU0lfUE9SVF9PVVQsIDApOwo+IC0JaWYgKCFlcCkgewo+IC0J
+CWRldl9lcnIoZGV2LCAibm8gb3V0cHV0IHBvcnQgd2l0aCBlbmRwb2ludCBzcGVjaWZpZWRcbiIp
+Owo+IC0JCXJldHVybiAtRUlOVkFMOwo+IC0JfQo+IC0KPiAtCXJldCA9IGV4eW5vc19kc2lfb2Zf
+cmVhZF91MzIoZXAsICJzYW1zdW5nLGJ1cnN0LWNsb2NrLWZyZXF1ZW5jeSIsCj4gKwlyZXQgPSBl
+eHlub3NfZHNpX29mX3JlYWRfdTMyKG5vZGUsICJzYW1zdW5nLGJ1cnN0LWNsb2NrLWZyZXF1ZW5j
+eSIsCj4gIAkJCQkgICAgICZkc2ktPmJ1cnN0X2Nsa19yYXRlKTsKPiAgCWlmIChyZXQgPCAwKQo+
+IC0JCWdvdG8gZW5kOwo+ICsJCXJldHVybiByZXQ7Cj4gIAo+IC0JcmV0ID0gZXh5bm9zX2RzaV9v
+Zl9yZWFkX3UzMihlcCwgInNhbXN1bmcsZXNjLWNsb2NrLWZyZXF1ZW5jeSIsCj4gKwlyZXQgPSBl
+eHlub3NfZHNpX29mX3JlYWRfdTMyKG5vZGUsICJzYW1zdW5nLGVzYy1jbG9jay1mcmVxdWVuY3ki
+LAo+ICAJCQkJICAgICAmZHNpLT5lc2NfY2xrX3JhdGUpOwo+ICAJaWYgKHJldCA8IDApCj4gLQkJ
+Z290byBlbmQ7Cj4gLQo+IC0Jb2Zfbm9kZV9wdXQoZXApOwo+ICsJCXJldHVybiByZXQ7Cj4gIAo+
+ICAJZXAgPSBvZl9ncmFwaF9nZXRfbmV4dF9lbmRwb2ludChub2RlLCBOVUxMKTsKPiAtCWlmICgh
+ZXApIHsKPiAtCQlyZXQgPSAtRUlOVkFMOwo+IC0JCWdvdG8gZW5kOwo+IC0JfQo+IC0KPiAtCWRz
+aS0+YnJpZGdlX25vZGUgPSBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50KGVwKTsKPiAt
+CWlmICghZHNpLT5icmlkZ2Vfbm9kZSkgewo+IC0JCXJldCA9IC1FSU5WQUw7Cj4gLQkJZ290byBl
+bmQ7Cj4gKwlpZiAoZXApIHsKPiArCQlkc2ktPmJyaWRnZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3Jl
+bW90ZV9wb3J0X3BhcmVudChlcCk7Cj4gKwkJb2Zfbm9kZV9wdXQoZXApOwoKSXQgbG9va3MgbGlr
+ZSB0aGVyZSBpcyBubyBvZl9ub2RlX3B1dCBvbiBkc2ktPmJyaWRnZV9ub2RlLCBidXQgdGhpcyBp
+cwpmb3IgYW5vdGhlciBwYXRjaC4KClJlZ2FyZHMKQW5kcnplagoKPiAgCX0KPiAtZW5kOgo+IC0J
+b2Zfbm9kZV9wdXQoZXApOwo+ICAKPiAtCXJldHVybiByZXQ7Cj4gKwlyZXR1cm4gMDsKPiAgfQo+
+ICAKPiAgc3RhdGljIGludCBleHlub3NfZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1
+Y3QgZGV2aWNlICptYXN0ZXIsCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
