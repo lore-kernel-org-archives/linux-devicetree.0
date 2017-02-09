@@ -1,115 +1,77 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: [PATCH v2 8/9] arm,arm64,drivers: move externs in a new header file
-Date: Thu,  9 Feb 2017 09:25:24 +0000
-Message-ID: <20170209092525.6654-9-juri.lelli@arm.com>
-References: <20170209092525.6654-1-juri.lelli@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170209092525.6654-1-juri.lelli@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] async_tx: Handle DMA devices having support for
+ fewer PQ coefficients
+Date: Thu, 9 Feb 2017 14:59:35 +0530
+Message-ID: <CAALAos-ua6hVpUqjnJSQ=ysSOKrN67toiT3J808uHC4A_ZV3mg@mail.gmail.com>
+References: <1486455406-11202-1-git-send-email-anup.patel@broadcom.com>
+ <1486455406-11202-3-git-send-email-anup.patel@broadcom.com>
+ <CAPcyv4gbV1yf52JrejW+Dn3wOPn7Er+8HWdu2qsW0+Qm+cRr9g@mail.gmail.com>
+ <CAALAos_yhXufdt79KWY0eugjF5oyJ8+NcPh2E-dEXnSQu2WhhA@mail.gmail.com>
+ <CAPcyv4hK_1f8bryq6smPQy7vTnP+QEzmT9wnAEE1xpxq7EAnjQ@mail.gmail.com>
+ <CAALAos9ovab4x=waRgM7G2adRC7syHMkY0Rhf-UPB_+h4w3yNQ@mail.gmail.com> <CAPcyv4iFJXxvJFrUs2jtwP9GX5NcJ8LiEDHeZ5b1fwjCAToe5w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAPcyv4iFJXxvJFrUs2jtwP9GX5NcJ8LiEDHeZ5b1fwjCAToe5w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Herbert Xu <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Rice <rob.rice-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-raid <linux-raid-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Create a new header file (include/linux/arch_topology.h) and put there
-declarations of interfaces used by arm, arm64 and drivers code.
+On Wed, Feb 8, 2017 at 9:54 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Feb 8, 2017 at 12:57 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> On Tue, Feb 7, 2017 at 11:46 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Tue, Feb 7, 2017 at 1:02 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>> On Tue, Feb 7, 2017 at 1:57 PM, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On Tue, Feb 7, 2017 at 12:16 AM, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>>>>>> The DMAENGINE framework assumes that if PQ offload is supported by a
+>>>>>> DMA device then all 256 PQ coefficients are supported. This assumption
+>>>>>> does not hold anymore because we now have BCM-SBA-RAID offload engine
+>>>>>> which supports PQ offload with limited number of PQ coefficients.
+>>>>>>
+>>>>>> This patch extends async_tx APIs to handle DMA devices with support
+>>>>>> for fewer PQ coefficients.
+>>>>>>
+>>>>>> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>>>
+>>>>> I don't like this approach. Define an interface for md to query the
+>>>>> offload engine once at the beginning of time. We should not be adding
+>>>>> any new extensions to async_tx.
+>>>>
+>>>> Even if we do capability checks in Linux MD, we still need a way
+>>>> for DMAENGINE drivers to advertise number of PQ coefficients
+>>>> handled by the HW.
+>>>>
+>>>> I agree capability checks should be done once in Linux MD but I don't
+>>>> see why this has to be part of BCM-SBA-RAID driver patches. We need
+>>>> separate patchsets to address limitations of async_tx framework.
+>>>
+>>> Right, separate enabling before we pile on new hardware support to a
+>>> known broken framework.
+>>
+>> Linux Async Tx not broken framework. The issue is:
+>> 1. Its not complete enough
+>> 2. Its not optimized for very high through-put offload engines
+>
+> I'm not understanding your point. I'm nak'ing this change to add yet
+> more per-transaction capability checking to async_tx. I don't like the
+> DMA_HAS_FEWER_PQ_COEF flag, especially since it is equal to
+> DMA_HAS_PQ_CONTINUE. I'm not asking for all of async_tx's problems to
+> be fixed before this new hardware support, I'm simply saying we should
+> start the process of moving offload-engine capability checking to the
+> raid code.
 
-Signed-off-by: Juri Lelli <juri.lelli@arm.com>
----
- arch/arm/kernel/topology.c    |  7 +------
- arch/arm64/kernel/topology.c  |  4 +---
- drivers/base/arch_topology.c  |  1 +
- include/linux/arch_topology.h | 17 +++++++++++++++++
- 4 files changed, 20 insertions(+), 9 deletions(-)
- create mode 100644 include/linux/arch_topology.h
+The DMA_HAS_FEWER_PQ_COEF is not equal to
+DMA_HAS_PQ_CONTINUE.
 
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 5d4679a5418b..1855632105a4 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -11,6 +11,7 @@
-  * for more details.
-  */
- 
-+#include <linux/arch_topology.h>
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/cpumask.h>
-@@ -44,10 +45,6 @@
-  * updated during this sequence.
-  */
- 
--extern unsigned long
--arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
--extern void set_capacity_scale(unsigned int cpu, unsigned long capacity);
--
- #ifdef CONFIG_OF
- struct cpu_efficiency {
- 	const char *compatible;
-@@ -75,8 +72,6 @@ static unsigned long *__cpu_capacity;
- 
- static unsigned long middle_capacity = 1;
- static bool cap_from_dt = true;
--extern void normalize_cpu_capacity(void);
--extern int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu);
- 
- /*
-  * Iterate all CPUs' descriptor in DT and compute the efficiency
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index deb5ebc1bdfe..6d2af4d9479f 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -11,6 +11,7 @@
-  * for more details.
-  */
- 
-+#include <linux/arch_topology.h>
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/init.h>
-@@ -26,9 +27,6 @@
- #include <asm/cputype.h>
- #include <asm/topology.h>
- 
--extern void normalize_cpu_capacity(void);
--extern int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu);
--
- static int __init get_cpu_for_node(struct device_node *node)
- {
- 	struct device_node *cpu_node;
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index c75fa5ab732b..409a8bb613f2 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -10,6 +10,7 @@
-  */
- 
- #include <linux/acpi.h>
-+#include <linux/arch_topology.h>
- #include <linux/cpu.h>
- #include <linux/cpufreq.h>
- #include <linux/device.h>
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-new file mode 100644
-index 000000000000..4edae9fe8cdd
---- /dev/null
-+++ b/include/linux/arch_topology.h
-@@ -0,0 +1,17 @@
-+/*
-+ * include/linux/arch_topology.h - arch specific cpu topology information
-+ */
-+#ifndef _LINUX_ARCH_TOPOLOGY_H_
-+#define _LINUX_ARCH_TOPOLOGY_H_
-+
-+void normalize_cpu_capacity(void);
-+
-+struct device_node;
-+int parse_cpu_capacity(struct device_node *cpu_node, int cpu);
-+
-+struct sched_domain;
-+unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
-+
-+void set_capacity_scale(unsigned int cpu, unsigned long capacity);
-+
-+#endif /* _LINUX_ARCH_TOPOLOGY_H_ */
--- 
-2.10.0
+I will try to drop this patch and take care of unsupported PQ
+coefficients in BCM-SBA-RAID driver itself even if this means
+doing some computations in BCM-SBA-RAID driver itself.
+
+Regards,
+Anup
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
