@@ -1,75 +1,63 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>
-Subject: Re: [PATCH v2 1/2] mtd: name the mtd device with an optional label
- property
-Date: Thu, 9 Feb 2017 10:20:19 +0100
-Message-ID: <5726ae7e-aa28-afea-e058-b762cf2df311@kaod.org>
-References: <1485368255-12038-1-git-send-email-clg@kaod.org>
- <1485368255-12038-2-git-send-email-clg@kaod.org>
- <20170208223859.GK94627@google.com> <20170209081155.48aba234@bbrezillon>
+From: =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
+Subject: [PATCH v3 1/2] mtd: name the mtd device with an optional label property
+Date: Thu,  9 Feb 2017 10:21:07 +0100
+Message-ID: <1486632068-14894-2-git-send-email-clg@kaod.org>
+References: <1486632068-14894-1-git-send-email-clg@kaod.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <20170209081155.48aba234@bbrezillon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@free-electrons.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Richard Weinberger <richard@nod.at>, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, Cyrille Pitchen <cyrille.pitchen@atmel.com>, David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1486632068-14894-1-git-send-email-clg-Bxea+6Xhats@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg-Bxea+6Xhats@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDIvMDkvMjAxNyAwODoxMSBBTSwgQm9yaXMgQnJlemlsbG9uIHdyb3RlOgo+IE9uIFdlZCwg
-OCBGZWIgMjAxNyAxNDozODo1OSAtMDgwMAo+IEJyaWFuIE5vcnJpcyA8Y29tcHV0ZXJzZm9ycGVh
-Y2VAZ21haWwuY29tPiB3cm90ZToKPiAKPj4gT24gV2VkLCBKYW4gMjUsIDIwMTcgYXQgMDc6MTc6
-MzRQTSArMDEwMCwgQ8OpZHJpYyBMZSBHb2F0ZXIgd3JvdGU6Cj4+PiBUaGlzIGNhbiBiZSB1c2Vk
-IHRvIGVhc2lseSBpZGVudGlmeSBhIHNwZWNpZmljIGNoaXAgb24gYSBzeXN0ZW0gd2l0aAo+Pj4g
-bXVsdGlwbGUgY2hpcHMuCj4+Pgo+Pj4gRHJpdmVycyB3YW50aW5nIHRvIHN1cHBvcnQgdGhpcyBu
-ZXcgbGFiZWwgcHJvcGVydHkgd2lsbCBiZW5lZml0IGZyb20KPj4+IGl0IHdpdGhvdXQgYSBjaGFu
-Z2UuIFRoZXkgbWlnaHQgd2FudCB0byBjaGVjayBpbiB0aGUgZnV0dXJlIHRoYXQKPj4+IG10ZC0+
-bmFtZSBpcyBOVUxMIGJlZm9yZSBhc3NpZ25pbmcgYSBkZWZhdWx0IG5hbWUgdG8gdGhlIG10ZCBk
-ZXZpY2UuCj4+PiBPdGhlciBkcml2ZXJzIHdpbGwga2VlcCB0aGUgY3VycmVudCBiZWhhdmlvciwg
-d2hpY2ggaXMgdG8gb3ZlcnJpZGUKPj4+IG10ZC0+bmFtZSB3aXRoIHRoZWlyIG93biB2YWx1ZS4K
-Pj4+Cj4+PiBTdWdnZXN0ZWQtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJlemlsbG9uQGZy
-ZWUtZWxlY3Ryb25zLmNvbT4KPj4+IFNpZ25lZC1vZmYtYnk6IEPDqWRyaWMgTGUgR29hdGVyIDxj
-bGdAa2FvZC5vcmc+Cj4+PiAtLS0KPj4+Cj4+PiAgQ2hhbmdlcyBzaW5jZSB2MToKPj4+Cj4+PiAg
-LSBtb3ZlZCB0aGUgdXNlIG9mIHRoZSAibGFiZWwiIHByb3BlcnR5IGZyb20gbXRkX3NldF9kZXZf
-ZGVmYXVsdHMoKQo+Pj4gICAgdG8gbXRkX3NldF9vZl9ub2RlKCkgdG8gbGV0IGRyaXZlcnMga2Vl
-cCBjb250cm9sIG9uIGhvdyBtdGQtPm5hbWUKPj4+ICAgIGlzIHNldCBhbmQgYWxsb2NhdGVkLgo+
-Pj4KPj4+ICBpbmNsdWRlL2xpbnV4L210ZC9tdGQuaCB8IDIgKysKPj4+ICAxIGZpbGUgY2hhbmdl
-ZCwgMiBpbnNlcnRpb25zKCspCj4+Pgo+Pj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbXRk
-L210ZC5oIGIvaW5jbHVkZS9saW51eC9tdGQvbXRkLmgKPj4+IGluZGV4IDEzZjgwNTJiOWZmOS4u
-ZjRmZTE1NTE3Mjk1IDEwMDY0NAo+Pj4gLS0tIGEvaW5jbHVkZS9saW51eC9tdGQvbXRkLmgKPj4+
-ICsrKyBiL2luY2x1ZGUvbGludXgvbXRkL210ZC5oCj4+PiBAQCAtMjQsNiArMjQsNyBAQAo+Pj4g
-ICNpbmNsdWRlIDxsaW51eC91aW8uaD4KPj4+ICAjaW5jbHVkZSA8bGludXgvbm90aWZpZXIuaD4K
-Pj4+ICAjaW5jbHVkZSA8bGludXgvZGV2aWNlLmg+Cj4+PiArI2luY2x1ZGUgPGxpbnV4L29mLmg+
-Cj4+PiAgCj4+PiAgI2luY2x1ZGUgPG10ZC9tdGQtYWJpLmg+Cj4+PiAgCj4+PiBAQCAtMzg1LDYg
-KzM4Niw3IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBtdGRfc2V0X29mX25vZGUoc3RydWN0IG10ZF9p
-bmZvICptdGQsCj4+PiAgCQkJCSAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApCj4+PiAgewo+Pj4g
-IAltdGQtPmRldi5vZl9ub2RlID0gbnA7Cj4+PiArCW9mX3Byb3BlcnR5X3JlYWRfc3RyaW5nKG5w
-LCAibGFiZWwiLCAmbXRkLT5uYW1lKTsgIAo+Pgo+PiBTZWVtcyBsaWtlIHRoaXMgY291bGQgYmUg
-ZG9uZSBvbmx5IGlmICchbXRkLT5uYW1lJz8KPj4KPj4gQXMgaXQgc3RhbmRzLCB5b3UncmUgc3Rp
-bGwgY2xvYmJlcmluZyBzb21lIG5hbWVzLCBlLmcuIG9uZXMgZnJvbQo+PiBwaHlzbWFwX29mLmMu
-Cj4gCj4gSW5kZWVkLiBJIHRob3VnaHQgYWxsIHVzZXJzIG9mCj4gbXRkX3NldF9vZl9ub2RlKCkv
-bmFuZF9zZXRfZmxhc2hfbm9kZSgpL3NwaV9ub3Jfc2V0X2ZsYXNoX25vZGUoKSB3ZXJlCj4gY2Fs
-bGluZyB0aGlzIGZ1bmN0aW9uIGJlZm9yZSBpbml0aWFsaXppbmcgbXRkLT5uYW1lLCB3aGljaCBp
-cwo+IGFwcGFyZW50bHkgbm90IHRydWUuCj4gCj4+IE5vdGFibHksIHRoaXMgZHJpdmVyIGFscmVh
-ZHkgc3VwcG9ydHMgYSAibGludXgsbXRkLW5hbWUiCj4+ICh3aGljaCB5b3VyIG5ldyBwcm9wZXJ0
-eSBzaG91bGQgcHJvYmFibHkgc3VwZXJzZWRlKSwgYnV0IGl0IHNlZW1zIGxpa2UKPj4geW91J3Jl
-IGJyZWFraW5nIGNvbXBhdGliaWxpdHkuCj4gCj4gV2VsbCwgd2UncmUgbm90IHJlYWxseSBicmVh
-a2luZyB0aGluZ3MgdW50aWwgc29tZW9uZSBzdGFydHMgZGVmaW5pbmcgYQo+ICdsYWJlbCcgcHJv
-cGVydHkgdW5kZXIgdGhlIGZsYXNoIG5vZGUgOy0pLiBNb3Jlb3ZlciwgaWYgd2Ugd2FudCB0bwo+
-IGRlcHJlY2F0ZSAnbGludXgsbXRkLW5hbWUnIGluIGZhdm9yIG9mICdsYWJlbCcsIHdlIHNob3Vs
-ZCBkZWZpbml0ZWx5Cj4gb3ZlcnJpZGUgdGhlICdsaW51eCxtdGQtbmFtZScgdmFsdWUgd2l0aCB0
-aGUgJ2xhYmVsJyBvbmUgaWYgc29tZW9uZQo+IGRlZmluZWQgYm90aCAod2hpY2ggaXMgYmFkIDst
-KSkuCj4gCj4gQW55d2F5LCBJIGFncmVlLCB3ZSdkIGJldHRlciBjaGVjayBpZiAhbXRkLT5uYW1l
-IGJlZm9yZSBhc3NpZ25pbmcgdGhlCj4gbGFiZWwgbmFtZS4KPiBDZWRyaWMsIGNhbiB5b3Ugc2Vu
-ZCBhIHYzPwoKCnllcy4gd2lsbCBkbyBpbiB0aGUgbW9ybmluZy4KClRoYW5rcywKCkMuIAoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4
-IE1URCBkaXNjdXNzaW9uIG1haWxpbmcgbGlzdApodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2xpbnV4LW10ZC8K
+This can be used to easily identify a specific chip on a system with
+multiple chips.
+
+Suggested-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
+---
+
+ Changes since v2:
+
+ - only assign device name from label if mtd->name is undefined
+
+ Changes since v1:
+
+ - moved the use of the "label" property from mtd_set_dev_defaults()
+   to mtd_set_of_node() to let drivers keep control on how mtd->name
+   is set and allocated.
+
+ include/linux/mtd/mtd.h | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
+index 13f8052b9ff9..5a08ddff4f51 100644
+--- a/include/linux/mtd/mtd.h
++++ b/include/linux/mtd/mtd.h
+@@ -24,6 +24,7 @@
+ #include <linux/uio.h>
+ #include <linux/notifier.h>
+ #include <linux/device.h>
++#include <linux/of.h>
+ 
+ #include <mtd/mtd-abi.h>
+ 
+@@ -385,6 +386,8 @@ static inline void mtd_set_of_node(struct mtd_info *mtd,
+ 				   struct device_node *np)
+ {
+ 	mtd->dev.of_node = np;
++	if (!mtd->name)
++		of_property_read_string(np, "label", &mtd->name);
+ }
+ 
+ static inline struct device_node *mtd_get_of_node(struct mtd_info *mtd)
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
