@@ -1,67 +1,62 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 8/8] ARM: sun8i: a33: Add the Mali OPPs
-Date: Thu,  9 Feb 2017 17:39:22 +0100
-Message-ID: <2e4a4f3f2f584f65f3c2d5e78f589015c651198d.1486655917.git-series.maxime.ripard@free-electrons.com>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
-Return-path: <owner-linux-mm@kvack.org>
-In-Reply-To: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
-In-Reply-To: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
-Sender: owner-linux-mm@kvack.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 08/10] ARM: davinci: fix the DT boot on da850-evm
+Date: Thu, 9 Feb 2017 17:44:25 +0100
+Message-ID: <CAMpxmJVKRgPOEfeAwJLQ_ge92ajjb+N9TdyZtKfhdLELNVkUFQ@mail.gmail.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+ <1486485683-11427-9-git-send-email-bgolaszewski@baylibre.com>
+ <m2fujpkgkg.fsf@baylibre.com> <4574d1c3-c169-b158-dba6-f1965a1056b0@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4574d1c3-c169-b158-dba6-f1965a1056b0-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Patrick Titiano <ptitiano-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Alexandre Bailon <abailon-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lad Prabhakar <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, arm-soc <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Mali GPU in the A33 has various operating frequencies used in the
-Allwinner BSP.
+2017-02-09 16:23 GMT+01:00 Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>:
+> On Tuesday 07 February 2017 11:51 PM, Kevin Hilman wrote:
+>> Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
+>>
+>>> When we enable vpif capture on the da850-evm we hit a BUG_ON() because
+>>> the i2c adapter can't be found. The board file boot uses i2c adapter 1
+>>> but in the DT mode it's actually adapter 0. Drop the problematic lines.
+>>>
+>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  arch/arm/mach-davinci/pdata-quirks.c | 4 ----
+>>>  1 file changed, 4 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
+>>> index 94948c1..09f62ac 100644
+>>> --- a/arch/arm/mach-davinci/pdata-quirks.c
+>>> +++ b/arch/arm/mach-davinci/pdata-quirks.c
+>>> @@ -116,10 +116,6 @@ static void __init da850_vpif_legacy_init(void)
+>>>      if (of_machine_is_compatible("ti,da850-lcdk"))
+>>>              da850_vpif_capture_config.subdev_count = 1;
+>>>
+>>> -    /* EVM (UI card) uses i2c adapter 1 (not default: zero) */
+>>> -    if (of_machine_is_compatible("ti,da850-evm"))
+>>> -            da850_vpif_capture_config.i2c_adapter_id = 1;
+>>> -
+>>
+>> oops, my bad.
+>>
+>> Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>
+> The offending code is not in my master branch. Since its almost certain
+> that VPIF platform support is going to wait for v4.12, can you or Kevin
+> please update Kevin's original patches with these fixes rolled in?
+>
+> Thanks,
+> Sekhar
+>
 
-Add them to our DT.
+Sure, I based my series on Kevin's integration branch for 4.10.
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
----
- arch/arm/boot/dts/sun8i-a33.dtsi | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
-index 043b1b017276..e1b0abfee42f 100644
---- a/arch/arm/boot/dts/sun8i-a33.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a33.dtsi
-@@ -101,6 +101,22 @@
- 		status = "disabled";
- 	};
- 
-+	mali_opp_table: opp_table1 {
-+		compatible = "operating-points-v2";
-+
-+		opp@144000000 {
-+			opp-hz = /bits/ 64 <144000000>;
-+		};
-+
-+		opp@240000000 {
-+			opp-hz = /bits/ 64 <240000000>;
-+		};
-+
-+		opp@384000000 {
-+			opp-hz = /bits/ 64 <384000000>;
-+		};
-+	};
-+
- 	memory {
- 		reg = <0x40000000 0x80000000>;
- 	};
-@@ -282,6 +298,7 @@
- 
- &mali {
- 	memory-region = <&display_pool>;
-+	operating-points-v2 = <&mali_opp_table>;
- };
- 
- &pio {
--- 
-git-series 0.8.11
-
+Thanks,
+Bartosz
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
