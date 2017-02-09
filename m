@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH v2 3/6] drm: of: introduce drm_of_find_panel_or_bridge
-Date: Thu,  9 Feb 2017 13:05:55 -0600
-Message-ID: <20170209190558.4784-4-robh@kernel.org>
+Subject: [PATCH v2 1/6] of: introduce of_graph_get_remote_node
+Date: Thu,  9 Feb 2017 13:05:53 -0600
+Message-ID: <20170209190558.4784-2-robh@kernel.org>
 References: <20170209190558.4784-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170209190558.4784-1-robh@kernel.org>
@@ -10,129 +10,94 @@ To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Se
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@freescale.com>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puc>
 List-Id: devicetree@vger.kernel.org
 
-Many drivers have a common pattern of searching the OF graph for either an
-attached panel or bridge and then finding the DRM struct for the panel
-or bridge. Also, most drivers need to handle deferred probing when the
-DRM device is not yet instantiated. Create a common function,
-drm_of_find_panel_or_bridge, to find the connected node and the
-associated DRM panel or bridge device.
+The OF graph API leaves too much of the graph walking to clients when
+in many cases the driver doesn't care about accessing the port or
+endpoint nodes. The drivers typically just want the device connected via
+a particular graph connection. of_graph_get_remote_node provides this
+functionality.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
 v2:
-- Reworked code flow
-- Added note that at least one of panel or bridge must not be NULL.
+- Fix of_node_put on endpoint node
+- Added DocBook comments for function
+- Made port/endpoint unsigned to disallow -1
 
- drivers/gpu/drm/drm_of.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++
- include/drm/drm_of.h     | 13 ++++++++++++
- 2 files changed, 65 insertions(+)
+ drivers/of/base.c        | 37 +++++++++++++++++++++++++++++++++++++
+ include/linux/of_graph.h |  8 ++++++++
+ 2 files changed, 45 insertions(+)
 
-diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
-index 47848ed8ca48..86b8b959587a 100644
---- a/drivers/gpu/drm/drm_of.c
-+++ b/drivers/gpu/drm/drm_of.c
-@@ -3,7 +3,9 @@
- #include <linux/list.h>
- #include <linux/of_graph.h>
- #include <drm/drmP.h>
-+#include <drm/drm_bridge.h>
- #include <drm/drm_crtc.h>
-+#include <drm/drm_panel.h>
- #include <drm/drm_of.h>
-
- static void drm_release_of(struct device *dev, void *data)
-@@ -207,3 +209,53 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
- 	return -EINVAL;
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index d4bea3c797d6..525eb804f6ea 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -2469,3 +2469,40 @@ struct device_node *of_graph_get_remote_port(const struct device_node *node)
+ 	return of_get_next_parent(np);
  }
- EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
+ EXPORT_SYMBOL(of_graph_get_remote_port);
 +
-+/*
-+ * drm_of_find_panel_or_bridge - return connected panel or bridge device
-+ * @np: device tree node containing encoder input ports
-+ * @panel: pointer to hold returned drm_panel
-+ * @bridge: pointer to hold returned drm_bridge
++/**
++ * of_graph_get_remote_node() - get remote parent device_node for given port/endpoint
++ * @node: pointer to parent device_node containing graph port/endpoint
++ * @port: identifier (value of reg property) of the parent port node
++ * @endpoint: identifier (value of reg property) of the endpoint node
 + *
-+ * Given a DT node's port and endpoint number, find the connected node and
-+ * return either the associated struct drm_panel or drm_bridge device. Either
-+ * @panel or @bridge must not be NULL.
-+ *
-+ * Returns zero if successful, or one of the standard error codes if it fails.
++ * Return: Remote device node associated with remote endpoint node linked
++ *	   to @node. Use of_node_put() on it when done.
 + */
-+int drm_of_find_panel_or_bridge(const struct device_node *np,
-+				int port, int endpoint,
-+				struct drm_panel **panel,
-+				struct drm_bridge **bridge)
++struct device_node *of_graph_get_remote_node(const struct device_node *node,
++					     u32 port, u32 endpoint)
 +{
-+	int ret = -EPROBE_DEFER;
-+	struct device_node *remote;
++	struct device_node *endpoint_node, *remote;
 +
-+	if (!panel && !bridge)
-+		return -EINVAL;
-+
-+	remote = of_graph_get_remote_node(np, port, endpoint);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	if (panel) {
-+		*panel = of_drm_find_panel(remote);
-+		if (*panel)
-+			ret = 0;
++	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
++	if (!endpoint_node) {
++		pr_debug("no valid endpoint (%d, %d) for node %s\n",
++			 port, endpoint, node->full_name);
++		return NULL;
 +	}
 +
-+	/* No panel found yet, check for a bridge next. */
-+	if (bridge) {
-+		if (ret) {
-+			*bridge = of_drm_find_bridge(remote);
-+			if (*bridge)
-+				ret = 0;
-+		} else {
-+			*bridge = NULL;
-+		}
-+
++	remote = of_graph_get_remote_port_parent(endpoint_node);
++	of_node_put(endpoint_node);
++	if (!remote) {
++		pr_debug("no valid remote node\n");
++		return NULL;
 +	}
 +
-+	of_node_put(remote);
-+	return ret;
++	if (!of_device_is_available(remote)) {
++		pr_debug("not available for remote node\n");
++		return NULL;
++	}
++
++	return remote;
 +}
-+EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
-diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
-index 26a64805cc15..f86507f0599b 100644
---- a/include/drm/drm_of.h
-+++ b/include/drm/drm_of.h
-@@ -8,6 +8,8 @@ struct component_match;
- struct device;
- struct drm_device;
- struct drm_encoder;
-+struct drm_panel;
-+struct drm_bridge;
- struct device_node;
-
- #ifdef CONFIG_OF
-@@ -23,6 +25,10 @@ extern int drm_of_component_probe(struct device *dev,
- extern int drm_of_encoder_active_endpoint(struct device_node *node,
- 					  struct drm_encoder *encoder,
- 					  struct of_endpoint *endpoint);
-+extern int drm_of_find_panel_or_bridge(const struct device_node *np,
-+				       int port, int endpoint,
-+				       struct drm_panel **panel,
-+				       struct drm_bridge **bridge);
++EXPORT_SYMBOL(of_graph_get_remote_node);
+diff --git a/include/linux/of_graph.h b/include/linux/of_graph.h
+index bb3a5a2cd570..abdb02eaef06 100644
+--- a/include/linux/of_graph.h
++++ b/include/linux/of_graph.h
+@@ -51,6 +51,8 @@ struct device_node *of_graph_get_endpoint_by_regs(
+ struct device_node *of_graph_get_remote_port_parent(
+ 					const struct device_node *node);
+ struct device_node *of_graph_get_remote_port(const struct device_node *node);
++struct device_node *of_graph_get_remote_node(const struct device_node *node,
++					     u32 port, u32 endpoint);
  #else
- static inline uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
- 						  struct device_node *port)
-@@ -52,6 +58,13 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
- {
- 	return -EINVAL;
- }
-+static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
-+					      int port, int endpoint,
-+					      struct drm_panel **panel,
-+					      struct drm_bridge **bridge)
-+{
-+	return -EINVAL;
-+}
- #endif
 
- static inline int drm_of_encoder_active_endpoint_id(struct device_node *node,
+ static inline int of_graph_parse_endpoint(const struct device_node *node,
+@@ -89,6 +91,12 @@ static inline struct device_node *of_graph_get_remote_port(
+ {
+ 	return NULL;
+ }
++static inline struct device_node *of_graph_get_remote_node(
++					const struct device_node *node,
++					u32 port, u32 endpoint)
++{
++	return NULL;
++}
+
+ #endif /* CONFIG_OF */
+
 --
 2.10.1
