@@ -1,43 +1,134 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/unittest: Swap arguments of of_unittest_apply_overlay()
-Date: Thu, 9 Feb 2017 09:12:42 -0600
-Message-ID: <CAL_JsqKuNXsBwxkrw7EnX-ZgUm_DtP-0VZtSYYnq0_0Uxrc2GA@mail.gmail.com>
-References: <20170119100616.4679-1-alexander.sverdlin@nokia.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
+ a nexus node
+Date: Thu, 9 Feb 2017 09:17:58 -0600
+Message-ID: <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
+References: <20170123204851.12808-1-stephen.boyd@linaro.org>
+ <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
+ <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170119100616.4679-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 19, 2017 at 4:06 AM, Alexander Sverdlin
-<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
-> Function signature
+On Tue, Jan 24, 2017 at 12:05 PM, Rob Herring <robh+dt@kernel.org> wrote:
+> On Tue, Jan 24, 2017 at 12:36 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> Hi Stephen,
+>>
+>> Sorry I did not get to v1 and v2 in a timely manner.
+>>
+>>
+>> On 01/23/17 12:48, Stephen Boyd wrote:
+>>> Platforms like 96boards have a standardized connector/expansion
+>>> slot that exposes signals like GPIOs to expansion boards in an
+>>> SoC agnostic way. We'd like the DT overlays for the expansion
+>>> boards to be written once without knowledge of the SoC on the
+>>> other side of the connector. This avoids the unscalable
+>>> combinatorial explosion of a different DT overlay for each
+>>> expansion board and SoC pair.
+>>>
+>>> We need a way to describe the GPIOs routed through the connector
+>>> in an SoC agnostic way. Let's introduce nexus property parsing
+>>> into the OF core to do this. This is largely based on the
+>>> interrupt nexus support we already have. This allows us to remap
+>>> a phandle list in a consumer node (e.g. reset-gpios) through a
+>>> connector in a generic way (e.g. via gpio-map). Do this in a
+>>> generic routine so that we can remap any sort of variable length
+>>> phandle list.
+>>>
+>>> Taking GPIOs as an example, the connector would be a GPIO nexus,
+>>> supporting the remapping of a GPIO specifier space to multiple
+>>> GPIO providers on the SoC. DT would look as shown below, where
+>>> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
+>>> expansion port where boards can be plugged in, and
+>>> 'expansion_device' is a device on the expansion board.
+>>>
+>>>       soc {
+>>>               soc_gpio1: gpio-controller1 {
+>>>                       #gpio-cells = <2>;
+>>>               };
+>>>
+>>>               soc_gpio2: gpio-controller2 {
+>>>                       #gpio-cells = <2>;
+>>>               };
+>>>       };
+>>>
+>>>       connector: connector {
+>>>               #gpio-cells = <2>;
+>>>               gpio-map = <0 0 &soc_gpio1 1 0>,
+>>>                          <1 0 &soc_gpio2 4 0>,
+>>>                          <2 0 &soc_gpio1 3 0>,
+>>>                          <3 0 &soc_gpio2 2 0>;
+>>>               gpio-map-mask = <0xf 0x0>;
+>>>               gpio-map-pass-thru = <0x0 0x1>
+>>>       };
+>>>
+>>>       expansion_device {
+>>>               reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
+>>>       };
+>>
+>> The how to architect connectors and plugs threads fell asleep before
+>> coming to a resolution.  We need to revive that discussion.
+>>
+>> One of the concepts of the plug and connector architecture is that
+>> a main board may contain multiple connectors of the same type (or
+>> different types, but the same type is sufficient for this discussion).
+>>
+>> The node describing the card that plugs into one of the connectors
+>> does not know the phandle of the connector it is going to be
+>> connected to.  Some other mechanism is provided to allow a card
+>> to be plugged into any of the available connectors.  If there are
+>> two identical cards plugged into two connectors, then both cards
+>> have the same exact device tree node.  But some mechanism will
+>> exist to resolve (or "link") the two card nodes to the different
+>> connector nodes.
+>>
+>> As a result of this, in the above example the reset-gpios property
+>> in the node 'expansion_device' can not contain '&connector'.  The
+>> concept of &connector belongs to the entire expansion_device node,
+>> not to individual properties within the node.
 >
->   of_unittest_apply_overlay(int unittest_nr, int overlay_nr, ...
+> I think this is easily solved with a connector having 2 halves and
+> that we need to search parents for *-map properties. Inheriting from
+> parents is a common pattern in DT though perhaps not walking the
+> parents of a phandle. So we'd have something like this:
 >
-> and call sites, like in of_unittest_apply_overlay_check():
+> base-connector-1 {
+>   gpio-map = ...
+>   connector {
+>     child {
+>       some-gpios = <&connector 1>;
+>     };
+>   };
+> };
 >
->   ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, ...
+> base-connector-2 {
+>   gpio-map = ...
+>   connector {
+>     child {
+>       some-gpios = <&connector 1>;
+>     };
+>   };
+> };
 >
-> do not match. Fix this in one place (function signature).
-> The only affected test case is 15, which supplies non-existing
-> overlay number 16, but two bugs matched here. Fix the test case.
->
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  drivers/of/unittest.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> Now, how we resolve that /connector from an overlay targets
+> /base-connector-1 and /base-connector-2 is an orthogonal issue and one
+> that's going to be connector specific (at least for probe-able
+> connectors).
 
-Applied, thanks.
+Frank, any more comments on this? If not, I plan to apply this series.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
