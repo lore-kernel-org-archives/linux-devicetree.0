@@ -1,11 +1,13 @@
-From: Harninder Rai <harninder.rai@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: Add support for FSL's LS1088A SoC
-Date: Thu, 9 Feb 2017 16:34:21 +0530
-Message-ID: <1486638261-10070-1-git-send-email-harninder.rai@nxp.com>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: [PATCH 11/11] iommu: Remove iommu_register_instance interface
+Date: Thu,  9 Feb 2017 12:33:00 +0100
+Message-ID: <1486639981-32368-12-git-send-email-joro@8bytes.org>
+References: <1486639981-32368-1-git-send-email-joro@8bytes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486639981-32368-1-git-send-email-joro@8bytes.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,504 +17,191 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, shawnguo@kernel.org
-Cc: Harninder Rai <harninder.rai@nxp.com>, stuart.yoder@nxp.com, Ashish Kumar <ashish.kumar@nxp.com>, oss@buserror.net, Raghav Dogra <raghav.dogra@nxp.com>, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alex Williamson <alex.williamson@redhat.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: devicetree@vger.kernel.org, Joerg Roedel <jroedel@suse.de>, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-LS1088A contains eight ARM v8 CortexA53 processor cores
-with 32 KB L1-D cache and 32 KB L1-I cache
+From: Joerg Roedel <jroedel@suse.de>
 
-Features summary
- Eight 32-bit / 64-bit ARM v8 Cortex-A53 CPUs
-  - Arranged as two clusters of four cores sharing a 1 MB L2 cache
-  - Speed Up to 1.5 GHz
-  - Support for cluster power-gating.
- Cache coherent interconnect (CCI-400)
-  - Hardware-managed data coherency
-  - Up to 700 MHz
- One 64-bit DDR4 SDRAM memory controller with ECC
- Data path acceleration architecture 2.0 (DPAA2)
- Three PCIe 3.0 controllers
- One serial ATA (SATA 3.0) controller
- Three high-speed USB 3.0 controllers with integrated PHY
+And also move its remaining functionality to
+iommu_device_register() and 'struct iommu_device'.
 
- Following levels of DTSI/DTS files have been created for the LS1088A
-  SoC family:
-
-         - fsl-ls1088a.dtsi:
-                 DTS-Include file for NXP LS1088A SoC.
-
-         - fsl-ls1088a-qds.dts:
-                 DTS file for NXP LS1088A QDS board.
-
-         - fsl-ls1088a-rdb.dts:
-                 DTS file for NXP LS1088A RDB board
-
-Signed-off-by: Harninder Rai <harninder.rai@nxp.com>
-Signed-off-by: Ashish Kumar <ashish.kumar@nxp.com>
-Signed-off-by: Raghav Dogra <raghav.dogra@nxp.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 ---
- arch/arm64/boot/dts/freescale/Makefile            |   2 +
- arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts | 102 ++++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts |  86 ++++++++
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi    | 234 ++++++++++++++++++++++
- 4 files changed, 424 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+ drivers/iommu/arm-smmu-v3.c  |  2 --
+ drivers/iommu/arm-smmu.c     |  1 -
+ drivers/iommu/exynos-iommu.c |  2 --
+ drivers/iommu/iommu.c        | 37 ++++++-------------------------------
+ drivers/iommu/msm_iommu.c    |  2 --
+ drivers/iommu/mtk_iommu.c    |  1 -
+ include/linux/iommu.h        |  7 -------
+ include/linux/of_iommu.h     |  6 ------
+ 8 files changed, 6 insertions(+), 52 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 39db645..cdf7307 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -5,6 +5,8 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1043a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1046a-rdb.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-qds.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls1088a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-qds.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-rdb.dtb
- dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-ls2080a-simu.dtb
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-new file mode 100644
-index 0000000..de0604a
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-qds.dts
-@@ -0,0 +1,102 @@
-+/*
-+ * Device Tree file for NXP LS1088a QDS Board
-+ *
-+ * Copyright 2017 NXP
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls1088a.dtsi"
-+
-+/ {
-+	model = "LS1088A QDS Board";
-+	compatible = "fsl,ls1088a-qds", "fsl,ls1088a";
-+};
-+
-+&ifc {
-+	status = "disabled";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	pca9547@77 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			ina220@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+
-+			ina220@41 {
-+				compatible = "ti,ina220";
-+				reg = <0x41>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			rtc@51 {
-+				compatible = "nxp,pcf2129";
-+				reg = <0x51>;
-+				/* IRQ10_B */
-+				interrupts = <0 150 0x4>;
-+			};
-+
-+			eeprom@56 {
-+				compatible = "atmel,24c512";
-+				reg = <0x56>;
-+			};
-+
-+			eeprom@57 {
-+				compatible = "atmel,24c512";
-+				reg = <0x57>;
-+			};
-+
-+			temp-sensor@4c {
-+				compatible = "adi,adt7461a";
-+				reg = <0x4c>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "disabled";
-+};
-+
-+&i2c2 {
-+	status = "disabled";
-+};
-+
-+&i2c3 {
-+	status = "disabled";
-+};
-+
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-new file mode 100644
-index 0000000..c825a8c
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a-rdb.dts
-@@ -0,0 +1,86 @@
-+/*
-+ * Device Tree file for NXP LS1088a RDB board
-+ *
-+ * Copyright 2017 NXP
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+
-+#include "fsl-ls1088a.dtsi"
-+
-+/ {
-+	model = "L1088A RDB Board";
-+	compatible = "fsl,ls1088a-rdb", "fsl,ls1088a";
-+};
-+
-+&ifc {
-+	status = "disabled";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	pca9547@77 {
-+		compatible = "nxp,pca9547";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			ina220@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			rtc@51 {
-+				compatible = "nxp,pcf2129";
-+				reg = <0x51>;
-+				/* IRQ10_B */
-+				interrupts = <0 150 0x4>;
-+			};
-+
-+			adt7461a@4c {
-+				compatible = "adt7461a";
-+				reg = <0x4c>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	status = "disabled";
-+};
-+
-+&i2c2 {
-+	status = "disabled";
-+};
-+
-+&i2c3 {
-+	status = "disabled";
-+};
-+
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-new file mode 100644
-index 0000000..da2f864
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -0,0 +1,234 @@
-+/*
-+ * Device Tree Include file for NXP Layerscape-1088A family SoC.
-+ *
-+ * Copyright 2017 NXP
-+ *
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "fsl,ls1088a";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		/* We have 2 clusters having 4 Cortex-A53 cores each */
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x0>;
-+			clocks = <&clockgen 1 0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x1>;
-+			clocks = <&clockgen 1 0>;
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x2>;
-+			clocks = <&clockgen 1 0>;
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x3>;
-+			clocks = <&clockgen 1 0>;
-+		};
-+
-+		cpu4: cpu@100 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x100>;
-+			clocks = <&clockgen 1 1>;
-+		};
-+
-+		cpu5: cpu@101 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x101>;
-+			clocks = <&clockgen 1 1>;
-+		};
-+
-+		cpu6: cpu@102 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x102>;
-+			clocks = <&clockgen 1 1>;
-+		};
-+
-+		cpu7: cpu@103 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53";
-+			reg = <0x103>;
-+			clocks = <&clockgen 1 1>;
-+		};
-+	};
-+
-+	gic: interrupt-controller@6000000 {
-+		compatible = "arm,gic-v3";
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+		reg = <0x0 0x06000000 0 0x10000>, /* GIC Dist */
-+		      <0x0 0x06100000 0 0x100000>, /* GICR(RD_base+SGI_base)*/
-+		      <0x0 0x0c0c0000 0 0x2000>, /* GICC */
-+		      <0x0 0x0c0d0000 0 0x1000>, /* GICH */
-+		      <0x0 0x0c0e0000 0 0x20000>; /* GICV */
-+		interrupts = <1 9 0x4>;
-+	};
-+
-+	sysclk: sysclk {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <100000000>;
-+		clock-output-names = "sysclk";
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		clockgen: clocking@1300000 {
-+			compatible = "fsl,ls1088a-clockgen";
-+			reg = <0 0x1300000 0 0xa0000>;
-+			#clock-cells = <2>;
-+			clocks = <&sysclk>;
-+		};
-+
-+		duart0: serial@21c0500 {
-+			compatible = "fsl,ns16550", "ns16550a";
-+			reg = <0x0 0x21c0500 0x0 0x100>;
-+			clocks = <&clockgen 4 3>;
-+			interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		duart1: serial@21c0600 {
-+			compatible = "fsl,ns16550", "ns16550a";
-+			reg = <0x0 0x21c0600 0x0 0x100>;
-+			clocks = <&clockgen 4 3>;
-+			interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		gpio0: gpio@2300000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2300000 0x0 0x10000>;
-+			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio1: gpio@2310000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2310000 0x0 0x10000>;
-+			interrupts = <0 36 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio2: gpio@2320000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2320000 0x0 0x10000>;
-+			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		gpio3: gpio@2330000 {
-+			compatible = "fsl,qoriq-gpio";
-+			reg = <0x0 0x2330000 0x0 0x10000>;
-+			interrupts = <0 37 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+		};
-+
-+		ifc: ifc@2240000 {
-+			compatible = "fsl,ifc", "simple-bus";
-+			reg = <0x0 0x2240000 0x0 0x20000>;
-+			interrupts = <0 21 IRQ_TYPE_LEVEL_HIGH>;
-+			little-endian;
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+
-+			ranges = <0 0 0x5 0x80000000 0x08000000
-+				  2 0 0x5 0x30000000 0x00010000
-+				  3 0 0x5 0x20000000 0x00010000>;
-+			};
-+
-+		i2c0: i2c@2000000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2000000 0x0 0x10000>;
-+			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@2010000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2010000 0x0 0x10000>;
-+			interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@2020000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2020000 0x0 0x10000>;
-+			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@2030000 {
-+			compatible = "fsl,vf610-i2c";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0 0x2030000 0x0 0x10000>;
-+			interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			status = "disabled";
-+		};
-+
-+		sata0: sata@3200000 {
-+			compatible = "fsl,ls1088a-ahci", "fsl,ls1043a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>;
-+			interrupts = <0 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <1 13 IRQ_TYPE_LEVEL_LOW>,/* Physical Secure PPI */
-+			     <1 14 IRQ_TYPE_LEVEL_LOW>,/* Physical Non-Secure PPI */
-+			     <1 11 IRQ_TYPE_LEVEL_LOW>,/* Virtual PPI */
-+			     <1 10 IRQ_TYPE_LEVEL_LOW>;/* Hypervisor PPI */
-+	};
-+};
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 32133e2..5375137 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -2702,8 +2702,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 
+ 	ret = iommu_device_register(&smmu->iommu);
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+-
+ #ifdef CONFIG_PCI
+ 	if (pci_bus_type.iommu_ops != &arm_smmu_ops) {
+ 		pci_request_acs();
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index f4ce1e7..8fb4af2 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -2121,7 +2121,6 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+ 		return err;
+ 	}
+ 
+-	iommu_register_instance(dev->fwnode, &arm_smmu_ops);
+ 	platform_set_drvdata(pdev, smmu);
+ 	arm_smmu_device_reset(smmu);
+ 
+diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+index 64325d8..778eccc 100644
+--- a/drivers/iommu/exynos-iommu.c
++++ b/drivers/iommu/exynos-iommu.c
+@@ -642,8 +642,6 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
+ 
+ 	pm_runtime_enable(dev);
+ 
+-	of_iommu_set_ops(dev->of_node, &exynos_iommu_ops);
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+index 21061da..a7e14b4 100644
+--- a/drivers/iommu/iommu.c
++++ b/drivers/iommu/iommu.c
+@@ -1647,43 +1647,18 @@ int iommu_request_dm_for_dev(struct device *dev)
+ 	return ret;
+ }
+ 
+-struct iommu_instance {
+-	struct list_head list;
+-	struct fwnode_handle *fwnode;
+-	const struct iommu_ops *ops;
+-};
+-static LIST_HEAD(iommu_instance_list);
+-static DEFINE_SPINLOCK(iommu_instance_lock);
+-
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops)
+-{
+-	struct iommu_instance *iommu = kzalloc(sizeof(*iommu), GFP_KERNEL);
+-
+-	if (WARN_ON(!iommu))
+-		return;
+-
+-	of_node_get(to_of_node(fwnode));
+-	INIT_LIST_HEAD(&iommu->list);
+-	iommu->fwnode = fwnode;
+-	iommu->ops = ops;
+-	spin_lock(&iommu_instance_lock);
+-	list_add_tail(&iommu->list, &iommu_instance_list);
+-	spin_unlock(&iommu_instance_lock);
+-}
+-
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+-	struct iommu_instance *instance;
+ 	const struct iommu_ops *ops = NULL;
++	struct iommu_device *iommu;
+ 
+-	spin_lock(&iommu_instance_lock);
+-	list_for_each_entry(instance, &iommu_instance_list, list)
+-		if (instance->fwnode == fwnode) {
+-			ops = instance->ops;
++	spin_lock(&iommu_device_lock);
++	list_for_each_entry(iommu, &iommu_device_list, list)
++		if (iommu->fwnode == fwnode) {
++			ops = iommu->ops;
+ 			break;
+ 		}
+-	spin_unlock(&iommu_instance_lock);
++	spin_unlock(&iommu_device_lock);
+ 	return ops;
+ }
+ 
+diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+index 30795cb..d044835 100644
+--- a/drivers/iommu/msm_iommu.c
++++ b/drivers/iommu/msm_iommu.c
+@@ -810,8 +810,6 @@ static int msm_iommu_probe(struct platform_device *pdev)
+ 		goto fail;
+ 	}
+ 
+-	of_iommu_set_ops(pdev->dev.of_node, &msm_iommu_ops);
+-
+ 	pr_info("device mapped at %p, irq %d with %d ctx banks\n",
+ 		iommu->base, iommu->irq, iommu->ncb);
+ 
+diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+index d484fa6..5d14cd1 100644
+--- a/drivers/iommu/mtk_iommu.c
++++ b/drivers/iommu/mtk_iommu.c
+@@ -681,7 +681,6 @@ static int mtk_iommu_init_fn(struct device_node *np)
+ 		return ret;
+ 	}
+ 
+-	of_iommu_set_ops(np, &mtk_iommu_ops);
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 626c935..9e82fc8 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -382,8 +382,6 @@ int iommu_fwspec_init(struct device *dev, struct fwnode_handle *iommu_fwnode,
+ 		      const struct iommu_ops *ops);
+ void iommu_fwspec_free(struct device *dev);
+ int iommu_fwspec_add_ids(struct device *dev, u32 *ids, int num_ids);
+-void iommu_register_instance(struct fwnode_handle *fwnode,
+-			     const struct iommu_ops *ops);
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode);
+ 
+ #else /* CONFIG_IOMMU_API */
+@@ -634,11 +632,6 @@ static inline int iommu_fwspec_add_ids(struct device *dev, u32 *ids,
+ 	return -ENODEV;
+ }
+ 
+-static inline void iommu_register_instance(struct fwnode_handle *fwnode,
+-					   const struct iommu_ops *ops)
+-{
+-}
+-
+ static inline
+ const struct iommu_ops *iommu_ops_from_fwnode(struct fwnode_handle *fwnode)
+ {
+diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
+index 66fcbc9..fc4add3 100644
+--- a/include/linux/of_iommu.h
++++ b/include/linux/of_iommu.h
+@@ -31,12 +31,6 @@ static inline const struct iommu_ops *of_iommu_configure(struct device *dev,
+ 
+ #endif	/* CONFIG_OF_IOMMU */
+ 
+-static inline void of_iommu_set_ops(struct device_node *np,
+-				    const struct iommu_ops *ops)
+-{
+-	iommu_register_instance(&np->fwnode, ops);
+-}
+-
+ static inline const struct iommu_ops *of_iommu_get_ops(struct device_node *np)
+ {
+ 	return iommu_ops_from_fwnode(&np->fwnode);
 -- 
-2.7.4
+1.9.1
