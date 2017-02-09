@@ -1,54 +1,84 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] ARM: dts: Add support for phyCORE-AM335x PCM-953
- carrier board
-Date: Thu, 9 Feb 2017 09:31:33 -0800
-Message-ID: <20170209173132.GD21809@atomide.com>
-References: <1485252576-36955-1-git-send-email-t.remmet@phytec.de>
- <ff34a257-7272-9b9e-c0bb-a88bac8b3d05@arm.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 2/2] ARM: dts: bcm283x: Add critical thermal zone for
+ GPU
+Date: Thu, 9 Feb 2017 18:48:52 +0100 (CET)
+Message-ID: <124007607.358509.1486662532562@email.1und1.de>
+References: <E0A4388D-788A-40B4-9193-36FD75284654@martin.sperl.org>
+ <1486217787-15703-1-git-send-email-stefan.wahren@i2se.com>
+ <1486217787-15703-2-git-send-email-stefan.wahren@i2se.com>
+ <20170208041929.GA6809@localhost.localdomain>
+ <20170208042351.GB6809@localhost.localdomain>
+ <93f3ecbc-6d28-3e04-d6f3-4c03f8ac7ab3@i2se.com>
+ <87lgtgea1q.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <ff34a257-7272-9b9e-c0bb-a88bac8b3d05-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Teresa Remmet <t.remmet-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wadim Egorov <w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org>, Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <87lgtgea1q.fsf@eliezer.anholt.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eric Anholt <eric@anholt.net>, Eduardo Valentin <edubezval@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, kernel@martin.sperl.org, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, linux-rpi-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> [170209 08:57]:
-> On 24/01/17 10:09, Teresa Remmet wrote:
-> > +	user_buttons: user_buttons {
-> > +		compatible = "gpio-keys";
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&user_buttons_pins>;
-> > +
-> > +		button@0 {
-> > +			label = "home";
-> > +			linux,code = <KEY_HOME>;
-> > +			gpios = <&gpio3 7 GPIO_ACTIVE_HIGH>;
-> > +			gpio-key,wakeup;
-> > +		};
-> > +
-> > +		button@1 {
-> > +			label = "menu";
-> > +			linux,code = <KEY_MENU>;
-> > +			gpios = <&gpio3 8 GPIO_ACTIVE_HIGH>;
-> > +			gpio-key,wakeup;
+Hi Eric,
+
+> Eric Anholt <eric@anholt.net> hat am 8. Februar 2017 um 20:50 geschrieben:
 > 
-> Could you please replace this with wakeup-source as specified in
-> Documentation/devicetree/bindings/power/wakeup-source.txt
 > 
-> I know this patch is merged, just fix it on top of linux-next ?
-> I think TI/OMAP downstream tree has some remnants of the legacy
-> boolean and it keeps slipping through every merge window :)
+> Stefan Wahren <stefan.wahren@i2se.com> writes:
+> 
+> > Am 08.02.2017 um 05:23 schrieb Eduardo Valentin:
+> >> On Tue, Feb 07, 2017 at 08:19:31PM -0800, Eduardo Valentin wrote:
+> >>> On Sat, Feb 04, 2017 at 02:16:27PM +0000, Stefan Wahren wrote:
+> >>>> As suggested by Eduardo Valentin this adds the thermal zone for
+> >>>> the bcm2835 SoC. Since we currently don't have any cooling devices
+> >>>> leave this section empty.
+> >>>>
+> >>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> >>>> ---
+> >>>>  arch/arm/boot/dts/bcm283x.dtsi |   19 +++++++++++++++++++
+> >>>>  1 file changed, 19 insertions(+)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+> >>>> index 9c7ec7e..359da9d 100644
+> >>>> --- a/arch/arm/boot/dts/bcm283x.dtsi
+> >>>> +++ b/arch/arm/boot/dts/bcm283x.dtsi
+> >>>> @@ -19,6 +19,25 @@
+> >>>>  		bootargs = "earlyprintk console=ttyAMA0";
+> >>>>  	};
+> >>>>  
+> >>>> +	thermal-zones {
+> >>>> +		gpu_thermal: gpu-thermal {
+> >>>> +			polling-delay-passive = <0>;
+> >>>> +			polling-delay = <1000>;
+> >>>> +
+> >>>> +			thermal-sensors = <&thermal>;
+> >> Just came to my mind, dont you need to have an id to specify with sensor
+> >> points to gpu?
+> >
+> > Sorry, i don't know the exact setup of the single thermal sensor on the
+> > SoC (datasheet doesn't provide any helpful information). I adapted the
+> > Renesas R-Car thermal binding because i think it would be the best match.
+> >
+> > @Eric: What's your opinion?
+> 
+> I don't understand the question.
 
-Oops sorry these keep coming. Teresa, can you please send a
-follow-up fix against current Linux next?
+i hope to get it right. We are talking about defining the thermal zone [1].
 
-Regards,
+There are 4 examples:
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+(a) - CPU thermal zone with one internal sensor
+(b) - IC with several internal sensors
+(c) - Several sensors within one single thermal zone
+(d) - Board thermal
+
+I decided to choose (a) for the patch and Eduardo tends to (b).
+
+Here are the questions:
+
+Where is the thermal sensor TSENS located (ARM core or VideoCore 4)?
+
+Do we expect several internal sensors?
+
+[1] - http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/thermal/thermal.txt
