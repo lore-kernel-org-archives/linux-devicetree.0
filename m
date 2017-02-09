@@ -1,86 +1,43 @@
-From: Mars Cheng <mars.cheng@mediatek.com>
-Subject: Re: [PATCH v2 01/10] Document: DT: mediatek: multiple base address
- support for sysirq
-Date: Thu, 9 Feb 2017 09:47:57 +0800
-Message-ID: <1486604877.29572.9.camel@mtkswgap22>
-References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
-         <1486383336-16892-2-git-send-email-mars.cheng@mediatek.com>
-         <20170208232039.p7ljh4krndtn2edy@rob-hp-laptop>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ASoC: zx-i2s: introduce pclk for zx2967 family
+Date: Thu, 9 Feb 2017 09:48:09 +0800
+Message-ID: <20170209014807.GO3407@dragon>
+References: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
+ <1486522955-14528-2-git-send-email-baoyou.xie@linaro.org>
+ <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170208232039.p7ljh4krndtn2edy@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, CC Hwang <cc.hwang@mediatek.com>, Loda Chou <loda.chou@mediatek.com>, Miles Chen <miles.chen@mediatek.com>, Jades Shih <jades.shih@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, My Chuang <my.chuang@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, wsd_upstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will.deacon@arm.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, Chieh-Jay Liu <Chieh-Jay.Liu@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, 2017-02-08 at 17:20 -0600, Rob Herring wrote:
-> On Mon, Feb 06, 2017 at 08:15:27PM +0800, Mars Cheng wrote:
-> > This describes how to specify multiple base addresses for sysirq
-> > in mediatek platforms.
-> > 
-> > Signed-off-by: Mars Cheng <mars.cheng@mediatek.com>
-> > ---
-> >  .../interrupt-controller/mediatek,sysirq.txt       |   13 +++++++++----
-> >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> > index 9d1d72c..1718454 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> > @@ -18,16 +18,21 @@ Required properties:
-> >  	"mediatek,mt2701-sysirq"
-> >  - interrupt-controller : Identifies the node as an interrupt controller
-> >  - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
-> > +- #intpol-bases: Indicate how many base addresses to be used, default is 1.
+On Wed, Feb 08, 2017 at 06:52:07PM -0600, Rob Herring wrote:
+> On Wed, Feb 08, 2017 at 11:02:34AM +0800, Baoyou Xie wrote:
+> > ZTE's zx2967 I2S controller driver introduces pclk, this
+> > patch documents this fact.
 > 
-> There is no point in this. It can either be implied by the compatible 
-> string or you just try to get the resource for the 2nd region. (Or in DT 
-> terms, get the size of reg.)
+> Now we have the same subject for patches 2 and 3.
 > 
+> Personally, I'd prefer "dt-bindings: sound: blah...", but not enough to 
+> argue with Mark about it. If that is not the prefix, then it should at 
+> least have "binding" in the subject.
 
-Originally I try to mimic #redistributor-regions in
-Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt.
++1
 
-But I think you are right since irq-gic-v3 has several kinds of bases in
-reg so that they need an indicator to decode. For irq-mtk-sysirq, we can
-just try 2nd region and increment a counter to get the number of bases.
+The prefix of sound bindings is quite unique from other subsystems.
+Looking at the prefix of Documentation/devicetree/bindings/sound/
+commits, I'm always confused whether it's a pure binding commit
+or just submitted as part of the driver patch.  I feel that we
+kinda lose the point of having a prefix.
 
-Will fix this in v3.
+Just my 2 cents.
 
-Thanks.
-
-> >  - interrupt-parent: phandle of irq parent for sysirq. The parent must
-> >    use the same interrupt-cells format as GIC.
-> >  - reg: Physical base address of the intpol registers and length of memory
-> > -  mapped region.
-> > +  mapped region. Could be multiple bases here. Ex: mt6797 needs 2 reg, others
-> > +  need 1. If not set, the default is 1.
-> >  
-> >  Example:
-> > -	sysirq: interrupt-controller@10200100 {
-> > -		compatible = "mediatek,mt6589-sysirq", "mediatek,mt6577-sysirq";
-> > +	sysirq: intpol-controller@10200620 {
-> > +		compatible = "mediatek,mt6797-sysirq",
-> > +			     "mediatek,mt6577-sysirq";
-> >  		interrupt-controller;
-> >  		#interrupt-cells = <3>;
-> > +		#intpol-bases = <2>;
-> >  		interrupt-parent = <&gic>;
-> > -		reg = <0 0x10200100 0 0x1c>;
-> > +		reg = <0 0x10220620 0 0x20>,
-> > +		      <0 0x10220690 0 0x10>;
-> >  	};
-> > -- 
-> > 1.7.9.5
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
