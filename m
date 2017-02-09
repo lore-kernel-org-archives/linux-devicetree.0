@@ -1,85 +1,83 @@
-From: Michal Hocko <mhocko@kernel.org>
-Subject: Re: [PATCH 3/8] mm: cma: Export a few symbols
-Date: Thu, 9 Feb 2017 20:20:47 +0100
-Message-ID: <20170209192046.GB31906@dhcp22.suse.cz>
-References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
- <2dee6c0baaf08e2c7d48ceb7e97e511c914d0f87.1486655917.git-series.maxime.ripard@free-electrons.com>
+From: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through a
+ nexus node
+Date: Thu, 09 Feb 2017 11:55:21 -0800
+Message-ID: <148667012126.1039.3552258235157685937@sboyd-linaro>
+References: <20170123204851.12808-1-stephen.boyd@linaro.org>
+ <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
+ <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
+ <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
+ <20170209153526.GF27312@n2100.armlinux.org.uk>
+ <CAL_JsqKmkkPobGGzOOcbt2Nbx1=y=+C_167dVKHqrP0UgHBe_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <owner-linux-mm@kvack.org>
-Content-Disposition: inline
-In-Reply-To: <2dee6c0baaf08e2c7d48ceb7e97e511c914d0f87.1486655917.git-series.maxime.ripard@free-electrons.com>
-Sender: owner-linux-mm@kvack.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Joonsoo Kim <js1304@gmail.com>, m.szyprowski@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKmkkPobGGzOOcbt2Nbx1=y=+C_167dVKHqrP0UgHBe_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-[CC CMA people]
+Quoting Rob Herring (2017-02-09 08:00:05)
+> On Thu, Feb 9, 2017 at 9:35 AM, Russell King - ARM Linux
+> <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org> wrote:
+> > On Thu, Feb 09, 2017 at 09:17:58AM -0600, Rob Herring wrote:
+> >> Frank, any more comments on this? If not, I plan to apply this series.
+> >
+> > Well, I find that a little annoying, because DT has the requirement
+> > that new bindings are properly documented in Documentation, and it
+> > appears that this comes with no documentation what so ever, despite
+> > introducing new properties (like the -map-mask-passthru thing).
+> >
+> > So I'm NAKing it until there's some documentation of how this
+> > mechanism is supposed to work.
+> >
+> > Merely providing an example in a commit log is (IMHO) insufficient.
+> > An example doesn't explain how it was created, or how to create an
+> > implementation.
+> =
 
-On Thu 09-02-17 17:39:17, Maxime Ripard wrote:
-> Modules might want to check their CMA pool size and address for debugging
-> and / or have additional checks.
-> 
-> The obvious way to do this would be through dev_get_cma_area and
-> cma_get_base and cma_get_size, that are currently not exported, which
-> results in a build failure.
-> 
-> Export them to prevent such a failure.
+> Yes, you are right.
+> =
 
-Who actually uses those exports. None of the follow up patches does
-AFAICS.
+> However, I'd like to see this documented in the DT spec, rather than
+> kernel Documentation/ as this is a core binding. Though that would
+> also imply first moving the GPIO bindings there. Perhaps just how this
+> works generically could be in the spec, but the GPIO specifics can
+> live with the rest of the GPIO bindings for now. This is intended to
+> extend to other bindings.
 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> ---
->  drivers/base/dma-contiguous.c | 1 +
->  mm/cma.c                      | 2 ++
->  2 files changed, 3 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
-> index e167a1e1bccb..60f5c2591ccd 100644
-> --- a/drivers/base/dma-contiguous.c
-> +++ b/drivers/base/dma-contiguous.c
-> @@ -35,6 +35,7 @@
->  #endif
->  
->  struct cma *dma_contiguous_default_area;
-> +EXPORT_SYMBOL(dma_contiguous_default_area);
->  
->  /*
->   * Default global CMA area size can be defined in kernel's .config.
-> diff --git a/mm/cma.c b/mm/cma.c
-> index c960459eda7e..b50245282a18 100644
-> --- a/mm/cma.c
-> +++ b/mm/cma.c
-> @@ -47,11 +47,13 @@ phys_addr_t cma_get_base(const struct cma *cma)
->  {
->  	return PFN_PHYS(cma->base_pfn);
->  }
-> +EXPORT_SYMBOL(cma_get_base);
->  
->  unsigned long cma_get_size(const struct cma *cma)
->  {
->  	return cma->count << PAGE_SHIFT;
->  }
-> +EXPORT_SYMBOL(cma_get_size);
->  
->  static unsigned long cma_bitmap_aligned_mask(const struct cma *cma,
->  					     int align_order)
-> -- 
-> git-series 0.8.11
-> 
-> --
-> To unsubscribe, send a message with 'unsubscribe linux-mm' in
-> the body to majordomo@kvack.org.  For more info on Linux MM,
-> see: http://www.linux-mm.org/ .
-> Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+I will make a patch against the devicetree spec and send it as a reply
+to this series.
 
--- 
-Michal Hocko
-SUSE Labs
+> =
 
+> > Remember, we expect people to do exactly that, so we need to give
+> > them this information so that they can make use of it.
+> >
+> > I did try to work out from the code how the -map-mask thing worked,
+> > but eventually gave up.
+> =
+
+> The code is definitely hard to follow and I've not come up with any
+> ways to make it easier to read. It's largely copied from the
+> interrupt-map version, but different enough that sharing isn't really
+> possible either.
+> =
+
+> For interrupts, it's documented in the DT spec. The best (only?)
+> explanation for how interrupt-map works is here[1] (used to be at
+> devicetree.org).
+> =
+
+
+interrupt-map is also documented in the latest DT spec[2]. I can add
+another section for "Generic Nexus Properties" and describe how this
+code works.
+
+[2] http://www.devicetree.org/specifications-pdf
 --
-To unsubscribe, send a message with 'unsubscribe linux-mm' in
-the body to majordomo@kvack.org.  For more info on Linux MM,
-see: http://www.linux-mm.org/ .
-Don't email: <a href=mailto:"dont@kvack.org"> email@kvack.org </a>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
