@@ -1,96 +1,76 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
-Date: Thu, 9 Feb 2017 17:38:25 +0530
-Message-ID: <CAFp+6iFrE8oz2By9KR1n51OZZxZ05gStu03bMgD4zVbLXZ5ppQ@mail.gmail.com>
-References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
- <1486372421-29073-7-git-send-email-peter.chen@nxp.com> <20170208204300.GC8068@usblab-sd-06.qualcomm.com>
- <85873d69-5664-0603-8cbd-a250d29ac335@ti.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH v2 1/5] drm/exynos: dsi: Fix the parse_dt function
+Date: Thu, 09 Feb 2017 21:08:53 +0900
+Message-ID: <13fc2e1c-058b-f46d-e61b-6fe5263b11ee@samsung.com>
+References: <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170209012716epcas1p33915757c95d5defb88c7d2c54cee3582@epcas1p3.samsung.com>
+ <1486603601-26826-2-git-send-email-hoegeun.kwon@samsung.com>
+ <8afdbdea-5675-fd55-5195-47c6aded4202@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <85873d69-5664-0603-8cbd-a250d29ac335@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Jack Pham <jackp@codeaurora.org>, Peter Chen <peter.chen@nxp.com>, Greg KH <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, broonie@kernel.org, sre@kernel.org, robh+dt <robh+dt@kernel.org>, shawnguo@kernel.org, rjw@rjwysocki.net, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, p.zabel@pengutronix.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundary
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <8afdbdea-5675-fd55-5195-47c6aded4202@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, inki.dae@samsung.com, robh+dt@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Hoegeun Kwon <hoegeun.kwon@samsung.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 9, 2017 at 5:23 PM, Roger Quadros <rogerq@ti.com> wrote:
->
->
-> On 08/02/17 22:43, Jack Pham wrote:
->> Hi Peter, Sriram, Arnd,
->>
->> On Mon, Feb 06, 2017 at 05:13:38PM +0800, Peter Chen wrote:
->>> From: Arnd Bergmann <arnd@arndb.de>
->>>
->>> For xhci-hcd platform device, all the DMA parameters are not
->>> configured properly, notably dma ops for dwc3 devices. So, set
->>> the dma for xhci from sysdev. sysdev is pointing to device that
->>> is known to the system firmware or hardware.
->>>
->>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->>> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
->>> Tested-by: Baolin Wang <baolin.wang@linaro.org>
->>> Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
->>> Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
->>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
->>> ---
->>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->>> index 6d33b42..7a9c860 100644
->>> --- a/drivers/usb/host/xhci-plat.c
->>> +++ b/drivers/usb/host/xhci-plat.c
->>
->>> -    hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
->>> +    hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
->>> +                           dev_name(&pdev->dev), NULL);
->>
->> As mentioned already in [1], usb_create_shared_hcd() is called to create
->> the second bus, however it also needs to be converted.
->>
->> Not exactly as Roger's suggestion but this worked for me:
->>
->> -       xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
->> +       xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
->>                         dev_name(&pdev->dev), hcd);
->
-> But we're creating a shared_hcd and there is an API for that so why not use it
-> instead of calling __usb_create_hcd()?
-
-Do we not want to pass on the DMA configuration from sysdev to
-shared_hcd as well?
-
->
->>         if (!xhci->shared_hcd) {
->>                 ret = -ENOMEM;
->>
->> Without this, SuperSpeed devices fail to enumerate:
->>
->>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
->>  usb 2-1: device descriptor read/8, error -11
->>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
->>  usb 2-1: device descriptor read/8, error -11
->>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
->>  usb 2-1: device descriptor read/8, error -11
->>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
->>  usb 2-1: device descriptor read/8, error -11
->>  <and continues...>
->>
->> Thanks,
->> Jack
->>
->> [1] https://lkml.org/lkml/2016/12/9/240
->>
->
-> --
-> cheers,
-> -roger
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+CgpPbiAwMi8wOS8yMDE3IDAzOjU3IFBNLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+IE9uIDA5LjAy
+LjIwMTcgMDI6MjYsIEhvZWdldW4gS3dvbiB3cm90ZToKPj4gVGhlIGRzaSArIHBhbmVsIGlzIGEg
+cGFyZW50YWwgcmVsYXRpb25zaGlwLCBzbyBPRiBncnBhaCBpcyBub3QgbmVlZGVkLgo+PiBUaGVy
+ZWZvcmUsIHRoZSBjdXJyZW50IGRzaV9wYXJzZV9kdCBmdW5jdGlvbiB3aWxsIHRocm93IGFuIGVy
+cm9yLAo+PiBiZWNhdXNlIHRoZXJlIGlzIG5vIGxpbmtlZCBPRiBncmFwaCBmb3IgY2FzZSBzdWNo
+IGFzIGZpbWQgKyBkc2kgKwo+PiBwYW5lbC4gU28gdGhpcyBwYXRjaCBwYXJzZSB0aGUgUGxsLCBi
+dXJzdCBhbmQgZXNjIGNsb2NrIGZyZXF1ZW5jeQo+PiBwcm9wZXJ0aWVzIGluIGRzaV9wYXJzZV9k
+dCBhbmQgbW9kaWZpZWQgdG8gY3JlYXRlIGEgYnJpZGdlX25vZGUgb25seQo+PiBpZiB0aGVyZSBp
+cyBhbiBPRiBncmFwaCBhc3NvY2lhdGVkIHdpdGggZHNpLgo+PiBTbyBJIHRoaW5rIHRoZSBBQkkg
+YnJlYWthZ2UgaXMgbmVlZGVkLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBIb2VnZXVuIEt3b24gPGhv
+ZWdldW4ua3dvbkBzYW1zdW5nLmNvbT4KPiBOaWNlIGRpZmZzdGF0LCBtb3JlIGltcG9ydGFudGx5
+IGl0IGZpeGVzIGJhZCBkZXNpZ24gb2YgZWFybHkgZGF5cyBvZgo+IG9mX2dyYXBoLgo+Cj4gUmV2
+aWV3ZWQtYnk6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4KPiBPbmUgY29t
+bWVudCBiZWxvdy4KPgo+PiAtLS0KPj4gICBkcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19k
+cm1fZHNpLmMgfCAzMiArKysrKysrKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgIDEgZmls
+ZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKyksIDI0IGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy9ncHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jIGIvZHJpdmVycy9n
+cHUvZHJtL2V4eW5vcy9leHlub3NfZHJtX2RzaS5jCj4+IGluZGV4IGUwN2NiMWYuLjIxNGQ0ODYg
+MTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9leHlub3MvZXh5bm9zX2RybV9kc2kuYwo+
+PiArKysgYi9kcml2ZXJzL2dwdS9kcm0vZXh5bm9zL2V4eW5vc19kcm1fZHNpLmMKPj4gQEAgLTE2
+NTIsMzkgKzE2NTIsMjMgQEAgc3RhdGljIGludCBleHlub3NfZHNpX3BhcnNlX2R0KHN0cnVjdCBl
+eHlub3NfZHNpICpkc2kpCj4+ICAgCWlmIChyZXQgPCAwKQo+PiAgIAkJcmV0dXJuIHJldDsKPj4g
+ICAKPj4gLQllcCA9IG9mX2dyYXBoX2dldF9lbmRwb2ludF9ieV9yZWdzKG5vZGUsIERTSV9QT1JU
+X09VVCwgMCk7Cj4+IC0JaWYgKCFlcCkgewo+PiAtCQlkZXZfZXJyKGRldiwgIm5vIG91dHB1dCBw
+b3J0IHdpdGggZW5kcG9pbnQgc3BlY2lmaWVkXG4iKTsKPj4gLQkJcmV0dXJuIC1FSU5WQUw7Cj4+
+IC0JfQo+PiAtCj4+IC0JcmV0ID0gZXh5bm9zX2RzaV9vZl9yZWFkX3UzMihlcCwgInNhbXN1bmcs
+YnVyc3QtY2xvY2stZnJlcXVlbmN5IiwKPj4gKwlyZXQgPSBleHlub3NfZHNpX29mX3JlYWRfdTMy
+KG5vZGUsICJzYW1zdW5nLGJ1cnN0LWNsb2NrLWZyZXF1ZW5jeSIsCj4+ICAgCQkJCSAgICAgJmRz
+aS0+YnVyc3RfY2xrX3JhdGUpOwo+PiAgIAlpZiAocmV0IDwgMCkKPj4gLQkJZ290byBlbmQ7Cj4+
+ICsJCXJldHVybiByZXQ7Cj4+ICAgCj4+IC0JcmV0ID0gZXh5bm9zX2RzaV9vZl9yZWFkX3UzMihl
+cCwgInNhbXN1bmcsZXNjLWNsb2NrLWZyZXF1ZW5jeSIsCj4+ICsJcmV0ID0gZXh5bm9zX2RzaV9v
+Zl9yZWFkX3UzMihub2RlLCAic2Ftc3VuZyxlc2MtY2xvY2stZnJlcXVlbmN5IiwKPj4gICAJCQkJ
+ICAgICAmZHNpLT5lc2NfY2xrX3JhdGUpOwo+PiAgIAlpZiAocmV0IDwgMCkKPj4gLQkJZ290byBl
+bmQ7Cj4+IC0KPj4gLQlvZl9ub2RlX3B1dChlcCk7Cj4+ICsJCXJldHVybiByZXQ7Cj4+ICAgCj4+
+ICAgCWVwID0gb2ZfZ3JhcGhfZ2V0X25leHRfZW5kcG9pbnQobm9kZSwgTlVMTCk7Cj4+IC0JaWYg
+KCFlcCkgewo+PiAtCQlyZXQgPSAtRUlOVkFMOwo+PiAtCQlnb3RvIGVuZDsKPj4gLQl9Cj4+IC0K
+Pj4gLQlkc2ktPmJyaWRnZV9ub2RlID0gb2ZfZ3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChl
+cCk7Cj4+IC0JaWYgKCFkc2ktPmJyaWRnZV9ub2RlKSB7Cj4+IC0JCXJldCA9IC1FSU5WQUw7Cj4+
+IC0JCWdvdG8gZW5kOwo+PiArCWlmIChlcCkgewo+PiArCQlkc2ktPmJyaWRnZV9ub2RlID0gb2Zf
+Z3JhcGhfZ2V0X3JlbW90ZV9wb3J0X3BhcmVudChlcCk7Cj4+ICsJCW9mX25vZGVfcHV0KGVwKTsK
+PiBJdCBsb29rcyBsaWtlIHRoZXJlIGlzIG5vIG9mX25vZGVfcHV0IG9uIGRzaS0+YnJpZGdlX25v
+ZGUsIGJ1dCB0aGlzIGlzCj4gZm9yIGFub3RoZXIgcGF0Y2guCgpUaGFua3MgZm9yIHlvdXIgcmV2
+aWV3LgoKWWVzIHJpZ2h0LCBzbyBpIHdpbGwgbWFrZSBhbm90aGVyIHBhdGNoLgoKQmVzdCBSZWdh
+cmRzLApIb2VnZXVuCgo+Cj4gUmVnYXJkcwo+IEFuZHJ6ZWoKPgo+PiAgIAl9Cj4+IC1lbmQ6Cj4+
+IC0Jb2Zfbm9kZV9wdXQoZXApOwo+PiAgIAo+PiAtCXJldHVybiByZXQ7Cj4+ICsJcmV0dXJuIDA7
+Cj4+ICAgfQo+PiAgIAo+PiAgIHN0YXRpYyBpbnQgZXh5bm9zX2RzaV9iaW5kKHN0cnVjdCBkZXZp
+Y2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAo+Cj4KPgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
