@@ -1,40 +1,84 @@
 From: Rob Herring <robh@kernel.org>
 Subject: Re: [PATCH] devicetree: Add video bus switch
-Date: Thu, 9 Feb 2017 16:58:29 -0600
-Message-ID: <CAL_JsqK2RHLoLc_ikHzP2B5_Lof2g9NG+zvamGe4o1ko1ggGQA@mail.gmail.com>
+Date: Thu, 9 Feb 2017 17:02:13 -0600
+Message-ID: <CAL_JsqKSHvg+iB-SRd=YthauGP8mWeVF0j8X-fgLchwtOppH8A@mail.gmail.com>
 References: <20161023200355.GA5391@amd> <20161119232943.GF13965@valkosipuli.retiisi.org.uk>
  <20161214122451.GB27011@amd> <20161222100104.GA30917@amd> <20161222133938.GA30259@amd>
  <20161224152031.GA8420@amd> <20170203123508.GA10286@amd> <20170208213609.lnemfbzitee5iur2@rob-hp-laptop>
- <20170208223451.GB18807@amd>
+ <20170208223017.GA18807@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170208223451.GB18807@amd>
+In-Reply-To: <20170208223017.GA18807@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>
 Cc: Sakari Ailus <sakari.ailus@iki.fi>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>, Sebastian Reichel <sre@kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 4:34 PM, Pavel Machek <pavel@ucw.cz> wrote:
->> > +
->> > +This is a binding for a gpio controlled switch for camera interfaces. Such a
->> > +device is used on some embedded devices to connect two cameras to the same
->> > +interface of a image signal processor.
->> > +
->> > +Required properties
+On Wed, Feb 8, 2017 at 4:30 PM, Pavel Machek <pavel@ucw.cz> wrote:
+> On Wed 2017-02-08 15:36:09, Rob Herring wrote:
+>> On Fri, Feb 03, 2017 at 01:35:08PM +0100, Pavel Machek wrote:
+>> >
+>> > N900 contains front and back camera, with a switch between the
+>> > two. This adds support for the switch component, and it is now
+>> > possible to select between front and back cameras during runtime.
+>> >
+>> > This adds documentation for the devicetree binding.
+>> >
+>> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+>> > Signed-off-by: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+>> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+>> >
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/media/video-bus-switch.txt b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+>> > new file mode 100644
+>> > index 0000000..1b9f8e0
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/media/video-bus-switch.txt
+>> > @@ -0,0 +1,63 @@
+>> > +Video Bus Switch Binding
+>> > +========================
+>>
+>> I'd call it a mux rather than switch.
+>
+> It is a switch, not a multiplexor (
+> https://en.wikipedia.org/wiki/Multiplexing ). Only one camera can
+> operate at a time.
+
+It's no different than an i2c mux. It's one at a time.
+
+>
+>> BTW, there's a new mux-controller binding under review you might look
+>> at. It would only be needed here if the mux ctrl also controls other
+>> things.
+>
+> Do you have a pointer?
+
+Let me Google that for you:
+
+>
+>> > +Required Port nodes
 >> > +===================
 >> > +
->> > +compatible : must contain "video-bus-switch"
+>> > +More documentation on these bindings is available in
+>> > +video-interfaces.txt in the same directory.
+>> > +
+>> > +reg                : The interface:
+>> > +             0 - port for image signal processor
+>> > +             1 - port for first camera sensor
+>> > +             2 - port for second camera sensor
 >>
->> video-bus-gpio-mux
+>> This could be used for display side as well. So describe these just as
+>> inputs and outputs.
 >
-> Sakari already asked for rename here. I believe I waited reasonable
-> time, but got no input from you, so I did rename it. Now you decide on
-> different name.
+> I'd prefer not to confuse people. I guess that would be 0 -- output
+> port, 1, 2 -- input ports... But this is media data, are you sure it
+> is good idea to change this?
+
+And I'd prefer something that can be reused by others.
+
 >
-> Can we either get timely reactions or less bikeshedding?
-
-You mean less than 5 days because I don't see any other version of
-this? But in short, no, you can't.
-
-Rob
+>                                                                         Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
