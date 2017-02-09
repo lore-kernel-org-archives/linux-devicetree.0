@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 2/8] dt-bindings: gpu: mali: Add optional memory-region
-Date: Thu,  9 Feb 2017 17:39:16 +0100
-Message-ID: <49fd36f667c5ae46b0724c8204eabc51014aab92.1486655917.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH 1/8] ARM: sun8i: Fix the mali clock rate
+Date: Thu,  9 Feb 2017 17:39:15 +0100
+Message-ID: <4830ced34cc83058f7cad123be67fecc624a99d6.1486655917.git-series.maxime.ripard@free-electrons.com>
 References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
 Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
@@ -12,31 +12,30 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-The reserved memory bindings allow us to specify which memory areas our
-buffers can be allocated from.
+The Mali clock rate was improperly assumed to be 408MHz, while it was
+really 384Mhz, 408MHz being the "extreme" frequency, and definitely not
+stable.
 
-Let's use it.
+Switch for the stable, correct frequency for the GPU.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt | 4 ++++
- 1 file changed, 4 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-index 476f5ea6c627..88df4a276607 100644
---- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-+++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-@@ -35,6 +35,10 @@ Optional properties:
-   - interrupt-names and interrupts:
-     * pmu: Power Management Unit interrupt, if implemented in hardware
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index 35008b78d899..8a880ecc4dda 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -495,7 +495,7 @@
+ 			resets = <&ccu RST_BUS_GPU>;
  
-+  - memory-region:
-+    Memory region to allocate from, as defined in
-+    Documentation/devicetree/bindi/reserved-memory/reserved-memory.txt
-+
- Vendor-specific bindings
- ------------------------
+ 			assigned-clocks = <&ccu CLK_GPU>;
+-			assigned-clock-rates = <408000000>;
++			assigned-clock-rates = <384000000>;
+ 		};
  
+ 		gic: interrupt-controller@01c81000 {
 -- 
 git-series 0.8.11
 
