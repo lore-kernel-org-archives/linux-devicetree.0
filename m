@@ -1,76 +1,95 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 08/10] soc: mediatek: add MT6797 power dt-bindings
-Date: Thu, 9 Feb 2017 09:32:10 +0800
-Message-ID: <1486603930.29572.1.camel@mtkswgap22>
-References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
-         <1486383336-16892-9-git-send-email-mars.cheng@mediatek.com>
-         <20170209003741.nxcdxah5ydcj6v33@rob-hp-laptop>
+From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
+Date: Thu, 9 Feb 2017 09:41:13 +0800
+Message-ID: <20170209014113.GB460@b29397-desktop>
+References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
+ <1486372421-29073-7-git-send-email-peter.chen@nxp.com>
+ <20170208204300.GC8068@usblab-sd-06.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170209003741.nxcdxah5ydcj6v33@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20170208204300.GC8068-NjF/qFWh7jSrUKQWM4GlyCPyLMyjRtWwAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chieh-Jay Liu <Chieh-Jay.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+To: Jack Pham <jackp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org, troy.kisky-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, oscar-Bdbr4918Nnnk1uMJSBkQmQ@public.gmane.org, stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgSriram Dash <sr>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-02-08 at 18:37 -0600, Rob Herring wrote:
-> On Mon, Feb 06, 2017 at 08:15:34PM +0800, Mars Cheng wrote:
-> > This adds power dt-bindings for MT6797
+On Wed, Feb 08, 2017 at 12:43:00PM -0800, Jack Pham wrote:
+> Hi Peter, Sriram, Arnd,
 > 
-> Some consistency in the subject for bindings please.
-
-Got it, will use the format like "dt-bindings: xxx: xxx" to send patch
-set v3
-
-Thanks.
-
-> 
+> On Mon, Feb 06, 2017 at 05:13:38PM +0800, Peter Chen wrote:
+> > From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 > > 
-> > Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Kevin-CW Chen <kevin-cw.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > For xhci-hcd platform device, all the DMA parameters are not
+> > configured properly, notably dma ops for dwc3 devices. So, set
+> > the dma for xhci from sysdev. sysdev is pointing to device that
+> > is known to the system firmware or hardware.
+> > 
+> > Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> > Signed-off-by: Sriram Dash <sriram.dash-3arQi8VN3Tc@public.gmane.org>
+> > Tested-by: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Tested-by: Vivek Gautam <vivek.gautam-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Tested-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> > Signed-off-by: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > > ---
-> >  .../devicetree/bindings/soc/mediatek/scpsys.txt    |    6 +++++-
-> >  1 file changed, 5 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > index 16fe94d..b1d165b 100644
-> > --- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > +++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-> > @@ -9,11 +9,14 @@ domain control.
-> >  
-> >  The driver implements the Generic PM domain bindings described in
-> >  power/power_domain.txt. It provides the power domains defined in
-> > -include/dt-bindings/power/mt8173-power.h and mt2701-power.h.
-> > +- include/dt-bindings/power/mt8173-power.h
-> > +- include/dt-bindings/power/mt6797-power.h
-> > +- include/dt-bindings/power/mt2701-power.h
-> >  
-> >  Required properties:
-> >  - compatible: Should be one of:
-> >  	- "mediatek,mt2701-scpsys"
-> > +	- "mediatek,mt6797-scpsys"
-> >  	- "mediatek,mt8173-scpsys"
-> >  - #power-domain-cells: Must be 1
-> >  - reg: Address range of the SCPSYS unit
-> > @@ -22,6 +25,7 @@ Required properties:
-> >                        These are clocks which hardware needs to be
-> >                        enabled before enabling certain power domains.
-> >  	Required clocks for MT2701: "mm", "mfg", "ethif"
-> > +	Required clocks for MT6797: "mm", "mfg", "vdec"
-> >  	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-> >  
-> >  Optional properties:
-> > -- 
-> > 1.7.9.5
-> > 
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> > index 6d33b42..7a9c860 100644
+> > --- a/drivers/usb/host/xhci-plat.c
+> > +++ b/drivers/usb/host/xhci-plat.c
+> 
+> > -	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+> > +	hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
+> > +			       dev_name(&pdev->dev), NULL);
+> 
+> As mentioned already in [1], usb_create_shared_hcd() is called to create
+> the second bus, however it also needs to be converted.
+> 
+> Not exactly as Roger's suggestion but this worked for me:
+> 
+> -       xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
+> +       xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
+>                         dev_name(&pdev->dev), hcd);
+>         if (!xhci->shared_hcd) {
+>                 ret = -ENOMEM;
+> 
+> Without this, SuperSpeed devices fail to enumerate:
+> 
+>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
+>  usb 2-1: device descriptor read/8, error -11
+>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
+>  usb 2-1: device descriptor read/8, error -11
+>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
+>  usb 2-1: device descriptor read/8, error -11
+>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
+>  usb 2-1: device descriptor read/8, error -11
+>  <and continues...>
+> 
+> Thanks,
+> Jack
+> 
+
+Do you work at same platform with Vivek Gautam? I see his tested-by
+tag in this patch.
+
+I have no dwc3 platform to test, I only got patches from [1], and rebase to
+Greg's usb-next, the rebase has a conflict, and I made a 
+change which is similar to revert below patch, but it is definitely
+not your problem.
+
+commit 488dc164914ff5ce5e913abd32048d28fc0d06b8
+Author: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Date:   Fri Jan 20 15:38:24 2017 +0200
+
+    xhci: remove WARN_ON if dma mask is not set for platform devices
 
 
+[1] http://www.spinics.net/lists/linux-usb/msg152375.html
+
+-- 
+
+Best Regards,
+Peter Chen
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
