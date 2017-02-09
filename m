@@ -1,39 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 12/13] dt-bindings: auxdisplay: Add bindings for Hitachi
- HD44780
-Date: Wed, 8 Feb 2017 19:11:30 -0600
-Message-ID: <20170209011130.t63w45ud55332uhy@rob-hp-laptop>
-References: <1486391895-9554-1-git-send-email-geert@linux-m68k.org>
- <1486391895-9554-13-git-send-email-geert@linux-m68k.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/5] Fix the parse_dt of exynos dsi and remove the OF graph
+Date: Thu, 09 Feb 2017 10:26:36 +0900
+Message-ID: <1486603601-26826-1-git-send-email-hoegeun.kwon@samsung.com>
+References: <CGME20170209012715epcas1p3dbe1788b864c50d339dcfd791c0900ec@epcas1p3.samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1486391895-9554-13-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Willy Tarreau <willy-W4YR9g1X7EZBDgjK7y7TUQ@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 06, 2017 at 03:38:14PM +0100, Geert Uytterhoeven wrote:
-> Add DT bindings for an Hitachi HD44780 Character LCD Controller where
-> its M6800 bus interface is connected to GPIOs.
+Hi,
 
-Really, you should have a bit-bang M6800 bus driver and binding and then 
-the binding for the LCD ctrl looks the same whether you are bit-banging 
-it or not.
+The dsi + panel is a parental relationship, so OF grpah is not needed.
+Therefore, the current dsi_parse_dt function will throw an error,
+because there is no linked OF graph for case such as fimd + dsi +
+panel.
 
-That's a bit more work though. Maybe you could split the binding like 
-this, but keep a monolithic driver for now. The driver can just fetch 
-the GPIOs from the parent (bus controller) node. And you'd have to work 
-out probing the driver.
+So the 1/5 patch parse the Pll, burst and esc clock frequency
+properties in dsi_parse_dt and modified to create a bridge_node only
+if there is an OF graph associated with dsi.
 
-> Memory-mapped configurations are not yet supported.
+Also fixed the dts, which depend on the 1/5 patch. So removed the
+ports node and move burst and esc clock frequency properties to the
+parent (DSI node).
 
-I guess this would require faulting on some address and then bit-banging 
-the access. That sounds fun...
+Changes for V2:
+- Added the clear explanation for commit. (1/5 patch)
+- Fixed it to the same subject as the actual work. (2/5 ~ 5/5 patches)
 
-Rob
+Best Regards,
+Hoegeun
+
+Hoegeun Kwon (5):
+  drm/exynos: dsi: Fix the parse_dt function
+  arm64: dts: exynos: Remove the OF graph from DSI node for exynos5433
+    dts
+  arm: dts: Remove the OF graph from DSI node for exynos3250 dts
+  arm: dts: Remove the OF graph from DSI node for exynos4412 dts
+  arm: dts: Remove the OF graph from DSI node for exynos4210 dts
+
+ arch/arm/boot/dts/exynos3250-rinato.dts            | 23 ++--------------
+ arch/arm/boot/dts/exynos4210-trats.dts             | 23 ++--------------
+ arch/arm/boot/dts/exynos4412-trats2.dts            | 23 ++--------------
+ .../boot/dts/exynos/exynos5433-tm2-common.dtsi     | 16 ++---------
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c            | 32 ++++++----------------
+ 5 files changed, 16 insertions(+), 101 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
