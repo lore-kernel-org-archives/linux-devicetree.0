@@ -1,12 +1,17 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH] arm64: dts: hisilicon: add dts files for hi3798cv200-poplar
- board
-Date: Thu, 9 Feb 2017 15:07:07 +0800
-Message-ID: <1486624027-15156-1-git-send-email-xuejiancheng@hisilicon.com>
+From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
+ Broadcom NSP SoC"
+Date: Thu, 09 Feb 2017 08:21:30 +0100
+Message-ID: <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
+References: <20170208233023.31922-1-zajec5@gmail.com>
+ <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
+ <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
+ <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,646 +21,64 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, arnd@arndb.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yanhaifeng@hisilicon.com, elder@linaro.org, xuejiancheng@hisilicon.com, hermit.wangheming@hisilicon.com, linux-arm-kernel@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add basic dts files for hi3798cv200-poplar board. Poplar is the
-first development board compliant with the 96Boards Enterprise
-Edition TV Platform specification. The board features the
-Hi3798CV200 with an integrated quad-core 64-bit ARM Cortex A53
-processor and high performance Mali T720 GPU.
-
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Reviewed-by: Alex Elder <elder@linaro.org>
----
- .../bindings/arm/hisilicon/hisilicon.txt           |   4 +
- arch/arm64/boot/dts/hisilicon/Makefile             |   1 +
- .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 169 +++++++++
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 413 +++++++++++++++++++++
- 4 files changed, 587 insertions(+)
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
- create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-
-diff --git a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-index 7df79a7..7d90bf1 100644
---- a/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-+++ b/Documentation/devicetree/bindings/arm/hisilicon/hisilicon.txt
-@@ -1,5 +1,9 @@
- Hisilicon Platforms Device Tree Bindings
- ----------------------------------------------------
-+Hi3798cv200 Poplar Board
-+Required root node properties:
-+	- compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
-+
- Hi4511 Board
- Required root node properties:
- 	- compatible = "hisilicon,hi3620-hi4511";
-diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-index c8b8f80..96202fe 100644
---- a/arch/arm64/boot/dts/hisilicon/Makefile
-+++ b/arch/arm64/boot/dts/hisilicon/Makefile
-@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
- dtb-$(CONFIG_ARCH_HISI) += hip07-d05.dtb
-+dtb-$(CONFIG_ARCH_HISI) += hi3798cv200-poplar.dtb
- 
- always		:= $(dtb-y)
- subdir-y	:= $(dts-dirs)
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-new file mode 100644
-index 0000000..4e2b1d1
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-@@ -0,0 +1,169 @@
-+/*
-+ * DTS File for HiSilicon Poplar Development Board
-+ *
-+ * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "hi3798cv200.dtsi"
-+
-+/ {
-+	model = "HiSilicon Poplar Development Board";
-+	compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x000000000 0x00000000 0x00000000 0x80000000>;
-+	};
-+
-+	soc {
-+		leds {
-+			compatible = "gpio-leds";
-+
-+			user-led0 {
-+				label = "USER-LED0";
-+				gpios = <&gpio6 3 GPIO_ACTIVE_LOW>;
-+				linux,default-trigger = "heartbeat";
-+				default-state = "off";
-+			};
-+
-+			user-led1 {
-+				label = "USER-LED1";
-+				gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
-+				linux,default-trigger = "mmc0";
-+				default-state = "off";
-+			};
-+
-+			user-led2 {
-+				label = "USER-LED2";
-+				gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-+				linux,default-trigger = "none";
-+				default-state = "off";
-+			};
-+
-+			user-led3 {
-+				label = "USER-LED3";
-+				gpios = <&gpio10 6 GPIO_ACTIVE_LOW>;
-+				linux,default-trigger = "cpu0";
-+				default-state = "off";
-+			};
-+		};
-+	};
-+};
-+
-+&uart0 {
-+	status = "ok";
-+};
-+
-+&uart2 {
-+	status = "ok";
-+	label = "LS-UART0";
-+};
-+/* No optional LS-UART1 on Low Speed Expansion Connector. */
-+
-+&i2c0 {
-+	status = "ok";
-+	label = "LS-I2C0";
-+};
-+
-+&i2c2 {
-+	status = "ok";
-+	label = "LS-I2C1";
-+};
-+
-+&spi0 {
-+	status = "ok";
-+	label = "LS-SPI0";
-+};
-+
-+&gpio1 {
-+	status = "ok";
-+	gpio-line-names = "LS-GPIO-E",	"",
-+			  "",		"",
-+			  "",		"LS-GPIO-F",
-+			  "",		"LS-GPIO-J";
-+};
-+
-+&gpio2 {
-+	status = "ok";
-+	gpio-line-names = "LS-GPIO-H",	"LS-GPIO-I",
-+			  "LS-GPIO-L",	"LS-GPIO-G",
-+			  "LS-GPIO-K",	"",
-+			  "",		"";
-+};
-+
-+&gpio3 {
-+	status = "ok";
-+	gpio-line-names = "",		"",
-+			  "",		"",
-+			  "LS-GPIO-C",	"",
-+			  "",		"LS-GPIO-B";
-+};
-+
-+&gpio4 {
-+	status = "ok";
-+	gpio-line-names = "",		"",
-+			  "",		"",
-+			  "",		"LS-GPIO-D",
-+			  "",		"";
-+};
-+
-+&gpio5 {
-+	status = "ok";
-+	gpio-line-names = "",		"USER-LED-1",
-+			  "USER-LED-2",	"",
-+			  "",		"LS-GPIO-A",
-+			  "",		"";
-+};
-+
-+&gpio6 {
-+	status = "ok";
-+	gpio-line-names = "",		"",
-+			  "",		"USER-LED-0",
-+			  "",		"",
-+			  "",		"";
-+};
-+
-+&gpio10 {
-+	status = "ok";
-+	gpio-line-names = "",		"",
-+			  "",		"",
-+			  "",		"",
-+			  "USER-LED-3",	"";
-+};
-+
-+&gmac0 {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	phy-handle = <&eth_phy1>;
-+	phy-mode = "rgmii";
-+	hisilicon,phy-reset-delays-us = <10000 10000 30000>;
-+	status = "ok";
-+
-+	eth_phy1: phy@3{
-+		reg = <3>;
-+	};
-+};
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-new file mode 100644
-index 0000000..ae3ce6d
---- /dev/null
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -0,0 +1,413 @@
-+/*
-+ * DTS File for HiSilicon Hi3798cv200 SOC.
-+ *
-+ * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/histb-clock.h>
-+#include <dt-bindings/reset/ti-syscon.h>
-+
-+/ {
-+	compatible = "hisilicon,hi3798cv200";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@2 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu@3 {
-+			compatible = "arm,cortex-a53";
-+			device_type = "cpu";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	gic: interrupt-controller@f1001000 {
-+		compatible = "arm,gic-400";
-+		reg = <0x0 0xf1001000 0x0 0x1000>,  /*GICD*/
-+		      <0x0 0xf1002000 0x0 0x100>;   /*GICC*/
-+		#address-cells = <0>;
-+		#interrupt-cells = <3>;
-+		interrupt-controller;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x00000000 0x0 0xffffffff>;
-+
-+		crg: clock-reset-controller@f8a22000 {
-+			compatible = "hisilicon,hi3798cv200-crg", "simple-mfd";
-+			reg = <0xf8a22000 0x1000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <2>;
-+
-+			gmacphyrst: reset-controller {
-+				compatible = "ti,syscon-reset";
-+				reset-cells = <1>;
-+				ti,reset-bits = <
-+					0xcc 12 0xcc 12 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)  /* 0: gmac0-phy-rst */
-+					0xcc 13 0xcc 13 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)  /* 1: gmac1-phy-rst */
-+				>;
-+			};
-+		};
-+
-+		sysctrl: system-controller@f8000000 {
-+			compatible = "hisilicon,hi3798cv200-sysctrl", "syscon";
-+			reg = <0xf8000000 0x1000>;
-+			#clock-cells = <1>;
-+			#reset-cells = <2>;
-+		};
-+
-+		uart0: serial@f8b00000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0xf8b00000 0x1000>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sysctrl HISTB_UART0_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@f8b02000 {
-+			compatible = "arm,pl011", "arm,primecell";
-+			reg = <0xf8b02000 0x1000>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_UART2_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		i2c0: i2c@f8b10000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xf8b10000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg HISTB_I2C0_CLK>;
-+			status = "disabled";
-+		};
-+
-+		i2c1: i2c@f8b11000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xf8b11000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg HISTB_I2C1_CLK>;
-+			status = "disabled";
-+		};
-+
-+		i2c2: i2c@f8b12000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xf8b12000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg HISTB_I2C2_CLK>;
-+			status = "disabled";
-+		};
-+
-+		i2c3: i2c@f8b13000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xf8b13000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg HISTB_I2C3_CLK>;
-+			status = "disabled";
-+		};
-+
-+		i2c4: i2c@f8b14000 {
-+			compatible = "hisilicon,hix5hd2-i2c";
-+			reg = <0xf8b14000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-frequency = <400000>;
-+			clocks = <&crg HISTB_I2C4_CLK>;
-+			status = "disabled";
-+		};
-+
-+		spi0: spi@f8b1a000 {
-+			compatible = "arm,pl022", "arm,primecell";
-+			reg = <0xf8b1a000 0x1000>;
-+			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			num-cs = <1>;
-+			cs-gpios = <&gpio7 1 0>;
-+			clocks = <&crg HISTB_SPI0_CLK>;
-+			clock-names = "apb_pclk";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
-+
-+		emmc: mmc@f9830000 {
-+			compatible = "snps,dw-mshc";
-+			reg = <0xf9830000 0x10000>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_MMC_CIU_CLK>,
-+				 <&crg HISTB_MMC_BIU_CLK>;
-+			clock-names = "ciu", "biu";
-+		};
-+
-+		gpio0: gpio@f8b20000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b20000 0x1000>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio1: gpio@f8b21000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b21000 0x1000>;
-+			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio2: gpio@f8b22000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b22000 0x1000>;
-+			interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio3: gpio@f8b23000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b23000 0x1000>;
-+			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio4: gpio@f8b24000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b24000 0x1000>;
-+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio5: gpio@f8004000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8004000 0x1000>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio6: gpio@f8b26000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b26000 0x1000>;
-+			interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio7: gpio@f8b27000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b27000 0x1000>;
-+			interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio8: gpio@f8b28000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b28000 0x1000>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio9: gpio@f8b29000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b29000 0x1000>;
-+			interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio10: gpio@f8b2a000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b2a000 0x1000>;
-+			interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio11: gpio@f8b2b000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b2b000 0x1000>;
-+			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gpio12: gpio@f8b2c000 {
-+			compatible = "arm,pl061", "arm,primecell";
-+			reg = <0xf8b2c000 0x1000>;
-+			interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+			clocks = <&crg HISTB_APB_CLK>;
-+			clock-names = "apb_pclk";
-+			status = "disabled";
-+		};
-+
-+		gmac0: ethernet@f9840000 {
-+			compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
-+			reg = <0xf9840000 0x1000>,
-+			      <0xf984300c 0x4>;
-+			interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_ETH0_MAC_CLK>,
-+				 <&crg HISTB_ETH0_MACIF_CLK>;
-+			clock-names = "mac_core", "mac_ifc";
-+			resets = <&crg 0xcc 8>,
-+				 <&crg 0xcc 10>,
-+				 <&gmacphyrst 0>;
-+			reset-names = "mac_core", "mac_ifc", "phy";
-+		};
-+
-+		gmac1: ethernet@f9841000 {
-+			compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
-+			reg = <0xf9841000 0x1000>,
-+			      <0xf9843010 0x4>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_ETH1_MAC_CLK>,
-+				 <&crg HISTB_ETH1_MACIF_CLK>;
-+			clock-names = "mac_core", "mac_ifc";
-+			resets = <&crg 0xcc 9>,
-+				 <&crg 0xcc 11>,
-+				 <&gmacphyrst 1>;
-+			reset-names = "mac_core", "mac_ifc", "phy";
-+		};
-+
-+		ir: ir@f8001000 {
-+			compatible = "hisilicon,hix5hd2-ir";
-+			reg = <0xf8001000 0x1000>;
-+			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&sysctrl HISTB_IR_CLK>;
-+		};
-+	};
-+};
--- 
-1.9.1
+T24gMjAxNy0wMi0wOSAwMDo0NCwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwMi8wOC8y
+MDE3IDAzOjM5IFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IE9uIDIwMTctMDItMDkgMDA6
+MzIsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+PiBPbiAwMi8wOC8yMDE3IDAzOjMwIFBNLCBS
+YWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+Pj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBt
+aWxlY2tpLnBsPgo+Pj4+IAo+Pj4+IFRoaXMgcmV2ZXJ0cyBjb21taXQgZDdiYzFhN2Q0MWJmICgi
+cGh5OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IKPj4+PiBCcm9hZGNvbSBOU1AgU29DIikgYXMg
+d2UgYWxyZWFkeSBoYXZlIGRyaXZlciBmb3IgdGhpcyBQSFkgKHNoYXJlZCBieSAKPj4+PiBOUwo+
+Pj4+IGFuZCBOU1ApLiBJdCB3YXMgYWRkZWQgaW4gY29tbWl0IGU1NjY2MjgxZDllYSAoInBoeTog
+YmNtLW5zLXVzYjM6IAo+Pj4+IG5ldwo+Pj4+IGRyaXZlciBmb3IgVVNCIDMuMCBQSFkgb24gTm9y
+dGhzdGFyIikuCj4+Pj4gCj4+Pj4gSW5zdGVhZCBvZiBhZGRpbmcgc2VwYXJhdGVkIGRyaXZlciAm
+IGR1cGxpY2F0aW5nIGNvZGUgd2Ugc2hvdWxkIHdvcmsgCj4+Pj4gb24KPj4+PiBpbXByb3Zpbmcg
+ZXhpc3RpbmcgKG9sZCkgb25lLiBUaGFua3MgdG8gd29yayBkb25lIGJ5IEJyb2FkY29tIHdlIAo+
+Pj4+IGtub3cKPj4+PiB0aGVyZSBpcyBNRElPIGJ1cyB3ZSB3ZXJlbid0IGF3YXJlIG9mICYgd2Ug
+a25vdyByZWdpc3RlciBuYW1lcyB3aGljaAo+Pj4+IG1ha2VzIGluaXRpYWxpemF0aW9uIG1vcmUg
+Y2xlYXIuIFRoaXMgaXMgdmVyeSB2YWx1YWJsZSBpbmZvIGFuZCB3ZQo+Pj4+IHNob3VsZCB3b3Jr
+IG9uIHVzaW5nIGl0IGluIGV4aXN0aW5nIGRyaXZlciBhZnRlcndhcmRzLgo+Pj4gCj4+PiBTaG91
+bGQgbm90IHdlIGZpcnN0IGV4dGVuZCB0aGUgb2xkIGRyaXZlciB0byBzdXBwb3J0IE5TUCBhbmQg
+dGhlbiAKPj4+IHJldmVydAo+Pj4gZDdiYzFhN2Q0MWJmICgicGh5OiBBZGQgVVNCMyBQSFkgc3Vw
+cG9ydCBmb3IgQnJvYWRjb20gTlNQIFNvQyIpPwo+PiAKPj4gU291bmRzIGxpa2UgYSB3ZWlyZCAv
+IGRpcnR5IGRldmVsb3BtZW50IG1ldGhvZCB0byBtZTogYWRkaW5nIAo+PiBkdXBsaWNhdGVkCj4+
+IGNvZGUKPj4gZmlyc3QgdGhlbiB3b3JraW5nIG9uIGNsZWFuaW5nIGl0LiBVbmxlc3MgeW91IG1l
+YW4gZHJpdmVycy9zdGFnaW5nLy4KPiAKPiBUaGVyZSB3YXMgY2xlYXJseSBhIG1pc3Rha2UgaW4g
+c3VibWl0dGluZyB0aGlzIE5TUCBVU0IgUEhZIGRyaXZlciwgYW5kCj4gaXQgc2hvdWxkIGhhdmUg
+YmVlbiBhIHBhdGNoIGFnYWluc3QgdGhlIGV4aXN0aW5nIE5TIFVTQiBQSFkgZHJpdmVyLCBidXQK
+PiBpdCB3YXMgbm90LCBva2F5IGZhaXIgZW5vdWdoLgo+IAo+IEl0J3Mgb25lIHRoaW5nIHRvIGFk
+ZHJlc3MgdGhhdCBpbiB0aGUgZnV0dXJlLCBhbmQgaXQncyBhbm90aGVyIHRoaW5nIHRvCj4gZmxh
+dCBvdXQgcmV2ZXJ0IHRoZSBkcml2ZXIganVzdCBiZWNhdXNlIHlvdSBkb24ndCBsaWtlIHRoZSBk
+dXBsaWNhdGlvbi4KPiAKPiBJIGRvbid0IGxpa2UgdGhhdCBlaXRoZXIsIGFuZCB3ZSBjYW4gZGlz
+Y3VzcyBvbiBob3cgdG8gaW1wcm92ZSB0aGluZ3MKPiAobGlrZSBoYXZlIHRoZSBtYWludGFpbmVy
+IHJldmlldyB0aGF0IHRvbyksIGJ1dCBkdXBsaWNhdGlvbiBpcyBhIGxlc3Nlcgo+IGV2aWwgdGhh
+biBub3QgaGF2aW5nIHRoZSBoYXJkd2FyZSBzdXBwb3J0ZWQgYXQgYWxsLCBhbmQgZXZlbiBtb3Jl
+IHNvLAo+IHB1cnBvc2VseSByZXZlcnRpbmcgaW4gdGhlIG5hbWUgb2YgcmVtb3ZpbmcgdGhhdCBk
+dXBsaWNhdGlvbiwgdGhhdCdzCj4gaW50ZW50aW9uYWxseSBicmVha2luZyB3b3JraW5nIGhhcmR3
+YXJlIQoKSGFyZHdhcmUgc3VwcG9ydCBpcyBub3QgZXhjdXNlIGFuZCBJIGRvbid0IHRoaW5rIGl0
+IGV2ZXIgd2FzIGluIHRoZSAKTGludXguCgpXZSBkb24ndCBhY2NlcHQgYmFkbHkgZGVzaWduZWQg
+ZHJpdmVycyBqdXN0IGJlY2F1c2UgdGhleSBwcm92aWRlIG5ldyBodyAKc3VwcG9ydC4KV2UgaGF2
+ZSB2YXJpb3VzIHN0YW5kYXJkcyAoZm9yIHF1YWxpdHksIHN0eWxlLCBkZXNpZ24sIGNvZGUpIGF0
+IGtlcm5lbCAKYW5kIHdlCnN0aWNrIHRvIHRoZW0gdW5sZXNzIGl0J3MgZHJpdmVycy9zdGFnaW5n
+Ly4gQXMgeW91IHNhaWQgdGhpcyBkcml2ZXIgCnNob3VsZG4ndCBiZQpwdXNoZWQgaW4gdGhlIGZp
+cnN0IHBsYWNlLgoKRHJvcHBpbmcgaGFyZHdhcmUgc3VwcG9ydCBpbiBrZXJuZWwgaGFwcGVucy4g
+U29tZXRpbWVzIGl0J3MgYWJvdXQgCmFuY2llbnQKZGV2aWNlcywgc29tZXRpbWVzIGFib3V0IGNv
+ZGUgcXVhbGl0eSAoc29tZSBmb3Jnb3R0ZW4gc3RhZ2luZyBkcml2ZXJzIAp1c2VkIHRvIGJlCmRy
+b3BwZWQgQUZBSUspLgoKQWRkaXRpb25hbGx5IHlvdSdyZSB0YWxraW5nIGFib3V0IHN1cHBvcnQg
+dGhhdCB3YXMgKmp1c3QqIGFkZGVkIGFuZCAKaXNuJ3QgdXNlZApieSBhbnlvbmUgaW4gdGhlIHdp
+bGQgd29ybGQgeWV0LgoKVGhpcyBoYXJkd2FyZSB3YXMgbWlzc2luZyB1cHN0cmVhbSBzdXBwb3J0
+IGZvciA0IHllYXJzIHNvIDIgZXh0cmEgbW9udGhzIAp3b24ndApyZWFsbHkgaHVydCBhbnlvbmUu
+CgpJIHJlYWxseSBkb24ndCBzZWUgZXhjdXNlZSBvciBuZWVkIGZvciBrZWVwaW5nIHRoaXMgZHJp
+dmVyLgoKSWYgeW91IHdhbnQgdG8gKGFuZCB5b3UgZmVlbCBpdCdzIHdlbGwgZGVzaWduZWQpLCB3
+ZSBjYW4ga2VlcApicmNtLG5zcC11c2IzLXBoeS50eHQKCkkgdm90ZSBmb3IgZm9jdXNpbmcgb24g
+ZXhpc3RpbmcgZHJpdmVyIGltcHJvdmVtZW50cyBpbnN0ZWFkIG9mIGxvb2tpbmcgCmZvcgpleGN1
+c2VzIGZvciBrZWVwaW5nIGRyaXZlciB0aGF0IHNob3VsZG4ndCBiZSBhZGRlZCBpbiB0aGUgZmly
+c3QgcGxhY2UuCkpvbiBzZWVtcyB0byBiZSBhbHJlYWR5IHdvcmtpbmcgb24gdGhpcywgSSdtIHdp
+bGxpbmcgdG8gaGVscCBoaW0sIEknbSAKc3VyZSB3ZQpjYW4gZ2V0IHlvdSBhIHByb3BlciBzdXBw
+b3J0IGZvciB0aGUgbmV4dCBtZXJnZSB3aW5kb3cuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
+eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
