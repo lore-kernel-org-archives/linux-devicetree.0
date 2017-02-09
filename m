@@ -1,13 +1,18 @@
-From: Jayachandran C <jnair@caviumnetworks.com>
-Subject: [PATCH v4 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform documentation
-Date: Thu,  9 Feb 2017 19:13:32 +0000
-Message-ID: <1486667612-8168-1-git-send-email-jnair@caviumnetworks.com>
-References: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
+ Broadcom NSP SoC"
+Date: Thu, 9 Feb 2017 11:18:52 -0800
+Message-ID: <b2bdc1a7-4e5c-a13e-0cda-c90759d7308c@gmail.com>
+References: <20170208233023.31922-1-zajec5@gmail.com>
+ <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
+ <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
+ <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+ <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
+In-Reply-To: <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,51 +22,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jayachandran C <jnair@caviumnetworks.com>
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for Cavium ThunderX2 CN99XX ARM64 processor family.
-The the SoC will use the ID "cavium,thunderx2-cn9900".
-
-Add documentation entry for the "cavium,thunder2" cpu core as well.
-
-Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
----
-
-v3->v4
-Documentation updates to reflect changes in device tree.
-
- Documentation/devicetree/bindings/arm/cavium-thunder2.txt | 8 ++++++++
- Documentation/devicetree/bindings/arm/cpus.txt            | 1 +
- 2 files changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-new file mode 100644
-index 0000000..dc5dd65
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-@@ -0,0 +1,8 @@
-+Cavium ThunderX2 CN99XX platform tree bindings
-+----------------------------------------------
-+
-+Boards with Cavium ThunderX2 CN99XX SoC shall have the root property:
-+  compatible = "cavium,thunderx2-cn9900", "brcm,vulcan-soc";
-+
-+These SoC uses the "cavium,thunder2" core which will be compatible
-+with "brcm,vulcan".
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index a1bcfee..74f0b23 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -169,6 +169,7 @@ nodes to be present and contain the properties described below.
- 			    "brcm,brahma-b15"
- 			    "brcm,vulcan"
- 			    "cavium,thunder"
-+			    "cavium,thunder2"
- 			    "faraday,fa526"
- 			    "intel,sa110"
- 			    "intel,sa1100"
--- 
-2.7.4
+T24gMDIvMDgvMjAxNyAxMToyMSBQTSwgUmFmYcWCIE1pxYJlY2tpIHdyb3RlOgo+IE9uIDIwMTct
+MDItMDkgMDA6NDQsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+IE9uIDAyLzA4LzIwMTcgMDM6
+MzkgUE0sIFJhZmHFgiBNacWCZWNraSB3cm90ZToKPj4+IE9uIDIwMTctMDItMDkgMDA6MzIsIEZs
+b3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+Pj4gT24gMDIvMDgvMjAxNyAwMzozMCBQTSwgUmFmYcWC
+IE1pxYJlY2tpIHdyb3RlOgo+Pj4+PiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVj
+a2kucGw+Cj4+Pj4+Cj4+Pj4+IFRoaXMgcmV2ZXJ0cyBjb21taXQgZDdiYzFhN2Q0MWJmICgicGh5
+OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IKPj4+Pj4gQnJvYWRjb20gTlNQIFNvQyIpIGFzIHdl
+IGFscmVhZHkgaGF2ZSBkcml2ZXIgZm9yIHRoaXMgUEhZIChzaGFyZWQKPj4+Pj4gYnkgTlMKPj4+
+Pj4gYW5kIE5TUCkuIEl0IHdhcyBhZGRlZCBpbiBjb21taXQgZTU2NjYyODFkOWVhICgicGh5OiBi
+Y20tbnMtdXNiMzogbmV3Cj4+Pj4+IGRyaXZlciBmb3IgVVNCIDMuMCBQSFkgb24gTm9ydGhzdGFy
+IikuCj4+Pj4+Cj4+Pj4+IEluc3RlYWQgb2YgYWRkaW5nIHNlcGFyYXRlZCBkcml2ZXIgJiBkdXBs
+aWNhdGluZyBjb2RlIHdlIHNob3VsZAo+Pj4+PiB3b3JrIG9uCj4+Pj4+IGltcHJvdmluZyBleGlz
+dGluZyAob2xkKSBvbmUuIFRoYW5rcyB0byB3b3JrIGRvbmUgYnkgQnJvYWRjb20gd2Uga25vdwo+
+Pj4+PiB0aGVyZSBpcyBNRElPIGJ1cyB3ZSB3ZXJlbid0IGF3YXJlIG9mICYgd2Uga25vdyByZWdp
+c3RlciBuYW1lcyB3aGljaAo+Pj4+PiBtYWtlcyBpbml0aWFsaXphdGlvbiBtb3JlIGNsZWFyLiBU
+aGlzIGlzIHZlcnkgdmFsdWFibGUgaW5mbyBhbmQgd2UKPj4+Pj4gc2hvdWxkIHdvcmsgb24gdXNp
+bmcgaXQgaW4gZXhpc3RpbmcgZHJpdmVyIGFmdGVyd2FyZHMuCj4+Pj4KPj4+PiBTaG91bGQgbm90
+IHdlIGZpcnN0IGV4dGVuZCB0aGUgb2xkIGRyaXZlciB0byBzdXBwb3J0IE5TUCBhbmQgdGhlbgo+
+Pj4+IHJldmVydAo+Pj4+IGQ3YmMxYTdkNDFiZiAoInBoeTogQWRkIFVTQjMgUEhZIHN1cHBvcnQg
+Zm9yIEJyb2FkY29tIE5TUCBTb0MiKT8KPj4+Cj4+PiBTb3VuZHMgbGlrZSBhIHdlaXJkIC8gZGly
+dHkgZGV2ZWxvcG1lbnQgbWV0aG9kIHRvIG1lOiBhZGRpbmcgZHVwbGljYXRlZAo+Pj4gY29kZQo+
+Pj4gZmlyc3QgdGhlbiB3b3JraW5nIG9uIGNsZWFuaW5nIGl0LiBVbmxlc3MgeW91IG1lYW4gZHJp
+dmVycy9zdGFnaW5nLy4KPj4KPj4gVGhlcmUgd2FzIGNsZWFybHkgYSBtaXN0YWtlIGluIHN1Ym1p
+dHRpbmcgdGhpcyBOU1AgVVNCIFBIWSBkcml2ZXIsIGFuZAo+PiBpdCBzaG91bGQgaGF2ZSBiZWVu
+IGEgcGF0Y2ggYWdhaW5zdCB0aGUgZXhpc3RpbmcgTlMgVVNCIFBIWSBkcml2ZXIsIGJ1dAo+PiBp
+dCB3YXMgbm90LCBva2F5IGZhaXIgZW5vdWdoLgo+Pgo+PiBJdCdzIG9uZSB0aGluZyB0byBhZGRy
+ZXNzIHRoYXQgaW4gdGhlIGZ1dHVyZSwgYW5kIGl0J3MgYW5vdGhlciB0aGluZyB0bwo+PiBmbGF0
+IG91dCByZXZlcnQgdGhlIGRyaXZlciBqdXN0IGJlY2F1c2UgeW91IGRvbid0IGxpa2UgdGhlIGR1
+cGxpY2F0aW9uLgo+Pgo+PiBJIGRvbid0IGxpa2UgdGhhdCBlaXRoZXIsIGFuZCB3ZSBjYW4gZGlz
+Y3VzcyBvbiBob3cgdG8gaW1wcm92ZSB0aGluZ3MKPj4gKGxpa2UgaGF2ZSB0aGUgbWFpbnRhaW5l
+ciByZXZpZXcgdGhhdCB0b28pLCBidXQgZHVwbGljYXRpb24gaXMgYSBsZXNzZXIKPj4gZXZpbCB0
+aGFuIG5vdCBoYXZpbmcgdGhlIGhhcmR3YXJlIHN1cHBvcnRlZCBhdCBhbGwsIGFuZCBldmVuIG1v
+cmUgc28sCj4+IHB1cnBvc2VseSByZXZlcnRpbmcgaW4gdGhlIG5hbWUgb2YgcmVtb3ZpbmcgdGhh
+dCBkdXBsaWNhdGlvbiwgdGhhdCdzCj4+IGludGVudGlvbmFsbHkgYnJlYWtpbmcgd29ya2luZyBo
+YXJkd2FyZSEKPiAKPiBIYXJkd2FyZSBzdXBwb3J0IGlzIG5vdCBleGN1c2UgYW5kIEkgZG9uJ3Qg
+dGhpbmsgaXQgZXZlciB3YXMgaW4gdGhlIExpbnV4Lgo+IAo+IFdlIGRvbid0IGFjY2VwdCBiYWRs
+eSBkZXNpZ25lZCBkcml2ZXJzIGp1c3QgYmVjYXVzZSB0aGV5IHByb3ZpZGUgbmV3IGh3Cj4gc3Vw
+cG9ydC4KPiBXZSBoYXZlIHZhcmlvdXMgc3RhbmRhcmRzIChmb3IgcXVhbGl0eSwgc3R5bGUsIGRl
+c2lnbiwgY29kZSkgYXQga2VybmVsCj4gYW5kIHdlCj4gc3RpY2sgdG8gdGhlbSB1bmxlc3MgaXQn
+cyBkcml2ZXJzL3N0YWdpbmcvLiBBcyB5b3Ugc2FpZCB0aGlzIGRyaXZlcgo+IHNob3VsZG4ndCBi
+ZQo+IHB1c2hlZCBpbiB0aGUgZmlyc3QgcGxhY2UuCj4gCj4gRHJvcHBpbmcgaGFyZHdhcmUgc3Vw
+cG9ydCBpbiBrZXJuZWwgaGFwcGVucy4gU29tZXRpbWVzIGl0J3MgYWJvdXQgYW5jaWVudAo+IGRl
+dmljZXMsIHNvbWV0aW1lcyBhYm91dCBjb2RlIHF1YWxpdHkgKHNvbWUgZm9yZ290dGVuIHN0YWdp
+bmcgZHJpdmVycwo+IHVzZWQgdG8gYmUKPiBkcm9wcGVkIEFGQUlLKS4KPiAKPiBBZGRpdGlvbmFs
+bHkgeW91J3JlIHRhbGtpbmcgYWJvdXQgc3VwcG9ydCB0aGF0IHdhcyAqanVzdCogYWRkZWQgYW5k
+Cj4gaXNuJ3QgdXNlZAo+IGJ5IGFueW9uZSBpbiB0aGUgd2lsZCB3b3JsZCB5ZXQuCgpFeGNlcHQg
+cGVvcGxlIHdvcmtpbmcgb24gaXQgYXQgQnJvYWRjb20sIGJ1dCBmYWlyIGVub3VnaC4KCj4gCj4g
+VGhpcyBoYXJkd2FyZSB3YXMgbWlzc2luZyB1cHN0cmVhbSBzdXBwb3J0IGZvciA0IHllYXJzIHNv
+IDIgZXh0cmEgbW9udGhzCj4gd29uJ3QKPiByZWFsbHkgaHVydCBhbnlvbmUuCj4gCj4gSSByZWFs
+bHkgZG9uJ3Qgc2VlIGV4Y3VzZWUgb3IgbmVlZCBmb3Iga2VlcGluZyB0aGlzIGRyaXZlci4KPiAK
+PiBJZiB5b3Ugd2FudCB0byAoYW5kIHlvdSBmZWVsIGl0J3Mgd2VsbCBkZXNpZ25lZCksIHdlIGNh
+biBrZWVwCj4gYnJjbSxuc3AtdXNiMy1waHkudHh0CgpObyBpdCdzIGZpbmUsIGxldCdzIGRyb3Ag
+aXQgYWxsIGFuZCByZXBsYWNlIGl0IHdpdGggd2hhdGV2ZXIgeW91IGFuZCBKb24KY29tZSB1cCB3
+aXRoIG5leHQuCgo+IAo+IEkgdm90ZSBmb3IgZm9jdXNpbmcgb24gZXhpc3RpbmcgZHJpdmVyIGlt
+cHJvdmVtZW50cyBpbnN0ZWFkIG9mIGxvb2tpbmcgZm9yCj4gZXhjdXNlcyBmb3Iga2VlcGluZyBk
+cml2ZXIgdGhhdCBzaG91bGRuJ3QgYmUgYWRkZWQgaW4gdGhlIGZpcnN0IHBsYWNlLgo+IEpvbiBz
+ZWVtcyB0byBiZSBhbHJlYWR5IHdvcmtpbmcgb24gdGhpcywgSSdtIHdpbGxpbmcgdG8gaGVscCBo
+aW0sIEknbQo+IHN1cmUgd2UKPiBjYW4gZ2V0IHlvdSBhIHByb3BlciBzdXBwb3J0IGZvciB0aGUg
+bmV4dCBtZXJnZSB3aW5kb3cuCgpGYWlyIGVub3VnaCwgSSBkcm9wcGVkIERoYW5hamF5J3MgY2hh
+bmdlcyAoIkFSTTogZHRzOiBOU1A6IEFkZCBVU0Igbm9kZXMKZm9yIE5vcnRoc3RhciBQbHVzIikg
+ZnJvbSBkZXZpY2V0cmVlL25leHQgc28geW91IGFuZCBKb24gY2FuIGZpZ3VyZSBvdXQKd2hhdCBp
+cyB0aGUgYmVzdCB0aGluZyB0byBtb3ZlIGZvcndhcmQgYW5kIHdlIG1pbmltaXplIHRoZSBhbW91
+bnQgb2YKaW5jb21wYXRpYmxlIERUIHN0dWZmIHRvIGJlIHNvcnRlZCBvdXQgbGF0ZXIgb24uIFNv
+IGFzIGZhciBhcyBJIGFtCmNvbmNlcm5lZCwgdGhlcmUgYXJlIG5vIGJvYXJkL1NvQyBEVFMgY2hh
+bmdlcyB0byBiZSBwYXRjaGVkIGxhdGVyIG9uLCB3ZQpjb3VsZCByZS1hcHBseSB0aGlzIHBhdGNo
+IGFzLWlzLCBvciB3ZSBjb3VsZCBoYXZlIHRvIGRlZmluZSBhIG5ldyBiaW5kaW5nLgotLSAKRmxv
+cmlhbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
