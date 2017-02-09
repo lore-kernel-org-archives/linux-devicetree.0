@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH 4/8] drm/sun4i: Grab reserved memory region
-Date: Thu,  9 Feb 2017 17:39:18 +0100
-Message-ID: <cf185f6de351837a9a29c123ca801682c983b83d.1486655917.git-series.maxime.ripard@free-electrons.com>
+Subject: [PATCH 5/8] ARM: sun8i: a33: Add shared display memory pool
+Date: Thu,  9 Feb 2017 17:39:19 +0100
+Message-ID: <cbbbc887fcebed08f60c5424c8cbd65a3467ce96.1486655917.git-series.maxime.ripard@free-electrons.com>
 References: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
 Return-path: <owner-linux-mm@kvack.org>
 In-Reply-To: <cover.7101c7323e6f22e281ad70b93488cf44caca4ca0.1486655917.git-series.maxime.ripard@free-electrons.com>
@@ -12,85 +12,60 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-
 Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Allow to provide an optional memory region to allocate from for our DRM
-driver.
+The memory buffers might need to be allocated and shared from both the
+scanout and the GPU.
+
+Create a memory region reserved for their own usage so that each can
+allocate from it, and get the informations on the region that is going to
+be used (size and offset).
 
 Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/sun8i-a33.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 4ce665349f6b..7ed7a159c9c1 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -12,6 +12,7 @@
+diff --git a/arch/arm/boot/dts/sun8i-a33.dtsi b/arch/arm/boot/dts/sun8i-a33.dtsi
+index 5a9ba43ccb07..043b1b017276 100644
+--- a/arch/arm/boot/dts/sun8i-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a33.dtsi
+@@ -97,6 +97,7 @@
+ 	de: display-engine {
+ 		compatible = "allwinner,sun8i-a33-display-engine";
+ 		allwinner,pipelines = <&fe0>;
++		memory-region = <&display_pool>;
+ 		status = "disabled";
+ 	};
  
- #include <linux/component.h>
- #include <linux/of_graph.h>
-+#include <linux/of_reserved_mem.h>
+@@ -104,6 +105,18 @@
+ 		reg = <0x40000000 0x80000000>;
+ 	};
  
- #include <drm/drmP.h>
- #include <drm/drm_crtc_helper.h>
-@@ -133,10 +134,16 @@ static int sun4i_drv_bind(struct device *dev)
- 	drm_vblank_init(drm, 1);
- 	drm_mode_config_init(drm);
- 
-+	ret = of_reserved_mem_device_init(dev);
-+	if (ret && ret != -ENODEV) {
-+		dev_err(drm->dev, "Couldn't claim our memory region\n");
-+		goto free_drm;
-+	}
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- 	ret = component_bind_all(drm->dev, drm);
- 	if (ret) {
- 		dev_err(drm->dev, "Couldn't bind all pipelines components\n");
--		goto free_drm;
-+		goto free_mem_region;
- 	}
++		display_pool: cma {
++			compatible = "shared-dma-pool";
++			size = <0x1000000>;
++			reusable;
++		};
++	};
++
+ 	soc@01c00000 {
+ 		tcon0: lcd-controller@01c0c000 {
+ 			compatible = "allwinner,sun8i-a33-tcon";
+@@ -267,6 +280,10 @@
+ 	compatible = "allwinner,sun8i-a33-ccu";
+ };
  
- 	/* Create our layers */
-@@ -144,7 +151,7 @@ static int sun4i_drv_bind(struct device *dev)
- 	if (IS_ERR(drv->layers)) {
- 		dev_err(drm->dev, "Couldn't create the planes\n");
- 		ret = PTR_ERR(drv->layers);
--		goto free_drm;
-+		goto free_mem_region;
- 	}
- 
- 	/* Create our CRTC */
-@@ -152,7 +159,7 @@ static int sun4i_drv_bind(struct device *dev)
- 	if (!drv->crtc) {
- 		dev_err(drm->dev, "Couldn't create the CRTC\n");
- 		ret = -EINVAL;
--		goto free_drm;
-+		goto free_mem_region;
- 	}
- 	drm->irq_enabled = true;
- 
-@@ -164,7 +171,7 @@ static int sun4i_drv_bind(struct device *dev)
- 	if (IS_ERR(drv->fbdev)) {
- 		dev_err(drm->dev, "Couldn't create our framebuffer\n");
- 		ret = PTR_ERR(drv->fbdev);
--		goto free_drm;
-+		goto free_mem_region;
- 	}
- 
- 	/* Enable connectors polling */
-@@ -172,10 +179,12 @@ static int sun4i_drv_bind(struct device *dev)
- 
- 	ret = drm_dev_register(drm, 0);
- 	if (ret)
--		goto free_drm;
-+		goto free_mem_region;
- 
- 	return 0;
- 
-+free_mem_region:
-+	of_reserved_mem_device_release(dev);
- free_drm:
- 	drm_dev_unref(drm);
- 	return ret;
++&mali {
++	memory-region = <&display_pool>;
++};
++
+ &pio {
+ 	compatible = "allwinner,sun8i-a33-pinctrl";
+ 	interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
 -- 
 git-series 0.8.11
 
