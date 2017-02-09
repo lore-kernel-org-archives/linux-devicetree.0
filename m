@@ -1,88 +1,96 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 2/3] ASoC: zx-i2s: introduce pclk for
-	zx2967 family
-Date: Thu, 9 Feb 2017 12:06:25 +0000
-Message-ID: <20170209120625.lhqcistgyjpy3plq@sirena.org.uk>
-References: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
- <1486522955-14528-2-git-send-email-baoyou.xie@linaro.org>
- <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
- <20170209014807.GO3407@dragon>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCH v12 6/9] usb: xhci: use bus->sysdev for DMA configuration
+Date: Thu, 9 Feb 2017 17:38:25 +0530
+Message-ID: <CAFp+6iFrE8oz2By9KR1n51OZZxZ05gStu03bMgD4zVbLXZ5ppQ@mail.gmail.com>
+References: <1486372421-29073-1-git-send-email-peter.chen@nxp.com>
+ <1486372421-29073-7-git-send-email-peter.chen@nxp.com> <20170208204300.GC8068@usblab-sd-06.qualcomm.com>
+ <85873d69-5664-0603-8cbd-a250d29ac335@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5382407215857446295=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170209014807.GO3407@dragon>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, shawn.guo@linaro.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, chen.chaokai@zte.com.cn, xie.baoyou@zte.com.cn, wang.qiang01@zte.com.cn, jun.nie@linaro.org, Baoyou Xie <baoyou.xie@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <85873d69-5664-0603-8cbd-a250d29ac335@ti.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Jack Pham <jackp@codeaurora.org>, Peter Chen <peter.chen@nxp.com>, Greg KH <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Ulf Hansson <ulf.hansson@linaro.org>, broonie@kernel.org, sre@kernel.org, robh+dt <robh+dt@kernel.org>, shawnguo@kernel.org, rjw@rjwysocki.net, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, p.zabel@pengutronix.de, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, s.hauer@pengutronix.de, mail@maciej.szmigiero.name, troy.kisky@boundary
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 9, 2017 at 5:23 PM, Roger Quadros <rogerq@ti.com> wrote:
+>
+>
+> On 08/02/17 22:43, Jack Pham wrote:
+>> Hi Peter, Sriram, Arnd,
+>>
+>> On Mon, Feb 06, 2017 at 05:13:38PM +0800, Peter Chen wrote:
+>>> From: Arnd Bergmann <arnd@arndb.de>
+>>>
+>>> For xhci-hcd platform device, all the DMA parameters are not
+>>> configured properly, notably dma ops for dwc3 devices. So, set
+>>> the dma for xhci from sysdev. sysdev is pointing to device that
+>>> is known to the system firmware or hardware.
+>>>
+>>> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>>> Signed-off-by: Sriram Dash <sriram.dash@nxp.com>
+>>> Tested-by: Baolin Wang <baolin.wang@linaro.org>
+>>> Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>>> Tested-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+>>> Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+>>> ---
+>>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+>>> index 6d33b42..7a9c860 100644
+>>> --- a/drivers/usb/host/xhci-plat.c
+>>> +++ b/drivers/usb/host/xhci-plat.c
+>>
+>>> -    hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+>>> +    hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
+>>> +                           dev_name(&pdev->dev), NULL);
+>>
+>> As mentioned already in [1], usb_create_shared_hcd() is called to create
+>> the second bus, however it also needs to be converted.
+>>
+>> Not exactly as Roger's suggestion but this worked for me:
+>>
+>> -       xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
+>> +       xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
+>>                         dev_name(&pdev->dev), hcd);
+>
+> But we're creating a shared_hcd and there is an API for that so why not use it
+> instead of calling __usb_create_hcd()?
 
---===============5382407215857446295==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="l2smyxk6aht5vgdo"
-Content-Disposition: inline
+Do we not want to pass on the DMA configuration from sysdev to
+shared_hcd as well?
+
+>
+>>         if (!xhci->shared_hcd) {
+>>                 ret = -ENOMEM;
+>>
+>> Without this, SuperSpeed devices fail to enumerate:
+>>
+>>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
+>>  usb 2-1: device descriptor read/8, error -11
+>>  usb 2-1: new SuperSpeed USB device number 2 using xhci-hcd
+>>  usb 2-1: device descriptor read/8, error -11
+>>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
+>>  usb 2-1: device descriptor read/8, error -11
+>>  usb 2-1: new SuperSpeed USB device number 3 using xhci-hcd
+>>  usb 2-1: device descriptor read/8, error -11
+>>  <and continues...>
+>>
+>> Thanks,
+>> Jack
+>>
+>> [1] https://lkml.org/lkml/2016/12/9/240
+>>
+>
+> --
+> cheers,
+> -roger
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 
---l2smyxk6aht5vgdo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 09, 2017 at 09:48:09AM +0800, Shawn Guo wrote:
-> On Wed, Feb 08, 2017 at 06:52:07PM -0600, Rob Herring wrote:
-
-> > Personally, I'd prefer "dt-bindings: sound: blah...", but not enough to=
-=20
-> > argue with Mark about it. If that is not the prefix, then it should at=
-=20
-> > least have "binding" in the subject.
-
-> +1
-
-> The prefix of sound bindings is quite unique from other subsystems.
-> Looking at the prefix of Documentation/devicetree/bindings/sound/
-> commits, I'm always confused whether it's a pure binding commit
-> or just submitted as part of the driver patch.  I feel that we
-> kinda lose the point of having a prefix.
-
-That's really not what's happening reliably - other subsystems also seem
-to have a bunch of things prefixed for the subsystem and the DT specific
-prefixes are all over the shop, people seem to be making them up at
-random.  If DT binding review were something that reliably and
-consistently happened and didn't affect the subsystem I'd perhaps buy it
-but for run of the mill stuff it seems like getting things reviewed in
-the subsystem is more important.
-
---l2smyxk6aht5vgdo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlicW0AACgkQJNaLcl1U
-h9CKUwf/eenRtWOUgLcSz5PgdgRE/tMDYOn9I9BKP3Nk7UCWpJKA2W/LE5lgLfow
-SvQsLunCt49zniDpfmtwIsFedDTfPNjg1P6FZf+/1WrbFBTP4vRP7vve55ERrC+l
-lFpmn9MaPnVRleZqBgG3qEbpoacyxG63VNZNRYnNcn6LT4P8YgaHUmQHOAfjtNXC
-d50aaW2fofXFAWByjaErj7jT2zfVsX4xXy/aBYi4yGd2ILhqfsYsOhC1uJcBdoHh
-xMu+jLHhqZRHQdg62ShazpRifrVI9mL0j0HyUvviAULGu1agA7o1e6Q/vEsFsMlY
-mlDOb6ZOiKRbaGBC7bwA4sta3NaV9A==
-=vk02
------END PGP SIGNATURE-----
-
---l2smyxk6aht5vgdo--
-
---===============5382407215857446295==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============5382407215857446295==--
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
