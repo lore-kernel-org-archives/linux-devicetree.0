@@ -1,86 +1,46 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 1/2] input: touchscreen: add driver for Zeitec ZET6223
-Date: Thu, 9 Feb 2017 13:38:48 -0800
-Message-ID: <20170209213848.GE8862@dtor-ws>
-References: <20170114191425.GA31309@dtor-ws>
- <20170118205712.GA5333@gmail.com>
- <20170118224946.GC11881@dtor-ws>
- <20170131081942.GC8311@dtor-ws>
- <20170201191058.GA8453@gmail.com>
- <20170201192053.GB40720@dtor-ws>
- <20170201192331.GC40720@dtor-ws>
- <20170201193023.GD40720@dtor-ws>
- <20170201193554.GB8453@gmail.com>
- <20170201224734.GF40720@dtor-ws>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v6 2/4] Documentation: dt: add bindings for ti-cpufreq
+Date: Thu, 9 Feb 2017 23:03:21 +0100
+Message-ID: <CAJZ5v0hT4peuRQUrLHC32GmVSoa6Npv2qutNo2WEhne72hHi6A@mail.gmail.com>
+References: <20170203172929.23940-3-d-gerlach@ti.com>
+ <20170209153549.8354-1-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170201224734.GF40720@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Jelle van der Waa <jelle@vdwaa.nl>
-Cc: Rob Herring <robh+dt@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170209153549.8354-1-d-gerlach@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dave Gerlach <d-gerlach@ti.com>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Nishanth Menon <nm@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Lukasz Majewski <lukma@denx.de>, Rob Herring <robh+dt@kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 01, 2017 at 02:47:34PM -0800, Dmitry Torokhov wrote:
-> On Wed, Feb 01, 2017 at 08:35:55PM +0100, Jelle van der Waa wrote:
-> > On 02/01/17 at 11:30am, Dmitry Torokhov wrote:
-> > > On Wed, Feb 01, 2017 at 11:23:31AM -0800, Dmitry Torokhov wrote:
-> > > > On Wed, Feb 01, 2017 at 11:20:53AM -0800, Dmitry Torokhov wrote:
-> > > > > On Wed, Feb 01, 2017 at 08:10:59PM +0100, Jelle van der Waa wrote:
-> > > > > > On 01/31/17 at 12:19am, Dmitry Torokhov wrote:
-> > > > > > > Hi Jelle,
-> > > > > > > 
-> > > > > > > On Wed, Jan 18, 2017 at 02:49:46PM -0800, Dmitry Torokhov wrote:
-> > > > > > > > On Wed, Jan 18, 2017 at 09:57:14PM +0100, Jelle van der Waa wrote:
-> > > > > > > > > > I also have been looking at you previosu submission and had some draft
-> > > > > > > > > > changes. I reconciled them in the patch below, if it still works for you
-> > > > > > > > > > then I'll fold everything together and apply. Please let me know.
-> > > > > > > > > 
-> > > > > > > > > I'll find some time to test the patch below, I've one small suggestion
-> > > > > > > > > to the patch below.
-> > > > > > > 
-> > > > > > > It would be very helpful if you let me know if the patch actually works
-> > > > > > > on the hardware: the merge window for 4.11 will be opening fairly soon.
-> > > > > > 
-> > > > > > Sorry, I had a busy week and at first it didn't work since I didn't have
-> > > > > > a regulator and I think the code for the regular might be wrong.
-> > > > > > 
-> > > > > > I think that you want the regulators to be optional, but
-> > > > > > devm_regulator_get_optional errors out when no vcc/vio is configured.
-> > > > > > Changing it to devm_regulator_get makes the driver work. I guess this is
-> > > > > > since devm_regulator_get_optional doesn't allow the creation of a dummy
-> > > > > > device while devm_regulator_get does.
-> > > > > 
-> > > > > Ah, yes, these should have been non-optional. I'll fix it up and apply
-> > > > > then.
-> > > > 
-> > > > Hmm.. but no, we only acess regulators if they are non-NULL in
-> > > > zet6223_power_on(). I used devm_regulator_get_optional() to avoid
-> > > > needless sleep in zet6223_power_on() when we do not have regulators
-> > > > defined. Let me look some more...
-> > > 
-> > > What is the error you are getting from devm_regulator_get_optional()?
-> > > What kind of system is that? Do you have system with full constraints?
-> > 
-> > The system is an ARM tablet, I don't know what regulator it uses for the
-> > touchscreen (since I don't have any schematics).
-> > 
-> > The error I get is:
-> > 
-> > [    1.274337] zet6223 1-0076: failed to get 'vio' regulator: -19
-> 
-> OK, I see what is going on. I CCed you on a mail to Mark Brown regarding
-> regulator_get_optional(), depending on his response we'll know the way
-> forward.
+On Thu, Feb 9, 2017 at 4:35 PM, Dave Gerlach <d-gerlach@ti.com> wrote:
+> Add the device tree bindings document for the TI CPUFreq/OPP driver
+> on AM33xx, AM43xx, DRA7xx, and AM57xx SoCs. The operating-points-v2
+> binding allows us to provide an opp-supported-hw property for each OPP
+> to define when it is available. This driver is responsible for reading
+> and parsing registers to determine which OPPs can be selectively enabled
+> based on the specific SoC in use by matching against the opp-supported-hw
+> data.
+>
+> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+> ---
 
-OK, I changed them to be non-optional: I think we can spare 30 msec on
-startup for now, we may revisit later if/when we get new regulator API
-to check when regulators were turned off/on last.
+I applied this (with the Rob's ACK) along with the rest of the series
+and I fixed up things that didn't apply and didn't build and I was not
+amused by that at all.
 
-I'll queue it for 4.11.
+In particular, Viresh, if you ACK something, please make sure that it
+doesn't conflict with your own patches.
 
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Rafael
