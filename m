@@ -1,15 +1,14 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 08/10] ARM: davinci: fix the DT boot on da850-evm
-Date: Thu, 9 Feb 2017 20:53:02 +0530
-Message-ID: <4574d1c3-c169-b158-dba6-f1965a1056b0@ti.com>
-References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
- <1486485683-11427-9-git-send-email-bgolaszewski@baylibre.com>
- <m2fujpkgkg.fsf@baylibre.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/5] arm64: add THUNDER2 processor family
+Date: Thu, 09 Feb 2017 16:25:41 +0100
+Message-ID: <4275983.LUpotW2BbV@wuerfel>
+References: <1486256226-43889-1-git-send-email-jnair@caviumnetworks.com>
+ <1486256226-43889-2-git-send-email-jnair@caviumnetworks.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <m2fujpkgkg.fsf@baylibre.com>
+In-Reply-To: <1486256226-43889-2-git-send-email-jnair@caviumnetworks.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,42 +18,41 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Lad Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: Jayachandran C <jnair@caviumnetworks.com>
+Cc: devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 07 February 2017 11:51 PM, Kevin Hilman wrote:
-> Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+On Sunday, February 5, 2017 12:57:02 AM CET Jayachandran C wrote:
+> Add support for ThunderX2 CN99XX arm64 server processors.
 > 
->> When we enable vpif capture on the da850-evm we hit a BUG_ON() because
->> the i2c adapter can't be found. The board file boot uses i2c adapter 1
->> but in the DT mode it's actually adapter 0. Drop the problematic lines.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->> ---
->>  arch/arm/mach-davinci/pdata-quirks.c | 4 ----
->>  1 file changed, 4 deletions(-)
->>
->> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
->> index 94948c1..09f62ac 100644
->> --- a/arch/arm/mach-davinci/pdata-quirks.c
->> +++ b/arch/arm/mach-davinci/pdata-quirks.c
->> @@ -116,10 +116,6 @@ static void __init da850_vpif_legacy_init(void)
->>  	if (of_machine_is_compatible("ti,da850-lcdk"))
->>  		da850_vpif_capture_config.subdev_count = 1;
->>  
->> -	/* EVM (UI card) uses i2c adapter 1 (not default: zero) */
->> -	if (of_machine_is_compatible("ti,da850-evm"))
->> -		da850_vpif_capture_config.i2c_adapter_id = 1;
->> -
+> Introduce a new arm64 platform config option ARCH_THUNDER2 for these
+> processors.
 > 
-> oops, my bad.
+> Signed-off-by: Jayachandran C <jnair@caviumnetworks.com>
+> ---
+>  arch/arm64/Kconfig.platforms | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
-> Acked-by: Kevin Hilman <khilman@baylibre.com>
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 715ef12..129cc5a 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -190,6 +190,13 @@ config ARCH_THUNDER
+>  	help
+>  	  This enables support for Cavium's Thunder Family of SoCs.
+>  
+> +config ARCH_THUNDER2
+> +	bool "Cavium ThunderX2 Server Processors"
+> +	select GPIOLIB
+> +	help
+> +	  This enables support for Cavium's ThunderX2 CN99XX family of
+> +	  server processors.
+> +
+>  config ARCH_UNIPHIER
+>  	bool "Socionext UniPhier SoC Family"
+>  	select ARCH_HAS_RESET_CONTROLLER
+> 
 
-The offending code is not in my master branch. Since its almost certain
-that VPIF platform support is going to wait for v4.12, can you or Kevin
-please update Kevin's original patches with these fixes rolled in?
+Applied this one to next/arm64, thanks!
 
-Thanks,
-Sekhar
+	Arnd
