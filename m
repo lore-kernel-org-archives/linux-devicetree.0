@@ -1,16 +1,15 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 1/3] of: Support parsing phandle argument lists through
- a nexus node
-Date: Thu, 9 Feb 2017 09:17:58 -0600
-Message-ID: <CAL_JsqKbkynNmCrXbi=VJ5wqYtRrYbC+00qSm_uyZFBLFOUz0w@mail.gmail.com>
-References: <20170123204851.12808-1-stephen.boyd@linaro.org>
- <20170123204851.12808-2-stephen.boyd@linaro.org> <5886F5ED.3030509@gmail.com>
- <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 08/10] ARM: davinci: fix the DT boot on da850-evm
+Date: Thu, 9 Feb 2017 20:53:02 +0530
+Message-ID: <4574d1c3-c169-b158-dba6-f1965a1056b0@ti.com>
+References: <1486485683-11427-1-git-send-email-bgolaszewski@baylibre.com>
+ <1486485683-11427-9-git-send-email-bgolaszewski@baylibre.com>
+ <m2fujpkgkg.fsf@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKS3Q2mg0aSubB3TV6LPQjCx+hqBu4TqbsqyfBvWrwctg@mail.gmail.com>
+In-Reply-To: <m2fujpkgkg.fsf@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,115 +19,42 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Stephen Boyd <stephen.boyd@linaro.org>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Kevin Hilman <khilman@baylibre.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Lechner <david@lechnology.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Lad Prabhakar <prabhakar.csengg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-media@vger.kernel.org, Alexandre Bailon <abailon@baylibre.com>, Patrick Titiano <ptitiano@baylibre.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 24, 2017 at 12:05 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Tue, Jan 24, 2017 at 12:36 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> Hi Stephen,
+On Tuesday 07 February 2017 11:51 PM, Kevin Hilman wrote:
+> Bartosz Golaszewski <bgolaszewski@baylibre.com> writes:
+> 
+>> When we enable vpif capture on the da850-evm we hit a BUG_ON() because
+>> the i2c adapter can't be found. The board file boot uses i2c adapter 1
+>> but in the DT mode it's actually adapter 0. Drop the problematic lines.
 >>
->> Sorry I did not get to v1 and v2 in a timely manner.
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>> ---
+>>  arch/arm/mach-davinci/pdata-quirks.c | 4 ----
+>>  1 file changed, 4 deletions(-)
 >>
->>
->> On 01/23/17 12:48, Stephen Boyd wrote:
->>> Platforms like 96boards have a standardized connector/expansion
->>> slot that exposes signals like GPIOs to expansion boards in an
->>> SoC agnostic way. We'd like the DT overlays for the expansion
->>> boards to be written once without knowledge of the SoC on the
->>> other side of the connector. This avoids the unscalable
->>> combinatorial explosion of a different DT overlay for each
->>> expansion board and SoC pair.
->>>
->>> We need a way to describe the GPIOs routed through the connector
->>> in an SoC agnostic way. Let's introduce nexus property parsing
->>> into the OF core to do this. This is largely based on the
->>> interrupt nexus support we already have. This allows us to remap
->>> a phandle list in a consumer node (e.g. reset-gpios) through a
->>> connector in a generic way (e.g. via gpio-map). Do this in a
->>> generic routine so that we can remap any sort of variable length
->>> phandle list.
->>>
->>> Taking GPIOs as an example, the connector would be a GPIO nexus,
->>> supporting the remapping of a GPIO specifier space to multiple
->>> GPIO providers on the SoC. DT would look as shown below, where
->>> 'soc_gpio1' and 'soc_gpio2' are inside the SoC, 'connector' is an
->>> expansion port where boards can be plugged in, and
->>> 'expansion_device' is a device on the expansion board.
->>>
->>>       soc {
->>>               soc_gpio1: gpio-controller1 {
->>>                       #gpio-cells = <2>;
->>>               };
->>>
->>>               soc_gpio2: gpio-controller2 {
->>>                       #gpio-cells = <2>;
->>>               };
->>>       };
->>>
->>>       connector: connector {
->>>               #gpio-cells = <2>;
->>>               gpio-map = <0 0 &soc_gpio1 1 0>,
->>>                          <1 0 &soc_gpio2 4 0>,
->>>                          <2 0 &soc_gpio1 3 0>,
->>>                          <3 0 &soc_gpio2 2 0>;
->>>               gpio-map-mask = <0xf 0x0>;
->>>               gpio-map-pass-thru = <0x0 0x1>
->>>       };
->>>
->>>       expansion_device {
->>>               reset-gpios = <&connector 2 GPIO_ACTIVE_LOW>;
->>>       };
->>
->> The how to architect connectors and plugs threads fell asleep before
->> coming to a resolution.  We need to revive that discussion.
->>
->> One of the concepts of the plug and connector architecture is that
->> a main board may contain multiple connectors of the same type (or
->> different types, but the same type is sufficient for this discussion).
->>
->> The node describing the card that plugs into one of the connectors
->> does not know the phandle of the connector it is going to be
->> connected to.  Some other mechanism is provided to allow a card
->> to be plugged into any of the available connectors.  If there are
->> two identical cards plugged into two connectors, then both cards
->> have the same exact device tree node.  But some mechanism will
->> exist to resolve (or "link") the two card nodes to the different
->> connector nodes.
->>
->> As a result of this, in the above example the reset-gpios property
->> in the node 'expansion_device' can not contain '&connector'.  The
->> concept of &connector belongs to the entire expansion_device node,
->> not to individual properties within the node.
->
-> I think this is easily solved with a connector having 2 halves and
-> that we need to search parents for *-map properties. Inheriting from
-> parents is a common pattern in DT though perhaps not walking the
-> parents of a phandle. So we'd have something like this:
->
-> base-connector-1 {
->   gpio-map = ...
->   connector {
->     child {
->       some-gpios = <&connector 1>;
->     };
->   };
-> };
->
-> base-connector-2 {
->   gpio-map = ...
->   connector {
->     child {
->       some-gpios = <&connector 1>;
->     };
->   };
-> };
->
-> Now, how we resolve that /connector from an overlay targets
-> /base-connector-1 and /base-connector-2 is an orthogonal issue and one
-> that's going to be connector specific (at least for probe-able
-> connectors).
+>> diff --git a/arch/arm/mach-davinci/pdata-quirks.c b/arch/arm/mach-davinci/pdata-quirks.c
+>> index 94948c1..09f62ac 100644
+>> --- a/arch/arm/mach-davinci/pdata-quirks.c
+>> +++ b/arch/arm/mach-davinci/pdata-quirks.c
+>> @@ -116,10 +116,6 @@ static void __init da850_vpif_legacy_init(void)
+>>  	if (of_machine_is_compatible("ti,da850-lcdk"))
+>>  		da850_vpif_capture_config.subdev_count = 1;
+>>  
+>> -	/* EVM (UI card) uses i2c adapter 1 (not default: zero) */
+>> -	if (of_machine_is_compatible("ti,da850-evm"))
+>> -		da850_vpif_capture_config.i2c_adapter_id = 1;
+>> -
+> 
+> oops, my bad.
+> 
+> Acked-by: Kevin Hilman <khilman@baylibre.com>
 
-Frank, any more comments on this? If not, I plan to apply this series.
+The offending code is not in my master branch. Since its almost certain
+that VPIF platform support is going to wait for v4.12, can you or Kevin
+please update Kevin's original patches with these fixes rolled in?
 
-Rob
+Thanks,
+Sekhar
