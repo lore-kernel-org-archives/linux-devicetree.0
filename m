@@ -1,43 +1,102 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] ASoC: zx-i2s: introduce pclk for zx2967 family
-Date: Thu, 9 Feb 2017 09:48:09 +0800
-Message-ID: <20170209014807.GO3407@dragon>
-References: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
- <1486522955-14528-2-git-send-email-baoyou.xie@linaro.org>
- <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
+From: Rick Chang <rick.chang@mediatek.com>
+Subject: Re: [PATCH v6 3/3] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Thu, 9 Feb 2017 10:10:47 +0800
+Message-ID: <1486606247.4093.9.camel@mtksdaap41>
+References: <1479353915-5043-1-git-send-email-rick.chang@mediatek.com>
+ <1479353915-5043-4-git-send-email-rick.chang@mediatek.com>
+ <d602365a-e87b-5bae-8698-bd43063ef079@xs4all.nl>
+ <1479784905.8964.15.camel@mtksdaap41>
+ <badf8125-27ed-9c5b-fbc0-75716ffdfb0e@xs4all.nl>
+ <1479866054.8964.21.camel@mtksdaap41> <1479894203.8964.29.camel@mtksdaap41>
+ <1483670099.18931.5.camel@mtksdaap41>
+ <974d20f3-5133-0869-2a35-c1617bec5d6e@xs4all.nl>
+ <c35bd06d-f012-1289-e765-02dc26b87e27@gmail.com>
+ <1484011718.10361.7.camel@mtksdaap41>
+ <267403e5-18ac-0c74-10ca-cc36b909dfb4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Baoyou Xie <baoyou.xie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jun.nie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xie.baoyou-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, chen.chaokai-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org, wang.qiang01-Th6q7B73Y6EnDS1+zs4M5A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <267403e5-18ac-0c74-10ca-cc36b909dfb4@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hans Verkuil <hverkuil@xs4all.nl>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, srv_heupstream@mediatek.com, James Liao <jamesjj.liao@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Eddie Huang <eddie.huang@mediatek.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08, 2017 at 06:52:07PM -0600, Rob Herring wrote:
-> On Wed, Feb 08, 2017 at 11:02:34AM +0800, Baoyou Xie wrote:
-> > ZTE's zx2967 I2S controller driver introduces pclk, this
-> > patch documents this fact.
+Hi Hans,
+
+All the dependences of this patch have been merged into v4.10-next.Could
+you take v9 of this patch set? Matthias will help us to take the dts
+part.
+
+Best Regards,
+Rick
+
+On Fri, 2017-01-13 at 16:02 +0100, Matthias Brugger wrote:
+> Hi James,
 > 
-> Now we have the same subject for patches 2 and 3.
+> On 10/01/17 02:28, Eddie Huang wrote:
+> > Hi Matthias,
+> >
+> > On Mon, 2017-01-09 at 19:45 +0100, Matthias Brugger wrote:
+> >>
+> >> On 09/01/17 12:29, Hans Verkuil wrote:
+> >>> Hi Rick,
+> >>>
+> >>> On 01/06/2017 03:34 AM, Rick Chang wrote:
+> >>>> Hi Hans,
+> >>>>
+> >>>> The dependence on [1] has been merged in 4.10, but [2] has not.Do you have
+> >>>> any idea about this patch series? Should we wait for [2] or we could merge
+> >>>> the source code and dt-binding first?
+> >>>
+> >>> Looking at [2] I noticed that the last comment was July 4th. What is the reason
+> >>> it hasn't been merged yet?
+> >>>
+> >>> If I know [2] will be merged for 4.11, then I am fine with merging this media
+> >>> patch series. The dependency of this patch on [2] is something Mauro can handle.
+> >>>
+> >>> If [2] is not merged for 4.11, then I think it is better to wait until it is
+> >>> merged.
+> >>>
+> >>
+> >> I can't take [2] because there is no scpsys in the dts present. It seems
+> >> that it got never posted.
+> >>
+> >> Rick can you please follow-up with James and provide a patch which adds
+> >> a scpsys node to the mt2701.dtsi?
+> >>
+> >
+> > James sent three MT2701 dts patches [1] two weeks ago, these three
+> > patches include scpsys node. Please take a reference. And We will send
+> > new MT2701 ionmmu/smi dtsi node patch base on [1] later, thus you can
+> > accept and merge to 4.11.
+> >
 > 
-> Personally, I'd prefer "dt-bindings: sound: blah...", but not enough to 
-> argue with Mark about it. If that is not the prefix, then it should at 
-> least have "binding" in the subject.
-
-+1
-
-The prefix of sound bindings is quite unique from other subsystems.
-Looking at the prefix of Documentation/devicetree/bindings/sound/
-commits, I'm always confused whether it's a pure binding commit
-or just submitted as part of the driver patch.  I feel that we
-kinda lose the point of having a prefix.
-
-Just my 2 cents.
-
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks for the clarification. I pulled all this patches into 
+> v4.10-next/dts32
+> 
+> Hans will you take v9 of this patch set?
+> Then I'll take the dts patch.
+> 
+> Regards,
+> Matthias
+> 
+> > [1]
+> > https://patchwork.kernel.org/patch/9489991/
+> > https://patchwork.kernel.org/patch/9489985/
+> > https://patchwork.kernel.org/patch/9489989/
+> >
+> > Thanks,
+> > Eddie
+> >
+> >
