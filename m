@@ -1,47 +1,43 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 3/4] leds: Add LED support for MT6323 PMIC
-Date: Thu, 9 Feb 2017 15:23:44 +0100
-Message-ID: <20170209142344.GA23373@xo-6d-61-c0.localdomain>
-References: <1486520357-13096-1-git-send-email-sean.wang@mediatek.com>
- <1486520357-13096-4-git-send-email-sean.wang@mediatek.com>
- <a410da2e-ce5f-6263-2d7d-79f4b358a848@gmail.com>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of/unittest: Swap arguments of of_unittest_apply_overlay()
+Date: Thu, 9 Feb 2017 09:12:42 -0600
+Message-ID: <CAL_JsqKuNXsBwxkrw7EnX-ZgUm_DtP-0VZtSYYnq0_0Uxrc2GA@mail.gmail.com>
+References: <20170119100616.4679-1-alexander.sverdlin@nokia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a410da2e-ce5f-6263-2d7d-79f4b358a848@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, keyhaede@gmail.com, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, rpurdie@rpsys.net, linux-arm-kernel@lists.infradead.org, matthias.bgg@gmail.com, linux-mediatek@lists.infradead.org, lee.jones@linaro.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170119100616.4679-1-alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+On Thu, Jan 19, 2017 at 4:06 AM, Alexander Sverdlin
+<alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org> wrote:
+> Function signature
+>
+>   of_unittest_apply_overlay(int unittest_nr, int overlay_nr, ...
+>
+> and call sites, like in of_unittest_apply_overlay_check():
+>
+>   ret = of_unittest_apply_overlay(overlay_nr, unittest_nr, ...
+>
+> do not match. Fix this in one place (function signature).
+> The only affected test case is 15, which supplies non-existing
+> overlay number 16, but two bugs matched here. Fix the test case.
+>
+> Signed-off-by: Alexander Sverdlin <alexander.sverdlin-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  drivers/of/unittest.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-> > +/*
-> > + * Register for MT6323_ISINK_CON0 to setup the
-> > + * duty cycle of the blink
-> > + */
-> > +#define MT6323_ISINK_CON0(i)		(MT6323_ISINK0_CON0 + 0x8 * (i))
-> > +#define MT6323_ISINK_DIM_DUTY_MASK	(0x1f << 8)
-> > +#define MT6323_ISINK_DIM_DUTY(i)	(((i) << 8) & \
-> > +					MT6323_ISINK_DIM_DUTY_MASK)
-> > +
-> > +/*
-> > + * Register to setup the period of the blink
-> > + */
-> 
-> This fits in a single line, so can be wrapped with /* */ like :
+Applied, thanks.
 
-People do this to make blocks stand out, and to make it similar to other blocks
-above. I believe this is ok.
-
-									Pavel
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
