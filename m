@@ -1,73 +1,138 @@
-From: Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 4/5] dt-bindings: arm64 ARCH_THUNDER2 platform
- documentation
-Date: Thu, 9 Feb 2017 19:05:23 +0000
-Message-ID: <20170209190523.GA6791@localhost>
-References: <1486502399-2950-1-git-send-email-jnair@caviumnetworks.com>
- <1486502399-2950-5-git-send-email-jnair@caviumnetworks.com>
- <CAL_Jsq+i2evzVnQKf3qYMYJVZ=ecdSQObGy8CMn7aMoxBi_PTg@mail.gmail.com>
- <20170208053234.GA3102@localhost>
- <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a07eo0htv_y6H_aHvAaeo5two3vQTaySuFXpG+dzYguUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 3/6] drm: of: introduce drm_of_find_panel_or_bridge
+Date: Thu,  9 Feb 2017 13:05:55 -0600
+Message-ID: <20170209190558.4784-4-robh@kernel.org>
+References: <20170209190558.4784-1-robh@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170209190558.4784-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel.vetter@intel.com>, Sean Paul <seanpaul@chromium.org>
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, Archit Taneja <architt@codeaurora.org>, Jingoo Han <jingoohan1@gmail.com>, Inki Dae <inki.dae@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Stefan Agner <stefan@agner.ch>, Alison Wang <alison.wang@freescale.com>, Xinliang Liu <z.liuxinliang@hisilicon.com>, Rongrong Zou <zourongrong@gmail.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puc>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 08, 2017 at 09:42:38AM +0100, Arnd Bergmann wrote:
-> On Wed, Feb 8, 2017 at 6:32 AM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> > On Tue, Feb 07, 2017 at 04:35:24PM -0600, Rob Herring wrote:
-> >> On Tue, Feb 7, 2017 at 3:19 PM, Jayachandran C <jnair-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org> wrote:
-> >> > diff --git a/Documentation/devicetree/bindings/arm/cavium-thunder2.txt b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-> >> > new file mode 100644
-> >> > index 0000000..82276a2
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/arm/cavium-thunder2.txt
-> >> > @@ -0,0 +1,5 @@
-> >> > +Cavium Thunder2 Family device tree bindings
-> >> > +-------------------------------------------
-> >> > +
-> >> > +Boards with Cavium ThunderX2 CN99XX shall have the root property:
-> >> > +  compatible = "cavium,thunder-99xx";
-> >>
-> >> Is it ThunderX2 or Thunder2? What happened to "CN" in the compatible
-> >> string. There's a lot of inconsistencies here.
-> >
-> > I have followed the exiting Thunder naming as well as general DT
-> > conventions, Basically:
-> >
-> > Platform - ARCH_THUNDER2  (for ThunderX2 CN99XX, ARCH_THUNDER is
-> >            for ThunderX CN8?XX)
-> 
-> The platform name is fine, we don't care too much about that as it is
-> easily changed
-> if necessary.
-> 
-> > Core - cavium,thunder2 (ThunderX2 cpu core, "cavium,thunder" is ThunderX core)
-> > Board/SoC - cavium,thunder-99xx (for ThunderX2, "cavium,thunder-88xx"
-> >           is existing ThunderX board)
-> >
-> > Thunder2 because it is based on the next generation Thunder core, and
-> > processor family is ThunderX2 CN99XX.
-> >
-> > I had thought thru other possibilities as well, this seems the best I
-> > could come up with.
-> 
-> We should really avoid having the 'xx' placeholder in there but instead put
-> actual chip names in the compatible string, preferably the real ID such as
-> "cn8890" for the older chip. I see that we got it wrong for thunder-88xx.dts,
-> but that is no reason to duplicate the mistake.
+Many drivers have a common pattern of searching the OF graph for either an
+attached panel or bridge and then finding the DRM struct for the panel
+or bridge. Also, most drivers need to handle deferred probing when the
+DRM device is not yet instantiated. Create a common function,
+drm_of_find_panel_or_bridge, to find the connected node and the
+associated DRM panel or bridge device.
 
-Ok. Looks like 1,2,5 of the patchset is already applied. Thanks!
+Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+v2:
+- Reworked code flow
+- Added note that at least one of panel or bridge must not be NULL.
 
-I will follow up with v4 of 3,4 with a better ID.
+ drivers/gpu/drm/drm_of.c | 52 ++++++++++++++++++++++++++++++++++++++++++++++++
+ include/drm/drm_of.h     | 13 ++++++++++++
+ 2 files changed, 65 insertions(+)
 
-JC.
+diff --git a/drivers/gpu/drm/drm_of.c b/drivers/gpu/drm/drm_of.c
+index 47848ed8ca48..86b8b959587a 100644
+--- a/drivers/gpu/drm/drm_of.c
++++ b/drivers/gpu/drm/drm_of.c
+@@ -3,7 +3,9 @@
+ #include <linux/list.h>
+ #include <linux/of_graph.h>
+ #include <drm/drmP.h>
++#include <drm/drm_bridge.h>
+ #include <drm/drm_crtc.h>
++#include <drm/drm_panel.h>
+ #include <drm/drm_of.h>
+
+ static void drm_release_of(struct device *dev, void *data)
+@@ -207,3 +209,53 @@ int drm_of_encoder_active_endpoint(struct device_node *node,
+ 	return -EINVAL;
+ }
+ EXPORT_SYMBOL_GPL(drm_of_encoder_active_endpoint);
++
++/*
++ * drm_of_find_panel_or_bridge - return connected panel or bridge device
++ * @np: device tree node containing encoder input ports
++ * @panel: pointer to hold returned drm_panel
++ * @bridge: pointer to hold returned drm_bridge
++ *
++ * Given a DT node's port and endpoint number, find the connected node and
++ * return either the associated struct drm_panel or drm_bridge device. Either
++ * @panel or @bridge must not be NULL.
++ *
++ * Returns zero if successful, or one of the standard error codes if it fails.
++ */
++int drm_of_find_panel_or_bridge(const struct device_node *np,
++				int port, int endpoint,
++				struct drm_panel **panel,
++				struct drm_bridge **bridge)
++{
++	int ret = -EPROBE_DEFER;
++	struct device_node *remote;
++
++	if (!panel && !bridge)
++		return -EINVAL;
++
++	remote = of_graph_get_remote_node(np, port, endpoint);
++	if (!remote)
++		return -ENODEV;
++
++	if (panel) {
++		*panel = of_drm_find_panel(remote);
++		if (*panel)
++			ret = 0;
++	}
++
++	/* No panel found yet, check for a bridge next. */
++	if (bridge) {
++		if (ret) {
++			*bridge = of_drm_find_bridge(remote);
++			if (*bridge)
++				ret = 0;
++		} else {
++			*bridge = NULL;
++		}
++
++	}
++
++	of_node_put(remote);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(drm_of_find_panel_or_bridge);
+diff --git a/include/drm/drm_of.h b/include/drm/drm_of.h
+index 26a64805cc15..f86507f0599b 100644
+--- a/include/drm/drm_of.h
++++ b/include/drm/drm_of.h
+@@ -8,6 +8,8 @@ struct component_match;
+ struct device;
+ struct drm_device;
+ struct drm_encoder;
++struct drm_panel;
++struct drm_bridge;
+ struct device_node;
+
+ #ifdef CONFIG_OF
+@@ -23,6 +25,10 @@ extern int drm_of_component_probe(struct device *dev,
+ extern int drm_of_encoder_active_endpoint(struct device_node *node,
+ 					  struct drm_encoder *encoder,
+ 					  struct of_endpoint *endpoint);
++extern int drm_of_find_panel_or_bridge(const struct device_node *np,
++				       int port, int endpoint,
++				       struct drm_panel **panel,
++				       struct drm_bridge **bridge);
+ #else
+ static inline uint32_t drm_of_find_possible_crtcs(struct drm_device *dev,
+ 						  struct device_node *port)
+@@ -52,6 +58,13 @@ static inline int drm_of_encoder_active_endpoint(struct device_node *node,
+ {
+ 	return -EINVAL;
+ }
++static inline int drm_of_find_panel_or_bridge(const struct device_node *np,
++					      int port, int endpoint,
++					      struct drm_panel **panel,
++					      struct drm_bridge **bridge)
++{
++	return -EINVAL;
++}
+ #endif
+
+ static inline int drm_of_encoder_active_endpoint_id(struct device_node *node,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.10.1
