@@ -1,17 +1,13 @@
-From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
-Subject: Re: [PATCH for-4.11 1/2] Revert "phy: Add USB3 PHY support for
- Broadcom NSP SoC"
-Date: Thu, 09 Feb 2017 08:21:30 +0100
-Message-ID: <b715c193196fb2de2b95cc3d15102e1b@milecki.pl>
-References: <20170208233023.31922-1-zajec5@gmail.com>
- <82b47a03-c41b-378b-2d7c-f263eff514a9@gmail.com>
- <1b66f9ab3a9efd1bd0817a114e5b9ec9@milecki.pl>
- <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+From: Michael Heimpold <michael.heimpold@i2se.com>
+Subject: [PATCH v4 1/9] ARM: dts: imx28: add alternative pinmuxing for mmc2
+Date: Thu,  9 Feb 2017 08:42:41 +0100
+Message-ID: <1486626169-20022-2-git-send-email-michael.heimpold@i2se.com>
+References: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <06b6461c-9f43-3482-352f-374490056e90@gmail.com>
+In-Reply-To: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,64 +17,43 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, Michael Heimpold <michael.heimpold@i2se.com>, fabio.estevam@nxp.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNy0wMi0wOSAwMDo0NCwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAwMi8wOC8y
-MDE3IDAzOjM5IFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IE9uIDIwMTctMDItMDkgMDA6
-MzIsIEZsb3JpYW4gRmFpbmVsbGkgd3JvdGU6Cj4+PiBPbiAwMi8wOC8yMDE3IDAzOjMwIFBNLCBS
-YWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+Pj4gRnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBt
-aWxlY2tpLnBsPgo+Pj4+IAo+Pj4+IFRoaXMgcmV2ZXJ0cyBjb21taXQgZDdiYzFhN2Q0MWJmICgi
-cGh5OiBBZGQgVVNCMyBQSFkgc3VwcG9ydCBmb3IKPj4+PiBCcm9hZGNvbSBOU1AgU29DIikgYXMg
-d2UgYWxyZWFkeSBoYXZlIGRyaXZlciBmb3IgdGhpcyBQSFkgKHNoYXJlZCBieSAKPj4+PiBOUwo+
-Pj4+IGFuZCBOU1ApLiBJdCB3YXMgYWRkZWQgaW4gY29tbWl0IGU1NjY2MjgxZDllYSAoInBoeTog
-YmNtLW5zLXVzYjM6IAo+Pj4+IG5ldwo+Pj4+IGRyaXZlciBmb3IgVVNCIDMuMCBQSFkgb24gTm9y
-dGhzdGFyIikuCj4+Pj4gCj4+Pj4gSW5zdGVhZCBvZiBhZGRpbmcgc2VwYXJhdGVkIGRyaXZlciAm
-IGR1cGxpY2F0aW5nIGNvZGUgd2Ugc2hvdWxkIHdvcmsgCj4+Pj4gb24KPj4+PiBpbXByb3Zpbmcg
-ZXhpc3RpbmcgKG9sZCkgb25lLiBUaGFua3MgdG8gd29yayBkb25lIGJ5IEJyb2FkY29tIHdlIAo+
-Pj4+IGtub3cKPj4+PiB0aGVyZSBpcyBNRElPIGJ1cyB3ZSB3ZXJlbid0IGF3YXJlIG9mICYgd2Ug
-a25vdyByZWdpc3RlciBuYW1lcyB3aGljaAo+Pj4+IG1ha2VzIGluaXRpYWxpemF0aW9uIG1vcmUg
-Y2xlYXIuIFRoaXMgaXMgdmVyeSB2YWx1YWJsZSBpbmZvIGFuZCB3ZQo+Pj4+IHNob3VsZCB3b3Jr
-IG9uIHVzaW5nIGl0IGluIGV4aXN0aW5nIGRyaXZlciBhZnRlcndhcmRzLgo+Pj4gCj4+PiBTaG91
-bGQgbm90IHdlIGZpcnN0IGV4dGVuZCB0aGUgb2xkIGRyaXZlciB0byBzdXBwb3J0IE5TUCBhbmQg
-dGhlbiAKPj4+IHJldmVydAo+Pj4gZDdiYzFhN2Q0MWJmICgicGh5OiBBZGQgVVNCMyBQSFkgc3Vw
-cG9ydCBmb3IgQnJvYWRjb20gTlNQIFNvQyIpPwo+PiAKPj4gU291bmRzIGxpa2UgYSB3ZWlyZCAv
-IGRpcnR5IGRldmVsb3BtZW50IG1ldGhvZCB0byBtZTogYWRkaW5nIAo+PiBkdXBsaWNhdGVkCj4+
-IGNvZGUKPj4gZmlyc3QgdGhlbiB3b3JraW5nIG9uIGNsZWFuaW5nIGl0LiBVbmxlc3MgeW91IG1l
-YW4gZHJpdmVycy9zdGFnaW5nLy4KPiAKPiBUaGVyZSB3YXMgY2xlYXJseSBhIG1pc3Rha2UgaW4g
-c3VibWl0dGluZyB0aGlzIE5TUCBVU0IgUEhZIGRyaXZlciwgYW5kCj4gaXQgc2hvdWxkIGhhdmUg
-YmVlbiBhIHBhdGNoIGFnYWluc3QgdGhlIGV4aXN0aW5nIE5TIFVTQiBQSFkgZHJpdmVyLCBidXQK
-PiBpdCB3YXMgbm90LCBva2F5IGZhaXIgZW5vdWdoLgo+IAo+IEl0J3Mgb25lIHRoaW5nIHRvIGFk
-ZHJlc3MgdGhhdCBpbiB0aGUgZnV0dXJlLCBhbmQgaXQncyBhbm90aGVyIHRoaW5nIHRvCj4gZmxh
-dCBvdXQgcmV2ZXJ0IHRoZSBkcml2ZXIganVzdCBiZWNhdXNlIHlvdSBkb24ndCBsaWtlIHRoZSBk
-dXBsaWNhdGlvbi4KPiAKPiBJIGRvbid0IGxpa2UgdGhhdCBlaXRoZXIsIGFuZCB3ZSBjYW4gZGlz
-Y3VzcyBvbiBob3cgdG8gaW1wcm92ZSB0aGluZ3MKPiAobGlrZSBoYXZlIHRoZSBtYWludGFpbmVy
-IHJldmlldyB0aGF0IHRvbyksIGJ1dCBkdXBsaWNhdGlvbiBpcyBhIGxlc3Nlcgo+IGV2aWwgdGhh
-biBub3QgaGF2aW5nIHRoZSBoYXJkd2FyZSBzdXBwb3J0ZWQgYXQgYWxsLCBhbmQgZXZlbiBtb3Jl
-IHNvLAo+IHB1cnBvc2VseSByZXZlcnRpbmcgaW4gdGhlIG5hbWUgb2YgcmVtb3ZpbmcgdGhhdCBk
-dXBsaWNhdGlvbiwgdGhhdCdzCj4gaW50ZW50aW9uYWxseSBicmVha2luZyB3b3JraW5nIGhhcmR3
-YXJlIQoKSGFyZHdhcmUgc3VwcG9ydCBpcyBub3QgZXhjdXNlIGFuZCBJIGRvbid0IHRoaW5rIGl0
-IGV2ZXIgd2FzIGluIHRoZSAKTGludXguCgpXZSBkb24ndCBhY2NlcHQgYmFkbHkgZGVzaWduZWQg
-ZHJpdmVycyBqdXN0IGJlY2F1c2UgdGhleSBwcm92aWRlIG5ldyBodyAKc3VwcG9ydC4KV2UgaGF2
-ZSB2YXJpb3VzIHN0YW5kYXJkcyAoZm9yIHF1YWxpdHksIHN0eWxlLCBkZXNpZ24sIGNvZGUpIGF0
-IGtlcm5lbCAKYW5kIHdlCnN0aWNrIHRvIHRoZW0gdW5sZXNzIGl0J3MgZHJpdmVycy9zdGFnaW5n
-Ly4gQXMgeW91IHNhaWQgdGhpcyBkcml2ZXIgCnNob3VsZG4ndCBiZQpwdXNoZWQgaW4gdGhlIGZp
-cnN0IHBsYWNlLgoKRHJvcHBpbmcgaGFyZHdhcmUgc3VwcG9ydCBpbiBrZXJuZWwgaGFwcGVucy4g
-U29tZXRpbWVzIGl0J3MgYWJvdXQgCmFuY2llbnQKZGV2aWNlcywgc29tZXRpbWVzIGFib3V0IGNv
-ZGUgcXVhbGl0eSAoc29tZSBmb3Jnb3R0ZW4gc3RhZ2luZyBkcml2ZXJzIAp1c2VkIHRvIGJlCmRy
-b3BwZWQgQUZBSUspLgoKQWRkaXRpb25hbGx5IHlvdSdyZSB0YWxraW5nIGFib3V0IHN1cHBvcnQg
-dGhhdCB3YXMgKmp1c3QqIGFkZGVkIGFuZCAKaXNuJ3QgdXNlZApieSBhbnlvbmUgaW4gdGhlIHdp
-bGQgd29ybGQgeWV0LgoKVGhpcyBoYXJkd2FyZSB3YXMgbWlzc2luZyB1cHN0cmVhbSBzdXBwb3J0
-IGZvciA0IHllYXJzIHNvIDIgZXh0cmEgbW9udGhzIAp3b24ndApyZWFsbHkgaHVydCBhbnlvbmUu
-CgpJIHJlYWxseSBkb24ndCBzZWUgZXhjdXNlZSBvciBuZWVkIGZvciBrZWVwaW5nIHRoaXMgZHJp
-dmVyLgoKSWYgeW91IHdhbnQgdG8gKGFuZCB5b3UgZmVlbCBpdCdzIHdlbGwgZGVzaWduZWQpLCB3
-ZSBjYW4ga2VlcApicmNtLG5zcC11c2IzLXBoeS50eHQKCkkgdm90ZSBmb3IgZm9jdXNpbmcgb24g
-ZXhpc3RpbmcgZHJpdmVyIGltcHJvdmVtZW50cyBpbnN0ZWFkIG9mIGxvb2tpbmcgCmZvcgpleGN1
-c2VzIGZvciBrZWVwaW5nIGRyaXZlciB0aGF0IHNob3VsZG4ndCBiZSBhZGRlZCBpbiB0aGUgZmly
-c3QgcGxhY2UuCkpvbiBzZWVtcyB0byBiZSBhbHJlYWR5IHdvcmtpbmcgb24gdGhpcywgSSdtIHdp
-bGxpbmcgdG8gaGVscCBoaW0sIEknbSAKc3VyZSB3ZQpjYW4gZ2V0IHlvdSBhIHByb3BlciBzdXBw
-b3J0IGZvciB0aGUgbmV4dCBtZXJnZSB3aW5kb3cuCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51
-eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Signed-off-by: Michael Heimpold <michael.heimpold@i2se.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ arch/arm/boot/dts/imx28.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 3aabf65..bc5cf41 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -581,6 +581,22 @@
+ 					fsl,pull-up = <MXS_PULL_ENABLE>;
+ 				};
+ 
++				mmc2_4bit_pins_b: mmc2-4bit@1 {
++					reg = <1>;
++					fsl,pinmux-ids = <
++						MX28_PAD_SSP2_SCK__SSP2_SCK
++						MX28_PAD_SSP2_MOSI__SSP2_CMD
++						MX28_PAD_SSP2_MISO__SSP2_D0
++						MX28_PAD_SSP2_SS0__SSP2_D3
++						MX28_PAD_SSP2_SS1__SSP2_D1
++						MX28_PAD_SSP2_SS2__SSP2_D2
++						MX28_PAD_AUART1_RX__SSP2_CARD_DETECT
++					>;
++					fsl,drive-strength = <MXS_DRIVE_8mA>;
++					fsl,voltage = <MXS_VOLTAGE_HIGH>;
++					fsl,pull-up = <MXS_PULL_ENABLE>;
++				};
++
+ 				mmc2_cd_cfg: mmc2-cd-cfg {
+ 					fsl,pinmux-ids = <
+ 						MX28_PAD_AUART1_RX__SSP2_CARD_DETECT
+-- 
+2.6.1
