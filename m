@@ -1,13 +1,11 @@
 From: Michael Heimpold <michael.heimpold@i2se.com>
-Subject: [PATCH v4 8/9] ARM: dts: add support for I2SE Duckbill 2 EnOcean
-Date: Thu,  9 Feb 2017 08:42:48 +0100
-Message-ID: <1486626169-20022-9-git-send-email-michael.heimpold@i2se.com>
-References: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
+Subject: [PATCH v4 0/9] ARM: dts: support I2SE Duckbill devices
+Date: Thu,  9 Feb 2017 08:42:40 +0100
+Message-ID: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486626169-20022-1-git-send-email-michael.heimpold@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,260 +16,80 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: shawnguo@kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, fabio.estevam@nxp.com, frowand.list@gmail.com, Michael Heimpold <mhei@heimpold.de>
+Cc: stefan.wahren@i2se.com, devicetree@vger.kernel.org, Michael Heimpold <michael.heimpold@i2se.com>, fabio.estevam@nxp.com, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Michael Heimpold <mhei@heimpold.de>
+This series updates/adds Device Tree support for I2SE's Duckbill
+device family.
 
-This machine is based on I2SE's Duckbill 2 board and features a
-EnOcean daugther board based on the popular TCM310 chipset.
-This product is intended to be used for e.g. home automation purposes.
+The Duckbill devices are small, pen-drive sized boards based on
+NXP's i.MX28 SoC. While the initial variants (Duckbill series) were
+equipped with a micro SD card slot only, the latest generation
+(Duckbill 2 series) have an additional internal eMMC onboard.
 
-Signed-off-by: Michael Heimpold <mhei@heimpold.de>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/Makefile                     |   1 +
+Both device generations consists of four "family members":
+
+- Duckbill/Duckbill 2: generic board, intended to be used as
+  baseboard for custom designs and/or as development board
+
+- Duckbill EnOcean/Duckbill 2 EnOcean: come with an EnOcean
+  daugther board equipped with the popular TCM310 module
+
+- Duckbill 485/Duckbill 2 485: as the name implies, these
+  devices are intended to be used as Ethernet - RS485 converters
+
+- Duckbill SPI/Duckbill 2 SPI: not sold separately, but used
+  in I2SE's development kits for Green PHY HomePlug Powerline
+  communication
+
+Because the Duckbill series is EOL, this patch series only adds
+support for the latest Duckbill 2 series devices. However,
+support for the generic Duckbill board was already mainline,
+so update it to match vendor tree DT.
+
+Changes since v3:
+- re-work compatible strings for individual products
+- fixed subject prefix for documentation patch
+
+Changes since v2:
+- re-ordered documentation patch and fixed typos
+- re-worded some commit messages to better reflect patch content
+- fixed Makefile beginner issues
+- added Acked-bys where applicable
+
+Changes since v1:
+- dropped device tree include (shared common definitions)
+- added patch 9 (DT documentation file)
+- applied reviewers hints
+- rebased
+
+Michael Heimpold (9):
+  ARM: dts: imx28: add alternative pinmuxing for mmc2
+  ARM: dts: imx28: rename mmc2_sck_cfg
+  ARM: dts: imx28: add alternative muxing for mmc2_sck_cfg
+  ARM: dts: imx28-duckbill: update to match vendor distributed DT
+  dt-bindings: arm: add entries for I2SE boards
+  ARM: dts: add support for I2SE Duckbill 2 boards
+  ARM: dts: add support for I2SE Duckbill 2 485
+  ARM: dts: add support for I2SE Duckbill 2 EnOcean
+  ARM: dts: add support for I2SE Duckbill 2 SPI
+
+ Documentation/devicetree/bindings/arm/i2se.txt |  22 +++
+ arch/arm/boot/dts/Makefile                     |   4 +
+ arch/arm/boot/dts/imx28-duckbill-2-485.dts     | 189 +++++++++++++++++++++
  arch/arm/boot/dts/imx28-duckbill-2-enocean.dts | 220 +++++++++++++++++++++++++
- 2 files changed, 221 insertions(+)
+ arch/arm/boot/dts/imx28-duckbill-2-spi.dts     | 199 ++++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill-2.dts         | 183 ++++++++++++++++++++
+ arch/arm/boot/dts/imx28-duckbill.dts           |  81 ++++++---
+ arch/arm/boot/dts/imx28-m28cu3.dts             |   2 +-
+ arch/arm/boot/dts/imx28.dtsi                   |  28 +++-
+ arch/arm/mach-mxs/mach-mxs.c                   |   3 +-
+ 10 files changed, 903 insertions(+), 28 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/i2se.txt
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-485.dts
  create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2-spi.dts
+ create mode 100644 arch/arm/boot/dts/imx28-duckbill-2.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5f758b9..d854dcd 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -477,6 +477,7 @@ dtb-$(CONFIG_ARCH_MXS) += \
- 	imx28-cfa10058.dtb \
- 	imx28-duckbill-2-485.dtb \
- 	imx28-duckbill-2.dtb \
-+	imx28-duckbill-2-enocean.dtb \
- 	imx28-duckbill.dtb \
- 	imx28-eukrea-mbmx283lc.dtb \
- 	imx28-eukrea-mbmx287lc.dtb \
-diff --git a/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-new file mode 100644
-index 0000000..4450047
---- /dev/null
-+++ b/arch/arm/boot/dts/imx28-duckbill-2-enocean.dts
-@@ -0,0 +1,220 @@
-+/*
-+ * Copyright (C) 2015-2017 I2SE GmbH <info@i2se.com>
-+ * Copyright (C) 2016 Michael Heimpold <mhei@heimpold.de>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "imx28.dtsi"
-+
-+/ {
-+	model = "I2SE Duckbill 2 EnOcean";
-+	compatible = "i2se,duckbill-2-enocean", "i2se,duckbill-2", "fsl,imx28";
-+
-+	memory {
-+		reg = <0x40000000 0x08000000>;
-+	};
-+
-+	apb@80000000 {
-+		apbh@80000000 {
-+			ssp0: ssp@80010000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc0_8bit_pins_a
-+					&mmc0_cd_cfg &mmc0_sck_cfg>;
-+				bus-width = <8>;
-+				vmmc-supply = <&reg_3p3v>;
-+				status = "okay";
-+				non-removable;
-+			};
-+
-+			ssp2: ssp@80014000 {
-+				compatible = "fsl,imx28-mmc";
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&mmc2_4bit_pins_b
-+					&mmc2_cd_cfg &mmc2_sck_cfg_b>;
-+				bus-width = <4>;
-+				vmmc-supply = <&reg_3p3v>;
-+				status = "okay";
-+			};
-+
-+			pinctrl@80018000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&hog_pins_a>;
-+
-+				hog_pins_a: hog@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_LCD_D17__GPIO_1_17    /* Revision detection */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				mac0_phy_reset_pin: mac0-phy-reset@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_GPMI_ALE__GPIO_0_26    /* PHY Reset */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				mac0_phy_int_pin: mac0-phy-int@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_GPMI_D07__GPIO_0_7    /* PHY Interrupt */
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				led_pins: leds@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_SAIF0_MCLK__GPIO_3_20
-+						MX28_PAD_SAIF0_LRCLK__GPIO_3_21
-+						MX28_PAD_AUART0_CTS__GPIO_3_2
-+						MX28_PAD_I2C0_SCL__GPIO_3_24
-+						MX28_PAD_I2C0_SDA__GPIO_3_25
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+
-+				enocean_button: enocean-button@0 {
-+					reg = <0>;
-+					fsl,pinmux-ids = <
-+						MX28_PAD_AUART0_RTS__GPIO_3_3
-+					>;
-+					fsl,drive-strength = <MXS_DRIVE_4mA>;
-+					fsl,voltage = <MXS_VOLTAGE_HIGH>;
-+					fsl,pull-up = <MXS_PULL_DISABLE>;
-+				};
-+			};
-+		};
-+
-+		apbx@80040000 {
-+			lradc@80050000 {
-+				status = "okay";
-+			};
-+
-+			auart0: serial@8006a000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&auart0_2pins_a>;
-+				status = "okay";
-+			};
-+
-+			duart: serial@80074000 {
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&duart_pins_a>;
-+				status = "okay";
-+			};
-+
-+			usbphy0: usbphy@8007c000 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	ahb@80080000 {
-+		usb0: usb@80080000 {
-+			status = "okay";
-+			dr_mode = "peripheral";
-+		};
-+
-+		mac0: ethernet@800f0000 {
-+			phy-mode = "rmii";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&mac0_pins_a>, <&mac0_phy_reset_pin>;
-+			phy-supply = <&reg_3p3v>;
-+			phy-reset-gpios = <&gpio0 26 GPIO_ACTIVE_LOW>;
-+			phy-reset-duration = <25>;
-+			phy-handle = <&ethphy>;
-+			status = "okay";
-+
-+			mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ethphy: ethernet-phy@0 {
-+					compatible = "ethernet-phy-ieee802.3-c22";
-+					reg = <0>;
-+					pinctrl-names = "default";
-+					pinctrl-0 = <&mac0_phy_int_pin>;
-+					interrupt-parent = <&gpio0>;
-+					interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+					max-speed = <100>;
-+				};
-+			};
-+		};
-+	};
-+
-+	reg_3p3v: regulator-3p3v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "3P3V";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&led_pins>;
-+
-+		status-red {
-+			label = "duckbill:red:status";
-+			gpios = <&gpio3 21 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		status-green {
-+			label = "duckbill:green:status";
-+			gpios = <&gpio3 20 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+
-+		enocean-blue {
-+			label = "duckbill:blue:enocean";
-+			gpios = <&gpio3 24 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		enocean-red {
-+			label = "duckbill:red:enocean";
-+			gpios = <&gpio3 25 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		enocean-green {
-+			label = "duckbill:green:enocean";
-+			gpios = <&gpio3 2 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&enocean_button>;
-+
-+		enocean {
-+			label = "EnOcean";
-+			linux,code = <KEY_NEW>;
-+			gpios = <&gpio3 3 GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
 -- 
 2.6.1
