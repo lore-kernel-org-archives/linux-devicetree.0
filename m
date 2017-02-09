@@ -1,48 +1,40 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 07/10] clocksource/drivers/arm_arch_timer: Add dt binding for hisilicon-161010101 erratum
-Date: Thu,  9 Feb 2017 00:14:41 +0100
-Message-ID: <1486595685-10232-7-git-send-email-daniel.lezcano@linaro.org>
-References: <20170208231208.GB12695@mai>
- <1486595685-10232-1-git-send-email-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1486595685-10232-1-git-send-email-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: Ding Tianhong <dingtianhong@huawei.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, Rob Herring <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Douglas Anderson <dianders@chromium.org>, Brian Norris <briannorris@chromium.org>, Scott Wood <oss@buserror.net>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 12/13] dt-bindings: auxdisplay: Add bindings for Hitachi
+ HD44780
+Date: Wed, 8 Feb 2017 19:11:30 -0600
+Message-ID: <20170209011130.t63w45ud55332uhy@rob-hp-laptop>
+References: <1486391895-9554-1-git-send-email-geert@linux-m68k.org>
+ <1486391895-9554-13-git-send-email-geert@linux-m68k.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1486391895-9554-13-git-send-email-geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Miguel Ojeda Sandonis <miguel.ojeda.sandonis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Willy Tarreau <willy-W4YR9g1X7EZBDgjK7y7TUQ@public.gmane.org>, Ksenija Stanojevic <ksenija.stanojevic-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ding Tianhong <dingtianhong@huawei.com>
+On Mon, Feb 06, 2017 at 03:38:14PM +0100, Geert Uytterhoeven wrote:
+> Add DT bindings for an Hitachi HD44780 Character LCD Controller where
+> its M6800 bus interface is connected to GPIOs.
 
-This erratum describes a bug in logic outside the core, so MIDR can't be
-used to identify its presence, and reading an SoC-specific revision
-register from common arch timer code would be awkward.  So, describe it
-in the device tree.
+Really, you should have a bit-bang M6800 bus driver and binding and then 
+the binding for the LCD ctrl looks the same whether you are bit-banging 
+it or not.
 
-Signed-off-by: Ding Tianhong <dingtianhong@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- Documentation/devicetree/bindings/arm/arch_timer.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+That's a bit more work though. Maybe you could split the binding like 
+this, but keep a monolithic driver for now. The driver can just fetch 
+the GPIOs from the parent (bus controller) node. And you'd have to work 
+out probing the driver.
 
-diff --git a/Documentation/devicetree/bindings/arm/arch_timer.txt b/Documentation/devicetree/bindings/arm/arch_timer.txt
-index ad440a2..e926aea 100644
---- a/Documentation/devicetree/bindings/arm/arch_timer.txt
-+++ b/Documentation/devicetree/bindings/arm/arch_timer.txt
-@@ -31,6 +31,12 @@ to deliver its interrupts via SPIs.
-   This also affects writes to the tval register, due to the implicit
-   counter read.
- 
-+- hisilicon,erratum-161010101 : A boolean property. Indicates the
-+  presence of Hisilicon erratum 161010101, which says that reading the
-+  counters is unreliable in some cases, and reads may return a value 32
-+  beyond the correct value. This also affects writes to the tval
-+  registers, due to the implicit counter read.
-+
- ** Optional properties:
- 
- - arm,cpu-registers-not-fw-configured : Firmware does not initialize
--- 
-2.7.4
+> Memory-mapped configurations are not yet supported.
+
+I guess this would require faulting on some address and then bit-banging 
+the access. That sounds fun...
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
