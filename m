@@ -1,749 +1,180 @@
-From: Baoyou Xie <baoyou.xie@linaro.org>
-Subject: [PATCH v6 3/3] i2c: zx2967: add i2c controller driver for ZTE's
- zx2967 family
-Date: Thu,  9 Feb 2017 17:32:33 +0800
-Message-ID: <1486632753-17363-3-git-send-email-baoyou.xie@linaro.org>
-References: <1486632753-17363-1-git-send-email-baoyou.xie@linaro.org>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] irqchip: mtk-sysirq: extend intpol base to
+ arbitrary number
+Date: Thu, 9 Feb 2017 09:43:56 +0000
+Message-ID: <504b27fa-412b-8f21-d9c3-5e2c7dc67dd5@arm.com>
+References: <1486383336-16892-1-git-send-email-mars.cheng@mediatek.com>
+ <1486383336-16892-3-git-send-email-mars.cheng@mediatek.com>
+ <2079ad73-6d7d-d20f-2945-68ea9fbd9b50@arm.com>
+ <1486632694.8348.14.camel@mtkswgap22>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486632753-17363-1-git-send-email-baoyou.xie@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, andy.shevchenko@gmail.com, jun.nie@linaro.org, baoyou.xie@linaro.org, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, xie.baoyou@zte.com.cn, linux-kernel@vger.kernel.org, chen.chaokai@zte.com.cn, linux-i2c@vger.kernel.org, wang.qiang01@zte.com.cn, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1486632694.8348.14.camel@mtkswgap22>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, CC Hwang <cc.hwang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, wsd_upstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Loda Chou <loda.chou-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jades Shih <jades.shih-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Miles Chen <miles.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, My Chuang <my.chuang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Chieh-Jay Liu <Chieh-Jay.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds i2c controller driver for ZTE's zx2967 family.
+On 09/02/17 09:31, Mars Cheng wrote:
+> On Thu, 2017-02-09 at 09:03 +0000, Marc Zyngier wrote:
+>> On 06/02/17 12:15, Mars Cheng wrote:
+>>> Originally driver only supports one base. However, MT6797 has
+>>> more than one bases to configure interrupt polarity. To support
+>>> possible design change, here comes a solution to use arbitrary
+>>> number of bases.
+>>>
+>>> Signed-off-by: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  drivers/irqchip/irq-mtk-sysirq.c |   71 +++++++++++++++++++++++++++-----------
+>>>  1 file changed, 50 insertions(+), 21 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-mtk-sysirq.c b/drivers/irqchip/irq-mtk-sysirq.c
+>>> index 63ac73b..2645706 100644
+>>> --- a/drivers/irqchip/irq-mtk-sysirq.c
+>>> +++ b/drivers/irqchip/irq-mtk-sysirq.c
+>>> @@ -24,7 +24,9 @@
+>>>  
+>>>  struct mtk_sysirq_chip_data {
+>>>  	spinlock_t lock;
+>>> -	void __iomem *intpol_base;
+>>> +	u32 nr_intpol_bases;
+>>> +	void __iomem **intpol_bases;
+>>> +	u32 *intpol_words;
+>>>  };
+>>>  
+>>>  static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+>>> @@ -33,13 +35,15 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+>>>  	struct mtk_sysirq_chip_data *chip_data = data->chip_data;
+>>>  	u32 offset, reg_index, value;
+>>>  	unsigned long flags;
+>>> -	int ret;
+>>> +	int ret, i;
+>>>  
+>>>  	offset = hwirq & 0x1f;
+>>>  	reg_index = hwirq >> 5;
+>>> +	for (i = 0; reg_index >= chip_data->intpol_words[i]; i++)
+>>> +		reg_index -= chip_data->intpol_words[i];
+>>
+>> Two questions:
+>> - What guarantees that two successive regions deal with consecutive
+>> interrupts? For example, if I have region A that deals with interrupts
+>> 0-31, what guarantees that region B covers 32-63?
+> 
+> It is guaranteed by mediatek's chip design team. For those chips with
+> multiple bases, they all have the consecutive interrupts in the next
+> region.
 
-Signed-off-by: Baoyou Xie <baoyou.xie@linaro.org>
-Reviewed-by: Shawn Guo <shawnguo@kernel.org>
----
- drivers/i2c/busses/Kconfig      |   9 +
- drivers/i2c/busses/Makefile     |   1 +
- drivers/i2c/busses/i2c-zx2967.c | 676 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 686 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-zx2967.c
+Hum. OK. We'll see how long this holds true, I suppose.
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index e4a603e..d983e36 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -1246,4 +1246,13 @@ config I2C_OPAL
- 	  This driver can also be built as a module. If so, the module will be
- 	  called as i2c-opal.
- 
-+config I2C_ZX2967
-+	tristate "ZTE zx2967 I2C support"
-+	depends on ARCH_ZX
-+	default y
-+	help
-+	  Selecting this option will add ZX2967 I2C driver.
-+	  This driver can also be built as a module. If so, the module will be
-+	  called i2c-zx2967.
-+
- endmenu
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index beb4809..16b2901 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -101,6 +101,7 @@ obj-$(CONFIG_I2C_XILINX)	+= i2c-xiic.o
- obj-$(CONFIG_I2C_XLR)		+= i2c-xlr.o
- obj-$(CONFIG_I2C_XLP9XX)	+= i2c-xlp9xx.o
- obj-$(CONFIG_I2C_RCAR)		+= i2c-rcar.o
-+obj-$(CONFIG_I2C_ZX2967)	+= i2c-zx2967.o
- 
- # External I2C/SMBus adapter drivers
- obj-$(CONFIG_I2C_DIOLAN_U2C)	+= i2c-diolan-u2c.o
-diff --git a/drivers/i2c/busses/i2c-zx2967.c b/drivers/i2c/busses/i2c-zx2967.c
-new file mode 100644
-index 0000000..3a36b84
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-zx2967.c
-@@ -0,0 +1,676 @@
-+/*
-+ * ZTE's zx2967 family i2c bus controller driver
-+ *
-+ * Copyright (C) 2017 ZTE Ltd.
-+ *
-+ * Author: Baoyou Xie <baoyou.xie@linaro.org>
-+ *
-+ * License terms: GNU General Public License (GPL) version 2
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+
-+#define REG_CMD				0x04
-+#define REG_DEVADDR_H			0x0C
-+#define REG_DEVADDR_L			0x10
-+#define REG_CLK_DIV_FS			0x14
-+#define REG_CLK_DIV_HS			0x18
-+#define REG_WRCONF			0x1C
-+#define REG_RDCONF			0x20
-+#define REG_DATA			0x24
-+#define REG_STAT			0x28
-+
-+#define I2C_STOP			0
-+#define I2C_MASTER			BIT(0)
-+#define I2C_ADDR_MODE_TEN		BIT(1)
-+#define I2C_IRQ_MSK_ENABLE		BIT(3)
-+#define I2C_RW_READ			BIT(4)
-+#define I2C_CMB_RW_EN			BIT(5)
-+#define I2C_START			BIT(6)
-+
-+#define I2C_ADDR_LOW_MASK		GENMASK(6, 0)
-+#define I2C_ADDR_LOW_SHIFT		0
-+#define I2C_ADDR_HI_MASK		GENMASK(2, 0)
-+#define I2C_ADDR_HI_SHIFT		7
-+
-+#define I2C_WFIFO_RESET			BIT(7)
-+#define I2C_RFIFO_RESET			BIT(7)
-+
-+#define I2C_IRQ_ACK_CLEAR		BIT(7)
-+#define I2C_INT_MASK			GENMASK(6, 0)
-+
-+#define I2C_TRANS_DONE			BIT(0)
-+#define I2C_ERROR_DEVICE		BIT(1)
-+#define I2C_ERROR_DATA			BIT(2)
-+#define I2C_ERROR_MASK			GENMASK(2, 1)
-+
-+#define I2C_SR_BUSY			BIT(6)
-+
-+#define I2C_SR_EDEVICE			BIT(1)
-+#define I2C_SR_EDATA			BIT(2)
-+
-+#define I2C_FIFO_MAX			16
-+
-+#define I2C_TIMEOUT			msecs_to_jiffies(1000)
-+
-+#define DEV(i2c)			(&i2c->adap.dev)
-+
-+struct zx2967_i2c_info {
-+	spinlock_t		lock;
-+	struct i2c_adapter	adap;
-+	struct clk		*clk;
-+	struct completion	complete;
-+	u32			clk_freq;
-+	void __iomem		*reg_base;
-+	size_t			residue;
-+	int			irq;
-+	int			msg_rd;
-+	u8			*cur_trans;
-+	u8			access_cnt;
-+	bool			is_suspended;
-+};
-+
-+static void zx2967_i2c_writel(struct zx2967_i2c_info *zx_i2c,
-+			      u32 val, unsigned long reg)
-+{
-+	writel_relaxed(val, zx_i2c->reg_base + reg);
-+}
-+
-+static u32 zx2967_i2c_readl(struct zx2967_i2c_info *zx_i2c, unsigned long reg)
-+{
-+	return readl_relaxed(zx_i2c->reg_base + reg);
-+}
-+
-+static void zx2967_i2c_writesb(struct zx2967_i2c_info *zx_i2c,
-+			       void *data, unsigned long reg, int len)
-+{
-+	writesb(zx_i2c->reg_base + reg, data, len);
-+}
-+
-+static void zx2967_i2c_readsb(struct zx2967_i2c_info *zx_i2c,
-+			      void *data, unsigned long reg, int len)
-+{
-+	readsb(zx_i2c->reg_base + reg, data, len);
-+}
-+
-+static void zx2967_i2c_start_ctrl(struct zx2967_i2c_info *zx_i2c)
-+{
-+	u32 status;
-+	u32 ctl;
-+
-+	status = zx2967_i2c_readl(zx_i2c, REG_STAT);
-+	status |= I2C_IRQ_ACK_CLEAR;
-+	zx2967_i2c_writel(zx_i2c, status, REG_STAT);
-+
-+	ctl = zx2967_i2c_readl(zx_i2c, REG_CMD);
-+	if (zx_i2c->msg_rd)
-+		ctl |= I2C_RW_READ;
-+	else
-+		ctl &= ~I2C_RW_READ;
-+	ctl &= ~I2C_CMB_RW_EN;
-+	ctl |= I2C_START;
-+	zx2967_i2c_writel(zx_i2c, ctl, REG_CMD);
-+}
-+
-+static void zx2967_i2c_flush_fifos(struct zx2967_i2c_info *zx_i2c)
-+{
-+	u32 offset;
-+	u32 val;
-+
-+	if (zx_i2c->msg_rd) {
-+		offset = REG_RDCONF;
-+		val = I2C_RFIFO_RESET;
-+	} else {
-+		offset = REG_WRCONF;
-+		val = I2C_WFIFO_RESET;
-+	}
-+
-+	val |= zx2967_i2c_readl(zx_i2c, offset);
-+	zx2967_i2c_writel(zx_i2c, val, offset);
-+}
-+
-+static int zx2967_i2c_empty_rx_fifo(struct zx2967_i2c_info *zx_i2c, u32 size)
-+{
-+	u8 val[I2C_FIFO_MAX] = {0};
-+	int i;
-+
-+	if (size > I2C_FIFO_MAX) {
-+		dev_err(DEV(zx_i2c), "fifo size %d over the max value %d\n",
-+			size, I2C_FIFO_MAX);
-+		return -EINVAL;
-+	}
-+
-+	zx2967_i2c_readsb(zx_i2c, val, REG_DATA, size);
-+	for (i = 0; i < size; i++) {
-+		*zx_i2c->cur_trans++ = val[i];
-+		zx_i2c->residue--;
-+	}
-+
-+	barrier();
-+
-+	return 0;
-+}
-+
-+static int zx2967_i2c_fill_tx_fifo(struct zx2967_i2c_info *zx_i2c)
-+{
-+	size_t residue = zx_i2c->residue;
-+	u8 *buf = zx_i2c->cur_trans;
-+
-+	if (residue == 0) {
-+		dev_err(DEV(zx_i2c), "residue is %d\n", (int)residue);
-+		return -EINVAL;
-+	}
-+
-+	if (residue <= I2C_FIFO_MAX) {
-+		zx2967_i2c_writesb(zx_i2c, buf, REG_DATA, residue);
-+
-+		/* Again update before writing to FIFO to make sure isr sees. */
-+		zx_i2c->residue = 0;
-+		zx_i2c->cur_trans = NULL;
-+	} else {
-+		zx2967_i2c_writesb(zx_i2c, buf, REG_DATA, I2C_FIFO_MAX);
-+		zx_i2c->residue -= I2C_FIFO_MAX;
-+		zx_i2c->cur_trans += I2C_FIFO_MAX;
-+	}
-+
-+	barrier();
-+
-+	return 0;
-+}
-+
-+static int zx2967_i2c_reset_hardware(struct zx2967_i2c_info *zx_i2c)
-+{
-+	u32 val;
-+	u32 clk_div;
-+	u32 status;
-+
-+	val = I2C_MASTER | I2C_IRQ_MSK_ENABLE;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+
-+	clk_div = clk_get_rate(zx_i2c->clk) / zx_i2c->clk_freq - 1;
-+	zx2967_i2c_writel(zx_i2c, clk_div, REG_CLK_DIV_FS);
-+	zx2967_i2c_writel(zx_i2c, clk_div, REG_CLK_DIV_HS);
-+
-+	zx2967_i2c_writel(zx_i2c, I2C_FIFO_MAX - 1, REG_WRCONF);
-+	zx2967_i2c_writel(zx_i2c, I2C_FIFO_MAX - 1, REG_RDCONF);
-+	zx2967_i2c_writel(zx_i2c, 1, REG_RDCONF);
-+
-+	zx2967_i2c_flush_fifos(zx_i2c);
-+
-+	status = zx2967_i2c_readl(zx_i2c, REG_STAT);
-+	if (status & I2C_SR_BUSY)
-+		return -EBUSY;
-+	if (status & (I2C_SR_EDEVICE | I2C_SR_EDATA))
-+		return -EIO;
-+
-+	enable_irq(zx_i2c->irq);
-+
-+	return 0;
-+}
-+
-+static void zx2967_i2c_isr_clr(struct zx2967_i2c_info *zx_i2c)
-+{
-+	u32 status;
-+
-+	status = zx2967_i2c_readl(zx_i2c, REG_STAT);
-+	status |= I2C_IRQ_ACK_CLEAR;
-+	zx2967_i2c_writel(zx_i2c, status, REG_STAT);
-+}
-+
-+static irqreturn_t zx2967_i2c_isr(int irq, void *dev_id)
-+{
-+	u32 status;
-+	struct zx2967_i2c_info *zx_i2c = (struct zx2967_i2c_info *)dev_id;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&zx_i2c->lock, flags);
-+
-+	status = zx2967_i2c_readl(zx_i2c, REG_STAT) & I2C_INT_MASK;
-+	zx2967_i2c_isr_clr(zx_i2c);
-+
-+	if (status & I2C_ERROR_MASK) {
-+		spin_unlock_irqrestore(&zx_i2c->lock, flags);
-+		return IRQ_HANDLED;
-+	}
-+
-+	if (status & I2C_TRANS_DONE)
-+		complete(&zx_i2c->complete);
-+
-+	spin_unlock_irqrestore(&zx_i2c->lock, flags);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void zx2967_set_addr(struct zx2967_i2c_info *zx_i2c, u16 addr)
-+{
-+	u16 val;
-+
-+	val = (addr >> I2C_ADDR_LOW_SHIFT) & I2C_ADDR_LOW_MASK;
-+	zx2967_i2c_writel(zx_i2c, val, REG_DEVADDR_L);
-+
-+	val = (addr >> I2C_ADDR_HI_SHIFT) & I2C_ADDR_HI_MASK;
-+	zx2967_i2c_writel(zx_i2c, val, REG_DEVADDR_H);
-+	if (val)
-+		val = zx2967_i2c_readl(zx_i2c, REG_CMD) | I2C_ADDR_MODE_TEN;
-+	else
-+		val = zx2967_i2c_readl(zx_i2c, REG_CMD) & ~I2C_ADDR_MODE_TEN;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+}
-+
-+static int
-+zx2967_i2c_xfer_read_bytes(struct zx2967_i2c_info *zx_i2c, u32 bytes)
-+{
-+	unsigned long time_left;
-+
-+	reinit_completion(&zx_i2c->complete);
-+	zx2967_i2c_writel(zx_i2c, bytes - 1, REG_RDCONF);
-+	zx2967_i2c_start_ctrl(zx_i2c);
-+
-+	time_left = wait_for_completion_timeout(&zx_i2c->complete,
-+				I2C_TIMEOUT);
-+	if (time_left == 0) {
-+		dev_err(DEV(zx_i2c), "read i2c transfer timed out\n");
-+		disable_irq(zx_i2c->irq);
-+		zx2967_i2c_reset_hardware(zx_i2c);
-+		return -EIO;
-+	}
-+
-+	return zx2967_i2c_empty_rx_fifo(zx_i2c, bytes);
-+}
-+
-+static int zx2967_i2c_xfer_read(struct zx2967_i2c_info *zx_i2c)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < zx_i2c->access_cnt; i++) {
-+		ret = zx2967_i2c_xfer_read_bytes(zx_i2c, I2C_FIFO_MAX);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (zx_i2c->residue > 0) {
-+		ret = zx2967_i2c_xfer_read_bytes(zx_i2c, zx_i2c->residue);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	zx_i2c->residue = 0;
-+	zx_i2c->access_cnt = 0;
-+	return 0;
-+}
-+
-+static int
-+zx2967_i2c_xfer_write_bytes(struct zx2967_i2c_info *zx_i2c, u32 bytes)
-+{
-+	unsigned long time_left;
-+	int ret;
-+
-+	reinit_completion(&zx_i2c->complete);
-+
-+	ret = zx2967_i2c_fill_tx_fifo(zx_i2c);
-+	if (ret)
-+		return ret;
-+
-+	zx2967_i2c_start_ctrl(zx_i2c);
-+
-+	time_left = wait_for_completion_timeout(&zx_i2c->complete,
-+				I2C_TIMEOUT);
-+	if (time_left == 0) {
-+		dev_err(DEV(zx_i2c), "write i2c transfer timed out\n");
-+		disable_irq(zx_i2c->irq);
-+		zx2967_i2c_reset_hardware(zx_i2c);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zx2967_i2c_xfer_write(struct zx2967_i2c_info *zx_i2c)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < zx_i2c->access_cnt; i++) {
-+		ret = zx2967_i2c_xfer_write_bytes(zx_i2c, I2C_FIFO_MAX);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	if (zx_i2c->residue > 0) {
-+		ret = zx2967_i2c_xfer_write_bytes(zx_i2c, zx_i2c->residue);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	zx_i2c->residue = 0;
-+	zx_i2c->access_cnt = 0;
-+	return 0;
-+}
-+
-+static int zx2967_i2c_xfer_msg(struct zx2967_i2c_info *zx_i2c,
-+			       struct i2c_msg *msg)
-+{
-+	if (msg->len == 0)
-+		return -EINVAL;
-+
-+	zx2967_i2c_flush_fifos(zx_i2c);
-+
-+	zx_i2c->cur_trans = msg->buf;
-+	zx_i2c->residue = msg->len;
-+	zx_i2c->access_cnt = msg->len / I2C_FIFO_MAX;
-+	zx_i2c->msg_rd = msg->flags & I2C_M_RD;
-+
-+	if (zx_i2c->msg_rd)
-+		return zx2967_i2c_xfer_read(zx_i2c);
-+
-+	return zx2967_i2c_xfer_write(zx_i2c);
-+}
-+
-+static int zx2967_i2c_xfer(struct i2c_adapter *adap,
-+			   struct i2c_msg *msgs, int num)
-+{
-+	struct zx2967_i2c_info *zx_i2c = i2c_get_adapdata(adap);
-+	int ret;
-+	int i;
-+
-+	if (zx_i2c->is_suspended)
-+		return -EBUSY;
-+
-+	zx2967_set_addr(zx_i2c, msgs->addr);
-+
-+	for (i = 0; i < num; i++) {
-+		ret = zx2967_i2c_xfer_msg(zx_i2c, &msgs[i]);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return num;
-+}
-+
-+static void
-+zx2967_smbus_xfer_prepare(struct zx2967_i2c_info *zx_i2c, u16 addr,
-+			  char read_write, u8 command, int size,
-+			  union i2c_smbus_data *data)
-+{
-+	u32 val;
-+
-+	val = zx2967_i2c_readl(zx_i2c, REG_RDCONF);
-+	val |= I2C_RFIFO_RESET;
-+	zx2967_i2c_writel(zx_i2c, val, REG_RDCONF);
-+	zx2967_set_addr(zx_i2c, addr);
-+	val = zx2967_i2c_readl(zx_i2c, REG_CMD);
-+	val &= ~I2C_RW_READ;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+
-+	switch (size) {
-+	case I2C_SMBUS_BYTE:
-+		zx2967_i2c_writel(zx_i2c, command, REG_DATA);
-+		break;
-+	case I2C_SMBUS_BYTE_DATA:
-+		zx2967_i2c_writel(zx_i2c, command, REG_DATA);
-+		if (read_write == I2C_SMBUS_WRITE)
-+			zx2967_i2c_writel(zx_i2c, data->byte, REG_DATA);
-+		break;
-+	case I2C_SMBUS_WORD_DATA:
-+		zx2967_i2c_writel(zx_i2c, command, REG_DATA);
-+		if (read_write == I2C_SMBUS_WRITE) {
-+			zx2967_i2c_writel(zx_i2c, (data->word >> 8), REG_DATA);
-+			zx2967_i2c_writel(zx_i2c, (data->word & 0xff),
-+					  REG_DATA);
-+		}
-+		break;
-+	}
-+}
-+
-+static int zx2967_smbus_xfer_read(struct zx2967_i2c_info *zx_i2c, int size,
-+				  union i2c_smbus_data *data)
-+{
-+	unsigned long time_left;
-+	u8 buf[2];
-+	u32 val;
-+
-+	reinit_completion(&zx_i2c->complete);
-+
-+	val = zx2967_i2c_readl(zx_i2c, REG_CMD);
-+	val |= I2C_CMB_RW_EN;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+
-+	val = zx2967_i2c_readl(zx_i2c, REG_CMD);
-+	val |= I2C_START;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+
-+	time_left = wait_for_completion_timeout(&zx_i2c->complete,
-+						I2C_TIMEOUT);
-+	if (time_left == 0) {
-+		dev_err(DEV(zx_i2c), "i2c read transfer timed out\n");
-+		disable_irq(zx_i2c->irq);
-+		zx2967_i2c_reset_hardware(zx_i2c);
-+		return -EIO;
-+	}
-+
-+	switch (size) {
-+	case I2C_SMBUS_BYTE:
-+	case I2C_SMBUS_BYTE_DATA:
-+		val = zx2967_i2c_readl(zx_i2c, REG_DATA);
-+		data->byte = val;
-+		break;
-+	case I2C_SMBUS_WORD_DATA:
-+	case I2C_SMBUS_PROC_CALL:
-+		buf[0] = zx2967_i2c_readl(zx_i2c, REG_DATA);
-+		buf[1] = zx2967_i2c_readl(zx_i2c, REG_DATA);
-+		data->word = (buf[0] << 8) | buf[1];
-+		break;
-+	default:
-+		dev_warn(DEV(zx_i2c), "Unsupported transaction %d\n", size);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zx2967_smbus_xfer_write(struct zx2967_i2c_info *zx_i2c)
-+{
-+	unsigned long time_left;
-+	u32 val;
-+
-+	reinit_completion(&zx_i2c->complete);
-+	val = zx2967_i2c_readl(zx_i2c, REG_CMD);
-+	val |= I2C_START;
-+	zx2967_i2c_writel(zx_i2c, val, REG_CMD);
-+
-+	time_left = wait_for_completion_timeout(&zx_i2c->complete,
-+						I2C_TIMEOUT);
-+	if (time_left == 0) {
-+		dev_err(DEV(zx_i2c), "i2c write transfer timed out\n");
-+		disable_irq(zx_i2c->irq);
-+		zx2967_i2c_reset_hardware(zx_i2c);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int zx2967_smbus_xfer(struct i2c_adapter *adap, u16 addr,
-+			     unsigned short flags, char read_write,
-+			     u8 command, int size, union i2c_smbus_data *data)
-+{
-+	struct zx2967_i2c_info *zx_i2c = i2c_get_adapdata(adap);
-+
-+	if (size == I2C_SMBUS_QUICK)
-+		read_write = I2C_SMBUS_WRITE;
-+
-+	switch (size) {
-+	case I2C_SMBUS_QUICK:
-+	case I2C_SMBUS_BYTE:
-+	case I2C_SMBUS_BYTE_DATA:
-+	case I2C_SMBUS_WORD_DATA:
-+		zx2967_smbus_xfer_prepare(zx_i2c, addr, read_write,
-+					  command, size, data);
-+		break;
-+	default:
-+		dev_warn(&adap->dev, "Unsupported transaction %d\n", size);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (read_write == I2C_SMBUS_READ)
-+		return zx2967_smbus_xfer_read(zx_i2c, size, data);
-+
-+	return zx2967_smbus_xfer_write(zx_i2c);
-+}
-+
-+#define ZX2967_I2C_FUNCS (I2C_FUNC_SMBUS_QUICK | I2C_FUNC_SMBUS_BYTE |	\
-+		I2C_FUNC_SMBUS_BYTE_DATA | I2C_FUNC_SMBUS_WORD_DATA |	\
-+		I2C_FUNC_SMBUS_BLOCK_DATA | I2C_FUNC_SMBUS_PROC_CALL |	\
-+		I2C_FUNC_I2C | I2C_FUNC_SMBUS_I2C_BLOCK)
-+
-+static u32 zx2967_i2c_func(struct i2c_adapter *adap)
-+{
-+	return ZX2967_I2C_FUNCS;
-+}
-+
-+static int __maybe_unused zx2967_i2c_suspend(struct device *dev)
-+{
-+	struct zx2967_i2c_info *zx_i2c = dev_get_drvdata(dev);
-+
-+	zx_i2c->is_suspended = true;
-+	clk_disable_unprepare(zx_i2c->clk);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused zx2967_i2c_resume(struct device *dev)
-+{
-+	struct zx2967_i2c_info *zx_i2c = dev_get_drvdata(dev);
-+
-+	zx_i2c->is_suspended = false;
-+	clk_prepare_enable(zx_i2c->clk);
-+
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(zx2967_i2c_dev_pm_ops,
-+			 zx2967_i2c_suspend, zx2967_i2c_resume);
-+
-+static const struct i2c_algorithm zx2967_i2c_algo = {
-+	.master_xfer = zx2967_i2c_xfer,
-+	.smbus_xfer = zx2967_smbus_xfer,
-+	.functionality = zx2967_i2c_func,
-+};
-+
-+static const struct of_device_id zx2967_i2c_of_match[] = {
-+	{ .compatible = "zte,zx296718-i2c", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, zx2967_i2c_of_match);
-+
-+static int zx2967_i2c_probe(struct platform_device *pdev)
-+{
-+	struct zx2967_i2c_info *zx_i2c;
-+	void __iomem *reg_base;
-+	struct resource *res;
-+	struct clk *clk;
-+	int ret;
-+
-+	zx_i2c = devm_kzalloc(&pdev->dev, sizeof(*zx_i2c), GFP_KERNEL);
-+	if (!zx_i2c)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(reg_base))
-+		return PTR_ERR(reg_base);
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(&pdev->dev, "missing controller clock");
-+		return PTR_ERR(clk);
-+	}
-+
-+	ret = clk_prepare_enable(clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to enable i2c_clk\n");
-+		return ret;
-+	}
-+
-+	ret = device_property_read_u32(&pdev->dev, "clock-frequency",
-+				       &zx_i2c->clk_freq);
-+	if (ret) {
-+		dev_err(&pdev->dev, "missing clock-frequency");
-+		return ret;
-+	}
-+
-+	ret = platform_get_irq(pdev, 0);
-+	if (ret < 0)
-+		return ret;
-+
-+	zx_i2c->irq = ret;
-+	zx_i2c->reg_base = reg_base;
-+	zx_i2c->clk = clk;
-+
-+	spin_lock_init(&zx_i2c->lock);
-+	init_completion(&zx_i2c->complete);
-+	platform_set_drvdata(pdev, zx_i2c);
-+
-+	ret = zx2967_i2c_reset_hardware(zx_i2c);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to initialize i2c controller\n");
-+		goto err_clk_unprepare;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, zx_i2c->irq,
-+			zx2967_i2c_isr, 0, dev_name(&pdev->dev), zx_i2c);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to request irq %i\n", zx_i2c->irq);
-+		goto err_clk_unprepare;
-+	}
-+
-+	i2c_set_adapdata(&zx_i2c->adap, zx_i2c);
-+	strlcpy(zx_i2c->adap.name, "zx2967 i2c adapter",
-+		sizeof(zx_i2c->adap.name));
-+	zx_i2c->adap.algo = &zx2967_i2c_algo;
-+	zx_i2c->adap.nr = pdev->id;
-+	zx_i2c->adap.dev.parent = &pdev->dev;
-+	zx_i2c->adap.dev.of_node = pdev->dev.of_node;
-+
-+	ret = i2c_add_numbered_adapter(&zx_i2c->adap);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to add zx2967 i2c adapter\n");
-+		goto err_clk_unprepare;
-+	}
-+
-+	return 0;
-+err_clk_unprepare:
-+	clk_disable_unprepare(zx_i2c->clk);
-+	return ret;
-+}
-+
-+static int zx2967_i2c_remove(struct platform_device *pdev)
-+{
-+	struct zx2967_i2c_info *zx_i2c = platform_get_drvdata(pdev);
-+
-+	i2c_del_adapter(&zx_i2c->adap);
-+	clk_disable_unprepare(zx_i2c->clk);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver zx2967_i2c_driver = {
-+	.probe	= zx2967_i2c_probe,
-+	.remove	= zx2967_i2c_remove,
-+	.driver	= {
-+		.name  = "zx2967_i2c",
-+		.of_match_table = zx2967_i2c_of_match,
-+		.pm = &zx2967_i2c_dev_pm_ops,
-+	},
-+};
-+module_platform_driver(zx2967_i2c_driver);
-+
-+MODULE_AUTHOR("Baoyou Xie <baoyou.xie@linaro.org>");
-+MODULE_DESCRIPTION("ZTE zx2967 I2C Bus Controller driver");
-+MODULE_LICENSE("GPL v2");
+> 
+>> - Given that there is a static relation between a region and a hwirq,
+>> can't you compute this relation at init time, and let set_type be a fast
+>> path?
+>>
+> 
+> sure, I can do this to optimize set_type. will do it in v3
+> 
+>>>  
+>>>  	spin_lock_irqsave(&chip_data->lock, flags);
+>>> -	value = readl_relaxed(chip_data->intpol_base + reg_index * 4);
+>>> +	value = readl_relaxed(chip_data->intpol_bases[i] + reg_index * 4);
+>>>  	if (type == IRQ_TYPE_LEVEL_LOW || type == IRQ_TYPE_EDGE_FALLING) {
+>>>  		if (type == IRQ_TYPE_LEVEL_LOW)
+>>>  			type = IRQ_TYPE_LEVEL_HIGH;
+>>> @@ -49,7 +53,8 @@ static int mtk_sysirq_set_type(struct irq_data *data, unsigned int type)
+>>>  	} else {
+>>>  		value &= ~(1 << offset);
+>>>  	}
+>>> -	writel(value, chip_data->intpol_base + reg_index * 4);
+>>> +
+>>> +	writel(value, chip_data->intpol_bases[i] + reg_index * 4);
+>>
+>> Why do you have a writel here, while you're using relaxed accessors
+>> otherwise? Is there anything else that needs to be made visible to the
+>> irqchip?
+>>
+> 
+> before we call spin_unlock_irqrestore() in the end of set_type, polarity
+> should take effect so we use writel() here. This patch did not change
+> the usage.
+
+That's not what I mean. writel has a DSB *before* performing the write
+to the device. Do you have any write (to memory) that needs to be made
+visible to the irqchip before the write to the register occurs?
+
+Looking at the code, I'd say no. This is a standard device
+read-modify-write sequence, no in-memory data that needs to make it
+before the write occurs.
+
+So please turn this into a writel_relaxed.
+
+> 
+>>>  
+>>>  	data = data->parent_data;
+>>>  	ret = data->chip->irq_set_type(data, type);
+>>> @@ -124,8 +129,7 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+>>>  {
+>>>  	struct irq_domain *domain, *domain_parent;
+>>>  	struct mtk_sysirq_chip_data *chip_data;
+>>> -	int ret, size, intpol_num;
+>>> -	struct resource res;
+>>> +	int ret, size, intpol_num = 0, nr_intpol_bases, i;
+>>>  
+>>>  	domain_parent = irq_find_host(parent);
+>>>  	if (!domain_parent) {
+>>> @@ -133,36 +137,61 @@ static int __init mtk_sysirq_of_init(struct device_node *node,
+>>>  		return -EINVAL;
+>>>  	}
+>>>  
+>>> -	ret = of_address_to_resource(node, 0, &res);
+>>> -	if (ret)
+>>> -		return ret;
+>>> -
+>>>  	chip_data = kzalloc(sizeof(*chip_data), GFP_KERNEL);
+>>>  	if (!chip_data)
+>>>  		return -ENOMEM;
+>>>  
+>>> -	size = resource_size(&res);
+>>> -	intpol_num = size * 8;
+>>> -	chip_data->intpol_base = ioremap(res.start, size);
+>>> -	if (!chip_data->intpol_base) {
+>>> -		pr_err("mtk_sysirq: unable to map sysirq register\n");
+>>> -		ret = -ENXIO;
+>>> -		goto out_free;
+>>> +	if (of_property_read_u32(node, "#intpol-bases", &nr_intpol_bases))
+>>> +		nr_intpol_bases = 1;
+>>> +
+>>> +	chip_data->intpol_words =
+>>> +		kcalloc(nr_intpol_bases, sizeof(u32), GFP_KERNEL);
+>>
+>> Please keep the assignment on a single line.
+>>
+> 
+> Got it, but another warning (prefer 75 char in single line) would pop
+> up. Would you still like me to keep it on a single line?
+
+rm scripts/checkpatch.pl
+
+Look, no warning! More seriously, if you're really worried about this,
+you can reformat it:
+
+	chip_data->intpol_words = kcalloc(nr_intpol_bases,
+					  sizeof(u32), GFP_KERNEL);
+
+like this.
+
+Thanks,
+
+	M.
 -- 
-2.7.4
+Jazz is not dead. It just smells funny...
