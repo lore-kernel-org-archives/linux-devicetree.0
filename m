@@ -1,168 +1,88 @@
-From: Horng-Shyang Liao <hs.liao@mediatek.com>
-Subject: Re: [PATCH v20 2/4] mailbox: mediatek: Add Mediatek CMDQ driver
-Date: Thu, 9 Feb 2017 20:03:01 +0800
-Message-ID: <1486641781.19890.12.camel@mtksdaap41>
-References: <1483499169-16329-1-git-send-email-hs.liao@mediatek.com>
- <1483499169-16329-3-git-send-email-hs.liao@mediatek.com>
- <CABb+yY23TUB8NpmpiO=cCmVFAVJMqKPfGgX14j+_Yj7tJvMOuQ@mail.gmail.com>
- <1485419833.990.1.camel@mtksdaap41>
- <CABb+yY13VaFpYz6EExvAXLpAqEWDJ4R50WG0DYbXO6iCESbA5A@mail.gmail.com>
- <1486359476.11424.33.camel@mtksdaap41>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 2/3] ASoC: zx-i2s: introduce pclk for
+	zx2967 family
+Date: Thu, 9 Feb 2017 12:06:25 +0000
+Message-ID: <20170209120625.lhqcistgyjpy3plq@sirena.org.uk>
+References: <1486522955-14528-1-git-send-email-baoyou.xie@linaro.org>
+ <1486522955-14528-2-git-send-email-baoyou.xie@linaro.org>
+ <20170209005207.y6wcrzk43ngfslhl@rob-hp-laptop>
+ <20170209014807.GO3407@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1486359476.11424.33.camel@mtksdaap41>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Daniel Kurtz <djkurtz@chromium.org>, Monica Wang <monica.wang@mediatek.com>, Jiaguang Zhang <jiaguang.zhang@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>, cawa cheng <cawa.cheng@mediatek.com>, hs.liao@mediatek.com, Bibby Hsieh <bibby.hsieh@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Damon Chu <damon.chu@mediatek.com>, Devicetree List <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Daoyuan Huang <daoyuan.huang@mediatek.com>, Sascha Hauer <s.hauer@pengutronix.de>, Houlong Wei <houlong.wei@mediatek.com>, Glory Hung <glory.hung@mediatek.com>, CK HU <ck.hu@mediatek.com>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, srv_heupstream@mediatek.com, Josh-YC Liu <josh-yc.liu@mediatek.com>, Linux
+Content-Type: multipart/mixed; boundary="===============5382407215857446295=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170209014807.GO3407@dragon>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: mark.rutland@arm.com, Rob Herring <robh@kernel.org>, alsa-devel@alsa-project.org, shawn.guo@linaro.org, mathieu.poirier@linaro.org, devicetree@vger.kernel.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, mturquette@baylibre.com, tiwai@suse.com, sboyd@codeaurora.org, lgirdwood@gmail.com, chen.chaokai@zte.com.cn, xie.baoyou@zte.com.cn, wang.qiang01@zte.com.cn, jun.nie@linaro.org, Baoyou Xie <baoyou.xie@linaro.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-02-06 at 13:37 +0800, Horng-Shyang Liao wrote:
-> Hi Jassi,
-> 
-> On Wed, 2017-02-01 at 10:52 +0530, Jassi Brar wrote:
-> > On Thu, Jan 26, 2017 at 2:07 PM, Horng-Shyang Liao <hs.liao@mediatek.com> wrote:
-> > > Hi Jassi,
-> > >
-> > > On Thu, 2017-01-26 at 10:08 +0530, Jassi Brar wrote:
-> > >> On Wed, Jan 4, 2017 at 8:36 AM, HS Liao <hs.liao@mediatek.com> wrote:
-> > >>
-> > >> > diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
-> > >> > new file mode 100644
-> > >> > index 0000000..747bcd3
-> > >> > --- /dev/null
-> > >> > +++ b/drivers/mailbox/mtk-cmdq-mailbox.c
-> > >>
-> > >> ...
-> > >>
-> > >> > +static void cmdq_task_exec(struct cmdq_pkt *pkt, struct cmdq_thread *thread)
-> > >> > +{
-> > >> > +       struct cmdq *cmdq;
-> > >> > +       struct cmdq_task *task;
-> > >> > +       unsigned long curr_pa, end_pa;
-> > >> > +
-> > >> > +       cmdq = dev_get_drvdata(thread->chan->mbox->dev);
-> > >> > +
-> > >> > +       /* Client should not flush new tasks if suspended. */
-> > >> > +       WARN_ON(cmdq->suspended);
-> > >> > +
-> > >> > +       task = kzalloc(sizeof(*task), GFP_ATOMIC);
-> > >> > +       task->cmdq = cmdq;
-> > >> > +       INIT_LIST_HEAD(&task->list_entry);
-> > >> > +       task->pa_base = dma_map_single(cmdq->mbox.dev, pkt->va_base,
-> > >> > +                                      pkt->cmd_buf_size, DMA_TO_DEVICE);
-> > >> >
-> > >> You seem to parse the requests and responses, that should ideally be
-> > >> done in client driver.
-> > >> Also, we are here in atomic context, can you move it in client driver
-> > >> (before the spin_lock)?
-> > >> Maybe by adding a new 'pa_base' member as well in 'cmdq_pkt'.
-> > >
-> > > will do
-> 
-> I agree with moving dma_map_single out from spin_lock.
-> 
-> However, mailbox clients cannot map virtual memory to mailbox
-> controller's device for DMA. In our previous discussion, we decided to
-> remove mailbox_controller.h from clients to restrict their capabilities.
-> 
-> Please take a look at following link from 2016/9/22 to 2016/9/30 about
-> mailbox_controller.h.
-> https://patchwork.kernel.org/patch/9312953/
-> 
-> Is there any better place to do dma_map_single?
 
-Hi Jassi,
+--===============5382407215857446295==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="l2smyxk6aht5vgdo"
+Content-Disposition: inline
 
-According to previous discussion, we have two requirements:
-(1) CMDQ clients should not access mailbox_controller.h;
-(2) dma_map_single should not put inside spin_lock.
 
-I think a trade-off solution is to put in mtk-cmdq-helper.c.
-Although it is a mailbox client, it is not a CMDQ client.
-We can include mailbox_controller.h in mtk-cmdq-helper.c
-(instead of mtk-cmdq.h), and then map dma at cmdq_pkt_flush_async
-before mbox_send_message.
+--l2smyxk6aht5vgdo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-pkt->pa_base = dma_map_single(client->chan->mbox->dev, pkt->va_base,
-                              pkt->cmd_buf_size, DMA_TO_DEVICE);
+On Thu, Feb 09, 2017 at 09:48:09AM +0800, Shawn Guo wrote:
+> On Wed, Feb 08, 2017 at 06:52:07PM -0600, Rob Herring wrote:
 
-What do you think?
+> > Personally, I'd prefer "dt-bindings: sound: blah...", but not enough to=
+=20
+> > argue with Mark about it. If that is not the prefix, then it should at=
+=20
+> > least have "binding" in the subject.
 
-Thanks,
-HS
+> +1
 
-> > >> ....
-> > >> > +
-> > >> > +       cmdq->mbox.num_chans = CMDQ_THR_MAX_COUNT;
-> > >> > +       cmdq->mbox.ops = &cmdq_mbox_chan_ops;
-> > >> > +       cmdq->mbox.of_xlate = cmdq_xlate;
-> > >> > +
-> > >> > +       /* make use of TXDONE_BY_ACK */
-> > >> > +       cmdq->mbox.txdone_irq = false;
-> > >> > +       cmdq->mbox.txdone_poll = false;
-> > >> > +
-> > >> > +       for (i = 0; i < ARRAY_SIZE(cmdq->thread); i++) {
-> > >> >
-> > >> You mean  i < CMDQ_THR_MAX_COUNT
-> > >
-> > > will do
-> > >
-> > >> > +               cmdq->thread[i].base = cmdq->base + CMDQ_THR_BASE +
-> > >> > +                               CMDQ_THR_SIZE * i;
-> > >> > +               INIT_LIST_HEAD(&cmdq->thread[i].task_busy_list);
-> > >> >
-> > >> You seem the queue mailbox requests in this controller driver? why not
-> > >> use the mailbox api for that?
-> > >>
-> > >> > +               init_timer(&cmdq->thread[i].timeout);
-> > >> > +               cmdq->thread[i].timeout.function = cmdq_thread_handle_timeout;
-> > >> > +               cmdq->thread[i].timeout.data = (unsigned long)&cmdq->thread[i];
-> > >> >
-> > >> Here again... you seem to ignore the polling mechanism provided by the
-> > >> mailbox api, and implement your own.
-> > >
-> > > The queue is used to record the tasks which are flushed into CMDQ
-> > > hardware (GCE). We are handling time critical tasks, so we have to
-> > > queue them in GCE rather than a software queue (e.g. mailbox buffer).
-> > > Let me use display as an example. Many display tasks are flushed into
-> > > CMDQ to wait next vsync event. When vsync event is triggered by display
-> > > hardware, GCE needs to process all flushed tasks "within vblank" to
-> > > prevent garbage on screen. This is all done by GCE (without CPU)
-> > > to fulfill time critical requirement. After GCE finish its work,
-> > > it will generate interrupts, and then CMDQ driver will let clients know
-> > > which tasks are done.
-> > >
-> > Does the GCE provide any 'lock' to prevent modifying (by adding tasks
-> > to) the GCE h/w buffer when it is processing it at vsync?  Otherwise
-> 
-> CPU will suspend GCE when adding a task (cmdq_thread_suspend),
-> and resume GCE after adding task is done (cmdq_thread_resume).
-> If GCE is processing task(s) at vsync and CPU wants to add a new task
-> at the same time, CPU will detect this situation
-> (by cmdq_thread_is_in_wfe), resume GCE immediately, and then add
-> following task(s) to wait for next vsync event.
-> All the above logic is implemented at cmdq_task_exec.
-> 
-> > there maybe race/error. If there is such a 'lock' flag/irq, that could
-> > help here. However, you are supposed to know your h/w better, so I
-> > will accept this implementation assuming it can't be done any better.
-> > 
-> > Please address other comments and resubmit.
-> > 
-> > Thanks
-> 
-> After we figure out a better solution for dma_map_single issue, I will
-> resubmit a new version.
-> 
-> Thanks,
-> HS
+> The prefix of sound bindings is quite unique from other subsystems.
+> Looking at the prefix of Documentation/devicetree/bindings/sound/
+> commits, I'm always confused whether it's a pure binding commit
+> or just submitted as part of the driver patch.  I feel that we
+> kinda lose the point of having a prefix.
+
+That's really not what's happening reliably - other subsystems also seem
+to have a bunch of things prefixed for the subsystem and the DT specific
+prefixes are all over the shop, people seem to be making them up at
+random.  If DT binding review were something that reliably and
+consistently happened and didn't affect the subsystem I'd perhaps buy it
+but for run of the mill stuff it seems like getting things reviewed in
+the subsystem is more important.
+
+--l2smyxk6aht5vgdo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlicW0AACgkQJNaLcl1U
+h9CKUwf/eenRtWOUgLcSz5PgdgRE/tMDYOn9I9BKP3Nk7UCWpJKA2W/LE5lgLfow
+SvQsLunCt49zniDpfmtwIsFedDTfPNjg1P6FZf+/1WrbFBTP4vRP7vve55ERrC+l
+lFpmn9MaPnVRleZqBgG3qEbpoacyxG63VNZNRYnNcn6LT4P8YgaHUmQHOAfjtNXC
+d50aaW2fofXFAWByjaErj7jT2zfVsX4xXy/aBYi4yGd2ILhqfsYsOhC1uJcBdoHh
+xMu+jLHhqZRHQdg62ShazpRifrVI9mL0j0HyUvviAULGu1agA7o1e6Q/vEsFsMlY
+mlDOb6ZOiKRbaGBC7bwA4sta3NaV9A==
+=vk02
+-----END PGP SIGNATURE-----
+
+--l2smyxk6aht5vgdo--
+
+--===============5382407215857446295==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============5382407215857446295==--
