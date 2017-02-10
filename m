@@ -1,48 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 4/5] mtd: nand: atmel: Document the new DT bindings
-Date: Fri, 10 Feb 2017 07:58:15 -0600
-Message-ID: <CAL_Jsq+cmS=o-ZN2PUCreRrWAEdEgV4pRCfWaJ9jHy_oSHMPfg@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH RESEND 4/5] mtd: nand: atmel: Document the new DT
+ bindings
+Date: Fri, 10 Feb 2017 15:00:48 +0100
+Message-ID: <20170210150048.40295070@bbrezillon>
 References: <1485535324-28393-1-git-send-email-boris.brezillon@free-electrons.com>
- <1485535324-28393-5-git-send-email-boris.brezillon@free-electrons.com>
- <20170201153920.g26erfzxnxrmsu4z@rob-hp-laptop> <20170201164711.27e4b600@bbrezillon>
- <20170210135528.4ee6807b@bbrezillon>
+        <1485535324-28393-5-git-send-email-boris.brezillon@free-electrons.com>
+        <20170201153920.g26erfzxnxrmsu4z@rob-hp-laptop>
+        <20170201164711.27e4b600@bbrezillon>
+        <20170210135528.4ee6807b@bbrezillon>
+        <CAL_Jsq+cmS=o-ZN2PUCreRrWAEdEgV4pRCfWaJ9jHy_oSHMPfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170210135528.4ee6807b@bbrezillon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Josh Wu <rainyfeeling-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org>, Haavard Skinnemoen <hskinnemoen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hans-Christian Egtvedt <egtvedt-BrfabpQBY5qlHtIdYg32fQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Marek Vasut <ma>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+cmS=o-ZN2PUCreRrWAEdEgV4pRCfWaJ9jHy_oSHMPfg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Richard Weinberger <richard@nod.at>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Wenyou Yang <wenyou.yang@atmel.com>, Josh Wu <rainyfeeling@outlook.com>, Haavard Skinnemoen <hskinnemoen@gmail.com>, Hans-Christian Egtvedt <egtvedt@samfundet.no>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>Marek Vasut <ma>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 10, 2017 at 6:55 AM, Boris Brezillon
-<boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Wed, 1 Feb 2017 16:47:11 +0100
-> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->
->> On Wed, 1 Feb 2017 09:39:20 -0600
->> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->>
->> > On Fri, Jan 27, 2017 at 05:42:03PM +0100, Boris Brezillon wrote:
->> > > Document the new DT bindings for the Atmel NAND controller and
->> > > deprecate the old ones.
->> >
->> > Why?
->>
->> Because the existing representation is not only wrong, it also causes
->> pinmux conflicts between the NAND controller and other devices present
->> on the EBI bus.
->> It's explained in the cover letter, but maybe you want me to put that
->> in the commit message.
->
-> Do you need more explanation (A.K.A. ping).
+On Fri, 10 Feb 2017 07:58:15 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-No, but it should be in the commit msg.
+> On Fri, Feb 10, 2017 at 6:55 AM, Boris Brezillon
+> <boris.brezillon@free-electrons.com> wrote:
+> > Hi Rob,
+> >
+> > On Wed, 1 Feb 2017 16:47:11 +0100
+> > Boris Brezillon <boris.brezillon@free-electrons.com> wrote:
+> >  
+> >> On Wed, 1 Feb 2017 09:39:20 -0600
+> >> Rob Herring <robh@kernel.org> wrote:
+> >>  
+> >> > On Fri, Jan 27, 2017 at 05:42:03PM +0100, Boris Brezillon wrote:  
+> >> > > Document the new DT bindings for the Atmel NAND controller and
+> >> > > deprecate the old ones.  
+> >> >
+> >> > Why?  
+> >>
+> >> Because the existing representation is not only wrong, it also causes
+> >> pinmux conflicts between the NAND controller and other devices present
+> >> on the EBI bus.
+> >> It's explained in the cover letter, but maybe you want me to put that
+> >> in the commit message.  
+> >
+> > Do you need more explanation (A.K.A. ping).  
+> 
+> No, but it should be in the commit msg.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Okay, will add more details in the commit msg then.
+
+Thanks,
+
+Boris
