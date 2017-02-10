@@ -1,36 +1,45 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3 v2] usb: host: fotg2: add device tree probing
-Date: Fri, 10 Feb 2017 21:26:55 +0100
-Message-ID: <3421824.lhyKKsOD1E@wuerfel>
-References: <20170208200010.21522-1-ulli.kroll@googlemail.com> <alpine.LNX.2.00.1702091513580.6226@T420s> <CACRpkdYmfv0XCirnaMSqZ7O9cKp2XAvqJoGQBSXqHN9fSKGnHg@mail.gmail.com>
+From: Velibor Markovski <velibor.markovski@broadcom.com>
+Subject: [PATCH INTERNAL 1/2] dt-bindings: arm-ccn: Add bindings info for
+ CCN-502 compatible string
+Date: Fri, 10 Feb 2017 12:35:08 -0800
+Message-ID: <1486758909-23662-2-git-send-email-velibor.markovski@broadcom.com>
+References: <1486758909-23662-1-git-send-email-velibor.markovski@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYmfv0XCirnaMSqZ7O9cKp2XAvqJoGQBSXqHN9fSKGnHg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Hans Ulli Kroll <ulli.kroll@googlemail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1486758909-23662-1-git-send-email-velibor.markovski@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Velibor Markovski <velibor.markovski@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday, February 10, 2017 2:12:36 PM CET Linus Walleij wrote:
-> 
-> > +       /* Right now device-tree probed devices don't get dma_mask set.
-> > +        * Since shared usb code relies on it, set it here for now.
-> > +        * Once we have dma capability bindings this can go away.
-> > +        */
-> > +
-> > +       retval = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
-> > +       if (retval)
-> > +               goto fail_create_hcd;
-> 
-> Were you able to test this part? I saw the gemini has some DMA engine
-> but I never saw a driver for it. It looks like a reasonable thing to do to
-> my untrained DMA eye.
+Add CCN-502 to the list of supported devices by ARM CCN PMU driver.
 
-We should never use dma_coerce_mask_and_coherent() for new code, it's
-only needed for broken platforms without DT.
+Signed-off-by: Velibor Markovski <velibor.markovski@broadcom.com>
+---
+ Documentation/devicetree/bindings/arm/ccn.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-A 32-bit mask is set by default.
-
-	Arnd
+diff --git a/Documentation/devicetree/bindings/arm/ccn.txt b/Documentation/devicetree/bindings/arm/ccn.txt
+index b100d38..2980145 100644
+--- a/Documentation/devicetree/bindings/arm/ccn.txt
++++ b/Documentation/devicetree/bindings/arm/ccn.txt
+@@ -3,6 +3,7 @@
+ Required properties:
+ 
+ - compatible: (standard compatible string) should be one of:
++	"arm,ccn-502"
+ 	"arm,ccn-504"
+ 	"arm,ccn-508"
+ 
+-- 
+1.9.1
