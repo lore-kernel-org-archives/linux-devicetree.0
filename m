@@ -1,96 +1,114 @@
-From: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH for-4.11 2/2] Revert "dt-bindings: phy: Add documentation
- for NSP USB3 PHY"
-Date: Thu, 9 Feb 2017 19:30:06 -0500
-Message-ID: <CAC3K-4oju7mEAhaTM3VaF_NGt1agsuN8Reb6XzxM5qo54Eo0dA@mail.gmail.com>
-References: <20170208233023.31922-1-zajec5@gmail.com> <20170208233023.31922-2-zajec5@gmail.com>
+From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2 0/6] arm64: dts: rockchip: support Google Kevin
+Date: Thu,  9 Feb 2017 17:05:15 -0800
+Message-ID: <20170210010521.78872-1-briannorris@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170208233023.31922-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Stephen Barber <smbarber-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 8, 2017 at 6:30 PM, Rafa=C5=82 Mi=C5=82ecki <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> =
-wrote:
-> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->
-> This reverts commit c8ca631f9480 ("dt-bindings: phy: Add documentation
-> for NSP USB3 PHY") to match reverting commit adding the new PHY driver.
-> Please note we revert this commit before it reached stable release.
->
-> If new compatible string is needed it should be added to the existing
-> bcm-ns-usb3-phy.txt which already describes this PHY.
->
-> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Hi,
 
-(previous email got caught in HTML filters)
+This is v2, adding basic support for Google Kevin, a board in the Gru device
+family. I do not add a leaf .dts board file for Gru, but I have retained the
+split between "things that apply to the Gru family" (rk3399-gru.dtsi) and
+"things that apply to Kevin only" (rk3399-gru-kevin.dtsi).
 
-Per the discussion with Rafal, this is acceptable
+I know it's close to the 4.11 merge window, so I expect this won't make it for
+that. But since I got it ready for testing anyway, I thought I might as well
+get it out the door, ready for 4.12.
 
-Acked-by: Jon Mason <jon.mason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+I've included resends of two patches (adding cros-ec*.dtsi symlinks, and adding
+RK3399 DWC3). The former is unmodified, but the latter is rewritten to match
+current upstream bindings better, and to allow it to function w/o extcon
+support (USB2 only).
 
-> ---
->  .../devicetree/bindings/phy/brcm,nsp-usb3-phy.txt  | 39 ----------------=
-------
->  1 file changed, 39 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/phy/brcm,nsp-usb3-p=
-hy.txt
->
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt =
-b/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-> deleted file mode 100644
-> index e68ae5dec9c9..000000000000
-> --- a/Documentation/devicetree/bindings/phy/brcm,nsp-usb3-phy.txt
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -Broadcom USB3 phy binding for northstar plus SoC
-> -The USB3 phy is internal to the SoC and is accessed using mdio interface=
-.
-> -
-> -Required mdio bus properties:
-> -- reg: Should be 0x0 for SoC internal USB3 phy
-> -- #address-cells: must be 1
-> -- #size-cells: must be 0
-> -
-> -Required USB3 PHY properties:
-> -- compatible: should be "brcm,nsp-usb3-phy"
-> -- reg: USB3 Phy address on SoC internal MDIO bus and it should be 0x10.
-> -- usb3-ctrl-syscon: handler of syscon node defining physical address
-> -  of usb3 control register.
-> -- #phy-cells: must be 0
-> -
-> -Required usb3 control properties:
-> -- compatible: should be "brcm,nsp-usb3-ctrl"
-> -- reg: offset and length of the control registers
-> -
-> -Example:
-> -
-> -       mdio@0 {
-> -               reg =3D <0x0>;
-> -               #address-cells =3D <1>;
-> -               #size-cells =3D <0>;
-> -
-> -               usb3_phy: usb-phy@10 {
-> -                       compatible =3D "brcm,nsp-usb3-phy";
-> -                       reg =3D <0x10>;
-> -                       usb3-ctrl-syscon =3D <&usb3_ctrl>;
-> -                       #phy-cells =3D <0>;
-> -                       status =3D "disabled";
-> -               };
-> -       };
-> -
-> -       usb3_ctrl: syscon@104408 {
-> -               compatible =3D "brcm,nsp-usb3-ctrl", "syscon";
-> -               reg =3D <0x104408 0x3fc>;
-> -       };
-> --
-> 2.11.0
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+AFAICT, all these bindings are in -next, except for the root node compatible
+property (added doc in this series).
+
+I elaborate on what's working/not working below, but one of the big missing
+pieces is cpufreq support. We still need some more work on getting good
+bindings and driver support upstream for the PWM regulator + OVP circuit on
+these boards. See patch 5 for more info.
+
+Working and tested (to some extent):
+ * EC support -- including keyboard, battery, PWM, and probably more
+ * UART / console
+ * Thermal
+ * Touchscreen
+ * Touchpad
+ * Digitizer (regulator still WIP; working on this in another series)
+ * PCIe / Wifi
+ * Bluetooth / Webcam
+ * SD card
+ * eMMC
+ * USB2 on TypeC
+   - This works much of the time, but USB3 devices may or may not detect
+     properly. Waiting on proper extcon support for USB3 over TypeC.
+   - Depends on XHCI/DWC3 fixes for ARM64 that still haven't landed
+ * Backlight
+
+Not working:
+ * CPUFreq -- relies on special OVP support for our PWM regulator
+   circuits
+ * EC / extcon support -- and with it, USB3/TypeC/DP
+ * DRM -- won't even build on ARM64, so all display, eDP, etc. is not
+   enabled
+
+Not tested:
+ * Audio
+
+
+I include a more detailed changelog in the patches themselves, but a rough
+summary:
+
+v1 -> v2:
+ * merge the OPP and CPU regulators into 1 patch; don't support them on non-Gru
+   boards yet, as that will break them (and we're not sure if the same table is
+   applicable anyway)
+ * drop some patches that were applied already
+ * update copyrights
+ * match USB bindings more closely
+ * drop digitizer regulator patches; this isn't ready (working on in another
+   series)
+
+
+Brian Norris (5):
+  arm64: dts: rockchip: support dwc3 USB for rk3399
+  dt-bindings: Document rk3399 Gru/Kevin
+  arm64: dts: rockchip: add Gru/Kevin DTS
+  arm64: dts: rockchip: describe Gru/Kevin OPPs + CPU regulators
+  arm64: dts: rockchip: sort rk3399 by unit address
+
+Douglas Anderson (1):
+  arm64: dts: Add symlinks for cros-ec-keyboard and cros-ec-sbs
+
+ Documentation/devicetree/bindings/arm/rockchip.txt |   20 +
+ .../boot/dts/include/common/cros-ec-keyboard.dtsi  |    1 +
+ .../arm64/boot/dts/include/common/cros-ec-sbs.dtsi |    1 +
+ arch/arm64/boot/dts/rockchip/Makefile              |    1 +
+ arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts  |  312 ++++++
+ arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi       | 1165 ++++++++++++++++++++
+ arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi       |  145 +++
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi           |  142 ++-
+ 8 files changed, 1743 insertions(+), 44 deletions(-)
+ create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-keyboard.dtsi
+ create mode 120000 arch/arm64/boot/dts/include/common/cros-ec-sbs.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru-kevin.dts
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi
+
+-- 
+2.11.0.483.g087da7b7c-goog
